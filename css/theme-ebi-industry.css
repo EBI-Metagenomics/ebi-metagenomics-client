@@ -1,0 +1,47 @@
+/*
+  Colour palette: EMBL-EBI Industry
+*/
+
+a {
+  color: #222;
+***REMOVED***
+
+dl dt a,
+a.label,
+.label,
+a:hover,
+a:focus,
+a:active {
+  color: rgb(0,134,180);
+***REMOVED***
+
+h1 { color: #f7f7f7; ***REMOVED***
+h2 { color: rgb(0,134,180); ***REMOVED***
+h3 { color: #444444; ***REMOVED***
+
+a.special { background-color: #7cd17c; ***REMOVED***
+
+.menu .active > a,
+.tag,
+.tabs-title > a:hover,
+.button,
+.button.primary {
+  background-color: rgb(0,134,180);
+***REMOVED***
+a.tag:hover { color: #fff; ***REMOVED***
+
+.tabs-title > a:hover,
+.button.primary:hover,
+.button.primary:focus { background: rgba(0,134,180,.9); ***REMOVED***
+
+.tabs-title > a:focus,
+.tabs-title > a[aria-selected='true'] {
+  color: #fff;
+  background: #666; ***REMOVED***
+
+.masthead { background-color: rgb(0,134,180); ***REMOVED***
+
+/* Menu hover triangle colour */
+.masthead nav ul#global-nav.menu li a:hover:after { border-bottom-color: rgb(0,134,180); ***REMOVED***
+
+/* end */
