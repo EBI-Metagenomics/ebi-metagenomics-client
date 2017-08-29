@@ -11,6 +11,7 @@
 // add class verbose-analytics to your body for a readout to console on clicks, ala:
 // jQuery('body').addClass('verbose-analytics');
 // -------------
+
 var numberOfEbiGaChecks = 0;
 var numberOfEbiGaChecksLimit = 2;
 var lastGaEventTime = Date.now(); // track the last time an event was send (don't double send)

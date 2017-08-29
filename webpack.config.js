@@ -1,10 +1,14 @@
 // var path = require('path');
 
 module.exports = {
-	entry: './entry.js',
+	entry: {
+        index: 'src/main.js',
+        projects: 'src/modules/projects.js',
+        project: 'src/modules/project.js'
+    ***REMOVED***,
 	output: {
-		path: __dirname,
-		filename: 'bundle.js',
+        filename: '[name].js',
+		path: __dirname + '/dist',
 	***REMOVED***,
 	resolve: {
 		modules: [ __dirname, 'node_modules']
