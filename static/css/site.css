@@ -1,0 +1,29 @@
+.tabs-panel.active {
+    display: block;
+***REMOVED***
+
+.studiesTable {
+    overflow: hidden;
+    /*white-space: nowrap;*/
+    table-layout: fixed;
+***REMOVED***
+
+td, th {
+    word-wrap: break-word;
+***REMOVED***
+
+th.biome {
+    width: 30%
+***REMOVED***
+
+th.name {
+    width: 50%
+***REMOVED***
+
+th.samples {
+    width: 7%
+***REMOVED***
+
+/*th.updated{*/
+/*width: 5%*/
+/****REMOVED****/
