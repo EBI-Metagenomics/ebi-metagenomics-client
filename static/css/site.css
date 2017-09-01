@@ -1,29 +1,69 @@
 .tabs-panel.active {
     display: block;
-***REMOVED***
+}
 
 .studiesTable {
     overflow: hidden;
     /*white-space: nowrap;*/
     table-layout: fixed;
-***REMOVED***
+}
+
+td, th{
+    text-transform: capitalize;
+}
 
 td, th {
     word-wrap: break-word;
-***REMOVED***
+}
 
+/*STUDIES TABLE*/
 th.biome {
     width: 30%
-***REMOVED***
+}
 
 th.name {
     width: 50%
-***REMOVED***
+}
 
 th.samples {
     width: 7%
-***REMOVED***
+}
+
+/*SAMPLES TABLE*/
+th.biome-icon {
+    width: 10%;
+}
+
+th.sample-id {
+    width: 15%;
+}
+
+th.sample-name {
+    width: 15%;
+}
 
 /*th.updated{*/
 /*width: 5%*/
-/****REMOVED****/
+/*}*/
+
+select.table-tools {
+    -webkit-appearance: menulist;
+    height: auto;
+    width: 5em;
+    margin-left: 0.25em;
+    margin-right:0.5em;
+
+}
+
+.map {
+    height: 30em;
+}
+
+.centered{
+    text-align: center;
+}
+
+#map{
+    height: 100%;
+    width: 100%;
+}

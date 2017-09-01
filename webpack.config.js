@@ -4,30 +4,33 @@ module.exports = {
     entry: {
         index: 'src/main.js',
         studies: 'src/modules/studies.js',
-        study: 'src/modules/study.js'
-    ***REMOVED***,
+        study: 'src/modules/study.js',
+        samples: 'src/modules/samples.js',
+        sample: 'src/modules/sample.js',
+        contact: 'src/contact.js'
+    },
     output: {
         filename: '[name].js',
         path: __dirname + '/dist',
-    ***REMOVED***,
+    },
     resolve: {
         modules: [__dirname, 'node_modules'],
         alias: {
-            handlebars: 'handlebars/dist/handlebars.min.js'
-        ***REMOVED***
-    ***REMOVED***,
+            handlebars: 'handlebars/dist/handlebars.min.js',
+        }
+    },
     module: {
         loaders: [
-            {test: /\.css$/, loader: "style-loader!css-loader"***REMOVED***,
+            {test: /\.css$/, loader: "style-loader!css-loader"},
             {
                 test: /\.hbs$/,
                 loader: __dirname + "/../../../",
                 query: {
                     partialDirs: [
-                        path.join(__dirname+"../", 'templates', 'partials')
+                        path.join(__dirname + "../", 'templates', 'partials')
                     ]
-                ***REMOVED***
-            ***REMOVED***
+                }
+            }
         ],
         rules: [
             {
@@ -37,10 +40,10 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: ['env']
-                    ***REMOVED***
-                ***REMOVED***
-            ***REMOVED***,
-            {test: /\.handlebars$/, loader: "handlebars-loader"***REMOVED***
+                    }
+                }
+            },
+            {test: /\.handlebars$/, loader: "handlebars-loader"}
         ]
-    ***REMOVED***
-***REMOVED***
+    }
+}

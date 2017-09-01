@@ -5,7 +5,7 @@
   "main": "entry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  ***REMOVED***,
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -20,12 +20,12 @@
     "motion-ui": "^1.2.3",
     "tablesorter": "^2.28.15",
     "underscore": "^1.8.3"
-  ***REMOVED***,
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
     "css-loader": "^0.28.5",
     "style-loader": "^0.18.2"
-  ***REMOVED***
-***REMOVED***
+  }
+}

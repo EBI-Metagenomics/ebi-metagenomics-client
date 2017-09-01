@@ -5,8 +5,8 @@
   select {
     -moz-appearance: none;
     -webkit-appearance: none;
-  ***REMOVED***
-***REMOVED***
+  }
+}
 
 // manually add back the foreground mixin
 // https://github.com/ebiwd/EBI-Framework/issues/84
@@ -14,20 +14,20 @@
 
 /// Checks the lightness of `$color`, and if it passes the `$threshold` of lightness, it returns the `$yes` color. Otherwise, it returns the `$no` color. Use this function to dynamically output a foreground color based on a given background color.
 ///
-/// @param {Color***REMOVED*** $color - Color to check the lightness of.
-/// @param {Color***REMOVED*** $yes [$black] - Color to return if `$color` is light.
-/// @param {Color***REMOVED*** $no [$white] - Color to return if `$color` is dark.
-/// @param {Percentage***REMOVED*** $threshold [60%] - Threshold of lightness to check against.
+/// @param {Color} $color - Color to check the lightness of.
+/// @param {Color} $yes [$black] - Color to return if `$color` is light.
+/// @param {Color} $no [$white] - Color to return if `$color` is dark.
+/// @param {Percentage} $threshold [60%] - Threshold of lightness to check against.
 ///
-/// @returns {Color***REMOVED*** The $yes color or $no color.
+/// @returns {Color} The $yes color or $no color.
 @function foreground($color, $yes: $black, $no: $white, $threshold: 60%) {
   @if $color == transparent {
     $color: $body-background;
-  ***REMOVED***
+  }
   @if (lightness($color) > $threshold) {
     @return $yes;
-  ***REMOVED***
+  }
   @else {
     @return $no;
-  ***REMOVED***
-***REMOVED***
+  }
+}

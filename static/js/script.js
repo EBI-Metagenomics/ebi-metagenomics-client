@@ -16,10 +16,10 @@ function ebiFrameworkExternalLinks() {
       url.indexOf('//intranet.ebi.ac.uk') !== -1 ||
       url.indexOf('//pdbe.org') !== -1 ||
       url.indexOf('//' + document.domain) !== -1);
-  ***REMOVED***
+  }
   function isFileType(url, type) {
     return url.indexOf(type, url.length-type.length)!==-1;
-  ***REMOVED***
+  }
   try {
     var alist = document.getElementsByTagName('a');
     var fileTypes = ['pdf', 'doc', 'txt'];
@@ -30,12 +30,12 @@ function ebiFrameworkExternalLinks() {
           icon = document.createElement('span');
           icon.className = 'link-' + fileTypes[type];
           alist[i].appendChild(icon);
-        ***REMOVED***
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
-  catch(err) {***REMOVED***
-***REMOVED***
+        }
+      }
+    }
+  }
+  catch(err) {}
+}
 
 
 function ebiFrameworkManageGlobalSearch() {
@@ -46,7 +46,7 @@ function ebiFrameworkManageGlobalSearch() {
     var hasLocalEBISearch = document.getElementById('ebi_search') !== null;
     if (hasLocalSearch || hasLocalEBISearch) {
       document.body.className += ' no-global-search';
-    ***REMOVED*** else {
+    } else {
       // If the page gets a global search, we specify how the dropdown box should be. #RespectMyAuthoriti
       var html = '<form id="global-search" name="global-search" action="/ebisearch/search.ebi" method="GET" class="large-8 large-push-2">' +
                     '<fieldset>' +
@@ -63,13 +63,13 @@ function ebiFrameworkManageGlobalSearch() {
       try {
         var gloablSearch = document.getElementById('search-global-dropdown');
         gloablSearch.innerHTML = html;
-      ***REMOVED*** catch (err) {
+      } catch (err) {
         setTimeout(init, 500);
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
-  catch (err) {***REMOVED***
-***REMOVED***
+      }
+    }
+  }
+  catch (err) {}
+}
 
 function ebiFrameworkSearchNullError() {
   // Add error alerts for 'no input' on search boxes.
@@ -78,10 +78,10 @@ function ebiFrameworkSearchNullError() {
     var disabled = document.body.className.indexOf('no-search-error') !== -1;
     // Array of search box definition objects, specify inputNode, defaultText (optional, default ''), errorText (optional, default 'Please enter a search term')
     var searchBoxes = [
-      { inputNode: document.getElementById('global-searchbox') ***REMOVED***, // in global masthead
-      { inputNode: document.getElementById('local-searchbox') ***REMOVED***, // in local masthead
-      { inputNode: document.body.className.indexOf('front') !== -1 ? document.getElementById('query') : null ***REMOVED***, // on home page
-      { inputNode: document.getElementById('people-groups') ? document.getElementById('people-groups').getElementsByTagName('input')[0] : null ***REMOVED*** // on people and group page
+      { inputNode: document.getElementById('global-searchbox') }, // in global masthead
+      { inputNode: document.getElementById('local-searchbox') }, // in local masthead
+      { inputNode: document.body.className.indexOf('front') !== -1 ? document.getElementById('query') : null }, // on home page
+      { inputNode: document.getElementById('people-groups') ? document.getElementById('people-groups').getElementsByTagName('input')[0] : null } // on people and group page
     ];
 
     if (!disabled) {
@@ -110,14 +110,14 @@ function ebiFrameworkSearchNullError() {
             if (searchInput.value === searchInputDefault || searchInput.value === '') {
               alert(searchError);
               return false;
-            ***REMOVED***
-          ***REMOVED***;
-        ***REMOVED***
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
-  catch (err) {***REMOVED***
-***REMOVED***
+            }
+          };
+        }
+      }
+    }
+  }
+  catch (err) {}
+}
 
 function ebiFrameworkHideGlobalNav() {
   // Remove global-nav/global-nav-expanded from header/footer
@@ -130,14 +130,14 @@ function ebiFrameworkHideGlobalNav() {
     if (hasGlobalMasthead && disabled) {
       if ((elem=document.getElementById('global-nav')) !== null) {
         elem.parentNode.removeChild(elem);
-      ***REMOVED***
+      }
       if ((elem=document.getElementById('global-nav-expanded')) !== null) {
         elem.parentNode.removeChild(elem);
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
-  catch (err) {***REMOVED***
-***REMOVED***
+      }
+    }
+  }
+  catch (err) {}
+}
 
 function ebiFrameworkAssignImageByMetaTags() {
   // Assign global nav background images through meta tags
@@ -149,12 +149,12 @@ function ebiFrameworkAssignImageByMetaTags() {
   if (mastheadColor != null) {
     masthead.style.backgroundColor = mastheadColor.getAttribute("content");
     masthead.className += ' meta-background-color';
-  ***REMOVED***
+  }
   if (mastheadImage != null) {
     masthead.style.backgroundImage = 'url(' + mastheadImage.getAttribute("content") + ')';
     masthead.className += ' meta-background-image';
-  ***REMOVED***
-***REMOVED***
+  }
+}
 
 function ebiFrameworkInsertEMBLdropdown() {
   // Insert EMBL dropdown menu
@@ -162,7 +162,7 @@ function ebiFrameworkInsertEMBLdropdown() {
     // remove any current dropdown
     if ((elem=document.getElementById('embl-dropdown')) !== null) {
       document.getElementById('embl-dropdown').remove();
-    ***REMOVED***
+    }
 
     var dropdownDiv = document.createElement("div");
     dropdownDiv.innerHTML = '<div id="embl-dropdown" class="embl-dropdown dropdown-pane bottom" data-dropdown>' +
@@ -196,9 +196,9 @@ function ebiFrameworkInsertEMBLdropdown() {
             '</div>';
     document.getElementById("masthead-black-bar").appendChild(dropdownDiv);
     // We don't invoke the dropdown here, as that method depends on how you're using the Framework
-  ***REMOVED***
-  catch(err) {***REMOVED***;
-***REMOVED***
+  }
+  catch(err) {};
+}
 
 function ebiFrameworkUpdateFoot() {
   var html = '<div class="columns small-6 medium-2 ">' +
@@ -222,12 +222,12 @@ function ebiFrameworkUpdateFoot() {
     try {
       var foot = document.getElementById('global-nav-expanded');
       foot.innerHTML = html;
-    ***REMOVED*** catch (err) {
+    } catch (err) {
       setTimeout(init, 500);
-    ***REMOVED***
-  ***REMOVED***
+    }
+  }
   init();
-***REMOVED***
+}
 
 function ebiFrameworkUpdateFooterMeta() {
   var d = new Date();
@@ -240,10 +240,10 @@ function ebiFrameworkUpdateFooterMeta() {
     try {
       var foot = document.getElementById('ebi-footer-meta');
       foot.innerHTML = html;
-    ***REMOVED*** catch (err) { setTimeout(init, 500); ***REMOVED***
-  ***REMOVED***
+    } catch (err) { setTimeout(init, 500); }
+  }
   init();
-***REMOVED***
+}
 
 function ebiFrameworkIncludeScripts() {
   var downtimeScript =  '//www.ebi.ac.uk/web_guidelines/js/downtime.js?' + Math.round(new Date().getTime() / 3600000);
@@ -253,7 +253,7 @@ function ebiFrameworkIncludeScripts() {
   putScript.src = downtimeScript;
   document.body.appendChild(putComment);
   document.body.appendChild(putScript);
-***REMOVED***
+}
 
 function ebiFrameworkCookieBanner() {
   function setCookie(c_name, value, exdays) {
@@ -264,7 +264,7 @@ function ebiFrameworkCookieBanner() {
     document.cookie = c_name + "=" + c_value;
     c_value = escape(value) + ((exdays===null) ? "" : ";expires=" + exdate.toUTCString()) + ";domain=" + document.domain + ";path=/";
     document.cookie = c_name + "=" + c_value;
-  ***REMOVED***
+  }
 
   function getCookie(c_name) {
     var i, x, y, ARRcookies=document.cookie.split(";");
@@ -274,9 +274,9 @@ function ebiFrameworkCookieBanner() {
       x = x.replace(/^\s+|\s+$/g,"");
       if (x===c_name) {
         return unescape(y);
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
+      }
+    }
+  }
 
   function createBanner() {
     var banner = document.createElement('div');
@@ -287,26 +287,26 @@ function ebiFrameworkCookieBanner() {
     banner.className = "cookie-banner";
     wrapper.className = "row";
     wrapper.innerHTML = "" +
-    "<span class='text'>This website uses cookies. By continuing to browse this site, you are agreeing to the use of our site cookies. " +
+    "<span class='text'>This website uses cookies. By continuing to browse this util, you are agreeing to the use of our util cookies. " +
     "To find out more, see our <a href='//www.ebi.ac.uk/about/terms-of-use'>Terms of Use</a>.</span>" +
     "<div id='cookie-dismiss'><button class='close-button' style='top: 0.3rem; color:#fff;' aria-label='Close alert' type='button'><span aria-hidden='true'>&times;</span></button></div>" +
     "";
 
     document.body.appendChild(banner);
     banner.appendChild(wrapper);
-  ***REMOVED***
+  }
 
   function openBanner() {
     var height = document.getElementById('cookie-banner').offsetHeight;
     document.getElementById('cookie-banner').style.display = 'block';
     document.body.style.paddingBottom = height+'px';
-  ***REMOVED***
+  }
 
   function closeBanner() {
     var height = document.getElementById('cookie-banner').offsetHeight;
     document.getElementById('cookie-banner').style.display = 'none';
     document.body.style.paddingBottom = '0';
-  ***REMOVED***
+  }
 
   function init() {
     try {
@@ -317,13 +317,13 @@ function ebiFrameworkCookieBanner() {
         document.getElementById('cookie-dismiss').onclick = function() {
           closeBanner();
           return false;
-        ***REMOVED***;
-      ***REMOVED***
-    ***REMOVED***
-    catch(err) { setTimeout(init, 100); ***REMOVED***
-  ***REMOVED***
+        };
+      }
+    }
+    catch(err) { setTimeout(init, 100); }
+  }
   init();
-***REMOVED***
+}
 
 function ebiFrameworkInvokeScripts() {
   ebiFrameworkExternalLinks();
@@ -336,7 +336,7 @@ function ebiFrameworkInvokeScripts() {
   ebiFrameworkUpdateFooterMeta();
   ebiFrameworkIncludeScripts();
   ebiFrameworkCookieBanner();
-***REMOVED***
+}
 
 /* All scripts are automatically loaded, unless the page asked us not to.
  *   Configurable with a data attribute:
@@ -346,5 +346,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var bodyData = document.body.dataset;
   if (bodyData["ebiframeworkinvokescripts"] != "false") {
     ebiFrameworkInvokeScripts();
-  ***REMOVED***
-***REMOVED***);
+  }
+});

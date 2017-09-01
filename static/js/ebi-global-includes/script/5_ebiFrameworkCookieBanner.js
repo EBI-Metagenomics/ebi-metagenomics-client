@@ -7,7 +7,7 @@ function ebiFrameworkCookieBanner() {
     document.cookie = c_name + "=" + c_value;
     c_value = escape(value) + ((exdays===null) ? "" : ";expires=" + exdate.toUTCString()) + ";domain=" + document.domain + ";path=/";
     document.cookie = c_name + "=" + c_value;
-  ***REMOVED***
+  }
 
   function getCookie(c_name) {
     var i, x, y, ARRcookies=document.cookie.split(";");
@@ -17,9 +17,9 @@ function ebiFrameworkCookieBanner() {
       x = x.replace(/^\s+|\s+$/g,"");
       if (x===c_name) {
         return unescape(y);
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
+      }
+    }
+  }
 
   function createBanner() {
     var banner = document.createElement('div');
@@ -30,26 +30,26 @@ function ebiFrameworkCookieBanner() {
     banner.className = "cookie-banner";
     wrapper.className = "row";
     wrapper.innerHTML = "" +
-    "<span class='text'>This website uses cookies. By continuing to browse this site, you are agreeing to the use of our site cookies. " +
+    "<span class='text'>This website uses cookies. By continuing to browse this util, you are agreeing to the use of our util cookies. " +
     "To find out more, see our <a href='//www.ebi.ac.uk/about/terms-of-use'>Terms of Use</a>.</span>" +
     "<div id='cookie-dismiss'><button class='close-button' style='top: 0.3rem; color:#fff;' aria-label='Close alert' type='button'><span aria-hidden='true'>&times;</span></button></div>" +
     "";
 
     document.body.appendChild(banner);
     banner.appendChild(wrapper);
-  ***REMOVED***
+  }
 
   function openBanner() {
     var height = document.getElementById('cookie-banner').offsetHeight;
     document.getElementById('cookie-banner').style.display = 'block';
     document.body.style.paddingBottom = height+'px';
-  ***REMOVED***
+  }
 
   function closeBanner() {
     var height = document.getElementById('cookie-banner').offsetHeight;
     document.getElementById('cookie-banner').style.display = 'none';
     document.body.style.paddingBottom = '0';
-  ***REMOVED***
+  }
 
   function init() {
     try {
@@ -60,10 +60,10 @@ function ebiFrameworkCookieBanner() {
         document.getElementById('cookie-dismiss').onclick = function() {
           closeBanner();
           return false;
-        ***REMOVED***;
-      ***REMOVED***
-    ***REMOVED***
-    catch(err) { setTimeout(init, 100); ***REMOVED***
-  ***REMOVED***
+        };
+      }
+    }
+    catch(err) { setTimeout(init, 100); }
+  }
   init();
-***REMOVED***
+}

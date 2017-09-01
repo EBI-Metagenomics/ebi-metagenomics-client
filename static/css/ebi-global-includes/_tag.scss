@@ -32,13 +32,13 @@ $tag-radius: $global-radius !default;
   line-height: 1;
   white-space: nowrap;
   // cursor: default;
-***REMOVED***
+}
 
 @mixin ebi-tag {
   a.tag {
     color: $tag-color;
     border-bottom-style: none;
-  ***REMOVED***
+  }
   .tag {
     @include tag;
 
@@ -48,11 +48,11 @@ $tag-radius: $global-radius !default;
 
     // @each $name, $color in $foundation-palette {
     //   @if $name != primary {
-    //     &.#{$name***REMOVED*** {
+    //     &.#{$name} {
     //       background: $color;
     //       color: foreground($color);
-    //     ***REMOVED***
-    //   ***REMOVED***
-    // ***REMOVED***
-  ***REMOVED***
-***REMOVED***
+    //     }
+    //   }
+    // }
+  }
+}

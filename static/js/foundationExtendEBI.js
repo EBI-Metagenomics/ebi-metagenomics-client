@@ -4,7 +4,7 @@
 */
 
 // Analytics tracking
-// This code tracks the user's clicks in various parts of the EBI site and logs them as GA events.
+// This code tracks the user's clicks in various parts of the EBI util and logs them as GA events.
 // Links in non-generic regions can be tracked by adding '.track-with-analytics-events' to a parent div. Careful with the scoping.
 //
 // Dev note:
@@ -21,32 +21,32 @@ function ebiGaCheck() {
     if (ga && ga.loaded) {
       jQuery('body').addClass('google-analytics-loaded'); // Confirm GA is loaded, add a class if found
       ebiGaInit();
-    ***REMOVED*** else {
+    } else {
       if (numberOfEbiGaChecks <= numberOfEbiGaChecksLimit) {
         setTimeout(ebiGaCheck, 900); // give a second check if GA was slow to load
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED*** catch (err) {
+      }
+    }
+  } catch (err) {
     if (numberOfEbiGaChecks <= numberOfEbiGaChecksLimit) {
       setTimeout(ebiGaCheck, 900); // give a second check if GA was slow to load
-    ***REMOVED***
-  ***REMOVED***
-***REMOVED***
+    }
+  }
+}
 ebiGaCheck(); // invoke analytics check
 
 // Utility method
 if (!Array.prototype.last){
   Array.prototype.last = function(){
     return this[this.length - 1];
-  ***REMOVED***;
-***REMOVED***;
+  };
+};
 
 function analyticsTrackInteraction(actedOnItem, parentContainer, customEventName) {
   var customEventName = customEventName || []; // you can pass some custom text as a 3rd param
 
   if (customEventName.length > 0) {
     linkName = customEventName;
-  ***REMOVED*** else { // then derive a value
+  } else { // then derive a value
     var linkName = jQuery(actedOnItem).text().toString();
     // if there's no text, it's probably and image
     if (linkName.length == 0 && jQuery(actedOnItem).attr('src')) linkName = jQuery(actedOnItem).attr('src').split('/').last();
@@ -55,8 +55,8 @@ function analyticsTrackInteraction(actedOnItem, parentContainer, customEventName
     // special things for gloabl search box
     if (parentContainer == 'Global search') {
       linkName = 'query: ' + jQuery('#global-search input#query').val();
-    ***REMOVED***
-  ***REMOVED***
+    }
+  }
 
   // send to GA
   // Only if more than 100ms has past since last click.
@@ -70,9 +70,9 @@ function analyticsTrackInteraction(actedOnItem, parentContainer, customEventName
       console.log('%c Verbose analytics on ', 'color: #FFF; background: #111; font-size: .75rem;');
       console.log('clicked on: %o ',actedOnItem);
       console.log('sent to GA: ', 'event ->', 'UI ->', 'UI Element / ' + parentContainer + ' ->', linkName, '; at: ',lastGaEventTime);
-    ***REMOVED***
-  ***REMOVED***
-***REMOVED*** // END analyticsTrackInteraction
+    }
+  }
+} // END analyticsTrackInteraction
 
 // initialise the tracking of various areas
 function ebiGaInit() {
@@ -83,59 +83,59 @@ function ebiGaInit() {
   // Order these by specificity -- only the first invoked will be sent to GA
   jQuery("body.google-analytics-loaded .track-with-analytics-events a").on('mousedown', function(e) {
     analyticsTrackInteraction(e.target,'Manually tracked area');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded .masthead-black-bar").on('mousedown', 'a, button', function(e) {
     analyticsTrackInteraction(e.target,'Black bar');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded .masthead").on('mousedown', 'a, button', function(e) {
     analyticsTrackInteraction(e.target,'Masthead');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded .related ul").on('mousedown', 'li > a', function(e) {
     analyticsTrackInteraction(e.target,'Popular');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded .with-overlay").on('mousedown', 'a, button', function(e) {
     analyticsTrackInteraction(e.target,'Highlight box');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded #global-footer").on('mousedown', 'a, button', function(e) {
     analyticsTrackInteraction(e.target,'Footer');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded #global-search").on('mousedown', 'input', function(e) {
     analyticsTrackInteraction(e.target,'Global search');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded #local-search").on('mousedown', 'input', function(e) {
     analyticsTrackInteraction(e.target,'Local search');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded .analytics-content-intro, body.google-analytics-loaded .intro-unit").on('mousedown', 'a, button', function(e) {
     analyticsTrackInteraction(e.target,'Intro');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded .analytics-content-sidebar").on('mousedown', 'a, button', function(e) {
     analyticsTrackInteraction(e.target,'Sidebar');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded .analytics-content-left").on('mousedown', 'a, button', function(e) {
     analyticsTrackInteraction(e.target,'Left content');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded .analytics-content-right").on('mousedown', 'a, button', function(e) {
     analyticsTrackInteraction(e.target,'Right content');
-  ***REMOVED***);
+  });
   jQuery("body.google-analytics-loaded .analytics-content-footer").on('mousedown', 'a, button', function(e) {
     analyticsTrackInteraction(e.target,'Content footer');
-  ***REMOVED***);
+  });
 
   // catch all -- should come last
   jQuery("body.google-analytics-loaded #main-content-area, body.google-analytics-loaded .analytics-content-main").on('mousedown', 'a, button', function(e) {
     analyticsTrackInteraction(e.target,'Main content');
-  ***REMOVED***);
+  });
 
   // todo: homepage search return
   // $('textarea').bind("enterKey",function(e){
   //    //do stuff here
-  // ***REMOVED***);
+  // });
   // $('textarea').keyup(function(e){
   //     if(e.keyCode == 13)
   //     {
   //         $(this).trigger("enterKey");
-  //     ***REMOVED***
-  // ***REMOVED***);
+  //     }
+  // });
 
   // To do: track livefilter
   // input.filter[type="text"]').on("keyup", function() {
@@ -149,20 +149,20 @@ function ebiGaInit() {
       if ( ( e.keyCode == 70 && ( e.ctrlKey || e.metaKey ) ) ||
          ( e.keyCode == 191 ) ) {
         keydown = new Date().getTime();
-      ***REMOVED***
+      }
       return true;
-    ***REMOVED***).blur(function() {
+    }).blur(function() {
       // and then browser window blurs, indicating shift to UI
       if ( keydown !== null ) {
         var delta = new Date().getTime() - keydown;
         if ( delta > 0 && delta < 1000 ) {
           ga && ga('send', 'event', 'UI', 'UI Element / Keyboard', 'Browser in page search');
-        ***REMOVED***
+        }
         keydown = null;
-      ***REMOVED***
-    ***REMOVED***);
-  ***REMOVED***
-***REMOVED*** // END ebiGaInit
+      }
+    });
+  }
+} // END ebiGaInit
 
 // Foundation specific extensions of functionality
 // -------------
@@ -174,33 +174,33 @@ function ebiGaInit() {
 function activateEMBLdropdown(options) {
   (function($) {
     var options = options || '',
-        dropDownOptions = {closeOnClick: true***REMOVED***;
+        dropDownOptions = {closeOnClick: true};
 
     if (options == 'reInit') {
       // try to destory any existing menu
       try {
         $('#embl-dropdown').foundation('close');
         $('#embl-dropdown').foundation('destroy');
-      ***REMOVED***
+      }
       catch(err) {
         // silently fail
-      ***REMOVED***;
+      };
       // bootstrap the menu
       ebiFrameworkInsertEMBLdropdown(); // re-insert menu
       activateEMBLdropdown(); // activate this
-    ***REMOVED*** else {
+    } else {
       // we assume we're bootstraping the dropdown fresh
       setTimeout(function() { // A small buffer incase scripts are loaded out of order
         try {
           var dropdownEbiMenu = new Foundation.Dropdown($('#embl-dropdown'), dropDownOptions);
-        ***REMOVED***
+        }
         catch(err) {
           // silently fail
-        ***REMOVED***;
-      ***REMOVED***, 200);
-    ***REMOVED***
-  ***REMOVED***(jQuery));
-***REMOVED*** // END activateEMBLdropdown
+        };
+      }, 200);
+    }
+  }(jQuery));
+} // END activateEMBLdropdown
 
 // Smooth scroll anchor links for jQuery users
 // -------------
@@ -210,7 +210,7 @@ function smoothScrollAnchorLinksEBI() {
       // Table compatibility
       if ($(this).parent().parent().hasClass('tabs')) {
         return true; //exit
-      ***REMOVED***
+      }
       if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
         var target = $(this.hash),
             targetName = this.hash;
@@ -218,16 +218,16 @@ function smoothScrollAnchorLinksEBI() {
         if (target.length) {
           $('html,body').animate({
             scrollTop: target.offset().top - 40
-          ***REMOVED***, {
+          }, {
             duration: 1000,
-            complete: function(){ window.location.hash = targetName; ***REMOVED***
-          ***REMOVED***);
+            complete: function(){ window.location.hash = targetName; }
+          });
           return false;
-        ***REMOVED***
-      ***REMOVED***
-    ***REMOVED***);
-  ***REMOVED***(jQuery));
-***REMOVED*** // END smoothScrollAnchorLinksEBI
+        }
+      }
+    });
+  }(jQuery));
+} // END smoothScrollAnchorLinksEBI
 
 // Respond the local nav to browser window width
 // -----------
@@ -236,7 +236,7 @@ function invokeResponsiveMenuEBI() {
     // Create a dynamic height for the menu bar when stuck
     // -----------
     var desiredStuckMenuHeight = $('.masthead-inner').outerHeight() - $('.masthead-inner > nav > ul.menu').outerHeight();
-    $("<style id='dynamic-stuck-height' type='text/css'> .masthead.sticky.is-stuck{ margin-top: -" + desiredStuckMenuHeight + "px !important;***REMOVED*** </style>").appendTo("body");
+    $("<style id='dynamic-stuck-height' type='text/css'> .masthead.sticky.is-stuck{ margin-top: -" + desiredStuckMenuHeight + "px !important;} </style>").appendTo("body");
 
     // Clone the local menu into a mobile-only menu
     // -----------
@@ -258,7 +258,7 @@ function invokeResponsiveMenuEBI() {
         // We calculate each li and not the parent ul as some teams may make the ul 100% wide
         $(localMenuClass+' > li:not(".bug-fix-placeholder")').each( function() {
           localMenuWidthUsed = localMenuWidthUsed + $(this).outerWidth();
-        ***REMOVED***);
+        });
 
         // Account for any float-right menu
         localMenuWidthUsed = localMenuWidthUsed + localMenuRightSideWidth;
@@ -271,9 +271,9 @@ function invokeResponsiveMenuEBI() {
           // $(localMenuClass).append('<li class="extra-items-menu" style="display:none;"><a href="#">Also in this section</a><ul class="menu"></ul></li>');
           localMenuWidthUsed = localMenuWidthUsed + $(localMenuClass + ' > li.extra-items-menu').outerWidth(); // Account for width of li.extra-items-menu
           // invoke foundation to create dropdown functionality when we add the menu
-          var options = {closeOnClickInside: false, closeOnClick: false***REMOVED***; // Prevent a bug in foundation 6.2.4 that prevents mobile clicking :(
+          var options = {closeOnClickInside: false, closeOnClick: false}; // Prevent a bug in foundation 6.2.4 that prevents mobile clicking :(
           var responsiveMenu = new Foundation.DropdownMenu($(localMenuClass),options);
-        ***REMOVED***
+        }
 
         // Do we need to make space?
         if ( (changeDirection == 'init') || (changeDirection == 'decrease') ) {
@@ -281,17 +281,17 @@ function invokeResponsiveMenuEBI() {
             // show dropdown, if hidden
             if ($(localMenuClass + ' li.extra-items-menu:visible').length == 0) {
               $(localMenuClass + ' li.extra-items-menu').show();
-            ***REMOVED***
+            }
 
             // loop through each menu item in reverse, and slice off the first as it's the dropdown
             $($(localMenuClass+' > li').get().reverse().slice(1)).each( function() {
               if (localMenuWidthUsed > localMenuWidthAvail) { // do we need to hide more items?
                 localMenuWidthUsed = localMenuWidthUsed - $(this).outerWidth();
                 $(this).detach().prependTo(localMenuClass + ' > li.extra-items-menu > ul.menu');
-              ***REMOVED*** // we could break when <= but this should be pretty fast
-            ***REMOVED***);
-          ***REMOVED***
-        ***REMOVED***
+              } // we could break when <= but this should be pretty fast
+            });
+          }
+        }
 
         if (changeDirection == 'increase') {
           // does the dropdown exist?
@@ -310,8 +310,8 @@ function invokeResponsiveMenuEBI() {
                 // if the dropdown has no visible items, hide it
                 $(localMenuClass + ' li.extra-items-menu').hide();
                 break;
-              ***REMOVED***
-            ***REMOVED***
+              }
+            }
 
             // if there's no or just one item left, see if we should not count the width of the dropdown menu
             // if ($(localMenuClass + ' li.extra-items-menu > ul > li:not(".bug-fix-placeholder")').length == 1) {
@@ -321,11 +321,11 @@ function invokeResponsiveMenuEBI() {
             //     $(localMenuClass+' > li.extra-items-menu > ul.menu > li:first-child').detach().insertBefore(localMenuClass+' li.extra-items-menu');
             //     // if the dropdown has no visible items, hide it
             //     $(localMenuClass + ' li.extra-items-menu').hide();
-            //   ***REMOVED***
-            // ***REMOVED***
-          ***REMOVED***
-        ***REMOVED***
-      ***REMOVED***
+            //   }
+            // }
+          }
+        }
+      }
 
       localNavSpilloverMenu('init');
       // re-calc menus on browser change, if it affect width of localMenuWidthAvail
@@ -336,25 +336,25 @@ function invokeResponsiveMenuEBI() {
         // we look for changes of more than 1 to reduce jitter
         if (widthChangeAmount > 1)  localNavSpilloverMenu('increase');
         if (widthChangeAmount < -1) localNavSpilloverMenu('decrease');
-      ***REMOVED***);
-    ***REMOVED***
-  ***REMOVED***(jQuery));
-***REMOVED*** // END invokeResponsiveMenuEBI
+      });
+    }
+  }(jQuery));
+} // END invokeResponsiveMenuEBI
 
 // Default invokation of foundationExtendEBI
 (function($) {
   // Clearable text inputs
   // via: http://stackoverflow.com/questions/6258521/clear-icon-inside-input-text
   // -------------
-  function tog(v){return v?'addClass':'removeClass';***REMOVED***
+  function tog(v){return v?'addClass':'removeClass';}
   $(document).on('input', '.clearable', function(){
     $(this)[tog(this.value)]('x');
-  ***REMOVED***).on('mousemove', '.x', function( e ){
+  }).on('mousemove', '.x', function( e ){
     $(this)[tog(this.offsetWidth-25 < e.clientX-this.getBoundingClientRect().left)]('onX');
-  ***REMOVED***).on('touchstart click', '.onX', function( ev ){
+  }).on('touchstart click', '.onX', function( ev ){
     ev.preventDefault();
     $(this).removeClass('x onX').val('').change().keyup();
-  ***REMOVED***);
+  });
 
   $.fn.foundationExtendEBI = function() {
     // Activate EMBL dropdown menu
@@ -370,16 +370,16 @@ function invokeResponsiveMenuEBI() {
     // ---------
     // Ideally we would have used Foundation's "data-auto-focus", but this came after the HTML was widely circulated
     $('a[data-toggle="search-global-dropdown"]').click( function() {
-      if($(this).is(':not(.hover)')) { setTimeout(function() { $('input#global-searchbox').focus() ***REMOVED***, 100); ***REMOVED***
-    ***REMOVED***);
+      if($(this).is(':not(.hover)')) { setTimeout(function() { $('input#global-searchbox').focus() }, 100); }
+    });
 
     // Link overlay images
     $('.with-overlay').on('click',function(e) {
       var href = $(this).find('a:first').attr('href') || '';
       if (href.length > 0) {
         window.location.href = href;
-      ***REMOVED***
-    ***REMOVED***)
+      }
+    })
 
     // Responsive support for tables
     // ---------
@@ -390,11 +390,11 @@ function invokeResponsiveMenuEBI() {
         if ($(columnsToAppend[i]).attr('class')) {
           var position = i + 1;
           $(this).find('td:nth-child('+position+')').addClass($(columnsToAppend[i]).attr('class'));
-        ***REMOVED***
-      ***REMOVED***;
-    ***REMOVED***);
+        }
+      };
+    });
 
-  ***REMOVED***
+  }
 
   /* Allow invokation of of foundation and foundationExtendEBI with data attributes
 
@@ -411,11 +411,11 @@ function invokeResponsiveMenuEBI() {
     bodyData.foundationInvoke = bodyData.foundationInvoke || 'document';
     if (bodyData.foundationInvoke === 'true') bodyData.foundationInvoke = 'document';
     $(bodyData.foundationInvoke).foundation();
-  ***REMOVED***
+  }
   if (bodyData.foundationExtendEBI) {
     bodyData.foundationExtendEBI = bodyData.foundationExtendEBI || 'document';
     if (bodyData.foundationExtendEBI === 'true') bodyData.foundationExtendEBI = 'document';
     $(bodyData.foundationExtendEBI).foundationExtendEBI();
-  ***REMOVED***
+  }
 
-***REMOVED***(jQuery));
+}(jQuery));

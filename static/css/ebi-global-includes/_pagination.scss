@@ -79,38 +79,38 @@ $pagination-arrows: true !default;
   $background-hover: $pagination-item-background-hover
 ) {
   @include clearfix;
-  margin-#{$global-left***REMOVED***: 0;
+  margin-#{$global-left}: 0;
   margin-bottom: $margin-bottom;
   text-align: center;
 
   // List item
   li {
-    margin-#{$global-right***REMOVED***: $spacing;
+    margin-#{$global-right}: $spacing;
     border-radius: $radius;
     font-size: $font-size;
 
     @if $pagination-mobile-items {
       display: inline-block;
-    ***REMOVED***
+    }
     @else {
       display: none;
 
       &:last-child,
       &:first-child {
         display: inline-block;
-      ***REMOVED***
+      }
 
       @if $pagination-mobile-current-item {
         &.current {
           display: inline-block;
-        ***REMOVED***
-      ***REMOVED***
+        }
+      }
 
       @include breakpoint(medium) {
         display: inline-block;
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
+      }
+    }
+  }
 
   // Page links
   a,
@@ -122,9 +122,9 @@ $pagination-arrows: true !default;
 
     &:hover {
       background: $background-hover;
-    ***REMOVED***
-  ***REMOVED***
-***REMOVED***
+    }
+  }
+}
 
 /// Adds styles for the current pagination item. Apply this to an `<a>`.
 @mixin pagination-item-current (
@@ -136,7 +136,7 @@ $pagination-arrows: true !default;
   background: $background-current;
   color: $white;
   cursor: default;
-***REMOVED***
+}
 
 /// Adds styles for a disabled pagination item. Apply this to an `<a>`.
 @mixin pagination-item-disabled (
@@ -149,8 +149,8 @@ $pagination-arrows: true !default;
 
   &:hover {
     background: transparent;
-  ***REMOVED***
-***REMOVED***
+  }
+}
 
 /// Adds styles for an ellipsis for use in a pagination list.
 @mixin pagination-ellipsis (
@@ -160,7 +160,7 @@ $pagination-arrows: true !default;
   padding: $padding;
   content: '\2026';
   color: $color;
-***REMOVED***
+}
 
 @mixin foundation-pagination {
   .pagination {
@@ -168,30 +168,30 @@ $pagination-arrows: true !default;
 
     .current {
       @include pagination-item-current;
-    ***REMOVED***
+    }
 
     .disabled {
       @include pagination-item-disabled;
-    ***REMOVED***
+    }
 
     .ellipsis::after {
       @include pagination-ellipsis;
-    ***REMOVED***
-  ***REMOVED***
+    }
+  }
 
   @if $pagination-arrows {
     .pagination-previous a::before,
     .pagination-previous.disabled::before {
       display: inline-block;
-      margin-#{$global-right***REMOVED***: 0.5rem;
+      margin-#{$global-right}: 0.5rem;
       content: '\00ab';
-    ***REMOVED***
+    }
 
     .pagination-next a::after,
     .pagination-next.disabled::after {
       display: inline-block;
-      margin-#{$global-left***REMOVED***: 0.5rem;
+      margin-#{$global-left}: 0.5rem;
       content: '\00bb';
-    ***REMOVED***
-  ***REMOVED***
-***REMOVED***
+    }
+  }
+}

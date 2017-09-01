@@ -11,10 +11,10 @@ function ebiFrameworkExternalLinks() {
       url.indexOf('//intranet.ebi.ac.uk') !== -1 ||
       url.indexOf('//pdbe.org') !== -1 ||
       url.indexOf('//' + document.domain) !== -1);
-  ***REMOVED***
+  }
   function isFileType(url, type) {
     return url.indexOf(type, url.length-type.length)!==-1;
-  ***REMOVED***
+  }
   try {
     var alist = document.getElementsByTagName('a');
     var fileTypes = ['pdf', 'doc', 'txt'];
@@ -25,10 +25,10 @@ function ebiFrameworkExternalLinks() {
           icon = document.createElement('span');
           icon.className = 'link-' + fileTypes[type];
           alist[i].appendChild(icon);
-        ***REMOVED***
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
-  catch(err) {***REMOVED***
-***REMOVED***
+        }
+      }
+    }
+  }
+  catch(err) {}
+}
 

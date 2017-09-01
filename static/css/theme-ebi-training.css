@@ -4,7 +4,7 @@
 
 a {
   color: #222;
-***REMOVED***
+}
 
 dl dt a,
 a.label,
@@ -13,14 +13,14 @@ a:hover,
 a:focus,
 a:active {
   color: rgb(233,180,0);
-***REMOVED***
+}
 
-h1 { color: #f7f7f7; ***REMOVED***
-h2 { color: rgb(233,180,0); ***REMOVED***
-h3 { color: #444444; ***REMOVED***
-h4 { color: #222; ***REMOVED***
+h1 { color: #f7f7f7; }
+h2 { color: rgb(233,180,0); }
+h3 { color: #444444; }
+h4 { color: #222; }
 
-a.special { background-color: #7cd17c; ***REMOVED***
+a.special { background-color: #7cd17c; }
 
 .menu .active > a,
 .tag,
@@ -28,24 +28,24 @@ a.special { background-color: #7cd17c; ***REMOVED***
 .button,
 .button.primary {
   background-color: rgb(233,180,0);
-***REMOVED***
-a.tag:hover { color: #fff; ***REMOVED***
+}
+a.tag:hover { color: #fff; }
 
 .tabs-title > a:hover,
 .button.primary:hover,
-.button.primary:focus { background: rgba(233,180,0,.9); ***REMOVED***
+.button.primary:focus { background: rgba(233,180,0,.9); }
 .tabs-title > a:focus,
 .tabs-title > a[aria-selected='true'] {
   color: #fff;
-  background: #666; ***REMOVED***
+  background: #666; }
 
-.masthead { background-color: rgb(233,180,0); ***REMOVED***
+.masthead { background-color: rgb(233,180,0); }
 
-body main.row { margin-top: 1.5rem; ***REMOVED***
+body main.row { margin-top: 1.5rem; }
 body .form-checkboxes .form-item,
 body .form-radios .form-item {
     margin-top: 0;
     margin-bottom: 0;
-***REMOVED***
+}
 
 /* end */

@@ -6,7 +6,7 @@ function ebiFrameworkManageGlobalSearch() {
     var hasLocalEBISearch = document.getElementById('ebi_search') !== null;
     if (hasLocalSearch || hasLocalEBISearch) {
       document.body.className += ' no-global-search';
-    ***REMOVED*** else {
+    } else {
       // If the page gets a global search, we specify how the dropdown box should be. #RespectMyAuthoriti
       var html = '<form id="global-search" name="global-search" action="/ebisearch/search.ebi" method="GET" class="large-8 large-push-2">' +
                     '<fieldset>' +
@@ -23,13 +23,13 @@ function ebiFrameworkManageGlobalSearch() {
       try {
         var gloablSearch = document.getElementById('search-global-dropdown');
         gloablSearch.innerHTML = html;
-      ***REMOVED*** catch (err) {
+      } catch (err) {
         setTimeout(init, 500);
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
-  catch (err) {***REMOVED***
-***REMOVED***
+      }
+    }
+  }
+  catch (err) {}
+}
 
 function ebiFrameworkSearchNullError() {
   // Add error alerts for 'no input' on search boxes.
@@ -38,10 +38,10 @@ function ebiFrameworkSearchNullError() {
     var disabled = document.body.className.indexOf('no-search-error') !== -1;
     // Array of search box definition objects, specify inputNode, defaultText (optional, default ''), errorText (optional, default 'Please enter a search term')
     var searchBoxes = [
-      { inputNode: document.getElementById('global-searchbox') ***REMOVED***, // in global masthead
-      { inputNode: document.getElementById('local-searchbox') ***REMOVED***, // in local masthead
-      { inputNode: document.body.className.indexOf('front') !== -1 ? document.getElementById('query') : null ***REMOVED***, // on home page
-      { inputNode: document.getElementById('people-groups') ? document.getElementById('people-groups').getElementsByTagName('input')[0] : null ***REMOVED*** // on people and group page
+      { inputNode: document.getElementById('global-searchbox') }, // in global masthead
+      { inputNode: document.getElementById('local-searchbox') }, // in local masthead
+      { inputNode: document.body.className.indexOf('front') !== -1 ? document.getElementById('query') : null }, // on home page
+      { inputNode: document.getElementById('people-groups') ? document.getElementById('people-groups').getElementsByTagName('input')[0] : null } // on people and group page
     ];
 
     if (!disabled) {
@@ -70,11 +70,11 @@ function ebiFrameworkSearchNullError() {
             if (searchInput.value === searchInputDefault || searchInput.value === '') {
               alert(searchError);
               return false;
-            ***REMOVED***
-          ***REMOVED***;
-        ***REMOVED***
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
-  catch (err) {***REMOVED***
-***REMOVED***
+            }
+          };
+        }
+      }
+    }
+  }
+  catch (err) {}
+}

@@ -26,20 +26,20 @@ function injectEBIFramework() {
     putComment = document.createComment(script.src + ' automatically inserted');
     document.getElementsByTagName('head')[0].appendChild(putComment);
     document.getElementsByTagName('head')[0].appendChild(script);
-  ***REMOVED***
+  }
 
   function executeFoundation() {
     try {
       var script = document.createElement('script');
       script.type = 'text/javascript';
-      script.innerHTML = '$(document).ready(function() { $(document).foundation(); $(document).foundationExtendEBI(); ***REMOVED***);';
+      script.innerHTML = '$(document).ready(function() { $(document).foundation(); $(document).foundationExtendEBI(); });';
       document.body.appendChild(script);
 
       buildEBIHtml();
-    ***REMOVED*** catch (err) {
+    } catch (err) {
       setTimeout(executeFoundation, 500);
-    ***REMOVED***
-  ***REMOVED***
+    }
+  }
 
   (function includeScripts() {
     var requireScripts = ['//www.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/libraries/foundation-6/js/foundation.js',
@@ -60,16 +60,16 @@ function injectEBIFramework() {
             putScript.src = requireScripts[j];
             document.getElementsByTagName('head')[0].appendChild(putComment);
             document.getElementsByTagName('head')[0].appendChild(putScript);
-          ***REMOVED***
-        ***REMOVED***
+          }
+        }
         // once we know foundation is present
         executeFoundation();
-      ***REMOVED*** catch (err) {
+      } catch (err) {
         setTimeout(init, 500);
-      ***REMOVED***
-    ***REMOVED***
+      }
+    }
     init();
-  ***REMOVED***)(); // END function includeScripts
+  })(); // END function includeScripts
 
 
   (function includeStyles() {
@@ -91,13 +91,13 @@ function injectEBIFramework() {
           putStyle.href = requireStyles[j];
           document.head.appendChild(putComment);
           document.head.appendChild(putStyle);
-        ***REMOVED***
-      ***REMOVED*** catch (err) {
+        }
+      } catch (err) {
         setTimeout(init, 500);
-      ***REMOVED***
-    ***REMOVED***
+      }
+    }
     init();
-  ***REMOVED***)(); // END function includeStyles
+  })(); // END function includeStyles
 
 
   function buildEBIHtml() {
@@ -188,12 +188,12 @@ function injectEBIFramework() {
       // Footer
       if ($('footer').length > 0) {
         $('footer').append(EBIFooter);
-      ***REMOVED*** else {
+      } else {
         $('body').append(EBIFooter);
-      ***REMOVED***
+      }
 
-    ***REMOVED***);
-  ***REMOVED***
+    });
+  }
 
 
-***REMOVED*** // END function injectEBIFramework
+} // END function injectEBIFramework

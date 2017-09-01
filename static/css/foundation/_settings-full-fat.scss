@@ -13,15 +13,15 @@
 @mixin foundation-everything($flex: false) {
   @if $flex {
     $global-flexbox: true !global;
-  ***REMOVED***
+  }
 
   @include foundation-global-styles;
   @if not $flex {
     @include foundation-grid;
-  ***REMOVED***
+  }
   @else {
     @include foundation-flex-grid;
-  ***REMOVED***
+  }
   @include foundation-typography;
   @include foundation-forms;
   @include foundation-button;
@@ -61,12 +61,12 @@
   @if $use-animations {
     @include motion-ui-transitions;
     @include motion-ui-animations;
-  ***REMOVED***
+  }
 
   @if $flex {
     @include foundation-flex-classes;
-  ***REMOVED***
-***REMOVED***
+  }
+}
 
 // invoke Foundation
 @include foundation-everything;

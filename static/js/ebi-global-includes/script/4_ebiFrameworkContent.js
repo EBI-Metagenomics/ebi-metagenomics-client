@@ -9,14 +9,14 @@ function ebiFrameworkHideGlobalNav() {
     if (hasGlobalMasthead && disabled) {
       if ((elem=document.getElementById('global-nav')) !== null) {
         elem.parentNode.removeChild(elem);
-      ***REMOVED***
+      }
       if ((elem=document.getElementById('global-nav-expanded')) !== null) {
         elem.parentNode.removeChild(elem);
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
-  catch (err) {***REMOVED***
-***REMOVED***
+      }
+    }
+  }
+  catch (err) {}
+}
 
 function ebiFrameworkAssignImageByMetaTags() {
   // Assign global nav background images through meta tags
@@ -28,12 +28,12 @@ function ebiFrameworkAssignImageByMetaTags() {
   if (mastheadColor != null) {
     masthead.style.backgroundColor = mastheadColor.getAttribute("content");
     masthead.className += ' meta-background-color';
-  ***REMOVED***
+  }
   if (mastheadImage != null) {
     masthead.style.backgroundImage = 'url(' + mastheadImage.getAttribute("content") + ')';
     masthead.className += ' meta-background-image';
-  ***REMOVED***
-***REMOVED***
+  }
+}
 
 function ebiFrameworkInsertEMBLdropdown() {
   // Insert EMBL dropdown menu
@@ -41,7 +41,7 @@ function ebiFrameworkInsertEMBLdropdown() {
     // remove any current dropdown
     if ((elem=document.getElementById('embl-dropdown')) !== null) {
       document.getElementById('embl-dropdown').remove();
-    ***REMOVED***
+    }
 
     var dropdownDiv = document.createElement("div");
     dropdownDiv.innerHTML = '<div id="embl-dropdown" class="embl-dropdown dropdown-pane bottom" data-dropdown>' +
@@ -75,9 +75,9 @@ function ebiFrameworkInsertEMBLdropdown() {
             '</div>';
     document.getElementById("masthead-black-bar").appendChild(dropdownDiv);
     // We don't invoke the dropdown here, as that method depends on how you're using the Framework
-  ***REMOVED***
-  catch(err) {***REMOVED***;
-***REMOVED***
+  }
+  catch(err) {};
+}
 
 function ebiFrameworkUpdateFoot() {
   var html = '<div class="columns small-6 medium-2 ">' +
@@ -101,12 +101,12 @@ function ebiFrameworkUpdateFoot() {
     try {
       var foot = document.getElementById('global-nav-expanded');
       foot.innerHTML = html;
-    ***REMOVED*** catch (err) {
+    } catch (err) {
       setTimeout(init, 500);
-    ***REMOVED***
-  ***REMOVED***
+    }
+  }
   init();
-***REMOVED***
+}
 
 function ebiFrameworkUpdateFooterMeta() {
   var d = new Date();
@@ -119,10 +119,10 @@ function ebiFrameworkUpdateFooterMeta() {
     try {
       var foot = document.getElementById('ebi-footer-meta');
       foot.innerHTML = html;
-    ***REMOVED*** catch (err) { setTimeout(init, 500); ***REMOVED***
-  ***REMOVED***
+    } catch (err) { setTimeout(init, 500); }
+  }
   init();
-***REMOVED***
+}
 
 function ebiFrameworkIncludeScripts() {
   var downtimeScript =  '//www.ebi.ac.uk/web_guidelines/js/downtime.js?' + Math.round(new Date().getTime() / 3600000);
@@ -132,4 +132,4 @@ function ebiFrameworkIncludeScripts() {
   putScript.src = downtimeScript;
   document.body.appendChild(putComment);
   document.body.appendChild(putScript);
-***REMOVED***
+}

@@ -52,8 +52,8 @@
 
     <!-- CSS: implied media=all -->
     <!-- CSS concatenated and minified via ant build script-->
-    <link rel="stylesheet" href="static/css/foundation.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="static/css/ebi-global.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/static/css/foundation.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/static/css/ebi-global.css" type="text/css" media="all"/>
     <link rel="stylesheet" href="https://www.ebi.ac.uk/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css" type="text/css"
           media="all"/>
 
@@ -69,9 +69,9 @@
 
     <!-- you can replace this with theme-[projectname].css. See http://www.ebi.ac.uk/web/style/colour for details of how to do this -->
     <!-- also inform ES so we can host your colour palette file -->
-    <link rel="stylesheet" href="static/css/theme-embl-petrol.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="static/css/ebi-global.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="static/css/site.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/static/css/theme-embl-petrol.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/static/css/ebi-global.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/static/css/site.css" type="text/css" media="all"/>
 
 </head>
 
@@ -79,12 +79,11 @@
 <div id="header"></div>
 
 <!-- Suggested layout containers / #content -->
-<div id="content">A
+<div id="content">
+    <div id="main-content-area" class="row" role="main">
+        <script id="studyTmpl" type="text/template">
 
-    <script id="studyTmpl" type="text/template">
-        <section id="main-content-area" class="row" role="main">
-            <h2>Project <%= project_id %> (<%= project_accession %>) </h2>
-
+            <h2>Project <%= study_id %> (<%= study_accession %>) </h2>
 
             <div class="center">
                 <ul class="tabs" data-tabs id="study-tabs">
@@ -93,27 +92,40 @@
                 </ul>
                 <div class="tabs-content" data-tab-content="study-tabs">
                     <div class="tabs-panel active" id="overview">
-                        <h4>Last updated: <%= last_updated %></h4>
-                        <section>
-                            <h3>Description</h3>
-                            <p> <%= abstract %></p>
-                            <h3>Classification</h3>
-                            <% _.each(classifications, function(biome){ %>
-                                <p> <%= biome %></p>
-                            <% ***REMOVED***); %>
-                        </section>
+                        <div class="row">
+                            <div class="columns small-4 medium-4 large-4">
+                                <h4>Last updated: <%= last_updated %></h4>
+                                <section>
+                                    <h3>Description</h3>
+                                    <p> <%= abstract %></p>
+                                    <h3>Classification</h3>
+                                    <% _.each(classifications, function(biome){ %>
+                                    <p> <%= biome %></p>
+                                    <% }); %>
+                                </section>
+
+                                <section>
+                                    <h3>Contact details</h3>
+                                    <ul>
+                                        <li>Institute: <%= contact_details.institute %></li>
+                                        <li>Name: <%= contact_details.name %></li>
+                                        <li>Email: <%= contact_details.email %></li>
+                                    </ul>
+                                </section>
+                            </div>
+                            <div class="columns small-8 medium-8 large-8 map">
+                                <div id="map">
+
+                                </div>
+                            </div>
+
+                        </div>
+
 
                         <section>
-                            <h3>Contact details</h3>
-                            <ul>
-                                <li>Institute: <%= contact_details.institute %></li>
-                                <li>Name: <%= contact_details.name %></li>
-                                <li>Email: <%= contact_details.email %></li>
-                            </ul>
-                        </section>
-                        <section>
                             <h3>Associated runs</h3>
-                            <table id="associatedRuns">
+                            <div id="tableTools"></div>
+                            <table id='runsTable' class="tablesorter">
                                 <thead>
                                 <tr>
                                     <th>Sample name</th>
@@ -125,17 +137,9 @@
                                     <th>Analysis results</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td>A</td>
-                                    <td>B</td>
-                                    <td>C</td>
-                                    <td>D</td>
-                                    <td>E</td>
-                                    <td>F</td>
-                                    <td>G</td>
-                                </tr>
+                                <tbody id="runsTableBody" class="live-filter-table">
                                 </tbody>
+
                             </table>
                         </section>
                     </div>
@@ -153,9 +157,17 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </script>
+    </div>
+    <script id="runRow" type="text/template">
+        <td><%= sample_name %></td>
+        <td><%= sample_id %></td>
+        <td><%= run_id %></td>
+        <td><%= experiment_type %></td>
+        <td><%= instrument_model %></td>
+        <td><%= pipeline_version %></td>
+        <td><%= analysis_results %></td>
     </script>
-
 </div>
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
 <!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
@@ -171,23 +183,70 @@
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script defer="defer" src="static/js/script.js"></script>
+<script src="/node_modules/tablesorter/dist/js/jquery.tablesorter.js"></script>
+
+<script defer="defer" src="/static/js/script.js"></script>
+<script defer="defer" src="/static/libraries/jquery.liveFilter.js"></script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAivAQNT-w_7wzIJ9nf7E9GTOzn1mkDGzE">
+</script>
+<script src="/static/libraries/markerclusterer/src/markerclusterer.js"></script>
+
 
 <!-- The Foundation theme JavaScript -->
-<script src="static/js/foundation.js"></script>
-<script src="static/js/foundationExtendEBI.js"></script>
+<script src="/static/js/foundation.js"></script>
+<script src="/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">$(document).foundation();</script>
 <script type="text/JavaScript">$(document).foundationExtendEBI();</script>
-<script src="dist/study.js"></script>
+<script src="/dist/study.js"></script>
+
 <!-- Google Analytics details... -->
-<!-- Change UA-XXXXX-X to be your site's ID -->
+<!-- Change UA-XXXXX-X to be your util's ID -->
 <!--
 <script>
   window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
   Modernizr.load({
     load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-  ***REMOVED***);
+  });
 </script>
 -->
 </body>
+
+<!--Google Map marker API-->
+<script id="marker-template" type="text/x-handlebars-template">
+
+    <div class="row">
+        <div class="columns small-1 medium-1 large-1"></div>
+        <div class="columns small-11 medium-11 large-11">
+            <h2>Sample - {{this.id}}</h2>
+            <!--<p>{{this.name}}</p>-->
+
+        </div>
+    </div>
+    <div class="row columns">
+        <p>{{this.desc}}</p>
+    </div>
+    <div class="row">
+        <div class="columns">
+            <ul>
+                <li>
+                    Classification: {{this.classification}}
+                </li>
+                <li>
+                    Collection date: {{this.collection_date}}
+                </li>
+                <li>
+                    Lat/Long: {{this.lat}}, {{this.lng}}
+                </li>
+                <li>
+                    Sampling depth: TODO
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row centered">
+        <a href="{{this.sample_url}}" class="button centered">View more</a>
+    </div>
+</script>
 </html>

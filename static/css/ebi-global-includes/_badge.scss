@@ -32,7 +32,7 @@ $badge-font-size: 0.6rem !default;
   // font-size: $badge-font-size;
   text-align: center;
   border-radius: 50%;
-***REMOVED***
+}
 
 @mixin foundation-badge {
   .badge {
@@ -43,11 +43,11 @@ $badge-font-size: 0.6rem !default;
 
     @each $name, $color in $foundation-palette {
       @if $name != primary {
-        &.#{$name***REMOVED*** {
+        &.#{$name} {
           background: $color;
           color: foreground($color);
-        ***REMOVED***
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
-***REMOVED***
+        }
+      }
+    }
+  }
+}
