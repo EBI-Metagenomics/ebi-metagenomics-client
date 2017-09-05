@@ -3,6 +3,9 @@ import _ from 'underscore';
 import * as util from '../main';
 import tablesorter from 'tablesorter';
 
+util.setCurrentTab('#studies-nav');
+
+
 const STUDIES_PER_PAGE = 10;
 var currentPage = 1;
 var totalPages = -1;

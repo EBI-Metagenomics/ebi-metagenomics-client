@@ -6,6 +6,9 @@ const SAMPLES_PER_PAGE = 10;
 var currentPage = 1;
 var totalPages = -1;
 
+util.setCurrentTab('#samples-nav');
+
+
 var Biome = Backbone.Model.extend({
     url : function() {
         var base = util.API_URL+'biomes';
@@ -59,7 +62,6 @@ var BiomeCollectionView = Backbone.View.extend({
 var Sample = Backbone.Model.extend({
     parse: function (data) {
         const attr = data.attributes;
-        console.log(data);
         return {
             biome: attr['environment-biome'],
             sample_id: attr['accession'],

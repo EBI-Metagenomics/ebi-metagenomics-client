@@ -5,6 +5,9 @@ import tablesorter from 'tablesorter';
 import livefilter from 'livefilter';
 import Handlebars from 'handlebars'
 
+util.setCurrentTab('#studies-nav');
+
+
 var study_id = util.getURLParameter();
 
 const STUDIES_PER_PAGE = 500;
@@ -13,14 +16,12 @@ var totalPages = -1;
 
 var Study = Backbone.Model.extend({
     url : function() {
-        var base = util.API_URL+'studies';
-        if (this.isNew()) return base;
-        return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id;
+        return util.API_URL+'studies/' + this.id;
     },
     parse: function(data){
-        var attr = data.data.attributes;
-        var biomes = data.data.relationships.biomes.data;
-        var biome_list = biomes.map(function(x){return x.id.split(":").slice(1).join(" > ")});
+        const attr = data.data.attributes;
+        const biomes = data.data.relationships.biomes.data;
+        const biome_list = biomes.map(function(x){return util.formatLineage(x.id)});
 
         return {
             study_id: attr['project-id'],
@@ -43,13 +44,13 @@ var StudyView = Backbone.View.extend({
     template: _.template($("#studyTmpl").html()),
     el: '#main-content-area',
     initialize: function(){
-        var that = this;
+        const that = this;
         this.model.fetch({data: $.param({include:'samples'}), success: function(data){
             that.render();
             attachTabHandlers();
             util.initTableTools();
-            var runs = new RunCollection({pid: study_id});
-            var runsView = new RunsView({collection: runs});
+            const runs = new RunCollection({pid: study_id});
+            const runsView = new RunsView({collection: runs});
             initMap(data.attributes.samples);
         }});
     },
@@ -69,6 +70,7 @@ var Run = Backbone.Model.extend({
        return {
            sample_name: "N/A",
            sample_id: attr['sample-accession'],
+           sample_url: '/sample/'+attr['sample-accession'],
            run_id: attr.accession,
            experiment_type: data.relationships['experiment-type'].data.id,
            instrument_model: attr.instrument_model || util.NO_DATA_MSG,
@@ -161,8 +163,7 @@ function initMap(samples) {
     map.fitBounds(bounds);
 
     var markerCluster = new MarkerClusterer(map, markers,
-        {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
-        maxZoom: 15});
+        {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
     window.map = map;
     return map
 }

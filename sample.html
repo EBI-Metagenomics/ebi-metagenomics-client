@@ -81,81 +81,54 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
-        <script id="studyTmpl" type="text/template">
+        <script id="sampleTmpl" type="text/template">
+            <div class="center column small-12 medium-12 large-12">
+                <h3>Sample overview (<%= sample_accession %>)</h3>
+                <h2>Sample <%= sample_name %> </h2>
+                <hr>
+                <section>
+                    <h3>Description</h3>
+                    <h4>Classification: <%= lineage %></h4>
+                    <h4>Project name: <a href="<%= study_link %>"><%= study_accession %></a></h4>
+                </section>
+                <hr>
+                <section>
+                    <h3>Sample metadata</h3>
+                    <table>
+                        <tbody>
+                            <tr><td>Investigation type</td><td><%= investigation_type %></td></tr>
+                            <tr><td>Geographic location (depth)</td><td><%= geo_location %></td></tr>
+                            <tr><td>Collection date</td><td><%= collection_date %></td></tr>
+                            <tr><td>Environment (biome)</td><td><%= env_biome %></td></tr>
+                            <tr><td>Environment (feature)</td><td><%= env_feature %></td></tr>
+                            <tr><td>Environment (material)</td><td><%= env_material %></td></tr>
+                            <tr><td>Environmental package</td><td><%= env_package %></td></tr>
+                            <tr><td>Elevation</td><td><%= elevation %></td></tr>
+                            <tr><td>NCBI sample classification</td><td><%= ncbi_class %></td></tr>
+                            <tr><td>Instrument model</td><td><%= inst_model %></td></tr>
+                        </tbody>
+                    </table>
+                </section>
+                <hr>
+                <section>
+                    <H1>Associated runs</H1>
+                    <table id='runsTable' class="tablesorter">
+                        <thead>
+                        <tr>
+                            <th>Sample name</th>
+                            <th>Sample ID</th>
+                            <th>Run ID</th>
+                            <th>Experiment type</th>
+                            <th>Instrument model</th>
+                            <th>Version</th>
+                            <th>Analysis results</th>
+                        </tr>
+                        </thead>
+                        <tbody id="runsTableBody" class="live-filter-table">
+                        </tbody>
 
-            <h2>Project <%= study_id %> (<%= study_accession %>) </h2>
-
-            <div class="center">
-                <ul class="tabs" data-tabs id="study-tabs">
-                    <li class="tabs-title active"><a href="#overview" aria-selected="true">Overview</a></li>
-                    <li class="tabs-title"><a href="#analysis">Analysis summary</a></li>
-                </ul>
-                <div class="tabs-content" data-tab-content="study-tabs">
-                    <div class="tabs-panel active" id="overview">
-                        <div class="row">
-                            <div class="columns small-4 medium-4 large-4">
-                                <h4>Last updated: <%= last_updated %></h4>
-                                <section>
-                                    <h3>Description</h3>
-                                    <p> <%= abstract %></p>
-                                    <hr>
-                                    <h3>Classification</h3>
-                                    <% _.each(classifications, function(biome){ %>
-                                    <p> <%= biome %></p>
-                                    <% }); %>
-                                </section>
-                                <hr>
-                                <section>
-                                    <h3>Contact details</h3>
-                                    <ul>
-                                        <li>Institute: <%= contact_details.institute %></li>
-                                        <li>Name: <%= contact_details.name %></li>
-                                        <li>Email: <%= contact_details.email %></li>
-                                    </ul>
-                                </section>
-                            </div>
-                            <div class="columns small-8 medium-8 large-8 map">
-                                <div id="map">
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <hr>
-                        <section>
-                            <h3>Associated runs</h3>
-                            <div id="tableTools"></div>
-                            <table id='runsTable' class="tablesorter">
-                                <thead>
-                                <tr>
-                                    <th>Sample name</th>
-                                    <th>Sample ID</th>
-                                    <th>Run ID</th>
-                                    <th>Experiment type</th>
-                                    <th>Instrument model</th>
-                                    <th>Version</th>
-                                    <th>Analysis results</th>
-                                </tr>
-                                </thead>
-                                <tbody id="runsTableBody" class="live-filter-table">
-                                </tbody>
-                            </table>
-                        </section>
-                    </div>
-
-                    <div class="tabs-panel" id="analysis">
-
-                        <p>In this section you can download the different results matrix files summarising the project.
-                            Each
-                            downloadable file contains an aggregation of the analysis results from the individual
-                            project
-                            runs. To visualise and download the analysis results for individual runs, please access
-                            their
-                            respective pages.</p>
-                        <h4>Pipeline version...</h4>
-                    </div>
-                </div>
+                    </table>
+                </section>
             </div>
         </script>
     </div>
@@ -199,7 +172,7 @@
 <script src="/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">$(document).foundation();</script>
 <script type="text/JavaScript">$(document).foundationExtendEBI();</script>
-<script src="/dist/study.js"></script>
+<script src="/dist/sample.js"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->
