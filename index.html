@@ -34,8 +34,8 @@
 
   <!-- CSS: implied media=all -->
   <!-- CSS concatenated and minified via ant build script-->
-  <link rel="stylesheet" href="libraries/foundation-6/css/foundation.css" type="text/css" media="all" />
-  <link rel="stylesheet" href="css/ebi-global.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="/static/css/foundation.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="/static/css/ebi-global.css" type="text/css" media="all" />
   <link rel="stylesheet" href="https://www.ebi.ac.uk/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css" type="text/css" media="all" />
 
   <!-- Use this CSS file for any custom styling -->
@@ -49,7 +49,7 @@
 
   <!-- you can replace this with theme-[projectname].css. See http://www.ebi.ac.uk/web/style/colour for details of how to do this -->
   <!-- also inform ES so we can host your colour palette file -->
-  <link rel="stylesheet" href="css/theme-embl-petrol.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="/static/css/theme-embl-petrol.css" type="text/css" media="all" />
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -93,7 +93,7 @@
         <div class="masthead-inner row">
           <!-- local-title -->
           <div class="columns medium-7" id="local-title">
-            <h1><a href="[service-url]" title="Back to [service-name] homepage">EBI Metagenomics</a></h1>
+            <h1><a href="/" title="Back to [service-name] homepage">EBI Metagenomics</a></h1>
           </div>
           <!-- /local-title -->
 
@@ -182,16 +182,16 @@
 
   <!-- JavaScript -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script defer="defer" src="js/script.js"></script>
+  <script defer="defer" src="/static/js/script.js"></script>
 
   <!-- The Foundation theme JavaScript -->
-  <script src="libraries/foundation-6/js/foundation.js"></script>
-  <script src="js/foundationExtendEBI.js"></script>
+  <script src="/static/js/foundation.js"></script>
+  <script src="/static/js/foundationExtendEBI.js"></script>
   <script type="text/JavaScript">$(document).foundation();</script>
   <script type="text/JavaScript">$(document).foundationExtendEBI();</script>
-
+  <script src="dist/index.js"></script>
   <!-- Google Analytics details... -->
-  <!-- Change UA-XXXXX-X to be your site's ID -->
+  <!-- Change UA-XXXXX-X to be your util's ID -->
   <!--
   <script>
     window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];

@@ -68,9 +68,6 @@ var Run = Backbone.Model.extend({
         var analysis = rel.analysis;
         //TODO add analysis date to table
         return {
-            sample_name: "N/A",
-            sample_id: attr['sample-accession'],
-            sample_url: '/sample/'+attr['sample-accession'],
             run_id: attr.accession,
             experiment_type: data.relationships['experiment-type'].data.id,
             instrument_model: attr.instrument_model || util.NO_DATA_MSG,
