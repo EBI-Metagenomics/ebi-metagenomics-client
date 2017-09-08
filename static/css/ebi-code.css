@@ -1,5 +1,5 @@
 /* Pygments CSS code highlighting */
-/* Base styles via default.css: https://github.com/richleland/pygments-css */
+/* Base styles via pipeline.css: https://github.com/richleland/pygments-css */
 .highlight .hll { background-color: #ffffcc }
 .highlight  { background: #f8f8f8; }
 .highlight .c { color: #408080; font-style: italic } /* Comment */

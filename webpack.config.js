@@ -2,7 +2,7 @@ var path = require('path');
 
 module.exports = {
     entry: {
-        index: 'src/main.js',
+        index: 'src/modules/index.js',
         search: 'src/modules/search.js',
         submit: 'src/modules/submit.js',
         studies: 'src/modules/studies.js',
