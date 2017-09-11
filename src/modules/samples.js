@@ -63,7 +63,8 @@ var Sample = Backbone.Model.extend({
     parse: function (data) {
         const attr = data.attributes;
         return {
-            biome: attr['environment-biome'],
+            biome_icon: util.getBiomeIcon(data.relationships.biome.data.id),
+            biome_name: data.relationships.biome.data.id,
             sample_id: attr['accession'],
             sample_name: attr['sample-name'],
             sample_desc: attr['sample-desc'],
@@ -74,7 +75,7 @@ var Sample = Backbone.Model.extend({
 
 var SampleView = Backbone.View.extend({
     tagName: 'tr',
-    template: _.template($("#sampleRow").html()),
+    template: _.template($("#sample-row").html()),
     attributes: {
         class: 'study',
     },
@@ -93,7 +94,7 @@ var SamplesCollection = Backbone.Collection.extend({
 });
 
 var SamplesView = Backbone.View.extend({
-    el: "#samplesTable",
+    el: "#samples-table-body",
     initialize: function(){
         var that = this;
         this.collection.fetch({data: $.param({page: currentPage, page_size: SAMPLES_PER_PAGE}), success: function(response){

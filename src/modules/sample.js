@@ -14,7 +14,6 @@ var Sample = Backbone.Model.extend({
     parse: function (d) {
         const data = d.data;
         const attr = data.attributes;
-        console.log(d);
         return {
             study_accession: attr['study-accession'] || util.NO_DATA_MSG,
             study_link: '/study/' + attr['study-accession'],
@@ -44,10 +43,9 @@ var SampleView = Backbone.View.extend({
     initialize: function () {
         const that = this;
         this.model.fetch({
-            data: $.param({include: 'runs'}), success: function (data) {
+            data: $.param({include: 'runs,metadata'}), success: function (data) {
                 that.render();
                 util.initTableTools();
-                // var runs = new RunCollection({pid: sample_id});
                 var runsView = new RunsView({collection: data.attributes.runs});
             }
         });
@@ -69,6 +67,7 @@ var Run = Backbone.Model.extend({
         //TODO add analysis date to table
         return {
             run_id: attr.accession,
+            run_url: '/run/'+attr.accession,
             experiment_type: data.relationships['experiment-type'].data.id,
             instrument_model: attr.instrument_model || util.NO_DATA_MSG,
             pipeline_version: pipelines.data.map(function (x) {
@@ -78,6 +77,7 @@ var Run = Backbone.Model.extend({
         }
     }
 });
+
 var RunView = Backbone.View.extend({
     tagName: 'tr',
     template: _.template($("#runRow").html()),
@@ -114,11 +114,11 @@ var RunsView = Backbone.View.extend({
     },
     render: function () {
         this.collection.forEach(function (run) {
-            var run = new Run(run);
-            var runView = new RunView({model: run.attributes});
-            console.log('appending');
-            console.log($(this.$el));
-            $(this.$el).append(runView.render());
+            if (run.type==='runs') {
+                var run = new Run(run);
+                var runView = new RunView({model: run.attributes});
+                $(this.$el).append(runView.render());
+            }
         }, this);
         $(this.el).parent().tablesorter();
         return this;

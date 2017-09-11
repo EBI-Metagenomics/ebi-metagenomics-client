@@ -8,7 +8,6 @@
     table-layout: fixed;
 }
 
-
 td, th {
     word-wrap: break-word;
 }
@@ -19,12 +18,13 @@ th.biome {
 }
 
 /*th.name {*/
-    /*width: 50%*/
+/*width: 50%*/
 /*}*/
 
 th.samples {
     width: 7%
 }
+
 th.updated {
     width: 10%
 }
@@ -61,7 +61,7 @@ select.table-tools {
     height: auto;
     width: 5em;
     margin-left: 0.25em;
-    margin-right:0.5em;
+    margin-right: 0.5em;
 
 }
 
@@ -69,26 +69,26 @@ select.table-tools {
     height: 30em;
 }
 
-.centered{
+.centered {
     text-align: center;
 }
 
-#map{
+#map {
     height: 100%;
     width: 100%;
 }
 
-.expand-button{
+.expand-button {
     cursor: pointer;
 }
-.expand-button:after{
+
+.expand-button:after {
     content: '+';
 }
 
 .expand-button.min:after {
     content: '-';
 }
-
 
 /* Index page */
 .jumbo-header {
@@ -110,7 +110,7 @@ select.table-tools {
 }
 
 .jumbo-header .button {
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
     margin-top: 18px;
     display: inline-block;
 }
@@ -122,7 +122,7 @@ select.table-tools {
     text-decoration: none;
     background: url(../images/backgrounds/bgd_button_login_off.gif) repeat-x 50%;
     border-radius: 30px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0,0.3);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
     padding: 12px 22px;
     cursor: pointer;
     border: 1px #1f54bc solid;
@@ -139,61 +139,258 @@ select.table-tools {
     cursor: pointer;
 }
 
+.biome-disp {
+    height: 9em;
+    margin-bottom: 1em;
+}
+
+.studies-list {
+    max-height: 25em;
+    overflow: scroll;
+}
+
+.inline-select {
+    width: auto;
+
+}
+
+.page-item.current {
+    padding: inherit;
+}
+.page-item.current > a {
+    color:white;
+}
+
 
 /************* BIOME ICONS ************/
 /*biome gal*/
-.biome_icon {display: inline-block; background-image: url(../images/ico_biome_sprite.png);}
+.biome_icon {
+    display: inline-block;
+    background-image: url(../images/ico_biome_sprite.png);
+}
+
 /*biome large icon*/
-.biome_icon.icon_lg {width:150px; height:150px;}
-.biome_icon.icon_lg.soil_b {background-position: -20px -998px;}
-.biome_icon.icon_lg.marine_b {background-position: -222px -998px;}
-.biome_icon.icon_lg.forest_b {background-position: -420px -998px;}
-.biome_icon.icon_lg.freshwater_b {background-position: -20px -1196px;}
-.biome_icon.icon_lg.grassland_b {background-position: -222px -1196px;}
-.biome_icon.icon_lg.human_gut_b {background-position: -420px -1196px;}
-.biome_icon.icon_lg.human_host_b {background-position: -620px -1196px;}
-.biome_icon.icon_lg.non_human_host_b {background-position: -622px -996px;}
-.biome_icon.icon_lg.engineered_b {background-position: -20px -1396px;}
-.biome_icon.icon_lg.air_b {background-position: -222px -1396px;}
-.biome_icon.icon_lg.wastewater_b {background-position: -420px -1396px;}
-.biome_icon.icon_lg.default_b {background-position: -622px -1396px;}
-.biome_icon.icon_lg.vulcano_b {background-position: -20px -1596px;}
-.biome_icon.icon_lg.hotspring_b {background-position: -222px -1596px;}
-.biome_icon.icon_lg.cave_b {background-position: -420px -1596px;}
-.biome_icon.icon_lg.plant_host_b {background-position: -622px -1596px;}
+.biome_icon.icon_lg {
+    width: 150px;
+    height: 150px;
+}
+
+.biome_icon.icon_lg.soil_b {
+    background-position: -20px -998px;
+}
+
+.biome_icon.icon_lg.marine_b {
+    background-position: -222px -998px;
+}
+
+.biome_icon.icon_lg.forest_b {
+    background-position: -420px -998px;
+}
+
+.biome_icon.icon_lg.freshwater_b {
+    background-position: -20px -1196px;
+}
+
+.biome_icon.icon_lg.grassland_b {
+    background-position: -222px -1196px;
+}
+
+.biome_icon.icon_lg.human_gut_b {
+    background-position: -420px -1196px;
+}
+
+.biome_icon.icon_lg.human_host_b {
+    background-position: -620px -1196px;
+}
+
+.biome_icon.icon_lg.non_human_host_b {
+    background-position: -622px -996px;
+}
+
+.biome_icon.icon_lg.engineered_b {
+    background-position: -20px -1396px;
+}
+
+.biome_icon.icon_lg.air_b {
+    background-position: -222px -1396px;
+}
+
+.biome_icon.icon_lg.wastewater_b {
+    background-position: -420px -1396px;
+}
+
+.biome_icon.icon_lg.default_b {
+    background-position: -622px -1396px;
+}
+
+.biome_icon.icon_lg.vulcano_b {
+    background-position: -20px -1596px;
+}
+
+.biome_icon.icon_lg.hotspring_b {
+    background-position: -222px -1596px;
+}
+
+.biome_icon.icon_lg.cave_b {
+    background-position: -420px -1596px;
+}
+
+.biome_icon.icon_lg.plant_host_b {
+    background-position: -622px -1596px;
+}
+
 /*biome medium icon*/
-.biome_icon.icon_sm {width:75px; height:75px;}
-.biome_icon.icon_sm.soil_b {background-position: -41px -396px;}    /*---- 4  root:Environmental:Terrestrial:Soil */
-.biome_icon.icon_sm.marine_b {background-position: -142px -396px;}  /* ---- 3    root:Environmental:Marine: */
-.biome_icon.icon_sm.forest_b {background-position: -241px -396px;}  /* ---- 5    root:Environmental:Terrestrial:Soil and contains forest */
-.biome_icon.icon_sm.human_gut_b {background-position: -241px -496px;}  /* ---- root:Host-associated:Human:Digestive system */
-.biome_icon.icon_sm.human_host_b {background-position: -341px -496px;}   /*---- root:Host-associated:Human 3 */
-.biome_icon.icon_sm.non_human_host_b {background-position: -342px -396px;}  /*---- root:Host-associated: NOT HUMAN 3 */
-.biome_icon.icon_sm.freshwater_b {background-position: -40px -497px;}   /* ---- 4 root:Environmental:Aquatic:Freshwater */
-.biome_icon.icon_sm.grassland_b {background-position: -142px -496px;}   /*---- 5 root:Environmental:Terrestrial:Soil and contains grassland */
-.biome_icon.icon_sm.engineered_b {background-position: -41px -596px;}   /*---- 2 root:Engineered */
-.biome_icon.icon_sm.air_b {background-position: -142px -596px;}          /*----  3 root:Environmental:Air */
-.biome_icon.icon_sm.wastewater_b {background-position: -241px -596px;}  /*----  3 root:Engineered:Wastewater */
-.biome_icon.icon_sm.default_b {background-position: -342px -596px;}     /*backup */
-.biome_icon.icon_sm.vulcano_b {background-position:-41px -695px;}   /*---- Volcanic 4 root:Environmental:Terrestrial:Volcanic or root:Environmental:Aquatic:Marine:Volcanic */
-.biome_icon.icon_sm.hotspring_b {background-position:-142px -695px;}  /*----root:Environmental:Aquatic:Thermal springs 4 */
-.biome_icon.icon_sm.cave_b {background-position:-241px -695px;}    /* */
-.biome_icon.icon_sm.plant_host_b {background-position:-342px -696px;}   /* ---- 3   root:Host-associated:Plants */
+.biome_icon.icon_sm {
+    width: 75px;
+    height: 75px;
+}
+
+.biome_icon.icon_sm.soil_b {
+    background-position: -41px -396px;
+}
+
+/*---- 4  root:Environmental:Terrestrial:Soil */
+.biome_icon.icon_sm.marine_b {
+    background-position: -142px -396px;
+}
+
+/* ---- 3    root:Environmental:Marine: */
+.biome_icon.icon_sm.forest_b {
+    background-position: -241px -396px;
+}
+
+/* ---- 5    root:Environmental:Terrestrial:Soil and contains forest */
+.biome_icon.icon_sm.human_gut_b {
+    background-position: -241px -496px;
+}
+
+/* ---- root:Host-associated:Human:Digestive system */
+.biome_icon.icon_sm.human_host_b {
+    background-position: -341px -496px;
+}
+
+/*---- root:Host-associated:Human 3 */
+.biome_icon.icon_sm.non_human_host_b {
+    background-position: -342px -396px;
+}
+
+/*---- root:Host-associated: NOT HUMAN 3 */
+.biome_icon.icon_sm.freshwater_b {
+    background-position: -40px -497px;
+}
+
+/* ---- 4 root:Environmental:Aquatic:Freshwater */
+.biome_icon.icon_sm.grassland_b {
+    background-position: -142px -496px;
+}
+
+/*---- 5 root:Environmental:Terrestrial:Soil and contains grassland */
+.biome_icon.icon_sm.engineered_b {
+    background-position: -41px -596px;
+}
+
+/*---- 2 root:Engineered */
+.biome_icon.icon_sm.air_b {
+    background-position: -142px -596px;
+}
+
+/*----  3 root:Environmental:Air */
+.biome_icon.icon_sm.wastewater_b {
+    background-position: -241px -596px;
+}
+
+/*----  3 root:Engineered:Wastewater */
+.biome_icon.icon_sm.default_b {
+    background-position: -342px -596px;
+}
+
+/*backup */
+.biome_icon.icon_sm.vulcano_b {
+    background-position: -41px -695px;
+}
+
+/*---- Volcanic 4 root:Environmental:Terrestrial:Volcanic or root:Environmental:Aquatic:Marine:Volcanic */
+.biome_icon.icon_sm.hotspring_b {
+    background-position: -142px -695px;
+}
+
+/*----root:Environmental:Aquatic:Thermal springs 4 */
+.biome_icon.icon_sm.cave_b {
+    background-position: -241px -695px;
+}
+
+/* */
+.biome_icon.icon_sm.plant_host_b {
+    background-position: -342px -696px;
+}
+
+/* ---- 3   root:Host-associated:Plants */
 /*biome small icon*/
-.biome_icon.icon_xs {width: 30px; height: 30px;}
-.biome_icon.icon_xs.soil_b {background-position:-42px -38px;}
-.biome_icon.icon_xs.marine_b {background-position: -82px -38px;}
-.biome_icon.icon_xs.forest_b {background-position: -122px -38px;}
-.biome_icon.icon_xs.freshwater_b {background-position: -42px -78px;}
-.biome_icon.icon_xs.grassland_b {background-position: -82px -78px;}
-.biome_icon.icon_xs.human_gut_b {background-position: -122px -78px;}
-.biome_icon.icon_xs.human_host_b {background-position: -162px -78px;}
-.biome_icon.icon_xs.non_human_host_b {background-position: -162px -38px;}
-.biome_icon.icon_xs.engineered_b {background-position: -42px -118px;}
-.biome_icon.icon_xs.air_b {background-position: -82px -118px;}
-.biome_icon.icon_xs.wastewater_b {background-position: -122px -118px;}
-.biome_icon.icon_xs.default_b {background-position: -162px -118px;}
-.biome_icon.icon_xs.vulcano_b {background-position: -42px -157px;}
-.biome_icon.icon_xs.hotspring_b {background-position: -82px -157px;}
-.biome_icon.icon_xs.cave_b {background-position: -122px -157px;}
-.biome_icon.icon_xs.plant_host_b {background-position: -162px -157px;}
+.biome_icon.icon_xs {
+    width: 30px;
+    height: 30px;
+}
+
+.biome_icon.icon_xs.soil_b {
+    background-position: -42px -38px;
+}
+
+.biome_icon.icon_xs.marine_b {
+    background-position: -82px -38px;
+}
+
+.biome_icon.icon_xs.forest_b {
+    background-position: -122px -38px;
+}
+
+.biome_icon.icon_xs.freshwater_b {
+    background-position: -42px -78px;
+}
+
+.biome_icon.icon_xs.grassland_b {
+    background-position: -82px -78px;
+}
+
+.biome_icon.icon_xs.human_gut_b {
+    background-position: -122px -78px;
+}
+
+.biome_icon.icon_xs.human_host_b {
+    background-position: -162px -78px;
+}
+
+.biome_icon.icon_xs.non_human_host_b {
+    background-position: -162px -38px;
+}
+
+.biome_icon.icon_xs.engineered_b {
+    background-position: -42px -118px;
+}
+
+.biome_icon.icon_xs.air_b {
+    background-position: -82px -118px;
+}
+
+.biome_icon.icon_xs.wastewater_b {
+    background-position: -122px -118px;
+}
+
+.biome_icon.icon_xs.default_b {
+    background-position: -162px -118px;
+}
+
+.biome_icon.icon_xs.vulcano_b {
+    background-position: -42px -157px;
+}
+
+.biome_icon.icon_xs.hotspring_b {
+    background-position: -82px -157px;
+}
+
+.biome_icon.icon_xs.cave_b {
+    background-position: -122px -157px;
+}
+
+.biome_icon.icon_xs.plant_host_b {
+    background-position: -162px -157px;
+}

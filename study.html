@@ -85,7 +85,6 @@
 
             <h2>Project <%= study_id %> (<%= study_accession %>) </h2>
 
-            <div class="center">
                 <ul class="tabs" data-tabs id="study-tabs">
                     <li class="tabs-title active"><a href="#overview" aria-selected="true">Overview</a></li>
                     <li class="tabs-title"><a href="#analysis">Analysis summary</a></li>
@@ -118,7 +117,6 @@
 
                                 </div>
                             </div>
-
                         </div>
 
                         <hr>
@@ -144,7 +142,6 @@
                     </div>
 
                     <div class="tabs-panel" id="analysis">
-
                         <p>In this section you can download the different results matrix files summarising the project.
                             Each
                             downloadable file contains an aggregation of the analysis results from the individual
@@ -155,7 +152,6 @@
                         <h4>Pipeline version...</h4>
                     </div>
                 </div>
-            </div>
         </script>
     </div>
     <script id="runRow" type="text/template">
@@ -199,6 +195,7 @@
 <script type="text/JavaScript">$(document).foundation();</script>
 <script type="text/JavaScript">$(document).foundationExtendEBI();</script>
 <script src="/dist/study.js"></script>
+<script src="/static/libraries/oms.min.js"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->

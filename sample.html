@@ -82,36 +82,66 @@
 <div id="content">
     <div id="main-content-area" class="row" role="main">
         <script id="sampleTmpl" type="text/template">
-            <div class="center column small-12 medium-12 large-12">
+            <div class="column small-12 medium-12 large-12">
                 <h3>Sample overview (<%= sample_accession %>)</h3>
                 <h2>Sample <%= sample_name %> </h2>
                 <hr>
                 <section>
                     <h3>Description</h3>
                     <h4>Classification: <%= lineage %></h4>
-                    <h4>Project name: <a href="<%= study_link %>"><%= study_accession %></a></h4>
+                    <h4>Study name: <a href="<%= study_link %>"><%= study_accession %></a></h4>
                 </section>
                 <hr>
                 <section>
                     <h3>Sample metadata</h3>
                     <table>
                         <tbody>
-                            <tr><td>Investigation type</td><td><%= investigation_type %></td></tr>
-                            <tr><td>Geographic location (depth)</td><td><%= geo_location %></td></tr>
-                            <tr><td>Collection date</td><td><%= collection_date %></td></tr>
-                            <tr><td>Environment (biome)</td><td><%= env_biome %></td></tr>
-                            <tr><td>Environment (feature)</td><td><%= env_feature %></td></tr>
-                            <tr><td>Environment (material)</td><td><%= env_material %></td></tr>
-                            <tr><td>Environmental package</td><td><%= env_package %></td></tr>
-                            <tr><td>Elevation</td><td><%= elevation %></td></tr>
-                            <tr><td>NCBI sample classification</td><td><%= ncbi_class %></td></tr>
-                            <tr><td>Instrument model</td><td><%= inst_model %></td></tr>
+                        <tr>
+                            <td>Investigation type</td>
+                            <td><%= investigation_type %></td>
+                        </tr>
+                        <tr>
+                            <td>Geographic location (depth)</td>
+                            <td><%= geo_location %></td>
+                        </tr>
+                        <tr>
+                            <td>Collection date</td>
+                            <td><%= collection_date %></td>
+                        </tr>
+                        <tr>
+                            <td>Environment (biome)</td>
+                            <td><%= env_biome %></td>
+                        </tr>
+                        <tr>
+                            <td>Environment (feature)</td>
+                            <td><%= env_feature %></td>
+                        </tr>
+                        <tr>
+                            <td>Environment (material)</td>
+                            <td><%= env_material %></td>
+                        </tr>
+                        <tr>
+                            <td>Environmental package</td>
+                            <td><%= env_package %></td>
+                        </tr>
+                        <tr>
+                            <td>Elevation</td>
+                            <td><%= elevation %></td>
+                        </tr>
+                        <tr>
+                            <td>NCBI sample classification</td>
+                            <td><%= ncbi_class %></td>
+                        </tr>
+                        <tr>
+                            <td>Instrument model</td>
+                            <td><%= inst_model %></td>
+                        </tr>
                         </tbody>
                     </table>
                 </section>
                 <hr>
                 <section>
-                    <H1>Associated runs</H1>
+                    <h3>Associated runs</h3>
                     <table id='runsTable' class="tablesorter">
                         <thead>
                         <tr>
@@ -131,7 +161,7 @@
         </script>
     </div>
     <script id="runRow" type="text/template">
-        <td><%= run_id %></td>
+        <td><a href="<%= run_url %>"><%= run_id %></a></td>
         <td><%= experiment_type %></td>
         <td><%= instrument_model %></td>
         <td><%= pipeline_version %></td>
@@ -184,37 +214,37 @@
 
 <!--Google Map marker API-->
 <!--<script id="marker-template" type="text/x-handlebars-template">-->
-    <!--<div class="row">-->
-        <!--<div class="columns small-1 medium-1 large-1"></div>-->
-        <!--<div class="columns small-11 medium-11 large-11">-->
-            <!--<h2>Sample - {{this.id}}</h2>-->
-            <!--&lt;!&ndash;<p>{{this.name}}</p>&ndash;&gt;-->
+<!--<div class="row">-->
+<!--<div class="columns small-1 medium-1 large-1"></div>-->
+<!--<div class="columns small-11 medium-11 large-11">-->
+<!--<h2>Sample - {{this.id}}</h2>-->
+<!--&lt;!&ndash;<p>{{this.name}}</p>&ndash;&gt;-->
 
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div class="row columns">-->
-        <!--<p>{{this.desc}}</p>-->
-    <!--</div>-->
-    <!--<div class="row">-->
-        <!--<div class="columns">-->
-            <!--<ul>-->
-                <!--<li>-->
-                    <!--Classification: {{this.classification}}-->
-                <!--</li>-->
-                <!--<li>-->
-                    <!--Collection date: {{this.collection_date}}-->
-                <!--</li>-->
-                <!--<li>-->
-                    <!--Lat/Long: {{this.lat}}, {{this.lng}}-->
-                <!--</li>-->
-                <!--<li>-->
-                    <!--Sampling depth: TODO-->
-                <!--</li>-->
-            <!--</ul>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div class="row centered">-->
-        <!--<a href="{{this.sample_url}}" class="button centered">View more</a>-->
-    <!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="row columns">-->
+<!--<p>{{this.desc}}</p>-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--<div class="columns">-->
+<!--<ul>-->
+<!--<li>-->
+<!--Classification: {{this.classification}}-->
+<!--</li>-->
+<!--<li>-->
+<!--Collection date: {{this.collection_date}}-->
+<!--</li>-->
+<!--<li>-->
+<!--Lat/Long: {{this.lat}}, {{this.lng}}-->
+<!--</li>-->
+<!--<li>-->
+<!--Sampling depth: TODO-->
+<!--</li>-->
+<!--</ul>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="row centered">-->
+<!--<a href="{{this.sample_url}}" class="button centered">View more</a>-->
+<!--</div>-->
 <!--</script>-->
 </html>

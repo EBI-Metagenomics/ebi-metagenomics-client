@@ -126,13 +126,11 @@
             <div class="row">
                 <div class="small-12 columns">
                     <h2>Search results</h2>
-                    <p class="small">Showing <span id="visibleStudies">10</span> results from a total of <span
-                            id="totalStudies"></span> (page <span id="currentPage"></span> of <span
-                            id="totalPages"></span>).</p>
+                    <div id="pageSize"></div>
                 </div>
 
                 <div class="small-12 medium-12 medium-push-12">
-                    <table class="studiesTable tablesorter">
+                    <table class="studies-table tablesorter">
                         <thead>
                         <tr>
                             <th class="biome">Biome</th>
@@ -141,30 +139,22 @@
                             <th class="updated">Last updated</th>
                         </tr>
                         </thead>
-                        <tbody id='studiesTable'>
+                        <tbody id='studies-table-body'>
                         </tbody>
-                        <script id="studyRow" type="text/template">
-                            <td><%= biome %></td>
+                        <script id="study-row" type="text/template">
+                            <td>
+                                <span class="biome_icon icon_xs <%= biome_icon %>"></span>
+                            </td>
                             <td><a href="<%= study_link %>"> <%= study_name %></a></td>
                             <!--TODO point samples_count link correctly-->
                             <td><a href="<%= study_link %>"><%= samples_count %></a></td>
                             <td><%= last_update %></td>
                         </script>
                     </table>
-                    <ul class="pagination" role="navigation" aria-label="Pagination">
-                        <li class="pagination-previous disabled">Previous <span class="show-for-sr">page</span></li>
-                        <li class="current"><span class="show-for-sr">You're on page</span> 1</li>
-                        <li><a href="#" aria-label="Page 2">2</a></li>
-                        <li><a href="#" aria-label="Page 3">3</a></li>
-                        <li><a href="#" aria-label="Page 4">4</a></li>
-                        <li class="ellipsis" aria-hidden="true"></li>
-                        <li><a href="#" aria-label="Page 12">12</a></li>
-                        <li><a href="#" aria-label="Page 13">13</a></li>
-                        <li class="pagination-next"><a href="#" aria-label="Next page">Next <span class="show-for-sr">page</span></a>
-                        </li>
-                    </ul>
+
                 </div> <!-- /medium-7 -->
             </div>
+            <div id="pagination"></div>
         </div>
     </section>
 </div>
@@ -183,6 +173,7 @@
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="static/libraries/jquery.twbsPagination.js"></script>
 <script defer="defer" src="/static/js/script.js"></script>
 
 <!-- The Foundation theme JavaScript -->
