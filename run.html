@@ -81,6 +81,27 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
+        <script id="runTmpl" type="text/template">
+            <div class="center column small-12 medium-12 large-12">
+                <h2>Run(<%= run_accession %>)</h2>
+                <hr>
+                <section>
+                    <h3>Description</h3>
+                    <h4>Sample name: <%= sample_name %> (<%= sample_accession %>)</h4>
+                    <h4>Project name: <a href="<%= study_link %>"><%= study_name %> (<%= study_accession %>)</a></h4>
+                </section>
+                <hr>
+                <% _.each(analyses, function(analysis){ %>
+                <section>
+                    <h3>Data analysis</h3>
+                    <h4>Experiment type: <%= analysis.experiment_type %></h4>
+                    <h4>Pipeline_version: <%= analysis.pipeline_version %></h4>
+                    <h4>Analysis date: <%= analysis.date %></h4>
+                </section>
+                <% }); %>
+            </div>
+        </script>
+
     </div>
 </div>
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->

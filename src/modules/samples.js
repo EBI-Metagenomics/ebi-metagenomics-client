@@ -1,37 +1,14 @@
 import Backbone from 'backbone';
 import _ from 'underscore';
 import * as util from '../main';
+import * as pagi from '../components/pagination';
+import * as api from '../components/api';
 
 const SAMPLES_PER_PAGE = 10;
 var currentPage = 1;
 var totalPages = -1;
 
 util.setCurrentTab('#samples-nav');
-
-
-var Biome = Backbone.Model.extend({
-    url : function() {
-        var base = util.API_URL+'biomes';
-        if (this.isNew()) return base;
-        return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id;
-    },
-    parse: function(data){
-        // Work-around when requesting root biome
-        if (data.data){
-            data = data.data;
-        }
-        var lineage = data.attributes.lineage.match(/[\w|\s]*(root.*)/g)[0].trim();
-        return {name: lineage};
-    }
-});
-
-var BiomeCollection = Backbone.Collection.extend({
-    model: Biome,
-    url: util.API_URL+"biomes/root/children",
-    parse: function(response){
-        return response.data
-    }
-});
 
 
 var BiomeCollectionView = Backbone.View.extend({
@@ -41,7 +18,7 @@ var BiomeCollectionView = Backbone.View.extend({
         var that = this;
         this.collection.fetch({data: $.param({depth_lte:3}), success: function(){
             // Fetch and pre-pend root node to list
-            var root = new Biome({id:'root'});
+            var root = new api.Biome({id:'root'});
             root.fetch({success: function(){
                 that.collection.unshift(root);
                 that.render();
@@ -59,19 +36,6 @@ var BiomeCollectionView = Backbone.View.extend({
 });
 
 
-var Sample = Backbone.Model.extend({
-    parse: function (data) {
-        const attr = data.attributes;
-        return {
-            biome_icon: util.getBiomeIcon(data.relationships.biome.data.id),
-            biome_name: data.relationships.biome.data.id,
-            sample_id: attr['accession'],
-            sample_name: attr['sample-name'],
-            sample_desc: attr['sample-desc'],
-            sample_link: "/sample/"+attr['accession']
-        }
-    }
-});
 
 var SampleView = Backbone.View.extend({
     tagName: 'tr',
@@ -85,13 +49,6 @@ var SampleView = Backbone.View.extend({
     }
 });
 
-var SamplesCollection = Backbone.Collection.extend({
-    url: util.API_URL + "samples",
-    model: Sample,
-    parse: function(response){
-        return response.data;
-    }
-});
 
 var SamplesView = Backbone.View.extend({
     el: "#samples-table-body",
@@ -135,10 +92,42 @@ var SamplesView = Backbone.View.extend({
     }
 });
 
-var biomes = new BiomeCollection();
+$("#pagination").append(util.pagination);
+$("#pageSize").append(util.pagesize);
+
+pagi.updatePageSize(changePageSize);
+
+
+function changePageSize(pageSize) {
+    var formData = getFormData();
+    samplesView.update(pagi.currentPage, pageSize, formData[0], formData[1]);
+}
+
+function changePage(page) {
+    var formData = getFormData();
+    samplesView.update(page, pagi.getPageSize(), formData[0], formData[1]);
+}
+
+function updatePagination(p) {
+    var curPage = p.page;
+    var totPages = p.pages;
+    var countSamples = p.count;
+    $("#currentPage").text(curPage);
+    $("#maxPage").text(totPages);
+    pagi.maxPage = totPages;
+    $("#totalResults").text(countSamples);
+    $(pagi.pagination).twbsPagination($.extend({}, pagi.opts, {
+        startPage: 1,
+        totalPages: totPages
+    }));
+}
+
+
+
+var biomes = new api.BiomeCollection();
 var biomesSelectView = new BiomeCollectionView({collection: biomes});
 
-var samples = new SamplesCollection();
+var samples = new api.SamplesCollection();
 var samplesView = new SamplesView({collection: samples});
 
 // TODO remove this

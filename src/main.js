@@ -10,8 +10,6 @@ var tableTools = require("./partials/table_tools.handlebars");
 export var pagination = require("./partials/pagination.handlebars");
 export var pagesize = require("./partials/pagesize.handlebars");
 
-
-
 export function formatLineage(lineage){
     return lineage.split(":").slice(1).join(" > ");
 }
@@ -20,7 +18,6 @@ export function formatDate(date_str){
     var d = new Date(date_str);
     return d.getDate()+"-"+MONTHS[d.getMonth()]+"-"+d.getFullYear()
 }
-
 
 export function setCurrentTab(id){
     document.addEventListener("DOMContentLoaded", function(){
@@ -34,7 +31,6 @@ export function initTableTools(){
     $("#tableTools").append(tableTools);
 }
 
-// Handlebars.registerPartial('header', 'partials/header.handlebars');
 
 export function getURLParameter() {
     var regex = /\/([A-z0-9]+)$/g;
@@ -93,12 +89,6 @@ export function getBiomeIcon(lineage){
         return 'default_b';
     }());
 }
-
-
-window.D2 = biomeIconMapD2;
-window.D3 = biomeIconMapD3;
-window.D4 = biomeIconMapD4;
-
 
 
 window.stripLineage = stripLineage;

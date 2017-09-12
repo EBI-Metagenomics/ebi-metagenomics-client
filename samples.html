@@ -124,9 +124,7 @@
             <div class="row">
                 <div class="small-12 columns">
                     <h2>Search results</h2>
-                    <p class="small">Showing <div id="pageSize"></div><span id="visibleSamples">10</span> results from a total of <span
-                            id="totalStudies"></span> (page <span id="currentPage"></span> of <span
-                            id="totalPages"></span>).</p>
+                    <div id="pageSize"></div>
                 </div>
 
                 <div class="small-12 medium-12 medium-push-12">
@@ -146,7 +144,7 @@
                                 <span class="biome_icon icon_xs <%= biome_icon %> <%= biome_name %>"></span>
                             </td>
                             <td>
-                                <div><%= sample_id %></div>
+                                <div><%= sample_accession %></div>
                             </td>
                             <td>
                                 <div><a href=<%=sample_link %>><%= sample_name %></a></div>
@@ -156,9 +154,9 @@
                             </td>
                         </script>
                     </table>
-                    <div id="pagination"></div>
                 </div> <!-- /medium-7 -->
             </div>
+            <div id="pagination"></div>
         </div>
     </section>
 </div>
@@ -177,7 +175,7 @@
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="static/libraries"></script>
+<script src="static/libraries/jquery.twbsPagination.js"></script>
 <script defer="defer" src="/static/js/script.js"></script>
 
 <!-- The Foundation theme JavaScript -->

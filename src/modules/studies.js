@@ -1,9 +1,8 @@
 import Backbone from 'backbone';
 import _ from 'underscore';
 import * as util from '../main';
-import * as pagi from '../components/pagination';
-
-window.pag = pagi.$pagination;
+import * as api from '../components/api';
+import Pagination from '../components/pagination';
 util.setCurrentTab('#studies-nav');
 
 // Allow function to be called from inside underscore template
@@ -18,8 +17,8 @@ function getFormData() {
 $("#studyFilter").on('submit', function (e) {
     e.preventDefault();
     var formData = getFormData();
-    pagi.currentPage = 1;
-    studiesView.update(pagi.currentPage, pagi.getPageSize(), formData[0], formData[1]);
+    console.log(formData);
+    studiesView.update(1, Pagination.getPageSize(), formData[0], formData[1]);
 });
 
 var Biome = Backbone.Model.extend({
@@ -76,22 +75,7 @@ var BiomeCollectionView = Backbone.View.extend({
     }
 });
 
-// Model for an individual study
-var Study = Backbone.Model.extend({
-    parse: function (data) {
-        const attr = data.attributes;
-        const biomes = data.relationships.biomes.data.map(function (x) {
-            return x.id;
-        });
-        return {
-            biome_icon: biomes.map(util.getBiomeIcon),
-            study_link: "/study/" + data.id,
-            study_name: attr['study-name'],
-            samples_count: attr['samples-count'],
-            last_update: util.formatDate(attr['last-update'])
-        };
-    }
-});
+
 
 var StudyView = Backbone.View.extend({
     tagName: 'tr',
@@ -105,15 +89,6 @@ var StudyView = Backbone.View.extend({
     }
 });
 
-// Model for a collection of studies,
-var StudiesCollection = Backbone.Collection.extend({
-    url: util.API_URL + "studies",
-    model: Study,
-    parse: function (response) {
-        updatePagination(response.meta.pagination);
-        return response.data;
-    }
-});
 
 
 var StudiesView = Backbone.View.extend({
@@ -121,9 +96,9 @@ var StudiesView = Backbone.View.extend({
     initialize: function () {
         var that = this;
         this.collection.fetch({
-            data: $.param({page: pagi.currentPage, page_size: pagi.getPageSize()}), success: function (response) {
+            data: $.param({page: Pagination.currentPage, page_size: Pagination.getPageSize()}), success: function (response) {
                 that.render();
-                pagi.initPagination(changePage);
+                Pagination.initPagination(changePage);
             }
         });
         return this;
@@ -170,49 +145,29 @@ StudyView.bind("remove", function () {
 
 // PAGINATION
 
-
-
 $("#pagination").append(util.pagination);
 $("#pageSize").append(util.pagesize);
 
-pagi.attachCallBack(changePageSize);
+Pagination.updatePageSize(updatePageSize);
 
 
-function changePageSize(pageSize) {
+function updatePageSize(pageSize) {
     var formData = getFormData();
-    studiesView.update(pagi.currentPage, pageSize, formData[0], formData[1]);
+    studiesView.update(Pagination.currentPage, pageSize, formData[0], formData[1]);
 }
 
 function changePage(page) {
     var formData = getFormData();
-    studiesView.update(page, pagi.getPageSize(), formData[0], formData[1]);
+    studiesView.update(page, Pagination.getPageSize(), formData[0], formData[1]);
 }
 
-function updatePagination(p) {
-    var curPage = p.page;
-    var totPages = p.pages;
-    var countStudies = p.count;
-    $("#currentPage").text(curPage);
-    $("#maxPage").text(totPages);
-    pagi.maxPage = totPages;
-    $("#totalStudies").text(countStudies);
-    if (countStudies < pagi.getPageSize()) {
-        $("#visibleStudies").text(countStudies);
-    } else {
-        $("#visibleStudies").text(pagi.getPageSize());
-    }
-    $(pagi.pagination).twbsPagination($.extend({}, pagi.opts, {
-        startPage: 1,
-        totalPages: totPages
-    }));
-}
 
 
 
 var biomes = new BiomeCollection();
 var biomesSelectView = new BiomeCollectionView({collection: biomes});
 
-var studies = new StudiesCollection();
+var studies = new api.StudiesCollection();
 var studiesView = new StudiesView({collection: studies});
 
 
@@ -237,7 +192,7 @@ function orderResultsTable(event) {
         ordering = '-'.concat(ordering);
     }
 
-    studiesView.update(1, pagi.getPageSize(), undefined, undefined, ordering);
+    studiesView.update(1, Pagination.getPageSize(), undefined, undefined, ordering);
 }
 
 

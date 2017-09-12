@@ -4,6 +4,7 @@ import * as util from '../main';
 import tablesorter from 'tablesorter';
 import livefilter from 'livefilter';
 import Handlebars from 'handlebars'
+import * as api from '../components/api';
 
 util.setCurrentTab('#studies-nav');
 
@@ -14,35 +15,35 @@ const STUDIES_PER_PAGE = 500;
 var currentPage = 1;
 var totalPages = -1;
 
-var Study = Backbone.Model.extend({
-    url: function () {
-        return util.API_URL + 'studies/' + this.id;
-    },
-    parse: function (data) {
-        const attr = data.data.attributes;
-        const biomes = data.data.relationships.biomes.data;
-        const biome_list = biomes.map(function (x) {
-            return util.formatLineage(x.id)
-        });
-
-        return {
-            study_id: attr['project-id'],
-            study_accession: attr['accession'],
-            last_updated: util.formatDate(attr['last-update']),
-            contact_details: {
-                institute: attr['centre-name'] || util.NO_DATA_MSG,
-                name: attr['author-name'] || util.NO_DATA_MSG,
-                email: attr['author-email'] || util.NO_DATA_MSG,
-            },
-            abstract: attr['study-abstract'],
-            classifications: biome_list,
-            samples: data.included
-        }
-    }
-});
+// var Study = Backbone.Model.extend({
+//     url: function () {
+//         return util.API_URL + 'studies/' + this.id;
+//     },
+//     parse: function (data) {
+//         const attr = data.data.attributes;
+//         const biomes = data.data.relationships.biomes.data;
+//         const biome_list = biomes.map(function (x) {
+//             return util.formatLineage(x.id)
+//         });
+//
+//         return {
+//             study_id: attr['project-id'],
+//             study_accession: attr['accession'],
+//             last_updated: util.formatDate(attr['last-update']),
+//             contact_details: {
+//                 institute: attr['centre-name'] || util.NO_DATA_MSG,
+//                 name: attr['author-name'] || util.NO_DATA_MSG,
+//                 email: attr['author-email'] || util.NO_DATA_MSG,
+//             },
+//             abstract: attr['study-abstract'],
+//             classifications: biome_list,
+//             samples: data.included
+//         }
+//     }
+// });
 
 var StudyView = Backbone.View.extend({
-    model: Study,
+    model: api.Study,
     template: _.template($("#studyTmpl").html()),
     el: '#main-content-area',
     initialize: function () {
@@ -52,8 +53,8 @@ var StudyView = Backbone.View.extend({
                 that.render();
                 attachTabHandlers();
                 util.initTableTools();
-                const runs = new RunCollection({pid: study_id});
-                const runsView = new RunsView({collection: runs});
+                const collection = new api.RunCollection({pid: study_id});
+                const runsView = new RunsView({collection: collection});
                 initMap(data.attributes.samples);
             }
         });
@@ -64,27 +65,27 @@ var StudyView = Backbone.View.extend({
     }
 });
 
-var Run = Backbone.Model.extend({
-    parse: function (data) {
-        var attr = data.attributes;
-        var rel = data.relationships;
-        var pipelines = rel.pipelines;
-        var analysis = rel.analysis;
-
-        return {
-            sample_name: "N/A",
-            sample_id: attr['sample-accession'],
-            sample_url: '/sample/' + attr['sample-accession'],
-            run_id: attr.accession,
-            experiment_type: data.relationships['experiment-type'].data.id,
-            instrument_model: attr.instrument_model || util.NO_DATA_MSG,
-            pipeline_version: pipelines.data.map(function (x) {
-                return x.id;
-            }).join(", "),
-            analysis_results: 'TAXONOMIC / FUNCTION / DOWNLOAD'
-        }
-    }
-});
+// var Run = Backbone.Model.extend({
+//     parse: function (data) {
+//         var attr = data.attributes;
+//         var rel = data.relationships;
+//         var pipelines = rel.pipelines;
+//         var analysis = rel.analysis;
+//
+//         return {
+//             sample_name: "N/A",
+//             sample_id: attr['sample-accession'],
+//             sample_url: '/sample/' + attr['sample-accession'],
+//             run_id: attr.accession,
+//             experiment_type: data.relationships['experiment-type'].data.id,
+//             instrument_model: attr.instrument_model || util.NO_DATA_MSG,
+//             pipeline_version: pipelines.data.map(function (x) {
+//                 return x.id;
+//             }).join(", "),
+//             analysis_results: 'TAXONOMIC / FUNCTION / DOWNLOAD'
+//         }
+//     }
+// });
 
 var RunView = Backbone.View.extend({
     tagName: 'tr',
@@ -98,23 +99,12 @@ var RunView = Backbone.View.extend({
     }
 });
 
-var RunCollection = Backbone.Collection.extend({
-    url: util.API_URL + 'runs',
-    model: Run,
-    initialize: function (data) {
-        this.pid = data.pid;
-    },
-    parse: function (response) {
-        return response.data
-    }
-});
-
 var RunsView = Backbone.View.extend({
     el: '#runsTableBody',
     initialize: function () {
         var that = this;
         this.collection.fetch({
-            data: $.param({study_accession: this.collection.pid}), success: function () {
+            data: $.param({include: 'sample', study_accession: study_id}), success: function (data) {
                 that.render();
                 createLiveFilter();
             }
@@ -130,7 +120,6 @@ var RunsView = Backbone.View.extend({
         return this;
     }
 });
-
 
 function attachTabHandlers() {
     $("li.tabs-title > a").on('click', function () {
@@ -227,7 +216,7 @@ function placeMarker(map, oms, template, sample) {
         content: contentString
     });
 
-    google.maps.event.addListener(marker, 'spider_click', function(e){
+    google.maps.event.addListener(marker, 'spider_click', function (e) {
         infowindow.open(map, marker);
     });
     oms.addMarker(marker);
@@ -236,5 +225,5 @@ function placeMarker(map, oms, template, sample) {
     return marker;
 }
 
-var study = new Study({id: study_id});
+var study = new api.Study({id: study_id});
 var studyView = new StudyView({model: study});

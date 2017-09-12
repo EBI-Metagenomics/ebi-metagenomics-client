@@ -86,8 +86,139 @@
                                                   oldtitle="Close this section" title="">✖</span>
             </div>
             <p class="lead">Submit, analyse, visualize and compare your data.</p>
-            <div class="button"><a href="/metagenomics/submission"> Submit data</a></div>
+            <div class="button"><a href="/submit"> Submit data</a></div>
         </section>
+        <h2>Browse projects</h2>
+        <div class="row">
+            <div id="top10biomes" class="columns small-12 medium-5 large-5">
+                <h3>By selected biomes</h3>
+                <script id="biomeTmpl" type="text/template">
+                    <a href="<%= biome_url %>">
+                        <div>
+                            <img class="spacer" alt="icon"
+                                 src="static/images/backgrounds/bgd_transparent_1x1.png">
+                            <span class="biome_icon icon_sm <%= biome_icon %> <%= biome_name%>"></span>
+                        </div>
+                        <div class="biome-text">
+                            <%= biome_name %> (<%= num_biome_projects %>)
+                        </div>
+                    </a>
+                </script>
+            </div>
+            <div class="columns small-12 medium-7 large-7">
+                <h3>Latest projects</h3>
+                <div id="studies" class="studies-list">
+                    <script id="studyTmpl" type="text/template">
+
+                        <p>
+                            <% _.each(biome_icons, function(biome_icon){ %>
+                            <span class="biome_icon icon_xs <%= biome_icon %>"></span>
+                            <% }); %>
+                            <%= study_name %>
+                        </p>
+                        <%= study_abstract %>
+                        <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%= samples_count %>
+                            samples</a> - <a href=""> Compare</a>
+                        <hr>
+                    </script>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="columns small-12 medium-6 large-6">
+                <div class="home-blog-box">
+                    <div class="row">
+                        <div class="columns small-12 medium-6">
+                            <h2>Spotlight</h2>
+                        </div>
+                        <div class="columns small-12 medium-6">
+                            <h4>A major milestone</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="columns">
+                            <img class='home-blog-img'
+                                 src="//ProteinsWebTeam.github.io/ebi-metagenomics-blog/assets/media/images/posts/ico_celebration_EMGblog_01.png"
+                                 alt="ico_celebration_EMGblog_01.png">
+                            <h3>One Thousand Publicly Available Projects</h3>
+                            <p>This week, EBI Metagenomics hit a major milestone as we passed over one thousand publicly
+                                available projects on the site. This corresponds to over 60,000 samples, comprising more
+                                than 80,000 individual runs, and represents the analysis of over 300 billion nucleotide
+                                sequences from a wide range of environmental biomes.
+                            </p>
+                            <a href="//ProteinsWebTeam.github.io/ebi-metagenomics-blog/2017/04/03/A-major-milestone/"
+                               class="all left" data-hasqtip="36" oldtitle="Read more on the blog" title="">Read
+                                more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="columns small-12 medium-6 large-6">
+                <div class="home-blog-box">
+                    <div class="row">
+                        <div class="columns small-12 medium-6">
+                            <h2>Tools</h2>
+                        </div>
+                        <div class="columns small-12 medium-6">
+                            <h4>Bulk download</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="columns">
+                            <img class='home-blog-img'
+                                 src="//proteinswebteam.github.io/ebi-metagenomics-blog/assets/media/images/posts/ico_code_EMG_grey.png"
+                                 alt="ico_celebration_EMGblog_01.png">
+                            <p>Interested in bulk download of our data? Did you know that we provide a Python script for
+                                the
+                                bulk download of publicly available project data? The tool iterates over all samples and
+                                runs in a project and builds an appropriate root URL, which it uses to download
+                                individual
+                                run result files. Different file types can be specified, allowing you to download, for
+                                example, all reads encoding 16S rRNAs, all taxonomic assignments, or all predicted
+                                protein
+                                coding sequences, for a particular project. To find out more, see the <a
+                                        href="https://github.com/ProteinsWebTeam/ebi-metagenomics/wiki/Downloading-results-programmatically"
+                                        class="all" title="Bulk download script">Bulk download script</a>.
+                            </p>
+                            <a href="//ProteinsWebTeam.github.io/ebi-metagenomics-blog/2017/01/12/Bulk-download/"
+                               class="all left" data-hasqtip="38" oldtitle="Read more on the blog" title="">Read
+                                more</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns small-12 medium-12 large-12">
+                <h2>How to cite</h2>
+                <div class="home-blog-box">
+                    <img alt="Cover of the Nucleic Acids Research journal"
+                         src="static/images/nucleic_acids_research_D1_cover.gif"
+                         style="width: auto; float: left; margin-right: 18px;">
+                    <p>To cite EBI Metagenomics, please refer to the following publication:</p>
+                    <p>
+                        Alex Mitchell, Francois Bucchini, Guy Cochrane, Hubert Denise, Petra ten Hoopen, Matthew Fraser,
+                        Sebastien Pesseat, Simon Potter, Maxim Scheremetjew, Peter Sterk and Robert D. Finn (2015).
+                        <br>
+                        <strong>
+                            EBI metagenomics in 2016 - an expanding and evolving resource for the analysis and archiving
+                            of metagenomic data.
+                        </strong>
+                        Nucleic Acids Research (2015) doi:
+                        <a href="http://nar.oxfordjournals.org/content/44/D1/D595.full" class="ext" data-hasqtip="39"
+                           oldtitle="EBI metagenomics in 2016 - an expanding and evolving resource for the analysis and archiving of metagenomic data"
+                           title="" aria-describedby="qtip-39">
+                            10.1093/nar/gkv1195
+                        </a>
+                    </p>
+                    <a href="about#h_site" class="all" data-hasqtip="40" oldtitle="About page - How to cite" title="" aria-describedby="qtip-40">
+                        More citations
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
