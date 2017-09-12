@@ -37,6 +37,11 @@ export function getURLParameter() {
     return regex.exec(window.location)[1];
 }
 
+export function getURLFilterParams(){
+    return new URL(window.location).searchParams;
+
+}
+
 export function stripLineage(lineage){
     var depth;
     if (lineage.includes(":")){
@@ -90,6 +95,13 @@ export function getBiomeIcon(lineage){
     }());
 }
 
+export function getFormData() {
+    var formData = $("#filter").serializeArray();
+    //Returns [stringQuery, biomeSelectorValue]
+    return formData.map(function (elem) {
+        return elem.value
+    });
+}
 
 window.stripLineage = stripLineage;
 

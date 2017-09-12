@@ -1,14 +1,21 @@
 import Backbone from 'backbone';
 import _ from 'underscore';
 import * as util from '../main';
-import * as pagi from '../components/pagination';
 import * as api from '../components/api';
+import Pagination from '../components/pagination';
 
 const SAMPLES_PER_PAGE = 10;
 var currentPage = 1;
 var totalPages = -1;
 
 util.setCurrentTab('#samples-nav');
+
+$("#filter").on('submit', function (e) {
+    e.preventDefault();
+    var formData = util.getFormData();
+    console.log(formData);
+    samplesView.update(1, Pagination.getPageSize(), formData[0], formData[1]);
+});
 
 
 var BiomeCollectionView = Backbone.View.extend({
@@ -41,7 +48,7 @@ var SampleView = Backbone.View.extend({
     tagName: 'tr',
     template: _.template($("#sample-row").html()),
     attributes: {
-        class: 'study',
+        class: 'sample',
     },
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
@@ -54,14 +61,15 @@ var SamplesView = Backbone.View.extend({
     el: "#samples-table-body",
     initialize: function(){
         var that = this;
-        this.collection.fetch({data: $.param({page: currentPage, page_size: SAMPLES_PER_PAGE}), success: function(response){
+        this.collection.fetch({data: $.param({page: Pagination.currentPage, page_size: Pagination.getPageSize()}), success: function(response){
             that.render();
+            Pagination.initPagination(changePage);
         }});
         return this;
     },
     update: function(page, page_size, searchQuery, biome){
         var that = this;
-        $(".sample").remove();
+
         var params = {};
         if (page!==undefined){
             params.page=page
@@ -76,10 +84,9 @@ var SamplesView = Backbone.View.extend({
             params.search = searchQuery
         }
 
-        this.collection.fetch({data: $.param(params), remove:true, success: function(){
+        this.collection.fetch({page: Pagination.currentPage, page_size: Pagination.getPageSize(), data: $.param(params), remove:true, success: function(){
+            $(".sample").remove();
             that.render();
-            // updatePaginationButtons();
-            $(this.el).parent().tablesorter();
         }});
         return this;
     },
@@ -95,32 +102,19 @@ var SamplesView = Backbone.View.extend({
 $("#pagination").append(util.pagination);
 $("#pageSize").append(util.pagesize);
 
-pagi.updatePageSize(changePageSize);
+Pagination.updatePageSize(changePageSize);
 
 
 function changePageSize(pageSize) {
-    var formData = getFormData();
-    samplesView.update(pagi.currentPage, pageSize, formData[0], formData[1]);
+    var formData = util.getFormData();
+    samplesView.update(Pagination.currentPage, pageSize, formData[0], formData[1]);
 }
 
 function changePage(page) {
-    var formData = getFormData();
-    samplesView.update(page, pagi.getPageSize(), formData[0], formData[1]);
+    var formData = util.getFormData();
+    samplesView.update(page, Pagination.getPageSize(), formData[0], formData[1]);
 }
 
-function updatePagination(p) {
-    var curPage = p.page;
-    var totPages = p.pages;
-    var countSamples = p.count;
-    $("#currentPage").text(curPage);
-    $("#maxPage").text(totPages);
-    pagi.maxPage = totPages;
-    $("#totalResults").text(countSamples);
-    $(pagi.pagination).twbsPagination($.extend({}, pagi.opts, {
-        startPage: 1,
-        totalPages: totPages
-    }));
-}
 
 
 

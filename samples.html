@@ -82,7 +82,7 @@
         <div class="columns small-12 medium-12 large-12">
             <h2>Samples list</h2>
             <div class="filter_form">
-                <form id="samplesFilter">
+                <form id="filter">
                     <fieldset>
                         <div class="result_row">
                             <label for="text" class="study_search">Text:</label>
@@ -141,7 +141,7 @@
                         </tbody>
                         <script id="sample-row" type="text/template">
                             <td>
-                                <span class="biome_icon icon_xs <%= biome_icon %> <%= biome_name %>"></span>
+                                <span class="biome_icon icon_xs <%= biome_icon %> <%= biome_name %>" title="<%= biome_name %>"></span>
                             </td>
                             <td>
                                 <div><%= sample_accession %></div>

@@ -5,19 +5,14 @@ import * as api from '../components/api';
 import Pagination from '../components/pagination';
 util.setCurrentTab('#studies-nav');
 
-// Allow function to be called from inside underscore template
-function getFormData() {
-    var formData = $("#studyFilter").serializeArray();
-    //Returns [stringQuery, biomeSelectorValue]
-    return formData.map(function (elem) {
-        return elem.value
-    });
-}
+const pageFilters = util.getURLFilterParams();
+
+
+
 
 $("#studyFilter").on('submit', function (e) {
     e.preventDefault();
-    var formData = getFormData();
-    console.log(formData);
+    var formData = util.getFormData();
     studiesView.update(1, Pagination.getPageSize(), formData[0], formData[1]);
 });
 
@@ -152,12 +147,12 @@ Pagination.updatePageSize(updatePageSize);
 
 
 function updatePageSize(pageSize) {
-    var formData = getFormData();
+    var formData = util.getFormData();
     studiesView.update(Pagination.currentPage, pageSize, formData[0], formData[1]);
 }
 
 function changePage(page) {
-    var formData = getFormData();
+    var formData = util.getFormData();
     studiesView.update(page, Pagination.getPageSize(), formData[0], formData[1]);
 }
 

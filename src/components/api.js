@@ -155,6 +155,7 @@ export const SamplesCollection = Backbone.Collection.extend({
     url: util.API_URL + "samples",
     model: Sample,
     parse: function (response) {
+        Pagination.updatePagination(response.meta.pagination);
         return response.data;
     }
 });
