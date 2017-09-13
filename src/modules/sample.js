@@ -4,7 +4,6 @@ import * as util from '../main';
 import * as api from '../components/api';
 util.setCurrentTab('#samples-nav');
 
-
 var sample_id = util.getURLParameter();
 
 var SampleView = Backbone.View.extend({

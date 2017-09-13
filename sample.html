@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <!--TODO add metadata-->
-    <title>[page-title] &lt; [service-name] &lt; EMBL-EBI</title>
+    <title>Sample</title>
     <meta name="description" content="EMBL-EBI"/><!-- Describe what this page is about -->
     <meta name="keywords" content="bioinformatics, europe, institute"/>
     <!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
@@ -96,46 +96,12 @@
                     <h3>Sample metadata</h3>
                     <table>
                         <tbody>
+                        <% _.each(metadatas, function(m){ %>
                         <tr>
-                            <td>Investigation type</td>
-                            <td><%= investigation_type %></td>
+                            <td><%= m.name %></td>
+                            <td><%= m.value %></td>
                         </tr>
-                        <tr>
-                            <td>Geographic location (depth)</td>
-                            <td><%= geo_location %></td>
-                        </tr>
-                        <tr>
-                            <td>Collection date</td>
-                            <td><%= collection_date %></td>
-                        </tr>
-                        <tr>
-                            <td>Environment (biome)</td>
-                            <td><%= env_biome %></td>
-                        </tr>
-                        <tr>
-                            <td>Environment (feature)</td>
-                            <td><%= env_feature %></td>
-                        </tr>
-                        <tr>
-                            <td>Environment (material)</td>
-                            <td><%= env_material %></td>
-                        </tr>
-                        <tr>
-                            <td>Environmental package</td>
-                            <td><%= env_package %></td>
-                        </tr>
-                        <tr>
-                            <td>Elevation</td>
-                            <td><%= elevation %></td>
-                        </tr>
-                        <tr>
-                            <td>NCBI sample classification</td>
-                            <td><%= ncbi_class %></td>
-                        </tr>
-                        <tr>
-                            <td>Instrument model</td>
-                            <td><%= inst_model %></td>
-                        </tr>
+                        <% }); %>
                         </tbody>
                     </table>
                 </section>

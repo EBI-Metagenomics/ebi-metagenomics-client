@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <!--TODO add metadata-->
-    <title>[page-title] &lt; [service-name] &lt; EMBL-EBI</title>
+    <title>Studies</title>
     <meta name="description" content="EMBL-EBI"/><!-- Describe what this page is about -->
     <meta name="keywords" content="bioinformatics, europe, institute"/>
     <!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
@@ -115,7 +115,9 @@
                         </tbody>
                         <script id="study-row" type="text/template">
                             <td>
-                                <span class="biome_icon icon_xs <%= biome_icon %>" title="<%= biome_name %>"></span>
+                                <% _.each(biomes, function(biome){ %>
+                                <span class="biome_icon icon_xs <%= biome.icon %>" title="<%= biome.name %>"></span>
+                                <% }); %>
                             </td>
                             <td><a href="<%= study_link %>"> <%= study_name %></a></td>
                             <!--TODO point samples_count link correctly-->

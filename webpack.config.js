@@ -12,7 +12,8 @@ module.exports = {
         run: 'src/modules/run.js',
         compare: 'src/modules/compare.js',
         about: 'src/modules/about.js',
-        contact: 'src/modules/contact.js'
+        contact: 'src/modules/contact.js',
+        biomes: 'src/modules/biomes.js',
     },
     output: {
         filename: '[name].js',

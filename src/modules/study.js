@@ -8,7 +8,6 @@ import * as api from '../components/api';
 
 util.setCurrentTab('#studies-nav');
 
-
 var study_id = util.getURLParameter();
 
 const STUDIES_PER_PAGE = 500;
@@ -133,7 +132,7 @@ function attachTabHandlers() {
         $("[data-tab-content=" + tabGroup + "] > .tabs-panel").removeClass('active');
         $(tabId).addClass('active');
     });
-};
+}
 
 function createLiveFilter() {
     $('#runsTableBody').liveFilter(
@@ -195,7 +194,7 @@ function createMarkerLabel(template, sample) {
         collection_date: attr['collection-date'],
         lat: attr['latitude'],
         lng: attr['longitude'],
-        sample_url: 'sample/' + attr.accession + '/'
+        sample_url: '/sample/' + attr.accession
     };
     return template(data);
 }

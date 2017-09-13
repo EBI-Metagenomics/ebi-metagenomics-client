@@ -2,16 +2,24 @@ var Pagination = module.exports = {
     pageSize: '#pagesize',
     pagination: '#pagination',
     currentPage: 1,
+
     opts: {
-        startPage: 1,
-        totalPages: 2,
+        startPage: null,
+        totalPages: null,
         activeClass: 'current',
         disabledClass: 'disabled',
         hideOnlyOnePage: true,
         visiblePages: 5,
     },
 
-    initPagination: function(callback) {
+    initPagination: function(initPage, initPageSize, totalPages, totalResults, callback) {
+        console.log('Init pagination');
+        this.opts.startPage = initPage;
+        this.opts.totalPages = parseInt(totalPages);
+
+        this.setPageDisplay(initPage, totalPages, totalResults);
+        $("#pagesize").val(initPageSize);
+
         $(pagination).twbsPagination(this.opts).on('page', function(evt, page){
             callback(page);
         });
@@ -33,16 +41,21 @@ var Pagination = module.exports = {
     updatePagination: function(p) {
         var totPages = p.pages;
 
-        this.currentPage = p.page;
-        this.maxPage = totPages;
-        this.totalResults = p.count;
-        $("#currentPage").text(this.currentPage);
-        $("#maxPage").text(this.maxPage);
-        $("#totalResults").text(this.totalResults);
-
-        $(this.pagination).twbsPagination($.extend({}, this.opts, {
+        this.setPageDisplay(p.page, p.pages, p.count);
+        this.opts.startPage = p.page;
+        this.opts.totalPages = p.pages;
+        $(this.pagination).twbsPagination('destroy');
+        $(this.pagination).twbsPagination(this.opts, {
             startPage: 1,
-            totalPages: totPages
-        }));
+            totalPages: p.pages,
+        });
+    },
+
+    setPageDisplay: function(currentPage, maxPage, totalResults){
+        $("#currentPage").text(currentPage);
+        $("#maxPage").text(maxPage);
+        $("#totalResults").text(totalResults);
     }
 };
+
+window.Pagination = Pagination;

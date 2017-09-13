@@ -12,14 +12,12 @@ export const Study = Backbone.Model.extend({
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
         const biomes = data.relationships.biomes.data.map(function (x) {
-            return x.id;
+            const name = x.id;
+            return {name: util.formatLineage(name), icon: util.getBiomeIcon(name)};
         });
-        const biome_list = biomes.map(function (x) {
-            return util.formatLineage(x)
-        });
+
         return {
-            biome_name: biomes,
-            biome_icon: biomes.map(util.getBiomeIcon),
+            biomes: biomes,
             study_link: "/study/" + data.id,
             study_name: attr['study-name'],
             samples_count: attr['samples-count'],
@@ -32,7 +30,6 @@ export const Study = Backbone.Model.extend({
                 email: attr['author-email'] || util.NO_DATA_MSG,
             },
             abstract: attr['study-abstract'],
-            classifications: biome_list,
             samples: d.included
         }
     }
@@ -104,8 +101,17 @@ export const Biome = Backbone.Model.extend({
         if (data.data) {
             data = data.data;
         }
-        var lineage = data.attributes.lineage.match(/[\w|\s]*(root.*)/g)[0].trim();
-        return {name: lineage};
+        const attr = data.attributes;
+        const lineage = attr['lineage'];
+        return {
+            name: util.lineage2Biome(lineage),
+            icon: util.getBiomeIcon(lineage),
+            lineage: lineage,
+            lineage_projects : attr['studies-count'],
+            // lineage_projects_no_children: attr['studies-count'],
+            biome_studies_link: '/studies?biome='+lineage,
+            // biome_studies_link_no_children: 'TODO2',
+        };
     }
 });
 
@@ -123,6 +129,18 @@ export const Sample = Backbone.Model.extend({
         return util.API_URL + 'samples/' + this.id;
     },
     parse: function (d) {
+        console.log(d);
+        const metadatas = d.included.filter(function (el){
+            return el.type==='sample-anns';
+        }).map(function(el){
+            const attr = el.attributes;
+            const name = attr['var-name'];
+            return {
+                name: name[0].toUpperCase() + name.slice(1),
+                value: attr['var-value'] + ' ' + attr['unit']
+            }
+        });
+
         // Adaption to handle 'includes' on API calls which would wrap the response
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
@@ -135,18 +153,8 @@ export const Sample = Backbone.Model.extend({
             study_accession: attr['study-accession'] || util.NO_DATA_MSG,
             study_link: '/study/' + attr['study-accession'],
             sample_accession: attr.accession || util.NO_DATA_MSG,
-            investigation_type: 'N/A' || util.NO_DATA_MSG,
-            geo_location: attr['geo-loc-name'] || util.NO_DATA_MSG,
-            collection_date: attr['collection-date]'] || util.NO_DATA_MSG,
-            env_biome: attr['environment-biome'] || util.NO_DATA_MSG,
-            env_feature: attr['environment-feature'] || util.NO_DATA_MSG,
-            env_material: attr['environment-material'] || util.NO_DATA_MSG,
-            env_package: util.NO_DATA_MSG,
-            elevation: util.NO_DATA_MSG,
-            ncbi_class: util.NO_DATA_MSG,
-            depth: util.NO_DATA_MSG,
-            inst_model: util.NO_DATA_MSG,
             lineage: util.formatLineage(data.relationships.biome.data.id || util.NO_DATA_MSG),
+            metadatas: metadatas,
             runs: d.included,
         }
     }
@@ -156,7 +164,6 @@ export const SamplesCollection = Backbone.Collection.extend({
     url: util.API_URL + "samples",
     model: Sample,
     parse: function (response) {
-        Pagination.updatePagination(response.meta.pagination);
         return response.data;
     }
 });

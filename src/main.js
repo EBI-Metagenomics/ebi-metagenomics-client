@@ -1,8 +1,10 @@
 import Backbone from 'backbone';
 
+
 export const API_URL = "https://wwwdev.ebi.ac.uk/metagenomics/api/v0.2/";
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 export const NO_DATA_MSG = "N/A";
+export const DEFAULT_PAGE_SIZE = 25;
 
 const header = require("./partials/header.handlebars");
 const footer = require("./partials/footer.handlebars");
@@ -13,6 +15,10 @@ export const resultsFilter = require("./partials/results_filter.handlebars");
 
 export function formatLineage(lineage){
     return lineage.split(":").slice(1).join(" > ");
+}
+
+export function lineage2Biome(lineage){
+    return lineage.split(":").slice(-1)[0];
 }
 
 export function formatDate(date_str){
@@ -33,10 +39,15 @@ export function initTableTools(){
 }
 
 export function initResultsFilter(callback){
+    const formId = "#filter";
     $("#filterForm").append(resultsFilter);
-    $("#filter").on('submit', callback);
-}
+    $(formId).on('submit', callback);
+    $(".clearFilter").on('click', function(e){
+        $(formId)[0].reset();
+        callback(e);
+    });
 
+}
 
 export function getURLParameter() {
     var regex = /\/([A-z0-9]+)$/g;
@@ -96,18 +107,33 @@ export function getBiomeIcon(lineage){
     }
 
     return biomeIconMapD4[lineageD4] || biomeIconMapD3[lineageD3] || biomeIconMapD2[lineageD2] || (function(lineage){
-        console.warn('Could not match lineage '+lineage+' with any biome icons');
+        console.warn('Could not match lineage "'+lineageD5+'" with any biome icons');
         return 'default_b';
     }());
 }
 
-export function getFormData() {
+export function getFilterFormData() {
     var formData = $("#filter").serializeArray();
-    //Returns [stringQuery, biomeSelectorValue]
-    return formData.map(function (elem) {
-        return elem.value
-    });
+    return formData;
 }
+
+export function setURLParams(search, lineage, pageSize, currentPage, refresh){
+    let params = {};
+    if (search!==null)  params.search = search;
+    if (lineage!==null) params.lineage = lineage;
+    params.pagesize = pageSize;
+    params.page = currentPage;
+    if (refresh) {
+        window.location.search = $.param(params);
+    } else {
+        history.pushState(null, '', window.location.pathname+'?'+$.param(params));
+    //    Set URL without refreshing
+    }
+}
+
+
+
 
 window.stripLineage = stripLineage;
 
+window.util = getBiomeIcon;
