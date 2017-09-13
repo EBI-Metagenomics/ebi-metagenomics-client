@@ -97,10 +97,10 @@
                         <div>
                             <img class="spacer" alt="icon"
                                  src="static/images/backgrounds/bgd_transparent_1x1.png">
-                            <span class="biome_icon icon_sm <%= biome_icon %> <%= biome_name%>"></span>
+                            <span class="biome_icon icon_sm <%= icon %> <%= name%>"></span>
                         </div>
                         <div class="biome-text">
-                            <%= biome_name %> (<%= num_biome_projects %>)
+                            <%= name %> (<%= lineage_projects %>)
                         </div>
                     </a>
                 </script>
@@ -111,12 +111,12 @@
                     <script id="studyTmpl" type="text/template">
 
                         <p>
-                            <% _.each(biome_icons, function(biome_icon){ %>
-                            <span class="biome_icon icon_xs <%= biome_icon %>"></span>
+                            <% _.each(biomes, function(biome){ %>
+                            <span class="biome_icon icon_xs <%= biome.icon %>"></span>
                             <% }); %>
                             <%= study_name %>
                         </p>
-                        <%= study_abstract %>
+                        <%= abstract %>
                         <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%= samples_count %>
                             samples</a> - <a href=""> Compare</a>
                         <hr>

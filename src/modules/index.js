@@ -1,6 +1,7 @@
 import Backbone from 'backbone';
 import _ from 'underscore';
 import * as util from '../main';
+import * as api from '../components/api';
 
 util.setCurrentTab('#overview-nav');
 
@@ -8,19 +9,6 @@ $('#this_close').on('click', function () {
     $('.jumbo-header').slideUp();
 });
 
-// medium-offset-1
-var Biome = Backbone.Model.extend({
-    parse: function (data) {
-        const attr = data.attributes;
-        const lineage = attr.lineage;
-        return {
-            biome_url: '/biomes/'+ lineage,
-            biome_icon: util.getBiomeIcon(lineage),
-            biome_name: attr['biome-name'],
-            num_biome_projects: attr['study-count']
-        };
-    }
-});
 
 var BiomeView = Backbone.View.extend({
     tagName: 'div',
@@ -29,7 +17,7 @@ var BiomeView = Backbone.View.extend({
     attributes: {
         class: 'small-6 medium-6 large-2 columns biome-disp'
     },
-    render: function(s){
+    render: function(){
         this.$el.html(this.template(this.model.toJSON()));
         return this.$el;
     }
@@ -37,7 +25,7 @@ var BiomeView = Backbone.View.extend({
 
 var Biomes = Backbone.Collection.extend({
     url: util.API_URL + 'biomes/top10',
-    model: Biome,
+    model: api.Biome,
     parse: function(response){
         return response.data;
     }
@@ -69,25 +57,6 @@ var BiomesView = Backbone.View.extend({
     }
 });
 
-var Study = Backbone.Model.extend({
-    parse: function(data){
-        const attr = data.attributes;
-        const biomes = data.relationships.biomes.data.map(function(x){return x.id;});
-        if (attr['study-name']===attr['study-abstract']){
-            attr['study-abstract'] = '';
-        }
-        return {
-            biome_icons: biomes.map(util.getBiomeIcon),
-            study_link: "/study/"+data.id,
-            samples_link: "/study/"+data.id,
-            study_name: attr['study-name'],
-            study_abstract: attr['study-abstract'],
-            samples_count: attr['samples-count'],
-            last_update: util.formatDate(attr['last-update'])
-        };
-    }
-});
-
 var StudyView = Backbone.View.extend({
     tagName: 'div',
     template: _.template($("#studyTmpl").html()),
@@ -103,7 +72,7 @@ var StudyView = Backbone.View.extend({
 // Model for a collection of studies,
 var StudiesCollection = Backbone.Collection.extend({
     url: util.API_URL+"studies/recent",
-    model: Study,
+    model: api.Study,
     parse: function(response){
         return response.data;
     }

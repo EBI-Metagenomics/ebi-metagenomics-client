@@ -15,10 +15,10 @@ export const Study = Backbone.Model.extend({
             const name = x.id;
             return {name: util.formatLineage(name), icon: util.getBiomeIcon(name)};
         });
-
         return {
             biomes: biomes,
             study_link: "/study/" + data.id,
+            samples_link: "/study/"+data.id,
             study_name: attr['study-name'],
             samples_count: attr['samples-count'],
             study_id: attr['project-id'],
@@ -106,6 +106,7 @@ export const Biome = Backbone.Model.extend({
         return {
             name: util.lineage2Biome(lineage),
             icon: util.getBiomeIcon(lineage),
+            biome_url: '/biomes/'+ lineage,
             lineage: lineage,
             lineage_projects : attr['studies-count'],
             // lineage_projects_no_children: attr['studies-count'],
