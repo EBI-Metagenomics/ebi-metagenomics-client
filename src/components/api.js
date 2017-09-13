@@ -117,6 +117,7 @@ export const BiomeCollection = Backbone.Collection.extend({
     }
 });
 
+
 export const Sample = Backbone.Model.extend({
     url: function () {
         return util.API_URL + 'samples/' + this.id;

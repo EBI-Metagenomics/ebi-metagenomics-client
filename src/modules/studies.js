@@ -7,38 +7,14 @@ util.setCurrentTab('#studies-nav');
 
 const pageFilters = util.getURLFilterParams();
 
-
-
-
-$("#studyFilter").on('submit', function (e) {
+util.initResultsFilter(function (e) {
     e.preventDefault();
     var formData = util.getFormData();
     studiesView.update(1, Pagination.getPageSize(), formData[0], formData[1]);
 });
 
-var Biome = Backbone.Model.extend({
-    url: function () {
-        var base = util.API_URL + 'biomes';
-        if (this.isNew()) return base;
-        return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id;
-    },
-    parse: function (data) {
-        // Work-around when requesting root biome
-        if (data.data) {
-            data = data.data;
-        }
-        var lineage = data.attributes.lineage.match(/[\w|\s]*(root.*)/g)[0].trim();
-        return {name: lineage};
-    }
-});
 
-var BiomeCollection = Backbone.Collection.extend({
-    model: Biome,
-    url: util.API_URL + "biomes/root/children",
-    parse: function (response) {
-        return response.data
-    }
-});
+
 
 
 var BiomeCollectionView = Backbone.View.extend({
@@ -49,7 +25,7 @@ var BiomeCollectionView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param({depth_lte: 3}), success: function () {
                 // Fetch and pre-pend root node to list
-                var root = new Biome({id: 'root'});
+                var root = new api.Biome({id: 'root'});
                 root.fetch({
                     success: function () {
                         that.collection.unshift(root);
@@ -159,7 +135,7 @@ function changePage(page) {
 
 
 
-var biomes = new BiomeCollection();
+var biomes = new api.BiomeCollection();
 var biomesSelectView = new BiomeCollectionView({collection: biomes});
 
 var studies = new api.StudiesCollection();

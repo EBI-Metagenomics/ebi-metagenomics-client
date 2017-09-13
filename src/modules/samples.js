@@ -10,12 +10,15 @@ var totalPages = -1;
 
 util.setCurrentTab('#samples-nav');
 
-$("#filter").on('submit', function (e) {
+
+util.initResultsFilter(function (e) {
     e.preventDefault();
     var formData = util.getFormData();
     console.log(formData);
     samplesView.update(1, Pagination.getPageSize(), formData[0], formData[1]);
 });
+
+// $("#filter").on('submit', );
 
 
 var BiomeCollectionView = Backbone.View.extend({

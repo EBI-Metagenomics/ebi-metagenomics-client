@@ -1,0 +1,29 @@
+<div class="filter_form">
+    <form id="filter">
+        <fieldset>
+            <div class="result_row">
+                <label for="text" class="study_search">Text:</label>
+                <span><input id="searchTerm" name="searchTerm" type="text" value=""></span>
+            </div>
+            <div class="result_row">
+                <label for="biome" class="study_search">Biomes:</label>
+                <span id="biomeSelect">
+                       <script id="biomeSelectorTmpl" type="text/template">
+                            <select name="biome">
+                                <% _.each(biomes, function(biome) { %>
+                                    <option value="<%= biome %>"><%= stripLineage(biome) %></option>
+                                <% }); %>
+                            </select>
+                        </script>
+                </span>
+            </div>
+            <div class="result_row">
+                <div class="filter_button">
+                    <input type="submit" name="search" value="Search" class="main_button">
+                    | <a
+                        href="/metagenomics/projects/doSearch?search=Search&amp;studyVisibility=ALL_PUBLISHED_PROJECTS">Clear</a>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

@@ -4,11 +4,12 @@ export const API_URL = "https://wwwdev.ebi.ac.uk/metagenomics/api/v0.2/";
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 export const NO_DATA_MSG = "N/A";
 
-var header = require("./partials/header.handlebars");
-var footer = require("./partials/footer.handlebars");
-var tableTools = require("./partials/table_tools.handlebars");
-export var pagination = require("./partials/pagination.handlebars");
-export var pagesize = require("./partials/pagesize.handlebars");
+const header = require("./partials/header.handlebars");
+const footer = require("./partials/footer.handlebars");
+const tableTools = require("./partials/table_tools.handlebars");
+export const pagination = require("./partials/pagination.handlebars");
+export const pagesize = require("./partials/pagesize.handlebars");
+export const resultsFilter = require("./partials/results_filter.handlebars");
 
 export function formatLineage(lineage){
     return lineage.split(":").slice(1).join(" > ");
@@ -29,6 +30,11 @@ export function setCurrentTab(id){
 
 export function initTableTools(){
     $("#tableTools").append(tableTools);
+}
+
+export function initResultsFilter(callback){
+    $("#filterForm").append(resultsFilter);
+    $("#filter").on('submit', callback);
 }
 
 
