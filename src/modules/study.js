@@ -1,45 +1,16 @@
 import Backbone from 'backbone';
 import _ from 'underscore';
 import * as util from '../main';
-import tablesorter from 'tablesorter';
-import livefilter from 'livefilter';
 import Handlebars from 'handlebars'
 import * as api from '../components/api';
+import Pagination from '../components/pagination';
 
 util.setCurrentTab('#studies-nav');
 
 var study_id = util.getURLParameter();
 
-const STUDIES_PER_PAGE = 500;
-var currentPage = 1;
-var totalPages = -1;
-
-// var Study = Backbone.Model.extend({
-//     url: function () {
-//         return util.API_URL + 'studies/' + this.id;
-//     },
-//     parse: function (data) {
-//         const attr = data.data.attributes;
-//         const biomes = data.data.relationships.biomes.data;
-//         const biome_list = biomes.map(function (x) {
-//             return util.formatLineage(x.id)
-//         });
-//
-//         return {
-//             study_id: attr['project-id'],
-//             study_accession: attr['accession'],
-//             last_updated: util.formatDate(attr['last-update']),
-//             contact_details: {
-//                 institute: attr['centre-name'] || util.NO_DATA_MSG,
-//                 name: attr['author-name'] || util.NO_DATA_MSG,
-//                 email: attr['author-email'] || util.NO_DATA_MSG,
-//             },
-//             abstract: attr['study-abstract'],
-//             classifications: biome_list,
-//             samples: data.included
-//         }
-//     }
-// });
+const pageFilters = util.getURLFilterParams();
+let runsView = null;
 
 var StudyView = Backbone.View.extend({
     model: api.Study,
@@ -48,13 +19,17 @@ var StudyView = Backbone.View.extend({
     initialize: function () {
         const that = this;
         this.model.fetch({
-            data: $.param({include: 'samples'}), success: function (data) {
+            data: $.param({include: 'samples'}), success: function (data, response) {
                 that.render();
                 attachTabHandlers();
                 util.initTableTools();
                 const collection = new api.RunCollection({pid: study_id});
-                const runsView = new RunsView({collection: collection});
+                runsView = new RunsView({collection: collection});
                 initMap(data.attributes.samples);
+                $("#pagination").append(util.pagination);
+                $("#pageSize").append(util.pagesize);
+                Pagination.setPageSizeChangeCallback(updatePageSize);
+
             }
         });
     },
@@ -64,33 +39,12 @@ var StudyView = Backbone.View.extend({
     }
 });
 
-// var Run = Backbone.Model.extend({
-//     parse: function (data) {
-//         var attr = data.attributes;
-//         var rel = data.relationships;
-//         var pipelines = rel.pipelines;
-//         var analysis = rel.analysis;
-//
-//         return {
-//             sample_name: "N/A",
-//             sample_id: attr['sample-accession'],
-//             sample_url: '/sample/' + attr['sample-accession'],
-//             run_id: attr.accession,
-//             experiment_type: data.relationships['experiment-type'].data.id,
-//             instrument_model: attr.instrument_model || util.NO_DATA_MSG,
-//             pipeline_version: pipelines.data.map(function (x) {
-//                 return x.id;
-//             }).join(", "),
-//             analysis_results: 'TAXONOMIC / FUNCTION / DOWNLOAD'
-//         }
-//     }
-// });
 
 var RunView = Backbone.View.extend({
     tagName: 'tr',
     template: _.template($("#runRow").html()),
     attributes: {
-        class: 'run',
+        class: 'run-row',
     },
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
@@ -102,20 +56,53 @@ var RunsView = Backbone.View.extend({
     el: '#runsTableBody',
     initialize: function () {
         var that = this;
+
+        let params = {};
+        const pagesize = pageFilters.get('pagesize') || util.DEFAULT_PAGE_SIZE;
+        if (pagesize !== null) {
+            params.page_size = pagesize;
+        }
+        params.page = pageFilters.get('page') || 1;
+
+        params.include = 'sample';
+        params.study_accession = study_id;
+
         this.collection.fetch({
-            data: $.param({include: 'sample', study_accession: study_id}), success: function (data) {
+            data: $.param(params), success: function (collection, response, options) {
+                const pag = response.meta.pagination;
+                Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
                 that.render();
                 createLiveFilter();
             }
         });
         return this;
     },
+
+    update: function (page, page_size) {
+        var that = this;
+        var params = {};
+        if (page !== undefined) {
+            params.page = page
+        }
+        if (page_size !== undefined) {
+            params.page_size = page_size
+        }
+        util.setURLParams(null, null, params.page_size, params.page, false);
+        this.collection.fetch({
+            data: $.param(params), remove: true,
+            success: function (collection, response, options) {
+                $(".run-row").remove();
+                Pagination.updatePagination(response.meta.pagination);
+                that.render();
+            }
+        });
+
+    },
     render: function () {
         this.collection.each(function (run) {
             var runView = new RunView({model: run});
             $(this.$el).append(runView.render());
         }, this);
-        $(this.el).parent().tablesorter();
         return this;
     }
 });
@@ -140,7 +127,16 @@ function createLiveFilter() {
     );
 }
 
-window.initMap = initMap;
+
+function updatePageSize(pageSize) {
+    console.log(pageSize);
+    runsView.update(Pagination.currentPage, pageSize);
+}
+
+function changePage(page) {
+    console.log(page);
+    runsView.update(page, Pagination.getPageSize());
+}
 
 function initMap(samples) {
     var map = new google.maps.Map(document.getElementById('map'), {

@@ -68,7 +68,8 @@ var StudiesView = Backbone.View.extend({
     el: '#studies-table-body',
     initialize: function () {
         var that = this;
-        const params = {};
+
+        let params = {};
         params.page = Pagination.currentPage;
         params.page_size = Pagination.getPageSize();
 
@@ -144,7 +145,7 @@ var StudiesView = Backbone.View.extend({
 $("#pagination").append(util.pagination);
 $("#pageSize").append(util.pagesize);
 
-Pagination.updatePageSize(updatePageSize);
+Pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 function updatePageSize(pageSize) {

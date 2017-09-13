@@ -130,17 +130,19 @@ export const Sample = Backbone.Model.extend({
         return util.API_URL + 'samples/' + this.id;
     },
     parse: function (d) {
-        console.log(d);
-        const metadatas = d.included.filter(function (el){
-            return el.type==='sample-anns';
-        }).map(function(el){
-            const attr = el.attributes;
-            const name = attr['var-name'];
-            return {
-                name: name[0].toUpperCase() + name.slice(1),
-                value: attr['var-value'] + ' ' + attr['unit']
-            }
-        });
+        let metadatas = [];
+        if (d.hasOwnProperty('included')){
+            metadatas = d.included.filter(function (el) {
+                return el.type === 'sample-anns';
+            }).map(function (el) {
+                const attr = el.attributes;
+                const name = attr['var-name'];
+                return {
+                    name: name[0].toUpperCase() + name.slice(1),
+                    value: attr['var-value'] + ' ' + attr['unit']
+                }
+            });
+        }
 
         // Adaption to handle 'includes' on API calls which would wrap the response
         const data = d.data !== undefined ? d.data : d;

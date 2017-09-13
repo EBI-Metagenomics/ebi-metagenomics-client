@@ -13,19 +13,19 @@ var Pagination = module.exports = {
     },
 
     initPagination: function(initPage, initPageSize, totalPages, totalResults, callback) {
-        console.log('Init pagination');
         this.opts.startPage = initPage;
         this.opts.totalPages = parseInt(totalPages);
-
+        this.callback = callback;
         this.setPageDisplay(initPage, totalPages, totalResults);
         $("#pagesize").val(initPageSize);
 
         $(pagination).twbsPagination(this.opts).on('page', function(evt, page){
+            console.log('callback');
             callback(page);
         });
     },
 
-    updatePageSize(callback) {
+    setPageSizeChangeCallback(callback) {
         let that = this;
         $(document).ready(function () {
             $(that.pageSize).change(function (e) {
@@ -39,15 +39,18 @@ var Pagination = module.exports = {
     },
 
     updatePagination: function(p) {
+        let that = this;
         var totPages = p.pages;
 
         this.setPageDisplay(p.page, p.pages, p.count);
         this.opts.startPage = p.page;
         this.opts.totalPages = p.pages;
         $(this.pagination).twbsPagination('destroy');
-        $(this.pagination).twbsPagination(this.opts, {
-            startPage: 1,
+        $(this.pagination).twbsPagination($.extend({}, this.opts, {
+            startPage: p.PAGE,
             totalPages: p.pages,
+        })).on('page', function(evt, page){
+            that.callback(page);
         });
     },
 

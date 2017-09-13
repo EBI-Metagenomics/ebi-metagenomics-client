@@ -53,7 +53,6 @@
     <!-- CSS: implied media=all -->
     <!-- CSS concatenated and minified via ant build script-->
     <link rel="stylesheet" href="/static/css/foundation.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="/static/css/ebi-global.css" type="text/css" media="all"/>
     <link rel="stylesheet" href="https://www.ebi.ac.uk/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css" type="text/css"
           media="all"/>
 
@@ -69,9 +68,10 @@
 
     <!-- you can replace this with theme-[projectname].css. See http://www.ebi.ac.uk/web/style/colour for details of how to do this -->
     <!-- also inform ES so we can host your colour palette file -->
+    <link rel="stylesheet" href="/static/css/site.css" type="text/css" media="all"/>
+
     <link rel="stylesheet" href="/static/css/theme-embl-petrol.css" type="text/css" media="all"/>
     <link rel="stylesheet" href="/static/css/ebi-global.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="/static/css/site.css" type="text/css" media="all"/>
 
 </head>
 
@@ -122,7 +122,7 @@
                         <hr>
                         <section>
                             <h3>Associated runs</h3>
-                            <div id="tableTools"></div>
+                            <div id="pageSize"></div>
                             <table id='runsTable' class="tablesorter">
                                 <thead>
                                 <tr>
@@ -138,6 +138,7 @@
                                 <tbody id="runsTableBody" class="live-filter-table">
                                 </tbody>
                             </table>
+                            <div id="pagination"></div>
                         </section>
                     </div>
 
@@ -178,9 +179,9 @@
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="/node_modules/tablesorter/dist/js/jquery.tablesorter.js"></script>
-
+<script src="/static/libraries/jquery.twbsPagination.js"></script>
 <script defer="defer" src="/static/js/script.js"></script>
+
 <script defer="defer" src="/static/libraries/jquery.liveFilter.js"></script>
 
 <script async defer

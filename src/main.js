@@ -50,7 +50,7 @@ export function initResultsFilter(callback){
 }
 
 export function getURLParameter() {
-    var regex = /\/([A-z0-9]+)$/g;
+    var regex = /\/([A-z0-9]+)(?:$|[?])/g;
     return regex.exec(window.location)[1];
 }
 

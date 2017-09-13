@@ -83,7 +83,7 @@ var BiomesView = Backbone.View.extend({
 $("#pagination").append(util.pagination);
 $("#pageSize").append(util.pagesize);
 
-Pagination.updatePageSize(updatePageSize);
+Pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 function updatePageSize(pageSize) {
