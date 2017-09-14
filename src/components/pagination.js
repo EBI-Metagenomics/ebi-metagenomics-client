@@ -18,9 +18,7 @@ var Pagination = module.exports = {
         this.callback = callback;
         this.setPageDisplay(initPage, totalPages, totalResults);
         $("#pagesize").val(initPageSize);
-
         $(pagination).twbsPagination(this.opts).on('page', function(evt, page){
-            console.log('callback');
             callback(page);
         });
     },

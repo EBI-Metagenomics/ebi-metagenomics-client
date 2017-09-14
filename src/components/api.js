@@ -82,7 +82,14 @@ export const RunCollection = Backbone.Collection.extend({
     url: util.API_URL + 'runs',
     model: Run,
     initialize: function (data) {
-        this.pid = data.pid;
+        // Project/sample ID
+        if (data.hasOwnProperty(('study_id'))) {
+            this.study_id = data.study_id;
+        }
+        // Sample ID
+        if (data.hasOwnProperty(('sample_id'))) {
+            this.sample_id = data.sample_id;
+        }
     },
 
     parse: function (response) {

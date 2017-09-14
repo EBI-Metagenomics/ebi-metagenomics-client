@@ -202,7 +202,6 @@ window.studiesView = studiesView;
 // 		$('#tmp').text(JSON.stringify(response.data));
 // 	},
 // 	error: function(collection, response, options){
-// 		console.log(e);
 // 	}
 // });
 

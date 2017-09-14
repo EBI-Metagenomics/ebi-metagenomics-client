@@ -2,9 +2,16 @@ import Backbone from 'backbone';
 import _ from 'underscore';
 import * as util from '../main';
 import * as api from '../components/api';
+import Pagination from '../components/pagination';
+
+
 util.setCurrentTab('#samples-nav');
 
 var sample_id = util.getURLParameter();
+
+const pageFilters = util.getURLFilterParams();
+let runsView = null;
+
 
 var SampleView = Backbone.View.extend({
     model: api.Sample,
@@ -16,7 +23,11 @@ var SampleView = Backbone.View.extend({
             data: $.param({include: 'runs,metadata'}), success: function (data) {
                 that.render();
                 util.initTableTools();
-                var runsView = new RunsView({collection: data.attributes.runs});
+                const collection = new api.RunCollection({sample_id: sample_id});
+                runsView = new RunsView({collection: collection});
+                $("#pagination").append(util.pagination);
+                $("#pageSize").append(util.pagesize);
+                Pagination.setPageSizeChangeCallback(updatePageSize);
             }
         });
     },
@@ -30,10 +41,10 @@ var RunView = Backbone.View.extend({
     tagName: 'tr',
     template: _.template($("#runRow").html()),
     attributes: {
-        class: 'run',
+        class: 'run-row',
     },
     render: function () {
-        this.$el.html(this.template(this.model));
+        this.$el.html(this.template(this.model.toJSON()));
         return this.$el
     }
 });
@@ -41,22 +52,66 @@ var RunView = Backbone.View.extend({
 
 var RunsView = Backbone.View.extend({
     el: '#runsTableBody',
-    initialize: function (data) {
+    initialize: function () {
         var that = this;
-        this.render();
+
+        let params = {};
+        const pagesize = pageFilters.get('pagesize') || util.DEFAULT_PAGE_SIZE;
+        if (pagesize !== null) {
+            params.page_size = pagesize;
+        }
+        params.page = pageFilters.get('page') || 1;
+
+        // params.include = 'sample';
+        params.sample_accession = sample_id;
+
+        this.collection.fetch({
+            data: $.param(params), success: function (collection, response, options) {
+                const pag = response.meta.pagination;
+                Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
+                that.render();
+                createLiveFilter();
+            }
+        });
+        return this;
+    },
+
+    update: function (page, page_size) {
+        var that = this;
+        var params = {};
+        if (page !== undefined) {
+            params.page = page
+        }
+        if (page_size !== undefined) {
+            params.page_size = page_size
+        }
+        params.sample_accession = sample_id;
+        util.setURLParams(null, null, params.page_size, params.page, false);
+        this.collection.fetch({
+            data: $.param(params), remove: true,
+            success: function (collection, response, options) {
+                $(".run-row").remove();
+                Pagination.updatePagination(response.meta.pagination);
+                that.render();
+            }
+        });
     },
     render: function () {
-        this.collection.forEach(function (run) {
-            if (run.type==='runs') {
-                var run2 = new api.Run().parse(run);
-                var runView = new RunView({model: run2});
-                $(this.$el).append(runView.render());
-            }
+        this.collection.each(function (run) {
+            var runView = new RunView({model: run});
+            $(this.$el).append(runView.render());
         }, this);
-        $(this.el).parent().tablesorter();
         return this;
     }
 });
+
+function updatePageSize(pageSize) {
+    runsView.update(Pagination.currentPage, pageSize);
+}
+
+function changePage(page) {
+    runsView.update(page, Pagination.getPageSize());
+}
 
 function createLiveFilter() {
     $('#runsTableBody').liveFilter(

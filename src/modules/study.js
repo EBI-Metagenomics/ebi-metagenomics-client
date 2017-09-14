@@ -23,13 +23,12 @@ var StudyView = Backbone.View.extend({
                 that.render();
                 attachTabHandlers();
                 util.initTableTools();
-                const collection = new api.RunCollection({pid: study_id});
+                const collection = new api.RunCollection({study_id: study_id});
                 runsView = new RunsView({collection: collection});
                 initMap(data.attributes.samples);
                 $("#pagination").append(util.pagination);
                 $("#pageSize").append(util.pagesize);
                 Pagination.setPageSizeChangeCallback(updatePageSize);
-
             }
         });
     },
@@ -55,26 +54,25 @@ var RunView = Backbone.View.extend({
 var RunsView = Backbone.View.extend({
     el: '#runsTableBody',
     initialize: function () {
-        var that = this;
+            var that = this;
 
-        let params = {};
-        const pagesize = pageFilters.get('pagesize') || util.DEFAULT_PAGE_SIZE;
-        if (pagesize !== null) {
-            params.page_size = pagesize;
-        }
-        params.page = pageFilters.get('page') || 1;
-
-        params.include = 'sample';
-        params.study_accession = study_id;
-
-        this.collection.fetch({
-            data: $.param(params), success: function (collection, response, options) {
-                const pag = response.meta.pagination;
-                Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
-                that.render();
-                createLiveFilter();
+            let params = {};
+            const pagesize = pageFilters.get('pagesize') || util.DEFAULT_PAGE_SIZE;
+            if (pagesize !== null) {
+                params.page_size = pagesize;
             }
-        });
+            params.page = pageFilters.get('page') || 1;
+
+            params.include = 'sample';
+            params.study_accession = study_id;
+            this.collection.fetch({
+                data: $.param(params), success: function (collection, response, options) {
+                    const pag = response.meta.pagination;
+                    Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
+                    that.render();
+                    createLiveFilter();
+                }
+            });
         return this;
     },
 
@@ -87,6 +85,9 @@ var RunsView = Backbone.View.extend({
         if (page_size !== undefined) {
             params.page_size = page_size
         }
+        params.include = 'sample';
+        params.study_accession = study_id;
+
         util.setURLParams(null, null, params.page_size, params.page, false);
         this.collection.fetch({
             data: $.param(params), remove: true,
@@ -129,12 +130,10 @@ function createLiveFilter() {
 
 
 function updatePageSize(pageSize) {
-    console.log(pageSize);
     runsView.update(Pagination.currentPage, pageSize);
 }
 
 function changePage(page) {
-    console.log(page);
     runsView.update(page, Pagination.getPageSize());
 }
 

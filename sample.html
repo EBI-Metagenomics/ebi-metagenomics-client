@@ -108,6 +108,7 @@
                 <hr>
                 <section>
                     <h3>Associated runs</h3>
+                    <div id="pageSize"></div>
                     <table id='runsTable' class="tablesorter">
                         <thead>
                         <tr>
@@ -120,8 +121,8 @@
                         </thead>
                         <tbody id="runsTableBody" class="live-filter-table">
                         </tbody>
-
                     </table>
+                    <div id="pagination"></div>
                 </section>
             </div>
         </script>
@@ -149,6 +150,8 @@
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="/node_modules/tablesorter/dist/js/jquery.tablesorter.js"></script>
+<script src="/static/libraries/jquery.twbsPagination.js"></script>
+
 
 <script defer="defer" src="/static/js/script.js"></script>
 <script defer="defer" src="/static/libraries/jquery.liveFilter.js"></script>
