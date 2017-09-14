@@ -136,7 +136,6 @@ var StudiesView = Backbone.View.extend({
             var studyView = new StudyView({model: study});
             $(this.$el).append(studyView.render());
         }, this);
-
         return this;
     }
 });

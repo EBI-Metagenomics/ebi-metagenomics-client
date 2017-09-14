@@ -81,17 +81,30 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
+        <h2>Comparison tool</h2>
+        <p>The comparison is currently based on a summary of Gene Ontology (GO) terms derived from InterPro matches to
+            the selected runs. It is therefore not possible to select studies that contain only amplicon data at
+            present.
+        </p>
+        <div class="row">
+            <div class="columns small-12 medium-6 large-6">
+                <h3>Project list</h3>
+                <select size="10" id="studies" class="comparison-select">
+                </select>
+            </div>
+            <div class="columns small-12 medium-6 large-6">
+                <h3>Run list</h3>
+                <select size="10" id="runs" class="comparison-select" multiple>
+
+                </select>
+                <script id="compare-option" type="text/template">
+                    <%= name %>
+                </script>
+            </div>
+        </div>
     </div>
 </div>
-<!-- Optional local footer (insert citation / project-specific copyright / etc here -->
-<!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
-<!-- <div class="row"> -->
-<!-- <span class="reference">How to reference this page: ...</span> -->
-<!-- </div> -->
-<!-- </footer> -->
-<!-- End optional local footer -->
-<!-- </div> -->
-<!-- End suggested layout containers / #content -->
+
 
 <div id="footer"></div>
 

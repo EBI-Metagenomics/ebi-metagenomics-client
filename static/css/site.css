@@ -408,6 +408,22 @@ select.table-tools {
 }
 
 
+/*Compare page*/
+.comparison-select{
+    width: 100%;
+    height: auto;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+}
+
+.study-option{
+    padding: 2px 4px;
+}
+
+
+/*Loading gif in tables*/
 .loading-gif {
     height:2em;
     width: 2em;

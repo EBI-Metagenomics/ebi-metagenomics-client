@@ -12,13 +12,13 @@ var Pagination = module.exports = {
         visiblePages: 5,
     },
 
-    initPagination: function(initPage, initPageSize, totalPages, totalResults, callback) {
+    initPagination: function (initPage, initPageSize, totalPages, totalResults, callback) {
         this.opts.startPage = initPage;
         this.opts.totalPages = parseInt(totalPages);
         this.callback = callback;
         this.setPageDisplay(initPage, totalPages, totalResults);
         $("#pagesize").val(initPageSize);
-        $(pagination).twbsPagination(this.opts).on('page', function(evt, page){
+        $(pagination).twbsPagination(this.opts).on('page', function (evt, page) {
             callback(page);
         });
     },
@@ -32,11 +32,11 @@ var Pagination = module.exports = {
         });
     },
 
-    getPageSize: function(){
+    getPageSize: function () {
         return parseInt($(this.pageSize)[0].value);
     },
 
-    updatePagination: function(p) {
+    updatePagination: function (p) {
         let that = this;
         var totPages = p.pages;
 
@@ -47,12 +47,12 @@ var Pagination = module.exports = {
         $(this.pagination).twbsPagination($.extend({}, this.opts, {
             startPage: p.PAGE,
             totalPages: p.pages,
-        })).on('page', function(evt, page){
+        })).on('page', function (evt, page) {
             that.callback(page);
         });
     },
 
-    setPageDisplay: function(currentPage, maxPage, totalResults){
+    setPageDisplay: function (currentPage, maxPage, totalResults) {
         $("#currentPage").text(currentPage);
         $("#maxPage").text(maxPage);
         $("#totalResults").text(totalResults);

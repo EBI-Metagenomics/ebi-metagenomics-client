@@ -39,8 +39,13 @@ export const Study = Backbone.Model.extend({
 export const StudiesCollection = Backbone.Collection.extend({
     url: util.API_URL + "studies",
     model: Study,
+    initialize: function(pagination){
+        this.pagination = pagination;
+    },
     parse: function (response) {
-        Pagination.updatePagination(response.meta.pagination);
+        if (this.pagination) {
+            Pagination.updatePagination(response.meta.pagination);
+        }
         return response.data;
     }
 });
@@ -91,7 +96,6 @@ export const RunCollection = Backbone.Collection.extend({
             this.sample_id = data.sample_id;
         }
     },
-
     parse: function (response) {
         return response.data
     }
