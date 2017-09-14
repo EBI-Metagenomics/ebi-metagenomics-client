@@ -101,6 +101,9 @@ var StudiesView = Backbone.View.extend({
     },
 
     update: function (page, page_size, searchQuery, biome, ordering) {
+        $(".study").remove();
+
+        util.showTableLoadingGif();
         var that = this;
         var params = {};
         if (page !== undefined) {
@@ -122,7 +125,7 @@ var StudiesView = Backbone.View.extend({
 
         this.collection.fetch({
             data: $.param(params), remove: true, success: function (collection, response, options) {
-                $(".study").remove();
+                util.hideTableLoadingGif();
                 Pagination.updatePagination(response.meta.pagination);
                 that.render();
             }

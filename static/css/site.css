@@ -406,3 +406,14 @@ select.table-tools {
 .biome_icon.icon_xs.plant_host_b {
     background-position: -162px -157px;
 }
+
+
+.loading-gif {
+    height:2em;
+    width: 2em;
+}
+
+.loading-gif-row {
+    text-align: center;
+    display: none;
+}

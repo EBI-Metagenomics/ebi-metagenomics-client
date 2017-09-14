@@ -48,6 +48,8 @@ var BiomesView = Backbone.View.extend({
         return this;
     },
     update: function (page, page_size) {
+        $(".biome-row").remove();
+        util.showTableLoadingGif();
         var that = this;
         var params = {};
         if (page !== undefined) {
@@ -60,7 +62,7 @@ var BiomesView = Backbone.View.extend({
 
         this.collection.fetch({
             data: $.param(params), remove: true, success: function (collection, response, options) {
-                $(".biome-row").remove();
+                util.hideTableLoadingGif();
                 Pagination.updatePagination(response.meta.pagination);
                 that.render();
             }

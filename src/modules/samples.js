@@ -98,6 +98,8 @@ var SamplesView = Backbone.View.extend({
         return this;
     },
     update: function (page, page_size, searchQuery, biome) {
+        $(".sample").remove();
+        util.showTableLoadingGif();
         var that = this;
 
         var params = {};
@@ -119,7 +121,7 @@ var SamplesView = Backbone.View.extend({
             data: $.param(params),
             remove: true,
             success: function (collection, response, options) {
-                $(".sample").remove();
+                util.hideTableLoadingGif();
                 Pagination.updatePagination(response.meta.pagination);
                 that.render();
             }

@@ -131,6 +131,12 @@ export function setURLParams(search, lineage, pageSize, currentPage, refresh){
     }
 }
 
+export function showTableLoadingGif(){
+    $(".loading-gif-row").show();
+}
+export function hideTableLoadingGif(){
+    $(".loading-gif-row").hide();
+}
 
 
 

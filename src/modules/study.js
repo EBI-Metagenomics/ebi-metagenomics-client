@@ -75,8 +75,9 @@ var RunsView = Backbone.View.extend({
             });
         return this;
     },
-
     update: function (page, page_size) {
+        $(".run-row").remove();
+        util.showTableLoadingGif();
         var that = this;
         var params = {};
         if (page !== undefined) {
@@ -92,7 +93,7 @@ var RunsView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params), remove: true,
             success: function (collection, response, options) {
-                $(".run-row").remove();
+                util.hideTableLoadingGif();
                 Pagination.updatePagination(response.meta.pagination);
                 that.render();
             }
