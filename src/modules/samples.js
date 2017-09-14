@@ -44,8 +44,7 @@ var BiomeCollectionView = Backbone.View.extend({
         var biomes = this.collection.models.map(function (model) {
             return model.attributes.lineage
         });
-        biomes.sort();
-        var selectData = {biomes: biomes.sort()};
+        var selectData = {biomes: biomes.sort().map(function(x){return util.stripLineage(x);})};
         this.$el.html(this.template(selectData));
         return this
     }

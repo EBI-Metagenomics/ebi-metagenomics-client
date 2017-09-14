@@ -141,5 +141,3 @@ export function hideTableLoadingGif(){
 
 
 window.stripLineage = stripLineage;
-
-window.util = getBiomeIcon;

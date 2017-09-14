@@ -11,7 +11,7 @@
                        <script id="biomeSelectorTmpl" type="text/template">
                             <select name="biome">
                                 <% _.each(biomes, function(biome) { %>
-                                    <option value="<%= biome %>"><%= stripLineage(biome) %></option>
+                                    <option value="<%= biome %>"><%= biome %></option>
                                 <% }); %>
                             </select>
                         </script>
