@@ -1,10 +1,6 @@
-import Backbone from 'backbone';
-
-
-export const API_URL = "https://wwwdev.ebi.ac.uk/metagenomics/api/v0.2/";
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-export const NO_DATA_MSG = "N/A";
-export const DEFAULT_PAGE_SIZE = 25;
+
+
 
 const header = require("./partials/header.handlebars");
 const footer = require("./partials/footer.handlebars");

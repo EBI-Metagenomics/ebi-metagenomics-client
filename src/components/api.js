@@ -1,12 +1,13 @@
 import Backbone from 'backbone';
-import _ from 'underscore';
 import * as util from 'src/main';
 import Pagination from './pagination';
+import {API_URL, NO_DATA_MSG} from '../config';
+
 
 // Model for an individual study
 export const Study = Backbone.Model.extend({
     url: function () {
-        return util.API_URL + 'studies/' + this.id;
+        return API_URL + 'studies/' + this.id;
     },
     parse: function (d) {
         const data = d.data !== undefined ? d.data : d;
@@ -25,9 +26,9 @@ export const Study = Backbone.Model.extend({
             study_accession: attr['accession'],
             last_update: util.formatDate(attr['last-update']),
             contact_details: {
-                institute: attr['centre-name'] || util.NO_DATA_MSG,
-                name: attr['author-name'] || util.NO_DATA_MSG,
-                email: attr['author-email'] || util.NO_DATA_MSG,
+                institute: attr['centre-name'] || NO_DATA_MSG,
+                name: attr['author-name'] || NO_DATA_MSG,
+                email: attr['author-email'] || NO_DATA_MSG,
             },
             abstract: attr['study-abstract'],
             samples: d.included
@@ -37,7 +38,7 @@ export const Study = Backbone.Model.extend({
 
 // Model for a collection of studies,
 export const StudiesCollection = Backbone.Collection.extend({
-    url: util.API_URL + "studies",
+    url: API_URL + "studies",
     model: Study,
     initialize: function(pagination){
         this.pagination = pagination;
@@ -52,7 +53,7 @@ export const StudiesCollection = Backbone.Collection.extend({
 
 export const Run = Backbone.Model.extend({
     url: function () {
-        return util.API_URL + 'runs/' + this.id;
+        return API_URL + 'runs/' + this.id;
     },
     parse: function (d) {
         // Adaption to handle 'includes' on API calls which would wrap the response
@@ -74,7 +75,7 @@ export const Run = Backbone.Model.extend({
             sample_url: '/sample/' + attr['sample-accession'],
             run_url: '/run/' + attr.accession,
             experiment_type: data.relationships['experiment-type'].data.id,
-            instrument_model: attr.instrument_model || util.NO_DATA_MSG,
+            instrument_model: attr.instrument_model || NO_DATA_MSG,
             pipeline_version: pipelines.data.map(function (x) {
                 return x.id
             }).join(", "),
@@ -84,7 +85,7 @@ export const Run = Backbone.Model.extend({
 });
 
 export const RunCollection = Backbone.Collection.extend({
-    url: util.API_URL + 'runs',
+    url: API_URL + 'runs',
     model: Run,
     initialize: function (data) {
         // Project/sample ID
@@ -103,7 +104,7 @@ export const RunCollection = Backbone.Collection.extend({
 
 export const Biome = Backbone.Model.extend({
     url: function () {
-        var base = util.API_URL + 'biomes';
+        var base = API_URL + 'biomes';
         if (this.isNew()) return base;
         return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id;
     },
@@ -128,7 +129,7 @@ export const Biome = Backbone.Model.extend({
 
 export const BiomeCollection = Backbone.Collection.extend({
     model: Biome,
-    url: util.API_URL + "biomes/root/children",
+    url: API_URL + "biomes/root/children",
     parse: function (response) {
         return response.data
     }
@@ -137,7 +138,7 @@ export const BiomeCollection = Backbone.Collection.extend({
 
 export const Sample = Backbone.Model.extend({
     url: function () {
-        return util.API_URL + 'samples/' + this.id;
+        return API_URL + 'samples/' + this.id;
     },
     parse: function (d) {
         let metadatas = [];
@@ -160,13 +161,13 @@ export const Sample = Backbone.Model.extend({
         return {
             biome_icon: util.getBiomeIcon(data.relationships.biome.data.id),
             biome_name: data.relationships.biome.data.id,
-            sample_name: attr['sample-name'] || util.NO_DATA_MSG,
+            sample_name: attr['sample-name'] || NO_DATA_MSG,
             sample_desc: attr['sample-desc'],
             sample_link: "/sample/" + attr['accession'],
-            study_accession: attr['study-accession'] || util.NO_DATA_MSG,
+            study_accession: attr['study-accession'] || NO_DATA_MSG,
             study_link: '/study/' + attr['study-accession'],
-            sample_accession: attr.accession || util.NO_DATA_MSG,
-            lineage: util.formatLineage(data.relationships.biome.data.id || util.NO_DATA_MSG),
+            sample_accession: attr.accession || NO_DATA_MSG,
+            lineage: util.formatLineage(data.relationships.biome.data.id || NO_DATA_MSG),
             metadatas: metadatas,
             runs: d.included,
         }
@@ -174,7 +175,7 @@ export const Sample = Backbone.Model.extend({
 });
 
 export const SamplesCollection = Backbone.Collection.extend({
-    url: util.API_URL + "samples",
+    url: API_URL + "samples",
     model: Sample,
     parse: function (response) {
         return response.data;

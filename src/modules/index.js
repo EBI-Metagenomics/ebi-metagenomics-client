@@ -2,6 +2,7 @@ import Backbone from 'backbone';
 import _ from 'underscore';
 import * as util from '../main';
 import * as api from '../components/api';
+import {API_URL} from "../config";
 
 util.setCurrentTab('#overview-nav');
 
@@ -24,7 +25,7 @@ var BiomeView = Backbone.View.extend({
 });
 
 var Biomes = Backbone.Collection.extend({
-    url: util.API_URL + 'biomes/top10',
+    url: API_URL + 'biomes/top10',
     model: api.Biome,
     parse: function(response){
         return response.data;
@@ -71,7 +72,7 @@ var StudyView = Backbone.View.extend({
 
 // Model for a collection of studies,
 var StudiesCollection = Backbone.Collection.extend({
-    url: util.API_URL+"studies/recent",
+    url: API_URL+"studies/recent",
     model: api.Study,
     parse: function(response){
         return response.data;

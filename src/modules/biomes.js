@@ -3,6 +3,8 @@ import _ from 'underscore';
 import * as util from '../main';
 import * as api from '../components/api';
 import Pagination from '../components/pagination';
+import {DEFAULT_PAGE_SIZE} from "../config";
+
 util.setCurrentTab('');
 
 const pageFilters = util.getURLFilterParams();
@@ -31,7 +33,7 @@ var BiomesView = Backbone.View.extend({
         var that = this;
 
         const params = {};
-        const pagesize = pageFilters.get('pagesize') || util.DEFAULT_PAGE_SIZE;
+        const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
         if (pagesize !== null) {
             params.page_size = pagesize;
         }

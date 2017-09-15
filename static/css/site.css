@@ -157,13 +157,14 @@ select.table-tools {
 .page-item.current {
     padding: inherit;
 }
+
 .page-item.current > a {
-    color:white;
+    color: white;
 }
 
 .home-blog-img {
-    float:left;
-    margin-right:9px;
+    float: left;
+    margin-right: 9px;
 }
 
 .home-blog-box {
@@ -172,7 +173,6 @@ select.table-tools {
     overflow: hidden /*when resizing*/;
     padding: 5px 20px;
 }
-
 
 /************* BIOME ICONS ************/
 /*biome gal*/
@@ -407,9 +407,13 @@ select.table-tools {
     background-position: -162px -157px;
 }
 
-
+/*Submit page*/
+#submissionModal {
+    width: 22em;
+    text-align: center;
+}
 /*Compare page*/
-.comparison-select{
+.comparison-select {
     width: 100%;
     height: auto;
     -webkit-appearance: none;
@@ -418,14 +422,17 @@ select.table-tools {
     text-overflow: '';
 }
 
-.study-option{
+.study-option {
     padding: 2px 4px;
 }
 
+.advanced-settings-wrapper {
+    display: none;
+}
 
 /*Loading gif in tables*/
 .loading-gif {
-    height:2em;
+    height: 2em;
     width: 2em;
 }
 

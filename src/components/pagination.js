@@ -59,4 +59,4 @@ var Pagination = module.exports = {
     }
 };
 
-window.Pagination = Pagination;
+// window.Pagination = Pagination;

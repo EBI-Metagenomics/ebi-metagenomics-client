@@ -4,6 +4,7 @@ import * as util from '../main';
 import Handlebars from 'handlebars'
 import * as api from '../components/api';
 import Pagination from '../components/pagination';
+import {DEFAULT_PAGE_SIZE} from "../config";
 
 util.setCurrentTab('#studies-nav');
 
@@ -57,7 +58,7 @@ var RunsView = Backbone.View.extend({
             var that = this;
 
             let params = {};
-            const pagesize = pageFilters.get('pagesize') || util.DEFAULT_PAGE_SIZE;
+            const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
             if (pagesize !== null) {
                 params.page_size = pagesize;
             }

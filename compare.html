@@ -81,25 +81,92 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
-        <h2>Comparison tool</h2>
-        <p>The comparison is currently based on a summary of Gene Ontology (GO) terms derived from InterPro matches to
-            the selected runs. It is therefore not possible to select studies that contain only amplicon data at
-            present.
-        </p>
-        <div class="row">
-            <div class="columns small-12 medium-6 large-6">
-                <h3>Project list</h3>
-                <select size="10" id="studies" class="comparison-select">
-                </select>
+        <section id="runSelection">
+            <h2>Comparison tool</h2>
+            <p>The comparison is currently based on a summary of Gene Ontology (GO) terms derived from InterPro matches
+                to
+                the selected runs. It is therefore not possible to select studies that contain only amplicon data at
+                present.
+            </p>
+            <div class="row">
+                <div class="columns small-12 medium-6 large-6">
+                    <h3>Project list</h3>
+                    <select size="10" id="studies" class="comparison-select">
+                    </select>
+                </div>
+                <div class="columns small-12 medium-6 large-6">
+                    <h3>Run list (<span id="selected">0</span> selected out of <span id="total">0</span>)</h3>
+                    <select size="10" id="runs" class="comparison-select" multiple>
+                    </select>
+                    <script id="compare-option" type="text/template">
+                        <%= name %>
+                    </script>
+                    <a id="selectAll">Select all</a> | <a id="unselectAll">Unselect all</a>
+                </div>
             </div>
-            <div class="columns small-12 medium-6 large-6">
-                <h3>Run list</h3>
-                <select size="10" id="runs" class="comparison-select" multiple>
+        </section>
+        <section id="advanced">
+            <h3>Advanced settings</h3>
+            <a id="displayAdvSettings">Show / hide advanced settings</a>
+            <div class="row advanced-settings-wrapper">
+                <div class="columns">
+                    <form id="advancedSettings">
+                        <fieldset>
+                            <legend>Stacked columns</legend>
+                            <div class="row">
+                                <div class="columns small-2 clearfix">
+                                    <label for='GO_terms' class="text-right middle">GO terms below </label>
+                                </div>
+                                <div class="columns small-2">
+                                    <input id='GO_terms' type="number" class="left" name="goPerc">
+                                </div>
+                                <div class="columns small-8">
+                                    <label class="text-left middle"> % match included in 'other'. </label>
+                                </div>
+                            </div>
+                        </fieldset>
 
-                </select>
-                <script id="compare-option" type="text/template">
-                    <%= name %>
-                </script>
+                        <fieldset>
+                            <legend>Heatmap</legend>
+                            <div class="row">
+                                <div class="columns small-2 clearfix">
+                                    <label for='showLegend' class="text-right middle">Show legend</label>
+                                </div>
+
+                                <div class="columns small-10">
+                                    <input id='showLegend' name='showLegend' type="checkbox">
+                                </div>
+                            </div>
+
+
+                            <label class="text-left middle" for="heat-clust">Hierarchical clustering:</label>
+                            <select id="heat-clust" name="hmClust">
+                                <option value="none">No clustering</option>
+                                <option value="row">Observations (X axis)</option>
+                                <option value="column">Runs (Y axis)</option>
+                                <option value="both" selected="selected">Both</option>
+                            </select>
+
+                            <label for="dendrograms">Show dendrograms (if clustering):</label>
+                            <select id="dendrograms" name="hmDendrogram">
+                                <option value="none">No dendrograms</option>
+                                <option value="row">Observations (X axis)</option>
+                                <option value="column">Runs (Y axis)</option>
+                                <option value="both" selected="selected">Both</option>
+                            </select>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>Full GO annotation</legend>
+                            <label>Show the <input type="number" name="goValue"> GO terms which vary the most.</label>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <div class="row">
+            <div class="columns" style="text-align: center">
+                <a id="compare" class="button">Compare</a> | <a id="clearAll">Clear all</a>
             </div>
         </div>
     </div>

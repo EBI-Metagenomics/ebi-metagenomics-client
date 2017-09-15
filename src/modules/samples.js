@@ -3,6 +3,7 @@ import _ from 'underscore';
 import * as util from '../main';
 import * as api from '../components/api';
 import Pagination from '../components/pagination';
+import {DEFAULT_PAGE_SIZE} from "../config";
 
 
 util.setCurrentTab('#samples-nav');
@@ -82,7 +83,7 @@ var SamplesView = Backbone.View.extend({
             $("#search").val(search);
         }
 
-        const pagesize = pageFilters.get('pagesize') || util.DEFAULT_PAGE_SIZE;
+        const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
         if (pagesize !== null) {
             params.page_size = pagesize;
         }
