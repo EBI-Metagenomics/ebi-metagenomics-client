@@ -10,8 +10,8 @@
                 <span id="biomeSelect">
                        <script id="biomeSelectorTmpl" type="text/template">
                             <select name="biome">
-                                <% _.each(biomes, function(biome) { %>
-                                    <option value="<%= biome %>"><%= biome %></option>
+                                <% _.each(biomes, function(b) { %>
+                                    <option value="<%= b.lineage %>"><%= b.biome %></option>
                                 <% }); %>
                             </select>
                         </script>

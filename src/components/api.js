@@ -2,7 +2,7 @@ import Backbone from 'backbone';
 import * as util from 'src/main';
 import Pagination from './pagination';
 import {API_URL, NO_DATA_MSG} from '../config';
-
+import _ from 'underscore';
 
 // Model for an individual study
 export const Study = Backbone.Model.extend({
@@ -62,24 +62,25 @@ export const Run = Backbone.Model.extend({
         const rel = data.relationships;
         const pipelines = rel.pipelines;
         const analysis = rel.analysis;
-
         return {
             run_id: attr['accession'],
-            analyses: [{
-                experiment_type: 'A',
-                pipeline_version: 'x.x',
-                date: 'xx/xx/xxxx'
-            }],
+            // analyses: [{
+            //     experiment_type: 'A',
+            //     pipeline_version: 'x.x',
+            //     date: 'xx/xx/xxxx'
+            // }],
             sample_name: "N/A",
             sample_id: attr['sample-accession'],
             sample_url: '/sample/' + attr['sample-accession'],
             run_url: '/run/' + attr.accession,
             experiment_type: data.relationships['experiment-type'].data.id,
             instrument_model: attr.instrument_model || NO_DATA_MSG,
-            pipeline_version: pipelines.data.map(function (x) {
+            pipeline_versions: pipelines.data.map(function (x) {
                 return x.id
-            }).join(", "),
-            analysis_results: 'TAXONOMIC / FUNCTION / DOWNLOAD'
+            }),
+            analysis_results: 'TAXONOMIC / FUNCTION / DOWNLOAD',
+            study_id: attr['study-accession'],
+            study_url: '/study/' + attr['study-accession'],
         }
     }
 });
@@ -179,5 +180,25 @@ export const SamplesCollection = Backbone.Collection.extend({
     model: Sample,
     parse: function (response) {
         return response.data;
+    }
+});
+
+export const Analysis = Backbone.Model.extend({
+    url: function () {
+        return API_URL + 'runs/' + this.id + '/pipelines/'+this.version;
+    },
+    initialize: function(params){
+        this.id = params.id;
+        this.version = params.version;
+    }
+});
+
+export const AnalysisMetadata = Backbone.Model.extend({
+    url: function(){
+        return API_URL + 'runs/' + this.id + '/pipelines/'+this.version+'/metadata';
+    },
+    initialize: function(params){
+        this.id = params.id;
+        this.version = params.version;
     }
 });

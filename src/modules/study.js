@@ -22,7 +22,7 @@ var StudyView = Backbone.View.extend({
         this.model.fetch({
             data: $.param({include: 'samples'}), success: function (data, response) {
                 that.render();
-                attachTabHandlers();
+                util.attachTabHandlers();
                 util.initTableTools();
                 const collection = new api.RunCollection({study_id: study_id});
                 runsView = new RunsView({collection: collection});
@@ -109,20 +109,6 @@ var RunsView = Backbone.View.extend({
         return this;
     }
 });
-
-function attachTabHandlers() {
-    $("li.tabs-title > a").on('click', function () {
-        var tabButtonContainer = $(this).closest('ul');
-        $(tabButtonContainer).children().children('a').attr('aria-selected', 'false');
-        $(this).attr('aria-selected', 'true');
-
-        // Remove active class from all sibling buttons
-        var tabId = $(this).attr('href');
-        var tabGroup = tabButtonContainer.attr('id');
-        $("[data-tab-content=" + tabGroup + "] > .tabs-panel").removeClass('active');
-        $(tabId).addClass('active');
-    });
-}
 
 function createLiveFilter() {
     $('#runsTableBody').liveFilter(

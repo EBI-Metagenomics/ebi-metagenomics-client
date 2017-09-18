@@ -30,7 +30,7 @@ var BiomeCollectionView = Backbone.View.extend({
                     success: function () {
                         that.collection.unshift(root);
                         that.render();
-                        const biome = pageFilters.get('biome');
+                        const biome = pageFilters.get('lineage');
                         if (biome !== null) {
                             //TODO handle if invalid biome
                             $("#biomeSelect > select").val(biome);
@@ -44,7 +44,13 @@ var BiomeCollectionView = Backbone.View.extend({
         var biomes = this.collection.models.map(function (model) {
             return model.attributes.lineage
         });
-        var selectData = {biomes: biomes.sort().map(function(x){return util.stripLineage(x);})};
+        var selectData = {
+            biomes: biomes.sort().map(function (x) {
+                return {
+                    lineage: x,
+                    biome: util.stripLineage(x)};
+            })
+        };
         this.$el.html(this.template(selectData));
         return this
     }
@@ -73,7 +79,7 @@ var StudiesView = Backbone.View.extend({
         params.page = Pagination.currentPage;
         params.page_size = Pagination.getPageSize();
 
-        const biome = pageFilters.get('biome');
+        const biome = pageFilters.get('lineage');
         if (biome !== null) {
             params.lineage = biome;
         }

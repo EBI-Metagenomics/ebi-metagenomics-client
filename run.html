@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <!--TODO add metadata-->
-    <title>[page-title] &lt; [service-name] &lt; EMBL-EBI</title>
+    <title>Run</title>
     <meta name="description" content="EMBL-EBI"/><!-- Describe what this page is about -->
     <meta name="keywords" content="bioinformatics, europe, institute"/>
     <!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
@@ -81,29 +81,56 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
-        <script id="runTmpl" type="text/template">
-            <div class="center column small-12 medium-12 large-12">
-                <h2>Run(<%= run_accession %>)</h2>
-                <hr>
-                <section>
-                    <h3>Description</h3>
-                    <h4>Sample name: <%= sample_name %> (<%= sample_accession %>)</h4>
-                    <h4>Project name: <a href="<%= study_link %>"><%= study_name %> (<%= study_accession %>)</a></h4>
-                </section>
-                <hr>
-                <% _.each(analyses, function(analysis){ %>
-                <section>
-                    <h3>Data analysis</h3>
-                    <h4>Experiment type: <%= analysis.experiment_type %></h4>
-                    <h4>Pipeline_version: <%= analysis.pipeline_version %></h4>
-                    <h4>Analysis date: <%= analysis.date %></h4>
-                </section>
-                <% }); %>
-            </div>
-        </script>
 
     </div>
 </div>
+
+<script id="runTmpl" type="text/template">
+    <h2>Run <%= run_id %></h2>
+    <section>
+        <h4>Sample name: <%= sample_name %> (<%= sample_id %>)</h4>
+        <h4>Project name: <a href="<%= study_url %>"><%= study_id %> (<%= study_id %>)</a></h4>
+        <h4>Analysis pipeline version
+            <select id="analysisSelect" class="autowidth">
+                <% _.each(pipeline_versions, function(version){ %>
+                <option value="<%= version%>">V<%= version %></option>
+                <% }); %>
+            </select>
+        </h4>
+    </section>
+
+    <ul class="tabs" data-tabs id="run-tabs">
+        <li class="tabs-title active"><a href="#overview" aria-selected="true">Overview</a></li>
+        <li class="tabs-title"><a href="#qc">Quality control</a></li>
+        <li class="tabs-title"><a href="#functional">Taxonomic analysis</a></li>
+        <li class="tabs-title"><a href="#taxonomic">Functional analysis</a></li>
+        <li class="tabs-title"><a href="#download">Download</a></li>
+    </ul>
+    <div class="tabs-content" data-tab-content="run-tabs">
+        <div class="tabs-panel active" id="overview">
+            <div class="row">
+                <div class="center column small-12 medium-12 large-12">
+                </div>
+            </div>
+        </div>
+        <div class="tabs-panel" id="qc">
+            <div class="row">
+                <div class="center column small-12 medium-12 large-12">
+                    <p>The chart below shows the number of reads which pass the quality control steps we have
+                        implemented in our pipeline. Sequence merging may have occurred with paired-end data, so the
+                        initial number of reads may differ from the number given by ENA.</p>
+                    <div id="QC-step-chart" class="run-qc-chart">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tabs-panel" id="functional"></div>
+        <div class="tabs-panel" id="taxonomic"></div>
+        <div class="tabs-panel" id="download"></div>
+    </div>
+</script>
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
 <!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
 <!-- <div class="row"> -->
@@ -118,8 +145,6 @@
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="/node_modules/tablesorter/dist/js/jquery.tablesorter.js"></script>
-
 <script defer="defer" src="/static/js/script.js"></script>
 <script defer="defer" src="/static/libraries/jquery.liveFilter.js"></script>
 
@@ -129,6 +154,8 @@
 <script type="text/JavaScript">$(document).foundation();</script>
 <script type="text/JavaScript">$(document).foundationExtendEBI();</script>
 <script src="/dist/run.js"></script>
+<script src="/static/libraries/oms.min.js"></script>
+
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->

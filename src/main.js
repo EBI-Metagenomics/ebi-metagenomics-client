@@ -1,7 +1,5 @@
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-
-
 const header = require("./partials/header.handlebars");
 const footer = require("./partials/footer.handlebars");
 const tableTools = require("./partials/table_tools.handlebars");
@@ -47,7 +45,7 @@ export function initResultsFilter(callback){
 
 export function getURLParameter() {
     var regex = /\/([A-z0-9]+)(?:$|[?])/g;
-    return regex.exec(window.location)[1];
+    return regex.exec(window.location.pathname)[1];
 }
 
 export function getURLFilterParams(){
@@ -134,6 +132,21 @@ export function hideTableLoadingGif(){
     $(".loading-gif-row").hide();
 }
 
+
+export function attachTabHandlers() {
+    $("li.tabs-title > a").on('click', function () {
+        var tabButtonContainer = $(this).closest('ul');
+        $(tabButtonContainer).children().children('a').attr('aria-selected', 'false');
+        $(this).attr('aria-selected', 'true');
+
+        // Remove active class from all sibling buttons
+        var tabId = $(this).attr('href');
+        var tabGroup = tabButtonContainer.attr('id');
+        $("[data-tab-content=" + tabGroup + "] > .tabs-panel").removeClass('active');
+        console.log($(tabId));
+        $(tabId).addClass('active');
+    });
+}
 
 
 window.stripLineage = stripLineage;

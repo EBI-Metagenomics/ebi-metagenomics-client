@@ -13,7 +13,7 @@ var Pagination = module.exports = {
     },
 
     initPagination: function (initPage, initPageSize, totalPages, totalResults, callback) {
-        this.opts.startPage = initPage;
+        this.opts.startPage = parseInt(initPage);
         this.opts.totalPages = parseInt(totalPages);
         this.callback = callback;
         this.setPageDisplay(initPage, totalPages, totalResults);
