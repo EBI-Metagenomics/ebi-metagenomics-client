@@ -39,7 +39,6 @@ var Pagination = module.exports = {
     updatePagination: function (p) {
         let that = this;
         var totPages = p.pages;
-
         this.setPageDisplay(p.page, p.pages, p.count);
         this.opts.startPage = p.page;
         this.opts.totalPages = p.pages;
@@ -58,5 +57,6 @@ var Pagination = module.exports = {
         $("#totalResults").text(totalResults);
     }
 };
+
 
 // window.Pagination = Pagination;

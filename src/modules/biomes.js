@@ -11,7 +11,11 @@ const pageFilters = util.getURLFilterParams();
 
 util.initResultsFilter(function (e) {
     e.preventDefault();
-    util.setURLParams(null, null, Pagination.getPageSize(), Pagination.currentPage, true);
+    let params = {
+        page_size: Pagination.getPageSize(),
+        page: Pagination.currentPage
+    };
+    util.setURLParams(params, true);
 });
 
 
@@ -60,7 +64,7 @@ var BiomesView = Backbone.View.extend({
         if (page_size !== undefined) {
             params.page_size = page_size
         }
-        util.setURLParams(null, null, params.page_size, params.page, false);
+        util.setURLParams(params, false);
 
         this.collection.fetch({
             data: $.param(params), remove: true, success: function (collection, response, options) {

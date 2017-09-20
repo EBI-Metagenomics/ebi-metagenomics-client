@@ -4,18 +4,32 @@ import * as util from '../main';
 import * as api from '../components/api';
 import Pagination from '../components/pagination';
 import {DEFAULT_PAGE_SIZE} from "../config";
-
+import Order from '../components/order';
 
 util.setCurrentTab('#samples-nav');
 
 const pageFilters = util.getURLFilterParams();
 
+const orderOptions = [
+    {name: 'Sample accession', value: 'accession'},
+    {name: 'Sample name', value: 'sample_name'},
+    // {name: 'Number of runs', value: 'runs-count'}, // NOT DISPLAYED IN TABLE
+    // {name: 'Number of samples', value: 'samples_count'},
+    {name: 'Last updated', value: 'last_update'},
+];
+
 util.initResultsFilter(function (e) {
     e.preventDefault();
     var formData = util.getFilterFormData();
-    util.setURLParams(formData[0].value, formData[1].value, Pagination.getPageSize(), 1, true);
+    var params = {
+        page_size: Pagination.getPageSize(),
+        page: Pagination.currentPage,
+        search: formData.search,
+        lineage: formData.biome,
+        ordering: Order.getValue(),
+    };
+    util.setURLParams(params, true);
 });
-
 
 
 var BiomeCollectionView = Backbone.View.extend({
@@ -31,11 +45,11 @@ var BiomeCollectionView = Backbone.View.extend({
                     success: function () {
                         that.collection.unshift(root);
                         that.render();
-                        const biome = pageFilters.get('biome');
-                        if (biome !== null) {
-                            //TODO handle if invalid biome
-                            $("#biomeSelect > select").val(biome);
+                        let biome = pageFilters.get('lineage');
+                        if (!biome) {
+                            biome = 'root';
                         }
+                        $("#biomeSelect > select").val(biome);
                     }
                 });
             }
@@ -49,7 +63,8 @@ var BiomeCollectionView = Backbone.View.extend({
             biomes: biomes.sort().map(function (x) {
                 return {
                     lineage: x,
-                    biome: util.stripLineage(x)};
+                    biome: util.stripLineage(x)
+                };
             })
         };
         this.$el.html(this.template(selectData));
@@ -73,16 +88,27 @@ var SampleView = Backbone.View.extend({
 
 var SamplesView = Backbone.View.extend({
     el: "#samples-table-body",
+    params: {},
     initialize: function () {
         var that = this;
-        const params = {};
+        let params = {};
         params.page = Pagination.currentPage;
         params.page_size = Pagination.getPageSize();
 
         const biome = pageFilters.get('lineage');
-        if (biome !== null) {
+        if (biome) {
             params.lineage = biome;
+        } else {
+            params.lineage = 'root';
         }
+
+        const ordering = pageFilters.get('ordering');
+        if (ordering){
+            params.ordering = ordering;
+        } else {
+            params.ordering = '-last_update';
+        }
+
         const search = pageFilters.get('search');
         if (search !== null) {
             params.search = search;
@@ -90,39 +116,62 @@ var SamplesView = Backbone.View.extend({
         }
 
         const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
-        if (pagesize !== null) {
+        if (pagesize) {
             params.page_size = pagesize;
         }
         params.page = pageFilters.get('page') || 1;
+        this.params = params;
+
         this.collection.fetch({
             data: $.param(params), success: function (collection, response, options) {
                 that.render();
                 const pag = response.meta.pagination;
                 Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
+                Order.initSelector(orderOptions, params.ordering, function (val) {
+                    var formData = util.getFilterFormData();
+                    that.update(1, Pagination.getPageSize(), null, null, val);
+                });
             }
         });
         return this;
     },
-    update: function (page, page_size, searchQuery, biome) {
+    update: function (page, page_size, searchQuery, biome, ordering) {
         $(".sample").remove();
+
         util.showTableLoadingGif();
         var that = this;
-
         var params = {};
-        if (page !== undefined) {
+
+        if (page !== null) {
             params.page = page
         }
-        if (page_size !== undefined) {
+
+        if (page_size !== null) {
             params.page_size = page_size
         }
-        if (searchQuery !== undefined && searchQuery.length > 0) {
+
+        if (searchQuery !== null) {
             params.search = searchQuery
-        }
-        if (biome !== undefined) {
-            params.lineage = biome
+        } else {
+            if (this.params.search) {
+                params.search = this.params.search;
+            }
         }
 
-        util.setURLParams(params.search, params.lineage, params.page_size, params.page, false);
+        if (biome !== null) {
+            params.lineage = biome
+        } else {
+            if (this.params.lineage) {
+                params.lineage = this.params.lineage;
+            }
+        }
+
+        if (ordering !== undefined) {
+            params.ordering = ordering
+        }
+        // util.setURLParams(params.search, params.lineage, params.page_size, params.page, false);
+        util.setURLParams(params, false);
+
         this.collection.fetch({
             data: $.param(params),
             remove: true,
@@ -151,12 +200,12 @@ Pagination.setPageSizeChangeCallback(updatePageSize);
 
 function updatePageSize(pageSize) {
     var formData = util.getFilterFormData();
-    samplesView.update(Pagination.currentPage, pageSize, formData[0].value, formData[1].value);
+    samplesView.update(Pagination.currentPage, pageSize, null, null);
 }
 
 function changePage(page) {
     var formData = util.getFilterFormData();
-    samplesView.update(page, Pagination.getPageSize(), formData[0].value, formData[1].value);
+    samplesView.update(page, Pagination.getPageSize(), null, null);
 }
 
 

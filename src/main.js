@@ -108,15 +108,20 @@ export function getBiomeIcon(lineage){
 
 export function getFilterFormData() {
     var formData = $("#filter").serializeArray();
-    return formData;
+    var data = {};
+    $.map(formData, function(n, i){
+        data[n['name']] = n['value'];
+    });
+    return data;
 }
 
-export function setURLParams(search, lineage, pageSize, currentPage, refresh){
-    let params = {};
-    if (search!==null)  params.search = search;
-    if (lineage!==null) params.lineage = lineage;
-    params.pagesize = pageSize;
-    params.page = currentPage;
+export function setURLParams(params, refresh){
+// export function setURLParams(search, lineage, pageSize, currentPage, refresh){
+//     let params = {};
+//     if (search!==null)  params.search = search;
+//     if (lineage!==null) params.lineage = lineage;
+//     params.pagesize = pageSize;
+//     params.page = currentPage;
     if (refresh) {
         window.location.search = $.param(params);
     } else {
@@ -143,7 +148,6 @@ export function attachTabHandlers() {
         var tabId = $(this).attr('href');
         var tabGroup = tabButtonContainer.attr('id');
         $("[data-tab-content=" + tabGroup + "] > .tabs-panel").removeClass('active');
-        console.log($(tabId));
         $(tabId).addClass('active');
     });
 }

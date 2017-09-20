@@ -430,6 +430,10 @@ select.table-tools {
     display: none;
 }
 
+.text-right {
+    text-align: right;
+}
+
 /*Loading gif in tables*/
 .loading-gif {
     height: 2em;

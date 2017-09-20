@@ -8,7 +8,6 @@ var Highcharts = require('highcharts');
 util.setCurrentTab('#samples-nav');
 
 var run_id = util.getURLParameter();
-console.log(Highcharts);
 
 let analysis = null;
 let metadata = null;
@@ -43,46 +42,62 @@ var RunView = Backbone.View.extend({
 var QCGraphView = Backbone.View.extend({
     model: api.AnalysisMetadata,
     initialize: function () {
-        console.log(this);
-        qcChart = Highcharts.chart('QC-step-chart', {
-            chart: {
-                type: 'bar'
-            },
-            title: {
-                text: 'Number of sequence reads per QC step'
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Count'
-                }
-            },
-            xAxis: {
-                categories: ['Initial reads', 'Trimming', 'Length filtering', 'Ambiguous base filtering', 'Reads subsampled for QC analysis']
-            },
-            plotOptions: {
-                series: {
-                    stacking: 'normal'
-                }
-            },
-            credits: {
-                enabled: false
-            },
-            series: [
-                {
-                    name: 'Reads filtered out',
-                    data: [1, 1, 1, 1, 1],
-                    color: '#CCCCD3'
-                }, {
-                    name: 'Reads after sampling',
-                    data: [2, 2, 2, 2, 2],
-                    color: '#8DC7C7'
-                },
-                {
-                    name: 'Reads remaining',
-                    data: [1, 1, 1, 1, 1],
-                    color: '#058DC7',
-                }]
+        this.model.fetch({
+            success: function (model) {
+                let data = {};
+                model.attributes.data.map(function (e) {
+                    const attr = e.attributes;
+                    data[attr['var-name']] = attr['var-value'];
+                });
+                let remaining = [0, 0, 0, 0, 0];
+                let filtered = [0, 0, 0, 0, 0];
+                let post_sample = [0, 0, 0, 0, 0];
+                console.log(data);
+                remaining[0] = parseInt(data['Submitted nucleotide sequences']);
+                remaining[1] = parseInt(data['Nucleotide sequences after format-specific filtering']);
+                remaining[2] = parseInt(data['Nucleotide sequences after length filtering']);
+                remaining[3] = parseInt(data['Nucleotide sequences after undetermined bases filtering']);
+                filtered[2] = remaining[1] - remaining[2];
+                qcChart = Highcharts.chart('QC-step-chart', {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: 'Number of sequence reads per QC step'
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Count'
+                        }
+                    },
+                    xAxis: {
+                        categories: ['Initial reads', 'Trimming', 'Length filtering', 'Ambiguous base filtering', 'Reads subsampled for QC analysis']
+                    },
+                    plotOptions: {
+                        series: {
+                            stacking: 'normal'
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [
+                        {
+                            name: 'Reads filtered out',
+                            data: filtered,
+                            color: '#CCCCD3'
+                        }, {
+                            //     name: 'Reads after sampling',
+                            //     data: post_sample,
+                            //     color: '#8DC7C7'
+                            // }, {
+                            name: 'Reads remaining',
+                            data: remaining,
+                            color: '#058DC7',
+                        }]
+                });
+            }
         });
     }
 });

@@ -115,8 +115,7 @@
                             <th>Run ID</th>
                             <th>Experiment type</th>
                             <th>Instrument model</th>
-                            <th>Version</th>
-                            <th>Analysis results</th>
+                            <th>Analyses</th>
                         </tr>
                         </thead>
                         <tbody id="runsTableBody" class="live-filter-table">
@@ -136,8 +135,7 @@
         <td><a href="<%= run_url %>"><%= run_id %></a></td>
         <td><%= experiment_type %></td>
         <td><%= instrument_model %></td>
-        <td><%= pipeline_version %></td>
-        <td><%= analysis_results %></td>
+        <td><a href="<%= run_url %>">View analyses</a></td>
     </script>
 </div>
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->

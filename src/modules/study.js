@@ -90,7 +90,8 @@ var RunsView = Backbone.View.extend({
         params.include = 'sample';
         params.study_accession = study_id;
 
-        util.setURLParams(null, null, params.page_size, params.page, false);
+        util.setURLParams(params, false);
+
         this.collection.fetch({
             data: $.param(params), remove: true,
             success: function (collection, response, options) {
