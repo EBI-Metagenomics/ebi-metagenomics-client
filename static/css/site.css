@@ -14,7 +14,7 @@ td, th {
 
 /*STUDIES TABLE*/
 th.biome {
-    width: 10%
+    width: 6%
 }
 
 /*th.name {*/
@@ -452,4 +452,18 @@ select.table-tools {
 .run-qc-chart {
     width: 100%;
     height: 15em;
+}
+
+.facet-panel {
+    overflow: scroll;
+}
+
+.facet-child-group {
+    margin-left: 1em;
+    display: none;
+    min-width: 14em;
+}
+.facet-child-group.show{
+    display: block;
+
 }

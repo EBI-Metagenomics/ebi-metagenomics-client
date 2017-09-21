@@ -24,7 +24,7 @@ var Pagination = module.exports = {
     },
 
     setPageSizeChangeCallback(callback) {
-        let that = this;
+        const that = this;
         $(document).ready(function () {
             $(that.pageSize).change(function (e) {
                 callback(that.getPageSize());
@@ -37,7 +37,7 @@ var Pagination = module.exports = {
     },
 
     updatePagination: function (p) {
-        let that = this;
+        const that = this;
         var totPages = p.pages;
         this.setPageDisplay(p.page, p.pages, p.count);
         this.opts.startPage = p.page;

@@ -81,8 +81,85 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
+        <div class="columns small-12 medium-12 large-12">
+            <h2>Search EBI Metagenomics</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="columns small-12 medium-12 large-12">
+            <ul class="tabs" data-tabs id="results-tabs">
+                <li class="tabs-title active"><a href="#projects" aria-selected="true">Projects</a></li>
+                <li class="tabs-title"><a href="#samples">Samples</a></li>
+                <li class="tabs-title"><a href="#runs">Runs</a></li>
+            </ul>
+            <div class="tabs-content" data-tab-content="results-tabs">
+                <div class="tabs-panel active" id="projects"></div>
+                <div class="tabs-panel" id="samples"></div>
+                <div class="tabs-panel" id="runs"></div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script id="projectsTmpl" type="text/template">
+    <div class="row">
+        <div class="columns small-3 medium-3 large-3">
+            <h3>Filter your results</h3>
+
+            <!--Function to build successive hierarchy of checkboxes-->
+            <% function drawAndExpand(child, name){ %>
+            <div class="facet-child-group show">
+                <% let forLabel = child.value+'checkbox' %>
+                <% if (child.children){ %>
+                    <button class="disp-children">A</button>
+                <% } %>
+                <input name="<%= name %>" type="checkbox" value="<%= child.value %>" class="facet-checkbox"
+                       id="<%= forLabel %>"/> <label for="<%= forLabel %>"><%= child.label %></label>
+                    <% _.each(child.children, function(child2){ %>
+                        <div class="facet-child-group">
+                        <% drawAndExpand(child2, name, true); %>
+                        </div>
+                    <% });%>
+            </div>
+            <% } %>
+            <% _.each(facets, function(facet){ if (facet.label!=='Source'){ %>
+            <h4><%= facet.label %></h4>
+                <% _.each(facet.facetValues, function(child){ %>
+
+                    <% drawAndExpand(child, facet.id, false) %>
+
+                <% console.log(child) %>
+                <% }); %>
+            <% }});%>
+        </div>
+        <div class="columns small-9 medium-9 large-9">
+            <h3>Showing <%= entries.length %> out of <%= hitCount %></h3>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Project</td>
+                        <td>Name</td>
+                        <td>Biome</td>
+                        <td>Description</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% _.each(entries, function(entry){ %>
+                        <tr>
+                            <td><%= f.id %></td>
+                            <td><%= %></td>
+                            <td><%= %></td>
+                            <td><%= %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</script>
+
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
 <!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
 <!-- <div class="row"> -->

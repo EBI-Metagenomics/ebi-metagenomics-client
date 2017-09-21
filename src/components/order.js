@@ -13,7 +13,7 @@ var Order = module.exports = {
         });
         $(this.orderSelector).append(opts);
         $(this.orderSelector).val(initOption);
-        let that = this;
+        const that = this;
         $(this.orderSelector).on('change', function(){
             onChangeCallback(that.getValue());
         });
