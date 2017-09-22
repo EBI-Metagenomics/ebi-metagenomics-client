@@ -9,14 +9,14 @@ addons:
       - nginx
 
 install:
-    npm install webpack -g
-    sudo nginx start;
-    curl http://localhost:8080
-    npm install
+    - npm install webpack -g;
+    - sudo nginx start;
+    - curl http://localhost:8080;
+    - npm install;
 
 script:
-    pwd
-    mocha
+    - pwd
+    - mocha
 
 cache:
   directories:
