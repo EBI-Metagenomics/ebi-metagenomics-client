@@ -3,6 +3,22 @@ node_js:
  - "node"
  - "8"
 
+addons:
+  apt:
+    packages:
+      - nginx
+
+install:
+    - npm install webpack -g;
+    - test/util/configure-nginx.sh;
+    - sudo nginx;
+    - curl http://localhost:8080;
+    - npm install;
+
+script:
+    - pwd
+    - mocha
+
 cache:
   directories:
     - "node_modules"
