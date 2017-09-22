@@ -1,16 +1,25 @@
-import Backbone from 'backbone';
-import _ from 'underscore';
-import * as util from '../main';
-import * as api from '../components/api';
-import Pagination from '../components/pagination';
+const Backbone = require('backbone');
+const _ = require('underscore');
+const commons = require('../commons');
+const api = require('../components/api');
+const Pagination = require('../components/pagination');
 import {DEFAULT_PAGE_SIZE} from "../config";
+import {
+    getURLFilterParams,
+    getURLParameter,
+    hideTableLoadingGif,
+    initTableTools,
+    setCurrentTab,
+    setURLParams,
+    showTableLoadingGif
+} from "../util";
 
 
-util.setCurrentTab('#samples-nav');
+setCurrentTab('#samples-nav');
 
-var sample_id = util.getURLParameter();
+var sample_id = getURLParameter();
 
-const pageFilters = util.getURLFilterParams();
+const pageFilters = getURLFilterParams();
 let runsView = null;
 
 
@@ -23,11 +32,11 @@ var SampleView = Backbone.View.extend({
         this.model.fetch({
             data: $.param({include: 'runs,metadata'}), success: function (data) {
                 that.render();
-                util.initTableTools();
+                initTableTools();
                 const collection = new api.RunCollection({sample_id: sample_id});
                 runsView = new RunsView({collection: collection});
-                $("#pagination").append(util.pagination);
-                $("#pageSize").append(util.pagesize);
+                $("#pagination").append(commons.pagination);
+                $("#pageSize").append(commons.pagesize);
                 Pagination.setPageSizeChangeCallback(updatePageSize);
             }
         });
@@ -79,7 +88,7 @@ var RunsView = Backbone.View.extend({
 
     update: function (page, page_size) {
         $(".run-row").remove();
-        util.showTableLoadingGif();
+        showTableLoadingGif();
         var that = this;
         var params = {};
         if (page !== undefined) {
@@ -89,12 +98,12 @@ var RunsView = Backbone.View.extend({
             params.page_size = page_size
         }
         params.sample_accession = sample_id;
-        util.setURLParams(params, false);
+        setURLParams(params, false);
 
         this.collection.fetch({
             data: $.param(params), remove: true,
             success: function (collection, response, options) {
-                util.hideTableLoadingGif();
+                hideTableLoadingGif();
                 Pagination.updatePagination(response.meta.pagination);
                 that.render();
             }
@@ -118,9 +127,9 @@ function changePage(page) {
 }
 
 function createLiveFilter() {
-    $('#runsTableBody').liveFilter(
-        '#search-filter', 'tr'
-    );
+    // $('#runsTableBody').liveFilter(
+    //     '#search-filter', 'tr'
+    // );
 }
 
 

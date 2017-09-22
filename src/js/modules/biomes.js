@@ -1,21 +1,33 @@
-import Backbone from 'backbone';
-import _ from 'underscore';
-import * as util from '../main';
-import * as api from '../components/api';
-import Pagination from '../components/pagination';
+const Backbone = require('backbone');
+const _ = require('underscore');
+const util = require('../util');
+require('../commons');
+const api = require('../components/api');
+const Pagination = require('../components/pagination');
 import {DEFAULT_PAGE_SIZE} from "../config";
 
-util.setCurrentTab('');
+import {
+    formatLineage,
+    getFilterFormData,
+    getURLFilterParams,
+    hideTableLoadingGif,
+    initResultsFilter,
+    setCurrentTab,
+    setURLParams,
+    showTableLoadingGif
+} from "../util";
 
-const pageFilters = util.getURLFilterParams();
+setCurrentTab('');
 
-util.initResultsFilter(function (e) {
+const pageFilters = getURLFilterParams();
+
+initResultsFilter(function (e) {
     e.preventDefault();
     let params = {
         page_size: Pagination.getPageSize(),
         page: Pagination.currentPage
     };
-    util.setURLParams(params, true);
+    setURLParams(params, true);
 });
 
 
@@ -55,7 +67,7 @@ var BiomesView = Backbone.View.extend({
     },
     update: function (page, page_size) {
         $(".biome-row").remove();
-        util.showTableLoadingGif();
+        showTableLoadingGif();
         var that = this;
         var params = {};
         if (page !== undefined) {
@@ -64,11 +76,11 @@ var BiomesView = Backbone.View.extend({
         if (page_size !== undefined) {
             params.page_size = page_size
         }
-        util.setURLParams(params, false);
+        setURLParams(params, false);
 
         this.collection.fetch({
             data: $.param(params), remove: true, success: function (collection, response, options) {
-                util.hideTableLoadingGif();
+                hideTableLoadingGif();
                 Pagination.updatePagination(response.meta.pagination);
                 that.render();
             }
@@ -77,7 +89,7 @@ var BiomesView = Backbone.View.extend({
     },
     render: function () {
         this.collection.each(function (biome) {
-            biome.attributes.lineage = util.formatLineage(biome.attributes.lineage);
+            biome.attributes.lineage = formatLineage(biome.attributes.lineage);
             var biomeView = new BiomeView({model: biome});
             $(this.$el).append(biomeView.render());
         }, this);
@@ -88,19 +100,19 @@ var BiomesView = Backbone.View.extend({
 
 // PAGINATION
 
-$("#pagination").append(util.pagination);
-$("#pageSize").append(util.pagesize);
+$("#pagination").append(commons.pagination);
+$("#pageSize").append(commons.pagesize);
 
 Pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 function updatePageSize(pageSize) {
-    var formData = util.getFilterFormData();
+    var formData = getFilterFormData();
     biomesView.update(Pagination.currentPage, pageSize, formData[0], formData[1]);
 }
 
 function changePage(page) {
-    var formData = util.getFilterFormData();
+    var formData = getFilterFormData();
     biomesView.update(page, Pagination.getPageSize(), formData[0], formData[1]);
 }
 

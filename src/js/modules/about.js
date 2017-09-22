@@ -1,6 +1,6 @@
-import * as util from '../main.js';
+import {setCurrentTab} from "../util";
 
-util.setCurrentTab('#about-nav');
+setCurrentTab('#about-nav');
 
 
 // Expand button handler, usage as follows

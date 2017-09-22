@@ -5,16 +5,16 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
     entry: {
         index: 'src/js/modules/index.js',
-        // search: 'src/js/modules/search.js',
-        // submit: 'src/js/modules/submit.js',
-        // studies: 'src/js/modules/studies.js',
-        // study: 'src/js/modules/study.js',
-        // samples: 'src/js/modules/samples.js',
-        // sample: 'src/js/modules/sample.js',
-        // run: 'src/js/modules/run.js',
-        // compare: 'src/js/modules/compare.js',
-        // about: 'src/js/modules/about.js',
-        // contact: 'src/js/modules/contact.js',
+        search: 'src/js/modules/search.js',
+        submit: 'src/js/modules/submit.js',
+        studies: 'src/js/modules/studies.js',
+        study: 'src/js/modules/study.js',
+        samples: 'src/js/modules/samples.js',
+        sample: 'src/js/modules/sample.js',
+        run: 'src/js/modules/run.js',
+        compare: 'src/js/modules/compare.js',
+        about: 'src/js/modules/about.js',
+        contact: 'src/js/modules/contact.js',
         // biomes: 'src/js/modules/biomes.js',
     },
     output: {
@@ -105,7 +105,8 @@ module.exports = {
         new CopyWebpackPlugin([
             {from: 'static/images', to: '../static/images'},
             {from: 'static/fonts', to: '../static/fonts'},
-            {from: 'static/js', to: '../static/js'}
+            {from: 'static/js', to: '../static/js'},
+            {from: 'static/libraries', to: '../static/libraries'},
         ]),
     ],
 

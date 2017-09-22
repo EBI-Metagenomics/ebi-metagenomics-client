@@ -1,4 +1,5 @@
 let $ = require('jquery');
+
 // import '../../static/js/foundation';
 //
 // console.log(Foundation);
@@ -42,11 +43,11 @@ let $ = require('jquery');
 //     $.fn.foundation = foundation;
 //     return $;
 // }());
-//
-// // Foundation.addToJquery($);
-//
+
+// Foundation.addToJquery($);
+
 // import '../../static/js/foundationExtendEBI';
-//
+
 // $(document).ready(function() {
 //     $(document).foundation();
 //     $(document).foundationExtendEBI();

@@ -1,16 +1,31 @@
-import Backbone from 'backbone';
-import _ from 'underscore';
-import * as util from '../main';
-import Handlebars from 'handlebars'
-import * as api from '../components/api';
-import Pagination from '../components/pagination';
+const Backbone = require('backbone');
+const _ = require('underscore');
+const util = require('../util');
+require('../commons');
+const api = require('../components/api');
+const Pagination = require('../components/pagination');
+const Handlebars = require('handlebars');
+import 'marker-spider';
+import 'js-marker-clusterer';
+
 import {DEFAULT_PAGE_SIZE} from "../config";
+import {
+    attachTabHandlers,
+    getURLFilterParams,
+    getURLParameter,
+    hideTableLoadingGif,
+    initTableTools,
+    setCurrentTab,
+    setURLParams,
+    showTableLoadingGif
+} from "../util";
 
-util.setCurrentTab('#studies-nav');
+setCurrentTab('#studies-nav');
 
-var study_id = util.getURLParameter();
 
-const pageFilters = util.getURLFilterParams();
+var study_id = getURLParameter();
+
+const pageFilters = getURLFilterParams();
 let runsView = null;
 
 var StudyView = Backbone.View.extend({
@@ -22,13 +37,13 @@ var StudyView = Backbone.View.extend({
         this.model.fetch({
             data: $.param({include: 'samples'}), success: function (data, response) {
                 that.render();
-                util.attachTabHandlers();
-                util.initTableTools();
+                attachTabHandlers();
+                initTableTools();
                 const collection = new api.RunCollection({study_id: study_id});
                 runsView = new RunsView({collection: collection});
                 initMap(data.attributes.samples);
-                $("#pagination").append(util.pagination);
-                $("#pageSize").append(util.pagesize);
+                $("#pagination").append(commons.pagination);
+                $("#pageSize").append(commons.pagesize);
                 Pagination.setPageSizeChangeCallback(updatePageSize);
             }
         });
@@ -78,7 +93,7 @@ var RunsView = Backbone.View.extend({
     },
     update: function (page, page_size) {
         $(".run-row").remove();
-        util.showTableLoadingGif();
+        showTableLoadingGif();
         var that = this;
         var params = {};
         if (page !== undefined) {
@@ -90,12 +105,12 @@ var RunsView = Backbone.View.extend({
         params.include = 'sample';
         params.study_accession = study_id;
 
-        util.setURLParams(params, false);
+        setURLParams(params, false);
 
         this.collection.fetch({
             data: $.param(params), remove: true,
             success: function (collection, response, options) {
-                util.hideTableLoadingGif();
+                hideTableLoadingGif();
                 Pagination.updatePagination(response.meta.pagination);
                 that.render();
             }
@@ -112,9 +127,9 @@ var RunsView = Backbone.View.extend({
 });
 
 function createLiveFilter() {
-    $('#runsTableBody').liveFilter(
-        '#search-filter', 'tr'
-    );
+    // $('#runsTableBody').liveFilter(
+    //     '#search-filter', 'tr'
+    // );
 }
 
 

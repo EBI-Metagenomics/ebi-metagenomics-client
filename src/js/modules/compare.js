@@ -1,9 +1,10 @@
-import Backbone from 'backbone';
-import _ from 'underscore';
-import * as util from '../main';
-import * as api from '../components/api';
+const Backbone = require('backbone');
+const _ = require('underscore');
+require('../commons');
+const api = require('../components/api');
+import {setCurrentTab} from "../util";
 
-util.setCurrentTab('#compare-nav');
+setCurrentTab('#compare-nav');
 
 var StudyView = Backbone.View.extend({
     tagName: 'option',

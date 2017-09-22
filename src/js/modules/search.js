@@ -1,11 +1,13 @@
-import * as util from '../main';
+console.log(1);
 import {SEARCH_URL} from '../config';
+import {attachTabHandlers, setCurrentTab} from "../util";
+console.log(2);
 const _ = require('underscore');
 const Backbone = require('backbone');
 
-util.setCurrentTab('#search-nav');
-util.attachTabHandlers();
-
+setCurrentTab('#search-nav');
+attachTabHandlers();
+console.log(3);
 
 /*
 * FOLLOWING CODE IS SPECIFIC TO EBI-SEARCH API
@@ -33,6 +35,7 @@ let Search = Backbone.Collection.extend({
         return response.data;
     }
 });
+console.log(4);
 
 let Project = Backbone.Model.extend({
     parse: function (d) {
@@ -49,7 +52,7 @@ let Projects = Search.extend({
         console.log(data);
     }
 });
-
+console.log(5);
 let ResultsView = Backbone.View.extend({
     render: function (response) {
         this.$el.html(this.template(response));
@@ -57,6 +60,7 @@ let ResultsView = Backbone.View.extend({
     }
 });
 
+console.log(6);
 let ProjectsView = ResultsView.extend({
     el: '#projects',
     params: {},
@@ -79,8 +83,8 @@ let ProjectsView = ResultsView.extend({
         });
     }
 });
+console.log(1);
 let search = new Search();
-console.log(search.tab);
 
 let projects = new Projects();
 let projectsView = new ProjectsView({collection: projects});

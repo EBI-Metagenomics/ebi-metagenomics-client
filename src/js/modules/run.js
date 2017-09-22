@@ -1,13 +1,16 @@
-import Backbone from 'backbone';
-import _ from 'underscore';
-import * as util from '../main';
-import * as api from '../components/api';
+const Backbone = require('backbone');
+const _ = require('underscore');
+const util = require('../util');
+require('../commons');
+const api = require('../components/api');
+
+import {attachTabHandlers, getURLParameter, setCurrentTab} from "../util";
 
 var Highcharts = require('highcharts');
 
-util.setCurrentTab('#samples-nav');
+setCurrentTab('#samples-nav');
 
-var run_id = util.getURLParameter();
+var run_id = getURLParameter();
 
 let analysis = null;
 let metadata = null;
@@ -33,7 +36,7 @@ var RunView = Backbone.View.extend({
     },
     render: function (callback) {
         this.$el.html(this.template(this.model.toJSON()));
-        util.attachTabHandlers();
+        attachTabHandlers();
         callback();
         return this.$el;
     }

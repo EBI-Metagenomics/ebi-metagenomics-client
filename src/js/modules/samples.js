@@ -1,14 +1,29 @@
-import Backbone from 'backbone';
-import _ from 'underscore';
-import * as util from '../main';
-import * as api from '../components/api';
-import Pagination from '../components/pagination';
+const Backbone = require('backbone');
+const _ = require('underscore');
+const util = require('../util');
+const commons = require('../commons');
+const api = require('../components/api');
+const Pagination = require('../components/pagination');
+const Order = require('../components/order');
+
+
 import {DEFAULT_PAGE_SIZE} from "../config";
-import Order from '../components/order';
+import {
+    getFilterFormData,
+    getURLFilterParams,
+    hideTableLoadingGif,
+    initResultsFilter,
+    setCurrentTab,
+    setURLParams,
+    showTableLoadingGif,
+    stripLineage
+} from "../util";
 
-util.setCurrentTab('#samples-nav');
+setCurrentTab('#samples-nav');
+$("#pagination").append(commons.pagination);
+$("#pageSize").append(commons.pagesize);
 
-const pageFilters = util.getURLFilterParams();
+const pageFilters = getURLFilterParams();
 
 const orderOptions = [
     {name: 'Sample accession', value: 'accession'},
@@ -18,9 +33,9 @@ const orderOptions = [
     {name: 'Last updated', value: 'last_update'},
 ];
 
-util.initResultsFilter(function (e) {
+initResultsFilter(function (e) {
     e.preventDefault();
-    var formData = util.getFilterFormData();
+    var formData = getFilterFormData();
     var params = {
         page_size: Pagination.getPageSize(),
         page: Pagination.currentPage,
@@ -28,7 +43,7 @@ util.initResultsFilter(function (e) {
         lineage: formData.biome,
         ordering: Order.getValue(),
     };
-    util.setURLParams(params, true);
+    setURLParams(params, true);
 });
 
 
@@ -63,7 +78,7 @@ var BiomeCollectionView = Backbone.View.extend({
             biomes: biomes.sort().map(function (x) {
                 return {
                     lineage: x,
-                    biome: util.stripLineage(x)
+                    biome: stripLineage(x)
                 };
             })
         };
@@ -128,7 +143,7 @@ var SamplesView = Backbone.View.extend({
                 const pag = response.meta.pagination;
                 Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
                 Order.initSelector(orderOptions, params.ordering, function (val) {
-                    var formData = util.getFilterFormData();
+                    var formData = getFilterFormData();
                     that.update(1, Pagination.getPageSize(), null, null, val);
                 });
             }
@@ -138,7 +153,7 @@ var SamplesView = Backbone.View.extend({
     update: function (page, page_size, searchQuery, biome, ordering) {
         $(".sample").remove();
 
-        util.showTableLoadingGif();
+        showTableLoadingGif();
         var that = this;
         var params = {};
 
@@ -170,13 +185,13 @@ var SamplesView = Backbone.View.extend({
             params.ordering = ordering
         }
         // util.setURLParams(params.search, params.lineage, params.page_size, params.page, false);
-        util.setURLParams(params, false);
+        setURLParams(params, false);
 
         this.collection.fetch({
             data: $.param(params),
             remove: true,
             success: function (collection, response, options) {
-                util.hideTableLoadingGif();
+                hideTableLoadingGif();
                 Pagination.updatePagination(response.meta.pagination);
                 that.render();
             }
@@ -192,19 +207,18 @@ var SamplesView = Backbone.View.extend({
     }
 });
 
-$("#pagination").append(util.pagination);
-$("#pageSize").append(util.pagesize);
+
 
 Pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 function updatePageSize(pageSize) {
-    var formData = util.getFilterFormData();
+    var formData = getFilterFormData();
     samplesView.update(Pagination.currentPage, pageSize, null, null);
 }
 
 function changePage(page) {
-    var formData = util.getFilterFormData();
+    var formData = getFilterFormData();
     samplesView.update(page, Pagination.getPageSize(), null, null);
 }
 

@@ -1,3 +1,3 @@
-import * as util from '../main.js';
+import {setCurrentTab} from "../util";
 
-util.setCurrentTab('#submit-nav');
+setCurrentTab('#submit-nav');

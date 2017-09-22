@@ -1,3 +1,5 @@
+import 'static/libraries/jquery.twbsPagination.js'
+
 var Pagination = module.exports = {
     pageSize: '#pagesize',
     pagination: '#pagination',
@@ -18,7 +20,7 @@ var Pagination = module.exports = {
         this.callback = callback;
         this.setPageDisplay(initPage, totalPages, totalResults);
         $("#pagesize").val(initPageSize);
-        $(pagination).twbsPagination(this.opts).on('page', function (evt, page) {
+        $(this.pagination).twbsPagination(this.opts).on('page', function (evt, page) {
             callback(page);
         });
     },
@@ -33,6 +35,7 @@ var Pagination = module.exports = {
     },
 
     getPageSize: function () {
+        console.log((this.pageSize));
         return parseInt($(this.pageSize)[0].value);
     },
 

@@ -1,5 +1,4 @@
-import Backbone from 'backbone';
-import _ from 'underscore';
-import * as util from '../main';
+import {setCurrentTab} from "../util";
+require('../commons');
 
-util.setCurrentTab('#contact-nav');
+setCurrentTab('#contact-nav');

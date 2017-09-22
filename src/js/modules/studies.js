@@ -1,16 +1,29 @@
-import Backbone from 'backbone';
-import _ from 'underscore';
-import * as util from '../main';
-import * as api from '../components/api';
-import Pagination from '../components/pagination';
-import Order from '../components/order';
+const Backbone = require('backbone');
+const _ = require('underscore');
+const util = require('../util');
+const commons = require('../commons');
+const api = require('../components/api');
+const Pagination = require('../components/pagination');
+const Order = require('../components/order');
+
 
 import {DEFAULT_PAGE_SIZE} from "../config";
+import {
+    getFilterFormData,
+    getURLFilterParams,
+    hideTableLoadingGif,
+    initResultsFilter,
+    setCurrentTab,
+    setURLParams,
+    showTableLoadingGif,
+    stripLineage
+} from "../util";
 
+setCurrentTab('#studies-nav');
+$("#pagination").append(commons.pagination);
+$("#pageSize").append(commons.pagesize);
 
-util.setCurrentTab('#studies-nav');
-
-const pageFilters = util.getURLFilterParams();
+const pageFilters = getURLFilterParams();
 
 const orderOptions = [
     // {name: 'Study accession', value: 'accession'},
@@ -21,10 +34,9 @@ const orderOptions = [
 ];
 
 
-
-util.initResultsFilter(function (e) {
+initResultsFilter(function (e) {
     e.preventDefault();
-    var formData = util.getFilterFormData();
+    // var formData = getFilterFormData();
     var params = {
         page_size: Pagination.getPageSize(),
         page: Pagination.currentPage,
@@ -32,8 +44,10 @@ util.initResultsFilter(function (e) {
         lineage: formData.biome,
         ordering: Order.getValue(),
     };
-    util.setURLParams(params, true);
+    setURLParams(params, true);
 });
+
+
 
 
 var BiomeCollectionView = Backbone.View.extend({
@@ -67,14 +81,13 @@ var BiomeCollectionView = Backbone.View.extend({
             biomes: biomes.sort().map(function (x) {
                 return {
                     lineage: x,
-                    biome: util.stripLineage(x)};
+                    biome: stripLineage(x)};
             })
         };
         this.$el.html(this.template(selectData));
         return this
     }
 });
-
 
 var StudyView = Backbone.View.extend({
     tagName: 'tr',
@@ -135,7 +148,7 @@ var StudiesView = Backbone.View.extend({
                 const pag = response.meta.pagination;
                 Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
                 Order.initSelector(orderOptions, params.ordering, function (val) {
-                    var formData = util.getFilterFormData();
+                    var formData = getFilterFormData();
                     that.update(1, Pagination.getPageSize(), null, null, val);
                 });
             }
@@ -146,7 +159,7 @@ var StudiesView = Backbone.View.extend({
     update: function (page, page_size, searchQuery, biome, ordering) {
         $(".study").remove();
 
-        util.showTableLoadingGif();
+        showTableLoadingGif();
         var that = this;
         var params = {};
 
@@ -178,11 +191,11 @@ var StudiesView = Backbone.View.extend({
             params.ordering = ordering
         }
         // util.setURLParams(params.search, params.lineage, params.page_size, params.page, false);
-        util.setURLParams(params, false);
+        setURLParams(params, false);
 
         this.collection.fetch({
             data: $.param(params), remove: true, success: function (collection, response, options) {
-                util.hideTableLoadingGif();
+                hideTableLoadingGif();
                 Pagination.updatePagination(response.meta.pagination);
                 that.render();
             }
@@ -199,30 +212,30 @@ var StudiesView = Backbone.View.extend({
 });
 
 
-// PAGINATION
-
-$("#pagination").append(util.pagination);
-$("#pageSize").append(util.pagesize);
-
-Pagination.setPageSizeChangeCallback(updatePageSize);
-
 
 function updatePageSize(pageSize) {
-    var formData = util.getFilterFormData();
+    var formData = getFilterFormData();
     studiesView.update(Pagination.currentPage, pageSize, null, null);
 }
 
 function changePage(page) {
-    var formData = util.getFilterFormData();
+    var formData = getFilterFormData();
     studiesView.update(page, Pagination.getPageSize(), null, null);
 }
+
+Pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 var biomes = new api.BiomeCollection();
 var biomesSelectView = new BiomeCollectionView({collection: biomes});
-
 var studies = new api.StudiesCollection();
 var studiesView = new StudiesView({collection: studies});
+
+// PAGINATION
+
+
+
+
 
 
 // function orderResultsTable(event) {

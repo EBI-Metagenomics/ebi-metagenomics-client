@@ -1,8 +1,7 @@
 import Backbone from 'backbone';
-import * as util from 'src/main';
 import Pagination from './pagination';
 import {API_URL, NO_DATA_MSG} from '../config';
-import _ from 'underscore';
+import {formatDate, formatLineage, getBiomeIcon, lineage2Biome} from "../util";
 
 // Model for an individual study
 export const Study = Backbone.Model.extend({
@@ -14,7 +13,7 @@ export const Study = Backbone.Model.extend({
         const attr = data.attributes;
         const biomes = data.relationships.biomes.data.map(function (x) {
             const name = x.id;
-            return {name: util.formatLineage(name), icon: util.getBiomeIcon(name)};
+            return {name: formatLineage(name), icon: getBiomeIcon(name)};
         });
         return {
             biomes: biomes,
@@ -24,7 +23,7 @@ export const Study = Backbone.Model.extend({
             samples_count: attr['samples-count'],
             study_id: attr['project-id'],
             study_accession: attr['accession'],
-            last_update: util.formatDate(attr['last-update']),
+            last_update: formatDate(attr['last-update']),
             contact_details: {
                 institute: attr['centre-name'] || NO_DATA_MSG,
                 name: attr['author-name'] || NO_DATA_MSG,
@@ -117,8 +116,8 @@ export const Biome = Backbone.Model.extend({
         const attr = data.attributes;
         const lineage = attr['lineage'];
         return {
-            name: util.lineage2Biome(lineage),
-            icon: util.getBiomeIcon(lineage),
+            name: lineage2Biome(lineage),
+            icon: getBiomeIcon(lineage),
             lineage: lineage,
             lineage_projects : attr['studies-count'],
             // lineage_projects_no_children: attr['studies-count'],
@@ -160,7 +159,7 @@ export const Sample = Backbone.Model.extend({
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
         return {
-            biome_icon: util.getBiomeIcon(data.relationships.biome.data.id),
+            biome_icon: getBiomeIcon(data.relationships.biome.data.id),
             biome_name: data.relationships.biome.data.id,
             sample_name: attr['sample-name'] || NO_DATA_MSG,
             sample_desc: attr['sample-desc'],
@@ -168,7 +167,7 @@ export const Sample = Backbone.Model.extend({
             study_accession: attr['study-accession'] || NO_DATA_MSG,
             study_link: '/study/' + attr['study-accession'],
             sample_accession: attr.accession || NO_DATA_MSG,
-            lineage: util.formatLineage(data.relationships.biome.data.id || NO_DATA_MSG),
+            lineage: formatLineage(data.relationships.biome.data.id || NO_DATA_MSG),
             metadatas: metadatas,
             runs: d.included,
         }
