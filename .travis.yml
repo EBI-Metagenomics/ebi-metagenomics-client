@@ -10,7 +10,8 @@ addons:
 
 install:
     - npm install webpack -g;
-    - sudo nginx start;
+    - test/util/configure-nginx.sh;
+    - sudo nginx;
     - curl http://localhost:8080;
     - npm install;
 
