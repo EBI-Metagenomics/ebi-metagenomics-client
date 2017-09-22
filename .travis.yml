@@ -11,11 +11,12 @@ addons:
 install:
     npm install webpack -g
     sudo nginx start;
-    echo curl http://localhost:8080
+    curl http://localhost:8080
     npm install
 
 script:
-    npm test
+    pwd
+    mocha
 
 cache:
   directories:
