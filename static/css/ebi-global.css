@@ -188,7 +188,7 @@ body.no-global-search .masthead-black-bar ul#global-nav.menu li.search {
     display: block;
     height: 50px;
     width: 67px;
-    background-image: url("../images/logos/EMBL-EBI/EMBL_EBI_Logo_white.svg");
+    background-image: url("/static/images/logos/EMBL-EBI/EMBL_EBI_Logo_white.svg");
     background-size: 64px 47px;
     background-repeat: no-repeat;
     margin-left: 6px; } }
@@ -267,7 +267,7 @@ body.no-global-search .masthead-black-bar ul#global-nav.menu li.search {
     color: #fff; }
   .masthead-black-bar .dropdown-pane.embl-dropdown {
     background-color: #333;
-    background-image: url("../images/map.png");
+    background-image: url("/static/images/map.png");
     background-position: 100% 100%;
     background-repeat: no-repeat;
     color: #fff;
@@ -584,7 +584,7 @@ pre > code {
 .embl-selector .button.hover,
 .embl-selector .button:focus,
 .embl-selector .button:hover {
-  background: no-repeat 4px 50% url("../images/logos/EMBL-EBI/EMBL_EBI_Logo_white.svg");
+  background: no-repeat 4px 50% url("/static/images/logos/EMBL-EBI/EMBL_EBI_Logo_white.svg");
   padding-left: 108px;
   background-size: 100px;
   padding-right: 17px;
@@ -637,7 +637,7 @@ pre > code {
     display: block;
     height: 53px;
     width: 89%;
-    background-image: url("../images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg");
+    background-image: url("/static/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg");
     background-size: contain;
     background-repeat: no-repeat;
     margin-left: -.25rem;

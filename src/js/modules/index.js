@@ -1,10 +1,16 @@
-import Backbone from 'backbone';
-import _ from 'underscore';
-import * as util from '../main';
-import * as api from '../components/api';
-import {API_URL} from "../config";
+const Backbone = require('backbone');
+const _ = require('underscore');
+const $ = require('jquery');
 
-util.setCurrentTab('#overview-nav');
+require('../commons');
+
+
+const api = require('../components/api');
+import {API_URL} from "../config";
+import {setCurrentTab} from "../util";
+
+
+setCurrentTab('#overview-nav');
 
 $('#this_close').on('click', function () {
     $('.jumbo-header').slideUp();

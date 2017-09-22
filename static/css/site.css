@@ -92,8 +92,8 @@ select.table-tools {
 
 /* Index page */
 .jumbo-header {
-    background: url(../images/backgrounds/bgd_header_microbes_30p.png) 96% bottom no-repeat,
-    url(../images/backgrounds/bgd_header_microbes_big_10p.png) -100px center no-repeat;
+    background: url(/static/images/backgrounds/bgd_header_microbes_30p.png) 96% bottom no-repeat,
+    url(/static/images/backgrounds/bgd_header_microbes_big_10p.png) -100px center no-repeat;
     text-align: center;
     font-weight: 300;
     line-height: 1.4;
@@ -120,7 +120,7 @@ select.table-tools {
     color: white;
     text-transform: uppercase;
     text-decoration: none;
-    background: url(../images/backgrounds/bgd_button_login_off.gif) repeat-x 50%;
+    background: url(/static/images/backgrounds/bgd_button_login_off.gif) repeat-x 50%;
     border-radius: 30px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
     padding: 12px 22px;
@@ -178,7 +178,7 @@ select.table-tools {
 /*biome gal*/
 .biome_icon {
     display: inline-block;
-    background-image: url(../images/ico_biome_sprite.png);
+    background-image: url(/static/images/ico_biome_sprite.png);
 }
 
 /*biome large icon*/
