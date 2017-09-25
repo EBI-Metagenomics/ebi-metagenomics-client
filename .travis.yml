@@ -12,7 +12,7 @@ install:
     - npm install webpack -g;
     - npm install;
     - webpack --progress --display-error-details;
-    - sudo nginx -c test/util/nginx.conf;
+    - sudo nginx -c "$(pwd)/test/util/nginx.conf";
     - curl http://localhost:8080;
 
 script:
