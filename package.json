@@ -24,7 +24,6 @@
     "jquery": "^3.2.1",
     "js-marker-clusterer": "^1.0.0",
     "livefilter": "^2.7.1",
-    "marker-spider": "^0.1.0",
     "motion-ui": "^1.2.3",
     "npm": "^5.4.2",
     "selenium-webdriver": "^3.5.0",

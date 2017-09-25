@@ -1,11 +1,13 @@
+console.log(1);
 const Backbone = require('backbone');
 const _ = require('underscore');
 const util = require('../util');
-require('../commons');
+const commons = require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination');
 const Handlebars = require('handlebars');
-import 'marker-spider';
+
+// const OverlappingMarkerSpiderfier = require('../../../static/libraries/oms.min.js');
 import 'js-marker-clusterer';
 
 import {DEFAULT_PAGE_SIZE} from "../config";
@@ -145,6 +147,7 @@ function initMap(samples) {
     var map = new google.maps.Map(document.getElementById('map'), {
         streetViewControl: false,
     });
+    console.log(map);
 
     const template = Handlebars.compile($("#marker-template").html());
 
@@ -223,5 +226,8 @@ function placeMarker(map, oms, template, sample) {
     return marker;
 }
 
+console.log(1);
 var study = new api.Study({id: study_id});
+console.log(2);
 var studyView = new StudyView({model: study});
+console.log(3);
