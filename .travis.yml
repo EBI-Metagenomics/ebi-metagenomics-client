@@ -12,12 +12,12 @@ addons:
       - nginx
 
 before_install:
+    - sudo nginx;
     - service nginx status;
 
 install:
     - npm install webpack -g;
     - test/util/configure-nginx.sh;
-    - sudo nginx;
     - curl http://localhost:8080;
     - npm install;
 
