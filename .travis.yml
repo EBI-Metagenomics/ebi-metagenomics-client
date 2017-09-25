@@ -14,7 +14,7 @@ install:
     - webpack --progress --display-error-details;
     - sudo nginx -s stop;
     - sudo cp -f test/util/nginx.conf /usr/share/nginx/nginx.conf;
-    - sudo nginx -c test/util/nginx.conf;
+    - sudo nginx;
     - curl http://localhost:8080;
 
 script:
