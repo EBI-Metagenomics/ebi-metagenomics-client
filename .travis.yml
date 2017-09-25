@@ -12,6 +12,8 @@ install:
     - npm install webpack -g;
     - npm install;
     - webpack --progress --display-error-details;
+    - sudo nginx -s stop;
+    - sudo cp -f test/util/nginx.conf /usr/chare/nginx/nginx.conf;
     - sudo nginx -c test/util/nginx.conf;
     - curl http://localhost:8080;
 
