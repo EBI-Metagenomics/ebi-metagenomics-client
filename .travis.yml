@@ -1,5 +1,5 @@
 dist: trusy
-sudo: required
+sudo: false
 
 language: node_js
 node_js:
@@ -12,7 +12,7 @@ addons:
       - nginx
 
 before_install:
-    - echo service nginx status;
+    - service nginx status;
 
 install:
     - npm install webpack -g;
