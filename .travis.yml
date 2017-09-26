@@ -3,10 +3,10 @@ node_js:
  - "node"
  - "8"
 
-addons:
-  apt:
-    packages:
-      - nginx
+before_install:
+    - add-apt-repository -y ppa:nginx/stable
+    - apt-get update
+    - apt-get -y install nginx
 
 install:
     - npm install webpack -g;
