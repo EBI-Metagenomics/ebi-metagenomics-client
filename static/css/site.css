@@ -47,9 +47,25 @@ th.description {
 
 }
 
+.search-row > td > div{
+    max-height:5em;
+    overflow-y: scroll;
+}
+
 .samples-table > tbody > tr > td > div {
     max-height: 5em;
     overflow-y: scroll;
+}
+
+.facet-slider-input {
+    width: auto;
+}
+
+.left {
+    float:left
+}
+.right {
+    float:right;
 }
 
 /*th.updated{*/

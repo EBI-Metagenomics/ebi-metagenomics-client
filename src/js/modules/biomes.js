@@ -8,7 +8,7 @@ import {DEFAULT_PAGE_SIZE} from "../config";
 
 import {
     formatLineage,
-    getFilterFormData,
+    getFormData,
     getURLFilterParams,
     hideTableLoadingGif,
     initResultsFilter,
@@ -107,12 +107,12 @@ Pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 function updatePageSize(pageSize) {
-    var formData = getFilterFormData();
+    var formData = getFormData("#filter");
     biomesView.update(Pagination.currentPage, pageSize, formData[0], formData[1]);
 }
 
 function changePage(page) {
-    var formData = getFilterFormData();
+    var formData = getFormData("#filter");
     biomesView.update(page, Pagination.getPageSize(), formData[0], formData[1]);
 }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <!--TODO add metadata-->
-    <title>[page-title] &lt; [service-name] &lt; EMBL-EBI</title>
+    <title>Search</title>
     <meta name="description" content="EMBL-EBI"/><!-- Describe what this page is about -->
     <meta name="keywords" content="bioinformatics, europe, institute"/>
     <!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
@@ -82,75 +82,193 @@
     <div class="row">
         <div class="columns small-12 medium-12 large-12">
             <ul class="tabs" data-tabs id="results-tabs">
-                <li class="tabs-title active"><a href="#projects" aria-selected="true">Projects</a></li>
-                <li class="tabs-title"><a href="#samples">Samples</a></li>
-                <li class="tabs-title"><a href="#runs">Runs</a></li>
+                <li class="tabs-title is-active"><a href="#projectsTab" aria-selected="true">Projects</a></li>
+                <li class="tabs-title"><a href="#samplesTab">Samples</a></li>
+                <li class="tabs-title"><a href="#runsTab">Runs</a></li>
             </ul>
             <div class="tabs-content" data-tab-content="results-tabs">
-                <div class="tabs-panel active" id="projects"></div>
-                <div class="tabs-panel" id="samples"></div>
-                <div class="tabs-panel" id="runs"></div>
+                <div class="tabs-panel active" id="projectsTab">
+                    <div class="row">
+                        <div class="columns small-2 medium-2 large-2" id="projectsFilters">
+                        </div>
+                        <div class="columns small-10 medium-10 large-10" id="projects">
+                        </div>
+                    </div>
+                </div>
+                <div class="tabs-panel" id="samplesTab">
+                    <div class="row">
+                        <div class="columns small-2 medium-2 large-2" id="samplesFilters">
+                        </div>
+                        <div class="columns small-10 medium-10 large-10" id="samples">
+                        </div>
+                    </div>
+                </div>
+                <div class="tabs-panel" id="runsTab">
+                    <div class="row">
+                        <div class="columns small-2 medium-2 large-2" id="runsFilter">
+                        </div>
+                        <div class="columns small-10 medium-10 large-10" id="runs">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<script id="projectsTmpl" type="text/template">
-    <div class="row">
-        <div class="columns small-3 medium-3 large-3">
-            <h3>Filter your results</h3>
+<script id="filtersTmpl" type="text/template">
+    <form id="<%= formId %>">
+        <h3>Filter results</h3>
+        <!--Function to build successive hierarchy of checkboxes-->
+        <% function drawAndExpand(child, name, parentValue){ %>
+        <% let forLabel = child.value+'checkbox'; %>
+        <% if (child.children){ %>
+        <button class="disp-children">&#9654;</button>
+        <% } %>
+        <input name="<%= name %>" type="checkbox" value="<%= parentValue+child.value %>" class="facet-checkbox"
+               id="<%= forLabel %>"/> <label for="<%= forLabel %>"><%= child.label %> (<%= child.count %>)</label>
+        <% _.each(child.children, function(child2){ %>
+        <div class="facet-child-group">
+            <% drawAndExpand(child2, name, parentValue+child.value+'/'); %>
+        </div>
+        <% });%>
 
-            <!--Function to build successive hierarchy of checkboxes-->
-            <% function drawAndExpand(child, name){ %>
-            <div class="facet-child-group show">
-                <% let forLabel = child.value+'checkbox'; %>
-                <% if (child.children){ %>
-                    <button class="disp-children">A</button>
-                <% } %>
-                <input name="<%= name %>" type="checkbox" value="<%= child.value %>" class="facet-checkbox"
-                       id="<%= forLabel %>"/> <label for="<%= forLabel %>"><%= child.label %></label>
-                    <% _.each(child.children, function(child2){ %>
-                        <div class="facet-child-group">
-                        <% drawAndExpand(child2, name, true); %>
-                        </div>
-                    <% });%>
-            </div>
+        <% } %>
+        <% _.each(facets, function(facet){ if (facet.label!=='Source'){ %>
+        <div class="facet-group">
+            <% if (facet.type==='slider') {%>
+                <h5><%= facet.label %> (<%= facet.units %>)</h5>
+                <div class="row columns">
+                    <div id="<%= formId+facet.label+'slider' %>" class="slider" data-slider>
+                        <span class="slider-handle" data-slider-handle role="slider" tabindex="1"
+                              aria-controls="<%= formId+facet.label+'min' %>"></span>
+                        <span class="slider-fill" data-slider-fill></span>
+                        <span class="slider-handle" data-slider-handle role="slider" tabindex="1"
+                              aria-controls="<%= formId+facet.label+'max' %>"></span>
+                    </div>
+                </div>
+                <div class="row columns">
+                    <input class='facet-slider-input left' name="<%= facet.label+'min' %>" id="<%= formId+facet.label+'min' %>" type="number">
+                    <input class='facet-slider-input right' name="<%= facet.label+'max' %>" id="<%= formId+facet.label+'max' %>" type="number">
+                </div>
+            <% } else { %>
+                <h5><%= facet.label %></h5>
+            <% _.each(facet.facetValues, function(child){ %>
+                <div class="facet-child-group show">
+                    <% drawAndExpand(child, facet.id, '') %>
+                </div>
+            <% }); %>
             <% } %>
-            <% _.each(facets, function(facet){ if (facet.label!=='Source'){ %>
-            <h4><%= facet.label %></h4>
-                <% _.each(facet.facetValues, function(child){ %>
-
-                    <% drawAndExpand(child, facet.id, false) %>
-
-                <% console.log(child) %>
-                <% }); %>
-            <% }});%>
         </div>
-        <div class="columns small-9 medium-9 large-9">
-            <h3>Showing <%= entries.length %> out of <%= hitCount %></h3>
-            <table>
-                <thead>
-                    <tr>
-                        <td>Project</td>
-                        <td>Name</td>
-                        <td>Biome</td>
-                        <td>Description</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% _.each(entries, function(entry){ %>
-                        <tr>
-                            <td><%= f.id %></td>
-                            <td><%= f.id %></td>
-                            <td><%= f.id %></td>
-                            <td><%= f.id %></td>
-                        </tr>
+        <% }});%>
+    </form>
+</script>
+
+<script id="projectResultsTmpl" type="text/template">
+    <h5>Showing <%= entries.length %> out of <%= hitCount %></h5>
+    <table>
+        <thead>
+        <tr>
+            <td>Biome</td>
+            <td>Project</td>
+            <td>Name</td>
+            <td>Description</td>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(entries, function(entry){ %>
+        <% const fields = entry.fields %>
+        <tr class="search-row">
+            <td>
+                <div>
+                    <% _.each(entry.biomes, function(biome){ %>
+                    <span class="biome_icon icon_xs <%= biome.icon %>" title="<%= biome.name %>"></span>
                     <% }); %>
-                </tbody>
-            </table>
+                </div>
+            </td>
+            <td>
+                <div><a href="<%= entry.study_link %>"><%= entry.id %></a></div>
+            </td>
+            <td>
+                <div><%= fields.name %></div>
+            </td>
+            <td>
+                <div><%= fields.description %></div>
+            </td>
+        </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</script>
 
-        </div>
-    </div>
+<script id="samplesResultsTmpl" type="text/template">
+    <h5>Showing <%= entries.length %> out of <%= hitCount %></h5>
+    <table>
+        <thead>
+        <tr>
+            <td>Sample</td>
+            <td>Project</td>
+            <td>Name</td>
+            <td>Description</td>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(entries, function(entry){ %>
+        <% const fields = entry.fields %>
+        <tr class="search-row">
+            <td>
+                <div><a href="<%= entry.sample_link %>"><%= entry.id %></a></div>
+            </td>
+            <td>
+                <div><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a></div>
+            </td>
+            <td>
+                <div><%= fields.name %></div>
+            </td>
+            <td>
+                <div><%= fields.description %></div>
+            </td>
+        </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</script>
+
+<script id="runsResultsTmpl" type="text/template">
+    <h5>Showing <%= entries.length %> out of <%= hitCount %></h5>
+    <table>
+        <thead>
+        <tr>
+            <td>Run</td>
+            <td>Sample</td>
+            <td>Project</td>
+            <td>Experiment Type</td>
+            <td>Pipeline Version</td>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(entries, function(entry){ %>
+        <% const fields = entry.fields %>
+        <tr class="search-row">
+            <td>
+                <div><a href="<%= entry.run_link %>"><%= entry.id %></a></div>
+            </td>
+            <td>
+                <div><a href="<%= entry.sample_link %>"><%= fields.METAGENOMICS_SAMPLES %></a></div>
+            </td>
+            <td>
+                <div><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a></div>
+            </td>
+            <td>
+                <div><%= fields.experiment_type %></div>
+            </td>
+            <td>
+                <div><a href="<%= entry.pipeline_link %>"><%= fields.pipeline_version %></a></div>
+            </td>
+        </tr>
+        <% }); %>
+        </tbody>
+    </table>
 </script>
 
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
@@ -173,9 +291,10 @@
 <!-- The Foundation theme JavaScript -->
 
 <script src="/static/js/foundation.js"></script>
+<script src="/static/libraries/foundation.util.touch.js"></script>
 <script src="/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(document).foundation();
         $(document).foundationExtendEBI();
     });

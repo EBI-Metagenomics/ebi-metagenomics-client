@@ -9,7 +9,7 @@ const Order = require('../components/order');
 
 import {DEFAULT_PAGE_SIZE} from "../config";
 import {
-    getFilterFormData,
+    getFormData,
     getURLFilterParams,
     hideTableLoadingGif,
     initResultsFilter,
@@ -35,7 +35,7 @@ const orderOptions = [
 
 initResultsFilter(function (e) {
     e.preventDefault();
-    var formData = getFilterFormData();
+    var formData = getFormData("#filter");
     var params = {
         page_size: Pagination.getPageSize(),
         page: Pagination.currentPage,
@@ -143,7 +143,7 @@ var SamplesView = Backbone.View.extend({
                 const pag = response.meta.pagination;
                 Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
                 Order.initSelector(orderOptions, params.ordering, function (val) {
-                    var formData = getFilterFormData();
+                    var formData = getFormData("#filter");
                     that.update(1, Pagination.getPageSize(), null, null, val);
                 });
             }
@@ -213,12 +213,12 @@ Pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 function updatePageSize(pageSize) {
-    var formData = getFilterFormData();
+    var formData = getFormData("#filter");
     samplesView.update(Pagination.currentPage, pageSize, null, null);
 }
 
 function changePage(page) {
-    var formData = getFilterFormData();
+    var formData = getFormData("#filter");
     samplesView.update(page, Pagination.getPageSize(), null, null);
 }
 

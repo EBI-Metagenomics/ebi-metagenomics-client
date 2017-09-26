@@ -1,4 +1,5 @@
 let $ = require('jquery');
+let _ = require('underscore');
 
 // import '../../static/js/foundation';
 //
@@ -157,11 +158,20 @@ export function getBiomeIcon(lineage) {
     }());
 }
 
-export function getFilterFormData() {
-    var formData = $("#filter").serializeArray();
+export function getFormData(selector) {
+    var formData = $(selector).serializeArray();
     var data = {};
     $.map(formData, function (n, i) {
-        data[n['name']] = n['value'];
+        const varName = n['name'];
+        const value = n['value'];
+        if (_.has(data, varName)){
+            if (!Array.isArray(data[varName])) {
+                data[varName] = [data[varName]];
+            }
+            data[varName].push(value);
+        } else {
+            data[varName] = value;
+        }
     });
     return data;
 }
