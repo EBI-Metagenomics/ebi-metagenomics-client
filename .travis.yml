@@ -13,8 +13,9 @@ install:
     - npm install;
     - webpack --progress --display-error-details;
 
-    - travis_wait docker run --rm --name emg-nginx -v $TRAVIS_BUILD_DIR/dist:/usr/share/nginx/html:ro -v $TRAVIS_BUILD_DIR/test/util/nginx.conf:/etc/nginx/conf.d -d -p 8080:80 nginx
-
+    - travis_wait docker run --rm --name emg-nginx -v $TRAVIS_BUILD_DIR/dist:/usr/share/nginx/html:ro -d -p 8080:80 nginx;
+    - docker cp $TRAVIS_BUILD_DIR/test/util/nginx.conf emg-nginx:/etc/nginx/conf.d;
+    - docker run nginx reload;
     - sleep 10s;
     - curl -I http://localhost:8080
 
