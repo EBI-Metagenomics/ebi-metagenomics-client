@@ -15,7 +15,6 @@ install:
     - sudo nginx -s stop;
     - sudo cp -f test/util/nginx.conf /usr/share/nginx/nginx.conf;
     - sudo nginx;
-    - sleep 5s;
 
 script:
     - npm test;
