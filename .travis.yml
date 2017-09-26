@@ -3,24 +3,19 @@ node_js:
  - "node"
  - "8"
 
-before_install:
-    - sudo add-apt-repository -y ppa:nginx/stable
-    - sudo apt-get update
-    - sudo apt-get -y install nginx
+services:
+  - docker
+
+
 
 install:
     - npm install webpack -g;
     - npm install;
     - webpack --progress --display-error-details;
-    - sudo nginx -s stop;
 
-    - sed -i "s%rootPath%$TRAVIS_BUILD_DIR/dist%g" test/util/nginx.conf
-#    - grep "dist" test/util/nginx.conf;
-#    - sudo cp -f test/util/nginx.conf /usr/share/nginx/nginx.conf;
-    - sudo nginx -c $TRAVIS_BUILD_DIR/test/util/nginx.conf;
-    - sudo chmod -R 755 $TRAVIS_BUILD_DIR/dist;
+    - docker run -rm --name emg-nginx -v $TRAVIS_BUILD_DIR/dist:/usr/share/nginx/html:ro -v $TRAVIS_BUILD_DIR/test/util/nginx.conf:/etc/nginx/conf.d-d -p 8080:80 nginx
+
     - sleep 10s;
-    - ps -ef | grep nginx;
     - curl -I http://localhost:8080
 
 
