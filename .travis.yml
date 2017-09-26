@@ -14,6 +14,7 @@ install:
     - webpack --progress --display-error-details;
     - sudo nginx -s stop;
     - sed -i "s%rootPath%$TRAVIS_BUILD_DIR/dist%g" test/util/nginx.conf
+    - grep "dist" test/util/nginx.conf;
     - sudo cp -f test/util/nginx.conf /usr/share/nginx/nginx.conf;
     - sudo nginx;
 
