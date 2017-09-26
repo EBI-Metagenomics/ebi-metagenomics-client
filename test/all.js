@@ -10,9 +10,6 @@ describe('A server receiving a request', function () {
 
     // Assert against mocha's `this` context
     it('Server is online.', function () {
-        console.log(this.err);
-        console.log(this.res);
-        console.log(this.body);
         expect(this.err).to.equal(null);
         expect(this.res.statusCode).to.equal(200);
     });
