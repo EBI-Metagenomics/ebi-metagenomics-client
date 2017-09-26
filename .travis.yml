@@ -18,6 +18,7 @@ install:
 #    - grep "dist" test/util/nginx.conf;
 #    - sudo cp -f test/util/nginx.conf /usr/share/nginx/nginx.conf;
     - sudo nginx -c $TRAVIS_BUILD_DIR/test/util/nginx.conf;
+    - sudo chmod -R 777 .;
     - sleep 10s;
     - ps -ef | grep nginx;
     - curl -I http://localhost:8080
