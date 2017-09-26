@@ -16,11 +16,9 @@ install:
     - sudo cp -f test/util/nginx.conf /usr/share/nginx/nginx.conf;
     - sudo nginx;
     - sleep 5s;
-    - curl http://localhost:8080;
 
 script:
-    - pwd
-    - mocha
+    - npm test;
 
 cache:
   directories:
