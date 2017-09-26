@@ -17,7 +17,7 @@ install:
 #    - docker cp $TRAVIS_BUILD_DIR/test/util/nginx.conf emg-nginx:/etc/nginx/conf.d/nginx.conf;
 #    - docker exec emg-nginx nginx -s reload;
     - sleep 10s;
-    - curl -I http://localhost:8080
+    - curl -I http://localhost:8080:80
 
 
 script:
