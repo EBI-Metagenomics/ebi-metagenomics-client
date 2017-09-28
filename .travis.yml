@@ -22,8 +22,7 @@ before_script:
 
 
 script:
-    - cypress run --record
-
+    cypress run --record
 
 after_script:
     - docker stop emg-nginx
@@ -31,4 +30,5 @@ after_script:
 cache:
   directories:
     - node_modules
+    - /home/travis/.cypress/Cypress
 
