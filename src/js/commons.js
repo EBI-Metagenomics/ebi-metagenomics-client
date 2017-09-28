@@ -1,7 +1,6 @@
 
 export const header = require("../partials/header.handlebars");
 export const footer = require("../partials/footer.handlebars");
-export const tableTools = require("../partials/table_tools.handlebars");
 export const pagination = require("../partials/pagination.handlebars");
 export const pagesize = require("../partials/pagesize.handlebars");
 export const resultsFilter = require("../partials/results_filter.handlebars");
