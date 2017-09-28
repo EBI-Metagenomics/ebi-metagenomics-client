@@ -1,10 +1,7 @@
 const navNames = ['overview', 'search', 'submit', 'studies', 'samples', 'compare', 'about', 'contact'];
 const pageTitles = ['Browse projects', 'Search EBI Metagenomics', 'Submit data', 'Studies list', 'Samples list', 'Comparison tool', 'About EBI metagenomics', 'Contact us'];
 
-function openPage(origPage) {
-    let url = 'http://localhost:8080/' + (origPage !== 'overview' ? origPage : '');
-    cy.visit(url);
-}
+
 
 for (let orig=0; orig<navNames.length; orig++){
     for (let dest=1; dest<navNames.length; dest++){
