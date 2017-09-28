@@ -105,7 +105,7 @@
                 </div>
                 <div class="tabs-panel" id="runsTab">
                     <div class="row">
-                        <div class="columns small-2 medium-2 large-2" id="runsFilter">
+                        <div class="columns small-2 medium-2 large-2" id="runsFilters">
                         </div>
                         <div class="columns small-10 medium-10 large-10" id="runs">
                         </div>
@@ -119,6 +119,7 @@
 <script id="filtersTmpl" type="text/template">
     <form id="<%= formId %>">
         <h3>Filter results</h3>
+        <a id="clearFilters" class="button">Clear filters</a>
         <!--Function to build successive hierarchy of checkboxes-->
         <% function drawAndExpand(child, name, parentValue){ %>
         <% let forLabel = child.value+'checkbox'; %>

@@ -92,7 +92,6 @@ export function initResultsFilter(callback) {
         $(formId)[0].reset();
         callback(e);
     });
-
 }
 
 export function getURLParameter() {
@@ -102,7 +101,6 @@ export function getURLParameter() {
 
 export function getURLFilterParams() {
     return new URL(window.location).searchParams;
-
 }
 
 export function stripLineage(lineage) {

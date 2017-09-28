@@ -42,14 +42,13 @@ const ResultsView = Backbone.View.extend({
 
 const FiltersView = Backbone.View.extend({
     template: _.template($("#filtersTmpl").html()),
-    render: function(elem, data, formId, callback){
+    render: function(elem, data, formId){
         data.formId = formId;
         data.elem = elem;
         $(elem).html(this.template(data));
-        attachCheckboxHandlers();
+        attachCheckboxHandlers('#'+data.formId);
         _.each(data.facets, function(facet){
             if (facet.type==='slider'){
-                const id = '.'+facet.label+'slider';
                 let opts = {
                     start: facet.min,
                     end: facet.max,
@@ -58,6 +57,11 @@ const FiltersView = Backbone.View.extend({
                     doubleSided: true
                 };
                 var elem = new Foundation.Slider($('#'+data.formId+facet.label+'slider'), opts);
+                $(document).ready(function(){
+                    $(elem.$element).on('moved.zf.slider', function(){
+                        $('#'+formId).trigger('change');
+                    })
+                })
 
             }
         });
@@ -97,6 +101,7 @@ const ProjectsView = ResultsView.extend({
     initialize: function () {
         //TODO fetch params from session storage
         this.params = Search.prototype.params;
+
         this.fetchAndRender(true);
     },
     update: function(){
@@ -112,6 +117,9 @@ const ProjectsView = ResultsView.extend({
             success: function (collection, response) {
                 if (renderFilter) {
                     filters.render('#projectsFilters', response, that.formEl);
+                    $('#'+that.formEl).change(function(){
+                        that.update();
+                    });
                 }
                 that.render(response);
             }
@@ -132,8 +140,8 @@ const Samples = Search.extend({
     parse: function (response){
         response.facets.unshift(addSliderFilter('Depth', 'Metres', 0, 2000));
         response.facets.unshift(addSliderFilter('Temperature', '°C', -20, 110));
-        let data = response.entries.map(Sample.prototype.parse);
-        return data;
+        response.entries = response.entries.map(Sample.prototype.parse);
+        return response;
     }
 });
 
@@ -149,9 +157,9 @@ const SamplesView = ResultsView.extend({
         this.fetchAndRender(true);
     },
     update: function(){
-        var formData = removeRedundantBiomes($('#'+this.formEl).serializeArray());
-        var joinedFilters = joinFilters(formData);
-        this.params.facets = joinedFilters;
+        var formData = processSliders(removeRedundantBiomes($('#'+this.formEl).serializeArray()));
+        this.params.query = formData.queryParams.join(" AND ");
+        this.params.facets = formData.facets;
         this.fetchAndRender(false);
     },
     fetchAndRender: function(renderFilter){
@@ -161,6 +169,9 @@ const SamplesView = ResultsView.extend({
             success: function (collection, response) {
                 if (renderFilter) {
                     filters.render('#samplesFilters', response, that.formEl);
+                    $('#'+that.formEl).change(function(){
+                        that.update();
+                    });
                 }
                 that.render(response);
             }
@@ -182,10 +193,10 @@ const Run = Backbone.Model.extend({
 const Runs = Search.extend({
     tab: 'runs',
     parse: function (response){
-        let data = response.entries.map(Run.prototype.parse);
         response.facets.unshift(addSliderFilter('Depth', 'Metres', 0, 2000));
         response.facets.unshift(addSliderFilter('Temperature', '°C', -20, 110));
-        return data;
+        response.entries = response.entries.map(Run.prototype.parse);
+        return response;
     }
 });
 
@@ -201,9 +212,9 @@ const RunsView = ResultsView.extend({
         this.fetchAndRender(true);
     },
     update: function(){
-        var formData = removeRedundantBiomes($('#'+this.formEl).serializeArray());
-        var joinedFilters = joinFilters(formData);
-        this.params.facets = joinedFilters;
+        var formData = processSliders(removeRedundantBiomes($('#'+this.formEl).serializeArray()));
+        this.params.query = formData.queryParams.join(" AND ");
+        this.params.facets = formData.facets;
         this.fetchAndRender(false);
     },
     fetchAndRender: function(renderFilter){
@@ -212,13 +223,36 @@ const RunsView = ResultsView.extend({
             data: $.param(that.params),
             success: function (collection, response) {
                 if (renderFilter) {
-                    filters.render('#runsFilter', response, that.formEl);
+                    filters.render('#runsFilters', response, that.formEl);
+                    $('#'+that.formEl).change(function(){
+                        that.update();
+                    });
                 }
                 that.render(response);
             }
         });
     }
 });
+
+function processSliders(formData){
+    const queryNames = ['Temperaturemin', 'Temperaturemax', 'Depthmin', 'Depthmax'];
+    const temp = [null, null];
+    const depth = [null, null];
+
+    _.each(formData, function(elem){
+        if (elem.name==='Temperaturemin') {temp[0] = elem.value;}
+        else if (elem.name==='Temperaturemax') {temp[1] = elem.value;}
+        else if (elem.name==='Depthmin') {depth[0] = elem.value;}
+        else if (elem.name==='Depthmax') {depth[1] = elem.value;}
+    });
+
+    return {
+        facets: joinFilters(formData.filter(function(elem){
+            return (queryNames.indexOf(elem.name)===-1);
+        })),
+        queryParams: ['temperature:['+temp[0]+' TO '+temp[1]+']', 'depth:[ '+depth[0]+ ' TO '+depth[1]+']']
+    }
+}
 
 function joinFilters(filters){
     return filters.map(function(elem){
@@ -318,8 +352,8 @@ function getParentCheckbox(elem){
 /**
  * Waterfall checkbox behaviour (checkbox reflects values of child checkboxes (OFF | Partial | ON)
  */
-function attachCheckboxHandlers(){
-    $('.facet-checkbox').on('change', function () {
+function attachCheckboxHandlers(elem){
+    $(elem).find('.facet-checkbox').on('change', function () {
         // Check children
         $(this).siblings('.facet-child-group').find('.facet-checkbox').prop('checked', this.checked);
         $(this).siblings('.facet-child-group').find('.facet-checkbox').prop('indeterminate', false);
@@ -327,7 +361,7 @@ function attachCheckboxHandlers(){
         setParentCheckboxStatus(this);
     });
 
-    $('.disp-children').on('click', function(e){
+    $(elem).find('.disp-children').on('click', function(e){
         e.preventDefault();
         const group = $(this).siblings('.facet-child-group');
         group.hasClass('show') ? group.removeClass('show') : group.addClass('show');

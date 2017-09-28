@@ -55,7 +55,6 @@ var QCGraphView = Backbone.View.extend({
                 let remaining = [0, 0, 0, 0, 0];
                 let filtered = [0, 0, 0, 0, 0];
                 let post_sample = [0, 0, 0, 0, 0];
-                console.log(data);
                 remaining[0] = parseInt(data['Submitted nucleotide sequences']);
                 remaining[1] = parseInt(data['Nucleotide sequences after format-specific filtering']);
                 remaining[2] = parseInt(data['Nucleotide sequences after length filtering']);

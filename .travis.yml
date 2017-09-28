@@ -6,8 +6,6 @@ node_js:
 services:
   - docker
 
-
-
 install:
     - npm install webpack -g;
     - npm install;
@@ -19,8 +17,12 @@ install:
     - curl -I http://localhost:8080
 
 
+before_script:
+    - "if [ -n \"$PHANTOMJS21\" ]; then mv phantomjs-$PHANTOMJS2-linux-x86_64/bin/phantomjs .; fi"
+
+
 script:
-    - npm test;
+    - cypress run --record
 
 
 after_script:
@@ -28,6 +30,5 @@ after_script:
 
 cache:
   directories:
-    - "node_modules"
-    - nginx-cache
+    - node_modules
 

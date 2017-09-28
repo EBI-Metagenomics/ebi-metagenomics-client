@@ -35,7 +35,6 @@ var Pagination = module.exports = {
     },
 
     getPageSize: function () {
-        console.log((this.pageSize));
         return parseInt($(this.pageSize)[0].value);
     },
 

@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mb1069/ebi-metagenomics-client.svg?branch=master)](https://travis-ci.org/mb1069/ebi-metagenomics-client)
+
  # ebi-metagenomics-client
 Requirements:
  - npm 5.3.0

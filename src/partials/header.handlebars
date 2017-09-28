@@ -43,12 +43,16 @@
                     <li id="about-nav"><a href="/about">About</a></li>
                     <li id="contact-nav"><a href="/contact">Contact</a></li>
                 </ul>
-
-                <ul class="menu dropdown float-right" data-dropdown-menu data-description="functional">
-                    <li class="functional"><a href="#"><i class="icon icon-functional" data-icon="l"></i>Login</a>
-                    </li>
-
-                </ul>
+                <form id="headerSearchForm" action="/search">
+                    <ul class="menu dropdown float-right" data-dropdown-menu data-description="functional">
+                        <li><input id='navbar-query' name="query" type="search" placeholder="Search"></li>
+                        <li>
+                            <button id="search" type="submit" class="button">Search</button>
+                        </li>
+                        <li class="functional"><a href="#"><i class="icon icon-functional" data-icon="l"></i>Login</a>
+                        </li>
+                    </ul>
+                </form>
             </nav>
             <!-- /local-nav -->
         </div>
