@@ -101,6 +101,7 @@
                             <th class="sample-id">Sample ID</th>
                             <th class="sample-name">Name</th>
                             <th class="description">Description</th>
+                            <th class="updated">Last updated</th>
                         </tr>
                         </thead>
                         <tbody id='samples-table-body'>
@@ -116,13 +117,16 @@
                                       title="<%= biome_name %>"></span>
                             </td>
                             <td class="sample-id">
-                                <div><%= sample_accession %></div>
+                                <%= sample_accession %>
                             </td>
                             <td class="sample-name">
-                                <div><a href=<%= sample_link %>><%= sample_name %></a></div>
+                                <a href="<%= sample_link %>"><%= sample_name %></a>
                             </td>
                             <td class="description">
-                                <div><%= sample_desc %></div>
+                                <%= sample_desc %>
+                            </td>
+                            <td class="updated">
+                                <%= last_update %>
                             </td>
                         </script>
                     </table>

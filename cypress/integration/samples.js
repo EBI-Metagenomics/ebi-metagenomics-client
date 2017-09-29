@@ -47,7 +47,7 @@ describe('Samples page', function() {
     });
 
     it('Should respond to study name ordering', function(){
-        const selector = "td.name";
+        const selector = "td.sample-name";
 
         setSortBy(sortBySelector, '-sample_name');
         cy.get(selector).first().should(function($el){
@@ -61,7 +61,7 @@ describe('Samples page', function() {
     });
 
     it('Should respond to num. samples ordering', function(){
-        const selector = "td.samples";
+        const selector = "td.sample-id";
 
         setSortBy(sortBySelector, '-accession');
         cy.get(selector).first().should(function($el){

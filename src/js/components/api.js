@@ -170,6 +170,7 @@ export const Sample = Backbone.Model.extend({
             lineage: formatLineage(data.relationships.biome.data.id || NO_DATA_MSG),
             metadatas: metadatas,
             runs: d.included,
+            last_update: formatDate(attr['last-update'])
         }
     }
 });
