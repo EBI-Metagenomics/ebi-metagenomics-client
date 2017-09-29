@@ -111,17 +111,17 @@
                         </tr>
                         </tbody>
                         <script id="sample-row" type="text/template">
-                            <td>
+                            <td class="biome-icon">
                                 <span class="biome_icon icon_xs <%= biome_icon %> <%= biome_name %>"
                                       title="<%= biome_name %>"></span>
                             </td>
-                            <td>
+                            <td class="sample-id">
                                 <div><%= sample_accession %></div>
                             </td>
-                            <td>
-                                <div><a href=<%=sample_link %>><%= sample_name %></a></div>
+                            <td class="sample-name">
+                                <div><a href=<%= sample_link %>><%= sample_name %></a></div>
                             </td>
-                            <td>
+                            <td class="description">
                                 <div><%= sample_desc %></div>
                             </td>
                         </script>

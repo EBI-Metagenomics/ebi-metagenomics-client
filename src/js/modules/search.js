@@ -1,25 +1,38 @@
 import {SEARCH_URL} from '../config';
 import {attachTabHandlers, setCurrentTab} from "../util";
+
 const util = require('../util');
 const _ = require('underscore');
 const Backbone = require('backbone');
+const Cookies = require('js-cookie');
+
 import 'foundation-sites';
+
 setCurrentTab('#search-nav');
 attachTabHandlers();
 
-/*
-* FOLLOWING CODE IS SPECIFIC TO EBI-SEARCH API
-* */
+const queryText = util.getURLFilterParams().get('query');
+$(document).ready(function () {
+    $("#navbar-query").val(queryText);
+});
+
+const COOKIE_NAME = 'metagenomic_filter_params';
+
 const Search = Backbone.Collection.extend({
     tab: null,
     params: {
-        query: 'A',
+        query: '',
         format: 'json',
         size: 10,
         start: 0,
         fields: 'id,name,biome,description',
         facetcount: 10,
         facetsdepth: 5,
+    },
+    initialize: function () {
+        if (queryText) {
+            this.params.query = queryText;
+        }
     },
     url: function () {
         return SEARCH_URL + this.tab;
@@ -42,13 +55,13 @@ const ResultsView = Backbone.View.extend({
 
 const FiltersView = Backbone.View.extend({
     template: _.template($("#filtersTmpl").html()),
-    render: function(elem, data, formId){
+    render: function (elem, data, formId) {
         data.formId = formId;
         data.elem = elem;
         $(elem).html(this.template(data));
-        attachCheckboxHandlers('#'+data.formId);
-        _.each(data.facets, function(facet){
-            if (facet.type==='slider'){
+        attachCheckboxHandlers('#' + data.formId);
+        _.each(data.facets, function (facet) {
+            if (facet.type === 'slider') {
                 let opts = {
                     start: facet.min,
                     end: facet.max,
@@ -56,10 +69,10 @@ const FiltersView = Backbone.View.extend({
                     initialEnd: facet.max,
                     doubleSided: true
                 };
-                var elem = new Foundation.Slider($('#'+data.formId+facet.label+'slider'), opts);
-                $(document).ready(function(){
-                    $(elem.$element).on('moved.zf.slider', function(){
-                        $('#'+formId).trigger('change');
+                var elem = new Foundation.Slider($('#' + data.formId + facet.label + 'slider'), opts);
+                $(document).ready(function () {
+                    $(elem.$element).on('moved.zf.slider', function () {
+                        $('#' + formId).trigger('change');
                     })
                 })
 
@@ -100,26 +113,43 @@ const ProjectsView = ResultsView.extend({
     template: _.template($("#projectResultsTmpl").html()),
     initialize: function () {
         //TODO fetch params from session storage
-        this.params = Search.prototype.params;
+        const cookieParams = loadSearchParams('projects');
+        if (cookieParams) {
+            this.params = JSON.parse(cookieParams);
+        } else {
+            this.params = Search.prototype.params;
+        }
+        this.params.query = queryText || 'domain_source:metagenomics_projects';
 
-        this.fetchAndRender(true);
+        this.fetchAndRender(true, cookieParams);
     },
-    update: function(){
-        var formData = removeRedundantBiomes($('#'+this.formEl).serializeArray());
+    update: function () {
+        var formData = removeRedundantBiomes($('#' + this.formEl).serializeArray());
         var joinedFilters = joinFilters(formData);
         this.params.facets = joinedFilters;
-        this.fetchAndRender(false);
+        this.params.query = queryText || 'domain_source:metagenomics_projects';
+        this.fetchAndRender(false, false);
     },
-    fetchAndRender: function(renderFilter){
+    fetchAndRender: function (renderFilter, setFilters) {
         const that = this;
+        saveSearchParams('projects', this.params);
         this.collection.fetch({
             data: $.param(that.params),
             success: function (collection, response) {
                 if (renderFilter) {
                     filters.render('#projectsFilters', response, that.formEl);
-                    $('#'+that.formEl).change(function(){
+                    const form = $('#' + that.formEl);
+                    form.change(function () {
                         that.update();
                     });
+                    form.children("button[type='reset']").on("click", function(e){
+                        e.preventDefault();
+                        $(this).closest('form').get(0).reset();
+                        that.update();
+                    });
+                }
+                if (setFilters) {
+                    setFacetFilters('#' + that.formEl, that.params);
                 }
                 that.render(response);
             }
@@ -137,7 +167,7 @@ const Sample = Backbone.Model.extend({
 
 const Samples = Search.extend({
     tab: 'samples',
-    parse: function (response){
+    parse: function (response) {
         response.facets.unshift(addSliderFilter('Depth', 'Metres', 0, 2000));
         response.facets.unshift(addSliderFilter('Temperature', '°C', -20, 110));
         response.entries = response.entries.map(Sample.prototype.parse);
@@ -150,28 +180,50 @@ const SamplesView = ResultsView.extend({
     formEl: 'samplesForm',
     params: {},
     template: _.template($("#samplesResultsTmpl").html()),
+
     initialize: function () {
         //TODO fetch params from session storage
-        this.params = Search.prototype.params;
-        this.params.fields+=",METAGENOMICS_PROJECTS";
-        this.fetchAndRender(true);
+        const cookieParams = loadSearchParams('samples');
+        if (cookieParams) {
+            this.params = JSON.parse(cookieParams);
+        } else {
+            this.params = Search.prototype.params;
+            this.params.fields += ",METAGENOMICS_PROJECTS";
+        }
+        this.params.query = queryText || 'domain_source:metagenomics_samples';
+        this.fetchAndRender(true, cookieParams);
     },
-    update: function(){
-        var formData = processSliders(removeRedundantBiomes($('#'+this.formEl).serializeArray()));
+    update: function () {
+        var formData = processSliders(removeRedundantBiomes($('#' + this.formEl).serializeArray()));
         this.params.query = formData.queryParams.join(" AND ");
         this.params.facets = formData.facets;
-        this.fetchAndRender(false);
+        if (queryText) {
+            formData.queryParams.push(queryText);
+        }
+        this.fetchAndRender(false, false);
     },
-    fetchAndRender: function(renderFilter){
+    fetchAndRender: function (renderFilter, setFilters) {
         const that = this;
         this.collection.fetch({
             data: $.param(that.params),
             success: function (collection, response) {
                 if (renderFilter) {
                     filters.render('#samplesFilters', response, that.formEl);
-                    $('#'+that.formEl).change(function(){
+                    const form = $('#' + that.formEl);
+                    form.change(function () {
                         that.update();
                     });
+                    form.children("button[type='reset']").on("click", function(e){
+                        e.preventDefault();
+                        form.get(0).reset();
+                        _.each(form.find('input'), function(elem){
+                            $(elem).val($(elem).attr('defaultVal'));
+                        });
+                        that.update();
+                    });
+                }
+                if (setFilters) {
+                    setFacetFilters('#' + that.formEl, that.params);
                 }
                 that.render(response);
             }
@@ -180,7 +232,7 @@ const SamplesView = ResultsView.extend({
 });
 
 const Run = Backbone.Model.extend({
-    parse: function(d){
+    parse: function (d) {
         d.study_link = '/study/' + d.fields['METAGENOMICS_PROJECTS'][0];
         d.sample_link = '/sample/' + d.fields['METAGENOMICS_SAMPLES'][0];
         d.run_link = '/run/' + d.id;
@@ -192,7 +244,7 @@ const Run = Backbone.Model.extend({
 
 const Runs = Search.extend({
     tab: 'runs',
-    parse: function (response){
+    parse: function (response) {
         response.facets.unshift(addSliderFilter('Depth', 'Metres', 0, 2000));
         response.facets.unshift(addSliderFilter('Temperature', '°C', -20, 110));
         response.entries = response.entries.map(Run.prototype.parse);
@@ -207,26 +259,47 @@ const RunsView = ResultsView.extend({
     template: _.template($("#runsResultsTmpl").html()),
     initialize: function () {
         //TODO fetch params from session storage
-        this.params = Search.prototype.params;
-        this.params.fields+=",METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,experiment_type,pipeline_version";
-        this.fetchAndRender(true);
+        const cookieParams = loadSearchParams('runs');
+        if (cookieParams) {
+            this.params = cookieParams;
+        } else {
+            this.params = loadSearchParams('runs') || Search.prototype.params;
+            this.params.fields += ",METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,experiment_type,pipeline_version";
+        }
+        this.params.query = queryText || 'domain_source:metagenomics_runs';
+        this.fetchAndRender(true, cookieParams);
     },
-    update: function(){
-        var formData = processSliders(removeRedundantBiomes($('#'+this.formEl).serializeArray()));
+    update: function () {
+        var formData = processSliders(removeRedundantBiomes($('#' + this.formEl).serializeArray()));
         this.params.query = formData.queryParams.join(" AND ");
         this.params.facets = formData.facets;
-        this.fetchAndRender(false);
+        if (queryText) {
+            formData.queryParams.push(queryText);
+        }
+        this.fetchAndRender(false, false);
     },
-    fetchAndRender: function(renderFilter){
+    fetchAndRender: function (renderFilter, setFilters) {
         const that = this;
         this.collection.fetch({
             data: $.param(that.params),
             success: function (collection, response) {
                 if (renderFilter) {
                     filters.render('#runsFilters', response, that.formEl);
-                    $('#'+that.formEl).change(function(){
+                    const form = $('#' + that.formEl);
+                    form.change(function () {
                         that.update();
                     });
+                    form.children("button[type='reset']").on("click", function(e){
+                        e.preventDefault();
+                        form.get(0).reset();
+                        _.each(form.find('input'), function(elem){
+                            $(elem).val($(elem).attr('defaultVal'));
+                        });
+                        that.update();
+                    });
+                }
+                if (setFilters) {
+                    setFacetFilters('#' + that.formEl, that.params);
                 }
                 that.render(response);
             }
@@ -234,96 +307,71 @@ const RunsView = ResultsView.extend({
     }
 });
 
-function processSliders(formData){
+function processSliders(formData) {
     const queryNames = ['Temperaturemin', 'Temperaturemax', 'Depthmin', 'Depthmax'];
     const temp = [null, null];
     const depth = [null, null];
 
-    _.each(formData, function(elem){
-        if (elem.name==='Temperaturemin') {temp[0] = elem.value;}
-        else if (elem.name==='Temperaturemax') {temp[1] = elem.value;}
-        else if (elem.name==='Depthmin') {depth[0] = elem.value;}
-        else if (elem.name==='Depthmax') {depth[1] = elem.value;}
+    _.each(formData, function (elem) {
+        if (elem.name === 'Temperaturemin') {
+            temp[0] = elem.value;
+        }
+        else if (elem.name === 'Temperaturemax') {
+            temp[1] = elem.value;
+        }
+        else if (elem.name === 'Depthmin') {
+            depth[0] = elem.value;
+        }
+        else if (elem.name === 'Depthmax') {
+            depth[1] = elem.value;
+        }
     });
 
     return {
-        facets: joinFilters(formData.filter(function(elem){
-            return (queryNames.indexOf(elem.name)===-1);
+        facets: joinFilters(formData.filter(function (elem) {
+            return (queryNames.indexOf(elem.name) === -1);
         })),
-        queryParams: ['temperature:['+temp[0]+' TO '+temp[1]+']', 'depth:[ '+depth[0]+ ' TO '+depth[1]+']']
+        queryParams: ['temperature:[' + temp[0] + ' TO ' + temp[1] + ']', 'depth:[ ' + depth[0] + ' TO ' + depth[1] + ']']
     }
 }
 
-function joinFilters(filters){
-    return filters.map(function(elem){
-        return elem.name+":"+elem.value;
+function joinFilters(filters) {
+    return filters.map(function (elem) {
+        return elem.name + ":" + elem.value;
     }).join(',')
 }
 
-function removeRedundantBiomes(formData){
-    var newData = formData.filter(function(elem){
-        return elem.name!=='biome';
+function removeRedundantBiomes(formData) {
+    var newData = formData.filter(function (elem) {
+        return elem.name !== 'biome';
     });
-    var biomes = formData.filter(function(elem){
-        return elem.name==='biome';
+    var biomes = formData.filter(function (elem) {
+        return elem.name === 'biome';
     });
-    _.each(biomes, function(biome){
+    _.each(biomes, function (biome) {
         let parent = null;
         let biomeValue = biome.value;
-        if (biomeValue.indexOf('/') > -1){
+        if (biomeValue.indexOf('/') > -1) {
             var pos = biomeValue.lastIndexOf('/');
             parent = biomeValue.substring(0, pos);
         } else {
             parent = '';
         }
-        var parentExists = _.find(biomes, function(biome2){
-            return biome2.value===parent
+        var parentExists = _.find(biomes, function (biome2) {
+            return biome2.value === parent
         });
 
-        if (!parentExists){
+        if (!parentExists) {
             newData.push(biome);
         }
     });
     return newData;
 }
 
-function setParentCheckboxStatus(elem){
-    const parentCheckbox = getParentCheckbox(elem);
-    const children = getChildrenCheckboxes(parentCheckbox);
-    let checkedChildren = 0;
-    let countChildren = children.length;
-    let indeterminateChildren = 0;
-    _.each(children, function (checkbox) {
-        if (checkbox.checked){
-            checkedChildren++;
-        }
-        if ($(checkbox).prop('indeterminate')){
-            indeterminateChildren++;
-        }
-    });
-
-    if (indeterminateChildren>0){
-        $(parentCheckbox).prop('indeterminate', true);
-        $(parentCheckbox).prop('checked', false);
-    } else if (checkedChildren===0){
-        $(parentCheckbox).prop('indeterminate', false);
-        $(parentCheckbox).prop('checked', false);
-    } else if (checkedChildren<countChildren){
-        $(parentCheckbox).prop('indeterminate', true);
-        $(parentCheckbox).prop('checked', false);
-    } else {
-        $(parentCheckbox).prop('indeterminate', false);
-        $(parentCheckbox).prop('checked', true);
-    }
-    if (getParentCheckbox(parentCheckbox).val()!==undefined) {
-        setParentCheckboxStatus(parentCheckbox);
-    }
-}
-
-function convertBiomes(entry){
+function convertBiomes(entry) {
     let biomes = [];
-    _.each(entry.fields.biome, function(biome){
-        biome = 'root:'+biome.replace(/\/([^\/]*)$/, '').replace(/\//g, ':');
+    _.each(entry.fields.biome, function (biome) {
+        biome = 'root:' + biome.replace(/\/([^\/]*)$/, '').replace(/\//g, ':');
         biomes.push({
             name: util.formatLineage(biome),
             icon: util.getBiomeIcon(biome)
@@ -332,7 +380,7 @@ function convertBiomes(entry){
     return biomes;
 }
 
-function addSliderFilter(name, units, min, max){
+function addSliderFilter(name, units, min, max) {
     return {
         type: 'slider',
         label: name,
@@ -342,39 +390,111 @@ function addSliderFilter(name, units, min, max){
     }
 }
 
-function getChildrenCheckboxes(elem){
+function setFacetFilters(formId, params) {
+    if (params.facets) {
+        console.log(params.facets);
+        let facetParams = params.facets.split(",");
+        _.each(facetParams, function (param) {
+            let [name, value] = param.split(":");
+            // Set checkbox parent and propagate to parent
+            const selector = formId + " input[name='" + name + "'][value='"+value+"']";
+            $(selector).prop('checked', true).parent().show();
+
+            setParentCheckboxStatus(selector);
+            setChildrenCheckboxes(selector);
+        });
+    }
+}
+
+function getChildrenCheckboxes(elem) {
     return $(elem).siblings('.facet-child-group').children('.facet-checkbox');
 }
-function getParentCheckbox(elem){
+
+function getParentCheckbox(elem) {
     return $(elem).parent().siblings('.facet-checkbox');
+}
+
+function setChildrenCheckboxes(elem){
+    const children = $(elem).siblings('.facet-child-group').find('.facet-checkbox');
+    children.prop('checked', elem.checked);
+    children.prop('indeterminate', false);
+    if (elem.checked){
+        children.parent().show();
+    }
+}
+
+
+function setParentCheckboxStatus(elem) {
+    const parentCheckSelector = getParentCheckbox(elem);
+    const children = getChildrenCheckboxes(parentCheckSelector);
+    let checkedChildren = 0;
+    let countChildren = children.length;
+    let indeterminateChildren = 0;
+    _.each(children, function (checkbox) {
+        if (checkbox.checked) {
+            checkedChildren++;
+        }
+        if ($(checkbox).prop('indeterminate')) {
+            indeterminateChildren++;
+        }
+    });
+
+    const parentCheckbox = $(parentCheckSelector);
+
+    if (indeterminateChildren > 0) {
+        parentCheckbox.prop('indeterminate', true);
+        parentCheckbox.prop('checked', false);
+        parentCheckbox.parent().show();
+    } else if (checkedChildren === 0) {
+        parentCheckbox.prop('indeterminate', false);
+        parentCheckbox.prop('checked', false);
+        parentCheckbox.parent().hide();
+    } else if (checkedChildren < countChildren) {
+        parentCheckbox.prop('indeterminate', true);
+        parentCheckbox.prop('checked', false);
+        parentCheckbox.parent().show();
+    } else {
+        parentCheckbox.prop('indeterminate', false);
+        parentCheckbox.prop('checked', true);
+        parentCheckbox.parent().show();
+    }
+    if (getParentCheckbox(parentCheckSelector).val() !== undefined) {
+        setParentCheckboxStatus(parentCheckSelector);
+    }
 }
 
 /**
  * Waterfall checkbox behaviour (checkbox reflects values of child checkboxes (OFF | Partial | ON)
  */
-function attachCheckboxHandlers(elem){
+function attachCheckboxHandlers(elem) {
     $(elem).find('.facet-checkbox').on('change', function () {
         // Check children
-        $(this).siblings('.facet-child-group').find('.facet-checkbox').prop('checked', this.checked);
-        $(this).siblings('.facet-child-group').find('.facet-checkbox').prop('indeterminate', false);
-
+        setChildrenCheckboxes(this);
         setParentCheckboxStatus(this);
     });
 
-    $(elem).find('.disp-children').on('click', function(e){
+    $(elem).find('.disp-children').on('click', function (e) {
         e.preventDefault();
         const group = $(this).siblings('.facet-child-group');
-        group.hasClass('show') ? group.removeClass('show') : group.addClass('show');
 
-        if ($(this).hasClass('open')){
-            $(this).removeClass('open');
-            $(this).text("\u25B6");
-        } else {
-            $(this).addClass('open');
+        group.toggle();
+        console.log(group.is(":visible"));
+        if (group.is(":visible")) {
             $(this).text("\u25BC");
+        } else {
+            $(this).text("\u25B6");
         }
     });
 }
+
+function saveSearchParams(facet, params) {
+    Cookies.set(COOKIE_NAME + facet, params);
+}
+
+function loadSearchParams(facet) {
+    return Cookies.get(COOKIE_NAME + facet);
+}
+
 
 let search = new Search();
 

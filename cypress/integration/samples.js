@@ -1,34 +1,34 @@
 import {openPage} from './util';
-const origPage = 'studies';
+const origPage = 'samples';
 
 const initialResultSize = 25;
 const sortBySelector = '#sortBy';
 
-function waitForStudiesLoad(results){
-    cy.get("table tr.study", {timeout: 10000}).should("have.length", parseInt(results));
+function waitForSamplesLoad(results){
+    cy.get("table tr.sample", {timeout: 10000}).should("have.length", parseInt(results));
 }
 
 function setSortBy(sortBySelector, optionVal){
     cy.get(sortBySelector).select(optionVal);
-    waitForStudiesLoad(initialResultSize);
+    waitForSamplesLoad(initialResultSize);
 }
 
 /**
  * Verify number of results responds to selector
  */
-describe('Studies page', function() {
+describe('Samples page', function() {
     // it('Correct number of results.', function() {
     //     openPage(origPage);
     //     cy.wait(1000);
     //     cy.get('#pagesize').invoke('val').then((val) => {
-    //         waitForStudiesLoad(val);
+    //         waitForSamplesLoad(val);
     //         cy.get('#pagesize').select('50');
-    //         waitForStudiesLoad('50');
+    //         waitForSamplesLoad('50');
     //     });
     // });
     beforeEach(function(){
         openPage(origPage);
-        waitForStudiesLoad(initialResultSize);
+        waitForSamplesLoad(initialResultSize);
 
     });
 
@@ -49,12 +49,12 @@ describe('Studies page', function() {
     it('Should respond to study name ordering', function(){
         const selector = "td.name";
 
-        setSortBy(sortBySelector, '-study_name');
+        setSortBy(sortBySelector, '-sample_name');
         cy.get(selector).first().should(function($el){
             expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
         });
 
-        setSortBy(sortBySelector, 'study_name');
+        setSortBy(sortBySelector, 'sample_name');
         cy.get(selector).first().should(function($el){
             expect(Cypress.$(selector).last().text()).to.be.gte($el.text());
         });
@@ -63,12 +63,12 @@ describe('Studies page', function() {
     it('Should respond to num. samples ordering', function(){
         const selector = "td.samples";
 
-        setSortBy(sortBySelector, '-samples_count');
+        setSortBy(sortBySelector, '-accession');
         cy.get(selector).first().should(function($el){
             expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
         });
 
-        setSortBy(sortBySelector, 'samples_count');
+        setSortBy(sortBySelector, 'accession');
         cy.get(selector).first().should(function($el){
             expect(Cypress.$(selector).last().text()).to.be.gte($el.text());
         });

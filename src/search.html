@@ -119,7 +119,7 @@
 <script id="filtersTmpl" type="text/template">
     <form id="<%= formId %>">
         <h3>Filter results</h3>
-        <a id="clearFilters" class="button">Clear filters</a>
+        <button id="clearFilters" class="button" type="reset">Clear filters</button>
         <!--Function to build successive hierarchy of checkboxes-->
         <% function drawAndExpand(child, name, parentValue){ %>
         <% let forLabel = child.value+'checkbox'; %>
@@ -149,8 +149,8 @@
                     </div>
                 </div>
                 <div class="row columns">
-                    <input class='facet-slider-input left' name="<%= facet.label+'min' %>" id="<%= formId+facet.label+'min' %>" type="number">
-                    <input class='facet-slider-input right' name="<%= facet.label+'max' %>" id="<%= formId+facet.label+'max' %>" type="number">
+                    <input class='facet-slider-input left' name="<%= facet.label+'min' %>" id="<%= formId+facet.label+'min' %>" type="number" defaultval="<%= facet.min %>">
+                    <input class='facet-slider-input right' name="<%= facet.label+'max' %>" id="<%= formId+facet.label+'max' %>" type="number" defaultval="<%= facet.max %>">
                 </div>
             <% } else { %>
                 <h5><%= facet.label %></h5>
@@ -166,7 +166,8 @@
 </script>
 
 <script id="projectResultsTmpl" type="text/template">
-    <h5>Showing <%= entries.length %> out of <%= hitCount %></h5>
+    <h4>Showing results for: <%= searchDescription %></h4>
+    <h5><%= entries.length %> out of <%= hitCount %> results</h5>
     <table>
         <thead>
         <tr>
@@ -203,7 +204,8 @@
 </script>
 
 <script id="samplesResultsTmpl" type="text/template">
-    <h5>Showing <%= entries.length %> out of <%= hitCount %></h5>
+    <h4>Showing results for: <%= searchDescription %></h4>
+    <h5><%= entries.length %> out of <%= hitCount %> results</h5>
     <table>
         <thead>
         <tr>
@@ -236,7 +238,8 @@
 </script>
 
 <script id="runsResultsTmpl" type="text/template">
-    <h5>Showing <%= entries.length %> out of <%= hitCount %></h5>
+    <h4>Showing results for: <%= searchDescription %></h4>
+    <h5><%= entries.length %> out of <%= hitCount %> results</h5>
     <table>
         <thead>
         <tr>
