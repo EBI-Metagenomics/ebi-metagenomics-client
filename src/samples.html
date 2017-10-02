@@ -74,70 +74,62 @@
     <section id="main-content-area" class="row" role="main">
         <div class="columns small-12 medium-12 large-12">
             <h2>Samples list</h2>
-            <div id="filterForm"></div>
-
-            <!-- Your menu structure should make a breadcrumb redundant, but if a breadcrump is needed uncomment the below -->
-            <!--         <nav aria-label="You are here:" role="navigation">
-                      <ul class="breadcrumbs">
-                        <li><a href="../../">EBI Framework</a></li>
-                        <li><a href="../">Sample pages</a></li>
-                        <li>
-                          <span class="show-for-sr">Current: </span> Search results boilerplate
-                        </li>
-                      </ul>
-                    </nav> -->
-
-            <div class="row">
-                <div class="small-12 columns">
-                    <h2>Search results</h2>
-                    <div id="pageSize"></div>
+            <div class="center">
+                <div class="row">
+                    <div class="columns small-6 ">
+                        <div id="pageSize"></div>
+                    </div>
+                    <div class="columns small-6">
+                        <div id="filterForm"></div>
+                    </div>
                 </div>
-
-                <div class="small-12 medium-12 medium-push-12">
-                    <table class="samples-table">
-                        <thead>
-                        <tr>
-                            <th class="biome-icon">Biome</th>
-                            <th data-sortby='accession' class="sample-id sort-both">Sample ID</th>
-                            <!--<th data-sortby='study-accession' class="study-id sort-both">Study ID</th>-->
-                            <th class="study-id">Study ID</th>
-                            <th data-sortby='sample_name' class="sample-name sort-both">Name</th>
-                            <th class="description sort-both">Description</th>
-                            <th data-sortby='last_update' class="updated sort-both">Last updated</th>
-                        </tr>
-                        </thead>
-                        <tbody id='samples-table-body'>
-                        <tr>
-                            <td class='loading-gif-row' colspan="4">
-                                <img class='loading-gif' src="/static/images/ajax-loader.gif"/>
-                            </td>
-                        </tr>
-                        </tbody>
-                        <script id="sample-row" type="text/template">
-                            <td class="biome-icon">
+                <div class="row">
+                    <div class="small-12 medium-12 medium-push-12">
+                        <table class="samples-table">
+                            <thead>
+                            <tr>
+                                <th class="biome-icon">Biome</th>
+                                <th data-sortby='accession' class="sample-id sort-both">Sample ID</th>
+                                <!--<th data-sortby='study-accession' class="study-id sort-both">Study ID</th>-->
+                                <th class="study-id">Study ID</th>
+                                <th data-sortby='sample_name' class="sample-name sort-both">Name</th>
+                                <th class="description">Description</th>
+                                <th data-sortby='last_update' class="updated sort-both">Last updated</th>
+                            </tr>
+                            </thead>
+                            <tbody id='samples-table-body'>
+                            <tr>
+                                <td class='loading-gif-row' colspan="4">
+                                    <img class='loading-gif' src="/static/images/ajax-loader.gif"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <script id="sample-row" type="text/template">
+                                <td class="biome-icon">
                                 <span class="biome_icon icon_xs <%= biome_icon %> <%= biome_name %>"
                                       title="<%= biome_name %>"></span>
-                            </td>
-                            <td class="sample-id">
-                                <a href="<%= sample_link %>"><%= sample_accession %></a>
-                            </td>
-                            <td class="study-id">
-                                <a href="<%= study_link %>"><%= study_accession %></a>
-                            </td>
-                            <td class="sample-name">
-                                <a href="<%= sample_link %>"><%= sample_name %></a>
-                            </td>
-                            <td class="description">
-                                <%= sample_desc %>
-                            </td>
-                            <td class="updated">
-                                <%= last_update %>
-                            </td>
-                        </script>
-                    </table>
-                </div> <!-- /medium-7 -->
+                                </td>
+                                <td class="sample-id">
+                                    <a href="<%= sample_link %>"><%= sample_accession %></a>
+                                </td>
+                                <td class="study-id">
+                                    <a href="<%= study_link %>"><%= study_accession %></a>
+                                </td>
+                                <td class="sample-name">
+                                    <a href="<%= sample_link %>"><%= sample_name %></a>
+                                </td>
+                                <td class="description">
+                                    <%= sample_desc %>
+                                </td>
+                                <td class="updated">
+                                    <%= last_update %>
+                                </td>
+                            </script>
+                        </table>
+                    </div>
+                </div>
+                <div id="pagination"></div>
             </div>
-            <div id="pagination"></div>
         </div>
     </section>
 </div>
@@ -164,7 +156,7 @@
 <script src="/static/js/foundation.js"></script>
 <script src="/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(document).foundation();
         $(document).foundationExtendEBI();
     });

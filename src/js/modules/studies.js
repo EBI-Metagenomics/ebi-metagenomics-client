@@ -15,7 +15,8 @@ import {
     setCurrentTab,
     setURLParams,
     showTableLoadingGif,
-    stripLineage
+    stripLineage,
+    BiomeCollectionView
 } from "../util";
 
 setCurrentTab('#studies-nav');
@@ -33,60 +34,9 @@ const orderOptions = [
 ];
 
 
-initResultsFilter(function (e) {
-    e.preventDefault();
-    var formData = getFormData("#filter");
-    var params = {
-        page_size: Pagination.getPageSize(),
-        page: Pagination.currentPage,
-        search: formData.search,
-        lineage: formData.biome,
-        ordering: Order.currentOrder,
-    };
-    setURLParams(params, true);
-});
 
 
 
-
-var BiomeCollectionView = Backbone.View.extend({
-    el: "#biomeSelect",
-    template: _.template($("#biomeSelectorTmpl").html()),
-    initialize: function () {
-        var that = this;
-        this.collection.fetch({
-            data: $.param({depth_lte: 3}), success: function () {
-                // Fetch and pre-pend root node to list
-                var root = new api.Biome({id: 'root'});
-                root.fetch({
-                    success: function () {
-                        that.collection.unshift(root);
-                        that.render();
-                        let biome = pageFilters.get('lineage');
-                        if (!biome) {
-                            biome = 'root';
-                        }
-                        $("#biomeSelect > select").val(biome);
-                    }
-                });
-            }
-        });
-    },
-    render: function () {
-        var biomes = this.collection.models.map(function (model) {
-            return model.attributes.lineage
-        });
-        var selectData = {
-            biomes: biomes.sort().map(function (x) {
-                return {
-                    lineage: x,
-                    biome: stripLineage(x)};
-            })
-        };
-        this.$el.html(this.template(selectData));
-        return this
-    }
-});
 
 var StudyView = Backbone.View.extend({
     tagName: 'tr',
@@ -120,9 +70,9 @@ var StudiesView = Backbone.View.extend({
         }
 
         const ordering = pageFilters.get('ordering');
-        if (ordering){
+        if (ordering) {
             params.ordering = ordering;
-        }  else {
+        } else {
             params.ordering = '-last_update';
         }
 
@@ -146,54 +96,31 @@ var StudiesView = Backbone.View.extend({
                 that.render();
                 const pag = response.meta.pagination;
                 Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
-                Order.initHeaders(params.ordering, function(sort){
+                Order.initHeaders(params.ordering, function (sort) {
                     var formData = getFormData("#filter");
-                    that.update(1, Pagination.getPageSize(), null, null, sort);
+                    const params = {
+                        page: 1,
+                        pagesize: Pagination.getPageSize(),
+                        ordering: sort
+                    };
+                    that.update(params);
                 })
             }
         });
         return this;
     },
 
-    update: function (page, page_size, searchQuery, biome, ordering) {
+    update: function (params) {
+        const that = this;
+
+        this.params = $.extend(this.params, params);
         $(".study").remove();
 
         showTableLoadingGif();
-        var that = this;
-        var params = {};
-
-        if (page !== null) {
-            params.page = page
-        }
-
-        if (page_size !== null) {
-            params.page_size = page_size
-        }
-
-        if (searchQuery !== null) {
-            params.search = searchQuery
-        } else {
-            if (this.params.search) {
-                params.search = this.params.search;
-            }
-        }
-
-        if (biome !== null) {
-            params.lineage = biome
-        } else {
-            if (this.params.lineage) {
-                params.lineage = this.params.lineage;
-            }
-        }
-
-        if (ordering !== null) {
-            params.ordering = ordering
-        }
-        // util.setURLParams(params.search, params.lineage, params.page_size, params.page, false);
-        setURLParams(params, false);
+        setURLParams(this.params, false);
 
         this.collection.fetch({
-            data: $.param(params), remove: true, success: function (collection, response, options) {
+            data: $.param(that.params), remove: true, success: function (collection, response, options) {
                 hideTableLoadingGif();
                 Pagination.updatePagination(response.meta.pagination);
                 that.render();
@@ -211,28 +138,45 @@ var StudiesView = Backbone.View.extend({
 });
 
 function updatePageSize(pageSize) {
-    var formData = getFormData("#filter");
-    studiesView.update(Pagination.currentPage, pageSize, null, null);
+    const params = {
+        page_size: pageSize,
+        page: Pagination.currentPage,
+    };
+    studiesView.update(params);
 }
 
 function changePage(page) {
-    var formData = getFormData("#filter");
-    studiesView.update(page, Pagination.getPageSize(), null, null);
+    const params = {
+        page_size: Pagination.getPageSize(),
+        page: page,
+    };
+    studiesView.update(params);
 }
 
 Pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 var biomes = new api.BiomeCollection();
-var biomesSelectView = new BiomeCollectionView({collection: biomes});
+var biomesSelectView = new BiomeCollectionView({collection: biomes}, pageFilters.get('lineage'));
 var studies = new api.StudiesCollection();
 var studiesView = new StudiesView({collection: studies});
 
+
+
+initResultsFilter(pageFilters.get('search'), function (e) {
+    e.preventDefault();
+    var params = {
+        page_size: Pagination.getPageSize(),
+        page: Pagination.currentPage,
+        search: $("#search-input").val(),
+        lineage: $("#biome-select").val(),
+        ordering: Order.currentOrder,
+    };
+    studiesView.update(params);
+});
+
+
 // PAGINATION
-
-
-
-
 
 
 // function orderResultsTable(event) {

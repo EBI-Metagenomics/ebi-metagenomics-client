@@ -16,7 +16,8 @@ import {
     setCurrentTab,
     setURLParams,
     showTableLoadingGif,
-    stripLineage
+    stripLineage,
+    BiomeCollectionView
 } from "../util";
 
 setCurrentTab('#samples-nav');
@@ -32,60 +33,6 @@ const orderOptions = [
     // {name: 'Number of samples', value: 'samples_count'},
     {name: 'Last updated', value: 'last_update'},
 ];
-
-initResultsFilter(function (e) {
-    e.preventDefault();
-    var formData = getFormData("#filter");
-    var params = {
-        page_size: Pagination.getPageSize(),
-        page: Pagination.currentPage,
-        search: formData.search,
-        lineage: formData.biome,
-        ordering: Order.currentOrder,
-    };
-    setURLParams(params, true);
-});
-
-
-var BiomeCollectionView = Backbone.View.extend({
-    el: "#biomeSelect",
-    template: _.template($("#biomeSelectorTmpl").html()),
-    initialize: function () {
-        var that = this;
-        this.collection.fetch({
-            data: $.param({depth_lte: 3}), success: function () {
-                // Fetch and pre-pend root node to list
-                var root = new api.Biome({id: 'root'});
-                root.fetch({
-                    success: function () {
-                        that.collection.unshift(root);
-                        that.render();
-                        let biome = pageFilters.get('lineage');
-                        if (!biome) {
-                            biome = 'root';
-                        }
-                        $("#biomeSelect > select").val(biome);
-                    }
-                });
-            }
-        });
-    },
-    render: function () {
-        var biomes = this.collection.models.map(function (model) {
-            return model.attributes.lineage
-        });
-        var selectData = {
-            biomes: biomes.sort().map(function (x) {
-                return {
-                    lineage: x,
-                    biome: stripLineage(x)
-                };
-            })
-        };
-        this.$el.html(this.template(selectData));
-        return this
-    }
-});
 
 
 var SampleView = Backbone.View.extend({
@@ -140,58 +87,32 @@ var SamplesView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params), success: function (collection, response, options) {
                 that.render();
-                console.log(collection);
                 const pag = response.meta.pagination;
                 Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
                 Order.initHeaders(params.ordering, function(sort){
                     var formData = getFormData("#filter");
-                    that.update(1, Pagination.getPageSize(), null, null, sort);
+                    const params = {
+                        page: 1,
+                        pagesize: Pagination.getPageSize(),
+                        ordering: sort
+                    };
+                    that.update(params);
                 })
             }
         });
         return this;
     },
-    update: function (page, page_size, searchQuery, biome, ordering) {
+    update: function (params) {
+        const that = this;
+
+        this.params = $.extend(this.params, params);
         $(".sample").remove();
 
         showTableLoadingGif();
-        var that = this;
-        var params = {};
-
-        if (page !== null) {
-            params.page = page
-        }
-
-        if (page_size !== null) {
-            params.page_size = page_size
-        }
-
-        if (searchQuery !== null) {
-            params.search = searchQuery
-        } else {
-            if (this.params.search) {
-                params.search = this.params.search;
-            }
-        }
-
-        if (biome !== null) {
-            params.lineage = biome
-        } else {
-            if (this.params.lineage) {
-                params.lineage = this.params.lineage;
-            }
-        }
-
-        if (ordering !== undefined) {
-            params.ordering = ordering
-        }
-        // util.setURLParams(params.search, params.lineage, params.page_size, params.page, false);
-        setURLParams(params, false);
+        setURLParams(this.params, false);
 
         this.collection.fetch({
-            data: $.param(params),
-            remove: true,
-            success: function (collection, response, options) {
+            data: $.param(that.params), remove: true, success: function (collection, response, options) {
                 hideTableLoadingGif();
                 Pagination.updatePagination(response.meta.pagination);
                 that.render();
@@ -208,27 +129,42 @@ var SamplesView = Backbone.View.extend({
     }
 });
 
+function updatePageSize(pageSize) {
+    const params = {
+        page_size: pageSize,
+        page: Pagination.currentPage,
+    };
+    samplesView.update(params);
+}
 
+function changePage(page) {
+    const params = {
+        page_size: Pagination.getPageSize(),
+        page: page,
+    };
+    samplesView.update(params);
+}
 
 Pagination.setPageSizeChangeCallback(updatePageSize);
 
 
-function updatePageSize(pageSize) {
-    var formData = getFormData("#filter");
-    samplesView.update(Pagination.currentPage, pageSize, null, null);
-}
-
-function changePage(page) {
-    var formData = getFormData("#filter");
-    samplesView.update(page, Pagination.getPageSize(), null, null);
-}
-
-
 var biomes = new api.BiomeCollection();
-var biomesSelectView = new BiomeCollectionView({collection: biomes});
+var biomesSelectView = new BiomeCollectionView({collection: biomes}, pageFilters.get('lineage'));
 
 var samples = new api.SamplesCollection();
 var samplesView = new SamplesView({collection: samples});
+
+initResultsFilter(pageFilters.get('search'), function (e) {
+    e.preventDefault();
+    var params = {
+        page_size: Pagination.getPageSize(),
+        page: Pagination.currentPage,
+        search: $("#search-input").val(),
+        lineage: $("#biome-select").val(),
+        ordering: Order.currentOrder,
+    };
+    samplesView.update(params);
+});
 
 // TODO remove this
 window.samplesView = samplesView;

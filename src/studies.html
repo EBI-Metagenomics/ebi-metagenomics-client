@@ -77,26 +77,16 @@
         <div class="columns small-12 medium-12 large-12">
             <h2>Studies list</h2>
             <div class="center">
-
-                <div id="filterForm"></div>
-                <!-- Your menu structure should make a breadcrumb redundant, but if a breadcrump is needed uncomment the below -->
-                <!--         <nav aria-label="You are here:" role="navigation">
-                          <ul class="breadcrumbs">
-                            <li><a href="../../">EBI Framework</a></li>
-                            <li><a href="../">Sample pages</a></li>
-                            <li>
-                              <span class="show-for-sr">Current: </span> Search results boilerplate
-                            </li>
-                          </ul>
-                        </nav> -->
-
                 <div class="row">
-                    <div class="small-12 columns">
-                        <h2>Search results</h2>
+                    <div class="columns small-6 ">
                         <div id="pageSize"></div>
                     </div>
-
-                    <div class="small-12 medium-12 medium-push-12">
+                    <div class="columns small-6">
+                        <div id="filterForm"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="columns small-12 medium-12 medium-push-12">
                         <table class="studies-table">
                             <thead>
                             <tr>
@@ -108,9 +98,9 @@
                             </thead>
                             <tbody id='studies-table-body'>
                             <!--<tr>-->
-                                <!--<td class='loading-gif-row' colspan="4">-->
-                                    <!--<img class='loading-gif' src="/static/images/ajax-loader.gif"/>-->
-                                <!--</td>-->
+                            <!--<td class='loading-gif-row' colspan="4">-->
+                            <!--<img class='loading-gif' src="/static/images/ajax-loader.gif"/>-->
+                            <!--</td>-->
                             <!--</tr>-->
                             </tbody>
                             <script id="study-row" type="text/template">
@@ -125,8 +115,7 @@
                                 <td class="updated"><%= last_update %></td>
                             </script>
                         </table>
-
-                    </div> <!-- /medium-7 -->
+                    </div>
                 </div>
                 <div id="pagination"></div>
             </div>
@@ -155,7 +144,7 @@
 <script src="/static/js/foundation.js"></script>
 <script src="/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(document).foundation();
         $(document).foundationExtendEBI();
     });

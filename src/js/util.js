@@ -1,7 +1,9 @@
-let $ = require('jquery');
-let _ = require('underscore');
+const $ = require('jquery');
+const _ = require('underscore');
+const Backbone = require('backbone');
+const api = require('./components/api');
 
-import {footer, header, resultsFilter, tableTools} from "./commons";
+import {footer, header, resultsFilter} from "./commons";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 export function formatLineage(lineage) {
@@ -26,17 +28,15 @@ export function setCurrentTab(id) {
 }
 
 export function initTableTools() {
-    $("#tableTools").append(tableTools);
+    // $("#tableTools").append(tableTools);
 }
 
-export function initResultsFilter(callback) {
+export function initResultsFilter(initQuery, callback) {
     const formId = "#filter";
     $("#filterForm").append(resultsFilter);
-    $(formId).on('submit', callback);
-    $(".clearFilter").on('click', function (e) {
-        $(formId)[0].reset();
-        callback(e);
-    });
+    $('#search-input').val(initQuery);
+    $('#search-input').on('change', callback);
+    $('#biome-select').on('change', callback);
 }
 
 export function getURLParameter() {
@@ -155,4 +155,36 @@ export function attachTabHandlers() {
         $(tabId).addClass('active');
     });
 }
+
+export const BiomeCollectionView = Backbone.View.extend({
+    initialize: function (collection, biome) {
+        var that = this;
+        this.collection.fetch({
+            data: $.param({depth_lte: 3}), success: function () {
+                // Fetch and pre-pend root node to list
+                var root = new api.Biome({id: 'root'});
+                root.fetch({
+                    success: function () {
+                        that.collection.unshift(root);
+                        that.render();
+                        if (!biome) {
+                            biome = 'root';
+                        }
+                        $("#biomeSelect > select").val(biome);
+                    }
+                });
+            }
+        });
+    },
+    render: function () {
+        var biomes = this.collection.models.map(function (model) {
+            return model.attributes.lineage
+        });
+        _.each(biomes.sort(), function(lineage){
+            const option = "<option value=\""+lineage+"\">"+stripLineage(lineage)+"</option> ";
+            $("#biome-select").append($(option));
+        });
+        return this
+    }
+});
 
