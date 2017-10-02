@@ -31,20 +31,38 @@ th.updated {
 
 /*SAMPLES TABLE*/
 th.biome-icon {
-    width: 10%;
+    width: 6%;
 }
 
 th.sample-id {
     width: 10%;
 }
 
+th.study-id {
+    width: 10%;
+}
 th.sample-name {
-    width: 20%;
+    width: 18%;
 }
 
 th.description {
-    width: 60%;
+    width: 46%;
 
+}
+
+th.sort-desc:after {
+    float:right;
+    content: url('../images/sort_desc.png');
+}
+
+th.sort-asc:after {
+    float:right;
+    content: url('../images/sort_asc.png');
+}
+
+th.sort-both:after {
+    float:right;
+    content: url('../images/sort_both.png');
 }
 
 .search-row > td > div{

@@ -80,7 +80,9 @@
     </div>
 
     <div class="row">
-        <div class="columns small-12 medium-12 large-12">
+        <div class="columns small-2 medium-2 large-2" id="projectsFilters">
+        </div>
+        <div class="columns small-10 medium-10 large-10">
             <ul class="tabs" data-tabs id="results-tabs">
                 <li class="tabs-title is-active"><a href="#projectsTab" aria-selected="true">Projects</a></li>
                 <li class="tabs-title"><a href="#samplesTab">Samples</a></li>
@@ -89,25 +91,20 @@
             <div class="tabs-content" data-tab-content="results-tabs">
                 <div class="tabs-panel active" id="projectsTab">
                     <div class="row">
-                        <div class="columns small-2 medium-2 large-2" id="projectsFilters">
-                        </div>
-                        <div class="columns small-10 medium-10 large-10" id="projects">
+
+                        <div class="columns" id="projects">
                         </div>
                     </div>
                 </div>
                 <div class="tabs-panel" id="samplesTab">
                     <div class="row">
-                        <div class="columns small-2 medium-2 large-2" id="samplesFilters">
-                        </div>
-                        <div class="columns small-10 medium-10 large-10" id="samples">
+                        <div class="columns" id="samples">
                         </div>
                     </div>
                 </div>
                 <div class="tabs-panel" id="runsTab">
                     <div class="row">
-                        <div class="columns small-2 medium-2 large-2" id="runsFilters">
-                        </div>
-                        <div class="columns small-10 medium-10 large-10" id="runs">
+                        <div class="columns" id="runs">
                         </div>
                     </div>
                 </div>
@@ -166,7 +163,7 @@
 </script>
 
 <script id="projectResultsTmpl" type="text/template">
-    <h4>Showing results for: <%= searchDescription %></h4>
+    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100] and depth in [0,50] </h5>
     <h5><%= entries.length %> out of <%= hitCount %> results</h5>
     <table>
         <thead>
@@ -204,7 +201,7 @@
 </script>
 
 <script id="samplesResultsTmpl" type="text/template">
-    <h4>Showing results for: <%= searchDescription %></h4>
+    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100] and depth in [0,50] </h5>
     <h5><%= entries.length %> out of <%= hitCount %> results</h5>
     <table>
         <thead>
@@ -238,7 +235,7 @@
 </script>
 
 <script id="runsResultsTmpl" type="text/template">
-    <h4>Showing results for: <%= searchDescription %></h4>
+    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100] and depth in [0,50] </h5>
     <h5><%= entries.length %> out of <%= hitCount %> results</h5>
     <table>
         <thead>

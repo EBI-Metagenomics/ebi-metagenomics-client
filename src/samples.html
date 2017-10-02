@@ -98,10 +98,12 @@
                         <thead>
                         <tr>
                             <th class="biome-icon">Biome</th>
-                            <th class="sample-id">Sample ID</th>
-                            <th class="sample-name">Name</th>
-                            <th class="description">Description</th>
-                            <th class="updated">Last updated</th>
+                            <th data-sortby='accession' class="sample-id sort-both">Sample ID</th>
+                            <!--<th data-sortby='study-accession' class="study-id sort-both">Study ID</th>-->
+                            <th class="study-id">Study ID</th>
+                            <th data-sortby='sample_name' class="sample-name sort-both">Name</th>
+                            <th class="description sort-both">Description</th>
+                            <th data-sortby='last_update' class="updated sort-both">Last updated</th>
                         </tr>
                         </thead>
                         <tbody id='samples-table-body'>
@@ -117,7 +119,10 @@
                                       title="<%= biome_name %>"></span>
                             </td>
                             <td class="sample-id">
-                                <%= sample_accession %>
+                                <a href="<%= sample_link %>"><%= sample_accession %></a>
+                            </td>
+                            <td class="study-id">
+                                <a href="<%= study_link %>"><%= study_accession %></a>
                             </td>
                             <td class="sample-name">
                                 <a href="<%= sample_link %>"><%= sample_name %></a>

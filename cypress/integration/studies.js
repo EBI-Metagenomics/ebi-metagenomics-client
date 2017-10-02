@@ -2,14 +2,13 @@ import {openPage} from './util';
 const origPage = 'studies';
 
 const initialResultSize = 25;
-const sortBySelector = '#sortBy';
 
 function waitForStudiesLoad(results){
     cy.get("table tr.study", {timeout: 10000}).should("have.length", parseInt(results));
 }
 
-function setSortBy(sortBySelector, optionVal){
-    cy.get(sortBySelector).select(optionVal);
+function setSortBy(sortBySelector){
+    cy.get(sortBySelector).click();
     waitForStudiesLoad(initialResultSize);
 }
 
@@ -35,42 +34,42 @@ describe('Studies page', function() {
     it('Should respond to last-updated ordering', function(){
         const selector = "td.updated";
 
-        setSortBy(sortBySelector, '-last_update');
-        cy.get(selector).first().should(function($el){
-            expect(new Date(Cypress.$(selector).last().text())).to.be.lte(new Date($el.text()));
-        });
-
-        setSortBy(sortBySelector, 'last_update');
+        setSortBy('th.updated');
         cy.get(selector).first().should(function($el){
             expect(new Date(Cypress.$(selector).last().text())).to.be.gte(new Date($el.text()));
+        });
+
+        setSortBy('th.updated');
+        cy.get(selector).first().should(function($el){
+            expect(new Date(Cypress.$(selector).last().text())).to.be.lte(new Date($el.text()));
         });
     });
 
     it('Should respond to study name ordering', function(){
         const selector = "td.name";
 
-        setSortBy(sortBySelector, '-study_name');
-        cy.get(selector).first().should(function($el){
-            expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
-        });
-
-        setSortBy(sortBySelector, 'study_name');
+        setSortBy('th.name');
         cy.get(selector).first().should(function($el){
             expect(Cypress.$(selector).last().text()).to.be.gte($el.text());
+        });
+
+        setSortBy('th.name');
+        cy.get(selector).first().should(function($el){
+            expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
         });
     });
 
     it('Should respond to num. samples ordering', function(){
         const selector = "td.samples";
 
-        setSortBy(sortBySelector, '-samples_count');
-        cy.get(selector).first().should(function($el){
-            expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
-        });
-
-        setSortBy(sortBySelector, 'samples_count');
+        setSortBy('th.samples');
         cy.get(selector).first().should(function($el){
             expect(Cypress.$(selector).last().text()).to.be.gte($el.text());
+        });
+
+        setSortBy('th.samples');
+        cy.get(selector).first().should(function($el){
+            expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
         });
     });
 });

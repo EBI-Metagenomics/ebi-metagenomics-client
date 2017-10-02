@@ -101,17 +101,17 @@
                             <thead>
                             <tr>
                                 <th class="biome">Biome</th>
-                                <th class="name">Study name</th>
-                                <th class="samples">Samples</th>
-                                <th class="updated">Last updated</th>
+                                <th data-sortby='study_name' class="sort-both name">Study name</th>
+                                <th data-sortby='samples_count' class="sort-both samples">Samples</th>
+                                <th data-sortby='last_update' class="sort-both updated">Last updated</th>
                             </tr>
                             </thead>
                             <tbody id='studies-table-body'>
-                            <tr>
-                                <td class='loading-gif-row' colspan="4">
-                                    <img class='loading-gif' src="/static/images/ajax-loader.gif"/>
-                                </td>
-                            </tr>
+                            <!--<tr>-->
+                                <!--<td class='loading-gif-row' colspan="4">-->
+                                    <!--<img class='loading-gif' src="/static/images/ajax-loader.gif"/>-->
+                                <!--</td>-->
+                            <!--</tr>-->
                             </tbody>
                             <script id="study-row" type="text/template">
                                 <td class="biome">

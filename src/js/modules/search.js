@@ -18,6 +18,8 @@ $(document).ready(function () {
 
 const COOKIE_NAME = 'metagenomic_filter_params';
 
+let currentTab = 'projects';
+
 const Search = Backbone.Collection.extend({
     tab: null,
     params: {
@@ -142,7 +144,7 @@ const ProjectsView = ResultsView.extend({
                     form.change(function () {
                         that.update();
                     });
-                    form.children("button[type='reset']").on("click", function(e){
+                    form.children("button[type='reset']").on("click", function (e) {
                         e.preventDefault();
                         $(this).closest('form').get(0).reset();
                         that.update();
@@ -213,10 +215,10 @@ const SamplesView = ResultsView.extend({
                     form.change(function () {
                         that.update();
                     });
-                    form.children("button[type='reset']").on("click", function(e){
+                    form.children("button[type='reset']").on("click", function (e) {
                         e.preventDefault();
                         form.get(0).reset();
-                        _.each(form.find('input'), function(elem){
+                        _.each(form.find('input'), function (elem) {
                             $(elem).val($(elem).attr('defaultVal'));
                         });
                         that.update();
@@ -289,10 +291,10 @@ const RunsView = ResultsView.extend({
                     form.change(function () {
                         that.update();
                     });
-                    form.children("button[type='reset']").on("click", function(e){
+                    form.children("button[type='reset']").on("click", function (e) {
                         e.preventDefault();
                         form.get(0).reset();
-                        _.each(form.find('input'), function(elem){
+                        _.each(form.find('input'), function (elem) {
                             $(elem).val($(elem).attr('defaultVal'));
                         });
                         that.update();
@@ -397,7 +399,7 @@ function setFacetFilters(formId, params) {
         _.each(facetParams, function (param) {
             let [name, value] = param.split(":");
             // Set checkbox parent and propagate to parent
-            const selector = formId + " input[name='" + name + "'][value='"+value+"']";
+            const selector = formId + " input[name='" + name + "'][value='" + value + "']";
             $(selector).prop('checked', true).parent().show();
 
             setParentCheckboxStatus(selector);
@@ -414,13 +416,13 @@ function getParentCheckbox(elem) {
     return $(elem).parent().siblings('.facet-checkbox');
 }
 
-function setChildrenCheckboxes(elem){
+function setChildrenCheckboxes(elem) {
     const children = $(elem).siblings('.facet-child-group').find('.facet-checkbox');
     children.prop('checked', elem.checked);
     children.prop('indeterminate', false);
-    if (elem.checked){
-        children.parent().show();
-    }
+    // if (elem.checked){
+    //     children.parent().show();
+    // }
 }
 
 
@@ -444,19 +446,15 @@ function setParentCheckboxStatus(elem) {
     if (indeterminateChildren > 0) {
         parentCheckbox.prop('indeterminate', true);
         parentCheckbox.prop('checked', false);
-        parentCheckbox.parent().show();
     } else if (checkedChildren === 0) {
         parentCheckbox.prop('indeterminate', false);
         parentCheckbox.prop('checked', false);
-        parentCheckbox.parent().hide();
     } else if (checkedChildren < countChildren) {
         parentCheckbox.prop('indeterminate', true);
         parentCheckbox.prop('checked', false);
-        parentCheckbox.parent().show();
     } else {
         parentCheckbox.prop('indeterminate', false);
         parentCheckbox.prop('checked', true);
-        parentCheckbox.parent().show();
     }
     if (getParentCheckbox(parentCheckSelector).val() !== undefined) {
         setParentCheckboxStatus(parentCheckSelector);
@@ -478,7 +476,6 @@ function attachCheckboxHandlers(elem) {
         const group = $(this).siblings('.facet-child-group');
 
         group.toggle();
-        console.log(group.is(":visible"));
         if (group.is(":visible")) {
             $(this).text("\u25BC");
         } else {
@@ -498,7 +495,6 @@ function loadSearchParams(facet) {
 
 let search = new Search();
 
-let filters = new FiltersView();
 
 let projects = new Projects();
 let projectsView = new ProjectsView({collection: projects});
@@ -509,3 +505,8 @@ let samplesView = new SamplesView({collection: samples});
 let runs = new Runs();
 let runsView = new RunsView({collection: runs});
 
+let filters = new FiltersView(function () {
+    projectsView.update();
+    samplesView.update();
+    runsView.update();
+});

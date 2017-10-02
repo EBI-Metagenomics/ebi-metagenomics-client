@@ -79,18 +79,17 @@ module.exports = {
                     }
                 ]
             }, {
-                test: /\.(css)$/,
+                test: /\.css$/,
                 use: [
-                    {
-                        loader: 'html-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: '../static/css/'
-                        }
-                    }
+                    'style-loader',
+                    'css-loader'
                 ]
+            }, {
+                test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                loader: 'url-loader?limit=100000&name=../static/[name].[ext]'
+
             }
-            // }, {
+// }, {
             //     test: /\.(jpe?g|png|gif|svg)$/i,
             //     loader: 'file-loader?name=../[path][name].[ext]!html-loader'
             // }

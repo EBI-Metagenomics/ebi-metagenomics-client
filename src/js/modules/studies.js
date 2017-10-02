@@ -6,7 +6,6 @@ const api = require('../components/api');
 const Pagination = require('../components/pagination');
 const Order = require('../components/order');
 
-
 import {DEFAULT_PAGE_SIZE} from "../config";
 import {
     getFormData,
@@ -42,7 +41,7 @@ initResultsFilter(function (e) {
         page: Pagination.currentPage,
         search: formData.search,
         lineage: formData.biome,
-        ordering: Order.getValue(),
+        ordering: Order.currentOrder,
     };
     setURLParams(params, true);
 });
@@ -147,10 +146,10 @@ var StudiesView = Backbone.View.extend({
                 that.render();
                 const pag = response.meta.pagination;
                 Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
-                Order.initSelector(orderOptions, params.ordering, function (val) {
+                Order.initHeaders(params.ordering, function(sort){
                     var formData = getFormData("#filter");
-                    that.update(1, Pagination.getPageSize(), null, null, val);
-                });
+                    that.update(1, Pagination.getPageSize(), null, null, sort);
+                })
             }
         });
         return this;
@@ -187,7 +186,7 @@ var StudiesView = Backbone.View.extend({
             }
         }
 
-        if (ordering !== undefined) {
+        if (ordering !== null) {
             params.ordering = ordering
         }
         // util.setURLParams(params.search, params.lineage, params.page_size, params.page, false);
@@ -210,8 +209,6 @@ var StudiesView = Backbone.View.extend({
         return this;
     }
 });
-
-
 
 function updatePageSize(pageSize) {
     var formData = getFormData("#filter");

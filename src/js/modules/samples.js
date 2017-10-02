@@ -41,7 +41,7 @@ initResultsFilter(function (e) {
         page: Pagination.currentPage,
         search: formData.search,
         lineage: formData.biome,
-        ordering: Order.getValue(),
+        ordering: Order.currentOrder,
     };
     setURLParams(params, true);
 });
@@ -140,12 +140,13 @@ var SamplesView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params), success: function (collection, response, options) {
                 that.render();
+                console.log(collection);
                 const pag = response.meta.pagination;
                 Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
-                Order.initSelector(orderOptions, params.ordering, function (val) {
+                Order.initHeaders(params.ordering, function(sort){
                     var formData = getFormData("#filter");
-                    that.update(1, Pagination.getPageSize(), null, null, val);
-                });
+                    that.update(1, Pagination.getPageSize(), null, null, sort);
+                })
             }
         });
         return this;
