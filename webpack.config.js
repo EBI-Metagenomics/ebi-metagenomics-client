@@ -85,10 +85,7 @@ module.exports = {
                     'css-loader'
                 ]
             }, {
-                test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-                loader: 'url-loader?limit=100000&name=../static/[name].[ext]'
-
-            }
+            test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000'}
 // }, {
             //     test: /\.(jpe?g|png|gif|svg)$/i,
             //     loader: 'file-loader?name=../[path][name].[ext]!html-loader'
@@ -109,4 +106,5 @@ module.exports = {
         ]),
     ],
 
+    devtool: "#inline-source-map",
 };
