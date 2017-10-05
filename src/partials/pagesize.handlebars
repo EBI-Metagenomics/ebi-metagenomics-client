@@ -1,14 +1,17 @@
 <div class="row">
     <div class="columns small-12 medium-12 large126">
-        <label for="pagesize">Showing:
+        <label for="pagesize">Show:
             <select id="pagesize" class="inline-select">
                 <option value=50>50</option>
                 <option selected value=25>25</option>
                 <option value=10>10</option>
             </select>
-            results from a total of <span
+            results
+            <span id="pagesize-text">
+                from a total of <span
                     id="totalResults"></span> (page <span id="currentPage"></span> of <span
                     id="maxPage"></span>).
+            </span>
         </label>
     </div>
     <!--<div class="columns small-12 medium-6 large-6 text-right">-->

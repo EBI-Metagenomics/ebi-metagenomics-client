@@ -70,6 +70,13 @@ th.sort-both:after {
     overflow-y: scroll;
 }
 
+div.disabled {
+    filter: grayscale(50%);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
 .samples-table > tbody > tr > td > div {
     max-height: 5em;
     overflow-y: scroll;

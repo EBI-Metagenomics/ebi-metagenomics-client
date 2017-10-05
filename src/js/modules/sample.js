@@ -2,7 +2,7 @@ const Backbone = require('backbone');
 const _ = require('underscore');
 const commons = require('../commons');
 const api = require('../components/api');
-const Pagination = require('../components/pagination');
+const Pagination = require('../components/pagination').Pagination;
 import {DEFAULT_PAGE_SIZE} from "../config";
 import {
     getURLFilterParams,
@@ -14,6 +14,7 @@ import {
     showTableLoadingGif
 } from "../util";
 
+const pagination = new Pagination();
 
 setCurrentTab('#samples-nav');
 
@@ -37,7 +38,7 @@ var SampleView = Backbone.View.extend({
                 runsView = new RunsView({collection: collection});
                 $("#pagination").append(commons.pagination);
                 $("#pageSize").append(commons.pagesize);
-                Pagination.setPageSizeChangeCallback(updatePageSize);
+                pagination.setPageSizeChangeCallback(updatePageSize);
             }
         });
     },
@@ -78,7 +79,7 @@ var RunsView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params), success: function (collection, response, options) {
                 const pag = response.meta.pagination;
-                Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
+                pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
                 that.render();
                 createLiveFilter();
             }
@@ -104,7 +105,7 @@ var RunsView = Backbone.View.extend({
             data: $.param(params), remove: true,
             success: function (collection, response, options) {
                 hideTableLoadingGif();
-                Pagination.updatePagination(response.meta.pagination);
+                pagination.updatePagination(response.meta.pagination);
                 that.render();
             }
         });
@@ -119,11 +120,11 @@ var RunsView = Backbone.View.extend({
 });
 
 function updatePageSize(pageSize) {
-    runsView.update(Pagination.currentPage, pageSize);
+    runsView.update(pagination.currentPage, pageSize);
 }
 
 function changePage(page) {
-    runsView.update(page, Pagination.getPageSize());
+    runsView.update(page, pagination.getPageSize());
 }
 
 function createLiveFilter() {

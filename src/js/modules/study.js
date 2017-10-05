@@ -3,9 +3,10 @@ const _ = require('underscore');
 const util = require('../util');
 const commons = require('../commons');
 const api = require('../components/api');
-const Pagination = require('../components/pagination');
+const Pagination = require('../components/pagination').Pagination;
 const Handlebars = require('handlebars');
 
+const pagination = new Pagination();
 // const OverlappingMarkerSpiderfier = require('../../../static/libraries/oms.min.js');
 import 'js-marker-clusterer';
 
@@ -45,7 +46,7 @@ var StudyView = Backbone.View.extend({
                 initMap(data.attributes.samples);
                 $("#pagination").append(commons.pagination);
                 $("#pageSize").append(commons.pagesize);
-                Pagination.setPageSizeChangeCallback(updatePageSize);
+                pagination.setPageSizeChangeCallback(updatePageSize);
             }
         });
     },
@@ -85,7 +86,7 @@ var RunsView = Backbone.View.extend({
             this.collection.fetch({
                 data: $.param(params), success: function (collection, response, options) {
                     const pag = response.meta.pagination;
-                    Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
+                    pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
                     that.render();
                     createLiveFilter();
                 }
@@ -112,7 +113,7 @@ var RunsView = Backbone.View.extend({
             data: $.param(params), remove: true,
             success: function (collection, response, options) {
                 hideTableLoadingGif();
-                Pagination.updatePagination(response.meta.pagination);
+                pagination.updatePagination(response.meta.pagination);
                 that.render();
             }
         });
@@ -135,11 +136,11 @@ function createLiveFilter() {
 
 
 function updatePageSize(pageSize) {
-    runsView.update(Pagination.currentPage, pageSize);
+    runsView.update(pagination.currentPage, pageSize);
 }
 
 function changePage(page) {
-    runsView.update(page, Pagination.getPageSize());
+    runsView.update(page, pagination.getPageSize());
 }
 
 function initMap(samples) {

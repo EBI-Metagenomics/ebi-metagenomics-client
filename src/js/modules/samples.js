@@ -3,9 +3,10 @@ const _ = require('underscore');
 const util = require('../util');
 const commons = require('../commons');
 const api = require('../components/api');
-const Pagination = require('../components/pagination');
+const Pagination = require('../components/pagination').Pagination;
 const Order = require('../components/order');
 
+const pagination = new Pagination();
 
 import {DEFAULT_PAGE_SIZE} from "../config";
 import {
@@ -54,8 +55,8 @@ var SamplesView = Backbone.View.extend({
     initialize: function () {
         var that = this;
         let params = {};
-        params.page = Pagination.currentPage;
-        params.page_size = Pagination.getPageSize();
+        params.page = pagination.currentPage;
+        params.page_size = pagination.getPageSize();
 
         const biome = pageFilters.get('lineage');
         if (biome) {
@@ -88,12 +89,12 @@ var SamplesView = Backbone.View.extend({
             data: $.param(params), success: function (collection, response, options) {
                 that.render();
                 const pag = response.meta.pagination;
-                Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
+                pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
                 Order.initHeaders(params.ordering, function(sort){
                     var formData = getFormData("#filter");
                     const params = {
                         page: 1,
-                        pagesize: Pagination.getPageSize(),
+                        pagesize: pagination.getPageSize(),
                         ordering: sort
                     };
                     that.update(params);
@@ -114,7 +115,7 @@ var SamplesView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(that.params), remove: true, success: function (collection, response, options) {
                 hideTableLoadingGif();
-                Pagination.updatePagination(response.meta.pagination);
+                pagination.updatePagination(response.meta.pagination);
                 that.render();
             }
         });
@@ -132,20 +133,20 @@ var SamplesView = Backbone.View.extend({
 function updatePageSize(pageSize) {
     const params = {
         page_size: pageSize,
-        page: Pagination.currentPage,
+        page: pagination.currentPage,
     };
     samplesView.update(params);
 }
 
 function changePage(page) {
     const params = {
-        page_size: Pagination.getPageSize(),
+        page_size: pagination.getPageSize(),
         page: page,
     };
     samplesView.update(params);
 }
 
-Pagination.setPageSizeChangeCallback(updatePageSize);
+pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 var biomes = new api.BiomeCollection();
@@ -157,8 +158,8 @@ var samplesView = new SamplesView({collection: samples});
 initResultsFilter(pageFilters.get('search'), function (e) {
     e.preventDefault();
     var params = {
-        page_size: Pagination.getPageSize(),
-        page: Pagination.currentPage,
+        page_size: pagination.getPageSize(),
+        page: pagination.currentPage,
         search: $("#search-input").val(),
         lineage: $("#biome-select").val(),
         ordering: Order.currentOrder,

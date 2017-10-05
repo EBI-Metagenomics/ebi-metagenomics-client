@@ -1,62 +1,74 @@
 import 'static/libraries/jquery.twbsPagination.js'
 
-var Pagination = module.exports = {
-    pageSize: '#pagesize',
-    pagination: '#pagination',
-    currentPage: 1,
+export var Pagination = function(){
+    let pageSize =  '#pagesize';
+    let pagination =  '#pagination';
 
-    opts: {
+    let currentPage = 1;
+
+    let opts =  {
         startPage: null,
         totalPages: null,
         activeClass: 'current',
         disabledClass: 'disabled',
         hideOnlyOnePage: true,
         visiblePages: 5,
-    },
+    };
 
-    initPagination: function (initPage, initPageSize, totalPages, totalResults, callback) {
-        this.opts.startPage = parseInt(initPage);
-        this.opts.totalPages = parseInt(totalPages);
-        this.callback = callback;
-        this.setPageDisplay(initPage, totalPages, totalResults);
-        $("#pagesize").val(initPageSize);
-        $(this.pagination).twbsPagination(this.opts).on('page', function (evt, page) {
+    function setPaginationElem(selector){
+        pagination = selector;
+    }
+
+    function initPagination(initPage, initPageSize, totalPages, totalResults, callback) {
+        opts.startPage = parseInt(initPage);
+        opts.totalPages = parseInt(totalPages);
+        setPageDisplay(initPage, totalPages, totalResults);
+        $(pageSize).val(initPageSize);
+        $(pagination).twbsPagination(opts).on('page', function (evt, page) {
             callback(page);
         });
-    },
+    }
 
-    setPageSizeChangeCallback(callback) {
+   function setPageSizeChangeCallback(callback) {
         const that = this;
-        $(document).ready(function () {
             $(that.pageSize).change(function (e) {
                 callback(that.getPageSize());
-            });
         });
-    },
+    }
 
-    getPageSize: function () {
-        return parseInt($(this.pageSize)[0].value);
-    },
+    function getPageSize() {
+        return parseInt($(pageSize)[0].value);
+    }
 
-    updatePagination: function (p) {
+    function updatePagination(p) {
         const that = this;
         var totPages = p.pages;
-        this.setPageDisplay(p.page, p.pages, p.count);
-        this.opts.startPage = p.page;
-        this.opts.totalPages = p.pages;
-        $(this.pagination).twbsPagination('destroy');
-        $(this.pagination).twbsPagination($.extend({}, this.opts, {
+        setPageDisplay(p.page, p.pages, p.count);
+        opts.startPage = p.page;
+        opts.totalPages = p.pages;
+        $(pagination).twbsPagination('destroy');
+        $(pagination).twbsPagination($.extend({}, opts, {
             startPage: p.PAGE,
             totalPages: p.pages,
         })).on('page', function (evt, page) {
             that.callback(page);
         });
-    },
+    }
 
-    setPageDisplay: function (currentPage, maxPage, totalResults) {
+    function setPageDisplay(currentPage, maxPage, totalResults) {
         $("#currentPage").text(currentPage);
         $("#maxPage").text(maxPage);
-        $("#totalResults").text(totalResults);
+        if (totalResults){
+            $("#totalResults").text(totalResults);
+        }
+    }
+    return {
+        setPaginationElem: setPaginationElem,
+        initPagination: initPagination,
+        setPageSizeChangeCallback: setPageSizeChangeCallback,
+        getPageSize: getPageSize,
+        updatePagination: updatePagination,
+        setPageDisplay: setPageDisplay
     }
 };
 
