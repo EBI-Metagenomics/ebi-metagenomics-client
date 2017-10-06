@@ -70,12 +70,25 @@ th.sort-both:after {
     overflow-y: scroll;
 }
 
-div.disabled {
-    filter: grayscale(50%);
-    opacity: 0.5;
-    cursor: not-allowed;
+/*div.disabled {*/
+    /*filter: grayscale(70%);*/
+    /*opacity: 0.7;*/
+    /*cursor: not-allowed;*/
+/*}*/
+
+.pagesize-container {
+    margin-top: .5em;
+    margin-right: .5em;
+    margin-bottom: 0;
 }
 
+.inline-select {
+    margin-bottom: 0;
+}
+
+.facet-remove-button {
+    margin-right: 1em;
+}
 
 .samples-table > tbody > tr > td > div {
     max-height: 5em;
@@ -86,6 +99,15 @@ div.disabled {
     width: auto;
 }
 
+.facet-group {
+    margin-bottom: .5em;
+}
+
+
+.slider-input {
+    margin-top:1em;
+    width: 40%
+}
 .left {
     float:left
 }

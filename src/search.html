@@ -77,34 +77,62 @@
         <div class="columns small-12 medium-12 large-12">
             <h2>Search EBI Metagenomics</h2>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="columns small-2 medium-2 large-2" id="projectsFilters">
-        </div>
-        <div class="columns small-10 medium-10 large-10">
-            <ul class="tabs" data-tabs id="results-tabs">
-                <li class="tabs-title is-active"><a href="#projectsTab" aria-selected="true">Projects</a></li>
-                <li class="tabs-title"><a href="#samplesTab">Samples</a></li>
-                <li class="tabs-title"><a href="#runsTab">Runs</a></li>
-            </ul>
-            <div class="tabs-content" data-tab-content="results-tabs">
-                <div class="tabs-panel active" id="projectsTab">
-                    <div class="row">
-
-                        <div class="columns" id="projects">
+        <div class="row">
+            <div class="columns small-12 medium-12 large-12">
+                <ul class="tabs" data-tabs id="results-tabs">
+                    <li class="tabs-title is-active"><a href="#projectsTab" aria-selected="true">Projects</a></li>
+                    <li class="tabs-title"><a href="#samplesTab">Samples</a></li>
+                    <li class="tabs-title"><a href="#runsTab">Runs</a></li>
+                    <li style="float:right">
+                        <div id="pageSize" class="pagesize-container"></div>
+                    </li>
+                </ul>
+                <div class="tabs-content" data-tab-content="results-tabs">
+                    <div class="tabs-panel active" id="projectsTab">
+                        <div class="row">
+                            <div class="columns small-2 medium-2 large-2 filters" id="projectsFilters">
+                            </div>
+                            <div class="columns small-10 medium-10 large-10">
+                                <div id="projects-search-params">
+                                    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100]
+                                        and depth in [0,50] </h5>
+                                    <div class="filter-clear"></div>
+                                </div>
+                                <div id="projects"></div>
+                                <div id="projects-pagination"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="tabs-panel" id="samplesTab">
-                    <div class="row">
-                        <div class="columns" id="samples">
+                    <div class="tabs-panel" id="samplesTab">
+                        <div class="row">
+                            <div class="columns small-2 medium-2 large-2 filters" id="samplesFilters">
+                            </div>
+                            <div class="columns small-10 medium-10 large-10">
+                                <div id="samples-search-params">
+                                    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100]
+                                        and depth in [0,50] </h5>
+                                    <div class="filter-clear"></div>
+                                </div>
+                                <div id="samples"></div>
+                                <div id="samples-pagination"></div>
+                            </div>
+
                         </div>
                     </div>
-                </div>
-                <div class="tabs-panel" id="runsTab">
-                    <div class="row">
-                        <div class="columns" id="runs">
+                    <div class="tabs-panel" id="runsTab">
+                        <div class="row">
+                            <div class="columns small-2 medium-2 large-2 filters" id="runsFilters">
+                            </div>
+                            <div class="columns small-10 medium-10 large-10">
+                                <div id="runs-search-params">
+                                    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100]
+                                        and depth in [0,50] </h5>
+                                    <div class="filter-clear"></div>
+                                </div>
+                                <div id="runs"></div>
+                                <div id="runs-pagination"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -116,7 +144,7 @@
 <script id="filtersTmpl" type="text/template">
     <form id="<%= formId %>">
         <h3>Filter results</h3>
-        <button id="clearFilters" class="button" type="reset">Clear filters</button>
+        <button type='button' class="button reset">Clear filters</button>
         <!--Function to build successive hierarchy of checkboxes-->
         <% function drawAndExpand(child, name, parentValue){ %>
         <% let forLabel = child.value+'checkbox'; %>
@@ -124,7 +152,7 @@
         <button class="disp-children">&#9654;</button>
         <% } %>
         <input name="<%= name %>" type="checkbox" value="<%= parentValue+child.value %>" class="facet-checkbox"
-               id="<%= forLabel %>"/> <label for="<%= forLabel %>"><%= child.label %> (<%= child.count %>)</label>
+               id="<%= forLabel %>" /> <label for="<%= forLabel %>"><%= child.label %> (<%= child.count %>)</label>
         <% _.each(child.children, function(child2){ %>
         <div class="facet-child-group">
             <% drawAndExpand(child2, name, parentValue+child.value+'/'); %>
@@ -133,38 +161,40 @@
 
         <% } %>
         <% _.each(facets, function(facet){ if (facet.label!=='Source'){ %>
-        <div class="facet-group">
+        <% facet.label = facet.label.toLowerCase() %>
+        <div class="facet-group <%= convertFacetLabelName(facet.label)+'-group' %> ">
             <% if (facet.type==='slider') {%>
-                <h5><%= facet.label %> (<%= facet.units %>)</h5>
-                <div class="row columns">
-                    <div id="<%= formId+facet.label+'slider' %>" class="slider" data-slider>
-                        <span class="slider-handle" data-slider-handle role="slider" tabindex="1"
-                              aria-controls="<%= formId+facet.label+'min' %>"></span>
-                        <span class="slider-fill" data-slider-fill></span>
-                        <span class="slider-handle" data-slider-handle role="slider" tabindex="1"
-                              aria-controls="<%= formId+facet.label+'max' %>"></span>
-                    </div>
-                </div>
-                <div class="row columns">
-                    <input class='facet-slider-input left' name="<%= facet.label+'min' %>" id="<%= formId+facet.label+'min' %>" type="number" defaultval="<%= facet.min %>">
-                    <input class='facet-slider-input right' name="<%= facet.label+'max' %>" id="<%= formId+facet.label+'max' %>" type="number" defaultval="<%= facet.max %>">
-                </div>
-            <% } else { %>
-                <h5><%= facet.label %></h5>
-            <% _.each(facet.facetValues, function(child){ %>
-                <div class="facet-child-group show">
-                    <% drawAndExpand(child, facet.id, '') %>
-                </div>
-            <% }); %>
-            <% } %>
+            <div class="switch tiny">
+                <% const switchId = formId+facet.label+'slider-switch' %>
+                <input class="switch-input" data-facet-name="<%= facet.label %>" id="<%= switchId %>" type="checkbox" checked>
+                <label class="switch-paddle" for="<%= switchId %>">
+                </label>
+            </div>
+            <h5><%= facet.label.capitalize() %> (<%= facet.units %>)</h5>
+            <div class="row columns slider-group">
+                <div id="<%= formId+facet.label+'slider' %>" class="slider"
+                     data-facet-slider="<%= facet.label+'slider' %>"></div>
+                <input class='left slider-input' name="<%= facet.label+'min' %>" data-facet-name="<%= facet.label %>"
+                       defaultValue="<%= facet.min %>" data-min type="number">
+                <input class='right slider-input' name="<%= facet.label+'max' %>" data-facet-name="<%= facet.label %>"
+                       defaultValue="<%= facet.max %>" data-max type="number">
+            </div>
+        </div>
+        <% } else { %>
+        <h5><%= facet.label.capitalize() %></h5>
+        <% _.each(facet.facetValues, function(child){ %>
+        <div class="facet-child-group show">
+            <% drawAndExpand(child, facet.id, '') %>
+        </div>
+        <% }); %>
+        <% } %>
         </div>
         <% }});%>
     </form>
 </script>
 
 <script id="projectResultsTmpl" type="text/template">
-    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100] and depth in [0,50] </h5>
-    <h5><%= entries.length %> out of <%= hitCount %> results</h5>
+    <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
     <table>
         <thead>
         <tr>
@@ -201,8 +231,7 @@
 </script>
 
 <script id="samplesResultsTmpl" type="text/template">
-    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100] and depth in [0,50] </h5>
-    <h5><%= entries.length %> out of <%= hitCount %> results</h5>
+    <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
     <table>
         <thead>
         <tr>
@@ -235,8 +264,7 @@
 </script>
 
 <script id="runsResultsTmpl" type="text/template">
-    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100] and depth in [0,50] </h5>
-    <h5><%= entries.length %> out of <%= hitCount %> results</h5>
+    <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
     <table>
         <thead>
         <tr>
@@ -286,6 +314,7 @@
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
 <script defer="defer" src="/static/js/script.js"></script>
 
 
