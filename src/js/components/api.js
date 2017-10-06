@@ -24,11 +24,6 @@ export const Study = Backbone.Model.extend({
             study_id: attr['project-id'],
             study_accession: attr['accession'],
             last_update: formatDate(attr['last-update']),
-            contact_details: {
-                institute: attr['centre-name'] || NO_DATA_MSG,
-                name: attr['author-name'] || NO_DATA_MSG,
-                email: attr['author-email'] || NO_DATA_MSG,
-            },
             abstract: attr['study-abstract'],
             samples: d.included
         }

@@ -85,7 +85,6 @@ var StudiesView = Backbone.View.extend({
         }
         params.page = parseInt(pageFilters.get('page')) || 1;
         this.params = params;
-
         this.collection.fetch({
             data: $.param(params),
             remove: true,
