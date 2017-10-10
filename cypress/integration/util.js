@@ -1,9 +1,10 @@
+import Config from './config';
 const sortBySelector = '#sortBy';
 
 
 var Util = module.exports = {
     openPage: function (origPage) {
-        let url = 'http://localhost:8080/' + (origPage !== 'overview' ? origPage : '');
+        let url = Config.BASE_URL + (origPage !== 'overview' ? origPage : '');
         cy.visit(url);
     },
     setSortBy: function (optionValue, numResults, waitCallback){
