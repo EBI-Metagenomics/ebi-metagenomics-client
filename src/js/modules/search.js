@@ -20,7 +20,8 @@ $("#pageSize").append(commons.pagesize).find('#pagesize').change(function () {
 });
 
 
-const queryText = util.getURLFilterParams().get('query');
+let queryText = util.getURLFilterParams().get('query');
+
 $(document).ready(function () {
     $("#navbar-query").val(queryText);
     $("#pagesize-text").hide();
@@ -59,8 +60,28 @@ const Search = Backbone.Collection.extend({
 });
 
 const ResultsView = Backbone.View.extend({
-    render: function (response) {
-        this.$el.html(this.template(response));
+    render: function (response, params) {
+        let templateData = $.extend({}, response);
+        const defaultQueries = [ProjectsView.prototype.defaultQuery, SamplesView.prototype.defaultQuery, RunsView.prototype.defaultQuery];
+        console.log(defaultQueries, params.query);
+
+        if (defaultQueries.indexOf(params.query) === -1) {
+            const splitParams = params.query.split(' AND ');
+            templateData.queryText = _.reject(splitParams, isFacetParam)[0];
+
+            const sliderParams = _.filter(splitParams, isFacetParam);
+            templateData.sliderText = sliderParams.join(', ');
+        } else {
+            templateData.queryText = null;
+            templateData.sliderText = null;
+        }
+
+        if (params.facets && params.facets.length > 0) {
+            templateData.filterText = params.facets.replace(/,/g, ', ');
+        } else {
+            templateData.filterText = null;
+        }
+        this.$el.html(this.template(templateData));
         return this.$el
     }
 });
@@ -164,6 +185,7 @@ const Projects = Search.extend({
     }
 });
 
+
 const ProjectsView = ResultsView.extend({
     el: '#projects',
     formEl: 'projectsForm',
@@ -183,11 +205,9 @@ const ProjectsView = ResultsView.extend({
         }
 
         this.params.query = queryText || this.defaultQuery;
-        this.fetchAndRender(true, true);
     },
 
     update: function (page, pagesize) {
-        console.trace();
         var formData = removeRedundantBiomes($('#' + this.formEl).serializeArray());
         this.params.facets = joinFilters(formData);
         if (!this.params.query.length) {
@@ -204,11 +224,10 @@ const ProjectsView = ResultsView.extend({
 
     fetchAndRender: function (renderFilter, setFilters) {
         const that = this;
-
-        saveSearchParams('projects', this.params);
         return this.collection.fetch({
             data: $.param(that.params),
             success: function (collection, response) {
+                saveSearchParams('projects', that.params);
                 if (renderFilter) {
                     filters.render('#projectsFilters', response, that.formEl, that.params.query);
                     const $form = $('#' + that.formEl);
@@ -232,7 +251,7 @@ const ProjectsView = ResultsView.extend({
                 if (setFilters) {
                     setFacetFilters('#' + that.formEl, that.params);
                 }
-                that.render(response);
+                that.render(response, that.params);
             }
         }).promise();
     }
@@ -284,7 +303,6 @@ const SamplesView = ResultsView.extend({
                 this.params.query = params.join(' AND ');
             }
         }
-        this.fetchAndRender(true, true);
     },
     update: function (page, pagesize) {
         var formData = processSliders(removeRedundantBiomes($('#' + this.formEl).serializeArray()));
@@ -306,11 +324,10 @@ const SamplesView = ResultsView.extend({
     },
     fetchAndRender: function (renderFilter, setFilters) {
         const that = this;
-
-        saveSearchParams('samples', this.params);
         return this.collection.fetch({
             data: $.param(that.params),
             success: function (collection, response) {
+                saveSearchParams('samples', that.params);
                 if (renderFilter) {
                     filters.render('#samplesFilters', response, that.formEl, that.params.query);
                     const $form = $('#' + that.formEl);
@@ -332,7 +349,7 @@ const SamplesView = ResultsView.extend({
                 if (setFilters) {
                     setFacetFilters('#' + that.formEl, that.params);
                 }
-                that.render(response);
+                that.render(response, that.params);
             }
         }).promise();
     }
@@ -387,7 +404,6 @@ const RunsView = ResultsView.extend({
                 this.params.query = params.join(' AND ');
             }
         }
-        this.fetchAndRender(true, true);
     },
     update: function (page, pagesize) {
         var formData = processSliders(removeRedundantBiomes($('#' + this.formEl).serializeArray()));
@@ -410,14 +426,13 @@ const RunsView = ResultsView.extend({
 
     fetchAndRender: function (renderFilter, setFilters) {
         const that = this;
-        saveSearchParams('runs', this.params);
         return this.collection.fetch({
             data: $.param(that.params),
             success: function (collection, response) {
+                saveSearchParams('runs', that.params);
                 if (renderFilter) {
                     filters.render('#runsFilters', response, that.formEl, that.params.query);
                     const $form = $('#' + that.formEl);
-
                     $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
                         addClearButton($(this), $('.filter-clear'));
                         propagateToFacets($(this).attr('type'), $(this).attr('name'), $(this).val(), $(this).is(':checked'), ['#projectsFilters', '#samplesFilters']);
@@ -435,7 +450,7 @@ const RunsView = ResultsView.extend({
                 if (setFilters) {
                     setFacetFilters('#' + that.formEl, that.params);
                 }
-                that.render(response);
+                that.render(response, that.params);
             }
         }).promise();
     }
@@ -787,12 +802,37 @@ let runsView = new RunsView({collection: runs});
 
 let filters = new FiltersView(updateAll);
 
+initAll(projectsView, samplesView, runsView);
+
+function initAll(projectsView, samplesView, runsView) {
+    showSpinner();
+    return $.when(
+        projectsView.fetchAndRender(true, true),
+        samplesView.fetchAndRender(true, true),
+        runsView.fetchAndRender(true, true)
+    ).done(function () {
+        hideSpinner();
+    });
+}
+
 function updateAll(pagesize) {
+    showSpinner();
     return $.when(
         projectsView.update(null, pagesize),
         samplesView.update(null, pagesize),
         runsView.update(null, pagesize)
-    ).promise();
+    ).done(function () {
+        hideSpinner();
+    });
+}
+
+function showSpinner() {
+    $('#loading-icon').fadeIn();
+}
+
+function hideSpinner() {
+    $('#loading-icon').fadeOut();
+
 }
 
 function getAllFormIds(except) {
@@ -811,7 +851,11 @@ function resetAllForms() {
         const $form = $(id);
         resetInputsInElem($form);
     });
-    updateAll();
+    projectsView.params.query = projectsView.defaultQuery;
+    samplesView.params.query = samplesView.defaultQuery;
+    runsView.params.query = runsView.defaultQuery;
+    queryText = null;
+    initAll(projectsView, samplesView, runsView);
 }
 
 String.prototype.capitalize = function () {

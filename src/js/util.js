@@ -2,6 +2,7 @@ const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
 const api = require('./components/api');
+$.typeWatch = require('jquery.typewatch');
 
 import {footer, header, resultsFilter} from "./commons";
 
@@ -34,8 +35,17 @@ export function initTableTools() {
 export function initResultsFilter(initQuery, callback) {
     const formId = "#filter";
     $("#filterForm").append(resultsFilter);
-    $('#search-input').val(initQuery);
-    $('#search-input').on('change', callback);
+    const $searchInput = $('#search-input');
+    $searchInput.val(initQuery);
+    var options = {
+        callback: callback,
+        wait: 100,
+        highlight: true,
+        allowSubmit: false,
+        captureLength: 0
+    };
+    $searchInput.typeWatch(options);
+    // $('#search-input').on('keyup', callback);
     $('#biome-select').on('change', callback);
 }
 

@@ -86,6 +86,11 @@ th.sort-both:after {
     margin-bottom: 0;
 }
 
+.header-search-input {
+    width: 8em;
+    float: left;
+}
+
 .facet-remove-button {
     margin-right: 1em;
 }
@@ -501,6 +506,11 @@ select.table-tools {
 .loading-gif {
     height: 2em;
     width: 2em;
+}
+
+.loading-gif-small {
+    height: 1em;
+    width: 1em;
 }
 
 .loading-gif-row {

@@ -75,7 +75,7 @@
 <div id="content">
     <div id="main-content-area" class="row" role="main">
         <div class="columns small-12 medium-12 large-12">
-            <h2>Search EBI Metagenomics</h2>
+            <h2>Search EBI Metagenomics <img id='loading-icon' class='loading-gif-small' src="/static/images/ajax-loader.gif"/></h2>
         </div>
 
         <div class="row">
@@ -95,8 +95,6 @@
                             </div>
                             <div class="columns small-10 medium-10 large-10">
                                 <div id="projects-search-params">
-                                    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100]
-                                        and depth in [0,50] </h5>
                                     <div class="filter-clear"></div>
                                 </div>
                                 <div id="projects"></div>
@@ -110,8 +108,6 @@
                             </div>
                             <div class="columns small-10 medium-10 large-10">
                                 <div id="samples-search-params">
-                                    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100]
-                                        and depth in [0,50] </h5>
                                     <div class="filter-clear"></div>
                                 </div>
                                 <div id="samples"></div>
@@ -126,8 +122,6 @@
                             </div>
                             <div class="columns small-10 medium-10 large-10">
                                 <div id="runs-search-params">
-                                    <h5>You searched for: AA in biomes: [Marine, Soil, ...] with temperatures in [0,100]
-                                        and depth in [0,50] </h5>
                                     <div class="filter-clear"></div>
                                 </div>
                                 <div id="runs"></div>
@@ -152,7 +146,7 @@
         <button class="disp-children">&#9654;</button>
         <% } %>
         <input name="<%= name %>" type="checkbox" value="<%= parentValue+child.value %>" class="facet-checkbox"
-               id="<%= forLabel %>" /> <label for="<%= forLabel %>"><%= child.label %> (<%= child.count %>)</label>
+               id="<%= forLabel %>"/> <label for="<%= forLabel %>"><%= child.label %> (<%= child.count %>)</label>
         <% _.each(child.children, function(child2){ %>
         <div class="facet-child-group">
             <% drawAndExpand(child2, name, parentValue+child.value+'/'); %>
@@ -166,7 +160,8 @@
             <% if (facet.type==='slider') {%>
             <div class="switch tiny">
                 <% const switchId = formId+facet.label+'slider-switch' %>
-                <input class="switch-input" data-facet-name="<%= facet.label %>" id="<%= switchId %>" type="checkbox" checked>
+                <input class="switch-input" data-facet-name="<%= facet.label %>" id="<%= switchId %>" type="checkbox"
+                       checked>
                 <label class="switch-paddle" for="<%= switchId %>">
                 </label>
             </div>
@@ -194,6 +189,20 @@
 </script>
 
 <script id="projectResultsTmpl" type="text/template">
+    <h5>You searched for projects with
+        <% if (queryText && queryText.length>0) { %>
+        keyword: <%= queryText %>
+        <% } %>
+        <% if (filterText && filterText.length>0) { %>
+        filters: <%= filterText %>
+        <% } %>
+        <% if (sliderText && sliderText.length>0) { %>
+        and <%= sliderText %>
+        <% } %>
+        <% if (!queryText && !filterText && !sliderText){ %>
+        no search parameters
+        <% } %>
+        .</h5>
     <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
     <table>
         <thead>
@@ -231,6 +240,20 @@
 </script>
 
 <script id="samplesResultsTmpl" type="text/template">
+    <h5>You searched for samples with
+        <% if (queryText && queryText.length>0) { %>
+        keyword: <%= queryText %>
+        <% } %>
+        <% if (filterText && filterText.length>0) { %>
+        filters: <%= filterText %>
+        <% } %>
+        <% if (sliderText && sliderText.length>0) { %>
+        and <%= sliderText %>
+        <% } %>
+        <% if (!queryText && !filterText && !sliderText){ %>
+        no search parameters
+        <% } %>
+        .</h5>
     <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
     <table>
         <thead>
@@ -264,6 +287,20 @@
 </script>
 
 <script id="runsResultsTmpl" type="text/template">
+    <h5>You searched for runs with
+        <% if (queryText && queryText.length>0) { %>
+        keyword: <%= queryText %>
+        <% } %>
+        <% if (filterText && filterText.length>0) { %>
+        filters: <%= filterText %>
+        <% } %>
+        <% if (sliderText && sliderText.length>0) { %>
+        and <%= sliderText %>
+        <% } %>
+        <% if (!queryText && !filterText && !sliderText){ %>
+        no search parameters
+        <% } %>
+        .</h5>
     <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
     <table>
         <thead>

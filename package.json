@@ -26,6 +26,7 @@
     "install": "^0.10.1",
     "jquery": "^3.2.1",
     "jquery-ui": "^1.12.1",
+    "jquery.typewatch": "^3.0.0",
     "js-cookie": "^2.1.4",
     "js-marker-clusterer": "^1.0.0",
     "jsdom-global": "^3.0.2",

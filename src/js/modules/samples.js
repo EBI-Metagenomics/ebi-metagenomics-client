@@ -156,7 +156,6 @@ var samples = new api.SamplesCollection();
 var samplesView = new SamplesView({collection: samples});
 
 initResultsFilter(pageFilters.get('search'), function (e) {
-    e.preventDefault();
     var params = {
         page_size: pagination.getPageSize(),
         page: pagination.currentPage,

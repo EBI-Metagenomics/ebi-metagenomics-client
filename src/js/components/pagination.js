@@ -20,8 +20,8 @@ export var Pagination = function(){
     }
 
     function initPagination(initPage, initPageSize, totalPages, totalResults, callback) {
-        opts.startPage = parseInt(initPage);
-        opts.totalPages = parseInt(totalPages);
+        opts.startPage = Math.max(1, parseInt(initPage));
+        opts.totalPages = Math.max(1, parseInt(totalPages));
         setPageDisplay(initPage, totalPages, totalResults);
         $(pageSize).val(initPageSize);
         $(pagination).twbsPagination(opts).on('page', function (evt, page) {

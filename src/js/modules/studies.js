@@ -160,7 +160,6 @@ var studiesView = new StudiesView({collection: studies});
 
 
 initResultsFilter(pageFilters.get('search'), function (e) {
-    e.preventDefault();
     var params = {
         page_size: pagination.getPageSize(),
         page: pagination.currentPage,
