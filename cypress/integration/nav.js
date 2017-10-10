@@ -38,5 +38,13 @@ for (let orig = 0; orig < navNames.length; orig++) {
     });
 }
 
+describe('External link to HMMER sequence search redirects correctly', function(){
+    it('Navbar link to sequence search is valid.', function(){
+        openPage('overview');
+        cy.get('#sequence-search-nav').click();
+        cy.url().should('include', 'sequence-search/search/phmmer');
+    });
+});
+
 // TODO login node
 // TODO generic EBI links

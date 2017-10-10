@@ -63,7 +63,6 @@ const ResultsView = Backbone.View.extend({
     render: function (response, params) {
         let templateData = $.extend({}, response);
         const defaultQueries = [ProjectsView.prototype.defaultQuery, SamplesView.prototype.defaultQuery, RunsView.prototype.defaultQuery];
-        console.log(defaultQueries, params.query);
 
         if (defaultQueries.indexOf(params.query) === -1) {
             const splitParams = params.query.split(' AND ');
@@ -759,6 +758,12 @@ function loadSearchParams(facet, newTextQuery) {
     return data;
 }
 
+function deleteCachedSearchParams(){
+    _.each(['projects', 'samples', 'runs'], function(facet){
+        Cookies.remove(COOKIE_NAME + facet);
+    })
+}
+
 function sliderToggleCallback(e) {
     const $checkbox = $(this);
     const enabled = $checkbox.is(':checked');
@@ -802,18 +807,19 @@ let runsView = new RunsView({collection: runs});
 
 let filters = new FiltersView(updateAll);
 
-initAll(projectsView, samplesView, runsView);
+initAll(projectsView, samplesView, runsView, true, true);
 
-function initAll(projectsView, samplesView, runsView) {
+function initAll(projectsView, samplesView, runsView, renderFilters, setFilters) {
     showSpinner();
     return $.when(
-        projectsView.fetchAndRender(true, true),
-        samplesView.fetchAndRender(true, true),
-        runsView.fetchAndRender(true, true)
+        projectsView.fetchAndRender(renderFilters, setFilters),
+        samplesView.fetchAndRender(renderFilters, setFilters),
+        runsView.fetchAndRender(renderFilters, setFilters)
     ).done(function () {
         hideSpinner();
     });
 }
+
 
 function updateAll(pagesize) {
     showSpinner();
@@ -850,12 +856,15 @@ function resetAllForms() {
     _.each(getAllFormIds(), function (id) {
         const $form = $(id);
         resetInputsInElem($form);
+        console.log($form.find(":checked"));
     });
-    projectsView.params.query = projectsView.defaultQuery;
-    samplesView.params.query = samplesView.defaultQuery;
-    runsView.params.query = runsView.defaultQuery;
+    deleteCachedSearchParams();
     queryText = null;
-    initAll(projectsView, samplesView, runsView);
+    projectsView.initialize();
+    samplesView.initialize();
+    runsView.initialize();
+
+    initAll(projectsView, samplesView, runsView, false, false);
 }
 
 String.prototype.capitalize = function () {
