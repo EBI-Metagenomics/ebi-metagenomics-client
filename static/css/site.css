@@ -540,3 +540,7 @@ select.table-tools {
     display: block;
 
 }
+
+.map-alert {
+    color: #bf0000;
+}

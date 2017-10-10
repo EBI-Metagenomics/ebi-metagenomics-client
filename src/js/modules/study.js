@@ -162,6 +162,8 @@ function initMap(samples) {
         const lng = sample.attributes.longitude;
         if (!(lat === null || lng === null)) {
             result.push(placeMarker(map, oms, template, sample));
+        } else {
+            $("#warning").show();
         }
         return result;
     }, []);

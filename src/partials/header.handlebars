@@ -36,7 +36,9 @@
                     data-dropdown-menu>
                     <li id="overview-nav"><a href="/">Overview</a></li>
                     <li id="search-nav"><a href="/search">Search</a></li>
-                    <li id="sequence-search-nav"><a href="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer">Sequence search</a></li>
+                    <li id="sequence-search-nav"><a
+                            href="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer">Sequence search</a>
+                    </li>
                     <li id="submit-nav"><a href="/submit">Submit data</a></li>
                     <li id="studies-nav"><a href="/studies">Studies</a></li>
                     <li id="samples-nav"><a href="/samples">Samples</a></li>
@@ -47,11 +49,15 @@
                 <ul class="menu dropdown float-right" data-dropdown-menu data-description="functional">
                     <li>
                         <form id="headerSearchForm" action="/search">
-                            <input id='navbar-query' class='header-search-input' name="query" type="search" placeholder="Search">
+                            <input id='navbar-query' class='header-search-input' name="query" type="search"
+                                   placeholder="Search">
                             <button id="search" type="submit" class="button">Search</button>
                         </form>
                     </li>
-                    <li class="functional"><a href="#"><i class="icon icon-functional" data-icon="l"></i>Login</a>
+                    <li class="functional">
+                        <a class="icon icon-functional button" data-icon="l" href="#">
+                            Login
+                        </a>
                     </li>
                 </ul>
             </nav>

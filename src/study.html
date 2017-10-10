@@ -98,6 +98,9 @@
                             <div class="columns small-8 medium-8 large-8 map">
                                 <div id="map">
                                 </div>
+                                <div id="warning" class="map-alert text-center">
+                                    Some samples have no associated latitude/longitude coordinates and could not be marked on the map.
+                                </div>
                             </div>
                         </div>
                         <hr>
@@ -193,8 +196,8 @@
             </ul>
         </div>
     </div>
-    <div class="row centered">
-        <a href="{{this.sample_url}}" class="button centered">View more</a>
+    <div class="row text-center">
+        <a href="{{this.sample_url}}" class="button">View more</a>
     </div>
 </script>
 
