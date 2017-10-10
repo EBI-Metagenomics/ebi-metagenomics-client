@@ -3,6 +3,9 @@ const origPage = 'studies';
 
 const initialResultSize = 25;
 
+function assertTableIsCleared(){
+    cy.get("table tr.study").should('not.exist');
+}
 function waitForStudiesLoad(results){
     cy.get("table tr.study", {timeout: 10000}).should("have.length", parseInt(results));
 }
@@ -10,6 +13,12 @@ function waitForStudiesLoad(results){
 function setSortBy(sortBySelector){
     cy.get(sortBySelector).click();
     waitForStudiesLoad(initialResultSize);
+}
+
+function setSelectOption(selector, option, num_results){
+    cy.get(selector).select(option);
+    assertTableIsCleared();
+    waitForStudiesLoad(num_results);
 }
 
 /**
@@ -72,6 +81,18 @@ describe('Studies page', function() {
             expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
         });
     });
+
+    it('Should respond to biome selector', function(){
+        const selector = "#biome-select";
+        let biome = "root:Environmental:Air";
+        setSelectOption(selector, biome, 2);
+        cy.get('.biome-icon > span').should('have.class', 'air_b');
+
+        biome = "root:Engineered:Biotransformation";
+        setSelectOption(selector, biome, 7);
+        cy.get('.biome-icon > span').should('have.class', 'engineered_b');
+    });
+
 });
 
 // TODO test pagination works

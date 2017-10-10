@@ -3,13 +3,24 @@ const origPage = 'samples';
 
 const initialResultSize = 25;
 
+
+function assertTableIsCleared(){
+    cy.get("table tr.sample").should('not.exist');
+}
 function waitForSamplesLoad(results){
     cy.get("table tr.sample", {timeout: 10000}).should("have.length", parseInt(results));
 }
 
 function setSortBy(sortBySelector){
     cy.get(sortBySelector).click();
+    assertTableIsCleared();
     waitForSamplesLoad(initialResultSize);
+}
+
+function setSelectOption(selector, option, num_results){
+    cy.get(selector).select(option);
+    assertTableIsCleared();
+    waitForSamplesLoad(num_results);
 }
 
 /**
@@ -71,6 +82,17 @@ describe('Samples page', function() {
         cy.get(selector).first().should(function($el){
             expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
         });
+    });
+
+    it('Should respond to biome selector', function(){
+        const selector = "#biome-select";
+        let biome = "root:Engineered";
+        setSelectOption(selector, biome, initialResultSize);
+        cy.get('.biome-icon > span').should('have.class', 'engineered_b');
+
+        biome = "root:Environmental:Air";
+        setSelectOption(selector, biome, 4);
+        cy.get('.biome-icon > span').should('have.class', 'air_b');
     });
 });
 

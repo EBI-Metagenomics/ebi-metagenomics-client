@@ -153,16 +153,18 @@ export const Sample = Backbone.Model.extend({
         // Adaption to handle 'includes' on API calls which would wrap the response
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
+        const biome = data.relationships.biome;
+        const biome_name = biome.data.id;
         return {
-            biome_icon: getBiomeIcon(data.relationships.biome.data.id),
-            biome_name: data.relationships.biome.data.id,
+            biome_icon: getBiomeIcon(biome_name),
+            biome_name: formatLineage(biome_name),
             sample_name: attr['sample-name'] || NO_DATA_MSG,
             sample_desc: attr['sample-desc'],
             sample_link: "/sample/" + attr['accession'],
             study_accession: attr['study-accession'] || NO_DATA_MSG,
             study_link: '/study/' + attr['study-accession'],
             sample_accession: attr.accession || NO_DATA_MSG,
-            lineage: formatLineage(data.relationships.biome.data.id || NO_DATA_MSG),
+            lineage: formatLineage(biome.data.id || NO_DATA_MSG),
             metadatas: metadatas,
             runs: d.included,
             last_update: formatDate(attr['last-update'])

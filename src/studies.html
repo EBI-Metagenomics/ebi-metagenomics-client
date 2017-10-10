@@ -90,7 +90,7 @@
                         <table class="studies-table">
                             <thead>
                             <tr>
-                                <th class="biome">Biome</th>
+                                <th class="biome-icon">Biome</th>
                                 <th data-sortby='study_name' class="sort-both name">Study name</th>
                                 <th data-sortby='samples_count' class="sort-both samples">Samples</th>
                                 <th data-sortby='last_update' class="sort-both updated">Last updated</th>
@@ -104,7 +104,7 @@
                             <!--</tr>-->
                             </tbody>
                             <script id="study-row" type="text/template">
-                                <td class="biome">
+                                <td class="biome-icon">
                                     <% _.each(biomes, function(biome){ %>
                                     <span class="biome_icon icon_xs <%= biome.icon %>" title="<%= biome.name %>"></span>
                                     <% }); %>
