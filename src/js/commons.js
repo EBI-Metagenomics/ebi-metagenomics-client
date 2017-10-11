@@ -18,10 +18,10 @@ require('html-loader?path=../name=[name].[ext]!../study.html');
 require('html-loader?path=../name=[name].[ext]!../submit.html');
 require('html-loader?path=../name=[name].[ext]!../index.html');
 
+require('style-loader?name=[name].[ext]!../../static/css/site.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');
 require('style-loader?name=[name].[ext]!../../static/css/foundation.css');
 require('style-loader?name=[name].[ext]!../../static/css/theme-embl-petrol.css');
-require('style-loader?name=[name].[ext]!../../static/css/site.css');
 require('style-loader?name=[name].[ext]!../../static/fonts/fonts.css');
 
 require('file-loader?name=[name].[ext]!../../static/images/backgrounds/bgd_transparent_1x1.png');

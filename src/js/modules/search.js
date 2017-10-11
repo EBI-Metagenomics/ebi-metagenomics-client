@@ -9,8 +9,8 @@ const commons = require('../commons');
 const Pagination = require('../components/pagination').Pagination;
 require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
-
 import 'foundation-sites';
+import '../../../static/libraries/jquery.TableCSVExport';
 
 setCurrentTab('#search-nav');
 attachTabHandlers();
@@ -18,7 +18,6 @@ attachTabHandlers();
 $("#pageSize").append(commons.pagesize).find('#pagesize').change(function () {
     updateAll($(this).val())
 });
-
 
 let queryText = util.getURLFilterParams().get('query');
 
@@ -29,7 +28,6 @@ $(document).ready(function () {
 
 const COOKIE_NAME = 'metagenomic_filter_params';
 const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)]/;
-
 
 const Search = Backbone.Collection.extend({
     tab: null,
@@ -60,7 +58,7 @@ const Search = Backbone.Collection.extend({
 });
 
 const ResultsView = Backbone.View.extend({
-    render: function (response, params) {
+    render: function (response, params, no_display) {
         let templateData = $.extend({}, response);
         const defaultQueries = [ProjectsView.prototype.defaultQuery, SamplesView.prototype.defaultQuery, RunsView.prototype.defaultQuery];
 
@@ -80,8 +78,55 @@ const ResultsView = Backbone.View.extend({
         } else {
             templateData.filterText = null;
         }
-        this.$el.html(this.template(templateData));
-        return this.$el
+        if (!no_display) {
+            this.$el.html(this.template(templateData));
+        }
+        return this.template(templateData);
+    },
+    fetchCSV: function ($buttonElem) {
+        $buttonElem.prop('disabled', true);
+        $buttonElem.addClass('loading-cursor');
+        let tmpParams = $.extend(true, {}, this.params);
+        tmpParams.facetcount = 0;
+        tmpParams.facetsdepth = 1;
+        const maxSize = 100;
+        const totalResults = this.totalResults;
+        const that = this;
+        let fetches = [];
+        for (let start = 0; start < totalResults; start += maxSize) {
+            const number = Math.min(maxSize, totalResults - start);
+            let p = $.extend(true, {}, tmpParams);
+            p.start = start;
+            p.size = number;
+            fetches.push(this.collection.fetch({
+                data: $.param(p),
+                success: function (collection, response) {
+                    return collection;
+                }
+            }));
+        }
+
+        $.when.apply($, fetches).done(function () {
+            let collection = null;
+            for (var i = 0; i < arguments.length; i++) {
+                if (!collection) {
+                    collection = arguments[i][0];
+                } else {
+                    collection.entries = collection.entries.concat(arguments[i][0].entries);
+                }
+            }
+            const resultsTmpl = that.render(collection, tmpParams, true);
+            $(resultsTmpl).filter('table').TableCSVExport({
+                showHiddenRows: true,
+                delivery: 'download'
+            });
+        }).fail(function () {
+            alert('Could not download, an error has occured');
+        //    TODO improve error handling
+        }).always(function () {
+            $buttonElem.removeClass('loading-cursor');
+            $buttonElem.prop('disabled', false);
+        });
     }
 });
 
@@ -121,7 +166,6 @@ const FiltersView = Backbone.View.extend({
                     create: function (event, ui) {
                         $(this).siblings('[data-min]').val(initData[0]);
                         $(this).siblings('[data-max]').val(initData[1]);
-
                         $(this).siblings('.slider-input').on('change', function (e) {
                             const index = $(this).is('[data-min]') ? 0 : 1;
                             const val = parseInt($(this).val());
@@ -184,7 +228,6 @@ const Projects = Search.extend({
     }
 });
 
-
 const ProjectsView = ResultsView.extend({
     el: '#projects',
     formEl: 'projectsForm',
@@ -202,7 +245,6 @@ const ProjectsView = ResultsView.extend({
             this.params = $.extend(true, {}, Search.prototype.params);
             this.params.fields += ",METAGENOMICS_PROJECTS";
         }
-
         this.params.query = queryText || this.defaultQuery;
     },
 
@@ -226,18 +268,22 @@ const ProjectsView = ResultsView.extend({
         return this.collection.fetch({
             data: $.param(that.params),
             success: function (collection, response) {
+                that.totalResults = response.hitCount;
+
                 saveSearchParams('projects', that.params);
                 if (renderFilter) {
                     filters.render('#projectsFilters', response, that.formEl, that.params.query);
                     const $form = $('#' + that.formEl);
 
-                    $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
+                    $form.find("input[type=checkbox]:not('.switch-input')").on('click', function () {
+                        setChildrenCheckboxes(this);
+                        setParentCheckboxStatus(this);
                         addClearButton($(this), $('.filter-clear'));
                         propagateToFacets($(this).attr('type'), $(this).attr('name'), $(this).val(), $(this).is(':checked'), ['#samplesFilters', '#runsFilters']);
                         updateAll();
                     });
 
-                    $form.find('button.reset').click(function (e) {
+                    $form.find('button.reset').click(function () {
                         resetAllForms();
                     });
 
@@ -251,9 +297,12 @@ const ProjectsView = ResultsView.extend({
                     setFacetFilters('#' + that.formEl, that.params);
                 }
                 that.render(response, that.params);
+                $(that.el).find("button[name='download']").click(function () {
+                    that.fetchCSV($(this));
+                });
             }
         }).promise();
-    }
+    },
 });
 
 const Sample = Backbone.Model.extend({
@@ -326,12 +375,15 @@ const SamplesView = ResultsView.extend({
         return this.collection.fetch({
             data: $.param(that.params),
             success: function (collection, response) {
+                that.totalResults = response.hitCount;
                 saveSearchParams('samples', that.params);
                 if (renderFilter) {
                     filters.render('#samplesFilters', response, that.formEl, that.params.query);
                     const $form = $('#' + that.formEl);
 
                     $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
+                        setChildrenCheckboxes(this);
+                        setParentCheckboxStatus(this);
                         addClearButton($(this), $('.filter-clear'));
                         propagateToFacets($(this).attr('type'), $(this).attr('name'), $(this).val(), $(this).is(':checked'), ['#projectsFilters', '#runsFilters']);
                         updateAll();
@@ -349,6 +401,9 @@ const SamplesView = ResultsView.extend({
                     setFacetFilters('#' + that.formEl, that.params);
                 }
                 that.render(response, that.params);
+                $(that.el).find("button[name='download']").click(function () {
+                    that.fetchCSV($(this));
+                });
             }
         }).promise();
     }
@@ -385,7 +440,6 @@ const RunsView = ResultsView.extend({
 
     initialize: function () {
         this.pagination.setPaginationElem('#runs-pagination');
-
         const cookieParams = loadSearchParams('runs', queryText);
         if (cookieParams) {
             this.params = cookieParams;
@@ -428,11 +482,14 @@ const RunsView = ResultsView.extend({
         return this.collection.fetch({
             data: $.param(that.params),
             success: function (collection, response) {
+                that.totalResults = response.hitCount;
                 saveSearchParams('runs', that.params);
                 if (renderFilter) {
                     filters.render('#runsFilters', response, that.formEl, that.params.query);
                     const $form = $('#' + that.formEl);
                     $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
+                        setChildrenCheckboxes(this);
+                        setParentCheckboxStatus(this);
                         addClearButton($(this), $('.filter-clear'));
                         propagateToFacets($(this).attr('type'), $(this).attr('name'), $(this).val(), $(this).is(':checked'), ['#projectsFilters', '#samplesFilters']);
                         updateAll();
@@ -450,6 +507,9 @@ const RunsView = ResultsView.extend({
                     setFacetFilters('#' + that.formEl, that.params);
                 }
                 that.render(response, that.params);
+                $(that.el).find("button[name='download']").click(function () {
+                    that.fetchCSV($(this));
+                });
             }
         }).promise();
     }
@@ -655,11 +715,9 @@ function getFacetCheckboxes(elem) {
 
 function setChildrenCheckboxes(elem) {
     const $children = getChildrenCheckboxes(elem);
-    $children.attr('checked', $(elem).is(':checked'));
     $children.attr('indeterminate', false);
-    // if (elem.checked) {
-    //     $children.parent().show();
-    // }
+    $children.attr('checked', $(elem).is(':checked'));
+
 }
 
 function setParentCheckboxStatus(elem) {
@@ -701,11 +759,11 @@ function setParentCheckboxStatus(elem) {
  * Waterfall checkbox behaviour (checkbox reflects values of child checkboxes (OFF | Partial | ON)
  */
 function attachCheckboxHandlers(elem) {
-    $(elem).find('.facet-checkbox').on('change', function () {
-        // Check children
-        setChildrenCheckboxes(this);
-        setParentCheckboxStatus(this);
-    });
+    // $(elem).find('.facet-checkbox').on('change', function () {
+    //     // Check children
+    //     setChildrenCheckboxes(this);
+    //     setParentCheckboxStatus(this);
+    // });
 
     $(elem).find('.disp-children').on('click', function (e) {
         e.preventDefault();
@@ -758,8 +816,8 @@ function loadSearchParams(facet, newTextQuery) {
     return data;
 }
 
-function deleteCachedSearchParams(){
-    _.each(['projects', 'samples', 'runs'], function(facet){
+function deleteCachedSearchParams() {
+    _.each(['projects', 'samples', 'runs'], function (facet) {
         Cookies.remove(COOKIE_NAME + facet);
     })
 }
@@ -820,7 +878,6 @@ function initAll(projectsView, samplesView, runsView, renderFilters, setFilters)
     });
 }
 
-
 function updateAll(pagesize) {
     showSpinner();
     return $.when(
@@ -838,7 +895,6 @@ function showSpinner() {
 
 function hideSpinner() {
     $('#loading-icon').fadeOut();
-
 }
 
 function getAllFormIds(except) {
@@ -856,7 +912,6 @@ function resetAllForms() {
     _.each(getAllFormIds(), function (id) {
         const $form = $(id);
         resetInputsInElem($form);
-        console.log($form.find(":checked"));
     });
     deleteCachedSearchParams();
     queryText = null;

@@ -23,7 +23,7 @@ var BiomeView = Backbone.View.extend({
     attributes: {
         class: 'small-6 medium-6 large-2 columns biome-disp'
     },
-    render: function(){
+    render: function () {
         this.$el.html(this.template(this.model.toJSON()));
         return this.$el;
     }
@@ -32,32 +32,38 @@ var BiomeView = Backbone.View.extend({
 var Biomes = Backbone.Collection.extend({
     url: API_URL + 'biomes/top10',
     model: api.Biome,
-    parse: function(response){
+    parse: function (response) {
         return response.data;
     }
 });
 
 var BiomesView = Backbone.View.extend({
     el: '#top10biomes',
-    initialize: function(){
+    initialize: function () {
         var that = this;
-        this.collection.fetch({success: function(){
-            that.collection.models.sort(function(a,b){
-                return b.attributes.num_biome_projects - a.attributes.num_biome_projects
-            });
-            that.render();
-        }});
+        this.collection.fetch({
+            success: function () {
+                that.collection.models.sort(function (a, b) {
+                    return b.attributes.num_biome_projects - a.attributes.num_biome_projects
+                });
+                that.render();
+            }
+        });
         return this;
     },
-    render: function(){
+    render: function () {
         let x = 0;
-        this.collection.each(function(biome){
+        this.collection.each(function (biome) {
             var biomeView = new BiomeView({model: biome});
             let newElem = biomeView.render();
-            if (x%5===0) {newElem.addClass('medium-offset-1')}
-            if ((x+1)%5===0) {newElem.addClass('end')}
+            if (x % 5 === 0) {
+                newElem.addClass('medium-offset-1')
+            }
+            if ((x + 1) % 5 === 0) {
+                newElem.addClass('end')
+            }
             $(this.$el).append(newElem);
-            x+=1
+            x += 1
         }, this);
         return this;
     }
@@ -69,7 +75,7 @@ var StudyView = Backbone.View.extend({
     attributes: {
         class: 'study',
     },
-    render: function(){
+    render: function () {
         this.$el.html(this.template(this.model.toJSON()));
         return this.$el
     }
@@ -77,53 +83,56 @@ var StudyView = Backbone.View.extend({
 
 // Model for a collection of studies,
 var StudiesCollection = Backbone.Collection.extend({
-    url: API_URL+"studies/recent",
+    url: API_URL + "studies/recent",
     model: api.Study,
-    parse: function(response){
+    parse: function (response) {
         return response.data;
     }
 });
 
 var StudiesView = Backbone.View.extend({
     el: '#studies',
-    initialize: function(){
+    initialize: function () {
         var that = this;
-        this.collection.fetch({success: function(response){
-            that.render();
-        }});
+        this.collection.fetch({
+            success: function (response) {
+                that.render();
+            }
+        });
         return this;
     },
-    update: function(page, page_size, searchQuery, biome){
+    update: function (page, page_size, searchQuery, biome) {
         var that = this;
         $(".study").remove();
         var params = {};
-        if (page!==undefined){
-            params.page=page
+        if (page !== undefined) {
+            params.page = page
         }
-        if (page_size!==undefined){
-            params.page_size=page_size
+        if (page_size !== undefined) {
+            params.page_size = page_size
         }
-        if (biome!==undefined){
-            params.biome=biome
+        if (biome !== undefined) {
+            params.biome = biome
         }
-        if (searchQuery!==undefined && searchQuery.length > 0){
+        if (searchQuery !== undefined && searchQuery.length > 0) {
             params.search = searchQuery
         }
 
-        this.collection.fetch({data: $.param(params), remove:true, success: function(){
-            that.render();
-        }});
+        this.collection.fetch({
+            data: $.param(params), remove: true, success: function () {
+                that.render();
+            }
+        });
         return this;
     },
-    render: function(){
-        this.collection.each(function(study){
+    render: function () {
+        this.collection.each(function (study) {
             var studyView = new StudyView({model: study});
             $(this.$el).append(studyView.render());
         }, this);
         return this;
     }
 });
-
 
 var biomes = new Biomes();
 var biomesView = new BiomesView({collection: biomes});

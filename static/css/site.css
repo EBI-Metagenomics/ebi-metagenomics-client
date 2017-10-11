@@ -87,7 +87,12 @@ th.sort-both:after {
 }
 
 .header-search-input {
-    width: 8em;
+    width: 70% !important;
+    float: left;
+}
+
+.header-search-button {
+    width: 30% !important;
     float: left;
 }
 
@@ -538,9 +543,16 @@ select.table-tools {
 }
 .facet-child-group.show{
     display: block;
-
 }
 
 .map-alert {
     color: #bf0000;
+}
+
+.search-panel-tab {
+    font-size: 1rem !important;
+}
+
+.loading-cursor {
+    cursor: wait !important;
 }

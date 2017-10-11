@@ -81,9 +81,9 @@
         <div class="row">
             <div class="columns small-12 medium-12 large-12">
                 <ul class="tabs" data-tabs id="results-tabs">
-                    <li class="tabs-title is-active"><a href="#projectsTab" aria-selected="true">Projects</a></li>
-                    <li class="tabs-title"><a href="#samplesTab">Samples</a></li>
-                    <li class="tabs-title"><a href="#runsTab">Runs</a></li>
+                    <li class="tabs-title is-active"><a href="#projectsTab" class="search-panel-tab" aria-selected="true">Projects</a></li>
+                    <li class="tabs-title"><a href="#samplesTab" class="search-panel-tab">Samples</a></li>
+                    <li class="tabs-title"><a href="#runsTab" class="search-panel-tab">Runs</a></li>
                     <li style="float:right">
                         <div id="pageSize" class="pagesize-container"></div>
                     </li>
@@ -145,7 +145,7 @@
         <% if (child.children){ %>
         <button class="disp-children">&#9654;</button>
         <% } %>
-        <input name="<%= name %>" type="checkbox" value="<%= parentValue+child.value %>" class="facet-checkbox"
+        <input name="<%= name %>" type="checkbox" value="<%= parentValue+child.value %>" class="facet-checkbox <%= forLabel %>"
                id="<%= forLabel %>"/> <label for="<%= forLabel %>"><%= child.label %> (<%= child.count %>)</label>
         <% _.each(child.children, function(child2){ %>
         <div class="facet-child-group">
@@ -189,21 +189,29 @@
 </script>
 
 <script id="projectResultsTmpl" type="text/template">
-    <h5>You searched for projects with
-        <% if (queryText && queryText.length>0) { %>
-        keyword: <%= queryText %>
-        <% } %>
-        <% if (filterText && filterText.length>0) { %>
-        filters: <%= filterText %>
-        <% } %>
-        <% if (sliderText && sliderText.length>0) { %>
-        and <%= sliderText %>
-        <% } %>
-        <% if (!queryText && !filterText && !sliderText){ %>
-        no search parameters
-        <% } %>
-        .</h5>
-    <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
+    <div class="row">
+        <div class="columns small-8 medium-8 large-8">
+            <h5>You searched for projects with
+                <% if (queryText && queryText.length>0) { %>
+                keyword: <%= queryText %>
+                <% } %>
+                <% if (filterText && filterText.length>0) { %>
+                filters: <%= filterText %>
+                <% } %>
+                <% if (sliderText && sliderText.length>0) { %>
+                and <%= sliderText %>
+                <% } %>
+                <% if (!queryText && !filterText && !sliderText){ %>
+                no search parameters
+                <% } %>
+                .</h5>
+            <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
+
+        </div>
+        <div class="columns small-4 medium-4 large-4">
+            <button class="button right" name="download">Download results as CSV</button>
+        </div>
+    </div>
     <table>
         <thead>
         <tr>
@@ -240,21 +248,29 @@
 </script>
 
 <script id="samplesResultsTmpl" type="text/template">
-    <h5>You searched for samples with
-        <% if (queryText && queryText.length>0) { %>
-        keyword: <%= queryText %>
-        <% } %>
-        <% if (filterText && filterText.length>0) { %>
-        filters: <%= filterText %>
-        <% } %>
-        <% if (sliderText && sliderText.length>0) { %>
-        and <%= sliderText %>
-        <% } %>
-        <% if (!queryText && !filterText && !sliderText){ %>
-        no search parameters
-        <% } %>
-        .</h5>
-    <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
+    <div class="row">
+        <div class="columns small-8 medium-8 large-8">
+            <h5>You searched for samples with
+                <% if (queryText && queryText.length>0) { %>
+                keyword: <%= queryText %>
+                <% } %>
+                <% if (filterText && filterText.length>0) { %>
+                filters: <%= filterText %>
+                <% } %>
+                <% if (sliderText && sliderText.length>0) { %>
+                and <%= sliderText %>
+                <% } %>
+                <% if (!queryText && !filterText && !sliderText){ %>
+                no search parameters
+                <% } %>
+                .</h5>
+            <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
+
+        </div>
+        <div class="columns small-4 medium-4 large-4">
+            <button class="button right" name="download">Download results as CSV</button>
+        </div>
+    </div>
     <table>
         <thead>
         <tr>
@@ -287,21 +303,29 @@
 </script>
 
 <script id="runsResultsTmpl" type="text/template">
-    <h5>You searched for runs with
-        <% if (queryText && queryText.length>0) { %>
-        keyword: <%= queryText %>
-        <% } %>
-        <% if (filterText && filterText.length>0) { %>
-        filters: <%= filterText %>
-        <% } %>
-        <% if (sliderText && sliderText.length>0) { %>
-        and <%= sliderText %>
-        <% } %>
-        <% if (!queryText && !filterText && !sliderText){ %>
-        no search parameters
-        <% } %>
-        .</h5>
-    <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
+    <div class="row">
+        <div class="columns small-8 medium-8 large-8">
+            <h5>You searched for runs with
+                <% if (queryText && queryText.length>0) { %>
+                keyword: <%= queryText %>
+                <% } %>
+                <% if (filterText && filterText.length>0) { %>
+                filters: <%= filterText %>
+                <% } %>
+                <% if (sliderText && sliderText.length>0) { %>
+                and <%= sliderText %>
+                <% } %>
+                <% if (!queryText && !filterText && !sliderText){ %>
+                no search parameters
+                <% } %>
+                .</h5>
+            <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
+
+        </div>
+        <div class="columns small-4 medium-4 large-4">
+            <button class="button right" name="download">Download results as CSV</button>
+        </div>
+    </div>
     <table>
         <thead>
         <tr>
@@ -350,13 +374,11 @@
 <div id="footer"></div>
 
 <!-- JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
 
 <script defer="defer" src="/static/js/script.js"></script>
 
-
 <!-- The Foundation theme JavaScript -->
-
 <script src="/static/js/foundation.js"></script>
 <script src="/static/libraries/foundation.util.touch.js"></script>
 <script src="/static/js/foundationExtendEBI.js"></script>
@@ -366,6 +388,7 @@
         $(document).foundationExtendEBI();
     });
 </script>
+
 <script src="js/search.js"></script>
 
 <!-- Google Analytics details... -->
