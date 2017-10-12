@@ -2,6 +2,8 @@ const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
 const api = require('./components/api');
+const Handlebars = require('handlebars');
+
 $.typeWatch = require('jquery.typewatch');
 
 import {footer, header, resultsFilter} from "./commons";
@@ -20,9 +22,11 @@ export function formatDate(date_str) {
     return d.getDate() + "-" + MONTHS[d.getMonth()] + "-" + d.getFullYear()
 }
 
-export function setCurrentTab(id) {
+export function setCurrentTab(id, hideSearch) {
     document.addEventListener("DOMContentLoaded", function () {
-        $("#header").append(header);
+        // console.log(header());
+        // let tmpl = Handlebars.compile(header());
+        $("#header").append(header({hideSearch: hideSearch}));
         $("#footer").append(footer);
         $(id).addClass('active');
     });

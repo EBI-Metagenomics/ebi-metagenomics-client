@@ -12,7 +12,7 @@ require('webpack-jquery-ui/css');
 import 'foundation-sites';
 import '../../../static/libraries/jquery.TableCSVExport';
 
-setCurrentTab('#search-nav');
+setCurrentTab('#search-nav', true);
 attachTabHandlers();
 
 $("#pageSize").append(commons.pagesize).find('#pagesize').change(function () {
