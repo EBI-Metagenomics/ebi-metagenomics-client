@@ -5,15 +5,16 @@ import {openPage} from './util';
 /**
  * Check all links in navbar towards other pages of the site are functional
  */
-for (let orig=0; orig<navNames.length; orig++){
-    for (let dest=1; dest<navNames.length; dest++){
+for (let orig = 0; orig < navNames.length; orig++) {
+    for (let dest = 1; dest < navNames.length; dest++) {
         const origPage = navNames[orig];
         const destPage = navNames[dest];
-        describe('Nav test '+origPage+'->'+destPage, function() {
-            it('Navbar link is valid.', function() {
+        describe('Nav test ' + origPage + '->' + destPage, function () {
+            it('Navbar link is valid.', function () {
                 openPage(origPage);
-                cy.get('#'+destPage+'-nav').click();
-                if (origPage!=='overview') {
+                cy.get('#' + destPage + '-nav').click();
+
+                if (origPage !== 'overview') {
                     cy.url().should('include', destPage);
                 }
                 cy.get('h2').should('contain', pageTitles[dest]);
@@ -38,8 +39,8 @@ for (let orig = 0; orig < navNames.length; orig++) {
     });
 }
 
-describe('External link to HMMER sequence search redirects correctly', function(){
-    it('Navbar link to sequence search is valid.', function(){
+describe('External link to HMMER sequence search redirects correctly', function () {
+    it('Navbar link to sequence search is valid.', function () {
         openPage('overview');
         cy.get('#sequence-search-nav').click();
         cy.url().should('include', 'sequence-search/search/phmmer');
