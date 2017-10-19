@@ -1,7 +1,8 @@
 const Backbone = require('backbone');
 const Pagination = require('../components/pagination').Pagination;
 import {API_URL, NO_DATA_MSG} from '../config';
-import {formatDate, formatLineage, getBiomeIcon, lineage2Biome} from "../util";
+import {formatDate, formatLineage, getBiomeIcon, lineage2Biome, getBiomeIconData} from "../util";
+
 const _ = require('underscore');
 
 // Model for an individual study
@@ -12,14 +13,13 @@ export const Study = Backbone.Model.extend({
     parse: function (d) {
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
-        const biomes = data.relationships.biomes.data.map(function (x) {
-            const name = x.id;
-            return {name: formatLineage(name), icon: getBiomeIcon(name)};
-        });
+        const biomes = data.relationships.biomes.data.map(getBiomeIconData);
         const samples = d.included.reduce(function (lst, included) {
             if (included.type = 'samples') {
-                included.url = '/sample' + included.id;
-                lst.push(included)
+                included.attributes.url = '/sample/' + included.id;
+                lst.push(included);
+                included.biome = getBiomeIconData(included.relationships.biome.data);
+                included.attributes['last-update'] = formatDate(included.attributes['last-update'])
             }
             return lst
         }, []);
@@ -76,7 +76,8 @@ export const Run = Backbone.Model.extend({
             sample_url: '/sample/' + attr['sample-accession'],
             run_url: '/run/' + attr.accession,
             experiment_type: data.relationships['experiment-type'].data.id,
-            instrument_model: attr.instrument_model || NO_DATA_MSG,
+            instrument_model: attr['instrument-model'],
+            instrument_platform: attr['instrument-platform'],
             pipeline_versions: pipelines.data.map(function (x) {
                 return x.id
             }),

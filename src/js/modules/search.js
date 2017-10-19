@@ -20,9 +20,10 @@ $("#pageSize").append(commons.pagesize).find('#pagesize').change(function () {
 });
 
 let queryText = util.getURLFilterParams().get('query');
+$("#navbar-query").val(queryText);
 
 $(document).ready(function () {
-    $("#navbar-query").val(queryText);
+    //TODO convert to template argument
     $("#pagesize-text").hide();
 });
 
@@ -32,7 +33,6 @@ const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)]/;
 const Search = Backbone.Collection.extend({
     tab: null,
     params: {
-        query: '',
         format: 'json',
         size: 10,
         start: 0,
@@ -283,9 +283,9 @@ const ProjectsView = ResultsView.extend({
                         updateAll();
                     });
 
-                    $form.find('button.reset').click(function () {
-                        resetAllForms();
-                    });
+                    // $form.find('button.reset').click(function () {
+                    //     resetAllForms();
+                    // });
 
                     that.pagination.initPagination(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
                         that.update(page);
@@ -331,37 +331,31 @@ const SamplesView = ResultsView.extend({
     defaultQuery: 'domain_source:metagenomics_samples',
     pagination: new Pagination(),
 
+    setDefaultParams: function(){
+        this.params = $.extend(true, {}, Search.prototype.params);
+        this.params.fields += ",METAGENOMICS_PROJECTS";
+        this.params.searchQuery = this.defaultQuery;
+    },
+
     initialize: function () {
         //TODO fetch params from session storage
         this.pagination.setPaginationElem('#samples-pagination');
-        const cookieParams = loadSearchParams('samples', queryText);
+        const cookieParams = loadSearchParams('samples', getQueryText());
         if (cookieParams) {
+            console.log(cookieParams);
             this.params = cookieParams;
         } else {
-            this.params = $.extend(true, {}, Search.prototype.params);
-            this.params.fields += ",METAGENOMICS_PROJECTS";
+            this.setDefaultParams();
         }
-
-        if (!this.params.query) {
-            this.params.query = queryText || this.defaultQuery;
-        } else {
-            let params = this.params.query.split(" AND ");
-            if (params.indexOf(queryText) === -1 && queryText) {
-                params.push(queryText);
-                this.params.query = params.join(' AND ');
-            }
-        }
+        console.log('params1', this.params);
+        this.params.searchQuery = getQueryText() || this.defaultQuery;
+        console.log('params2', this.params);
     },
     update: function (page, pagesize) {
         var formData = processSliders(removeRedundantBiomes($('#' + this.formEl).serializeArray()));
-        if (queryText) {
-            formData.queryParams.push(queryText);
-        }
-        this.params.query = formData.queryParams.join(" AND ");
+        this.params.facetQuery = formData.queryParams;
         this.params.facets = formData.facets;
-        if (!this.params.query.length) {
-            this.params.query = this.defaultQuery;
-        }
+
         if (pagesize) {
             this.params.size = pagesize;
         }
@@ -372,13 +366,15 @@ const SamplesView = ResultsView.extend({
     },
     fetchAndRender: function (renderFilter, setFilters) {
         const that = this;
+        const fetchParams = genCombinedQuery(this.params);
+        console.log('params3', fetchParams);
         return this.collection.fetch({
-            data: $.param(that.params),
+            data: $.param(fetchParams),
             success: function (collection, response) {
                 that.totalResults = response.hitCount;
                 saveSearchParams('samples', that.params);
                 if (renderFilter) {
-                    filters.render('#samplesFilters', response, that.formEl, that.params.query);
+                    filters.render('#samplesFilters', response, that.formEl, fetchParams.query);
                     const $form = $('#' + that.formEl);
 
                     $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
@@ -389,18 +385,18 @@ const SamplesView = ResultsView.extend({
                         updateAll();
                     });
 
-                    $form.find('button.reset').click(function (e) {
-                        resetAllForms();
-                    });
+                    // $form.find('button.reset').click(function (e) {
+                    //     resetAllForms();
+                    // });
 
                     that.pagination.initPagination(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
                         that.update(page);
                     });
                 }
                 if (setFilters) {
-                    setFacetFilters('#' + that.formEl, that.params);
+                    setFacetFilters('#' + that.formEl, fetchParams);
                 }
-                that.render(response, that.params);
+                that.render(response, fetchParams);
                 $(that.el).find("button[name='download']").click(function () {
                     that.fetchCSV($(this));
                 });
@@ -438,36 +434,32 @@ const RunsView = ResultsView.extend({
     defaultQuery: 'domain_source:metagenomics_runs',
     pagination: new Pagination(),
 
+    setDefaultParams: function(){
+        this.params = $.extend(true, {}, Search.prototype.params);
+        this.params.fields += ",METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,experiment_type,pipeline_version";
+        this.params.searchQuery = this.defaultQuery;
+    },
+
     initialize: function () {
+        //TODO fetch params from session storage
         this.pagination.setPaginationElem('#runs-pagination');
-        const cookieParams = loadSearchParams('runs', queryText);
+        const cookieParams = loadSearchParams('runs', getQueryText());
         if (cookieParams) {
+            console.log(cookieParams);
             this.params = cookieParams;
         } else {
-            this.params = $.extend(true, {}, Search.prototype.params);
-            this.params.fields += ",METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,experiment_type,pipeline_version";
+            this.setDefaultParams();
         }
-
-        if (!this.params.query) {
-            this.params.query = queryText || this.defaultQuery;
-        } else {
-            let params = this.params.query.split(" AND ");
-            if (params.indexOf(queryText) === -1 && queryText) {
-                params.push(queryText);
-                this.params.query = params.join(' AND ');
-            }
-        }
+        console.log('params1', this.params);
+        this.params.searchQuery = getQueryText() || this.defaultQuery;
+        console.log('params2', this.params);
     },
+
     update: function (page, pagesize) {
         var formData = processSliders(removeRedundantBiomes($('#' + this.formEl).serializeArray()));
-        if (queryText) {
-            formData.queryParams.push(queryText);
-        }
         this.params.query = formData.queryParams.join(" AND ");
         this.params.facets = formData.facets;
-        if (!this.params.query.length) {
-            this.params.query = this.defaultQuery;
-        }
+
         if (pagesize) {
             this.params.size = pagesize;
         }
@@ -479,14 +471,17 @@ const RunsView = ResultsView.extend({
 
     fetchAndRender: function (renderFilter, setFilters) {
         const that = this;
+        const fetchParams = genCombinedQuery(this.params);
+        console.log('params3', fetchParams);
         return this.collection.fetch({
-            data: $.param(that.params),
+            data: $.param(fetchParams),
             success: function (collection, response) {
                 that.totalResults = response.hitCount;
                 saveSearchParams('runs', that.params);
                 if (renderFilter) {
-                    filters.render('#runsFilters', response, that.formEl, that.params.query);
+                    filters.render('#runsFilters', response, that.formEl, fetchParams.query);
                     const $form = $('#' + that.formEl);
+
                     $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
                         setChildrenCheckboxes(this);
                         setParentCheckboxStatus(this);
@@ -495,18 +490,18 @@ const RunsView = ResultsView.extend({
                         updateAll();
                     });
 
-                    $form.find('button.reset').click(function (e) {
-                        resetAllForms();
-                    });
+                    // $form.find('button.reset').click(function (e) {
+                    //     resetAllForms();
+                    // });
 
                     that.pagination.initPagination(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
                         that.update(page);
                     });
                 }
                 if (setFilters) {
-                    setFacetFilters('#' + that.formEl, that.params);
+                    setFacetFilters('#' + that.formEl, fetchParams);
                 }
-                that.render(response, that.params);
+                that.render(response, fetchParams);
                 $(that.el).find("button[name='download']").click(function () {
                     that.fetchCSV($(this));
                 });
@@ -514,6 +509,17 @@ const RunsView = ResultsView.extend({
         }).promise();
     }
 });
+
+function genCombinedQuery(params){
+    const fetchParams = $.extend(true, {}, params);
+    let queryParts = fetchParams.facetQuery || [];
+    queryParts.push(fetchParams.searchQuery);
+    fetchParams.query = queryParts.join(" AND ");
+    delete fetchParams.facetQuery;
+    delete fetchParams.searchQuery;
+
+    return fetchParams;
+}
 
 
 function addClearButton($input, $container) {
@@ -785,26 +791,16 @@ function isFacetParam(elem) {
 
 function saveSearchParams(facet, params) {
     let cookieParams = $.extend(true, {}, params);
-    if (params.query) {
-        let query = params.query.split(' AND ');
-        const textQuery = _.reject(query, isFacetParam)[0];
-        // Avoid saving empty query
-        if (textQuery && textQuery.length > 0) {
-            cookieParams.textQuery = textQuery;
-        }
-        cookieParams.sliderQuery = _.filter(query, isFacetParam);
+    if (cookieParams.query) {
         delete cookieParams.query;
     }
     Cookies.set(COOKIE_NAME + facet, cookieParams);
 }
 
-function loadSearchParams(facet, newTextQuery) {
+function loadSearchParams(facet) {
     let data = Cookies.get(COOKIE_NAME + facet);
     if (data) {
         data = JSON.parse(data);
-        if (newTextQuery) {
-            data.textQuery = newTextQuery;
-        }
         data.query = data.sliderQuery || [];
         if (data.textQuery) {
             data.query.push(data.textQuery);
@@ -812,8 +808,9 @@ function loadSearchParams(facet, newTextQuery) {
         data.query = data.query.join(' AND ');
         delete data.textQuery;
         delete data.sliderQuery;
+        return data;
     }
-    return data;
+    return null;
 }
 
 function deleteCachedSearchParams() {
@@ -851,21 +848,6 @@ function enableSlider($checkbox, enabled) {
     }
     $elemGroup.find(':input').prop('disabled', !enabled);
 }
-
-let search = new Search();
-
-let projects = new Projects();
-let projectsView = new ProjectsView({collection: projects});
-
-let samples = new Samples();
-let samplesView = new SamplesView({collection: samples});
-
-let runs = new Runs();
-let runsView = new RunsView({collection: runs});
-
-let filters = new FiltersView(updateAll);
-
-initAll(projectsView, samplesView, runsView, true, true);
 
 function initAll(projectsView, samplesView, runsView, renderFilters, setFilters) {
     showSpinner();
@@ -914,7 +896,6 @@ function resetAllForms() {
         resetInputsInElem($form);
     });
     deleteCachedSearchParams();
-    queryText = null;
     projectsView.initialize();
     samplesView.initialize();
     runsView.initialize();
@@ -925,3 +906,34 @@ function resetAllForms() {
 String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
+
+const button = $("<button id='search-reset' class='button' type='reset'>Clear all</button>");
+const $searchForm = $("#headerSearchForm");
+$searchForm.append(button);
+$searchForm.on('reset', function () {
+    deleteCachedSearchParams();
+    resetAllForms();
+});
+
+
+function getQueryText(){
+    return $searchForm.find("#navbar-query").val();
+}
+
+let search = new Search();
+
+let projects = new Projects();
+let projectsView = new ProjectsView({collection: projects});
+
+let samples = new Samples();
+let samplesView = new SamplesView({collection: samples});
+
+let runs = new Runs();
+let runsView = new RunsView({collection: runs});
+
+let filters = new FiltersView(updateAll);
+
+initAll(projectsView, samplesView, runsView, true, true);
+
+
+

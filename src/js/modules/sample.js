@@ -110,11 +110,16 @@ var RunsView = Backbone.View.extend({
             }
         });
     },
+
     render: function () {
         this.collection.each(function (run) {
             var runView = new RunView({model: run});
             $(this.$el).append(runView.render());
         }, this);
+        if (this.collection.length===0){
+            $(this.$el).append("<tr><td colspan=4>No runs to display</td></tr>")
+        }
+        console.log($(this.$el))
         return this;
     }
 });

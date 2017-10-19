@@ -5,8 +5,10 @@ const commons = require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
 const Handlebars = require('handlebars');
+const List = require('list.js');
 
 const pagination = new Pagination();
+
 // const OverlappingMarkerSpiderfier = require('../../../static/libraries/oms.min.js');
 import 'js-marker-clusterer';
 
@@ -23,7 +25,6 @@ import {
 } from "../util";
 
 setCurrentTab('#studies-nav');
-
 
 var study_id = getURLParameter();
 
@@ -56,7 +57,6 @@ var StudyView = Backbone.View.extend({
     }
 });
 
-
 var RunView = Backbone.View.extend({
     tagName: 'tr',
     template: _.template($("#runRow").html()),
@@ -72,25 +72,25 @@ var RunView = Backbone.View.extend({
 var RunsView = Backbone.View.extend({
     el: '#runsTableBody',
     initialize: function () {
-            var that = this;
+        var that = this;
 
-            let params = {};
-            const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
-            if (pagesize !== null) {
-                params.page_size = pagesize;
+        let params = {};
+        const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
+        if (pagesize !== null) {
+            params.page_size = pagesize;
+        }
+        params.page = pageFilters.get('page') || 1;
+
+        params.include = 'sample';
+        params.study_accession = study_id;
+        this.collection.fetch({
+            data: $.param(params), success: function (collection, response, options) {
+                const pag = response.meta.pagination;
+                pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
+                that.render();
+                createLiveFilter();
             }
-            params.page = pageFilters.get('page') || 1;
-
-            params.include = 'sample';
-            params.study_accession = study_id;
-            this.collection.fetch({
-                data: $.param(params), success: function (collection, response, options) {
-                    const pag = response.meta.pagination;
-                    pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
-                    that.render();
-                    createLiveFilter();
-                }
-            });
+        });
         return this;
     },
     update: function (page, page_size) {
@@ -121,9 +121,14 @@ var RunsView = Backbone.View.extend({
     },
     render: function () {
         this.collection.each(function (run) {
+            console.log(run);
             var runView = new RunView({model: run});
             $(this.$el).append(runView.render());
         }, this);
+        let opts = {
+            valueNames: ["sample_name", "sample_id", "run_id", "experiment_type", "instrument_platform", "instrument_model"]
+        };
+        window.a = new List("runs-section", opts);
         return this;
     }
 });

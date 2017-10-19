@@ -100,6 +100,29 @@
                 </section>
                 <hr>
                 <section>
+                    <h3>Associated studies</h3>
+                    <div id="pageSize2"></div>
+                    <table id='studiesTable'>
+                        <thead>
+                        <tr>
+                            <th class="biome-icon">Biome</th>
+                            <th data-sortby='study_name' class="sort-both name">Study name</th>
+                            <th data-sortby='samples_count' class="sort-both samples">Samples</th>
+                            <th data-sortby='last_update' class="sort-both updated">Last updated</th>
+                        </tr>
+                        </thead>
+                        <tbody id="studiesTableBody" class="live-filter-table">
+                        <tr>
+                            <td class='loading-gif-row' colspan="5">
+                                <img class='loading-gif' src="/static/images/ajax-loader.gif"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div id="pagination2"></div>
+                </section>
+                <hr>
+                <section>
                     <h3>Associated runs</h3>
                     <div id="pageSize"></div>
                     <table id='runsTable'>

@@ -36,6 +36,11 @@ export function initTableTools() {
     // $("#tableTools").append(tableTools);
 }
 
+export function getBiomeIconData(biome_data){
+    const name = biome_data.id;
+    return {name: formatLineage(name), icon: getBiomeIcon(name)};
+}
+
 export function initResultsFilter(initQuery, callback) {
     const formId = "#filter";
     $("#filterForm").append(resultsFilter);
