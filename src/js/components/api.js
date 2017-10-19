@@ -1,7 +1,8 @@
-import Backbone from 'backbone';
-import Pagination from './pagination';
+const Backbone = require('backbone');
+const Pagination = require('../components/pagination').Pagination;
 import {API_URL, NO_DATA_MSG} from '../config';
 import {formatDate, formatLineage, getBiomeIcon, lineage2Biome} from "../util";
+const _ = require('underscore');
 
 // Model for an individual study
 export const Study = Backbone.Model.extend({
@@ -15,17 +16,24 @@ export const Study = Backbone.Model.extend({
             const name = x.id;
             return {name: formatLineage(name), icon: getBiomeIcon(name)};
         });
+        const samples = d.included.reduce(function (lst, included) {
+            if (included.type = 'samples') {
+                included.url = '/sample' + included.id;
+                lst.push(included)
+            }
+            return lst
+        }, []);
         return {
             biomes: biomes,
             study_link: "/study/" + data.id,
-            samples_link: "/study/"+data.id,
+            samples_link: "/study/" + data.id,
             study_name: attr['study-name'],
             samples_count: attr['samples-count'],
             study_id: attr['project-id'],
             study_accession: attr['accession'],
             last_update: formatDate(attr['last-update']),
             abstract: attr['study-abstract'],
-            samples: d.included
+            samples: samples
         }
     }
 });
@@ -34,7 +42,7 @@ export const Study = Backbone.Model.extend({
 export const StudiesCollection = Backbone.Collection.extend({
     url: API_URL + "studies",
     model: Study,
-    initialize: function(pagination){
+    initialize: function (pagination) {
         this.pagination = pagination;
     },
     parse: function (response) {
@@ -114,9 +122,9 @@ export const Biome = Backbone.Model.extend({
             name: lineage2Biome(lineage),
             icon: getBiomeIcon(lineage),
             lineage: lineage,
-            lineage_projects : attr['studies-count'],
+            lineage_projects: attr['studies-count'],
             // lineage_projects_no_children: attr['studies-count'],
-            biome_studies_link: '/studies?biome='+lineage,
+            biome_studies_link: '/studies?biome=' + lineage,
             // biome_studies_link_no_children: 'TODO2',
         };
     }
@@ -137,7 +145,7 @@ export const Sample = Backbone.Model.extend({
     },
     parse: function (d) {
         let metadatas = [];
-        if (d.hasOwnProperty('included')){
+        if (d.hasOwnProperty('included')) {
             metadatas = d.included.filter(function (el) {
                 return el.type === 'sample-anns';
             }).map(function (el) {
@@ -182,19 +190,19 @@ export const SamplesCollection = Backbone.Collection.extend({
 
 export const Analysis = Backbone.Model.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id + '/pipelines/'+this.version;
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version;
     },
-    initialize: function(params){
+    initialize: function (params) {
         this.id = params.id;
         this.version = params.version;
     }
 });
 
 export const AnalysisMetadata = Backbone.Model.extend({
-    url: function(){
-        return API_URL + 'runs/' + this.id + '/pipelines/'+this.version+'/metadata';
+    url: function () {
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/metadata';
     },
-    initialize: function(params){
+    initialize: function (params) {
         this.id = params.id;
         this.version = params.version;
     }
