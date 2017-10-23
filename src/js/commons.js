@@ -5,6 +5,13 @@ export const pagination = require("../partials/pagination.handlebars");
 export const pagesize = require("../partials/pagesize.handlebars");
 export const resultsFilter = require("../partials/results_filter.handlebars");
 
+export const pipelines = [
+    require('../partials/pipelines/1.handlebars'),
+    require('../partials/pipelines/2.handlebars'),
+    require('../partials/pipelines/3.handlebars'),
+    require('../partials/pipelines/4.handlebars'),
+];
+
 require('html-loader?path=../name=[name].[ext]!../about.html');
 require('html-loader?path=../name=[name].[ext]!../biomes.html');
 require('html-loader?path=../name=[name].[ext]!../compare.html');
@@ -16,6 +23,8 @@ require('html-loader?path=../name=[name].[ext]!../search.html');
 require('html-loader?path=../name=[name].[ext]!../studies.html');
 require('html-loader?path=../name=[name].[ext]!../study.html');
 require('html-loader?path=../name=[name].[ext]!../submit.html');
+require('html-loader?path=../name=[name].[ext]!../pipelines.html');
+require('html-loader?path=../name=[name].[ext]!../pipeline.html');
 require('html-loader?path=../name=[name].[ext]!../index.html');
 
 require('style-loader?name=[name].[ext]!../../static/css/site.css');

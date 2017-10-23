@@ -16,6 +16,8 @@ module.exports = {
         about: 'src/js/modules/about.js',
         contact: 'src/js/modules/contact.js',
         // biomes: 'src/js/modules/biomes.js',
+        pipelines: 'src/js/modules/pipelines.js',
+        pipeline: 'src/js/modules/pipeline.js',
     },
     output: {
         filename: '[name].js',

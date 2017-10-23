@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <!--TODO add metadata-->
+    <title>Pipelines</title>
+    <meta name="description" content="EMBL-EBI"/><!-- Describe what this page is about -->
+    <meta name="keywords" content="bioinformatics, europe, institute"/>
+    <!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
+    <meta name="author" content="EMBL-EBI"/><!-- Your [project-name] here -->
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="MobileOptimized" content="width"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="theme-color" content="#70BDBD"/> <!-- Android Chrome mobile browser tab color -->
+
+    <!-- Add information on the life cycle of this page -->
+    <meta name="ebi:owner" content="John Doe"/> <!-- Who should be contacted about changes -->
+    <meta name="ebi:review-cycle" content="30"/> <!-- In days, how often should the content be reviewed -->
+    <meta name="ebi:last-review" content="2015-12-20"/> <!-- The last time the content was reviewed -->
+    <meta name="ebi:expiry" content="2016-01-20"/> <!-- When this content is no longer relevant -->
+
+    <!-- If you link to any other sites frequently, consider optimising performance with a DNS prefetch -->
+    <link rel="dns-prefetch" href="//embl.de"/>
+
+    <!-- If you have custom icon, replace these as appropriate.
+         You can generate them at realfavicongenerator.net -->
+    <link rel="icon" type="image/x-icon"
+          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/favicon.ico"/>
+    <link rel="icon" type="image/png"
+          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="192×192"
+          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/android-chrome-192x192.png"/>
+    <!-- Android (192px) -->
+    <link rel="apple-touch-icon-precomposed" sizes="114x114"
+          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-114x114.png"/>
+    <!-- For iPhone 4 Retina display (114px) -->
+    <link rel="apple-touch-icon-precomposed" sizes="72x72"
+          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-72x72.png"/>
+    <!-- For iPad (72px) -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-144x144.png"/>
+    <!-- For iPad retinat (144px) -->
+    <link rel="apple-touch-icon-precomposed"
+          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-57x57.png"/>
+    <!-- For iPhone (57px) -->
+    <link rel="mask-icon"
+          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/safari-pinned-tab.svg"
+          color="#ffffff"/> <!-- Safari icon for pinned tab -->
+    <meta name="msapplication-TileColor" content="#2b5797"/> <!-- MS Icons -->
+    <meta name="msapplication-TileImage"
+          content="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/mstile-144x144.png"/>
+
+    <!-- CSS: implied media=all -->
+    <!-- CSS concatenated and minified via ant build script-->
+    <!--<link rel="stylesheet" href="/static/css/theme-embl-petrol.css" type="text/css" media="all"/>-->
+    <!--<link rel="stylesheet" href="/static/css/ebi-global.css" type="text/css" media="all"/>-->
+    <!--<link rel="stylesheet" href="/static/fonts/fonts.css" type="text/css" media="all"/>-->
+
+    <!-- Use this CSS file for any custom styling -->
+    <!--
+      <link rel="stylesheet" href="css/custom.css" type="text/css" media="all">
+    -->
+
+    <!-- If you have a custom header image or colour -->
+    <meta name="ebi:masthead-color" content="#091314"/>
+    <meta name="ebi:masthead-image"
+          content="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/backgrounds/embl-ebi-background-4.jpg"/>
+</head>
+<body class="level2"><!-- add any of your classes or IDs -->
+<div id="header"></div>
+
+<!-- Suggested layout containers / #content -->
+<div id="content">
+    <div id="main-content-area" class="row" role="main">
+
+        <div id="content-full" class="columns small-12 medium-12 large-12">
+            <h2>Pipeline release archive</h2>
+            <p>You will find here the list of pipelines that were used to run the analyses.</p>
+
+            <h3 class="pi_arch_title"><span><a href="/pipeline/4.0">Pipeline v.4.0</a></span>
+                (04-Sep-2017)</h3>
+
+            <ul>
+                <li>Updated tools: InterProScan</li>
+                <li>rRNASelector (used to identify 16S rRNA genes) was replaced with Infernal for SSU and LSU gene
+                    identification
+                </li>
+                <li>The QIIME taxonomic classification component was replaced with MAPseq</li>
+                <li>The Greengenes reference database was replaced with SILVA SSU / LSU version 128, enabling
+                    classification of eukaryotes, remapped to a 8-level taxonomy
+                </li>
+                <li>Prodigal was added to run alongside FragGeneScan as part of a combined gene caller when
+                    processing assembled sequences
+                </li>
+            </ul>
+
+
+            <h3 class="pi_arch_title"><span><a href="/pipeline/3.0">Pipeline v.3.0</a></span>
+                (30-Jun-2016)</h3>
+
+
+            <ul>
+                <li>Updated tools: InterProScan, FraGeneScan, QIIME and Trimmomatic</li>
+                <li>Updated GO slim, based on the analysis of over 22 billion (22x10^9) billion functional
+                    annotations
+                </li>
+                <li>Added identification and masking of transfer RNA genes</li>
+                <li>Improved quality control statistics (sequence length summary, GC and nucleotide distribution)
+                </li>
+            </ul>
+            <h3 class="pi_arch_title"><span><a href="/pipelines/2.0">Pipeline v.2.0</a></span>
+                (15-Feb-2015)</h3>
+            <ul>
+                <li>Removed clustering step during the Quality control (QC)</li>
+                <li>Added step to mask rRNA on reads (instead of removing reads with rRNA)</li>
+                <li>Improved performance and tools update</li>
+            </ul>
+            <h3 class="pi_arch_title"><span><a href="/pipelines/1.0">Pipeline v.1.0</a></span>
+                (09-Dec-2009)</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Optional local footer (insert citation / project-specific copyright / etc here -->
+<!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
+<!-- <div class="row"> -->
+<!-- <span class="reference">How to reference this page: ...</span> -->
+<!-- </div> -->
+<!-- </footer> -->
+<!-- End optional local footer -->
+<!-- </div> -->
+<!-- End suggested layout containers / #content -->
+
+<div id="footer"></div>
+
+<!-- JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script defer="defer" src="/static/js/script.js"></script>
+
+<!-- The Foundation theme JavaScript -->
+
+<script src="/static/js/foundation.js"></script>
+<script src="/static/js/foundationExtendEBI.js"></script>
+<script type="text/JavaScript">
+    $(document).ready(function () {
+        $(document).foundation();
+        $(document).foundationExtendEBI();
+    });
+</script>
+
+<script src="/js/pipelines.js"></script>
+
+
+<!-- Google Analytics details... -->
+<!-- Change UA-XXXXX-X to be your util's ID -->
+<!--
+<script>
+  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
+  Modernizr.load({
+    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
+  });
+</script>
+-->
+</body>
+
+
+</html>
