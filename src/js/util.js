@@ -207,4 +207,3 @@ export const BiomeCollectionView = Backbone.View.extend({
     }
 });
 
-

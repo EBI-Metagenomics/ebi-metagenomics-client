@@ -33,3 +33,12 @@ require('file-loader?name=[name].[ext]!../../static/images/ico_biome_sprite.png'
 require('file-loader?name=[name].[ext]!../../static/images/logos/EMBL-EBI/EMBL_EBI_Logo_white.svg');
 require('file-loader?name=[name].[ext]!../../static/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg');
 require('file-loader?name=[name].[ext]!../../static/images/map.png');
+
+require('file-loader?name=[name].[ext]!../../static/images/ico_graph_barh.png');
+require('file-loader?name=[name].[ext]!../../static/images/ico_graph_barh_on.png');
+require('file-loader?name=[name].[ext]!../../static/images/ico_graph_krona.png');
+require('file-loader?name=[name].[ext]!../../static/images/ico_graph_krona_on.png');
+require('file-loader?name=[name].[ext]!../../static/images/ico_graph_pie.png');
+require('file-loader?name=[name].[ext]!../../static/images/ico_graph_pie_on.png');
+require('file-loader?name=[name].[ext]!../../static/images/ico_graph_col.png');
+require('file-loader?name=[name].[ext]!../../static/images/ico_graph_col_on.png');

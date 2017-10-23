@@ -14,15 +14,19 @@ export const Study = Backbone.Model.extend({
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
         const biomes = data.relationships.biomes.data.map(getBiomeIconData);
-        const samples = d.included.reduce(function (lst, included) {
-            if (included.type = 'samples') {
-                included.attributes.url = '/sample/' + included.id;
-                lst.push(included);
-                included.biome = getBiomeIconData(included.relationships.biome.data);
-                included.attributes['last-update'] = formatDate(included.attributes['last-update'])
-            }
-            return lst
-        }, []);
+        if (d.included) {
+            let samples = d.included.reduce(function (lst, included) {
+                if (included.type = 'samples') {
+                    included.attributes.url = '/sample/' + included.id;
+                    lst.push(included);
+                    included.biome = getBiomeIconData(included.relationships.biome.data);
+                    included.attributes['last-update'] = formatDate(included.attributes['last-update'])
+                }
+                return lst
+            }, []);
+        } else {
+            let samples = [];
+        }
         return {
             biomes: biomes,
             study_link: "/study/" + data.id,
@@ -202,6 +206,16 @@ export const Analysis = Backbone.Model.extend({
 export const AnalysisMetadata = Backbone.Model.extend({
     url: function () {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/metadata';
+    },
+    initialize: function (params) {
+        this.id = params.id;
+        this.version = params.version;
+    }
+});
+
+export const Taxonomy = Backbone.Model.extend({
+    url: function () {
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/taxonomy';
     },
     initialize: function (params) {
         this.id = params.id;

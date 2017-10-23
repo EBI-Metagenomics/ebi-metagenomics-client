@@ -54,7 +54,6 @@
     <!-- CSS concatenated and minified via ant build script-->
     <!--<link rel="stylesheet" href="/static/css/theme-embl-petrol.css" type="text/css" media="all"/>-->
     <!--<link rel="stylesheet" href="/static/css/ebi-global.css" type="text/css" media="all"/>-->
-    <!--<link rel="stylesheet" href="/static/css/site.css" type="text/css" media="all"/>-->
     <!--<link rel="stylesheet" href="/static/fonts/fonts.css" type="text/css" media="all"/>-->
 
     <!-- Use this CSS file for any custom styling -->
@@ -94,8 +93,8 @@
     <ul class="tabs" data-tabs id="run-tabs">
         <li class="tabs-title active"><a href="#overview" aria-selected="true">Overview</a></li>
         <li class="tabs-title"><a href="#qc">Quality control</a></li>
-        <li class="tabs-title"><a href="#functional">Taxonomic analysis</a></li>
-        <li class="tabs-title"><a href="#taxonomic">Functional analysis</a></li>
+        <li class="tabs-title"><a href="#taxonomic">Taxonomic analysis</a></li>
+        <li class="tabs-title"><a href="#functional">Functional analysis</a></li>
         <li class="tabs-title"><a href="#download">Download</a></li>
     </ul>
     <div class="tabs-content" data-tab-content="run-tabs">
@@ -122,7 +121,19 @@
 
         </div>
         <div class="tabs-panel" id="functional"></div>
-        <div class="tabs-panel" id="taxonomic"></div>
+        <div class="tabs-panel" id="taxonomic">
+            <div id="tax-Krona">
+                <!--<div class="msg_error" id="ie_krona">Krona chart is only working for latest versions of Internet-->
+                    <!--Explorer (IE 9+). <br/>-->
+                    <!--Please, update your browser to a more recent version - <a href="http://windows.microsoft.com/ie"-->
+                                                                              <!--onclick="trackExternalDownload('http://windows.microsoft.com/ie')">Download-->
+                        <!--Now</a>.-->
+                </div>
+                <object class="krona_chart"
+                        data="https://www.ebi.ac.uk/metagenomics/projects/<%= study_id %>/samples/<%= sample_id %>/runs/<%= run_id %>/results/krona/versions/2.0?taxonomy=true&collapse=false"
+                        type="text/html"></object>
+            </div>
+        </div>
         <div class="tabs-panel" id="download"></div>
     </div>
 </script>
@@ -147,13 +158,13 @@
 <script src="/static/js/foundation.js"></script>
 <script src="/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(document).foundation();
         $(document).foundationExtendEBI();
     });
 </script>
-<script src="/js/run.js"></script>
 
+<script src="/js/run.js"></script>
 
 
 <!-- Google Analytics details... -->
