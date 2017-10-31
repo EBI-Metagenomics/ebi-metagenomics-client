@@ -35,13 +35,14 @@ module.exports = {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
             }, {
-                test: /\.hbs$/,
-                loader: __dirname + "/../../../",
-                query: {
-                    partialDirs: [
-                        path.join(__dirname + "../", 'templates', 'partials')
-                    ]
-                }
+                test: /\.handlebars$/,
+                loader: "handlebars-loader"
+                // loader: __dirname + "/../../../",
+                // query: {
+                //     partialDirs: [
+                //         path.join(__dirname + "../", 'templates', 'partials')
+                //     ]
+                // }
             }, {
                 test: /\.(html)$/,
                 use: {
@@ -87,7 +88,12 @@ module.exports = {
                     'css-loader'
                 ]
             }, {
-            test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000'}
+                test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                loader: 'url-loader?limit=100000'
+            }, {
+                test: require.resolve("jstree"),
+                use: "imports-loader?this=>window"
+            }
 // }, {
             //     test: /\.(jpe?g|png|gif|svg)$/i,
             //     loader: 'file-loader?name=../[path][name].[ext]!html-loader'

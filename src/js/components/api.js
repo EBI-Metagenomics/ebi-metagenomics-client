@@ -14,8 +14,9 @@ export const Study = Backbone.Model.extend({
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
         const biomes = data.relationships.biomes.data.map(getBiomeIconData);
+        let samples = null;
         if (d.included) {
-            let samples = d.included.reduce(function (lst, included) {
+            samples = d.included.reduce(function (lst, included) {
                 if (included.type = 'samples') {
                     included.attributes.url = '/sample/' + included.id;
                     lst.push(included);
@@ -25,7 +26,7 @@ export const Study = Backbone.Model.extend({
                 return lst
             }, []);
         } else {
-            let samples = [];
+            samples = [];
         }
         return {
             biomes: biomes,

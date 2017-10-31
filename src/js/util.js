@@ -9,6 +9,7 @@ $.typeWatch = require('jquery.typewatch');
 import {footer, header, resultsFilter} from "./commons";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 export function formatLineage(lineage) {
     return lineage.split(":").slice(1).join(" > ");
 }
@@ -36,7 +37,7 @@ export function initTableTools() {
     // $("#tableTools").append(tableTools);
 }
 
-export function getBiomeIconData(biome_data){
+export function getBiomeIconData(biome_data) {
     const name = biome_data.id;
     return {name: formatLineage(name), icon: getBiomeIcon(name)};
 }
@@ -126,7 +127,7 @@ export function getFormData(selector) {
     $.map(formData, function (n, i) {
         const varName = n['name'];
         const value = n['value'];
-        if (_.has(data, varName)){
+        if (_.has(data, varName)) {
             if (!Array.isArray(data[varName])) {
                 data[varName] = [data[varName]];
             }
@@ -199,11 +200,15 @@ export const BiomeCollectionView = Backbone.View.extend({
         var biomes = this.collection.models.map(function (model) {
             return model.attributes.lineage
         });
-        _.each(biomes.sort(), function(lineage){
-            const option = "<option value=\""+lineage+"\">"+stripLineage(lineage)+"</option> ";
+        _.each(biomes.sort(), function (lineage) {
+            const option = "<option value=\"" + lineage + "\">" + stripLineage(lineage) + "</option> ";
             $("#biome-select").append($(option));
         });
         return this
     }
 });
+
+export const capitalizeWord = function (string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 

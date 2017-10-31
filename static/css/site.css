@@ -98,7 +98,8 @@ th.sort-both:after {
 }
 
 .facet-remove-button {
-    margin-right: 1em;
+    margin-right: 1em !important;
+    float:left;
 }
 
 .samples-table > tbody > tr > td > div {
@@ -542,7 +543,6 @@ select.table-tools {
 .facet-child-group {
     margin-left: 1em;
     display: none;
-    min-width: 14em;
 }
 
 .facet-child-group.show {
@@ -570,4 +570,10 @@ select.table-tools {
 
 .tabs-title > a[aria-selected='false'] > img {
     filter: grayscale(100%);
+}
+
+.slider-group-title {
+    padding-left:1em;
+    float:left;
+    line-height: 1.2em;
 }

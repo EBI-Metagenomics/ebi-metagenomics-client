@@ -11,6 +11,9 @@ require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
 import 'foundation-sites';
 import '../../../static/libraries/jquery.TableCSVExport';
+const CheckboxTree = require('../components/checkbox_tree');
+
+const Slider = require('../components/slider.js');
 
 setCurrentTab('#search-nav', true);
 attachTabHandlers();
@@ -40,6 +43,7 @@ const Search = Backbone.Collection.extend({
         facetcount: 10,
         facetsdepth: 5,
     },
+    filterBtnContainer: 'div.btn-container',
     initialize: function () {
         if (queryText) {
             this.params.query = queryText;
@@ -122,7 +126,7 @@ const ResultsView = Backbone.View.extend({
             });
         }).fail(function () {
             alert('Could not download, an error has occured');
-        //    TODO improve error handling
+            //    TODO improve error handling
         }).always(function () {
             $buttonElem.removeClass('loading-cursor');
             $buttonElem.prop('disabled', false);
@@ -136,7 +140,7 @@ const FiltersView = Backbone.View.extend({
         data.formId = formId;
         data.elem = elem;
         $(elem).html(this.template(data));
-        attachCheckboxHandlers('#' + data.formId);
+        // attachCheckboxHandlers('#' + data.formId);
         _.each(data.facets, function (facet) {
             if (facet.type === 'slider') {
                 const initValues = getFacetValues(facet.label, query);
@@ -230,7 +234,7 @@ const Projects = Search.extend({
 
 const ProjectsView = ResultsView.extend({
     el: '#projects',
-    formEl: 'projectsForm',
+    formEl: 'projectsFilters',
     params: {},
     pagination: new Pagination(),
     template: _.template($("#projectResultsTmpl").html()),
@@ -243,13 +247,13 @@ const ProjectsView = ResultsView.extend({
             this.params = cookieParams;
         } else {
             this.params = $.extend(true, {}, Search.prototype.params);
-            this.params.fields += ",METAGENOMICS_PROJECTS";
         }
+        this.params.fields = "ENA_PROJECT,METAGENOMICS_RUNS,METAGENOMICS_SAMPLES,biome,biome_name,centre_name,creation_date,description,domain_source,id,last_modification_date,name,releaseDate_date";
         this.params.query = queryText || this.defaultQuery;
     },
 
     update: function (page, pagesize) {
-        var formData = removeRedundantBiomes($('#' + this.formEl).serializeArray());
+        var formData = removeRedundantFilters($('#' + this.formEl).serializeArray());
         this.params.facets = joinFilters(formData);
         if (!this.params.query.length) {
             this.params.query = this.defaultQuery;
@@ -272,20 +276,6 @@ const ProjectsView = ResultsView.extend({
 
                 saveSearchParams('projects', that.params);
                 if (renderFilter) {
-                    filters.render('#projectsFilters', response, that.formEl, that.params.query);
-                    const $form = $('#' + that.formEl);
-
-                    $form.find("input[type=checkbox]:not('.switch-input')").on('click', function () {
-                        setChildrenCheckboxes(this);
-                        setParentCheckboxStatus(this);
-                        addClearButton($(this), $('.filter-clear'));
-                        propagateToFacets($(this).attr('type'), $(this).attr('name'), $(this).val(), $(this).is(':checked'), ['#samplesFilters', '#runsFilters']);
-                        updateAll();
-                    });
-
-                    // $form.find('button.reset').click(function () {
-                    //     resetAllForms();
-                    // });
 
                     that.pagination.initPagination(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
                         that.update(page);
@@ -325,13 +315,13 @@ const Samples = Search.extend({
 
 const SamplesView = ResultsView.extend({
     el: '#samples',
-    formEl: 'samplesForm',
+    formEl: 'samplesFilters',
     params: {},
     template: _.template($("#samplesResultsTmpl").html()),
     defaultQuery: 'domain_source:metagenomics_samples',
     pagination: new Pagination(),
 
-    setDefaultParams: function(){
+    setDefaultParams: function () {
         this.params = $.extend(true, {}, Search.prototype.params);
         this.params.fields += ",METAGENOMICS_PROJECTS";
         this.params.searchQuery = this.defaultQuery;
@@ -342,17 +332,15 @@ const SamplesView = ResultsView.extend({
         this.pagination.setPaginationElem('#samples-pagination');
         const cookieParams = loadSearchParams('samples', getQueryText());
         if (cookieParams) {
-            console.log(cookieParams);
             this.params = cookieParams;
         } else {
             this.setDefaultParams();
         }
-        console.log('params1', this.params);
         this.params.searchQuery = getQueryText() || this.defaultQuery;
-        console.log('params2', this.params);
     },
-    update: function (page, pagesize) {
-        var formData = processSliders(removeRedundantBiomes($('#' + this.formEl).serializeArray()));
+    update: function (page = 1, pagesize = 25) {
+        console.log(this);
+        var formData = processSliders(removeRedundantFilters($('#' + this.formEl).serializeArray()));
         this.params.facetQuery = formData.queryParams;
         this.params.facets = formData.facets;
 
@@ -367,27 +355,23 @@ const SamplesView = ResultsView.extend({
     fetchAndRender: function (renderFilter, setFilters) {
         const that = this;
         const fetchParams = genCombinedQuery(this.params);
-        console.log('params3', fetchParams);
         return this.collection.fetch({
             data: $.param(fetchParams),
             success: function (collection, response) {
                 that.totalResults = response.hitCount;
                 saveSearchParams('samples', that.params);
                 if (renderFilter) {
-                    filters.render('#samplesFilters', response, that.formEl, fetchParams.query);
+                    // filters.render('#samplesFilters', response, that.formEl, fetchParams.query);
                     const $form = $('#' + that.formEl);
 
-                    $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
-                        setChildrenCheckboxes(this);
-                        setParentCheckboxStatus(this);
-                        addClearButton($(this), $('.filter-clear'));
-                        propagateToFacets($(this).attr('type'), $(this).attr('name'), $(this).val(), $(this).is(':checked'), ['#projectsFilters', '#runsFilters']);
-                        updateAll();
-                    });
-
-                    // $form.find('button.reset').click(function (e) {
-                    //     resetAllForms();
+                    // $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
+                    //     setChildrenCheckboxes(this);
+                    //     setParentCheckboxStatus(this);
+                    //     addClearButton($(this), $('.filter-clear'));
+                    //     propagateToFacets($(this).attr('type'), $(this).attr('name'), $(this).val(), $(this).is(':checked'), ['#projectsFilters', '#runsFilters']);
+                    //     updateAll();
                     // });
+
 
                     that.pagination.initPagination(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
                         that.update(page);
@@ -428,13 +412,13 @@ const Runs = Search.extend({
 
 const RunsView = ResultsView.extend({
     el: '#runs',
-    formEl: 'runsForm',
+    formEl: 'runsFilters',
     params: {},
     template: _.template($("#runsResultsTmpl").html()),
     defaultQuery: 'domain_source:metagenomics_runs',
     pagination: new Pagination(),
 
-    setDefaultParams: function(){
+    setDefaultParams: function () {
         this.params = $.extend(true, {}, Search.prototype.params);
         this.params.fields += ",METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,experiment_type,pipeline_version";
         this.params.searchQuery = this.defaultQuery;
@@ -445,18 +429,15 @@ const RunsView = ResultsView.extend({
         this.pagination.setPaginationElem('#runs-pagination');
         const cookieParams = loadSearchParams('runs', getQueryText());
         if (cookieParams) {
-            console.log(cookieParams);
             this.params = cookieParams;
         } else {
             this.setDefaultParams();
         }
-        console.log('params1', this.params);
         this.params.searchQuery = getQueryText() || this.defaultQuery;
-        console.log('params2', this.params);
     },
 
     update: function (page, pagesize) {
-        var formData = processSliders(removeRedundantBiomes($('#' + this.formEl).serializeArray()));
+        var formData = processSliders(removeRedundantFilters($('#' + this.formEl).serializeArray()));
         this.params.query = formData.queryParams.join(" AND ");
         this.params.facets = formData.facets;
 
@@ -472,23 +453,22 @@ const RunsView = ResultsView.extend({
     fetchAndRender: function (renderFilter, setFilters) {
         const that = this;
         const fetchParams = genCombinedQuery(this.params);
-        console.log('params3', fetchParams);
         return this.collection.fetch({
             data: $.param(fetchParams),
             success: function (collection, response) {
                 that.totalResults = response.hitCount;
                 saveSearchParams('runs', that.params);
                 if (renderFilter) {
-                    filters.render('#runsFilters', response, that.formEl, fetchParams.query);
+                    // filters.render('#runsFilters', response, that.formEl, fetchParams.query);
                     const $form = $('#' + that.formEl);
 
-                    $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
-                        setChildrenCheckboxes(this);
-                        setParentCheckboxStatus(this);
-                        addClearButton($(this), $('.filter-clear'));
-                        propagateToFacets($(this).attr('type'), $(this).attr('name'), $(this).val(), $(this).is(':checked'), ['#projectsFilters', '#samplesFilters']);
-                        updateAll();
-                    });
+                    // $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
+                    //     setChildrenCheckboxes(this);
+                    //     setParentCheckboxStatus(this);
+                    //     addClearButton($(this), $('.filter-clear'));
+                    //     propagateToFacets($(this).attr('type'), $(this).attr('name'), $(this).val(), $(this).is(':checked'), ['#projectsFilters', '#samplesFilters']);
+                    //     updateAll();
+                    // });
 
                     // $form.find('button.reset').click(function (e) {
                     //     resetAllForms();
@@ -510,7 +490,7 @@ const RunsView = ResultsView.extend({
     }
 });
 
-function genCombinedQuery(params){
+function genCombinedQuery(params) {
     const fetchParams = $.extend(true, {}, params);
     let queryParts = fetchParams.facetQuery || [];
     queryParts.push(fetchParams.searchQuery);
@@ -520,7 +500,6 @@ function genCombinedQuery(params){
 
     return fetchParams;
 }
-
 
 function addClearButton($input, $container) {
     let facet = $input.attr('name') || $input.attr('data-facet-name');
@@ -539,9 +518,9 @@ function addClearButton($input, $container) {
             }
         } else {
             // if any checkboxes on the same level are enabled
-            if (!getFacetCheckboxes($input).is(':checked')) {
-                $container.find("[data-facet='" + facet + "']").remove();
-            }
+            // if (!getFacetCheckboxes($input).is(':checked')) {
+            //     $container.find("[data-facet='" + facet + "']").remove();
+            // }
         }
     }
 }
@@ -602,14 +581,15 @@ function joinFilters(filters) {
     }).join(',')
 }
 
-function removeRedundantBiomes(formData) {
-    var newData = formData.filter(function (elem) {
-        return elem.name !== 'biome';
-    });
-    var biomes = formData.filter(function (elem) {
-        return elem.name === 'biome';
-    });
-    _.each(biomes, function (biome) {
+function removeRedundantFilters(formData) {
+    // var newData = formData.filter(function (elem) {
+    //     return elem.name !== 'biome';
+    // });
+    // var biomes = formData.filter(function (elem) {
+    //     return elem.name === 'biome';
+    // });
+    let newData = [];
+    _.each(formData, function (biome) {
         let parent = null;
         let biomeValue = biome.value;
         if (biomeValue.indexOf('/') > -1) {
@@ -618,7 +598,7 @@ function removeRedundantBiomes(formData) {
         } else {
             parent = '';
         }
-        var parentExists = _.find(biomes, function (biome2) {
+        var parentExists = _.find(formData, function (biome2) {
             return biome2.value === parent
         });
 
@@ -627,22 +607,6 @@ function removeRedundantBiomes(formData) {
         }
     });
     return newData;
-}
-
-function propagateToFacets(type, name, value, checked, otherFacets) {
-    _.each(otherFacets, function (formId) {
-        if (type === 'checkbox') {
-            let checkbox = $(formId).find("input[name='" + name + "'][value='" + value + "']");
-            if (checkbox.length) {
-                let updateForm = checkbox.is(':checked') !== checked;
-                checkbox.prop('checked', checked);
-                setParentCheckboxStatus(checkbox);
-                setChildrenCheckboxes(checkbox);
-            }
-        } else {
-            $(formId).find("input[name='" + name + "']").val(value);
-        }
-    });
 }
 
 function convertBiomes(entry) {
@@ -676,8 +640,8 @@ function setFacetFilters(formId, params) {
             // Set checkbox parent and propagate to parent
             const selector = formId + " input[name='" + name + "'][value='" + value + "']";
             $(selector).prop('checked', true).parent().show();
-            setParentCheckboxStatus(selector);
-            setChildrenCheckboxes(selector);
+            // setParentCheckboxStatus(selector);
+            // setChildrenCheckboxes(selector);
 
             addClearButton($(selector), $('.filter-clear'));
         });
@@ -704,83 +668,6 @@ function setFacetFilters(formId, params) {
             enableSlider($(this), enabled, false);
             addClearButton($(this), $('.filter-clear'));
         });
-    });
-}
-
-function getChildrenCheckboxes(elem) {
-    return $(elem).siblings('.facet-child-group').children('.facet-checkbox');
-}
-
-function getParentCheckbox(elem) {
-    return $(elem).parent().siblings('.facet-checkbox');
-}
-
-function getFacetCheckboxes(elem) {
-    return $(elem).closest('.facet-group').find('input');
-}
-
-function setChildrenCheckboxes(elem) {
-    const $children = getChildrenCheckboxes(elem);
-    $children.attr('indeterminate', false);
-    $children.attr('checked', $(elem).is(':checked'));
-
-}
-
-function setParentCheckboxStatus(elem) {
-    const parentCheckSelector = getParentCheckbox(elem);
-    const children = getChildrenCheckboxes(parentCheckSelector);
-    let checkedChildren = 0;
-    let countChildren = children.length;
-    let indeterminateChildren = 0;
-    _.each(children, function (checkbox) {
-        if (checkbox.checked) {
-            checkedChildren++;
-        }
-        if ($(checkbox).prop('indeterminate')) {
-            indeterminateChildren++;
-        }
-    });
-
-    const $parentCheckbox = $(parentCheckSelector);
-
-    if (indeterminateChildren > 0) {
-        $parentCheckbox.prop('indeterminate', true);
-        $parentCheckbox.prop('checked', false);
-    } else if (checkedChildren === 0) {
-        $parentCheckbox.prop('indeterminate', false);
-        $parentCheckbox.prop('checked', false);
-    } else if (checkedChildren < countChildren) {
-        $parentCheckbox.prop('indeterminate', true);
-        $parentCheckbox.prop('checked', false);
-    } else {
-        $parentCheckbox.prop('indeterminate', false);
-        $parentCheckbox.prop('checked', true);
-    }
-    if (getParentCheckbox(parentCheckSelector).val() !== undefined) {
-        setParentCheckboxStatus(parentCheckSelector);
-    }
-}
-
-/**
- * Waterfall checkbox behaviour (checkbox reflects values of child checkboxes (OFF | Partial | ON)
- */
-function attachCheckboxHandlers(elem) {
-    // $(elem).find('.facet-checkbox').on('change', function () {
-    //     // Check children
-    //     setChildrenCheckboxes(this);
-    //     setParentCheckboxStatus(this);
-    // });
-
-    $(elem).find('.disp-children').on('click', function (e) {
-        e.preventDefault();
-        const $group = $(this).siblings('.facet-child-group');
-
-        $group.toggle();
-        if ($group.is(":visible")) {
-            $(this).text("\u25BC");
-        } else {
-            $(this).text("\u25B6");
-        }
     });
 }
 
@@ -849,21 +736,10 @@ function enableSlider($checkbox, enabled) {
     $elemGroup.find(':input').prop('disabled', !enabled);
 }
 
-function initAll(projectsView, samplesView, runsView, renderFilters, setFilters) {
-    showSpinner();
-    return $.when(
-        projectsView.fetchAndRender(renderFilters, setFilters),
-        samplesView.fetchAndRender(renderFilters, setFilters),
-        runsView.fetchAndRender(renderFilters, setFilters)
-    ).done(function () {
-        hideSpinner();
-    });
-}
-
 function updateAll(pagesize) {
     showSpinner();
     return $.when(
-        projectsView.update(null, pagesize),
+        facetView.update(null, pagesize),
         samplesView.update(null, pagesize),
         runsView.update(null, pagesize)
     ).done(function () {
@@ -881,7 +757,7 @@ function hideSpinner() {
 
 function getAllFormIds(except) {
     return _.filter([
-        '#' + projectsView.formEl,
+        '#' + facetView.formEl,
         '#' + samplesView.formEl,
         '#' + runsView.formEl
     ], function (e) {
@@ -896,11 +772,11 @@ function resetAllForms() {
         resetInputsInElem($form);
     });
     deleteCachedSearchParams();
-    projectsView.initialize();
+    facetView.initialize();
     samplesView.initialize();
     runsView.initialize();
 
-    initAll(projectsView, samplesView, runsView, false, false);
+    initAll(facetView, samplesView, runsView, false, false);
 }
 
 String.prototype.capitalize = function () {
@@ -915,15 +791,68 @@ $searchForm.on('reset', function () {
     resetAllForms();
 });
 
-
-function getQueryText(){
+function getQueryText() {
     return $searchForm.find("#navbar-query").val();
+}
+
+function initAll(projectsView, samplesView, runsView, renderFilters, setFilters) {
+    showSpinner();
+    const projectFacet = $.get("https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_projects?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_projects");
+    const sampleFacet = $.get("https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_samples?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_samples");
+    const runFacet = $.get("https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_runs?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_runs");
+    return $.when(
+        projectsView.fetchAndRender(renderFilters, setFilters),
+        samplesView.fetchAndRender(renderFilters, setFilters),
+        runsView.fetchAndRender(renderFilters, setFilters),
+        projectFacet,
+        sampleFacet,
+        runFacet
+    ).done(function () {
+        hideSpinner();
+        createCheckboxFacets(projectFacet.responseJSON.facets, projectsView, $('#projectsFilters'), $('#projects-search-params'), projectsView.update.bind(projectsView));
+
+        const $samplesForm = $('#samplesFilters');
+        const $sampleBtnContainer = $('#samples-search-params');
+        createSliders($samplesForm, 'samples', samplesView.update.bind(samplesView), $sampleBtnContainer);
+        createCheckboxFacets(sampleFacet.responseJSON.facets, samplesView, $samplesForm, $sampleBtnContainer, samplesView.update.bind(samplesView));
+
+        const $runsForm = $('#runsFilters');
+        const $runsBtnContainer = $('#runs-search-params');
+        createSliders($runsForm, 'runs', runsView.update.bind(runsView), $runsBtnContainer);
+        createCheckboxFacets(runFacet.responseJSON.facets, runsView, $runsForm, $runsBtnContainer, runsView.update.bind(runsView));
+
+    });
+}
+
+function createSliders($form, facet, callback, $btnContainer) {
+    new Slider().init($form, facet, 'Temperature', 'temperature', -20, 110, '°C', callback, $btnContainer);
+    new Slider().init($form, facet, 'Depth', 'depth', 0, 2000, 'meters', callback, $btnContainer);
+}
+
+function createCheckboxFacets(facets, facetView, $facetForm, $facetBtnContainer, callback){
+    let filters = null;
+    if (facetView.params.facets) {
+        filters = _.map(facetView.params.facets.split(","), function (facet) {
+            const p = facet.split(":");
+            return {
+                id: p[0],
+                value: p[1]
+            }
+        });
+    } else {
+        filters = [];
+    }
+    _.each(facets, function(facet){
+        if (facet.id!=='domain_source'){
+            const cbTree = new CheckboxTree().init($facetForm, $facetBtnContainer, facet, callback, filters);
+        }
+    });
 }
 
 let search = new Search();
 
 let projects = new Projects();
-let projectsView = new ProjectsView({collection: projects});
+let facetView = new ProjectsView({collection: projects});
 
 let samples = new Samples();
 let samplesView = new SamplesView({collection: samples});
@@ -933,7 +862,4 @@ let runsView = new RunsView({collection: runs});
 
 let filters = new FiltersView(updateAll);
 
-initAll(projectsView, samplesView, runsView, true, true);
-
-
-
+initAll(facetView, samplesView, runsView, true, true);
