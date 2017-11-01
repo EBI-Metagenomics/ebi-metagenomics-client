@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const util = require('../util');
+// const util = require('../util');
 const filterBtnWidget = require('./rmv_filter_widget');
 const createRmvButton = new filterBtnWidget().create;
 const removeFilterButton = new filterBtnWidget().remove;
@@ -84,14 +84,14 @@ module.exports = function CheckboxTree() {
         return $().add($checkbox).add($label);
     };
 
-    const setRmvButton = function($btnContainer, $this){
+    const setRmvButton = function ($btnContainer, $this) {
         if ($this.is(':checked')) {
-            let $rmvButton = createRmvButton($this.attr('name'), $this.val(), function(){
+            let $rmvButton = createRmvButton($this.attr('name'), $this.val(), function () {
                 $this.click();
             });
             $btnContainer.append($rmvButton);
         } else {
-            removeFilterButton($this.attr('name', $this.val()));
+            removeFilterButton($this.attr('name'), $this.val());
             // $btnContainer.find("div[data-facet='"+$this.attr('name')+"'][data-value='"+$this.val()+"']").remove();
         }
     };
@@ -106,7 +106,7 @@ module.exports = function CheckboxTree() {
                 }
             }
         });
-    };
+    }
 
     const createExpandButton = function () {
         const $button = $("<button class='disp-children'>&#9654;</button>");
