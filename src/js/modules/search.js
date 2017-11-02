@@ -5,12 +5,14 @@ const util = require('../util');
 const _ = require('underscore');
 const Backbone = require('backbone');
 const Cookies = require('js-cookie');
+
 const commons = require('../commons');
 const Pagination = require('../components/pagination').Pagination;
 require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
 import 'foundation-sites';
 import '../../../static/libraries/jquery.TableCSVExport';
+
 const CheckboxTree = require('../components/checkbox_tree');
 
 const Slider = require('../components/slider.js');
@@ -30,7 +32,7 @@ $(document).ready(function () {
     $("#pagesize-text").hide();
 });
 
-const COOKIE_NAME = 'metagenomic_filter_params';
+const COOKIE_NAME = 'ebi-metagenomics';
 const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)]/;
 
 const Search = Backbone.Collection.extend({
@@ -39,7 +41,7 @@ const Search = Backbone.Collection.extend({
         format: 'json',
         size: 10,
         start: 0,
-        fields: 'id,name,biome,description',
+        fields: 'id,name,biome_name,description',
         facetcount: 10,
         facetsdepth: 5,
     },
@@ -62,7 +64,7 @@ const Search = Backbone.Collection.extend({
 });
 
 const ResultsView = Backbone.View.extend({
-    render: function (response, params, no_display) {
+    render: function (response, params, no_display, columns) {
         let templateData = $.extend({}, response);
         const defaultQueries = [ProjectsView.prototype.defaultQuery, SamplesView.prototype.defaultQuery, RunsView.prototype.defaultQuery];
 
@@ -82,10 +84,19 @@ const ResultsView = Backbone.View.extend({
         } else {
             templateData.filterText = null;
         }
+
         if (!no_display) {
-            this.$el.html(this.template(templateData));
+            const $data = $(this.template(templateData));
+            $data.find("td").map(function () {
+                if (columns.indexOf($(this).attr('data-column')) === -1) {
+                    $(this).hide();
+                }
+            });
+            // $data.find("td[data-column='"+column+"']").show();
+            this.$el.html($data);
+        } else {
+            return this.template(templateData);
         }
-        return this.template(templateData);
     },
     fetchCSV: function ($buttonElem) {
         $buttonElem.prop('disabled', true);
@@ -119,7 +130,7 @@ const ResultsView = Backbone.View.extend({
                     collection.entries = collection.entries.concat(arguments[i][0].entries);
                 }
             }
-            const resultsTmpl = that.render(collection, tmpParams, true);
+            const resultsTmpl = that.render(collection, tmpParams, true, []);
             $(resultsTmpl).filter('table').TableCSVExport({
                 showHiddenRows: true,
                 delivery: 'download'
@@ -248,7 +259,7 @@ const ProjectsView = ResultsView.extend({
         } else {
             this.params = $.extend(true, {}, Search.prototype.params);
         }
-        this.params.fields = "ENA_PROJECT,METAGENOMICS_RUNS,METAGENOMICS_SAMPLES,biome,biome_name,centre_name,creation_date,description,domain_source,id,last_modification_date,name,releaseDate_date";
+        this.params.fields = "ENA_PROJECT,METAGENOMICS_RUNS,METAGENOMICS_SAMPLES,biome_name,centre_name,creation_date,description,domain_source,id,last_modification_date,name,releaseDate_date";
         this.params.query = queryText || this.defaultQuery;
     },
 
@@ -273,8 +284,14 @@ const ProjectsView = ResultsView.extend({
             data: $.param(that.params),
             success: function (collection, response) {
                 that.totalResults = response.hitCount;
-
                 saveSearchParams('projects', that.params);
+                if (setFilters) {
+                    setFacetFilters('#' + that.formEl, that.params);
+                }
+
+                const columns = getVisibleColumns('projects') || ['project-ena-accession', 'project-id', 'project-biome', 'project-centre-name'];
+
+                that.render(response, that.params, false, columns);
                 if (renderFilter) {
 
                     that.pagination.initPagination(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
@@ -282,11 +299,9 @@ const ProjectsView = ResultsView.extend({
                     });
                     that.pagination.setPageSizeChangeCallback(updateAll);
 
+                    createDataTable('projects', $('#projectsTable'), $('#projectsModal'), columns);
                 }
-                if (setFilters) {
-                    setFacetFilters('#' + that.formEl, that.params);
-                }
-                that.render(response, that.params);
+
                 $(that.el).find("button[name='download']").click(function () {
                     that.fetchCSV($(this));
                 });
@@ -323,7 +338,7 @@ const SamplesView = ResultsView.extend({
 
     setDefaultParams: function () {
         this.params = $.extend(true, {}, Search.prototype.params);
-        this.params.fields += ",METAGENOMICS_PROJECTS";
+        this.params.fields += ",METAGENOMICS_PROJECTS,project_name,biome_name";
         this.params.searchQuery = this.defaultQuery;
     },
 
@@ -339,7 +354,6 @@ const SamplesView = ResultsView.extend({
         this.params.searchQuery = getQueryText() || this.defaultQuery;
     },
     update: function (page = 1, pagesize = 25) {
-        console.log(this);
         var formData = processSliders(removeRedundantFilters($('#' + this.formEl).serializeArray()));
         this.params.facetQuery = formData.queryParams;
         this.params.facets = formData.facets;
@@ -360,27 +374,22 @@ const SamplesView = ResultsView.extend({
             success: function (collection, response) {
                 that.totalResults = response.hitCount;
                 saveSearchParams('samples', that.params);
-                if (renderFilter) {
-                    // filters.render('#samplesFilters', response, that.formEl, fetchParams.query);
-                    const $form = $('#' + that.formEl);
 
-                    // $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
-                    //     setChildrenCheckboxes(this);
-                    //     setParentCheckboxStatus(this);
-                    //     addClearButton($(this), $('.filter-clear'));
-                    //     propagateToFacets($(this).attr('type'), $(this).attr('name'), $(this).val(), $(this).is(':checked'), ['#projectsFilters', '#runsFilters']);
-                    //     updateAll();
-                    // });
-
-
-                    that.pagination.initPagination(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
-                        that.update(page);
-                    });
-                }
                 if (setFilters) {
                     setFacetFilters('#' + that.formEl, fetchParams);
                 }
-                that.render(response, fetchParams);
+
+                const columns = getVisibleColumns('samples') || ['sample-id', 'sample-projects', 'sample-name', 'sample-desc'];
+
+                that.render(response, fetchParams, false, columns);
+
+                if (renderFilter) {
+                    that.pagination.initPagination(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
+                        that.update(page);
+                    });
+                    createDataTable('samples', $('#samplesTable'), $('#samplesModal'), columns);
+                }
+
                 $(that.el).find("button[name='download']").click(function () {
                     that.fetchCSV($(this));
                 });
@@ -458,30 +467,22 @@ const RunsView = ResultsView.extend({
             success: function (collection, response) {
                 that.totalResults = response.hitCount;
                 saveSearchParams('runs', that.params);
+                if (setFilters) {
+                    setFacetFilters('#' + that.formEl, fetchParams);
+                }
+
+                const columns = getVisibleColumns('runs') || ['run-id', 'run-sample', 'run-project', 'run-experiment-type', 'run-pipeline-vers'];
+
+                that.render(response, fetchParams, false, columns);
+
                 if (renderFilter) {
-                    // filters.render('#runsFilters', response, that.formEl, fetchParams.query);
-                    const $form = $('#' + that.formEl);
-
-                    // $form.find("input[type=checkbox]:not('.switch-input')").on('click', function (e) {
-                    //     setChildrenCheckboxes(this);
-                    //     setParentCheckboxStatus(this);
-                    //     addClearButton($(this), $('.filter-clear'));
-                    //     propagateToFacets($(this).attr('type'), $(this).attr('name'), $(this).val(), $(this).is(':checked'), ['#projectsFilters', '#samplesFilters']);
-                    //     updateAll();
-                    // });
-
-                    // $form.find('button.reset').click(function (e) {
-                    //     resetAllForms();
-                    // });
 
                     that.pagination.initPagination(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
                         that.update(page);
                     });
+                    createDataTable('runs', $('#runsTable'), $('#runsModal'), columns);
                 }
-                if (setFilters) {
-                    setFacetFilters('#' + that.formEl, fetchParams);
-                }
-                that.render(response, fetchParams);
+
                 $(that.el).find("button[name='download']").click(function () {
                     that.fetchCSV($(this));
                 });
@@ -676,36 +677,6 @@ function isFacetParam(elem) {
     return res !== null && res.length === 4;
 }
 
-function saveSearchParams(facet, params) {
-    let cookieParams = $.extend(true, {}, params);
-    if (cookieParams.query) {
-        delete cookieParams.query;
-    }
-    Cookies.set(COOKIE_NAME + facet, cookieParams);
-}
-
-function loadSearchParams(facet) {
-    let data = Cookies.get(COOKIE_NAME + facet);
-    if (data) {
-        data = JSON.parse(data);
-        data.query = data.sliderQuery || [];
-        if (data.textQuery) {
-            data.query.push(data.textQuery);
-        }
-        data.query = data.query.join(' AND ');
-        delete data.textQuery;
-        delete data.sliderQuery;
-        return data;
-    }
-    return null;
-}
-
-function deleteCachedSearchParams() {
-    _.each(['projects', 'samples', 'runs'], function (facet) {
-        Cookies.remove(COOKIE_NAME + facet);
-    })
-}
-
 function sliderToggleCallback(e) {
     const $checkbox = $(this);
     const enabled = $checkbox.is(':checked');
@@ -809,19 +780,57 @@ function initAll(projectsView, samplesView, runsView, renderFilters, setFilters)
         runFacet
     ).done(function () {
         hideSpinner();
-        createCheckboxFacets(projectFacet.responseJSON.facets, projectsView, $('#projectsFilters'), $('#projects-search-params'), projectsView.update.bind(projectsView));
+        createCheckboxTrees('projects', projectFacet.responseJSON.facets, projectsView, $('#projectsFilters'), $('#projects-search-params'), projectsView.update.bind(projectsView));
 
         const $samplesForm = $('#samplesFilters');
         const $sampleBtnContainer = $('#samples-search-params');
         createSliders($samplesForm, 'samples', samplesView.update.bind(samplesView), $sampleBtnContainer);
-        createCheckboxFacets(sampleFacet.responseJSON.facets, samplesView, $samplesForm, $sampleBtnContainer, samplesView.update.bind(samplesView));
+        createCheckboxTrees('samples', sampleFacet.responseJSON.facets, samplesView, $samplesForm, $sampleBtnContainer, samplesView.update.bind(samplesView));
 
         const $runsForm = $('#runsFilters');
         const $runsBtnContainer = $('#runs-search-params');
         createSliders($runsForm, 'runs', runsView.update.bind(runsView), $runsBtnContainer);
-        createCheckboxFacets(runFacet.responseJSON.facets, runsView, $runsForm, $runsBtnContainer, runsView.update.bind(runsView));
-
+        createCheckboxTrees('runs', runFacet.responseJSON.facets, runsView, $runsForm, $runsBtnContainer, runsView.update.bind(runsView));
     });
+}
+
+function createDataTable(facet, $table, $modal, initColumns) {
+    function setColumnVisibility(visible, data_column) {
+        const tds = $table.find("td[data-column='" + data_column + "']");
+        if (visible) {
+            tds.show();
+        } else {
+            tds.hide();
+        }
+    }
+
+    function addModalCheckbox($modal, text, label, checked) {
+        setColumnVisibility(checked, label);
+
+        const $checkbox = $("<input data-column='" + label + "' type='checkbox' />");
+        $checkbox.prop('checked', checked);
+
+        const $label = $("<label for='" + label + "'>" + text + "</label>");
+        const $container = $("<div class='row column'></div>");
+        $checkbox.click(function (e) {
+            setColumnVisibility($(this).is(":checked"), $(this).attr('data-column'));
+
+            const visibleColumns = [];
+            $modal.find('input[type=checkbox]:checked').each(function () {
+                visibleColumns.push($(this).attr('data-column'));
+            });
+            saveVisibleColumns(facet, visibleColumns);
+        });
+
+        $container.append($label).append($checkbox);
+        $modal.append($container);
+    }
+
+    _.each($table.find('thead').find('td'), function (column) {
+        const text = $(column).attr('data-column');
+        const visible = initColumns.indexOf(text) !== -1;
+        addModalCheckbox($modal, $(column).text(), $(column).attr('data-column'), visible);
+    })
 }
 
 function createSliders($form, facet, callback, $btnContainer) {
@@ -829,10 +838,10 @@ function createSliders($form, facet, callback, $btnContainer) {
     new Slider().init($form, facet, 'Depth', 'depth', 0, 2000, 'meters', callback, $btnContainer);
 }
 
-function createCheckboxFacets(facets, facetView, $facetForm, $facetBtnContainer, callback){
-    let filters = null;
+function createCheckboxTrees(facet, trees, facetView, $facetForm, $facetBtnContainer, callback) {
+    let values = null;
     if (facetView.params.facets) {
-        filters = _.map(facetView.params.facets.split(","), function (facet) {
+        values = _.map(facetView.params.facets.split(","), function (facet) {
             const p = facet.split(":");
             return {
                 id: p[0],
@@ -840,14 +849,101 @@ function createCheckboxFacets(facets, facetView, $facetForm, $facetBtnContainer,
             }
         });
     } else {
-        filters = [];
+        values = [];
     }
-    _.each(facets, function(facet){
-        if (facet.id!=='domain_source'){
-            const cbTree = new CheckboxTree().init($facetForm, $facetBtnContainer, facet, callback, filters);
+
+    _.each(trees, function (tree) {
+        if (tree.id !== 'domain_source') {
+            const cbTree = new CheckboxTree().init(facet, $facetForm, $facetBtnContainer, tree, callback, values, false);
         }
     });
 }
+
+function saveSearchParams(facet, params) {
+    let cookieParams = Cookies.get(COOKIE_NAME);
+    if (cookieParams === undefined) {
+        cookieParams = {};
+        cookieParams[facet] = {};
+    } else {
+        cookieParams = JSON.parse(cookieParams);
+        if (cookieParams[facet] === undefined) {
+            cookieParams[facet] = {};
+        }
+    }
+    cookieParams[facet]['data'] = $.extend(true, {}, params);
+
+    // let cookieParams = $.extend(true, {}, params);
+    if (cookieParams[facet]['data'].query) {
+        delete cookieParams[facet]['data'].query;
+    }
+
+    Cookies.set(COOKIE_NAME, cookieParams);
+}
+
+function loadSearchParams(facet) {
+    try {
+        let data = Cookies.get(COOKIE_NAME)[facet]['data'];
+        if (data) {
+            data = JSON.parse(data);
+            data.query = data.sliderQuery || [];
+            if (data.textQuery) {
+                data.query.push(data.textQuery);
+            }
+            data.query = data.query.join(' AND ');
+            delete data.textQuery;
+            delete data.sliderQuery;
+            return data;
+        }
+    } catch (e) {
+
+    }
+
+    return null;
+}
+
+function deleteCachedSearchParams() {
+    _.each(['projects', 'samples', 'runs'], function (facet) {
+        try {
+            Cookies.remove(COOKIE_NAME[facet]['data']);
+        } catch (e) {
+
+        }
+    })
+}
+
+window.getVisibleColumns = getVisibleColumns;
+
+function getVisibleColumns(facet) {
+    let cookieData = Cookies.get(COOKIE_NAME);
+    if (cookieData) {
+        cookieData = JSON.parse(cookieData);
+        if (cookieData[facet]) {
+            return cookieData[facet]['columns']
+        }
+    }
+    return null
+}
+
+function saveVisibleColumns(facet, columns) {
+    let cookieData = Cookies.get(COOKIE_NAME);
+    if (cookieData) {
+        cookieData = JSON.parse(cookieData);
+    } else {
+        cookieData = {}
+    }
+    if (cookieData[facet]) {
+        cookieData[facet] = {
+            columns: columns,
+            data: cookieData[facet]['data']
+        }
+    } else {
+        cookieData[facet] = {
+            columns: columns,
+        }
+    }
+    Cookies.set(COOKIE_NAME, cookieData);
+}
+
 
 let search = new Search();
 

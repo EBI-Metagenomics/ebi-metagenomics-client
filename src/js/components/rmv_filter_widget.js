@@ -14,7 +14,9 @@ module.exports = function FilterButtonCtnr() {
         return $toggleContainer
     };
 
-    const remove = function(name, val){
+    const remove = function($elem){
+        const name = $elem.attr('name');
+        const val =  $elem.val();
         $("div[data-facet='"+name+"'][data-value='"+val+"']").remove();
     };
 
