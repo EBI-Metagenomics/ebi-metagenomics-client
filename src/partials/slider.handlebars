@@ -1,11 +1,11 @@
 <div class="facet-group">
     <div class="row columns">
         <div class="switch tiny left">
-            <input class="switch-input" data-facet-name="{{facet_label}}" id="{{switch_id}}" type="checkbox" checked>
+            <input class="switch-input" data-facet-name="{{facet_label}}" id="{{switch_id}}" type="checkbox">
             <label class="switch-paddle" for="{{switch_id}}">
             </label>
         </div>
-        <h5 class="slider-group-title">{{facet_label}} ({{units}})</h5>
+        <h5 class="slider-group-title">{{name}} ({{units}})</h5>
     </div>
 
     <div class="row columns slider-group">
@@ -13,19 +13,19 @@
              data-facet-slider="{{facet_label}}"></div>
         <div class="row">
             <div class="columns small-6">
-                <input class='left slider-input' name="{{facet_label_min}}"
+                <input class='left slider-input' name="{{facet_name_min}}"
                        data-facet-name="{{facet_label}}"
                        defaultValue="{{min}}" data-min type="number" value="{{min}}">
             </div>
             <div class="columns small-6">
-                <input class='right slider-input' name="{{facet_label_max}}"
+                <input class='right slider-input' name="{{facet_name_max}}"
                        data-facet-name="{{facet_label}}"
                        defaultValue="{{max}}" data-max type="number" value="{{max}}">
             </div>
 
-            <!--<input class='left slider-input' name="{{facet_label_min}}" data-facet-name="{{facet_label}}"-->
+            <!--<input class='left slider-input' name="{{facet_name_min}}" data-facet-name="{{facet_label}}"-->
             <!--defaultValue="{{min}}" data-min type="number" value="{{min}}">-->
-            <!--<input class='right slider-input columns small-6' name="{{facet_label_max}}" data-facet-name="{{facet_label}}"-->
+            <!--<input class='right slider-input columns small-6' name="{{facet_name_max}}" data-facet-name="{{facet_label}}"-->
             <!--defaultValue="{{max}}" data-max type="number" value="{{max}}">-->
         </div>
 

@@ -1,12 +1,12 @@
 import 'static/libraries/jquery.twbsPagination.js'
 
-export var Pagination = function(){
-    let pageSize =  '#pagesize';
-    let pagination =  '#pagination';
+export var Pagination = function () {
+    let pageSize = '#pagesize';
+    let pagination = '#pagination';
 
     let currentPage = 1;
 
-    let opts =  {
+    let opts = {
         startPage: null,
         totalPages: null,
         activeClass: 'current',
@@ -15,11 +15,11 @@ export var Pagination = function(){
         visiblePages: 5,
     };
 
-    function setPaginationElem(selector){
+    function setPaginationElem(selector) {
         pagination = selector;
     }
 
-    function initPagination(initPage, initPageSize, totalPages, totalResults, callback) {
+    function init(initPage, initPageSize, totalPages, totalResults, callback) {
         opts.startPage = Math.max(1, parseInt(initPage));
         opts.totalPages = Math.max(1, parseInt(totalPages));
         setPageDisplay(initPage, totalPages, totalResults);
@@ -29,10 +29,10 @@ export var Pagination = function(){
         });
     }
 
-   function setPageSizeChangeCallback(callback) {
+    function setPageSizeChangeCallback(callback) {
         const that = this;
-            $(that.pageSize).change(function (e) {
-                callback(that.getPageSize());
+        $(document).on('change', that.pageSize, function (e) {
+            callback(that.getPageSize());
         });
     }
 
@@ -40,34 +40,33 @@ export var Pagination = function(){
         return parseInt($(pageSize)[0].value);
     }
 
-    function updatePagination(p) {
+    function update(p, callback) {
         const that = this;
-        var totPages = p.pages;
-        setPageDisplay(p.page, p.pages, p.count);
+        let totPages = p.pages;
+        setPageDisplay(p.page, totPages, p.count);
         opts.startPage = p.page;
-        opts.totalPages = p.pages;
+        opts.totalPages = totPages;
         $(pagination).twbsPagination('destroy');
         $(pagination).twbsPagination($.extend({}, opts, {
             startPage: p.PAGE,
-            totalPages: p.pages,
+            totalPages: totPages,
         })).on('page', function (evt, page) {
-            that.callback(page);
+            callback(page);
         });
     }
 
     function setPageDisplay(currentPage, maxPage, totalResults) {
         $("#currentPage").text(currentPage);
         $("#maxPage").text(maxPage);
-        if (totalResults){
-            $("#totalResults").text(totalResults);
-        }
+        $("#totalResults").text(totalResults);
     }
+
     return {
         setPaginationElem: setPaginationElem,
-        initPagination: initPagination,
+        init: init,
         setPageSizeChangeCallback: setPageSizeChangeCallback,
         getPageSize: getPageSize,
-        updatePagination: updatePagination,
+        update: update,
         setPageDisplay: setPageDisplay
     }
 };

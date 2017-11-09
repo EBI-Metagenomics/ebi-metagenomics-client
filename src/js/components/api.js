@@ -38,7 +38,6 @@ export const Study = Backbone.Model.extend({
             study_accession: attr['accession'],
             last_update: formatDate(attr['last-update']),
             abstract: attr['study-abstract'],
-            samples: samples
         }
     }
 });
@@ -52,7 +51,7 @@ export const StudiesCollection = Backbone.Collection.extend({
     },
     parse: function (response) {
         if (this.pagination) {
-            Pagination.updatePagination(response.meta.pagination);
+            Pagination.update(response.meta.pagination);
         }
         return response.data;
     }

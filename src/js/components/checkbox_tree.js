@@ -23,16 +23,6 @@ module.exports = function CheckboxTree() {
             drawAndPropagate($treeContainer, node, tree.id, $btnContainer, callback);
         });
 
-        // Set checkbox values
-        _.each(values, function (facetValue) {
-            if (facetValue.id === tree.id) {
-                const $checkbox = $treeContainer.find("input[value='" + facetValue.value + "']");
-                $checkbox.prop('checked', true);
-                setChildrenCheckboxes($checkbox);
-                setParentCheckboxStatus($checkbox);
-                setRmvButton($btnContainer, $checkbox);
-            }
-        });
 
         if (!inModal) {
             const $modalLink = $("<a data-open='filtersModal'>More fields</a>");
@@ -42,25 +32,55 @@ module.exports = function CheckboxTree() {
                 getFacetFields(facet, tree.id).done(function (response) {
                     const tree = response.facets[0];
                     const $tree = new CheckboxTree().init(facet, $modalElem, $btnContainer, tree, callback, [], true);
-                    $tree.find('input').click(function(){
+                    $tree.find('input').off('click');
+                    $tree.find('input').click(function (e) {
                         const name = $(this).attr('name');
                         const val = $(this).val();
-                        const $formElem = $elem.find("input[name='"+name+"'][value='"+val+"']");
+                        const $formElem = $elem.find('input[name="' + name + '"][value="' + val + '"]');
                         const checked = $(this).is(':checked');
-                        if ($formElem.length===0){
-                            if (checked){
-                                $elem.append($(this).parent());
+                        if ($formElem.length === 0) {
+                            if (checked) {
+                                $treeContainer.append($(this).parent());
                             }
                         } else {
-                            if (checked){
+                            if (checked) {
                                 $formElem.prop('checked', true);
                             }
                         }
+
+                        if (e.originalEvent.isTrusted) {
+                            propagateToFacets($(this).attr('name'), $(this).val(), $(this).is(':checked'));
+                        }
+                        setRmvButton($btnContainer, $(this));
+                        callback();
                     })
                 });
             });
             $treeContainer.append($("<p></p>").append($modalLink));
         }
+
+        // Set checkbox values
+        _.each(values, function (facetValue) {
+            if (facetValue.id === tree.id) {
+                let $checkbox = $treeContainer.find("input[value='" + facetValue.value + "']");
+                if ($checkbox.length > 0) {
+                    $checkbox.prop('checked', true);
+                    setChildrenCheckboxes($checkbox);
+                    setParentCheckboxStatus($checkbox);
+                } else {
+                    const node = {
+                        label: facetValue.value,
+                        value: facetValue.value,
+                        count: ''
+                    };
+                    drawAndPropagate($treeContainer, node, tree.id, $btnContainer, callback);
+                    $checkbox = $treeContainer.find("input[value='" + facetValue.value + "']");
+                    $checkbox.prop('checked', true);
+                }
+                setRmvButton($btnContainer, $checkbox);
+            }
+        });
+
         $treeContainer.children('.facet-child-group').addClass('show');
         $elem.append($treeContainer);
 
@@ -81,7 +101,7 @@ module.exports = function CheckboxTree() {
         const $groupContainer = $(groupContainerTmpl);
 
         if (node.children) {
-            //Button click handler
+            // Button click handler
             const $button = createExpandButton();
             $button.appendTo($groupContainer);
         }
@@ -95,7 +115,7 @@ module.exports = function CheckboxTree() {
 
     const createCheckbox = function (name, node, $btnContainer, callback) {
         const id = name + '_' + node.value;
-        const $checkbox = $("<input name='" + name + "' type='checkbox' value='" + node.value + "' class='facet-checkbox' id='" + id + "'/>");
+        const $checkbox = $('<input name="' + name + '" type="checkbox" value="' + node.value + '" class="facet-checkbox" id="' + id + '"/>');
         $checkbox.click(function (e) {
             setChildrenCheckboxes($checkbox);
             setParentCheckboxStatus($checkbox);
@@ -140,10 +160,12 @@ module.exports = function CheckboxTree() {
         }
 
         if ($this.is(':checked') && (($parent.length === 0) || (!getParentCheckbox($this).is(':checked')))) {
-            let $rmvButton = createRmvButton($this.attr('name'), $this.val(), function () {
-                $this.click();
-            });
-            $btnContainer.append($rmvButton);
+            if ($btnContainer.find('div[data-facet="' + $this.attr('name') + '"][data-value="' + $this.val() + '"]').length === 0) {
+                let $rmvButton = createRmvButton($this.attr('name'), $this.val(), function () {
+                    $this.click();
+                });
+                $btnContainer.append($rmvButton);
+            }
         } else {
             removeFilterButton($this);
             // $btnContainer.find("div[data-facet='"+$this.attr('name')+"'][data-value='"+$this.val()+"']").remove();
@@ -152,7 +174,7 @@ module.exports = function CheckboxTree() {
 
     function propagateToFacets(name, value, checked) {
         _.each(allForms, function (formId) {
-            let $checkbox = $(formId).find("input[name='" + name + "'][value='" + value + "']");
+            let $checkbox = $(formId).find('input[name="' + name + '"][value="' + value + '"]');
             if ($checkbox.length) {
                 let updateCheckbox = $checkbox.is(':checked') !== checked;
                 if (updateCheckbox) {
