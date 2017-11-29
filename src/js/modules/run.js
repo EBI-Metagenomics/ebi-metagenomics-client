@@ -1,22 +1,27 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const util = require('../util');
+const Config = require('../config');
 require('../commons');
 const api = require('../components/api');
+const TaxonomyPieChart = require('../components/taxonomy/taxonomyPie');
+const GenericTable = require('../components/genericTable');
 
+require('tablesorter');
 import {attachTabHandlers, getURLParameter, setCurrentTab} from "../util";
 
-var Highcharts = require('highcharts');
+let Highcharts = require('highcharts');
 
 setCurrentTab('#samples-nav');
 
-var run_id = getURLParameter();
+let run_id = getURLParameter();
 
 let analysis = null;
 let metadata = null;
-
+let taxonomy = null;
 let qcChart = null;
-var RunView = Backbone.View.extend({
+
+let RunView = Backbone.View.extend({
     model: api.Run,
     template: _.template($("#runTmpl").html()),
     el: '#main-content-area',
@@ -25,11 +30,13 @@ var RunView = Backbone.View.extend({
         this.model.fetch({
             data: {},
             success: function (data) {
-                analysis = new api.Analysis({id: run_id, version: data.attributes.pipeline_versions[0]});
-                metadata = new api.AnalysisMetadata({id: run_id, version: data.attributes.pipeline_versions[0]});
-
+                let version = data.attributes.pipeline_versions[0];
+                analysis = new api.Analysis({id: run_id, version: version});
+                metadata = new api.AnalysisMetadata({id: run_id, version: version});
+                taxonomy = new api.Taxonomy({id: run_id, version: version});
                 that.render(function () {
                     let qcGraph = new QCGraphView({model: metadata});
+                    let taxonomyGraph = new TaxonomyGraphView({model: taxonomy});
                 });
             }
         });
@@ -42,7 +49,7 @@ var RunView = Backbone.View.extend({
     }
 });
 
-var QCGraphView = Backbone.View.extend({
+let QCGraphView = Backbone.View.extend({
     model: api.AnalysisMetadata,
     initialize: function () {
         this.model.fetch({
@@ -50,7 +57,7 @@ var QCGraphView = Backbone.View.extend({
                 let data = {};
                 model.attributes.data.map(function (e) {
                     const attr = e.attributes;
-                    data[attr['var-name']] = attr['var-value'];
+                    data[attr['let-name']] = attr['let-value'];
                 });
                 let remaining = [0, 0, 0, 0, 0];
                 let filtered = [0, 0, 0, 0, 0];
@@ -104,14 +111,50 @@ var QCGraphView = Backbone.View.extend({
     }
 });
 
+let TaxonomyGraphView = Backbone.View.extend({
+    model: api.Taxonomy,
+    initialize: function () {
+        this.model.fetch({
+            success: function (model) {
+                // Pie tab
+                new TaxonomyPieChart('domain-composition', 'Domain composition', model.attributes.data, 0);
+                const phylumChart = new TaxonomyPieChart('phylum-composition', 'Phylum composition', model.attributes.data, 1, true);
+                const headers = [
+                    {sortBy: 'a', name: ''},
+                    {sortBy: 'a', name: 'Phylum'},
+                    {sortBy: 'a', name: 'Domain'},
+                    {sortBy: 'a', name: 'Reads'},
+                    {sortBy: 'a', name: '%'},
+                ];
+                const total = _.reduce(phylumChart.clusteredData, function (m, d) {
+                    return m + d.y;
+                }, 0);
+                let i = 0;
+                const data = _.map(phylumChart.clusteredData, function (d) {
+                    const taxColor = Math.min(Config.TAXONOMY_COLOURS.length-1, i);
+                    const colorDiv = "<div class='puce-square-legend' style='background-color: " + Config.TAXONOMY_COLOURS[taxColor] + "'></div>";
+                    return [++i, colorDiv+d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)]
+                });
+                const phylumTable = new GenericTable($('#pie').find("[data-table='phylum-table']"), '', headers, function () {
+                });
+                phylumTable.update(data, false, 1, data.length);
+                phylumTable.$table.tablesorter({
+                    headers: {0: {sorter: false}}
+                });
+
+            }
+        });
+    }
+});
+
 
 $(document).ready(function () {
     // TODO Handle change of analysis
     $("#analysisSelect").change(function (e) {
-        console.log(this);
-        console.log(e);
+        // console.log(this);
+        // console.log(e);
     });
 });
 
-var run = new api.Run({id: run_id});
-var runView = new RunView({model: run});
+let run = new api.Run({id: run_id});
+let runView = new RunView({model: run});

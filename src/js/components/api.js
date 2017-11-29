@@ -34,7 +34,7 @@ export const Study = Backbone.Model.extend({
             samples_link: "/study/" + data.id,
             study_name: attr['study-name'],
             samples_count: attr['samples-count'],
-            study_id: attr['project-id'],
+            study_id: data.id,
             study_accession: attr['accession'],
             last_update: formatDate(attr['last-update']),
             abstract: attr['study-abstract'],
@@ -46,13 +46,16 @@ export const Study = Backbone.Model.extend({
 export const StudiesCollection = Backbone.Collection.extend({
     url: API_URL + "studies",
     model: Study,
-    initialize: function (pagination) {
-        this.pagination = pagination;
+    initialize: function (params, url) {
+        if (url) {
+            this.url = url;
+        }
+        if (params) {
+            this.params = params;
+            console.log(this.params);
+        }
     },
     parse: function (response) {
-        if (this.pagination) {
-            Pagination.update(response.meta.pagination);
-        }
         return response.data;
     }
 });
@@ -68,6 +71,8 @@ export const Run = Backbone.Model.extend({
         const rel = data.relationships;
         const pipelines = rel.pipelines;
         const analysis = rel.analysis;
+        const sample_id =  rel.sample.data.id;
+        const study_id =  rel.study.data.id;
         return {
             run_id: attr['accession'],
             // analyses: [{
@@ -75,19 +80,18 @@ export const Run = Backbone.Model.extend({
             //     pipeline_version: 'x.x',
             //     date: 'xx/xx/xxxx'
             // }],
-            sample_name: "N/A",
-            sample_id: attr['sample-accession'],
-            sample_url: '/sample/' + attr['sample-accession'],
+            sample_id: sample_id,
+            sample_url: '/sample/' + sample_id,
             run_url: '/run/' + attr.accession,
-            experiment_type: data.relationships['experiment-type'].data.id,
+            experiment_type: attr['experiment-type'],
             instrument_model: attr['instrument-model'],
             instrument_platform: attr['instrument-platform'],
             pipeline_versions: pipelines.data.map(function (x) {
                 return x.id
             }),
             analysis_results: 'TAXONOMIC / FUNCTION / DOWNLOAD',
-            study_id: attr['study-accession'],
-            study_url: '/study/' + attr['study-accession'],
+            study_id: study_id,
+            study_url: '/study/' + study_id,
         }
     }
 });
@@ -149,23 +153,19 @@ export const Sample = Backbone.Model.extend({
         return API_URL + 'samples/' + this.id;
     },
     parse: function (d) {
-        let metadatas = [];
-        if (d.hasOwnProperty('included')) {
-            metadatas = d.included.filter(function (el) {
-                return el.type === 'sample-anns';
-            }).map(function (el) {
-                const attr = el.attributes;
-                const name = attr['var-name'];
-                return {
-                    name: name[0].toUpperCase() + name.slice(1),
-                    value: attr['var-value'] + ' ' + attr['unit']
-                }
-            });
-        }
-
-        // Adaption to handle 'includes' on API calls which would wrap the response
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
+
+        let metadatas = _.map(attr['sample-metadata'], function (el) {
+            const key = el.key;
+            return {
+                name: key[0].toUpperCase() + key.slice(1),
+                value: el.value
+        }
+        });
+
+
+        // Adaption to handle 'includes' on API calls which would wrap the response
         const biome = data.relationships.biome;
         const biome_name = biome.data.id;
         return {
@@ -173,14 +173,16 @@ export const Sample = Backbone.Model.extend({
             biome_name: formatLineage(biome_name),
             sample_name: attr['sample-name'] || NO_DATA_MSG,
             sample_desc: attr['sample-desc'],
-            sample_link: "/sample/" + attr['accession'],
+            sample_url: "/sample/" + attr['accession'],
             study_accession: attr['study-accession'] || NO_DATA_MSG,
             study_link: '/study/' + attr['study-accession'],
             sample_accession: attr.accession || NO_DATA_MSG,
             lineage: formatLineage(biome.data.id || NO_DATA_MSG),
             metadatas: metadatas,
             runs: d.included,
-            last_update: formatDate(attr['last-update'])
+            last_update: formatDate(attr['last-update']),
+            latitude: attr.latitude,
+            longitude: attr.longitude,
         }
     }
 });
@@ -188,6 +190,12 @@ export const Sample = Backbone.Model.extend({
 export const SamplesCollection = Backbone.Collection.extend({
     url: API_URL + "samples",
     model: Sample,
+    initialize: function (data) {
+        // Sample ID
+        if (data.hasOwnProperty(('sample_id'))) {
+            this.sample_id = data.sample_id;
+        }
+    },
     parse: function (response) {
         return response.data;
     }

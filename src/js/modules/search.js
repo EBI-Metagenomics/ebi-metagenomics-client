@@ -337,7 +337,7 @@ function getPagesObj(hitcount, start, size) {
 const Sample = Backbone.Model.extend({
     parse: function (d) {
         d.study_link = '/study/' + d.fields.METAGENOMICS_PROJECTS[0];
-        d.sample_link = '/sample/' + d.id;
+        d.sample_url = '/sample/' + d.id;
         return d;
     }
 });
@@ -441,7 +441,7 @@ const SamplesView = ResultsView.extend({
 const Run = Backbone.Model.extend({
     parse: function (d) {
         d.study_link = '/study/' + d.fields['METAGENOMICS_PROJECTS'][0];
-        d.sample_link = '/sample/' + d.fields['METAGENOMICS_SAMPLES'][0];
+        d.sample_url = '/sample/' + d.fields['METAGENOMICS_SAMPLES'][0];
         d.run_link = '/run/' + d.id;
         d.pipeline_link = '/pipeline/' + d.fields.pipeline_version[0];
         d.biomes = convertBiomes(d);

@@ -4,6 +4,7 @@ export const footer = require("../partials/footer.handlebars");
 export const pagination = require("../partials/pagination.handlebars");
 export const pagesize = require("../partials/pagesize.handlebars");
 export const resultsFilter = require("../partials/results_filter.handlebars");
+export const genericTable = require('../partials/generic_table.handlebars');
 
 export const pipelines = [
     require('../partials/pipelines/1.handlebars'),

@@ -54,7 +54,6 @@
     <!-- CSS concatenated and minified via ant build script-->
     <!--<link rel="stylesheet" href="/static/css/theme-embl-petrol.css" type="text/css" media="all"/>-->
     <!--<link rel="stylesheet" href="/static/css/ebi-global.css" type="text/css" media="all"/>-->
-    <!--<link rel="stylesheet" href="/static/css/site.css" type="text/css" media="all"/>-->
     <!--<link rel="stylesheet" href="/static/fonts/fonts.css" type="text/css" media="all"/>-->
 
     <!-- Use this CSS file for any custom styling -->
@@ -104,66 +103,55 @@
                             </div>
                         </div>
                         <hr>
-                        <section>
-                            <h3>Associated samples</h3>
-                            <div id="pageSize2"></div>
-                            <table id='samplesTable'>
-                                <thead>
-                                <tr>
-                                    <th>Sample name</th>
-                                    <th>Sample ID</th>
-                                    <th>Description</th>
-                                    <th>Last-update</th>
-                                </tr>
-                                </thead>
-                                <tbody id="samplesTableBody" class="live-filter-table">
-                                    <% _.each(samples, function(sample){ %>
-                                    <% attr = sample.attributes %>
-                                    <% console.log(sample) %>
-                                        <tr>
-                                            <td><a href="<%= attr.url %>"><%= attr['sample-name'] %></a></td>
-                                            <td><a href="<%= attr.url %>"><%= attr.accession %></a></td>
-                                            <td><%= attr['sample-desc'] %></td>
-                                            <td><%= attr['last-update'] %></td>
-                                        </tr>
-                                    <% });%>
-
-                                </tbody>
-                            </table>
-                            <div id="pagination2"></div>
+                        <section id="samples-section">
+                            <!--<h3>Associated samples</h3>-->
+                            <!--<div id="pageSize2"></div>-->
+                            <!--<table id='samplesTable'>-->
+                                <!--<thead>-->
+                                <!--<tr>-->
+                                    <!--<th>Sample name</th>-->
+                                    <!--<th>Sample ID</th>-->
+                                    <!--<th>Description</th>-->
+                                    <!--<th>Last-update</th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+                                <!--<tbody id="samplesTableBody" class="live-filter-table">-->
+                                <!--</tbody>-->
+                            <!--</table>-->
+                            <!--<div id="pagination2"></div>-->
                         </section>
                         <hr>
                         <section id="runs-section">
-                            <h3>Associated runs</h3>
-                            <div class="row">
-                                <div class="columns small-12 medium-6 large-6">
-                                    <div id="pageSize"></div>
-                                </div>
-                                <div class="columns small-12 medium-6 large-6">
-                                    <label class="right" for="tableFilter">Filter rows: <input id="tableFilter" class="search"></label>
-                                </div>
-                            </div>
-                            <table id='runsTable'>
-                                <thead>
-                                <tr>
-                                    <th>Sample name</th>
-                                    <th>Sample ID</th>
-                                    <th>Run ID</th>
-                                    <th>Experiment type</th>
-                                    <th>Instrument platform</th>
-                                    <th>Instrument model</th>
-                                    <th>Analyses</th>
-                                </tr>
-                                </thead>
-                                <tbody id="runsTableBody" class="list">
-                                <tr>
-                                    <td class='loading-gif-row' colspan="7">
-                                        <img class='loading-gif' src="/static/images/ajax-loader.gif"/>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div id="pagination"></div>
+                            <!--<h3>Associated runs</h3>-->
+                            <!--<div class="row">-->
+                                <!--<div class="columns small-12 medium-6 large-6">-->
+                                    <!--<div id="pageSize"></div>-->
+                                <!--</div>-->
+                                <!--<div class="columns small-12 medium-6 large-6">-->
+                                    <!--<label class="right" for="tableFilter">Filter rows: <input id="tableFilter" class="search"></label>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<table id='runsTable'>-->
+                                <!--<thead>-->
+                                <!--<tr>-->
+                                    <!--<th>Sample name</th>-->
+                                    <!--<th>Sample ID</th>-->
+                                    <!--<th>Run ID</th>-->
+                                    <!--<th>Experiment type</th>-->
+                                    <!--<th>Instrument platform</th>-->
+                                    <!--<th>Instrument model</th>-->
+                                    <!--<th>Analyses</th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+                                <!--<tbody id="runsTableBody" class="list">-->
+                                <!--<tr>-->
+                                    <!--<td class='loading-gif-row' colspan="7">-->
+                                        <!--<img class='loading-gif' src="/static/images/ajax-loader.gif"/>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <!--</tbody>-->
+                            <!--</table>-->
+                            <!--<div id="pagination"></div>-->
                         </section>
                     </div>
 
@@ -181,6 +169,15 @@
             </script>
         </div>
     </div>
+    <script id="sampleRow" type="text/template">
+        <td class="sample_name"><%= sample_name %></td>
+        <td class="sample_id"><a href="<%= sample_url %>"><%= sample_id %></a></td>
+        <td class="run_id"><a href="<%= run_url %>"><%= run_id %></a></td>
+        <td class="experiment_type"><%= experiment_type %></td>
+        <td class="instrument_platform"><%= instrument_platform %></td>
+        <td class="instrument_model"><%= instrument_model %></td>
+        <td><a href="<%= run_url %>">View analyses</a></td>
+    </script>
     <script id="runRow" type="text/template">
         <td class="sample_name"><%= sample_name %></td>
         <td class="sample_id"><a href="<%= sample_url %>"><%= sample_id %></a></td>

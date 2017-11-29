@@ -77,61 +77,108 @@
 </div>
 
 <script id="runTmpl" type="text/template">
-    <h2>Run <%= run_id %></h2>
-    <section>
-        <h4>Sample name: <%= sample_name %> (<%= sample_id %>)</h4>
-        <h4>Project name: <a href="<%= study_url %>"><%= study_id %> (<%= study_id %>)</a></h4>
-        <h4>Analysis pipeline version
-            <select id="analysisSelect" class="autowidth">
-                <% _.each(pipeline_versions, function(version){ %>
-                <option value="<%= version%>">V<%= version %></option>
-                <% }); %>
-            </select>
-        </h4>
-    </section>
+    <div class="column small-12 medium-12 large-12">
+        <h2>Run <%= run_id %></h2>
+        <section>
+            <h4>Analysis pipeline version
+                <select id="analysisSelect" class="autowidth">
+                    <% _.each(pipeline_versions, function(version){ %>
+                    <option value="<%= version%>">V<%= version %></option>
+                    <% }); %>
+                </select>
+            </h4>
+        </section>
 
-    <ul class="tabs" data-tabs id="run-tabs">
-        <li class="tabs-title active"><a href="#overview" aria-selected="true">Overview</a></li>
-        <li class="tabs-title"><a href="#qc">Quality control</a></li>
-        <li class="tabs-title"><a href="#taxonomic">Taxonomic analysis</a></li>
-        <li class="tabs-title"><a href="#functional">Functional analysis</a></li>
-        <li class="tabs-title"><a href="#download">Download</a></li>
-    </ul>
-    <div class="tabs-content" data-tab-content="run-tabs">
-        <div class="tabs-panel active" id="overview">
-            <div class="row">
-                <div class="center column small-12 medium-12 large-12">
+        <ul class="tabs" data-tabs id="run-tabs">
+            <li class="tabs-title active"><a href="#overview" aria-selected="true">Overview</a></li>
+            <li class="tabs-title"><a href="#qc">Quality control</a></li>
+            <li class="tabs-title"><a href="#taxonomic">Taxonomic analysis</a></li>
+            <li class="tabs-title"><a href="#functional">Functional analysis</a></li>
+            <li class="tabs-title"><a href="#download">Download</a></li>
+        </ul>
+        <div class="tabs-content" data-tab-content="run-tabs">
+            <div class="tabs-panel active" id="overview">
+                <div class="row">
+                    <div class="center column small-12 medium-12 large-12">
+                        <h4>Sample: <a href="<%= sample_url %>"><%= sample_id %></a></h4>
+                        <h4>Project: <a href="<%= study_url %>"><%= study_id %></a></h4>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="tabs-panel" id="qc">
-            <div class="row">
-                <div class="center column small-12 medium-12 large-12">
-                    <p>The chart below shows the number of reads which pass the quality control steps we have
-                        implemented in our pipeline. Sequence merging may have occurred with paired-end data, so the
-                        initial number of reads may differ from the number given by ENA.</p>
-                    <div id="QC-step-chart" class="run-qc-chart"></div>
-                    <p>The histograms below show the distribution of sequence lengths, in basepairs, (left) and GC
-                        percentage (right) for the sequences having passed our quality control steps. Note that for
-                        large files, the distributions were compiled from a random subset of 2 millions sequence reads.
-                        The standard deviations are shown on each plot. The bar chart underneath each graph indicates
-                        the minimum, average and maximum length and average GC and AT content, respectively.</p>
+            <div class="tabs-panel" id="qc">
+                <div class="row">
+                    <div class="center column small-12 medium-12 large-12">
+                        <p>The chart below shows the number of reads which pass the quality control steps we have
+                            implemented in our pipeline. Sequence merging may have occurred with paired-end data, so the
+                            initial number of reads may differ from the number given by ENA.</p>
+                        <div id="QC-step-chart" class="run-qc-chart"></div>
+                        <p>The histograms below show the distribution of sequence lengths, in basepairs, (left) and GC
+                            percentage (right) for the sequences having passed our quality control steps. Note that for
+                            large files, the distributions were compiled from a random subset of 2 millions sequence
+                            reads.
+                            The standard deviations are shown on each plot. The bar chart underneath each graph
+                            indicates
+                            the minimum, average and maximum length and average GC and AT content, respectively.</p>
+                    </div>
                 </div>
             </div>
-
-        </div>
-        <div class="tabs-panel" id="functional"></div>
-        <div class="tabs-panel" id="taxonomic">
-            <div id="tax-Krona">
-                <!--<div class="msg_error" id="ie_krona">Krona chart is only working for latest versions of Internet-->
-                    <!--Explorer (IE 9+). <br/>-->
-                    <!--Please, update your browser to a more recent version - <a href="http://windows.microsoft.com/ie"-->
-                                                                              <!--onclick="trackExternalDownload('http://windows.microsoft.com/ie')">Download-->
-                        <!--Now</a>.-->
+            <div class="tabs-panel" id="functional"></div>
+            <div class="tabs-panel" id="taxonomic">
+                <ul class="tabs" data-tabs id="taxonomy-tabs">
+                    <li class="tabs-title active"><a href="#krona" aria-selected="true"><img
+                            src="/static/images/ico_graph_krona_on.png"/></a></li>
+                    <li class="tabs-title"><a href="#pie" aria-selected="false"><img
+                            src="/static/images/ico_graph_pie_on.png"/></a></li>
+                    <li class="tabs-title"><a href="#bar" aria-selected="false"><img
+                            src="/static/images/ico_graph_barh_on.png"/></a></li>
+                    <li class="tabs-title"><a href="#column" aria-selected="false"><img
+                            src="/static/images/ico_graph_col_on.png"/></a></li>
+                </ul>
+                <div class="tabs-content" data-tab-content="taxonomy-tabs">
+                    <div class="tabs-panel active" id="krona">
+                        <div id="tax-Krona">
+                            <!--<div class="msg_error" id="ie_krona">Krona chart is only working for latest versions of Internet-->
+                            <!--Explorer (IE 9+). <br/>-->
+                            <!--Please, update your browser to a more recent version - <a href="http://windows.microsoft.com/ie"-->
+                            <!--onclick="trackExternalDownload('http://windows.microsoft.com/ie')">Download-->
+                            <!--Now</a>.-->
+                        </div>
+                        <object class="krona_chart"
+                                data="https://www.ebi.ac.uk/metagenomics/projects/<%= study_id %>/samples/<%= sample_id %>/runs/<%= run_id %>/results/krona/versions/2.0?taxonomy=true&collapse=false"
+                                type="text/html"></object>
+                    </div>
+                    <div class="tabs-panel" id="pie">
+                        <div class="row">
+                            <div class="columns small-12 medium-4 larger-4">
+                                <div id="domain-composition"></div>
+                            </div>
+                            <div class="columns small-12 medium-8 larger-8">
+                                <div id="phylum-composition"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="columns small-12 medium-12 large-12">
+                                <div data-table="phylum-table"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tabs-panel" id="bar">
+                        Bar
+                        <div class="row">
+                            <div class="columns small-12 medium-12 large-12">
+                                <div class="phylum-table"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tabs-panel" id="column">
+                        Columns
+                        <div class="row">
+                            <div class="columns small-12 medium-12 large-12">
+                                <div class="phylum-table"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <object class="krona_chart"
-                        data="https://www.ebi.ac.uk/metagenomics/projects/<%= study_id %>/samples/<%= sample_id %>/runs/<%= run_id %>/results/krona/versions/2.0?taxonomy=true&collapse=false"
-                        type="text/html"></object>
             </div>
         </div>
         <div class="tabs-panel" id="download"></div>

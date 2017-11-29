@@ -517,6 +517,10 @@ select.table-tools {
     width: 2em;
 }
 
+.loading-gif-medium {
+    height: 1.5em;
+    width: 1.5em;
+}
 .loading-gif-small {
     height: 1em;
     width: 1em;
@@ -576,4 +580,11 @@ select.table-tools {
     padding-left:1em;
     float:left;
     line-height: 1.2em;
+}
+
+.puce-square-legend {
+    margin-right: 6px;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
 }

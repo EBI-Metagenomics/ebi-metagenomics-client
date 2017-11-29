@@ -6,13 +6,12 @@ const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
 const Handlebars = require('handlebars');
 const List = require('list.js');
-
+const GenericTable = require('../components/genericTable');
 const pagination = new Pagination();
 
 // const OverlappingMarkerSpiderfier = require('../../../static/libraries/oms.min.js');
 import 'js-marker-clusterer';
 
-import {DEFAULT_PAGE_SIZE} from "../config";
 import {
     attachTabHandlers,
     getURLFilterParams,
@@ -26,164 +25,178 @@ import {
 
 setCurrentTab('#studies-nav');
 
-var study_id = getURLParameter();
+const DEFAULT_PAGE_SIZE = 10;
 
-const pageFilters = getURLFilterParams();
-let runsView = null;
 
-var StudyView = Backbone.View.extend({
+let study_id = getURLParameter();
+
+let StudyView = Backbone.View.extend({
     model: api.Study,
     template: _.template($("#studyTmpl").html()),
     el: '#main-content-area',
-    initialize: function () {
+    fetchAndRender: function () {
         const that = this;
-        this.model.fetch({
-            data: $.param({include: 'samples'}), success: function (data, response) {
-                that.render();
+        return this.model.fetch({
+            data: $.param({}), success: function (data, response) {
+                that.$el.html(that.template(that.model.toJSON()));
                 attachTabHandlers();
-                initTableTools();
-                const collection = new api.RunCollection({study_id: study_id});
-                runsView = new RunsView({collection: collection});
-                initMap(data.attributes.samples);
-                $("#pagination").append(commons.pagination);
-                $("#pageSize").append(commons.pagesize);
-                pagination.setPageSizeChangeCallback(updatePageSize);
             }
         });
-    },
-    render: function () {
-        this.$el.html(this.template(this.model.toJSON()));
-        return this.$el
     }
 });
 
-var RunView = Backbone.View.extend({
-    tagName: 'tr',
-    template: _.template($("#runRow").html()),
-    attributes: {
-        class: 'run-row',
+let SamplesView = Backbone.View.extend({
+    tableObj: null,
+    pagination: null,
+    fetch: function () {
+        return this.collection.fetch()
     },
-    render: function () {
-        this.$el.html(this.template(this.model.toJSON()));
-        return this.$el
-    }
-});
 
-var RunsView = Backbone.View.extend({
-    el: '#runsTableBody',
-    initialize: function () {
-        var that = this;
-
-        let params = {};
-        const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
-        if (pagesize !== null) {
-            params.page_size = pagesize;
-        }
-        params.page = pageFilters.get('page') || 1;
-
-        params.include = 'sample';
-        params.study_accession = study_id;
-        this.collection.fetch({
-            data: $.param(params), success: function (collection, response, options) {
-                const pag = response.meta.pagination;
-                pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
-                that.render();
-                createLiveFilter();
-            }
+    init: function () {
+        const that = this;
+        const columns = [
+            {sortBy: 'sample_name', name: 'Sample name'},
+            {sortBy: 'accession', name: 'Sample ID'},
+            {sortBy: null, name: 'Description'},
+            {sortBy: 'last_update', name: 'Last update'},
+        ];
+        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, function (page, pageSize, order, query) {
+            that.update(page, pageSize, order, query);
         });
-        return this;
+        this.update(1, DEFAULT_PAGE_SIZE, null, null)
     },
-    update: function (page, page_size) {
-        $(".run-row").remove();
-        showTableLoadingGif();
-        var that = this;
-        var params = {};
-        if (page !== undefined) {
-            params.page = page
-        }
-        if (page_size !== undefined) {
-            params.page_size = page_size
-        }
-        params.include = 'sample';
-        params.study_accession = study_id;
 
-        setURLParams(params, false);
-
-        this.collection.fetch({
-            data: $.param(params), remove: true,
-            success: function (collection, response, options) {
-                hideTableLoadingGif();
-                pagination.updatePagination(response.meta.pagination);
-                that.render();
-            }
-        });
-
-    },
-    render: function () {
-        this.collection.each(function (run) {
-            console.log(run);
-            var runView = new RunView({model: run});
-            $(this.$el).append(runView.render());
-        }, this);
-        let opts = {
-            valueNames: ["sample_name", "sample_id", "run_id", "experiment_type", "instrument_platform", "instrument_model"]
+    update: function (page, pageSize, order, query) {
+        this.tableObj.showLoadingGif();
+        let params = {
+            study_id: this.collection.study_id,
+            page: page,
+            page_size: pageSize
         };
-        window.a = new List("runs-section", opts);
-        return this;
+        if (order) {
+            params['ordering'] = order;
+        }
+        if (query) {
+            params['search'] = query;
+        }
+        const that = this;
+        this.collection.fetch({
+            data: $.param(params),
+            success: function (data, response) {
+                that.renderData(page, response.meta.pagination.count);
+                that.tableObj.hideLoadingGif();
+            }
+        })
+    },
+
+    renderData: function (page, resultCount) {
+        initMap(this.collection.models);
+        const tableData = _.map(this.collection.models, function (m) {
+            const attr = m.attributes;
+            const sample_link = "<a href='"+attr.sample_url+"'>" + attr.sample_accession + "</a>";
+            return [attr.sample_name, sample_link, attr.sample_desc, attr.last_update]
+        });
+        this.tableObj.update(tableData, true, page, resultCount);
     }
 });
 
-function createLiveFilter() {
-    // $('#runsTableBody').liveFilter(
-    //     '#search-filter', 'tr'
-    // );
-}
 
+let RunsView = Backbone.View.extend({
+    tableObj: null,
+    pagination: null,
+    fetch: function () {
+        return this.collection.fetch()
+    },
 
-function updatePageSize(pageSize) {
-    runsView.update(pagination.currentPage, pageSize);
-}
+    init: function () {
+        const that = this;
+        const columns = [
+            {sortBy: 'accession', name: 'Run ID'},
+            {sortBy: null, name: 'Experiment type'},
+            {sortBy: null, name: 'Instrument model'},
+            {sortBy: null, name: 'Instrument platform'},
+        ];
+        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, function (page, pageSize, order, query) {
+            that.update(page, pageSize, order, query);
+        });
+        this.update(1, DEFAULT_PAGE_SIZE, null, null)
+    },
 
-function changePage(page) {
-    runsView.update(page, pagination.getPageSize());
-}
+    update: function (page, pageSize, order, query) {
+        this.tableObj.showLoadingGif();
+        let params = {
+            study_id: this.collection.study_id,
+            page: page,
+            page_size: pageSize
+        };
+        if (order) {
+            params['ordering'] = order;
+        }
+        if (query) {
+            params['search'] = query;
+        }
+        const that = this;
+        this.collection.fetch({
+            data: $.param(params),
+            success: function (data, response) {
+                that.renderData(page, response.meta.pagination.count);
+                that.tableObj.hideLoadingGif();
+            }
+        })
+    },
+
+    renderData: function (page, resultCount) {
+        const tableData = _.map(this.collection.models, function (m) {
+            const attr = m.attributes;
+            const run_link = "<a href='" + attr.run_url+ "'>" + attr.run_id + "</a>";
+            return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform']]
+        });
+        this.tableObj.update(tableData, true, page, resultCount);
+    }
+});
+
 
 function initMap(samples) {
-    var map = new google.maps.Map(document.getElementById('map'), {
+    let map = new google.maps.Map(document.getElementById('map'), {
         streetViewControl: false,
+        zoom: 1,
+        center: new google.maps.LatLng(0.0, 0.0)
     });
 
     const template = Handlebars.compile($("#marker-template").html());
 
-    var oms = new OverlappingMarkerSpiderfier(map, {
+    let oms = new OverlappingMarkerSpiderfier(map, {
         markersWontMove: true,
         markersWontHide: true,
         basicFormatEvents: true
     });
 
-    // Do not display markers with invalid Lat/Long values
+    // // Do not display markers with invalid Lat/Long values
     let markers = samples.reduce(function (result, sample) {
         const lat = sample.attributes.latitude;
         const lng = sample.attributes.longitude;
-        if (!(lat === null || lng === null)) {
-            result.push(placeMarker(map, oms, template, sample));
-        } else {
+
+        if (lat === null || lng === null) {
             $("#warning").show();
+        } else {
+            result.push(placeMarker(map, oms, template, sample));
         }
         return result;
     }, []);
 
-    var bounds = new google.maps.LatLngBounds();
-    for (var i = 0; i < markers.length; i++) {
-        bounds.extend(markers[i].getPosition());
-    }
-    map.fitBounds(bounds);
+    if (markers.length > 0) {
+        let bounds = new google.maps.LatLngBounds();
+        for (let i = 0; i < markers.length; i++) {
+            bounds.extend(markers[i].getPosition());
+        }
+        // map.fitBounds(bounds);
 
-    var markerCluster = new MarkerClusterer(map, markers,
-        {
-            imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
-            maxZoom: 17
-        });
+        let markerCluster = new MarkerClusterer(map, markers,
+            {
+                imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+                maxZoom: 17
+            });
+    }
     window.map = map;
     return map
 }
@@ -194,7 +207,7 @@ function getSamplePosition(sample) {
 
 function createMarkerLabel(template, sample) {
     const attr = sample.attributes;
-    var data = {
+    let data = {
         id: attr.accession,
         name: attr['sample-name'],
         desc: attr['sample-desc'],
@@ -210,16 +223,16 @@ function createMarkerLabel(template, sample) {
 function placeMarker(map, oms, template, sample) {
     const pos = getSamplePosition(sample);
 
-    var marker = new google.maps.Marker({
+    let marker = new google.maps.Marker({
         position: pos,
         map: map,
         title: sample.id
     });
 
 
-    var contentString = createMarkerLabel(template, sample);
+    let contentString = createMarkerLabel(template, sample);
 
-    var infowindow = new google.maps.InfoWindow({
+    let infowindow = new google.maps.InfoWindow({
         content: contentString
     });
 
@@ -232,5 +245,31 @@ function placeMarker(map, oms, template, sample) {
     return marker;
 }
 
-var study = new api.Study({id: study_id});
-var studyView = new StudyView({model: study});
+let study = new api.Study({id: study_id});
+let studyView = new StudyView({model: study});
+
+let samples = new api.SamplesCollection({study_id: study_id});
+let samplesView = new SamplesView({collection: samples});
+
+let runs = new api.RunCollection({study_id: study_id});
+let runsView = new RunsView({collection: runs});
+
+
+$.when(
+    studyView.fetchAndRender(),
+).done(function () {
+    samplesView.init();
+    runsView.init();
+});
+
+
+// <!--<% _.each(samples, function(sample){ %>-->
+// <!--<% attr = sample.attributes %>-->
+// <!--<% console.log(sample) %>-->
+// <!--<tr>-->
+// <!--<td><a href="<%= attr.url %>"><%= attr['sample-name'] %></a></td>-->
+// <!--<td><a href="<%= attr.url %>"><%= attr.accession %></a></td>-->
+// <!--<td><%= attr['sample-desc'] %></td>-->
+// <!--<td><%= attr['last-update'] %></td>-->
+//     <!--</tr>-->
+// <!--<% });%>-->

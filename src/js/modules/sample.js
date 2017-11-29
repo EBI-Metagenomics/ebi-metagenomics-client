@@ -1,9 +1,14 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
+const util = require('../util');
 const commons = require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
-import {DEFAULT_PAGE_SIZE} from "../config";
+const Handlebars = require('handlebars');
+const List = require('list.js');
+const GenericTable = require('../components/genericTable');
+const API_URL = require('../config').API_URL;
+
 import {
     getURLFilterParams,
     getURLParameter,
@@ -14,41 +19,28 @@ import {
     showTableLoadingGif
 } from "../util";
 
-const pagination = new Pagination();
-
 setCurrentTab('#samples-nav');
 
-var sample_id = getURLParameter();
-
-const pageFilters = getURLFilterParams();
-let runsView = null;
+const DEFAULT_PAGE_SIZE = 10;
 
 
-var SampleView = Backbone.View.extend({
+let sample_id = getURLParameter();
+
+let SampleView = Backbone.View.extend({
     model: api.Sample,
     template: _.template($("#sampleTmpl").html()),
     el: '#main-content-area',
-    initialize: function () {
+    fetchAndRender: function () {
         const that = this;
-        this.model.fetch({
-            data: $.param({include: 'runs,metadata'}), success: function (data) {
-                that.render();
-                initTableTools();
-                const collection = new api.RunCollection({sample_id: sample_id});
-                runsView = new RunsView({collection: collection});
-                $("#pagination").append(commons.pagination);
-                $("#pageSize").append(commons.pagesize);
-                pagination.setPageSizeChangeCallback(updatePageSize);
+        return this.model.fetch({
+            data: $.param({}), success: function (data, response) {
+                that.$el.html(that.template(that.model.toJSON()));
             }
         });
-    },
-    render: function () {
-        this.$el.html(this.template(this.model.toJSON()));
-        return this.$el
     }
 });
 
-var RunView = Backbone.View.extend({
+let RunView = Backbone.View.extend({
     tagName: 'tr',
     template: _.template($("#runRow").html()),
     attributes: {
@@ -60,84 +52,133 @@ var RunView = Backbone.View.extend({
     }
 });
 
-
-var RunsView = Backbone.View.extend({
-    el: '#runsTableBody',
-    initialize: function () {
-        var that = this;
-
-        let params = {};
-        const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
-        if (pagesize !== null) {
-            params.page_size = pagesize;
-        }
-        params.page = pageFilters.get('page') || 1;
-
-        // params.include = 'sample';
-        params.sample_accession = sample_id;
-
-        this.collection.fetch({
-            data: $.param(params), success: function (collection, response, options) {
-                const pag = response.meta.pagination;
-                pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
-                that.render();
-                createLiveFilter();
-            }
-        });
-        return this;
+let StudiesView = Backbone.View.extend({
+    tableObj: null,
+    pagination: null,
+    fetch: function () {
+        return this.collection.fetch()
     },
 
-    update: function (page, page_size) {
-        $(".run-row").remove();
-        showTableLoadingGif();
-        var that = this;
-        var params = {};
-        if (page !== undefined) {
-            params.page = page
-        }
-        if (page_size !== undefined) {
-            params.page_size = page_size
-        }
-        params.sample_accession = sample_id;
-        setURLParams(params, false);
-
-        this.collection.fetch({
-            data: $.param(params), remove: true,
-            success: function (collection, response, options) {
-                hideTableLoadingGif();
-                pagination.updatePagination(response.meta.pagination);
-                that.render();
-            }
+    init: function () {
+        const that = this;
+        const columns = [
+            {sortBy: null, name: 'Biome'},
+            {sortBy: null, name: 'Study ID'},
+            {sortBy: null, name: 'Name'},
+            {sortBy: null, name: 'Abstract'},
+            {sortBy: null, name: 'Samples count'},
+            {sortBy: null, name: 'Last update'},
+        ];
+        this.tableObj = new GenericTable($('#studies-section'), 'Associated studies', columns, function (page, pageSize, order, query) {
+            that.update(page, pageSize, order, query);
         });
+        this.update(1, DEFAULT_PAGE_SIZE, null, null)
     },
 
-    render: function () {
-        this.collection.each(function (run) {
-            var runView = new RunView({model: run});
-            $(this.$el).append(runView.render());
-        }, this);
-        if (this.collection.length===0){
-            $(this.$el).append("<tr><td colspan=4>No runs to display</td></tr>")
+    update: function (page, pageSize, order, query) {
+        this.tableObj.showLoadingGif();
+        let params = {
+            sample_id: this.collection.params.sample_id,
+            page: page,
+            page_size: pageSize
+        };
+        if (order) {
+            params['ordering'] = order;
         }
-        console.log($(this.$el))
-        return this;
+        if (query) {
+            params['search'] = query;
+        }
+        const that = this;
+        this.collection.fetch({
+            data: $.param(params),
+            success: function (data, response) {
+                that.renderData(page, response.meta.pagination.count);
+                that.tableObj.hideLoadingGif();
+            }
+        })
+    },
+
+    renderData: function (page, resultCount) {
+        const tableData = _.map(this.collection.models, function (m) {
+            const attr = m.attributes;
+            const study_link = "<a href='" + attr.study_link + "'>" + attr.study_id + "</a>";
+            const biomes = _.map(m.attributes.biomes, function (b) {
+                return "<span class='biome_icon icon_xs " + b.icon + "' title='" + b.name + "'></span>"
+            });
+            return [biomes.join(' '), study_link, attr['study_name'], attr['abstract'], attr['samples_count'], attr['last_update']]
+        });
+        this.tableObj.update(tableData, true, page, resultCount);
     }
 });
 
-function updatePageSize(pageSize) {
-    runsView.update(pagination.currentPage, pageSize);
-}
 
-function changePage(page) {
-    runsView.update(page, pagination.getPageSize());
-}
+let RunsView = Backbone.View.extend({
+    tableObj: null,
+    pagination: null,
+    fetch: function () {
+        return this.collection.fetch()
+    },
 
-function createLiveFilter() {
-    // $('#runsTableBody').liveFilter(
-    //     '#search-filter', 'tr'
-    // );
-}
+    init: function () {
+        const that = this;
+        const columns = [
+            {sortBy: 'accession', name: 'Run ID'},
+            {sortBy: null, name: 'Experiment type'},
+            {sortBy: null, name: 'Instrument model'},
+            {sortBy: null, name: 'Instrument platform'},
+        ];
+        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, function (page, pageSize, order, query) {
+            that.update(page, pageSize, order, query);
+        });
+        this.update(1, DEFAULT_PAGE_SIZE, null, null)
+    },
+
+    update: function (page, pageSize, order, query) {
+        this.tableObj.showLoadingGif();
+        let params = {
+            sample_id: this.collection.sample_id,
+            page: page,
+            page_size: pageSize
+        };
+        if (order) {
+            params['ordering'] = order;
+        }
+        if (query) {
+            params['search'] = query;
+        }
+        const that = this;
+        this.collection.fetch({
+            data: $.param(params),
+            success: function (data, response) {
+                that.renderData(page, response.meta.pagination.count);
+                that.tableObj.hideLoadingGif();
+            }
+        })
+    },
+
+    renderData: function (page, resultCount) {
+        const tableData = _.map(this.collection.models, function (m) {
+            const attr = m.attributes;
+            const run_link = "<a href='" + attr.run_url + "'>" + attr.run_id + "</a>";
+            return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform']]
+        });
+        this.tableObj.update(tableData, true, page, resultCount);
+    }
+});
 
 
-var sample = new api.Sample({id: sample_id});
-var sampleView = new SampleView({model: sample});
+let sample = new api.Sample({id: sample_id});
+let sampleView = new SampleView({model: sample});
+
+let studies = new api.StudiesCollection({sample_id: sample_id}, API_URL + 'samples/' + sample_id + '/studies');
+let studiesView = new StudiesView({collection: studies});
+
+let runs = new api.RunCollection({sample_id: sample_id});
+let runsView = new RunsView({collection: runs});
+
+$.when(
+    sampleView.fetchAndRender()
+).done(function () {
+    studiesView.init();
+    runsView.init();
+});

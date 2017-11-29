@@ -60,7 +60,7 @@ var BiomesView = Backbone.View.extend({
             success: function (collection, response, options) {
                 that.render();
                 const pag = response.meta.pagination;
-                Pagination.initPagination(params.page, pagesize, pag.pages, pag.count, changePage);
+                Pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
             }
         });
         return this;
@@ -81,7 +81,7 @@ var BiomesView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params), remove: true, success: function (collection, response, options) {
                 hideTableLoadingGif();
-                Pagination.updatePagination(response.meta.pagination);
+                Pagination.update(response.meta.pagination);
                 that.render();
             }
         });
