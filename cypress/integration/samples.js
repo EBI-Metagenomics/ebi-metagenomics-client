@@ -41,48 +41,48 @@ describe('Samples page', function() {
         waitForSamplesLoad(initialResultSize);
 
     });
-
-    it('Should respond to last-updated ordering', function(){
-        const selector = "td.updated";
-
-        setSortBy('th.updated');
-        cy.get(selector).first().should(function($el){
-            expect(new Date(Cypress.$(selector).last().text())).to.be.gte(new Date($el.text()));
-        });
-
-        setSortBy('th.updated');
-        cy.get(selector).first().should(function($el){
-            expect(new Date(Cypress.$(selector).last().text())).to.be.lte(new Date($el.text()));
-        });
-    });
-
-    it('Should respond to study name ordering', function(){
-        const selector = "td.sample-name";
-
-        setSortBy('th.sample-name');
-        cy.get(selector).first().should(function($el){
-            expect(Cypress.$(selector).last().text()).to.be.gte($el.text());
-        });
-
-        setSortBy('th.sample-name');
-        cy.get(selector).first().should(function($el){
-            expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
-        });
-    });
-
-    it('Should respond to num. samples ordering', function(){
-        const selector = "td.sample-id";
-
-        setSortBy('th.sample-id');
-        cy.get(selector).first().should(function($el){
-            expect(Cypress.$(selector).last().text()).to.be.gte($el.text());
-        });
-
-        setSortBy('th.sample-id');
-        cy.get(selector).first().should(function($el){
-            expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
-        });
-    });
+    //
+    // it('Should respond to last-updated ordering', function(){
+    //     const selector = "td.updated";
+    //
+    //     setSortBy('th.updated');
+    //     cy.get(selector).first().should(function($el){
+    //         expect(new Date(Cypress.$(selector).last().text())).to.be.gte(new Date($el.text()));
+    //     });
+    //
+    //     setSortBy('th.updated');
+    //     cy.get(selector).first().should(function($el){
+    //         expect(new Date(Cypress.$(selector).last().text())).to.be.lte(new Date($el.text()));
+    //     });
+    // });
+    //
+    // it('Should respond to study name ordering', function(){
+    //     const selector = "td.sample-name";
+    //
+    //     setSortBy('th.sample-name');
+    //     cy.get(selector).first().should(function($el){
+    //         expect(Cypress.$(selector).last().text()).to.be.gte($el.text());
+    //     });
+    //
+    //     setSortBy('th.sample-name');
+    //     cy.get(selector).first().should(function($el){
+    //         expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
+    //     });
+    // });
+    //
+    // it('Should respond to num. samples ordering', function(){
+    //     const selector = "td.sample-id";
+    //
+    //     setSortBy('th.sample-id');
+    //     cy.get(selector).first().should(function($el){
+    //         expect(Cypress.$(selector).last().text()).to.be.gte($el.text());
+    //     });
+    //
+    //     setSortBy('th.sample-id');
+    //     cy.get(selector).first().should(function($el){
+    //         expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
+    //     });
+    // });
 
     it('Should respond to biome selector', function(){
         const selector = "#biome-select";

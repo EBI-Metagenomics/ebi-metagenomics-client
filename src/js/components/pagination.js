@@ -41,7 +41,6 @@ export var Pagination = function () {
     }
 
     function update(p, callback) {
-        const that = this;
         let totPages = p.pages;
         setPageDisplay(p.page, totPages, p.count);
         opts.startPage = p.page;
@@ -62,6 +61,8 @@ export var Pagination = function () {
     }
 
     return {
+        pageSize: pageSize,
+        pagination: pagination,
         setPaginationElem: setPaginationElem,
         init: init,
         setPageSizeChangeCallback: setPageSizeChangeCallback,
