@@ -43,6 +43,7 @@ var SampleView = Backbone.View.extend({
         class: 'sample',
     },
     render: function () {
+        console.log(this.model);
         this.$el.html(this.template(this.model.toJSON()));
         return this.$el
     }

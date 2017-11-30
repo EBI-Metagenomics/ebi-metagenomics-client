@@ -175,7 +175,7 @@ export const Sample = Backbone.Model.extend({
             sample_desc: attr['sample-desc'],
             sample_url: "/sample/" + attr['accession'],
             study_accession: attr['study-accession'] || NO_DATA_MSG,
-            study_link: '/study/' + attr['study-accession'],
+            study_url: '/study/' + attr['study-accession'],
             sample_accession: attr.accession || NO_DATA_MSG,
             lineage: formatLineage(biome.data.id || NO_DATA_MSG),
             metadatas: metadatas,
@@ -192,7 +192,7 @@ export const SamplesCollection = Backbone.Collection.extend({
     model: Sample,
     initialize: function (data) {
         // Sample ID
-        if (data.hasOwnProperty(('sample_id'))) {
+        if (data && data.hasOwnProperty(('sample_id'))) {
             this.sample_id = data.sample_id;
         }
     },
