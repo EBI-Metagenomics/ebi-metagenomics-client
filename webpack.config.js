@@ -14,7 +14,7 @@ module.exports = {
         run: 'src/js/modules/run.js',
         compare: 'src/js/modules/compare.js',
         about: 'src/js/modules/about.js',
-        contact: 'src/js/modules/contact.js',
+        help: 'src/js/modules/help.js',
         // biomes: 'src/js/modules/biomes.js',
         pipelines: 'src/js/modules/pipelines.js',
         pipeline: 'src/js/modules/pipeline.js',
