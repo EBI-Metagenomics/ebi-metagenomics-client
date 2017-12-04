@@ -6,7 +6,8 @@
   "scripts": {
     "cypress:open": "cypress open",
     "test": "cypress open",
-    "watch": "webpack --watch --config webpack.config.js"
+    "watch": "webpack --watch --config webpack.config.js",
+    "build": "webpack --config webpack.config.js"
   },
   "author": "",
   "license": "ISC",
@@ -43,6 +44,7 @@
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
     "chai": "^4.1.2",
+    "clean-webpack-plugin": "^0.1.17",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.7",
     "cypress": "^0.20.1",
