@@ -2,6 +2,7 @@ var Config = module.exports = {
     API_URL: "https://www.ebi.ac.uk/metagenomics/api/latest/",
     SEARCH_URL: "https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_",
     SEQUENCE_SEARCH_URL: "https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer",
+    BLOG_URL: "https://ebi-metagenomics.github.io/ebi-metagenomics-blog/",
     NO_DATA_MSG: 'N/A',
     DEFAULT_PAGE_SIZE: 25,
 
