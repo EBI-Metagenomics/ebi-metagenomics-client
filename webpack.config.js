@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const envs = ['prod', 'dev'];
 let env = 'prod';
@@ -29,7 +30,7 @@ module.exports = {
         run: 'src/js/modules/run.js',
         compare: 'src/js/modules/compare.js',
         about: 'src/js/modules/about.js',
-        contact: 'src/js/modules/contact.js',
+        help: 'src/js/modules/help.js',
         // biomes: 'src/js/modules/biomes.js',
         pipelines: 'src/js/modules/pipelines.js',
         pipeline: 'src/js/modules/pipeline.js',
@@ -114,6 +115,7 @@ module.exports = {
         ]
     },
     plugins: [
+        new CleanWebpackPlugin(['dist']),
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',

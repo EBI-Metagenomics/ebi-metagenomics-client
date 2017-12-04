@@ -5,7 +5,9 @@
   "main": "entry.js",
   "scripts": {
     "cypress:open": "cypress open",
-    "test": "cypress open"
+    "test": "cypress open",
+    "watch": "webpack --watch --config webpack.config.js",
+    "build": "webpack --config webpack.config.js"
   },
   "author": "",
   "license": "ISC",
@@ -42,6 +44,7 @@
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
     "chai": "^4.1.2",
+    "clean-webpack-plugin": "^0.1.17",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.7",
     "cypress": "^0.20.1",
@@ -54,8 +57,9 @@
     "selenium-webdriver": "^3.5.0",
     "style-loader": "^0.18.2",
     "test": "^0.6.0",
-    "webpack": "^3.6.0",
     "url-loader": "^0.5.9",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.5",
     "webpack-jquery-ui": "^1.0.0"
   }
 }

@@ -16,7 +16,7 @@ export const pipelines = [
 require('html-loader?path=../name=[name].[ext]!../about.html');
 require('html-loader?path=../name=[name].[ext]!../biomes.html');
 require('html-loader?path=../name=[name].[ext]!../compare.html');
-require('html-loader?path=../name=[name].[ext]!../contact.html');
+require('html-loader?path=../name=[name].[ext]!../help.html');
 require('html-loader?path=../name=[name].[ext]!../run.html');
 require('html-loader?path=../name=[name].[ext]!../sample.html');
 require('html-loader?path=../name=[name].[ext]!../samples.html');
