@@ -1,4 +1,3 @@
-
 export const header = require("../partials/header.handlebars");
 export const footer = require("../partials/footer.handlebars");
 export const pagination = require("../partials/pagination.handlebars");
@@ -52,3 +51,19 @@ require('file-loader?name=[name].[ext]!../../static/images/ico_graph_pie.png');
 require('file-loader?name=[name].[ext]!../../static/images/ico_graph_pie_on.png');
 require('file-loader?name=[name].[ext]!../../static/images/ico_graph_col.png');
 require('file-loader?name=[name].[ext]!../../static/images/ico_graph_col_on.png');
+
+export const NO_DATA_MSG = 'N/A';
+export const DEFAULT_PAGE_SIZE = 25;
+export const TAXONOMY_COLOURS = [
+    '#058dc7',
+    '#82d23d',
+    '#e26736',
+    '#fbe300',
+    '#24cbe5',
+    '#c49ecc',
+    '#ffc08a',
+    '#708090',
+    '#6af9c4',
+    '#caae74',
+    '#cccccc',
+];

@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const util = require('../util');
-const commons = require('../commons');
+const Commons = require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
 const Handlebars = require('handlebars');
@@ -21,7 +21,7 @@ import {
 
 setCurrentTab('#samples-nav');
 
-const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_PAGE_SIZE = Commons.DEFAULT_PAGE_SIZE;
 
 
 let sample_id = getURLParameter();

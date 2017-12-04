@@ -4,7 +4,7 @@ const util = require('../util');
 require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination');
-import {DEFAULT_PAGE_SIZE} from "../config";
+const DEFAULT_PAGE_SIZE = require('../commons').DEFAULT_PAGE_SIZE;
 
 import {
     formatLineage,

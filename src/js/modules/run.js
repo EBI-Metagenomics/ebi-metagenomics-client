@@ -2,7 +2,7 @@ const Backbone = require('backbone');
 const _ = require('underscore');
 const util = require('../util');
 const Config = require('config');
-require('../commons');
+const Commons = require('../commons');
 const api = require('../components/api');
 const TaxonomyPieChart = require('../components/taxonomy/taxonomyPie');
 const GenericTable = require('../components/genericTable');
@@ -11,6 +11,9 @@ require('tablesorter');
 import {attachTabHandlers, getURLParameter, setCurrentTab} from "../util";
 
 let Highcharts = require('highcharts');
+
+
+const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 
 setCurrentTab('#samples-nav');
 
@@ -131,9 +134,9 @@ let TaxonomyGraphView = Backbone.View.extend({
                 }, 0);
                 let i = 0;
                 const data = _.map(phylumChart.clusteredData, function (d) {
-                    const taxColor = Math.min(Config.TAXONOMY_COLOURS.length-1, i);
+                    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
                     const colorDiv = "<div class='puce-square-legend' style='background-color: " + Config.TAXONOMY_COLOURS[taxColor] + "'></div>";
-                    return [++i, colorDiv+d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)]
+                    return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)]
                 });
                 const phylumTable = new GenericTable($('#pie').find("[data-table='phylum-table']"), '', headers, function () {
                 });
