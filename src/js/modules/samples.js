@@ -104,6 +104,9 @@ var SamplesView = Backbone.View.extend({
         return this;
     },
     update: function (params) {
+        console.trace()
+        console.log('updateStart');
+        console.log($('.sample').length)
         const that = this;
 
         this.params = $.extend(this.params, params);
@@ -117,6 +120,8 @@ var SamplesView = Backbone.View.extend({
                 hideTableLoadingGif();
                 pagination.update(response.meta.pagination);
                 that.render();
+                console.log('updateEnd');
+                console.log($('.sample').length)
             }
         });
         return this;
@@ -146,7 +151,6 @@ function changePage(page) {
     samplesView.update(params);
 }
 
-$(document).on('')
 pagination.setPageSizeChangeCallback(updatePageSize);
 
 
