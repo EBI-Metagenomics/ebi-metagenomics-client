@@ -5,7 +5,7 @@ const $ = require('jquery');
 require('../commons');
 
 const api = require('../components/api');
-import {API_URL} from "../config";
+const API_URL = require('config').API_URL;
 import {setCurrentTab} from "../util";
 
 
