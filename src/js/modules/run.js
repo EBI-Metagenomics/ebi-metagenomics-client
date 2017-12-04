@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const util = require('../util');
-const Config = require('../config');
+const Config = require('config');
 require('../commons');
 const api = require('../components/api');
 const TaxonomyPieChart = require('../components/taxonomy/taxonomyPie');

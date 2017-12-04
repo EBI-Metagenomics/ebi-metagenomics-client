@@ -2,6 +2,21 @@ var path = require('path');
 var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const envs = ['prod', 'dev'];
+let env = 'prod';
+const args = process.argv.slice(2);
+args.forEach(function (val, index, array) {
+    if (val === '--env') {
+        let arg_env = array[index + 1];
+        if (envs.indexOf(arg_env) > -1) {
+            env = arg_env
+        } else {
+            console.error('Invalid environment specified, should be in: [' + envs + '].');
+            process.exit(1);
+        }
+    }
+});
+
 module.exports = {
     entry: {
         index: 'src/js/modules/index.js',
@@ -27,6 +42,7 @@ module.exports = {
         modules: [__dirname, 'node_modules'],
         alias: {
             handlebars: 'handlebars/dist/handlebars.min.js',
+            config: path.join(__dirname, 'config', env+'.js')
         },
     },
     module: {

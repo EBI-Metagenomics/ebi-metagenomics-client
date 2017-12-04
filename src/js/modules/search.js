@@ -1,4 +1,4 @@
-import {SEARCH_URL} from '../config';
+const SEARCH_URL = require('config').SEARCH_URL;
 import {attachTabHandlers, setCurrentTab} from "../util";
 
 const util = require('../util');
@@ -701,9 +701,11 @@ function setFacetFilters(formId, formData) {
                 const valueMax = data[3];
                 $form.find('[name=' + facetName + 'min]').val(valueMin).prop('disabled', false);
                 $form.find('[name=' + facetName + 'max]').val(valueMax).prop('disabled', false);
-                $form.find('.slider[data-facet-slider='+facetName+']').slider({values: [valueMin, valueMax],
-                disabled: false});
-                $form.find('.switch-input[data-facet-name='+facetName+']').prop('checked', true);
+                $form.find('.slider[data-facet-slider=' + facetName + ']').slider({
+                    values: [valueMin, valueMax],
+                    disabled: false
+                });
+                $form.find('.switch-input[data-facet-name=' + facetName + ']').prop('checked', true);
             }
         });
     }
