@@ -69,28 +69,44 @@
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
-<div id="header"></div>
+<div id="header"></div><!-- TODO: What is this for? -->
 
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
-        <div class="columns small-12 medium-12 large-12">
-            <h2>Contact us</h2>
-            <p>If you have any questions related to the EBI metagenomics resource, please <a href="http://www.ebi.ac.uk/support/metagenomics">contact us</a>.</p>
-            <h3>Follow us on Twitter</h3>
-            <p>Follow us on Twitter using <a href="http://twitter.com/EBImetagenomics">@EBImetagenomics</a></p>
+        <div class="column small-12 medium-12 large-12">
+            <h2>EBI Metagenomics Help</h2>
+
+            <p>All <a id="doc-link" title="EMG-docs"
+                      class="ext">documentation</a> relating to the use of the EBI metagenomics has been moved to
+                <a title="Read the Docs" href="https://readthedocs.org/" class="ext">Read the Docs</a>.
+                This allows us to provide a rich, searchable and downloadable document, as well as enables us to store
+                different versions corresponding to the different pipelines (accessed via the bottom left corner of the
+                <a id="doc-link-2" title="EMG-docs" class="ext">EMG Read the Docs site</a>). Answers to many of the most
+                commonly asked questions can be found under the FAQ section. Furthermore, there are also the following
+                training materials as part of the <a title="EBI Train online"
+                                                     href="https://www.ebi.ac.uk/training/online/about-train-online"
+                                                     class="ext">EBI Train online</a>:
+            <ol>
+                <li><a title="Quick Tour"
+                       href="https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-portal-quick-tour"
+                       class="ext">Tutorial about the website</a></li>
+                <li><a title="Submitting data to the ENA"
+                       href="https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-portal-submitting-metagenomics-da"
+                       class="ext">Tutorial describing the data submission process</a></li>
+                <li><a title="Analysis and exploration"
+                       href="https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-analysing-and-exploring-metagenomics-data"
+                       class="ext">A webinar explaining about EBI metagenomics and the analysis you can perform</a></li>
+            </ol>
+            <p>
+                However, if neither the documentation nor online materials answer your question, please <a
+                    title="EBI's support & feedback form"
+                    href="https://www.ebi.ac.uk/support/metagenomics"
+                    class="ext">contact us</a>.
+            </p>
         </div>
     </div>
 </div>
-<!-- Optional local footer (insert citation / project-specific copyright / etc here -->
-<!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
-<!-- <div class="row"> -->
-<!-- <span class="reference">How to reference this page: ...</span> -->
-<!-- </div> -->
-<!-- </footer> -->
-<!-- End optional local footer -->
-<!-- </div> -->
-<!-- End suggested layout containers / #content -->
 
 <div id="footer"></div>
 
@@ -103,7 +119,7 @@
 <script src="/static/js/foundation.js"></script>
 <script src="/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(document).foundation();
         $(document).foundationExtendEBI();
     });

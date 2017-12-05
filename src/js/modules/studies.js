@@ -158,7 +158,6 @@ var studies = new api.StudiesCollection();
 var studiesView = new StudiesView({collection: studies});
 
 
-
 initResultsFilter(pageFilters.get('search'), function (e) {
     var params = {
         page_size: pagination.getPageSize(),

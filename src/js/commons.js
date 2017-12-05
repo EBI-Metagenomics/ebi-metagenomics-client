@@ -52,6 +52,9 @@ require('file-loader?name=[name].[ext]!../../static/images/ico_graph_pie_on.png'
 require('file-loader?name=[name].[ext]!../../static/images/ico_graph_col.png');
 require('file-loader?name=[name].[ext]!../../static/images/ico_graph_col_on.png');
 
+export const SEQUENCE_SEARCH_URL = "https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer";
+export const BLOG_URL = "https://ebi-metagenomics.github.io/ebi-metagenomics-blog/";
+export const READTHEDOCS_URL = "https://emg-docs.readthedocs.io";
 export const NO_DATA_MSG = 'N/A';
 export const DEFAULT_PAGE_SIZE = 25;
 export const TAXONOMY_COLOURS = [
