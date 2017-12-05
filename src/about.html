@@ -10,240 +10,133 @@
     <div id="main-content-area" class="row" role="main">
         <div class="column small-12 medium-12 large-12">
             <h2>About EBI metagenomics</h2>
+
             <h3>EBI Metagenomics service</h3>
+
             <p>Metagenomics is the study of all genomes present in any given environment without the need for prior
                 individual identification or amplification. For example, in its simplest form, a metagenomic study might
-                be the direct sequence results of DNA extracted from a bucket of sea water.</p>
+                be the direct sequence results of DNA extracted from a bucket of sea water.
+            </p>
             <p>The EBI Metagenomics service is an automated pipeline for the analysis and archiving of metagenomic data
                 that aims to provide insights into the phylogenetic diversity as well as the functional and metabolic
-                potential of a sample. You can freely browse all the public data in the repository.</p>
+                potential of a sample. You can freely browse all the public data in the repository.
+            </p>
             <p>Please take your time to explore and tell us what you think about our website. We welcome your feedback
                 on look and feel, functionality or scientific content. If you want to be kept informed about updates to
                 the website, please subscribe to our mailing list. Also note, as we constantly try to improve the site,
-                it may change from time to time.</p>
+                it may change from time to time.
+            </p>
 
-            <h3>Why choose EBI Metagenomics?</h3>
-            <h4>Easy submission</h4>
-            <p>The EBI Metagenomics service offers a manually-assisted submission route, with help available to ensure
-                data and metadata formatting comply with the European Nucleotide Archive (ENA) data schema and the
-                Genomic Standards Consortium (GSC) sample metadata guidelines respectively, allowing harmonisation of
-                analysis efforts across the wider genomics community.</p>
-            <h4>Powerful analysis</h4>
-            <p>The service identifies rRNA sequences, using rRNASelector, and performs taxonomic analysis upon 16S rRNAs
-                using Qiime. The remaining reads are submitted for functional analysis of predicted protein coding
-                sequences using the InterPro sequence analysis resource. InterPro uses diagnostic models to classify
-                sequences into families and to predict the presence of functionally important domains and sites. By
-                utilising this resource, the service offers a powerful and sophisticated alternative to BLAST-based
-                functional metagenomic analyses. </p>
-            <h4>Data archiving</h4>
-            <p>Data submitted to the EBI Metagenomics service is automatically archived in the European Nucleotide
-                Archive (ENA). Accession numbers are supplied for sequence data as part of the archiving process, which
-                is a prerequisite for publication in many journals. The ENA only accepts data that is intended for
-                public release. However, any data submitted to us can be kept confidential (by secure user login) for a
-                period of up to 2 years to allow time for the data producer to publish their findings. It should be
-                noted that ALL data must eventually be suitable for public release.</p>
+            <h3>Staying informed</h3>
 
-            <h3>How to use EBI Metagenomics for data analysis</h3>
-            <h4>Register with us</h4>
-            <p>Registration is required to submit data for analysis. Please note that the registration system is shared
-                with ENA, so if you have previously submitted sequences to EMBL-Bank you will already have a valid
-                account.</p>
-            <h4>Check your data format</h4>
-            <p>The service accepts all NGS shotgun sequence reads, including Roche 454, Illumina and IonTorrent
-                sequences, from metagenomic or metatranscriptomic samples. Amplicon marker gene studies may be included,
-                particularly if they are associated with other meta-omic data for a sample.</p>
-            <p>If your dataset does not fit these descriptions, please <a
-                    href="http://www.ebi.ac.uk/support/metagenomics">contact us</a> to help us better understand your
-                needs.</p>
-            <h4>Filter any human-associated samples</h4>
-            <p>Human associated samples (e.g., human gut samples) must be filtered prior to submission to remove any
-                human contaminants.</p>
+            <p>Follow us on Twitter using <a href="http://twitter.com/EBImetagenomics">@EBImetagenomics</a></p>
 
-            <h3>How we analyse the data</h3>
-            <p>The latest version of the pipeline includes the following steps:</p>
-            <a href="/metagenomics/pipelines/4.0" data-hasqtip="18"
-               oldtitle="EBI metagenomics - latest pipeline release" title="" aria-describedby="qtip-18">
-                <div class="block_wrapper">
-                    <div class="block_container pipe_v3">
-                        <div class="mainbranch">
-                            <div class="block-lb">Raw reads</div>
-                            <div class="arrow_pip "></div>
-                            <div class="block small step0">
-                                <div class="children">SeqPrep</div>
-                            </div>
-                            <div class="arrow_pip "></div>
-                            <div class="block-lb">Initial reads</div>
-                            <div class="arrow_pip"></div>
-                            <div class="block step1">
-                                <div class="children">QC</div>
-                            </div>
-                            <div class="arrow_pip"></div>
-                            <div class="block-lb">Processed reads</div>
-                            <div class="arrow_pip"></div>
-                            <div class="block step2">
-                                <div class="children_l">ncRNA selection</div>
-                            </div>
-                        </div>
+            <h3>Citing us</h3>
 
-                        <div class="lowbranch">
-                            <div class="lowbranch_func">
-                                <div class="arrow_pip rotate_f"></div>
-                                <div class="block-lb">Reads with ncRNA reads filtered out</div>
-                                <div class="arrow_pip"></div>
-                                <div class="block step3 function">
-                                    <div class="children_l">ORF predictions</div>
-                                </div>
-                                <div class="arrow_pip"></div>
-                                <div class="block-lb">Predicted CDS</div>
-                                <div class="arrow_pip"></div>
-                                <div class="block step4 function">
-                                    <div class="children_l">Functional analysis</div>
-                                </div>
-                                <div class="arrow_pip"></div>
-                                <div class="block-lb">IPR matches <br> &amp; GO terms</div>
-                            </div> <!-- /lowbranch_func -->
-
-                            <div class="lowbranch_tax">
-                                <div class="arrow_pip rotate_t"></div>
-                                <div class="block-lb">Reads with rRNA</div>
-                                <div class="arrow_pip"></div>
-                                <div class="block-lb">SSU/LSU rRNA</div>
-                                <div class="arrow_pip"></div>
-                                <div class="block step5 taxon">
-                                    <div class="children_l">Taxonomic analysis</div>
-                                </div>
-                                <div class="arrow_pip"></div>
-                                <div class="block-lb">OTUs &amp; taxonomic lineage</div>
-                            </div><!-- /lowbranch_tax -->
-
-                            <div class="lowbranch_trna">
-                                <div class="arrow_pip rotate_t"></div>
-                                <div class="block-lb">Reads with tRNA</div>
-                            </div><!-- /lowbranch_trna -->
-                        </div><!-- /lowbranch -->
-                    </div> <!-- /block_container -->
-                </div>   <!-- /block_wrapper -->
-            </a>
-            <p>Please find here <a href="/metagenomics/pipelines">more detail about the pipeline tools &amp; steps </a>
-                that were used to analyse our data.</p>
-
-            <h3 id="h_site">How to cite</h3>
-            <p>To cite EBI Metagenomics, please refer to the following publication:<br>
-                Alex Mitchell, Francois Bucchini, Guy Cochrane, Hubert Denise, Petra ten Hoopen, Matthew Fraser,
-                Sebastien Pesseat, Simon Potter, Maxim Scheremetjew, Peter Sterk and Robert D. Finn (2015).<br>
-                <strong>EBI metagenomics in 2016 - an expanding and evolving resource for the analysis and archiving of
-                    metagenomic data.</strong> Nucleic Acids Research (2015) doi: <a
-                        href="http://nar.oxfordjournals.org/content/44/D1/D595.full" class="ext" data-hasqtip="20"
-                        oldtitle="EBI metagenomics in 2016 - an expanding and evolving resource for the analysis and archiving of metagenomic data"
-                        title="">10.1093/nar/gkv1195</a>
+            <p>To cite EBI Metagenomics, please refer to the following publication:<br/><br/>
+                Alex L. Mitchell, Maxim Scheremetjew, Hubert Denise, Simon Potter, Aleksandra Tarkowska, Matloob
+                Qureshi, Gustavo A. Salazar, Sebastien Pesseat, Miguel A. Boland, Fiona M. I. Hunter, Petra ten Hoopen,
+                Blaise Alako, Clara Amid, Darren J. Wilkinson, Thomas P. Curtis, Guy Cochrane, Robert D. Finn
+                (2017).<br/>
+                <strong>EBI Metagenomics in 2017: enriching the analysis of microbial communities, from sequence reads
+                    to assemblies.</strong> Nucleic Acids Research (2017) doi: <a
+                        title="EBI Metagenomics in 2017: enriching the analysis of microbial communities, from sequence reads to assemblies"
+                        href="https://doi.org/10.1093/nar/gkx967" class="ext">10.1093/nar/gkx967</a>
             </p>
             <h5><a class="expand-button" for="#extra_citation">View previous citations</a></h5>
-            <p id="extra_citation" class="hidden">Sarah Hunter, Matthew Corbett, Hubert Denise, Matthew Fraser,
-                Alejandra Gonzalez-Beltran, Christopher Hunter, Philip Jones, Rasko Leinonen, Craig McAnulla, Eamonn
-                Maguire, John Maslen, Alex Mitchell, Gift Nuka, Arnaud Oisel, Sebastien Pesseat, Rajesh Radhakrishnan,
-                Philippe Rocca-Serra, Maxim Scheremetjew, Peter Sterk, Daniel Vaughan, Guy Cochrane, Dawn Field and
-                Susanna-Assunta Sansone (2013).<br>
-                <strong>EBI metagenomics - a new resource for the analysis and archiving of metagenomic data.</strong>
-                Nucleic Acids Research (2013) doi: <a href="http://dx.doi.org/10.1093/nar/gkt961" class="ext"
-                                                      data-hasqtip="21"
-                                                      oldtitle="EBI metagenomics - a new resource for the analysis and archiving of metagenomic data"
-                                                      title="">10.1093/nar/gkt961</a>
-            </p>
+            <div id="extra_citation" class="hidden">
+                <p>Alex Mitchell, Francois Bucchini, Guy Cochrane, Hubert Denise, Petra ten Hoopen, Matthew Fraser,
+                    Sebastien Pesseat, Simon Potter, Maxim Scheremetjew, Peter Sterk and Robert D. Finn (2015).<br/>
+                    <strong>EBI metagenomics in 2016 - an expanding and evolving resource for the analysis and archiving
+                        of metagenomic data.</strong> Nucleic Acids Research (2015) doi: <a
+                            title="EBI metagenomics in 2016 - an expanding and evolving resource for the analysis and archiving of metagenomic data"
+                            href="http://nar.oxfordjournals.org/content/44/D1/D595.full"
+                            class="ext">10.1093/nar/gkv1195</a>
+                </p>
+                <p>Sarah Hunter, Matthew Corbett, Hubert Denise, Matthew Fraser, Alejandra Gonzalez-Beltran, Christopher
+                    Hunter, Philip Jones, Rasko Leinonen, Craig McAnulla, Eamonn Maguire, John Maslen, Alex Mitchell,
+                    Gift Nuka, Arnaud Oisel, Sebastien Pesseat, Rajesh Radhakrishnan, Philippe Rocca-Serra, Maxim
+                    Scheremetjew, Peter Sterk, Daniel Vaughan, Guy Cochrane, Dawn Field and Susanna-Assunta Sansone
+                    (2013).<br/>
+                    <strong>EBI metagenomics - a new resource for the analysis and archiving of metagenomic
+                        data.</strong> Nucleic Acids Research (2013) doi: <a
+                            title="EBI metagenomics - a new resource for the analysis and archiving of metagenomic data"
+                            href="http://dx.doi.org/10.1093/nar/gkt961" class="ext">10.1093/nar/gkt961</a>
+                </p>
+            </div>
 
             <h3>Funding</h3>
-            <p>
-                <div class="row">
-                    <div class="columns small-8 medium-8 large-8">
-            <p>The EBI metagenomics resource was initiated by funding from EMBL. It continues to be developed with
-                support from EMBL and additional funding has been gratefully received from the Biotechnology and
-                Biological Sciences Research Council (BBSRC grant BB/I02612X/1 and BB/M011755/1) and the EU's
-                Seventh Framework Programme for Research (FP7 grant MICROB3).</p>
+            <h4>Present</h4>
+            <div class="row">
+                <div class="columns small-8 medium-8 large-8">
+
+                    <p>The EBI metagenomics resource is supported by the Biotechnology and Biological Sciences Research
+                        Council
+                        (BBSRC) [grant references BB/M011755/1 and BB/N018354/1]],
+                        the European Commission within the Research Infrastructures programme of Horizon 2020 [grant
+                        agreement
+                        number 676559] (ELIXIR-EXCELERATE)
+                        and InnovateUK (project reference 102513). Funding for open access charge: Research Councils UK
+                        (RCUK).
+                    </p>
+                </div>
+                <div class="columns small-4 medium-4 large-4">
+                    <img src="/static/images/funding/embl_logo.png" alt="EMBL">
+                    <img src="/static/images/funding/BBSRC.png" alt="BBSRC">
+                    <img src="/static/images/funding/excelerate_whitebackground.png" alt="Excelerate">
+                    <img src="/static/images/funding/innovate-uk-logo.png" alt="InnovateUK">
+                </div>
+            </div>
+            <h4>Past</h4>
+
+            <p>The EBI metagenomics resource was initiated by funding from EMBL. It continues to be developed
+                with
+                support from EMBL and additional
+                funding has been gratefully received from the Biotechnology and Biological Sciences Research
+                Council
+                (BBSRC grant BB/I02612X/1 and BB/M011755/1) and the EU's Seventh Framework Programme for
+                Research (FP7
+                grant MICROB3).
+            </p>
         </div>
-        <div class="columns small-4 medium-4 large-4">
-            <img src="/static/images/funding/FP7.jpg" alt="FP7" width="122" height="94">
-            <img src="/static/images/funding/BBSRC.png" alt="BBSRC">
-        </div>
-    </div>
-    </p>
+        <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
+        <!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
+        <!-- <div class="row"> -->
+        <!-- <span class="reference">How to reference this page: ...</span> -->
+        <!-- </div> -->
+        <!-- </footer> -->
+        <!-- End optional local footer -->
+        <!-- </div> -->
+        <!-- End suggested layout containers / #content -->
 
-    <h3>Follow us</h3>
-    <p>If you would like to be kept informed of further developments with the EBI metagenomics resources please
-        follow us on Twitter using
-        <a href="http://twitter.com/EBImetagenomics" class="ext">@EBImetagenomics</a>.</p>
+        <div id="footer"></div>
 
-    <h3>Credits</h3>
-    <p>We would like to thanks our beta testers for providing valuable feedback.</p>
-    <h4>The team</h4>
-    <p>This new resource for metagenomics is supported by the <a
-            href="https://www.ebi.ac.uk/services/teams/metagenomics" class="ext" data-hasqtip="22"
-            oldtitle="The EBI Metagenomics team" title="">EBI Metagenomics Team</a>, in collaboration with the
-        <a href="http://www.ebi.ac.uk/ena/" class="ext"> ENA</a> and
-        <a href="http://www.uniprot.org/" class="ext"> UniProt</a> groups.</p>
-    <h4>Photos</h4>
-    <p>We would like to thank the following authors for their contribution related to the pictures used on the
-        website:</p>
-    <ul>
-        <li>Image: A Blue Starfish (Linckia laevigata) resting on hard Acropora coral. Lighthouse, Ribbon Reefs,
-            Great
-            Barrier Reef, by Richard Ling [<a href="http://www.rling.com" class="ext" rel="nofollow">Copyright
-                (c)
-                [2004] Richard Ling</a> - <a
-                    href="http://commons.wikimedia.org/wiki/File:Blue_Linckia_Starfish.JPG" class="ext"
-                    rel="nofollow"> Wikipedia</a>]
-        </li>
-        <li>Image: Coli Bacteria, by renjith krishnan [<a
-                href="http://www.freedigitalphotos.net/images/view_photog.php?photogid=721" class="ext">FreeDigitalPhotos.net</a>]
-        </li>
-        <li>Image: Honeycomb, by Apple's Eyes Studio [<a
-                href="http://www.freedigitalphotos.net/images/view_photog.php?photogid=2000" class="ext">FreeDigitalPhotos.net</a>]
-        </li>
-        <li>Image: Oupeye (Belgium) biological sewage treatment, by User:Xofc [<a
-                href="http://www.gnu.org/copyleft/fdl.html" class="ext" rel="nofollow">GFDL</a> - <a
-                href="http://commons.wikimedia.org/wiki/File:090913-EpurationOupeye_0020.jpeg" class="ext"
-                rel="nofollow"> Wikipedia</a>]
-        </li>
-    </ul>
-</div>
-</div>
-</div>
-<!-- Optional local footer (insert citation / project-specific copyright / etc here -->
-<!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
-<!-- <div class="row"> -->
-<!-- <span class="reference">How to reference this page: ...</span> -->
-<!-- </div> -->
-<!-- </footer> -->
-<!-- End optional local footer -->
-<!-- </div> -->
-<!-- End suggested layout containers / #content -->
+        <!-- JavaScript -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script defer="defer" src="/static/js/script.js"></script>
 
-<div id="footer"></div>
+        <!-- The Foundation theme JavaScript -->
 
-<!-- JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script defer="defer" src="/static/js/script.js"></script>
+        <script src="/static/js/foundation.js"></script>
+        <script src="/static/js/foundationExtendEBI.js"></script>
+        <script type="text/JavaScript">
+            $(document).ready(function () {
+                $(document).foundation();
+                $(document).foundationExtendEBI();
+            });
+        </script>
+        <script src="/js/about.js"></script>
 
-<!-- The Foundation theme JavaScript -->
-
-<script src="/static/js/foundation.js"></script>
-<script src="/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-<script src="/js/about.js"></script>
-
-<!-- Google Analytics details... -->
-<!-- Change UA-XXXXX-X to be your util's ID -->
-<!--
-<script>
-  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
-  Modernizr.load({
-    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-  });
-</script>
--->
+        <!-- Google Analytics details... -->
+        <!-- Change UA-XXXXX-X to be your util's ID -->
+        <!--
+        <script>
+          window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
+          Modernizr.load({
+            load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
+          });
+        </script>
+        -->
 </body>
 
 </html>
