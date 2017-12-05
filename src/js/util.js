@@ -7,7 +7,7 @@ const sequenceSearchUrl = require('config').SEQUENCE_SEARCH_URL;
 
 $.typeWatch = require('jquery.typewatch');
 
-import {footer, header, resultsFilter} from "./commons";
+import {footer, header, resultsFilter, head} from "./commons";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -32,6 +32,21 @@ export function setCurrentTab(id, hideSearch) {
         $("#footer").append(footer);
         $(id).addClass('active');
     });
+}
+
+/**
+ * Initialises the head tag of each page.
+ * Has to be called from the JS file of each page.
+ *
+ * @param {String} pageTitle - The title of a page, e.g. Help or About etc.
+ */
+export function initHeadTag(pageTitle) {
+    document.addEventListener("DOMContentLoaded", function () {
+        // console.log(header());
+        // let tmpl = Handlebars.compile(header());
+        $("#head").append(head({pageTitle: pageTitle}));
+    });
+
 }
 
 export function initTableTools() {

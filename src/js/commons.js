@@ -1,4 +1,5 @@
 export const header = require("../partials/header.handlebars");
+export const head = require("../partials/head.handlebars");
 export const footer = require("../partials/footer.handlebars");
 export const pagination = require("../partials/pagination.handlebars");
 export const pagesize = require("../partials/pagesize.handlebars");
