@@ -13,7 +13,7 @@ require('webpack-jquery-ui/css');
 import 'foundation-sites';
 import '../../../static/libraries/jquery.TableCSVExport';
 
-const CheckboxTree = require('../components/checkbox_tree');
+const CheckboxTree = require('../components/checkboxTree');
 
 const Slider = require('../components/slider.js');
 
