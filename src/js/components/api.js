@@ -1,8 +1,9 @@
 const Backbone = require('backbone');
 const Pagination = require('../components/pagination').Pagination;
 const Commons = require('../commons');
-const API_URL = Commons.API_URL;
+const Config = require('config');
 const NO_DATA_MSG = Commons.NO_DATA_MSG;
+const API_URL = Config.API_URL;
 
 import {formatDate, formatLineage, getBiomeIcon, lineage2Biome, getBiomeIconData} from "../util";
 
