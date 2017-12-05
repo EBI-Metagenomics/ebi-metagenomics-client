@@ -3,6 +3,7 @@ const _ = require('underscore');
 const Backbone = require('backbone');
 const api = require('./components/api');
 const Handlebars = require('handlebars');
+const sequenceSearchUrl = require('config').SEQUENCE_SEARCH_URL;
 
 $.typeWatch = require('jquery.typewatch');
 
@@ -27,7 +28,7 @@ export function setCurrentTab(id, hideSearch) {
     document.addEventListener("DOMContentLoaded", function () {
         // console.log(header());
         // let tmpl = Handlebars.compile(header());
-        $("#header").append(header({hideSearch: hideSearch}));
+        $("#header").append(header({hideSearch: hideSearch, sequenceSearchUrl: sequenceSearchUrl}));
         $("#footer").append(footer);
         $(id).addClass('active');
     });

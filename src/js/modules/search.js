@@ -1,4 +1,4 @@
-const SEARCH_URL = require('config').SEARCH_URL;
+const searchUrl = require('config').SEARCH_URL;
 import {attachTabHandlers, setCurrentTab} from "../util";
 
 const util = require('../util');
@@ -56,7 +56,7 @@ const Search = Backbone.Collection.extend({
         }
     },
     url: function () {
-        return SEARCH_URL + this.tab;
+        return searchUrl + this.tab;
     },
     parse: function (response) {
         if (this.pagination) {
@@ -825,9 +825,9 @@ function getQueryText() {
 
 function initAll(projectsView, samplesView, runsView, renderFilters, setFilters) {
     showSpinner();
-    const projectFacet = $.get("https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_projects?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_projects");
-    const sampleFacet = $.get("https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_samples?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_samples");
-    const runFacet = $.get("https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_runs?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_runs");
+    const projectFacet = $.get(searchUrl + "projects?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_projects");
+    const sampleFacet = $.get(searchUrl + "samples?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_samples");
+    const runFacet = $.get(searchUrl + "runs?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_runs");
     return $.when(
         projectsView.fetchAndRender(renderFilters, setFilters),
         samplesView.fetchAndRender(renderFilters, setFilters),
