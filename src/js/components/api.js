@@ -1,6 +1,9 @@
 const Backbone = require('backbone');
 const Pagination = require('../components/pagination').Pagination;
-import {API_URL, NO_DATA_MSG} from '../config';
+const Commons = require('../commons');
+const API_URL = Commons.API_URL;
+const NO_DATA_MSG = Commons.NO_DATA_MSG;
+
 import {formatDate, formatLineage, getBiomeIcon, lineage2Biome, getBiomeIconData} from "../util";
 
 const _ = require('underscore');
@@ -71,8 +74,8 @@ export const Run = Backbone.Model.extend({
         const rel = data.relationships;
         const pipelines = rel.pipelines;
         const analysis = rel.analysis;
-        const sample_id =  rel.sample.data.id;
-        const study_id =  rel.study.data.id;
+        const sample_id = rel.sample.data.id;
+        const study_id = rel.study.data.id;
         return {
             run_id: attr['accession'],
             // analyses: [{
@@ -161,7 +164,7 @@ export const Sample = Backbone.Model.extend({
             return {
                 name: key[0].toUpperCase() + key.slice(1),
                 value: el.value
-        }
+            }
         });
 
 

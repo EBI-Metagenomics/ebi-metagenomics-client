@@ -8,7 +8,7 @@ const Order = require('../components/order');
 
 const pagination = new Pagination();
 
-import {DEFAULT_PAGE_SIZE} from "../config";
+const DEFAULT_PAGE_SIZE = require('../commons').DEFAULT_PAGE_SIZE;
 import {
     getFormData,
     getURLFilterParams,
