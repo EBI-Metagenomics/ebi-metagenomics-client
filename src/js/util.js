@@ -228,3 +228,13 @@ export const capitalizeWord = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+/**
+ * Truncates the given string to the given maximum length.
+ *
+ * @param str String to truncate.
+ * @param maxLength Maximum length.
+ */
+export function truncateString(str, maxLength = 190) {
+    return (str.length > maxLength) ? str.substr(0, maxLength - 1) + '&hellip;' : str;
+}
+
