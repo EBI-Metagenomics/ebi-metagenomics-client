@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const Pagination = require('../components/pagination').Pagination;
 const Commons = require('../commons');
-const API_URL = Commons.API_URL;
+const apiUrl = require('config').API_URL;
 const NO_DATA_MSG = Commons.NO_DATA_MSG;
 
 import {formatDate, formatLineage, getBiomeIcon, lineage2Biome, getBiomeIconData, truncateString} from "../util";
@@ -11,7 +11,7 @@ const _ = require('underscore');
 // Model for an individual study
 export const Study = Backbone.Model.extend({
     url: function () {
-        return API_URL + 'studies/' + this.id;
+        return apiUrl + 'studies/' + this.id;
     },
     parse: function (d) {
         const data = d.data !== undefined ? d.data : d;
@@ -47,7 +47,7 @@ export const Study = Backbone.Model.extend({
 
 // Model for a collection of studies,
 export const StudiesCollection = Backbone.Collection.extend({
-    url: API_URL + "studies",
+    url: apiUrl + "studies",
     model: Study,
     initialize: function (params, url) {
         if (url) {
@@ -65,7 +65,7 @@ export const StudiesCollection = Backbone.Collection.extend({
 
 export const Run = Backbone.Model.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id;
+        return apiUrl + 'runs/' + this.id;
     },
     parse: function (d) {
         // Adaption to handle 'includes' on API calls which would wrap the response
@@ -100,7 +100,7 @@ export const Run = Backbone.Model.extend({
 });
 
 export const RunCollection = Backbone.Collection.extend({
-    url: API_URL + 'runs',
+    url: apiUrl + 'runs',
     model: Run,
     initialize: function (data) {
         // Project/sample ID
@@ -119,7 +119,7 @@ export const RunCollection = Backbone.Collection.extend({
 
 export const Biome = Backbone.Model.extend({
     url: function () {
-        var base = API_URL + 'biomes';
+        var base = apiUrl + 'biomes';
         if (this.isNew()) return base;
         return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id;
     },
@@ -144,7 +144,7 @@ export const Biome = Backbone.Model.extend({
 
 export const BiomeCollection = Backbone.Collection.extend({
     model: Biome,
-    url: API_URL + "biomes/root/children",
+    url: apiUrl + "biomes/root/children",
     parse: function (response) {
         return response.data
     }
@@ -153,7 +153,7 @@ export const BiomeCollection = Backbone.Collection.extend({
 
 export const Sample = Backbone.Model.extend({
     url: function () {
-        return API_URL + 'samples/' + this.id;
+        return apiUrl + 'samples/' + this.id;
     },
     parse: function (d) {
         const data = d.data !== undefined ? d.data : d;
@@ -191,7 +191,7 @@ export const Sample = Backbone.Model.extend({
 });
 
 export const SamplesCollection = Backbone.Collection.extend({
-    url: API_URL + "samples",
+    url: apiUrl + "samples",
     model: Sample,
     initialize: function (data) {
         // Sample ID
@@ -206,7 +206,7 @@ export const SamplesCollection = Backbone.Collection.extend({
 
 export const Analysis = Backbone.Model.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version;
+        return apiUrl + 'runs/' + this.id + '/pipelines/' + this.version;
     },
     initialize: function (params) {
         this.id = params.id;
@@ -216,7 +216,7 @@ export const Analysis = Backbone.Model.extend({
 
 export const AnalysisMetadata = Backbone.Model.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/metadata';
+        return apiUrl + 'runs/' + this.id + '/pipelines/' + this.version + '/metadata';
     },
     initialize: function (params) {
         this.id = params.id;
@@ -226,7 +226,7 @@ export const AnalysisMetadata = Backbone.Model.extend({
 
 export const Taxonomy = Backbone.Model.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/taxonomy';
+        return apiUrl + 'runs/' + this.id + '/pipelines/' + this.version + '/taxonomy';
     },
     initialize: function (params) {
         this.id = params.id;
