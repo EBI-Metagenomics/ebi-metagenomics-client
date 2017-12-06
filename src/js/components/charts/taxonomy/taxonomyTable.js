@@ -1,4 +1,4 @@
-const tableTmpl = require('../commons').genericTable;
+const tableTmpl = require('../../../commons').genericTable;
 const _ = require('underscore');
 
 // Front-end only table, where all data is pre-loaded

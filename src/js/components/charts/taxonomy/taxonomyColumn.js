@@ -1,7 +1,7 @@
 const Highcharts = require('highcharts');
 const _ = require('underscore');
 require('highcharts/modules/exporting')(Highcharts);
-const Commons = require('../../commons');
+const Commons = require('../../../commons');
 
 // rgb(5, 141, 199)
 // rgb(130, 210, 61)
