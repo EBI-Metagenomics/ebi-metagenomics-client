@@ -5,7 +5,9 @@ const Config = require('config');
 const Commons = require('../commons');
 const api = require('../components/api');
 const TaxonomyPieChart = require('../components/taxonomy/taxonomyPie');
-const GenericTable = require('../components/genericTable');
+const TaxonomyColumnChart = require('../components/taxonomy/taxonomyColumn');
+const TaxonomyStackedColumnChart = require('../components/taxonomy/taxonomyStackedColumn');
+const ClientSideTable = require('../components/clientSideTable');
 
 require('tablesorter');
 import {attachTabHandlers, getURLParameter, setCurrentTab} from "../util";
@@ -38,7 +40,7 @@ let RunView = Backbone.View.extend({
                 metadata = new api.AnalysisMetadata({id: run_id, version: version});
                 taxonomy = new api.Taxonomy({id: run_id, version: version});
                 that.render(function () {
-                    let qcGraph = new QCGraphView({model: metadata});
+                    // let qcGraph = new QCGraphView({model: metadata});
                     let taxonomyGraph = new TaxonomyGraphView({model: taxonomy});
                 });
             }
@@ -114,42 +116,180 @@ let QCGraphView = Backbone.View.extend({
     }
 });
 
+// Cluster and compact groups other than top 10 largest into an 'other' category
+function groupTaxonomyData(data, depth) {
+    let clusteredData = _.sortBy(clusterData(data, depth), function (o) {
+        return o.y;
+    }).reverse();
+    if (clusteredData.length > 10) {
+        const top10 = clusteredData.slice(0, 10);
+        const others = {
+            name: 'Other',
+            lineage: [],
+            y: 0
+        };
+        _.each(clusteredData.slice(10, clusteredData.length), function (d) {
+            others.y += d.y;
+            if (others.lineage.indexOf(d.lineage[0]) === -1) {
+                others.lineage.push(d.lineage[0]);
+            }
+        });
+        others.lineage = others.lineage.join(", ");
+        top10.push(others);
+        clusteredData = top10;
+    }
+    return clusteredData
+}
+
+// Cluster data by depth
+function clusterData(data, depth) {
+    let clusteredData = {};
+    let total = 0;
+    _.each(data, function (d) {
+        const attr = d.attributes;
+        const lineage = attr.lineage.split(':');
+        let category;
+        if (lineage.length < depth) {
+            category = lineage[lineage.length - 1]
+        } else {
+            category = lineage[depth]
+        }
+        let val = attr.count;
+        if (clusteredData.hasOwnProperty(category)) {
+            clusteredData[category]['v'] += val;
+        } else {
+            clusteredData[category] = {
+                v: val,
+                l: lineage,
+            };
+        }
+        total += val;
+    });
+    clusteredData = _.map(clusteredData, function (values, k) {
+        return {
+            name: k,
+            y: values.v,
+            lineage: values.l
+        }
+    });
+    return clusteredData;
+}
+
 let TaxonomyGraphView = Backbone.View.extend({
     model: api.Taxonomy,
     initialize: function () {
         this.model.fetch({
             success: function (model) {
+
+                const clusteredData = groupTaxonomyData(model.attributes.data, 0);
+                const phylumData = groupTaxonomyData(model.attributes.data, 1);
+
                 // Pie tab
-                new TaxonomyPieChart('domain-composition', 'Domain composition', model.attributes.data, 0);
-                const phylumChart = new TaxonomyPieChart('phylum-composition', 'Phylum composition', model.attributes.data, 1, true);
+                new TaxonomyPieChart('domain-composition-pie', 'Domain composition', clusteredData);
+                const phylumPieChart = new TaxonomyPieChart('phylum-composition-pie', 'Phylum composition', phylumData, true);
+
                 const headers = [
                     {sortBy: 'a', name: ''},
                     {sortBy: 'a', name: 'Phylum'},
                     {sortBy: 'a', name: 'Domain'},
-                    {sortBy: 'a', name: 'Reads'},
+                    {sortBy: 'a', name: 'Unique OTUs'},
                     {sortBy: 'a', name: '%'},
                 ];
-                const total = _.reduce(phylumChart.clusteredData, function (m, d) {
+                const total = _.reduce(phylumData, function (m, d) {
                     return m + d.y;
                 }, 0);
                 let i = 0;
-                const data = _.map(phylumChart.clusteredData, function (d) {
+                const data = _.map(phylumData, function (d) {
                     const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
-                    const colorDiv = "<div class='puce-square-legend' style='background-color: " + Config.TAXONOMY_COLOURS[taxColor] + "'></div>";
+                    const colorDiv = "<div class='puce-square-legend' style='background-color: " + Commons.TAXONOMY_COLOURS[taxColor] + "'></div>";
                     return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)]
                 });
-                const phylumTable = new GenericTable($('#pie').find("[data-table='phylum-table']"), '', headers, function () {
+                const phylumPieTable = new ClientSideTable($('#pie').find(".phylum-table"), '', headers);
+                phylumPieTable.update(data, false, 1, data.length);
+                phylumPieTable.$table.tablesorter({});
+
+                const numSeries = phylumPieChart.series[0].data.length;
+                phylumPieTable.$tbody.find('tr').hover(function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    phylumPieChart.series[0].data[index].setState('hover');
+                }, function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    phylumPieChart.series[0].data[index].setState();
                 });
-                phylumTable.update(data, false, 1, data.length);
-                phylumTable.$table.tablesorter({
-                    headers: {0: {sorter: false}}
+
+                phylumPieTable.$tbody.find('tr').click(function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    const series = phylumPieChart.series[0].data[index];
+                    series.setVisible(!series.visible);
+                    if (index === numSeries - 1) {
+                        ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled');
+                    } else {
+                        $(this).toggleClass('disabled');
+                    }
                 });
+
+                new TaxonomyColumnChart('domain-composition-column', 'Domain composition', clusteredData, false);
+                const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column', 'Phylum composition', phylumData, false);
+                const phylumColumnTable = new ClientSideTable($('#column').find(".phylum-table"), '', headers);
+                phylumColumnTable.update(data, false, 1, data.length);
+                phylumColumnTable.$table.tablesorter({});
+                phylumColumnTable.$tbody.find('tr').hover(function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    phylumColumnChart.series[0].data[index].setState('hover');
+                }, function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    phylumColumnChart.series[0].data[index].setState();
+                });
+
+                // phylumColumnTable.$tbody.find('tr').click(function () {
+                //     let index = getSeriesIndex($(this).index(), numSeries);
+                //     const series = phylumColumnChart.series[0].data[index];
+                //     series.setVisible(!series.visible);
+                //     if (index === numSeries - 1) {
+                //         ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled');
+                //     } else {
+                //         $(this).toggleClass('disabled');
+                //     }
+                // });
+
+
+                // Column tab
+                const phylumStackedColumnChart = new TaxonomyStackedColumnChart('phylum-composition-stacked-column', 'Phylum composition', phylumData, false);
+                const phylumStackedColumnTable = new ClientSideTable($('#stacked-column').find(".phylum-table"), '', headers);
+                phylumStackedColumnTable.update(data, false, 1, data.length);
+                phylumStackedColumnTable.$table.tablesorter({});
+                phylumStackedColumnTable.$tbody.find('tr').hover(function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    phylumStackedColumnChart.series[index].data[0].setState('hover');
+                }, function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    phylumStackedColumnChart.series[index].data[0].setState();
+                });
+
+                // phylumStackedColumnTable.$tbody.find('tr').click(function () {
+                //     let index = getSeriesIndex($(this).index(), numSeries);
+                //     const series = phylumStackedColumnChart.series[0].data[index];
+                //     console.log(phylumColumnChart.series);
+                //
+                //     series.setVisible(!series.visible);
+                //     if (index === numSeries - 1) {
+                //         ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled');
+                //     } else {
+                //         $(this).toggleClass('disabled');
+                //     }
+                // });
 
             }
         });
     }
 });
 
+function getSeriesIndex(index, numSeries) {
+    if (index >= numSeries - 1) {
+        index = numSeries - 1;
+    }
+    return index
+}
 
 $(document).ready(function () {
     // TODO Handle change of analysis

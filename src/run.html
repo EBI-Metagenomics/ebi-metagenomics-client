@@ -129,9 +129,9 @@
                             src="/static/images/ico_graph_krona_on.png"/></a></li>
                     <li class="tabs-title"><a href="#pie" aria-selected="false"><img
                             src="/static/images/ico_graph_pie_on.png"/></a></li>
-                    <li class="tabs-title"><a href="#bar" aria-selected="false"><img
-                            src="/static/images/ico_graph_barh_on.png"/></a></li>
                     <li class="tabs-title"><a href="#column" aria-selected="false"><img
+                            src="/static/images/ico_graph_barh_on.png"/></a></li>
+                    <li class="tabs-title"><a href="#stacked-column" aria-selected="false"><img
                             src="/static/images/ico_graph_col_on.png"/></a></li>
                 </ul>
                 <div class="tabs-content" data-tab-content="taxonomy-tabs">
@@ -150,20 +150,12 @@
                     <div class="tabs-panel" id="pie">
                         <div class="row">
                             <div class="columns small-12 medium-4 larger-4">
-                                <div id="domain-composition"></div>
+                                <div id="domain-composition-pie"></div>
                             </div>
                             <div class="columns small-12 medium-8 larger-8">
-                                <div id="phylum-composition"></div>
+                                <div id="phylum-composition-pie"></div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="columns small-12 medium-12 large-12">
-                                <div data-table="phylum-table"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tabs-panel" id="bar">
-                        Bar
                         <div class="row">
                             <div class="columns small-12 medium-12 large-12">
                                 <div class="phylum-table"></div>
@@ -171,7 +163,26 @@
                         </div>
                     </div>
                     <div class="tabs-panel" id="column">
-                        Columns
+                        <div class="row">
+                            <div class="columns small-12 medium-4 larger-4">
+                                <div id="domain-composition-column"></div>
+                            </div>
+                            <div class="columns small-12 medium-8 larger-8">
+                                <div id="phylum-composition-column"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="columns small-12 medium-12 large-12">
+                                <div class="phylum-table"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tabs-panel" id="stacked-column">
+                        <div class="row">
+                            <div class="columns small-12 medium-12 larger-12">
+                                <div id="phylum-composition-stacked-column"></div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="columns small-12 medium-12 large-12">
                                 <div class="phylum-table"></div>
