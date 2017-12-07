@@ -34,7 +34,7 @@ export const Study = Backbone.Model.extend({
         return {
             biomes: biomes,
             study_link: "/study/" + data.id,
-            samples_link: "/study/" + data.id,
+            samples_link: "/study/" + data.id+"#samples-section",
             study_name: attr['study-name'],
             samples_count: attr['samples-count'],
             study_id: data.id,
