@@ -21,6 +21,26 @@ $(function () {
     $('#blog-url').attr('href', blogUrl);
 });
 
+//  re-style the twitter component
+$("iframe").ready(function () {
+    var timer = setInterval(function () {
+        if ($($("iframe").contents()).find(".avatar").length > 0) {
+            $($("iframe").contents()).find(".avatar, .timeline-Tweet-author, .timeline-Tweet-media").css({display: "none"});
+            $($("iframe").contents()).find(".timeline-Tweet-retweetCredit").css({'text-align': "center"});
+            /*style retweet info text*/
+            $($("iframe").contents()).find(".timeline-Tweet-text").css({
+                'text-align': "center",
+                'font-size': '157%',
+                'line-height': '1.4'
+            });
+            /*style tweet main text*/
+            $($("iframe").contents()).find("img.autosized-media").css({'max-height': '175px'});
+            /*don't know if this is relevant anymore*/
+            clearInterval(timer);
+        }
+    }, 100);
+});
+
 var BiomeView = Backbone.View.extend({
     tagName: 'div',
     first: false,
