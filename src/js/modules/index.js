@@ -3,6 +3,8 @@ const _ = require('underscore');
 const $ = require('jquery');
 const api = require('../components/api');
 const apiUrl = require('config').API_URL;
+const commons = require('../commons');
+const blogUrl = commons.BLOG_URL;
 
 import {initHeadTag, setCurrentTab} from "../util";
 
@@ -11,6 +13,12 @@ initHeadTag('EBI metagenomics: archiving, analysis and integration of metagenomi
 
 $('#this_close').on('click', function () {
     $('.jumbo-header').slideUp();
+});
+
+// Shorthand for $( document ).ready()
+$(function () {
+    // Sets the blog url for 'See all articles' link
+    $('#blog-url').attr('href', blogUrl);
 });
 
 var BiomeView = Backbone.View.extend({
