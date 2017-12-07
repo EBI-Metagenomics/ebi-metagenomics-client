@@ -15,7 +15,8 @@ module.exports = class ClientSideTable extends GenericTable {
         that.attachPageSizeCallback();
     }
 
-    update(dataset, clear, page, resultCount) {
+    update(dataset, clear, page) {
+        let resultCount = dataset.length;
         const that = this;
         if (clear) {
             this.$tbody.empty();
@@ -30,17 +31,24 @@ module.exports = class ClientSideTable extends GenericTable {
         this.$tbody.children('tr').slice(this.getPageSize()).hide();
         this.setPageDisplay(1, resultCount);
         this.hideLoadingGif();
+        this.$table.tablesorter({});
+        this.$table.bind('sortStart', function () {
+            that.$tbody.children('tr').show();
+        }).bind('sortEnd', function () {
+            that.setVisibleRows(0, that.getPageSize())
+        })
     }
 
     filterTable(searchString) {
         this.searchString = searchString;
-        this.$tbody.children('tr').filter(":contains('" + searchString + "')").show();
-        this.$tbody.children('tr').filter(":not(:contains('" + searchString + "'))").hide();
+        this.$tbody.children('tr').filter(":contains('" + searchString + "')").addClass('match');
+        this.$tbody.children('tr').filter(":not(:contains('" + searchString + "'))").removeClass('match');
 
         const pageSize = this.getPageSize();
-        this.$tbody.children('tr').slice(pageSize).hide();
-        const visibleRows = this.$tbody.children('tr:visible').length;
-        this.setPagination(1, visibleRows, pageSize);
+        this.$tbody.children('tr').hide();
+        const matchedRows = this.$tbody.children('tr.match');
+        matchedRows.slice(0, pageSize).show();
+        this.setPagination(1, matchedRows.length, pageSize);
     }
 
     attachPageSizeCallback() {
@@ -62,6 +70,7 @@ module.exports = class ClientSideTable extends GenericTable {
             startPage: page,
             totalPages: Math.max(Math.ceil(resultCount / pagesize), 1),
         }).on('page', function (evt, page) {
+            console.log('PAGE: ' + page);
             that.changePage(page)
             // that.callback(page, that.getPageSize(), that.getCurrentOrder(), that.getFilterText());
         });
@@ -74,22 +83,26 @@ module.exports = class ClientSideTable extends GenericTable {
         this.setVisibleRows(initIndex, finalIndex);
     }
 
-    setVisibleRows(min, pageSize) {
-        this.$tbody.children('tr').slice(min).show();
+    setVisibleRows(min, finalIndex) {
+        // this.$tbody.children('tr').slice(min).show();
 
         if (this.searchString) {
             this.filterTable(this.searchString);
         }
 
         let count = 0;
-        this.$tbody.children('tr:visible').each(function (i, e) {
-            if (!(min <= i && i < pageSize)) {
-                $(e).hide();
-            } else {
-                $(e).show();
-                count++;
-            }
-        });
+        this.$tbody.children('tr').hide();
+        const remainingRows = this.$tbody.children(this.searchString ? 'tr.match' : 'tr');
+        remainingRows.slice(min, finalIndex).show();
+        // remainingRows.each(function (i, e) {
+        //     if (!(min <= i && i < pageSize)) {
+        //         $(e).hide();
+        //     } else {
+        //         console.log('Index:', i);
+        //         $(e).show();
+        //         count++;
+        //     }
+        // });
     }
 };
 

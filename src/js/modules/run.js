@@ -4,10 +4,15 @@ const util = require('../util');
 const Config = require('config');
 const Commons = require('../commons');
 const api = require('../components/api');
-const TaxonomyPieChart = require('../components/taxonomy/taxonomyPie');
-const TaxonomyColumnChart = require('../components/taxonomy/taxonomyColumn');
-const TaxonomyStackedColumnChart = require('../components/taxonomy/taxonomyStackedColumn');
+const TaxonomyPieChart = require('../components/charts/taxonomy/taxonomyPie');
+const TaxonomyColumnChart = require('../components/charts/taxonomy/taxonomyColumn');
+const TaxonomyStackedColumnChart = require('../components/charts/taxonomy/taxonomyStackedColumn');
 const ClientSideTable = require('../components/clientSideTable');
+
+const QCChart = require('../components/charts/qcChart');
+const GoTermChart = require('../components/charts/goTermChart');
+const SeqFeatChart = require('../components/charts/sequFeatSumChart');
+
 
 require('tablesorter');
 import {attachTabHandlers, getURLParameter, setCurrentTab} from "../util";
@@ -22,9 +27,9 @@ setCurrentTab('#samples-nav');
 let run_id = getURLParameter();
 
 let analysis = null;
-let metadata = null;
+let interproData = null;
 let taxonomy = null;
-let qcChart = null;
+let goTerm = null;
 
 let RunView = Backbone.View.extend({
     model: api.Run,
@@ -37,11 +42,16 @@ let RunView = Backbone.View.extend({
             success: function (data) {
                 let version = data.attributes.pipeline_versions[0];
                 analysis = new api.Analysis({id: run_id, version: version});
-                metadata = new api.AnalysisMetadata({id: run_id, version: version});
+                interproData = new api.InterproIden({id: run_id, version: version});
                 taxonomy = new api.Taxonomy({id: run_id, version: version});
+                goTerm = new api.GoSlim({id: run_id, version: version});
                 that.render(function () {
-                    // let qcGraph = new QCGraphView({model: metadata});
+                    let qcGraph = new QCGraphView({model: analysis});
                     let taxonomyGraph = new TaxonomyGraphView({model: taxonomy});
+
+                    let interProSummary = new InterProSummary({model: interproData});
+
+                    let goTermCharts = new GoTermCharts({model: goTerm});
                 });
             }
         });
@@ -55,62 +65,18 @@ let RunView = Backbone.View.extend({
 });
 
 let QCGraphView = Backbone.View.extend({
-    model: api.AnalysisMetadata,
+    model: api.Analysis,
     initialize: function () {
         this.model.fetch({
             success: function (model) {
-                let data = {};
-                model.attributes.data.map(function (e) {
-                    const attr = e.attributes;
-                    data[attr['let-name']] = attr['let-value'];
+                const data = {};
+                model.attributes.data.attributes['analysis-summary'].forEach(function (e) {
+                    data[e.key] = e.value;
                 });
-                let remaining = [0, 0, 0, 0, 0];
-                let filtered = [0, 0, 0, 0, 0];
-                let post_sample = [0, 0, 0, 0, 0];
-                remaining[0] = parseInt(data['Submitted nucleotide sequences']);
-                remaining[1] = parseInt(data['Nucleotide sequences after format-specific filtering']);
-                remaining[2] = parseInt(data['Nucleotide sequences after length filtering']);
-                remaining[3] = parseInt(data['Nucleotide sequences after undetermined bases filtering']);
-                filtered[2] = remaining[1] - remaining[2];
-                qcChart = Highcharts.chart('QC-step-chart', {
-                    chart: {
-                        type: 'bar'
-                    },
-                    title: {
-                        text: 'Number of sequence reads per QC step'
-                    },
-                    yAxis: {
-                        min: 0,
-                        title: {
-                            text: 'Count'
-                        }
-                    },
-                    xAxis: {
-                        categories: ['Initial reads', 'Trimming', 'Length filtering', 'Ambiguous base filtering', 'Reads subsampled for QC analysis']
-                    },
-                    plotOptions: {
-                        series: {
-                            stacking: 'normal'
-                        }
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    series: [
-                        {
-                            name: 'Reads filtered out',
-                            data: filtered,
-                            color: '#CCCCD3'
-                        }, {
-                            //     name: 'Reads after sampling',
-                            //     data: post_sample,
-                            //     color: '#8DC7C7'
-                            // }, {
-                            name: 'Reads remaining',
-                            data: remaining,
-                            color: '#058DC7',
-                        }]
-                });
+
+                const qcChart = new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
+
+                const seqFeatChart = new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
             }
         });
     }
@@ -201,12 +167,11 @@ let TaxonomyGraphView = Backbone.View.extend({
                 let i = 0;
                 const data = _.map(phylumData, function (d) {
                     const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
-                    const colorDiv = "<div class='puce-square-legend' style='background-color: " + Commons.TAXONOMY_COLOURS[taxColor] + "'></div>";
+                    const colorDiv = getColourSquareIcon(i);
                     return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)]
                 });
                 const phylumPieTable = new ClientSideTable($('#pie').find(".phylum-table"), '', headers);
-                phylumPieTable.update(data, false, 1, data.length);
-                phylumPieTable.$table.tablesorter({});
+                phylumPieTable.update(data, false, 1);
 
                 const numSeries = phylumPieChart.series[0].data.length;
                 phylumPieTable.$tbody.find('tr').hover(function () {
@@ -231,8 +196,7 @@ let TaxonomyGraphView = Backbone.View.extend({
                 new TaxonomyColumnChart('domain-composition-column', 'Domain composition', clusteredData, false);
                 const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column', 'Phylum composition', phylumData, false);
                 const phylumColumnTable = new ClientSideTable($('#column').find(".phylum-table"), '', headers);
-                phylumColumnTable.update(data, false, 1, data.length);
-                phylumColumnTable.$table.tablesorter({});
+                phylumColumnTable.update(data, false, 1);
                 phylumColumnTable.$tbody.find('tr').hover(function () {
                     let index = getSeriesIndex($(this).index(), numSeries);
                     phylumColumnChart.series[0].data[index].setState('hover');
@@ -256,8 +220,7 @@ let TaxonomyGraphView = Backbone.View.extend({
                 // Column tab
                 const phylumStackedColumnChart = new TaxonomyStackedColumnChart('phylum-composition-stacked-column', 'Phylum composition', phylumData, false);
                 const phylumStackedColumnTable = new ClientSideTable($('#stacked-column').find(".phylum-table"), '', headers);
-                phylumStackedColumnTable.update(data, false, 1, data.length);
-                phylumStackedColumnTable.$table.tablesorter({});
+                phylumStackedColumnTable.update(data, false, 1);
                 phylumStackedColumnTable.$tbody.find('tr').hover(function () {
                     let index = getSeriesIndex($(this).index(), numSeries);
                     phylumStackedColumnChart.series[index].data[0].setState('hover');
@@ -284,11 +247,155 @@ let TaxonomyGraphView = Backbone.View.extend({
     }
 });
 
+let InterProSummary = Backbone.View.extend({
+    model: api.InterproIden,
+    initialize: function () {
+        this.model.fetch({
+            data: $.param({page_size: 7000}),
+            success: function (model) {
+                const data = model.attributes.data;
+                let top10AndOthers = [];
+                let totalCount = 0;
+
+                data.slice(0, 10).forEach(function (d) {
+                    d = d.attributes;
+                    top10AndOthers.push({
+                        name: d.description,
+                        y: d.count
+                    });
+                    totalCount += d.count;
+                });
+                let sumOthers = 0;
+                _.each(data.slice(10), function (d) {
+                    sumOthers += d.attributes.count;
+                });
+                totalCount += sumOthers;
+                const others = {
+                    name: 'Other',
+                    y: sumOthers
+                };
+                top10AndOthers.push(others);
+                const chartOptions = {
+                    plotOptions: {
+                        pie: {
+                            dataLabels: {
+                                enabled: false
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'pCDS matched'
+                    }]
+                };
+                new TaxonomyPieChart('InterProPie-chart', 'InterPro matches summary', top10AndOthers, false, chartOptions);
+                const tableData = [];
+                let i = 0;
+                data.forEach(function (d) {
+                    d = d.attributes;
+                    const colorDiv = getColourSquareIcon(i);
+                    const interProLink = createInterProLink(d.description, d.accession);
+                    tableData.push([++i, colorDiv + interProLink, d.accession, d.count, (d.count * 100 / totalCount).toFixed(2)])
+                });
+
+                const headers = [{sortBy: 'a', name: ''},
+                    {sortBy: 'a', name: 'Entry name'},
+                    {sortBy: 'a', name: 'ID'},
+                    {sortBy: 'a', name: 'pCDS matched'},
+                    {sortBy: 'a', name: '%'}
+                ];
+                const interproTable = new ClientSideTable($('#InterPro-table'), '', headers);
+                interproTable.update(tableData, false, 1, data.length);
+            }
+        })
+    }
+});
+
+let GoTermCharts = Backbone.View.extend({
+    model: api.GoSlim,
+    initialize: function () {
+        this.model.fetch({
+            success: function (model) {
+                const data = model.attributes.data;
+                let biological_process_data = [];
+                let molecular_function_data = [];
+                let cellular_component_data = [];
+                data.forEach(function (d) {
+                    switch (d.attributes.lineage) {
+                        case 'biological_process':
+                            biological_process_data.push(d);
+                            break;
+                        case 'molecular_function':
+                            molecular_function_data.push(d);
+                            break;
+                        case 'cellular_component':
+                            cellular_component_data.push(d);
+                            break;
+                    }
+                });
+                new GoTermChart('biological-process-bar-chart', 'Biological process', biological_process_data, Commons.TAXONOMY_COLOURS[0]);
+                new GoTermChart('molecular-function-bar-chart', 'Molecular function', molecular_function_data, Commons.TAXONOMY_COLOURS[1]);
+                new GoTermChart('cellular-component-bar-chart', 'Cellular component', cellular_component_data, Commons.TAXONOMY_COLOURS[2]);
+
+                new TaxonomyPieChart('biological-process-pie-chart', 'Biological process', groupGoTermData(biological_process_data), true, {plotOptions: {pie: {dataLabels: {enabled: false}}}});
+                new TaxonomyPieChart('molecular-function-pie-chart', 'Molecular function', groupGoTermData(molecular_function_data), true, {plotOptions: {pie: {dataLabels: {enabled: false}}}});
+                new TaxonomyPieChart('cellular-component-pie-chart', 'Cellular component', groupGoTermData(cellular_component_data), true, {plotOptions: {pie: {dataLabels: {enabled: false}}}});
+
+
+
+
+                $('#go-bar-btn').click(function () {
+                    $('#go-slim-pie-charts').hide();
+                    $('#go-slim-bar-charts').show();
+                });
+                $('#go-pie-btn').click(function () {
+                    $('#go-slim-pie-charts').show();
+                    $('#go-slim-bar-charts').hide();
+                });
+            }
+        });
+    }
+});
+
+// Compact groups other than top 10 largest into an 'other' category
+function groupGoTermData(data) {
+    let top10 = data.slice(0, 10).map(function(d){
+        d = d.attributes;
+        return {
+            name: d.description,
+            y: d.count
+        }
+    });
+    if (data.length > 10) {
+        const others = {
+            name: 'Other',
+            y: 0
+        };
+        _.each(data.slice(10), function (d) {
+            console.log(d);
+            others.y += d.attributes.count;
+        });
+        top10.push(others);
+        data = top10;
+    }
+    return data
+}
+
 function getSeriesIndex(index, numSeries) {
     if (index >= numSeries - 1) {
         index = numSeries - 1;
     }
     return index
+}
+
+function createInterProLink(text, id) {
+    const url = Config.INTERPRO_URL + 'entry/' + id;
+    return "<a href='" + url + "'>" + text + "</a>"
+}
+
+
+function getColourSquareIcon(i) {
+    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
+    return "<div class='puce-square-legend' style='background-color: " + Commons.TAXONOMY_COLOURS[taxColor] + "'></div>";
 }
 
 $(document).ready(function () {

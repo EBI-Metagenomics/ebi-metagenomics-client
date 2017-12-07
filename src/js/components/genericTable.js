@@ -11,10 +11,10 @@ module.exports = class GenericTable {
             filter: true
         };
         const $sectionContent = $(tableTmpl(params));
+        this.$table = $sectionContent.find('table');
         this.$loadingGif = $sectionContent.find('.loading-gif-medium');
         this.$tbody = $sectionContent.find('tbody');
         this.$filterInput = $sectionContent.find('#tableFilter');
-        this.$table = $sectionContent.find('table');
 
         this.storeElemRefs($sectionContent);
 

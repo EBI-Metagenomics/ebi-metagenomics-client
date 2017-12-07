@@ -15,7 +15,6 @@ const Commons = require('../../../commons');
 // rgb(202, 174, 116)
 // rgb(204, 204, 204)
 
-
 module.exports = class TaxonomyColumn {
     constructor(containerId, chartTitle, chartData, legend, extraOptions) {
         const categories = [];

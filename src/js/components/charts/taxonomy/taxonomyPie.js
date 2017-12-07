@@ -5,12 +5,12 @@ const Commons = require('../../../commons');
 
 
 module.exports = class TaxonomyPie {
-    constructor(containerId, chartTitle, pieData, legend) {
+    constructor(containerId, chartTitle, pieData, legend, extraOptions) {
         const categories = [];
         pieData.forEach(function (e) {
             categories.push(e.name);
         });
-        const options = {
+        let options = {
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: null,
@@ -46,15 +46,28 @@ module.exports = class TaxonomyPie {
                 data: pieData,
             }],
         };
-
+        if (extraOptions) {
+            options = $.extend(true, options, extraOptions);
+        }
         if (legend) {
             options.legend = {
                 title: {
                     text: 'Click to hide'
                 },
                 align: 'right',
-                verticalAlign: 'top',
+                verticalAlign: 'middle',
                 layout: 'vertical',
+                labelFormatter: function() {
+                    // do truncation here and return string
+                    // this.name holds the whole label
+                    // for example:
+                    if (this.name.length>15){
+                        return this.name.slice(0, 15)+'...'
+                    } else{
+                        return this.name
+                    }
+
+                }
             };
             options.plotOptions.pie.showInLegend = true;
         }
