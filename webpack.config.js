@@ -34,6 +34,7 @@ module.exports = {
         // biomes: 'src/js/modules/biomes.js',
         pipelines: 'src/js/modules/pipelines.js',
         pipeline: 'src/js/modules/pipeline.js',
+        login: 'src/js/modules/login.js',
     },
     output: {
         filename: '[name].js',
