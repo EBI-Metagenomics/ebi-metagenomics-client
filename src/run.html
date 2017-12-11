@@ -100,8 +100,31 @@
             <div class="tabs-panel active" id="overview">
                 <div class="row">
                     <div class="center column small-12 medium-12 large-12">
-                        <h4>Sample: <a href="<%= sample_url %>"><%= sample_id %></a></h4>
-                        <h4>Project: <a href="<%= study_url %>"><%= study_id %></a></h4>
+                        <h3>Description</h3>
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td>Study</td>
+                                <td><a href="<%= study_url %>"><%= study_id %></a></td>
+                            </tr>
+                            <tr>
+                                <td>Sample</td>
+                                <td><a href="<%= sample_url %>"><%= sample_id %></a></td>
+                            </tr>
+                            <tr>
+                                <td>Experiment type</td>
+                                <td><%= experiment_type %></td>
+                            </tr>
+                            <tr>
+                                <td>Instrument model</td>
+                                <td><%= instrument_model %></td>
+                            </tr>
+                            <tr>
+                                <td>Instrument platform</td>
+                                <td><%= instrument_platform %></td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -226,12 +249,12 @@
                     <p>A summary of Gene Ontology (GO) terms derived from InterPro matches to your sample is provided in
                         the charts below.</p>
                     <p>Switch view:
-                        <ul class="tabs">
-                            <li class="tabs-title" id="go-bar-btn"><a href="#go-bar" aria-selected="true"><img
-                                    src="/static/images/ico_graph_barh_on.png"/></a></li>
-                            <li class="tabs-title" id="go-pie-btn"><a href="#go-pie" aria-selected="false"><img
-                                    src="/static/images/ico_graph_pie_on.png"/></a></li>
-                        </ul>
+                    <ul class="tabs">
+                        <li class="tabs-title" id="go-bar-btn"><a href="#go-bar" aria-selected="true"><img
+                                src="/static/images/ico_graph_barh_on.png"/></a></li>
+                        <li class="tabs-title" id="go-pie-btn"><a href="#go-pie" aria-selected="false"><img
+                                src="/static/images/ico_graph_pie_on.png"/></a></li>
+                    </ul>
                     </p>
                 </div>
                 <div class="row" id="go-slim-bar-charts">

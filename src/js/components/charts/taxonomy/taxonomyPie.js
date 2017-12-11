@@ -58,9 +58,6 @@ module.exports = class TaxonomyPie {
                 verticalAlign: 'middle',
                 layout: 'vertical',
                 labelFormatter: function() {
-                    // do truncation here and return string
-                    // this.name holds the whole label
-                    // for example:
                     if (this.name.length>15){
                         return this.name.slice(0, 15)+'...'
                     } else{
