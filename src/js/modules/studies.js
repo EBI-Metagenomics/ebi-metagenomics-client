@@ -96,7 +96,7 @@ var StudiesView = Backbone.View.extend({
                     var formData = getFormData("#filter");
                     const params = {
                         page: 1,
-                        pagesize: pagination.getPageSize(),
+                        page_size: pagination.getPageSize(),
                         ordering: sort
                     };
                     that.update(params);
@@ -114,11 +114,10 @@ var StudiesView = Backbone.View.extend({
 
         showTableLoadingGif();
         setURLParams(this.params, false);
-        console.log(this.collection.url);
         this.collection.fetch({
             data: $.param(that.params), remove: true, success: function (collection, response, options) {
                 hideTableLoadingGif();
-                pagination.update(response.meta.pagination);
+                pagination.update(response.meta.pagination, changePage);
                 that.render();
             }
         });

@@ -94,7 +94,7 @@ var SamplesView = Backbone.View.extend({
                     var formData = getFormData("#filter");
                     const params = {
                         page: 1,
-                        pagesize: pagination.getPageSize(),
+                        page_size: pagination.getPageSize(),
                         ordering: sort
                     };
                     that.update(params);
@@ -104,9 +104,6 @@ var SamplesView = Backbone.View.extend({
         return this;
     },
     update: function (params) {
-        console.trace()
-        console.log('updateStart');
-        console.log($('.sample').length)
         const that = this;
 
         this.params = $.extend(this.params, params);
@@ -118,7 +115,7 @@ var SamplesView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(that.params), remove: true, success: function (collection, response, options) {
                 hideTableLoadingGif();
-                pagination.update(response.meta.pagination);
+                pagination.update(response.meta.pagination, changePage);
                 that.render();
                 console.log('updateEnd');
                 console.log($('.sample').length)
