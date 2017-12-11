@@ -1,20 +1,45 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const $ = require('jquery');
-
-require('../commons');
-
 const api = require('../components/api');
-const API_URL = require('config').API_URL;
-import {setCurrentTab} from "../util";
+const apiUrl = require('config').API_URL;
+const commons = require('../commons');
+const blogUrl = commons.BLOG_URL;
 
+import {initHeadTag, setCurrentTab} from "../util";
 
 setCurrentTab('#overview-nav');
+initHeadTag('EBI metagenomics: archiving, analysis and integration of metagenomics data');
 
 $('#this_close').on('click', function () {
     $('.jumbo-header').slideUp();
 });
 
+// Shorthand for $( document ).ready()
+$(function () {
+    // Sets the blog url for 'See all articles' link
+    $('#blog-url').attr('href', blogUrl);
+});
+
+//  re-style the twitter component
+$("iframe").ready(function () {
+    var timer = setInterval(function () {
+        if ($($("iframe").contents()).find(".avatar").length > 0) {
+            $($("iframe").contents()).find(".avatar, .timeline-Tweet-author, .timeline-Tweet-media").css({display: "none"});
+            $($("iframe").contents()).find(".timeline-Tweet-retweetCredit").css({'text-align': "center"});
+            /*style retweet info text*/
+            $($("iframe").contents()).find(".timeline-Tweet-text").css({
+                'text-align': "center",
+                'font-size': '157%',
+                'line-height': '1.4'
+            });
+            /*style tweet main text*/
+            $($("iframe").contents()).find("img.autosized-media").css({'max-height': '175px'});
+            /*don't know if this is relevant anymore*/
+            clearInterval(timer);
+        }
+    }, 100);
+});
 
 var BiomeView = Backbone.View.extend({
     tagName: 'div',
@@ -30,7 +55,7 @@ var BiomeView = Backbone.View.extend({
 });
 
 var Biomes = Backbone.Collection.extend({
-    url: API_URL + 'biomes/top10',
+    url: apiUrl + 'biomes/top10',
     model: api.Biome,
     parse: function (response) {
         return response.data;
@@ -44,7 +69,7 @@ var BiomesView = Backbone.View.extend({
         this.collection.fetch({
             success: function () {
                 that.collection.models.sort(function (a, b) {
-                    return b.attributes.num_biome_projects - a.attributes.num_biome_projects
+                    return b.attributes.studies_count - a.attributes.studies_count
                 });
                 that.render();
             }
@@ -69,6 +94,10 @@ var BiomesView = Backbone.View.extend({
     }
 });
 
+var biomes = new Biomes();
+var biomesView = new BiomesView({collection: biomes});
+
+
 var StudyView = Backbone.View.extend({
     tagName: 'div',
     template: _.template($("#studyTmpl").html()),
@@ -83,7 +112,7 @@ var StudyView = Backbone.View.extend({
 
 // Model for a collection of studies,
 var StudiesCollection = Backbone.Collection.extend({
-    url: API_URL + "studies/recent",
+    url: apiUrl + "studies/recent",
     model: api.Study,
     parse: function (response) {
         return response.data;
@@ -133,9 +162,6 @@ var StudiesView = Backbone.View.extend({
         return this;
     }
 });
-
-var biomes = new Biomes();
-var biomesView = new BiomesView({collection: biomes});
 
 var studies = new StudiesCollection();
 var studiesView = new StudiesView({collection: studies});

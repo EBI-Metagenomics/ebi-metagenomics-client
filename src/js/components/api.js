@@ -5,7 +5,7 @@ const Config = require('config');
 const NO_DATA_MSG = Commons.NO_DATA_MSG;
 const API_URL = Config.API_URL;
 
-import {formatDate, formatLineage, getBiomeIcon, lineage2Biome, getBiomeIconData} from "../util";
+import {formatDate, formatLineage, getBiomeIcon, lineage2Biome, getBiomeIconData, truncateString} from "../util";
 
 const _ = require('underscore');
 
@@ -41,7 +41,7 @@ export const Study = Backbone.Model.extend({
             study_id: data.id,
             study_accession: attr['accession'],
             last_update: formatDate(attr['last-update']),
-            abstract: attr['study-abstract'],
+            abstract: truncateString(attr['study-abstract']),
         }
     }
 });
@@ -135,7 +135,7 @@ export const Biome = Backbone.Model.extend({
             name: lineage2Biome(lineage),
             icon: getBiomeIcon(lineage),
             lineage: lineage,
-            lineage_projects: attr['studies-count'],
+            studies_count: attr['study-count'],
             // lineage_projects_no_children: attr['studies-count'],
             biome_studies_link: '/studies?biome=' + lineage,
             // biome_studies_link_no_children: 'TODO2',

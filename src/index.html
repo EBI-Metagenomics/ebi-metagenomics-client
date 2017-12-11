@@ -1,73 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <!--TODO add metadata-->
-    <title>[page-title] &lt; [service-name] &lt; EMBL-EBI</title>
-    <meta name="description" content="EMBL-EBI"/><!-- Describe what this page is about -->
-    <meta name="keywords" content="bioinformatics, europe, institute"/>
-    <!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
-    <meta name="author" content="EMBL-EBI"/><!-- Your [project-name] here -->
-    <meta name="HandheldFriendly" content="true"/>
-    <meta name="MobileOptimized" content="width"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="theme-color" content="#70BDBD"/> <!-- Android Chrome mobile browser tab color -->
-
-    <!-- Add information on the life cycle of this page -->
-    <meta name="ebi:owner" content="John Doe"/> <!-- Who should be contacted about changes -->
-    <meta name="ebi:review-cycle" content="30"/> <!-- In days, how often should the content be reviewed -->
-    <meta name="ebi:last-review" content="2015-12-20"/> <!-- The last time the content was reviewed -->
-    <meta name="ebi:expiry" content="2016-01-20"/> <!-- When this content is no longer relevant -->
-
-    <!-- If you link to any other sites frequently, consider optimising performance with a DNS prefetch -->
-    <link rel="dns-prefetch" href="//embl.de"/>
-
-    <!-- If you have custom icon, replace these as appropriate.
-         You can generate them at realfavicongenerator.net -->
-    <link rel="icon" type="image/x-icon"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/favicon.ico"/>
-    <link rel="icon" type="image/png"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/favicon-32x32.png"/>
-    <link rel="icon" type="image/png" sizes="192×192"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/android-chrome-192x192.png"/>
-    <!-- Android (192px) -->
-    <link rel="apple-touch-icon-precomposed" sizes="114x114"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-114x114.png"/>
-    <!-- For iPhone 4 Retina display (114px) -->
-    <link rel="apple-touch-icon-precomposed" sizes="72x72"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-72x72.png"/>
-    <!-- For iPad (72px) -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-144x144.png"/>
-    <!-- For iPad retinat (144px) -->
-    <link rel="apple-touch-icon-precomposed"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-57x57.png"/>
-    <!-- For iPhone (57px) -->
-    <link rel="mask-icon"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/safari-pinned-tab.svg"
-          color="#ffffff"/> <!-- Safari icon for pinned tab -->
-    <meta name="msapplication-TileColor" content="#2b5797"/> <!-- MS Icons -->
-    <meta name="msapplication-TileImage"
-          content="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/mstile-144x144.png"/>
-
-    <!-- CSS: implied media=all -->
-    <!-- CSS concatenated and minified via ant build script-->
-    <!--<link rel="stylesheet" href="/static/css/theme-embl-petrol.css" type="text/css" media="all"/>-->
-    <!--<link rel="stylesheet" href="/static/css/ebi-global.css" type="text/css" media="all"/>-->
-    <!--<link rel="stylesheet" href="/static/css/site.css" type="text/css" media="all"/>-->
-    <!--<link rel="stylesheet" href="/static/fonts/fonts.css" type="text/css" media="all"/>-->
-
-    <!-- Use this CSS file for any custom styling -->
-    <!--
-      <link rel="stylesheet" href="css/custom.css" type="text/css" media="all">
-    -->
-
-    <!-- If you have a custom header image or colour -->
-    <meta name="ebi:masthead-color" content="#091314"/>
-    <meta name="ebi:masthead-image"
-          content="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/backgrounds/embl-ebi-background-4.jpg"/>
-</head>
-
+<head id="head"></head>
 <body class="level2"><!-- add any of your classes or IDs -->
 <div id="header"></div>
 
@@ -76,14 +9,15 @@
     <div id="main-content-area" class="row" role="main">
         <section class="jumbo-header" style="position: relative;">
             <div class="close_section anim"><span class="show_tooltip" id="this_close" data-hasqtip="0"
-                                                  oldtitle="Close this section" title="">✖</span>
+                                                  oldtitle="Close this section" title="">&#10006;</span>
             </div>
             <p class="lead">Submit, analyse, visualize and compare your data.</p>
             <div class="button"><a href="/submit"> Submit data</a></div>
         </section>
+        <!-- START Browse projects section-->
         <h2>Browse projects</h2>
         <div class="row">
-            <div id="top10biomes" class="columns small-12 medium-5 large-5">
+            <div id="top10biomes" class="columns small-12 medium-6 large-6">
                 <h3>By selected biomes</h3>
                 <script id="biomeTmpl" type="text/template">
                     <a href="<%= biome_studies_link %>">
@@ -93,12 +27,12 @@
                             <span class="biome_icon icon_sm <%= icon %> <%= name%>"></span>
                         </div>
                         <div class="biome-text">
-                            <%= name %> (<%= lineage_projects %>)
+                            <%= name %> (<%= studies_count %>)
                         </div>
                     </a>
                 </script>
             </div>
-            <div class="columns small-12 medium-7 large-7">
+            <div class="columns small-12 medium-6 large-6">
                 <h3>Latest projects</h3>
                 <div id="studies" class="studies-list">
                     <script id="studyTmpl" type="text/template">
@@ -117,72 +51,69 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="columns small-12 medium-6 large-6">
+                <a href="/biomes" class="all right" data-hasqtip="27"
+                   oldtitle="View projects and filter by biome" title=""
+                   aria-describedby="qtip-27">Browse all biomes</a>
+            </div>
+            <div class="columns small-12 medium-6 large-6">
+                <a href="/studies"
+                   class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
+                   aria-describedby="qtip-42">View all projects</a>
+            </div>
+        </div>
+        <!-- END Browse projects section-->
+        <!-- START Blog post section-->
         <hr>
+        <div class="row">
+            <div class="columns small-12 medium-6 large-6"><h2>Spotlight</h2></div>
+            <div class="columns small-12 medium-6 large-6"><h2>Tools</h2></div>
+        </div>
         <div class="row">
             <div class="columns small-12 medium-6 large-6">
                 <div class="home-blog-box">
-                    <div class="row">
-                        <div class="columns small-12 medium-6">
-                            <h2>Spotlight</h2>
-                        </div>
-                        <div class="columns small-12 medium-6">
-                            <h4>A major milestone</h4>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="columns">
-                            <img class='home-blog-img'
-                                 src="//ProteinsWebTeam.github.io/ebi-metagenomics-blog/assets/media/images/posts/ico_celebration_EMGblog_01.png"
-                                 alt="ico_celebration_EMGblog_01.png">
-                            <h3>One Thousand Publicly Available Projects</h3>
-                            <p>This week, EBI Metagenomics hit a major milestone as we passed over one thousand publicly
-                                available projects on the site. This corresponds to over 60,000 samples, comprising more
-                                than 80,000 individual runs, and represents the analysis of over 300 billion nucleotide
-                                sequences from a wide range of environmental biomes.
-                            </p>
-                            <a href="//ProteinsWebTeam.github.io/ebi-metagenomics-blog/2017/04/03/A-major-milestone/"
-                               class="all left" data-hasqtip="36" oldtitle="Read more on the blog" title="">Read
-                                more</a>
+                    <div class="hlight-spot grid_12 alpha" id="blog-spotlight">
+                        <div class="hlight_subtitle"><h3></h3></div>
+                        <div class="home_box alpha">
+                            <div>
+                                <p class="placeholder"
+                                   style="width: 50%;"></p>
+                            </div>
+                            <a href="#" title="Read more on the blog" class="all left">Read more</a>
+                            <!-- For links inside the blog post -->
+                            <a href="#" class="all right"></a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="columns small-12 medium-6 large-6">
                 <div class="home-blog-box">
-                    <div class="row">
-                        <div class="columns small-12 medium-6">
-                            <h2>Tools</h2>
-                        </div>
-                        <div class="columns small-12 medium-6">
-                            <h4>Bulk download</h4>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="columns">
-                            <img class='home-blog-img'
-                                 src="//proteinswebteam.github.io/ebi-metagenomics-blog/assets/media/images/posts/ico_code_EMG_grey.png"
-                                 alt="ico_celebration_EMGblog_01.png">
-                            <p>Interested in bulk download of our data? Did you know that we provide a Python script for
-                                the
-                                bulk download of publicly available project data? The tool iterates over all samples and
-                                runs in a project and builds an appropriate root URL, which it uses to download
-                                individual
-                                run result files. Different file types can be specified, allowing you to download, for
-                                example, all reads encoding 16S rRNAs, all taxonomic assignments, or all predicted
-                                protein
-                                coding sequences, for a particular project. To find out more, see the <a
-                                        href="https://github.com/ProteinsWebTeam/ebi-metagenomics/wiki/Downloading-results-programmatically"
-                                        class="all" title="Bulk download script">Bulk download script</a>.
-                            </p>
-                            <a href="//ProteinsWebTeam.github.io/ebi-metagenomics-blog/2017/01/12/Bulk-download/"
-                               class="all left" data-hasqtip="38" oldtitle="Read more on the blog" title="">Read
-                                more</a>
-
+                    <div class="hlight-spot grid_12 omega" id="blog-tools">
+                        <div class="hlight_subtitle"><h3></h3></div>
+                        <div class="home_box omega">
+                            <div>
+                                <p class="placeholder"
+                                   style="width: 50%;"></p>
+                            </div>
+                            <a href="#" title="Read more on the blog" class="all left">Read more</a>
+                            <!-- For links inside the blog post -->
+                            <a href="#" class="all right"></a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="columns small-12 medium-6 large-6">
+                <a id="blog-url" href="#" class="all left" data-hasqtip="27"
+                   oldtitle="View projects and filter by biome" title=""
+                   aria-describedby="qtip-27">See all articles</a>
+            </div>
+        </div>
+        <!-- END Blog post section-->
+        <hr>
+        <!-- START Citation section-->
         <div class="row">
             <div class="columns small-12 medium-12 large-12">
                 <h2>How to cite</h2>
@@ -192,28 +123,63 @@
                          style="width: auto; float: left; margin-right: 18px;">
                     <p>To cite EBI Metagenomics, please refer to the following publication:</p>
                     <p>
-                        Alex Mitchell, Francois Bucchini, Guy Cochrane, Hubert Denise, Petra ten Hoopen, Matthew Fraser,
-                        Sebastien Pesseat, Simon Potter, Maxim Scheremetjew, Peter Sterk and Robert D. Finn (2015).
+                        Alex L. Mitchell, Maxim Scheremetjew, Hubert Denise, Simon Potter, Aleksandra Tarkowska, Matloob
+                        Qureshi, Gustavo A. Salazar, Sebastien Pesseat, Miguel A. Boland, Fiona M. I. Hunter, Petra ten
+                        Hoopen,
+                        Blaise Alako, Clara Amid, Darren J. Wilkinson, Thomas P. Curtis, Guy Cochrane, Robert D. Finn
+                        (2017).
                         <br>
-                        <strong>
-                            EBI metagenomics in 2016 - an expanding and evolving resource for the analysis and archiving
-                            of metagenomic data.
-                        </strong>
-                        Nucleic Acids Research (2015) doi:
-                        <a href="http://nar.oxfordjournals.org/content/44/D1/D595.full" class="ext" data-hasqtip="39"
-                           oldtitle="EBI metagenomics in 2016 - an expanding and evolving resource for the analysis and archiving of metagenomic data"
-                           title="" aria-describedby="qtip-39">
-                            10.1093/nar/gkv1195
-                        </a>
+                        <strong>EBI Metagenomics in 2017: enriching the analysis of microbial communities, from sequence
+                            reads
+                            to assemblies.</strong> Nucleic Acids Research (2017) doi: <a
+                            title="EBI Metagenomics in 2017: enriching the analysis of microbial communities, from sequence reads to assemblies"
+                            href="https://doi.org/10.1093/nar/gkx967" class="ext">10.1093/nar/gkx967</a>
                     </p>
-                    <a href="about#h_site" class="all" data-hasqtip="40" oldtitle="About page - How to cite" title="" aria-describedby="qtip-40">
+                    <a href="about#h_site" class="all right" data-hasqtip="40" oldtitle="About page - How to cite"
+                       title=""
+                       aria-describedby="qtip-40">
                         More citations
                     </a>
                 </div>
             </div>
         </div>
-    </div>
+        <!-- END Citation section-->
+        <hr>
+        <!-- START Twitter section-->
+        <section class="jumbo-news">
+            <div class="grid_24 jumbo-news-container">
+                <div class="jumbo-news-centred" style="text-align: center">
 
+                    <h3 class="icon icon-socialmedia icon-s2" data-icon="T"></h3>
+                    <a class="twitter-timeline" height="100" data-dnt="true"
+                       href="https://twitter.com/EBImetagenomics"
+                       data-widget-id="345516657369837568"
+                       data-chrome="nofooter noborders noheader noscrollbar transparent" data-tweet-limit="1">Tweets by
+                        @EBImetagenomics</a>
+
+                    <p class="jumbo-news-contact"><strong><a
+                            href="http://twitter.com/EBImetagenomics"
+                            alt="Follow us on Twitter">@EBImetagenomics</a></strong>
+                    </p>
+                    <script>
+                        !function (d, s, id) {
+                            var
+                                js, fjs = d.getElementsByTagName(s)[0],
+                                p = /^http:/.test(d.location) ? 'http' : 'https';
+                            if (!d.getElementById(id)) {
+                                js = d.createElement(s);
+                                js.id = id;
+                                js.src = p + "://platform.twitter.com/widgets.js";
+                                fjs.parentNode.insertBefore(js, fjs);
+                            }
+                        }(document, "script", "twitter-wjs");</script>
+
+
+                </div>
+            </div>
+        </section>
+        <!-- END Twitter section-->
+    </div>
 </div>
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
 <!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
@@ -238,12 +204,13 @@
 <script src="/static/js/foundation.js"></script>
 <script src="/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(document).foundation();
         $(document).foundationExtendEBI();
     });
 </script>
 <script src="/js/index.js"></script>
+<script defer="defer" src="/static/js/blog.js" type="text/javascript"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->
@@ -256,6 +223,4 @@
 </script>
 -->
 </body>
-
-
 </html>
