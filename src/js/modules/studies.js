@@ -17,7 +17,8 @@ import {
     setCurrentTab,
     setURLParams,
     showTableLoadingGif,
-    BiomeCollectionView
+    BiomeCollectionView,
+    setDownloadResultURL
 } from "../util";
 
 setCurrentTab('#studies-nav');
@@ -89,6 +90,8 @@ var StudiesView = Backbone.View.extend({
             data: $.param(params),
             remove: true,
             success: function (collection, response, options) {
+                const newParams = getDownloadParams(params);
+                setDownloadResultURL(that.collection.url+'?'+$.param(newParams));
                 that.render();
                 const pag = response.meta.pagination;
                 pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
@@ -100,7 +103,8 @@ var StudiesView = Backbone.View.extend({
                         ordering: sort
                     };
                     that.update(params);
-                })
+                });
+
             }
         });
         return this;
@@ -121,6 +125,8 @@ var StudiesView = Backbone.View.extend({
                 that.render();
             }
         });
+        const newParams = getDownloadParams(that.params);
+        setDownloadResultURL(that.collection.url+'?'+$.param(newParams));
         return this;
     },
     render: function () {
@@ -132,6 +138,13 @@ var StudiesView = Backbone.View.extend({
     }
 });
 
+function getDownloadParams(params){
+    const downloadParams = $.extend(true, {}, params);
+    delete downloadParams['page'];
+    delete downloadParams['page_size'];
+    downloadParams['format'] = 'csv';
+    return downloadParams;
+}
 function updatePageSize(pageSize) {
     const params = {
         page_size: pageSize,
