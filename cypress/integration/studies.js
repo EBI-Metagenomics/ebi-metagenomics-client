@@ -37,7 +37,6 @@ describe('Studies page', function() {
     beforeEach(function(){
         openPage(origPage);
         waitForStudiesLoad(initialResultSize);
-
     });
 
     it('Should respond to last-updated ordering', function(){
@@ -91,6 +90,20 @@ describe('Studies page', function() {
         biome = "root:Engineered:Biotransformation";
         setSelectOption(selector, biome, 7);
         cy.get('.biome-icon > span').should('have.class', 'engineered_b');
+    });
+
+    // Assert result is different and ordering between first item in each page is correct
+    it('Should respond to page change', function(){
+        const pageSelector = '#pagination > ul > li:nth-child(4)'; // Second page button
+        const studyNameSelector = 'td.name';
+        cy.get(studyNameSelector).first().then(function($el){
+            const studyName = $el.text();
+            cy.get(pageSelector).click();
+            assertTableIsCleared();
+            waitForStudiesLoad(initialResultSize);
+            expect(Cypress.$(studyNameSelector).last().text()).to.be.gte(studyName);
+        });
+
     });
 
 });
