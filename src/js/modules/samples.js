@@ -17,7 +17,8 @@ import {
     setCurrentTab,
     setURLParams,
     showTableLoadingGif,
-    stripLineage,
+    getDownloadParams,
+    setDownloadResultURL,
     BiomeCollectionView
 } from "../util";
 
@@ -66,7 +67,7 @@ var SamplesView = Backbone.View.extend({
         }
 
         const ordering = pageFilters.get('ordering');
-        if (ordering){
+        if (ordering) {
             params.ordering = ordering;
         } else {
             params.ordering = '-last_update';
@@ -86,11 +87,14 @@ var SamplesView = Backbone.View.extend({
         this.params = params;
 
         this.collection.fetch({
-            data: $.param(params), success: function (collection, response, options) {
+            data: $.param(params),
+            success: function (collection, response, options) {
+                const newParams = getDownloadParams(params);
+                setDownloadResultURL(that.collection.url + '?' + $.param(newParams));
                 that.render();
                 const pag = response.meta.pagination;
                 pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
-                Order.initHeaders(params.ordering, function(sort){
+                Order.initHeaders(params.ordering, function (sort) {
                     var formData = getFormData("#filter");
                     const params = {
                         page: 1,
@@ -117,10 +121,11 @@ var SamplesView = Backbone.View.extend({
                 hideTableLoadingGif();
                 pagination.update(response.meta.pagination, changePage);
                 that.render();
-                console.log('updateEnd');
-                console.log($('.sample').length)
             }
         });
+        const newParams = getDownloadParams(that.params);
+        setDownloadResultURL(that.collection.url + '?' + $.param(newParams));
+
         return this;
     },
     render: function () {

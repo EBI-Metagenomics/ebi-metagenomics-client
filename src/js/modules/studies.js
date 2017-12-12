@@ -18,6 +18,7 @@ import {
     setURLParams,
     showTableLoadingGif,
     BiomeCollectionView,
+    getDownloadParams,
     setDownloadResultURL
 } from "../util";
 
@@ -138,13 +139,7 @@ var StudiesView = Backbone.View.extend({
     }
 });
 
-function getDownloadParams(params){
-    const downloadParams = $.extend(true, {}, params);
-    delete downloadParams['page'];
-    delete downloadParams['page_size'];
-    downloadParams['format'] = 'csv';
-    return downloadParams;
-}
+
 function updatePageSize(pageSize) {
     const params = {
         page_size: pageSize,

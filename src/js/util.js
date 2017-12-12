@@ -235,6 +235,14 @@ export const capitalizeWord = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+export const getDownloadParams = function(params){
+    const downloadParams = $.extend(true, {}, params);
+    delete downloadParams['page'];
+    delete downloadParams['page_size'];
+    downloadParams['format'] = 'csv';
+    return downloadParams;
+}
+
 export const setDownloadResultURL = function (url) {
     $('#download-results').attr('href', url);
 };

@@ -91,13 +91,14 @@ describe('Studies page', function () {
     // Assert result is different and ordering between first item in each page is correct
     it('Should respond to page change', function () {
         const pageSelector = '#pagination > ul > li:nth-child(4)'; // Second page button
-        const studyNameSelector = 'td.name';
-        cy.get(studyNameSelector).first().then(function ($el) {
-            const studyName = $el.text();
+        const studyDateSelector = 'td.updated';
+        setSortBy('th.updated');
+        cy.get(studyDateSelector).first().then(function ($el) {
+            const studyDate = $el.text();
             cy.get(pageSelector).click();
             assertTableIsCleared();
             waitForStudiesLoad(initialResultSize);
-            expect(Cypress.$(studyNameSelector).last().text()).to.be.gte(studyName);
+            expect(new Date(Cypress.$(studyDateSelector).last().text())).to.be.lte(new Date(studyDate));
         });
     });
 
