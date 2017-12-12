@@ -59,7 +59,6 @@ export function getBiomeIconData(biome_data) {
 }
 
 export function initResultsFilter(initQuery, callback) {
-    const formId = "#filter";
     $("#filterForm").append(resultsFilter);
     const $searchInput = $('#search-input');
     $searchInput.val(initQuery);
@@ -72,7 +71,16 @@ export function initResultsFilter(initQuery, callback) {
     };
     $searchInput.typeWatch(options);
     // $('#search-input').on('keyup', callback);
-    $('#biome-select').on('change', callback);
+    const $biomeSelect = $('#biome-select');
+    $biomeSelect.on('change', callback);
+
+    const $clearBtn = $('#clear-filter');
+    $clearBtn.click(function () {
+        $searchInput.val('');
+        $biomeSelect.val($biomeSelect.find('option:first').val())
+        $biomeSelect.trigger('change');
+    })
+
 }
 
 export function getURLParameter() {
@@ -201,7 +209,6 @@ export const BiomeCollectionView = Backbone.View.extend({
                 var root = new api.Biome({id: 'root'});
                 root.fetch({
                     success: function () {
-                        that.collection.unshift(root);
                         that.render();
                         if (!biome) {
                             biome = 'root';
@@ -226,7 +233,19 @@ export const BiomeCollectionView = Backbone.View.extend({
 
 export const capitalizeWord = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+export const getDownloadParams = function(params){
+    const downloadParams = $.extend(true, {}, params);
+    delete downloadParams['page'];
+    delete downloadParams['page_size'];
+    downloadParams['format'] = 'csv';
+    return downloadParams;
 }
+
+export const setDownloadResultURL = function (url) {
+    $('#download-results').attr('href', url);
+};
 
 /**
  * Truncates the given string to the given maximum length.

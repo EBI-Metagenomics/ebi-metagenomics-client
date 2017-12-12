@@ -17,7 +17,9 @@ import {
     setCurrentTab,
     setURLParams,
     showTableLoadingGif,
-    BiomeCollectionView
+    BiomeCollectionView,
+    getDownloadParams,
+    setDownloadResultURL
 } from "../util";
 
 setCurrentTab('#studies-nav');
@@ -89,6 +91,8 @@ var StudiesView = Backbone.View.extend({
             data: $.param(params),
             remove: true,
             success: function (collection, response, options) {
+                const newParams = getDownloadParams(params);
+                setDownloadResultURL(that.collection.url+'?'+$.param(newParams));
                 that.render();
                 const pag = response.meta.pagination;
                 pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
@@ -96,11 +100,12 @@ var StudiesView = Backbone.View.extend({
                     var formData = getFormData("#filter");
                     const params = {
                         page: 1,
-                        pagesize: pagination.getPageSize(),
+                        page_size: pagination.getPageSize(),
                         ordering: sort
                     };
                     that.update(params);
-                })
+                });
+
             }
         });
         return this;
@@ -114,14 +119,15 @@ var StudiesView = Backbone.View.extend({
 
         showTableLoadingGif();
         setURLParams(this.params, false);
-        console.log(this.collection.url);
         this.collection.fetch({
             data: $.param(that.params), remove: true, success: function (collection, response, options) {
                 hideTableLoadingGif();
-                pagination.update(response.meta.pagination);
+                pagination.update(response.meta.pagination, changePage);
                 that.render();
             }
         });
+        const newParams = getDownloadParams(that.params);
+        setDownloadResultURL(that.collection.url+'?'+$.param(newParams));
         return this;
     },
     render: function () {
@@ -132,6 +138,7 @@ var StudiesView = Backbone.View.extend({
         return this;
     }
 });
+
 
 function updatePageSize(pageSize) {
     const params = {
