@@ -34,11 +34,24 @@ let SampleView = Backbone.View.extend({
         const that = this;
         return this.model.fetch({
             data: $.param({}), success: function (data, response) {
+                that.model.attributes.metadatas.sort(compareByName);
                 that.$el.html(that.template(that.model.toJSON()));
             }
         });
     }
 });
+
+function compareByName(a, b){
+    const textA = a.name.toUpperCase();
+    const textB = b.name.toUpperCase();
+    if (textA < textB) {
+        return -1;
+    } else if (textB < textA){
+        return 1;
+    } else {
+        return 0
+    }
+}
 
 let RunView = Backbone.View.extend({
     tagName: 'tr',
