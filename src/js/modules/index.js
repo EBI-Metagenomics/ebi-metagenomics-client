@@ -55,7 +55,7 @@ var BiomeView = Backbone.View.extend({
 });
 
 var Biomes = Backbone.Collection.extend({
-    url: apiUrl + 'biomes/top10',
+    url: apiUrl + 'biomes/top10?ordering=-samples_count',
     model: api.Biome,
     parse: function (response) {
         return response.data;
