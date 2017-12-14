@@ -135,7 +135,7 @@ export const Biome = Backbone.Model.extend({
             name: lineage2Biome(lineage),
             icon: getBiomeIcon(lineage),
             lineage: lineage,
-            studies_count: attr['study-count'],
+            studies_count: attr['samples-count'],
             // lineage_projects_no_children: attr['studies-count'],
             biome_studies_link: '/studies?biome=' + lineage,
             // biome_studies_link_no_children: 'TODO2',
