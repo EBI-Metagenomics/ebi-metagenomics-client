@@ -4,7 +4,7 @@ const createRmvButton = new filterBtnWidget().create;
 let _ = require('underscore');
 
 
-module.exports = function Slier() {
+module.exports = function Slider() {
     const containerDiv = "<div class='facet-group'></div>";
     const toggleContainer = "<div class='switch tiny'></div>";
     const allForms = ['#projectsFilters', '#samplesFilters', '#runsFilters'];
