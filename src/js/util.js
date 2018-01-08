@@ -109,13 +109,14 @@ const biomeIconMapD2 = {
 };
 const biomeIconMapD3 = {
     'root:environmental:air': 'air_b',
-    'root:environmental:aquatic': 'marine_b',
+    'root:environmental:aquatic': 'freshwater_b',
     'root:engineered:wastewater': 'wastewater_b',
     'root:host-associated:human': 'human_host_b',
     'root:host-associated:plants': 'plant_host_b',
 
 };
 const biomeIconMapD4 = {
+    'root:environmental:aquatic:marine': 'marine_b',
     'root:environmental:terrestrial:volcanic': 'vulcano_b',
     'root:environmental:aquatic:marine:volcanic': 'vulcano_b',
     'root:environmental:aquatic:thermal springs': 'hotspring_b',
