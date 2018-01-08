@@ -5,7 +5,6 @@ const Commons = require('../../commons');
 
 module.exports = class GoTermChart {
     constructor(containerId, chartTitle, data, color) {
-        console.log(data);
         let series = [];
         let categories = [];
         data.forEach(function (d) {

@@ -13,6 +13,7 @@ const QCChart = require('../components/charts/qcChart');
 const GoTermChart = require('../components/charts/goTermChart');
 const SeqFeatChart = require('../components/charts/sequFeatSumChart');
 
+const detailList = require('../components/detailList');
 
 require('tablesorter');
 import {attachTabHandlers, getURLParameter, setCurrentTab} from "../util";
@@ -40,12 +41,35 @@ let RunView = Backbone.View.extend({
         this.model.fetch({
             data: {},
             success: function (data) {
-                let version = data.attributes.pipeline_versions[0];
+                const attr = data.attributes;
+                let version = attr.pipeline_versions[0];
                 analysis = new api.Analysis({id: run_id, version: version});
                 interproData = new api.InterproIden({id: run_id, version: version});
                 taxonomy = new api.Taxonomy({id: run_id, version: version});
                 goTerm = new api.GoSlim({id: run_id, version: version});
                 that.render(function () {
+                    let description = {
+                        Study: "<a href='" + attr.study_url + "'>" + attr.study_id + "</a>",
+                        Sample: "<a href='" + attr.sample_url + "'>" + attr.sample_id + "</a>",
+                    };
+                    const dataAnalysis = {};
+                    if (attr['experiment_type']) {
+                        dataAnalysis['Experiment type'] = attr['experiment_type']
+                    }
+
+                    if (attr['instrument_model']) {
+                        dataAnalysis['Instrument model'] = attr['instrument_model']
+                    }
+
+                    if (attr['instrument_platform']) {
+                        dataAnalysis['Instrument platform'] = attr['instrument_platform']
+                    }
+
+                    $('#overview').append(new detailList('Description', description));
+                    console.log(dataAnalysis)
+                    if (dataAnalysis.keys.length > 0) {
+                        $('#overview').append(new detailList('Data analysis', dataAnalysis));
+                    }
                     let qcGraph = new QCGraphView({model: analysis});
                     let taxonomyGraph = new TaxonomyGraphView({model: taxonomy});
 
@@ -316,6 +340,10 @@ let GoTermCharts = Backbone.View.extend({
         this.model.fetch({
             success: function (model) {
                 const data = model.attributes.data;
+                if (data.length === 0) {
+                    disableTab('functional');
+                    return;
+                }
                 let biological_process_data = [];
                 let molecular_function_data = [];
                 let cellular_component_data = [];
@@ -341,8 +369,6 @@ let GoTermCharts = Backbone.View.extend({
                 new TaxonomyPieChart('cellular-component-pie-chart', 'Cellular component', groupGoTermData(cellular_component_data), true, {plotOptions: {pie: {dataLabels: {enabled: false}}}});
 
 
-
-
                 $('#go-bar-btn').click(function () {
                     $('#go-slim-pie-charts').hide();
                     $('#go-slim-bar-charts').show();
@@ -358,7 +384,7 @@ let GoTermCharts = Backbone.View.extend({
 
 // Compact groups other than top 10 largest into an 'other' category
 function groupGoTermData(data) {
-    let top10 = data.slice(0, 10).map(function(d){
+    let top10 = data.slice(0, 10).map(function (d) {
         d = d.attributes;
         return {
             name: d.description,
@@ -396,6 +422,11 @@ function createInterProLink(text, id) {
 function getColourSquareIcon(i) {
     const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
     return "<div class='puce-square-legend' style='background-color: " + Commons.TAXONOMY_COLOURS[taxColor] + "'></div>";
+}
+
+function disableTab(id) {
+    console.log($("[href='#" + id + "']").parent('li'));
+    $("[href='#" + id + "']").parent('li').addClass('disabled');
 }
 
 $(document).ready(function () {
