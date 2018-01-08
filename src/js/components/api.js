@@ -205,32 +205,34 @@ export const SamplesCollection = Backbone.Collection.extend({
     }
 });
 
-export const Analysis = Backbone.Model.extend({
+export const RunPipelineObject = Backbone.Model.extend({
+    initialize: function (params) {
+        this.id = params.id;
+        this.version = params.version;
+    }
+});
+
+export const Analysis = RunPipelineObject.extend({
     url: function () {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version;
     },
-    initialize: function (params) {
-        this.id = params.id;
-        this.version = params.version;
-    }
 });
 
-export const AnalysisMetadata = Backbone.Model.extend({
-    url: function () {
-        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/metadata';
-    },
-    initialize: function (params) {
-        this.id = params.id;
-        this.version = params.version;
-    }
-});
-
-export const Taxonomy = Backbone.Model.extend({
+export const Taxonomy = RunPipelineObject.extend({
     url: function () {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/taxonomy';
     },
-    initialize: function (params) {
-        this.id = params.id;
-        this.version = params.version;
+});
+
+export const InterproIden = RunPipelineObject.extend({
+    url: function () {
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/interpro-identifiers';
+    },
+});
+
+export const GoSlim = RunPipelineObject.extend({
+    url: function () {
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/go-slim';
     }
 });
+

@@ -589,6 +589,25 @@ select.table-tools {
     display: inline-block;
 }
 
+.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.4;
+    filter: grayscale(80%);
+}
+
 /* Style for external links */
 a.ext, a.ext:link {padding-left: 12px;background: url(/static/images/ico_ext_link.png) no-repeat 0 3px;}
 a.ext:hover,a.ext:active, a.ext:focus {background: url(/static/images/ico_ext_link_on.png) no-repeat 0 3px; }
+
+tr.disabled {
+    opacity: 0.3;
+}
+
+div.box {
+    padding: 1em 2em;
+    border: 1px solid #e5e5e5;
+    margin: 1em !important;
+
+    display: block;
+}
