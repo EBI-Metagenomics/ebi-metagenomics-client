@@ -219,7 +219,6 @@ export const Analysis = RunPipelineObject.extend({
     parse: function (d) {
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
-        console.log(attr);
         return {
             experiment_type: attr['experiment-type'],
             analysis_summary: attr['analysis-summary'],

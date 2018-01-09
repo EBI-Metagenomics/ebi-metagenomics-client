@@ -114,7 +114,8 @@ let AnalysisView = Backbone.View.extend({
                     dataAnalysis['Instrument platform'] = attr['instrument_platform']
                 }
                 if (attr['complete_time']) {
-                    dataAnalysis['Analysis date'] = attr['complete_time']
+                    const date = new Date(attr['complete_time']);
+                    dataAnalysis['Analysis date'] = date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear();
                 }
                 if (attr['version']) {
                     dataAnalysis['Pipeline version'] = attr['version']
