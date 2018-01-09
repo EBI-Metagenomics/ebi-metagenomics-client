@@ -216,6 +216,19 @@ export const Analysis = RunPipelineObject.extend({
     url: function () {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version;
     },
+    parse: function (d) {
+        const data = d.data !== undefined ? d.data : d;
+        const attr = data.attributes;
+        console.log(attr);
+        return {
+            experiment_type: attr['experiment-type'],
+            analysis_summary: attr['analysis-summary'],
+            complete_time: attr['complete-time'],
+            instrument_model: attr['instrument-model'],
+            instrument_platform: attr['instrument-platform'],
+            pipeline_version: attr['pipeline-version'],
+        }
+    }
 });
 
 export const Taxonomy = RunPipelineObject.extend({

@@ -26,10 +26,9 @@ module.exports = class GenericTable {
 
             this.attachPageSizeCallback(this.$pageSizeSelect, callback);
         }
-
         this.order = null;
 
-        $container.append($sectionContent);
+        $container.html($sectionContent);
     }
 
     storeElemRefs($sectionContent) {

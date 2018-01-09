@@ -1,6 +1,5 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const util = require('../util');
 const Config = require('config');
 const Commons = require('../commons');
 const api = require('../components/api');
@@ -18,8 +17,6 @@ const detailList = require('../components/detailList');
 require('tablesorter');
 import {attachTabHandlers, getURLParameter, setCurrentTab} from "../util";
 
-let Highcharts = require('highcharts');
-
 
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 
@@ -32,79 +29,116 @@ let interproData = null;
 let taxonomy = null;
 let goTerm = null;
 
+function createKronaChart(study_id, sample_id, run_id, version) {
+    $('#krona-chart').html(
+        $("<object class='krona_chart' data='https://www.ebi.ac.uk/metagenomics/projects/" + study_id + "/samples/" + sample_id + "/runs/" + run_id + "/results/krona/versions/" + version + "?taxonomy=true&collapse=false' type='text/html'></object>)")
+    );
+}
+
 let RunView = Backbone.View.extend({
     model: api.Run,
-    template: _.template($("#runTmpl").html()),
-    el: '#main-content-area',
-    initialize: function () {
+    el: '#runContainer',
+    initialize: function (model) {
         const that = this;
+        let version = model.version || null;
         this.model.fetch({
             data: {},
             success: function (data) {
                 const attr = data.attributes;
-                let version = attr.pipeline_versions[0];
+                if (version === null) {
+                    version = attr.pipeline_versions[0];
+                    attr.pipeline_versions.forEach(function (e) {
+                        $('#analysisSelect').append("<option value='" + e + "'>" + e + "</option>");
+                    })
+                }
+
+                let description = {
+                    Study: "<a href='" + attr.study_url + "'>" + attr.study_id + "</a>",
+                    Sample: "<a href='" + attr.sample_url + "'>" + attr.sample_id + "</a>",
+                };
+                $('#overview').html(new detailList('Description', description));
+
                 analysis = new api.Analysis({id: run_id, version: version});
                 interproData = new api.InterproIden({id: run_id, version: version});
                 taxonomy = new api.Taxonomy({id: run_id, version: version});
                 goTerm = new api.GoSlim({id: run_id, version: version});
-                that.render(function () {
-                    let description = {
-                        Study: "<a href='" + attr.study_url + "'>" + attr.study_id + "</a>",
-                        Sample: "<a href='" + attr.sample_url + "'>" + attr.sample_id + "</a>",
-                    };
-                    const dataAnalysis = {};
-                    if (attr['experiment_type']) {
-                        dataAnalysis['Experiment type'] = attr['experiment_type']
-                    }
 
-                    if (attr['instrument_model']) {
-                        dataAnalysis['Instrument model'] = attr['instrument_model']
-                    }
+                let analysisView = new AnalysisView({model: analysis});
 
-                    if (attr['instrument_platform']) {
-                        dataAnalysis['Instrument platform'] = attr['instrument_platform']
-                    }
-
-                    $('#overview').append(new detailList('Description', description));
-                    console.log(dataAnalysis)
-                    if (dataAnalysis.keys.length > 0) {
-                        $('#overview').append(new detailList('Data analysis', dataAnalysis));
-                    }
-                    let qcGraph = new QCGraphView({model: analysis});
+                if (attr.analysis_results.indexOf('TAXONOMIC') > -1) {
+                    enableTab('taxonomic');
                     let taxonomyGraph = new TaxonomyGraphView({model: taxonomy});
+                    createKronaChart(attr.study_id, attr.sample_id, run_id, version);
+                } else {
+                    disableTab('taxonomic');
+                }
 
+                if (attr.analysis_results.indexOf('FUNCTION') > -1) {
+                    enableTab('functional');
                     let interProSummary = new InterProSummary({model: interproData});
-
                     let goTermCharts = new GoTermCharts({model: goTerm});
-                });
+                } else {
+                    disableTab('functional');
+                }
+
+                if (attr.analysis_results.indexOf('DOWNLOAD') > -1) {
+                    enableTab('download');
+                } else {
+                    disableTab('download');
+                }
             }
         });
-    },
-    render: function (callback) {
-        this.$el.html(this.template(this.model.toJSON()));
-        attachTabHandlers();
-        callback();
-        return this.$el;
     }
 });
 
-let QCGraphView = Backbone.View.extend({
+let AnalysisView = Backbone.View.extend({
     model: api.Analysis,
     initialize: function () {
         this.model.fetch({
-            success: function (model) {
-                const data = {};
-                model.attributes.data.attributes['analysis-summary'].forEach(function (e) {
-                    data[e.key] = e.value;
-                });
+            success: function (data) {
+                const attr = data.attributes;
+                const dataAnalysis = {};
+                if (attr['experiment_type']) {
+                    dataAnalysis['Experiment type'] = attr['experiment_type']
+                }
 
-                const qcChart = new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
+                if (attr['instrument_model']) {
+                    dataAnalysis['Instrument model'] = attr['instrument_model']
+                }
 
-                const seqFeatChart = new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
+                if (attr['instrument_platform']) {
+                    dataAnalysis['Instrument platform'] = attr['instrument_platform']
+                }
+
+                if (attr['instrument_platform']) {
+                    dataAnalysis['Instrument platform'] = attr['instrument_platform']
+                }
+                if (attr['complete_time']) {
+                    dataAnalysis['Analysis date'] = attr['complete_time']
+                }
+                if (attr['version']) {
+                    dataAnalysis['Pipeline version'] = attr['version']
+                }
+
+                if (Object.keys(dataAnalysis).length > 0) {
+                    $('#overview').append(new detailList('Data analysis', dataAnalysis));
+                }
+                createQCGraph(attr);
             }
-        });
+        })
     }
 });
+
+function createQCGraph(attr) {
+    const data = {};
+    attr['analysis_summary'].forEach(function (e) {
+        data[e.key] = e.value;
+    });
+
+    const qcChart = new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
+
+    const seqFeatChart = new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
+}
 
 // Cluster and compact groups other than top 10 largest into an 'other' category
 function groupTaxonomyData(data, depth) {
@@ -340,10 +374,6 @@ let GoTermCharts = Backbone.View.extend({
         this.model.fetch({
             success: function (model) {
                 const data = model.attributes.data;
-                if (data.length === 0) {
-                    disableTab('functional');
-                    return;
-                }
                 let biological_process_data = [];
                 let molecular_function_data = [];
                 let cellular_component_data = [];
@@ -397,7 +427,6 @@ function groupGoTermData(data) {
             y: 0
         };
         _.each(data.slice(10), function (d) {
-            console.log(d);
             others.y += d.attributes.count;
         });
         top10.push(others);
@@ -425,17 +454,21 @@ function getColourSquareIcon(i) {
 }
 
 function disableTab(id) {
-    console.log($("[href='#" + id + "']").parent('li'));
     $("[href='#" + id + "']").parent('li').addClass('disabled');
+}
+
+function enableTab(id) {
+    $("[href='#" + id + "']").parent('li').removeClass('disabled');
 }
 
 $(document).ready(function () {
     // TODO Handle change of analysis
     $("#analysisSelect").change(function (e) {
-        // console.log(this);
-        // console.log(e);
+        runView = new RunView({model: run, version: $(this).val()})
     });
 });
 
+$('#run_id').text(run_id);
+attachTabHandlers();
 let run = new api.Run({id: run_id});
 let runView = new RunView({model: run});
