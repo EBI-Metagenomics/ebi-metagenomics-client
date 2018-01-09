@@ -132,12 +132,10 @@ module.exports = class GenericTable {
     }
 
     showLoadingGif(){
-        console.log('Show', this.$loadingGif);
         this.$loadingGif.fadeIn();
     }
 
     hideLoadingGif(){
-        console.log('Hide', this.$loadingGif);
         this.$loadingGif.fadeOut();
     }
 

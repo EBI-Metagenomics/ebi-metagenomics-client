@@ -105,8 +105,8 @@ export const RunCollection = Backbone.Collection.extend({
     model: Run,
     initialize: function (data) {
         // Project/sample ID
-        if (data.hasOwnProperty(('study_id'))) {
-            this.study_id = data.study_id;
+        if (data.hasOwnProperty(('study_accession'))) {
+            this.study_accession = data.study_accession;
         }
         // Sample ID
         if (data.hasOwnProperty(('sample_id'))) {
@@ -199,6 +199,10 @@ export const SamplesCollection = Backbone.Collection.extend({
         if (data && data.hasOwnProperty(('sample_id'))) {
             this.sample_id = data.sample_id;
         }
+        if (data.hasOwnProperty(('study_accession'))) {
+            this.study_accession = data.study_accession;
+        }
+        console.log(this);
     },
     parse: function (response) {
         return response.data;

@@ -69,7 +69,7 @@ let SamplesView = Backbone.View.extend({
     update: function (page, pageSize, order, query) {
         this.tableObj.showLoadingGif();
         let params = {
-            study_id: this.collection.study_id,
+            study_accession: this.collection.study_accession,
             page: page,
             page_size: pageSize
         };
@@ -93,7 +93,7 @@ let SamplesView = Backbone.View.extend({
         initMap(this.collection.models);
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
-            const sample_link = "<a href='"+attr.sample_url+"'>" + attr.sample_accession + "</a>";
+            const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
             return [attr.sample_name, sample_link, attr.sample_desc, attr.last_update]
         });
         this.tableObj.update(tableData, true, page, resultCount);
@@ -125,7 +125,7 @@ let RunsView = Backbone.View.extend({
     update: function (page, pageSize, order, query) {
         this.tableObj.showLoadingGif();
         let params = {
-            study_id: this.collection.study_id,
+            study_accession: this.collection.study_accession,
             page: page,
             page_size: pageSize
         };
@@ -148,7 +148,7 @@ let RunsView = Backbone.View.extend({
     renderData: function (page, resultCount) {
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
-            const run_link = "<a href='" + attr.run_url+ "'>" + attr.run_id + "</a>";
+            const run_link = "<a href='" + attr.run_url + "'>" + attr.run_id + "</a>";
             return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform']]
         });
         this.tableObj.update(tableData, true, page, resultCount);
@@ -175,7 +175,6 @@ function initMap(samples) {
     let markers = samples.reduce(function (result, sample) {
         const lat = sample.attributes.latitude;
         const lng = sample.attributes.longitude;
-
         if (lat === null || lng === null) {
             $("#warning").show();
         } else {
@@ -248,10 +247,10 @@ function placeMarker(map, oms, template, sample) {
 let study = new api.Study({id: study_id});
 let studyView = new StudyView({model: study});
 
-let samples = new api.SamplesCollection({study_id: study_id});
+let samples = new api.SamplesCollection({study_accession: study_id});
 let samplesView = new SamplesView({collection: samples});
 
-let runs = new api.RunCollection({study_id: study_id});
+let runs = new api.RunCollection({study_accession: study_id});
 let runsView = new RunsView({collection: runs});
 
 
