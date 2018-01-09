@@ -41,7 +41,7 @@ export const Study = Backbone.Model.extend({
             study_id: data.id,
             study_accession: attr['accession'],
             last_update: formatDate(attr['last-update']),
-            abstract: truncateString(attr['study-abstract']),
+            abstract: attr['study-abstract'],
         }
     }
 });
@@ -56,7 +56,6 @@ export const StudiesCollection = Backbone.Collection.extend({
         }
         if (params) {
             this.params = params;
-            console.log(this.params);
         }
     },
     parse: function (response) {
@@ -202,7 +201,6 @@ export const SamplesCollection = Backbone.Collection.extend({
         if (data.hasOwnProperty(('study_accession'))) {
             this.study_accession = data.study_accession;
         }
-        console.log(this);
     },
     parse: function (response) {
         return response.data;
