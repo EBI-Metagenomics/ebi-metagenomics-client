@@ -75,7 +75,8 @@
     <div class="row" role="main">
         <div  id="main-content-area" class="columns small-12 medium-12 large-12">
             <script id="studyTmpl" type="text/template">
-                <h2>Project <%= study_id %> (<%= study_accession %>) </h2>
+                <h3>Project <%= study_accession %> (<%= bioproject %>) </h3>
+                <h2><%= study_name %></h2>
                 <ul class="tabs" data-tabs id="study-tabs">
                     <li class="tabs-title active"><a href="#overview" aria-selected="true">Overview</a></li>
                     <li class="tabs-title"><a href="#analysis">Analysis summary</a></li>
@@ -153,6 +154,15 @@
                                 <!--</tbody>-->
                             <!--</table>-->
                             <!--<div id="pagination"></div>-->
+                        </section>
+                        <hr>
+                        <section id="external-links-section">
+                            <div class="row columns">
+                                <h3>External links</h3>
+                                <ul id="links">
+                                    <%= external_links %>
+                                </ul>
+                            </div>
                         </section>
                     </div>
 
