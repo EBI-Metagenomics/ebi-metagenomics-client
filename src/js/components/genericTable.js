@@ -1,6 +1,9 @@
 const tableTmpl = require('../commons').genericTable;
 const _ = require('underscore');
 const formatDownloadURL = require('../util').formatDownloadURL;
+const Commons = require('../commons');
+
+
 module.exports = class GenericTable {
     constructor($container, title, headers, callback) {
         this.headers = headers;
@@ -26,7 +29,7 @@ module.exports = class GenericTable {
         this.$tbody = $sectionContent.find('tbody');
 
         this.order = null;
-
+        this.$pageSizeSelect.val(Commons.DEFAULT_PAGE_SIZE);
         $container.append($sectionContent);
     }
 
