@@ -236,7 +236,7 @@ export const capitalizeWord = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-export const getDownloadParams = function(params){
+export const getDownloadParams = function (params) {
     const downloadParams = $.extend(true, {}, params);
     delete downloadParams['page'];
     delete downloadParams['page_size'];
@@ -258,3 +258,16 @@ export function truncateString(str, maxLength = 190) {
     return (str.length > maxLength) ? str.substr(0, maxLength - 1) + '&hellip;' : str;
 }
 
+/**
+ * Format request for URL (remove result size limit, add csv format
+ * @param requestURL: api url to format for download
+ */
+export function formatDownloadURL(requestURL) {
+    const splitURL = requestURL.split('?');
+    let params = _.filter(splitURL[1].split('&'), function (e) {
+        const paramName = e.split('=')[0];
+        return !_.contains(['page', 'page_size', 'format'], paramName);
+    });
+    params.push('format=csv');
+    return splitURL[0] + '?' + params.join('&');
+}
