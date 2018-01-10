@@ -9,6 +9,8 @@ const GenericTable = require('../components/genericTable');
 const pagination = new Pagination();
 const Map = require('../components/map');
 
+const DetailList = require('../components/DetailList');
+
 // const OverlappingMarkerSpiderfier = require('../../../static/libraries/oms.min.js');
 import 'js-marker-clusterer';
 
@@ -35,13 +37,27 @@ let StudyView = Backbone.View.extend({
     el: '#main-content-area',
     fetchAndRender: function () {
         const that = this;
-        return this.model.fetch({
-            data: $.param({}), success: function (data, response) {
-                console.log(that.model);
-                that.$el.html(that.template(that.model.toJSON()));
+        const deferred = $.Deferred();
+        this.model.fetch({
+            data: $.param({}),
+            success: function (data, response) {
+                const attr = data.attributes;
+
+                getExternalLinks(attr.id, attr.bioproject).done(function (data) {
+                    console.log(data);
+                    const links = _.map(data, function(url, text){
+                        return createListItem(createLinkTag(url, text));
+                    });
+                    that.model.attributes.external_links = links;
+                    console.log(that.model);
+                    that.$el.html(that.template(that.model.toJSON()));
+                    deferred.resolve(true);
+                });
                 attachTabHandlers();
+
             }
         });
+        return deferred.promise();
     }
 });
 
@@ -202,6 +218,39 @@ function initPage() {
         samplesView.init();
         runsView.init();
     });
+}
+
+
+function checkURLExists(url) {
+    return $.ajax({
+        type: 'HEAD',
+        url: url,
+    });
+}
+
+function createLinkTag(url, text){
+    return "<a href='"+url+"'>"+text+"</a>";
+}
+
+function createListItem(html){
+    return "<li>"+html+"</li>";
+}
+
+function getExternalLinks(study_id, study_accession) {
+    var deferred = new $.Deferred();
+    const ena_url = 'https://www.ebi.ac.uk/ena/data/view/' + study_accession;
+    const ena_url_check = checkURLExists(ena_url);
+    let urls = {};
+    $.when(
+        ena_url_check
+    ).done(function () {
+        if (ena_url_check.status===200){
+            urls['ENA website ('+study_id+')'] = ena_url;
+        }
+        deferred.resolve(urls);
+
+    });
+    return deferred.promise();
 }
 
 
