@@ -16,7 +16,7 @@ export function formatLineage(lineage) {
 }
 
 export function lineage2Biome(lineage) {
-    return lineage.split(":").slice(-1)[0];
+    return lineage.split(":").splice(2, lineage.length - 2).join(" ");
 }
 
 export function formatDate(date_str) {
