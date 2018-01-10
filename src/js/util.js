@@ -109,13 +109,14 @@ const biomeIconMapD2 = {
 };
 const biomeIconMapD3 = {
     'root:environmental:air': 'air_b',
-    'root:environmental:aquatic': 'marine_b',
+    'root:environmental:aquatic': 'freshwater_b',
     'root:engineered:wastewater': 'wastewater_b',
     'root:host-associated:human': 'human_host_b',
     'root:host-associated:plants': 'plant_host_b',
 
 };
 const biomeIconMapD4 = {
+    'root:environmental:aquatic:marine': 'marine_b',
     'root:environmental:terrestrial:volcanic': 'vulcano_b',
     'root:environmental:aquatic:marine:volcanic': 'vulcano_b',
     'root:environmental:aquatic:thermal springs': 'hotspring_b',
@@ -204,7 +205,7 @@ export const BiomeCollectionView = Backbone.View.extend({
     initialize: function (collection, biome) {
         var that = this;
         this.collection.fetch({
-            data: $.param({depth_lte: 3}), success: function () {
+            data: $.param({depth_lte: 3, page_size:100}), success: function () {
                 // Fetch and pre-pend root node to list
                 var root = new api.Biome({id: 'root'});
                 root.fetch({

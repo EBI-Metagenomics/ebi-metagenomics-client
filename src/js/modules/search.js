@@ -13,7 +13,7 @@ require('webpack-jquery-ui/css');
 import 'foundation-sites';
 import '../../../static/libraries/jquery.TableCSVExport';
 
-const CheckboxTree = require('../components/checkbox_tree');
+const CheckboxTree = require('../components/checkboxTree');
 
 const Slider = require('../components/slider.js');
 
@@ -260,14 +260,13 @@ const ProjectsView = ResultsView.extend({
             this.pagination.setPaginationElem('#projects-pagination');
             const cookieParams = loadSearchParams('projects');
             this.params = $.extend(true, {}, Search.prototype.params);
-
+            console.log(getQueryText());
             if (cookieParams) {
                 this.params.facets = cookieParams.filters || "";
-                this.params.query = cookieParams.query || getQueryText() || this.defaultQuery;
+                this.params.query = getQueryText() || cookieParams.query || this.defaultQuery;
             } else {
                 this.params.facets = "";
                 this.params.query = getQueryText() || this.defaultQuery;
-
             }
             this.params.fields = "ENA_PROJECT,METAGENOMICS_RUNS,METAGENOMICS_SAMPLES,biome_name,centre_name,creation_date,description,domain_source,id,last_modification_date,name,releaseDate_date";
             // this.params.query = this.defaultQuery;
@@ -294,6 +293,8 @@ const ProjectsView = ResultsView.extend({
 
         fetchAndRender: function (renderFilter, setFilters) {
             const that = this;
+            console.trace();
+            console.log(that.params);
             return this.collection.fetch({
                 data: $.param(that.params),
                 success: function (collection, response) {

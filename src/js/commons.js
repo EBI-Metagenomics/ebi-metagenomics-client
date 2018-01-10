@@ -5,6 +5,7 @@ export const pagination = require("../partials/pagination.handlebars");
 export const pagesize = require("../partials/pagesize.handlebars");
 export const resultsFilter = require("../partials/results_filter.handlebars");
 export const genericTable = require('../partials/generic_table.handlebars');
+export const detailList = require('../partials/detailList.handlebars');
 
 export const pipelines = [
     require('../partials/pipelines/1.handlebars'),
@@ -27,6 +28,7 @@ require('html-loader?path=../name=[name].[ext]!../submit.html');
 require('html-loader?path=../name=[name].[ext]!../pipelines.html');
 require('html-loader?path=../name=[name].[ext]!../pipeline.html');
 require('html-loader?path=../name=[name].[ext]!../index.html');
+require('html-loader?path=../name=[name].[ext]!../login.html');
 
 require('style-loader?name=[name].[ext]!../../static/css/site.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');

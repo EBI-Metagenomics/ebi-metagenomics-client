@@ -11,7 +11,7 @@ before_install:
     - bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda
     - export PATH=~/miniconda/bin:$PATH
     - pip install "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-    - pip install https://github.com/EBI-metagenomics/emgapi/archive/v1.0.0.tar.gz
+    - pip install https://github.com/EBI-Metagenomics/emgapi/archive/v1.0.2.tar.gz
     - emgcli check --deploy
     - emgcli migrate --fake-initial
     - emgcli collectstatic --noinput
