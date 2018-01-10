@@ -6,8 +6,9 @@
   "scripts": {
     "cypress:open": "cypress open",
     "test": "cypress open",
-    "watch": "webpack --env dev --watch --config webpack.config.js",
-    "build": "webpack --env dev --config webpack.config.js"
+    "watch": "webpack --watch --config webpack.config.js",
+    "build": "webpack --progress --display-error-details --config webpack.config.js",
+    "start": "webpack-dev-server --open --watch --progress --colors"
   },
   "author": "",
   "license": "ISC",

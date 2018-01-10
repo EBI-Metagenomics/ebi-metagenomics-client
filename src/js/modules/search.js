@@ -1,4 +1,4 @@
-const searchUrl = require('config').SEARCH_URL;
+const searchUrl = process.env.SEARCH_URL;
 import {attachTabHandlers, setCurrentTab} from "../util";
 
 const util = require('../util');

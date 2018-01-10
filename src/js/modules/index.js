@@ -2,7 +2,7 @@ const Backbone = require('backbone');
 const _ = require('underscore');
 const $ = require('jquery');
 const api = require('../components/api');
-const apiUrl = require('config').API_URL;
+const apiUrl = process.env.API_URL;
 const commons = require('../commons');
 const blogUrl = commons.BLOG_URL;
 
