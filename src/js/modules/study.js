@@ -22,7 +22,10 @@ import {
     initTableTools,
     setCurrentTab,
     setURLParams,
-    showTableLoadingGif
+    showTableLoadingGif,
+    createListItem,
+    createLinkTag,
+    checkURLExists
 } from "../util";
 
 setCurrentTab('#studies-nav');
@@ -200,6 +203,25 @@ function initMap(samples) {
     }, []);
 }
 
+
+function getExternalLinks(study_id, study_accession) {
+    var deferred = new $.Deferred();
+    const ena_url = 'https://www.ebi.ac.uk/ena/data/view/' + study_accession;
+    const ena_url_check = checkURLExists(ena_url);
+    let urls = {};
+    $.when(
+        ena_url_check
+    ).done(function () {
+        if (ena_url_check.status===200){
+            urls['ENA website ('+study_id+')'] = ena_url;
+        }
+        deferred.resolve(urls);
+
+    });
+    return deferred.promise();
+}
+
+
 // Called by googleMaps import callback
 function initPage() {
     let study = new api.Study({id: study_id});
@@ -218,39 +240,6 @@ function initPage() {
         samplesView.init();
         runsView.init();
     });
-}
-
-
-function checkURLExists(url) {
-    return $.ajax({
-        type: 'HEAD',
-        url: url,
-    });
-}
-
-function createLinkTag(url, text){
-    return "<a href='"+url+"'>"+text+"</a>";
-}
-
-function createListItem(html){
-    return "<li>"+html+"</li>";
-}
-
-function getExternalLinks(study_id, study_accession) {
-    var deferred = new $.Deferred();
-    const ena_url = 'https://www.ebi.ac.uk/ena/data/view/' + study_accession;
-    const ena_url_check = checkURLExists(ena_url);
-    let urls = {};
-    $.when(
-        ena_url_check
-    ).done(function () {
-        if (ena_url_check.status===200){
-            urls['ENA website ('+study_id+')'] = ena_url;
-        }
-        deferred.resolve(urls);
-
-    });
-    return deferred.promise();
 }
 
 
