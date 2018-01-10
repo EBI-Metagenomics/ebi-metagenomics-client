@@ -167,7 +167,6 @@ export const Sample = Backbone.Model.extend({
             }
         });
 
-
         // Adaption to handle 'includes' on API calls which would wrap the response
         const biome = data.relationships.biome;
         const biome_name = biome.data.id;
@@ -195,8 +194,8 @@ export const SamplesCollection = Backbone.Collection.extend({
     model: Sample,
     initialize: function (data) {
         // Sample ID
-        if (data && data.hasOwnProperty(('sample_id'))) {
-            this.sample_id = data.sample_id;
+        if (data && data.hasOwnProperty(('study_accession'))) {
+            this.study_accession = data.study_accession;
         }
         if (data.hasOwnProperty(('study_accession'))) {
             this.study_accession = data.study_accession;

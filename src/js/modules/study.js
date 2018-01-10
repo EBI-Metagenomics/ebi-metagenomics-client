@@ -7,6 +7,7 @@ const Handlebars = require('handlebars');
 const List = require('list.js');
 const GenericTable = require('../components/genericTable');
 const pagination = new Pagination();
+const Map = require('../components/map');
 
 // const OverlappingMarkerSpiderfier = require('../../../static/libraries/oms.min.js');
 import 'js-marker-clusterer';
@@ -28,7 +29,6 @@ const DEFAULT_PAGE_SIZE = Commons.DEFAULT_PAGE_SIZE;
 
 
 let study_id = getURLParameter();
-
 let StudyView = Backbone.View.extend({
     model: api.Study,
     template: _.template($("#studyTmpl").html()),
@@ -46,59 +46,59 @@ let StudyView = Backbone.View.extend({
 });
 
 let SamplesView = Backbone.View.extend({
-    tableObj: null,
-    pagination: null,
-    fetch: function () {
-        return this.collection.fetch()
-    },
+        tableObj: null,
+        pagination: null,
+        fetch: function () {
+            return this.collection.fetch()
+        },
 
-    init: function () {
-        const that = this;
-        const columns = [
-            {sortBy: 'sample_name', name: 'Sample name'},
-            {sortBy: 'accession', name: 'Sample ID'},
-            {sortBy: null, name: 'Description'},
-            {sortBy: 'last_update', name: 'Last update'},
-        ];
-        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, function (page, pageSize, order, query) {
-            that.update(page, pageSize, order, query);
-        });
-        this.update(1, DEFAULT_PAGE_SIZE, null, null)
-    },
+        init: function () {
+            const that = this;
+            const columns = [
+                {sortBy: 'sample_name', name: 'Sample name'},
+                {sortBy: 'accession', name: 'Sample ID'},
+                {sortBy: null, name: 'Description'},
+                {sortBy: 'last_update', name: 'Last update'},
+            ];
+            this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, function (page, pageSize, order, query) {
+                that.update(page, pageSize, order, query);
+            });
+            this.update(1, DEFAULT_PAGE_SIZE, null, null)
+        },
 
-    update: function (page, pageSize, order, query) {
-        this.tableObj.showLoadingGif();
-        let params = {
-            study_accession: this.collection.study_accession,
-            page: page,
-            page_size: pageSize
-        };
-        if (order) {
-            params['ordering'] = order;
-        }
-        if (query) {
-            params['search'] = query;
-        }
-        const that = this;
-        this.collection.fetch({
-            data: $.param(params),
-            success: function (data, response) {
-                that.renderData(page, response.meta.pagination.count, response.links.first);
-                that.tableObj.hideLoadingGif();
+        update: function (page, pageSize, order, query) {
+            this.tableObj.showLoadingGif();
+            let params = {
+                study_accession: this.collection.study_accession,
+                page: page,
+                page_size: pageSize
+            };
+            if (order) {
+                params['ordering'] = order;
             }
-        })
-    },
+            if (query) {
+                params['search'] = query;
+            }
+            const that = this;
+            this.collection.fetch({
+                data: $.param(params),
+                success: function (data, response) {
+                    that.renderData(page, response.meta.pagination.count, response.links.first);
+                    that.tableObj.hideLoadingGif();
+                }
+            })
+        },
 
-    renderData: function (page, resultCount, requestURL) {
-        initMap(this.collection.models);
-        const tableData = _.map(this.collection.models, function (m) {
-            const attr = m.attributes;
-            const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
-            return [attr.sample_name, sample_link, attr.sample_desc, attr.last_update]
-        });
-        this.tableObj.update(tableData, true, page, resultCount, requestURL);
-    }
-});
+        renderData: function (page, resultCount, requestURL) {
+            initMap(this.collection.models);
+            const tableData = _.map(this.collection.models, function (m) {
+                const attr = m.attributes;
+                const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
+                return [attr.sample_name, sample_link, attr.sample_desc, attr.last_update]
+            });
+            this.tableObj.update(tableData, true, page, resultCount, requestURL);
+        }
+    });
 
 
 let RunsView = Backbone.View.extend({
@@ -182,84 +182,30 @@ function initMap(samples) {
         }
         return result;
     }, []);
-
-    if (markers.length > 0) {
-        let bounds = new google.maps.LatLngBounds();
-        for (let i = 0; i < markers.length; i++) {
-            bounds.extend(markers[i].getPosition());
-        }
-        // map.fitBounds(bounds);
-
-        let markerCluster = new MarkerClusterer(map, markers,
-            {
-                imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
-                maxZoom: 17
-            });
-    }
-    window.map = map;
-    return map
 }
 
-function getSamplePosition(sample) {
-    return {lat: parseFloat(sample.attributes.latitude), lng: parseFloat(sample.attributes.longitude)}
-}
+// Called by googleMaps import callback
+function initPage() {
+    let study = new api.Study({id: study_id});
+    let studyView = new StudyView({model: study});
 
-function createMarkerLabel(template, sample) {
-    const attr = sample.attributes;
-    let data = {
-        id: attr.accession,
-        name: attr['sample-name'],
-        desc: attr['sample-desc'],
-        classification: attr['environment-biome'],
-        collection_date: attr['collection-date'],
-        lat: attr['latitude'],
-        lng: attr['longitude'],
-        sample_url: '/sample/' + attr.accession
-    };
-    return template(data);
-}
+    let samples = new api.SamplesCollection({study_accession: study_id});
+    let samplesView = new SamplesView({collection: samples});
 
-function placeMarker(map, oms, template, sample) {
-    const pos = getSamplePosition(sample);
+    let runs = new api.RunCollection({study_accession: study_id});
+    let runsView = new RunsView({collection: runs});
 
-    let marker = new google.maps.Marker({
-        position: pos,
-        map: map,
-        title: sample.id
+
+    $.when(
+        studyView.fetchAndRender(),
+    ).done(function () {
+        samplesView.init();
+        runsView.init();
     });
-
-
-    let contentString = createMarkerLabel(template, sample);
-
-    let infowindow = new google.maps.InfoWindow({
-        content: contentString
-    });
-
-    google.maps.event.addListener(marker, 'spider_click', function (e) {
-        infowindow.open(map, marker);
-    });
-    oms.addMarker(marker);
-    // marker.addListener('click', function () {
-    // });
-    return marker;
 }
 
-let study = new api.Study({id: study_id});
-let studyView = new StudyView({model: study});
 
-let samples = new api.SamplesCollection({study_accession: study_id});
-let samplesView = new SamplesView({collection: samples});
-
-let runs = new api.RunCollection({study_accession: study_id});
-let runsView = new RunsView({collection: runs});
-
-
-$.when(
-    studyView.fetchAndRender(),
-).done(function () {
-    samplesView.init();
-    runsView.init();
-});
+window.initPage = initPage;
 
 
 // <!--<% _.each(samples, function(sample){ %>-->

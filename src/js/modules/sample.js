@@ -8,6 +8,7 @@ const Handlebars = require('handlebars');
 const List = require('list.js');
 const GenericTable = require('../components/genericTable');
 const API_URL = require('config').API_URL;
+const Map = require('../components/map');
 
 import {
     getURLFilterParams,
@@ -33,12 +34,27 @@ let SampleView = Backbone.View.extend({
     fetchAndRender: function () {
         const that = this;
         return this.model.fetch({
-            data: $.param({}), success: function (data, response) {
+            data: $.param({}),
+            success: function () {
+                that.model.attributes.metadatas.sort(compareByName);
                 that.$el.html(that.template(that.model.toJSON()));
+                new Map('map', [that.model]);
             }
         });
     }
 });
+
+function compareByName(a, b){
+    const textA = a.name.toUpperCase();
+    const textB = b.name.toUpperCase();
+    if (textA < textB) {
+        return -1;
+    } else if (textB < textA){
+        return 1;
+    } else {
+        return 0
+    }
+}
 
 let RunView = Backbone.View.extend({
     tagName: 'tr',
@@ -166,19 +182,22 @@ let RunsView = Backbone.View.extend({
     }
 });
 
+// Called by googleMaps import callback
+function initPage() {
+    let sample = new api.Sample({id: sample_id});
+    let sampleView = new SampleView({model: sample});
 
-let sample = new api.Sample({id: sample_id});
-let sampleView = new SampleView({model: sample});
+    let studies = new api.StudiesCollection({sample_id: sample_id}, API_URL + 'samples/' + sample_id + '/studies');
+    let studiesView = new StudiesView({collection: studies});
 
-let studies = new api.StudiesCollection({sample_id: sample_id}, API_URL + 'samples/' + sample_id + '/studies');
-let studiesView = new StudiesView({collection: studies});
+    let runs = new api.RunCollection({sample_id: sample_id});
+    let runsView = new RunsView({collection: runs});
 
-let runs = new api.RunCollection({sample_id: sample_id});
-let runsView = new RunsView({collection: runs});
-
-$.when(
-    sampleView.fetchAndRender()
-).done(function () {
-    studiesView.init();
-    runsView.init();
-});
+    $.when(
+        sampleView.fetchAndRender()
+    ).done(function () {
+        studiesView.init();
+        runsView.init();
+    });
+}
+window.initPage = initPage;
