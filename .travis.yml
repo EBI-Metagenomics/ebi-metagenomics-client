@@ -31,15 +31,17 @@ before_install:
   - emgcli check --deploy
   - emgdeploy --daemon -p ~/emgvar/emg.pid --workers 5 emgcli.wsgi:application
 
+  - npm install cypress
+
 install:
   - npm install webpack -g
   - npm install
   - nom run buil
-  - nginx -c $TRAVIS_BUILD_DIR/test/util/nginx.conf
+  - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
   - curl -I http://localhost:9000
 
 script:
-  - cypress run --record
+  - npm run cypress:run
 
 cache:
   directories:
