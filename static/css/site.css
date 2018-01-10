@@ -99,7 +99,7 @@ th.sort-both:after {
 
 .facet-remove-button {
     margin-right: 1em !important;
-    float:left;
+    float: left;
 }
 
 .samples-table > tbody > tr > td > div {
@@ -521,6 +521,7 @@ select.table-tools {
     height: 1.5em;
     width: 1.5em;
 }
+
 .loading-gif-small {
     height: 1em;
     width: 1em;
@@ -577,8 +578,8 @@ select.table-tools {
 }
 
 .slider-group-title {
-    padding-left:1em;
-    float:left;
+    padding-left: 1em;
+    float: left;
     line-height: 1.2em;
 }
 
@@ -589,6 +590,52 @@ select.table-tools {
     display: inline-block;
 }
 
+.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.4;
+    filter: grayscale(80%);
+}
+
 /* Style for external links */
-a.ext, a.ext:link {padding-left: 12px;background: url(/static/images/ico_ext_link.png) no-repeat 0 3px;}
-a.ext:hover,a.ext:active, a.ext:focus {background: url(/static/images/ico_ext_link_on.png) no-repeat 0 3px; }
+a.ext, a.ext:link {
+    padding-left: 12px;
+    background: url(/static/images/ico_ext_link.png) no-repeat 0 3px;
+}
+
+a.ext:hover, a.ext:active, a.ext:focus {
+    background: url(/static/images/ico_ext_link_on.png) no-repeat 0 3px;
+}
+
+tr.disabled {
+    opacity: 0.3;
+}
+
+div.box {
+    padding: 1em 2em;
+    border: 1px solid #e5e5e5;
+    margin: 1em !important;
+
+    display: block;
+}
+
+a.download-link {
+    margin-right: 1em;
+}
+
+p.study-abstract {
+    border: 1px solid #e6e6e6;
+    padding: 1em;
+    overflow-y: scroll;
+    max-height: 15em;
+}
+
+/* Style for external links */
+a.ext, a.ext:link {
+    padding-left: 12px;
+    background: url(/static/images/ico_ext_link.png) no-repeat 0 3px;
+}
+
+a.ext:hover, a.ext:active, a.ext:focus {
+    background: url(/static/images/ico_ext_link_on.png) no-repeat 0 3px;
+}

@@ -35,13 +35,13 @@ export const Study = Backbone.Model.extend({
         return {
             biomes: biomes,
             study_link: "/study/" + data.id,
-            samples_link: "/study/" + data.id,
+            samples_link: "/study/" + data.id+"#samples-section",
             study_name: attr['study-name'],
             samples_count: attr['samples-count'],
             study_id: data.id,
             study_accession: attr['accession'],
             last_update: formatDate(attr['last-update']),
-            abstract: truncateString(attr['study-abstract']),
+            abstract: attr['study-abstract'],
         }
     }
 });
@@ -56,7 +56,6 @@ export const StudiesCollection = Backbone.Collection.extend({
         }
         if (params) {
             this.params = params;
-            console.log(this.params);
         }
     },
     parse: function (response) {
@@ -135,9 +134,9 @@ export const Biome = Backbone.Model.extend({
             name: lineage2Biome(lineage),
             icon: getBiomeIcon(lineage),
             lineage: lineage,
-            studies_count: attr['study-count'],
+            samples_count: attr['samples-count'],
             // lineage_projects_no_children: attr['studies-count'],
-            biome_studies_link: '/studies?biome=' + lineage,
+            biome_studies_link: '/studies?lineage=' + lineage,
             // biome_studies_link_no_children: 'TODO2',
         };
     }
@@ -198,38 +197,43 @@ export const SamplesCollection = Backbone.Collection.extend({
         if (data && data.hasOwnProperty(('study_accession'))) {
             this.study_accession = data.study_accession;
         }
+        if (data.hasOwnProperty(('study_accession'))) {
+            this.study_accession = data.study_accession;
+        }
     },
     parse: function (response) {
         return response.data;
     }
 });
 
-export const Analysis = Backbone.Model.extend({
+export const RunPipelineObject = Backbone.Model.extend({
+    initialize: function (params) {
+        this.id = params.id;
+        this.version = params.version;
+    }
+});
+
+export const Analysis = RunPipelineObject.extend({
     url: function () {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version;
     },
-    initialize: function (params) {
-        this.id = params.id;
-        this.version = params.version;
-    }
 });
 
-export const AnalysisMetadata = Backbone.Model.extend({
-    url: function () {
-        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/metadata';
-    },
-    initialize: function (params) {
-        this.id = params.id;
-        this.version = params.version;
-    }
-});
-
-export const Taxonomy = Backbone.Model.extend({
+export const Taxonomy = RunPipelineObject.extend({
     url: function () {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/taxonomy';
     },
-    initialize: function (params) {
-        this.id = params.id;
-        this.version = params.version;
+});
+
+export const InterproIden = RunPipelineObject.extend({
+    url: function () {
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/interpro-identifiers';
+    },
+});
+
+export const GoSlim = RunPipelineObject.extend({
+    url: function () {
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/go-slim';
     }
 });
+

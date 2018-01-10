@@ -16,7 +16,7 @@ export function formatLineage(lineage) {
 }
 
 export function lineage2Biome(lineage) {
-    return lineage.split(":").slice(-1)[0];
+    return lineage.split(":").splice(2, lineage.length - 2).join(" ");
 }
 
 export function formatDate(date_str) {
@@ -109,13 +109,14 @@ const biomeIconMapD2 = {
 };
 const biomeIconMapD3 = {
     'root:environmental:air': 'air_b',
-    'root:environmental:aquatic': 'marine_b',
+    'root:environmental:aquatic': 'freshwater_b',
     'root:engineered:wastewater': 'wastewater_b',
     'root:host-associated:human': 'human_host_b',
     'root:host-associated:plants': 'plant_host_b',
 
 };
 const biomeIconMapD4 = {
+    'root:environmental:aquatic:marine': 'marine_b',
     'root:environmental:terrestrial:volcanic': 'vulcano_b',
     'root:environmental:aquatic:marine:volcanic': 'vulcano_b',
     'root:environmental:aquatic:thermal springs': 'hotspring_b',
@@ -204,7 +205,7 @@ export const BiomeCollectionView = Backbone.View.extend({
     initialize: function (collection, biome) {
         var that = this;
         this.collection.fetch({
-            data: $.param({depth_lte: 3}), success: function () {
+            data: $.param({depth_lte: 3, page_size:100}), success: function () {
                 // Fetch and pre-pend root node to list
                 var root = new api.Biome({id: 'root'});
                 root.fetch({
@@ -235,7 +236,7 @@ export const capitalizeWord = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-export const getDownloadParams = function(params){
+export const getDownloadParams = function (params) {
     const downloadParams = $.extend(true, {}, params);
     delete downloadParams['page'];
     delete downloadParams['page_size'];
@@ -257,3 +258,16 @@ export function truncateString(str, maxLength = 190) {
     return (str.length > maxLength) ? str.substr(0, maxLength - 1) + '&hellip;' : str;
 }
 
+/**
+ * Format request for URL (remove result size limit, add csv format
+ * @param requestURL: api url to format for download
+ */
+export function formatDownloadURL(requestURL) {
+    const splitURL = requestURL.split('?');
+    let params = _.filter(splitURL[1].split('&'), function (e) {
+        const paramName = e.split('=')[0];
+        return !_.contains(['page', 'page_size', 'format'], paramName);
+    });
+    params.push('format=csv');
+    return splitURL[0] + '?' + params.join('&');
+}

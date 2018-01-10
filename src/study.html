@@ -87,10 +87,11 @@
                                 <h4>Last updated: <%= last_update %></h4>
                                 <section>
                                     <h3>Description</h3>
-                                    <p> <%= abstract %></p>
+                                    <p class="study-abstract"> <%= abstract %></p>
                                     <h3>Classification</h3>
                                     <% _.each(biomes, function(biome){ %>
-                                    <p> <%= biome.name %></p>
+                                    <span class="biome_icon icon_sm <%= biome.icon %>" title="<%= biome.name %>"></span>
+                                    <!--<p> <%= biome.name %></p>-->
                                     <% }); %>
                                 </section>
                             </div>

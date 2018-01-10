@@ -1,6 +1,5 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const util = require('../util');
 const Commons = require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
@@ -38,6 +37,7 @@ let StudyView = Backbone.View.extend({
         const that = this;
         return this.model.fetch({
             data: $.param({}), success: function (data, response) {
+                console.log(that.model);
                 that.$el.html(that.template(that.model.toJSON()));
                 attachTabHandlers();
             }
@@ -46,59 +46,59 @@ let StudyView = Backbone.View.extend({
 });
 
 let SamplesView = Backbone.View.extend({
-    tableObj: null,
-    pagination: null,
-    fetch: function () {
-        return this.collection.fetch()
-    },
+        tableObj: null,
+        pagination: null,
+        fetch: function () {
+            return this.collection.fetch()
+        },
 
-    init: function () {
-        const that = this;
-        const columns = [
-            {sortBy: 'sample_name', name: 'Sample name'},
-            {sortBy: 'accession', name: 'Sample ID'},
-            {sortBy: null, name: 'Description'},
-            {sortBy: 'last_update', name: 'Last update'},
-        ];
-        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, function (page, pageSize, order, query) {
-            that.update(page, pageSize, order, query);
-        });
-        this.update(1, DEFAULT_PAGE_SIZE, null, null)
-    },
+        init: function () {
+            const that = this;
+            const columns = [
+                {sortBy: 'sample_name', name: 'Sample name'},
+                {sortBy: 'accession', name: 'Sample ID'},
+                {sortBy: null, name: 'Description'},
+                {sortBy: 'last_update', name: 'Last update'},
+            ];
+            this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, function (page, pageSize, order, query) {
+                that.update(page, pageSize, order, query);
+            });
+            this.update(1, DEFAULT_PAGE_SIZE, null, null)
+        },
 
-    update: function (page, pageSize, order, query) {
-        this.tableObj.showLoadingGif();
-        let params = {
-            study_accession: this.collection.study_accession,
-            page: page,
-            page_size: pageSize
-        };
-        if (order) {
-            params['ordering'] = order;
-        }
-        if (query) {
-            params['search'] = query;
-        }
-        const that = this;
-        this.collection.fetch({
-            data: $.param(params),
-            success: function (data, response) {
-                that.renderData(page, response.meta.pagination.count);
-                that.tableObj.hideLoadingGif();
+        update: function (page, pageSize, order, query) {
+            this.tableObj.showLoadingGif();
+            let params = {
+                study_accession: this.collection.study_accession,
+                page: page,
+                page_size: pageSize
+            };
+            if (order) {
+                params['ordering'] = order;
             }
-        })
-    },
+            if (query) {
+                params['search'] = query;
+            }
+            const that = this;
+            this.collection.fetch({
+                data: $.param(params),
+                success: function (data, response) {
+                    that.renderData(page, response.meta.pagination.count, response.links.first);
+                    that.tableObj.hideLoadingGif();
+                }
+            })
+        },
 
-    renderData: function (page, resultCount) {
-        new Map('map', this.collection.models);
-        const tableData = _.map(this.collection.models, function (m) {
-            const attr = m.attributes;
-            const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
-            return [attr.sample_name, sample_link, attr.sample_desc, attr.last_update]
-        });
-        this.tableObj.update(tableData, true, page, resultCount);
-    }
-});
+        renderData: function (page, resultCount, requestURL) {
+            initMap(this.collection.models);
+            const tableData = _.map(this.collection.models, function (m) {
+                const attr = m.attributes;
+                const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
+                return [attr.sample_name, sample_link, attr.sample_desc, attr.last_update]
+            });
+            this.tableObj.update(tableData, true, page, resultCount, requestURL);
+        }
+    });
 
 
 let RunsView = Backbone.View.extend({
@@ -139,21 +139,50 @@ let RunsView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params),
             success: function (data, response) {
-                that.renderData(page, response.meta.pagination.count);
+                that.renderData(page, response.meta.pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
             }
         })
     },
 
-    renderData: function (page, resultCount) {
+    renderData: function (page, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const run_link = "<a href='" + attr.run_url + "'>" + attr.run_id + "</a>";
             return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform']]
         });
-        this.tableObj.update(tableData, true, page, resultCount);
+        this.tableObj.update(tableData, true, page, resultCount, requestURL);
     }
 });
+
+
+function initMap(samples) {
+    let map = new google.maps.Map(document.getElementById('map'), {
+        streetViewControl: false,
+        zoom: 1,
+        center: new google.maps.LatLng(0.0, 0.0)
+    });
+
+    const template = Handlebars.compile($("#marker-template").html());
+
+    let oms = new OverlappingMarkerSpiderfier(map, {
+        markersWontMove: true,
+        markersWontHide: true,
+        basicFormatEvents: true
+    });
+
+    // // Do not display markers with invalid Lat/Long values
+    let markers = samples.reduce(function (result, sample) {
+        const lat = sample.attributes.latitude;
+        const lng = sample.attributes.longitude;
+        if (lat === null || lng === null) {
+            $("#warning").show();
+        } else {
+            result.push(placeMarker(map, oms, template, sample));
+        }
+        return result;
+    }, []);
+}
 
 // Called by googleMaps import callback
 function initPage() {
@@ -174,6 +203,7 @@ function initPage() {
         runsView.init();
     });
 }
+
 
 window.initPage = initPage;
 
