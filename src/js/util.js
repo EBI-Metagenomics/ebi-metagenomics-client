@@ -271,3 +271,19 @@ export function formatDownloadURL(requestURL) {
     params.push('format=csv');
     return splitURL[0] + '?' + params.join('&');
 }
+
+
+export function createLinkTag(url, text){
+    return "<a href='"+url+"'>"+text+"</a>";
+}
+
+export function createListItem(html){
+    return "<li>"+html+"</li>";
+}
+
+export function checkURLExists(url) {
+    return $.ajax({
+        type: 'HEAD',
+        url: url,
+    });
+}

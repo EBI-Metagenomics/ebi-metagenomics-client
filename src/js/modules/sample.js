@@ -9,15 +9,14 @@ const List = require('list.js');
 const GenericTable = require('../components/genericTable');
 const API_URL = require('config').API_URL;
 const Map = require('../components/map');
+const DetailList = require('../components/DetailList');
 
 import {
-    getURLFilterParams,
     getURLParameter,
-    hideTableLoadingGif,
-    initTableTools,
     setCurrentTab,
-    setURLParams,
-    showTableLoadingGif
+    createListItem,
+    createLinkTag,
+    checkURLExists
 } from "../util";
 
 setCurrentTab('#samples-nav');
@@ -33,23 +32,42 @@ let SampleView = Backbone.View.extend({
     el: '#main-content-area',
     fetchAndRender: function () {
         const that = this;
-        return this.model.fetch({
+        const deferred = $.Deferred();
+        this.model.fetch({
             data: $.param({}),
-            success: function () {
+            success: function (data, response) {
+                const attr = data.attributes;
                 that.model.attributes.metadatas.sort(compareByName);
-                that.$el.html(that.template(that.model.toJSON()));
-                new Map('map', [that.model]);
+                const metadataObj = {};
+                _.each(that.model.attributes.metadatas, function (e) {
+                    metadataObj[e.name] = e.value;
+                });
+
+                getExternalLinks(attr.id, attr.bioproject).done(function (data) {
+                    console.log(data);
+                    const links = _.map(data, function (url, text) {
+                        return createListItem(createLinkTag(url, text));
+                    });
+                    that.model.attributes.external_links = links;
+                    console.log(that.model);
+                    that.$el.html(that.template(that.model.toJSON()));
+                    $('#sample-metadata').html(new DetailList('Sample metadata', metadataObj));
+                    new Map('map', [that.model]);
+                    deferred.resolve(true);
+                });
+
             }
         });
+        return deferred.promise();
     }
 });
 
-function compareByName(a, b){
+function compareByName(a, b) {
     const textA = a.name.toUpperCase();
     const textB = b.name.toUpperCase();
     if (textA < textB) {
         return -1;
-    } else if (textB < textA){
+    } else if (textB < textA) {
         return 1;
     } else {
         return 0
@@ -108,13 +126,13 @@ let StudiesView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params),
             success: function (data, response) {
-                that.renderData(page, response.meta.pagination.count);
+                that.renderData(page, response.meta.pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
             }
         })
     },
 
-    renderData: function (page, resultCount) {
+    renderData: function (page, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const study_link = "<a href='" + attr.study_link + "'>" + attr.study_id + "</a>";
@@ -123,7 +141,7 @@ let StudiesView = Backbone.View.extend({
             });
             return [biomes.join(' '), study_link, attr['study_name'], attr['abstract'], attr['samples_count'], attr['last_update']]
         });
-        this.tableObj.update(tableData, true, page, resultCount);
+        this.tableObj.update(tableData, true, page, resultCount, requestURL);
     }
 });
 
@@ -166,21 +184,38 @@ let RunsView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params),
             success: function (data, response) {
-                that.renderData(page, response.meta.pagination.count);
+                that.renderData(page, response.meta.pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
             }
         })
     },
 
-    renderData: function (page, resultCount) {
+    renderData: function (page, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const run_link = "<a href='" + attr.run_url + "'>" + attr.run_id + "</a>";
             return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform']]
         });
-        this.tableObj.update(tableData, true, page, resultCount);
+        this.tableObj.update(tableData, true, page, resultCount, requestURL);
     }
 });
+
+function getExternalLinks(sample_accession) {
+    var deferred = new $.Deferred();
+    const ena_url = 'https://www.ebi.ac.uk/ena/data/view/' + sample_accession;
+    const ena_url_check = checkURLExists(ena_url);
+    let urls = {};
+    $.when(
+        ena_url_check
+    ).done(function () {
+        if (ena_url_check.status === 200) {
+            urls['ENA website (' + sample_accession + ')'] = ena_url;
+        }
+        deferred.resolve(urls);
+
+    });
+    return deferred.promise();
+}
 
 // Called by googleMaps import callback
 function initPage() {
@@ -200,4 +235,5 @@ function initPage() {
         runsView.init();
     });
 }
+
 window.initPage = initPage;

@@ -1,4 +1,6 @@
 const Handlebars = require('handlebars');
+const _ = require('underscore');
+
 
 module.exports = class Map {
     constructor(elementId, samples) {
@@ -53,12 +55,15 @@ module.exports = class Map {
 
     createMarkerLabel(template, sample) {
         const attr = sample.attributes;
+        _.each(sample.attributes.metadatas, function(e){
+            attr[e.name] = e.value;
+        });
         let data = {
             id: attr.accession,
             name: attr['sample-name'],
             desc: attr['sample-desc'],
-            classification: attr['environment-biome'],
-            collection_date: attr['collection-date'],
+            classification: attr['lineage'],
+            collection_date: attr['Collection date'],
             lat: attr['latitude'],
             lng: attr['longitude'],
             sample_url: '/sample/' + attr.accession

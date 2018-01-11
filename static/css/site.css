@@ -639,3 +639,13 @@ a.ext, a.ext:link {
 a.ext:hover, a.ext:active, a.ext:focus {
     background: url(/static/images/ico_ext_link_on.png) no-repeat 0 3px;
 }
+
+.detailList-key {
+    float: left;
+    clear: left;
+}
+
+.detailList-value {
+    float: right;
+    clear: right;
+}
