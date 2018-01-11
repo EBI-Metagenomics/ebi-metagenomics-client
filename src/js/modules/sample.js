@@ -7,7 +7,7 @@ const Pagination = require('../components/pagination').Pagination;
 const Handlebars = require('handlebars');
 const List = require('list.js');
 const GenericTable = require('../components/genericTable');
-const API_URL = require('config').API_URL;
+const API_URL = process.env.API_URL;
 const Map = require('../components/map');
 const DetailList = require('../components/DetailList');
 

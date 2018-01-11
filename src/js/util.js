@@ -3,7 +3,7 @@ const _ = require('underscore');
 const Backbone = require('backbone');
 const api = require('./components/api');
 const Handlebars = require('handlebars');
-const sequenceSearchUrl = require('config').SEQUENCE_SEARCH_URL;
+const sequenceSearchUrl = process.env.SEQUENCE_SEARCH_URL;
 
 $.typeWatch = require('jquery.typewatch');
 

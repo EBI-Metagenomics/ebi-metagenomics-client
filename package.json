@@ -6,8 +6,9 @@
   "scripts": {
     "cypress:open": "cypress open",
     "test": "cypress open",
-    "watch": "webpack --env dev --watch --config webpack.config.js",
-    "build": "webpack --env dev --config webpack.config.js"
+    "watch": "webpack --watch --config webpack.config.js",
+    "build": "webpack --progress --display-error-details --config webpack.config.js",
+    "start": "webpack-dev-server --open --watch --progress --colors"
   },
   "author": "",
   "license": "ISC",
@@ -47,7 +48,7 @@
     "clean-webpack-plugin": "^0.1.17",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.7",
-    "cypress": "^0.20.1",
+    "cypress": "^0.20.3",
     "handlebars-loader": "^1.5.0",
     "html-loader": "^0.5.1",
     "html-webpack-plugin": "^2.30.1",
