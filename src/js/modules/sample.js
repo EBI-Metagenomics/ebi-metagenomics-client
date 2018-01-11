@@ -9,6 +9,7 @@ const List = require('list.js');
 const GenericTable = require('../components/genericTable');
 const API_URL = require('config').API_URL;
 const Map = require('../components/map');
+const DetailList = require('../components/DetailList');
 
 import {
     getURLParameter,
@@ -37,15 +38,20 @@ let SampleView = Backbone.View.extend({
             success: function (data, response) {
                 const attr = data.attributes;
                 that.model.attributes.metadatas.sort(compareByName);
+                const metadataObj = {};
+                _.each(that.model.attributes.metadatas, function (e) {
+                    metadataObj[e.name] = e.value;
+                });
 
                 getExternalLinks(attr.id, attr.bioproject).done(function (data) {
                     console.log(data);
-                    const links = _.map(data, function(url, text){
+                    const links = _.map(data, function (url, text) {
                         return createListItem(createLinkTag(url, text));
                     });
                     that.model.attributes.external_links = links;
                     console.log(that.model);
                     that.$el.html(that.template(that.model.toJSON()));
+                    $('#sample-metadata').html(new DetailList('Sample metadata', metadataObj));
                     new Map('map', [that.model]);
                     deferred.resolve(true);
                 });
@@ -56,12 +62,12 @@ let SampleView = Backbone.View.extend({
     }
 });
 
-function compareByName(a, b){
+function compareByName(a, b) {
     const textA = a.name.toUpperCase();
     const textB = b.name.toUpperCase();
     if (textA < textB) {
         return -1;
-    } else if (textB < textA){
+    } else if (textB < textA) {
         return 1;
     } else {
         return 0
@@ -202,8 +208,8 @@ function getExternalLinks(sample_accession) {
     $.when(
         ena_url_check
     ).done(function () {
-        if (ena_url_check.status===200){
-            urls['ENA website ('+sample_accession+')'] = ena_url;
+        if (ena_url_check.status === 200) {
+            urls['ENA website (' + sample_accession + ')'] = ena_url;
         }
         deferred.resolve(urls);
 
@@ -229,4 +235,5 @@ function initPage() {
         runsView.init();
     });
 }
+
 window.initPage = initPage;

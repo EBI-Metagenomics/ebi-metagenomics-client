@@ -195,10 +195,7 @@ export const SamplesCollection = Backbone.Collection.extend({
     model: Sample,
     initialize: function (data) {
         // Sample ID
-        if (data && data.hasOwnProperty(('study_accession'))) {
-            this.study_accession = data.study_accession;
-        }
-        if (data.hasOwnProperty(('study_accession'))) {
+        if (data && data.hasOwnProperty('study_accession')) {
             this.study_accession = data.study_accession;
         }
     },
