@@ -21,7 +21,7 @@ export const Study = Backbone.Model.extend({
         if (d.included) {
             samples = d.included.reduce(function (lst, included) {
                 if (included.type = 'samples') {
-                    included.attributes.url = '/sample/' + included.id;
+                    included.attributes.url = '/samples/' + included.id;
                     lst.push(included);
                     included.biome = getBiomeIconData(included.relationships.biome.data);
                     included.attributes['last-update'] = formatDate(included.attributes['last-update'])
@@ -34,8 +34,8 @@ export const Study = Backbone.Model.extend({
         return {
             bioproject: attr['bioproject'],
             biomes: biomes,
-            study_link: "/study/" + data.id,
-            samples_link: "/study/" + data.id+"#samples-section",
+            study_link: "/studies/" + data.id,
+            samples_link: "/studies/" + data.id+"#samples-section",
             study_name: attr['study-name'],
             samples_count: attr['samples-count'],
             study_id: data.id,
@@ -84,7 +84,7 @@ export const Run = Backbone.Model.extend({
             //     date: 'xx/xx/xxxx'
             // }],
             sample_id: sample_id,
-            sample_url: '/sample/' + sample_id,
+            sample_url: '/samples/' + sample_id,
             run_url: '/run/' + attr.accession,
             experiment_type: attr['experiment-type'],
             instrument_model: attr['instrument-model'],
@@ -94,7 +94,7 @@ export const Run = Backbone.Model.extend({
             }),
             analysis_results: 'TAXONOMIC / FUNCTION / DOWNLOAD',
             study_id: study_id,
-            study_url: '/study/' + study_id,
+            study_url: '/studies/' + study_id,
         }
     }
 });
@@ -142,6 +142,7 @@ export const Biome = Backbone.Model.extend({
     }
 });
 
+
 export const BiomeCollection = Backbone.Collection.extend({
     model: Biome,
     url: API_URL + "biomes/root/children",
@@ -175,9 +176,9 @@ export const Sample = Backbone.Model.extend({
             biome_name: formatLineage(biome_name),
             sample_name: attr['sample-name'] || NO_DATA_MSG,
             sample_desc: attr['sample-desc'],
-            sample_url: "/sample/" + attr['accession'],
+            sample_url: "/samples/" + attr['accession'],
             study_accession: attr['study-accession'] || NO_DATA_MSG,
-            study_url: '/study/' + attr['study-accession'],
+            study_url: '/studies/' + attr['study-accession'],
             sample_accession: attr.accession || NO_DATA_MSG,
             lineage: formatLineage(biome.data.id || NO_DATA_MSG),
             metadatas: metadatas,

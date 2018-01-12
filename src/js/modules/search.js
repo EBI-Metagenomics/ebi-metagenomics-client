@@ -235,7 +235,7 @@ const Project = Backbone.Model.extend({
         //     });
         // });
         d.biomes = convertBiomes(d);
-        d.study_link = '/study/' + d.id;
+        d.study_link = '/studies/' + d.id;
         return d;
     }
 });
@@ -337,8 +337,8 @@ function getPagesObj(hitcount, start, size) {
 
 const Sample = Backbone.Model.extend({
     parse: function (d) {
-        d.study_link = '/study/' + d.fields.METAGENOMICS_PROJECTS[0];
-        d.sample_url = '/sample/' + d.id;
+        d.study_link = '/studies/' + d.fields.METAGENOMICS_PROJECTS[0];
+        d.sample_url = '/samples/' + d.id;
         return d;
     }
 });
@@ -441,10 +441,10 @@ const SamplesView = ResultsView.extend({
 
 const Run = Backbone.Model.extend({
     parse: function (d) {
-        d.study_link = '/study/' + d.fields['METAGENOMICS_PROJECTS'][0];
-        d.sample_url = '/sample/' + d.fields['METAGENOMICS_SAMPLES'][0];
+        d.study_link = '/studies/' + d.fields['METAGENOMICS_PROJECTS'][0];
+        d.sample_url = '/samples/' + d.fields['METAGENOMICS_SAMPLES'][0];
         d.run_link = '/run/' + d.id;
-        d.pipeline_link = '/pipeline/' + d.fields.pipeline_version[0];
+        d.pipeline_link = '/pipelines/' + d.fields.pipeline_version[0];
         d.biomes = convertBiomes(d);
         return d;
     }

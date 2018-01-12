@@ -58,6 +58,8 @@ module.exports = class Map {
         _.each(sample.attributes.metadatas, function(e){
             attr[e.name] = e.value;
         });
+        //TODO change sample_url to attribute from sample object
+        console.log(attr);
         let data = {
             id: attr.accession,
             name: attr['sample-name'],

@@ -7,7 +7,6 @@ const _ = require('underscore');
  */
 module.exports = class DetailList {
     constructor(title, properties) {
-        console.log(properties);
         return $(tmpl({
             title: title,
             properties: properties
