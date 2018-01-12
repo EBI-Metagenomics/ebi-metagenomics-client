@@ -13,6 +13,7 @@ module.exports = class ClientSideTable extends GenericTable {
             that.filterTable(str);
         });
         that.attachPageSizeCallback();
+
     }
 
     update(dataset, clear, page) {
@@ -66,14 +67,16 @@ module.exports = class ClientSideTable extends GenericTable {
         if (this.$pagination.data("twbs-pagination")) {
             this.$pagination.twbsPagination('destroy');
         }
+        const totalPages = Math.max(Math.ceil(resultCount / pagesize), 1);
         this.$pagination.twbsPagination({
             startPage: page,
-            totalPages: Math.max(Math.ceil(resultCount / pagesize), 1),
+            totalPages: totalPages
         }).on('page', function (evt, page) {
-            console.log('PAGE: ' + page);
             that.changePage(page)
             // that.callback(page, that.getPageSize(), that.getCurrentOrder(), that.getFilterText());
         });
+        this.$currentPageDisp.text(page);
+        this.$maxPageDisp.text(totalPages);
     }
 
     changePage(page) {
@@ -81,6 +84,7 @@ module.exports = class ClientSideTable extends GenericTable {
         const initIndex = (page - 1) * pageSize;
         const finalIndex = page * pageSize;
         this.setVisibleRows(initIndex, finalIndex);
+        this.$currentPageDisp.text(page);
     }
 
     setVisibleRows(min, finalIndex) {
