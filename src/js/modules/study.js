@@ -3,13 +3,8 @@ const _ = require('underscore');
 const Commons = require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
-const Handlebars = require('handlebars');
-const List = require('list.js');
 const GenericTable = require('../components/genericTable');
-const pagination = new Pagination();
 const Map = require('../components/map');
-
-const DetailList = require('../components/DetailList');
 
 // const OverlappingMarkerSpiderfier = require('../../../static/libraries/oms.min.js');
 import 'js-marker-clusterer';
@@ -109,7 +104,8 @@ let SamplesView = Backbone.View.extend({
         },
 
         renderData: function (page, resultCount, requestURL) {
-            initMap(this.collection.models);
+            new Map('map', this.collection.models);
+            // initMap(this.collection.models);
             const tableData = _.map(this.collection.models, function (m) {
                 const attr = m.attributes;
                 const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
@@ -173,36 +169,6 @@ let RunsView = Backbone.View.extend({
         this.tableObj.update(tableData, true, page, resultCount, requestURL);
     }
 });
-
-
-function initMap(samples) {
-    let map = new google.maps.Map(document.getElementById('map'), {
-        streetViewControl: false,
-        zoom: 1,
-        center: new google.maps.LatLng(0.0, 0.0)
-    });
-
-    const template = Handlebars.compile($("#marker-template").html());
-
-    let oms = new OverlappingMarkerSpiderfier(map, {
-        markersWontMove: true,
-        markersWontHide: true,
-        basicFormatEvents: true
-    });
-
-    // // Do not display markers with invalid Lat/Long values
-    let markers = samples.reduce(function (result, sample) {
-        const lat = sample.attributes.latitude;
-        const lng = sample.attributes.longitude;
-        if (lat === null || lng === null) {
-            $("#warning").show();
-        } else {
-            result.push(placeMarker(map, oms, template, sample));
-        }
-        return result;
-    }, []);
-}
-
 
 function getExternalLinks(study_id, study_accession) {
     var deferred = new $.Deferred();

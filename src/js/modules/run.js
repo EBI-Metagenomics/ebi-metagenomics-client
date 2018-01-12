@@ -1,6 +1,5 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const util = require('../util');
 const INTERPRO_URL = process.env.INTERPRO_URL;
 const Commons = require('../commons');
 const api = require('../components/api');
@@ -17,8 +16,6 @@ const detailList = require('../components/detailList');
 
 require('tablesorter');
 import {attachTabHandlers, getURLParameter, setCurrentTab} from "../util";
-
-let Highcharts = require('highcharts');
 
 
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;

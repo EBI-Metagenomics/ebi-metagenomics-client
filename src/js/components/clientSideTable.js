@@ -1,8 +1,6 @@
-const tableTmpl = require('../commons').genericTable;
 const _ = require('underscore');
 const GenericTable = require('./genericTable');
 
-const INIT_PAGE_SIZE = 10;
 
 module.exports = class ClientSideTable extends GenericTable {
     constructor($container, title, headers) {
