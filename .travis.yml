@@ -20,23 +20,24 @@ env:
 
 before_install:
   - mysql -e 'CREATE DATABASE emg;'
+  - mysql -u root --password="" --database=emg < travis/schema.sql
   - pip3 install --user --upgrade pip setuptools
   - python3 -V
   - pip3 -V
 
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-  - pip3 install --user https://github.com/EBI-Metagenomics/emgapi/archive/v1.0.4.tar.gz
-  - emgcli migrate
+  - pip3 install --user "git+git://github.com/ola-t/emgapi@test#egg=emgcli"
+  - emgcli migrate --fake-initial
   - emgcli collectstatic --noinput
   - emgcli check --deploy
-  - emgdeploy --daemon -p ~/emgvar/emg.pid --workers 5 emgcli.wsgi:application
+  - emgdeploy --daemon -p ~/emgvar/emg.pid emgcli.wsgi:application
 
   - npm install cypress
 
 install:
   - npm install webpack -g
   - npm install
-  - nom run buil
+  - npm run build
   - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
   - curl -I http://localhost:9000
 
