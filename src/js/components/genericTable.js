@@ -1,5 +1,8 @@
 const tableTmpl = require('../commons').genericTable;
 const _ = require('underscore');
+const formatDownloadURL = require('../util').formatDownloadURL;
+const Commons = require('../commons');
+
 
 module.exports = class GenericTable {
     constructor($container, title, headers, callback) {
@@ -27,8 +30,10 @@ module.exports = class GenericTable {
             this.attachPageSizeCallback(this.$pageSizeSelect, callback);
         }
         this.order = null;
+        this.$pageSizeSelect.val(Commons.DEFAULT_PAGE_SIZE);
 
         $container.html($sectionContent);
+
     }
 
     storeElemRefs($sectionContent) {
@@ -38,6 +43,7 @@ module.exports = class GenericTable {
         this.$maxPageDisp = this.$pagesizeContainer.find("#maxPage");
         this.$totalResultsDisp = this.$pagesizeContainer.find("#totalResults");
         this.$pageSizeSelect = this.$pagesizeContainer.find('#pagesize');
+        this.$downloadLink = $sectionContent.find('a.download-link');
     }
 
     attachPageSizeCallback($elem, callback) {
@@ -54,7 +60,7 @@ module.exports = class GenericTable {
         }, 300));
     }
 
-    update(dataset, clear, page, resultCount) {
+    update(dataset, clear, page, resultCount, requestURL) {
         const that = this;
         if (clear) {
             this.$tbody.empty();
@@ -76,6 +82,8 @@ module.exports = class GenericTable {
         });
         this.setPageDisplay(1, resultCount);
         this.hideLoadingGif();
+        const downloadURL = formatDownloadURL(requestURL);
+        this.setDownloadURL(downloadURL);
     }
 
     addRow(data) {
@@ -156,6 +164,10 @@ module.exports = class GenericTable {
         this.$currentPageDisp.text(currentPage);
         this.$maxPageDisp.text(Math.ceil(totalResults / this.getPageSize()));
         this.$totalResultsDisp.text(totalResults);
+    }
+
+    setDownloadURL(url) {
+        this.$downloadLink.attr('href', url);
     }
 };
 

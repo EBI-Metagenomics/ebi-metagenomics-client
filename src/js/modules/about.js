@@ -1,6 +1,7 @@
-import {setCurrentTab} from "../util";
+import {initHeadTag, setCurrentTab} from "../util";
 
 setCurrentTab('#about-nav');
+initHeadTag('About');
 
 
 // Expand button handler, usage as follows

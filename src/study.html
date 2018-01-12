@@ -73,9 +73,10 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div class="row" role="main">
-        <div  id="main-content-area" class="columns small-12 medium-12 large-12">
+        <div id="main-content-area" class="columns small-12 medium-12 large-12">
             <script id="studyTmpl" type="text/template">
-                <h2>Project <%= study_id %> (<%= study_accession %>) </h2>
+                <h3>Project <%= study_accession %> (<%= bioproject %>) </h3>
+                <h2><%= study_name %></h2>
                 <ul class="tabs" data-tabs id="study-tabs">
                     <li class="tabs-title active"><a href="#overview" aria-selected="true">Overview</a></li>
                     <li class="tabs-title"><a href="#analysis">Analysis summary</a></li>
@@ -87,10 +88,11 @@
                                 <h4>Last updated: <%= last_update %></h4>
                                 <section>
                                     <h3>Description</h3>
-                                    <p> <%= abstract %></p>
+                                    <p class="study-abstract"> <%= abstract %></p>
                                     <h3>Classification</h3>
                                     <% _.each(biomes, function(biome){ %>
-                                    <p> <%= biome.name %></p>
+                                    <span class="biome_icon icon_sm <%= biome.icon %>" title="<%= biome.name %>"></span>
+                                    <!--<p> <%= biome.name %></p>-->
                                     <% }); %>
                                 </section>
                             </div>
@@ -98,7 +100,8 @@
                                 <div id="map">
                                 </div>
                                 <div id="warning" class="map-alert text-center">
-                                    Some samples have no associated latitude/longitude coordinates and could not be marked on the map.
+                                    Some samples have no associated latitude/longitude coordinates and could not be
+                                    marked on the map.
                                 </div>
                             </div>
                         </div>
@@ -107,16 +110,16 @@
                             <!--<h3>Associated samples</h3>-->
                             <!--<div id="pageSize2"></div>-->
                             <!--<table id='samplesTable'>-->
-                                <!--<thead>-->
-                                <!--<tr>-->
-                                    <!--<th>Sample name</th>-->
-                                    <!--<th>Sample ID</th>-->
-                                    <!--<th>Description</th>-->
-                                    <!--<th>Last-update</th>-->
-                                <!--</tr>-->
-                                <!--</thead>-->
-                                <!--<tbody id="samplesTableBody" class="live-filter-table">-->
-                                <!--</tbody>-->
+                            <!--<thead>-->
+                            <!--<tr>-->
+                            <!--<th>Sample name</th>-->
+                            <!--<th>Sample ID</th>-->
+                            <!--<th>Description</th>-->
+                            <!--<th>Last-update</th>-->
+                            <!--</tr>-->
+                            <!--</thead>-->
+                            <!--<tbody id="samplesTableBody" class="live-filter-table">-->
+                            <!--</tbody>-->
                             <!--</table>-->
                             <!--<div id="pagination2"></div>-->
                         </section>
@@ -124,34 +127,43 @@
                         <section id="runs-section">
                             <!--<h3>Associated runs</h3>-->
                             <!--<div class="row">-->
-                                <!--<div class="columns small-12 medium-6 large-6">-->
-                                    <!--<div id="pageSize"></div>-->
-                                <!--</div>-->
-                                <!--<div class="columns small-12 medium-6 large-6">-->
-                                    <!--<label class="right" for="tableFilter">Filter rows: <input id="tableFilter" class="search"></label>-->
-                                <!--</div>-->
+                            <!--<div class="columns small-12 medium-6 large-6">-->
+                            <!--<div id="pageSize"></div>-->
+                            <!--</div>-->
+                            <!--<div class="columns small-12 medium-6 large-6">-->
+                            <!--<label class="right" for="tableFilter">Filter rows: <input id="tableFilter" class="search"></label>-->
+                            <!--</div>-->
                             <!--</div>-->
                             <!--<table id='runsTable'>-->
-                                <!--<thead>-->
-                                <!--<tr>-->
-                                    <!--<th>Sample name</th>-->
-                                    <!--<th>Sample ID</th>-->
-                                    <!--<th>Run ID</th>-->
-                                    <!--<th>Experiment type</th>-->
-                                    <!--<th>Instrument platform</th>-->
-                                    <!--<th>Instrument model</th>-->
-                                    <!--<th>Analyses</th>-->
-                                <!--</tr>-->
-                                <!--</thead>-->
-                                <!--<tbody id="runsTableBody" class="list">-->
-                                <!--<tr>-->
-                                    <!--<td class='loading-gif-row' colspan="7">-->
-                                        <!--<img class='loading-gif' src="/static/images/ajax-loader.gif"/>-->
-                                    <!--</td>-->
-                                <!--</tr>-->
-                                <!--</tbody>-->
+                            <!--<thead>-->
+                            <!--<tr>-->
+                            <!--<th>Sample name</th>-->
+                            <!--<th>Sample ID</th>-->
+                            <!--<th>Run ID</th>-->
+                            <!--<th>Experiment type</th>-->
+                            <!--<th>Instrument platform</th>-->
+                            <!--<th>Instrument model</th>-->
+                            <!--<th>Analyses</th>-->
+                            <!--</tr>-->
+                            <!--</thead>-->
+                            <!--<tbody id="runsTableBody" class="list">-->
+                            <!--<tr>-->
+                            <!--<td class='loading-gif-row' colspan="7">-->
+                            <!--<img class='loading-gif' src="/static/images/ajax-loader.gif"/>-->
+                            <!--</td>-->
+                            <!--</tr>-->
+                            <!--</tbody>-->
                             <!--</table>-->
                             <!--<div id="pagination"></div>-->
+                        </section>
+                        <hr>
+                        <section id="external-links-section">
+                            <div class="row columns">
+                                <h3>External links</h3>
+                                <ul id="links">
+                                    <%= external_links %>
+                                </ul>
+                            </div>
                         </section>
                     </div>
 
@@ -238,11 +250,7 @@
 
 <!-- JavaScript -->
 
-
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAivAQNT-w_7wzIJ9nf7E9GTOzn1mkDGzE">
-</script>
-<!--<script src="/static/libraries/markerclusterer/src/markerclusterer.js"></script>-->
+<script src="/static/libraries/markerclusterer/src/markerclusterer.js"></script>
 <script src="/static/libraries/oms.min.js"></script>
 
 <!-- JavaScript -->
@@ -262,7 +270,9 @@
     });
 </script>
 <script src="/js/study.js"></script>
-
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAivAQNT-w_7wzIJ9nf7E9GTOzn1mkDGzE&callback=initPage">
+</script>
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->
 <!--

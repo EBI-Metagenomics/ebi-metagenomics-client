@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head id="head"></head>
+
+<body class="level2"><!-- add any of your classes or IDs -->
+<div id="header"></div>
+
+<!-- Suggested layout containers / #content -->
+<div id="content">
+    <div id="main-content-area" class="row" role="main">
+        <div class="column small-12 medium-12 large-12">
+            <h2>Login</h2>
+
+            <form>
+                <div class="grid-container">
+                    <div class="grid-x grid-padding-x">
+                        <div class="medium-6 cell">
+                            <label>Username
+                                <input type="text">
+                            </label>
+                        </div>
+                        <div class="medium-6 cell">
+                            <label>Password
+                                <input type="text">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="footer"></div>
+
+<!-- JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script defer="defer" src="/static/js/script.js"></script>
+
+<!-- The Foundation theme JavaScript -->
+
+<script src="/static/js/foundation.js"></script>
+<script src="/static/js/foundationExtendEBI.js"></script>
+<script type="text/JavaScript">
+    $(document).ready(function () {
+        $(document).foundation();
+        $(document).foundationExtendEBI();
+    });
+</script>
+<!--<script src="/js/login.js"></script>-->
+
+<!-- Google Analytics details... -->
+<!-- Change UA-XXXXX-X to be your util's ID -->
+<!--
+<script>
+  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
+  Modernizr.load({
+    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
+  });
+</script>
+-->
+</body>
+
+</html>

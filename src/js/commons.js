@@ -1,4 +1,5 @@
 export const header = require("../partials/header.handlebars");
+export const head = require("../partials/head.handlebars");
 export const footer = require("../partials/footer.handlebars");
 export const pagination = require("../partials/pagination.handlebars");
 export const pagesize = require("../partials/pagesize.handlebars");
@@ -27,6 +28,8 @@ require('html-loader?path=../name=[name].[ext]!../submit.html');
 require('html-loader?path=../name=[name].[ext]!../pipelines.html');
 require('html-loader?path=../name=[name].[ext]!../pipeline.html');
 require('html-loader?path=../name=[name].[ext]!../index.html');
+require('html-loader?path=../name=[name].[ext]!../login.html');
+require('html-loader?path=../name=[name].[ext]!../healthcheck.html');
 
 require('style-loader?name=[name].[ext]!../../static/css/site.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');
@@ -53,7 +56,6 @@ require('file-loader?name=[name].[ext]!../../static/images/ico_graph_pie_on.png'
 require('file-loader?name=[name].[ext]!../../static/images/ico_graph_col.png');
 require('file-loader?name=[name].[ext]!../../static/images/ico_graph_col_on.png');
 
-export const SEQUENCE_SEARCH_URL = "https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer";
 export const BLOG_URL = "https://ebi-metagenomics.github.io/ebi-metagenomics-blog/";
 export const READTHEDOCS_URL = "https://emg-docs.readthedocs.io";
 export const NO_DATA_MSG = 'N/A';

@@ -1,6 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const Config = require('config');
+const util = require('../util');
+const INTERPRO_URL = process.env.INTERPRO_URL;
 const Commons = require('../commons');
 const api = require('../components/api');
 const TaxonomyPieChart = require('../components/charts/taxonomy/taxonomyPie');
@@ -444,7 +445,7 @@ function getSeriesIndex(index, numSeries) {
 }
 
 function createInterProLink(text, id) {
-    const url = Config.INTERPRO_URL + 'entry/' + id;
+    const url = INTERPRO_URL + 'entry/' + id;
     return "<a href='" + url + "'>" + text + "</a>"
 }
 

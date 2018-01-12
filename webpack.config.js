@@ -3,25 +3,29 @@ var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-const envs = ['prod', 'dev'];
-let env = 'prod';
-const args = process.argv.slice(2);
-args.forEach(function (val, index, array) {
-    if (val === '--env') {
-        let arg_env = array[index + 1];
-        if (envs.indexOf(arg_env) > -1) {
-            env = arg_env
-        } else {
-            console.error('Invalid environment specified, should be in: [' + envs + '].');
-            process.exit(1);
-        }
-    }
-});
 
 module.exports = {
+  plugins: [
+      new webpack.EnvironmentPlugin(
+        ["API_URL", "SEARCH_URL", "INTERPRO_URL", "SEQUENCE_SEARCH_URL", "ENA_URL"]
+      ),
+      new CleanWebpackPlugin(['dist']),
+      new webpack.ProvidePlugin({
+          $: 'jquery',
+          jQuery: 'jquery',
+          'window.jQuery': 'jquery'
+      }),
+      new CopyWebpackPlugin([
+          {from: 'static/images', to: '../static/images'},
+          {from: 'static/fonts', to: '../static/fonts'},
+          {from: 'static/js', to: '../static/js'},
+          {from: 'static/libraries', to: '../static/libraries'},
+      ]),
+    ],
     entry: {
         index: 'src/js/modules/index.js',
         search: 'src/js/modules/search.js',
+        healthcheck: 'src/js/modules/healthcheck.js',
         submit: 'src/js/modules/submit.js',
         studies: 'src/js/modules/studies.js',
         study: 'src/js/modules/study.js',
@@ -43,7 +47,6 @@ module.exports = {
         modules: [__dirname, 'node_modules'],
         alias: {
             handlebars: 'handlebars/dist/handlebars.min.js',
-            config: path.join(__dirname, 'config', env+'.js')
         },
     },
     module: {
@@ -114,20 +117,5 @@ module.exports = {
             // }
         ]
     },
-    plugins: [
-        new CleanWebpackPlugin(['dist']),
-        new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery',
-            'window.jQuery': 'jquery'
-        }),
-        new CopyWebpackPlugin([
-            {from: 'static/images', to: '../static/images'},
-            {from: 'static/fonts', to: '../static/fonts'},
-            {from: 'static/js', to: '../static/js'},
-            {from: 'static/libraries', to: '../static/libraries'},
-        ]),
-    ],
-
     devtool: "#inline-source-map",
 };

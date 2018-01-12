@@ -1,11 +1,10 @@
 const Backbone = require('backbone');
 const Pagination = require('../components/pagination').Pagination;
 const Commons = require('../commons');
-const Config = require('config');
+const API_URL = process.env.API_URL;
 const NO_DATA_MSG = Commons.NO_DATA_MSG;
-const API_URL = Config.API_URL;
 
-import {formatDate, formatLineage, getBiomeIcon, lineage2Biome, getBiomeIconData} from "../util";
+import {formatDate, formatLineage, getBiomeIcon, lineage2Biome, getBiomeIconData, truncateString} from "../util";
 
 const _ = require('underscore');
 
@@ -22,7 +21,7 @@ export const Study = Backbone.Model.extend({
         if (d.included) {
             samples = d.included.reduce(function (lst, included) {
                 if (included.type = 'samples') {
-                    included.attributes.url = '/sample/' + included.id;
+                    included.attributes.url = '/samples/' + included.id;
                     lst.push(included);
                     included.biome = getBiomeIconData(included.relationships.biome.data);
                     included.attributes['last-update'] = formatDate(included.attributes['last-update'])
@@ -33,9 +32,10 @@ export const Study = Backbone.Model.extend({
             samples = [];
         }
         return {
+            bioproject: attr['bioproject'],
             biomes: biomes,
-            study_link: "/study/" + data.id,
-            samples_link: "/study/" + data.id,
+            study_link: "/studies/" + data.id,
+            samples_link: "/studies/" + data.id+"#samples-section",
             study_name: attr['study-name'],
             samples_count: attr['samples-count'],
             study_id: data.id,
@@ -56,7 +56,6 @@ export const StudiesCollection = Backbone.Collection.extend({
         }
         if (params) {
             this.params = params;
-            console.log(this.params);
         }
     },
     parse: function (response) {
@@ -85,7 +84,7 @@ export const Run = Backbone.Model.extend({
             //     date: 'xx/xx/xxxx'
             // }],
             sample_id: sample_id,
-            sample_url: '/sample/' + sample_id,
+            sample_url: '/samples/' + sample_id,
             run_url: '/run/' + attr.accession,
             experiment_type: attr['experiment-type'],
             instrument_model: attr['instrument-model'],
@@ -95,7 +94,7 @@ export const Run = Backbone.Model.extend({
             }),
             analysis_results: 'TAXONOMIC / FUNCTION / DOWNLOAD',
             study_id: study_id,
-            study_url: '/study/' + study_id,
+            study_url: '/studies/' + study_id,
         }
     }
 });
@@ -105,8 +104,8 @@ export const RunCollection = Backbone.Collection.extend({
     model: Run,
     initialize: function (data) {
         // Project/sample ID
-        if (data.hasOwnProperty(('study_id'))) {
-            this.study_id = data.study_id;
+        if (data.hasOwnProperty(('study_accession'))) {
+            this.study_accession = data.study_accession;
         }
         // Sample ID
         if (data.hasOwnProperty(('sample_id'))) {
@@ -135,13 +134,14 @@ export const Biome = Backbone.Model.extend({
             name: lineage2Biome(lineage),
             icon: getBiomeIcon(lineage),
             lineage: lineage,
-            lineage_projects: attr['studies-count'],
+            samples_count: attr['samples-count'],
             // lineage_projects_no_children: attr['studies-count'],
-            biome_studies_link: '/studies?biome=' + lineage,
+            biome_studies_link: '/studies?lineage=' + lineage,
             // biome_studies_link_no_children: 'TODO2',
         };
     }
 });
+
 
 export const BiomeCollection = Backbone.Collection.extend({
     model: Biome,
@@ -168,7 +168,6 @@ export const Sample = Backbone.Model.extend({
             }
         });
 
-
         // Adaption to handle 'includes' on API calls which would wrap the response
         const biome = data.relationships.biome;
         const biome_name = biome.data.id;
@@ -177,9 +176,9 @@ export const Sample = Backbone.Model.extend({
             biome_name: formatLineage(biome_name),
             sample_name: attr['sample-name'] || NO_DATA_MSG,
             sample_desc: attr['sample-desc'],
-            sample_url: "/sample/" + attr['accession'],
+            sample_url: "/samples/" + attr['accession'],
             study_accession: attr['study-accession'] || NO_DATA_MSG,
-            study_url: '/study/' + attr['study-accession'],
+            study_url: '/studies/' + attr['study-accession'],
             sample_accession: attr.accession || NO_DATA_MSG,
             lineage: formatLineage(biome.data.id || NO_DATA_MSG),
             metadatas: metadatas,
@@ -196,8 +195,8 @@ export const SamplesCollection = Backbone.Collection.extend({
     model: Sample,
     initialize: function (data) {
         // Sample ID
-        if (data && data.hasOwnProperty(('sample_id'))) {
-            this.sample_id = data.sample_id;
+        if (data && data.hasOwnProperty('study_accession')) {
+            this.study_accession = data.study_accession;
         }
     },
     parse: function (response) {

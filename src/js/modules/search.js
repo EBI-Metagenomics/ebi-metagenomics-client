@@ -1,4 +1,4 @@
-const SEARCH_URL = require('config').SEARCH_URL;
+const searchUrl = process.env.SEARCH_URL;
 import {attachTabHandlers, setCurrentTab} from "../util";
 
 const util = require('../util');
@@ -56,7 +56,7 @@ const Search = Backbone.Collection.extend({
         }
     },
     url: function () {
-        return SEARCH_URL + this.tab;
+        return searchUrl + this.tab;
     },
     parse: function (response) {
         if (this.pagination) {
@@ -235,7 +235,7 @@ const Project = Backbone.Model.extend({
         //     });
         // });
         d.biomes = convertBiomes(d);
-        d.study_link = '/study/' + d.id;
+        d.study_link = '/studies/' + d.id;
         return d;
     }
 });
@@ -260,14 +260,13 @@ const ProjectsView = ResultsView.extend({
             this.pagination.setPaginationElem('#projects-pagination');
             const cookieParams = loadSearchParams('projects');
             this.params = $.extend(true, {}, Search.prototype.params);
-
+            console.log(getQueryText());
             if (cookieParams) {
                 this.params.facets = cookieParams.filters || "";
-                this.params.query = cookieParams.query || getQueryText() || this.defaultQuery;
+                this.params.query = getQueryText() || cookieParams.query || this.defaultQuery;
             } else {
                 this.params.facets = "";
                 this.params.query = getQueryText() || this.defaultQuery;
-
             }
             this.params.fields = "ENA_PROJECT,METAGENOMICS_RUNS,METAGENOMICS_SAMPLES,biome_name,centre_name,creation_date,description,domain_source,id,last_modification_date,name,releaseDate_date";
             // this.params.query = this.defaultQuery;
@@ -294,6 +293,8 @@ const ProjectsView = ResultsView.extend({
 
         fetchAndRender: function (renderFilter, setFilters) {
             const that = this;
+            console.trace();
+            console.log(that.params);
             return this.collection.fetch({
                 data: $.param(that.params),
                 success: function (collection, response) {
@@ -336,8 +337,8 @@ function getPagesObj(hitcount, start, size) {
 
 const Sample = Backbone.Model.extend({
     parse: function (d) {
-        d.study_link = '/study/' + d.fields.METAGENOMICS_PROJECTS[0];
-        d.sample_url = '/sample/' + d.id;
+        d.study_link = '/studies/' + d.fields.METAGENOMICS_PROJECTS[0];
+        d.sample_url = '/samples/' + d.id;
         return d;
     }
 });
@@ -440,10 +441,10 @@ const SamplesView = ResultsView.extend({
 
 const Run = Backbone.Model.extend({
     parse: function (d) {
-        d.study_link = '/study/' + d.fields['METAGENOMICS_PROJECTS'][0];
-        d.sample_url = '/sample/' + d.fields['METAGENOMICS_SAMPLES'][0];
+        d.study_link = '/studies/' + d.fields['METAGENOMICS_PROJECTS'][0];
+        d.sample_url = '/samples/' + d.fields['METAGENOMICS_SAMPLES'][0];
         d.run_link = '/run/' + d.id;
-        d.pipeline_link = '/pipeline/' + d.fields.pipeline_version[0];
+        d.pipeline_link = '/pipelines/' + d.fields.pipeline_version[0];
         d.biomes = convertBiomes(d);
         return d;
     }
@@ -825,9 +826,9 @@ function getQueryText() {
 
 function initAll(projectsView, samplesView, runsView, renderFilters, setFilters) {
     showSpinner();
-    const projectFacet = $.get("https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_projects?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_projects");
-    const sampleFacet = $.get("https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_samples?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_samples");
-    const runFacet = $.get("https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_runs?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_runs");
+    const projectFacet = $.get(searchUrl + "projects?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_projects");
+    const sampleFacet = $.get(searchUrl + "samples?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_samples");
+    const runFacet = $.get(searchUrl + "runs?format=json&size=1&start=0&facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_runs");
     return $.when(
         projectsView.fetchAndRender(renderFilters, setFilters),
         samplesView.fetchAndRender(renderFilters, setFilters),

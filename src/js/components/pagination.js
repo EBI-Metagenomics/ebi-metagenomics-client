@@ -1,6 +1,6 @@
 import 'static/libraries/jquery.twbsPagination.js'
 
-export var Pagination = function () {
+export const Pagination = function () {
     let pageSize = '#pagesize';
     let pagination = '#pagination';
 
