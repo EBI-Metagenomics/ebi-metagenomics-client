@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const util = require('../util');
-const Config = process.env;
+const INTERPRO_URL = process.env.INTERPRO_URL;
 const Commons = require('../commons');
 const api = require('../components/api');
 const TaxonomyPieChart = require('../components/charts/taxonomy/taxonomyPie');
@@ -67,7 +67,7 @@ let RunView = Backbone.View.extend({
 
                     $('#overview').append(new detailList('Description', description));
                     console.log(dataAnalysis)
-                    if (dataAnalysis.keys.length > 0) {
+                    if (Object.keys(dataAnalysis).length > 0) {
                         $('#overview').append(new detailList('Data analysis', dataAnalysis));
                     }
                     let qcGraph = new QCGraphView({model: analysis});
@@ -414,7 +414,7 @@ function getSeriesIndex(index, numSeries) {
 }
 
 function createInterProLink(text, id) {
-    const url = Config.INTERPRO_URL + 'entry/' + id;
+    const url = INTERPRO_URL + 'entry/' + id;
     return "<a href='" + url + "'>" + text + "</a>"
 }
 
