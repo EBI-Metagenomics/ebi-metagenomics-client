@@ -25,6 +25,7 @@ module.exports = {
     entry: {
         index: 'src/js/modules/index.js',
         search: 'src/js/modules/search.js',
+        healthcheck: 'src/js/modules/healthcheck.js',
         submit: 'src/js/modules/submit.js',
         studies: 'src/js/modules/studies.js',
         study: 'src/js/modules/study.js',

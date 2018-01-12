@@ -29,6 +29,7 @@ require('html-loader?path=../name=[name].[ext]!../pipelines.html');
 require('html-loader?path=../name=[name].[ext]!../pipeline.html');
 require('html-loader?path=../name=[name].[ext]!../index.html');
 require('html-loader?path=../name=[name].[ext]!../login.html');
+require('html-loader?path=../name=[name].[ext]!../healthcheck.html');
 
 require('style-loader?name=[name].[ext]!../../static/css/site.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');
