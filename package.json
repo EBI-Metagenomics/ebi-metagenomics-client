@@ -7,8 +7,7 @@
     "cypress:open": "cypress open",
     "test": "cypress open",
     "watch": "webpack --watch --config webpack.config.js",
-    "build": "webpack --progress --display-error-details --config webpack.config.js",
-    "start": "webpack-dev-server --open --watch --progress --colors"
+    "build": "webpack --progress --display-error-details --config webpack.config.js"
   },
   "author": "",
   "license": "ISC",
