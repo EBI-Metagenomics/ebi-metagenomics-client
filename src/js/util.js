@@ -85,7 +85,8 @@ export function initResultsFilter(initQuery, callback) {
 
 export function getURLParameter() {
     var regex = /\/([A-z0-9]+)(?:$|[?])/g;
-    return regex.exec(window.location.pathname)[1];
+    let lst = window.location.pathname.split('/');
+    return lst[lst.length - 1].split('?')[0];
 }
 
 export function getURLFilterParams() {

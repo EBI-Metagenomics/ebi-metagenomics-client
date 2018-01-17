@@ -93,25 +93,45 @@
                     <div class="tabs-panel active" id="overview">
                     </div>
                     <div class="tabs-panel" id="qc">
+                        <div class="row columns">
+                            <p>The chart below shows the number of reads which pass the quality control steps we have
+                                implemented in our pipeline. Sequence merging may have occurred with paired-end data, so
+                                the
+                                initial number of reads may differ from the number given by ENA.</p>
+                            <div id="QC-step-chart" class="run-qc-chart"></div>
+                        </div>
+                        <div class="row columns">
+                            <p>The histograms below show the distribution of sequence lengths, in basepairs, (left) and
+                                GC percentage (right) for the sequences having passed our quality control steps. Note
+                                that
+                                for large files, the distributions were compiled from a random subset of 2 millions
+                                sequence
+                                reads. The standard deviations are shown on each plot. The bar chart underneath each
+                                graph
+                                indicates the minimum, average and maximum length and average GC and AT content,
+                                respectively.</p>
+                        </div>
                         <div class="row">
-                            <div class="center column small-12 medium-12 large-12">
-                                <p>The chart below shows the number of reads which pass the quality control steps we have
-                                    implemented in our pipeline. Sequence merging may have occurred with paired-end data, so the
-                                    initial number of reads may differ from the number given by ENA.</p>
-                                <div id="QC-step-chart" class="run-qc-chart"></div>
-                                <!--<p>The histograms below show the distribution of sequence lengths, in basepairs, (left) and GC-->
-                                <!--percentage (right) for the sequences having passed our quality control steps. Note that for-->
-                                <!--large files, the distributions were compiled from a random subset of 2 millions sequence-->
-                                <!--reads.-->
-                                <!--The standard deviations are shown on each plot. The bar chart underneath each graph-->
-                                <!--indicates-->
-                                <!--the minimum, average and maximum length and average GC and AT content, respectively.</p>-->
+                            <div class="columns small-12 medium-6 large-6">
+                                <div id="Reads-length-histogram" class="reads-length-chart"></div>
                             </div>
+                            <div class="columns small-12 medium-6 large-6">
+                                <div id="Reads-GC-distribution" class="reads-gc-chart"></div>
+                            </div>
+                        </div>
+                        <div class="row columns">
+                            <p>The graph below show the relative abundance of nucletotides (A, C, G, T, or ambiguous
+                                base "N") at each position starting from the beginning of each read up to the first 500
+                                base pairs.</p>
+                        </div>
+                        <div class="row columns">
+                            <div id="Nucleotide-position-histogram" class="hucleotide-histogram-chart"></div>
                         </div>
                     </div>
                     <div class="tabs-panel" id="taxonomic">
                         <div class="row columns">
-                            These are the results from the taxonomic analysis steps of our pipeline. You can switch between
+                            These are the results from the taxonomic analysis steps of our pipeline. You can switch
+                            between
                             different views of the data using the menu of icons below (pie, bar, stacked and interactive
                             krona charts). The data used to build these charts can be found under the "Download" tab.
                         </div>
@@ -190,7 +210,8 @@
                                 on matches to the <a
                                         href="http://www.ebi.ac.uk/interpro" title="InterPro website"
                                         class="ext">InterPro
-                                    database</a> and GO terms, which summarise the functional content of the sequences in the
+                                    database</a> and GO terms, which summarise the functional content of the sequences
+                                in the
                                 sample. The full set of results files may be found under the "Download" tab.</p>
                         </div>
                         <div class="row column">
@@ -209,7 +230,8 @@
                         </div>
                         <div class="row column">
                             <h4>GO Terms annotation</h4>
-                            <p>A summary of Gene Ontology (GO) terms derived from InterPro matches to your sample is provided in
+                            <p>A summary of Gene Ontology (GO) terms derived from InterPro matches to your sample is
+                                provided in
                                 the charts below.</p>
                             <p>Switch view:
                             <ul class="tabs">
