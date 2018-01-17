@@ -41,7 +41,7 @@ module.exports = {
     },
     output: {
         filename: '[name].js',
-        path: __dirname + '/dist/js',
+        path: __dirname + '/dist/js'
     },
     resolve: {
         modules: [__dirname, 'node_modules'],
@@ -52,9 +52,6 @@ module.exports = {
     module: {
         loaders: [
             {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
-            }, {
                 test: /\.handlebars$/,
                 loader: "handlebars-loader"
                 // loader: __dirname + "/../../../",
@@ -105,10 +102,13 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     'style-loader',
-                    'css-loader'
+                  {
+                    loader: 'css-loader',
+                    options: { root: '../../' }
+                  }
                 ]
             }, {
-                test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                test: /\.(png|woff|woff2|eot|ttf|svg|gif)$/,
                 loader: 'url-loader?limit=100000'
             }
 // }, {

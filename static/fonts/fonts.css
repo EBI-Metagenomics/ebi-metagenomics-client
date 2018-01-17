@@ -57,7 +57,7 @@
   font-style: normal;
 }
 /* Specific file formats */
-@font-face {
+/*@font-face {
   font-family: 'EBI-FileFormats';
   src:url('/static/fonts/EBI-FileFormats/fonts/EBI-FileFormats.eot');
   src:url('/static/fonts/EBI-FileFormats/fonts/EBI-FileFormats.eot?#iefix') format('embedded-opentype'),
@@ -66,9 +66,9 @@
     url('/static/fonts/EBI-FileFormats/fonts/EBI-FileFormats.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-}
+}*/
 /* Chemistry font */
-@font-face {
+/*@font-face {
   font-family: 'EBI-Chemistry';
   src:url('/static/fonts/EBI-Chemistry/fonts/EBI-Chemistry.eot');
   src:url('/static/fonts/EBI-Chemistry/fonts/EBI-Chemistry.eot?#iefix') format('embedded-opentype'),
@@ -77,7 +77,7 @@
     url('/static/fonts/EBI-Chemistry/fonts/EBI-Chemistry.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-}
+}*/
 
 
 /* General .icon support  */
