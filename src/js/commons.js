@@ -37,25 +37,6 @@ require('style-loader?name=[name].[ext]!../../static/css/foundation.css');
 require('style-loader?name=[name].[ext]!../../static/css/theme-embl-petrol.css');
 require('style-loader?name=[name].[ext]!../../static/fonts/fonts.css');
 
-require('file-loader?name=[name].[ext]!../../static/images/backgrounds/bgd_transparent_1x1.png');
-require('file-loader?name=[name].[ext]!../../static/images/backgrounds/bgd_header_microbes_30p.png');
-require('file-loader?name=[name].[ext]!../../static/images/backgrounds/bgd_header_microbes_big_10p.png');
-require('file-loader?name=[name].[ext]!../../static/images/backgrounds/bgd_button_login_off.gif');
-require('file-loader?name=[name].[ext]!../../static/images/nucleic_acids_research_D1_cover.gif');
-require('file-loader?name=[name].[ext]!../../static/images/ico_biome_sprite.png');
-require('file-loader?name=[name].[ext]!../../static/images/logos/EMBL-EBI/EMBL_EBI_Logo_white.svg');
-require('file-loader?name=[name].[ext]!../../static/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg');
-require('file-loader?name=[name].[ext]!../../static/images/map.png');
-
-require('file-loader?name=[name].[ext]!../../static/images/ico_graph_barh.png');
-require('file-loader?name=[name].[ext]!../../static/images/ico_graph_barh_on.png');
-require('file-loader?name=[name].[ext]!../../static/images/ico_graph_krona.png');
-require('file-loader?name=[name].[ext]!../../static/images/ico_graph_krona_on.png');
-require('file-loader?name=[name].[ext]!../../static/images/ico_graph_pie.png');
-require('file-loader?name=[name].[ext]!../../static/images/ico_graph_pie_on.png');
-require('file-loader?name=[name].[ext]!../../static/images/ico_graph_col.png');
-require('file-loader?name=[name].[ext]!../../static/images/ico_graph_col_on.png');
-
 export const BLOG_URL = "https://ebi-metagenomics.github.io/ebi-metagenomics-blog/";
 export const READTHEDOCS_URL = "https://emg-docs.readthedocs.io";
 export const NO_DATA_MSG = 'N/A';

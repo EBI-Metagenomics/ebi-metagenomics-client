@@ -50,30 +50,6 @@ module.exports = {
         },
     },
     module: {
-        loaders: [
-            {
-                test: /\.handlebars$/,
-                loader: "handlebars-loader"
-                // loader: __dirname + "/../../../",
-                // query: {
-                //     partialDirs: [
-                //         path.join(__dirname + "../", 'templates', 'partials')
-                //     ]
-                // }
-            }, {
-                test: /\.(html)$/,
-                use: {
-                    loader: 'html-loader',
-                    options: {
-                        attrs: [':data-src']
-                    }
-                }
-            }, {
-                test: /(foundation\.core)/,
-                loader: 'exports?foundation=jQuery.fn.foundation'
-            },
-        ],
-
         rules: [
             {
                 test: /\.js$/,

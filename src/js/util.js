@@ -242,7 +242,7 @@ export const getDownloadParams = function (params) {
     delete downloadParams['page_size'];
     downloadParams['format'] = 'csv';
     return downloadParams;
-}
+};
 
 export const setDownloadResultURL = function (url) {
     $('#download-results').attr('href', url);
