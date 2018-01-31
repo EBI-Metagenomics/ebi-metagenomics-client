@@ -49,7 +49,7 @@ function waitForFacetQuery(facetName, testString) {
  */
 
 // const facetRequests = ['projectsSearch', 'samplesSearch', 'runsSearch'];
-const facetRequests = ['samplesFacet', 'samplesQuery'];
+const facetRequests = ['projectsFacet', 'projectsQuery', 'samplesFacet', 'samplesQuery', 'runsFacet', 'runsQuery'];
 describe('Search page', function () {
     it('Correct number of results.', function () {
         openPage(origPage);
@@ -64,10 +64,12 @@ describe('Search page', function () {
         openPage(origPage);
         waitForResultsLoad(initialResultSize);
         cy.server();
-        // cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_projects?*').as(facetRequests[0]);
-        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_samples?*size=1&*').as(facetRequests[0]);
-        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_samples?*size=10&*').as(facetRequests[1]);
-        // cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_runs?*').as(facetRequests[2]);
+        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_projects?*size=1&*').as(facetRequests[0]);
+        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_projects?*size=10&*').as(facetRequests[1]);
+        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_samples?*size=1&*').as(facetRequests[2]);
+        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_samples?*size=10&*').as(facetRequests[3]);
+        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_runs?*size=1&*').as(facetRequests[4]);
+        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_runs?*size=10&*').as(facetRequests[5]);
 
     });
 
