@@ -17,6 +17,10 @@ const CheckboxTree = require('../components/checkboxTree');
 
 const Slider = require('../components/slider.js');
 
+util.checkAPIonline();
+
+
+
 setCurrentTab('#search-nav', true);
 attachTabHandlers();
 
@@ -761,7 +765,6 @@ function enableSlider($checkbox, enabled) {
 }
 
 function updateAll(pagesize) {
-    updateAll
     showSpinner();
     return $.when(
         projectsView.update(null, pagesize),
@@ -811,19 +814,9 @@ const button = $("<button id='search-reset' class='button' type='reset'>Clear al
 const $searchForm = $("#headerSearchForm");
 $searchForm.append(button);
 $searchForm.on('reset', function () {
-    // let cookie = Cookies.get(COOKIE_NAME);
-    // if (cookie) {
-    //     let cookieVal = JSON.parse(cookie);
-    //     _.each(['projects', 'samples', 'runs'], function (facet) {
-    //         cookieVal[facet] = null
-    //     });
-    //     Cookies.set(COOKIE_NAME, cookieVal);
-    // }
     Cookies.remove(COOKIE_NAME);
     window.location.href = 'search';
-    // $searchForm.find("#navbar-query").val('');
-    // deleteCachedSearchParams();
-    // resetAllForms();
+
 });
 
 function getQueryText() {

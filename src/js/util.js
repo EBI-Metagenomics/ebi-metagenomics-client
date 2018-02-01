@@ -205,7 +205,7 @@ export const BiomeCollectionView = Backbone.View.extend({
     initialize: function (collection, biome) {
         var that = this;
         this.collection.fetch({
-            data: $.param({depth_lte: 3, page_size:100}), success: function () {
+            data: $.param({depth_lte: 3, page_size: 100}), success: function () {
                 // Fetch and pre-pend root node to list
                 var root = new api.Biome({id: 'root'});
                 root.fetch({
@@ -273,12 +273,12 @@ export function formatDownloadURL(requestURL) {
 }
 
 
-export function createLinkTag(url, text){
-    return "<a href='"+url+"'>"+text+"</a>";
+export function createLinkTag(url, text) {
+    return "<a href='" + url + "'>" + text + "</a>";
 }
 
-export function createListItem(html){
-    return "<li>"+html+"</li>";
+export function createListItem(html) {
+    return "<li>" + html + "</li>";
 }
 
 export function checkURLExists(url) {
@@ -286,4 +286,15 @@ export function checkURLExists(url) {
         type: 'HEAD',
         url: url,
     });
+}
+
+export function checkAPIonline() {
+    $.get({
+        url: process.env.API_URL,
+        success: function(){
+            console.log('API is online.');
+        },
+        failure: function(){
+            $('body').html('Fail')
+        }});
 }
