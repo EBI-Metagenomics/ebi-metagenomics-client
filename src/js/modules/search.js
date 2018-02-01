@@ -451,7 +451,7 @@ const Run = Backbone.Model.extend({
     parse: function (d) {
         d.study_link = '/studies/' + d.fields['METAGENOMICS_PROJECTS'][0];
         d.sample_url = '/samples/' + d.fields['METAGENOMICS_SAMPLES'][0];
-        d.run_link = '/run/' + d.id;
+        d.run_link = '/runs/' + d.id;
         d.pipeline_link = '/pipelines/' + d.fields.pipeline_version[0];
         d.biomes = convertBiomes(d);
         return d;

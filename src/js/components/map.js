@@ -68,7 +68,7 @@ module.exports = class Map {
             collection_date: attr['Collection date'],
             lat: attr['latitude'],
             lng: attr['longitude'],
-            sample_url: '/sample/' + attr.accession
+            sample_url: '/samples/' + attr.accession
         };
         return template(data);
     };

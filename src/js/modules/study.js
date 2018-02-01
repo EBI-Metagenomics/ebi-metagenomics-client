@@ -5,6 +5,8 @@ const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
 const GenericTable = require('../components/genericTable');
 const Map = require('../components/map');
+const API_URL = process.env.API_URL;
+
 
 // const OverlappingMarkerSpiderfier = require('../../../static/libraries/oms.min.js');
 import 'js-marker-clusterer';
@@ -42,12 +44,10 @@ let StudyView = Backbone.View.extend({
                 const attr = data.attributes;
 
                 getExternalLinks(attr.id, attr.bioproject).done(function (data) {
-                    console.log(data);
-                    const links = _.map(data, function(url, text){
+                    const links = _.map(data, function (url, text) {
                         return createListItem(createLinkTag(url, text));
                     });
                     that.model.attributes.external_links = links;
-                    console.log(that.model);
                     that.$el.html(that.template(that.model.toJSON()));
                     deferred.resolve(true);
                 });
@@ -60,61 +60,80 @@ let StudyView = Backbone.View.extend({
 });
 
 let SamplesView = Backbone.View.extend({
-        tableObj: null,
-        pagination: null,
-        fetch: function () {
-            return this.collection.fetch()
-        },
+    tableObj: null,
+    pagination: null,
+    fetch: function () {
+        return this.collection.fetch()
+    },
 
-        init: function () {
-            const that = this;
-            const columns = [
-                {sortBy: 'sample_name', name: 'Sample name'},
-                {sortBy: 'accession', name: 'Sample ID'},
-                {sortBy: null, name: 'Description'},
-                {sortBy: 'last_update', name: 'Last update'},
-            ];
-            this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, function (page, pageSize, order, query) {
-                that.update(page, pageSize, order, query);
-            });
-            this.update(1, DEFAULT_PAGE_SIZE, null, null)
-        },
+    init: function () {
+        const that = this;
+        const columns = [
+            {sortBy: 'sample_name', name: 'Sample name'},
+            {sortBy: 'accession', name: 'Sample ID'},
+            {sortBy: null, name: 'Description'},
+            {sortBy: 'last_update', name: 'Last update'},
+        ];
+        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, function (page, pageSize, order, query) {
+            that.update(page, pageSize, order, query);
+        });
+        this.update(1, DEFAULT_PAGE_SIZE, null, null)
+    },
 
-        update: function (page, pageSize, order, query) {
-            this.tableObj.showLoadingGif();
-            let params = {
-                study_accession: this.collection.study_accession,
-                page: page,
-                page_size: pageSize
-            };
-            if (order) {
-                params['ordering'] = order;
-            }
-            if (query) {
-                params['search'] = query;
-            }
-            const that = this;
-            this.collection.fetch({
-                data: $.param(params),
-                success: function (data, response) {
-                    that.renderData(page, response.meta.pagination.count, response.links.first);
-                    that.tableObj.hideLoadingGif();
-                }
-            })
-        },
-
-        renderData: function (page, resultCount, requestURL) {
-            new Map('map', this.collection.models);
-            // initMap(this.collection.models);
-            const tableData = _.map(this.collection.models, function (m) {
-                const attr = m.attributes;
-                const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
-                return [attr.sample_name, sample_link, attr.sample_desc, attr.last_update]
-            });
-            this.tableObj.update(tableData, true, page, resultCount, requestURL);
+    update: function (page, pageSize, order, query) {
+        this.tableObj.showLoadingGif();
+        let params = {
+            study_accession: this.collection.study_accession,
+            page: page,
+            page_size: pageSize
+        };
+        if (order) {
+            params['ordering'] = order;
         }
-    });
+        if (query) {
+            params['search'] = query;
+        }
+        const that = this;
+        this.collection.fetch({
+            data: $.param(params),
+            success: function (data, response) {
+                that.renderData(page, response.meta.pagination.count, response.links.first);
+                that.tableObj.hideLoadingGif();
+            }
+        })
+    },
 
+    renderData: function (page, resultCount, requestURL) {
+        // initMap(this.collection.models);
+        const tableData = _.map(this.collection.models, function (m) {
+            const attr = m.attributes;
+            const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
+            return [attr.sample_name, sample_link, attr.sample_desc, attr.last_update]
+        });
+        this.tableObj.update(tableData, true, page, resultCount, requestURL);
+    }
+});
+
+
+let MapData = Backbone.Model.extend({
+    url: function(){
+        return API_URL + 'samples?page_size=250&study_accession='+ this.study_id + '&fields=latitude,longitude'
+    },
+    initialize: function(study_id){
+        this.study_id = study_id;
+        this.data = [];
+    },
+    parse: function(d){
+        console.log(this);
+        this.data = this.data.concat(d.data);
+        if (d.links.next!==null){
+            this.url = d.links.next;
+            this.fetch();
+        } else {
+            new Map('map', this.data);
+        }
+    }
+});
 
 let RunsView = Backbone.View.extend({
     tableObj: null,
@@ -178,8 +197,8 @@ function getExternalLinks(study_id, study_accession) {
     $.when(
         ena_url_check
     ).done(function () {
-        if (ena_url_check.status===200){
-            urls['ENA website ('+study_id+')'] = ena_url;
+        if (ena_url_check.status === 200) {
+            urls['ENA website (' + study_id + ')'] = ena_url;
         }
         deferred.resolve(urls);
 
@@ -199,6 +218,7 @@ function initPage() {
     let runs = new api.RunCollection({study_accession: study_id});
     let runsView = new RunsView({collection: runs});
 
+    new MapData(study_id).fetch();
 
     $.when(
         studyView.fetchAndRender(),
