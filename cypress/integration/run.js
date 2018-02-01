@@ -1,7 +1,6 @@
 import {openPage} from './util';
 const origPage = 'run/ERR771103';
 
-
 //
 // function assertTableIsCleared(){
 //     cy.get("table tr.sample").should('not.exist');

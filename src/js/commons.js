@@ -36,6 +36,7 @@ require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');
 require('style-loader?name=[name].[ext]!../../static/css/foundation.css');
 require('style-loader?name=[name].[ext]!../../static/css/theme-embl-petrol.css');
 require('style-loader?name=[name].[ext]!../../static/fonts/fonts.css');
+require('style-loader?name=[name].[ext]!../../node_modules/tablesorter/dist/css/theme.default.min.css');
 
 export const BLOG_URL = "https://ebi-metagenomics.github.io/ebi-metagenomics-blog/";
 export const READTHEDOCS_URL = "https://emg-docs.readthedocs.io";

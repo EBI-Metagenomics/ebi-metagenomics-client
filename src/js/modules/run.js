@@ -15,6 +15,7 @@ const SeqFeatChart = require('../components/charts/sequFeatSumChart');
 const detailList = require('../components/detailList');
 
 require('tablesorter');
+
 import {attachTabHandlers, getURLParameter, setCurrentTab} from "../util";
 
 
@@ -63,7 +64,6 @@ let RunView = Backbone.View.extend({
                     }
 
                     $('#overview').append(new detailList('Description', description));
-                    console.log(dataAnalysis)
                     if (Object.keys(dataAnalysis).length > 0) {
                         $('#overview').append(new detailList('Data analysis', dataAnalysis));
                     }
@@ -214,6 +214,7 @@ let TaxonomyGraphView = Backbone.View.extend({
                     }
                 });
 
+
                 new TaxonomyColumnChart('domain-composition-column', 'Domain composition', clusteredData, false);
                 const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column', 'Phylum composition', phylumData, false);
                 const phylumColumnTable = new ClientSideTable($('#column').find(".phylum-table"), '', headers);
@@ -225,17 +226,6 @@ let TaxonomyGraphView = Backbone.View.extend({
                     let index = getSeriesIndex($(this).index(), numSeries);
                     phylumColumnChart.series[0].data[index].setState();
                 });
-
-                // phylumColumnTable.$tbody.find('tr').click(function () {
-                //     let index = getSeriesIndex($(this).index(), numSeries);
-                //     const series = phylumColumnChart.series[0].data[index];
-                //     series.setVisible(!series.visible);
-                //     if (index === numSeries - 1) {
-                //         ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled');
-                //     } else {
-                //         $(this).toggleClass('disabled');
-                //     }
-                // });
 
 
                 // Column tab
@@ -249,19 +239,6 @@ let TaxonomyGraphView = Backbone.View.extend({
                     let index = getSeriesIndex($(this).index(), numSeries);
                     phylumStackedColumnChart.series[index].data[0].setState();
                 });
-
-                // phylumStackedColumnTable.$tbody.find('tr').click(function () {
-                //     let index = getSeriesIndex($(this).index(), numSeries);
-                //     const series = phylumStackedColumnChart.series[0].data[index];
-                //     console.log(phylumColumnChart.series);
-                //
-                //     series.setVisible(!series.visible);
-                //     if (index === numSeries - 1) {
-                //         ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled');
-                //     } else {
-                //         $(this).toggleClass('disabled');
-                //     }
-                // });
 
             }
         });
@@ -394,7 +371,6 @@ function groupGoTermData(data) {
             y: 0
         };
         _.each(data.slice(10), function (d) {
-            console.log(d);
             others.y += d.attributes.count;
         });
         top10.push(others);
@@ -422,7 +398,6 @@ function getColourSquareIcon(i) {
 }
 
 function disableTab(id) {
-    console.log($("[href='#" + id + "']").parent('li'));
     $("[href='#" + id + "']").parent('li').addClass('disabled');
 }
 
