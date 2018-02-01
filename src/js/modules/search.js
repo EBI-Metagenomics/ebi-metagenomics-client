@@ -1016,6 +1016,12 @@ function saveVisibleColumns(facet, columns) {
     Cookies.set(COOKIE_NAME, cookieData);
 }
 
+function insertEbiSearchText(){
+    const html = '<p><small class="text-muted">Powered by <a href="https://www.ebi.ac.uk/ebisearch/&quot;" class="ext" target="_blank">EBI Search</a></small></p>';
+    $('.ebi-search').html(html);
+}
+
+insertEbiSearchText();
 
 let search = new Search();
 
