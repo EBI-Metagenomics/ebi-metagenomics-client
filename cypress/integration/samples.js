@@ -1,6 +1,6 @@
 import {openPage} from './util';
 const origPage = 'samples';
-import Config from 'config';
+import Config from './config';
 
 const initialResultSize = 25;
 

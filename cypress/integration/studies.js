@@ -1,5 +1,5 @@
 import {openPage} from './util';
-import Config from 'config';
+import Config from './config';
 
 const origPage = 'studies';
 
