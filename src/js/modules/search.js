@@ -19,8 +19,6 @@ const Slider = require('../components/slider.js');
 
 util.checkAPIonline();
 
-
-
 setCurrentTab('#search-nav', true);
 attachTabHandlers();
 
@@ -93,7 +91,7 @@ const ResultsView = Backbone.View.extend({
         //     templateData.filterText = null;
         // }
         templateData.filterText = null;
-
+        templateData['subfolder'] = util.subfolder;
         if (!no_display) {
             const $data = $(this.template(templateData));
             $data.find("td").map(function () {
@@ -239,7 +237,8 @@ const Project = Backbone.Model.extend({
         //     });
         // });
         d.biomes = convertBiomes(d);
-        d.study_link = '/studies/' + d.id;
+        console.log(util.subfolder);
+        d.study_link = util.subfolder + '/studies/' + d.id;
         return d;
     }
 });
@@ -264,7 +263,6 @@ const ProjectsView = ResultsView.extend({
             this.pagination.setPaginationElem('#projects-pagination');
             const cookieParams = loadSearchParams('projects');
             this.params = $.extend(true, {}, Search.prototype.params);
-            console.log(getQueryText());
             if (cookieParams) {
                 this.params.facets = cookieParams.filters || "";
                 this.params.query = getQueryText() || cookieParams.query || this.defaultQuery;
@@ -297,8 +295,6 @@ const ProjectsView = ResultsView.extend({
 
         fetchAndRender: function (renderFilter, setFilters) {
             const that = this;
-            console.trace();
-            console.log(that.params);
             return this.collection.fetch({
                 data: $.param(that.params),
                 success: function (collection, response) {
@@ -341,8 +337,8 @@ function getPagesObj(hitcount, start, size) {
 
 const Sample = Backbone.Model.extend({
     parse: function (d) {
-        d.study_link = '/studies/' + d.fields.METAGENOMICS_PROJECTS[0];
-        d.sample_url = '/samples/' + d.id;
+        d.study_link = util.subfolder + '/studies/' + d.fields.METAGENOMICS_PROJECTS[0];
+        d.sample_link = util.subfolder + '/samples/' + d.id;
         return d;
     }
 });
@@ -382,13 +378,9 @@ const SamplesView = ResultsView.extend({
         if (cookieParams) {
             this.params.facets = cookieParams.filters || '';
             this.params.query = getQueryText() || cookieParams.query || this.defaultQuery;
-            console.log(getQueryText(), cookieParams.query, this.defaultQuery)
         } else {
             this.params.query = getQueryText() || this.defaultQuery;
         }
-        console.log('Samples');
-        console.log(getQueryText(), cookieParams.query, this.defaultQuery);
-        console.log(getQueryText() || cookieParams.query || this.defaultQuery);
     },
     update: function (page = 1, pagesize = 25) {
         var formData = processSliders(removeRedundantFilters($('#' + this.formEl).serializeArray()));
@@ -449,10 +441,10 @@ const SamplesView = ResultsView.extend({
 
 const Run = Backbone.Model.extend({
     parse: function (d) {
-        d.study_link = '/studies/' + d.fields['METAGENOMICS_PROJECTS'][0];
-        d.sample_url = '/samples/' + d.fields['METAGENOMICS_SAMPLES'][0];
-        d.run_link = '/runs/' + d.id;
-        d.pipeline_link = '/pipelines/' + d.fields.pipeline_version[0];
+        d.study_link = util.subfolder + '/studies/' + d.fields['METAGENOMICS_PROJECTS'][0];
+        d.sample_link = util.subfolder + '/samples/' + d.fields['METAGENOMICS_SAMPLES'][0];
+        d.run_link = util.subfolder + '/runs/' + d.id;
+        d.pipeline_link = util.subfolder + '/pipelines/' + d.fields.pipeline_version[0];
         d.biomes = convertBiomes(d);
         return d;
     }
@@ -490,7 +482,6 @@ const RunsView = ResultsView.extend({
         if (cookieParams) {
             this.params.facets = cookieParams.filters || '';
             this.params.query = getQueryText() || cookieParams.query || this.defaultQuery;
-            console.log(getQueryText(), cookieParams.query, this.defaultQuery);
         } else {
             this.params.query = getQueryText() || this.defaultQuery;
         }
@@ -1016,7 +1007,7 @@ function saveVisibleColumns(facet, columns) {
     Cookies.set(COOKIE_NAME, cookieData);
 }
 
-function insertEbiSearchText(){
+function insertEbiSearchText() {
     const html = '<p><small class="text-muted">Powered by <a href="https://www.ebi.ac.uk/ebisearch/&quot;" class="ext" target="_blank">EBI Search</a></small></p>';
     $('.ebi-search').html(html);
 }

@@ -37,11 +37,16 @@ function waitForResultsLoad(results) {
 // }
 
 function waitForFacetFilters(facetName) {
-    cy.wait('@' + facetName).its('url').should('include', 'size=1');
+    cy.wait('@' + facetName, {timeout: 10000}).its('url').should('include', 'size=1');
 }
 
-function waitForFacetQuery(facetName, testString) {
-    cy.wait('@' + facetName).its('url').should('include', 'size=' + initialResultSize).should('include', 'query=' + encodeURIComponent(testString))
+function validateFacetQuery(facetName, testString) {
+    const timeout = 10000;
+    if (testString) {
+        cy.wait('@' + facetName, {timeout: timeout}).its('url').should('include', 'size=' + initialResultSize).should('include', 'query=' + encodeURIComponent(testString))
+    } else {
+        cy.wait('@' + facetName, {timeout: timeout}).its('url').should('include', 'size=' + initialResultSize)
+    }
 }
 
 /**
@@ -51,6 +56,43 @@ function waitForFacetQuery(facetName, testString) {
 // const facetRequests = ['projectsSearch', 'samplesSearch', 'runsSearch'];
 const facetRequests = ['projectsFacet', 'projectsQuery', 'samplesFacet', 'samplesQuery', 'runsFacet', 'runsQuery'];
 describe('Search page', function () {
+    beforeEach(function () {
+        cy.server();
+        cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=1&*').as(facetRequests[0]);
+        cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=10&*').as(facetRequests[1]);
+        cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=1&*').as(facetRequests[2]);
+        cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=10&*').as(facetRequests[3]);
+        cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=1&*').as(facetRequests[4]);
+        cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=10&*').as(facetRequests[5]);
+
+        openPage(origPage);
+        waitForResultsLoad(initialResultSize);
+    });
+
+    // Text search should apply to all facets
+    it('Text query should apply to all facets', function () {
+        console.log('Waiting');
+
+
+        waitForFacetFilters(facetRequests[0]);
+        validateFacetQuery(facetRequests[1]);
+        waitForFacetFilters(facetRequests[2]);
+        validateFacetQuery(facetRequests[3]);
+        waitForFacetFilters(facetRequests[4]);
+        validateFacetQuery(facetRequests[5]);
+
+        console.log('Done');
+        const testString = "Test";
+        cy.get(textQueryInput).type(testString);
+        cy.get(submitTextQuery).click();
+
+        // Check requests includes testString correctly
+        validateFacetQuery(facetRequests[1], encodeURIComponent(testString));
+        validateFacetQuery(facetRequests[3], encodeURIComponent(testString));
+        validateFacetQuery(facetRequests[5], encodeURIComponent(testString));
+
+    });
+
     it('Correct number of results.', function () {
         openPage(origPage);
         cy.wait(1000);
@@ -60,30 +102,6 @@ describe('Search page', function () {
             waitForResultsLoad('50');
         });
     });
-    beforeEach(function () {
-        openPage(origPage);
-        waitForResultsLoad(initialResultSize);
-        cy.server();
-        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_projects?*size=1&*').as(facetRequests[0]);
-        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_projects?*size=10&*').as(facetRequests[1]);
-        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_samples?*size=1&*').as(facetRequests[2]);
-        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_samples?*size=10&*').as(facetRequests[3]);
-        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_runs?*size=1&*').as(facetRequests[4]);
-        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_runs?*size=10&*').as(facetRequests[5]);
-
-    });
-
-    // Text search should apply to all facets
-    it('Text query should apply to all facets', function () {
-        const testString = "Test";
-        cy.get(textQueryInput).type(testString);
-        cy.get(submitTextQuery).click();
-
-        // Check requests includes testString correctly
-        waitForFacetFilters(facetRequests[0]);
-        waitForFacetQuery(facetRequests[1], encodeURIComponent(testString));
-    });
-
 
     it('Biome filters should restrict results', function () {
         cy.get('button.disp-children').first().click();

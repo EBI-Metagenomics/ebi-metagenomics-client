@@ -70,13 +70,21 @@
 
 <body class="level2"><!-- add any of your classes or IDs -->
 <div id="header"></div>
-
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" role="main">
         <script id="sampleTmpl" type="text/template">
             <div class="row">
                 <div class="column small-12 medium-12 large-12">
+                    <nav aria-label="You are here:" role="navigation">
+                        <ul class="breadcrumbs columns">
+                            <li><a href="../">Home</a></li>
+                            <li><a href="../samples">Samples</a></li>
+                            <li>
+                                <span class="show-for-sr">Current: </span> Sample <%= sample_accession %>
+                            </li>
+                        </ul>
+                    </nav>
                     <h3>Sample overview (<%= sample_accession %>)</h3>
                     <h2>Sample <%= sample_name %> </h2>
                     <hr>
@@ -215,18 +223,18 @@
 </script>
 
 
-<script src="/static/libraries/markerclusterer/src/markerclusterer.js"></script>
-<script src="/static/libraries/oms.min.js"></script>
+<script src="../static/libraries/markerclusterer/src/markerclusterer.js"></script>
+<script src="../static/libraries/oms.min.js"></script>
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="/static/libraries/jquery.liveFilter.js"></script>
-<script defer="defer" src="static/js/script.js"></script>
+<script src="../static/libraries/jquery.liveFilter.js"></script>
+<script defer="defer" src="../static/js/script.js"></script>
 
 <!-- The Foundation theme JavaScript -->
 
-<script src="static/js/foundation.js"></script>
-<script src="static/js/foundationExtendEBI.js"></script>
+<script src="../static/js/foundation.js"></script>
+<script src="../static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
     $(document).ready(function () {
         $(document).foundation();
@@ -234,7 +242,7 @@
     });
 </script>
 
-<script src="/js/sample.js"></script>
+<script src="../js/sample.js"></script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAivAQNT-w_7wzIJ9nf7E9GTOzn1mkDGzE&callback=initPage">
 </script>

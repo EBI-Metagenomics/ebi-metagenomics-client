@@ -7,7 +7,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
   plugins: [
       new webpack.EnvironmentPlugin(
-        ["API_URL", "SEARCH_URL", "INTERPRO_URL", "SEQUENCE_SEARCH_URL", "ENA_URL"]
+        ["API_URL", "SEARCH_URL", "INTERPRO_URL", "SEQUENCE_SEARCH_URL", "ENA_URL", "DEPLOYMENT_SUBFOLDER"]
       ),
       new CleanWebpackPlugin(['dist']),
       new webpack.ProvidePlugin({
