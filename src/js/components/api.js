@@ -72,7 +72,7 @@ export const Run = Backbone.Model.extend({
             // }],
             sample_id: sample_id,
             sample_url: util.subfolder + '/samples/' + sample_id,
-            run_url: util.subfolder + '/run/' + attr.accession,
+            run_url: util.subfolder + '/runs/' + attr.accession,
             experiment_type: attr['experiment-type'],
             instrument_model: attr['instrument-model'],
             instrument_platform: attr['instrument-platform'],
