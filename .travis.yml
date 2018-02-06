@@ -38,7 +38,8 @@ install:
   - npm install webpack -g
   - npm install
   - npm run build
-  - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
+  - ls -la  /var/log/nginx/error.log
+  - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf -p $TRAVIS_BUILD_DIR
   - curl -I http://localhost:9000
 
 script:
