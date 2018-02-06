@@ -39,6 +39,7 @@ install:
   - npm install
   - npm run build
   - sudo chmod 777 /var/log/nginx/*
+  - sudo chmod 777 /var/run/nginx.pid
   - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
   - curl -I http://localhost:9000/metagenomics/
 
