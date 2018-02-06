@@ -29,6 +29,29 @@ sudo service nginx restart
 https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
 
 #### How to setup your project?
- Run 'npm install' in the project's main directory.
+Export the following env variables.
+##### In your dev environment:
+```
+export API_URL="https://wwwdev.ebi.ac.uk/metagenomics/api/latest/"
+export SEARCH_URL="https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_"
+export INTERPRO_URL="https://wwwdev.ebi.ac.uk/interpro/"
+export SEQUENCE_SEARCH_URL="https://wwwdev.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
+export ENA_URL="https://www.ebi.ac.uk/ena/data/view/"
+```
+##### In the production environment:
+```
+export API_URL="https://www.ebi.ac.uk/metagenomics/api/latest/"
+export SEARCH_URL="https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_"
+export INTERPRO_URL="https://www.ebi.ac.uk/interpro/"
+export SEQUENCE_SEARCH_URL="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
+export ENA_URL="https://www.ebi.ac.uk/ena/data/view/"
+```
+
+##### Run 'npm install' in the project's main directory.
  Serve with own server, or use biult-in dev system by calling 'webpack-dev-server' in main directory.
  Access locally run server on http://localhost:8080/index.html .
+```
+npm install
+
+webpack --watch --config webpack.config.js
+```
