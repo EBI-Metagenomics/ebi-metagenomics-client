@@ -38,10 +38,8 @@ install:
   - npm install webpack -g
   - npm install
   - npm run build
-  - ls -la  /var/log/nginx/error.log
   - sudo chmod 777 /var/log/nginx/*
-  - ls -la  /var/log/nginx/error.log
-  - sudo nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
+  - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
   - curl -I http://localhost:9000/metagenomics/
 
 script:
