@@ -43,6 +43,7 @@ install:
   - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
   - echo $CLIENT_URL
   - curl -I http://localhost:9000/
+  - ls -la .
 
 script:
   - npm run test
