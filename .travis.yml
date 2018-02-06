@@ -44,7 +44,7 @@ install:
   - curl -I http://localhost:9000/
 
 script:
-  - npm run cypress:run
+  - npm run test
 
 cache:
   directories:
