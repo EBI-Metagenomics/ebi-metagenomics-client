@@ -39,7 +39,7 @@ install:
   - npm install
   - npm run build
   - ls -la  /var/log/nginx/error.log
-  - sudo chmod +w /var/log/nginx/error.log
+  - sudo chmod 777 /var/log/nginx/error.log
   - ls -la  /var/log/nginx/error.log
   - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
   - curl -I http://localhost:9000
