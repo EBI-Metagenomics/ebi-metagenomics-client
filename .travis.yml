@@ -41,7 +41,7 @@ install:
   - ls -la  /var/log/nginx/error.log
   - sudo chmod 777 /var/log/nginx/*
   - ls -la  /var/log/nginx/error.log
-  - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
+  - sudo nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
   - curl -I http://localhost:9000/metagenomics/
 
 script:
