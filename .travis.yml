@@ -16,7 +16,7 @@ addons:
       - nginx
       - python3-pip
 env:
-  - API_URL=http://localhost:8000 EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml CYPRESS_CLIENT_URL="http://localhost:9000"
+  - API_URL=http://localhost:8000 EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
 
 before_install:
   - mysql -e 'CREATE DATABASE emg;'
