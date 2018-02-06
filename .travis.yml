@@ -16,7 +16,7 @@ addons:
       - nginx
       - python3-pip
 env:
-  - API_URL=http://localhost:8000 EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
+  - API_URL=http://localhost:8000 EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml CLIENT_URL=http://localhost:9000
 
 before_install:
   - mysql -e 'CREATE DATABASE emg;'
