@@ -34,6 +34,8 @@ before_install:
 
   - npm install cypress
 
+  - chmod 755 upload.sh
+
 install:
   - npm install webpack -g
   - npm install
@@ -50,7 +52,8 @@ script:
   - npm run test
 
 after_script:
-  -
+  - sudo ./upload.sh -v -r $DRIVE_CYPRESS_DIR_ID cypress/screenshots
+  - sudo ./upload.sh -v -r $DRIVE_CYPRESS_DIR_ID cypress/videos
 
 cache:
   directories:s
