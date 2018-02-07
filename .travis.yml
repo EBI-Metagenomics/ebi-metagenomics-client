@@ -38,7 +38,7 @@ install:
   - npm install webpack -g
   - npm install
   - npm run build
-  - sudo mv dist /usr/share/nginx/html/metagenomics/
+  - sudo mv dist/* /usr/share/nginx/html/
   - sudo chmod 777 /var/log/nginx/*
   - sudo chmod 777 /var/run/nginx.pid
   - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
@@ -49,8 +49,12 @@ install:
 script:
   - npm run test
 
+after_script:
+  -
+
 cache:
-  directories:
+  directories:s
+    - ~/.npm
     - node_modules
     - /home/travis/.cypress/Cypress
 
