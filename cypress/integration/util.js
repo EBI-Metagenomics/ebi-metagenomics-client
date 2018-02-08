@@ -1,4 +1,5 @@
 import Config from './config';
+
 const sortBySelector = '#sortBy';
 
 
@@ -7,8 +8,14 @@ var Util = module.exports = {
         let url = Config.BASE_URL + (origPage !== 'overview' ? origPage : '');
         cy.visit(url);
     },
-    setSortBy: function (optionValue, numResults, waitCallback){
+    setSortBy: function (optionValue, numResults, waitCallback) {
         cy.get(sortBySelector).select('-last_update');
         waitCallback(numResults);
+    },
+    waitForSamplesLoad: function (results) {
+        cy.get("table tr.sample", {timeout: 10000}).should("have.length", parseInt(results));
+    },
+    assertTableIsCleared: function () {
+        cy.get("table tr.sample").should('not.exist');
     }
 };

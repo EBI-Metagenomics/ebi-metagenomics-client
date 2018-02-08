@@ -34,8 +34,6 @@ before_install:
 
   - npm install cypress
 
-  - chmod 755 travis/upload.sh
-
 install:
   - npm install webpack -g
   - npm install
@@ -44,20 +42,14 @@ install:
   - sudo chmod 777 /var/log/nginx/*
   - sudo chmod 777 /var/run/nginx.pid
   - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
-  - echo $CLIENT_URL
   - curl -I http://localhost:9000/metagenomics/
-  - ls -la .
 
 script:
-  - npm run test
+  - npm run test - --record --key $CYPRESS_RECORD_KEY
 
-after_script:
-  - sudo travis/upload.sh -v -r $DRIVE_CYPRESS_DIR_ID cypress/screenshots
-  - sudo travis/upload.sh -v -r $DRIVE_CYPRESS_DIR_ID cypress/videos
 
 cache:
   directories:s
     - ~/.npm
     - node_modules
     - /home/travis/.cypress/Cypress
-
