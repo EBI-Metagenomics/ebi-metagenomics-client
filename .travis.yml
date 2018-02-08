@@ -45,7 +45,7 @@ install:
   - curl -I http://localhost:9000/metagenomics/
 
 script:
-  - npm run test - --record --key $CYPRESS_RECORD_KEY
+  - npm run test -- --record --key $CYPRESS_RECORD_KEY
 
 
 cache:
