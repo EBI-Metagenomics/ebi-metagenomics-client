@@ -44,8 +44,18 @@ for (let orig = 0; orig < navNames.length; orig++) {
 describe('External link to HMMER sequence search redirects correctly', function () {
     it('Navbar link to sequence search is valid.', function () {
         openPage('overview');
-        cy.get('#sequence-search-nav').click();
-        cy.url().should('include', 'sequence-search/search/phmmer');
+        cy.get('#sequence-search-nav > a ').then(($link) => {
+            const url = $link.attr('href');
+            cy.request({
+                url: url,
+                followRedirect: true
+            }). then((resp) => {
+                expect(resp.status).to.eq(200)
+                expect(url).to.contain('sequence-search/search/phmmer')
+            })
+        });
+
+
     });
 });
 

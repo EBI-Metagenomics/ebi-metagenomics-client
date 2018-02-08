@@ -71,9 +71,6 @@ describe('Search page', function () {
 
     // Text search should apply to all facets
     it('Text query should apply to all facets', function () {
-        console.log('Waiting');
-
-
         waitForFacetFilters(facetRequests[0]);
         validateFacetQuery(facetRequests[1]);
         waitForFacetFilters(facetRequests[2]);
@@ -81,7 +78,6 @@ describe('Search page', function () {
         waitForFacetFilters(facetRequests[4]);
         validateFacetQuery(facetRequests[5]);
 
-        console.log('Done');
         const testString = "Test";
         cy.get(textQueryInput).type(testString);
         cy.get(submitTextQuery).click();
