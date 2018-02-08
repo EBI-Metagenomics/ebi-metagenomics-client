@@ -21,7 +21,7 @@ function assertTableIsCleared() {
 }
 
 function waitForResultsLoad(results) {
-    cy.get(rowSelector, {timeout: 10000}).should("have.length", parseInt(results));
+    cy.get(rowSelector, {timeout: 20000}).should("have.length", parseInt(results));
 }
 
 // function setSortBy(sortBySelector){
@@ -37,7 +37,7 @@ function waitForResultsLoad(results) {
 // }
 
 function waitForFacetFilters(facetName) {
-    cy.wait('@' + facetName, {timeout: 10000}).its('url').should('include', 'size=1');
+    cy.wait('@' + facetName, {timeout: 20000}).its('url').should('include', 'size=1');
 }
 
 function validateFacetQuery(facetName, testString) {
