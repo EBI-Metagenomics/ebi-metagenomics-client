@@ -5,22 +5,22 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 
 module.exports = {
-  plugins: [
-      new webpack.EnvironmentPlugin(
-        ["API_URL", "SEARCH_URL", "INTERPRO_URL", "SEQUENCE_SEARCH_URL", "ENA_URL", "DEPLOYMENT_SUBFOLDER"]
-      ),
-      new CleanWebpackPlugin(['dist']),
-      new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery',
-          'window.jQuery': 'jquery'
-      }),
-      new CopyWebpackPlugin([
-          {from: 'static/images', to: '../static/images'},
-          {from: 'static/fonts', to: '../static/fonts'},
-          {from: 'static/js', to: '../static/js'},
-          {from: 'static/libraries', to: '../static/libraries'},
-      ]),
+    plugins: [
+        new webpack.EnvironmentPlugin(
+            ["API_URL", "SEARCH_URL", "INTERPRO_URL", "SEQUENCE_SEARCH_URL", "ENA_URL", "DEPLOYMENT_SUBFOLDER"]
+        ),
+        new CleanWebpackPlugin(['dist']),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery'
+        }),
+        new CopyWebpackPlugin([
+            {from: 'static/images', to: '../static/images'},
+            {from: 'static/fonts', to: '../static/fonts'},
+            {from: 'static/js', to: '../static/js'},
+            {from: 'static/libraries', to: '../static/libraries'},
+        ]),
     ],
     entry: {
         index: 'src/js/modules/index.js',
@@ -78,10 +78,9 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     'style-loader',
-                  {
-                    loader: 'css-loader',
-                    options: { root: '../../' }
-                  }
+                    {
+                        loader: 'css-loader',
+                    }
                 ]
             }, {
                 test: /\.(png|woff|woff2|eot|ttf|svg|gif)$/,
