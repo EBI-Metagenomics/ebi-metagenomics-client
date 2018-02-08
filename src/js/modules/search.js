@@ -129,12 +129,19 @@ const ResultsView = Backbone.View.extend({
         }
 
         $.when.apply($, fetches).done(function () {
+            let args;
+            if (typeof(arguments[1])==='string'){
+                args = [arguments];
+            } else {
+                args = arguments;
+            }
             let collection = null;
-            for (var i = 0; i < arguments.length; i++) {
+            // Concatenate collection entries onto first collection
+            for (var i = 0; i < args.length; i++) {
                 if (!collection) {
-                    collection = arguments[i][0];
+                    collection = args[i][0];
                 } else {
-                    collection.entries = collection.entries.concat(arguments[i][0].entries);
+                    collection.entries = collection.entries.concat(args[i][0].entries);
                 }
             }
             const resultsTmpl = that.render(collection, tmpParams, true, []);
@@ -237,7 +244,6 @@ const Project = Backbone.Model.extend({
         //     });
         // });
         d.biomes = convertBiomes(d);
-        console.log(util.subfolder);
         d.study_link = util.subfolder + '/studies/' + d.id;
         return d;
     }
