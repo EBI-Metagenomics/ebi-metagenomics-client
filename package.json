@@ -52,7 +52,7 @@
     "html-loader": "^0.5.1",
     "html-webpack-plugin": "^2.30.1",
     "mocha": "^3.5.3",
-    "resolve-url-loader": "^2.1.0",
+    "resolve-url-loader": "^2.2.1",
     "script-loader": "^0.7.1",
     "selenium-webdriver": "^3.5.0",
     "style-loader": "^0.18.2",
