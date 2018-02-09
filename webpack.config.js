@@ -80,14 +80,11 @@ module.exports = {
                     'style-loader',
                     {
                         loader: 'css-loader',
-                        options: {
-                            url: false
-                        }
                     }
                 ]
             }, {
                 test: /\.(png|woff|woff2|eot|ttf|svg|gif)$/,
-                loader: 'url-loader?limit=100000'
+                loader: 'url-loader?name=[path][name].[ext]?limit=100000'
             }
 // }, {
             //     test: /\.(jpe?g|png|gif|svg)$/i,
