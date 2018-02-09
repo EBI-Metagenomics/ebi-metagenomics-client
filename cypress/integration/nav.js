@@ -46,6 +46,7 @@ describe('External link to HMMER sequence search redirects correctly', function 
         openPage('overview');
         cy.get('#sequence-search-nav > a ').then(($link) => {
             const url = $link.attr('href');
+            cy.log(url);
             cy.request({
                 url: url,
                 followRedirect: true
