@@ -153,6 +153,25 @@ describe('Samples page', function () {
             expect($el[0].href).to.include(encodeURIComponent('sample_name'));
         });
     });
+    it('Typing larger search query should cancel previous request.', function () {
+        const inputSelector = '#search-input';
+        const searchQuery = 'aaa';
+
+        waitForSamplesLoad(initialResultSize);
+        cy.server();
+        //TODO improve specificity of routing to avoid conflict with additional features
+        cy.route('**/api/**').as('apiQuery');
+        // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
+        cy.get(inputSelector).type(searchQuery[0]);
+        cy.wait('@apiQuery');
+        cy.get(inputSelector).type(searchQuery[1]);
+        cy.wait('@apiQuery');
+        cy.get(inputSelector).type(searchQuery[2]);
+        cy.wait('@apiQuery');
+
+        // Actual result set for query 'abc' should have size 1
+        waitForSamplesLoad(23);
+    });
 });
 
 // TODO test pagination works
