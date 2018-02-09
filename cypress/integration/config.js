@@ -1,6 +1,7 @@
 var Config = module.exports = {
     BASE_URL: 'http://localhost:9000/metagenomics/',
-    API_URL: "http://localhost:8000/v1/",
+    // API_URL: "http://localhost:8000/v1/",
+    API_URL: "https://www.ebi.ac.uk/metagenomics/api/latest/",
     SEARCH_URL: "https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_",
     INTERPRO_URL: "http://www.ebi.ac.uk/interpro/",
     SEQUENCE_SEARCH_URL: "https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer",

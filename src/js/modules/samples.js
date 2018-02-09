@@ -86,7 +86,7 @@ var SamplesView = Backbone.View.extend({
         params.page = pageFilters.get('page') || 1;
         this.params = params;
 
-        this.collection.fetch({
+        this.fetchXhr = this.collection.fetch({
             data: $.param(params),
             success: function (collection, response, options) {
                 const newParams = getDownloadParams(params);
@@ -115,8 +115,10 @@ var SamplesView = Backbone.View.extend({
 
         showTableLoadingGif();
         setURLParams(this.params, false);
-
-        this.collection.fetch({
+        if(this.fetchXhr.readyState > 0 && this.fetchXhr.readyState < 4){
+            this.fetchXhr.abort();
+        }
+        this.fetchXhr = this.collection.fetch({
             data: $.param(that.params), remove: true, success: function (collection, response, options) {
                 hideTableLoadingGif();
                 pagination.update(response.meta.pagination, changePage);
@@ -129,6 +131,7 @@ var SamplesView = Backbone.View.extend({
         return this;
     },
     render: function () {
+        $(".sample").remove();
         this.collection.each(function (sample) {
             var sampleView = new SampleView({model: sample});
             $(this.$el).append(sampleView.render());
