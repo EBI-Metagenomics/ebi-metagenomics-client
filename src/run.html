@@ -78,6 +78,15 @@
 
 <script id="runTmpl" type="text/template">
     <div class="column small-12 medium-12 large-12">
+        <nav aria-label="You are here:" role="navigation">
+            <ul class="breadcrumbs columns">
+                <li><a href="/metagenomics/">Home</a></li>
+                <li><a href="./">Runs</a></li>
+                <li>
+                    <span class="show-for-sr">Current: </span> Run <%= run_id %>
+                </li>
+            </ul>
+        </nav>
         <h2>Run <%= run_id %></h2>
         <section>
             <h4>Analysis pipeline version

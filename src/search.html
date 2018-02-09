@@ -74,6 +74,14 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
+        <nav aria-label="You are here:" role="navigation">
+            <ul class="breadcrumbs columns">
+                 <li><a href="./">Home</a></li>
+                <li>
+                    <span class="show-for-sr">Current: </span> Search
+                </li>
+            </ul>
+        </nav>
         <div class="columns small-12 medium-12 large-12">
             <div id="bonsai"></div>
 
@@ -82,7 +90,7 @@
         </div>
         <div class="row">
             <div class="columns small- medium-6 large-6">
-                <form id="headerSearchForm" action="/search">
+                <form id="headerSearchForm" action="/metagenomics/search">
                     <input id='navbar-query' class='header-search-input' name="query" type="search"
                            placeholder="Search">
                     <button id="search" type="submit" class="button" class="header-search-button">Search
@@ -293,10 +301,12 @@
         <% _.each(entries, function(entry){ %>
         <% const fields = entry.fields %>
         <tr class="search-row">
-            <td data-column="project-ena-accession"><a href="https://www.ebi.ac.uk/ena/data/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a></td>
-            <td data-column="project-id"><a href="/studies/<%= fields.id %>"><%= fields.id %></a></td>
+            <td data-column="project-ena-accession"><a
+                    href="https://www.ebi.ac.uk/ena/data/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a>
+            </td>
+            <td data-column="project-id"><a href="<%= entry.study_link %>"><%= fields.id %></a></td>
             <td data-column="project-biome"><%= fields.biome_name %></td>
-            <td data-column="project-name" ><%= fields.name %></td>
+            <td data-column="project-name"><%= fields.name %></td>
             <td data-column="project-desc"><%= fields.description %></td>
             <td data-column="project-sample-count"><%= fields.METAGENOMICS_SAMPLES.length %></td>
             <td data-column="project-run-count"><%= fields.METAGENOMICS_RUNS.length %></td>
@@ -338,7 +348,8 @@
         <% const fields = entry.fields %>
         <tr class="search-row">
             <td data-column="sample-id"><a href="<%= entry.sample_link %>"><%= entry.id %></a></td>
-            <td data-column="sample-projects"><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
+            <td data-column="sample-projects"><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a>
+            </td>
             <td data-column="sample-name"><%= fields.name %></td>
             <td data-column="sample-desc"><%= fields.description %></td>
         </tr>
@@ -390,7 +401,8 @@
             <td data-column="run-sample"><a href="<%= entry.sample_link %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
             <td data-column="run-project"><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
             <td data-column="run-experiment-type"><%= fields.experiment_type %></td>
-            <td data-column="run-pipeline-vers"><a href="<%= entry.pipeline_link %>"><%= fields.pipeline_version %></a></td>
+            <td data-column="run-pipeline-vers"><a href="<%= entry.pipeline_link %>"><%= fields.pipeline_version %></a>
+            </td>
         </tr>
         <% }); %>
         </tbody>
@@ -423,9 +435,9 @@
 <script defer="defer" src="static/js/script.js"></script>
 
 <!-- The Foundation theme JavaScript -->
-<script src="static/js/foundation.min.js"></script>
-<script src="static/libraries/foundation.util.touch.js"></script>
-<script src="static/js/foundationExtendEBI.js"></script>
+<script src="../static/js/foundation.min.js"></script>
+<script src="../static/libraries/foundation.util.touch.js"></script>
+<script src="../static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
     $(document).ready(function () {
         $(document).foundation();
@@ -433,7 +445,7 @@
     });
 </script>
 
-<script src="js/search.js"></script>
+<script src="../js/search.js"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->

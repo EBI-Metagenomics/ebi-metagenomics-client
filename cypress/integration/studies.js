@@ -117,7 +117,6 @@ describe('Studies page', function () {
             response: []
         });
         cy.get(inputSelector).type(searchQuery);
-
     });
 
     it('Clicking clear button should remove filters', function () {
@@ -165,6 +164,25 @@ describe('Studies page', function () {
             expect($el[0].href).to.include(encodeURIComponent(searchQuery));
             expect($el[0].href).to.include(encodeURIComponent('samples_count'));
         });
+    });
+
+    it('Typing larger search query should cancel previous request.', function () {
+        const inputSelector = '#search-input';
+        const searchQuery = 'abc';
+
+        waitForStudiesLoad(initialResultSize);
+        cy.server();
+        cy.route('**/api/**').as('apiQuery');
+        // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
+        cy.get(inputSelector).type(searchQuery[0]);
+        cy.wait('@apiQuery');
+        cy.get(inputSelector).type(searchQuery[1]);
+        cy.wait('@apiQuery');
+        cy.get(inputSelector).type(searchQuery[2]);
+        cy.wait('@apiQuery');
+
+        // Actual result set for query 'abc' should have size 1
+        waitForStudiesLoad(1);
     });
 
 });

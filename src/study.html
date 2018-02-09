@@ -75,6 +75,15 @@
     <div class="row" role="main">
         <div id="main-content-area" class="columns small-12 medium-12 large-12">
             <script id="studyTmpl" type="text/template">
+                <nav aria-label="You are here:" role="navigation">
+                    <ul class="breadcrumbs columns">
+                        <li><a href="/metagenomics/">Home</a></li>
+                        <li><a href="../studies">Studies</a></li>
+                        <li>
+                            <span class="show-for-sr">Current: </span> Study <%= study_accession %>
+                        </li>
+                    </ul>
+                </nav>
                 <h3>Project <%= study_accession %> (<%= bioproject %>) </h3>
                 <h2><%= study_name %></h2>
                 <ul class="tabs" data-tabs id="study-tabs">
