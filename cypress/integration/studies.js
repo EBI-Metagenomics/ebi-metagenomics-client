@@ -172,7 +172,7 @@ describe('Studies page', function () {
 
         waitForStudiesLoad(initialResultSize);
         cy.server();
-        cy.route('/metagenomics/api/latest/*').as('apiQuery');
+        cy.route('*').as('apiQuery');
         // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
         cy.get(inputSelector).type(searchQuery[0]);
         cy.wait('@apiQuery');
