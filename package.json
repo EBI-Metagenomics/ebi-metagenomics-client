@@ -5,7 +5,7 @@
   "main": "entry.js",
   "scripts": {
     "cypress:open": "cypress open",
-    "test": "cypress open",
+    "test": "cypress run",
     "watch": "webpack --watch --config webpack.config.js",
     "build": "webpack --progress --display-error-details --config webpack.config.js"
   },

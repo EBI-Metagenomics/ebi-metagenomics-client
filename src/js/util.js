@@ -4,7 +4,7 @@ const Backbone = require('backbone');
 const api = require('./components/api');
 const Handlebars = require('handlebars');
 const sequenceSearchUrl = process.env.SEQUENCE_SEARCH_URL;
-
+export const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 $.typeWatch = require('jquery.typewatch');
 
 import {footer, header, resultsFilter, head} from "./commons";
@@ -26,9 +26,11 @@ export function formatDate(date_str) {
 
 export function setCurrentTab(id, hideSearch) {
     document.addEventListener("DOMContentLoaded", function () {
-        // console.log(header());
-        // let tmpl = Handlebars.compile(header());
-        $("#header").append(header({hideSearch: hideSearch, sequenceSearchUrl: sequenceSearchUrl}));
+        $("#header").append(header({
+            hideSearch: hideSearch,
+            sequenceSearchUrl: sequenceSearchUrl,
+            subfolder: subfolder
+        }));
         $("#footer").append(footer);
         $(id).addClass('active');
     });
@@ -42,8 +44,6 @@ export function setCurrentTab(id, hideSearch) {
  */
 export function initHeadTag(pageTitle) {
     document.addEventListener("DOMContentLoaded", function () {
-        // console.log(header());
-        // let tmpl = Handlebars.compile(header());
         $("#head").append(head({pageTitle: pageTitle}));
     });
 
@@ -84,7 +84,7 @@ export function initResultsFilter(initQuery, callback) {
 }
 
 export function getURLParameter() {
-    var regex = /\/([A-z0-9]+)(?:$|[?])/g;
+    var regex = /\/([A-z0-9|\.]+)(?:$|[?])/g;
     return regex.exec(window.location.pathname)[1];
 }
 
@@ -291,10 +291,11 @@ export function checkURLExists(url) {
 export function checkAPIonline() {
     $.get({
         url: process.env.API_URL,
-        success: function(){
+        success: function () {
             console.log('API is online.');
         },
-        failure: function(){
+        failure: function () {
             $('body').html('Fail')
-        }});
+        }
+    });
 }
