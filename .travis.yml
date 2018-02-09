@@ -16,7 +16,7 @@ addons:
       - nginx
       - python3-pip
 env:
-  - API_URL=https://www.ebi.ac.uk/metagenomics/api/v1/
+  - API_URL=http://localhost:8000
   - SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_
   - DEPLOYMENT_SUBFOLDER="/metagenomics"
 
