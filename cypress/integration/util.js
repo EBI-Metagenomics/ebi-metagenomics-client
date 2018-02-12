@@ -13,7 +13,7 @@ var Util = module.exports = {
         waitCallback(numResults);
     },
     waitForSamplesLoad: function (results) {
-        cy.get("table tr.sample", {timeout: 10000}).should("have.length", parseInt(results));
+        cy.get("table tr.sample", {timeout: 20000}).should("have.length", parseInt(results));
     },
     assertTableIsCleared: function () {
         cy.get("table tr.sample").should('not.exist');
