@@ -13,8 +13,6 @@ const getCompressionPlugin = (() => {
 
 
 module.exports = (env = {prod: false}) => {
-    console.log('Production: ', env.prod);
-
     const config = {
         plugins: [
             new webpack.EnvironmentPlugin(
@@ -43,24 +41,24 @@ module.exports = (env = {prod: false}) => {
                 })
                 : null,
             // // Brotli compression
-            // env.production
-            //     ? new (getCompressionPlugin())({
-            //         asset: '[path].br[query]',
-            //         test: /\.(js|css|html|svg)$/i,
-            //         cache: true,
-            //         algorithm(buffer, _, callback) {
-            //             require('iltorb').compress(
-            //                 buffer,
-            //                 {
-            //                     mode: 1, // text
-            //                     quality: 11, // goes from 1 (but quick) to 11 (but slow)
-            //                 },
-            //                 callback
-            //             );
-            //         },
-            //     })
-            //     : null,
-        ],
+            env.prod
+                ? new (getCompressionPlugin())({
+                    asset: '[path].br[query]',
+                    test: /\.(js|css|html|svg)$/i,
+                    cache: true,
+                    algorithm(buffer, _, callback) {
+                        require('iltorb').compress(
+                            buffer,
+                            {
+                                mode: 1, // text
+                                quality: 11, // goes from 1 (but quick) to 11 (but slow)
+                            },
+                            callback
+                        );
+                    },
+                })
+                : null,
+        ].filter(Boolean), // filter out empty values
         entry:
             {
                 index: 'src/js/modules/index.js',
@@ -153,6 +151,5 @@ module.exports = (env = {prod: false}) => {
         },
         devtool: "#inline-source-map",
     }
-
     return config;
 };
