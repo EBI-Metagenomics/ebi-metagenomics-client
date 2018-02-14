@@ -29,22 +29,11 @@ sudo service nginx restart
 https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
 
 #### How to setup your project?
-Export the following env variables.
-##### In your dev environment:
+Export the following env variables in env-config.sh file. Adjust exports if need depending on whether you are in your dev or
+prod environment.
+
 ```
-export API_URL="https://wwwdev.ebi.ac.uk/metagenomics/api/latest/"
-export SEARCH_URL="https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_"
-export INTERPRO_URL="https://wwwdev.ebi.ac.uk/interpro/"
-export SEQUENCE_SEARCH_URL="https://wwwdev.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
-export ENA_URL="https://www.ebi.ac.uk/ena/data/view/"
-```
-##### In the production environment:
-```
-export API_URL="https://www.ebi.ac.uk/metagenomics/api/latest/"
-export SEARCH_URL="https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_"
-export INTERPRO_URL="https://www.ebi.ac.uk/interpro/"
-export SEQUENCE_SEARCH_URL="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
-export ENA_URL="https://www.ebi.ac.uk/ena/data/view/"
+source env-config.sh
 ```
 
 ##### Run 'npm install' in the project's main directory.
@@ -53,5 +42,5 @@ export ENA_URL="https://www.ebi.ac.uk/ena/data/view/"
 ```
 npm install
 
-webpack --watch --config webpack.config.js
+npm run watch
 ```
