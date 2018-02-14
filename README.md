@@ -38,7 +38,7 @@ source env-config.sh
 
 ##### Run 'npm install' in the project's main directory.
  Serve with own server, or use biult-in dev system by calling 'webpack-dev-server' in main directory.
- Access locally run server on http://localhost:8080/index.html .
+ Access local web server under http://localhost:9000/index.html .
 ```
 npm install
 
