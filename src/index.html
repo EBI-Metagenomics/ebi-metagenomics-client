@@ -88,7 +88,7 @@
                 <div class="columns small-4">
                     <div class="row">
                         <div class="columns small-1">
-                            <span class="icon icon-generic icon-c6" style="font-size: 2rem"  data-icon="D"></span>
+                            <span class="icon icon-generic icon-c6" style="font-size: 2rem" data-icon="D"></span>
                         </div>
                     </div>
                     <div class="row">
@@ -135,30 +135,18 @@
                         <div class="columns small-10">metatranscriptomes</div>
                     </div>
                 </div>
-                <div class="columns small-4">
+                <div id="objectCounts" class="columns small-4">
                     <div class="row">
                         <div class="columns small-1">
                             <span class="icon icon-functional icon-c9" style="font-size: 2rem" data-icon="U"></span>
                         </div>
                     </div>
-                    <div class="row">
+                    <script id="objectCountsTmpl" type="text/template">
                         <div class="columns small-2">
-                            <span style="font-weight: bold">?</span>
+                            <span style="font-weight: bold"><%= count %></span>
                         </div>
-                        <div class="columns small-10">runs</div>
-                    </div>
-                    <div class="row">
-                        <div class="columns small-2">
-                            <span style="font-weight: bold">?</span>
-                        </div>
-                        <div class="columns small-10">samples</div>
-                    </div>
-                    <div class="row">
-                        <div class="columns small-2">
-                            <span style="font-weight: bold">?</span>
-                        </div>
-                        <div class="columns small-10">projects</div>
-                    </div>
+                        <div class="columns small-10"><%= type %></div>
+                    </script>
                 </div>
             </div>
         </section>

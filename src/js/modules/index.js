@@ -165,3 +165,40 @@ var StudiesView = Backbone.View.extend({
 
 var studies = new StudiesCollection();
 var studiesView = new StudiesView({collection: studies});
+
+var ObjectCountView = Backbone.View.extend({
+    tagName: 'div',
+    // first: false,
+    template: _.template($("#objectCountsTmpl").html()),
+    attributes: {
+        class: 'row'
+    },
+    render: function () {
+        this.$el.html(this.template(this.model.toJSON()));
+        return this.$el;
+    }
+});
+
+var GlobalOverview = Backbone.View.extend({
+    el: '#objectCounts',
+    initialize: function () {
+        var that = this;
+        this.collection.fetch({
+            success: function (response) {
+                that.render();
+            }
+        });
+        return this;
+    },
+    render: function () {
+        this.collection.each(function (counts) {
+            const objectCountView = new ObjectCountView({model: counts});
+            $(this.$el).append(objectCountView.render());
+        }, this);
+
+        return this;
+    }
+});
+
+const resources = new api.ResourcesCollection();
+const globalOverviewView = new GlobalOverview({collection: resources});
