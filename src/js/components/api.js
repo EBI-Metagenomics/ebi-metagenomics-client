@@ -238,7 +238,7 @@ export const Resource = Backbone.Model.extend({
 });
 
 export const ResourcesCollection = Backbone.Collection.extend({
-    url: API_URL + "/utils/resources",
+    url: API_URL + "utils/resources",
     model: Resource,
     parse: function (response) {
         return response.data;
