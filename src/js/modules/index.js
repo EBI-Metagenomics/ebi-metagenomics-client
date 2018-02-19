@@ -6,10 +6,10 @@ const apiUrl = process.env.API_URL;
 const commons = require('../commons');
 const blogUrl = commons.BLOG_URL;
 
-import {initHeadTag, setCurrentTab} from "../util";
+import {setCurrentTab} from "../util";
 
 setCurrentTab('#overview-nav');
-initHeadTag('EBI metagenomics: archiving, analysis and integration of metagenomics data');
+// initHeadTag('EBI metagenomics: archiving, analysis and integration of metagenomics data');
 
 $('#this_close').on('click', function () {
     $('.jumbo-header').slideUp();

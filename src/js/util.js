@@ -24,30 +24,13 @@ export function formatDate(date_str) {
     return d.getDate() + "-" + MONTHS[d.getMonth()] + "-" + d.getFullYear()
 }
 
-export function setCurrentTab(id, hideSearch) {
+export function setCurrentTab(id) {
     document.addEventListener("DOMContentLoaded", function () {
-        $("#header").append(header({
-            hideSearch: hideSearch,
-            sequenceSearchUrl: sequenceSearchUrl,
-            subfolder: subfolder
-        }));
-        $("#footer").append(footer);
         $(id).addClass('active');
     });
 }
 
-/**
- * Initialises the head tag of each page.
- * Has to be called from the JS file of each page.
- *
- * @param {String} pageTitle - The title of a page, e.g. Help or About etc.
- */
-export function initHeadTag(pageTitle) {
-    document.addEventListener("DOMContentLoaded", function () {
-        $("#head").append(head({pageTitle: pageTitle}));
-    });
 
-}
 
 export function initTableTools() {
     // $("#tableTools").append(tableTools);

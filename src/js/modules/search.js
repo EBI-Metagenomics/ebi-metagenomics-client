@@ -19,7 +19,7 @@ const Slider = require('../components/slider.js');
 
 util.checkAPIonline();
 
-setCurrentTab('#search-nav', true);
+setCurrentTab('#search-nav');
 attachTabHandlers();
 
 $("#pageSize").append(commons.pagesize).find('#pagesize').change(function () {

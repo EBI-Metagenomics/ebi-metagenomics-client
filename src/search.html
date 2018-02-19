@@ -2,11 +2,11 @@
 <html lang="en">
 <head id="head">
     <title>Search &lt; EBI Metagenomics &lt; EMBL-EBI</title>
-    {{> partials/head}}
+    {{> partials/head this}}
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
-<div id="header"></div>
+<div id="header">{{> partials/header this}}</div>
 
 <!-- Suggested layout containers / #content -->
 <div id="content">
@@ -365,7 +365,7 @@
 <!-- </div> -->
 <!-- End suggested layout containers / #content -->
 
-<div id="footer"></div>
+<div id="footer">{{>partials/footer}}</div>
 
 <!-- JavaScript -->
 <script src="https://code.jquery.com/jquery-3.2.1.js"></script>

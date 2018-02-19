@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head id="head">
-    <title>About <  EBI Metagenomics &lt; EMBL-EBI</title>
-    {{> partials/head}}
+    <title>About < EBI Metagenomics &lt; EMBL-EBI</title>
+    {{> partials/head this}}
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
-<div id="header"></div>
+<div id="header">{{> partials/header this}}</div>
 
 <!-- Suggested layout containers / #content -->
 <div id="content">
@@ -121,7 +121,7 @@
 <!-- </div> -->
 <!-- End suggested layout containers / #content -->
 
-<div id="footer"></div>
+<div id="footer">{{>partials/footer}}</div>
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>

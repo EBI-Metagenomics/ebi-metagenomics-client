@@ -3,6 +3,20 @@ const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HandlebarsPlugin = require("handlebars-webpack-plugin");
+const fs = require('fs');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+
+const jsonData = {
+    subfolder: process.env.DEPLOYMENT_SUBFOLDER,
+};
+
+const configFile = 'config.json';
+fs.writeFile(configFile, JSON.stringify(jsonData), function(err) {
+    if(err) {
+        return console.log(err);
+    }
+});
 
 const getCompressionPlugin = (() => {
     let plugin;
@@ -66,6 +80,7 @@ module.exports = (env = {prod: false}) => {
                 // if ommited, the input filepath stripped of its extension will be used
                 output: path.join(__dirname, "dist", "[name].html"),
                 // data passed to main hbs template: `main-template(data)`
+                data : path.join(__dirname, configFile),
                 // globbed path to partials, where folder/filename is unique
                 partials: [
                     path.join(__dirname, "src", "partials", "*.handlebars")
@@ -134,17 +149,17 @@ module.exports = (env = {prod: false}) => {
                     test: /\.handlebars$/,
                     loader: "handlebars-loader"
                 }, {
-                    test: /\.(html)$/,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: '[name].[ext]',
-                                outputPath: '../'
-                            }
-                        }
-                    ]
-                }, {
+                    //     test: /\.(html)$/,
+                    //     use: [
+                    //         {
+                    //             loader: 'file-loader',
+                    //             options: {
+                    //                 name: '[name].[ext]',
+                    //                 outputPath: '../'
+                    //             }
+                    //         }
+                    //     ]
+                    // }, {
                     test: /\.css$/,
                     use: [
                         'style-loader',
