@@ -14,23 +14,6 @@ export const pipelines = [
     require('../partials/pipelines/4.handlebars'),
 ];
 
-require('html-loader?path=../name=[name].[ext]!../about.html');
-require('html-loader?path=../name=[name].[ext]!../biomes.html');
-require('html-loader?path=../name=[name].[ext]!../compare.html');
-require('html-loader?path=../name=[name].[ext]!../help.html');
-require('html-loader?path=../name=[name].[ext]!../run.html');
-require('html-loader?path=../name=[name].[ext]!../sample.html');
-require('html-loader?path=../name=[name].[ext]!../samples.html');
-require('html-loader?path=../name=[name].[ext]!../search.html');
-require('html-loader?path=../name=[name].[ext]!../studies.html');
-require('html-loader?path=../name=[name].[ext]!../study.html');
-require('html-loader?path=../name=[name].[ext]!../submit.html');
-require('html-loader?path=../name=[name].[ext]!../pipelines.html');
-require('html-loader?path=../name=[name].[ext]!../pipeline.html');
-require('html-loader?path=../name=[name].[ext]!../index.html');
-require('html-loader?path=../name=[name].[ext]!../login.html');
-require('html-loader?path=../name=[name].[ext]!../healthcheck.html');
-
 require('style-loader?name=[name].[ext]!../../static/css/site.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');
 require('style-loader?name=[name].[ext]!../../static/css/foundation.css');
