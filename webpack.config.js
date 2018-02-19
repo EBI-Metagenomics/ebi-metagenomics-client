@@ -7,17 +7,6 @@ const fs = require('fs');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 
-const jsonData = {
-    subfolder: process.env.DEPLOYMENT_SUBFOLDER,
-};
-
-const configFile = 'config.json';
-fs.writeFile(configFile, JSON.stringify(jsonData), function(err) {
-    if(err) {
-        return console.log(err);
-    }
-});
-
 const getCompressionPlugin = (() => {
     let plugin;
     return () => {
@@ -80,7 +69,10 @@ module.exports = (env = {prod: false}) => {
                 // if ommited, the input filepath stripped of its extension will be used
                 output: path.join(__dirname, "dist", "[name].html"),
                 // data passed to main hbs template: `main-template(data)`
-                data : path.join(__dirname, configFile),
+                data : {
+                    subfolder: process.env.DEPLOYMENT_SUBFOLDER,
+                },
+                    // path.join(__dirname, configFile),
                 // globbed path to partials, where folder/filename is unique
                 partials: [
                     path.join(__dirname, "src", "partials", "*.handlebars")
