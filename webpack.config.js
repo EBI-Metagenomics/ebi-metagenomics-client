@@ -64,7 +64,7 @@ module.exports = (env = {prod: false}) => {
                 entry: path.join(__dirname, "src", "*.html"),
                 // output path and filename(s). This should lie within the webpacks output-folder
                 // if ommited, the input filepath stripped of its extension will be used
-                output: path.join(__dirname, "dist", "metagenomics", "[name].html"),
+                output: path.join(__dirname, "dist", "[name].html"),
                 // data passed to main hbs template: `main-template(data)`
                 // globbed path to partials, where folder/filename is unique
                 partials: [
@@ -108,7 +108,7 @@ module.exports = (env = {prod: false}) => {
         output: {
             filename: '[name].js',
             path:
-            __dirname + '/dist/metagenomics/js'
+            __dirname + '/dist/js'
         }
         ,
         resolve: {
@@ -116,8 +116,7 @@ module.exports = (env = {prod: false}) => {
             alias:
                 {
                     handlebars: 'handlebars/dist/handlebars.min.js',
-                }
-            ,
+                },
         }
         ,
         module: {
