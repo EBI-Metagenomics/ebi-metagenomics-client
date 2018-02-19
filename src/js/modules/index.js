@@ -2,6 +2,7 @@ const Backbone = require('backbone');
 const _ = require('underscore');
 const $ = require('jquery');
 const api = require('../components/api');
+const ebisearch = require('../components/ebisearch');
 const apiUrl = process.env.API_URL;
 const commons = require('../commons');
 const blogUrl = commons.BLOG_URL;
@@ -202,3 +203,49 @@ var GlobalOverview = Backbone.View.extend({
 
 const resources = new api.ResourcesCollection();
 const globalOverviewView = new GlobalOverview({collection: resources});
+
+var ProjectCountView = Backbone.View.extend({
+    el: '#projectsCounts',
+
+    my_template: _.template("<span style=\"font-weight: bold\"><%= name %></span>"),
+
+    initialize: function () {
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+            // Your server goes below
+            //options.url = 'http://localhost:8000' + options.url;
+            // options.url = 'https://wwwdev.ebi.ac.uk/ebisearch' + options.url;
+            // jqXHR.setRequestHeader('Access-Control-Allow-Origin: https://wwwdev.ebi.ac.uk/ebisearch');
+            options.crossDomain = {
+                crossDomain: true
+            };
+            // options.xhrFields = {
+            //     withCredentials: true
+            // };
+            jqXHR.setRequestHeader('Access-Control-Allow-Origin', '*');
+            console.log('Test2');
+        });
+        var that = this;
+        // var options = {};
+        this.collection.fetch({
+            // dataType: 'jsonp',
+            success: function (response) {
+                console.log('Test3');
+                that.render();
+            },
+            error: function (xhr, error) {
+                // console.debug(xhr);
+                console.log('Test4');
+                console.debug(error);
+            },
+        });
+        return this;
+    },
+    render: function () {
+        console.log("Test 5");
+        this.$el.html(this.my_template(this.model.toJSON()));
+    }
+});
+
+const projectCount = new ebisearch.ProjectCount();
+console.log('Test');
+const projectCountView = new ProjectCountView({collection: projectCount});
