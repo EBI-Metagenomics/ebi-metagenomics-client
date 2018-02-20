@@ -16,7 +16,7 @@ addons:
       - nginx
       - python3-pip
 env:
-  - API_URL=http://127.0.0.1:8000/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
+  - API_URL=https://www.ebi.ac.uk/metagenomics/api/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
 
 before_install:
   - mysql -e 'CREATE DATABASE emg;'
