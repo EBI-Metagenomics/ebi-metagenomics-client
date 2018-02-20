@@ -73,7 +73,7 @@ describe('Home page: Test Browse latest projects component', function () {
 
         it('View specific study', function () {
             cy.contains('View more').click();
-            cy.contains('Project');
+            cy.contains('Project', {timeout: 20000});
             cy.title().should('include', 'Study');
         });
     })

@@ -178,12 +178,12 @@ describe('Studies page', function () {
         cy.server();
         cy.route(Config.API_URL+'**').as('apiQuery');
         // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
-        cy.get(inputSelector).type(searchQuery[0]);
-        cy.wait('@apiQuery');
-        cy.get(inputSelector).type(searchQuery[1]);
-        cy.wait('@apiQuery');
-        cy.get(inputSelector).type(searchQuery[2]);
-        cy.wait('@apiQuery');
+        cy.route('*/studies?*').as('apiQuery');
+        // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
+        for(var i in searchQuery){
+            cy.get(inputSelector).type(searchQuery[i]);
+            cy.wait('@apiQuery');
+        }
 
         // Actual result set for query 'abc' should have size 1
         waitForStudiesLoad(1);
