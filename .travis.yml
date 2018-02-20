@@ -33,7 +33,7 @@ before_install:
   - emgcli migrate --fake-initial
   - emgcli collectstatic --noinput
   - emgcli check --deploy
-  - emgdeploy --daemon -p ~/emgvar/emg.pid emgcli.wsgi:application
+  - emgdeploy --daemon -p ~/emg.pid emgcli.wsgi:application
 
   - npm install cypress
 
