@@ -72,8 +72,9 @@ describe('Home page: Test Browse latest projects component', function () {
         });
 
         it('View specific study', function () {
-            cy.contains('View more').click();
-            cy.contains('Project', {timeout: 200000});
+            cy.get("#studies > .study", {timeout: 5000}).should("have.length", parseInt(25));
+            cy.get('#latestStudies').contains('View more').first().click();
+            cy.contains('Project');
             cy.title().should('include', 'Study');
         });
     })
