@@ -176,9 +176,8 @@ describe('Studies page', function () {
 
         waitForStudiesLoad(initialResultSize);
         cy.server();
-        cy.route(Config.API_URL+'**').as('apiQuery');
         // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
-        cy.route('*/studies?*').as('apiQuery');
+        cy.route('**/studies?**').as('apiQuery');
         // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
         for(var i in searchQuery){
             cy.get(inputSelector).type(searchQuery[i]);

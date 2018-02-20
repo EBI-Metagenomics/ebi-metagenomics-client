@@ -6,7 +6,7 @@ const apiUrl = process.env.API_URL;
 const commons = require('../commons');
 const blogUrl = commons.BLOG_URL;
 
-import {setCurrentTab} from "../util";
+import {setCurrentTab, truncateString} from "../util";
 
 setCurrentTab('#overview-nav');
 // initHeadTag('EBI metagenomics: archiving, analysis and integration of metagenomics data');
@@ -105,7 +105,9 @@ var StudyView = Backbone.View.extend({
         class: 'study',
     },
     render: function () {
-        this.$el.html(this.template(this.model.toJSON()));
+        let data = this.model.toJSON();
+        data.abstract = truncateString(data.abstract, 250);
+        this.$el.html(this.template(data));
         return this.$el
     }
 });

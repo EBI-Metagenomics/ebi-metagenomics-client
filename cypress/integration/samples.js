@@ -160,7 +160,7 @@ describe('Samples page', function () {
         waitForSamplesLoad(initialResultSize);
         cy.server();
         //TODO improve specificity of routing to avoid conflict with additional features
-        cy.route('*/samples?*').as('apiQuery');
+        cy.route('**/samples?**').as('apiQuery');
         // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
         for(var i in searchQuery){
             cy.get(inputSelector).type(searchQuery[i]);
