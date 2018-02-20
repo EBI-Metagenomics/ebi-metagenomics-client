@@ -1,10 +1,9 @@
-import {openPage} from "./util";
+import {openPage, getBaseURL} from "./util";
 
-const origPage = '/';
+const origPage = '';
 
 describe('Home page: Test Browse by selected biomes component', function () {
     context('Check for elements', function () {
-
         before(function () {
             openPage(origPage);
         });
@@ -14,25 +13,33 @@ describe('Home page: Test Browse by selected biomes component', function () {
         });
 
         it('Select specific biomes', function () {
-            cy.get('#top10biomes').contains('Aquatic');
             cy.get('#top10biomes').contains('Plants');
             cy.get('#top10biomes').contains('Human');
+            cy.get('#top10biomes').contains('Human Skin');
+            cy.get('#top10biomes').contains('Terrestrial Soil');
+            cy.get('#top10biomes').contains('Food production');
+            cy.get('#top10biomes').contains('Mammals Digestive system');
+            cy.get('#top10biomes').contains('Human Digestive system');
+            cy.get('#top10biomes').contains('Aquatic');
+            cy.get('#top10biomes').contains('Aquatic Marine');
+            cy.get('#top10biomes').contains('Wastewater');
         })
 
     });
 
     context('Perform click events', function () {
-
         beforeEach(function () {
             openPage(origPage);
         });
 
         it('Browse all biomes', function () {
             cy.contains('Browse all biomes').click();
+            cy.url().should('eq', getBaseURL()+'biomes')
         });
 
         it('Browse human biomes', function () {
-            cy.get('#top10biomes').contains('Human').click();
+            cy.get('#top10biomes').get('.human_host_b.Human.Skin').click();
+            cy.url().should('include', getBaseURL()+'studies?lineage=root:Host-associated:Human:Skin')
         });
     })
 

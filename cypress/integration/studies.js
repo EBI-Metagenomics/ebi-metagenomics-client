@@ -1,4 +1,4 @@
-import {openPage} from './util';
+import {openPage, waitForStudiesLoad} from './util';
 import Config from './config';
 
 const origPage = 'studies';
@@ -9,9 +9,6 @@ function assertTableIsCleared() {
     cy.get("table tr.study").should('not.exist');
 }
 
-function waitForStudiesLoad(results) {
-    cy.get("table tr.study", {timeout: 10000}).should("have.length", parseInt(results));
-}
 
 function setSortBy(sortBySelector, numResults) {
     cy.get(sortBySelector).click();
@@ -39,11 +36,13 @@ describe('Studies page', function () {
         const selector = "td.updated";
 
         setSortBy('th.updated');
+        waitForStudiesLoad(initialResultSize);
         cy.get(selector).first().should(function ($el) {
             expect(new Date(Cypress.$(selector).last().text())).to.be.gte(new Date($el.text()));
         });
 
         setSortBy('th.updated');
+        waitForStudiesLoad(initialResultSize);
         cy.get(selector).first().should(function ($el) {
             expect(new Date(Cypress.$(selector).last().text())).to.be.lte(new Date($el.text()));
         });
@@ -53,11 +52,13 @@ describe('Studies page', function () {
         const selector = "td.name";
 
         setSortBy('th.name');
+        waitForStudiesLoad(initialResultSize);
         cy.get(selector).first().should(function ($el) {
             expect(Cypress.$(selector).last().text()).to.be.gte($el.text());
         });
 
         setSortBy('th.name');
+        waitForStudiesLoad(initialResultSize);
         cy.get(selector).first().should(function ($el) {
             expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
         });
@@ -67,13 +68,15 @@ describe('Studies page', function () {
         const selector = "td.samples";
 
         setSortBy('th.samples');
+        waitForStudiesLoad(initialResultSize);
         cy.get(selector).first().should(function ($el) {
-            expect(Cypress.$(selector).last().text()).to.be.gte($el.text());
+            expect(parseInt(Cypress.$(selector).last().text())).to.be.gte(parseInt($el.text()));
         });
 
         setSortBy('th.samples');
+        waitForStudiesLoad(initialResultSize);
         cy.get(selector).first().should(function ($el) {
-            expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
+            expect(parseInt(Cypress.$(selector).last().text())).to.be.lte(parseInt($el.text()));
         });
     });
 
@@ -117,6 +120,7 @@ describe('Studies page', function () {
             response: []
         });
         cy.get(inputSelector).type(searchQuery);
+        // As API searches over fields which are not returned, results cannot be validated in client.
     });
 
     it('Clicking clear button should remove filters', function () {
@@ -172,7 +176,7 @@ describe('Studies page', function () {
 
         waitForStudiesLoad(initialResultSize);
         cy.server();
-        cy.route('**/api/**').as('apiQuery');
+        cy.route(Config.API_URL+'**').as('apiQuery');
         // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
         cy.get(inputSelector).type(searchQuery[0]);
         cy.wait('@apiQuery');

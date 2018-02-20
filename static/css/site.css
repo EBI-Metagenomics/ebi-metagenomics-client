@@ -649,3 +649,7 @@ a.ext:hover, a.ext:active, a.ext:focus {
     float: right;
     clear: right;
 }
+
+.biome-disp > a {
+    display:inline;
+}

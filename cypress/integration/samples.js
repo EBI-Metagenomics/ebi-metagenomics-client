@@ -1,4 +1,4 @@
-import {openPage, waitForSamplesLoad, assertTableIsCleared} from './util';
+import {openPage, waitForSamplesLoad, assertTableIsCleared, stripWhitespace} from './util';
 
 const origPage = 'samples';
 import Config from './config';
@@ -53,12 +53,12 @@ describe('Samples page', function () {
 
         setSortBy('th.sample-name');
         cy.get(selector).first().should(function($el){
-            expect(Cypress.$(selector).last().text()).to.be.gte($el.text());
+            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).to.be.gte(stripWhitespace($el.text().toLowerCase()));
         });
 
         setSortBy('th.sample-name');
-        cy.get(selector).first().should(function($el){
-            expect(Cypress.$(selector).last().text()).to.be.lte($el.text());
+        cy.get(selector).last().should(function($el){
+            expect(stripWhitespace(Cypress.$(selector).first().text().toLowerCase())).to.be.gte(stripWhitespace($el.text().toLowerCase()));
         });
     });
 
@@ -116,7 +116,7 @@ describe('Samples page', function () {
         const clearButtonSelector = '#clear-filter';
         cy.get(clearButtonSelector).click();
         waitForSamplesLoad(initialResultSize);
-        cy.get('.biome-icon > span').should('have.class', 'human_gut_b');
+        cy.get('.biome-icon > span').should('have.class', 'human_host_b');
     });
 
     it('Download link should change with changes in filtering or ordering', function () {
@@ -155,22 +155,19 @@ describe('Samples page', function () {
     });
     it('Typing larger search query should cancel previous request.', function () {
         const inputSelector = '#search-input';
-        const searchQuery = 'aaa';
+        const searchQuery = 'cone';
 
         waitForSamplesLoad(initialResultSize);
         cy.server();
         //TODO improve specificity of routing to avoid conflict with additional features
-        cy.route('**/api/**').as('apiQuery');
+        cy.route(Config.API_URL+'**').as('apiQuery');
         // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
-        cy.get(inputSelector).type(searchQuery[0]);
-        cy.wait('@apiQuery');
-        cy.get(inputSelector).type(searchQuery[1]);
-        cy.wait('@apiQuery');
-        cy.get(inputSelector).type(searchQuery[2]);
-        cy.wait('@apiQuery');
-
-        // Actual result set for query 'abc' should have size 1
-        waitForSamplesLoad(23);
+        for(var i in searchQuery){
+            cy.get(inputSelector).type(searchQuery[i]);
+            cy.wait('@apiQuery');
+        }
+        // Actual result set for query 'cone' should have size 1
+        waitForSamplesLoad(1);
     });
 });
 
