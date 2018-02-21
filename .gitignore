@@ -1,1 +1,11 @@
 dist/
+node_modules/
+
+# Cypress files
+cypress/videos/
+cypress/screenshots/
+
+
+# IDE (Webstorm) files
+*.iml
+*.idea
