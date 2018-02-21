@@ -22,6 +22,24 @@ util.checkAPIonline();
 setCurrentTab('#search-nav');
 attachTabHandlers();
 
+const DEFAULT_QUERIES = ["domain_source:metagenomics_projects", "domain_source:metagenomics_samples", "domain_source:metagenomics_runs"]
+
+const COOKIE_NAME = 'ebi-metagenomics';
+const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)\]/;
+
+let queryText = util.getURLFilterParams().get('query');
+if (queryText === null) {
+    queryText = getCookieQuery();
+}
+
+$("#navbar-query").val(queryText);
+
+$(document).ready(function () {
+    //TODO convert to template argument
+    $("#pagesize-text").hide();
+});
+
+
 $("#pageSize").append(commons.pagesize).find('#pagesize').change(function () {
     updateAll($(this).val())
 });
@@ -30,16 +48,6 @@ function getPageSize() {
     return $('#pagesize').val();
 }
 
-let queryText = util.getURLFilterParams().get('query');
-$("#navbar-query").val(queryText);
-
-$(document).ready(function () {
-    //TODO convert to template argument
-    $("#pagesize-text").hide();
-});
-
-const COOKIE_NAME = 'ebi-metagenomics';
-const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)\]/;
 
 const Search = Backbone.Collection.extend({
     tab: null,
@@ -130,7 +138,7 @@ const ResultsView = Backbone.View.extend({
 
         $.when.apply($, fetches).done(function () {
             let args;
-            if (typeof(arguments[1])==='string'){
+            if (typeof(arguments[1]) === 'string') {
                 args = [arguments];
             } else {
                 args = arguments;
@@ -790,18 +798,18 @@ function getAllFormIds(except) {
     })
 }
 
-function resetAllForms() {
-    $(".facet-remove-button").remove();
-    _.each(getAllFormIds(), function (id) {
-        const $form = $(id);
-        resetInputsInElem($form);
-    });
-    projectsView.initialize();
-    samplesView.initialize();
-    runsView.initialize();
-
-    initAll(projectsView, samplesView, runsView, false, false);
-}
+// function resetAllForms() {
+//     $(".facet-remove-button").remove();
+//     _.each(getAllFormIds(), function (id) {
+//         const $form = $(id);
+//         resetInputsInElem($form);
+//     });
+//     projectsView.initialize();
+//     samplesView.initialize();
+//     runsView.initialize();
+//
+//     initAll(projectsView, samplesView, runsView, false, false);
+// }
 
 String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
@@ -934,7 +942,9 @@ function saveSearchParams(facet, filters, query) {
         delete cookieParams[facet]['filters'];
     }
     if (query) {
-        cookieParams[facet]['query'] = query;
+        if (DEFAULT_QUERIES.indexOf(query) === -1) {
+            cookieParams[facet]['query'] = query;
+        }
     } else {
         delete cookieParams[facet]['query'];
     }
@@ -963,6 +973,19 @@ function loadSearchParams(facet) {
         filters: data,
         query: query
     };
+}
+
+function getCookieQuery() {
+    let cookie = Cookies.get(COOKIE_NAME);
+    console.log(cookie);
+    if (cookie) {
+        cookie = JSON.parse(cookie);
+        try {
+            return cookie['projects']['query'];
+        } catch (e) {
+        }
+    }
+    return null
 }
 
 function deleteCachedSearchParams() {
