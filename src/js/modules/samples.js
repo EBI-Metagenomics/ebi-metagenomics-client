@@ -1,16 +1,13 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const util = require('../util');
 const commons = require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
 const Order = require('../components/order');
 
 const pagination = new Pagination();
-
-const DEFAULT_PAGE_SIZE = require('../commons').DEFAULT_PAGE_SIZE;
+const DEFAULT_PAGE_SIZE = commons.DEFAULT_PAGE_SIZE;
 import {
-    getFormData,
     getURLFilterParams,
     hideTableLoadingGif,
     initResultsFilter,
@@ -27,14 +24,6 @@ $("#pagination").append(commons.pagination);
 $("#pageSize").append(commons.pagesize);
 
 const pageFilters = getURLFilterParams();
-
-const orderOptions = [
-    {name: 'Sample accession', value: 'accession'},
-    {name: 'Sample name', value: 'sample_name'},
-    // {name: 'Number of runs', value: 'runs-count'}, // NOT DISPLAYED IN TABLE
-    // {name: 'Number of samples', value: 'samples_count'},
-    {name: 'Last updated', value: 'last_update'},
-];
 
 
 var SampleView = Backbone.View.extend({
@@ -95,7 +84,6 @@ var SamplesView = Backbone.View.extend({
                 const pag = response.meta.pagination;
                 pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
                 Order.initHeaders(params.ordering, function (sort) {
-                    var formData = getFormData("#filter");
                     const params = {
                         page: 1,
                         page_size: pagination.getPageSize(),
@@ -143,7 +131,7 @@ var SamplesView = Backbone.View.extend({
 function updatePageSize(pageSize) {
     const params = {
         page_size: pageSize,
-        page: pagination.currentPage,
+        page: 1,
     };
     samplesView.update(params);
 }
@@ -175,6 +163,3 @@ initResultsFilter(pageFilters.get('search'), function (e) {
     };
     samplesView.update(params);
 });
-
-// TODO remove this
-window.samplesView = samplesView;

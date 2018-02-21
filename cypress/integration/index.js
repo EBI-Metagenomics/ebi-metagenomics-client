@@ -15,13 +15,13 @@ describe('Home page: Test Browse by selected biomes component', function () {
         it('Select specific biomes', function () {
             cy.get('#top10biomes').contains('Plants');
             cy.get('#top10biomes').contains('Human');
-            cy.get('#top10biomes').contains('Human Skin');
-            cy.get('#top10biomes').contains('Terrestrial Soil');
+            cy.get('#top10biomes').contains('Skin');
+            cy.get('#top10biomes').contains('Soil');
             cy.get('#top10biomes').contains('Food production');
-            cy.get('#top10biomes').contains('Mammals Digestive system');
-            cy.get('#top10biomes').contains('Human Digestive system');
+            cy.get('#top10biomes').contains('Digestive system');
+            cy.get('#top10biomes').contains('Digestive system');
             cy.get('#top10biomes').contains('Aquatic');
-            cy.get('#top10biomes').contains('Aquatic Marine');
+            cy.get('#top10biomes').contains('Marine');
             cy.get('#top10biomes').contains('Wastewater');
         })
 
@@ -38,7 +38,7 @@ describe('Home page: Test Browse by selected biomes component', function () {
         });
 
         it('Browse human biomes', function () {
-            cy.get('#top10biomes').get('.human_host_b.Human.Skin').click();
+            cy.get('#top10biomes').get('.human_host_b.Skin').click();
             cy.url().should('include', getBaseURL()+'studies?lineage=root:Host-associated:Human:Skin')
         });
     })
