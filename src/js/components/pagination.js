@@ -46,11 +46,14 @@ export const Pagination = function () {
         opts.startPage = p.page;
         opts.totalPages = totPages;
         $(pagination).twbsPagination('destroy');
+        console.log(callback);
         $(pagination).twbsPagination($.extend({}, opts, {
             startPage: p.PAGE,
             totalPages: totPages,
         })).on('page', function (evt, page) {
-            callback(page);
+            callback({
+                page: page
+            });
         });
     }
 

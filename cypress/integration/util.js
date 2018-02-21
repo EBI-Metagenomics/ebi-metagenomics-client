@@ -15,8 +15,11 @@ var Util = module.exports = {
         cy.get(sortBySelector).select('-last_update');
         waitCallback(numResults);
     },
+    waitForBiomesLoad: function (results) {
+        cy.get("table tr.biome", {timeout: 10000}).should("have.length", parseInt(results));
+    },
     waitForSamplesLoad: function (results) {
-        cy.get("table tr.sample", {timeout: 20000}).should("have.length", parseInt(results));
+        cy.get("table tr.sample", {timeout: 10000}).should("have.length", parseInt(results));
     },
 
     waitForStudiesLoad: function (results) {

@@ -149,7 +149,7 @@ var StudiesView = Backbone.View.extend({
 function updatePageSize(pageSize) {
     const params = {
         page_size: pageSize,
-        page: pagination.currentPage,
+        page: 1,
     };
     studiesView.update(params);
 }
