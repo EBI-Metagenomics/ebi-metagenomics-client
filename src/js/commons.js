@@ -23,6 +23,7 @@ require('style-loader?name=[name].[ext]!../../node_modules/tablesorter/dist/css/
 
 export const BLOG_URL = "https://ebi-metagenomics.github.io/ebi-metagenomics-blog/";
 export const READTHEDOCS_URL = "https://emg-docs.readthedocs.io";
+export const COOKIE_NAME = 'ebi-metagenomics';
 export const NO_DATA_MSG = 'N/A';
 export const DEFAULT_PAGE_SIZE = 25;
 export const TAXONOMY_COLOURS = [

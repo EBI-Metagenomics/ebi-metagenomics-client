@@ -2,9 +2,12 @@ const Backbone = require('backbone');
 const _ = require('underscore');
 const $ = require('jquery');
 const api = require('../components/api');
+const ebisearch = require('../components/ebisearch');
 const apiUrl = process.env.API_URL;
 const commons = require('../commons');
 const blogUrl = commons.BLOG_URL;
+const cookieName = commons.COOKIE_NAME;
+const Cookies = require('js-cookie');
 
 import {setCurrentTab, truncateString, checkAPIonline} from "../util";
 
@@ -170,39 +173,102 @@ var StudiesView = Backbone.View.extend({
 var studies = new StudiesCollection();
 var studiesView = new StudiesView({collection: studies});
 
-var ObjectCountView = Backbone.View.extend({
-    tagName: 'div',
-    // first: false,
-    template: _.template($("#objectCountsTmpl").html()),
-    attributes: {
-        class: 'row'
-    },
-    render: function () {
-        this.$el.html(this.template(this.model.toJSON()));
-        return this.$el;
-    }
-});
+function initObjectCounts() {
+    //Perform Ajax request
+    const projectCountReq = $.get(new ebisearch.ProjectCount().url);
+    const sampleCountReq = $.get(new ebisearch.SampleCount().url);
+    const runCountReq = $.get(new ebisearch.RunCount().url);
+    const ampliconCountReq = $.get(new ebisearch.AmpliconCount().url);
+    const assemblyCountReq = $.get(new ebisearch.AssemblyCount().url);
+    const metaGountReq = $.get(new ebisearch.MetagenomicCount().url);
+    const metaTCountReq = $.get(new ebisearch.MetatranscriptomicCount().url);
+    const metaBCountReq = $.get(new ebisearch.MetabarcodingCount().url);
 
-var GlobalOverview = Backbone.View.extend({
-    el: '#objectCounts',
-    initialize: function () {
-        var that = this;
-        this.collection.fetch({
-            success: function (response) {
-                that.render();
+    function createAnchorTag(count, experimentType, domainId) {
+        const a = document.createElement('a');
+        const linkText = document.createTextNode(count);
+        a.appendChild(linkText);
+        a.onclick = function (event) {
+            let hashAppend = '';
+            if (domainId === 'samples') {
+                hashAppend = '#samplesTab'
+            } else if (domainId === 'runs') {
+                hashAppend = '#runsTab'
             }
-        });
-        return this;
-    },
-    render: function () {
-        this.collection.each(function (counts) {
-            const objectCountView = new ObjectCountView({model: counts});
-            $(this.$el).append(objectCountView.render());
-        }, this);
-
-        return this;
+            setCookieFilter(experimentType);
+            window.location = "/metagenomics/search" + hashAppend;
+        };
+        return a;
     }
-});
 
-const resources = new api.ResourcesCollection();
-const globalOverviewView = new GlobalOverview({collection: resources});
+    function addTextNode(elementId, count) {
+        const unlinkText = document.createTextNode(count);
+        let statsElement = document.getElementById(elementId);
+        statsElement.appendChild(unlinkText);
+    }
+
+    function appendNewAnchorEl(elementId, count, experimentType, domainId) {
+        let statsElement = document.getElementById(elementId);
+        statsElement.appendChild(createAnchorTag(count, experimentType, domainId));
+    }
+
+    function addStatsElementsToDOM(ampliconCount, assemblyCount,
+                                   metaBCount, metaGCount, metaTCount,
+                                   projectCount, sampleCount, runCount, dataSetCount) {
+
+        appendNewAnchorEl('amplicon-stats', ampliconCount, 'amplicon', 'runs');
+        appendNewAnchorEl('assembly-stats', assemblyCount, 'assembly', 'runs');
+        appendNewAnchorEl('metaB-stats', metaBCount, 'metabarcoding', 'runs');
+        appendNewAnchorEl('metaG-stats', metaGCount, 'metagenomic', 'runs');
+        appendNewAnchorEl('metaT-stats', metaTCount, 'metatranscriptomic', 'runs');
+        appendNewAnchorEl('project-stats', projectCount, null);
+        appendNewAnchorEl('sample-stats', sampleCount, null, 'samples');
+        appendNewAnchorEl('run-stats', runCount, null, 'runs');
+        addTextNode('dataset-stats', dataSetCount);
+    }
+
+    function setCookieFilter(experimentType) {
+        Cookies.remove(cookieName);
+        const defaultCookieParamsStr = '{"samples":{"query":""},"projects":{"query":""},"runs":{"query":""}}';
+        let cookieParams = JSON.parse(defaultCookieParamsStr);
+
+        if (experimentType) {
+            cookieParams['samples']['filters'] = 'experiment_type:' + experimentType;
+            cookieParams['runs']['filters'] = 'experiment_type:' + experimentType;
+        }
+        Cookies.set(cookieName, cookieParams);
+    }
+
+    //Use Promise to get acknowledged when succeeded
+    return $.when(
+        projectCountReq,
+        sampleCountReq,
+        runCountReq,
+        ampliconCountReq,
+        assemblyCountReq,
+        metaGountReq,
+        metaBCountReq,
+        metaTCountReq
+    ).done(function () {
+        const projectCount = projectCountReq.responseJSON.hitCount;
+        const sampleCount = sampleCountReq.responseJSON.hitCount;
+        const runCount = runCountReq.responseJSON.hitCount;
+        const ampliconCount = ampliconCountReq.responseJSON.hitCount;
+        const assemblyCount = assemblyCountReq.responseJSON.hitCount;
+        const metaGCount = metaGountReq.responseJSON.hitCount;
+        const metaTCount = metaTCountReq.responseJSON.hitCount;
+        const metaBCount = metaBCountReq.responseJSON.hitCount;
+        const dataSetCount = metaBCount + metaTCount + metaGCount + assemblyCount + ampliconCount;
+
+        addStatsElementsToDOM(ampliconCount, assemblyCount,
+            metaBCount, metaGCount, metaTCount,
+            projectCount, sampleCount, runCount, dataSetCount);
+
+        let containers = document.getElementsByClassName('jumbo-stats');
+        for (var container of containers) {
+            container.style.visibility = "visible";
+        }
+    });
+}
+
+initObjectCounts();
