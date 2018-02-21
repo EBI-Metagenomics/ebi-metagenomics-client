@@ -69,57 +69,57 @@ describe('Search page - generalFunctionality', function () {
         waitForResultsLoad(initialResultSize);
     });
 
-    // // Text search should apply to all facets
-    // it('Text query should apply to all facets', function () {
-    //     waitForFacetFilters(facetRequests[0]);
-    //     validateFacetQuery(facetRequests[1]);
-    //     waitForFacetFilters(facetRequests[2]);
-    //     validateFacetQuery(facetRequests[3]);
-    //     waitForFacetFilters(facetRequests[4]);
-    //     validateFacetQuery(facetRequests[5]);
-    //
-    //     const testString = "Test";
-    //     cy.get(textQueryInput).type(testString);
-    //     cy.get(submitTextQuery).click();
-    //
-    //     // Check requests includes testString correctly
-    //     validateFacetQuery(facetRequests[1], encodeURIComponent(testString));
-    //     validateFacetQuery(facetRequests[3], encodeURIComponent(testString));
-    //     validateFacetQuery(facetRequests[5], encodeURIComponent(testString));
-    //
-    // });
-    //
-    // it('Correct number of results.', function () {
-    //     openPage(origPage);
-    //     cy.wait(1000);
-    //     cy.get('#pagesize').invoke('val').then((val) => {
-    //         waitForResultsLoad(val);
-    //         cy.get('#pagesize').select('50');
-    //         waitForResultsLoad('50');
-    //     });
-    // });
-    //
-    // it('Biome filters should restrict results', function () {
-    //     cy.get('button.disp-children').first().click();
-    //     cy.get("input[value='Environmental/Air']").check({force: true});
-    //     waitForResultsLoad(2);
-    //     cy.get("tbody > tr > td[data-column='project-biome']").contains('Air')
-    // });
-    //
-    // it('Centre name filters should restrict results', function () {
-    //     cy.get("input[value='BioProject']").check({force: true});
-    //     waitForResultsLoad(10);
-    //     cy.get("tbody > tr > td[data-column='project-centre-name']").contains('BioProject')
-    // });
-    //
-    // it('Clear button should reset search completely', function(){
-    //     cy.get('button.disp-children').first().click();
-    //     cy.get("input[value='Environmental/Air']").check({force: true});
-    //     cy.get("input[value='BGI']").check({force: true});
-    //     waitForResultsLoad(1);
-    //     cy.get("#search-reset").click();
-    //     waitForResultsLoad(initialResultSize);
-    // });
+    // Text search should apply to all facets
+    it('Text query should apply to all facets', function () {
+        waitForFacetFilters(facetRequests[0]);
+        validateFacetQuery(facetRequests[1]);
+        waitForFacetFilters(facetRequests[2]);
+        validateFacetQuery(facetRequests[3]);
+        waitForFacetFilters(facetRequests[4]);
+        validateFacetQuery(facetRequests[5]);
+
+        const testString = "Test";
+        cy.get(textQueryInput).type(testString);
+        cy.get(submitTextQuery).click();
+
+        // Check requests includes testString correctly
+        validateFacetQuery(facetRequests[1], encodeURIComponent(testString));
+        validateFacetQuery(facetRequests[3], encodeURIComponent(testString));
+        validateFacetQuery(facetRequests[5], encodeURIComponent(testString));
+
+    });
+
+    it('Correct number of results.', function () {
+        openPage(origPage);
+        cy.wait(1000);
+        cy.get('#pagesize').invoke('val').then((val) => {
+            waitForResultsLoad(val);
+            cy.get('#pagesize').select('50');
+            waitForResultsLoad('50');
+        });
+    });
+
+    it('Biome filters should restrict results', function () {
+        cy.get('button.disp-children').first().click();
+        cy.get("input[value='Environmental/Air']").check({force: true});
+        waitForResultsLoad(2);
+        cy.get("tbody > tr > td[data-column='project-biome']").contains('Air')
+    });
+
+    it('Centre name filters should restrict results', function () {
+        cy.get("input[value='BioProject']").check({force: true});
+        waitForResultsLoad(10);
+        cy.get("tbody > tr > td[data-column='project-centre-name']").contains('BioProject')
+    });
+
+    it('Clear button should reset search completely', function(){
+        cy.get('button.disp-children').first().click();
+        cy.get("input[value='Environmental/Air']").check({force: true});
+        cy.get("input[value='BGI']").check({force: true});
+        waitForResultsLoad(1);
+        cy.get("#search-reset").click();
+        waitForResultsLoad(initialResultSize);
+    });
 
     it('Should pre-fill cached search query', function () {
         waitForFacetFilters(facetRequests[0]);
