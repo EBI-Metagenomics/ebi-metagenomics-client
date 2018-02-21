@@ -15,8 +15,13 @@ import {
     initResultsFilter,
     setCurrentTab,
     setURLParams,
-    showTableLoadingGif
+    showTableLoadingGif,
+    checkAPIonline
 } from "../util";
+
+
+checkAPIonline();
+
 
 setCurrentTab('');
 

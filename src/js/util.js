@@ -272,13 +272,14 @@ export function checkURLExists(url) {
 }
 
 export function checkAPIonline() {
-    $.get({
+    $.ajax({
         url: process.env.API_URL,
         success: function () {
             console.log('API is online.');
         },
-        failure: function () {
-            $('body').html('Fail')
+        error: function () {
+            $('body').html('Error: API Offline')
+            throw new Error("API is offline.");
         }
     });
 }

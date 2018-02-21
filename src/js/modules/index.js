@@ -6,7 +6,9 @@ const apiUrl = process.env.API_URL;
 const commons = require('../commons');
 const blogUrl = commons.BLOG_URL;
 
-import {setCurrentTab, truncateString} from "../util";
+import {setCurrentTab, truncateString, checkAPIonline} from "../util";
+
+checkAPIonline();
 
 setCurrentTab('#overview-nav');
 // initHeadTag('EBI metagenomics: archiving, analysis and integration of metagenomics data');

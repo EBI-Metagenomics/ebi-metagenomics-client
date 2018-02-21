@@ -16,8 +16,9 @@ const detailList = require('../components/detailList');
 
 require('tablesorter');
 
-import {attachTabHandlers, getURLParameter, setCurrentTab} from "../util";
+import {attachTabHandlers, getURLParameter, setCurrentTab, checkAPIonline} from "../util";
 
+checkAPIonline();
 
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 

@@ -16,9 +16,11 @@ import {
     showTableLoadingGif,
     getDownloadParams,
     setDownloadResultURL,
-    BiomeCollectionView
+    BiomeCollectionView,
+    checkAPIonline
 } from "../util";
 
+checkAPIonline();
 setCurrentTab('#samples-nav');
 $("#pagination").append(commons.pagination);
 $("#pageSize").append(commons.pagesize);

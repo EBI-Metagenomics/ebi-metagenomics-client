@@ -12,8 +12,11 @@ import {
     setCurrentTab,
     createListItem,
     createLinkTag,
-    checkURLExists
+    checkURLExists,
+    checkAPIonline;
 } from "../util";
+
+checkAPIonline();
 
 setCurrentTab('#samples-nav');
 

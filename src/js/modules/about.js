@@ -1,6 +1,8 @@
-import {setCurrentTab} from "../util";
+import {setCurrentTab, checkAPIonline} from "../util";
 
 setCurrentTab('#about-nav');
+
+checkAPIonline();
 
 
 // Expand button handler, usage as follows

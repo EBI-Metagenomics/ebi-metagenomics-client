@@ -2,7 +2,9 @@ const Backbone = require('backbone');
 const _ = require('underscore');
 require('../commons');
 const api = require('../components/api');
-import {setCurrentTab} from "../util";
+import {setCurrentTab, checkAPIonline} from "../util";
+
+checkAPIonline();
 
 setCurrentTab('#compare-nav');
 

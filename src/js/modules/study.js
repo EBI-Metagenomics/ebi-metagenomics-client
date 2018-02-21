@@ -22,8 +22,11 @@ import {
     showTableLoadingGif,
     createListItem,
     createLinkTag,
-    checkURLExists
+    checkURLExists,
+    checkAPIonline
 } from "../util";
+
+checkAPIonline();
 
 setCurrentTab('#studies-nav');
 
