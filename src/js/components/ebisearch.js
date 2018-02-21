@@ -1,50 +1,72 @@
-const Backbone = require('backbone');
 const searchUrl = process.env.SEARCH_URL;
 
-const Search = Backbone.Collection.extend({
-    domainIdShort: 'runs',
-    domainId: 'metagenomics_runs',
-    params: {
-        format: 'json',
-        size: 0,
-        start: 0,
-        fields: 'id,name',
-        facetcount: 0,
-        facetsdepth: 5,
-    },
-    initialize: function () {
-        this.query = ''
-
-    },
-    url: function () {
-        return searchUrl + this.domainIdShort + '?' + this.buildParamStr();
-    },
-    parse: function (response) {
-        return response.data;
-    },
-    buildParamStr: function () {
-        let key;
-        let result = '';
-        for (key in this.params) {
-            result += key + '=' + this.params[key];
-        }
-
-        return result;
+class Count {
+    constructor(domainIdShort, domainId, experimentType) {
+        this.params = {
+            fields: 'id,name',
+            facet: {
+                experimentType: experimentType
+            }
+        };
+        this.domainIdShort = domainIdShort;
+        this.domainId = domainId;
     }
-});
 
-// const ProjectCount = Search.extend({
-//     domainIdShort: 'projects',
-//     domainId: 'metagenomics_projects',
-//     parse: function (response) {
-//         console.log(response);
-//         return response;
-//     }
-// });
+    get url() {
+        let searchQuery = 'value1?query=domain_source:value2&format=json&size=0&start=0&fields=id,name,description,biome_name,metagenomics_samples&facetcount=0&facetsdepth=5';
+        searchQuery = searchQuery.replace('value1', this.domainIdShort);
+        searchQuery = searchQuery.replace('value2', this.domainId);
+        if (this.params.facet.experimentType !== null) {
+            searchQuery += '&facets=experiment_type:' + this.params.facet.experimentType
+        }
+        return searchUrl + searchQuery;
+    }
+}
 
-// var Person = Backbone.Model.extend({urlRoot : '/person/details'});
-// var myName = new Person({id: "12345"});
-// myName.fetch();
-// URL http://[domainName]/person/details/id
+export class ProjectCount extends Count {
+    constructor() {
+        super('projects', 'metagenomics_projects', null);
+    }
+}
 
-export const ProjectCount = Backbone.Model.extend({url: searchUrl + 'projects?query=domain_source:metagenomics_projects&format=json&size=0&start=0&fields=id,name,description,biome_name,metagenomics_samples&facetcount=0&facetsdepth=5'});
+export class SampleCount extends Count {
+    constructor() {
+        super('samples', 'metagenomics_samples', null);
+    }
+}
+
+export class RunCount extends Count {
+    constructor() {
+        super('runs', 'metagenomics_runs', null);
+    }
+}
+
+export class AmpliconCount extends Count {
+    constructor() {
+        super('runs', 'metagenomics_runs', 'amplicon');
+    }
+}
+
+export class AssemblyCount extends Count {
+    constructor() {
+        super('runs', 'metagenomics_runs', 'assembly');
+    }
+}
+
+export class MetatranscriptomicCount extends Count {
+    constructor() {
+        super('runs', 'metagenomics_runs', 'metatranscriptomic');
+    }
+}
+
+export class MetabarcodingCount extends Count {
+    constructor() {
+        super('runs', 'metagenomics_runs', 'metabarcoding');
+    }
+}
+
+export class MetagenomicCount extends Count {
+    constructor() {
+        super('runs', 'metagenomics_runs', 'metagenomic');
+    }
+}

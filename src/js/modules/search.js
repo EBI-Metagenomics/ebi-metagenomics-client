@@ -7,6 +7,7 @@ const Backbone = require('backbone');
 const Cookies = require('js-cookie');
 
 const commons = require('../commons');
+const cookieName = commons.COOKIE_NAME;
 const Pagination = require('../components/pagination').Pagination;
 require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
@@ -38,7 +39,6 @@ $(document).ready(function () {
     $("#pagesize-text").hide();
 });
 
-const COOKIE_NAME = 'ebi-metagenomics';
 const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)\]/;
 
 const Search = Backbone.Collection.extend({
@@ -811,7 +811,7 @@ const button = $("<button id='search-reset' class='button' type='reset'>Clear al
 const $searchForm = $("#headerSearchForm");
 $searchForm.append(button);
 $searchForm.on('reset', function () {
-    Cookies.remove(COOKIE_NAME);
+    Cookies.remove(cookieName);
     window.location.href = 'search';
 
 });
@@ -918,7 +918,7 @@ function createCheckboxTrees(facet, trees, facetView, $facetForm, $facetBtnConta
 }
 
 function saveSearchParams(facet, filters, query) {
-    let cookieParams = Cookies.get(COOKIE_NAME);
+    let cookieParams = Cookies.get(cookieName);
     if (cookieParams === undefined) {
         cookieParams = {};
         cookieParams[facet] = {};
@@ -939,12 +939,12 @@ function saveSearchParams(facet, filters, query) {
         delete cookieParams[facet]['query'];
     }
 
-    Cookies.set(COOKIE_NAME, cookieParams);
+    Cookies.set(cookieName, cookieParams);
 }
 
 function loadSearchParams(facet) {
     let data, query = null;
-    let cookie = Cookies.get(COOKIE_NAME);
+    let cookie = Cookies.get(cookieName);
     if (cookie) {
         cookie = JSON.parse(cookie);
         try {
@@ -966,7 +966,7 @@ function loadSearchParams(facet) {
 }
 
 function deleteCachedSearchParams() {
-    let cookie = Cookies.get(COOKIE_NAME);
+    let cookie = Cookies.get(cookieName);
     if (cookie) {
         let cookieVal = JSON.parse(cookie);
         _.each(['projects', 'samples', 'runs'], function (facet) {
@@ -975,7 +975,7 @@ function deleteCachedSearchParams() {
                 filters: null
             }
         });
-        Cookies.set(COOKIE_NAME, cookieVal);
+        Cookies.set(cookieName, cookieVal);
     }
     const new_url = window.location.toString();
 }
@@ -983,7 +983,7 @@ function deleteCachedSearchParams() {
 window.getVisibleColumns = getVisibleColumns;
 
 function getVisibleColumns(facet) {
-    let cookieData = Cookies.get(COOKIE_NAME);
+    let cookieData = Cookies.get(cookieName);
     if (cookieData) {
         cookieData = JSON.parse(cookieData);
         if (cookieData[facet]) {
@@ -994,7 +994,7 @@ function getVisibleColumns(facet) {
 }
 
 function saveVisibleColumns(facet, columns) {
-    let cookieData = Cookies.get(COOKIE_NAME);
+    let cookieData = Cookies.get(cookieName);
     if (cookieData) {
         cookieData = JSON.parse(cookieData);
     } else {
@@ -1010,7 +1010,7 @@ function saveVisibleColumns(facet, columns) {
             columns: columns,
         }
     }
-    Cookies.set(COOKIE_NAME, cookieData);
+    Cookies.set(cookieName, cookieData);
 }
 
 function insertEbiSearchText() {

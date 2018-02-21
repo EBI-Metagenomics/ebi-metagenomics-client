@@ -221,26 +221,3 @@ export const GoSlim = RunPipelineObject.extend({
         return API_URL + 'runs/' + this.id + util.subfolder + '/pipelines/' + this.version + '/go-slim';
     }
 });
-
-export const Resource = Backbone.Model.extend({
-    parse: function (d) {
-        const data = d.data !== undefined ? d.data : d;
-        const attr = data.attributes;
-        let resourceType = data.id;
-        if (resourceType === 'analysisjobs') {
-            resourceType = 'analysis jobs'
-        }
-        return {
-            type: resourceType,
-            count: attr['count']
-        };
-    }
-});
-
-export const ResourcesCollection = Backbone.Collection.extend({
-    url: API_URL + "utils/resources",
-    model: Resource,
-    parse: function (response) {
-        return response.data;
-    }
-});
