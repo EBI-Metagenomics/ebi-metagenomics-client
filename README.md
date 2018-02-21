@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client.svg?branch=master)](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client)
+[![Build Status](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client.svg?branch=develop)](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client)
 
  # ebi-metagenomics-client
 #### Requirements:

@@ -227,12 +227,13 @@ function initObjectCounts() {
 
     function setCookieFilter(experimentType) {
         Cookies.remove(cookieName);
-        const defaultCookieParamsStr = '{"samples":{"query":"domain_source:metagenomics_samples"},"projects":{"query":"domain_source:metagenomics_projects"},"runs":{"query":"domain_source:metagenomics_runs"}}';
+        const defaultCookieParamsStr = '{"samples":{"query":""},"projects":{"query":""},"runs":{"query":""}}';
         let cookieParams = JSON.parse(defaultCookieParamsStr);
 
-        cookieParams['samples']['filters'] = 'experiment_type:' + experimentType;
-        cookieParams['runs']['filters'] = 'experiment_type:' + experimentType;
-
+        if (experimentType) {
+            cookieParams['samples']['filters'] = 'experiment_type:' + experimentType;
+            cookieParams['runs']['filters'] = 'experiment_type:' + experimentType;
+        }
         Cookies.set(cookieName, cookieParams);
     }
 
