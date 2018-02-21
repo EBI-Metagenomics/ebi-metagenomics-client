@@ -1,41 +1,41 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const util = require('../util');
-require('../commons');
 const api = require('../components/api');
-const Pagination = require('../components/pagination');
-const DEFAULT_PAGE_SIZE = require('../commons').DEFAULT_PAGE_SIZE;
+const Pagination = require('../components/pagination').Pagination;
+const commons = require('../commons');
+const Order = require('../components/order');
 
+const pagination = new Pagination();
+
+const DEFAULT_PAGE_SIZE = commons.DEFAULT_PAGE_SIZE;
 import {
     formatLineage,
-    getFormData,
     getURLFilterParams,
     hideTableLoadingGif,
     initResultsFilter,
     setCurrentTab,
     setURLParams,
-    showTableLoadingGif
+    showTableLoadingGif,
+    checkAPIonline
 } from "../util";
+
+
+checkAPIonline();
+
 
 setCurrentTab('');
 
-const pageFilters = getURLFilterParams();
+$("#pagination").append(commons.pagination);
+$("#pageSize").append(commons.pagesize);
 
-initResultsFilter(function (e) {
-    e.preventDefault();
-    let params = {
-        page_size: Pagination.getPageSize(),
-        page: Pagination.currentPage
-    };
-    setURLParams(params, true);
-});
+const pageFilters = getURLFilterParams();
 
 
 var BiomeView = Backbone.View.extend({
     tagName: 'tr',
     template: _.template($("#biome-row").html()),
     attributes: {
-        class: 'biome-row',
+        class: 'biome',
     },
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
@@ -47,47 +47,70 @@ var BiomesView = Backbone.View.extend({
     el: '#biomes-table-body',
     initialize: function () {
         var that = this;
+        let params = {};
+        params.page = pagination.currentPage;
+        params.page_size = pagination.getPageSize();
 
-        const params = {};
+        const ordering = pageFilters.get('ordering');
+        if (ordering) {
+            params.ordering = ordering;
+        } else {
+            params.ordering = '-samples_count';
+        }
+
+        const search = pageFilters.get('search');
+        if (search !== null) {
+            params.search = search;
+            $("#search").val(search);
+        }
+
         const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
-        if (pagesize !== null) {
+        if (pagesize) {
             params.page_size = pagesize;
         }
         params.page = pageFilters.get('page') || 1;
-        this.collection.fetch({
+        this.params = params;
+
+        this.fetchXhr = this.collection.fetch({
             data: $.param(params),
             remove: true,
             success: function (collection, response, options) {
                 that.render();
                 const pag = response.meta.pagination;
-                Pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
+                pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
+                Order.initHeaders(params.ordering, function (sort) {
+                    const params = {
+                        page: 1,
+                        page_size: pagination.getPageSize(),
+                        ordering: sort
+                    };
+                    that.update(params);
+                })
             }
         });
         return this;
     },
-    update: function (page, page_size) {
-        $(".biome-row").remove();
-        showTableLoadingGif();
+    update: function (params) {
         var that = this;
-        var params = {};
-        if (page !== undefined) {
-            params.page = page
-        }
-        if (page_size !== undefined) {
-            params.page_size = page_size
-        }
-        setURLParams(params, false);
+        this.params = $.extend(this.params, params);
+        $('.biome').remove();
+        showTableLoadingGif();
+        setURLParams(this.params, false);
 
-        this.collection.fetch({
+        if(this.fetchXhr.readyState > 0 && this.fetchXhr.readyState < 4){
+            this.fetchXhr.abort();
+        }
+        this.fetchXhr = this.collection.fetch({
             data: $.param(params), remove: true, success: function (collection, response, options) {
                 hideTableLoadingGif();
-                Pagination.update(response.meta.pagination);
+                pagination.update(response.meta.pagination, that.update.bind(that));
                 that.render();
             }
         });
         return this;
     },
     render: function () {
+        $('.biome').remove();
         this.collection.each(function (biome) {
             biome.attributes.lineage = formatLineage(biome.attributes.lineage);
             var biomeView = new BiomeView({model: biome});
@@ -98,23 +121,26 @@ var BiomesView = Backbone.View.extend({
     }
 });
 
-// PAGINATION
 
-$("#pagination").append(commons.pagination);
-$("#pageSize").append(commons.pagesize);
-
-Pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 function updatePageSize(pageSize) {
-    var formData = getFormData("#filter");
-    biomesView.update(Pagination.currentPage, pageSize, formData[0], formData[1]);
+    const params = {
+        page_size: pageSize,
+        page: 1,
+    };
+    biomesView.update(params);
 }
 
 function changePage(page) {
-    var formData = getFormData("#filter");
-    biomesView.update(page, Pagination.getPageSize(), formData[0], formData[1]);
+    const params = {
+        page_size: pagination.getPageSize(),
+        page: page,
+    };
+    biomesView.update(params);
 }
+
+pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 

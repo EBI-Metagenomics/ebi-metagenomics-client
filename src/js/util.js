@@ -12,11 +12,11 @@ import {footer, header, resultsFilter, head} from "./commons";
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export function formatLineage(lineage) {
-    return lineage.split(":").slice(1).join(" > ");
+    return lineage.split(":").join(" > ");
 }
 
 export function lineage2Biome(lineage) {
-    return lineage.split(":").splice(2, lineage.length - 2).join(" ");
+    return lineage.split(":").splice(-1);
 }
 
 export function formatDate(date_str) {
@@ -272,13 +272,14 @@ export function checkURLExists(url) {
 }
 
 export function checkAPIonline() {
-    $.get({
+    $.ajax({
         url: process.env.API_URL,
         success: function () {
             console.log('API is online.');
         },
-        failure: function () {
-            $('body').html('Fail')
+        error: function () {
+            $('body').html('Error: API Offline')
+            throw new Error("API is offline.");
         }
     });
 }

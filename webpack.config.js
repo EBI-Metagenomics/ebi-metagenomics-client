@@ -105,7 +105,7 @@ module.exports = (env = {prod: false}) => {
                     'src/js/modules/about.js',
                 help:
                     'src/js/modules/help.js',
-                // biomes: 'src/js/modules/biomes.js',
+                biomes: 'src/js/modules/biomes.js',
                 pipelines:
                     'src/js/modules/pipelines.js',
                 pipeline:

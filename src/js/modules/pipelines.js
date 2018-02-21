@@ -1,5 +1,7 @@
 require('../commons');
 
-import {setCurrentTab} from "../util";
+import {setCurrentTab, checkAPIonline} from "../util";
+
+checkAPIonline();
 
 setCurrentTab('#about-nav');

@@ -29,10 +29,12 @@
                     <table class="biomes-table">
                         <thead>
                         <tr>
-                            <th class="biome">Biome</th>
-                            <th class="lineage">Lineage</th>
+                            <th class="biome-header"></th>
+                            <th data-sortby='biome_name' class="biome-name sort-both">Biome name and lineage</th>
                             <!--<th class="lineage_projects">Projects with this lineage</th>-->
-                            <th class="sub_lineage_projects">Projects including sub-lineages</th>
+                            <th data-sortby='samples_count' class="samples_count sort-both">Samples including
+                                sub-lineages
+                            </th>
                         </tr>
                         </thead>
                         <tbody id='biomes-table-body'>
@@ -46,8 +48,8 @@
                             <td>
                                 <span class="biome_icon icon_xs <%= icon %>" title="<%= name %>"></span>
                             </td>
-                            <td><a href="<%= biome_studies_link %>"> <%= name %></a> <br> <%= lineage %></td>
-                            <td><a href="<%= biome_studies_link %>"><%= studies_count %></a></td>
+                            <td class="biome-name"><a href="<%= biome_studies_link %>" class="name-lineage"> <%= name %></a> <br> <span class="lineage"><%= lineage %></span></td>
+                            <td class="samples_count"><a href="<%= biome_studies_link %>"><%= samples_count %></a></td>
                         </script>
                     </table>
 

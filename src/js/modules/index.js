@@ -9,7 +9,9 @@ const blogUrl = commons.BLOG_URL;
 const cookieName = commons.COOKIE_NAME;
 const Cookies = require('js-cookie');
 
-import {setCurrentTab, truncateString} from "../util";
+import {setCurrentTab, truncateString, checkAPIonline} from "../util";
+
+checkAPIonline();
 
 setCurrentTab('#overview-nav');
 // initHeadTag('EBI metagenomics: archiving, analysis and integration of metagenomics data');

@@ -19,9 +19,11 @@ import {
     showTableLoadingGif,
     BiomeCollectionView,
     getDownloadParams,
-    setDownloadResultURL
+    setDownloadResultURL,
+    checkAPIonline
 } from "../util";
 
+checkAPIonline();
 setCurrentTab('#studies-nav');
 $("#pagination").append(commons.pagination);
 $("#pageSize").append(commons.pagesize);
@@ -149,7 +151,7 @@ var StudiesView = Backbone.View.extend({
 function updatePageSize(pageSize) {
     const params = {
         page_size: pageSize,
-        page: pagination.currentPage,
+        page: 1,
     };
     studiesView.update(params);
 }

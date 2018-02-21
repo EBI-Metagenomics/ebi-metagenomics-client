@@ -1,6 +1,8 @@
 const commons = require('../commons');
 require('static/css/pipeline.css');
-import {getURLParameter, setCurrentTab} from "../util";
+import {getURLParameter, setCurrentTab, checkAPIonline} from "../util";
+
+checkAPIonline();
 
 setCurrentTab('#about-nav');
 
