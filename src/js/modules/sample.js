@@ -13,7 +13,7 @@ import {
     createListItem,
     createLinkTag,
     checkURLExists,
-    checkAPIonline;
+    checkAPIonline
 } from "../util";
 
 checkAPIonline();
