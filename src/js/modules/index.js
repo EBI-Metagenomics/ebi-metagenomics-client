@@ -8,6 +8,7 @@ const commons = require('../commons');
 const blogUrl = commons.BLOG_URL;
 const cookieName = commons.COOKIE_NAME;
 const Cookies = require('js-cookie');
+const util = require('../util');
 
 import {setCurrentTab, truncateString, checkAPIonline} from "../util";
 
@@ -196,7 +197,7 @@ function initObjectCounts() {
                 hashAppend = '#runsTab'
             }
             setCookieFilter(experimentType);
-            window.location = "/metagenomics/search" + hashAppend;
+            window.location = util.subfolder + '/search' + hashAppend;
         };
         return a;
     }
