@@ -12,7 +12,6 @@ var Util = module.exports = {
     },
     openPage: function (page) {
         cy.visit(Util.getPageURL(page));
-        cy.get('h2', {timeout: 10000});
     },
     setSortBy: function (optionValue, numResults, waitCallback) {
         cy.get(sortBySelector).select('-last_update');

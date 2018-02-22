@@ -44,13 +44,13 @@ for (let orig = 0; orig < navNames.length; orig++) {
 const pagesBreadcrumbs = {
     'about': [''],
     'biomes': [''],
-    // // 'compare': '',
+    // 'compare': '',
     'help': [''],
     // 'login': [''],
     'pipelines/4.0': ['', 'pipelines'],
     'pipelines': [''],
-    'runs/SRS009825': [''],
-    'samples/SRS009922': ['', 'samples'],
+    'runs/SRR997120': [''],
+    'samples/ERS1474828': ['', 'samples'],
     'samples': [''],
     'search': [''],
     'studies': [''],
@@ -66,6 +66,7 @@ for (let page in pagesBreadcrumbs) {
             cy.log(page);
             for (let i in breadcrumbs) {
                 openPage(page);
+                cy.get('h2', {timeout: 50000});
                 const expectedPage = breadcrumbs[i];
                 cy.get('.breadcrumbs>li>a').each(($el, index) => {
                     if (parseInt(i)===parseInt(index)){

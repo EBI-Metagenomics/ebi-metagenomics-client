@@ -278,8 +278,8 @@ export function checkAPIonline() {
             console.log('API is online.');
         },
         error: function () {
-            $('body').html('Error: API Offline')
-            throw new Error("API is offline.");
+            $('body').html('Error: API Offline');
+            // throw new Error("API is offline.");
         }
     });
 }
