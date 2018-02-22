@@ -7,9 +7,11 @@ var Util = module.exports = {
     getBaseURL: function(){
         return Config.BASE_URL;
     },
-    openPage: function (origPage) {
-        let url = Config.BASE_URL + (origPage !== 'overview' ? origPage : '');
-        cy.visit(url);
+    getPageURL: function(page){
+        return Config.BASE_URL + (page !== 'overview' ? page : '');
+    },
+    openPage: function (page) {
+        cy.visit(Util.getPageURL(page));
     },
     setSortBy: function (optionValue, numResults, waitCallback) {
         cy.get(sortBySelector).select('-last_update');

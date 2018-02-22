@@ -86,6 +86,10 @@ export const Run = Backbone.Model.extend({
     }
 });
 
+export function getKronaURL(run_id, pipeline_version){
+    return API_URL+"runs/"+run_id+"/pipelines/"+pipeline_version+"/krona"
+}
+
 export const RunCollection = Backbone.Collection.extend({
     url: API_URL + 'runs',
     model: Run,
@@ -200,24 +204,24 @@ export const RunPipelineObject = Backbone.Model.extend({
 
 export const Analysis = RunPipelineObject.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id + util.subfolder + '/pipelines/' + this.version;
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version;
     },
 });
 
 export const Taxonomy = RunPipelineObject.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id + util.subfolder + '/pipelines/' + this.version + '/taxonomy';
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/taxonomy';
     },
 });
 
 export const InterproIden = RunPipelineObject.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id + util.subfolder + '/pipelines/' + this.version + '/interpro-identifiers';
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/interpro-identifiers';
     },
 });
 
 export const GoSlim = RunPipelineObject.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id + util.subfolder + '/pipelines/' + this.version + '/go-slim';
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/go-slim';
     }
 });

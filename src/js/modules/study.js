@@ -221,13 +221,14 @@ function initPage() {
     let runs = new api.RunCollection({study_accession: study_id});
     let runsView = new RunsView({collection: runs});
 
-    new MapData(study_id).fetch();
+
 
     $.when(
         studyView.fetchAndRender(),
     ).done(function () {
         samplesView.init();
         runsView.init();
+        new MapData(study_id).fetch();
     });
 }
 

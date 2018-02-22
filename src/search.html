@@ -13,7 +13,7 @@
     <div id="main-content-area" class="row" role="main">
         <nav aria-label="You are here:" role="navigation">
             <ul class="breadcrumbs columns">
-                 <li><a href="./">Home</a></li>
+                 <li><a href="{{subfolder}}">Home</a></li>
                 <li>
                     <span class="show-for-sr">Current: </span> Search
                 </li>
@@ -27,7 +27,7 @@
         </div>
         <div class="row">
             <div class="columns small- medium-6 large-6">
-                <form id="headerSearchForm" action="/metagenomics/search">
+                <form id="headerSearchForm" action="{{subfolder}}/search">
                     <input id='navbar-query' class='header-search-input' name="query" type="search"
                            placeholder="Search">
                     <button id="search" type="submit" class="button" class="header-search-button">Search
@@ -369,12 +369,12 @@
 
 <!-- JavaScript -->
 <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-<script defer="defer" src="static/js/script.js"></script>
+<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
 
 <!-- The Foundation theme JavaScript -->
-<script src="static/js/foundation.min.js"></script>
-<script src="static/libraries/foundation.util.touch.js"></script>
-<script src="static/js/foundationExtendEBI.js"></script>
+<script src="{{subfolder}}/static/js/foundation.min.js"></script>
+<script src="{{subfolder}}/static/libraries/foundation.util.touch.js"></script>
+<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
     $(document).ready(function () {
         $(document).foundation();
@@ -382,7 +382,7 @@
     });
 </script>
 
-<script src="js/search.js"></script>
+<script src="{{subfolder}}/js/search.js"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->
