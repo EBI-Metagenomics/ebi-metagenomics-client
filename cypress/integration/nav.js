@@ -2,7 +2,7 @@
 const navNames = ['overview', 'search', 'submit', 'studies', 'samples', 'about', 'help'];
 // const pageTitles = ['Browse projects', 'Search EBI Metagenomics', 'Submit data', 'Studies list', 'Samples list', 'Comparison tool', 'About EBI metagenomics', 'Contact us'];
 const pageTitles = ['Browse projects', 'Search EBI Metagenomics', 'Submit data', 'Studies list', 'Samples list', 'About EBI metagenomics', 'EBI Metagenomics Help'];
-import {openPage} from './util';
+import {openPage, getPageURL} from './util';
 
 /**
  * Check all links in navbar towards other pages of the site are functional
@@ -38,6 +38,45 @@ for (let orig = 0; orig < navNames.length; orig++) {
             cy.get('#search').click();
             cy.url().should('include', 'search?query=' + testQuery);
         });
+    });
+}
+
+const pagesBreadcrumbs = {
+    'about': [''],
+    'biomes': [''],
+    // // 'compare': '',
+    'help': [''],
+    // 'login': [''],
+    'pipelines/4.0': ['', 'pipelines'],
+    'pipelines': [''],
+    'runs/SRS009825': [''],
+    'samples/SRS009922': ['', 'samples'],
+    'samples': [''],
+    'search': [''],
+    'studies': [''],
+    'studies/ERP000118': ['', 'studies'],
+    'submit': [''],
+};
+
+
+for (let page in pagesBreadcrumbs) {
+    describe(page + ' page breadcrumbs should be valid.', function () {
+        const breadcrumbs = pagesBreadcrumbs[page];
+        it('Test breadcrumb link validity', function () {
+            cy.log(page);
+            for (let i in breadcrumbs) {
+                openPage(page);
+                const expectedPage = breadcrumbs[i];
+                cy.get('.breadcrumbs>li>a').each(($el, index) => {
+                    if (parseInt(i)===parseInt(index)){
+                        cy.wrap($el).click();
+                        cy.url().should('equal', getPageURL(expectedPage));
+                        cy.go('back');
+                    }
+                });
+            }
+        });
+
     });
 }
 

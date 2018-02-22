@@ -18,8 +18,8 @@
     <div class="column small-12 medium-12 large-12">
         <nav aria-label="You are here:" role="navigation">
             <ul class="breadcrumbs columns">
-                <li><a href="/metagenomics/">Home</a></li>
-                <li><a href="./">Runs</a></li>
+                <li><a href="{{subfolder}}">Home</a></li>
+                <li><a href="{{subfolder}}/samples">Sample <%= sample_id %></a></li>
                 <li>
                     <span class="show-for-sr">Current: </span> Run <%= run_id %>
                 </li>
@@ -91,9 +91,7 @@
                             <!--onclick="trackExternalDownload('http://windows.microsoft.com/ie')">Download-->
                             <!--Now</a>.-->
                         </div>
-                        <object class="krona_chart"
-                                data="https://www.ebi.ac.uk/metagenomics/projects/<%= study_id %>/samples/<%= sample_id %>/runs/<%= run_id %>/results/krona/versions/2.0?taxonomy=true&collapse=false"
-                                type="text/html"></object>
+
                     </div>
                     <div class="tabs-panel" id="pie">
                         <div class="row">
@@ -199,9 +197,46 @@
                     </div>
                 </div>
 
-                <div class="tabs-panel" id="download"></div>
+                <div class="tabs-panel" id="download">
+                    <div id="download-list">
+
+                    </div>
+
+                </div>
             </div>
         </div>
+    </div>
+</script>
+
+<script id="download-tmpl" type="text/template">
+    <div class="row columns">
+        <div class="row columns">
+            <p>Here you may download the full set of analysis results files. For the original raw sequence reads, follow the link to ENA. Multi-part files should be concatenated after unzipping.</p>
+        </div>
+        <% _.each(groups, function(group){ %>
+            <div class="row columns">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Data type</th>
+                        <th>Compression</th>
+                        <th>Format</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% _.each(group.entries, function(entry){ %>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    <% });%>
+                    </tbody>
+                </table>
+            </div>
+        <% });%>
     </div>
 </script>
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
@@ -218,12 +253,12 @@
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script defer="defer" src="../static/js/script.js"></script>
+<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
 
 <!-- The Foundation theme JavaScript -->
 
-<script src="../static/js/foundation.js"></script>
-<script src="../static/js/foundationExtendEBI.js"></script>
+<script src="{{subfolder}}/static/js/foundation.js"></script>
+<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
     $(document).ready(function () {
         $(document).foundation();
@@ -231,7 +266,7 @@
     });
 </script>
 
-<script src="../js/run.js"></script>
+<script src="{{subfolder}}/js/run.js"></script>
 
 
 <!-- Google Analytics details... -->

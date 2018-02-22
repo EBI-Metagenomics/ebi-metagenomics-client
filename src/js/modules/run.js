@@ -42,10 +42,7 @@ let RunView = Backbone.View.extend({
             success: function (data) {
                 const attr = data.attributes;
                 let version = attr.pipeline_versions[0];
-                analysis = new api.Analysis({id: run_id, version: version});
-                interproData = new api.InterproIden({id: run_id, version: version});
-                taxonomy = new api.Taxonomy({id: run_id, version: version});
-                goTerm = new api.GoSlim({id: run_id, version: version});
+
                 that.render(function () {
                     let description = {
                         Study: "<a href='" + attr.study_url + "'>" + attr.study_id + "</a>",
@@ -68,12 +65,7 @@ let RunView = Backbone.View.extend({
                     if (Object.keys(dataAnalysis).length > 0) {
                         $('#overview').append(new detailList('Data analysis', dataAnalysis));
                     }
-                    let qcGraph = new QCGraphView({model: analysis});
-                    let taxonomyGraph = new TaxonomyGraphView({model: taxonomy});
-
-                    let interProSummary = new InterProSummary({model: interproData});
-
-                    let goTermCharts = new GoTermCharts({model: goTerm});
+                    loadAnalysisData(run_id, version);
                 });
             }
         });
@@ -87,20 +79,16 @@ let RunView = Backbone.View.extend({
 });
 
 let QCGraphView = Backbone.View.extend({
-    model: api.Analysis,
-    initialize: function () {
-        this.model.fetch({
-            success: function (model) {
-                const data = {};
-                model.attributes.data.attributes['analysis-summary'].forEach(function (e) {
-                    data[e.key] = e.value;
-                });
-
-                const qcChart = new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
-
-                const seqFeatChart = new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
-            }
+    initialize: function (attr) {
+        const data = {};
+        attr['analysis-summary'].forEach(function (e) {
+            data[e.key] = e.value;
         });
+
+        const qcChart = new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
+
+        const seqFeatChart = new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
+
     }
 });
 
@@ -357,6 +345,14 @@ let GoTermCharts = Backbone.View.extend({
     }
 });
 
+let DownloadView = Backbone.View.extend({
+    template: _.template($("#download-tmpl").html()),
+    el: '#download-list',
+    initialize: function(data){
+        console.log(data);
+    }
+});
+
 // Compact groups other than top 10 largest into an 'other' category
 function groupGoTermData(data) {
     let top10 = data.slice(0, 10).map(function (d) {
@@ -402,12 +398,55 @@ function disableTab(id) {
     $("[href='#" + id + "']").parent('li').addClass('disabled');
 }
 
+function loadKronaChart(run_id, pipeline_version) {
+    const krona_url = api.getKronaURL(run_id, pipeline_version);
+    // $.ajax({
+    //     url: krona_url,
+    //     success: function (e) {
+    //         const frame = $("<object></object>");
+    //         frame.append(e);
+    //         $('#krona').append(frame);
+    //     }
+    // });
+    const krona_chart = "<object class=\"krona_chart\"\n" +
+        "data=\""+krona_url+"\" " +
+        "type=\"text/html\"></object>";
+    $('#krona').append(krona_chart);
+// <object class="krona_chart"
+//     data="<%= krona_url %>"
+//     type="text/html"></object>
+}
+
+
+function loadAnalysisData(run_id, pipeline_version) {
+    loadKronaChart(runView.model.attributes.run_id, pipeline_version);
+
+    analysis = new api.Analysis({id: run_id, version: pipeline_version});
+    analysis.fetch({
+        success: function (model) {
+            const attr = model.attributes.data.attributes;
+            let qcGraph = new QCGraphView(attr);
+            let downloadView = new DownloadView(attr.download)
+        }
+    });
+
+    interproData = new api.InterproIden({id: run_id, version: pipeline_version});
+    let interProSummary = new InterProSummary({model: interproData});
+
+    taxonomy = new api.Taxonomy({id: run_id, version: pipeline_version});
+    let taxonomyGraph = new TaxonomyGraphView({model: taxonomy});
+
+    goTerm = new api.GoSlim({id: run_id, version: pipeline_version});
+    let goTermCharts = new GoTermCharts({model: goTerm});
+}
+
+function onAnalysisSelect() {
+    loadAnalysisData(runView.model.attributes.run_id, $(this).val());
+}
+
 $(document).ready(function () {
     // TODO Handle change of analysis
-    $("#analysisSelect").change(function (e) {
-        // console.log(this);
-        // console.log(e);
-    });
+    $("#analysisSelect").change(onAnalysisSelect);
 });
 
 let run = new api.Run({id: run_id});

@@ -15,7 +15,7 @@
         <div class="columns small-12 medium-12 large-12">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
-                     <li><a href="./">Home</a></li>
+                     <li><a href="{{subfolder}}">Home</a></li>
                     <li>
                         <span class="show-for-sr">Current: </span> Studies
                     </li>
@@ -33,7 +33,7 @@
                 </div>
                 <div class="row">
                     <div class="columns small-12 medium-12 large-12">
-                        <a href="/search">Use advanced search.</a>
+                        <a href="{{subfolder}}/search">Use advanced search.</a>
                         <a id='download-results' class="right" href="#">Download as csv</a>
                     </div>
                 </div>
@@ -89,19 +89,19 @@
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script defer="defer" src="static/js/script.js"></script>
+<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
 
 <!-- The Foundation theme JavaScript -->
 
-<script src="static/js/foundation.js"></script>
-<script src="static/js/foundationExtendEBI.js"></script>
+<script src="{{subfolder}}/static/js/foundation.js"></script>
+<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
     $(document).ready(function () {
         $(document).foundation();
         $(document).foundationExtendEBI();
     });
 </script>
-<script src="js/studies.js"></script>
+<script src="{{subfolder}}/js/studies.js"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->

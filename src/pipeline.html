@@ -12,7 +12,8 @@
     <div id="main-content-area" class="row" role="main">
         <nav aria-label="You are here:" role="navigation">
             <ul class="breadcrumbs columns">
-                 <li><a href="./">Home</a></li>
+                 <li><a href="{{subfolder}}">Home</a></li>
+                 <li><a href="{{subfolder}}/pipelines">Pipelines</a></li>
                 <li>
                     <span class="show-for-sr">Current: </span> Pipeline
                 </li>
@@ -37,12 +38,12 @@
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script defer="defer" src="static/js/script.js"></script>
+<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
 
 <!-- The Foundation theme JavaScript -->
 
-<script src="static/js/foundation.js"></script>
-<script src="static/js/foundationExtendEBI.js"></script>
+<script src="{{subfolder}}/static/js/foundation.js"></script>
+<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
     $(document).ready(function () {
         $(document).foundation();
@@ -50,7 +51,7 @@
     });
 </script>
 
-<script src="/js/pipeline.js"></script>
+<script src="{{subfolder}}/js/pipeline.js"></script>
 
 
 <!-- Google Analytics details... -->
