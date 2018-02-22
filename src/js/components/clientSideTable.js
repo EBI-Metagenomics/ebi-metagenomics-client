@@ -1,8 +1,6 @@
-const tableTmpl = require('../commons').genericTable;
 const _ = require('underscore');
 const GenericTable = require('./genericTable');
 
-const INIT_PAGE_SIZE = 10;
 
 module.exports = class ClientSideTable extends GenericTable {
     constructor($container, title, headers) {
@@ -13,7 +11,7 @@ module.exports = class ClientSideTable extends GenericTable {
             that.filterTable(str);
         });
         that.attachPageSizeCallback();
-
+        this.initHeaders(this.$table);
     }
 
     update(dataset, clear, page) {
@@ -32,7 +30,10 @@ module.exports = class ClientSideTable extends GenericTable {
         this.$tbody.children('tr').slice(this.getPageSize()).hide();
         this.setPageDisplay(1, resultCount);
         this.hideLoadingGif();
-        this.$table.tablesorter({});
+        this.$table.tablesorter({
+            theme : 'dropbox',
+            cssIcon: 'tablesorter-icon',
+        });
         this.$table.bind('sortStart', function () {
             that.$tbody.children('tr').show();
         }).bind('sortEnd', function () {
@@ -107,6 +108,39 @@ module.exports = class ClientSideTable extends GenericTable {
         //         count++;
         //     }
         // });
+    }
+
+    initHeaders($table, initialSort) {
+        const that = this;
+        that.order = initialSort;
+        $table.find("th.sort-both").on('click', function () {
+            const siblings = $(this).siblings('[data-sortby]');
+            _.each(siblings, function (s) {
+                const sibling = $(s);
+                if (sibling.hasClass('sort-desc') || sibling.hasClass('sort-asc')) {
+                    siblings.removeClass('sort-desc');
+                    siblings.removeClass('sort-asc');
+                    siblings.addClass('sort-both');
+                }
+            });
+
+            const elem = $(this);
+            let sort = null;
+            if (elem.hasClass('sort-both') || elem.hasClass('sort-desc')) {
+                elem.removeClass('sort-both');
+                elem.removeClass('sort-desc');
+                elem.addClass('sort-asc');
+                sort = elem.attr('data-sortby');
+            } else {
+                elem.removeClass('sort-asc');
+                elem.addClass('sort-desc');
+                sort = '-' + elem.attr('data-sortby');
+            }
+            that.order = sort;
+        });
+        if (initialSort) {
+            $table.find("[data-sortby='" + initialSort + "']").removeClass('sort-both').addClass(initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
+        }
     }
 };
 

@@ -4,19 +4,19 @@ const Backbone = require('backbone');
 const api = require('./components/api');
 const Handlebars = require('handlebars');
 const sequenceSearchUrl = process.env.SEQUENCE_SEARCH_URL;
-
+export const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 $.typeWatch = require('jquery.typewatch');
 
-import {footer, header, resultsFilter, head} from "./commons";
+import {resultsFilter} from "./commons";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export function formatLineage(lineage) {
-    return lineage.split(":").slice(1).join(" > ");
+    return lineage.split(":").join(" > ");
 }
 
 export function lineage2Biome(lineage) {
-    return lineage.split(":").splice(2, lineage.length - 2).join(" ");
+    return lineage.split(":").splice(-1);
 }
 
 export function formatDate(date_str) {
@@ -24,30 +24,13 @@ export function formatDate(date_str) {
     return d.getDate() + "-" + MONTHS[d.getMonth()] + "-" + d.getFullYear()
 }
 
-export function setCurrentTab(id, hideSearch) {
+export function setCurrentTab(id) {
     document.addEventListener("DOMContentLoaded", function () {
-        // console.log(header());
-        // let tmpl = Handlebars.compile(header());
-        $("#header").append(header({hideSearch: hideSearch, sequenceSearchUrl: sequenceSearchUrl}));
-        $("#footer").append(footer);
         $(id).addClass('active');
     });
 }
 
-/**
- * Initialises the head tag of each page.
- * Has to be called from the JS file of each page.
- *
- * @param {String} pageTitle - The title of a page, e.g. Help or About etc.
- */
-export function initHeadTag(pageTitle) {
-    document.addEventListener("DOMContentLoaded", function () {
-        // console.log(header());
-        // let tmpl = Handlebars.compile(header());
-        $("#head").append(head({pageTitle: pageTitle}));
-    });
 
-}
 
 export function initTableTools() {
     // $("#tableTools").append(tableTools);
@@ -84,9 +67,8 @@ export function initResultsFilter(initQuery, callback) {
 }
 
 export function getURLParameter() {
-    var regex = /\/([A-z0-9]+)(?:$|[?])/g;
-    let lst = window.location.pathname.split('/');
-    return lst[lst.length - 1].split('?')[0];
+    var regex = /\/([A-z0-9|\.]+)(?:$|[?])/g;
+    return regex.exec(window.location.pathname)[1];
 }
 
 export function getURLFilterParams() {
@@ -206,7 +188,7 @@ export const BiomeCollectionView = Backbone.View.extend({
     initialize: function (collection, biome) {
         var that = this;
         this.collection.fetch({
-            data: $.param({depth_lte: 3, page_size:100}), success: function () {
+            data: $.param({depth_lte: 3, page_size: 100}), success: function () {
                 // Fetch and pre-pend root node to list
                 var root = new api.Biome({id: 'root'});
                 root.fetch({
@@ -243,7 +225,7 @@ export const getDownloadParams = function (params) {
     delete downloadParams['page_size'];
     downloadParams['format'] = 'csv';
     return downloadParams;
-}
+};
 
 export const setDownloadResultURL = function (url) {
     $('#download-results').attr('href', url);
@@ -274,17 +256,30 @@ export function formatDownloadURL(requestURL) {
 }
 
 
-export function createLinkTag(url, text){
-    return "<a href='"+url+"'>"+text+"</a>";
+export function createLinkTag(url, text) {
+    return "<a href='" + url + "'>" + text + "</a>";
 }
 
-export function createListItem(html){
-    return "<li>"+html+"</li>";
+export function createListItem(html) {
+    return "<li>" + html + "</li>";
 }
 
 export function checkURLExists(url) {
     return $.ajax({
         type: 'HEAD',
         url: url,
+    });
+}
+
+export function checkAPIonline() {
+    $.ajax({
+        url: process.env.API_URL,
+        success: function () {
+            console.log('API is online.');
+        },
+        error: function () {
+            $('body').html('Error: API Offline');
+            // throw new Error("API is offline.");
+        }
     });
 }

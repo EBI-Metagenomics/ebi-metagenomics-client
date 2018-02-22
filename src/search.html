@@ -1,79 +1,24 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <!--TODO add metadata-->
-    <title>Search</title>
-    <meta name="description" content="EMBL-EBI"/><!-- Describe what this page is about -->
-    <meta name="keywords" content="bioinformatics, europe, institute"/>
-    <!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
-    <meta name="author" content="EMBL-EBI"/><!-- Your [project-name] here -->
-    <meta name="HandheldFriendly" content="true"/>
-    <meta name="MobileOptimized" content="width"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="theme-color" content="#70BDBD"/> <!-- Android Chrome mobile browser tab color -->
-
-    <!-- Add information on the life cycle of this page -->
-    <meta name="ebi:owner" content="John Doe"/> <!-- Who should be contacted about changes -->
-    <meta name="ebi:review-cycle" content="30"/> <!-- In days, how often should the content be reviewed -->
-    <meta name="ebi:last-review" content="2015-12-20"/> <!-- The last time the content was reviewed -->
-    <meta name="ebi:expiry" content="2016-01-20"/> <!-- When this content is no longer relevant -->
-
-    <!-- If you link to any other sites frequently, consider optimising performance with a DNS prefetch -->
-    <link rel="dns-prefetch" href="//embl.de"/>
-
-    <!-- If you have custom icon, replace these as appropriate.
-         You can generate them at realfavicongenerator.net -->
-    <link rel="icon" type="image/x-icon"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/favicon.ico"/>
-    <link rel="icon" type="image/png"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/favicon-32x32.png"/>
-    <link rel="icon" type="image/png" sizes="192×192"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/android-chrome-192x192.png"/>
-    <!-- Android (192px) -->
-    <link rel="apple-touch-icon-precomposed" sizes="114x114"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-114x114.png"/>
-    <!-- For iPhone 4 Retina display (114px) -->
-    <link rel="apple-touch-icon-precomposed" sizes="72x72"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-72x72.png"/>
-    <!-- For iPad (72px) -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-144x144.png"/>
-    <!-- For iPad retinat (144px) -->
-    <link rel="apple-touch-icon-precomposed"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-57x57.png"/>
-    <!-- For iPhone (57px) -->
-    <link rel="mask-icon"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/safari-pinned-tab.svg"
-          color="#ffffff"/> <!-- Safari icon for pinned tab -->
-    <meta name="msapplication-TileColor" content="#2b5797"/> <!-- MS Icons -->
-    <meta name="msapplication-TileImage"
-          content="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/mstile-144x144.png"/>
-
-    <!-- CSS: implied media=all -->
-    <!-- CSS concatenated and minified via ant build script-->
-    <!--<link rel="stylesheet" href="/static/css/theme-embl-petrol.css" type="text/css" media="all"/>-->
-    <!--<link rel="stylesheet" href="/static/css/ebi-global.css" type="text/css" media="all"/>-->
-    <!--<link rel="stylesheet" href="/static/css/site.css" type="text/css" media="all"/>-->
-    <!--<link rel="stylesheet" href="/static/fonts/fonts.css" type="text/css" media="all"/>-->
-
-    <!-- Use this CSS file for any custom styling -->
-    <!--
-      <link rel="stylesheet" href="css/custom.css" type="text/css" media="all">
-    -->
-
-    <!-- If you have a custom header image or colour -->
-    <meta name="ebi:masthead-color" content="#091314"/>
-    <meta name="ebi:masthead-image"
-          content="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/backgrounds/embl-ebi-background-4.jpg"/>
+<head id="head">
+    <title>Search &lt; EBI Metagenomics &lt; EMBL-EBI</title>
+    {{> partials/head this}}
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
-<div id="header"></div>
+<div id="header">{{> partials/header this hideSearch='True'}}</div>
 
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
+        <nav aria-label="You are here:" role="navigation">
+            <ul class="breadcrumbs columns">
+                 <li><a href="{{subfolder}}">Home</a></li>
+                <li>
+                    <span class="show-for-sr">Current: </span> Search
+                </li>
+            </ul>
+        </nav>
         <div class="columns small-12 medium-12 large-12">
             <div id="bonsai"></div>
 
@@ -82,7 +27,7 @@
         </div>
         <div class="row">
             <div class="columns small- medium-6 large-6">
-                <form id="headerSearchForm" action="/search">
+                <form id="headerSearchForm" action="{{subfolder}}/search">
                     <input id='navbar-query' class='header-search-input' name="query" type="search"
                            placeholder="Search">
                     <button id="search" type="submit" class="button" class="header-search-button">Search
@@ -92,7 +37,7 @@
         </div>
         <div class="row">
             <div class="columns small-12 medium-12 large-12">
-                <ul class="tabs" data-tabs id="results-tabs">
+                <ul class="tabs" data-tabs id="results-tabs" data-deep-link="true">
                     <li class="tabs-title is-active"><a href="#projectsTab" class="search-panel-tab"
                                                         aria-selected="true">Projects</a></li>
                     <li class="tabs-title"><a href="#samplesTab" class="search-panel-tab">Samples</a></li>
@@ -105,8 +50,8 @@
                     <div class="tabs-panel active" id="projectsTab">
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
-                                <form id="projectsFilters">
-                                </form>
+                                <form id="projectsFilters"></form>
+                                <div class="ebi-search"></div>
                             </div>
                             <div class="columns small-10 medium-10 large-10">
                                 <div class="row columns">
@@ -133,6 +78,7 @@
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
                                 <form id="samplesFilters"></form>
+                                <div class="ebi-search"></div>
                             </div>
                             <div class="columns small-10 medium-10 large-10">
                                 <div class="row columns">
@@ -159,6 +105,7 @@
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
                                 <form id="runsFilters"></form>
+                                <div class="ebi-search"></div>
                             </div>
                             <div class="columns small-10 medium-10 large-10">
                                 <div class="row columns">
@@ -291,10 +238,12 @@
         <% _.each(entries, function(entry){ %>
         <% const fields = entry.fields %>
         <tr class="search-row">
-            <td data-column="project-ena-accession"><a href="https://www.ebi.ac.uk/ena/data/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a></td>
-            <td data-column="project-id"><a href="/studies/<%= fields.id %>"><%= fields.id %></a></td>
+            <td data-column="project-ena-accession"><a
+                    href="https://www.ebi.ac.uk/ena/data/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a>
+            </td>
+            <td data-column="project-id"><a href="<%= entry.study_link %>"><%= fields.id %></a></td>
             <td data-column="project-biome"><%= fields.biome_name %></td>
-            <td data-column="project-name" ><%= fields.name %></td>
+            <td data-column="project-name"><%= fields.name %></td>
             <td data-column="project-desc"><%= fields.description %></td>
             <td data-column="project-sample-count"><%= fields.METAGENOMICS_SAMPLES.length %></td>
             <td data-column="project-run-count"><%= fields.METAGENOMICS_RUNS.length %></td>
@@ -336,7 +285,8 @@
         <% const fields = entry.fields %>
         <tr class="search-row">
             <td data-column="sample-id"><a href="<%= entry.sample_link %>"><%= entry.id %></a></td>
-            <td data-column="sample-projects"><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
+            <td data-column="sample-projects"><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a>
+            </td>
             <td data-column="sample-name"><%= fields.name %></td>
             <td data-column="sample-desc"><%= fields.description %></td>
         </tr>
@@ -388,7 +338,8 @@
             <td data-column="run-sample"><a href="<%= entry.sample_link %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
             <td data-column="run-project"><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
             <td data-column="run-experiment-type"><%= fields.experiment_type %></td>
-            <td data-column="run-pipeline-vers"><a href="<%= entry.pipeline_link %>"><%= fields.pipeline_version %></a></td>
+            <td data-column="run-pipeline-vers"><a href="<%= entry.pipeline_link %>"><%= fields.pipeline_version %></a>
+            </td>
         </tr>
         <% }); %>
         </tbody>
@@ -414,16 +365,16 @@
 <!-- </div> -->
 <!-- End suggested layout containers / #content -->
 
-<div id="footer"></div>
+<div id="footer">{{>partials/footer}}</div>
 
 <!-- JavaScript -->
 <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-<script defer="defer" src="/static/js/script.js"></script>
+<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
 
 <!-- The Foundation theme JavaScript -->
-<script src="/static/js/foundation.min.js"></script>
-<script src="/static/libraries/foundation.util.touch.js"></script>
-<script src="/static/js/foundationExtendEBI.js"></script>
+<script src="{{subfolder}}/static/js/foundation.min.js"></script>
+<script src="{{subfolder}}/static/libraries/foundation.util.touch.js"></script>
+<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
     $(document).ready(function () {
         $(document).foundation();
@@ -431,7 +382,7 @@
     });
 </script>
 
-<script src="js/search.js"></script>
+<script src="{{subfolder}}/js/search.js"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->

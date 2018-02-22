@@ -53,17 +53,17 @@ th.description {
 
 th.sort-desc:after {
     float: right;
-    content: url('../images/sort_desc.png');
+    content: url(../images/sort_desc.png);
 }
 
 th.sort-asc:after {
     float: right;
-    content: url('../images/sort_asc.png');
+    content: url(../images/sort_asc.png);
 }
 
 th.sort-both:after {
     float: right;
-    content: url('../images/sort_both.png');
+    content: url(../images/sort_both.png);
 }
 
 .search-row > td > div {
@@ -168,8 +168,8 @@ select.table-tools {
 
 /* Index page */
 .jumbo-header {
-    background: url(/static/images/backgrounds/bgd_header_microbes_30p.png) 96% bottom no-repeat,
-    url(/static/images/backgrounds/bgd_header_microbes_big_10p.png) -100px center no-repeat;
+    background: url(../images/backgrounds/bgd_header_microbes_30p.png) 96% bottom no-repeat,
+    url(../images/backgrounds/bgd_header_microbes_big_10p.png) -100px center no-repeat;
     text-align: center;
     font-weight: 300;
     line-height: 1.4;
@@ -196,7 +196,7 @@ select.table-tools {
     color: white;
     text-transform: uppercase;
     text-decoration: none;
-    background: url(/static/images/backgrounds/bgd_button_login_off.gif) repeat-x 50%;
+    background: url(../images/backgrounds/bgd_button_login_off.gif) repeat-x 50%;
     border-radius: 30px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
     padding: 12px 22px;
@@ -254,7 +254,7 @@ select.table-tools {
 /*biome gal*/
 .biome_icon {
     display: inline-block;
-    background-image: url(/static/images/ico_biome_sprite.png);
+    background-image: url(../images/ico_biome_sprite.png);
 }
 
 /*biome large icon*/
@@ -600,11 +600,11 @@ select.table-tools {
 /* Style for external links */
 a.ext, a.ext:link {
     padding-left: 12px;
-    background: url(/static/images/ico_ext_link.png) no-repeat 0 3px;
+    background: url(../images/ico_ext_link.png) no-repeat 0 3px;
 }
 
 a.ext:hover, a.ext:active, a.ext:focus {
-    background: url(/static/images/ico_ext_link_on.png) no-repeat 0 3px;
+    background: url(../images/ico_ext_link_on.png) no-repeat 0 3px;
 }
 
 tr.disabled {
@@ -633,11 +633,11 @@ p.study-abstract {
 /* Style for external links */
 a.ext, a.ext:link {
     padding-left: 12px;
-    background: url(/static/images/ico_ext_link.png) no-repeat 0 3px;
+    background: url(../images/ico_ext_link.png) no-repeat 0 3px;
 }
 
 a.ext:hover, a.ext:active, a.ext:focus {
-    background: url(/static/images/ico_ext_link_on.png) no-repeat 0 3px;
+    background: url(../images/ico_ext_link_on.png) no-repeat 0 3px;
 }
 
 .detailList-key {
@@ -648,4 +648,8 @@ a.ext:hover, a.ext:active, a.ext:focus {
 .detailList-value {
     float: right;
     clear: right;
+}
+
+.biome-disp > a {
+    display:inline;
 }

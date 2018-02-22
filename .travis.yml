@@ -1,6 +1,5 @@
 language: node_js
 node_js:
- - "node"
  - "8"
 
 python:
@@ -16,35 +15,43 @@ addons:
       - nginx
       - python3-pip
 env:
-  - API_URL=http://localhost:8000 EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
+  - API_URL=http://localhost:9000/metagenomics/api/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
 
 before_install:
   - mysql -e 'CREATE DATABASE emg;'
+  - mysql -u root --password="" --database=emg < travis/schema.sql
+  # Join fixtures from multiple .sql files to populate db.
+  - echo -e "SET FOREIGN_KEY_CHECKS = 0;\n$(cat travis/emg_sql_fixtures/*.sql)\nSET FOREIGN_KEY_CHECKS = 1;" > travis/emg_sql_fixtures/merged.sql
+  - mysql -u root --password="" --database=emg < travis/emg_sql_fixtures/merged.sql
   - pip3 install --user --upgrade pip setuptools
   - python3 -V
   - pip3 -V
 
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-  - pip3 install --user https://github.com/EBI-Metagenomics/emgapi/archive/v1.0.4.tar.gz
-  - emgcli migrate
+  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+  - emgcli migrate --fake-initial
   - emgcli collectstatic --noinput
   - emgcli check --deploy
-  - emgdeploy --daemon -p ~/emgvar/emg.pid --workers 5 emgcli.wsgi:application
+  - emgdeploy --daemon -p ~/emg.pid emgcli.wsgi:application
 
   - npm install cypress
 
 install:
   - npm install webpack -g
   - npm install
-  - nom run buil
+  - npm run build
+  - sudo mv dist/* /usr/share/nginx/html/
+  - sudo chmod 777 /var/log/nginx/*
+  - sudo chmod 777 /var/run/nginx.pid
   - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
-  - curl -I http://localhost:9000
+  - curl -I http://localhost:9000/metagenomics/
 
 script:
-  - npm run cypress:run
+  - npm run test -- --record --key $CYPRESS_RECORD_KEY
+
 
 cache:
-  directories:
+  directories:s
+    - ~/.npm
     - node_modules
     - /home/travis/.cypress/Cypress
-

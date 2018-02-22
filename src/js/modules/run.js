@@ -1,6 +1,5 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const util = require('../util');
 const INTERPRO_URL = process.env.INTERPRO_URL;
 const Commons = require('../commons');
 const api = require('../components/api');
@@ -16,8 +15,10 @@ const SeqFeatChart = require('../components/charts/sequFeatSumChart');
 const detailList = require('../components/detailList');
 
 require('tablesorter');
-import {attachTabHandlers, getURLParameter, setCurrentTab} from "../util";
 
+import {attachTabHandlers, getURLParameter, setCurrentTab, checkAPIonline} from "../util";
+
+checkAPIonline();
 
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 
@@ -30,117 +31,67 @@ let interproData = null;
 let taxonomy = null;
 let goTerm = null;
 
-function createKronaChart(study_id, sample_id, run_id, version) {
-    $('#krona-chart').html(
-        $("<object class='krona_chart' data='https://www.ebi.ac.uk/metagenomics/projects/" + study_id + "/samples/" + sample_id + "/runs/" + run_id + "/results/krona/versions/" + version + "?taxonomy=true&collapse=false' type='text/html'></object>)")
-    );
-}
-
 let RunView = Backbone.View.extend({
     model: api.Run,
-    el: '#runContainer',
-    initialize: function (model) {
+    template: _.template($("#runTmpl").html()),
+    el: '#main-content-area',
+    initialize: function () {
         const that = this;
-        let version = model.version || null;
         this.model.fetch({
             data: {},
             success: function (data) {
                 const attr = data.attributes;
-                if (version === null) {
-                    version = attr.pipeline_versions[0];
-                    attr.pipeline_versions.forEach(function (e) {
-                        $('#analysisSelect').append("<option value='" + e + "'>" + e + "</option>");
-                    })
-                }
+                let version = attr.pipeline_versions[0];
 
-                let description = {
-                    Study: "<a href='" + attr.study_url + "'>" + attr.study_id + "</a>",
-                    Sample: "<a href='" + attr.sample_url + "'>" + attr.sample_id + "</a>",
-                };
-                $('#overview').html(new detailList('Description', description));
+                that.render(function () {
+                    let description = {
+                        Study: "<a href='" + attr.study_url + "'>" + attr.study_id + "</a>",
+                        Sample: "<a href='" + attr.sample_url + "'>" + attr.sample_id + "</a>",
+                    };
+                    const dataAnalysis = {};
+                    if (attr['experiment_type']) {
+                        dataAnalysis['Experiment type'] = attr['experiment_type']
+                    }
 
-                analysis = new api.Analysis({id: run_id, version: version});
-                interproData = new api.InterproIden({id: run_id, version: version});
-                taxonomy = new api.Taxonomy({id: run_id, version: version});
-                goTerm = new api.GoSlim({id: run_id, version: version});
+                    if (attr['instrument_model']) {
+                        dataAnalysis['Instrument model'] = attr['instrument_model']
+                    }
 
-                let analysisView = new AnalysisView({model: analysis});
+                    if (attr['instrument_platform']) {
+                        dataAnalysis['Instrument platform'] = attr['instrument_platform']
+                    }
 
-                if (attr.analysis_results.indexOf('TAXONOMIC') > -1) {
-                    enableTab('taxonomic');
-                    let taxonomyGraph = new TaxonomyGraphView({model: taxonomy});
-                    createKronaChart(attr.study_id, attr.sample_id, run_id, version);
-                } else {
-                    disableTab('taxonomic');
-                }
-
-                if (attr.analysis_results.indexOf('FUNCTION') > -1) {
-                    enableTab('functional');
-                    let interProSummary = new InterProSummary({model: interproData});
-                    let goTermCharts = new GoTermCharts({model: goTerm});
-                } else {
-                    disableTab('functional');
-                }
-
-                if (attr.analysis_results.indexOf('DOWNLOAD') > -1) {
-                    enableTab('download');
-                } else {
-                    disableTab('download');
-                }
+                    $('#overview').append(new detailList('Description', description));
+                    if (Object.keys(dataAnalysis).length > 0) {
+                        $('#overview').append(new detailList('Data analysis', dataAnalysis));
+                    }
+                    loadAnalysisData(run_id, version);
+                });
             }
         });
+    },
+    render: function (callback) {
+        this.$el.html(this.template(this.model.toJSON()));
+        attachTabHandlers();
+        callback();
+        return this.$el;
     }
 });
 
-let AnalysisView = Backbone.View.extend({
-    model: api.Analysis,
-    initialize: function () {
-        this.model.fetch({
-            success: function (data) {
-                const attr = data.attributes;
-                const dataAnalysis = {};
-                if (attr['experiment_type']) {
-                    dataAnalysis['Experiment type'] = attr['experiment_type']
-                }
+let QCGraphView = Backbone.View.extend({
+    initialize: function (attr) {
+        const data = {};
+        attr['analysis_summary'].forEach(function (e) {
+            data[e.key] = e.value;
+        });
+        console.log(attr);
+        console.log(data);
+        const qcChart = new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
 
-                if (attr['instrument_model']) {
-                    dataAnalysis['Instrument model'] = attr['instrument_model']
-                }
+        const seqFeatChart = new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
 
-                if (attr['instrument_platform']) {
-                    dataAnalysis['Instrument platform'] = attr['instrument_platform']
-                }
-
-                if (attr['instrument_platform']) {
-                    dataAnalysis['Instrument platform'] = attr['instrument_platform']
-                }
-                if (attr['complete_time']) {
-                    const date = new Date(attr['complete_time']);
-                    dataAnalysis['Analysis date'] = date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear();
-                }
-                if (attr['version']) {
-                    dataAnalysis['Pipeline version'] = attr['version']
-                }
-
-                if (Object.keys(dataAnalysis).length > 0) {
-                    $('#overview').append(new detailList('Data analysis', dataAnalysis));
-                }
-                createQCGraph(attr);
-            }
-        })
     }
 });
-
-function createQCGraph(attr) {
-    const data = {};
-    attr['analysis_summary'].forEach(function (e) {
-        data[e.key] = e.value;
-    });
-
-    const qcChart = new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
-
-    const seqFeatChart = new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
-}
 
 // Cluster and compact groups other than top 10 largest into an 'other' category
 function groupTaxonomyData(data, depth) {
@@ -253,6 +204,7 @@ let TaxonomyGraphView = Backbone.View.extend({
                     }
                 });
 
+
                 new TaxonomyColumnChart('domain-composition-column', 'Domain composition', clusteredData, false);
                 const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column', 'Phylum composition', phylumData, false);
                 const phylumColumnTable = new ClientSideTable($('#column').find(".phylum-table"), '', headers);
@@ -264,17 +216,6 @@ let TaxonomyGraphView = Backbone.View.extend({
                     let index = getSeriesIndex($(this).index(), numSeries);
                     phylumColumnChart.series[0].data[index].setState();
                 });
-
-                // phylumColumnTable.$tbody.find('tr').click(function () {
-                //     let index = getSeriesIndex($(this).index(), numSeries);
-                //     const series = phylumColumnChart.series[0].data[index];
-                //     series.setVisible(!series.visible);
-                //     if (index === numSeries - 1) {
-                //         ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled');
-                //     } else {
-                //         $(this).toggleClass('disabled');
-                //     }
-                // });
 
 
                 // Column tab
@@ -288,19 +229,6 @@ let TaxonomyGraphView = Backbone.View.extend({
                     let index = getSeriesIndex($(this).index(), numSeries);
                     phylumStackedColumnChart.series[index].data[0].setState();
                 });
-
-                // phylumStackedColumnTable.$tbody.find('tr').click(function () {
-                //     let index = getSeriesIndex($(this).index(), numSeries);
-                //     const series = phylumStackedColumnChart.series[0].data[index];
-                //     console.log(phylumColumnChart.series);
-                //
-                //     series.setVisible(!series.visible);
-                //     if (index === numSeries - 1) {
-                //         ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled');
-                //     } else {
-                //         $(this).toggleClass('disabled');
-                //     }
-                // });
 
             }
         });
@@ -370,12 +298,25 @@ let InterProSummary = Backbone.View.extend({
     }
 });
 
+function getTotalGoTermCount(array){
+    let sum = 0;
+    _.each(array, function(e){
+        sum+= e.attributes.count;
+    });
+    return sum
+}
+
 let GoTermCharts = Backbone.View.extend({
     model: api.GoSlim,
     initialize: function () {
         this.model.fetch({
             success: function (model) {
                 const data = model.attributes.data;
+
+                if (getTotalGoTermCount(data) === 0) {
+                    disableTab('functional');
+                    return;
+                }
                 let biological_process_data = [];
                 let molecular_function_data = [];
                 let cellular_component_data = [];
@@ -413,6 +354,44 @@ let GoTermCharts = Backbone.View.extend({
         });
     }
 });
+
+
+let DownloadView = Backbone.View.extend({
+    template: _.template($("#download-tmpl").html()),
+    el: '#download-list',
+    initialize: function (data) {
+        //    TODO implement downloads
+        data = {
+            groups: [
+                {
+                    group_name: "Name",
+                    entries: [
+                        {
+                            name: "Submitted nucleotide reads",
+                            type: 'DNA/RNA data type',
+                            compression: 'GZIP',
+                            format: 'FASTA',
+                            link: 'link'
+                        }
+                    ]
+                }, {
+                    group_name: "Name2",
+                    entries: [
+                        {
+                            name: "Submitted nucleotide reads",
+                            type: 'DNA/RNA data type',
+                            compression: 'GZIP',
+                            format: 'FASTA',
+                            link: 'link'
+                        }
+                    ]
+                }
+            ]
+        };
+        this.$el.html(this.template(data));
+    }
+});
+
 
 // Compact groups other than top 10 largest into an 'other' category
 function groupGoTermData(data) {
@@ -459,18 +438,56 @@ function disableTab(id) {
     $("[href='#" + id + "']").parent('li').addClass('disabled');
 }
 
-function enableTab(id) {
-    $("[href='#" + id + "']").parent('li').removeClass('disabled');
+function loadKronaChart(run_id, pipeline_version) {
+    const krona_url = api.getKronaURL(run_id, pipeline_version);
+    // $.ajax({
+    //     url: krona_url,
+    //     success: function (e) {
+    //         const frame = $("<object></object>");
+    //         frame.append(e);
+    //         $('#krona').append(frame);
+    //     }
+    // });
+    const krona_chart = "<object class=\"krona_chart\"\n" +
+        "data=\"" + krona_url + "\" " +
+        "type=\"text/html\"></object>";
+    $('#krona').append(krona_chart);
+// <object class="krona_chart"
+//     data="<%= krona_url %>"
+//     type="text/html"></object>
+}
+
+
+function loadAnalysisData(run_id, pipeline_version) {
+    loadKronaChart(runView.model.attributes.run_id, pipeline_version);
+
+    analysis = new api.Analysis({id: run_id, version: pipeline_version});
+    analysis.fetch({
+        success: function (model) {
+            const attr = model.attributes;
+            let qcGraph = new QCGraphView(attr);
+            let downloadView = new DownloadView(attr.download)
+        }
+    });
+
+    interproData = new api.InterproIden({id: run_id, version: pipeline_version});
+    let interProSummary = new InterProSummary({model: interproData});
+
+    taxonomy = new api.Taxonomy({id: run_id, version: pipeline_version});
+    let taxonomyGraph = new TaxonomyGraphView({model: taxonomy});
+
+    goTerm = new api.GoSlim({id: run_id, version: pipeline_version});
+    let goTermCharts = new GoTermCharts({model: goTerm});
+}
+
+function onAnalysisSelect() {
+    loadAnalysisData(runView.model.attributes.run_id, $(this).val());
 }
 
 $(document).ready(function () {
     // TODO Handle change of analysis
-    $("#analysisSelect").change(function (e) {
-        runView = new RunView({model: run, version: $(this).val()})
-    });
+    $("#analysisSelect").change(onAnalysisSelect);
 });
 
-$('#run_id').text(run_id);
-attachTabHandlers();
 let run = new api.Run({id: run_id});
 let runView = new RunView({model: run});

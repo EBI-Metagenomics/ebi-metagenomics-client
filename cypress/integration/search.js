@@ -1,4 +1,5 @@
 import {openPage} from './util';
+
 const origPage = 'search';
 
 const initialResultSize = 10;
@@ -15,11 +16,12 @@ const samplesTabButton = "a[href='#samplesTab']";
 const runsTabButton = "a[href='#runsTab']";
 
 
-function assertTableIsCleared(){
+function assertTableIsCleared() {
     cy.get(rowSelector).should('not.exist');
 }
-function waitForResultsLoad(results){
-    cy.get(rowSelector, {timeout: 10000}).should("have.length", parseInt(results));
+
+function waitForResultsLoad(results) {
+    cy.get(rowSelector, {timeout: 20000}).should("have.length", parseInt(results));
 }
 
 // function setSortBy(sortBySelector){
@@ -34,87 +36,122 @@ function waitForResultsLoad(results){
 //     waitForResultsLoad(num_results);
 // }
 
+function waitForFacetFilters(facetName) {
+    cy.wait('@' + facetName, {timeout: 20000}).its('url').should('include', 'size=1');
+}
+
+function validateFacetQuery(facetName, testString) {
+    const timeout = 10000;
+    if (testString) {
+        cy.wait('@' + facetName, {timeout: timeout}).its('url').should('include', 'size=' + initialResultSize).should('include', 'query=' + encodeURIComponent(testString))
+    } else {
+        cy.wait('@' + facetName, {timeout: timeout}).its('url').should('include', 'size=' + initialResultSize)
+    }
+}
+
 /**
  * Verify number of results responds to selector
  */
-describe('Search page', function() {
-    // it('Correct number of results.', function() {
-    //     openPage(origPage);
-    //     cy.wait(1000);
-    //     cy.get('#pagesize').invoke('val').then((val) => {
-    //         waitForResultsLoad(val);
-    //         cy.get('#pagesize').select('50');
-    //         waitForResultsLoad('50');
-    //     });
-    // });
-    beforeEach(function(){
+
+// const facetRequests = ['projectsSearch', 'samplesSearch', 'runsSearch'];
+const facetRequests = ['projectsFacet', 'projectsQuery', 'samplesFacet', 'samplesQuery', 'runsFacet', 'runsQuery'];
+describe('Search page - generalFunctionality', function () {
+    beforeEach(function () {
+        cy.server();
+        cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=1&*').as(facetRequests[0]);
+        cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=10&*').as(facetRequests[1]);
+        cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=1&*').as(facetRequests[2]);
+        cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=10&*').as(facetRequests[3]);
+        cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=1&*').as(facetRequests[4]);
+        cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=10&*').as(facetRequests[5]);
+
         openPage(origPage);
         waitForResultsLoad(initialResultSize);
-
-        cy.server();
-        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_projects?*').as('projectsSearch');
-        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_samples?*').as('samplesSearch');
-        cy.route('https://wwwdev.ebi.ac.uk/ebisearch/ws/rest/metagenomics_runs?*').as('runsSearch');
-
-
     });
 
     // Text search should apply to all facets
-    it('Text query should apply to all facets', function(){
+    it('Text query should apply to all facets', function () {
+        waitForFacetFilters(facetRequests[0]);
+        validateFacetQuery(facetRequests[1]);
+        waitForFacetFilters(facetRequests[2]);
+        validateFacetQuery(facetRequests[3]);
+        waitForFacetFilters(facetRequests[4]);
+        validateFacetQuery(facetRequests[5]);
+
         const testString = "Test";
         cy.get(textQueryInput).type(testString);
         cy.get(submitTextQuery).click();
 
         // Check requests includes testString correctly
-        cy.wait('@projectsSearch').its('url').should('include', 'query='+encodeURIComponent(testString));
+        validateFacetQuery(facetRequests[1], encodeURIComponent(testString));
+        validateFacetQuery(facetRequests[3], encodeURIComponent(testString));
+        validateFacetQuery(facetRequests[5], encodeURIComponent(testString));
 
-        cy.wait('@samplesSearch').its('url').should('include', 'query='+encodeURIComponent(testString));
-
-        // cy.wait('@runsSearch').then((xhr) => {
-        //     console.log(xhr);
-        // }).its('url').should('include', 'query='+encodeURIComponent(testString));
-
-        waitForResultsLoad(initialResultSize);
-
-        // Test UI has correctly included queryString in search summary
-        cy.get(projectsTabButton).click();
-        cy.get("#projects").find(".columns > h5").then(($elem) => {
-            expect($elem).to.contain(testString);
-        });
-        cy.get(samplesTabButton).click();
-        cy.get("#samples").find(".columns > h5").then(($elem) => {
-            expect($elem).to.contain(testString);
-        });
-
-        // Reset and check it has finished
-        cy.get(resetTextQuery).click();
-        cy.wait('@projectsSearch').its('url').should.not('include', 'query='+encodeURIComponent(testString));
-
-        cy.wait('@samplesSearch').its('url').should.not('include', 'query='+encodeURIComponent(testString));
-
-        waitForResultsLoad(initialResultSize);
-
-        // Test UI has correctly included queryString in search summary
-        cy.get(projectsTabButton).click();
-        cy.get("#projects").find(".columns > h5").then(($elem) => {
-            expect($elem).should('not.contain', testString);
-        });
-        cy.get(samplesTabButton).click();
-        cy.get("#samples").find(".columns > h5").then(($elem) => {
-            expect($elem).should('not.contain', testString);
-        });
-
-
-
-        // cy.get(runsTabButton).click();
-        // cy.get("#runs").find(".columns > h5").then(($elem) => {
-        //     expect($elem).to.contain(testString);
-        // });
     });
-    //
 
+    it('Correct number of results.', function () {
+        openPage(origPage);
+        cy.wait(1000);
+        cy.get('#pagesize').invoke('val').then((val) => {
+            waitForResultsLoad(val);
+            cy.get('#pagesize').select('50');
+            waitForResultsLoad('50');
+        });
+    });
 
+    it('Biome filters should restrict results', function () {
+        cy.get('button.disp-children').first().click();
+        cy.get("input[value='Environmental/Air']").check({force: true});
+        waitForResultsLoad(2);
+        cy.get("tbody > tr > td[data-column='project-biome']").contains('Air')
+    });
 
+    it('Centre name filters should restrict results', function () {
+        cy.get("input[value='BioProject']").check({force: true});
+        waitForResultsLoad(10);
+        cy.get("tbody > tr > td[data-column='project-centre-name']").contains('BioProject')
+    });
+
+    it('Clear button should reset search completely', function(){
+        cy.get('button.disp-children').first().click();
+        cy.get("input[value='Environmental/Air']").check({force: true});
+        cy.get("input[value='BGI']").check({force: true});
+        waitForResultsLoad(1);
+        cy.get("#search-reset").click();
+        waitForResultsLoad(initialResultSize);
+    });
+
+    it('Should pre-fill cached search query', function () {
+        waitForFacetFilters(facetRequests[0]);
+        validateFacetQuery(facetRequests[1]);
+        waitForFacetFilters(facetRequests[2]);
+        validateFacetQuery(facetRequests[3]);
+        waitForFacetFilters(facetRequests[4]);
+        validateFacetQuery(facetRequests[5]);
+
+        const testString = "Test";
+        cy.get(textQueryInput).type(testString);
+        cy.get(submitTextQuery).click();
+
+        // Check requests includes testString correctly
+        validateFacetQuery(facetRequests[1], encodeURIComponent(testString));
+        validateFacetQuery(facetRequests[3], encodeURIComponent(testString));
+        validateFacetQuery(facetRequests[5], encodeURIComponent(testString));
+
+        // Navigate to another page, then return and verify string was pre-loaded
+        openPage('');
+        openPage(origPage);
+        waitForFacetFilters(facetRequests[0]);
+        validateFacetQuery(facetRequests[1]);
+        waitForFacetFilters(facetRequests[2]);
+        validateFacetQuery(facetRequests[3]);
+        waitForFacetFilters(facetRequests[4]);
+        validateFacetQuery(facetRequests[5]);
+        waitForResultsLoad(initialResultSize);
+        cy.get(textQueryInput).then(($input) => {
+            cy.log($input);
+        });
+    })
 });
 
 

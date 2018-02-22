@@ -34,22 +34,22 @@
             <nav>
                 <ul id="local-nav" class="dropdown menu float-left" data-description="navigational"
                     data-dropdown-menu>
-                    <li id="overview-nav"><a href="/">Overview</a></li>
-                    <li id="search-nav"><a href="/search">Search</a></li>
+                    <li id="overview-nav"><a href="{{subfolder}}/">Overview</a></li>
+                    <li id="search-nav"><a href="{{subfolder}}/search">Search</a></li>
                     <li id="sequence-search-nav"><a
                             href="{{sequenceSearchUrl}}">Sequence search</a>
                     </li>
-                    <li id="submit-nav"><a href="/submit">Submit data</a></li>
-                    <li id="studies-nav"><a href="/studies">Studies</a></li>
-                    <li id="samples-nav"><a href="/samples">Samples</a></li>
-                    <!--<li id="compare-nav"><a href="/compare">Comparison tool</a></li>-->
-                    <li id="about-nav"><a href="/about">About</a></li>
-                    <li id="help-nav"><a href="/help">Help</a></li>
+                    <li id="submit-nav"><a href="{{subfolder}}/submit">Submit data</a></li>
+                    <li id="studies-nav"><a href="{{subfolder}}/studies">Studies</a></li>
+                    <li id="samples-nav"><a href="{{subfolder}}/samples">Samples</a></li>
+                    <!--<li id="compare-nav"><a href="{{subfolder}}/compare">Comparison tool</a></li>-->
+                    <li id="about-nav"><a href="{{subfolder}}/about">About</a></li>
+                    <li id="help-nav"><a href="{{subfolder}}/help">Help</a></li>
                     <!--</ul>-->
                     <!--<ul class="menu dropdown float-right" data-dropdown-menu data-description="functional">-->
                     <li>
                         {{#unless hideSearch }}
-                            <form id="headerSearchForm" action="/search">
+                            <form id="headerSearchForm" action="{{subfolder}}/search">
                                 <input id='navbar-query' class='header-search-input' name="query" type="search"
                                        placeholder="Search">
                                 <button id="search" type="submit" class="button" class="header-search-button">Search
@@ -58,7 +58,7 @@
                         {{/unless}}
                     </li>
                     <li class="functional">
-                        <a class="icon icon-functional button" data-icon="l" href="/login.html">
+                        <a class="icon icon-functional button" data-icon="l" href="../login.html">
                             Login
                         </a>
                     </li>

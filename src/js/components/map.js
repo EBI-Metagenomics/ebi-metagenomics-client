@@ -4,6 +4,8 @@ const _ = require('underscore');
 
 module.exports = class Map {
     constructor(elementId, samples) {
+        console.log(elementId, samples);
+        console.log($('#map'));
         let map = new google.maps.Map(document.getElementById(elementId), {
             streetViewControl: false,
             zoom: 1,
@@ -68,7 +70,7 @@ module.exports = class Map {
             collection_date: attr['Collection date'],
             lat: attr['latitude'],
             lng: attr['longitude'],
-            sample_url: '/sample/' + attr.accession
+            sample_url: '/samples/' + attr.accession
         };
         return template(data);
     };

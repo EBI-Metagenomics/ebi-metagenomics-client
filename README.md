@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client.svg?branch=master)](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client)
+[![Build Status](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client.svg?branch=develop)](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client)
 
  # ebi-metagenomics-client
 #### Requirements:
@@ -29,6 +29,18 @@ sudo service nginx restart
 https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
 
 #### How to setup your project?
- Run 'npm install' in the project's main directory.
+Export the following env variables in env-config.sh file. Adjust exports if need depending on whether you are in your dev or
+prod environment.
+
+```
+source env-config.sh
+```
+
+##### Run 'npm install' in the project's main directory.
  Serve with own server, or use biult-in dev system by calling 'webpack-dev-server' in main directory.
- Access locally run server on http://localhost:8080/index.html .
+ Access local web server under http://localhost:9000/index.html .
+```
+npm install
+
+npm run watch
+```

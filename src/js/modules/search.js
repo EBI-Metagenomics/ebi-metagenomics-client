@@ -7,6 +7,7 @@ const Backbone = require('backbone');
 const Cookies = require('js-cookie');
 
 const commons = require('../commons');
+const cookieName = commons.COOKIE_NAME;
 const Pagination = require('../components/pagination').Pagination;
 require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
@@ -17,8 +18,27 @@ const CheckboxTree = require('../components/checkboxTree');
 
 const Slider = require('../components/slider.js');
 
-setCurrentTab('#search-nav', true);
+util.checkAPIonline();
+
+setCurrentTab('#search-nav');
 attachTabHandlers();
+
+const DEFAULT_QUERIES = ["domain_source:metagenomics_projects", "domain_source:metagenomics_samples", "domain_source:metagenomics_runs"]
+
+const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)\]/;
+
+let queryText = util.getURLFilterParams().get('query');
+if (queryText === null) {
+    queryText = getCookieQuery();
+}
+
+$("#navbar-query").val(queryText);
+
+$(document).ready(function () {
+    //TODO convert to template argument
+    $("#pagesize-text").hide();
+});
+
 
 $("#pageSize").append(commons.pagesize).find('#pagesize').change(function () {
     updateAll($(this).val())
@@ -28,16 +48,6 @@ function getPageSize() {
     return $('#pagesize').val();
 }
 
-let queryText = util.getURLFilterParams().get('query');
-$("#navbar-query").val(queryText);
-
-$(document).ready(function () {
-    //TODO convert to template argument
-    $("#pagesize-text").hide();
-});
-
-const COOKIE_NAME = 'ebi-metagenomics';
-const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)\]/;
 
 const Search = Backbone.Collection.extend({
     tab: null,
@@ -89,7 +99,7 @@ const ResultsView = Backbone.View.extend({
         //     templateData.filterText = null;
         // }
         templateData.filterText = null;
-
+        templateData['subfolder'] = util.subfolder;
         if (!no_display) {
             const $data = $(this.template(templateData));
             $data.find("td").map(function () {
@@ -127,12 +137,19 @@ const ResultsView = Backbone.View.extend({
         }
 
         $.when.apply($, fetches).done(function () {
+            let args;
+            if (typeof(arguments[1]) === 'string') {
+                args = [arguments];
+            } else {
+                args = arguments;
+            }
             let collection = null;
-            for (var i = 0; i < arguments.length; i++) {
+            // Concatenate collection entries onto first collection
+            for (var i = 0; i < args.length; i++) {
                 if (!collection) {
-                    collection = arguments[i][0];
+                    collection = args[i][0];
                 } else {
-                    collection.entries = collection.entries.concat(arguments[i][0].entries);
+                    collection.entries = collection.entries.concat(args[i][0].entries);
                 }
             }
             const resultsTmpl = that.render(collection, tmpParams, true, []);
@@ -235,7 +252,7 @@ const Project = Backbone.Model.extend({
         //     });
         // });
         d.biomes = convertBiomes(d);
-        d.study_link = '/studies/' + d.id;
+        d.study_link = util.subfolder + '/studies/' + d.id;
         return d;
     }
 });
@@ -260,7 +277,6 @@ const ProjectsView = ResultsView.extend({
             this.pagination.setPaginationElem('#projects-pagination');
             const cookieParams = loadSearchParams('projects');
             this.params = $.extend(true, {}, Search.prototype.params);
-            console.log(getQueryText());
             if (cookieParams) {
                 this.params.facets = cookieParams.filters || "";
                 this.params.query = getQueryText() || cookieParams.query || this.defaultQuery;
@@ -293,8 +309,6 @@ const ProjectsView = ResultsView.extend({
 
         fetchAndRender: function (renderFilter, setFilters) {
             const that = this;
-            console.trace();
-            console.log(that.params);
             return this.collection.fetch({
                 data: $.param(that.params),
                 success: function (collection, response) {
@@ -337,8 +351,8 @@ function getPagesObj(hitcount, start, size) {
 
 const Sample = Backbone.Model.extend({
     parse: function (d) {
-        d.study_link = '/studies/' + d.fields.METAGENOMICS_PROJECTS[0];
-        d.sample_url = '/samples/' + d.id;
+        d.study_link = util.subfolder + '/studies/' + d.fields.METAGENOMICS_PROJECTS[0];
+        d.sample_link = util.subfolder + '/samples/' + d.id;
         return d;
     }
 });
@@ -377,7 +391,7 @@ const SamplesView = ResultsView.extend({
 
         if (cookieParams) {
             this.params.facets = cookieParams.filters || '';
-            this.params.query = cookieParams.query || getQueryText() || this.defaultQuery;
+            this.params.query = getQueryText() || cookieParams.query || this.defaultQuery;
         } else {
             this.params.query = getQueryText() || this.defaultQuery;
         }
@@ -441,10 +455,10 @@ const SamplesView = ResultsView.extend({
 
 const Run = Backbone.Model.extend({
     parse: function (d) {
-        d.study_link = '/studies/' + d.fields['METAGENOMICS_PROJECTS'][0];
-        d.sample_url = '/samples/' + d.fields['METAGENOMICS_SAMPLES'][0];
-        d.run_link = '/run/' + d.id;
-        d.pipeline_link = '/pipelines/' + d.fields.pipeline_version[0];
+        d.study_link = util.subfolder + '/studies/' + d.fields['METAGENOMICS_PROJECTS'][0];
+        d.sample_link = util.subfolder + '/samples/' + d.fields['METAGENOMICS_SAMPLES'][0];
+        d.run_link = util.subfolder + '/runs/' + d.id;
+        d.pipeline_link = util.subfolder + '/pipelines/' + d.fields.pipeline_version[0];
         d.biomes = convertBiomes(d);
         return d;
     }
@@ -481,7 +495,7 @@ const RunsView = ResultsView.extend({
 
         if (cookieParams) {
             this.params.facets = cookieParams.filters || '';
-            this.params.query = cookieParams.query || getQueryText() || this.defaultQuery;
+            this.params.query = getQueryText() || cookieParams.query || this.defaultQuery;
         } else {
             this.params.query = getQueryText() || this.defaultQuery;
         }
@@ -756,7 +770,6 @@ function enableSlider($checkbox, enabled) {
 }
 
 function updateAll(pagesize) {
-    updateAll
     showSpinner();
     return $.when(
         projectsView.update(null, pagesize),
@@ -785,18 +798,18 @@ function getAllFormIds(except) {
     })
 }
 
-function resetAllForms() {
-    $(".facet-remove-button").remove();
-    _.each(getAllFormIds(), function (id) {
-        const $form = $(id);
-        resetInputsInElem($form);
-    });
-    projectsView.initialize();
-    samplesView.initialize();
-    runsView.initialize();
-
-    initAll(projectsView, samplesView, runsView, false, false);
-}
+// function resetAllForms() {
+//     $(".facet-remove-button").remove();
+//     _.each(getAllFormIds(), function (id) {
+//         const $form = $(id);
+//         resetInputsInElem($form);
+//     });
+//     projectsView.initialize();
+//     samplesView.initialize();
+//     runsView.initialize();
+//
+//     initAll(projectsView, samplesView, runsView, false, false);
+// }
 
 String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
@@ -806,18 +819,9 @@ const button = $("<button id='search-reset' class='button' type='reset'>Clear al
 const $searchForm = $("#headerSearchForm");
 $searchForm.append(button);
 $searchForm.on('reset', function () {
-    // let cookie = Cookies.get(COOKIE_NAME);
-    // if (cookie) {
-    //     let cookieVal = JSON.parse(cookie);
-    //     _.each(['projects', 'samples', 'runs'], function (facet) {
-    //         cookieVal[facet] = null
-    //     });
-    //     Cookies.set(COOKIE_NAME, cookieVal);
-    // }
-    Cookies.remove(COOKIE_NAME);
-    $searchForm.find("#navbar-query").val('');
-    deleteCachedSearchParams();
-    resetAllForms();
+    Cookies.remove(cookieName);
+    window.location.href = 'search';
+
 });
 
 function getQueryText() {
@@ -922,7 +926,7 @@ function createCheckboxTrees(facet, trees, facetView, $facetForm, $facetBtnConta
 }
 
 function saveSearchParams(facet, filters, query) {
-    let cookieParams = Cookies.get(COOKIE_NAME);
+    let cookieParams = Cookies.get(cookieName);
     if (cookieParams === undefined) {
         cookieParams = {};
         cookieParams[facet] = {};
@@ -938,17 +942,19 @@ function saveSearchParams(facet, filters, query) {
         delete cookieParams[facet]['filters'];
     }
     if (query) {
-        cookieParams[facet]['query'] = query;
+        if (DEFAULT_QUERIES.indexOf(query) === -1) {
+            cookieParams[facet]['query'] = query;
+        }
     } else {
         delete cookieParams[facet]['query'];
     }
 
-    Cookies.set(COOKIE_NAME, cookieParams);
+    Cookies.set(cookieName, cookieParams);
 }
 
 function loadSearchParams(facet) {
     let data, query = null;
-    let cookie = Cookies.get(COOKIE_NAME);
+    let cookie = Cookies.get(cookieName);
     if (cookie) {
         cookie = JSON.parse(cookie);
         try {
@@ -969,8 +975,21 @@ function loadSearchParams(facet) {
     };
 }
 
+function getCookieQuery() {
+    let cookie = Cookies.get(cookieName);
+    console.log(cookie);
+    if (cookie) {
+        cookie = JSON.parse(cookie);
+        try {
+            return cookie['projects']['query'];
+        } catch (e) {
+        }
+    }
+    return null
+}
+
 function deleteCachedSearchParams() {
-    let cookie = Cookies.get(COOKIE_NAME);
+    let cookie = Cookies.get(cookieName);
     if (cookie) {
         let cookieVal = JSON.parse(cookie);
         _.each(['projects', 'samples', 'runs'], function (facet) {
@@ -979,14 +998,15 @@ function deleteCachedSearchParams() {
                 filters: null
             }
         });
-        Cookies.set(COOKIE_NAME, cookieVal);
+        Cookies.set(cookieName, cookieVal);
     }
+    const new_url = window.location.toString();
 }
 
 window.getVisibleColumns = getVisibleColumns;
 
 function getVisibleColumns(facet) {
-    let cookieData = Cookies.get(COOKIE_NAME);
+    let cookieData = Cookies.get(cookieName);
     if (cookieData) {
         cookieData = JSON.parse(cookieData);
         if (cookieData[facet]) {
@@ -997,7 +1017,7 @@ function getVisibleColumns(facet) {
 }
 
 function saveVisibleColumns(facet, columns) {
-    let cookieData = Cookies.get(COOKIE_NAME);
+    let cookieData = Cookies.get(cookieName);
     if (cookieData) {
         cookieData = JSON.parse(cookieData);
     } else {
@@ -1013,9 +1033,15 @@ function saveVisibleColumns(facet, columns) {
             columns: columns,
         }
     }
-    Cookies.set(COOKIE_NAME, cookieData);
+    Cookies.set(cookieName, cookieData);
 }
 
+function insertEbiSearchText() {
+    const html = '<p><small class="text-muted">Powered by <a href="https://www.ebi.ac.uk/ebisearch/&quot;" class="ext" target="_blank">EBI Search</a></small></p>';
+    $('.ebi-search').html(html);
+}
+
+insertEbiSearchText();
 
 let search = new Search();
 

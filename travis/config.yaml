@@ -8,7 +8,7 @@ emg:
       PORT: 3306
   session_engine: 'django.contrib.sessions.backends.cache'
   emg_backend_auth: "https://backend"
-  prefix: "/metagenomics"
+  prefix: "/metagenomics/api"
   mongodb:
     db: 'emg'
     host: 'mongodb://localhost'

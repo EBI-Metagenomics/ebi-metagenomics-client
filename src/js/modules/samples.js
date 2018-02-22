@@ -1,16 +1,13 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const util = require('../util');
 const commons = require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
 const Order = require('../components/order');
 
 const pagination = new Pagination();
-
-const DEFAULT_PAGE_SIZE = require('../commons').DEFAULT_PAGE_SIZE;
+const DEFAULT_PAGE_SIZE = commons.DEFAULT_PAGE_SIZE;
 import {
-    getFormData,
     getURLFilterParams,
     hideTableLoadingGif,
     initResultsFilter,
@@ -19,22 +16,16 @@ import {
     showTableLoadingGif,
     getDownloadParams,
     setDownloadResultURL,
-    BiomeCollectionView
+    BiomeCollectionView,
+    checkAPIonline
 } from "../util";
 
+checkAPIonline();
 setCurrentTab('#samples-nav');
 $("#pagination").append(commons.pagination);
 $("#pageSize").append(commons.pagesize);
 
 const pageFilters = getURLFilterParams();
-
-const orderOptions = [
-    {name: 'Sample accession', value: 'accession'},
-    {name: 'Sample name', value: 'sample_name'},
-    // {name: 'Number of runs', value: 'runs-count'}, // NOT DISPLAYED IN TABLE
-    // {name: 'Number of samples', value: 'samples_count'},
-    {name: 'Last updated', value: 'last_update'},
-];
 
 
 var SampleView = Backbone.View.extend({
@@ -86,7 +77,7 @@ var SamplesView = Backbone.View.extend({
         params.page = pageFilters.get('page') || 1;
         this.params = params;
 
-        this.collection.fetch({
+        this.fetchXhr = this.collection.fetch({
             data: $.param(params),
             success: function (collection, response, options) {
                 const newParams = getDownloadParams(params);
@@ -95,7 +86,6 @@ var SamplesView = Backbone.View.extend({
                 const pag = response.meta.pagination;
                 pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
                 Order.initHeaders(params.ordering, function (sort) {
-                    var formData = getFormData("#filter");
                     const params = {
                         page: 1,
                         page_size: pagination.getPageSize(),
@@ -115,8 +105,10 @@ var SamplesView = Backbone.View.extend({
 
         showTableLoadingGif();
         setURLParams(this.params, false);
-
-        this.collection.fetch({
+        if(this.fetchXhr.readyState > 0 && this.fetchXhr.readyState < 4){
+            this.fetchXhr.abort();
+        }
+        this.fetchXhr = this.collection.fetch({
             data: $.param(that.params), remove: true, success: function (collection, response, options) {
                 hideTableLoadingGif();
                 pagination.update(response.meta.pagination, changePage);
@@ -129,6 +121,7 @@ var SamplesView = Backbone.View.extend({
         return this;
     },
     render: function () {
+        $(".sample").remove();
         this.collection.each(function (sample) {
             var sampleView = new SampleView({model: sample});
             $(this.$el).append(sampleView.render());
@@ -140,7 +133,7 @@ var SamplesView = Backbone.View.extend({
 function updatePageSize(pageSize) {
     const params = {
         page_size: pageSize,
-        page: pagination.currentPage,
+        page: 1,
     };
     samplesView.update(params);
 }
@@ -172,6 +165,3 @@ initResultsFilter(pageFilters.get('search'), function (e) {
     };
     samplesView.update(params);
 });
-
-// TODO remove this
-window.samplesView = samplesView;

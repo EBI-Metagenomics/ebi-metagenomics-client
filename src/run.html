@@ -1,278 +1,246 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <!--TODO add metadata-->
-    <title>Run</title>
-    <meta name="description" content="EMBL-EBI"/><!-- Describe what this page is about -->
-    <meta name="keywords" content="bioinformatics, europe, institute"/>
-    <!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
-    <meta name="author" content="EMBL-EBI"/><!-- Your [project-name] here -->
-    <meta name="HandheldFriendly" content="true"/>
-    <meta name="MobileOptimized" content="width"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="theme-color" content="#70BDBD"/> <!-- Android Chrome mobile browser tab color -->
-
-    <!-- Add information on the life cycle of this page -->
-    <meta name="ebi:owner" content="John Doe"/> <!-- Who should be contacted about changes -->
-    <meta name="ebi:review-cycle" content="30"/> <!-- In days, how often should the content be reviewed -->
-    <meta name="ebi:last-review" content="2015-12-20"/> <!-- The last time the content was reviewed -->
-    <meta name="ebi:expiry" content="2016-01-20"/> <!-- When this content is no longer relevant -->
-
-    <!-- If you link to any other sites frequently, consider optimising performance with a DNS prefetch -->
-    <link rel="dns-prefetch" href="//embl.de"/>
-
-    <!-- If you have custom icon, replace these as appropriate.
-         You can generate them at realfavicongenerator.net -->
-    <link rel="icon" type="image/x-icon"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/favicon.ico"/>
-    <link rel="icon" type="image/png"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/favicon-32x32.png"/>
-    <link rel="icon" type="image/png" sizes="192×192"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/android-chrome-192x192.png"/>
-    <!-- Android (192px) -->
-    <link rel="apple-touch-icon-precomposed" sizes="114x114"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-114x114.png"/>
-    <!-- For iPhone 4 Retina display (114px) -->
-    <link rel="apple-touch-icon-precomposed" sizes="72x72"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-72x72.png"/>
-    <!-- For iPad (72px) -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-144x144.png"/>
-    <!-- For iPad retinat (144px) -->
-    <link rel="apple-touch-icon-precomposed"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/apple-touch-icon-57x57.png"/>
-    <!-- For iPhone (57px) -->
-    <link rel="mask-icon"
-          href="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/safari-pinned-tab.svg"
-          color="#ffffff"/> <!-- Safari icon for pinned tab -->
-    <meta name="msapplication-TileColor" content="#2b5797"/> <!-- MS Icons -->
-    <meta name="msapplication-TileImage"
-          content="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/logos/EMBL-EBI/favicons/mstile-144x144.png"/>
-
-    <!-- CSS: implied media=all -->
-    <!-- CSS concatenated and minified via ant build script-->
-    <!--<link rel="stylesheet" href="/static/css/theme-embl-petrol.css" type="text/css" media="all"/>-->
-    <!--<link rel="stylesheet" href="/static/css/ebi-global.css" type="text/css" media="all"/>-->
-    <!--<link rel="stylesheet" href="/static/fonts/fonts.css" type="text/css" media="all"/>-->
-
-    <!-- Use this CSS file for any custom styling -->
-    <!--
-      <link rel="stylesheet" href="css/custom.css" type="text/css" media="all">
-    -->
-
-    <!-- If you have a custom header image or colour -->
-    <meta name="ebi:masthead-color" content="#091314"/>
-    <meta name="ebi:masthead-image"
-          content="https://wwwdev.ebi.ac.uk/web_guidelines/EBI-Framework/v1.2/images/backgrounds/embl-ebi-background-4.jpg"/>
+<head id="head">
+    <title>Run &lt; EBI Metagenomics &lt; EMBL-EBI</title>
+    {{> partials/head this}}
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
-<div id="header"></div>
+<div id="header-container">{{> partials/header this}}</div>
 
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
-        <div class="column small-12 medium-12 large-12">
-            <h2>Run <span id="run_id"></span></h2>
-            <section>
-                <h4>Analysis pipeline version
-                    <select id="analysisSelect" class="autowidth">
-                    </select>
-                </h4>
-            </section>
-            <div id="runContainer">
-                <ul class="tabs" data-tabs id="run-tabs">
-                    <li class="tabs-title active"><a href="#overview" aria-selected="true">Overview</a></li>
-                    <li class="tabs-title"><a href="#qc">Quality control</a></li>
-                    <li class="tabs-title"><a href="#taxonomic">Taxonomic analysis</a></li>
-                    <li class="tabs-title"><a href="#functional">Functional analysis</a></li>
-                    <li class="tabs-title"><a href="#abundance">Abundance and comparison</a></li>
-                    <li class="tabs-title"><a href="#download">Download</a></li>
+
+    </div>
+</div>
+
+<script id="runTmpl" type="text/template">
+    <div class="column small-12 medium-12 large-12">
+        <nav aria-label="You are here:" role="navigation">
+            <ul class="breadcrumbs columns">
+                <li><a href="{{subfolder}}">Home</a></li>
+                <li><a href="{{subfolder}}/samples">Sample <%= sample_id %></a></li>
+                <li>
+                    <span class="show-for-sr">Current: </span> Run <%= run_id %>
+                </li>
+            </ul>
+        </nav>
+        <h2>Run <%= run_id %></h2>
+        <section>
+            <h4>Analysis pipeline version
+                <select id="analysisSelect" class="autowidth">
+                    <% _.each(pipeline_versions, function(version){ %>
+                    <option value="<%= version%>">V<%= version %></option>
+                    <% }); %>
+                </select>
+            </h4>
+        </section>
+
+        <ul class="tabs" data-tabs id="run-tabs">
+            <li class="tabs-title active"><a href="#overview" aria-selected="true">Overview</a></li>
+            <li class="tabs-title"><a href="#qc">Quality control</a></li>
+            <li class="tabs-title"><a href="#taxonomic">Taxonomic analysis</a></li>
+            <li class="tabs-title"><a href="#functional">Functional analysis</a></li>
+            <li class="tabs-title"><a href="#abundance">Abundance and comparison</a></li>
+            <li class="tabs-title"><a href="#download">Download</a></li>
+        </ul>
+        <div class="tabs-content" data-tab-content="run-tabs">
+            <div class="tabs-panel active" id="overview">
+            </div>
+            <div class="tabs-panel" id="qc">
+                <div class="row">
+                    <div class="center column small-12 medium-12 large-12">
+                        <p>The chart below shows the number of reads which pass the quality control steps we have
+                            implemented in our pipeline. Sequence merging may have occurred with paired-end data, so the
+                            initial number of reads may differ from the number given by ENA.</p>
+                        <div id="QC-step-chart" class="run-qc-chart"></div>
+                        <!--<p>The histograms below show the distribution of sequence lengths, in basepairs, (left) and GC-->
+                        <!--percentage (right) for the sequences having passed our quality control steps. Note that for-->
+                        <!--large files, the distributions were compiled from a random subset of 2 millions sequence-->
+                        <!--reads.-->
+                        <!--The standard deviations are shown on each plot. The bar chart underneath each graph-->
+                        <!--indicates-->
+                        <!--the minimum, average and maximum length and average GC and AT content, respectively.</p>-->
+                    </div>
+                </div>
+            </div>
+            <div class="tabs-panel" id="taxonomic">
+                <div class="row columns">
+                    These are the results from the taxonomic analysis steps of our pipeline. You can switch between
+                    different views of the data using the menu of icons below (pie, bar, stacked and interactive
+                    krona charts). The data used to build these charts can be found under the "Download" tab.
+                </div>
+                <ul class="tabs" data-tabs id="taxonomy-tabs">
+                    <li class="tabs-title active"><a href="#krona" aria-selected="true"><img
+                            src="/static/images/ico_graph_krona_on.png"/></a></li>
+                    <li class="tabs-title"><a href="#pie" aria-selected="false"><img
+                            src="/static/images/ico_graph_pie_on.png"/></a></li>
+                    <li class="tabs-title"><a href="#column" aria-selected="false"><img
+                            src="/static/images/ico_graph_barh_on.png"/></a></li>
+                    <li class="tabs-title"><a href="#stacked-column" aria-selected="false"><img
+                            src="/static/images/ico_graph_col_on.png"/></a></li>
                 </ul>
-                <div class="tabs-content" data-tab-content="run-tabs">
-                    <div class="tabs-panel active" id="overview">
-                    </div>
-                    <div class="tabs-panel" id="qc">
-                        <div class="row columns">
-                            <p>The chart below shows the number of reads which pass the quality control steps we have
-                                implemented in our pipeline. Sequence merging may have occurred with paired-end data, so
-                                the
-                                initial number of reads may differ from the number given by ENA.</p>
-                            <div id="QC-step-chart" class="run-qc-chart"></div>
+
+                <div class="tabs-content" data-tab-content="taxonomy-tabs">
+
+                    <div class="tabs-panel active" id="krona">
+                        <div id="tax-Krona">
+                            <!--<div class="msg_error" id="ie_krona">Krona chart is only working for latest versions of Internet-->
+                            <!--Explorer (IE 9+). <br/>-->
+                            <!--Please, update your browser to a more recent version - <a href="http://windows.microsoft.com/ie"-->
+                            <!--onclick="trackExternalDownload('http://windows.microsoft.com/ie')">Download-->
+                            <!--Now</a>.-->
                         </div>
-                        <div class="row columns">
-                            <p>The histograms below show the distribution of sequence lengths, in basepairs, (left) and
-                                GC percentage (right) for the sequences having passed our quality control steps. Note
-                                that
-                                for large files, the distributions were compiled from a random subset of 2 millions
-                                sequence
-                                reads. The standard deviations are shown on each plot. The bar chart underneath each
-                                graph
-                                indicates the minimum, average and maximum length and average GC and AT content,
-                                respectively.</p>
+
+                    </div>
+                    <div class="tabs-panel" id="pie">
+                        <div class="row">
+                            <div class="columns small-12 medium-4 larger-4">
+                                <div id="domain-composition-pie"></div>
+                            </div>
+                            <div class="columns small-12 medium-8 larger-8">
+                                <div id="phylum-composition-pie"></div>
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="columns small-12 medium-6 large-6">
-                                <div id="Reads-length-histogram" class="reads-length-chart"></div>
-                            </div>
-                            <div class="columns small-12 medium-6 large-6">
-                                <div id="Reads-GC-distribution" class="reads-gc-chart"></div>
-                            </div>
-                        </div>
-                        <div class="row columns">
-                            <p>The graph below show the relative abundance of nucletotides (A, C, G, T, or ambiguous
-                                base "N") at each position starting from the beginning of each read up to the first 500
-                                base pairs.</p>
-                        </div>
-                        <div class="row columns">
-                            <div id="Nucleotide-position-histogram" class="hucleotide-histogram-chart"></div>
-                        </div>
-                    </div>
-                    <div class="tabs-panel" id="taxonomic">
-                        <div class="row columns">
-                            These are the results from the taxonomic analysis steps of our pipeline. You can switch
-                            between
-                            different views of the data using the menu of icons below (pie, bar, stacked and interactive
-                            krona charts). The data used to build these charts can be found under the "Download" tab.
-                        </div>
-                        <ul class="tabs" data-tabs id="taxonomy-tabs">
-                            <li class="tabs-title active"><a href="#krona" aria-selected="true"><img
-                                    src="/static/images/ico_graph_krona_on.png"/></a></li>
-                            <li class="tabs-title"><a href="#pie" aria-selected="false"><img
-                                    src="/static/images/ico_graph_pie_on.png"/></a></li>
-                            <li class="tabs-title"><a href="#column" aria-selected="false"><img
-                                    src="/static/images/ico_graph_barh_on.png"/></a></li>
-                            <li class="tabs-title"><a href="#stacked-column" aria-selected="false"><img
-                                    src="/static/images/ico_graph_col_on.png"/></a></li>
-                        </ul>
-
-                        <div class="tabs-content" data-tab-content="taxonomy-tabs">
-
-                            <div class="tabs-panel active" id="krona">
-                                <div id="tax-Krona">
-                                    <!--<div class="msg_error" id="ie_krona">Krona chart is only working for latest versions of Internet-->
-                                    <!--Explorer (IE 9+). <br/>-->
-                                    <!--Please, update your browser to a more recent version - <a href="http://windows.microsoft.com/ie"-->
-                                    <!--onclick="trackExternalDownload('http://windows.microsoft.com/ie')">Download-->
-                                    <!--Now</a>.-->
-                                </div>
-                                <div id="krona-chart"></div>
-
-                            </div>
-                            <div class="tabs-panel" id="pie">
-                                <div class="row">
-                                    <div class="columns small-12 medium-4 larger-4">
-                                        <div id="domain-composition-pie"></div>
-                                    </div>
-                                    <div class="columns small-12 medium-8 larger-8">
-                                        <div id="phylum-composition-pie"></div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="columns small-12 medium-12 large-12">
-                                        <div class="phylum-table"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tabs-panel" id="column">
-                                <div class="row">
-                                    <div class="columns small-12 medium-4 larger-4">
-                                        <div id="domain-composition-column"></div>
-                                    </div>
-                                    <div class="columns small-12 medium-8 larger-8">
-                                        <div id="phylum-composition-column"></div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="columns small-12 medium-12 large-12">
-                                        <div class="phylum-table"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tabs-panel" id="stacked-column">
-                                <div class="row">
-                                    <div class="columns small-12 medium-12 larger-12">
-                                        <div id="phylum-composition-stacked-column"></div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="columns small-12 medium-12 large-12">
-                                        <div class="phylum-table"></div>
-                                    </div>
-                                </div>
+                            <div class="columns small-12 medium-12 large-12">
+                                <div class="phylum-table"></div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="tabs-panel" id="functional">
-                        <div class="row column">
-                            <p>These charts present the functional analysis of our pipeline, which focuses
-                                on matches to the <a
-                                        href="http://www.ebi.ac.uk/interpro" title="InterPro website"
-                                        class="ext">InterPro
-                                    database</a> and GO terms, which summarise the functional content of the sequences
-                                in the
-                                sample. The full set of results files may be found under the "Download" tab.</p>
-                        </div>
-                        <div class="row column">
-                            <div id="SeqFeat-chart" class="run-qc-chart"></div>
-                        </div>
-                        <div class="row column">
-                            <h4>Interpro match summary</h4>
+                    <div class="tabs-panel" id="column">
+                        <div class="row">
+                            <div class="columns small-12 medium-4 larger-4">
+                                <div id="domain-composition-column"></div>
+                            </div>
+                            <div class="columns small-12 medium-8 larger-8">
+                                <div id="phylum-composition-column"></div>
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="columns small-12 medium-4 large-4">
-                                <div id="InterProPie-chart"></div>
-                            </div>
-                            <div class="columns small-12 medium-8 large-8">
-                                <div id="InterPro-table"></div>
+                            <div class="columns small-12 medium-12 large-12">
+                                <div class="phylum-table"></div>
                             </div>
                         </div>
-                        <div class="row column">
-                            <h4>GO Terms annotation</h4>
-                            <p>A summary of Gene Ontology (GO) terms derived from InterPro matches to your sample is
-                                provided in
-                                the charts below.</p>
-                            <p>Switch view:
-                            <ul class="tabs">
-                                <li class="tabs-title" id="go-bar-btn"><a href="#go-bar" aria-selected="true"><img
-                                        src="/static/images/ico_graph_barh_on.png"/></a></li>
-                                <li class="tabs-title" id="go-pie-btn"><a href="#go-pie" aria-selected="false"><img
-                                        src="/static/images/ico_graph_pie_on.png"/></a></li>
-                            </ul>
-                            </p>
-                        </div>
-                        <div class="row" id="go-slim-bar-charts">
-                            <div class="columns small-12 medium-4 large-4">
-                                <div id="biological-process-bar-chart"></div>
-                            </div>
-                            <div class="columns small-12 medium-4 large-4">
-                                <div id="molecular-function-bar-chart"></div>
-                            </div>
-                            <div class="columns small-12 medium-4 large-4">
-                                <div id="cellular-component-bar-chart"></div>
-                            </div>
-                        </div>
-                        <div class="row" id="go-slim-pie-charts" style="display:none">
-                            <div class="columns small-12 medium-4 large-4">
-                                <div id="biological-process-pie-chart"></div>
-                            </div>
-                            <div class="columns small-12 medium-4 large-4">
-                                <div id="molecular-function-pie-chart"></div>
-                            </div>
-                            <div class="columns small-12 medium-4 large-4">
-                                <div id="cellular-component-pie-chart"></div>
-                            </div>
-                        </div>
-
-                        <div class="tabs-panel" id="download"></div>
                     </div>
+                    <div class="tabs-panel" id="stacked-column">
+                        <div class="row">
+                            <div class="columns small-12 medium-12 larger-12">
+                                <div id="phylum-composition-stacked-column"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="columns small-12 medium-12 large-12">
+                                <div class="phylum-table"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs-panel" id="functional">
+                <div class="row column">
+                    <p>These charts present the functional analysis of our pipeline, which focuses
+                        on matches to the <a
+                                href="http://www.ebi.ac.uk/interpro" title="InterPro website"
+                                class="ext">InterPro
+                            database</a> and GO terms, which summarise the functional content of the sequences in the
+                        sample. The full set of results files may be found under the "Download" tab.</p>
+                </div>
+                <div class="row column">
+                    <div id="SeqFeat-chart" class="run-qc-chart"></div>
+                </div>
+                <div class="row column">
+                    <h4>Interpro match summary</h4>
+                </div>
+                <div class="row">
+                    <div class="columns small-12 medium-4 large-4">
+                        <div id="InterProPie-chart"></div>
+                    </div>
+                    <div class="columns small-12 medium-8 large-8">
+                        <div id="InterPro-table"></div>
+                    </div>
+                </div>
+                <div class="row column">
+                    <h4>GO Terms annotation</h4>
+                    <p>A summary of Gene Ontology (GO) terms derived from InterPro matches to your sample is provided in
+                        the charts below.</p>
+                    <p>Switch view:
+                    <ul class="tabs">
+                        <li class="tabs-title" id="go-bar-btn"><a href="#go-bar" aria-selected="true"><img
+                                src="/static/images/ico_graph_barh_on.png"/></a></li>
+                        <li class="tabs-title" id="go-pie-btn"><a href="#go-pie" aria-selected="false"><img
+                                src="/static/images/ico_graph_pie_on.png"/></a></li>
+                    </ul>
+                    </p>
+                </div>
+                <div class="row" id="go-slim-bar-charts">
+                    <div class="columns small-12 medium-4 large-4">
+                        <div id="biological-process-bar-chart"></div>
+                    </div>
+                    <div class="columns small-12 medium-4 large-4">
+                        <div id="molecular-function-bar-chart"></div>
+                    </div>
+                    <div class="columns small-12 medium-4 large-4">
+                        <div id="cellular-component-bar-chart"></div>
+                    </div>
+                </div>
+                <div class="row" id="go-slim-pie-charts" style="display:none">
+                    <div class="columns small-12 medium-4 large-4">
+                        <div id="biological-process-pie-chart"></div>
+                    </div>
+                    <div class="columns small-12 medium-4 large-4">
+                        <div id="molecular-function-pie-chart"></div>
+                    </div>
+                    <div class="columns small-12 medium-4 large-4">
+                        <div id="cellular-component-pie-chart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs-panel" id="download">
+                <div id="download-list">
                 </div>
             </div>
         </div>
     </div>
-</div>
+</script>
 
+<script id="download-tmpl" type="text/template">
+    <div class="row columns">
+        <div class="row columns">
+            <p>Here you may download the full set of analysis results files. For the original raw sequence reads, follow
+                the link to ENA. Multi-part files should be concatenated after unzipping.</p>
+        </div>
+        <% _.each(groups, function(group){ %>
+        <h3> <%= group.group_name %></h3>
+        <div class="row columns">
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Data type</th>
+                    <th>Compression</th>
+                    <th>Format</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <% _.each(group.entries, function(entry){ %>
+                <tr>
+                    <td><%= entry.name %></td>
+                    <td><%= entry.type %></td>
+                    <td><%= entry.compression %></td>
+                    <td><%= entry.format %></td>
+                    <td><%= entry.link%></td>
+                </tr>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+        <% }); %>
+    </div>
+</script>
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
 <!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
 <!-- <div class="row"> -->
@@ -283,16 +251,16 @@
 <!-- </div> -->
 <!-- End suggested layout containers / #content -->
 
-<div id="footer"></div>
+<div id="footer">{{>partials/footer}}</div>
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script defer="defer" src="/static/js/script.js"></script>
+<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
 
 <!-- The Foundation theme JavaScript -->
 
-<script src="/static/js/foundation.js"></script>
-<script src="/static/js/foundationExtendEBI.js"></script>
+<script src="{{subfolder}}/static/js/foundation.js"></script>
+<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
     $(document).ready(function () {
         $(document).foundation();
@@ -300,7 +268,7 @@
     });
 </script>
 
-<script src="/js/run.js"></script>
+<script src="{{subfolder}}/js/run.js"></script>
 
 
 <!-- Google Analytics details... -->

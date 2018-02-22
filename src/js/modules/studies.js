@@ -19,9 +19,11 @@ import {
     showTableLoadingGif,
     BiomeCollectionView,
     getDownloadParams,
-    setDownloadResultURL
+    setDownloadResultURL,
+    checkAPIonline
 } from "../util";
 
+checkAPIonline();
 setCurrentTab('#studies-nav');
 $("#pagination").append(commons.pagination);
 $("#pageSize").append(commons.pagesize);
@@ -87,7 +89,7 @@ var StudiesView = Backbone.View.extend({
         }
         params.page = parseInt(pageFilters.get('page')) || 1;
         this.params = params;
-        this.collection.fetch({
+        this.fetchXhr = this.collection.fetch({
             data: $.param(params),
             remove: true,
             success: function (collection, response, options) {
@@ -116,11 +118,15 @@ var StudiesView = Backbone.View.extend({
 
         this.params = $.extend(this.params, params);
         $(".study").remove();
-
         showTableLoadingGif();
         setURLParams(this.params, false);
-        this.collection.fetch({
-            data: $.param(that.params), remove: true, success: function (collection, response, options) {
+        if(this.fetchXhr.readyState > 0 && this.fetchXhr.readyState < 4){
+            this.fetchXhr.abort();
+        }
+        this.fetchXhr = this.collection.fetch({
+            data: $.param(that.params),
+            remove: true,
+            success: function (collection, response, options) {
                 hideTableLoadingGif();
                 pagination.update(response.meta.pagination, changePage);
                 that.render();
@@ -128,9 +134,11 @@ var StudiesView = Backbone.View.extend({
         });
         const newParams = getDownloadParams(that.params);
         setDownloadResultURL(that.collection.url+'?'+$.param(newParams));
+
         return this;
     },
     render: function () {
+        $(".study").remove();
         this.collection.each(function (study) {
             var studyView = new StudyView({model: study});
             $(this.$el).append(studyView.render());
@@ -143,7 +151,7 @@ var StudiesView = Backbone.View.extend({
 function updatePageSize(pageSize) {
     const params = {
         page_size: pageSize,
-        page: pagination.currentPage,
+        page: 1,
     };
     studiesView.update(params);
 }
