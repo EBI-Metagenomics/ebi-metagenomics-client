@@ -3,6 +3,15 @@ const _ = require('underscore');
 require('highcharts/modules/exporting')(Highcharts);
 const Commons = require('../../../commons');
 
+function duplicateLastColor(colours, data) {
+    let new_colours = [];
+    let i = 0;
+    while (i < data.length) {
+        new_colours.push(colours[Math.min(i, colours.length-1)]);
+        i++;
+    }
+    return new_colours;
+}
 
 module.exports = class TaxonomyPie {
     constructor(containerId, chartTitle, pieData, legend, extraOptions) {
@@ -34,7 +43,7 @@ module.exports = class TaxonomyPie {
                             color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                         }
                     },
-                    colors: Commons.TAXONOMY_COLOURS,
+                    colors: duplicateLastColor(Commons.TAXONOMY_COLOURS, pieData),
                 }
             },
             credits: {
@@ -57,10 +66,10 @@ module.exports = class TaxonomyPie {
                 align: 'right',
                 verticalAlign: 'middle',
                 layout: 'vertical',
-                labelFormatter: function() {
-                    if (this.name.length>15){
-                        return this.name.slice(0, 15)+'...'
-                    } else{
+                labelFormatter: function () {
+                    if (this.name.length > 15) {
+                        return this.name.slice(0, 15) + '...'
+                    } else {
                         return this.name
                     }
 

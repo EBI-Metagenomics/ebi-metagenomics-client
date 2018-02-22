@@ -98,23 +98,31 @@ function groupTaxonomyData(data, depth) {
     let clusteredData = _.sortBy(clusterData(data, depth), function (o) {
         return o.y;
     }).reverse();
-    if (clusteredData.length > 10) {
-        const top10 = clusteredData.slice(0, 10);
-        const others = {
-            name: 'Other',
-            lineage: [],
-            y: 0
-        };
-        _.each(clusteredData.slice(10, clusteredData.length), function (d) {
-            others.y += d.y;
-            if (others.lineage.indexOf(d.lineage[0]) === -1) {
-                others.lineage.push(d.lineage[0]);
-            }
-        });
-        others.lineage = others.lineage.join(", ");
-        top10.push(others);
-        clusteredData = top10;
-    }
+    _.each(clusteredData, function(o, i){
+        if(o.name==="undefined"){
+            console.log(i);
+            console.log(o);
+            o.name = "Unassigned";
+            o.lineage = ["Unassigned"];
+        }
+    });
+    // if (clusteredData.length > 10) {
+    //     const top10 = clusteredData.slice(0, 10);
+    //     const others = {
+    //         name: 'Other',
+    //         lineage: [],
+    //         y: 0
+    //     };
+    //     _.each(clusteredData.slice(10, clusteredData.length), function (d) {
+    //         others.y += d.y;
+    //         if (others.lineage.indexOf(d.lineage[0]) === -1) {
+    //             others.lineage.push(d.lineage[0]);
+    //         }
+    //     });
+    //     others.lineage = others.lineage.join(", ");
+    //     top10.push(others);
+    //     clusteredData = top10;
+    // }
     return clusteredData
 }
 
@@ -245,7 +253,7 @@ let InterProSummary = Backbone.View.extend({
                 let top10AndOthers = [];
                 let totalCount = 0;
 
-                data.slice(0, 10).forEach(function (d) {
+                data.forEach(function (d) {
                     d = d.attributes;
                     top10AndOthers.push({
                         name: d.description,
