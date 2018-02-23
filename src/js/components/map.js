@@ -4,8 +4,6 @@ const _ = require('underscore');
 
 module.exports = class Map {
     constructor(elementId, samples) {
-        console.log(elementId, samples);
-        console.log($('#map'));
         let map = new google.maps.Map(document.getElementById(elementId), {
             streetViewControl: false,
             zoom: 1,
@@ -61,7 +59,6 @@ module.exports = class Map {
             attr[e.name] = e.value;
         });
         //TODO change sample_url to attribute from sample object
-        console.log(attr);
         let data = {
             id: attr.accession,
             name: attr['sample-name'],
