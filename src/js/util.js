@@ -31,7 +31,6 @@ export function setCurrentTab(id) {
 }
 
 
-
 export function initTableTools() {
     // $("#tableTools").append(tableTools);
 }
@@ -171,6 +170,16 @@ export function hideTableLoadingGif() {
 }
 
 export function attachTabHandlers() {
+    // Deep linking
+    const $dataTabs = $('[data-tabs]');
+    new window.Foundation.Tabs($dataTabs);
+    var link_tab = window.location.hash.substr(1);
+    if (link_tab) {
+        $($dataTabs).foundation('selectTab', link_tab);
+        $('#' + link_tab).addClass('active');
+    }
+
+    // Linking click actions
     $("li.tabs-title > a").on('click', function () {
         var tabButtonContainer = $(this).closest('ul');
         $(tabButtonContainer).children().children('a').attr('aria-selected', 'false');
@@ -182,6 +191,7 @@ export function attachTabHandlers() {
         $("[data-tab-content=" + tabGroup + "] > .tabs-panel").removeClass('active');
         $(tabId).addClass('active');
     });
+
 }
 
 export const BiomeCollectionView = Backbone.View.extend({

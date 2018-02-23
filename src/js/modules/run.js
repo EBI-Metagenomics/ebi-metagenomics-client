@@ -16,13 +16,16 @@ const detailList = require('../components/detailList');
 
 require('tablesorter');
 
-import {attachTabHandlers, getURLParameter, setCurrentTab, checkAPIonline} from "../util";
+import {attachTabHandlers, getURLParameter, setCurrentTab, checkAPIonline, tabDeepLink} from "../util";
 
 checkAPIonline();
 
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 
 setCurrentTab('#samples-nav');
+
+window.Foundation.addToJquery($);
+
 
 let run_id = getURLParameter();
 
@@ -66,6 +69,7 @@ let RunView = Backbone.View.extend({
                         $('#overview').append(new detailList('Data analysis', dataAnalysis));
                     }
                     loadAnalysisData(run_id, version);
+
                 });
             }
         });
@@ -84,12 +88,8 @@ let QCGraphView = Backbone.View.extend({
         attr['analysis_summary'].forEach(function (e) {
             data[e.key] = e.value;
         });
-        console.log(attr);
-        console.log(data);
         const qcChart = new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
-
         const seqFeatChart = new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
-
     }
 });
 
@@ -100,8 +100,6 @@ function groupTaxonomyData(data, depth) {
     }).reverse();
     _.each(clusteredData, function(o, i){
         if(o.name==="undefined"){
-            console.log(i);
-            console.log(o);
             o.name = "Unassigned";
             o.lineage = ["Unassigned"];
         }

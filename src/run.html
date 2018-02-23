@@ -10,7 +10,6 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
-
     </div>
 </div>
 
@@ -36,8 +35,8 @@
             </h4>
         </section>
 
-        <ul class="tabs" data-tabs id="run-tabs">
-            <li class="tabs-title active"><a href="#overview" aria-selected="true">Overview</a></li>
+        <ul class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500" data-tabs id="run-tabs">
+            <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
             <li class="tabs-title"><a href="#qc">Quality control</a></li>
             <li class="tabs-title"><a href="#taxonomic">Taxonomic analysis</a></li>
             <li class="tabs-title"><a href="#functional">Functional analysis</a></li>
@@ -45,7 +44,7 @@
             <li class="tabs-title"><a href="#download">Download</a></li>
         </ul>
         <div class="tabs-content" data-tab-content="run-tabs">
-            <div class="tabs-panel active" id="overview">
+            <div class="tabs-panel" id="overview">
             </div>
             <div class="tabs-panel" id="qc">
                 <div class="row">
@@ -202,6 +201,9 @@
                 <div id="download-list">
                 </div>
             </div>
+            <div class="tabs-panel" id="abundance">
+                Abundance display
+            </div>
         </div>
     </div>
 </script>
@@ -260,9 +262,11 @@
 <!-- The Foundation theme JavaScript -->
 
 <script src="{{subfolder}}/static/js/foundation.js"></script>
+<script src="{{subfolder}}/static/js/what-input.js"></script>
 <script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
     $(document).ready(function () {
+        window.Foundation = Foundation;
         $(document).foundation();
         $(document).foundationExtendEBI();
     });
