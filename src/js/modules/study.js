@@ -80,7 +80,7 @@ let SamplesView = Backbone.View.extend({
         this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
-        this.update(1, DEFAULT_PAGE_SIZE, null, null)
+        this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, null, null)
     },
 
     update: function (page, pageSize, order, query) {
@@ -127,7 +127,6 @@ let MapData = Backbone.Model.extend({
         this.data = [];
     },
     parse: function(d){
-        console.log(this);
         this.data = this.data.concat(d.data);
         if (d.links.next!==null){
             this.url = d.links.next;
@@ -152,6 +151,7 @@ let RunsView = Backbone.View.extend({
             {sortBy: null, name: 'Experiment type'},
             {sortBy: null, name: 'Instrument model'},
             {sortBy: null, name: 'Instrument platform'},
+            {sortBy: null, name: 'Pipeline versions'},
         ];
         this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
@@ -185,8 +185,9 @@ let RunsView = Backbone.View.extend({
     renderData: function (page, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
+            console.log(attr);
             const run_link = "<a href='" + attr.run_url + "'>" + attr.run_id + "</a>";
-            return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform']]
+            return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform'], attr['pipeline_versions'].join(', ')]
         });
         this.tableObj.update(tableData, true, page, resultCount, requestURL);
     }

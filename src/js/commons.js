@@ -26,6 +26,7 @@ export const READTHEDOCS_URL = "https://emg-docs.readthedocs.io";
 export const COOKIE_NAME = 'ebi-metagenomics';
 export const NO_DATA_MSG = 'N/A';
 export const DEFAULT_PAGE_SIZE = 25;
+export const DEFAULT_PAGE_SIZE_SAMPLES = 10;
 export const TAXONOMY_COLOURS = [
     '#058dc7',
     '#82d23d',
