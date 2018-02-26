@@ -59,7 +59,7 @@ module.exports = class GenericTable {
         }, 300));
     }
 
-    update(dataset, clear, page, resultCount, requestURL) {
+    update(dataset, clear, page, pageSize, resultCount, requestURL) {
         const that = this;
         if (clear) {
             this.$tbody.empty();
@@ -69,18 +69,24 @@ module.exports = class GenericTable {
             that.addRow(row);
         });
 
-        this.$pageSizeSelect.val(dataset.length);
         if (this.$pagination.data("twbs-pagination")) {
             this.$pagination.twbsPagination('destroy');
         }
 
+
+        this.$pageSizeSelect.val(pageSize);
+
+        let  totalPages = Math.max(Math.ceil(resultCount/pageSize));
+        if (isNaN(totalPages)){
+            totalPages = 1;
+        }
         this.$pagination.twbsPagination({
             startPage: page,
-            totalPages: Math.max(Math.ceil(resultCount / this.getPageSize()), 1),
+            totalPages: totalPages
         }).on('page', function (evt, page) {
             that.callback(page, that.getPageSize(), that.getCurrentOrder(), that.getFilterText());
         });
-        this.setPageDisplay(1, resultCount);
+        this.setPageDisplay(1, resultCount, totalPages);
         this.hideLoadingGif();
         const downloadURL = formatDownloadURL(requestURL);
         this.setDownloadURL(downloadURL);
@@ -160,10 +166,10 @@ module.exports = class GenericTable {
         return this.order;
     }
 
-    setPageDisplay(currentPage, totalResults) {
+    setPageDisplay(currentPage, totalResults, totalPages) {
         this.$currentPageDisp.text(currentPage);
-        this.$maxPageDisp.text(Math.ceil(totalResults / this.getPageSize()));
         this.$totalResultsDisp.text(totalResults);
+        this.$maxPageDisp.text(totalPages);
     }
 
     setDownloadURL(url) {

@@ -125,13 +125,13 @@ let StudiesView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params),
             success: function (data, response) {
-                that.renderData(page, response.meta.pagination.count, response.links.first);
+                that.renderData(page, pageSize, response.meta.pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
             }
         })
     },
 
-    renderData: function (page, resultCount, requestURL) {
+    renderData: function (page, pageSize, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const study_link = "<a href='" + attr.study_link + "'>" + attr.study_id + "</a>";
@@ -140,7 +140,7 @@ let StudiesView = Backbone.View.extend({
             });
             return [biomes.join(' '), study_link, attr['study_name'], attr['abstract'], attr['samples_count'], attr['last_update']]
         });
-        this.tableObj.update(tableData, true, page, resultCount, requestURL);
+        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
 });
 
@@ -183,19 +183,19 @@ let RunsView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params),
             success: function (data, response) {
-                that.renderData(page, response.meta.pagination.count, response.links.first);
+                that.renderData(page, pageSize, response.meta.pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
             }
         })
     },
 
-    renderData: function (page, resultCount, requestURL) {
+    renderData: function (page, pageSize, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const run_link = "<a href='" + attr.run_url + "'>" + attr.run_id + "</a>";
             return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform']]
         });
-        this.tableObj.update(tableData, true, page, resultCount, requestURL);
+        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
 });
 
