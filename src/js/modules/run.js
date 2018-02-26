@@ -161,6 +161,7 @@ function clusterData(data, depth) {
 let TaxonomyGraphView = Backbone.View.extend({
     model: api.Taxonomy,
     initialize: function () {
+        const that = this;
         this.model.fetch({
             success: function (model) {
 
@@ -204,16 +205,16 @@ let TaxonomyGraphView = Backbone.View.extend({
                     const series = phylumPieChart.series[0].data[index];
                     series.setVisible(!series.visible);
                     if (index === numSeries - 1) {
-                        ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled');
+                        ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled-clickable');
                     } else {
-                        $(this).toggleClass('disabled');
+                        $(this).toggleClass('disabled-clickable');
                     }
                 });
-
 
                 new TaxonomyColumnChart('domain-composition-column', 'Domain composition', clusteredData, false);
                 const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column', 'Phylum composition', phylumData, false);
                 const phylumColumnTable = new ClientSideTable($('#column').find(".phylum-table"), '', headers);
+                console.log(that.model.url());
                 phylumColumnTable.update(data, false, 1);
                 phylumColumnTable.$tbody.find('tr').hover(function () {
                     let index = getSeriesIndex($(this).index(), numSeries);
@@ -222,6 +223,29 @@ let TaxonomyGraphView = Backbone.View.extend({
                     let index = getSeriesIndex($(this).index(), numSeries);
                     phylumColumnChart.series[0].data[index].setState();
                 });
+
+                phylumColumnTable.$tbody.find('tr').click(function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    const series = phylumColumnChart.series[0].data[index];
+                    phylumColumnChart.series[0].data[index].visible = false;
+                    series.visible = false;
+                    if (index === numSeries - 1) {
+                        ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled-clickable');
+                    } else {
+                        $(this).toggleClass('disabled-clickable');
+                    }
+                });
+
+                const numSeriesPhylumColumn = phylumColumnChart.series[0].data.length;
+                phylumColumnTable.$tbody.find('tr').hover(function () {
+                    let index = getSeriesIndex($(this).index(), numSeriesPhylumColumn);
+                    phylumColumnChart.series[0].data[index].setState('hover');
+                }, function () {
+                    let index = getSeriesIndex($(this).index(), numSeriesPhylumColumn);
+                    phylumColumnChart.series[0].data[index].setState();
+                });
+
+
 
 
                 // Column tab
@@ -268,6 +292,7 @@ let InterProSummary = Backbone.View.extend({
                     name: 'Other',
                     y: sumOthers
                 };
+                top10AndOthers = top10AndOthers.slice(0,10);
                 top10AndOthers.push(others);
                 const chartOptions = {
                     plotOptions: {
@@ -281,7 +306,8 @@ let InterProSummary = Backbone.View.extend({
                         name: 'pCDS matched'
                     }]
                 };
-                new TaxonomyPieChart('InterProPie-chart', 'InterPro matches summary', top10AndOthers, false, chartOptions);
+
+                const taxonomyPieChart = new TaxonomyPieChart('InterProPie-chart', 'InterPro matches summary', top10AndOthers, false, chartOptions);
                 const tableData = [];
                 let i = 0;
                 data.forEach(function (d) {
@@ -299,6 +325,27 @@ let InterProSummary = Backbone.View.extend({
                 ];
                 const interproTable = new ClientSideTable($('#InterPro-table'), '', headers);
                 interproTable.update(tableData, false, 1, data.length);
+
+                const numSeries = taxonomyPieChart.series[0].data.length;
+                interproTable.$tbody.find('tr').hover(function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    taxonomyPieChart.series[0].data[index].setState('hover');
+                }, function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    taxonomyPieChart.series[0].data[index].setState();
+                });
+
+                interproTable.$tbody.find('tr').click(function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    const series = taxonomyPieChart.series[0].data[index];
+                    series.setVisible(!series.visible);
+                    if (index === numSeries - 1) {
+                        ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled-clickable');
+                    } else {
+                        $(this).toggleClass('disabled-clickable');
+                    }
+                });
+                
             }
         })
     }

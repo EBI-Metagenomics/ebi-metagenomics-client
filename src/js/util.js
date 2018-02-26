@@ -176,6 +176,7 @@ export function attachTabHandlers() {
     var link_tab = window.location.hash.substr(1);
     if (link_tab) {
         $($dataTabs).foundation('selectTab', link_tab);
+        $("div.tabs-panel:not('"+link_tab+"')").removeClass('active');
         $('#' + link_tab).addClass('active');
     }
 
