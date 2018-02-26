@@ -69,6 +69,7 @@ module.exports = class GenericTable {
             that.addRow(row);
         });
 
+        this.$pageSizeSelect.val(dataset.length);
         if (this.$pagination.data("twbs-pagination")) {
             this.$pagination.twbsPagination('destroy');
         }
