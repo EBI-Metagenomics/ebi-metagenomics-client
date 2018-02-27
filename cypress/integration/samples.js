@@ -167,7 +167,7 @@ describe('Samples page', function () {
             cy.wait('@apiQuery');
         }
         // Actual result set for query 'cone' should have size 1
-        waitForSamplesLoad(1);
+        waitForSamplesLoad(2);
     });
 });
 
