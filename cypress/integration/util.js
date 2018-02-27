@@ -32,5 +32,10 @@ var Util = module.exports = {
     },
     stripWhitespace: function(str){
         return str.replace(/\s/g, "");
+    },
+    datatype: {
+        STR: 0,
+        NUM: 1,
+        DATE: 2
     }
 };

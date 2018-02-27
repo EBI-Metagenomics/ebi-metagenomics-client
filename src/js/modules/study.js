@@ -30,7 +30,6 @@ checkAPIonline();
 
 setCurrentTab('#studies-nav');
 
-const DEFAULT_PAGE_SIZE = Commons.DEFAULT_PAGE_SIZE;
 
 
 let study_id = getURLParameter();
@@ -55,7 +54,6 @@ let StudyView = Backbone.View.extend({
                     deferred.resolve(true);
                 });
                 attachTabHandlers();
-
             }
         });
         return deferred.promise();
@@ -77,7 +75,7 @@ let SamplesView = Backbone.View.extend({
             {sortBy: null, name: 'Description'},
             {sortBy: 'last_update', name: 'Last update'},
         ];
-        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, Commons.DEFAULT_PAGE_SIZE_SAMPLES, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
         this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, null, null)
@@ -97,17 +95,16 @@ let SamplesView = Backbone.View.extend({
             params['search'] = query;
         }
         const that = this;
-        this.collection.fetch({
+        this.fetchXhr = this.collection.fetch({
             data: $.param(params),
             success: function (data, response) {
                 that.renderData(page, pageSize, response.meta.pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
-            }
+            },
         })
     },
 
     renderData: function (page, pageSize, resultCount, requestURL) {
-        // initMap(this.collection.models);
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
@@ -153,10 +150,10 @@ let RunsView = Backbone.View.extend({
             {sortBy: null, name: 'Instrument platform'},
             {sortBy: null, name: 'Pipeline versions'},
         ];
-        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, Commons.DEFAULT_PAGE_SIZE, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
-        this.update(1, DEFAULT_PAGE_SIZE, null, null)
+        this.update(1, Commons.DEFAULT_PAGE_SIZE, null, null)
     },
 
     update: function (page, pageSize, order, query) {
@@ -220,8 +217,6 @@ function initPage() {
 
     let runs = new api.RunCollection({study_accession: study_id});
     let runsView = new RunsView({collection: runs});
-
-
 
     $.when(
         studyView.fetchAndRender(),

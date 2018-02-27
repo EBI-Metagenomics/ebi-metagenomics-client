@@ -3,14 +3,15 @@ const GenericTable = require('./genericTable');
 
 
 module.exports = class ClientSideTable extends GenericTable {
-    constructor($container, title, headers) {
+    constructor($container, title, headers, initPageSize) {
         super($container, title, headers, null);
         const that = this;
         this.$filterInput.on('keyup', function () {
             const str = $(this).val();
             that.filterTable(str);
         });
-        that.attachPageSizeCallback();
+        this.$pageSizeSelect.val(initPageSize);
+        that.attachPageSizeCallback(initPageSize);
         this.initHeaders(this.$table);
     }
 
@@ -31,7 +32,7 @@ module.exports = class ClientSideTable extends GenericTable {
         this.setPageDisplay(1, resultCount);
         this.hideLoadingGif();
         this.$table.tablesorter({
-            theme : 'dropbox',
+            theme: 'dropbox',
             cssIcon: 'tablesorter-icon',
         });
         this.$table.bind('sortStart', function () {
@@ -68,14 +69,18 @@ module.exports = class ClientSideTable extends GenericTable {
         if (this.$pagination.data("twbs-pagination")) {
             this.$pagination.twbsPagination('destroy');
         }
-        const totalPages = Math.max(Math.ceil(resultCount / pagesize), 1);
-        this.$pagination.twbsPagination({
-            startPage: page,
-            totalPages: totalPages
-        }).on('page', function (evt, page) {
-            that.changePage(page)
-            // that.callback(page, that.getPageSize(), that.getCurrentOrder(), that.getFilterText());
-        });
+        let totalPages = Math.max(Math.ceil(resultCount / pagesize));
+        if (isNaN(totalPages)) {
+            totalPages = 1;
+        }
+        if (totalPages > 0) {
+            this.$pagination.twbsPagination({
+                startPage: page,
+                totalPages: totalPages
+            }).on('page', function (evt, page) {
+                that.changePage(page)
+            });
+        }
         this.$currentPageDisp.text(page);
         this.$maxPageDisp.text(totalPages);
     }
