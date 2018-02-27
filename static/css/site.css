@@ -597,6 +597,11 @@ select.table-tools {
     filter: grayscale(80%);
 }
 
+.disabled-clickable {
+    opacity: 0.4;
+    filter: grayscale(80%);
+}
+
 /* Style for external links */
 a.ext, a.ext:link {
     padding-left: 12px;

@@ -87,7 +87,6 @@ module.exports = class GenericTable {
                 that.callback(page, that.getPageSize(), that.getCurrentOrder(), that.getFilterText());
             });
         }
-        console.log(requestURL);
         this.setPageDisplay(page, resultCount, totalPages);
         this.hideLoadingGif();
         const downloadURL = formatDownloadURL(requestURL);
