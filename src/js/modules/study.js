@@ -100,20 +100,20 @@ let SamplesView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params),
             success: function (data, response) {
-                that.renderData(page, response.meta.pagination.count, response.links.first);
+                that.renderData(page, pageSize, response.meta.pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
             }
         })
     },
 
-    renderData: function (page, resultCount, requestURL) {
+    renderData: function (page, pageSize, resultCount, requestURL) {
         // initMap(this.collection.models);
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
             return [attr.sample_name, sample_link, attr.sample_desc, attr.last_update]
         });
-        this.tableObj.update(tableData, true, page, resultCount, requestURL);
+        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
 });
 
@@ -176,20 +176,19 @@ let RunsView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params),
             success: function (data, response) {
-                that.renderData(page, response.meta.pagination.count, response.links.first);
+                that.renderData(page, pageSize, response.meta.pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
             }
         })
     },
 
-    renderData: function (page, resultCount, requestURL) {
+    renderData: function (page, pageSize, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
-            console.log(attr);
             const run_link = "<a href='" + attr.run_url + "'>" + attr.run_id + "</a>";
             return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform'], attr['pipeline_versions'].join(', ')]
         });
-        this.tableObj.update(tableData, true, page, resultCount, requestURL);
+        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
 });
 
