@@ -5,7 +5,7 @@ const Commons = require('../commons');
 
 
 module.exports = class GenericTable {
-    constructor($container, title, headers, callback) {
+    constructor($container, title, headers, initPageSize, callback) {
         this.headers = headers;
         let params = {
             section_title: title,
@@ -31,7 +31,7 @@ module.exports = class GenericTable {
         }
 
         this.order = null;
-        this.$pageSizeSelect.val(Commons.DEFAULT_PAGE_SIZE);
+        this.$pageSizeSelect.val(initPageSize);
         $container.append($sectionContent);
     }
 
@@ -73,26 +73,29 @@ module.exports = class GenericTable {
             this.$pagination.twbsPagination('destroy');
         }
 
-
         this.$pageSizeSelect.val(pageSize);
 
-        let  totalPages = Math.max(Math.ceil(resultCount/pageSize));
-        if (isNaN(totalPages)){
+        let totalPages = Math.max(Math.ceil(resultCount / pageSize));
+        if (isNaN(totalPages)) {
             totalPages = 1;
         }
-        this.$pagination.twbsPagination({
-            startPage: page,
-            totalPages: totalPages
-        }).on('page', function (evt, page) {
-            that.callback(page, that.getPageSize(), that.getCurrentOrder(), that.getFilterText());
-        });
-        this.setPageDisplay(1, resultCount, totalPages);
+        if (totalPages>0){
+            this.$pagination.twbsPagination({
+                startPage: page,
+                totalPages: totalPages
+            }).on('page', function (evt, page) {
+                that.callback(page, that.getPageSize(), that.getCurrentOrder(), that.getFilterText());
+            });
+        }
+        console.log(requestURL);
+        this.setPageDisplay(page, resultCount, totalPages);
         this.hideLoadingGif();
         const downloadURL = formatDownloadURL(requestURL);
         this.setDownloadURL(downloadURL);
     }
 
     addRow(data) {
+        const that = this;
         if (this.headers.length !== data.length) {
             console.error('Insufficient data inserted');
             console.error(this.headers);
@@ -101,11 +104,18 @@ module.exports = class GenericTable {
         }
 
 
+        let i = 0;
         const tds = _.map(data, function (d) {
             if (d === null) {
                 d = ''
             }
-            return $("<td>" + d + "</td>");
+            const $td = $("<td>" + d + "</td>");
+            const sortByClass = that.headers[i]['sortBy'];
+            if (sortByClass !== null && sortByClass.length > 0) {
+                $td.addClass(sortByClass);
+            }
+            i += 1;
+            return $td;
         });
         const row = $("<tr></tr>").append(tds);
         this.$tbody.append(row);
