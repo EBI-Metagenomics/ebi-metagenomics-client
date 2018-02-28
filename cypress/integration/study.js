@@ -1,4 +1,4 @@
-import {openPage, datatype} from './util';
+import {openPage, datatype, urlExists} from './util';
 import Config from './config';
 import GenericTableHandler from './genericTable';
 
