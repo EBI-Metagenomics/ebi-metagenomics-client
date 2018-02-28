@@ -1,4 +1,4 @@
-import {openPage, datatype} from './util';
+import {openPage, datatype, urlExists} from './util';
 import Config from './config';
 import GenericTableHandler from './genericTable';
 
@@ -88,6 +88,11 @@ describe('Sample page - General', function () {
         cy.get('#sample-metadata').should('contain', 'Collection date:').should('contain', '01/02/2013');
         //    TODO add more verifications
     });
+    it('External links should all be valid', function () {
+        cy.get('ul#links > li > a').each(($el) => {
+            urlExists($el.attr('href'));
+        });
+    });
 });
 
 let table;
@@ -103,7 +108,7 @@ describe('Sample page - Study table', function () {
     });
 
     it('Studies table download link should be valid', function () {
-        table.testDownloadLink(Config.API_URL + 'samples/'+sampleId+'/studies?sample_id=' + sampleId + "&format=csv")
+        table.testDownloadLink(Config.API_URL + 'samples/' + sampleId + '/studies?sample_id=' + sampleId + "&format=csv")
     });
 });
 
@@ -174,8 +179,4 @@ describe('Sample page - Runs table with >1 analysis per run', function () {
     it('Runs table should display both pipeline versions for a run', function () {
         table.testFiltering('ERR1022502', [['ERR1022502', 'metatranscriptomic', '', '', '2.0, 4.0'], ['ERR1022502', 'metatranscriptomic', 'Illumina HiSeq 2500', 'ILLUMINA', '2.0, 4.0']])
     });
-});
-
-describe('Sample page - External links are valid', function(){
-    
 });

@@ -74,6 +74,12 @@ describe('Study page - General', function () {
         cy.get('h2').should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
         //    TODO add more verifications
     });
+
+    it('External links should all be valid', function () {
+        cy.get('ul#links > li > a').each(($el) => {
+            urlExists($el.attr('href'));
+        });
+    });
 });
 
 let table;

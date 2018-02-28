@@ -4,10 +4,10 @@ const sortBySelector = '#sortBy';
 
 
 var Util = module.exports = {
-    getBaseURL: function(){
+    getBaseURL: function () {
         return Config.BASE_URL;
     },
-    getPageURL: function(page){
+    getPageURL: function (page) {
         return Config.BASE_URL + (page !== 'overview' ? page : '');
     },
     openPage: function (page) {
@@ -30,7 +30,11 @@ var Util = module.exports = {
     assertTableIsCleared: function () {
         cy.get("table tr.sample").should('not.exist');
     },
-    stripWhitespace: function(str){
+
+    urlExists: function (url) {
+        cy.request(url);
+    },
+    stripWhitespace: function (str) {
         return str.replace(/\s/g, "");
     },
     datatype: {
