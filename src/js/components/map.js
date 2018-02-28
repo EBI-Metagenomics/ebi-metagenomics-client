@@ -27,7 +27,7 @@ module.exports = class Map {
             if (lat === null || lng === null) {
                 $("#warning").show();
             } else {
-                result.push(that.placeMarker(map, oms, template, sample));
+                result.push(that.placeMarker(map, oms, template, sample, displayMarkerDetails));
             }
             return result;
         }, []);
@@ -66,7 +66,6 @@ module.exports = class Map {
         });
 
         let contentString = template(sample);
-        console.log(sample);
         if (displayMarkerDetails) {
             let infowindow = new google.maps.InfoWindow({
                 content: contentString
@@ -77,8 +76,6 @@ module.exports = class Map {
             });
         }
         oms.addMarker(marker);
-        // marker.addListener('click', function () {
-        // });
         return marker;
     };
 
