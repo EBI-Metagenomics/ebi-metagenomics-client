@@ -660,7 +660,7 @@ a.ext:hover, a.ext:active, a.ext:focus {
 }
 
 .map-marker-data {
-    width: 15em;
+    width: 25em;
     height: 15em;
     overflow-y: scroll;
 }
