@@ -41,7 +41,6 @@ let SampleView = Backbone.View.extend({
                 _.each(that.model.attributes.metadatas, function (e) {
                     metadataObj[e.name] = e.value;
                 });
-
                 getExternalLinks(attr.id, attr.bioproject).done(function (data) {
                     const links = _.map(data, function (url, text) {
                         return createListItem(createLinkTag(url, text));
@@ -49,7 +48,7 @@ let SampleView = Backbone.View.extend({
                     that.model.attributes.external_links = links;
                     that.$el.html(that.template(that.model.toJSON()));
                     $('#sample-metadata').html(new DetailList('Sample metadata', metadataObj));
-                    new Map('map', [that.model]);
+                    new Map('map', [that.model.attributes], false);
                     deferred.resolve(true);
                 });
 
