@@ -143,7 +143,7 @@ class GenericTableHandler {
             const txt = data[column];
             const selector = this.getRowColumnSelector(rowIndex, column);
             cy.get(selector).first().should(($el) => {
-                expect($el.text()).to.be.eq(txt);
+                expect($el.text()).to.include(txt);
             });
         }
     }
