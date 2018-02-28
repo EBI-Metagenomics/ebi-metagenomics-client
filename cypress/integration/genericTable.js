@@ -132,6 +132,12 @@ class GenericTableHandler {
         });
     }
 
+    testPageRowData(page, numVisibleResults, rowIndex, data){
+        this.getPaginationButton(page).click();
+        this.waitForTableLoad(numVisibleResults);
+        this.checkRowData(rowIndex, data);
+    }
+
     checkRowData(rowIndex, data) {
         for (let column in data) {
             const txt = data[column];
@@ -162,6 +168,12 @@ class GenericTableHandler {
         return this.getTableSelector() + "> tbody > tr td:nth-child(" + (columnIndex + 1) + ")"
     }
 
+    /**
+     * Returns jQuery selector string for a cell in the table's current page
+     * @param rowIndex
+     * @param columnIndex
+     * @returns {string}
+     */
     getRowColumnSelector(rowIndex, columnIndex) {
         rowIndex = parseInt(rowIndex);
         columnIndex = parseInt(columnIndex);
