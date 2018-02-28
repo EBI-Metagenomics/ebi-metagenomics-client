@@ -82,7 +82,7 @@ describe('Sample page - General', function () {
     it('Verify elements are present', function () {
         cy.get('h3').should('contain', sampleId);
         cy.get('h2').should('contain', 'Sample ASSDL1');
-        cy.get('#main-content-area > div.row > div.column > h3:nth-child(1)').should('contain', 'Description');
+        cy.get('#main-content-area > div.row > div.column > h3:nth-child(2)').should('contain', 'Description');
         cy.get('#main-content-area > div.row > div.column > h3').should('contain', 'Classification');
         cy.get('#main-content-area > div.row > div.column > p').should('contain', 'ASS depth profile');
         cy.get('#sample-metadata').should('contain', 'Collection date:').should('contain', '01/02/2013');

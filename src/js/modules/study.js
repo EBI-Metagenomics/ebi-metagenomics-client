@@ -132,14 +132,13 @@ let MapData = api.SamplesCollection.extend({
                 });
                 that.data = that.data.concat(data);
                 if (meta.links.next!==null){
-                    this.url = meta.links.next;
+                    that.url = meta.links.next;
                     that.fetchAll();
                 } else {
                     new Map('map', that.data, true);
                 }
             },
             error: function(a,b,c){
-                console.log('Error');
             }
         });
     }
