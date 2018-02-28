@@ -20,6 +20,8 @@ module.exports = class GenericTable {
         this.$filterInput = $sectionContent.find('#tableFilter');
 
         this.storeElemRefs($sectionContent);
+        this.$pageSizeSelect.val(initPageSize);
+
 
         if (callback) {
             this.callback = callback;
@@ -31,7 +33,6 @@ module.exports = class GenericTable {
         }
 
         this.order = null;
-        this.$pageSizeSelect.val(initPageSize);
         $container.append($sectionContent);
     }
 
@@ -79,7 +80,7 @@ module.exports = class GenericTable {
         if (isNaN(totalPages)) {
             totalPages = 1;
         }
-        if (totalPages>0){
+        if (totalPages > 0) {
             this.$pagination.twbsPagination({
                 startPage: page,
                 totalPages: totalPages

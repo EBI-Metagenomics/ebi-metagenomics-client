@@ -63,19 +63,19 @@ function waitForPageLoad(projectId) {
     cy.get('h3').should('contain', projectId)
 }
 
-// describe('Study page - General', function () {
-//     beforeEach(function () {
-//         openPage(origPage);
-//         waitForPageLoad(projectId);
-//     });
-//
-//     it('Verify elements are present', function () {
-//         cy.get('h3').should('contain', projectId);
-//         cy.get('h2').should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
-//         //    TODO add more verifications
-//     });
-// });
-//
+describe('Study page - General', function () {
+    beforeEach(function () {
+        openPage(origPage);
+        waitForPageLoad(projectId);
+    });
+
+    it('Verify elements are present', function () {
+        cy.get('h3').should('contain', projectId);
+        cy.get('h2').should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
+        //    TODO add more verifications
+    });
+});
+
 let table;
 describe('Study page - Samples table', function () {
     beforeEach(function () {

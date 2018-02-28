@@ -43,12 +43,10 @@ let SampleView = Backbone.View.extend({
                 });
 
                 getExternalLinks(attr.id, attr.bioproject).done(function (data) {
-                    console.log(data);
                     const links = _.map(data, function (url, text) {
                         return createListItem(createLinkTag(url, text));
                     });
                     that.model.attributes.external_links = links;
-                    console.log(that.model);
                     that.$el.html(that.template(that.model.toJSON()));
                     $('#sample-metadata').html(new DetailList('Sample metadata', metadataObj));
                     new Map('map', [that.model]);
@@ -102,7 +100,7 @@ let StudiesView = Backbone.View.extend({
             {sortBy: null, name: 'Samples count'},
             {sortBy: null, name: 'Last update'},
         ];
-        this.tableObj = new GenericTable($('#studies-section'), 'Associated studies', columns, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#studies-section'), 'Associated studies', columns, DEFAULT_PAGE_SIZE, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
         this.update(1, DEFAULT_PAGE_SIZE, null, null)
@@ -159,8 +157,9 @@ let RunsView = Backbone.View.extend({
             {sortBy: null, name: 'Experiment type'},
             {sortBy: null, name: 'Instrument model'},
             {sortBy: null, name: 'Instrument platform'},
+            {sortBy: null, name: 'Pipeline versions'},
         ];
-        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, DEFAULT_PAGE_SIZE, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
         this.update(1, DEFAULT_PAGE_SIZE, null, null)
@@ -193,7 +192,7 @@ let RunsView = Backbone.View.extend({
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const run_link = "<a href='" + attr.run_url + "'>" + attr.run_id + "</a>";
-            return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform']]
+            return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform'], attr['pipeline_versions'].join(', ')]
         });
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
