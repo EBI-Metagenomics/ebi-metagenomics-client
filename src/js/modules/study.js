@@ -115,22 +115,32 @@ let SamplesView = Backbone.View.extend({
 });
 
 
-let MapData = Backbone.Model.extend({
-    url: function(){
-        return API_URL + 'samples?page_size=250&study_accession='+ this.study_id + '&fields=latitude,longitude'
-    },
+let MapData = api.SamplesCollection.extend({
+    fields : ['latitude','longitude','biome','accession','sample_alias','sample_desc','sample_name'],
+
     initialize: function(study_id){
+        this.url = API_URL + 'samples?page_size=250&study_accession='+ study_id + '&fields='+this.fields.join(',');
         this.study_id = study_id;
         this.data = [];
     },
-    parse: function(d){
-        this.data = this.data.concat(d.data);
-        if (d.links.next!==null){
-            this.url = d.links.next;
-            this.fetch();
-        } else {
-            new Map('map', this.data);
-        }
+    fetchAll: function(){
+        const that = this;
+        this.fetch({
+            success: function(response, meta){
+                let data = _.map(response.models, function(model){
+                    return model.attributes;
+                });
+                that.data = that.data.concat(data);
+                if (meta.links.next!==null){
+                    that.url = meta.links.next;
+                    that.fetchAll();
+                } else {
+                    new Map('map', that.data, true);
+                }
+            },
+            error: function(a,b,c){
+            }
+        });
     }
 });
 
@@ -223,7 +233,7 @@ function initPage() {
     ).done(function () {
         samplesView.init();
         runsView.init();
-        new MapData(study_id).fetch();
+        new MapData(study_id).fetchAll();
     });
 }
 

@@ -29,6 +29,7 @@
             </div>
             <div class="row">
                 <div class="column small-6 medium-6 large-6">
+                    <h4>Last updated: <%= last_update %></h4>
                     <h3>Description</h3>
                     <p><%= sample_desc %></p>
                     <h3>Classification</h3>
@@ -88,40 +89,7 @@
 
 <div id="footer">{{>partials/footer}}</div>
 
-<script id="marker-template" type="text/x-handlebars-template">
-
-    <div class="row">
-        <div class="columns small-1 medium-1 large-1"></div>
-        <div class="columns small-11 medium-11 large-11">
-            <h2>Sample - {{this.id}}</h2>
-            <!--<p>{{this.name}}</p>-->
-        </div>
-    </div>
-    <div class="row columns">
-        <p>{{this.desc}}</p>
-    </div>
-    <div class="row">
-        <div class="columns">
-            <ul>
-                <li>
-                    Classification: {{this.classification}}
-                </li>
-                <li>
-                    Collection date: {{this.collection_date}}
-                </li>
-                <li>
-                    Lat/Long: {{this.lat}}, {{this.lng}}
-                </li>
-                <li>
-                    Sampling depth: TODO
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="row text-center">
-        <a href="{{this.sample_url}}" class="button">View more</a>
-    </div>
-</script>
+{{> partials/map_marker this}}
 
 
 <script src="../static/libraries/markerclusterer/src/markerclusterer.js"></script>
