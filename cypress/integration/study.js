@@ -1,4 +1,4 @@
-import {openPage, datatype} from './util';
+import {openPage, datatype, urlExists} from './util';
 import Config from './config';
 import GenericTableHandler from './genericTable';
 
@@ -63,19 +63,25 @@ function waitForPageLoad(projectId) {
     cy.get('h3').should('contain', projectId)
 }
 
-// describe('Study page - General', function () {
-//     beforeEach(function () {
-//         openPage(origPage);
-//         waitForPageLoad(projectId);
-//     });
-//
-//     it('Verify elements are present', function () {
-//         cy.get('h3').should('contain', projectId);
-//         cy.get('h2').should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
-//         //    TODO add more verifications
-//     });
-// });
-//
+describe('Study page - General', function () {
+    beforeEach(function () {
+        openPage(origPage);
+        waitForPageLoad(projectId);
+    });
+
+    it('Verify elements are present', function () {
+        cy.get('h3').should('contain', projectId);
+        cy.get('h2').should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
+        //    TODO add more verifications
+    });
+
+    it('External links should all be valid', function () {
+        cy.get('ul#links > li > a').each(($el) => {
+            urlExists($el.attr('href'));
+        });
+    });
+});
+
 let table;
 describe('Study page - Samples table', function () {
     beforeEach(function () {
@@ -197,6 +203,6 @@ describe('Study page - Runs table with >1 analysis per run', function(){
         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
     });
     it('Runs table should display both pipeline versions for a run', function(){
-        table.testPageRowData('last', 17, 0, ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']);
+        table.testFiltering('ERR770966', [['ERR770966', 'metagenomic', '', '', '2.0, 4.0'], ['ERR770966', 'metagenomic', 'Illumina MiSeq', 'ILLUMINA', '2.0, 4.0']]);
     });
 });
