@@ -15,6 +15,7 @@ export const pipelines = [
 ];
 
 require('style-loader?name=[name].[ext]!../../static/css/site.css');
+require('style-loader?name=[name].[ext]!../../static/css/elixir-banner.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');
 require('style-loader?name=[name].[ext]!../../static/css/foundation.css');
 require('style-loader?name=[name].[ext]!../../static/css/theme-embl-petrol.css');
