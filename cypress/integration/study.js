@@ -138,6 +138,7 @@ describe('Study page - Runs table', function () {
         waitForPageLoad(projectId);
         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
     });
+
     it('Runs table should contain correct number of runs', function () {
         table.checkLoadedCorrectly(1, 25, 258);
     });
@@ -185,5 +186,17 @@ describe('Study page - Runs table', function () {
     it('Runs table download link should be valid', function () {
         table.testDownloadLink(Config.API_URL + 'runs?study_accession=' + projectId + "&format=csv")
     });
+});
 
+describe('Study page - Runs table with >1 analysis per run', function(){
+    beforeEach(function () {
+        const projectId = "ERP009703";
+        const origPage = "studies/" + projectId;
+        openPage(origPage);
+        waitForPageLoad(projectId);
+        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+    });
+    it('Runs table should display both pipeline versions for a run', function(){
+        table.testPageRowData('last', 17, 0, ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']);
+    });
 });
