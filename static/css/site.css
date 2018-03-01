@@ -664,3 +664,13 @@ a.ext:hover, a.ext:active, a.ext:focus {
     height: 15em;
     overflow-y: scroll;
 }
+
+
+.masthead {
+    background-image: url(../images/backgrounds/embl-ebi-background-4.jpg);
+    max-width: 1920px;
+    margin-top: 0px;
+    bottom: auto;
+    top: 0px;
+    background-color: white;
+}
