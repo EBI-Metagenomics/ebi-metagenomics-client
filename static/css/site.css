@@ -674,3 +674,6 @@ a.ext:hover, a.ext:active, a.ext:focus {
     top: 0px;
     background-color: white;
 }
+span.pub-title {
+    font-weight: bold;
+}

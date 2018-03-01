@@ -24,6 +24,9 @@ require('style-loader?name=[name].[ext]!../../static/css/site.css');
 
 export const BLOG_URL = "https://ebi-metagenomics.github.io/ebi-metagenomics-blog/";
 export const READTHEDOCS_URL = "https://emg-docs.readthedocs.io";
+export const EBI_EUROPE_PMC_ENTRY_URL = "https://europepmc.org/abstract/MED/";
+export const EBI_ENA_VIEW_URL = "https://www.ebi.ac.uk/ena/data/view/";
+export const DX_DOI_URL = "http://dx.doi.org/";
 export const COOKIE_NAME = 'ebi-metagenomics';
 export const NO_DATA_MSG = 'N/A';
 export const DEFAULT_PAGE_SIZE = 25;

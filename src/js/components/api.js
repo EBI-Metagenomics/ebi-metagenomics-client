@@ -8,6 +8,9 @@ import {formatDate, formatLineage, getBiomeIcon, lineage2Biome, getBiomeIconData
 
 const _ = require('underscore');
 
+const ENA_VIEW_URL = Commons.EBI_ENA_VIEW_URL;
+const EUROPE_PMC_ENTRY_URL = Commons.EBI_EUROPE_PMC_ENTRY_URL;
+const DX_DOI_URL = Commons.DX_DOI_URL;
 
 // Model for an individual study
 export const Study = Backbone.Model.extend({
@@ -29,6 +32,7 @@ export const Study = Backbone.Model.extend({
             study_accession: attr['accession'],
             last_update: formatDate(attr['last-update']),
             abstract: attr['study-abstract'],
+            ena_url : ENA_VIEW_URL + data.id
         }
     }
 });
@@ -86,8 +90,8 @@ export const Run = Backbone.Model.extend({
     }
 });
 
-export function getKronaURL(run_id, pipeline_version){
-    return API_URL+"runs/"+run_id+"/pipelines/"+pipeline_version+"/krona"
+export function getKronaURL(run_id, pipeline_version) {
+    return API_URL + "runs/" + run_id + "/pipelines/" + pipeline_version + "/krona"
 }
 
 export const RunCollection = Backbone.Collection.extend({
@@ -223,5 +227,28 @@ export const InterproIden = RunPipelineObject.extend({
 export const GoSlim = RunPipelineObject.extend({
     url: function () {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/go-slim';
+    }
+});
+
+export const Publication = Backbone.Model.extend({
+    parse: function (d) {
+        const data = d.data !== undefined ? d.data : d;
+        const attrs = data.attributes;
+        let authors = attrs['authors'];
+        if (authors.length>50){
+            authors = authors.split(',').slice(0,5);
+            authors.push(' et al.');
+            authors = authors.join(',');
+        }
+        return {
+            pubmed_id: attrs['pubmed-id'],
+            title: attrs['pub-title'],
+            authors: authors,
+            doi: attrs['doi'],
+            pmc_url: EUROPE_PMC_ENTRY_URL + attrs['pubmed-id'],
+            doi_url: DX_DOI_URL + attrs['doi'],
+            year: attrs['published-year'],
+            volume: attrs['volume']
+        }
     }
 });

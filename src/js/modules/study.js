@@ -13,13 +13,8 @@ import 'js-marker-clusterer';
 
 import {
     attachTabHandlers,
-    getURLFilterParams,
     getURLParameter,
-    hideTableLoadingGif,
-    initTableTools,
     setCurrentTab,
-    setURLParams,
-    showTableLoadingGif,
     createListItem,
     createLinkTag,
     checkURLExists,
@@ -41,19 +36,20 @@ let StudyView = Backbone.View.extend({
         const that = this;
         const deferred = $.Deferred();
         this.model.fetch({
-            data: $.param({}),
+            data: $.param({
+                include: 'publications'
+            }),
             success: function (data, response) {
-                const attr = data.attributes;
-
-                getExternalLinks(attr.id, attr.bioproject).done(function (data) {
-                    const links = _.map(data, function (url, text) {
-                        return createListItem(createLinkTag(url, text));
-                    });
-                    that.model.attributes.external_links = links;
-                    that.$el.html(that.template(that.model.toJSON()));
-                    deferred.resolve(true);
+                const pubObj = new api.Publication();
+                const publications = _.map(response.included, function(d){
+                    return new pubObj.parse(d);
                 });
+                that.model.attributes.publications = publications;
+
+                that.$el.html(that.template(that.model.toJSON()));
                 attachTabHandlers();
+
+                deferred.resolve(true);
             }
         });
         return deferred.promise();
@@ -199,24 +195,6 @@ let RunsView = Backbone.View.extend({
     }
 });
 
-function getExternalLinks(study_id, study_accession) {
-    var deferred = new $.Deferred();
-    const ena_url = 'https://www.ebi.ac.uk/ena/data/view/' + study_accession;
-    const ena_url_check = checkURLExists(ena_url);
-    let urls = {};
-    $.when(
-        ena_url_check
-    ).done(function () {
-        if (ena_url_check.status === 200) {
-            urls['ENA website (' + study_id + ')'] = ena_url;
-        }
-        deferred.resolve(urls);
-
-    });
-    return deferred.promise();
-}
-
-
 // Called by googleMaps import callback
 function initPage() {
     let study = new api.Study({id: study_id});
@@ -241,13 +219,3 @@ function initPage() {
 window.initPage = initPage;
 
 
-// <!--<% _.each(samples, function(sample){ %>-->
-// <!--<% attr = sample.attributes %>-->
-// <!--<% console.log(sample) %>-->
-// <!--<tr>-->
-// <!--<td><a href="<%= attr.url %>"><%= attr['sample-name'] %></a></td>-->
-// <!--<td><a href="<%= attr.url %>"><%= attr.accession %></a></td>-->
-// <!--<td><%= attr['sample-desc'] %></td>-->
-// <!--<td><%= attr['last-update'] %></td>-->
-//     <!--</tr>-->
-// <!--<% });%>-->

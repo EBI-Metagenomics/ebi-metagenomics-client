@@ -54,6 +54,33 @@
                             </div>
                         </div>
                         <hr>
+                        <section id="external-links-section">
+                            <div class="row columns">
+                                <h3>External links</h3>
+                                <div class="row">
+                                    <div class="columns small-6">
+                                        <ul id="ebi_ena_links">
+                                            <a class="ext" href="<%= ena_url %>">ENA website (<%= study_accession %>)</a>
+                                        </ul>
+                                    </div>
+                                    <div class="columns small-6">
+                                        <ul id="europe_pmc_links">
+                                            <% _.each(publications, function(pub){ %>
+                                                <li>
+                                                    <span class="pub-title"><%= pub.title %> <br></span>
+                                                    <%= pub.authors %> <br>
+                                                    <%= pub.year %> <%= pub.volume %>
+                                                        (PMID: <a class="ext" href="<%= pub.pmc_url %>"><%= pub.pubmed_id %></a>)
+                                                        (DOI: <a class="ext" href="<%= pub.doi_url %>"><%= pub.doi %></a>)
+                                                    </p>
+                                                </li>
+                                            <% }); %>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <hr>
                         <section id="samples-section">
                             <!--<h3>Associated samples</h3>-->
                             <!--<div id="pageSize2"></div>-->
@@ -104,15 +131,6 @@
                             <!--</table>-->
                             <!--<div id="pagination"></div>-->
                         </section>
-                        <hr>
-                        <section id="external-links-section">
-                            <div class="row columns">
-                                <h3>External links</h3>
-                                <ul id="links">
-                                    <%= external_links %>
-                                </ul>
-                            </div>
-                        </section>
                     </div>
 
                     <div class="tabs-panel" id="analysis">
@@ -157,6 +175,7 @@
 <!-- End optional local footer -->
 <!-- </div> -->
 <!-- End suggested layout containers / #content -->
+
 
 <div id="footer">
     {{>partials/elixir}}

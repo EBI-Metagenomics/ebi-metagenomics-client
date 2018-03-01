@@ -72,11 +72,19 @@ describe('Study page - General', function () {
     it('Verify elements are present', function () {
         cy.get('h3').should('contain', projectId);
         cy.get('h2').should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
-        //    TODO add more verifications
+        cy.get('#ebi_ena_links').should('contain', 'ENA website (ERP019566)');
+        cy.get('#europe_pmc_links > li').should('contain', 'A longitudinal study of the diabetic skin and wound microbiome.');
+        cy.get('#europe_pmc_links > li').should('contain', 'Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.');
+        cy.get('#europe_pmc_links > li').should('contain', '2017 5');
+        cy.get('#europe_pmc_links > li > a').should('contain', '28740749');
+        cy.get('#europe_pmc_links > li > a').should('contain', '10.7717/peerj.3543');
     });
 
     it('External links should all be valid', function () {
-        cy.get('ul#links > li > a').each(($el) => {
+        cy.get('#ebi_ena_links > a').each(($el) => {
+            urlExists($el.attr('href'));
+        });
+        cy.get('#europe_pmc_links > li > a').each(($el) => {
             urlExists($el.attr('href'));
         });
     });
