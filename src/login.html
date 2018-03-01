@@ -3,6 +3,7 @@
 <head id="head">
     <title>Login &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
+    <link rel="stylesheet" href="{{subfolder}}/js/login.css" type="text/css" media="all"/>
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
 <div id="header-container">{{> partials/header this}}</div>
@@ -13,7 +14,7 @@
         <div class="column small-12 medium-12 large-12">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
-                     <li><a href="{{subfolder}}">Home</a></li>
+                    <li><a href="{{subfolder}}">Home</a></li>
                     <li>
                         <span class="show-for-sr">Current: </span> Login
                     </li>
@@ -41,7 +42,10 @@
     </div>
 </div>
 
-<div id="footer">{{>partials/footer}}</div>
+<div id="footer">
+    {{>partials/elixir}}
+    {{>partials/footer}}
+</div>
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>

@@ -597,6 +597,11 @@ select.table-tools {
     filter: grayscale(80%);
 }
 
+.disabled-clickable {
+    opacity: 0.4;
+    filter: grayscale(80%);
+}
+
 /* Style for external links */
 a.ext, a.ext:link {
     padding-left: 12px;
@@ -651,9 +656,24 @@ a.ext:hover, a.ext:active, a.ext:focus {
 }
 
 .biome-disp > a {
-    display: inline;
+    display:inline;
 }
 
+.map-marker-data {
+    width: 25em;
+    height: 15em;
+    overflow-y: scroll;
+}
+
+
+.masthead {
+    background-image: url(../images/backgrounds/embl-ebi-background-4.jpg);
+    max-width: 1920px;
+    margin-top: 0px;
+    bottom: auto;
+    top: 0px;
+    background-color: white;
+}
 span.pub-title {
     font-weight: bold;
 }

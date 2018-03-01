@@ -3,6 +3,7 @@
 <head id="head">
     <title>Home &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
+    <link rel="stylesheet" href="{{subfolder}}/js/index.css" type="text/css" media="all"/>
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
 <div id="header2">
@@ -279,8 +280,10 @@
 <!-- </div> -->
 <!-- End suggested layout containers / #content -->
 
-<div id="footer">{{>partials/footer}}</div>
-
+<div id="footer">
+    {{>partials/elixir}}
+    {{>partials/footer}}
+</div>
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 

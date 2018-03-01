@@ -3,6 +3,7 @@
 <head id="head">
     <title>Samples &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
+    <link rel="stylesheet" href="{{subfolder}}/js/samples.css" type="text/css" media="all"/>
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
 <div id="header-container">{{> partials/header this}}</div>
@@ -51,7 +52,7 @@
                             <tbody id='samples-table-body'>
                             <tr>
                                 <td class='loading-gif-row' colspan="4">
-                                    <img class='loading-gif' src="/static/images/ajax-loader.gif"/>
+                                    <img class='loading-gif' src="{{subfolder}}/static/images/ajax-loader.gif"/>
                                 </td>
                             </tr>
                             </tbody>
@@ -84,6 +85,11 @@
         </div>
     </section>
 </div>
+
+<div id="footer">
+    {{>partials/elixir}}
+    {{>partials/footer}}
+</div>
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
 <!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
 <!-- <div class="row"> -->
@@ -94,8 +100,6 @@
 <!-- </div> -->
 <!-- End suggested layout containers / #content -->
 
-
-<div id="footer">{{>partials/footer}}</div>
 
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -125,3 +129,4 @@
 -->
 </body>
 </html>
+

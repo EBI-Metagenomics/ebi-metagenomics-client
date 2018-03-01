@@ -25,7 +25,6 @@ checkAPIonline();
 
 setCurrentTab('#studies-nav');
 
-const DEFAULT_PAGE_SIZE = Commons.DEFAULT_PAGE_SIZE;
 
 
 let study_id = getURLParameter();
@@ -48,8 +47,9 @@ let StudyView = Backbone.View.extend({
                 that.model.attributes.publications = publications;
 
                 that.$el.html(that.template(that.model.toJSON()));
-                deferred.resolve(true);
                 attachTabHandlers();
+
+                deferred.resolve(true);
             }
         });
         return deferred.promise();
@@ -71,7 +71,7 @@ let SamplesView = Backbone.View.extend({
             {sortBy: null, name: 'Description'},
             {sortBy: 'last_update', name: 'Last update'},
         ];
-        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, Commons.DEFAULT_PAGE_SIZE_SAMPLES, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
         this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, null, null)
@@ -91,17 +91,16 @@ let SamplesView = Backbone.View.extend({
             params['search'] = query;
         }
         const that = this;
-        this.collection.fetch({
+        this.fetchXhr = this.collection.fetch({
             data: $.param(params),
             success: function (data, response) {
                 that.renderData(page, pageSize, response.meta.pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
-            }
+            },
         })
     },
 
     renderData: function (page, pageSize, resultCount, requestURL) {
-        // initMap(this.collection.models);
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
@@ -112,22 +111,32 @@ let SamplesView = Backbone.View.extend({
 });
 
 
-let MapData = Backbone.Model.extend({
-    url: function () {
-        return API_URL + 'samples?page_size=250&study_accession=' + this.study_id + '&fields=latitude,longitude'
-    },
-    initialize: function (study_id) {
+let MapData = api.SamplesCollection.extend({
+    fields : ['latitude','longitude','biome','accession','sample_alias','sample_desc','sample_name'],
+
+    initialize: function(study_id){
+        this.url = API_URL + 'samples?page_size=250&study_accession='+ study_id + '&fields='+this.fields.join(',');
         this.study_id = study_id;
         this.data = [];
     },
-    parse: function (d) {
-        this.data = this.data.concat(d.data);
-        if (d.links.next !== null) {
-            this.url = d.links.next;
-            this.fetch();
-        } else {
-            new Map('map', this.data);
-        }
+    fetchAll: function(){
+        const that = this;
+        this.fetch({
+            success: function(response, meta){
+                let data = _.map(response.models, function(model){
+                    return model.attributes;
+                });
+                that.data = that.data.concat(data);
+                if (meta.links.next!==null){
+                    that.url = meta.links.next;
+                    that.fetchAll();
+                } else {
+                    new Map('map', that.data, true);
+                }
+            },
+            error: function(a,b,c){
+            }
+        });
     }
 });
 
@@ -147,10 +156,10 @@ let RunsView = Backbone.View.extend({
             {sortBy: null, name: 'Instrument platform'},
             {sortBy: null, name: 'Pipeline versions'},
         ];
-        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, Commons.DEFAULT_PAGE_SIZE, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
-        this.update(1, DEFAULT_PAGE_SIZE, null, null)
+        this.update(1, Commons.DEFAULT_PAGE_SIZE, null, null)
     },
 
     update: function (page, pageSize, order, query) {
@@ -202,7 +211,7 @@ function initPage() {
     ).done(function () {
         samplesView.init();
         runsView.init();
-        new MapData(study_id).fetch();
+        new MapData(study_id).fetchAll();
     });
 }
 

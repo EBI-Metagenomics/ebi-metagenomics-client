@@ -3,6 +3,7 @@
 <head id="head">
     <title>Search &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
+    <link rel="stylesheet" href="{{subfolder}}/js/search.css" type="text/css" media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -23,7 +24,7 @@
             <div id="bonsai"></div>
 
             <h2>Search EBI Metagenomics <img id='loading-icon' class='loading-gif-small'
-                                             src="/static/images/ajax-loader.gif"/></h2>
+                                             src="{{subfolder}}/static/images/ajax-loader.gif"/></h2>
         </div>
         <div class="row">
             <div class="columns small- medium-6 large-6">
@@ -365,8 +366,10 @@
 <!-- </div> -->
 <!-- End suggested layout containers / #content -->
 
-<div id="footer">{{>partials/footer}}</div>
-
+<div id="footer">
+    {{>partials/elixir}}
+    {{>partials/footer}}
+</div>
 <!-- JavaScript -->
 <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
 <script defer="defer" src="{{subfolder}}/static/js/script.js"></script>

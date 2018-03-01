@@ -247,7 +247,7 @@ export const Publication = Backbone.Model.extend({
             doi: attrs['doi'],
             pmc_url: EUROPE_PMC_ENTRY_URL + attrs['pubmed-id'],
             doi_url: DX_DOI_URL + attrs['doi'],
-            year: attrs['year'],
+            year: attrs['published-year'],
             volume: attrs['volume']
         }
     }
