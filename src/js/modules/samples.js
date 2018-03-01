@@ -150,7 +150,7 @@ pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 var biomes = new api.BiomeCollection();
-var biomesSelectView = new BiomeCollectionView({collection: biomes}, pageFilters.get('lineage'));
+var biomesSelectView = new BiomeCollectionView({collection: biomes, maxDepth: 3}, pageFilters.get('lineage'));
 
 var samples = new api.SamplesCollection();
 var samplesView = new SamplesView({collection: samples});

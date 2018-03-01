@@ -25,8 +25,6 @@ function setSelectOption(selector, option, num_results) {
  * NOTE: text filtering is not yet tested as it operates on fields not returned by the API, therefore results can be deceiving
  */
 describe('Studies page', function () {
-
-
     beforeEach(function () {
         openPage(origPage);
         waitForStudiesLoad(initialResultSize);
@@ -187,7 +185,22 @@ describe('Studies page', function () {
         // Actual result set for query 'abc' should have size 1
         waitForStudiesLoad(1);
     });
-
 });
 
+const longBiome = "root:Host-associated:Mammals:Digestive system:Fecal";
+describe('Studies page - URL arguments', function(){
+    beforeEach(function(){
+        openPage('studies?lineage='+longBiome);
+        waitForStudiesLoad(1);
+    });
+    it('Providing a biome with depth>3 should cause page to insert select options', function(){
+        // Check all options exist
+        const splitBiome = longBiome.split(':');
+        for (let i=1; i<splitBiome.length; i++){
+            let parentLineage = splitBiome.slice(0,i).join(':');
+            expect(cy.get("#biome-select > option[value='"+parentLineage+"']")).to.exist;
+        }
+        cy.get('#biome-select').should('have.value', longBiome)
+    })
+});
 

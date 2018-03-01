@@ -9,6 +9,9 @@ const Order = require('../components/order');
 const pagination = new Pagination();
 
 const DEFAULT_PAGE_SIZE = require('../commons').DEFAULT_PAGE_SIZE;
+
+const BIOME_FILTER_DEPTH = 3;
+
 import {
     getFormData,
     getURLFilterParams,
@@ -168,7 +171,7 @@ pagination.setPageSizeChangeCallback(updatePageSize);
 
 
 var biomes = new api.BiomeCollection();
-var biomesSelectView = new BiomeCollectionView({collection: biomes}, pageFilters.get('lineage'));
+var biomesSelectView = new BiomeCollectionView({collection: biomes, maxDepth: BIOME_FILTER_DEPTH}, pageFilters.get('lineage'));
 var studies = new api.StudiesCollection();
 var studiesView = new StudiesView({collection: studies});
 
@@ -184,46 +187,7 @@ initResultsFilter(pageFilters.get('search'), function (e) {
     studiesView.update(params);
 });
 
-
-// PAGINATION
-
-
-// function orderResultsTable(event) {
-//     event.preventDefault();
-//     const th = $(event.currentTarget);
-//     let ordering;
-//
-//     if (th.hasClass('biome')) {
-//         ordering = 'biome'
-//     } else if (th.hasClass('name')) {
-//         ordering = 'study-name'
-//     } else if (th.hasClass('samples')) {
-//         ordering = 'samples-count'
-//     } else if (th.hasClass('updated')) {
-//         ordering = 'last-update'
-//     }
-//
-//     if (th.hasClass('tablesorter-headerAsc')) {
-//         ordering = '-'.concat(ordering);
-//     }
-//
-//     studiesView.update(1, pagination.getPageSize(), undefined, undefined, ordering);
-// }
-
-
 //TODO remove this
 // studiesView.update(1,10);
 window.biomes = biomes;
 window.studiesView = studiesView;
-
-// $("#projectsTable tbody").append(studiesView.render().el);
-// studiesView.render();
-
-// studies.fetch({
-// 	success: function(collection, response, options){
-// 		$('#tmp').text(JSON.stringify(response.data));
-// 	},
-// 	error: function(collection, response, options){
-// 	}
-// });
-
