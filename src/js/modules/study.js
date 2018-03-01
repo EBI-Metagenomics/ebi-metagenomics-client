@@ -6,6 +6,8 @@ const Pagination = require('../components/pagination').Pagination;
 const GenericTable = require('../components/genericTable');
 const Map = require('../components/map');
 const API_URL = process.env.API_URL;
+const EUROPEPMC_ENTRY_URL = Commons.EBI_EUROPEPMC_ENTRY_URL;
+const ENA_VIEW_URL = Commons.EBI_ENA_VIEW_URL;
 
 
 // const OverlappingMarkerSpiderfier = require('../../../static/libraries/oms.min.js');
@@ -23,7 +25,7 @@ import {
     createListItem,
     createLinkTag,
     checkURLExists,
-    checkAPIonline
+    checkAPIonline, getBiomeIcon, formatDate, formatLineage
 } from "../util";
 
 checkAPIonline();
@@ -50,12 +52,20 @@ let StudyView = Backbone.View.extend({
                     const links = _.map(data, function (url, text) {
                         return createListItem(createLinkTag(url, text));
                     });
+                    console.log("Check 2");
                     that.model.attributes.external_links = links;
-                    that.$el.html(that.template(that.model.toJSON()));
-                    deferred.resolve(true);
+                    console.log("Check 3");
                 });
+                getEuropePMCLinks(attr.id).done(function (data) {
+                    console.log("Check 4");
+                    const links = _.map(data, function (url, text) {
+                        return createListItem(createLinkTag(url, text));
+                    });
+                    that.model.attributes.europepmc_links = links;
+                });
+                that.$el.html(that.template(that.model.toJSON()));
+                deferred.resolve(true);
                 attachTabHandlers();
-
             }
         });
         return deferred.promise();
@@ -119,16 +129,16 @@ let SamplesView = Backbone.View.extend({
 
 
 let MapData = Backbone.Model.extend({
-    url: function(){
-        return API_URL + 'samples?page_size=250&study_accession='+ this.study_id + '&fields=latitude,longitude'
+    url: function () {
+        return API_URL + 'samples?page_size=250&study_accession=' + this.study_id + '&fields=latitude,longitude'
     },
-    initialize: function(study_id){
+    initialize: function (study_id) {
         this.study_id = study_id;
         this.data = [];
     },
-    parse: function(d){
+    parse: function (d) {
         this.data = this.data.concat(d.data);
-        if (d.links.next!==null){
+        if (d.links.next !== null) {
             this.url = d.links.next;
             this.fetch();
         } else {
@@ -192,9 +202,49 @@ let RunsView = Backbone.View.extend({
     }
 });
 
+function getEuropePMCLinks(study_id) {
+    let deferred = new $.Deferred();
+    let publications = new StudyPublications({study_accession: study_id});
+    const publicationArray = [];
+
+    publications.fetch({
+        success: function (data, response) {
+            for (let i = 0; i < data.models.length; i++) {
+                const pubmed_id = data.models[i].attributes['pubmed_id'];
+                const pub_title = data.models[i].attributes['pub_title'];
+                const authors = data.models[i].attributes['authors'];
+                const doi = data.models[0].attributes['doi'];
+                publicationArray.push(new PublicationLink(pub_title, authors, pubmed_id, doi));
+            }
+            console.log("Check 5");
+        },
+        error: function () {
+            console.log("Couldn't fetch study publications!");
+        }
+    });
+
+    for (let i = 0; i < publicationArray.length; i++) {
+        const pubmed_id = publicationArray[i].pubmed_id;
+        const url = EUROPEPMC_ENTRY_URL + publicationArray[i].pubmed_id;
+        const url_check = checkURLExists(url);
+        console.log("Check 1");
+        let urls = {};
+        $.when(
+            url_check
+        ).done(function () {
+            if (url_check.status === 200) {
+                urls['PMID (' + pubmed_id + ')'] = url;
+            }
+            deferred.resolve(urls);
+
+        });
+    }
+    return deferred.promise();
+}
+
 function getExternalLinks(study_id, study_accession) {
     var deferred = new $.Deferred();
-    const ena_url = 'https://www.ebi.ac.uk/ena/data/view/' + study_accession;
+    const ena_url = ENA_VIEW_URL + study_accession;
     const ena_url_check = checkURLExists(ena_url);
     let urls = {};
     $.when(
@@ -222,7 +272,6 @@ function initPage() {
     let runsView = new RunsView({collection: runs});
 
 
-
     $.when(
         studyView.fetchAndRender(),
     ).done(function () {
@@ -233,16 +282,44 @@ function initPage() {
 }
 
 
+class PublicationLink {
+    constructor(pub_title, authors, pubmed_id, doi) {
+        this.pub_title = pub_title;
+        this.authors = authors;
+        this.pubmed_id = pubmed_id;
+        this.doi = doi;
+    }
+}
+
+const Publication = Backbone.Model.extend({
+    parse: function (d) {
+        const data = d.data !== undefined ? d.data : d;
+        const attrs = data.attributes;
+        return {
+            pubmed_id: attrs['pubmed-id'],
+            pub_title: attrs['pub-title'],
+            authors: attrs['authors'],
+            doi: attrs['doi'],
+        }
+    }
+});
+
+const StudyPublications = Backbone.Collection.extend({
+    model: Publication,
+    initialize: function (data) {
+        if (data && data.hasOwnProperty('study_accession')) {
+            this.study_accession = data.study_accession;
+        }
+    },
+    url: function () {
+        return API_URL + 'studies/' + this.study_accession + '/publications?page_size=10';
+    },
+    parse: function (response) {
+        return response.data;
+    }
+});
+
+
 window.initPage = initPage;
 
 
-// <!--<% _.each(samples, function(sample){ %>-->
-// <!--<% attr = sample.attributes %>-->
-// <!--<% console.log(sample) %>-->
-// <!--<tr>-->
-// <!--<td><a href="<%= attr.url %>"><%= attr['sample-name'] %></a></td>-->
-// <!--<td><a href="<%= attr.url %>"><%= attr.accession %></a></td>-->
-// <!--<td><%= attr['sample-desc'] %></td>-->
-// <!--<td><%= attr['last-update'] %></td>-->
-//     <!--</tr>-->
-// <!--<% });%>-->

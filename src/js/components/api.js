@@ -86,8 +86,8 @@ export const Run = Backbone.Model.extend({
     }
 });
 
-export function getKronaURL(run_id, pipeline_version){
-    return API_URL+"runs/"+run_id+"/pipelines/"+pipeline_version+"/krona"
+export function getKronaURL(run_id, pipeline_version) {
+    return API_URL + "runs/" + run_id + "/pipelines/" + pipeline_version + "/krona"
 }
 
 export const RunCollection = Backbone.Collection.extend({
