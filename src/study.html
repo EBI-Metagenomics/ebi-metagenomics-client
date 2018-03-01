@@ -59,12 +59,21 @@
                                 <div class="row">
                                     <div class="columns small-6">
                                         <ul id="ebi_europepmc_links">
-                                            <%= europepmc_links %>
+                                            <a class="ext" href="<%= ena_url %>">ENA website (<%= study_accession %>)</a>
                                         </ul>
                                     </div>
                                     <div class="columns small-6">
                                         <ul id="ebi_ena_links">
-                                            <%= external_links %>
+                                            <% _.each(publications, function(pub){ %>
+                                                <li>
+                                                    <span class="pub-title"><%= pub.title %> <br></span>
+                                                    <%= pub.authors %> <br>
+                                                    <%= pub.year %> <%= pub.volume %>
+                                                        (PMID: <a class="ext" href="<%= pub.pmc_url %>"><%= pub.pubmed_id %></a>)
+                                                        (DOI: <a class="ext" href="<%= pub.doi_url %>"><%= pub.doi %></a>)
+                                                    </p>
+                                                </li>
+                                            <% }); %>
                                         </ul>
                                     </div>
                                 </div>
@@ -170,7 +179,6 @@
 
 <!--Google Map marker API-->
 <script id="marker-template" type="text/x-handlebars-template">
-
     <div class="row">
         <div class="columns small-1 medium-1 large-1"></div>
         <div class="columns small-11 medium-11 large-11">
@@ -203,6 +211,7 @@
         <a href="{{this.sample_url}}" class="button">View more</a>
     </div>
 </script>
+
 
 <!-- JavaScript -->
 

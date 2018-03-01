@@ -651,5 +651,9 @@ a.ext:hover, a.ext:active, a.ext:focus {
 }
 
 .biome-disp > a {
-    display:inline;
+    display: inline;
+}
+
+span.pub-title {
+    font-weight: bold;
 }
