@@ -172,8 +172,6 @@ export const Sample = Backbone.Model.extend({
             sample_name: attr['sample-name'] || NO_DATA_MSG,
             sample_desc: attr['sample-desc'],
             sample_url: util.subfolder + '/samples/' + attr['accession'],
-            study_accession: attr['study-accession'] || NO_DATA_MSG,
-            study_url: util.subfolder + '/studies/' + attr['study-accession'],
             sample_accession: attr.accession || NO_DATA_MSG,
             lineage: formatLineage(biome.data.id || NO_DATA_MSG),
             metadatas: metadatas,

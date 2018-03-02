@@ -12,7 +12,6 @@ import {
     formatLineage,
     getURLFilterParams,
     hideTableLoadingGif,
-    initResultsFilter,
     setCurrentTab,
     setURLParams,
     showTableLoadingGif,

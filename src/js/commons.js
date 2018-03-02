@@ -6,6 +6,7 @@ export const pagesize = require("../partials/pagesize.handlebars");
 export const resultsFilter = require("../partials/results_filter.handlebars");
 export const genericTable = require('../partials/generic_table.handlebars');
 export const detailList = require('../partials/detailList.handlebars');
+export const biomeFilter = require('../partials/biome_filter.handlebars');
 
 export const pipelines = [
     require('../partials/pipelines/1.handlebars'),

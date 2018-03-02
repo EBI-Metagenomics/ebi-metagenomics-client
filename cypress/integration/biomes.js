@@ -76,7 +76,7 @@ describe('Biomes page', function () {
             expect($el.text()).to.contain('root > Host-associated > Plants');
             cy.get('td.biome-name').first().find('a').click();
             waitForStudiesLoad(initialResultSize);
-            cy.get('.biome-icon > span').should('have.class', 'plant_host_b');
+            cy.get('span.biome_icon').should('have.class', 'plant_host_b');
         });
     });
 });
