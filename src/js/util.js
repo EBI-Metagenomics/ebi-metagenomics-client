@@ -36,30 +36,6 @@ export function getBiomeIconData(biome_data) {
     return {name: formatLineage(name), icon: getBiomeIcon(name)};
 }
 
-export function initResultsFilter(initQuery, callback) {
-    // $("#filterForm").append(resultsFilter);
-    // const $searchInput = $('#search-input');
-    // $searchInput.val(initQuery);
-    // var options = {
-    //     callback: callback,
-    //     wait: 100,
-    //     highlight: true,
-    //     allowSubmit: false,
-    //     captureLength: 0
-    // };
-    // $searchInput.typeWatch(options);
-    // // $('#search-input').on('keyup', callback);
-    // const $biomeSelect = $('#biome-select');
-    // $biomeSelect.on('change', callback);
-    //
-    // const $clearBtn = $('#clear-filter');
-    // $clearBtn.click(function () {
-    //     $searchInput.val('');
-    //     $biomeSelect.val($biomeSelect.find('option:first').val());
-    //     $biomeSelect.trigger('change');
-    // })
-}
-
 export function initBiomeFilter($div, callback){
     $div.before(biomeFilter);
     const $biomeSelect = $('#biome-select');

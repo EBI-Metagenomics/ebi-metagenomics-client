@@ -14,7 +14,6 @@ const BIOME_FILTER_DEPTH = 3;
 
 import {
     getURLFilterParams,
-    initResultsFilter,
     setCurrentTab,
     BiomeCollectionView,
     checkAPIonline,
@@ -131,14 +130,4 @@ var studiesView = new StudiesView({collection: studies});
 
 studiesView.init();
 
-initResultsFilter(pageFilters.get('search'), function (e) {
-    var params = {
-        page_size: pagination.getPageSize(),
-        page: pagination.currentPage,
-        search: $("#search-input").val(),
-        lineage: $("#biome-select").val(),
-        ordering: Order.currentOrder,
-    };
-    studiesView.update(params);
-});
 
