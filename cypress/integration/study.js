@@ -5,6 +5,8 @@ import GenericTableHandler from './genericTable';
 const projectId = "ERP019566";
 const origPage = "studies/" + projectId;
 
+const pageTitle = "Longitudinal study of the diabetic skin and wound microbiome";
+
 const samplesTableDefaultSize = 10;
 const runsTableDefaultSize = 25;
 
@@ -64,7 +66,7 @@ const runTableColumns = {
 describe('Study page - General', function () {
     beforeEach(function () {
         openPage(origPage);
-        waitForPageLoad(projectId);
+        waitForPageLoad(pageTitle);
     });
 
     it('Verify elements are present', function () {
@@ -92,7 +94,7 @@ let table;
 describe('Study page - Samples table', function () {
     beforeEach(function () {
         openPage(origPage);
-        waitForPageLoad(projectId);
+        waitForPageLoad(pageTitle);
         table = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
     });
 
@@ -147,7 +149,7 @@ describe('Study page - Samples table', function () {
 describe('Study page - Runs table', function () {
     beforeEach(function () {
         openPage(origPage);
-        waitForPageLoad(projectId);
+        waitForPageLoad(pageTitle);
         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
     });
 
@@ -205,7 +207,7 @@ describe('Study page - Runs table with >1 analysis per run', function(){
         const projectId = "ERP009703";
         const origPage = "studies/" + projectId;
         openPage(origPage);
-        waitForPageLoad(projectId);
+        waitForPageLoad("Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing study from the June solstice in the year 2014");
         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
     });
     it('Runs table should display both pipeline versions for a run', function(){

@@ -157,7 +157,7 @@ class GenericTableHandler {
     }
 
     getLoadingIcon() {
-        return cy.get(this.parentId + "> h3 > img.loading-gif-medium")
+        return cy.get(this.parentId + "> * > img.loading-gif-medium")
     }
 
     getFilterInput() {
