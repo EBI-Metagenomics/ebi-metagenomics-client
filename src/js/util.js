@@ -32,13 +32,6 @@ export function setCurrentTab(id) {
 }
 
 
-<<<<<<< HEAD
-export function initTableTools() {
-    // $("#tableTools").append(tableTools);
-}
-
-=======
->>>>>>> develop
 export function getBiomeIconData(biome_data) {
     const name = biome_data.id;
     return {name: formatLineage(name), icon: getBiomeIcon(name)};
