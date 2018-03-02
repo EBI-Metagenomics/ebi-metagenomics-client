@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists} from './util';
+import {openPage, datatype, urlExists, waitForPageLoad} from './util';
 import Config from './config';
 import GenericTableHandler from './genericTable';
 
@@ -59,9 +59,7 @@ const runTableColumns = {
     },
 };
 
-function waitForPageLoad(projectId) {
-    cy.get('h3').should('contain', projectId)
-}
+
 
 describe('Study page - General', function () {
     beforeEach(function () {

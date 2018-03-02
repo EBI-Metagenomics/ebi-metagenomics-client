@@ -1,23 +1,24 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
+const util = require('../util');
 const commons = require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
 const Order = require('../components/order');
-
+const GenericTable = require('../components/genericTable');
+const Commons = require('../commons');
 const pagination = new Pagination();
-const DEFAULT_PAGE_SIZE = commons.DEFAULT_PAGE_SIZE;
+
+
+const BIOME_FILTER_DEPTH = 3;
+
 import {
     getURLFilterParams,
-    hideTableLoadingGif,
     initResultsFilter,
     setCurrentTab,
-    setURLParams,
-    showTableLoadingGif,
-    getDownloadParams,
-    setDownloadResultURL,
     BiomeCollectionView,
-    checkAPIonline
+    checkAPIonline,
+    initBiomeFilter
 } from "../util";
 
 checkAPIonline();
@@ -27,28 +28,42 @@ $("#pageSize").append(commons.pagesize);
 
 const pageFilters = getURLFilterParams();
 
-
-var SampleView = Backbone.View.extend({
-    tagName: 'tr',
-    template: _.template($("#sample-row").html()),
-    attributes: {
-        class: 'sample',
-    },
-    render: function () {
-        this.$el.html(this.template(this.model.toJSON()));
-        return this.$el
-    }
-});
-
-
-var SamplesView = Backbone.View.extend({
-    el: "#samples-table-body",
+let SamplesView = Backbone.View.extend({
+    tableObj: null,
+    pagination: null,
     params: {},
-    initialize: function () {
-        var that = this;
+
+    fetch: function () {
+        return this.collection.fetch()
+    },
+    init: function () {
+        const that = this;
+        const columns = [
+            {sortBy: null, name: 'Biome'},
+            {sortBy: 'accession', name: 'Sample ID'},
+            {sortBy: 'sample_name', name: 'Name'},
+            {sortBy: null, name: 'Description'},
+            {sortBy: 'last_update', name: 'Last updated'},
+        ];
+        const $samplesSection = $('#samples-section');
+        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns, Commons.DEFAULT_PAGE_SIZE, function (page, pageSize, order, search) {
+
+            that.update({
+                page: page,
+                page_size: pageSize,
+                ordering: order,
+                search: search
+            });
+        });
+        initBiomeFilter($samplesSection.find('div.row:nth-child(2) > div.columns:nth-child(2)'), function () {
+            that.update({
+                lineage: $(this).val(),
+                search: $('#tableFilter').val()
+            });
+        });
+
         let params = {};
         params.page = pagination.currentPage;
-        params.page_size = pagination.getPageSize();
 
         const biome = pageFilters.get('lineage');
         if (biome) {
@@ -65,95 +80,56 @@ var SamplesView = Backbone.View.extend({
         }
 
         const search = pageFilters.get('search');
-        if (search !== null) {
+        if (search) {
             params.search = search;
             $("#search").val(search);
         }
-
-        const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
+        params.page_size = pagination.getPageSize();
+        const pagesize = pageFilters.get('pagesize') || Commons.DEFAULT_PAGE_SIZE;
         if (pagesize) {
             params.page_size = pagesize;
         }
-        params.page = pageFilters.get('page') || 1;
-        this.params = params;
+        params.page = parseInt(pageFilters.get('page')) || 1;
 
-        this.fetchXhr = this.collection.fetch({
-            data: $.param(params),
-            success: function (collection, response, options) {
-                const newParams = getDownloadParams(params);
-                setDownloadResultURL(that.collection.url + '?' + $.param(newParams));
-                that.render();
-                const pag = response.meta.pagination;
-                pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
-                Order.initHeaders(params.ordering, function (sort) {
-                    const params = {
-                        page: 1,
-                        page_size: pagination.getPageSize(),
-                        ordering: sort
-                    };
-                    that.update(params);
-                })
-            }
-        });
-        return this;
+        this.update(params);
     },
+
     update: function (params) {
+        this.params = $.extend({}, this.params, params);
+
         const that = this;
-
-        this.params = $.extend(this.params, params);
-        $(".sample").remove();
-
-        showTableLoadingGif();
-        setURLParams(this.params, false);
-        if(this.fetchXhr.readyState > 0 && this.fetchXhr.readyState < 4){
-            this.fetchXhr.abort();
-        }
         this.fetchXhr = this.collection.fetch({
-            data: $.param(that.params), remove: true, success: function (collection, response, options) {
-                hideTableLoadingGif();
-                pagination.update(response.meta.pagination, changePage);
-                that.render();
-            }
-        });
-        const newParams = getDownloadParams(that.params);
-        setDownloadResultURL(that.collection.url + '?' + $.param(newParams));
-
-        return this;
+            data: $.param(this.params),
+            success: function (data, response) {
+                const pagination = response.meta.pagination;
+                that.renderData(pagination.page, that.params.page_size, pagination.count, response.links.first);
+                that.tableObj.hideLoadingGif();
+            },
+        })
     },
-    render: function () {
-        $(".sample").remove();
-        this.collection.each(function (sample) {
-            var sampleView = new SampleView({model: sample});
-            $(this.$el).append(sampleView.render());
-        }, this);
-        return this;
+
+    renderData: function (page, pageSize, resultCount, requestURL) {
+        const tableData = _.map(this.collection.models, function (m) {
+            const attr = m.attributes;
+            console.log(attr);
+            const biomes = "<span class=\"biome_icon icon_xs " + attr.biome_icon + "\" title=\"" + attr.biome_name + "\"></span>";
+            const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
+            return [biomes, sample_link, attr.sample_name, attr.sample_desc, attr.last_update];
+        });
+        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
 });
 
-function updatePageSize(pageSize) {
-    const params = {
-        page_size: pageSize,
-        page: 1,
-    };
-    samplesView.update(params);
-}
-
-function changePage(page) {
-    const params = {
-        page_size: pagination.getPageSize(),
-        page: page,
-    };
-    samplesView.update(params);
-}
-
-pagination.setPageSizeChangeCallback(updatePageSize);
-
-
 var biomes = new api.BiomeCollection();
-var biomesSelectView = new BiomeCollectionView({collection: biomes, maxDepth: 3}, pageFilters.get('lineage'));
+var biomesSelectView = new BiomeCollectionView({
+    collection: biomes,
+    maxDepth: BIOME_FILTER_DEPTH
+}, pageFilters.get('lineage'));
 
 var samples = new api.SamplesCollection();
 var samplesView = new SamplesView({collection: samples});
+
+samplesView.init();
 
 initResultsFilter(pageFilters.get('search'), function (e) {
     var params = {
@@ -165,3 +141,4 @@ initResultsFilter(pageFilters.get('search'), function (e) {
     };
     samplesView.update(params);
 });
+

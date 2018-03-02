@@ -7,7 +7,7 @@ const sequenceSearchUrl = process.env.SEQUENCE_SEARCH_URL;
 export const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 $.typeWatch = require('jquery.typewatch');
 
-import {footer, header, resultsFilter, head} from "./commons";
+import {footer, header, resultsFilter, head, biomeFilter} from "./commons";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -31,39 +31,46 @@ export function setCurrentTab(id) {
 }
 
 
-
-export function initTableTools() {
-    // $("#tableTools").append(tableTools);
-}
-
 export function getBiomeIconData(biome_data) {
     const name = biome_data.id;
     return {name: formatLineage(name), icon: getBiomeIcon(name)};
 }
 
 export function initResultsFilter(initQuery, callback) {
-    $("#filterForm").append(resultsFilter);
-    const $searchInput = $('#search-input');
-    $searchInput.val(initQuery);
-    var options = {
-        callback: callback,
-        wait: 100,
-        highlight: true,
-        allowSubmit: false,
-        captureLength: 0
-    };
-    $searchInput.typeWatch(options);
-    // $('#search-input').on('keyup', callback);
+    // $("#filterForm").append(resultsFilter);
+    // const $searchInput = $('#search-input');
+    // $searchInput.val(initQuery);
+    // var options = {
+    //     callback: callback,
+    //     wait: 100,
+    //     highlight: true,
+    //     allowSubmit: false,
+    //     captureLength: 0
+    // };
+    // $searchInput.typeWatch(options);
+    // // $('#search-input').on('keyup', callback);
+    // const $biomeSelect = $('#biome-select');
+    // $biomeSelect.on('change', callback);
+    //
+    // const $clearBtn = $('#clear-filter');
+    // $clearBtn.click(function () {
+    //     $searchInput.val('');
+    //     $biomeSelect.val($biomeSelect.find('option:first').val());
+    //     $biomeSelect.trigger('change');
+    // })
+}
+
+export function initBiomeFilter($div, callback){
+    $div.before(biomeFilter);
     const $biomeSelect = $('#biome-select');
     $biomeSelect.on('change', callback);
 
     const $clearBtn = $('#clear-filter');
     $clearBtn.click(function () {
-        $searchInput.val('');
+        $('#tableFilter').val('');
         $biomeSelect.val($biomeSelect.find('option:first').val());
         $biomeSelect.trigger('change');
     })
-
 }
 
 export function getURLParameter() {

@@ -17,15 +17,18 @@ var Util = module.exports = {
         cy.get(sortBySelector).select('-last_update');
         waitCallback(numResults);
     },
+    waitForPageLoad: function (projectId) {
+        cy.get('h3').should('contain', projectId)
+    },
     waitForBiomesLoad: function (results) {
         cy.get("table tr.biome", {timeout: 10000}).should("have.length", parseInt(results));
     },
     waitForSamplesLoad: function (results) {
-        cy.get("table tr.sample", {timeout: 10000}).should("have.length", parseInt(results));
+        cy.get("table > tbody > tr", {timeout: 10000}).should("have.length", parseInt(results));
     },
 
     waitForStudiesLoad: function (results) {
-        cy.get("table tr.study", {timeout: 10000}).should("have.length", parseInt(results));
+        cy.get("table > tbody > tr", {timeout: 10000}).should("have.length", parseInt(results));
     },
     assertTableIsCleared: function () {
         cy.get("table tr.sample").should('not.exist');

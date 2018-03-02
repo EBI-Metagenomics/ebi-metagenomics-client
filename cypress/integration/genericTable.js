@@ -199,9 +199,8 @@ class GenericTableHandler {
     }
 
     getDownloadLink() {
-        return cy.get(this.parentId + "> div.row > div.columns >  a.download-link")
+        return cy.get(this.parentId + "> div.row.columns > a.download-link")
     }
-
     getTableSelector() {
         return this.parentId + "> div.row.columns > table "
     }

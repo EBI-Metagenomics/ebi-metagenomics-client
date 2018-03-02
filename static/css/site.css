@@ -656,7 +656,7 @@ a.ext:hover, a.ext:active, a.ext:focus {
 }
 
 .biome-disp > a {
-    display:inline;
+    display: inline;
 }
 
 .map-marker-data {
@@ -664,7 +664,6 @@ a.ext:hover, a.ext:active, a.ext:focus {
     height: 15em;
     overflow-y: scroll;
 }
-
 
 .masthead {
     background-image: url(../images/backgrounds/embl-ebi-background-4.jpg);
@@ -674,6 +673,15 @@ a.ext:hover, a.ext:active, a.ext:focus {
     top: 0px;
     background-color: white;
 }
+
 span.pub-title {
     font-weight: bold;
+}
+
+div.pagesize {
+    padding-top: 2em;
+}
+
+li.page-item.active {
+    background-color: #007c82;
 }

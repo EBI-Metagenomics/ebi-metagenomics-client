@@ -5,25 +5,20 @@ const commons = require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
 const Order = require('../components/order');
-
+const GenericTable = require('../components/genericTable');
+const Commons = require('../commons');
 const pagination = new Pagination();
 
-const DEFAULT_PAGE_SIZE = require('../commons').DEFAULT_PAGE_SIZE;
 
 const BIOME_FILTER_DEPTH = 3;
 
 import {
-    getFormData,
     getURLFilterParams,
-    hideTableLoadingGif,
     initResultsFilter,
     setCurrentTab,
-    setURLParams,
-    showTableLoadingGif,
     BiomeCollectionView,
-    getDownloadParams,
-    setDownloadResultURL,
-    checkAPIonline
+    checkAPIonline,
+    initBiomeFilter
 } from "../util";
 
 checkAPIonline();
@@ -33,38 +28,41 @@ $("#pageSize").append(commons.pagesize);
 
 const pageFilters = getURLFilterParams();
 
-const orderOptions = [
-    // {name: 'Study accession', value: 'accession'},
-    {name: 'Study name', value: 'study_name'},
-    // {name: 'Number of runs', value: 'runs-count'}, // NOT DISPLAYED IN TABLE
-    {name: 'Number of samples', value: 'samples_count'},
-    {name: 'Last updated', value: 'last_update'},
-];
-
-
-var StudyView = Backbone.View.extend({
-    tagName: 'tr',
-    template: _.template($("#study-row").html()),
-    attributes: {
-        class: 'study',
-    },
-    render: function () {
-        this.$el.html(this.template(this.model.toJSON()));
-        return this.$el
-    }
-});
-
-
-var StudiesView = Backbone.View.extend({
-    el: '#studies-table-body',
+let StudiesView = Backbone.View.extend({
+    tableObj: null,
+    pagination: null,
     params: {},
 
-    initialize: function () {
-        var that = this;
+    fetch: function () {
+        return this.collection.fetch()
+    },
+    init: function () {
+        const that = this;
+        const columns = [
+            {sortBy: null, name: 'Biome'},
+            {sortBy: 'study_name', name: 'Study name'},
+            {sortBy: 'samples_count', name: 'Samples'},
+            {sortBy: 'last_update', name: 'Last updated'},
+        ];
+        const $studiesSection = $('#studies-section');
+        this.tableObj = new GenericTable($studiesSection, 'Studies list', columns, Commons.DEFAULT_PAGE_SIZE, function (page, pageSize, order, search) {
+
+            that.update({
+                page: page,
+                page_size: pageSize,
+                ordering: order,
+                search: search
+            });
+        });
+        initBiomeFilter($studiesSection.find('div.row:nth-child(2) > div.columns:nth-child(2)'), function () {
+            that.update({
+                lineage: $(this).val(),
+                search: $('#tableFilter').val()
+            });
+        });
 
         let params = {};
         params.page = pagination.currentPage;
-        params.page_size = pagination.getPageSize();
 
         const biome = pageFilters.get('lineage');
         if (biome) {
@@ -85,96 +83,53 @@ var StudiesView = Backbone.View.extend({
             params.search = search;
             $("#search").val(search);
         }
-
-        const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
+        params.page_size = pagination.getPageSize();
+        const pagesize = pageFilters.get('pagesize') || Commons.DEFAULT_PAGE_SIZE;
         if (pagesize) {
             params.page_size = pagesize;
         }
         params.page = parseInt(pageFilters.get('page')) || 1;
-        this.params = params;
-        this.fetchXhr = this.collection.fetch({
-            data: $.param(params),
-            remove: true,
-            success: function (collection, response, options) {
-                const newParams = getDownloadParams(params);
-                setDownloadResultURL(that.collection.url+'?'+$.param(newParams));
-                that.render();
-                const pag = response.meta.pagination;
-                pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
-                Order.initHeaders(params.ordering, function (sort) {
-                    var formData = getFormData("#filter");
-                    const params = {
-                        page: 1,
-                        page_size: pagination.getPageSize(),
-                        ordering: sort
-                    };
-                    that.update(params);
-                });
 
-            }
-        });
-        return this;
+        this.update(params);
     },
 
     update: function (params) {
+        this.params = $.extend({}, this.params, params);
+
         const that = this;
-
-        this.params = $.extend(this.params, params);
-        $(".study").remove();
-        showTableLoadingGif();
-        setURLParams(this.params, false);
-        if(this.fetchXhr.readyState > 0 && this.fetchXhr.readyState < 4){
-            this.fetchXhr.abort();
-        }
         this.fetchXhr = this.collection.fetch({
-            data: $.param(that.params),
-            remove: true,
-            success: function (collection, response, options) {
-                hideTableLoadingGif();
-                pagination.update(response.meta.pagination, changePage);
-                that.render();
-            }
-        });
-        const newParams = getDownloadParams(that.params);
-        setDownloadResultURL(that.collection.url+'?'+$.param(newParams));
-
-        return this;
+            data: $.param(this.params),
+            success: function (data, response) {
+                const pagination = response.meta.pagination;
+                that.renderData(pagination.page, that.params.page_size, pagination.count, response.links.first);
+                that.tableObj.hideLoadingGif();
+            },
+        })
     },
-    render: function () {
-        $(".study").remove();
-        this.collection.each(function (study) {
-            var studyView = new StudyView({model: study});
-            $(this.$el).append(studyView.render());
-        }, this);
-        return this;
+
+    renderData: function (page, pageSize, resultCount, requestURL) {
+        const tableData = _.map(this.collection.models, function (m) {
+            const attr = m.attributes;
+            const biomes = _.map(m.attributes.biomes, function (biome) {
+                return "<span class=\"biome_icon icon_xs " + biome.icon + "\" title=\"" + biome.name + "\"></span>";
+            }).join();
+            const study_link = "<a href='" + attr.study_link + "'>" + attr.study_name + "</a>";
+            return [biomes, study_link, attr.samples_count, attr.last_update];
+        });
+        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
 });
 
-
-function updatePageSize(pageSize) {
-    const params = {
-        page_size: pageSize,
-        page: 1,
-    };
-    studiesView.update(params);
-}
-
-function changePage(page) {
-    const params = {
-        page_size: pagination.getPageSize(),
-        page: page,
-    };
-    studiesView.update(params);
-}
-
-pagination.setPageSizeChangeCallback(updatePageSize);
-
-
 var biomes = new api.BiomeCollection();
-var biomesSelectView = new BiomeCollectionView({collection: biomes, maxDepth: BIOME_FILTER_DEPTH}, pageFilters.get('lineage'));
+var biomesSelectView = new BiomeCollectionView({
+    collection: biomes,
+    maxDepth: BIOME_FILTER_DEPTH
+}, pageFilters.get('lineage'));
+
 var studies = new api.StudiesCollection();
 var studiesView = new StudiesView({collection: studies});
 
+studiesView.init();
 
 initResultsFilter(pageFilters.get('search'), function (e) {
     var params = {
@@ -187,7 +142,3 @@ initResultsFilter(pageFilters.get('search'), function (e) {
     studiesView.update(params);
 });
 
-//TODO remove this
-// studiesView.update(1,10);
-window.biomes = biomes;
-window.studiesView = studiesView;

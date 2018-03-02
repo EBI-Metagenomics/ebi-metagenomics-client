@@ -73,7 +73,6 @@ module.exports = class GenericTable {
         if (this.$pagination.data("twbs-pagination")) {
             this.$pagination.twbsPagination('destroy');
         }
-
         this.$pageSizeSelect.val(pageSize);
 
         let totalPages = Math.max(Math.ceil(resultCount / pageSize));
