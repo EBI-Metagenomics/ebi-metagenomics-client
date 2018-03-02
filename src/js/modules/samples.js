@@ -111,7 +111,6 @@ let SamplesView = Backbone.View.extend({
     renderData: function (page, pageSize, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
-            console.log(attr);
             const biomes = "<span class=\"biome_icon icon_xs " + attr.biome_icon + "\" title=\"" + attr.biome_name + "\"></span>";
             const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
             return [biomes, sample_link, attr.sample_name, attr.sample_desc, attr.last_update];

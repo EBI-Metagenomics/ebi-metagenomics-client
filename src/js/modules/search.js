@@ -977,7 +977,6 @@ function loadSearchParams(facet) {
 
 function getCookieQuery() {
     let cookie = Cookies.get(cookieName);
-    console.log(cookie);
     if (cookie) {
         cookie = JSON.parse(cookie);
         try {

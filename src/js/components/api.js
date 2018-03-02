@@ -166,7 +166,6 @@ export const Sample = Backbone.Model.extend({
         // Adaption to handle 'includes' on API calls which would wrap the response
         const biome = data.relationships.biome;
         const biome_name = biome.data.id;
-        console.log(d);
         return {
             biome_icon: getBiomeIcon(biome_name),
             biome_name: formatLineage(biome_name),
