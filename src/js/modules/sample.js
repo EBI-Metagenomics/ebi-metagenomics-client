@@ -99,7 +99,7 @@ let StudiesView = Backbone.View.extend({
             {sortBy: null, name: 'Samples count'},
             {sortBy: null, name: 'Last update'},
         ];
-        this.tableObj = new GenericTable($('#studies-section'), 'Associated studies', columns, DEFAULT_PAGE_SIZE, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#studies-section'), 'Associated studies', columns, DEFAULT_PAGE_SIZE, false, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
         this.update(1, DEFAULT_PAGE_SIZE, null, null)
@@ -158,7 +158,7 @@ let RunsView = Backbone.View.extend({
             {sortBy: null, name: 'Instrument platform'},
             {sortBy: null, name: 'Pipeline versions'},
         ];
-        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, DEFAULT_PAGE_SIZE, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, DEFAULT_PAGE_SIZE, false, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
         this.update(1, DEFAULT_PAGE_SIZE, null, null)

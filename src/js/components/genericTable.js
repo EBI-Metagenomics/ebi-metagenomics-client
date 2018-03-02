@@ -5,13 +5,14 @@ const Commons = require('../commons');
 
 
 module.exports = class GenericTable {
-    constructor($container, title, headers, initPageSize, callback) {
+    constructor($container, title, headers, initPageSize, is_page_header, callback) {
         this.headers = headers;
         let params = {
             section_title: title,
             headers: headers,
             pagination: true,
-            filter: true
+            filter: true,
+            header_class: is_page_header ? "h3" : "h2"
         };
         const $sectionContent = $(tableTmpl(params));
         this.$table = $sectionContent.find('table');

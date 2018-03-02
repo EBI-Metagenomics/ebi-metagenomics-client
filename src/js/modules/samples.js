@@ -46,7 +46,7 @@ let SamplesView = Backbone.View.extend({
             {sortBy: 'last_update', name: 'Last updated'},
         ];
         const $samplesSection = $('#samples-section');
-        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns, Commons.DEFAULT_PAGE_SIZE, function (page, pageSize, order, search) {
+        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns, Commons.DEFAULT_PAGE_SIZE, true, function (page, pageSize, order, search) {
 
             that.update({
                 page: page,

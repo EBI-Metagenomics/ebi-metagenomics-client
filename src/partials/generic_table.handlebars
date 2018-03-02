@@ -1,4 +1,7 @@
-<h3>{{section_title}} <img class="loading-gif-medium" src="{{subfolder}}/static/images/ajax-loader.gif"></h3>
+<{{header_class}}>
+    {{section_title}}
+    <img class="loading-gif-medium" src="{{subfolder}}/static/images/ajax-loader.gif">
+</{{header_class}}>
 <div class="row">
     <div class="columns small-12 medium-6 large-6 pagesize">
         {{#if this.pagination}}
@@ -19,7 +22,8 @@
     </div>
     <div class="columns small-12 medium-3 large-3">
         {{#if this.filter}}
-            <label class="right" for="tableFilter">Filter rows: <input id="tableFilter" class="search" type="text"></label>
+            <label class="right" for="tableFilter">Filter rows: <input id="tableFilter" class="search"
+                                                                       type="text"></label>
         {{/if}}
     </div>
 </div>
