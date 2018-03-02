@@ -18,7 +18,7 @@ var Util = module.exports = {
         waitCallback(numResults);
     },
     waitForPageLoad: function (projectId) {
-        cy.get('h3').should('contain', projectId)
+        cy.get('h2').should('contain', projectId)
     },
     waitForBiomesLoad: function (results) {
         cy.get("table tr.biome", {timeout: 10000}).should("have.length", parseInt(results));
