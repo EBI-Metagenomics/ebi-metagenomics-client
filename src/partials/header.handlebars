@@ -29,6 +29,26 @@
             <div class="columns medium-7" id="local-title">
                 <h1><a href="/" title="Back to homepage">EBI Metagenomics</a></h1>
             </div>
+            {{#unless hideSearch }}
+            <div class="column medium-5">
+                <form id="ebi_search" action="{{subfolder}}/search" method="get">
+                    <fieldset>
+                        <div class="input-group margin-bottom-none margin-top-large">
+                            <input id='navbar-query' name="query" type="search"
+                                   placeholder="Search" id="local-searchbox"  value="" class="input-group-field" size="35" maxlength="2048">
+                            <div class="input-group-button">
+                                <input id="search" class="button icon icon-functional" tabindex="2" type="submit" value="1">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <p id="example" class="small examples">
+                        Examples: <a href="{{subfolder}}/search?query=ERP001736" oldtitle="Study accession or a number (e.g. IPR020405 or 20405)">ERP001736</a>,
+                        <a href="{{subfolder}}/search?query=Tara+Oceans" oldtitle="Study title (e.g. Tara oceans)">Tara Oceans</a>,
+                        <a href="{{subfolder}}/search?query=Human+Gut" oldtitle="Biome name (e.g. Human Gut)">Human Gut</a>,
+                    </p>
+                </form>
+            </div>
+            {{/unless}}
             <!-- /local-title -->
             <!-- local-nav -->
             <nav>
@@ -47,16 +67,6 @@
                     <li id="help-nav"><a href="{{subfolder}}/help">Help</a></li>
                     <!--</ul>-->
                     <!--<ul class="menu dropdown float-right" data-dropdown-menu data-description="functional">-->
-                    <li>
-                        {{#unless hideSearch }}
-                            <form id="headerSearchForm" action="{{subfolder}}/search">
-                                <input id='navbar-query' class='header-search-input' name="query" type="search"
-                                       placeholder="Search">
-                                <button id="search" type="submit" class="button" class="header-search-button">Search
-                                </button>
-                            </form>
-                        {{/unless}}
-                    </li>
                     <li class="functional">
                         <a class="icon icon-functional button" data-icon="l" href="../login.html">
                             Login
