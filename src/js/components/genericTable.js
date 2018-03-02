@@ -12,7 +12,7 @@ module.exports = class GenericTable {
             headers: headers,
             pagination: true,
             filter: true,
-            header_class: is_page_header ? "h3" : "h2"
+            header_class: is_page_header ? "h2" : "h3"
         };
         const $sectionContent = $(tableTmpl(params));
         this.$table = $sectionContent.find('table');
