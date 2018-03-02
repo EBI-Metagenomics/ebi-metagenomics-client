@@ -34,7 +34,7 @@ for (let orig = 0; orig < navNames.length; orig++) {
     describe(origPage + ' - Search redirects correctly', function () {
         it('Navbar search re-directed correctly.', function () {
             openPage(origPage);
-            cy.get("#headerSearchForm input").type(testQuery);
+            cy.get("#headerSearchForm > input").type(testQuery);
             cy.get('#search').click();
             cy.url().should('include', 'search?query=' + testQuery);
         });
