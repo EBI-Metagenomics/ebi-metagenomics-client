@@ -3,10 +3,11 @@
 <head id="head">
     <title>Sample &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
+    <link rel="stylesheet" href="{{subfolder}}/js/sample.css" type="text/css" media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
-<div id="header">{{> partials/header this}}</div>
+<div id="header-container">{{> partials/header this}}</div>
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" role="main">
@@ -29,6 +30,7 @@
             </div>
             <div class="row">
                 <div class="column small-6 medium-6 large-6">
+                    <h4>Last updated: <%= last_update %></h4>
                     <h3>Description</h3>
                     <p><%= sample_desc %></p>
                     <h3>Classification</h3>
@@ -46,52 +48,16 @@
             </div>
             <hr>
             <div class="row">
-                <div class="column small-12 medium-12 large-12" id="studies-section">
-                    <!--<h3>Associated studies</h3>-->
-                    <!--<div id="pageSize2"></div>-->
-                    <!--<table id='studiesTable'>-->
-                    <!--<thead>-->
-                    <!--<tr>-->
-                    <!--<th class="biome-icon">Biome</th>-->
-                    <!--<th data-sortby='study_name' class="sort-both name">Study name</th>-->
-                    <!--<th data-sortby='samples_count' class="sort-both samples">Samples</th>-->
-                    <!--<th data-sortby='last_update' class="sort-both updated">Last updated</th>-->
-                    <!--</tr>-->
-                    <!--</thead>-->
-                    <!--<tbody id="studiesTableBody" class="live-filter-table">-->
-                    <!--<tr>-->
-                    <!--<td class='loading-gif-row' colspan="5">-->
-                    <!--<img class='loading-gif' src="/static/images/ajax-loader.gif"/>-->
-                    <!--</td>-->
-                    <!--</tr>-->
-                    <!--</tbody>-->
-                    <!--</table>-->
-                    <!--<div id="pagination2"></div>-->
+                <div class="column small-12 medium-12 large-12">
+                     <section id="studies-section">
+                     </section>
                 </div>
             </div>
             <hr>
             <div class="row">
-                <div class="column small-12 medium-12 large-12" id="runs-section">
-                    <!--<h3>Associated runs</h3>-->
-                    <!--<div id="pageSize"></div>-->
-                    <!--<table id='runsTable'>-->
-                    <!--<thead>-->
-                    <!--<tr>-->
-                    <!--<th>Run ID</th>-->
-                    <!--<th>Experiment type</th>-->
-                    <!--<th>Instrument model</th>-->
-                    <!--<th>Analyses</th>-->
-                    <!--</tr>-->
-                    <!--</thead>-->
-                    <!--<tbody id="runsTableBody" class="live-filter-table">-->
-                    <!--<tr>-->
-                    <!--<td class='loading-gif-row' colspan="5">-->
-                    <!--<img class='loading-gif' src="/static/images/ajax-loader.gif"/>-->
-                    <!--</td>-->
-                    <!--</tr>-->
-                    <!--</tbody>-->
-                    <!--</table>-->
-                    <!--<div id="pagination"></div>-->
+                <div class="column small-12 medium-12 large-12">
+                    <section id="runs-section">
+                    </section>
                 </div>
             </div>
             <hr>
@@ -122,44 +88,10 @@
 <!-- </div> -->
 <!-- End suggested layout containers / #content -->
 
-<div id="footer">{{>partials/footer}}</div>
-
-<script id="marker-template" type="text/x-handlebars-template">
-
-    <div class="row">
-        <div class="columns small-1 medium-1 large-1"></div>
-        <div class="columns small-11 medium-11 large-11">
-            <h2>Sample - {{this.id}}</h2>
-            <!--<p>{{this.name}}</p>-->
-        </div>
-    </div>
-    <div class="row columns">
-        <p>{{this.desc}}</p>
-    </div>
-    <div class="row">
-        <div class="columns">
-            <ul>
-                <li>
-                    Classification: {{this.classification}}
-                </li>
-                <li>
-                    Collection date: {{this.collection_date}}
-                </li>
-                <li>
-                    Lat/Long: {{this.lat}}, {{this.lng}}
-                </li>
-                <li>
-                    Sampling depth: TODO
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="row text-center">
-        <a href="{{this.sample_url}}" class="button">View more</a>
-    </div>
-</script>
-
-
+<div id="footer">
+    {{>partials/elixir}}
+    {{>partials/footer}}
+</div>
 <script src="../static/libraries/markerclusterer/src/markerclusterer.js"></script>
 <script src="../static/libraries/oms.min.js"></script>
 

@@ -3,8 +3,7 @@ const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HandlebarsPlugin = require("handlebars-webpack-plugin");
-const fs = require('fs');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 
 const getCompressionPlugin = (() => {
@@ -69,16 +68,16 @@ module.exports = (env = {prod: false}) => {
                 // if ommited, the input filepath stripped of its extension will be used
                 output: path.join(__dirname, "dist", "[name].html"),
                 // data passed to main hbs template: `main-template(data)`
-                data : {
+                data: {
                     subfolder: process.env.DEPLOYMENT_SUBFOLDER,
                 },
-                    // path.join(__dirname, configFile),
+                // path.join(__dirname, configFile),
                 // globbed path to partials, where folder/filename is unique
                 partials: [
                     path.join(__dirname, "src", "partials", "*.handlebars")
                 ],
-
-            })
+            }),
+            new ExtractTextPlugin("[name].css")
         ].filter(Boolean), // filter out empty values
         entry:
             {
@@ -141,26 +140,23 @@ module.exports = (env = {prod: false}) => {
                     test: /\.handlebars$/,
                     loader: "handlebars-loader"
                 }, {
-                    //     test: /\.(html)$/,
-                    //     use: [
-                    //         {
-                    //             loader: 'file-loader',
-                    //             options: {
-                    //                 name: '[name].[ext]',
-                    //                 outputPath: '../'
-                    //             }
-                    //         }
-                    //     ]
-                    // }, {
                     test: /\.css$/,
-                    use: [
-                        'style-loader',
-                        {
-                            loader: 'css-loader',
-                        }
-                    ]
+                    use: ExtractTextPlugin.extract({
+                        fallback: "style-loader",
+                        use: [
+                            {
+                                loader: 'css-loader',
+                                options: {
+                                    // If you are having trouble with urls not resolving add this setting.
+                                    // See https://github.com/webpack-contrib/css-loader#url
+                                    minimize: true,
+                                    sourceMap: true
+                                }
+                            }]
+                    })
+
                 }, {
-                    test: /\.(png|woff|woff2|eot|ttf|svg|gif)$/,
+                    test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg)$/,
                     loader: 'url-loader?name=[path][name].[ext]?limit=100000'
                 }
 // }, {
@@ -170,6 +166,6 @@ module.exports = (env = {prod: false}) => {
             ]
         },
         devtool: "#inline-source-map",
-    }
+    };
     return config;
 };

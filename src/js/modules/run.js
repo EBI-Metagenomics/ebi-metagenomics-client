@@ -22,6 +22,8 @@ checkAPIonline();
 
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 
+const DEFAULT_PAGE_SIZE = 25;
+
 setCurrentTab('#samples-nav');
 
 window.Foundation.addToJquery($);
@@ -188,7 +190,7 @@ let TaxonomyGraphView = Backbone.View.extend({
                     const colorDiv = getColourSquareIcon(i);
                     return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)]
                 });
-                const phylumPieTable = new ClientSideTable($('#pie').find(".phylum-table"), '', headers);
+                const phylumPieTable = new ClientSideTable($('#pie').find(".phylum-table"), '', headers, DEFAULT_PAGE_SIZE);
                 phylumPieTable.update(data, false, 1);
 
                 const numSeries = phylumPieChart.series[0].data.length;
@@ -213,8 +215,8 @@ let TaxonomyGraphView = Backbone.View.extend({
 
                 new TaxonomyColumnChart('domain-composition-column', 'Domain composition', clusteredData, false);
                 const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column', 'Phylum composition', phylumData, false);
-                const phylumColumnTable = new ClientSideTable($('#column').find(".phylum-table"), '', headers);
-                console.log(that.model.url());
+
+                const phylumColumnTable = new ClientSideTable($('#column').find(".phylum-table"), '', headers, DEFAULT_PAGE_SIZE);
                 phylumColumnTable.update(data, false, 1);
                 phylumColumnTable.$tbody.find('tr').hover(function () {
                     let index = getSeriesIndex($(this).index(), numSeries);
@@ -250,7 +252,7 @@ let TaxonomyGraphView = Backbone.View.extend({
 
                 // Column tab
                 const phylumStackedColumnChart = new TaxonomyStackedColumnChart('phylum-composition-stacked-column', 'Phylum composition', phylumData, false);
-                const phylumStackedColumnTable = new ClientSideTable($('#stacked-column').find(".phylum-table"), '', headers);
+                const phylumStackedColumnTable = new ClientSideTable($('#stacked-column').find(".phylum-table"), '', headers, DEFAULT_PAGE_SIZE);
                 phylumStackedColumnTable.update(data, false, 1);
                 phylumStackedColumnTable.$tbody.find('tr').hover(function () {
                     let index = getSeriesIndex($(this).index(), numSeries);
@@ -323,7 +325,7 @@ let InterProSummary = Backbone.View.extend({
                     {sortBy: 'a', name: 'pCDS matched'},
                     {sortBy: 'a', name: '%'}
                 ];
-                const interproTable = new ClientSideTable($('#InterPro-table'), '', headers);
+                const interproTable = new ClientSideTable($('#InterPro-table'), '', headers, DEFAULT_PAGE_SIZE);
                 interproTable.update(tableData, false, 1, data.length);
 
                 const numSeries = taxonomyPieChart.series[0].data.length;

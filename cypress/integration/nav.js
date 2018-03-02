@@ -67,12 +67,15 @@ for (let page in pagesBreadcrumbs) {
             for (let i in breadcrumbs) {
                 openPage(page);
                 cy.get('h2', {timeout: 50000});
+                cy.log(breadcrumbs.length, i);
+                cy.log(breadcrumbs);
                 const expectedPage = breadcrumbs[i];
                 cy.get('.breadcrumbs>li>a').each(($el, index) => {
+                    cy.log(i, expectedPage);
                     if (parseInt(i)===parseInt(index)){
                         cy.wrap($el).click();
                         cy.url().should('equal', getPageURL(expectedPage));
-                        cy.go('back');
+                        openPage(page);
                     }
                 });
             }

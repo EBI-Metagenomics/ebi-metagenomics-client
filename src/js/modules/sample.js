@@ -41,17 +41,14 @@ let SampleView = Backbone.View.extend({
                 _.each(that.model.attributes.metadatas, function (e) {
                     metadataObj[e.name] = e.value;
                 });
-
                 getExternalLinks(attr.id, attr.bioproject).done(function (data) {
-                    console.log(data);
                     const links = _.map(data, function (url, text) {
                         return createListItem(createLinkTag(url, text));
                     });
                     that.model.attributes.external_links = links;
-                    console.log(that.model);
                     that.$el.html(that.template(that.model.toJSON()));
                     $('#sample-metadata').html(new DetailList('Sample metadata', metadataObj));
-                    new Map('map', [that.model]);
+                    new Map('map', [that.model.attributes], false);
                     deferred.resolve(true);
                 });
 
@@ -102,7 +99,7 @@ let StudiesView = Backbone.View.extend({
             {sortBy: null, name: 'Samples count'},
             {sortBy: null, name: 'Last update'},
         ];
-        this.tableObj = new GenericTable($('#studies-section'), 'Associated studies', columns, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#studies-section'), 'Associated studies', columns, DEFAULT_PAGE_SIZE, false, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
         this.update(1, DEFAULT_PAGE_SIZE, null, null)
@@ -125,13 +122,13 @@ let StudiesView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params),
             success: function (data, response) {
-                that.renderData(page, response.meta.pagination.count, response.links.first);
+                that.renderData(page, pageSize, response.meta.pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
             }
         })
     },
 
-    renderData: function (page, resultCount, requestURL) {
+    renderData: function (page, pageSize, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const study_link = "<a href='" + attr.study_link + "'>" + attr.study_id + "</a>";
@@ -140,7 +137,7 @@ let StudiesView = Backbone.View.extend({
             });
             return [biomes.join(' '), study_link, attr['study_name'], attr['abstract'], attr['samples_count'], attr['last_update']]
         });
-        this.tableObj.update(tableData, true, page, resultCount, requestURL);
+        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
 });
 
@@ -159,8 +156,9 @@ let RunsView = Backbone.View.extend({
             {sortBy: null, name: 'Experiment type'},
             {sortBy: null, name: 'Instrument model'},
             {sortBy: null, name: 'Instrument platform'},
+            {sortBy: null, name: 'Pipeline versions'},
         ];
-        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, DEFAULT_PAGE_SIZE, false, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
         this.update(1, DEFAULT_PAGE_SIZE, null, null)
@@ -183,19 +181,19 @@ let RunsView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param(params),
             success: function (data, response) {
-                that.renderData(page, response.meta.pagination.count, response.links.first);
+                that.renderData(page, pageSize, response.meta.pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
             }
         })
     },
 
-    renderData: function (page, resultCount, requestURL) {
+    renderData: function (page, pageSize, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const run_link = "<a href='" + attr.run_url + "'>" + attr.run_id + "</a>";
-            return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform']]
+            return [run_link, attr['experiment_type'], attr['instrument_model'], attr['instrument_platform'], attr['pipeline_versions'].join(', ')]
         });
-        this.tableObj.update(tableData, true, page, resultCount, requestURL);
+        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
 });
 

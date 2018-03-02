@@ -5,13 +5,14 @@ const Commons = require('../commons');
 
 
 module.exports = class GenericTable {
-    constructor($container, title, headers, callback) {
+    constructor($container, title, headers, initPageSize, is_page_header, callback) {
         this.headers = headers;
         let params = {
             section_title: title,
             headers: headers,
             pagination: true,
-            filter: true
+            filter: true,
+            header_class: is_page_header ? "h2" : "h3"
         };
         const $sectionContent = $(tableTmpl(params));
         this.$table = $sectionContent.find('table');
@@ -20,6 +21,8 @@ module.exports = class GenericTable {
         this.$filterInput = $sectionContent.find('#tableFilter');
 
         this.storeElemRefs($sectionContent);
+        this.$pageSizeSelect.val(initPageSize);
+
 
         if (callback) {
             this.callback = callback;
@@ -30,10 +33,7 @@ module.exports = class GenericTable {
             this.attachPageSizeCallback(this.$pageSizeSelect, callback);
         }
         this.order = null;
-        this.$pageSizeSelect.val(Commons.DEFAULT_PAGE_SIZE);
-
-        $container.html($sectionContent);
-
+        $container.append($sectionContent);
     }
 
     storeElemRefs($sectionContent) {
@@ -60,7 +60,7 @@ module.exports = class GenericTable {
         }, 300));
     }
 
-    update(dataset, clear, page, resultCount, requestURL) {
+    update(dataset, clear, page, pageSize, resultCount, requestURL) {
         const that = this;
         if (clear) {
             this.$tbody.empty();
@@ -73,20 +73,28 @@ module.exports = class GenericTable {
         if (this.$pagination.data("twbs-pagination")) {
             this.$pagination.twbsPagination('destroy');
         }
+        this.$pageSizeSelect.val(pageSize);
 
-        this.$pagination.twbsPagination({
-            startPage: page,
-            totalPages: Math.max(Math.ceil(resultCount / this.getPageSize()), 1),
-        }).on('page', function (evt, page) {
-            that.callback(page, that.getPageSize(), that.getCurrentOrder(), that.getFilterText());
-        });
-        this.setPageDisplay(1, resultCount);
+        let totalPages = Math.max(Math.ceil(resultCount / pageSize));
+        if (isNaN(totalPages)) {
+            totalPages = 1;
+        }
+        if (totalPages > 0) {
+            this.$pagination.twbsPagination({
+                startPage: page,
+                totalPages: totalPages
+            }).on('page', function (evt, page) {
+                that.callback(page, that.getPageSize(), that.getCurrentOrder(), that.getFilterText());
+            });
+        }
+        this.setPageDisplay(page, resultCount, totalPages);
         this.hideLoadingGif();
         const downloadURL = formatDownloadURL(requestURL);
         this.setDownloadURL(downloadURL);
     }
 
     addRow(data) {
+        const that = this;
         if (this.headers.length !== data.length) {
             console.error('Insufficient data inserted');
             console.error(this.headers);
@@ -95,11 +103,18 @@ module.exports = class GenericTable {
         }
 
 
+        let i = 0;
         const tds = _.map(data, function (d) {
             if (d === null) {
                 d = ''
             }
-            return $("<td>" + d + "</td>");
+            const $td = $("<td>" + d + "</td>");
+            const sortByClass = that.headers[i]['sortBy'];
+            if (sortByClass !== null && sortByClass.length > 0) {
+                $td.addClass(sortByClass);
+            }
+            i += 1;
+            return $td;
         });
         const row = $("<tr></tr>").append(tds);
         this.$tbody.append(row);
@@ -160,10 +175,10 @@ module.exports = class GenericTable {
         return this.order;
     }
 
-    setPageDisplay(currentPage, totalResults) {
+    setPageDisplay(currentPage, totalResults, totalPages) {
         this.$currentPageDisp.text(currentPage);
-        this.$maxPageDisp.text(Math.ceil(totalResults / this.getPageSize()));
         this.$totalResultsDisp.text(totalResults);
+        this.$maxPageDisp.text(totalPages);
     }
 
     setDownloadURL(url) {

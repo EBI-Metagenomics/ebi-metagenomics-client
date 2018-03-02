@@ -3,10 +3,11 @@
 <head id="head">
     <title>Studies &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
+    <link rel="stylesheet" href="{{subfolder}}/js/studies.css" type="text/css" media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
-<div id="header">
+<div id="header-container">
     {{> partials/header this}}
 </div>
 
@@ -21,55 +22,9 @@
                     </li>
                 </ul>
             </nav>
-            <h2>Studies list</h2>
-            <div class="center">
-                <div class="row">
-                    <div class="columns small-6 ">
-                        <div id="pageSize"></div>
-                    </div>
-                    <div class="columns small-6">
-                        <div id="filterForm"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="columns small-12 medium-12 large-12">
-                        <a href="{{subfolder}}/search">Use advanced search.</a>
-                        <a id='download-results' class="right" href="#">Download as csv</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="columns small-12 medium-12 medium-push-12">
-                        <table class="studies-table">
-                            <thead>
-                            <tr>
-                                <th class="biome-icon">Biome</th>
-                                <th data-sortby='study_name' class="sort-both name">Study name</th>
-                                <th data-sortby='samples_count' class="sort-both samples">Samples</th>
-                                <th data-sortby='last_update' class="sort-both updated">Last updated</th>
-                            </tr>
-                            </thead>
-                            <tbody id='studies-table-body'>
-                            <!--<tr>-->
-                            <!--<td class='loading-gif-row' colspan="4">-->
-                            <!--<img class='loading-gif' src="/static/images/ajax-loader.gif"/>-->
-                            <!--</td>-->
-                            <!--</tr>-->
-                            </tbody>
-                            <script id="study-row" type="text/template">
-                                <td class="biome-icon">
-                                    <% _.each(biomes, function(biome){ %>
-                                    <span class="biome_icon icon_xs <%= biome.icon %>" title="<%= biome.name %>"></span>
-                                    <% }); %>
-                                </td>
-                                <td class="name"><a href="<%= study_link %>"> <%= study_name %></a></td>
-                                <!--TODO point samples_count link correctly-->
-                                <td class="samples"><a href="<%= study_link %>"><%= samples_count %></a></td>
-                                <td class="updated"><%= last_update %></td>
-                            </script>
-                        </table>
-                    </div>
-                </div>
-                <div id="pagination"></div>
+            <div class="row">
+                <section id="studies-section">
+                </section>
             </div>
         </div>
     </section>
@@ -85,8 +40,10 @@
 <!-- End suggested layout containers / #content -->
 
 
-<div id="footer">{{>partials/footer}}</div>
-
+<div id="footer">
+    {{>partials/elixir}}
+    {{>partials/footer}}
+</div>
 <!-- JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
