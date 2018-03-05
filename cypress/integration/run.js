@@ -3,7 +3,7 @@ import {openPage} from './util';
 const origPage = 'runs/SRR035098';
 
 function waitForPageLoad() {
-    cy.get('#overview').children().should('have.length', 2)
+    cy.get('#overview', {timeout: 20000}).children().should('have.length', 2)
 }
 
 function verifyTabIsVisible(tagId) {
@@ -30,7 +30,8 @@ describe('Run page', function () {
         openPage(origPage);
         waitForPageLoad();
         verifyTabIsVisible('#overview');
-        const tabs = ['#qc', '#functional', '#taxonomic', '#abundance', '#download', '#overview'];
+        // const tabs = ['#qc', '#functional', '#taxonomic', '#abundance', '#download', '#overview'];
+        const tabs = ['#qc', '#functional', '#taxonomic', '#download', '#overview'];
         for (var i in tabs) {
             const tabId = tabs[i];
             openTab(tabId);
