@@ -266,7 +266,7 @@ const Projects = Search.extend({
 });
 
 const ProjectsView = ResultsView.extend({
-        el: '#projects',
+        el: '#projectsResults',
         formEl: 'projectsFilters',
         params: {},
         pagination: new Pagination(),
@@ -368,7 +368,7 @@ const Samples = Search.extend({
 });
 
 const SamplesView = ResultsView.extend({
-    el: '#samples',
+    el: '#samplesResults',
     formEl: 'samplesFilters',
     params: {},
     template: _.template($("#samplesResultsTmpl").html()),
@@ -473,7 +473,7 @@ const Runs = Search.extend({
 });
 
 const RunsView = ResultsView.extend({
-    el: '#runs',
+    el: '#runsResults',
     formEl: 'runsFilters',
     params: {},
     template: _.template($("#runsResultsTmpl").html()),
