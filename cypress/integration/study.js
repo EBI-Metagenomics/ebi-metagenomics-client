@@ -211,6 +211,6 @@ describe('Study page - Runs table with >1 analysis per run', function(){
         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
     });
     it('Runs table should display both pipeline versions for a run', function(){
-        table.testFiltering('ERR770966', [['ERR770966', 'metagenomic', '', '', '2.0, 4.0'], ['ERR770966', 'metagenomic', 'Illumina MiSeq', 'ILLUMINA', '2.0, 4.0']]);
+        table.testFiltering('ERR770966', [['ERR770966', 'metagenomic', '', '', '2.0, 4.0'], ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']]);
     });
 });

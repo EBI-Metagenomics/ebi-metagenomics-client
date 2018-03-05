@@ -49,24 +49,28 @@ function validateFacetQuery(facetName, testString) {
     }
 }
 
+// const facetRequests = ['projectsSearch', 'samplesSearch', 'runsSearch'];
+const facetRequests = ['projectsFacet', 'projectsQuery', 'samplesFacet', 'samplesQuery', 'runsFacet', 'runsQuery'];
+
+function loadPage(page){
+    cy.server();
+    cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=1&*').as(facetRequests[0]);
+    cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=10&*').as(facetRequests[1]);
+    cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=1&*').as(facetRequests[2]);
+    cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=10&*').as(facetRequests[3]);
+    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=1&*').as(facetRequests[4]);
+    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=10&*').as(facetRequests[5]);
+    openPage(page);
+    waitForResultsLoad(initialResultSize);
+}
+
 /**
  * Verify number of results responds to selector
  */
 
-// const facetRequests = ['projectsSearch', 'samplesSearch', 'runsSearch'];
-const facetRequests = ['projectsFacet', 'projectsQuery', 'samplesFacet', 'samplesQuery', 'runsFacet', 'runsQuery'];
 describe('Search page - generalFunctionality', function () {
     beforeEach(function () {
-        cy.server();
-        cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=1&*').as(facetRequests[0]);
-        cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=10&*').as(facetRequests[1]);
-        cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=1&*').as(facetRequests[2]);
-        cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=10&*').as(facetRequests[3]);
-        cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=1&*').as(facetRequests[4]);
-        cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=10&*').as(facetRequests[5]);
-
-        openPage(origPage);
-        waitForResultsLoad(initialResultSize);
+        loadPage(origPage);
     });
 
     // Text search should apply to all facets
@@ -112,7 +116,7 @@ describe('Search page - generalFunctionality', function () {
         cy.get("tbody > tr > td[data-column='project-centre-name']").contains('BioProject')
     });
 
-    it('Clear button should reset search completely', function(){
+    it('Clear button should reset search completely', function () {
         cy.get('button.disp-children').first().click();
         cy.get("input[value='Environmental/Air']").check({force: true});
         cy.get("input[value='BGI']").check({force: true});
@@ -151,7 +155,18 @@ describe('Search page - generalFunctionality', function () {
         cy.get(textQueryInput).then(($input) => {
             cy.log($input);
         });
-    })
+    });
+});
+
+describe('Search page - Deep linking', function () {
+    it('Changing tabs should update result view', function () {
+        loadPage(origPage+'#projects');
+        cy.get('#projectsResults > div > div > h5').should('contain', 'projects');
+        loadPage(origPage+'#samples');
+        cy.get('#samplesResults > div > div > h5').should('contain', 'samples');
+        loadPage(origPage+'#runs');
+        cy.get('#runsResults > div > div > h5').should('contain', 'runs');
+    });
 });
 
 
