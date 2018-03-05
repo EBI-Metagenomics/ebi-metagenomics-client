@@ -26,12 +26,12 @@ describe('Run page', function () {
         waitForPageLoad();
         verifyTabIsVisible('#overview')
     });
-    it('Every tab button should work', function () {
+    it('Should only display available tabs', function () {
         openPage(origPage);
         waitForPageLoad();
         verifyTabIsVisible('#overview');
         // const tabs = ['#qc', '#functional', '#taxonomic', '#abundance', '#download', '#overview'];
-        const tabs = ['#qc', '#functional', '#taxonomic', '#download', '#overview'];
+        const tabs = ['#qc', '#taxonomic', '#download', '#overview'];
         for (var i in tabs) {
             const tabId = tabs[i];
             openTab(tabId);
