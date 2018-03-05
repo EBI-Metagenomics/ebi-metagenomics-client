@@ -7,6 +7,7 @@ const sequenceSearchUrl = process.env.SEQUENCE_SEARCH_URL;
 export const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 $.typeWatch = require('jquery.typewatch');
 
+
 import {footer, header, resultsFilter, head, biomeFilter} from "./commons";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -154,6 +155,17 @@ export function hideTableLoadingGif() {
 }
 
 export function attachTabHandlers() {
+    // Deep linking
+    const $dataTabs = $('[data-tabs]');
+    new window.Foundation.Tabs($dataTabs);
+    var link_tab = window.location.hash.substr(1);
+    if (link_tab) {
+        $($dataTabs).foundation('selectTab', link_tab);
+        $("div.tabs-panel:not('"+link_tab+"')").removeClass('active');
+        $('#' + link_tab).addClass('active');
+    }
+
+    // Linking click actions
     $("li.tabs-title > a").on('click', function () {
         var tabButtonContainer = $(this).closest('ul');
         $(tabButtonContainer).children().children('a').attr('aria-selected', 'false');
@@ -165,6 +177,7 @@ export function attachTabHandlers() {
         $("[data-tab-content=" + tabGroup + "] > .tabs-panel").removeClass('active');
         $(tabId).addClass('active');
     });
+
 }
 
 export const BiomeCollectionView = Backbone.View.extend({
