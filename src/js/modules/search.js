@@ -93,13 +93,13 @@ const ResultsView = Backbone.View.extend({
             templateData.sliderText = null;
         }
 
-        // if (params.facets && params.facets.length > 0) {
-        //     templateData.filterText = params.facets.replace(/,/g, ', ');
-        // } else {
-        //     templateData.filterText = null;
-        // }
-        templateData.filterText = null;
+        if (params.facets && params.facets.length > 0) {
+            templateData.filterText = params.facets.replace(/,/g, ', ');
+        } else {
+            templateData.filterText = null;
+        }
         templateData['subfolder'] = util.subfolder;
+        templateData['queryString'] = formatSearchSummaryStr(templateData);
         if (!no_display) {
             const $data = $(this.template(templateData));
             $data.find("td").map(function () {
@@ -985,6 +985,41 @@ function getCookieQuery() {
         }
     }
     return null
+}
+
+function formatSearchSummaryStr(params) {
+    let str = "";
+    const queryText = params.queryText || "";
+    const validQueryText = queryText.length > 0;
+    const filterText = params.filterText || "";
+    const validFilterText = filterText.length > 0;
+    const sliderText = params.sliderText || "";
+    const validSliderText = sliderText.length > 0;
+
+    if (validQueryText) {
+        str += " with keyword: " + queryText;
+    }
+    if (validFilterText) {
+        if (validQueryText) {
+            str += " and "
+        } else {
+            str += " with "
+        }
+        str += "filters: " + filterText;
+    }
+    if (validSliderText) {
+        if (validQueryText || validFilterText) {
+            str += " and "
+        } else {
+            str += " with "
+        }
+        str += sliderText
+    }
+    if (!(validQueryText || validFilterText || validSliderText)) {
+        str += " with no parameters"
+    }
+    str += '.';
+    return str
 }
 
 function deleteCachedSearchParams() {
