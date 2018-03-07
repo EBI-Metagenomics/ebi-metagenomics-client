@@ -70,6 +70,7 @@ module.exports = (env = {prod: false}) => {
                 // data passed to main hbs template: `main-template(data)`
                 data: {
                     subfolder: process.env.DEPLOYMENT_SUBFOLDER,
+                    apiUrl: process.env.API_URL,
                 },
                 // path.join(__dirname, configFile),
                 // globbed path to partials, where folder/filename is unique
