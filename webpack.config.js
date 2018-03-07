@@ -71,6 +71,7 @@ module.exports = (env = {prod: false}) => {
                 data: {
                     subfolder: process.env.DEPLOYMENT_SUBFOLDER,
                     apiUrl: process.env.API_URL,
+                    sequenceSearchUrl: process.env.SEQUENCE_SEARCH_URL
                 },
                 // path.join(__dirname, configFile),
                 // globbed path to partials, where folder/filename is unique

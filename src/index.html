@@ -13,13 +13,100 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
-        <section class="jumbo-header" style="position: relative;">
-            <div class="close_section anim"><span class="show_tooltip" id="this_close" data-hasqtip="0"
-                                                  oldtitle="Close this section" title="">&#10006;</span>
+        <section class="getting-started-banner">
+            <div class="row columns">
+                <h3 class="text-center">Getting started</h3>
             </div>
-            <p class="lead">Submit, analyse, visualize and compare data.</p>
-            <div class="button"><a href="submit"> Submit data</a></div>
+            <div class="row">
+                <div class="columns small-12 medium-6 large-6">
+                    <div class="row">
+                        <div class="columns small-12 medium-6 large-6">
+                            <div class="getting-started text-center">
+                                <h3>Submit data</h3>
+                                <p>Analyse, visualize and compare data.</p>
+                                <a class="button" href="{{subfolder}}/submit">Submit</a>
+                            </div>
+                        </div>
+                        <div class="columns small-12 medium-6 large-6">
+                            <div class="getting-started text-center">
+                                <h3>Request analysis</h3>
+                                <p>Request a new analysis of a dataset.</p>
+                                <a class="button">Search data</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns small-12 medium-6 large-6">
+                    <div class="row">
+                        <div class="columns small-12 medium-6 large-6">
+                            <div class="getting-started text-center">
+                                <h3>Text search</h3>
+                                <p>Search by name, biome, or keyword. </p>
+                                <a class="button" href="{{subfolder}}/search/">Search data</a>
+                            </div>
+                        </div>
+                        <div class="columns small-12 medium-6 large-6">
+                            <div class="getting-started text-center">
+                                <h3>Sequence search</h3>
+                                <p>Search for sequence using pHmmer</p>
+                                <a class="button" href="{{sequenceSearchUrl}}">Search sequences</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="columns small-12 medium-6 large-6">
+                    <div class="row columns text-center">
+                        <div class="row columns text-center getting-started">
+                            <h3>Submit or request data</h3>
+                            <div class="row">
+                                <div class="columns small-12 medium-6 large-6">
+                                    <div class="text-center">
+                                        <p>Analyse, visualize and compare data.</p>
+                                        <a class="button" href="{{subfolder}}/submit">Submit</a>
+                                    </div>
+                                </div>
+                                <div class="columns small-12 medium-6 large-6">
+                                    <div class="text-center">
+                                        <p>Request a new analysis of a dataset.</p>
+                                        <a class="button">Request</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns small-12 medium-6 large-6">
+                    <div class="row columns text-center">
+                        <div class="row columns text-center getting-started">
+                            <h3>Search</h3>
+                            <div class="row">
+                                <div class="columns small-12 medium-6 large-6">
+                                    <div class="text-center">
+                                        <p>Search by name, biome, or keyword. </p>
+                                        <a class="button" href="{{subfolder}}/search/">Search data</a>
+                                    </div>
+                                </div>
+                                <div class="columns small-12 medium-6 large-6">
+                                    <div class="text-center">
+                                        <p>Search for sequence using pHmmer</p>
+                                        <a class="button" href="{{sequenceSearchUrl}}">Search sequences</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </section>
+        <!--<section class="jumbo-header" style="position: relative;">-->
+        <!--<div class="close_section anim"><span class="show_tooltip" id="this_close" data-hasqtip="0"-->
+        <!--oldtitle="Close this section" title="">&#10006;</span>-->
+        <!--</div>-->
+        <!--<p class="lead">Submit, analyse, visualize and compare data.</p>-->
+        <!--<div class="button"><a href="submit"> Submit data</a></div>-->
+        <!--</section>-->
 
         <section class="jumbo-stats" style="visibility:hidden">
             <div class="row">
@@ -132,7 +219,8 @@
                         </p>
                         <%= abstract %>
                         <p>
-                        <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%= samples_count %>
+                            <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%= samples_count
+                            %>
                             samples</a>
                         </p>
                         <hr>

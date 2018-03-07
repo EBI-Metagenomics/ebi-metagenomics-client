@@ -697,3 +697,10 @@ img.publication-cover {
     float: left;
     margin-right: 18px;
 }
+
+.getting-started-banner{
+    margin: 0.5em 1em;
+}
+.getting-started{
+    border: solid black 1px;
+}
