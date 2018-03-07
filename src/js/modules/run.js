@@ -16,7 +16,7 @@ const detailList = require('../components/detailList');
 
 require('tablesorter');
 
-import {attachTabHandlers, getURLParameter, setCurrentTab, checkAPIonline} from "../util";
+import {attachTabHandlers, getURLParameter, setCurrentTab, checkAPIonline, tabDeepLink} from "../util";
 
 checkAPIonline();
 
@@ -25,6 +25,9 @@ const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 const DEFAULT_PAGE_SIZE = 25;
 
 setCurrentTab('#samples-nav');
+
+window.Foundation.addToJquery($);
+
 
 let run_id = getURLParameter();
 
@@ -68,6 +71,7 @@ let RunView = Backbone.View.extend({
                         $('#overview').append(new detailList('Data analysis', dataAnalysis));
                     }
                     loadAnalysisData(run_id, version);
+
                 });
             }
         });
@@ -83,14 +87,11 @@ let RunView = Backbone.View.extend({
 let QCGraphView = Backbone.View.extend({
     initialize: function (attr) {
         const data = {};
-        attr['analysis-summary'].forEach(function (e) {
+        attr['analysis_summary'].forEach(function (e) {
             data[e.key] = e.value;
         });
-
         const qcChart = new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
-
         const seqFeatChart = new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
-
     }
 });
 
@@ -99,23 +100,29 @@ function groupTaxonomyData(data, depth) {
     let clusteredData = _.sortBy(clusterData(data, depth), function (o) {
         return o.y;
     }).reverse();
-    if (clusteredData.length > 10) {
-        const top10 = clusteredData.slice(0, 10);
-        const others = {
-            name: 'Other',
-            lineage: [],
-            y: 0
-        };
-        _.each(clusteredData.slice(10, clusteredData.length), function (d) {
-            others.y += d.y;
-            if (others.lineage.indexOf(d.lineage[0]) === -1) {
-                others.lineage.push(d.lineage[0]);
-            }
-        });
-        others.lineage = others.lineage.join(", ");
-        top10.push(others);
-        clusteredData = top10;
-    }
+    _.each(clusteredData, function(o, i){
+        if(o.name==="undefined"){
+            o.name = "Unassigned";
+            o.lineage = ["Unassigned"];
+        }
+    });
+    // if (clusteredData.length > 10) {
+    //     const top10 = clusteredData.slice(0, 10);
+    //     const others = {
+    //         name: 'Other',
+    //         lineage: [],
+    //         y: 0
+    //     };
+    //     _.each(clusteredData.slice(10, clusteredData.length), function (d) {
+    //         others.y += d.y;
+    //         if (others.lineage.indexOf(d.lineage[0]) === -1) {
+    //             others.lineage.push(d.lineage[0]);
+    //         }
+    //     });
+    //     others.lineage = others.lineage.join(", ");
+    //     top10.push(others);
+    //     clusteredData = top10;
+    // }
     return clusteredData
 }
 
@@ -156,6 +163,7 @@ function clusterData(data, depth) {
 let TaxonomyGraphView = Backbone.View.extend({
     model: api.Taxonomy,
     initialize: function () {
+        const that = this;
         this.model.fetch({
             success: function (model) {
 
@@ -199,15 +207,15 @@ let TaxonomyGraphView = Backbone.View.extend({
                     const series = phylumPieChart.series[0].data[index];
                     series.setVisible(!series.visible);
                     if (index === numSeries - 1) {
-                        ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled');
+                        ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled-clickable');
                     } else {
-                        $(this).toggleClass('disabled');
+                        $(this).toggleClass('disabled-clickable');
                     }
                 });
 
-
                 new TaxonomyColumnChart('domain-composition-column', 'Domain composition', clusteredData, false);
                 const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column', 'Phylum composition', phylumData, false);
+
                 const phylumColumnTable = new ClientSideTable($('#column').find(".phylum-table"), '', headers, DEFAULT_PAGE_SIZE);
                 phylumColumnTable.update(data, false, 1);
                 phylumColumnTable.$tbody.find('tr').hover(function () {
@@ -217,6 +225,29 @@ let TaxonomyGraphView = Backbone.View.extend({
                     let index = getSeriesIndex($(this).index(), numSeries);
                     phylumColumnChart.series[0].data[index].setState();
                 });
+
+                phylumColumnTable.$tbody.find('tr').click(function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    const series = phylumColumnChart.series[0].data[index];
+                    phylumColumnChart.series[0].data[index].visible = false;
+                    series.visible = false;
+                    if (index === numSeries - 1) {
+                        ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled-clickable');
+                    } else {
+                        $(this).toggleClass('disabled-clickable');
+                    }
+                });
+
+                const numSeriesPhylumColumn = phylumColumnChart.series[0].data.length;
+                phylumColumnTable.$tbody.find('tr').hover(function () {
+                    let index = getSeriesIndex($(this).index(), numSeriesPhylumColumn);
+                    phylumColumnChart.series[0].data[index].setState('hover');
+                }, function () {
+                    let index = getSeriesIndex($(this).index(), numSeriesPhylumColumn);
+                    phylumColumnChart.series[0].data[index].setState();
+                });
+
+
 
 
                 // Column tab
@@ -246,7 +277,7 @@ let InterProSummary = Backbone.View.extend({
                 let top10AndOthers = [];
                 let totalCount = 0;
 
-                data.slice(0, 10).forEach(function (d) {
+                data.forEach(function (d) {
                     d = d.attributes;
                     top10AndOthers.push({
                         name: d.description,
@@ -263,6 +294,7 @@ let InterProSummary = Backbone.View.extend({
                     name: 'Other',
                     y: sumOthers
                 };
+                top10AndOthers = top10AndOthers.slice(0,10);
                 top10AndOthers.push(others);
                 const chartOptions = {
                     plotOptions: {
@@ -276,7 +308,8 @@ let InterProSummary = Backbone.View.extend({
                         name: 'pCDS matched'
                     }]
                 };
-                new TaxonomyPieChart('InterProPie-chart', 'InterPro matches summary', top10AndOthers, false, chartOptions);
+
+                const taxonomyPieChart = new TaxonomyPieChart('InterProPie-chart', 'InterPro matches summary', top10AndOthers, false, chartOptions);
                 const tableData = [];
                 let i = 0;
                 data.forEach(function (d) {
@@ -294,10 +327,39 @@ let InterProSummary = Backbone.View.extend({
                 ];
                 const interproTable = new ClientSideTable($('#InterPro-table'), '', headers, DEFAULT_PAGE_SIZE);
                 interproTable.update(tableData, false, 1, data.length);
+
+                const numSeries = taxonomyPieChart.series[0].data.length;
+                interproTable.$tbody.find('tr').hover(function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    taxonomyPieChart.series[0].data[index].setState('hover');
+                }, function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    taxonomyPieChart.series[0].data[index].setState();
+                });
+
+                interproTable.$tbody.find('tr').click(function () {
+                    let index = getSeriesIndex($(this).index(), numSeries);
+                    const series = taxonomyPieChart.series[0].data[index];
+                    series.setVisible(!series.visible);
+                    if (index === numSeries - 1) {
+                        ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled-clickable');
+                    } else {
+                        $(this).toggleClass('disabled-clickable');
+                    }
+                });
+                
             }
         })
     }
 });
+
+function getTotalGoTermCount(array){
+    let sum = 0;
+    _.each(array, function(e){
+        sum+= e.attributes.count;
+    });
+    return sum
+}
 
 let GoTermCharts = Backbone.View.extend({
     model: api.GoSlim,
@@ -305,7 +367,8 @@ let GoTermCharts = Backbone.View.extend({
         this.model.fetch({
             success: function (model) {
                 const data = model.attributes.data;
-                if (data.length === 0) {
+
+                if (getTotalGoTermCount(data) === 0) {
                     disableTab('functional');
                     return;
                 }
@@ -347,13 +410,43 @@ let GoTermCharts = Backbone.View.extend({
     }
 });
 
+
 let DownloadView = Backbone.View.extend({
     template: _.template($("#download-tmpl").html()),
     el: '#download-list',
-    initialize: function(data){
-        console.log(data);
+    initialize: function (data) {
+        //    TODO implement downloads
+        data = {
+            groups: [
+                {
+                    group_name: "Name",
+                    entries: [
+                        {
+                            name: "Submitted nucleotide reads",
+                            type: 'DNA/RNA data type',
+                            compression: 'GZIP',
+                            format: 'FASTA',
+                            link: 'link'
+                        }
+                    ]
+                }, {
+                    group_name: "Name2",
+                    entries: [
+                        {
+                            name: "Submitted nucleotide reads",
+                            type: 'DNA/RNA data type',
+                            compression: 'GZIP',
+                            format: 'FASTA',
+                            link: 'link'
+                        }
+                    ]
+                }
+            ]
+        };
+        this.$el.html(this.template(data));
     }
 });
+
 
 // Compact groups other than top 10 largest into an 'other' category
 function groupGoTermData(data) {
@@ -411,7 +504,7 @@ function loadKronaChart(run_id, pipeline_version) {
     //     }
     // });
     const krona_chart = "<object class=\"krona_chart\"\n" +
-        "data=\""+krona_url+"\" " +
+        "data=\"" + krona_url + "\" " +
         "type=\"text/html\"></object>";
     $('#krona').append(krona_chart);
 // <object class="krona_chart"
@@ -426,7 +519,7 @@ function loadAnalysisData(run_id, pipeline_version) {
     analysis = new api.Analysis({id: run_id, version: pipeline_version});
     analysis.fetch({
         success: function (model) {
-            const attr = model.attributes.data.attributes;
+            const attr = model.attributes;
             let qcGraph = new QCGraphView(attr);
             let downloadView = new DownloadView(attr.download)
         }

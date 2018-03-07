@@ -71,7 +71,7 @@ let SamplesView = Backbone.View.extend({
             {sortBy: null, name: 'Description'},
             {sortBy: 'last_update', name: 'Last update'},
         ];
-        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, Commons.DEFAULT_PAGE_SIZE_SAMPLES, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns, Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
         this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, null, null)
@@ -156,7 +156,7 @@ let RunsView = Backbone.View.extend({
             {sortBy: null, name: 'Instrument platform'},
             {sortBy: null, name: 'Pipeline versions'},
         ];
-        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, Commons.DEFAULT_PAGE_SIZE, function (page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns, Commons.DEFAULT_PAGE_SIZE, false, function (page, pageSize, order, query) {
             that.update(page, pageSize, order, query);
         });
         this.update(1, Commons.DEFAULT_PAGE_SIZE, null, null)

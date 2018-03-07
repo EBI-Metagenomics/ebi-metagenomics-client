@@ -192,9 +192,9 @@ function initObjectCounts() {
         a.onclick = function (event) {
             let hashAppend = '';
             if (domainId === 'samples') {
-                hashAppend = '#samplesTab'
+                hashAppend = '#samples'
             } else if (domainId === 'runs') {
-                hashAppend = '#runsTab'
+                hashAppend = '#runs'
             }
             setCookieFilter(experimentType);
             window.location = util.subfolder + '/search' + hashAppend;

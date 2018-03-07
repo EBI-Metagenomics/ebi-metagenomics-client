@@ -13,79 +13,19 @@
         <div class="columns small-12 medium-12 large-12">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
-                     <li><a href="./">Home</a></li>
+                    <li><a href="{{subfolder}}">Home</a></li>
                     <li>
                         <span class="show-for-sr">Current: </span> Samples
                     </li>
                 </ul>
             </nav>
-            <h2>Samples list</h2>
-            <div class="center">
-                <div class="row">
-                    <div class="columns small-6 ">
-                        <div id="pageSize"></div>
-                    </div>
-                    <div class="columns small-6">
-                        <div id="filterForm"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="columns small-12 medium-12 large-12">
-                        <a href="/search">Use advanced search.</a>
-                        <a id='download-results' class="right" href="#">Download as csv</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="columns small-12 medium-12 medium-push-12">
-                        <table class="samples-table">
-                            <thead>
-                            <tr>
-                                <th class="biome-icon">Biome</th>
-                                <th data-sortby='accession' class="sample-id sort-both">Sample ID</th>
-                                <!--<th data-sortby='study-accession' class="study-id sort-both">Study ID</th>-->
-                                <th class="study-id">Study ID</th>
-                                <th data-sortby='sample_name' class="sample-name sort-both">Name</th>
-                                <th class="description">Description</th>
-                                <th data-sortby='last_update' class="updated sort-both">Last updated</th>
-                            </tr>
-                            </thead>
-                            <tbody id='samples-table-body'>
-                            <tr>
-                                <td class='loading-gif-row' colspan="4">
-                                    <img class='loading-gif' src="{{subfolder}}/static/images/ajax-loader.gif"/>
-                                </td>
-                            </tr>
-                            </tbody>
-                            <script id="sample-row" type="text/template">
-                                <td class="biome-icon">
-                                <span class="biome_icon icon_xs <%= biome_icon %> <%= biome_name %>"
-                                      title="<%= biome_name %>"></span>
-                                </td>
-                                <td class="sample-id">
-                                    <a href="<%= sample_url %>"><%= sample_accession %></a>
-                                </td>
-                                <td class="study-id">
-                                    <a href="<%= study_url %>"><%= study_accession %></a>
-                                </td>
-                                <td class="sample-name">
-                                    <a href="<%= sample_url %>"><%= sample_name %></a>
-                                </td>
-                                <td class="description">
-                                    <%= sample_desc %>
-                                </td>
-                                <td class="updated">
-                                    <%= last_update %>
-                                </td>
-                            </script>
-                        </table>
-                    </div>
-                </div>
-                <div id="pagination"></div>
+            <div class="row">
+                <section id="samples-section">
+                </section>
             </div>
         </div>
     </section>
 </div>
-
 <div id="footer">
     {{>partials/elixir}}
     {{>partials/footer}}

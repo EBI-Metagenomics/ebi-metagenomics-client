@@ -157,7 +157,7 @@ class GenericTableHandler {
     }
 
     getLoadingIcon() {
-        return cy.get(this.parentId + "> h3 > img.loading-gif-medium")
+        return cy.get(this.parentId + "> * > img.loading-gif-medium")
     }
 
     getFilterInput() {
@@ -199,9 +199,8 @@ class GenericTableHandler {
     }
 
     getDownloadLink() {
-        return cy.get(this.parentId + "> div.row > div.columns >  a.download-link")
+        return cy.get(this.parentId + "> div.row.columns > a.download-link")
     }
-
     getTableSelector() {
         return this.parentId + "> div.row.columns > table "
     }

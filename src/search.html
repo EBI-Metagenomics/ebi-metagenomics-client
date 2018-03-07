@@ -39,16 +39,16 @@
         <div class="row">
             <div class="columns small-12 medium-12 large-12">
                 <ul class="tabs" data-tabs id="results-tabs" data-deep-link="true">
-                    <li class="tabs-title is-active"><a href="#projectsTab" class="search-panel-tab"
+                    <li class="tabs-title is-active"><a href="#projects" class="search-panel-tab"
                                                         aria-selected="true">Projects</a></li>
-                    <li class="tabs-title"><a href="#samplesTab" class="search-panel-tab">Samples</a></li>
-                    <li class="tabs-title"><a href="#runsTab" class="search-panel-tab">Runs</a></li>
+                    <li class="tabs-title"><a href="#samples" class="search-panel-tab">Samples</a></li>
+                    <li class="tabs-title"><a href="#runs" class="search-panel-tab">Runs</a></li>
                     <li style="float:right">
                         <div id="pageSize" class="pagesize-container"></div>
                     </li>
                 </ul>
                 <div class="tabs-content" data-tab-content="results-tabs">
-                    <div class="tabs-panel active" id="projectsTab">
+                    <div class="tabs-panel active" id="projects">
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
                                 <form id="projectsFilters"></form>
@@ -69,13 +69,13 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <div id="projects"></div>
+                                    <div id="projectsResults"></div>
                                     <div id="projects-pagination"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="tabs-panel" id="samplesTab">
+                    <div class="tabs-panel" id="samples">
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
                                 <form id="samplesFilters"></form>
@@ -96,13 +96,13 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <div id="samples"></div>
+                                    <div id="samplesResults"></div>
                                     <div id="samples-pagination"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="tabs-panel" id="runsTab">
+                    <div class="tabs-panel" id="runs">
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
                                 <form id="runsFilters"></form>
@@ -123,7 +123,7 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <div id="runs"></div>
+                                    <div id="runsResults"></div>
                                     <div id="runs-pagination"></div>
                                 </div>
                             </div>

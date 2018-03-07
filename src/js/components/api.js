@@ -172,8 +172,6 @@ export const Sample = Backbone.Model.extend({
             sample_name: attr['sample-name'] || NO_DATA_MSG,
             sample_desc: attr['sample-desc'],
             sample_url: util.subfolder + '/samples/' + attr['accession'],
-            study_accession: attr['study-accession'] || NO_DATA_MSG,
-            study_url: util.subfolder + '/studies/' + attr['study-accession'],
             sample_accession: attr.accession || NO_DATA_MSG,
             lineage: formatLineage(biome.data.id || NO_DATA_MSG),
             metadatas: metadatas,
@@ -210,6 +208,19 @@ export const Analysis = RunPipelineObject.extend({
     url: function () {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version;
     },
+    parse: function (d) {
+        const data = d.data !== undefined ? d.data : d;
+        const attr = data.attributes;
+        return {
+            experiment_type: attr['experiment-type'],
+            analysis_summary: attr['analysis-summary'],
+            complete_time: attr['complete-time'],
+            instrument_model: attr['instrument-model'],
+            instrument_platform: attr['instrument-platform'],
+            pipeline_version: attr['pipeline-version'],
+            download: attr['download']
+        }
+    }
 });
 
 export const Taxonomy = RunPipelineObject.extend({

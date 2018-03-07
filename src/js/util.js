@@ -7,7 +7,8 @@ const sequenceSearchUrl = process.env.SEQUENCE_SEARCH_URL;
 export const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 $.typeWatch = require('jquery.typewatch');
 
-import {footer, header, resultsFilter, head} from "./commons";
+
+import {footer, header, resultsFilter, head, biomeFilter} from "./commons";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -31,39 +32,22 @@ export function setCurrentTab(id) {
 }
 
 
-
-export function initTableTools() {
-    // $("#tableTools").append(tableTools);
-}
-
 export function getBiomeIconData(biome_data) {
     const name = biome_data.id;
     return {name: formatLineage(name), icon: getBiomeIcon(name)};
 }
 
-export function initResultsFilter(initQuery, callback) {
-    $("#filterForm").append(resultsFilter);
-    const $searchInput = $('#search-input');
-    $searchInput.val(initQuery);
-    var options = {
-        callback: callback,
-        wait: 100,
-        highlight: true,
-        allowSubmit: false,
-        captureLength: 0
-    };
-    $searchInput.typeWatch(options);
-    // $('#search-input').on('keyup', callback);
+export function initBiomeFilter($div, callback){
+    $div.before(biomeFilter);
     const $biomeSelect = $('#biome-select');
     $biomeSelect.on('change', callback);
 
     const $clearBtn = $('#clear-filter');
     $clearBtn.click(function () {
-        $searchInput.val('');
-        $biomeSelect.val($biomeSelect.find('option:first').val())
+        $('#tableFilter').val('');
+        $biomeSelect.val($biomeSelect.find('option:first').val());
         $biomeSelect.trigger('change');
     })
-
 }
 
 export function getURLParameter() {
@@ -171,6 +155,17 @@ export function hideTableLoadingGif() {
 }
 
 export function attachTabHandlers() {
+    // Deep linking
+    const $dataTabs = $('[data-tabs]');
+    new window.Foundation.Tabs($dataTabs);
+    var link_tab = window.location.hash.substr(1);
+    if (link_tab) {
+        $($dataTabs).foundation('selectTab', link_tab);
+        $("div.tabs-panel:not('"+link_tab+"')").removeClass('active');
+        $('#' + link_tab).addClass('active');
+    }
+
+    // Linking click actions
     $("li.tabs-title > a").on('click', function () {
         var tabButtonContainer = $(this).closest('ul');
         $(tabButtonContainer).children().children('a').attr('aria-selected', 'false');
@@ -182,13 +177,17 @@ export function attachTabHandlers() {
         $("[data-tab-content=" + tabGroup + "] > .tabs-panel").removeClass('active');
         $(tabId).addClass('active');
     });
+
 }
 
 export const BiomeCollectionView = Backbone.View.extend({
-    initialize: function (collection, biome) {
+    initialize: function (options, biome) {
+        for (let arg in options){
+            this[arg] = options[arg];
+        }
         var that = this;
         this.collection.fetch({
-            data: $.param({depth_lte: 3, page_size: 100}), success: function () {
+            data: $.param({depth_lte: this.maxDepth, page_size: 100}), success: function () {
                 // Fetch and pre-pend root node to list
                 var root = new api.Biome({id: 'root'});
                 root.fetch({
@@ -196,8 +195,21 @@ export const BiomeCollectionView = Backbone.View.extend({
                         that.render();
                         if (!biome) {
                             biome = 'root';
+                        } else {
+                            let splitBiome = biome.split(':');
+                            if (splitBiome.length > that.maxDepth){
+                                const existingParentBiome = splitBiome.slice(0, that.maxDepth).join(':');
+                                const $previousBiome = $('#biome-select').children("option[value='"+existingParentBiome+"']");
+                                const newOptions = [];
+                                for (let i = that.maxDepth+1; i<splitBiome.length+1; i++){
+                                    const newLineage = splitBiome.slice(0, i).join(':');
+                                    const newOption = createBiomeOption(newLineage);
+                                    newOptions.push(newOption);
+                                }
+                                $previousBiome.after(newOptions);
+                            }
                         }
-                        $("#biomeSelect > select").val(biome);
+                        $("#biome-select").val(biome);
                     }
                 });
             }
@@ -208,12 +220,16 @@ export const BiomeCollectionView = Backbone.View.extend({
             return model.attributes.lineage
         });
         _.each(biomes.sort(), function (lineage) {
-            const option = "<option value=\"" + lineage + "\">" + stripLineage(lineage) + "</option> ";
+            const option = createBiomeOption(lineage);
             $("#biome-select").append($(option));
         });
         return this
     }
 });
+
+function createBiomeOption(lineage){
+    return "<option value=\"" + lineage + "\">" + stripLineage(lineage) + "</option> ";
+}
 
 export const capitalizeWord = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
