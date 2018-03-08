@@ -1,7 +1,7 @@
 // const navNames = ['overview', 'search', 'submit', 'studies', 'samples', 'compare', 'about', 'contact'];
-const navNames = ['overview', 'search', 'submit', 'studies', 'samples', 'about', 'help'];
+const navNames = ['overview', 'search', 'submit', 'browse', 'about', 'help'];
 // const pageTitles = ['Browse projects', 'Search EBI Metagenomics', 'Submit data', 'Studies list', 'Samples list', 'Comparison tool', 'About EBI metagenomics', 'Contact us'];
-const pageTitles = ['Browse projects', 'Search EBI Metagenomics', 'Submit data', 'Studies list', 'Samples list', 'About EBI metagenomics', 'EBI Metagenomics Help'];
+const pageTitles = ['Browse projects', 'Search EBI Metagenomics', 'Submit data', 'Studies list', 'About EBI metagenomics', 'EBI Metagenomics Help'];
 import {openPage, getPageURL} from './util';
 
 /**
@@ -50,11 +50,11 @@ const pagesBreadcrumbs = {
     'pipelines/4.0': ['', 'pipelines'],
     'pipelines': [''],
     'runs/SRR997120': [''],
-    'samples/ERS1474828': ['', 'samples'],
+    'samples/ERS1474828': ['', 'browse#samples'],
     'samples': [''],
     'search': [''],
     'studies': [''],
-    'studies/ERP000118': ['', 'studies'],
+    'studies/ERP000118': ['', 'browse#studies'],
     'submit': [''],
 };
 
