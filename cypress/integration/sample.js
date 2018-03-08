@@ -181,3 +181,16 @@ describe('Sample page - Runs table with >1 analysis per run', function () {
         table.testFiltering('ERR1022502', [['ERR1022502', 'metatranscriptomic', '', '', '2.0, 4.0'], ['ERR1022502', 'metatranscriptomic', '', '', '2.0, 4.0']])
     });
 });
+
+describe('Sample page - Metadata display', function(){
+    beforeEach(function () {
+        const projectId = "ERS1474797";
+        const origPage = "samples/" + projectId;
+        openPage(origPage);
+        waitForPageLoad(projectId);
+        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+    });
+    it('Info message should be displayed if no metadata available for display', function(){
+        cy.get('#sample-metadata').contains('No metadata to be displayed.');
+    })
+});
