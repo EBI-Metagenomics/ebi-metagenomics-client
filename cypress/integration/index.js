@@ -39,7 +39,7 @@ describe('Home page: Test Browse by selected biomes component', function () {
 
         it('Browse human biomes', function () {
             cy.get('#top10biomes').get('.human_host_b.Skin').click();
-            cy.url().should('include', getBaseURL()+'studies?lineage=root:Host-associated:Human:Skin')
+            cy.url().should('include', getBaseURL()+'browse?lineage=root:Host-associated:Human:Skin#studies')
         });
     })
 
