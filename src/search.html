@@ -192,20 +192,7 @@
 <script id="projectResultsTmpl" type="text/template">
     <div class="row">
         <div class="columns small-8 medium-8 large-8">
-            <h5>You searched for projects with
-                <% if (queryText && queryText.length>0) { %>
-                keyword: <%= queryText %>
-                <% } %>
-                <% if (filterText && filterText.length>0) { %>
-                filters: <%= filterText %>
-                <% } %>
-                <% if (sliderText && sliderText.length>0) { %>
-                and <%= sliderText %>
-                <% } %>
-                <% if (!queryText && !filterText && !sliderText){ %>
-                no search parameters
-                <% } %>
-                .</h5>
+            <h5>You searched for projects <%=queryString%></h5>
             <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
 
         </div>
@@ -258,12 +245,8 @@
 <script id="samplesResultsTmpl" type="text/template">
     <div class="row">
         <div class="columns small-8 medium-8 large-8">
-            <h5>You searched for samples with <% if (queryText && queryText.length>0) { %> keyword: <%= queryText %> <%
-                } %> <% if (filterText && filterText.length>0) { %> filters: <%= filterText %> <% } %> <% if (sliderText
-                && sliderText.length>0) { %>and<%= sliderText %> <% } %><% if (!queryText && !filterText &&
-                !sliderText){ %>no search parameters<% } %>.</h5>
+            <h5>You searched for samples <%=queryString%></h5>
             <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
-
         </div>
         <div class="columns small-4 medium-4 large-4">
             <button class="button right" name="download">Download results as CSV</button>
@@ -299,20 +282,7 @@
 <script id="runsResultsTmpl" type="text/template">
     <div class="row">
         <div class="columns small-8 medium-8 large-8">
-            <h5>You searched for runs with
-                <% if (queryText && queryText.length>0) { %>
-                keyword: <%= queryText %>
-                <% } %>
-                <% if (filterText && filterText.length>0) { %>
-                filters: <%= filterText %>
-                <% } %>
-                <% if (sliderText && sliderText.length>0) { %>
-                and <%= sliderText %>
-                <% } %>
-                <% if (!queryText && !filterText && !sliderText){ %>
-                no search parameters
-                <% } %>
-                .</h5>
+            <h5>You searched for runs <%=queryString%></h5>
             <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
 
         </div>

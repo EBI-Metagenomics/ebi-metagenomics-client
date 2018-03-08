@@ -16,7 +16,7 @@ const detailList = require('../components/detailList');
 
 require('tablesorter');
 
-import {attachTabHandlers, getURLParameter, setCurrentTab, checkAPIonline, tabDeepLink} from "../util";
+import {attachTabHandlers, getURLParameter, setCurrentTab, checkAPIonline} from "../util";
 
 checkAPIonline();
 
@@ -24,7 +24,7 @@ const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 
 const DEFAULT_PAGE_SIZE = 25;
 
-setCurrentTab('#samples-nav');
+setCurrentTab('#browse-nav');
 
 window.Foundation.addToJquery($);
 

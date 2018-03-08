@@ -684,3 +684,23 @@ div.pagesize {
 li.page-item.active {
     background-color: #007c82;
 }
+
+div.home-blog-box img{
+    float: left;
+    padding: 0.5em;
+    height: 6em;
+    width: 6em;
+}
+
+img.publication-cover {
+    width: auto;
+    float: left;
+    margin-right: 18px;
+}
+
+.getting-started-banner{
+    margin: 0.5em 1em;
+}
+.getting-started{
+    border: solid black 1px;
+}

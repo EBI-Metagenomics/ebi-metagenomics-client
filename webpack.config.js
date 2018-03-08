@@ -70,6 +70,8 @@ module.exports = (env = {prod: false}) => {
                 // data passed to main hbs template: `main-template(data)`
                 data: {
                     subfolder: process.env.DEPLOYMENT_SUBFOLDER,
+                    apiUrl: process.env.API_URL,
+                    sequenceSearchUrl: process.env.SEQUENCE_SEARCH_URL
                 },
                 // path.join(__dirname, configFile),
                 // globbed path to partials, where folder/filename is unique
@@ -88,12 +90,10 @@ module.exports = (env = {prod: false}) => {
                     'src/js/modules/healthcheck.js',
                 submit:
                     'src/js/modules/submit.js',
-                studies:
-                    'src/js/modules/studies.js',
                 study:
                     'src/js/modules/study.js',
-                samples:
-                    'src/js/modules/samples.js',
+                browse:
+                    'src/js/modules/browse.js',
                 sample:
                     'src/js/modules/sample.js',
                 run:

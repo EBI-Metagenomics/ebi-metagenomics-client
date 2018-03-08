@@ -2,13 +2,11 @@ const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
 const api = require('./components/api');
-const Handlebars = require('handlebars');
-const sequenceSearchUrl = process.env.SEQUENCE_SEARCH_URL;
 export const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 $.typeWatch = require('jquery.typewatch');
 
 
-import {footer, header, resultsFilter, head, biomeFilter} from "./commons";
+import {biomeFilter} from "./commons";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -37,14 +35,14 @@ export function getBiomeIconData(biome_data) {
     return {name: formatLineage(name), icon: getBiomeIcon(name)};
 }
 
-export function initBiomeFilter($div, callback){
+export function initBiomeFilter($div, callback) {
     $div.before(biomeFilter);
-    const $biomeSelect = $('#biome-select');
+    const $biomeSelect = $('.biome-select');
     $biomeSelect.on('change', callback);
 
-    const $clearBtn = $('#clear-filter');
+    const $clearBtn = $('.clear-filter');
     $clearBtn.click(function () {
-        $('#tableFilter').val('');
+        $('.table-filter').val('');
         $biomeSelect.val($biomeSelect.find('option:first').val());
         $biomeSelect.trigger('change');
     })
@@ -161,7 +159,7 @@ export function attachTabHandlers() {
     var link_tab = window.location.hash.substr(1);
     if (link_tab) {
         $($dataTabs).foundation('selectTab', link_tab);
-        $("div.tabs-panel:not('"+link_tab+"')").removeClass('active');
+        $("div.tabs-panel:not('" + link_tab + "')").removeClass('active');
         $('#' + link_tab).addClass('active');
     }
 
@@ -181,8 +179,9 @@ export function attachTabHandlers() {
 }
 
 export const BiomeCollectionView = Backbone.View.extend({
+    selector: ".biome-select",
     initialize: function (options, biome) {
-        for (let arg in options){
+        for (let arg in options) {
             this[arg] = options[arg];
         }
         var that = this;
@@ -193,15 +192,16 @@ export const BiomeCollectionView = Backbone.View.extend({
                 root.fetch({
                     success: function () {
                         that.render();
+                        const $biomeSelect = $(that.selector);
                         if (!biome) {
                             biome = 'root';
                         } else {
                             let splitBiome = biome.split(':');
-                            if (splitBiome.length > that.maxDepth){
+                            if (splitBiome.length > that.maxDepth) {
                                 const existingParentBiome = splitBiome.slice(0, that.maxDepth).join(':');
-                                const $previousBiome = $('#biome-select').children("option[value='"+existingParentBiome+"']");
+                                const $previousBiome = $biomeSelect.children("option[value='" + existingParentBiome + "']");
                                 const newOptions = [];
-                                for (let i = that.maxDepth+1; i<splitBiome.length+1; i++){
+                                for (let i = that.maxDepth + 1; i < splitBiome.length + 1; i++) {
                                     const newLineage = splitBiome.slice(0, i).join(':');
                                     const newOption = createBiomeOption(newLineage);
                                     newOptions.push(newOption);
@@ -209,25 +209,26 @@ export const BiomeCollectionView = Backbone.View.extend({
                                 $previousBiome.after(newOptions);
                             }
                         }
-                        $("#biome-select").val(biome);
+                        $biomeSelect.val(biome);
                     }
                 });
             }
         });
     },
     render: function () {
+        const that = this;
         var biomes = this.collection.models.map(function (model) {
             return model.attributes.lineage
         });
         _.each(biomes.sort(), function (lineage) {
             const option = createBiomeOption(lineage);
-            $("#biome-select").append($(option));
+            $(that.selector).append($(option));
         });
         return this
     }
 });
 
-function createBiomeOption(lineage){
+function createBiomeOption(lineage) {
     return "<option value=\"" + lineage + "\">" + stripLineage(lineage) + "</option> ";
 }
 

@@ -18,7 +18,7 @@ import {
 
 checkAPIonline();
 
-setCurrentTab('#samples-nav');
+setCurrentTab('#browse-nav');
 
 const DEFAULT_PAGE_SIZE = Commons.DEFAULT_PAGE_SIZE;
 

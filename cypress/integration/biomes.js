@@ -2,6 +2,7 @@ import {openPage, waitForBiomesLoad, waitForStudiesLoad, assertTableIsCleared, s
 
 const origPage = 'biomes';
 import Config from './config';
+import GenericTableHandler from './genericTable';
 
 const initialResultSize = 25;
 
@@ -75,7 +76,7 @@ describe('Biomes page', function () {
         cy.get('td.biome-name').first().find('span').then(($el) => {
             expect($el.text()).to.contain('root > Host-associated > Plants');
             cy.get('td.biome-name').first().find('a').click();
-            waitForStudiesLoad(initialResultSize);
+            let studiesTable = new GenericTableHandler('#studies-section', 25);
             cy.get('span.biome_icon').should('have.class', 'plant_host_b');
         });
     });

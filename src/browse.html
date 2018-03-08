@@ -3,7 +3,7 @@
 <head id="head">
     <title>Studies &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/studies.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="{{subfolder}}/js/browse.css" type="text/css" media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -16,15 +16,26 @@
         <div class="columns small-12 medium-12 large-12">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
-                     <li><a href="{{subfolder}}">Home</a></li>
+                    <li><a href="{{subfolder}}">Home</a></li>
                     <li>
-                        <span class="show-for-sr">Current: </span> Studies
+                        <span class="show-for-sr">Current: </span> Browse
                     </li>
                 </ul>
             </nav>
             <div class="row">
-                <section id="studies-section">
-                </section>
+                <ul class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500" data-tabs
+                    id="data-tabs">
+                    <li class="tabs-title is-active"><a href="#studies" aria-selected="true">Studies</a></li>
+                    <li class="tabs-title"><a href="#samples">Samples</a></li>
+                </ul>
+                <div class="tabs-content" data-tab-content="data-tabs">
+                    <div class="tabs-panel active" id="studies">
+                        <section id="studies-section"></section>
+                    </div>
+                    <div class="tabs-panel active" id="samples">
+                        <section id="samples-section"></section>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -51,14 +62,16 @@
 <!-- The Foundation theme JavaScript -->
 
 <script src="{{subfolder}}/static/js/foundation.js"></script>
+<script src="{{subfolder}}/static/js/what-input.js"></script>
 <script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
     $(document).ready(function () {
+        window.Foundation = Foundation;
         $(document).foundation();
         $(document).foundationExtendEBI();
     });
 </script>
-<script src="{{subfolder}}/js/studies.js"></script>
+<script src="{{subfolder}}/js/browse.js"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->

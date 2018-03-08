@@ -13,13 +13,62 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
-        <section class="jumbo-header" style="position: relative;">
-            <div class="close_section anim"><span class="show_tooltip" id="this_close" data-hasqtip="0"
-                                                  oldtitle="Close this section" title="">&#10006;</span>
+        <section class="getting-started-banner">
+            <div class="row columns">
+                <h3 class="text-center">Getting started</h3>
             </div>
-            <p class="lead">Submit, analyse, visualize and compare your data.</p>
-            <div class="button"><a href="submit"> Submit data</a></div>
+            <div class="row">
+                <div class="columns small-12 medium-6 large-6">
+                    <div class="row columns text-center">
+                        <div class="row columns text-center getting-started">
+                            <h3>Request analysis</h3>
+                            <div class="row">
+                                <div class="columns small-12 medium-6 large-6">
+                                    <div class="text-center">
+                                        <p>Submit your data for analysis.</p>
+                                        <a class="button" href="{{subfolder}}/submit">Submit</a>
+                                    </div>
+                                </div>
+                                <div class="columns small-12 medium-6 large-6">
+                                    <div class="text-center">
+                                        <p>Request an analysis of a public dataset.</p>
+                                        <a class="button">Request</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns small-12 medium-6 large-6">
+                    <div class="row columns text-center">
+                        <div class="row columns text-center getting-started">
+                            <h3>Search by</h3>
+                            <div class="row">
+                                <div class="columns small-12 medium-6 large-6">
+                                    <div class="text-center">
+                                        <p>Name, biome, or keyword. </p>
+                                        <a class="button" href="{{subfolder}}/search/">Search text</a>
+                                    </div>
+                                </div>
+                                <div class="columns small-12 medium-6 large-6">
+                                    <div class="text-center">
+                                        <p>Sequence similarity</p>
+                                        <a class="button" href="{{sequenceSearchUrl}}">Search sequences</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
+        <!--<section class="jumbo-header" style="position: relative;">-->
+        <!--<div class="close_section anim"><span class="show_tooltip" id="this_close" data-hasqtip="0"-->
+        <!--oldtitle="Close this section" title="">&#10006;</span>-->
+        <!--</div>-->
+        <!--<p class="lead">Submit, analyse, visualize and compare data.</p>-->
+        <!--<div class="button"><a href="submit"> Submit data</a></div>-->
+        <!--</section>-->
 
         <section class="jumbo-stats" style="visibility:hidden">
             <div class="row">
@@ -132,7 +181,8 @@
                         </p>
                         <%= abstract %>
                         <p>
-                        <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%= samples_count %>
+                            <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%= samples_count
+                            %>
                             samples</a>
                         </p>
                         <hr>
@@ -143,12 +193,12 @@
 
         <div class="row">
             <div class="columns small-12 medium-6 large-6">
-                <a href="biomes" class="all right" data-hasqtip="27"
+                <a href="{{subfolder}}/biomes" class="all right" data-hasqtip="27"
                    oldtitle="View projects and filter by biome" title=""
                    aria-describedby="qtip-27">Browse all biomes</a>
             </div>
             <div class="columns small-12 medium-6 large-6">
-                <a href="studies"
+                <a href="{{subfolder}}/browse#studies"
                    class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
                    aria-describedby="qtip-42">View all projects</a>
             </div>
@@ -210,7 +260,7 @@
                 <div class="home-blog-box">
                     <img alt="Cover of the Nucleic Acids Research journal"
                          src="{{subfolder}}/static/images/nucleic_acids_research_D1_cover.gif"
-                         style="width: auto; float: left; margin-right: 18px;">
+                         class="publication-cover">
                     <p>To cite EBI Metagenomics, please refer to the following publication:</p>
                     <p>
                         Alex L. Mitchell, Maxim Scheremetjew, Hubert Denise, Simon Potter, Aleksandra Tarkowska, Matloob
