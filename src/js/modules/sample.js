@@ -47,7 +47,12 @@ let SampleView = Backbone.View.extend({
                     });
                     that.model.attributes.external_links = links;
                     that.$el.html(that.template(that.model.toJSON()));
-                    $('#sample-metadata').html(new DetailList('Sample metadata', metadataObj));
+                    console.log(Object.keys(metadataObj).length);
+                    if (Object.keys(metadataObj).length > 0) {
+                        $('#sample-metadata').html(new DetailList('Sample metadata', metadataObj));
+                    } else {
+                        $('#sample-metadata').html('No metadata to be displayed.');
+                    }
                     new Map('map', [that.model.attributes], false);
                     deferred.resolve(true);
                 });
