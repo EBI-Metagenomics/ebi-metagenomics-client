@@ -51,9 +51,8 @@ const pagesBreadcrumbs = {
     'pipelines': [''],
     'runs/SRR997120': [''],
     'samples/ERS1474828': ['', 'browse#samples'],
-    'samples': [''],
+    'browse': [''],
     'search': [''],
-    'studies': [''],
     'studies/ERP000118': ['', 'browse#studies'],
     'submit': [''],
 };
