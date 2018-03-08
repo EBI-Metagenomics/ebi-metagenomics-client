@@ -90,12 +90,10 @@ module.exports = (env = {prod: false}) => {
                     'src/js/modules/healthcheck.js',
                 submit:
                     'src/js/modules/submit.js',
-                studies:
-                    'src/js/modules/studies.js',
                 study:
                     'src/js/modules/study.js',
-                samples:
-                    'src/js/modules/samples.js',
+                browse:
+                    'src/js/modules/browse.js',
                 sample:
                     'src/js/modules/sample.js',
                 run:

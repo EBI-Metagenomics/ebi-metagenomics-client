@@ -37,12 +37,12 @@ export function getBiomeIconData(biome_data) {
 
 export function initBiomeFilter($div, callback) {
     $div.before(biomeFilter);
-    const $biomeSelect = $('#biome-select');
+    const $biomeSelect = $('.biome-select');
     $biomeSelect.on('change', callback);
 
-    const $clearBtn = $('#clear-filter');
+    const $clearBtn = $('.clear-filter');
     $clearBtn.click(function () {
-        $('#tableFilter').val('');
+        $('.table-filter').val('');
         $biomeSelect.val($biomeSelect.find('option:first').val());
         $biomeSelect.trigger('change');
     })
@@ -179,6 +179,7 @@ export function attachTabHandlers() {
 }
 
 export const BiomeCollectionView = Backbone.View.extend({
+    selector: ".biome-select",
     initialize: function (options, biome) {
         for (let arg in options) {
             this[arg] = options[arg];
@@ -191,13 +192,14 @@ export const BiomeCollectionView = Backbone.View.extend({
                 root.fetch({
                     success: function () {
                         that.render();
+                        const $biomeSelect = $(that.selector);
                         if (!biome) {
                             biome = 'root';
                         } else {
                             let splitBiome = biome.split(':');
                             if (splitBiome.length > that.maxDepth) {
                                 const existingParentBiome = splitBiome.slice(0, that.maxDepth).join(':');
-                                const $previousBiome = $('#biome-select').children("option[value='" + existingParentBiome + "']");
+                                const $previousBiome = $biomeSelect.children("option[value='" + existingParentBiome + "']");
                                 const newOptions = [];
                                 for (let i = that.maxDepth + 1; i < splitBiome.length + 1; i++) {
                                     const newLineage = splitBiome.slice(0, i).join(':');
@@ -207,19 +209,20 @@ export const BiomeCollectionView = Backbone.View.extend({
                                 $previousBiome.after(newOptions);
                             }
                         }
-                        $("#biome-select").val(biome);
+                        $biomeSelect.val(biome);
                     }
                 });
             }
         });
     },
     render: function () {
+        const that = this;
         var biomes = this.collection.models.map(function (model) {
             return model.attributes.lineage
         });
         _.each(biomes.sort(), function (lineage) {
             const option = createBiomeOption(lineage);
-            $("#biome-select").append($(option));
+            $(that.selector).append($(option));
         });
         return this
     }

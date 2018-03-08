@@ -204,6 +204,10 @@ class GenericTableHandler {
     getTableSelector() {
         return this.parentId + "> div.row.columns > table "
     }
+
+    getClearButton(){
+        return cy.get(this.parentId + " .clear-filter")
+    }
 }
 
 

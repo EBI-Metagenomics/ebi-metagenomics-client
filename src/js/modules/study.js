@@ -15,15 +15,12 @@ import {
     attachTabHandlers,
     getURLParameter,
     setCurrentTab,
-    createListItem,
-    createLinkTag,
-    checkURLExists,
     checkAPIonline
 } from "../util";
 
 checkAPIonline();
 
-setCurrentTab('#studies-nav');
+setCurrentTab('#browse-nav');
 
 
 

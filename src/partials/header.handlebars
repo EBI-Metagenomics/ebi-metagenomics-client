@@ -27,7 +27,7 @@
         <div class="masthead-inner row">
             <!-- local-title -->
             <div class="columns medium-7" id="local-title">
-                <h1><a href="/" title="Back to homepage">Microbial Communities Portal</a></h1>
+                <h1><a href="{{subfolder}}" title="Back to homepage">Microbial Communities Portal</a></h1>
                 <h5>Tagline</h5>
             </div>
             {{#unless hideSearch }}
@@ -56,17 +56,16 @@
                 <ul id="local-nav" class="dropdown menu float-left" data-description="navigational"
                     data-dropdown-menu>
                     <li id="overview-nav"><a href="{{subfolder}}/">Overview</a></li>
+                    <li id="submit-nav"><a href="{{subfolder}}/submit">Submit data</a></li>
                     <li id="search-nav"><a href="{{subfolder}}/search">Text search</a></li>
                     <li id="sequence-search-nav"><a
                             href="{{sequenceSearchUrl}}">Sequence search</a>
                     </li>
-                    <li id="submit-nav"><a href="{{subfolder}}/submit">Submit data</a></li>
-                    <li id="studies-nav"><a href="{{subfolder}}/studies">Studies</a></li>
-                    <li id="samples-nav"><a href="{{subfolder}}/samples">Samples</a></li>
+                    <li id="browse-data-nav"><a href="{{subfolder}}/browse">Browse data</a></li>
                     <!--<li id="compare-nav"><a href="{{subfolder}}/compare">Comparison tool</a></li>-->
+                    <li id="api-nav"><a href="{{apiUrl}}">API</a></li>
                     <li id="about-nav"><a href="{{subfolder}}/about">About</a></li>
                     <li id="help-nav"><a href="{{subfolder}}/help">Help</a></li>
-                    <li id="help-nav"><a href="{{apiUrl}}">API</a></li>
                     <!--</ul>-->
                     <!--<ul class="menu dropdown float-right" data-dropdown-menu data-description="functional">-->
                     <li class="functional">
