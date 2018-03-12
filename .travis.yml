@@ -55,7 +55,7 @@ script:
   - npm run test -- --record --key $CYPRESS_RECORD_KEY
 
 after_success:
-  - npm coverage
+  - npm run coverage
   - codecov
 
 cache:
