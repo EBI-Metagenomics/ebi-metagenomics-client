@@ -52,7 +52,7 @@ install:
   - curl -I http://localhost:9000/metagenomics/
 
 script:
-  - npm run test -- --record --key $CYPRESS_RECORD_KEY
+  - nyc npm run test -- --record --key $CYPRESS_RECORD_KEY
 
 after_success:
   - nyc report --reporter=text-lcov > coverage.lcov
