@@ -41,6 +41,8 @@ before_install:
 
 install:
   - npm install webpack -g
+  - npm install -g codecov
+  - npm install -g nyc
   - npm install
   - npm run build
   - sudo mv dist/* /usr/share/nginx/html/
@@ -52,6 +54,9 @@ install:
 script:
   - npm run test -- --record --key $CYPRESS_RECORD_KEY
 
+after_success:
+  - nyc report --reporter=text-lcov > coverage.lcov
+  - codecov
 
 cache:
   directories:s

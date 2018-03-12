@@ -1,3 +1,16 @@
 {
-  "presets": ["env"]
+  "presets": [
+    "env"
+  ],
+  "plugins": [
+    "instanbul"
+  ],
+  "retainLines": true,
+  "env": {
+    "test": {
+      "plugins": [
+        "istanbul"
+      ]
+    }
+  }
 }
