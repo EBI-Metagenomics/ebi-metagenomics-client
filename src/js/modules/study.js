@@ -6,25 +6,18 @@ const Pagination = require('../components/pagination').Pagination;
 const GenericTable = require('../components/genericTable');
 const Map = require('../components/map');
 const API_URL = process.env.API_URL;
-
+const util = require('../util');
 
 // const OverlappingMarkerSpiderfier = require('../../../static/libraries/oms.min.js');
-import 'js-marker-clusterer';
+require('js-marker-clusterer');
 
-import {
-    attachTabHandlers,
-    getURLParameter,
-    setCurrentTab,
-    checkAPIonline
-} from "../util";
+util.checkAPIonline();
 
-checkAPIonline();
-
-setCurrentTab('#browse-nav');
+util.setCurrentTab('#browse-nav');
 
 
 
-let study_id = getURLParameter();
+let study_id = util.getURLParameter();
 let StudyView = Backbone.View.extend({
     model: api.Study,
     template: _.template($("#studyTmpl").html()),
@@ -44,7 +37,7 @@ let StudyView = Backbone.View.extend({
                 that.model.attributes.publications = publications;
 
                 that.$el.html(that.template(that.model.toJSON()));
-                attachTabHandlers();
+                util.attachTabHandlers();
 
                 deferred.resolve(true);
             }

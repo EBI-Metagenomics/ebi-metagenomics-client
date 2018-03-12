@@ -3,6 +3,7 @@ const _ = require('underscore');
 const INTERPRO_URL = process.env.INTERPRO_URL;
 const Commons = require('../commons');
 const api = require('../components/api');
+const util = require('../util');
 const TaxonomyPieChart = require('../components/charts/taxonomy/taxonomyPie');
 const TaxonomyColumnChart = require('../components/charts/taxonomy/taxonomyColumn');
 const TaxonomyStackedColumnChart = require('../components/charts/taxonomy/taxonomyStackedColumn');
@@ -16,20 +17,19 @@ const detailList = require('../components/detailList');
 
 require('tablesorter');
 
-import {attachTabHandlers, getURLParameter, setCurrentTab, checkAPIonline} from "../util";
 
-checkAPIonline();
+util.checkAPIonline();
 
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 
 const DEFAULT_PAGE_SIZE = 25;
 
-setCurrentTab('#browse-nav');
+util.setCurrentTab('#browse-nav');
 
 window.Foundation.addToJquery($);
 
 
-let run_id = getURLParameter();
+let run_id = util.getURLParameter();
 
 let analysis = null;
 let interproData = null;
@@ -78,7 +78,7 @@ let RunView = Backbone.View.extend({
     },
     render: function (callback) {
         this.$el.html(this.template(this.model.toJSON()));
-        attachTabHandlers();
+        util.attachTabHandlers();
         callback();
         return this.$el;
     }

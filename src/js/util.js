@@ -5,8 +5,7 @@ const api = require('./components/api');
 export const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 $.typeWatch = require('jquery.typewatch');
 
-
-import {biomeFilter} from "./commons";
+const biomeFilter = require('./commons').biomeFilter;
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
