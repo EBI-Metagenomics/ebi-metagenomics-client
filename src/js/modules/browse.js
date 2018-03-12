@@ -8,29 +8,21 @@ const Order = require('../components/order');
 const GenericTable = require('../components/genericTable');
 const Commons = require('../commons');
 const pagination = new Pagination();
-import {
-    getURLFilterParams,
-    setCurrentTab,
-    BiomeCollectionView,
-    checkAPIonline,
-    initBiomeFilter,
-    attachTabHandlers
-} from "../util";
 
 window.Foundation.addToJquery($);
 
-attachTabHandlers();
+util.attachTabHandlers();
 
 const BIOME_FILTER_DEPTH = 3;
 
 
-checkAPIonline();
-setCurrentTab('#browse-nav');
+util.checkAPIonline();
+util.setCurrentTab('#browse-nav');
 
 $("#pagination").append(commons.pagination);
 $("#pageSize").append(commons.pagesize);
 
-const pageFilters = getURLFilterParams();
+const pageFilters = util.getURLFilterParams();
 
 let StudiesView = Backbone.View.extend({
     tableObj: null,
@@ -225,7 +217,7 @@ function syncFilterFields() {
 }
 
 var biomes = new api.BiomeCollection();
-var biomesSelectView = new BiomeCollectionView({
+var biomesSelectView = new util.BiomeCollectionView({
     collection: biomes,
     maxDepth: BIOME_FILTER_DEPTH
 }, pageFilters.get('lineage'));
@@ -239,7 +231,7 @@ var samplesView = new SamplesView({collection: samples});
 studiesView.init();
 samplesView.init();
 
-initBiomeFilter($("section").find('div.row:nth-child(2) > div.columns:nth-child(2)'), function () {
+util.initBiomeFilter($("section").find('div.row:nth-child(2) > div.columns:nth-child(2)'), function () {
     const updateObj = {
         lineage: $(this).val(),
         search: $('#tableFilter').val()

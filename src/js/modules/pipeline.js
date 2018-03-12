@@ -1,12 +1,12 @@
 const commons = require('../commons');
+const util = require('../util');
 require('static/css/pipeline.css');
-import {getURLParameter, setCurrentTab, checkAPIonline} from "../util";
 
-checkAPIonline();
+util.checkAPIonline();
 
-setCurrentTab('#about-nav');
+util.setCurrentTab('#about-nav');
 
-let pipeline_version = getURLParameter();
+let pipeline_version = util.getURLParameter();
 
 $(document).ready(function () {
     if (pipeline_version <= 0 || pipeline_version - 1 >= commons.pipelines.length) {

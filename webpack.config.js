@@ -81,52 +81,48 @@ module.exports = (env = {prod: false}) => {
             }),
             new ExtractTextPlugin("[name].css")
         ].filter(Boolean), // filter out empty values
-        entry:
-            {
-                index: 'src/js/modules/index.js',
-                search:
-                    'src/js/modules/search.js',
-                healthcheck:
-                    'src/js/modules/healthcheck.js',
-                submit:
-                    'src/js/modules/submit.js',
-                study:
-                    'src/js/modules/study.js',
-                browse:
-                    'src/js/modules/browse.js',
-                sample:
-                    'src/js/modules/sample.js',
-                run:
-                    'src/js/modules/run.js',
-                compare:
-                    'src/js/modules/compare.js',
-                about:
-                    'src/js/modules/about.js',
-                help:
-                    'src/js/modules/help.js',
-                biomes: 'src/js/modules/biomes.js',
-                pipelines:
-                    'src/js/modules/pipelines.js',
-                pipeline:
-                    'src/js/modules/pipeline.js',
-            }
-        ,
+        entry: {
+            index: 'src/js/modules/index.js',
+            search:
+                'src/js/modules/search.js',
+            healthcheck:
+                'src/js/modules/healthcheck.js',
+            submit:
+                'src/js/modules/submit.js',
+            study:
+                'src/js/modules/study.js',
+            browse:
+                'src/js/modules/browse.js',
+            sample:
+                'src/js/modules/sample.js',
+            run:
+                'src/js/modules/run.js',
+            compare:
+                'src/js/modules/compare.js',
+            about:
+                'src/js/modules/about.js',
+            help:
+                'src/js/modules/help.js',
+            biomes: 'src/js/modules/biomes.js',
+            pipelines:
+                'src/js/modules/pipelines.js',
+            pipeline:
+                'src/js/modules/pipeline.js',
+        },
         output: {
             filename: '[name].js',
             path:
             __dirname + '/dist/js'
-        }
-        ,
+        },
         resolve: {
             modules: [__dirname, 'node_modules'],
             alias:
                 {
                     handlebars: 'handlebars/dist/handlebars.min.js',
                 },
-        }
-        ,
+        },
         module: {
-            rules: [
+            rules: [(env === 'prod' ?
                 {
                     test: /\.js$/,
                     exclude: /(node_modules|bower_components)/,
@@ -136,29 +132,38 @@ module.exports = (env = {prod: false}) => {
                             presets: ['env'],
                         }
                     }
-                }, {
-                    test: /\.handlebars$/,
-                    loader: "handlebars-loader"
-                }, {
-                    test: /\.css$/,
-                    use: ExtractTextPlugin.extract({
-                        fallback: "style-loader",
-                        use: [
-                            {
-                                loader: 'css-loader',
-                                options: {
-                                    // If you are having trouble with urls not resolving add this setting.
-                                    // See https://github.com/webpack-contrib/css-loader#url
-                                    minimize: true,
-                                    sourceMap: true
-                                }
-                            }]
-                    })
+                } : {
+                    test: /\.js$/,
+                    exclude: /(node_modules|bower_components)/,
+                    use: {
+                        loader: 'istanbul-instrumenter-loader',
+                        query: {
+                            esModules: true
+                        },
+                    }
+                }), {
+                test: /\.handlebars$/,
+                loader: "handlebars-loader"
+            }, {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: [
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                // If you are having trouble with urls not resolving add this setting.
+                                // See https://github.com/webpack-contrib/css-loader#url
+                                minimize: true,
+                                sourceMap: true
+                            }
+                        }]
+                })
 
-                }, {
-                    test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg)$/,
-                    loader: 'url-loader?name=[path][name].[ext]?limit=100000'
-                }
+            }, {
+                test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg)$/,
+                loader: 'url-loader?name=[path][name].[ext]?limit=100000'
+            }
 // }, {
                 //     test: /\.(jpe?g|png|gif|svg)$/i,
                 //     loader: 'file-loader?name=../[path][name].[ext]!html-loader'

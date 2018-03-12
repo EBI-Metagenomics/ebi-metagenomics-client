@@ -1,3 +1,3 @@
-import {setCurrentTab, checkAPIonline} from "../util";
-checkAPIonline();
-setCurrentTab('#submit-nav');
+const util = require('../util');
+util.checkAPIonline();
+util.setCurrentTab('#submit-nav');

@@ -10,11 +10,9 @@ const cookieName = commons.COOKIE_NAME;
 const Cookies = require('js-cookie');
 const util = require('../util');
 
-import {setCurrentTab, truncateString, checkAPIonline} from "../util";
+util.checkAPIonline();
 
-checkAPIonline();
-
-setCurrentTab('#overview-nav');
+util.setCurrentTab('#overview-nav');
 // initHeadTag('EBI metagenomics: archiving, analysis and integration of metagenomics data');
 
 $('#this_close').on('click', function () {
@@ -112,7 +110,7 @@ var StudyView = Backbone.View.extend({
     },
     render: function () {
         let data = this.model.toJSON();
-        data.abstract = truncateString(data.abstract, 250);
+        data.abstract = util.truncateString(data.abstract, 250);
         this.$el.html(this.template(data));
         return this.$el
     }

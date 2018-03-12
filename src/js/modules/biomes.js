@@ -4,30 +4,21 @@ const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
 const commons = require('../commons');
 const Order = require('../components/order');
-
+const util = require('../util');
 const pagination = new Pagination();
 
 const DEFAULT_PAGE_SIZE = commons.DEFAULT_PAGE_SIZE;
-import {
-    formatLineage,
-    getURLFilterParams,
-    hideTableLoadingGif,
-    setCurrentTab,
-    setURLParams,
-    showTableLoadingGif,
-    checkAPIonline
-} from "../util";
 
 
-checkAPIonline();
+util.checkAPIonline();
 
 
-setCurrentTab('');
+util.setCurrentTab('');
 
 $("#pagination").append(commons.pagination);
 $("#pageSize").append(commons.pagesize);
 
-const pageFilters = getURLFilterParams();
+const pageFilters = util.getURLFilterParams();
 
 
 var BiomeView = Backbone.View.extend({
@@ -93,15 +84,15 @@ var BiomesView = Backbone.View.extend({
         var that = this;
         this.params = $.extend(this.params, params);
         $('.biome').remove();
-        showTableLoadingGif();
-        setURLParams(this.params, false);
+        util.showTableLoadingGif();
+        util.setURLParams(this.params, false);
 
-        if(this.fetchXhr.readyState > 0 && this.fetchXhr.readyState < 4){
+        if (this.fetchXhr.readyState > 0 && this.fetchXhr.readyState < 4) {
             this.fetchXhr.abort();
         }
         this.fetchXhr = this.collection.fetch({
             data: $.param(params), remove: true, success: function (collection, response, options) {
-                hideTableLoadingGif();
+                util.hideTableLoadingGif();
                 pagination.update(response.meta.pagination, that.update.bind(that));
                 that.render();
             }
@@ -111,7 +102,7 @@ var BiomesView = Backbone.View.extend({
     render: function () {
         $('.biome').remove();
         this.collection.each(function (biome) {
-            biome.attributes.lineage = formatLineage(biome.attributes.lineage);
+            biome.attributes.lineage = util.formatLineage(biome.attributes.lineage);
             var biomeView = new BiomeView({model: biome});
             $(this.$el).append(biomeView.render());
         }, this);
@@ -119,8 +110,6 @@ var BiomesView = Backbone.View.extend({
         return this;
     }
 });
-
-
 
 
 function updatePageSize(pageSize) {
@@ -140,8 +129,6 @@ function changePage(page) {
 }
 
 pagination.setPageSizeChangeCallback(updatePageSize);
-
-
 
 
 var biomes = new api.BiomeCollection();

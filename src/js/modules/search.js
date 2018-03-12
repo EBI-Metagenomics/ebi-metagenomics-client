@@ -1,5 +1,4 @@
 const searchUrl = process.env.SEARCH_URL;
-import {attachTabHandlers, setCurrentTab} from "../util";
 
 const util = require('../util');
 const _ = require('underscore');
@@ -11,8 +10,8 @@ const cookieName = commons.COOKIE_NAME;
 const Pagination = require('../components/pagination').Pagination;
 require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
-import 'foundation-sites';
-import '../../../static/libraries/jquery.TableCSVExport';
+require('foundation-sites');
+require('../../../static/libraries/jquery.TableCSVExport');
 
 const CheckboxTree = require('../components/checkboxTree');
 
@@ -20,8 +19,8 @@ const Slider = require('../components/slider.js');
 
 util.checkAPIonline();
 
-setCurrentTab('#search-nav');
-attachTabHandlers();
+util.setCurrentTab('#search-nav');
+util.attachTabHandlers();
 
 const DEFAULT_QUERIES = ["domain_source:metagenomics_projects", "domain_source:metagenomics_samples", "domain_source:metagenomics_runs"]
 

@@ -1,8 +1,7 @@
-import {setCurrentTab, checkAPIonline} from "../util";
+const util = require('../util');
+util.setCurrentTab('#about-nav');
 
-setCurrentTab('#about-nav');
-
-checkAPIonline();
+util.checkAPIonline();
 
 
 // Expand button handler, usage as follows

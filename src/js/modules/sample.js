@@ -6,24 +6,17 @@ const GenericTable = require('../components/genericTable');
 const API_URL = process.env.API_URL;
 const Map = require('../components/map');
 const DetailList = require('../components/detailList');
+const util = require('../util');
 
-import {
-    getURLParameter,
-    setCurrentTab,
-    createListItem,
-    createLinkTag,
-    checkURLExists,
-    checkAPIonline
-} from "../util";
 
-checkAPIonline();
+util.checkAPIonline();
 
-setCurrentTab('#browse-nav');
+util.setCurrentTab('#browse-nav');
 
 const DEFAULT_PAGE_SIZE = Commons.DEFAULT_PAGE_SIZE;
 
 
-let sample_id = getURLParameter();
+let sample_id = util.getURLParameter();
 
 let SampleView = Backbone.View.extend({
     model: api.Sample,
@@ -43,7 +36,7 @@ let SampleView = Backbone.View.extend({
                 });
                 getExternalLinks(attr.id, attr.bioproject).done(function (data) {
                     const links = _.map(data, function (url, text) {
-                        return createListItem(createLinkTag(url, text));
+                        return util.createListItem(util.createLinkTag(url, text));
                     });
                     that.model.attributes.external_links = links;
                     that.$el.html(that.template(that.model.toJSON()));
@@ -205,7 +198,7 @@ let RunsView = Backbone.View.extend({
 function getExternalLinks(sample_accession) {
     var deferred = new $.Deferred();
     const ena_url = 'https://www.ebi.ac.uk/ena/data/view/' + sample_accession;
-    const ena_url_check = checkURLExists(ena_url);
+    const ena_url_check = util.checkURLExists(ena_url);
     let urls = {};
     $.when(
         ena_url_check

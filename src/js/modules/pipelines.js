@@ -1,7 +1,6 @@
 require('../commons');
+const util = require('../util');
 
-import {setCurrentTab, checkAPIonline} from "../util";
+util.checkAPIonline();
 
-checkAPIonline();
-
-setCurrentTab('#about-nav');
+util.setCurrentTab('#about-nav');
