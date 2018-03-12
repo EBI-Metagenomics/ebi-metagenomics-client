@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client.svg?branch=develop)](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client)
-
+[![codecov](https://codecov.io/gh/EBI-Metagenomics/ebi-metagenomics-client/branch/develop/graph/badge.svg)](https://codecov.io/gh/EBI-Metagenomics/ebi-metagenomics-client)
  # ebi-metagenomics-client
 #### Requirements:
  - npm >= 5.3.0
