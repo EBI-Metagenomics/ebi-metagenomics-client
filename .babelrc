@@ -5,12 +5,5 @@
   "plugins": [
     "instanbul"
   ],
-  "retainLines": true,
-  "env": {
-    "test": {
-      "plugins": [
-        "istanbul"
-      ]
-    }
-  }
+  "retainLines": true
 }
