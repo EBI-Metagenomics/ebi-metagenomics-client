@@ -12,7 +12,8 @@
     "deploy": "npm run bundle",
     "deploy:dev": "npm run deploy -- -- --env.staging",
     "deploy:staging": "npm run deploy:production",
-    "deploy:production": "npm run deploy -- -- --env.prod"
+    "deploy:production": "npm run deploy -- -- --env.prod",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov;"
   },
   "author": "",
   "license": "ISC",
