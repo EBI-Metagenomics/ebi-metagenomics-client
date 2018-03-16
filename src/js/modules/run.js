@@ -30,6 +30,7 @@ window.Foundation.addToJquery($);
 
 
 let run_id = util.getURLParameter();
+let pipeline_version = new URL(window.location).searchParams.get('version');
 
 let analysis = null;
 let interproData = null;
@@ -46,9 +47,17 @@ let RunView = Backbone.View.extend({
             data: {},
             success: function (data) {
                 const attr = data.attributes;
-                let version = attr.pipeline_versions[0];
+                let version;
+                if (typeof pipeline_version !== 'undefined') {
+                    version = pipeline_version;
+                } else {
+                    version = attr.pipeline_versions[0];
+                }
+
 
                 that.render(function () {
+                    $("#analysisSelect").val(version);
+                    console.log($('#analysisSelect'));
                     let description = {
                         Study: "<a href='" + attr.study_url + "'>" + attr.study_id + "</a>",
                         Sample: "<a href='" + attr.sample_url + "'>" + attr.sample_id + "</a>",
@@ -100,8 +109,8 @@ function groupTaxonomyData(data, depth) {
     let clusteredData = _.sortBy(clusterData(data, depth), function (o) {
         return o.y;
     }).reverse();
-    _.each(clusteredData, function(o, i){
-        if(o.name==="undefined"){
+    _.each(clusteredData, function (o, i) {
+        if (o.name === "undefined") {
             o.name = "Unassigned";
             o.lineage = ["Unassigned"];
         }
@@ -248,8 +257,6 @@ let TaxonomyGraphView = Backbone.View.extend({
                 });
 
 
-
-
                 // Column tab
                 const phylumStackedColumnChart = new TaxonomyStackedColumnChart('phylum-composition-stacked-column', 'Phylum composition', phylumData, false);
                 const phylumStackedColumnTable = new ClientSideTable($('#stacked-column').find(".phylum-table"), '', headers, DEFAULT_PAGE_SIZE);
@@ -294,7 +301,7 @@ let InterProSummary = Backbone.View.extend({
                     name: 'Other',
                     y: sumOthers
                 };
-                top10AndOthers = top10AndOthers.slice(0,10);
+                top10AndOthers = top10AndOthers.slice(0, 10);
                 top10AndOthers.push(others);
                 const chartOptions = {
                     plotOptions: {
@@ -347,16 +354,16 @@ let InterProSummary = Backbone.View.extend({
                         $(this).toggleClass('disabled-clickable');
                     }
                 });
-                
+
             }
         })
     }
 });
 
-function getTotalGoTermCount(array){
+function getTotalGoTermCount(array) {
     let sum = 0;
-    _.each(array, function(e){
-        sum+= e.attributes.count;
+    _.each(array, function (e) {
+        sum += e.attributes.count;
     });
     return sum
 }

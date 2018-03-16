@@ -454,9 +454,11 @@ const SamplesView = ResultsView.extend({
 
 const Run = Backbone.Model.extend({
     parse: function (d) {
+        console.log(d);
+        d.run_id = d.fields['name'][0];
         d.study_link = util.subfolder + '/studies/' + d.fields['METAGENOMICS_PROJECTS'][0];
         d.sample_link = util.subfolder + '/samples/' + d.fields['METAGENOMICS_SAMPLES'][0];
-        d.run_link = util.subfolder + '/runs/' + d.id;
+        d.run_link = util.subfolder + '/runs/' + d.fields['name'][0] + "?version="+d.fields.pipeline_version[0];
         d.pipeline_link = util.subfolder + '/pipelines/' + d.fields.pipeline_version[0];
         d.biomes = convertBiomes(d);
         return d;

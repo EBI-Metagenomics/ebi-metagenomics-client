@@ -1,6 +1,6 @@
 import {openPage} from './util';
 
-const origPage = 'runs/SRR035098';
+const origPage = 'runs/ERR1022502';
 
 function waitForPageLoad() {
     cy.get('#overview', {timeout: 20000}).children().should('have.length', 2)
@@ -40,7 +40,17 @@ describe('Run page', function () {
     })
 });
 
-
+describe('Run page - url parameters', function () {
+    it('Should load correct analysis version', function () {
+        const pipeline_version = '4.0';
+        openPage(origPage + '?version=' + pipeline_version);
+        waitForPageLoad();
+        cy.get('#analysisSelect').then(($el) => {
+            expect($el.val()).to.be.eq(pipeline_version);
+        });
+    //    TODO add check that data matches pipeline version, not just selector
+    })
+})
 // TODO test pagination works
 // TODO test URL params are correctly set on every filter/search operation
 // TODO test clear button functions correctly
