@@ -156,8 +156,22 @@ describe('Search page - generalFunctionality', function () {
             cy.log($input);
         });
     });
-});
+    it('Pagination - double page change', function(){
+        loadPage(origPage+'#runs');
+        waitForFacetFilters(facetRequests[0]);
+        validateFacetQuery(facetRequests[1]);
+        waitForFacetFilters(facetRequests[2]);
+        validateFacetQuery(facetRequests[3]);
+        waitForFacetFilters(facetRequests[4]);
+        validateFacetQuery(facetRequests[5]);
 
+        cy.get('#projects-pagination > ul > li.page-item.last').click();
+
+        cy.get('#projects-pagination > ul > li.page-item.first').click();
+        waitForResultsLoad(initialResultSize);
+
+    });
+});
 describe('Search page - Deep linking', function () {
     it('Changing tabs should update result view', function () {
         loadPage(origPage+'#projects');
@@ -168,5 +182,4 @@ describe('Search page - Deep linking', function () {
         cy.get('#runsResults > div > div > h5').should('contain', 'runs');
     });
 });
-
 

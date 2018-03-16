@@ -50,9 +50,7 @@ export const Pagination = function () {
             startPage: p.PAGE,
             totalPages: totPages,
         })).on('page', function (evt, page) {
-            callback({
-                page: page
-            });
+            callback(page);
         });
     }
 
