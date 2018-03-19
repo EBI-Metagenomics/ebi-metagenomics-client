@@ -13,7 +13,8 @@
     "deploy:dev": "npm run deploy -- -- --env.staging",
     "deploy:staging": "npm run deploy:production",
     "deploy:production": "npm run deploy -- -- --env.prod",
-    "coverage": "nyc report --reporter=text-lcov > coverage.lcov;"
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov;",
+    "coverage:html": "nyc report --reporter=html > coverage.lcov;"
   },
   "author": "",
   "license": "ISC",
