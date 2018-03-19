@@ -48,16 +48,8 @@ var BiomesView = Backbone.View.extend({
             params.ordering = '-samples_count';
         }
 
-        const search = pageFilters.get('search');
-        if (search !== null) {
-            params.search = search;
-            $("#search").val(search);
-        }
-
         const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
-        if (pagesize) {
-            params.page_size = pagesize;
-        }
+        params.page_size = pagesize;
         params.page = pageFilters.get('page') || 1;
         this.params = params;
 
@@ -91,9 +83,9 @@ var BiomesView = Backbone.View.extend({
             this.fetchXhr.abort();
         }
         this.fetchXhr = this.collection.fetch({
-            data: $.param(params), remove: true, success: function (collection, response, options) {
+            data: $.param(this.params), remove: true, success: function (collection, response, options) {
                 util.hideTableLoadingGif();
-                pagination.update(response.meta.pagination, that.update.bind(that));
+                pagination.update(response.meta.pagination, changePage);
                 that.render();
             }
         });
@@ -121,6 +113,7 @@ function updatePageSize(pageSize) {
 }
 
 function changePage(page) {
+    console.log(page);
     const params = {
         page_size: pagination.getPageSize(),
         page: page,
