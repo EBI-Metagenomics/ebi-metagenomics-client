@@ -163,18 +163,10 @@ function initObjectCounts() {
         $('#stats-disp').show();
     }
 
-    function createAnchorTag(count, experimentType, domainId) {
+    function createAnchorTag(count, experimentType, hashAppend) {
         const a = $('<a></a>');
         const linkText = document.createTextNode(count);
         a.append(linkText);
-        let hashAppend = '';
-        if (domainId === 'samples') {
-            hashAppend = '#samples'
-        } else if (domainId === 'runs') {
-            hashAppend = '#runs'
-        } else if (domainId === 'projects') {
-            hashAppend = '#projects'
-        }
         a.attr('href', util.subfolder + '/search' + hashAppend);
         a.click(function (event) {
             setCookieFilter(experimentType);
@@ -193,14 +185,14 @@ function initObjectCounts() {
                                    metaBCount, metaGCount, metaTCount,
                                    projectCount, sampleCount, runCount) {
 
-        appendNewAnchorEl('#amplicon-stats', ampliconCount, 'amplicon', 'runs');
-        appendNewAnchorEl('#assembly-stats', assemblyCount, 'assembly', 'runs');
-        appendNewAnchorEl('#metaB-stats', metaBCount, 'metabarcoding', 'runs');
-        appendNewAnchorEl('#metaG-stats', metaGCount, 'metagenomic', 'runs');
-        appendNewAnchorEl('#metaT-stats', metaTCount, 'metatranscriptomic', 'runs');
-        appendNewAnchorEl('#project-stats', projectCount, null, 'projects');
-        appendNewAnchorEl('#sample-stats', sampleCount, null, 'samples');
-        appendNewAnchorEl('#run-stats', runCount, null, 'runs');
+        appendNewAnchorEl('#amplicon-stats', ampliconCount, 'amplicon', '#runs');
+        appendNewAnchorEl('#assembly-stats', assemblyCount, 'assembly', '#runs');
+        appendNewAnchorEl('#metaB-stats', metaBCount, 'metabarcoding', '#runs');
+        appendNewAnchorEl('#metaG-stats', metaGCount, 'metagenomic', '#runs');
+        appendNewAnchorEl('#metaT-stats', metaTCount, 'metatranscriptomic', '#runs');
+        appendNewAnchorEl('#project-stats', projectCount, null, '#projects');
+        appendNewAnchorEl('#sample-stats', sampleCount, null, '#samples');
+        appendNewAnchorEl('#run-stats', runCount, null, '#runs');
     }
 
     function setCookieFilter(experimentType) {
