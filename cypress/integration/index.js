@@ -45,6 +45,47 @@ describe('Home page: Test Browse by selected biomes component', function () {
             cy.get('#top10biomes').get('.human_host_b.Skin').click();
             cy.url().should('include', getBaseURL() + 'browse?lineage=root:Host-associated:Human:Skin#studies')
         });
+
+        it('Browse amplicon runs', function () {
+            cy.get('#amplicon-stats a').click();
+            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.get('#runsResults h5').contains('You searched for runs with filters: experiment_type:amplicon.')
+        });
+        it('Browse assemblies', function () {
+            cy.get('#assembly-stats a').click();
+            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.get('#runsResults h5').contains('You searched for runs with filters: experiment_type:assembly.')
+        });
+        it('Browse metabarcoding runs', function () {
+            cy.get('#metaB-stats a').click();
+            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.get('#runsResults h5').contains('You searched for runs with filters: experiment_type:metabarcoding.')
+        });
+        it('Browse metagenome runs', function () {
+            cy.get('#metaG-stats a').click();
+            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.get('#runsResults h5').contains('You searched for runs with filters: experiment_type:metagenomic.')
+        });
+        it('Browse metatranscriptomes runs', function () {
+            cy.get('#metaT-stats a').click();
+            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.get('#runsResults h5').contains('You searched for runs with filters: experiment_type:metatranscriptomic.')
+        });
+        it('Browse studies', function () {
+            cy.get('#project-stats a').click();
+            cy.url().should('eq', getBaseURL() + 'search#projects');
+            cy.get('#projectsResults h5').contains('You searched for projects with no parameters.');
+        });
+        it('Browse samples', function () {
+            cy.get('#sample-stats a').click();
+            cy.url().should('eq', getBaseURL() + 'search#samples');
+            cy.get('#samplesResults h5').contains('You searched for samples with no parameters.');
+        });
+        it('Browse runs', function () {
+            cy.get('#run-stats a').click();
+            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.get('#runsResults h5').contains('You searched for runs with no parameters.');
+        });
     })
 
 
@@ -59,7 +100,7 @@ describe('Home page: Test Browse latest projects component', function () {
 
         it('Browse by latest projects"', function () {
             cy.get('#latestStudies').contains('Latest projects');
-        })
+        });
 
     });
 

@@ -13,11 +13,6 @@ const util = require('../util');
 util.checkAPIonline();
 
 util.setCurrentTab('#overview-nav');
-// initHeadTag('EBI metagenomics: archiving, analysis and integration of metagenomics data');
-
-$('#this_close').on('click', function () {
-    $('.jumbo-header').slideUp();
-});
 
 // Shorthand for $( document ).ready()
 $(function () {
@@ -136,30 +131,6 @@ var StudiesView = Backbone.View.extend({
         });
         return this;
     },
-    update: function (page, page_size, searchQuery, biome) {
-        var that = this;
-        $(".study").remove();
-        var params = {};
-        if (page !== undefined) {
-            params.page = page
-        }
-        if (page_size !== undefined) {
-            params.page_size = page_size
-        }
-        if (biome !== undefined) {
-            params.biome = biome
-        }
-        if (searchQuery !== undefined && searchQuery.length > 0) {
-            params.search = searchQuery
-        }
-
-        this.collection.fetch({
-            data: $.param(params), remove: true, success: function () {
-                that.render();
-            }
-        });
-        return this;
-    },
     render: function () {
         this.collection.each(function (study) {
             var studyView = new StudyView({model: study});
@@ -184,28 +155,32 @@ function initObjectCounts() {
     const metaTCountReq = $.get(new ebisearch.MetatranscriptomicCount().url);
     const metaBCountReq = $.get(new ebisearch.MetabarcodingCount().url);
 
-    function hideLoadingGif(){
+    function hideLoadingGif() {
         $('#stats-loading').hide();
     }
 
-    function showStatsSection(){
+    function showStatsSection() {
         $('#stats-disp').show();
     }
 
     function createAnchorTag(count, experimentType, domainId) {
-        const a = document.createElement('a');
+        const a = $('<a></a>');
         const linkText = document.createTextNode(count);
-        a.appendChild(linkText);
-        a.onclick = function (event) {
-            let hashAppend = '';
-            if (domainId === 'samples') {
-                hashAppend = '#samples'
-            } else if (domainId === 'runs') {
-                hashAppend = '#runs'
-            }
+        a.append(linkText);
+        let hashAppend = '';
+        if (domainId === 'samples') {
+            hashAppend = '#samples'
+        } else if (domainId === 'runs') {
+            hashAppend = '#runs'
+        } else if (domainId === 'projects') {
+            hashAppend = '#projects'
+        }
+        a.attr('href', util.subfolder + '/search' + hashAppend);
+        a.click(function (event) {
             setCookieFilter(experimentType);
-            window.location = util.subfolder + '/search' + hashAppend;
-        };
+            window.location = $(this).attr('href');
+            return false;
+        });
         return a;
     }
 
@@ -216,22 +191,22 @@ function initObjectCounts() {
     }
 
     function appendNewAnchorEl(elementId, count, experimentType, domainId) {
-        let statsElement = document.getElementById(elementId);
-        statsElement.appendChild(createAnchorTag(count, experimentType, domainId));
+        let statsElement = $(elementId);
+        statsElement.append(createAnchorTag(count, experimentType, domainId));
     }
 
     function addStatsElementsToDOM(ampliconCount, assemblyCount,
                                    metaBCount, metaGCount, metaTCount,
                                    projectCount, sampleCount, runCount) {
 
-        appendNewAnchorEl('amplicon-stats', ampliconCount, 'amplicon', 'runs');
-        appendNewAnchorEl('assembly-stats', assemblyCount, 'assembly', 'runs');
-        appendNewAnchorEl('metaB-stats', metaBCount, 'metabarcoding', 'runs');
-        appendNewAnchorEl('metaG-stats', metaGCount, 'metagenomic', 'runs');
-        appendNewAnchorEl('metaT-stats', metaTCount, 'metatranscriptomic', 'runs');
-        appendNewAnchorEl('project-stats', projectCount, null);
-        appendNewAnchorEl('sample-stats', sampleCount, null, 'samples');
-        appendNewAnchorEl('run-stats', runCount, null, 'runs');
+        appendNewAnchorEl('#amplicon-stats', ampliconCount, 'amplicon', 'runs');
+        appendNewAnchorEl('#assembly-stats', assemblyCount, 'assembly', 'runs');
+        appendNewAnchorEl('#metaB-stats', metaBCount, 'metabarcoding', 'runs');
+        appendNewAnchorEl('#metaG-stats', metaGCount, 'metagenomic', 'runs');
+        appendNewAnchorEl('#metaT-stats', metaTCount, 'metatranscriptomic', 'runs');
+        appendNewAnchorEl('#project-stats', projectCount, null, 'projects');
+        appendNewAnchorEl('#sample-stats', sampleCount, null, 'samples');
+        appendNewAnchorEl('#run-stats', runCount, null, 'runs');
     }
 
     function setCookieFilter(experimentType) {
