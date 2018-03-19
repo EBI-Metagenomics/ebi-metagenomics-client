@@ -184,12 +184,6 @@ function initObjectCounts() {
         return a;
     }
 
-    function addTextNode(elementId, count) {
-        const unlinkText = document.createTextNode(count);
-        let statsElement = document.getElementById(elementId);
-        statsElement.appendChild(unlinkText);
-    }
-
     function appendNewAnchorEl(elementId, count, experimentType, domainId) {
         let statsElement = $(elementId);
         statsElement.append(createAnchorTag(count, experimentType, domainId));
