@@ -1017,6 +1017,7 @@ function formatSearchSummaryStr(params) {
     if (!(validQueryText || validFilterText || validSliderText)) {
         str += " with no parameters"
     }
+    console.log(validQueryText, validFilterText, validSliderText);
     str += '.';
     return str
 }

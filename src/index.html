@@ -15,7 +15,7 @@
     <div id="main-content-area" class="row" role="main">
         <section class="getting-started-banner">
             <div class="row columns">
-                <h3 class="text-center">Getting started</h3>
+                <h2 class="text-center">Getting started</h2>
             </div>
             <div class="row">
                 <div class="columns small-12 medium-6 large-6">
@@ -62,155 +62,124 @@
                 </div>
             </div>
         </section>
-        <!--<section class="jumbo-header" style="position: relative;">-->
-        <!--<div class="close_section anim"><span class="show_tooltip" id="this_close" data-hasqtip="0"-->
-        <!--oldtitle="Close this section" title="">&#10006;</span>-->
-        <!--</div>-->
-        <!--<p class="lead">Submit, analyse, visualize and compare data.</p>-->
-        <!--<div class="button"><a href="submit"> Submit data</a></div>-->
-        <!--</section>-->
-
-        <section class="jumbo-stats" style="visibility:hidden">
+        <section id="browse">
+            <h2>Browse</h2>
             <div class="row">
-                <div class="columns small-4">
-                    <div class="row">
-                        <div class="columns small-1">
-                            <span class="icon icon-generic icon-c6" style="font-size: 2rem" data-icon="D"></span>
+                <div class="columns small-12 medium-6 large-6">
+                    <h3>By data type</h3>
+                    <div class="index-stats-disp">
+                        <div id="stats-loading">
+                            <img class="loading-gif-large" src="{{subfolder}}/static/images/ajax-loader.gif">
+                        </div>
+                        <div id="stats-disp" class="row hidden">
+                            <div class="columns small-1 medium-1 large-1">
+                             <span class="icon icon-conceptual icon-c3"
+                                   style="font-size: 2rem"
+                                   data-icon="d"></span>
+                            </div>
+                            <div class="columns small-5 medium-5 large-5">
+                                <div class="columns small-12 medium-12 index-stats">
+                                    <div class="index-stats-label"><span id="amplicon-stats"></span></div>
+                                    amplicon
+                                </div>
+                                <div class="columns small-12 medium-12 index-stats">
+                                    <div class="index-stats-label"><span id="assembly-stats"></span></div>
+                                    assemblies
+                                </div>
+                                <div class="columns small-12 medium-12 index-stats">
+                                    <div class="index-stats-label"><span id="metaB-stats"></span></div>
+                                    metabarcoding
+                                </div>
+                                <div class="columns small-12 medium-12 index-stats">
+                                    <div class="index-stats-label"><span id="metaG-stats"></span></div>
+                                    metagenomes
+                                </div>
+                                <div class="columns small-12 medium-12 index-stats">
+                                    <div class="index-stats-label"><span id="metaT-stats"></span></div>
+                                    metatranscriptomes
+                                </div>
+                            </div>
+                            <div class="columns small-1 medium-1 large-1">
+                                <div class="columns small-1">
+                                        <span class="icon icon-functional icon-c9" style="font-size: 2rem"
+                                              data-icon="U"></span>
+                                </div>
+                            </div>
+                            <div class="columns small-5 medium-5 large-5">
+                                <div class="columns small-12 medium-12 index-stats">
+                                    <div class="index-stats-label"><span id="project-stats"></span></div>
+                                    studies
+                                </div>
+                                <div class="columns small-12 medium-12 index-stats">
+                                    <div class="index-stats-label"><span id="sample-stats"></span></div>
+                                    samples
+                                </div>
+                                <div class="columns small-12 medium-12 index-stats">
+                                    <div class="index-stats-label"><span id="run-stats"></span></div>
+                                    runs
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="columns small-2">
-                            <span id="dataset-stats" style="font-weight: bold"></span>
-                        </div>
-                        <div class="columns small-10">data sets</div>
+                    <h3>By selected biomes</h3>
+                    <div id="top10biomes" class="row columns">
+                        <script id="biomeTmpl" type="text/template">
+                            <a href="<%= biome_studies_link %>">
+                                <div>
+                                    <img class="spacer" alt="icon"
+                                         src="{{subfolder}}/static/images/backgrounds/bgd_transparent_1x1.png">
+                                    <span class="biome_icon icon_sm <%= icon %> <%= name%>"></span>
+                                </div>
+                                <div class="biome-text">
+                                    <%= name %> (<%= samples_count %>)
+                                </div>
+                            </a>
+                        </script>
+                    </div>
+                    <div class="row columns">
+                        <a href="{{subfolder}}/biomes" class="all right" data-hasqtip="27"
+                           oldtitle="View projects and filter by biome" title=""
+                           aria-describedby="qtip-27">Browse all biomes</a>
                     </div>
                 </div>
-                <div class="columns small-4">
-                    <div class="row">
-                        <div class="columns small-1">
-                            <span class="icon icon-conceptual icon-c3" style="font-size: 2rem" data-icon="d"></span>
+
+                <div class="columns small-12 medium-6 large-6">
+                    <div id="latestStudies">
+                        <h3>Latest projects</h3>
+                        <div id="studies" class="studies-list">
+                            <script id="studyTmpl" type="text/template">
+
+                                <p>
+                                    <% _.each(biomes, function(biome){ %>
+                                    <span class="biome_icon icon_xs <%= biome.icon %>"></span>
+                                    <% }); %>
+                                    <%= study_name %>
+                                </p>
+                                <%= abstract %>
+                                <p>
+                                    <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%=
+                                    samples_count
+                                    %>
+                                    samples</a>
+                                </p>
+                                <hr>
+                            </script>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="columns small-2">
-                            <span id="amplicon-stats" style="font-weight: bold"></span>
-                        </div>
-                        <div class="columns small-10">amplicon</div>
-                    </div>
-                    <div class="row">
-                        <div class="columns small-2">
-                            <span id="assembly-stats" style="font-weight: bold"></span>
-                        </div>
-                        <div class="columns small-10">assemblies</div>
-                    </div>
-                    <div class="row">
-                        <div class="columns small-2">
-                            <span id="metaB-stats" style="font-weight: bold"></span>
-                        </div>
-                        <div class="columns small-10">metabarcoding</div>
-                    </div>
-                    <div class="row">
-                        <div class="columns small-2">
-                            <span id="metaG-stats" style="font-weight: bold"></span>
-                        </div>
-                        <div class="columns small-10">metagenomes</div>
-                    </div>
-                    <div class="row">
-                        <div class="columns small-2">
-                            <span id="metaT-stats" style="font-weight: bold"></span>
-                        </div>
-                        <div class="columns small-10">metatranscriptomes</div>
-                    </div>
-                </div>
-                <div id="objectCounts" class="columns small-4">
-                    <div class="row">
-                        <div class="columns small-1">
-                            <span class="icon icon-functional icon-c9" style="font-size: 2rem" data-icon="U"></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="columns small-2">
-                            <span id="project-stats" style="font-weight: bold"></span>
-                        </div>
-                        <div class="columns small-10">studies</div>
-                    </div>
-                    <div class="row">
-                        <div class="columns small-2">
-                            <span id="sample-stats" style="font-weight: bold"></span>
-                        </div>
-                        <div class="columns small-10">samples</div>
-                    </div>
-                    <div class="row">
-                        <div class="columns small-2">
-                            <span id="run-stats" style="font-weight: bold"></span>
-                        </div>
-                        <div class="columns small-10">runs</div>
+                    <div class="row columns">
+                        <a href="{{subfolder}}/browse#studies"
+                           class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
+                           aria-describedby="qtip-42">View all projects</a>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- START Browse projects section-->
-        <h2>Browse</h2>
-        <div class="row">
-            <div id="top10biomes" class="columns small-12 medium-6 large-6">
-                <h3>By selected biomes</h3>
-                <script id="biomeTmpl" type="text/template">
-                    <a href="<%= biome_studies_link %>">
-                        <div>
-                            <img class="spacer" alt="icon"
-                                 src="{{subfolder}}/static/images/backgrounds/bgd_transparent_1x1.png">
-                            <span class="biome_icon icon_sm <%= icon %> <%= name%>"></span>
-                        </div>
-                        <div class="biome-text">
-                            <%= name %> (<%= samples_count %>)
-                        </div>
-                    </a>
-                </script>
-            </div>
-            <div id="latestStudies" class="columns small-12 medium-6 large-6">
-                <h3>Latest projects</h3>
-                <div id="studies" class="studies-list">
-                    <script id="studyTmpl" type="text/template">
-
-                        <p>
-                            <% _.each(biomes, function(biome){ %>
-                            <span class="biome_icon icon_xs <%= biome.icon %>"></span>
-                            <% }); %>
-                            <%= study_name %>
-                        </p>
-                        <%= abstract %>
-                        <p>
-                            <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%= samples_count
-                            %>
-                            samples</a>
-                        </p>
-                        <hr>
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="columns small-12 medium-6 large-6">
-                <a href="{{subfolder}}/biomes" class="all right" data-hasqtip="27"
-                   oldtitle="View projects and filter by biome" title=""
-                   aria-describedby="qtip-27">Browse all biomes</a>
-            </div>
-            <div class="columns small-12 medium-6 large-6">
-                <a href="{{subfolder}}/browse#studies"
-                   class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
-                   aria-describedby="qtip-42">View all projects</a>
-            </div>
-        </div>
-        <!-- END Browse projects section-->
-        <!-- START Blog post section-->
         <hr>
         <div class="row">
             <div id="blogSpotlight" class="columns small-12 medium-6 large-6"><h2>Spotlight</h2></div>
             <div id="blogTools" class="columns small-12 medium-6 large-6"><h2>Tools</h2></div>
         </div>
-        <div class="row">
+        <div id="blog" class="row">
             <div class="columns small-12 medium-6 large-6">
                 <div class="home-blog-box">
                     <div class="hlight-spot grid_12 alpha" id="blog-spotlight">
@@ -263,13 +232,17 @@
                          class="publication-cover">
                     <p>To cite EBI Metagenomics, please refer to the following publication:</p>
                     <p>
-                        Alex L. Mitchell, Maxim Scheremetjew, Hubert Denise, Simon Potter, Aleksandra Tarkowska, Matloob
-                        Qureshi, Gustavo A. Salazar, Sebastien Pesseat, Miguel A. Boland, Fiona M. I. Hunter, Petra ten
+                        Alex L. Mitchell, Maxim Scheremetjew, Hubert Denise, Simon Potter, Aleksandra Tarkowska,
+                        Matloob
+                        Qureshi, Gustavo A. Salazar, Sebastien Pesseat, Miguel A. Boland, Fiona M. I. Hunter, Petra
+                        ten
                         Hoopen,
-                        Blaise Alako, Clara Amid, Darren J. Wilkinson, Thomas P. Curtis, Guy Cochrane, Robert D. Finn
+                        Blaise Alako, Clara Amid, Darren J. Wilkinson, Thomas P. Curtis, Guy Cochrane, Robert D.
+                        Finn
                         (2017).
                         <br>
-                        <strong>EBI Metagenomics in 2017: enriching the analysis of microbial communities, from sequence
+                        <strong>EBI Metagenomics in 2017: enriching the analysis of microbial communities, from
+                            sequence
                             reads
                             to assemblies.</strong> Nucleic Acids Research (2017) doi: <a
                             title="EBI Metagenomics in 2017: enriching the analysis of microbial communities, from sequence reads to assemblies"
@@ -294,7 +267,8 @@
                     <a class="twitter-timeline" height="100" data-dnt="true"
                        href="https://twitter.com/EBImetagenomics"
                        data-widget-id="345516657369837568"
-                       data-chrome="nofooter noborders noheader noscrollbar transparent" data-tweet-limit="1">Tweets by
+                       data-chrome="nofooter noborders noheader noscrollbar transparent" data-tweet-limit="1">Tweets
+                        by
                         @EBImetagenomics</a>
 
                     <p class="jumbo-news-contact"><strong><a

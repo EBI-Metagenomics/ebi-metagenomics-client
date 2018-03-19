@@ -68,7 +68,7 @@ function loadPage(page){
  * Verify number of results responds to selector
  */
 
-describe('Search page - generalFunctionality', function () {
+describe('Search page - general Functionality', function () {
     beforeEach(function () {
         loadPage(origPage);
     });
@@ -166,7 +166,7 @@ describe('Search page - generalFunctionality', function () {
         validateFacetQuery(facetRequests[5]);
 
         cy.get('#projects-pagination > ul > li.page-item.last').click();
-
+        waitForResultsLoad(2);
         cy.get('#projects-pagination > ul > li.page-item.first').click();
         waitForResultsLoad(initialResultSize);
 

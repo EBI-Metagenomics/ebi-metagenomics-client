@@ -37,12 +37,12 @@
             processPost(data.spotlight, document.getElementById('blog-spotlight'));
             processPost(data.tools, document.getElementById('blog-tools'));
         } catch (err) {
+            console.error(err);
             handleError({statusText: err});
         }
     };
 
     var handleError = function (jqXHR) {
-        console.error(jqXHR.statusText);
         hideContainers();
     };
 
