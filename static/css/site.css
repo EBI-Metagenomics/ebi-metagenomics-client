@@ -510,6 +510,11 @@ select.table-tools {
     text-align: right;
 }
 
+.loading-gif-large {
+    height: 5em;
+    width: 5em;
+}
+
 /*Loading gif in tables*/
 .loading-gif {
     height: 2em;
@@ -685,7 +690,7 @@ li.page-item.active {
     background-color: #007c82;
 }
 
-div.home-blog-box img{
+div.home-blog-box img {
     float: left;
     padding: 0.5em;
     height: 6em;
@@ -698,9 +703,19 @@ img.publication-cover {
     margin-right: 18px;
 }
 
-.getting-started-banner{
+.getting-started-banner {
     margin: 0.5em 1em;
 }
-.getting-started{
+
+.getting-started {
     border: solid black 1px;
+}
+
+.index-stats-label {
+    float: left;
+    min-width: 4em;
+}
+
+.index-stats-disp {
+    min-height: 8em;
 }

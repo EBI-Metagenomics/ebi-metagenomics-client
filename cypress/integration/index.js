@@ -9,7 +9,11 @@ describe('Home page: Test Browse by selected biomes component', function () {
         });
 
         it('Browse by selected biomes"', function () {
-            cy.get('#top10biomes').contains('By selected biomes');
+            cy.get('#browse').contains('By selected biomes');
+            // Check biome icons are loaded
+            cy.get('#top10biomes span.biome_icon').then(($els) => {
+                expect($els).to.have.length(10);
+            });
         });
 
         it('Select specific biomes', function () {
@@ -34,12 +38,12 @@ describe('Home page: Test Browse by selected biomes component', function () {
 
         it('Browse all biomes', function () {
             cy.contains('Browse all biomes').click();
-            cy.url().should('eq', getBaseURL()+'biomes')
+            cy.url().should('eq', getBaseURL() + 'biomes')
         });
 
         it('Browse human biomes', function () {
             cy.get('#top10biomes').get('.human_host_b.Skin').click();
-            cy.url().should('include', getBaseURL()+'browse?lineage=root:Host-associated:Human:Skin#studies')
+            cy.url().should('include', getBaseURL() + 'browse?lineage=root:Host-associated:Human:Skin#studies')
         });
     })
 

@@ -169,6 +169,7 @@ var StudiesView = Backbone.View.extend({
     }
 });
 
+
 var studies = new StudiesCollection();
 var studiesView = new StudiesView({collection: studies});
 
@@ -182,6 +183,14 @@ function initObjectCounts() {
     const metaGountReq = $.get(new ebisearch.MetagenomicCount().url);
     const metaTCountReq = $.get(new ebisearch.MetatranscriptomicCount().url);
     const metaBCountReq = $.get(new ebisearch.MetabarcodingCount().url);
+
+    function hideLoadingGif(){
+        $('#stats-loading').hide();
+    }
+
+    function showStatsSection(){
+        $('#stats-disp').show();
+    }
 
     function createAnchorTag(count, experimentType, domainId) {
         const a = document.createElement('a');
@@ -213,7 +222,7 @@ function initObjectCounts() {
 
     function addStatsElementsToDOM(ampliconCount, assemblyCount,
                                    metaBCount, metaGCount, metaTCount,
-                                   projectCount, sampleCount, runCount, dataSetCount) {
+                                   projectCount, sampleCount, runCount) {
 
         appendNewAnchorEl('amplicon-stats', ampliconCount, 'amplicon', 'runs');
         appendNewAnchorEl('assembly-stats', assemblyCount, 'assembly', 'runs');
@@ -223,7 +232,6 @@ function initObjectCounts() {
         appendNewAnchorEl('project-stats', projectCount, null);
         appendNewAnchorEl('sample-stats', sampleCount, null, 'samples');
         appendNewAnchorEl('run-stats', runCount, null, 'runs');
-        addTextNode('dataset-stats', dataSetCount);
     }
 
     function setCookieFilter(experimentType) {
@@ -257,16 +265,13 @@ function initObjectCounts() {
         const metaGCount = metaGountReq.responseJSON.hitCount;
         const metaTCount = metaTCountReq.responseJSON.hitCount;
         const metaBCount = metaBCountReq.responseJSON.hitCount;
-        const dataSetCount = metaBCount + metaTCount + metaGCount + assemblyCount + ampliconCount;
 
         addStatsElementsToDOM(ampliconCount, assemblyCount,
             metaBCount, metaGCount, metaTCount,
-            projectCount, sampleCount, runCount, dataSetCount);
+            projectCount, sampleCount, runCount);
 
-        let containers = document.getElementsByClassName('jumbo-stats');
-        for (var container of containers) {
-            container.style.visibility = "visible";
-        }
+        hideLoadingGif();
+        showStatsSection();
     });
 }
 
