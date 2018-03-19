@@ -2,5 +2,6 @@
   "projectId": "8vc1o6",
   "chromeWebSecurity": false,
   "viewportWidth": 1920,
-  "viewportHeight": 983
+  "viewportHeight": 983,
+  "videoRecording": false
 }

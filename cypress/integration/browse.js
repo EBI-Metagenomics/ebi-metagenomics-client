@@ -39,9 +39,38 @@ const studiesTableColumns = {
     }
 };
 
+
+const samplesTableColumns = {
+    biome_icon: {
+        data: ['', ''],
+        type: datatype.STR,
+        sortable: false
+    },
+    sample_id: {
+        data: ['ERS1474797', 'ERS1474735'],
+        type: datatype.STR,
+        sortable: false
+    },
+    sample_name: {
+        data: ['Control patient 9 right foot time 1', 'Patient 8 skin contralateral foot to wound time 5'],
+        type: datatype.STR,
+        sortable: false
+    },
+    sample_desc: {
+        data: ['control_skin_right', 'diabetic_skin_contra'],
+        type: datatype.STR,
+        sortable: false
+    },
+    last_update: {
+        data: ['27-Nov-2017', '27-Nov-2017'],
+        type: datatype.DATE,
+        sortable: false
+    }
+};
+
 let studiesTable;
 let samplesTable;
-describe('Browse page - studies table', function () {
+describe('Browse page - Studies table', function () {
     beforeEach(function () {
         openPage(origPage + '#studies');
         waitForPageLoad('Studies list');
@@ -160,35 +189,6 @@ describe('Browse page - studies table', function () {
         cy.get('span.biome_icon').should('have.class', 'engineered_b');
     });
 });
-
-
-const samplesTableColumns = {
-    biome_icon: {
-        data: ['', ''],
-        type: datatype.STR,
-        sortable: false
-    },
-    sample_id: {
-        data: ['ERS1474797', 'ERS1474735'],
-        type: datatype.STR,
-        sortable: false
-    },
-    sample_name: {
-        data: ['Control patient 9 right foot time 1', 'Patient 8 skin contralateral foot to wound time 5'],
-        type: datatype.STR,
-        sortable: false
-    },
-    sample_desc: {
-        data: ['control_skin_right', 'diabetic_skin_contra'],
-        type: datatype.STR,
-        sortable: false
-    },
-    last_update: {
-        data: ['27-Nov-2017', '27-Nov-2017'],
-        type: datatype.DATE,
-        sortable: false
-    }
-};
 
 describe('Browse page - Samples table', function () {
     beforeEach(function () {
@@ -379,4 +379,50 @@ describe('Browse page - Generic - Filter propagation', function () {
         studiesTable.waitForTableLoad(1);
         studiesTable.getFilterInput().should('have.value', filterText);
     });
+});
+
+describe('Browse page - URL parameters', function () {
+    it('Should order results according to URL parameters (studies tab)', function () {
+        openPage('browse?ordering=samples_count#studies');
+        waitForPageLoad('Studies list');
+        studiesTable = new GenericTableHandler('#studies-section', studiesTableDefaultSize);
+        studiesTable.checkOrdering(2, datatype.NUM, false);
+    });
+    it('Should order results according to URL parameters (samples tab)', function () {
+        openPage('browse?ordering=accession#samples');
+        waitForPageLoad('Samples list');
+        samplesTable = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
+        samplesTable.checkOrdering(1, datatype.STR, true);
+    });
+    it('Should order results according to URL parameters (both tabs)', function () {
+        openPage('browse?ordering=last_updated#studies');
+        waitForPageLoad('Studies list');
+        studiesTable = new GenericTableHandler('#studies-section', studiesTableDefaultSize);
+        studiesTable.checkOrdering(3, datatype.DATE, false);
+        changeTab('samples');
+        samplesTable = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
+        samplesTable.checkOrdering(4, datatype.DATE, false);
+    });
+
+    it('Should filter results by search query', function () {
+        const searchQuery = 'OSD';
+        openPage('browse?search=' + searchQuery + '#studies');
+        waitForPageLoad('Studies list');
+        cy.get('input.table-filter').then(($els) => {
+            expect(Cypress.$($els).val()).to.eq(searchQuery);
+        });
+        studiesTable = new GenericTableHandler('#studies-section', 1);
+        samplesTable = new GenericTableHandler('#samples-section', 25);
+    });
+
+    it('Should filter results by biome', function(){
+        const biome = 'root:Environmental:Air';
+        openPage('browse?lineage='+biome+'#studies');
+        waitForPageLoad('Studies list');
+        cy.get('.biome-select option:selected').then(($els) => {
+            expect(Cypress.$($els).attr('value')).to.eq(biome);
+        });
+        studiesTable = new GenericTableHandler('#studies-section', 2);
+        samplesTable = new GenericTableHandler('#samples-section', 4);
+    })
 });

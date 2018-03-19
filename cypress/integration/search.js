@@ -152,9 +152,7 @@ describe('Search page - general Functionality', function () {
         waitForFacetFilters(facetRequests[4]);
         validateFacetQuery(facetRequests[5]);
         waitForResultsLoad(initialResultSize);
-        cy.get(textQueryInput).then(($input) => {
-            cy.log($input);
-        });
+
     });
     it('Pagination - double page change', function(){
         loadPage(origPage+'#runs');

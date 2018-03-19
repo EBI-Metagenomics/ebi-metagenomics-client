@@ -4,7 +4,6 @@ const util = require('../util');
 const commons = require('../commons');
 const api = require('../components/api');
 const Pagination = require('../components/pagination').Pagination;
-const Order = require('../components/order');
 const GenericTable = require('../components/genericTable');
 const Commons = require('../commons');
 const pagination = new Pagination();
@@ -29,9 +28,6 @@ let StudiesView = Backbone.View.extend({
     pagination: null,
     params: {},
 
-    fetch: function () {
-        return this.collection.fetch()
-    },
     init: function () {
         const that = this;
         const columns = [
@@ -49,12 +45,6 @@ let StudiesView = Backbone.View.extend({
                 search: search
             });
         });
-        // initBiomeFilter($studiesSection.find('div.row:nth-child(2) > div.columns:nth-child(2)'), function () {
-        //     that.update({
-        //         lineage: $(this).val(),
-        //         search: $('#tableFilter').val()
-        //     });
-        // });
 
         let params = {};
         params.page = pagination.currentPage;
@@ -78,11 +68,7 @@ let StudiesView = Backbone.View.extend({
             params.search = search;
             $("#search").val(search);
         }
-        params.page_size = pagination.getPageSize();
-        const pagesize = pageFilters.get('pagesize') || Commons.DEFAULT_PAGE_SIZE;
-        if (pagesize) {
-            params.page_size = pagesize;
-        }
+        params.page_size = pageFilters.get('pagesize') || Commons.DEFAULT_PAGE_SIZE;
         params.page = parseInt(pageFilters.get('page')) || 1;
 
         this.update(params);
@@ -120,9 +106,6 @@ let SamplesView = Backbone.View.extend({
     pagination: null,
     params: {},
 
-    fetch: function () {
-        return this.collection.fetch()
-    },
     init: function () {
         const that = this;
         const columns = [
@@ -171,14 +154,10 @@ let SamplesView = Backbone.View.extend({
             params.search = search;
             $("#search").val(search);
         }
-        params.page_size = pagination.getPageSize();
-        const pagesize = pageFilters.get('pagesize') || Commons.DEFAULT_PAGE_SIZE;
-        if (pagesize) {
-            params.page_size = pagesize;
-        }
+        params.page_size = pageFilters.get('pagesize') || Commons.DEFAULT_PAGE_SIZE;
         params.page = parseInt(pageFilters.get('page')) || 1;
 
-        this.update(params);
+        return this.update(params);
     },
 
     update: function (params) {
@@ -192,7 +171,7 @@ let SamplesView = Backbone.View.extend({
                 that.renderData(pagination.page, that.params.page_size, pagination.count, response.links.first);
                 that.tableObj.hideLoadingGif();
             },
-        })
+        });
     },
 
     renderData: function (page, pageSize, resultCount, requestURL) {
@@ -231,6 +210,7 @@ var samplesView = new SamplesView({collection: samples});
 studiesView.init();
 samplesView.init();
 
+
 util.initBiomeFilter($("section").find('div.row:nth-child(2) > div.columns:nth-child(2)'), function () {
     const updateObj = {
         lineage: $(this).val(),
@@ -239,5 +219,5 @@ util.initBiomeFilter($("section").find('div.row:nth-child(2) > div.columns:nth-c
     studiesView.update(updateObj);
     samplesView.update(updateObj);
 });
-
+$('.table-filter').val(pageFilters.get('search'));
 syncFilterFields();

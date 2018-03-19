@@ -110,31 +110,7 @@ export function getBiomeIcon(lineage) {
     }());
 }
 
-export function getFormData(selector) {
-    var formData = $(selector).serializeArray();
-    var data = {};
-    $.map(formData, function (n, i) {
-        const varName = n['name'];
-        const value = n['value'];
-        if (_.has(data, varName)) {
-            if (!Array.isArray(data[varName])) {
-                data[varName] = [data[varName]];
-            }
-            data[varName].push(value);
-        } else {
-            data[varName] = value;
-        }
-    });
-    return data;
-}
-
 export function setURLParams(params, refresh) {
-// export function setURLParams(search, lineage, pageSize, currentPage, refresh){
-//     let params = {};
-//     if (search!==null)  params.search = search;
-//     if (lineage!==null) params.lineage = lineage;
-//     params.pagesize = pageSize;
-//     params.page = currentPage;
     if (refresh) {
         window.location.search = $.param(params);
     } else {
