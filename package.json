@@ -43,6 +43,7 @@
     "motion-ui": "^1.2.3",
     "npm": "^5.7.1",
     "tablesorter": "^2.29.0",
+    "twbs-pagination": "^1.4.1",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
@@ -80,6 +81,11 @@
     "webpack-jquery-ui": "^1.0.0"
   },
   "nyc": {
-    "exclude": "static/libraries/*.js"
+    "exclude": [
+      "static/libraries/*.*.js",
+      "static/libraries/*.js",
+      "static/libraries/jquery.twbsPagination.js",
+      "static/libraries"
+    ]
   }
 }

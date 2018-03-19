@@ -1,4 +1,4 @@
-require('static/libraries/jquery.twbsPagination.js');
+require('twbs-pagination');
 
 export const Pagination = function () {
     let pageSize = '#pagesize';
