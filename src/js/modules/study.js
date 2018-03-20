@@ -49,9 +49,6 @@ let StudyView = Backbone.View.extend({
 let SamplesView = Backbone.View.extend({
     tableObj: null,
     pagination: null,
-    fetch: function () {
-        return this.collection.fetch()
-    },
 
     init: function () {
         const that = this;
@@ -133,9 +130,6 @@ let MapData = api.SamplesCollection.extend({
 let RunsView = Backbone.View.extend({
     tableObj: null,
     pagination: null,
-    fetch: function () {
-        return this.collection.fetch()
-    },
 
     init: function () {
         const that = this;
