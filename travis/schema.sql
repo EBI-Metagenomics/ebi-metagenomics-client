@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS `ANALYSIS_JOB`;
 CREATE TABLE `ANALYSIS_JOB` (
   `JOB_ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `JOB_OPERATOR` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
-  `PIPELINE_ID` smallint(6) NOT NULL,
+  `PIPELINE_ID` tinyint(4) NOT NULL,
   `SUBMIT_TIME` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `COMPLETE_TIME` datetime DEFAULT NULL,
   `ANALYSIS_STATUS_ID` tinyint(4) NOT NULL,
@@ -121,7 +121,7 @@ CREATE TABLE `BLACKLISTED_STUDY` (
   `EXT_STUDY_ID` varchar(18) COLLATE utf8_unicode_ci NOT NULL COMMENT 'This is the external unique (non-EMG) ID for the study, e.g. SRPXXXXXX for SRA studies',
   `ERROR_TYPE_ID` tinyint(4) NOT NULL COMMENT 'Foreign key to the study error type table.',
   `ANALYZER` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Person who tried to analyse this study.',
-  `PIPELINE_ID` smallint(6) DEFAULT NULL COMMENT 'Optional. The pipeline version used to run this study.',
+  `PIPELINE_ID` tinyint(4) DEFAULT NULL COMMENT 'Optional. The pipeline version used to run this study.',
   `DATE_BLACKLISTED` date NOT NULL COMMENT 'The date when the study has been marked as blacklisted.',
   `COMMENT` text COLLATE utf8_unicode_ci COMMENT 'Use this field to add more detailed information about the issue.',
   PRIMARY KEY (`EXT_STUDY_ID`),
@@ -170,7 +170,7 @@ DROP TABLE IF EXISTS `PIPELINE_RELEASE`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PIPELINE_RELEASE` (
-  `PIPELINE_ID` smallint(6) NOT NULL AUTO_INCREMENT,
+  `PIPELINE_ID` tinyint(4) NOT NULL AUTO_INCREMENT,
   `DESCRIPTION` text COLLATE utf8_unicode_ci,
   `CHANGES` text COLLATE utf8_unicode_ci NOT NULL,
   `RELEASE_VERSION` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
@@ -190,7 +190,7 @@ DROP TABLE IF EXISTS `PIPELINE_RELEASE_TOOL`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PIPELINE_RELEASE_TOOL` (
-  `PIPELINE_ID` smallint(6) NOT NULL,
+  `PIPELINE_ID` tinyint(4) NOT NULL,
   `TOOL_ID` smallint(6) NOT NULL,
   `TOOL_GROUP_ID` decimal(6,3) NOT NULL,
   `HOW_TOOL_USED_DESC` longtext COLLATE utf8_unicode_ci,
@@ -470,97 +470,6 @@ CREATE TABLE `VARIABLE_NAMES` (
   UNIQUE KEY `VARIABLE_NAMES_PK` (`VAR_ID`,`VAR_NAME`),
   UNIQUE KEY `VARIABLE_NAMES_VAR_ID_VAR_NAME_e353e1f1_uniq` (`VAR_ID`,`VAR_NAME`)
 ) ENGINE=InnoDB AUTO_INCREMENT=938 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `DOWNLOAD_DESCRIPTION_LABEL`
---
-DROP TABLE IF EXISTS `DOWNLOAD_DESCRIPTION_LABEL`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `DOWNLOAD_DESCRIPTION_LABEL` (
-  `DESCRIPTION_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `DESCRIPTION` varchar(255) NOT NULL,
-  `DESCRIPTION_LABEL` varchar(100) NOT NULL,
-  PRIMARY KEY (`DESCRIPTION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `DOWNLOAD_GROUP_TYPE`
---
-DROP TABLE IF EXISTS `DOWNLOAD_GROUP_TYPE`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `DOWNLOAD_GROUP_TYPE` (
-  `GROUP_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `GROUP_TYPE` varchar(30) NOT NULL,
-  PRIMARY KEY (`GROUP_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `DOWNLOAD_SUBDIR`
---
-DROP TABLE IF EXISTS `DOWNLOAD_SUBDIR`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `DOWNLOAD_SUBDIR` (
-  `SUBDIR_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `SUBDIR` varchar(100) NOT NULL,
-  PRIMARY KEY (`SUBDIR_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `FILE_FORMAT`
---
-DROP TABLE IF EXISTS `FILE_FORMAT`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `FILE_FORMAT` (
-  `FORMAT_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `FORMAT_NAME` varchar(30) NOT NULL,
-  `FORMAT_EXTENSION` varchar(30) NOT NULL,
-  `COMPRESSION` tinyint(1) NOT NULL,
-  PRIMARY KEY (`FORMAT_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `STUDY_DOWNLOAD test`
---
-DROP TABLE IF EXISTS `STUDY_DOWNLOAD`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `STUDY_DOWNLOAD` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `REAL_NAME` varchar(255) NOT NULL,
-  `ALIAS` varchar(255) NOT NULL,
-  `DESCRIPTION_ID` int(11) DEFAULT NULL,
-  `FORMAT_ID` int(11) DEFAULT NULL,
-  `GROUP_ID` int(11) DEFAULT NULL,
-  `PARENT_DOWNLOAD_ID` int(11) DEFAULT NULL,
-  `PIPELINE_ID` smallint(6) DEFAULT NULL,
-  `STUDY_ID` int(11) NOT NULL,
-  `SUBDIR_ID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `STUDY_DOWNLOAD_REAL_NAME_ALIAS_PIPELINE_ID_1e3f93f5_uniq` (`REAL_NAME`,`ALIAS`,`PIPELINE_ID`),
-  KEY `STUDY_DOWNLOAD_DESCRIPTION_ID_377695b0_fk_DOWNLOAD_` (`DESCRIPTION_ID`),
-  KEY `STUDY_DOWNLOAD_FORMAT_ID_724ee865_fk_FILE_FORMAT_FORMAT_ID` (`FORMAT_ID`),
-  KEY `STUDY_DOWNLOAD_GROUP_ID_b6e1f2b9_fk_DOWNLOAD_GROUP_TYPE_GROUP_ID` (`GROUP_ID`),
-  KEY `STUDY_DOWNLOAD_PARENT_DOWNLOAD_ID_d1ff5d7f_fk_STUDY_DOWNLOAD_id` (`PARENT_DOWNLOAD_ID`),
-  KEY `STUDY_DOWNLOAD_PIPELINE_ID_180ecd0d_fk_PIPELINE_` (`PIPELINE_ID`),
-  KEY `STUDY_DOWNLOAD_STUDY_ID_2f6230ae_fk_STUDY_STUDY_ID` (`STUDY_ID`),
-  KEY `STUDY_DOWNLOAD_SUBDIR_ID_2c096a97_fk_DOWNLOAD_SUBDIR_SUBDIR_ID` (`SUBDIR_ID`),
-  CONSTRAINT `STUDY_DOWNLOAD_DESCRIPTION_ID_377695b0_fk_DOWNLOAD_` FOREIGN KEY (`DESCRIPTION_ID`) REFERENCES `DOWNLOAD_DESCRIPTION_LABEL` (`DESCRIPTION_ID`),
-  CONSTRAINT `STUDY_DOWNLOAD_FORMAT_ID_724ee865_fk_FILE_FORMAT_FORMAT_ID` FOREIGN KEY (`FORMAT_ID`) REFERENCES `FILE_FORMAT` (`FORMAT_ID`),
-  CONSTRAINT `STUDY_DOWNLOAD_GROUP_ID_b6e1f2b9_fk_DOWNLOAD_GROUP_TYPE_GROUP_ID` FOREIGN KEY (`GROUP_ID`) REFERENCES `DOWNLOAD_GROUP_TYPE` (`GROUP_ID`),
-  CONSTRAINT `STUDY_DOWNLOAD_PARENT_DOWNLOAD_ID_d1ff5d7f_fk_STUDY_DOWNLOAD_id` FOREIGN KEY (`PARENT_DOWNLOAD_ID`) REFERENCES `STUDY_DOWNLOAD` (`id`),
-  CONSTRAINT `STUDY_DOWNLOAD_PIPELINE_ID_180ecd0d_fk_PIPELINE_` FOREIGN KEY (`PIPELINE_ID`) REFERENCES `PIPELINE_RELEASE` (`PIPELINE_ID`),
-  CONSTRAINT `STUDY_DOWNLOAD_STUDY_ID_2f6230ae_fk_STUDY_STUDY_ID` FOREIGN KEY (`STUDY_ID`) REFERENCES `STUDY` (`STUDY_ID`),
-  CONSTRAINT `STUDY_DOWNLOAD_SUBDIR_ID_2c096a97_fk_DOWNLOAD_SUBDIR_SUBDIR_ID` FOREIGN KEY (`SUBDIR_ID`) REFERENCES `DOWNLOAD_SUBDIR` (`SUBDIR_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7060 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
