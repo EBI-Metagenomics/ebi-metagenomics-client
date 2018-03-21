@@ -2,7 +2,6 @@ const Backbone = require('backbone');
 const _ = require('underscore');
 const Commons = require('../commons');
 const api = require('../components/api');
-const Pagination = require('../components/pagination').Pagination;
 const GenericTable = require('../components/genericTable');
 const Map = require('../components/map');
 const API_URL = process.env.API_URL;
@@ -15,8 +14,7 @@ util.checkAPIonline();
 
 util.setCurrentTab('#browse-nav');
 
-
-
+console.log(API_URL);
 let study_id = util.getURLParameter();
 let StudyView = Backbone.View.extend({
     model: api.Study,
@@ -31,7 +29,7 @@ let StudyView = Backbone.View.extend({
             }),
             success: function (data, response) {
                 const pubObj = new api.Publication();
-                const publications = _.map(response.included, function(d){
+                const publications = _.map(response.included, function (d) {
                     return new pubObj.parse(d);
                 });
                 that.model.attributes.publications = publications;
@@ -50,7 +48,7 @@ let SamplesView = Backbone.View.extend({
     tableObj: null,
     pagination: null,
 
-    init: function () {
+    initialize: function () {
         const that = this;
         const columns = [
             {sortBy: 'sample_name', name: 'Sample name'},
@@ -99,29 +97,29 @@ let SamplesView = Backbone.View.extend({
 
 
 let MapData = api.SamplesCollection.extend({
-    fields : ['latitude','longitude','biome','accession','sample_alias','sample_desc','sample_name'],
+    fields: ['latitude', 'longitude', 'biome', 'accession', 'sample_alias', 'sample_desc', 'sample_name'],
 
-    initialize: function(study_id){
-        this.url = API_URL + 'samples?page_size=250&study_accession='+ study_id + '&fields='+this.fields.join(',');
+    initialize: function (study_id) {
+        this.url = API_URL + 'samples?page_size=250&study_accession=' + study_id + '&fields=' + this.fields.join(',');
         this.study_id = study_id;
         this.data = [];
     },
-    fetchAll: function(){
+    fetchAll: function () {
         const that = this;
         this.fetch({
-            success: function(response, meta){
-                let data = _.map(response.models, function(model){
+            success: function (response, meta) {
+                let data = _.map(response.models, function (model) {
                     return model.attributes;
                 });
                 that.data = that.data.concat(data);
-                if (meta.links.next!==null){
+                if (meta.links.next !== null) {
                     that.url = meta.links.next;
                     that.fetchAll();
                 } else {
                     new Map('map', that.data, true);
                 }
             },
-            error: function(a,b,c){
+            error: function (a, b, c) {
             }
         });
     }
@@ -131,7 +129,7 @@ let RunsView = Backbone.View.extend({
     tableObj: null,
     pagination: null,
 
-    init: function () {
+    initialize: function () {
         const that = this;
         const columns = [
             {sortBy: 'accession', name: 'Run ID'},
@@ -179,6 +177,22 @@ let RunsView = Backbone.View.extend({
     }
 });
 
+let DownloadsView = Backbone.View.extend({
+    model: api.StudyDownloads,
+    template: _.template($("#downloadsTmpl").html()),
+    el: '#downloads',
+    initialize: function () {
+        const that = this;
+        this.model.fetch({
+            success: function (response, data) {
+                const pipeline_files = response.attributes.pipeline_files;
+                that.$el.html(that.template({pipeline_files: pipeline_files}));
+            }
+        });
+    }
+
+});
+
 // Called by googleMaps import callback
 function initPage() {
     let study = new api.Study({id: study_id});
@@ -190,16 +204,17 @@ function initPage() {
     let runs = new api.RunCollection({study_accession: study_id});
     let runsView = new RunsView({collection: runs});
 
+    let downloads = new api.StudyDownloads({id: study_id});
+
     $.when(
         studyView.fetchAndRender(),
     ).done(function () {
-        samplesView.init();
-        runsView.init();
+        samplesView.initialize();
+        runsView.initialize();
         new MapData(study_id).fetchAll();
+        new DownloadsView({model: downloads});
     });
 }
 
-
 window.initPage = initPage;
-
 

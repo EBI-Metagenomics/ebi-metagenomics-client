@@ -1,5 +1,4 @@
 const Backbone = require('backbone');
-const Pagination = require('../components/pagination').Pagination;
 const Commons = require('../commons');
 const API_URL = process.env.API_URL;
 const NO_DATA_MSG = Commons.NO_DATA_MSG;
@@ -32,7 +31,7 @@ export const Study = Backbone.Model.extend({
             study_accession: attr['accession'],
             last_update: formatDate(attr['last-update']),
             abstract: attr['study-abstract'],
-            ena_url : ENA_VIEW_URL + data.id
+            ena_url: ENA_VIEW_URL + data.id
         }
     }
 });
@@ -131,7 +130,7 @@ export const Biome = Backbone.Model.extend({
             lineage: lineage,
             samples_count: attr['samples-count'],
             // lineage_projects_no_children: attr['studies-count'],
-            biome_studies_link: util.subfolder + '/browse?lineage=' + lineage+'#studies',
+            biome_studies_link: util.subfolder + '/browse?lineage=' + lineage + '#studies',
             // biome_studies_link_no_children: 'TODO2',
         };
     }
@@ -246,8 +245,8 @@ export const Publication = Backbone.Model.extend({
         const data = d.data !== undefined ? d.data : d;
         const attrs = data.attributes;
         let authors = attrs['authors'];
-        if (authors.length>50){
-            authors = authors.split(',').slice(0,5);
+        if (authors.length > 50) {
+            authors = authors.split(',').slice(0, 5);
             authors.push(' et al.');
             authors = authors.join(',');
         }
@@ -261,5 +260,34 @@ export const Publication = Backbone.Model.extend({
             year: attrs['published-year'],
             volume: attrs['volume']
         }
+    }
+});
+
+function clusterDownloads(downloads) {
+    const pipelines = {};
+    _.each(downloads, function (download) {
+        const attr = download.attributes;
+        const group = attr['group-type'];
+        const pipeline = download.relationships.pipeline.data.id;
+
+        attr['link'] = download.links.self;
+        if (!pipelines.hasOwnProperty(pipeline)) {
+            pipelines[pipeline] = {};
+        }
+        if (!pipelines[pipeline].hasOwnProperty(group)){
+            pipelines[pipeline][group] = [];
+        }
+
+        pipelines[pipeline][group] = pipelines[pipeline][group].concat(download);
+    });
+    return pipelines
+}
+
+export const StudyDownloads = Backbone.Model.extend({
+    url: function () {
+        return API_URL + 'studies/' + this.id + '/downloads';
+    },
+    parse: function (response) {
+        this.attributes.pipeline_files = clusterDownloads(response.data);
     }
 });
