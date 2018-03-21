@@ -26,7 +26,7 @@ before_install:
   - pip3 -V
 
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi/develop.zip
+  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop
 
   - emgcli migrate --fake-initial
 
