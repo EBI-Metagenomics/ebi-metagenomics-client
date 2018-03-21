@@ -27,7 +27,7 @@ before_install:
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
   - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop"
 
-  - emgcli migrate --fake-initial
+  - emgcli migrate
 
   # Join fixtures from multiple .sql files to populate db.
   - echo -e "SET FOREIGN_KEY_CHECKS = 0;\n$(cat travis/emg_sql_fixtures/*.sql)\nSET FOREIGN_KEY_CHECKS = 1;" > travis/emg_sql_fixtures/merged.sql
