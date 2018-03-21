@@ -528,7 +528,7 @@ CREATE TABLE `FILE_FORMAT` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `STUDY_DOWNLOAD`
+-- Table structure for table `STUDY_DOWNLOAD test`
 --
 DROP TABLE IF EXISTS `STUDY_DOWNLOAD`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
