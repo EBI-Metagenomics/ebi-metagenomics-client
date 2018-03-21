@@ -18,18 +18,18 @@ env:
   - API_URL=http://localhost:9000/metagenomics/api/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
 
 before_install:
-  - mysql -e 'CREATE DATABASE emg;'
-  - mysql -u root --password="" --database=emg < travis/schema.sql
-  # Join fixtures from multiple .sql files to populate db.
   - pip3 install --user --upgrade pip setuptools
   - python3 -V
   - pip3 -V
 
+
+  - mysql -e 'CREATE DATABASE emg;'
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
   - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop"
 
   - emgcli migrate --fake-initial
 
+  # Join fixtures from multiple .sql files to populate db.
   - echo -e "SET FOREIGN_KEY_CHECKS = 0;\n$(cat travis/emg_sql_fixtures/*.sql)\nSET FOREIGN_KEY_CHECKS = 1;" > travis/emg_sql_fixtures/merged.sql
   - mysql -u root --password="" --database=emg < travis/emg_sql_fixtures/merged.sql
 
