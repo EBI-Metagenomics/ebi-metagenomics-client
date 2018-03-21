@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS `ANALYSIS_JOB`;
 CREATE TABLE `ANALYSIS_JOB` (
   `JOB_ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `JOB_OPERATOR` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
-  `PIPELINE_ID` tinyint(4) NOT NULL,
+  `PIPELINE_ID` smallint(6) NOT NULL,
   `SUBMIT_TIME` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `COMPLETE_TIME` datetime DEFAULT NULL,
   `ANALYSIS_STATUS_ID` tinyint(4) NOT NULL,
@@ -121,7 +121,7 @@ CREATE TABLE `BLACKLISTED_STUDY` (
   `EXT_STUDY_ID` varchar(18) COLLATE utf8_unicode_ci NOT NULL COMMENT 'This is the external unique (non-EMG) ID for the study, e.g. SRPXXXXXX for SRA studies',
   `ERROR_TYPE_ID` tinyint(4) NOT NULL COMMENT 'Foreign key to the study error type table.',
   `ANALYZER` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Person who tried to analyse this study.',
-  `PIPELINE_ID` tinyint(4) DEFAULT NULL COMMENT 'Optional. The pipeline version used to run this study.',
+  `PIPELINE_ID` smallint(6) DEFAULT NULL COMMENT 'Optional. The pipeline version used to run this study.',
   `DATE_BLACKLISTED` date NOT NULL COMMENT 'The date when the study has been marked as blacklisted.',
   `COMMENT` text COLLATE utf8_unicode_ci COMMENT 'Use this field to add more detailed information about the issue.',
   PRIMARY KEY (`EXT_STUDY_ID`),
@@ -170,7 +170,7 @@ DROP TABLE IF EXISTS `PIPELINE_RELEASE`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PIPELINE_RELEASE` (
-  `PIPELINE_ID` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `PIPELINE_ID` smallint(6) NOT NULL AUTO_INCREMENT,
   `DESCRIPTION` text COLLATE utf8_unicode_ci,
   `CHANGES` text COLLATE utf8_unicode_ci NOT NULL,
   `RELEASE_VERSION` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
@@ -190,7 +190,7 @@ DROP TABLE IF EXISTS `PIPELINE_RELEASE_TOOL`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PIPELINE_RELEASE_TOOL` (
-  `PIPELINE_ID` tinyint(4) NOT NULL,
+  `PIPELINE_ID` smallint(6) NOT NULL,
   `TOOL_ID` smallint(6) NOT NULL,
   `TOOL_GROUP_ID` decimal(6,3) NOT NULL,
   `HOW_TOOL_USED_DESC` longtext COLLATE utf8_unicode_ci,
@@ -541,7 +541,7 @@ CREATE TABLE `STUDY_DOWNLOAD` (
   `FORMAT_ID` int(11) DEFAULT NULL,
   `GROUP_ID` int(11) DEFAULT NULL,
   `PARENT_DOWNLOAD_ID` int(11) DEFAULT NULL,
-  `PIPELINE_ID` tinyint(4) DEFAULT NULL,
+  `PIPELINE_ID` smallint(6) DEFAULT NULL,
   `STUDY_ID` int(11) NOT NULL,
   `SUBDIR_ID` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
