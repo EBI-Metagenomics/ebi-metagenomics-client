@@ -68,44 +68,88 @@ export function stripLineage(lineage) {
 }
 
 const biomeIconMapD2 = {
-    'root:engineered': 'engineered_b',
-    'root:host-associated': 'non_human_host_b'
+    "root:engineered": "engineered_b",
+    // 'root:host-associated': 'non_human_host_b'
 };
 const biomeIconMapD3 = {
-    'root:environmental:air': 'air_b',
-    'root:environmental:aquatic': 'freshwater_b',
-    'root:engineered:wastewater': 'wastewater_b',
-    'root:host-associated:human': 'human_host_b',
-    'root:host-associated:plants': 'plant_host_b',
+    "root:engineered:wastewater": "wastewater_b",
+    "root:environmental:air": "air_b",
+    "root:host-associated:amphibia": "amphibian_b",
+    "root:host-associated:arthropoda": "arthropoda_b",
+    "root:host-associated:fish": "fish_b",
+    "root:host-associated:human": "human_host_b",
+    "root:host-associated:insecta": "insect_b",
+    "root:host-associated:mammals": "mammals_b",
+    "root:host-associated:mollusca": "mollusca_b",
+    "root:host-associated:plants": "plant_host_b",
+    "root:host-associated:porifera": "porifera_b",
+    // 'root:environmental:air': 'air_b',
+    // 'root:environmental:aquatic': 'freshwater_b',
+    // 'root:engineered:wastewater': 'wastewater_b',
+    // 'root:host-associated:human': 'human_host_b',
+    // 'root:host-associated:plants': 'plant_host_b',
 
 };
 const biomeIconMapD4 = {
-    'root:environmental:aquatic:marine': 'marine_b',
-    'root:environmental:terrestrial:volcanic': 'vulcano_b',
-    'root:environmental:aquatic:marine:volcanic': 'vulcano_b',
-    'root:environmental:aquatic:thermal springs': 'hotspring_b',
-    'root:environmental:aquatic:freshwater': 'freshwater_b',
-    'root:environmental:terrestrial:soil': 'soil_b',
-    'root:host-associated:human:digestive system': 'human_gut_b',
-
+    "root:environmental:aquatic:freshwater": "freshwater_b",
+    "root:environmental:aquatic:marine": "marine_b",
+    "root:environmental:aquatic:thermal springs": "hotspring_b",
+    "root:environmental:terrestrial:soil": "soil_b",
+    "root:environmental:terrestrial:volcanic": "vulcano_b",
+    "root:host-associated:human:digestive system": "human_gut_b",
+    "root:host-associated:human:skin": "skin_b",
+    // 'root:environmental:aquatic:marine': 'marine_b',
+    // 'root:environmental:terrestrial:volcanic': 'vulcano_b',
+    // 'root:environmental:aquatic:marine:volcanic': 'vulcano_b',
+    // 'root:environmental:aquatic:thermal springs': 'hotspring_b',
+    // 'root:environmental:aquatic:freshwater': 'freshwater_b',
+    // 'root:environmental:terrestrial:soil': 'soil_b',
+    // 'root:host-associated:human:digestive system': 'human_gut_b',
 };
+
+const biomeIconMapD5 = {
+    "root:environmental:aquatic:freshwater:drinking water": "drinking_water_b",
+    "root:environmental:aquatic:freshwater:groundwater": "groundwater_b",
+    "root:environmental:aquatic:freshwater:ice": "ice_b",
+    "root:environmental:aquatic:freshwater:lake": "lake_b",
+    "root:environmental:aquatic:freshwater:lotic": "river_b",
+    "root:environmental:aquatic:marine:hydrothermal vents": "hydrothermal_vents_b",
+    "root:environmental:terrestrial:soil:wetlands": "wetlands_b",
+    "root:host-associated:arthropoda:digestive system:oral": "mouth_b",
+    "root:host-associated:human:respiratory system:pulmonary system": "lung_b",
+    "root:host-associated:mammals:nervous system:brain": "brain_b",
+};
+
+const biomeIconMapD6 = {
+    "root:environmental:aquatic:freshwater:groundwater:cave water": "cave_b",
+    "root:environmental:aquatic:freshwater:ice:glacier": "glacier_b",
+    "root:environmental:terrestrial:soil:grasslands": "grassland_b",
+    "root:environmental:terrestrial:soil:loam:forest soil": "forest_b",
+    "root:environmental:terrestrial:soil:sand:desert": "desert_b"
+};
+
+
+// .biome_icon.default_b {  background-image: url(../images/biome_icons/biome_default.svg);  }
+
 
 export function getBiomeIcon(lineage) {
     const lineageList = lineage.split(':').map(function (x) {
         return x.toLowerCase()
     });
+
     const lineageD2 = lineageList.slice(0, 2).join(':');
     const lineageD3 = lineageList.slice(0, 3).join(':');
     const lineageD4 = lineageList.slice(0, 4).join(':');
     const lineageD5 = lineageList.slice(0, 5).join(':');
-    if (lineageD4 === 'root:environmental:terrestrial:soil' && lineageD5.includes('forest')) {
-        return 'forest_b';
-    } else if (lineageD4 === 'root:environmental:terrestrial:soil' && lineageD5.includes('grassland')) {
-        return 'grassland_b';
-    }
+    const lineageD6 = lineageList.slice(0, 6).join(':');
+    // if (lineageD4 === 'root:environmental:terrestrial:soil' && lineageD5.includes('forest')) {
+    //     return 'forest_b';
+    // } else if (lineageD4 === 'root:environmental:terrestrial:soil' && lineageD5.includes('grassland')) {
+    //     return 'grassland_b';
+    // }
 
-    return biomeIconMapD4[lineageD4] || biomeIconMapD3[lineageD3] || biomeIconMapD2[lineageD2] || (function (lineage) {
-        console.warn('Could not match lineage "' + lineageD5 + '" with any biome icons');
+    return biomeIconMapD6[lineageD6] || biomeIconMapD5[lineageD5] || biomeIconMapD4[lineageD4] || biomeIconMapD3[lineageD3] || biomeIconMapD2[lineageD2] || (function (lineage) {
+        console.warn('Could not match lineage "' + lineageD6 + '" with any biome icons');
         return 'default_b';
     }());
 }
