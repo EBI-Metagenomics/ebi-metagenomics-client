@@ -25,7 +25,7 @@ before_install:
 
   - mysql -e 'CREATE DATABASE emg;'
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop"
+  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
 
   - emgcli migrate
 
