@@ -43,7 +43,7 @@ before_install:
   - npm install cypress
 
   # Touch download files
-  - ./create_download_files.sh
+  - travis/create_download_files.sh
 
 install:
   - npm install webpack -g
