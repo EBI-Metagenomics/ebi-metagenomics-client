@@ -48,16 +48,13 @@ let RunView = Backbone.View.extend({
             success: function (data) {
                 const attr = data.attributes;
                 let version;
-                if (typeof pipeline_version !== 'undefined') {
+                if (typeof pipeline_version !== 'undefined' && pipeline_version !== null) {
                     version = pipeline_version;
                 } else {
                     version = attr.pipeline_versions[0];
                 }
-
-
                 that.render(function () {
                     $("#analysisSelect").val(version);
-                    console.log($('#analysisSelect'));
                     let description = {
                         Study: "<a href='" + attr.study_url + "'>" + attr.study_id + "</a>",
                         Sample: "<a href='" + attr.sample_url + "'>" + attr.sample_id + "</a>",
@@ -80,7 +77,7 @@ let RunView = Backbone.View.extend({
                         $('#overview').append(new detailList('Data analysis', dataAnalysis));
                     }
                     loadAnalysisData(run_id, version);
-
+                    loadDownloads(run_id, version);
                 });
             }
         });
@@ -419,38 +416,19 @@ let GoTermCharts = Backbone.View.extend({
 
 
 let DownloadView = Backbone.View.extend({
+    model: api.RunDownloads,
     template: _.template($("#download-tmpl").html()),
     el: '#download-list',
-    initialize: function (data) {
-        //    TODO implement downloads
-        data = {
-            groups: [
-                {
-                    group_name: "Name",
-                    entries: [
-                        {
-                            name: "Submitted nucleotide reads",
-                            type: 'DNA/RNA data type',
-                            compression: 'GZIP',
-                            format: 'FASTA',
-                            link: 'link'
-                        }
-                    ]
-                }, {
-                    group_name: "Name2",
-                    entries: [
-                        {
-                            name: "Submitted nucleotide reads",
-                            type: 'DNA/RNA data type',
-                            compression: 'GZIP',
-                            format: 'FASTA',
-                            link: 'link'
-                        }
-                    ]
-                }
-            ]
-        };
-        this.$el.html(this.template(data));
+    initialize: function () {
+        this.model.fetch({
+            data: $.param({page_size: 100}),
+            success: function (response, data) {
+                data = {
+                    groups: response.attributes.downloadGroups
+                };
+                this.$el.html(this.template(data));
+            }
+        });
     }
 });
 
@@ -542,8 +520,16 @@ function loadAnalysisData(run_id, pipeline_version) {
     let goTermCharts = new GoTermCharts({model: goTerm});
 }
 
+function loadDownloads(run_id, pipeline_version) {
+    let downloads = new api.RunDownloads({id: run_id, version: pipeline_version});
+    let downloadsView = new DownloadView({model: downloads});
+}
+
 function onAnalysisSelect() {
-    loadAnalysisData(runView.model.attributes.run_id, $(this).val());
+    const run_id = runView.model.attributes.run_id;
+    const version = $(this).val();
+    loadAnalysisData(run_id, version);
+    loadDownloads(run_id, version);
 }
 
 $(document).ready(function () {
@@ -551,5 +537,6 @@ $(document).ready(function () {
     $("#analysisSelect").change(onAnalysisSelect);
 });
 
-let run = new api.Run({id: run_id});
-let runView = new RunView({model: run});
+
+// let run = new api.Run({id: run_id});
+// let runView = new RunView({model: run});

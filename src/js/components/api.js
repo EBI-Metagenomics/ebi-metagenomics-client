@@ -263,7 +263,7 @@ export const Publication = Backbone.Model.extend({
     }
 });
 
-function clusterDownloads(downloads) {
+function clusterStudyDownloads(downloads) {
     const pipelines = {};
     _.each(downloads, function (download) {
         const attr = download.attributes;
@@ -283,11 +283,38 @@ function clusterDownloads(downloads) {
     return pipelines
 }
 
+
+function clusterRunDownloads(downloads) {
+    const groups = {};
+    _.each(downloads, function (download) {
+        const attr = download.attributes;
+        const group = attr['group-type'];
+
+        attr['link'] = download.links.self;
+
+        if (!groups.hasOwnProperty(group)){
+            groups[group] = [];
+        }
+
+        groups[group] = groups[group].concat(download);
+    });
+    return groups
+}
+
 export const StudyDownloads = Backbone.Model.extend({
     url: function () {
         return API_URL + 'studies/' + this.id + '/downloads';
     },
     parse: function (response) {
-        this.attributes.pipeline_files = clusterDownloads(response.data);
+        this.attributes.pipelineFiles = clusterStudyDownloads(response.data);
+    }
+});
+
+export const RunDownloads = Backbone.Model.extend({
+    url: function () {
+        return API_URL + 'runs/' + this.id + '/pipelines/'+this.attributes.version+'/downloads';
+    },
+    parse: function (response) {
+        this.attributes.downloadGroups = clusterRunDownloads(response.data);
     }
 });

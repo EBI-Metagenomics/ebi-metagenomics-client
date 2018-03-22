@@ -185,12 +185,11 @@ let DownloadsView = Backbone.View.extend({
         const that = this;
         this.model.fetch({
             success: function (response, data) {
-                const pipeline_files = response.attributes.pipeline_files;
+                const pipeline_files = response.attributes.pipelineFiles;
                 that.$el.html(that.template({pipeline_files: pipeline_files}));
             }
         });
     }
-
 });
 
 // Called by googleMaps import callback
