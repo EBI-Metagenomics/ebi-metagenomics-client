@@ -21,11 +21,10 @@ before_install:
   - pip3 install --user --upgrade pip setuptools
   - python3 -V
   - pip3 -V
-
-
-  - mysql -e 'CREATE DATABASE emg;'
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
   - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+
+  - mysql -e 'CREATE DATABASE emg;'
 
   # Create schema from django model
   - emgcli migrate
@@ -41,19 +40,6 @@ before_install:
   - emgcli collectstatic --noinput
   - emgcli check --deploy
   - emgdeploy --daemon -p ~/emg.pid emgcli.wsgi:application
-
-  - npm install cypress
-
-  # Touch download files
-  - travis/create_download_files.sh
-
-install:
-  - npm install webpack -g
-  - npm install -g codecov
-  - npm install -g nyc
-  - npm install
-  - npm run build
-  - sudo mv dist/* /usr/share/nginx/html/
   - sudo chmod 777 /var/log/nginx/*
   - sudo chmod 777 /var/run/nginx.pid
 
@@ -61,6 +47,20 @@ install:
   - sed -i s#{TRAVIS_BUILD_DIR}#$TRAVIS_BUILD_DIR#g $TRAVIS_BUILD_DIR/travis/nginx.conf
   - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
   - curl -I http://localhost:9000/metagenomics/
+
+
+  # Touch download files
+  - travis/create_download_files.sh
+
+install:
+
+  - npm install cypress
+  - npm install webpack -g
+  - npm install -g codecov
+  - npm install -g nyc
+  - npm install
+  - npm run build
+  - sudo mv dist/* /usr/share/nginx/html/
 
 script:
   - npm run test -- --record --key $CYPRESS_RECORD_KEY
