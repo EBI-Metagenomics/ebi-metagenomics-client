@@ -42,6 +42,9 @@ before_install:
 
   - npm install cypress
 
+  # Touch download files
+  - ./create_download_files.sh
+
 install:
   - npm install webpack -g
   - npm install -g codecov
