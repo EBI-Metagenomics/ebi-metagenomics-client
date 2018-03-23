@@ -24,9 +24,7 @@ module.exports = class Map {
             const lat = sample.latitude;
             const lng = sample.longitude;
 
-            if (lat === null || lng === null) {
-                $("#warning").show();
-            } else {
+            if ((lat !== null) && (lng !== null)) {
                 result.push(that.placeMarker(map, oms, template, sample, displayMarkerDetails));
             }
             return result;
@@ -43,6 +41,10 @@ module.exports = class Map {
                     imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
                     maxZoom: 17
                 });
+        } else if (markers.length === 0){
+            const $parentDiv = $("#"+elementId).parent();
+            $("#"+elementId).addClass('disabled');
+            $parentDiv.addClass('no-coords-tooltip');
         }
         window.map = map;
         return map

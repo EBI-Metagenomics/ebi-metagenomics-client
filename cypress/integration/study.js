@@ -63,154 +63,178 @@ const runTableColumns = {
 
 
 
-describe('Study page - General', function () {
-    beforeEach(function () {
-        openPage(origPage);
-        waitForPageLoad(pageTitle);
-    });
+// describe('Study page - General', function () {
+//     beforeEach(function () {
+//         openPage(origPage);
+//         waitForPageLoad(pageTitle);
+//     });
+//
+//     it('Verify elements are present', function () {
+//         cy.get('h3').should('contain', projectId);
+//         cy.get('h2').should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
+//         cy.get('#ebi_ena_links').should('contain', 'ENA website (ERP019566)');
+//         cy.get('#europe_pmc_links > li').should('contain', 'A longitudinal study of the diabetic skin and wound microbiome.');
+//         cy.get('#europe_pmc_links > li').should('contain', 'Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.');
+//         cy.get('#europe_pmc_links > li').should('contain', '2017 5');
+//         cy.get('#europe_pmc_links > li > a').should('contain', '28740749');
+//         cy.get('#europe_pmc_links > li > a').should('contain', '10.7717/peerj.3543');
+//     });
+//
+//     it('External links should all be valid', function () {
+//         cy.get('#ebi_ena_links > a').each(($el) => {
+//             urlExists($el.attr('href'));
+//         });
+//         cy.get('#europe_pmc_links > li > a').each(($el) => {
+//             urlExists($el.attr('href'));
+//         });
+//     });
+// });
+//
+// let table;
+// describe('Study page - Samples table', function () {
+//     beforeEach(function () {
+//         openPage(origPage);
+//         waitForPageLoad(pageTitle);
+//         table = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
+//     });
+//
+//     it('Samples table should contain correct number of samples', function () {
+//         table.checkLoadedCorrectly(1, 10, 258, sampleTableColumns);
+//     });
+//
+//     it('Samples table should respond to ordering', function () {
+//         table.testSorting(10, sampleTableColumns);
+//     });
+//
+//     it('Samples table should respond to filtering', function () {
+//         table.testFiltering('ERS1474800', [['Control patient 9 left foot time 3', 'ERS1474800', 'control_skin_left', '27-Nov-2017']])
+//     });
+//
+//     it('Samples table should respond to pagination', function () {
+//         table.testPagination(10, [{
+//             index: 1,
+//             data: ['Control patient 9 right foot time 1', 'ERS1474797', 'control_skin_right', '27-Nov-2017'],
+//         }, {
+//             index: 3,
+//             data: ['Patient 5 wound debridement time 5', 'ERS1474870', 'wound_deb', '27-Nov-2017']
+//         }, {
+//             index: 'next',
+//             data: ['Patient 6 skin contralateral foot to wound time 4', 'ERS1474887', 'diabetic_skin_contra', '27-Nov-2017'], // 4th row
+//             pageNum: 4
+//         }, {
+//             index: 'prev',
+//             data: ['Patient 5 wound debridement time 5', 'ERS1474870', 'wound_deb', '27-Nov-2017'], // Back to 3rd row
+//             pageNum: 3
+//         }, {
+//             index: 'last',
+//             data: ['Patient 5 skin contralateral foot to wound time 2', 'ERS1474858', 'diabetic_skin_contra', '27-Nov-2017'],
+//             pageNum: 6,
+//             pageSize: 8
+//         }, {
+//             index: 'first',
+//             data: ['Control patient 9 right foot time 1', 'ERS1474797', 'control_skin_right', '27-Nov-2017'],
+//             pageNum: 1
+//         }]);
+//     });
+//
+//     it('Samples table should respond to page size change', function () {
+//         table.testPageSizeChange(samplesTableDefaultSize, 25)
+//     });
+//
+//     it('Sample table download link should be valid', function () {
+//         table.testDownloadLink(Config.API_URL + 'samples?study_accession=' + projectId + "&format=csv")
+//     });
+// });
+//
+// describe('Study page - Runs table', function () {
+//     beforeEach(function () {
+//         openPage(origPage);
+//         waitForPageLoad(pageTitle);
+//         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+//     });
+//
+//     it('Runs table should contain correct number of runs', function () {
+//         table.checkLoadedCorrectly(1, 25, 258);
+//     });
+//
+//     it('Runs table should respond to ordering', function () {
+//         table.testSorting(25, runTableColumns);
+//     });
+//
+//     it('Runs table should respond to filtering', function () {
+//         table.testFiltering('ERR1760140', [['ERR1760140', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']])
+//     });
+//
+//
+//     it('Runs table should respond to pagination', function () {
+//         table.testPagination(25, [{
+//             index: 1,
+//             data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
+//         }, {
+//             index: 3,
+//             data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']
+//         }, {
+//             index: 'next',
+//             data: ['ERR1760066', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'], // 4th row
+//             pageNum: 4
+//         }, {
+//             index: 'prev',
+//             data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
+//             pageNum: 3
+//         }, {
+//             index: 'last',
+//             data: ['ERR1759891', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
+//             pageNum: 11,
+//             pageSize: 8
+//         }, {
+//             index: 'first',
+//             data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
+//             pageNum: 1
+//         }]);
+//     });
+//
+//     it('Runs table should respond to page size change', function () {
+//         table.testPageSizeChange(runsTableDefaultSize, 50)
+//     });
+//
+//     it('Runs table download link should be valid', function () {
+//         table.testDownloadLink(Config.API_URL + 'runs?study_accession=' + projectId + "&format=csv")
+//     });
+// });
+//
+// describe('Study page - Runs table with >1 analysis per run', function(){
+//     beforeEach(function () {
+//         const projectId = "ERP009703";
+//         const origPage = "studies/" + projectId;
+//         openPage(origPage);
+//         waitForPageLoad("Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing study from the June solstice in the year 2014");
+//         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+//     });
+//     it('Runs table should display both pipeline versions for a run', function(){
+//         table.testFiltering('ERR770966', [['ERR770966', 'metagenomic', '', '', '2.0, 4.0'], ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']]);
+//     });
+// });
 
-    it('Verify elements are present', function () {
-        cy.get('h3').should('contain', projectId);
-        cy.get('h2').should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
-        cy.get('#ebi_ena_links').should('contain', 'ENA website (ERP019566)');
-        cy.get('#europe_pmc_links > li').should('contain', 'A longitudinal study of the diabetic skin and wound microbiome.');
-        cy.get('#europe_pmc_links > li').should('contain', 'Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.');
-        cy.get('#europe_pmc_links > li').should('contain', '2017 5');
-        cy.get('#europe_pmc_links > li > a').should('contain', '28740749');
-        cy.get('#europe_pmc_links > li > a').should('contain', '10.7717/peerj.3543');
-    });
 
-    it('External links should all be valid', function () {
-        cy.get('#ebi_ena_links > a').each(($el) => {
-            urlExists($el.attr('href'));
-        });
-        cy.get('#europe_pmc_links > li > a').each(($el) => {
-            urlExists($el.attr('href'));
-        });
-    });
-});
-
-let table;
-describe('Study page - Samples table', function () {
-    beforeEach(function () {
-        openPage(origPage);
-        waitForPageLoad(pageTitle);
-        table = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
-    });
-
-    it('Samples table should contain correct number of samples', function () {
-        table.checkLoadedCorrectly(1, 10, 258, sampleTableColumns);
-    });
-
-    it('Samples table should respond to ordering', function () {
-        table.testSorting(10, sampleTableColumns);
-    });
-
-    it('Samples table should respond to filtering', function () {
-        table.testFiltering('ERS1474800', [['Control patient 9 left foot time 3', 'ERS1474800', 'control_skin_left', '27-Nov-2017']])
-    });
-
-    it('Samples table should respond to pagination', function () {
-        table.testPagination(10, [{
-            index: 1,
-            data: ['Control patient 9 right foot time 1', 'ERS1474797', 'control_skin_right', '27-Nov-2017'],
-        }, {
-            index: 3,
-            data: ['Patient 5 wound debridement time 5', 'ERS1474870', 'wound_deb', '27-Nov-2017']
-        }, {
-            index: 'next',
-            data: ['Patient 6 skin contralateral foot to wound time 4', 'ERS1474887', 'diabetic_skin_contra', '27-Nov-2017'], // 4th row
-            pageNum: 4
-        }, {
-            index: 'prev',
-            data: ['Patient 5 wound debridement time 5', 'ERS1474870', 'wound_deb', '27-Nov-2017'], // Back to 3rd row
-            pageNum: 3
-        }, {
-            index: 'last',
-            data: ['Patient 5 skin contralateral foot to wound time 2', 'ERS1474858', 'diabetic_skin_contra', '27-Nov-2017'],
-            pageNum: 6,
-            pageSize: 8
-        }, {
-            index: 'first',
-            data: ['Control patient 9 right foot time 1', 'ERS1474797', 'control_skin_right', '27-Nov-2017'],
-            pageNum: 1
-        }]);
-    });
-
-    it('Samples table should respond to page size change', function () {
-        table.testPageSizeChange(samplesTableDefaultSize, 25)
-    });
-
-    it('Sample table download link should be valid', function () {
-        table.testDownloadLink(Config.API_URL + 'samples?study_accession=' + projectId + "&format=csv")
-    });
-});
-
-describe('Study page - Runs table', function () {
-    beforeEach(function () {
-        openPage(origPage);
-        waitForPageLoad(pageTitle);
-        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
-    });
-
-    it('Runs table should contain correct number of runs', function () {
-        table.checkLoadedCorrectly(1, 25, 258);
-    });
-
-    it('Runs table should respond to ordering', function () {
-        table.testSorting(25, runTableColumns);
-    });
-
-    it('Runs table should respond to filtering', function () {
-        table.testFiltering('ERR1760140', [['ERR1760140', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']])
-    });
-
-
-    it('Runs table should respond to pagination', function () {
-        table.testPagination(25, [{
-            index: 1,
-            data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-        }, {
-            index: 3,
-            data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']
-        }, {
-            index: 'next',
-            data: ['ERR1760066', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'], // 4th row
-            pageNum: 4
-        }, {
-            index: 'prev',
-            data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-            pageNum: 3
-        }, {
-            index: 'last',
-            data: ['ERR1759891', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-            pageNum: 11,
-            pageSize: 8
-        }, {
-            index: 'first',
-            data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-            pageNum: 1
-        }]);
-    });
-
-    it('Runs table should respond to page size change', function () {
-        table.testPageSizeChange(runsTableDefaultSize, 50)
-    });
-
-    it('Runs table download link should be valid', function () {
-        table.testDownloadLink(Config.API_URL + 'runs?study_accession=' + projectId + "&format=csv")
-    });
-});
-
-describe('Study page - Runs table with >1 analysis per run', function(){
-    beforeEach(function () {
+describe('Study page - Map', function(){
+    it('Map should not be disabled if markers exist', function(){
         const projectId = "ERP009703";
         const origPage = "studies/" + projectId;
         openPage(origPage);
         waitForPageLoad("Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing study from the June solstice in the year 2014");
-        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+
+        cy.get('#map').should('not.have.class', 'disabled');
     });
-    it('Runs table should display both pipeline versions for a run', function(){
-        table.testFiltering('ERR770966', [['ERR770966', 'metagenomic', '', '', '2.0, 4.0'], ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']]);
+
+    it('Map should not disabled if markers exist', function(){
+        const projectId = "SRP062418";
+        const origPage = "studies/" + projectId;
+        openPage(origPage);
+        waitForPageLoad("Oral Microbiome Metagenome");
+
+        cy.get('#map').should('have.class', 'disabled');
+        cy.get('.map.no-coords-tooltip:first').then(($map) => {
+            $map.trigger('hover')
+        }).get('.map > span').should('be.visible').should('contain', 'No sample coordinates available to display.');
     });
 });

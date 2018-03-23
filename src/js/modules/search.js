@@ -456,7 +456,7 @@ const Run = Backbone.Model.extend({
         d.run_id = d.fields['name'][0];
         d.study_link = util.subfolder + '/studies/' + d.fields['METAGENOMICS_PROJECTS'][0];
         d.sample_link = util.subfolder + '/samples/' + d.fields['METAGENOMICS_SAMPLES'][0];
-        d.run_link = util.subfolder + '/runs/' + d.fields['name'][0] + "?version="+d.fields.pipeline_version[0];
+        d.run_link = util.subfolder + '/runs/' + d.fields['name'][0] + "?version=" + d.fields.pipeline_version[0];
         d.pipeline_link = util.subfolder + '/pipelines/' + d.fields.pipeline_version[0];
         d.biomes = convertBiomes(d);
         return d;
@@ -684,7 +684,7 @@ function convertBiomes(entry) {
     _.each(entry.fields.biome, function (biome) {
         biome = 'root:' + biome.replace(/\/([^\/]*)$/, '').replace(/\//g, ':');
         biomes.push({
-            name: util.formatLineage(biome),
+            name: util.formatLineage(biome, true),
             icon: util.getBiomeIcon(biome)
         });
     });

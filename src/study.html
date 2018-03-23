@@ -35,22 +35,25 @@
                             <div class="columns small-4 medium-4 large-4">
                                 <h4>Last updated: <%= last_update %></h4>
                                 <section>
-                                    <h3>Description</h3>
-                                    <p class="study-abstract"> <%= abstract %></p>
                                     <h3>Classification</h3>
                                     <% _.each(biomes, function(biome){ %>
-                                    <span class="biome_icon icon_sm <%= biome.icon %>" title="<%= biome.name %>"></span>
-                                    <!--<p> <%= biome.name %></p>-->
+                                    <div class="row columns">
+                                        <span class="biome_icon icon_sm <%= biome.icon %>" title="<%= biome.name %>"></span> <%= biome.name %>
+                                        <!--<p> <%= biome.name %></p>-->
+                                        </div>
                                     <% }); %>
+                                    <h3>Description</h3>
+                                    <p class="study-abstract"> <%= abstract %></p>
                                 </section>
                             </div>
                             <div class="columns small-8 medium-8 large-8 map">
                                 <div id="map">
                                 </div>
-                                <div id="warning" class="map-alert text-center">
-                                    Some samples have no associated latitude/longitude coordinates and could not be
-                                    marked on the map.
-                                </div>
+                                <span class="no-coords">No sample coordinates available to display.</span>
+                                <!--<div id="warning" class="map-alert text-center">-->
+                                    <!--Some samples have no associated latitude/longitude coordinates and could not be-->
+                                    <!--marked on the map.-->
+                                <!--</div>-->
                             </div>
                         </div>
                         <hr>

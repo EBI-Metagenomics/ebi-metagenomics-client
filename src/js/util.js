@@ -9,8 +9,13 @@ const biomeFilter = require('./commons').biomeFilter;
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-export function formatLineage(lineage) {
-    return lineage.split(":").join(" > ");
+export function formatLineage(lineage, removeRoot) {
+    let splitLineage = lineage.split(':');
+    if (removeRoot) {
+        splitLineage.shift();
+    }
+    return splitLineage.join(" > ");
+
 }
 
 export function lineage2Biome(lineage) {
@@ -31,7 +36,7 @@ export function setCurrentTab(id) {
 
 export function getBiomeIconData(biome_data) {
     const name = biome_data.id;
-    return {name: formatLineage(name), icon: getBiomeIcon(name)};
+    return {name: formatLineage(name, true), icon: getBiomeIcon(name)};
 }
 
 export function initBiomeFilter($div, callback) {
@@ -115,7 +120,7 @@ const biomeIconMapD5 = {
     "root:environmental:aquatic:freshwater:lotic": "river_b",
     "root:environmental:aquatic:marine:hydrothermal vents": "hydrothermal_vents_b",
     "root:environmental:terrestrial:soil:wetlands": "wetlands_b",
-    "root:host-associated:arthropoda:digestive system:oral": "mouth_b",
+    "root:host-associated:human:digestive system:oral": "mouth_b",
     "root:host-associated:human:respiratory system:pulmonary system": "lung_b",
     "root:host-associated:mammals:nervous system:brain": "brain_b",
 };
