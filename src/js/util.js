@@ -148,8 +148,8 @@ export function getBiomeIcon(lineage) {
     //     return 'grassland_b';
     // }
 
-    return biomeIconMapD6[lineageD6] || biomeIconMapD5[lineageD5] || biomeIconMapD4[lineageD4] || biomeIconMapD3[lineageD3] || biomeIconMapD2[lineageD2] || (function (lineage) {
-        console.warn('Could not match lineage "' + lineageD6 + '" with any biome icons');
+    return biomeIconMapD6[lineageD6] || biomeIconMapD5[lineageD5] || biomeIconMapD4[lineageD4] || biomeIconMapD3[lineageD3] || biomeIconMapD2[lineageD2] || (function () {
+        console.warn('Could not match lineage "' + lineage + '" with any biome icons');
         return 'default_b';
     }());
 }
