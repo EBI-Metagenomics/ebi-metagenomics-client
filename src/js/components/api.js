@@ -312,6 +312,7 @@ export const StudyDownloads = Backbone.Model.extend({
 
 export const RunDownloads = Backbone.Model.extend({
     url: function () {
+        console.log(this.id, this.attributes.version);
         return API_URL + 'runs/' + this.id + '/pipelines/'+this.attributes.version+'/downloads';
     },
     parse: function (response) {

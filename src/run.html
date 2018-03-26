@@ -209,14 +209,14 @@
     </div>
 </script>
 
-<script id="download-tmpl" type="text/template">
+<script id="downloadsTmpl" type="text/template">
     <div class="row columns">
         <div class="row columns">
             <p>Here you may download the full set of analysis results files. For the original raw sequence reads, follow
                 the link to ENA. Multi-part files should be concatenated after unzipping.</p>
         </div>
-        <% _.each(groups, function(group){ %>
-        <h3> <%= group.group_name %></h3>
+        <% _.each(groups, function(group, name){ %>
+        <h3> <%= name %></h3>
         <div class="row columns">
             <table>
                 <thead>
@@ -229,13 +229,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <% _.each(group.entries, function(entry){ %>
+                <% _.each(group, function(entry){ %>
                 <tr>
-                    <td><%= entry.name %></td>
+                    <td><%= entry.attributes.description.label %></td>
                     <td><%= entry.type %></td>
-                    <td><%= entry.compression %></td>
-                    <td><%= entry.format %></td>
-                    <td><%= entry.link%></td>
+                    <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].extension : '-' %></td>
+                    <td><%= entry.attributes['file-format'].name %></td>
+                    <td><a href="<%= entry.links.self %>"><span class="icon  icon-functional" data-icon="="></span></a></td>
                 </tr>
                 <% }); %>
                 </tbody>

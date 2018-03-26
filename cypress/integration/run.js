@@ -1,4 +1,4 @@
-import {openPage} from './util';
+import {openPage, changeTab} from './util';
 
 const origPage = 'runs/ERR1022502';
 
@@ -37,7 +37,8 @@ describe('Run page', function () {
             openTab(tabId);
             verifyTabIsVisible(tabId);
         }
-    })
+    });
+
 });
 
 describe('Run page - url parameters', function () {
@@ -48,9 +49,21 @@ describe('Run page - url parameters', function () {
         cy.get('#analysisSelect').then(($el) => {
             expect($el.val()).to.be.eq(pipeline_version);
         });
-    //    TODO add check that data matches pipeline version, not just selector
+        //    TODO add check that data matches pipeline version, not just selector
     })
-})
+});
+
+describe('Run page - download tab', function () {
+    beforeEach(function () {
+        openPage(origPage);
+        waitForPageLoad();
+        changeTab('#download')
+    });
+
+    it('Should display correct number of results', function () {
+
+    })
+});
 // TODO test pagination works
 // TODO test URL params are correctly set on every filter/search operation
 // TODO test clear button functions correctly

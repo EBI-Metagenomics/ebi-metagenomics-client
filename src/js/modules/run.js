@@ -417,16 +417,14 @@ let GoTermCharts = Backbone.View.extend({
 
 let DownloadView = Backbone.View.extend({
     model: api.RunDownloads,
-    template: _.template($("#download-tmpl").html()),
+    template: _.template($("#downloadsTmpl").html()),
     el: '#download-list',
     initialize: function () {
+        const that = this;
         this.model.fetch({
-            data: $.param({page_size: 100}),
+            data: $.param({page_size: 250}),
             success: function (response, data) {
-                data = {
-                    groups: response.attributes.downloadGroups
-                };
-                this.$el.html(this.template(data));
+                that.$el.html(that.template({groups: response.attributes.downloadGroups}));
             }
         });
     }
@@ -506,7 +504,6 @@ function loadAnalysisData(run_id, pipeline_version) {
         success: function (model) {
             const attr = model.attributes;
             let qcGraph = new QCGraphView(attr);
-            let downloadView = new DownloadView(attr.download)
         }
     });
 
@@ -538,5 +535,5 @@ $(document).ready(function () {
 });
 
 
-// let run = new api.Run({id: run_id});
-// let runView = new RunView({model: run});
+let run = new api.Run({id: run_id});
+let runView = new RunView({model: run});
