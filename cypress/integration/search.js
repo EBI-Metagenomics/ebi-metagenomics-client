@@ -164,7 +164,7 @@ describe('Search page - general Functionality', function () {
         validateFacetQuery(facetRequests[5]);
 
         cy.get('#projects-pagination > ul > li.page-item.last').click();
-        waitForResultsLoad(2);
+        waitForResultsLoad(5);
         cy.get('#projects-pagination > ul > li.page-item.first').click();
         waitForResultsLoad(initialResultSize);
 

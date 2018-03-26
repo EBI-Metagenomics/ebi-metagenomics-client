@@ -39,7 +39,7 @@ before_install:
   # EMG api deployment and setup
   - emgcli collectstatic --noinput
   - emgcli check --deploy
-  - emgdeploy --daemon -p ~/emg.pid emgcli.wsgi:application
+  - emgdeploy --daemon -p ~/emg.pid emgcli.wsgi:application --workers 5
   - sudo chmod 777 /var/log/nginx/*
   - sudo chmod 777 /var/run/nginx.pid
 
