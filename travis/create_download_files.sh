@@ -31,4 +31,5 @@ touch $TRAVIS_BUILD_DIR/results/2015/03/ERP009703/version_4.0/project-summary/SS
 touch $TRAVIS_BUILD_DIR/results/2015/03/ERP009703/version_4.0/project-summary/taxonomy_abundances_LSU_v4.0.tsv
 touch $TRAVIS_BUILD_DIR/results/2015/03/ERP009703/version_4.0/project-summary/taxonomy_abundances_SSU_v4.0.tsv
 
+mkdir -p  $TRAVIS_BUILD_DIR/results/2015/10/ERP012221/version_2.0/ERR1022502_FASTQ/
 touch $TRAVIS_BUILD_DIR/results/2015/10/ERP012221/version_2.0/ERR1022502_FASTQ/ERR1022502_FASTQ_1.fasta.gz
