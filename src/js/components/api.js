@@ -325,15 +325,25 @@ function clusterRunDownloads(downloads) {
     _.each(downloads, function (download) {
         const attr = download.attributes;
         const group = attr['group-type'];
+        const label = attr.description.label;
 
-        attr['link'] = download.links.self;
+        attr['links'] = [download.links.self];
 
         if (!groups.hasOwnProperty(group)) {
             groups[group] = [];
         }
-
-        groups[group] = groups[group].concat(download);
+        let grouped = false;
+        _.each(groups[group], function(d){
+            if (d.attributes.description.label===label){
+                d.attributes.links = d.attributes.links.concat(download.links.self);
+                grouped = true;
+            }
+        });
+        if (!grouped) {
+            groups[group] = groups[group].concat(download);
+        }
     });
+
     return groups
 }
 

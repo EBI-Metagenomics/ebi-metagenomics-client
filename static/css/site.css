@@ -719,3 +719,7 @@ img.publication-cover {
 .index-stats-disp {
     min-height: 8em;
 }
+
+a.download-part {
+    padding-right: 0.5em;
+}

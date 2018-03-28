@@ -250,7 +250,16 @@
                         '-' %>
                     </td>
                     <td><%= entry.attributes['file-format'].name %></td>
-                    <td><a href="<%= entry.links.self %>"><span class="icon  icon-functional" data-icon="="></span></a>
+                    <td><% if (entry.attributes.links.length===1){ %>
+                            <a href="<%= entry.attributes.links[0] %>"><span class="icon  icon-functional" data-icon="="></span>
+                            </a>
+                        <% } else { %>
+                            <% _.each(entry.attributes.links, function(link, i){ %>
+                                <a class='download-part' href="<%= entry.attributes.links[1] %>">Part <%= (i+1) %><span class="icon  icon-functional" data-icon="="></span>
+                                </a>
+                            <% }) %>
+                        <% } %>
+
                     </td>
                 </tr>
                 <% }); %>
