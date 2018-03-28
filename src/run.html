@@ -243,9 +243,7 @@
                 <% _.each(group, function(entry){ %>
                 <tr>
                     <td><%= entry.attributes.description.label %></td>
-                    <td><%= entry.type %> <span class="show_tooltip icon  icon-generic big" data-icon="g"
-                                                data-hasqtip="49" oldtitle="Chart data type" title=""
-                                                aria-describedby="qtip-49"></span></td>
+                    <td><%= entry.type %> </td>
                     <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].extension :
                         '-' %>
                     </td>
