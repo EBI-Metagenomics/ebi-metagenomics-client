@@ -131,11 +131,11 @@ export function attachTabHandlers() {
     // Deep linking
     const $dataTabs = $('[data-tabs]');
     new window.Foundation.Tabs($dataTabs);
-    var link_tab = window.location.hash.substr(1);
-    if (link_tab) {
-        $($dataTabs).foundation('selectTab', link_tab);
-        $("div.tabs-panel:not('" + link_tab + "')").removeClass('active');
-        $('#' + link_tab).addClass('active');
+    const linkTab = window.location.hash.substr(1);
+    if (linkTab) {
+        $($dataTabs).foundation('selectTab', linkTab);
+        $("div.tabs-panel:not('" + linkTab + "')").removeClass('active');
+        $('#' + linkTab).addClass('active');
     }
 
     // Linking click actions
@@ -150,7 +150,31 @@ export function attachTabHandlers() {
         $("[data-tab-content=" + tabGroup + "] > .tabs-panel").removeClass('active');
         $(tabId).addClass('active');
     });
+}
 
+export function changeTab(tabId){
+    // Tab header
+    $("ul.tabs > li > a").each((i, el) => {
+        const $el = $(el);
+        if ($($el).attr('href')===('#'+tabId)){
+            $($el).parent().addClass('is-active');
+            $el.attr('aria-selected', 'true');
+        } else {
+            $($el).parent().removeClass('is-active');
+            $el.attr('aria-selected', 'false');
+        }
+    });
+    $("div.tabs-panel").each((i, el) => {
+        const $el = $(el);
+        if ($($el).attr('id')===tabId){
+            $($el).addClass('active');
+        } else {
+            $($el).removeClass('active');
+        }
+    });
+    // Tab content
+    // $("div.tabs-panel:not('" + tabId + "')").removeClass('active');
+    // $("div.tabs-panel"+tabId).addClass('active');
 }
 
 export const BiomeCollectionView = Backbone.View.extend({

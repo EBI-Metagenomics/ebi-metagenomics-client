@@ -36,7 +36,8 @@
             </h4>
         </section>
 
-        <ul class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500" data-tabs id="run-tabs">
+        <ul class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500" data-tabs
+            id="run-tabs">
             <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
             <li class="tabs-title"><a href="#qc">Quality control</a></li>
             <li class="tabs-title"><a href="#taxonomic">Taxonomic analysis</a></li>
@@ -54,17 +55,22 @@
                             implemented in our pipeline. Sequence merging may have occurred with paired-end data, so the
                             initial number of reads may differ from the number given by ENA.</p>
                         <div id="QC-step-chart" class="run-qc-chart"></div>
-                        <!--<p>The histograms below show the distribution of sequence lengths, in basepairs, (left) and GC-->
-                        <!--percentage (right) for the sequences having passed our quality control steps. Note that for-->
-                        <!--large files, the distributions were compiled from a random subset of 2 millions sequence-->
-                        <!--reads.-->
-                        <!--The standard deviations are shown on each plot. The bar chart underneath each graph-->
-                        <!--indicates-->
-                        <!--the minimum, average and maximum length and average GC and AT content, respectively.</p>-->
+                        <p>The histograms below show the distribution of sequence lengths, in basepairs, (left) and GC
+                            percentage (right) for the sequences having passed our quality control steps. Note that for
+                            large files, the distributions were compiled from a random subset of 2 millions sequence
+                            reads.
+                            The standard deviations are shown on each plot. The bar chart underneath each graph
+                            indicates
+                            the minimum, average and maximum length and average GC and AT content, respectively.</p>
                     </div>
                 </div>
             </div>
             <div class="tabs-panel" id="taxonomic">
+
+                <div id="ssu-lsu-btns" class="row columns  <% if (version<4.0){ %> hidden <% } %>">
+                    <button class="button rna-select-button" value="/ssu">Small subunit rRNA</button>
+                    <button class="button rna-select-button" value="/lsu">Large subunit rRNA</button>
+                </div>
                 <div class="row columns">
                     These are the results from the taxonomic analysis steps of our pipeline. You can switch between
                     different views of the data using the menu of icons below (pie, bar, stacked and interactive
@@ -203,7 +209,12 @@
                 </div>
             </div>
             <div class="tabs-panel" id="abundance">
-                Abundance display
+                This page gives you information regarding metagenomic community diversity estimation and information
+                which allow comparisons between all study runs. The following plots illustrate the taxa abundance
+                distribution.
+                <div id="abundance-disp">
+                    <img id="abundance-chart" class='abundance-chart' src="">
+                </div>
             </div>
         </div>
     </div>
@@ -232,10 +243,15 @@
                 <% _.each(group, function(entry){ %>
                 <tr>
                     <td><%= entry.attributes.description.label %></td>
-                    <td><%= entry.type %></td>
-                    <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].extension : '-' %></td>
+                    <td><%= entry.type %> <span class="show_tooltip icon  icon-generic big" data-icon="g"
+                                                data-hasqtip="49" oldtitle="Chart data type" title=""
+                                                aria-describedby="qtip-49"></span></td>
+                    <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].extension :
+                        '-' %>
+                    </td>
                     <td><%= entry.attributes['file-format'].name %></td>
-                    <td><a href="<%= entry.links.self %>"><span class="icon  icon-functional" data-icon="="></span></a></td>
+                    <td><a href="<%= entry.links.self %>"><span class="icon  icon-functional" data-icon="="></span></a>
+                    </td>
                 </tr>
                 <% }); %>
                 </tbody>

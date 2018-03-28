@@ -200,6 +200,9 @@ export const RunPipelineObject = Backbone.Model.extend({
     initialize: function (params) {
         this.id = params.id;
         this.version = params.version;
+        if (params.hasOwnProperty('type')) {
+            this.type = params.type;
+        }
     }
 });
 
@@ -224,8 +227,41 @@ export const Analysis = RunPipelineObject.extend({
 
 export const Taxonomy = RunPipelineObject.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/taxonomy';
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/taxonomy' + this.type;
     },
+    fetch: function () {
+        const that = this;
+        const promise = $.Deferred();
+        let data = [];
+        $.get({
+            url: this.url(),
+            success: function (response) {
+                data = data.concat(response.data);
+                const numPages = response.meta.pagination.pages;
+                if (numPages > 1) {
+                    let requests = [];
+                    for (let x = 2; x <= numPages; x++) {
+                        requests.push($.get(that.url() + '?page=' + x));
+                    }
+                    $.when.apply($, requests).done(function () {
+                        let page = 2;
+                        _.each(requests, function (response) {
+                            if (response.responseJSON === undefined || response.responseJSON.data === undefined) {
+                                console.error('Could not retrieve data for page ', page);
+                            } else {
+                                data = data.concat(response.responseJSON.data);
+                            }
+                            page++;
+                        });
+                        promise.resolve(data);
+                    });
+                } else {
+                    promise.resolve(data);
+                }
+            }
+        });
+        return promise;
+    }
 });
 
 export const InterproIden = RunPipelineObject.extend({
@@ -274,7 +310,7 @@ function clusterStudyDownloads(downloads) {
         if (!pipelines.hasOwnProperty(pipeline)) {
             pipelines[pipeline] = {};
         }
-        if (!pipelines[pipeline].hasOwnProperty(group)){
+        if (!pipelines[pipeline].hasOwnProperty(group)) {
             pipelines[pipeline][group] = [];
         }
 
@@ -292,7 +328,7 @@ function clusterRunDownloads(downloads) {
 
         attr['link'] = download.links.self;
 
-        if (!groups.hasOwnProperty(group)){
+        if (!groups.hasOwnProperty(group)) {
             groups[group] = [];
         }
 
@@ -312,7 +348,7 @@ export const StudyDownloads = Backbone.Model.extend({
 
 export const RunDownloads = Backbone.Model.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id + '/pipelines/'+this.attributes.version+'/downloads';
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.attributes.version + '/downloads';
     },
     parse: function (response) {
         this.attributes.downloadGroups = clusterRunDownloads(response.data);

@@ -13,11 +13,15 @@ module.exports = class TaxonomyStackedColumns extends TaxonomyColumn {
             },
             plotOptions: {
                 series: {
-                    stacking: 'normal',
+                    stacking: 'percent',
                     dataLabels: {
                         enabled: true,
                     },
                 }
+            },
+            yAxis: {
+                min: 0,
+                max: 100
             },
             xAxis: {
                 title: {

@@ -32,6 +32,7 @@ module.exports = (env = {prod: false}) => {
                 {from: 'static/fonts', to: '../static/fonts'},
                 {from: 'static/js', to: '../static/js'},
                 {from: 'static/libraries', to: '../static/libraries'},
+                {from: 'static/krona', to: '../'}
             ]),
             // GZIP compression
             env.prod ? new (getCompressionPlugin())({
