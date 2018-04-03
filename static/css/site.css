@@ -161,6 +161,7 @@ select.table-tools {
     text-align: center;
     margin: 0 auto;
 }
+
 .no-coords-tooltip:hover span.no-coords {
     display: block;
 }
@@ -877,4 +878,13 @@ img.publication-cover {
 
 .header-logo {
     height: 5em;
+}
+
+a.download-part {
+    padding-right: 0.5em;
+}
+
+.chart-icon {
+    height: 2.5em;
+    width: 2.5em;
 }

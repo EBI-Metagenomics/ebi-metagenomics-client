@@ -9,6 +9,7 @@ const blogUrl = commons.BLOG_URL;
 const cookieName = commons.COOKIE_NAME;
 const Cookies = require('js-cookie');
 const util = require('../util');
+window.Foundation.addToJquery($);
 
 util.checkAPIonline();
 
@@ -140,9 +141,28 @@ var StudiesView = Backbone.View.extend({
     }
 });
 
+var RequestFormView = Backbone.View.extend({
+    events: {
+        "submit": "submit"
+    },
+    el: "#analysisRequestForm",
+    tagName: "form",
+    initialize: function () {
+        new Foundation.Abide(this.$el, {
+            'data-live-validate': true
+        });
+        this.render();
+    },
+    submit: function () {
+        console.log('submit');
+    }
+});
+
 
 var studies = new StudiesCollection();
 var studiesView = new StudiesView({collection: studies});
+
+var requestForm = new RequestFormView();
 
 function initObjectCounts() {
     //Perform Ajax request
@@ -230,7 +250,6 @@ function initObjectCounts() {
         addStatsElementsToDOM(ampliconCount, assemblyCount,
             metaBCount, metaGCount, metaTCount,
             projectCount, sampleCount, runCount);
-
         hideLoadingGif();
         showStatsSection();
     });
