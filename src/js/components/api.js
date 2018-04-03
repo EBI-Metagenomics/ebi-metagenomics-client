@@ -102,8 +102,8 @@ export const RunCollection = Backbone.Collection.extend({
             this.study_accession = data.study_accession;
         }
         // Sample ID
-        if (data.hasOwnProperty(('sample_id'))) {
-            this.sample_id = data.sample_id;
+        if (data.hasOwnProperty(('sample_accession'))) {
+            this.sample_accession = data.sample_accession;
         }
     },
     parse: function (response) {
