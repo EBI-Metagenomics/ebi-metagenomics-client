@@ -163,9 +163,9 @@ describe('Search page - general Functionality', function () {
         waitForFacetFilters(facetRequests[4]);
         validateFacetQuery(facetRequests[5]);
 
-        cy.get('#projects-pagination > ul > li.page-item.next').click();
+        cy.get('#projects-pagination > ul > li.page-item.next > a').click();
         waitForResultsLoad(initialResultSize);
-        cy.get('#projects-pagination > ul > li.page-item.first').click();
+        cy.get('#projects-pagination > ul > li.page-item.first > a').click();
         waitForResultsLoad(initialResultSize);
 
     });
