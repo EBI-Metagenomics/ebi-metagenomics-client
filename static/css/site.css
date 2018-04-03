@@ -720,6 +720,7 @@ img.publication-cover {
     min-height: 8em;
 }
 
-a.download-part {
+.download-part {
+    float:left;
     padding-right: 0.5em;
 }
