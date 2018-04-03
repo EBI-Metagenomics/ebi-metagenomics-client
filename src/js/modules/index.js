@@ -142,9 +142,6 @@ var StudiesView = Backbone.View.extend({
 });
 
 var RequestFormView = Backbone.View.extend({
-    events: {
-        "submit": "submit"
-    },
     el: "#analysisRequestForm",
     tagName: "form",
     initialize: function () {
@@ -152,9 +149,20 @@ var RequestFormView = Backbone.View.extend({
             'data-live-validate': true
         });
         this.render();
+        const that = this;
+        that.$el.find('button.mailtobtn').click(that.sendMail.bind(that));
     },
-    submit: function () {
-        console.log('submit');
+    sendMail: function () {
+        console.log(this.$el.find('[data-invalid]'));
+        if (this.$el.find('[data-invalid]').length !== 0) {
+            console.error('Did not submit, errors in form.')
+        } else {
+            let body = this.$el.serialize();
+            body = body.replace(/=/g, ': ').replace(/&/g, '%0D%0A');
+            body += '%0D%0A'; // Newline
+            body += 'Additional notes:';
+            window.location.href = "mailto:mdb@ebi.ac.uk?subject=Analysis request&body=" + body;
+        }
     }
 });
 
