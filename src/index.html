@@ -31,8 +31,8 @@
                                 </div>
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
-                                        <p>Public datasets.</p>
-                                        <a class="button">Request</a>
+                                        <p>Request an analysis of a public dataset.</p>
+                                        <button class="button" data-open="requestAnalysisModal">Request</button>
                                     </div>
                                 </div>
                             </div>
@@ -295,6 +295,43 @@
         <!-- END Twitter section-->
     </div>
 </div>
+<div class="reveal" id="requestAnalysisModal" data-reveal>
+    <h2>Request an analysis of a public dataset</h2>
+    <!--No validate attribute forces browser to ignore validation and instead allow FoundationAbide to enforce it. -->
+    <form id="analysisRequestForm" data-abide novalidate>
+        <div class="grid-container fluid">
+            <div class="grid-x">
+                <div class="medium-6 cell">
+                    <label>Study accession
+                        <input id="study-accession" name="study-accession" type="text" placeholder="ERP###### or SRP###### or DRP######" required pattern="study_accession">
+                        <span class="form-error">
+                            Improperly formatted accession, format should be ERP, SRP, DRP, PRJEB, PRJNA followed by a number.
+                        </span>
+                    </label>
+                </div>
+                <div class="medium-6 cell">
+                    <label>Contact name
+                        <input name="contact-name" type="text" required>
+                    </label>
+                </div>
+                <div class="medium-6 cell">
+                    <label>Contact email address
+                        <input name="contact-email" type="email" required pattern="email">
+                        <span class="form-error">
+                            Improperly formatted email address.
+                        </span>
+                    </label>
+                </div>
+                <!-- Add type of analysis: assembly | amplicon | raw read -->
+            </div>
+        </div>
+        <button class="button">Submit request</button>
+    </form>
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
 <!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
 <!-- <div class="row"> -->
@@ -321,6 +358,9 @@
 <script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
     $(document).ready(function () {
+        window.Foundation = Foundation;
+        Foundation.Abide.defaults.patterns['study_accession'] = /^((?:[ESD]RP|PR(?:JEB|JNA))\d{4,})$/;
+        Foundation.addToJquery($);
         $(document).foundation();
         $(document).foundationExtendEBI();
     });
