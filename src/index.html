@@ -310,6 +310,15 @@
                     </label>
                 </div>
                 <div class="medium-6 cell">
+                    <label>Analysis type
+                        <select name="analysis-type" type="text" required>
+                            <option value="amplicon">Amplicon</option>
+                            <option value="raw reads">Raw reads</option>
+                            <option value="assembly">Assembly</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="medium-6 cell">
                     <label>Contact name
                         <input name="contact-name" type="text" required>
                     </label>
@@ -325,7 +334,7 @@
                 <!-- Add type of analysis: assembly | amplicon | raw read -->
             </div>
         </div>
-        <button class="button">Submit request</button>
+        <button class="button mailtobtn" type="button" >Submit request</button>
     </form>
     <button class="close-button" data-close aria-label="Close modal" type="button">
         <span aria-hidden="true">&times;</span>
