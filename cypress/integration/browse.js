@@ -226,7 +226,7 @@ describe('Browse page - Samples table', function () {
             pageNum: 3
         }, {
             index: 'last',
-            data: ['', 'SRS211742', 'J21, fermented Kimchi day 21', '(CLOB) Community DNA obtained by 454 GS FLX titanium sequencing from sample at 21days of kimchi fermentation', '13-Aug-2015'],
+            data: ['', 'SRS211741', 'J18, fermented Kimchi day 18', '(CLOB) Community DNA obtained by 454 GS FLX titanium sequencing from sample at 18days of kimchi fermentation', '13-Aug-2015'],
             pageNum: 367,
             pageSize: 8
         }, {

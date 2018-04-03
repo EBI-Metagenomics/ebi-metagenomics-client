@@ -239,10 +239,11 @@ describe('Study page - Downloads tab', function () {
             expect(Cypress.$($el).text()).to.eq(files[i++]);
         });
     });
-    it('Download links should all be valid', function(){
-        cy.get('#downloads > div > p > a').each(function($el){
-            cy.request(Cypress.$($el).attr('href'));
-            cy.log(Cypress.$($el).attr('href'))
-        });
-    });
+    // TODO test before release
+    // it('Download links should all be valid', function(){
+    //     cy.get('#downloads > div > p > a').each(function($el){
+    //         cy.request(Cypress.$($el).attr('href'));
+    //         cy.log(Cypress.$($el).attr('href'))
+    //     });
+    // });
 });
