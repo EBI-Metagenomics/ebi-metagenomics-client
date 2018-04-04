@@ -96,13 +96,12 @@ let SamplesView = Backbone.View.extend({
 
 
 let MapData = api.StudyGeoCoordinates.extend({
-    fields: ['latitude', 'longitude', 'biome', 'accession', 'sample_alias', 'sample_desc', 'sample_name'],
-
     fetchAll: function () {
+        this.data = [];
         const that = this;
         this.fetch({
             success: function (response, meta) {
-                let data = _.map(response.models, function (model) {
+                let data = _.map(response.attributes.data, function (model) {
                     return model.attributes;
                 });
                 that.data = that.data.concat(data);
