@@ -47,8 +47,8 @@ class GenericTableHandler {
     }
 
     waitForTableLoad(pageSize) {
-        cy.get(this.getTableSelector() + "> tbody > tr", {timeout: 20000}).should('have.length', pageSize);
         this.waitForLoadingIcon();
+        cy.get(this.getTableSelector() + "> tbody > tr", {timeout: 20000}).should('have.length', pageSize);
     }
 
     waitForLoadingIcon() {

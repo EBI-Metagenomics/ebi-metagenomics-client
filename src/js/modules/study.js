@@ -14,7 +14,6 @@ util.checkAPIonline();
 
 util.setCurrentTab('#browse-nav');
 
-console.log(API_URL);
 let study_id = util.getURLParameter();
 let StudyView = Backbone.View.extend({
     model: api.Study,
@@ -96,14 +95,9 @@ let SamplesView = Backbone.View.extend({
 });
 
 
-let MapData = api.SamplesCollection.extend({
+let MapData = api.StudyGeoCoordinates.extend({
     fields: ['latitude', 'longitude', 'biome', 'accession', 'sample_alias', 'sample_desc', 'sample_name'],
 
-    initialize: function (study_id) {
-        this.url = API_URL + 'samples?page_size=250&study_accession=' + study_id + '&fields=' + this.fields.join(',');
-        this.study_id = study_id;
-        this.data = [];
-    },
     fetchAll: function () {
         const that = this;
         this.fetch({

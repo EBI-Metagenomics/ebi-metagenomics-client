@@ -202,22 +202,22 @@ describe('Study page - Runs table', function () {
 });
 
 
-describe('Study page - Runs table with >1 analysis per run', function(){
-    beforeEach(function () {
-        const projectId = "ERP009703";
-        const origPage = "studies/" + projectId;
-        openPage(origPage);
-        waitForPageLoad("Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing study from the June solstice in the year 2014");
-        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
-    });
-    it('Runs table should display both pipeline versions for a run', function(){
-        table.testFiltering('ERR770966', [['ERR770966', 'metagenomic', '', '', '2.0, 4.0'], ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']]);
-    });
-});
+// describe('Study page - Runs table with >1 analysis per run', function(){
+//     beforeEach(function () {
+//         const projectId = "ERP009703";
+//         const origPage = "studies/" + projectId;
+//         openPage(origPage);
+//         waitForPageLoad("Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing study from the June solstice in the year 2014");
+//         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+//     });
+//     it('Runs table should display both pipeline versions for a run', function(){
+//         table.testFiltering('ERR770966', [['ERR770966', 'metagenomic', '', '', '2.0, 4.0'], ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']]);
+//     });
+// });
 
 
 describe('Study page - Map', function () {
-    it('Map should not be disabled if markers exist', function () {
+    it('Should not be disabled if markers exist', function () {
         const projectId = "ERP009703";
         const origPage = "studies/" + projectId;
         openPage(origPage);
@@ -226,7 +226,7 @@ describe('Study page - Map', function () {
         cy.get('#map').should('not.have.class', 'disabled');
     });
 
-    it('Map should be disabled if markers exist', function () {
+    it('Should be disabled if markers exist', function () {
         const projectId = "SRP062418";
         const origPage = "studies/" + projectId;
         openPage(origPage);

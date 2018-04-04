@@ -333,8 +333,8 @@ function clusterRunDownloads(downloads) {
             groups[group] = [];
         }
         let grouped = false;
-        _.each(groups[group], function(d){
-            if (d.attributes.description.label===label){
+        _.each(groups[group], function (d) {
+            if (d.attributes.description.label === label) {
                 d.attributes.links = d.attributes.links.concat(download.links.self);
                 grouped = true;
             }
@@ -362,5 +362,14 @@ export const RunDownloads = Backbone.Model.extend({
     },
     parse: function (response) {
         this.attributes.downloadGroups = clusterRunDownloads(response.data);
+    }
+});
+
+export const StudyGeoCoordinates = Backbone.Model.extend({
+    url: function () {
+        return API_URL + "studies/" + this.id + "/geocoordinates";
+    },
+    initialize: function (study_accession) {
+        this.study_accession = study_accession;
     }
 });
