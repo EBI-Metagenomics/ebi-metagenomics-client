@@ -4,7 +4,7 @@ const Highcharts = require('highcharts');
 const _ = require('underscore');
 require('highcharts/modules/exporting')(Highcharts);
 
-module.exports = class QCChart {
+module.exports = class SeqFeatChart {
     constructor(containerId, chartTitle, data) {
         const categories = [
             'Nucleotide sequences with predicted CDS',

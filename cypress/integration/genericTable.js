@@ -52,9 +52,7 @@ class GenericTableHandler {
     }
 
     waitForLoadingIcon() {
-        this.getLoadingIcon().should(($el) => {
-            expect($el).to.be.hidden;
-        });
+        this.getLoadingIcon().should('be.hidden', {timeout: 40000});
     }
 
     checkOrdering(index, type, gte) {

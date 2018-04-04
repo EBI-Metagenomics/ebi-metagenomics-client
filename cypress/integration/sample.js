@@ -108,7 +108,7 @@ describe('Sample page - Study table', function () {
     });
 
     it('Studies table download link should be valid', function () {
-        table.testDownloadLink(Config.API_URL + 'samples/' + sampleId + '/studies?sample_id=' + sampleId + "&format=csv")
+        table.testDownloadLink(Config.API_URL + 'samples/' + sampleId + '/studies?sample_accession=' + sampleId + "&format=csv")
     });
 });
 
@@ -116,81 +116,81 @@ describe('Sample page - Runs table', function () {
     beforeEach(function () {
         openPage(origPage);
         waitForPageLoad(sampleId);
-        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+        table = new GenericTableHandler('#runs-section', 2);
     });
 
     it('Runs table should contain correct number of runs', function () {
-        table.checkLoadedCorrectly(1, 25, 12642);
+        table.checkLoadedCorrectly(1, 2, 2);
     });
 
     it('Runs table should respond to ordering', function () {
-        table.testSorting(25, runTableColumns);
+        table.testSorting(2, runTableColumns);
     });
 
     it('Runs table should respond to filtering', function () {
-        table.testFiltering('SRR997119', [['SRR997119', 'amplicon', '', '', '2.0']])
+        table.testFiltering('GCA', [['GCA_900215965', 'assembly', 'Illumina MiSeq', 'ILLUMINA', '4.0']])
     });
 
 
-    it('Runs table should respond to pagination', function () {
-        table.testPagination(25, [{
-            index: 1,
-            data: ['SRR997122', 'amplicon', '', '', '2.0'],
-        }, {
-            index: 3,
-            data: ['SRR997072', 'amplicon', '', '', '2.0'],
-        }, {
-            index: 'next',
-            data: ['SRR997047', 'amplicon', '', '', '2.0'],
-            pageNum: 4
-        }, {
-            index: 'prev',
-            data: ['SRR997072', 'amplicon', '', '', '2.0'],
-            pageNum: 3
-        }, {
-            index: 'last',
-            data: ['ERR010497', 'metatranscriptomic', '', '', '1.0'],
-            pageNum: 506,
-            pageSize: 17
-        }, {
-            index: 'first',
-            data: ['SRR997122', 'amplicon', '', '', '2.0'],
-            pageNum: 1
-        }]);
-    });
+    // it('Runs table should respond to pagination', function () {
+    //     table.testPagination(2, [{
+    //         index: 1,
+    //         data: ['SRR997122', 'amplicon', '', '', '2.0'],
+    //     }, {
+    //         index: 3,
+    //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
+    //     }, {
+    //         index: 'next',
+    //         data: ['SRR997047', 'amplicon', '', '', '2.0'],
+    //         pageNum: 4
+    //     }, {
+    //         index: 'prev',
+    //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
+    //         pageNum: 3
+    //     }, {
+    //         index: 'last',
+    //         data: ['ERR010497', 'metatranscriptomic', '', '', '1.0'],
+    //         pageNum: 506,
+    //         pageSize: 18
+    //     }, {
+    //         index: 'first',
+    //         data: ['SRR997122', 'amplicon', '', '', '2.0'],
+    //         pageNum: 1
+    //     }]);
+    // });
 
-    it('Runs table should respond to page size change', function () {
-        table.testPageSizeChange(runsTableDefaultSize, 50)
-    });
+    // it('Runs table should respond to page size change', function () {
+    // TODO use sample with > 25 runs to test
+    //     table.testPageSizeChange(runsTableDefaultSize, 50)
+    // });
 
     it('Runs table download link should be valid', function () {
-        table.testDownloadLink(Config.API_URL + 'runs?sample_id=' + sampleId + "&format=csv")
+        table.testDownloadLink(Config.API_URL + 'runs?sample_accession=' + sampleId + "&format=csv")
     });
 });
 
 describe('Sample page - Runs table with >1 analysis per run', function () {
     beforeEach(function () {
-        const projectId = "ERS667567";
+        const projectId = "ERS853149";
         const origPage = "samples/" + projectId;
         openPage(origPage);
         waitForPageLoad(projectId);
-        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+        table = new GenericTableHandler('#runs-section', 2);
     });
     it('Runs table should display both pipeline versions for a run', function () {
-        // TODO change to stricter test once db issue is resolved (which currently causes runs to appear multiple times in results)
-        table.testFiltering('ERR1022502', [['ERR1022502', 'metatranscriptomic', '', '', '2.0, 4.0'], ['ERR1022502', 'metatranscriptomic', '', '', '2.0, 4.0']])
+        table.checkRowData(0, ['ERR1022502', 'metatranscriptomic', '', '', '2.0, 4.0']);
     });
 });
 
-describe('Sample page - Metadata display', function(){
+describe('Sample page - Metadata display', function () {
     beforeEach(function () {
         const projectId = "ERS1474797";
         const origPage = "samples/" + projectId;
         openPage(origPage);
         waitForPageLoad(projectId);
-        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+        table = new GenericTableHandler('#runs-section', 1);
     });
-    it('Info message should be displayed if no metadata available for display', function(){
+    it('Info message should be displayed if no metadata available for display', function () {
         cy.get('#sample-metadata').contains('No metadata to be displayed.');
     })
 });

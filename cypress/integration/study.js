@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists, waitForPageLoad} from './util';
+import {openPage, datatype, urlExists, waitForPageLoad, changeTab} from './util';
 import Config from './config';
 import GenericTableHandler from './genericTable';
 
@@ -201,6 +201,7 @@ describe('Study page - Runs table', function () {
     });
 });
 
+
 describe('Study page - Runs table with >1 analysis per run', function(){
     beforeEach(function () {
         const projectId = "ERP009703";
@@ -235,3 +236,35 @@ describe('Study page - Map', function () {
         cy.get('.map > span').should('contain', 'No sample coordinates available to display.');
     });
 });
+
+// describe('Study page - Downloads tab', function () {
+//     beforeEach(function () {
+//         const projectId = "ERP009703";
+//         const origPage = "studies/" + projectId;
+//         openPage(origPage);
+//         changeTab('analysis');
+//     });
+//     it('Download links for both pipeline versions should be present', function () {
+//         const pipeline_versions = ['2.0', '4.0'];
+//         let i = 0;
+//         cy.get('#downloads h3').each(function ($el) {
+//             expect(Cypress.$($el).text()).to.eq('Pipeline version: ' + pipeline_versions[i++]);
+//         });
+//     });
+//     it('Download links should contain all files for each pipeline version', function () {
+//         const pipeline2Files = ['GO slim annotation', 'Complete GO annotation', 'InterPro matches', 'Phylum level taxonomies', 'Taxonomic assignments'];
+//         const pipeline4Files = ['GO slim annotation', 'Complete GO annotation', 'InterPro matches', 'Phylum level taxonomies SSU', 'Taxonomic assignments SSU', 'Phylum level taxonomies LSU', 'Taxonomic assignments LSU', 'Taxonomic diversity metrics LSU', 'Taxonomic diversity metrics SSU'];
+//         const files = pipeline2Files.concat(pipeline4Files);
+//         let i = 0;
+//         cy.get('#downloads > div > p').each(function($el){
+//             expect(Cypress.$($el).text()).to.eq(files[i++]);
+//         });
+//     });
+//     // TODO test before release
+//     // it('Download links should all be valid', function(){
+//     //     cy.get('#downloads > div > p > a').each(function($el){
+//     //         cy.request(Cypress.$($el).attr('href'));
+//     //         cy.log(Cypress.$($el).attr('href'))
+//     //     });
+//     // });
+// });

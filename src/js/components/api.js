@@ -1,5 +1,4 @@
 const Backbone = require('backbone');
-const Pagination = require('../components/pagination').Pagination;
 const Commons = require('../commons');
 const API_URL = process.env.API_URL;
 const NO_DATA_MSG = Commons.NO_DATA_MSG;
@@ -32,7 +31,7 @@ export const Study = Backbone.Model.extend({
             study_accession: attr['accession'],
             last_update: formatDate(attr['last-update']),
             abstract: attr['study-abstract'],
-            ena_url : ENA_VIEW_URL + data.id
+            ena_url: ENA_VIEW_URL + data.id
         }
     }
 });
@@ -103,8 +102,8 @@ export const RunCollection = Backbone.Collection.extend({
             this.study_accession = data.study_accession;
         }
         // Sample ID
-        if (data.hasOwnProperty(('sample_id'))) {
-            this.sample_id = data.sample_id;
+        if (data.hasOwnProperty(('sample_accession'))) {
+            this.sample_accession = data.sample_accession;
         }
     },
     parse: function (response) {
@@ -131,7 +130,7 @@ export const Biome = Backbone.Model.extend({
             lineage: lineage,
             samples_count: attr['samples-count'],
             // lineage_projects_no_children: attr['studies-count'],
-            biome_studies_link: util.subfolder + '/browse?lineage=' + lineage+'#studies',
+            biome_studies_link: util.subfolder + '/browse?lineage=' + lineage + '#studies',
             // biome_studies_link_no_children: 'TODO2',
         };
     }
@@ -201,6 +200,9 @@ export const RunPipelineObject = Backbone.Model.extend({
     initialize: function (params) {
         this.id = params.id;
         this.version = params.version;
+        if (params.hasOwnProperty('type')) {
+            this.type = params.type;
+        }
     }
 });
 
@@ -225,8 +227,41 @@ export const Analysis = RunPipelineObject.extend({
 
 export const Taxonomy = RunPipelineObject.extend({
     url: function () {
-        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/taxonomy';
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/taxonomy' + this.type;
     },
+    fetch: function () {
+        const that = this;
+        const promise = $.Deferred();
+        let data = [];
+        $.get({
+            url: this.url(),
+            success: function (response) {
+                data = data.concat(response.data);
+                const numPages = response.meta.pagination.pages;
+                if (numPages > 1) {
+                    let requests = [];
+                    for (let x = 2; x <= numPages; x++) {
+                        requests.push($.get(that.url() + '?page=' + x));
+                    }
+                    $.when.apply($, requests).done(function () {
+                        let page = 2;
+                        _.each(requests, function (response) {
+                            if (response.responseJSON === undefined || response.responseJSON.data === undefined) {
+                                console.error('Could not retrieve data for page ', page);
+                            } else {
+                                data = data.concat(response.responseJSON.data);
+                            }
+                            page++;
+                        });
+                        promise.resolve(data);
+                    });
+                } else {
+                    promise.resolve(data);
+                }
+            }
+        });
+        return promise;
+    }
 });
 
 export const InterproIden = RunPipelineObject.extend({
@@ -246,8 +281,8 @@ export const Publication = Backbone.Model.extend({
         const data = d.data !== undefined ? d.data : d;
         const attrs = data.attributes;
         let authors = attrs['authors'];
-        if (authors.length>50){
-            authors = authors.split(',').slice(0,5);
+        if (authors.length > 50) {
+            authors = authors.split(',').slice(0, 5);
             authors.push(' et al.');
             authors = authors.join(',');
         }
@@ -261,5 +296,71 @@ export const Publication = Backbone.Model.extend({
             year: attrs['published-year'],
             volume: attrs['volume']
         }
+    }
+});
+
+function clusterStudyDownloads(downloads) {
+    const pipelines = {};
+    _.each(downloads, function (download) {
+        const attr = download.attributes;
+        const group = attr['group-type'];
+        const pipeline = download.relationships.pipeline.data.id;
+
+        attr['link'] = download.links.self;
+        if (!pipelines.hasOwnProperty(pipeline)) {
+            pipelines[pipeline] = {};
+        }
+        if (!pipelines[pipeline].hasOwnProperty(group)) {
+            pipelines[pipeline][group] = [];
+        }
+
+        pipelines[pipeline][group] = pipelines[pipeline][group].concat(download);
+    });
+    return pipelines
+}
+
+
+function clusterRunDownloads(downloads) {
+    const groups = {};
+    _.each(downloads, function (download) {
+        const attr = download.attributes;
+        const group = attr['group-type'];
+        const label = attr.description.label;
+
+        attr['links'] = [download.links.self];
+
+        if (!groups.hasOwnProperty(group)) {
+            groups[group] = [];
+        }
+        let grouped = false;
+        _.each(groups[group], function(d){
+            if (d.attributes.description.label===label){
+                d.attributes.links = d.attributes.links.concat(download.links.self);
+                grouped = true;
+            }
+        });
+        if (!grouped) {
+            groups[group] = groups[group].concat(download);
+        }
+    });
+
+    return groups
+}
+
+export const StudyDownloads = Backbone.Model.extend({
+    url: function () {
+        return API_URL + 'studies/' + this.id + '/downloads';
+    },
+    parse: function (response) {
+        this.attributes.pipelineFiles = clusterStudyDownloads(response.data);
+    }
+});
+
+export const RunDownloads = Backbone.Model.extend({
+    url: function () {
+        return API_URL + 'runs/' + this.id + '/pipelines/' + this.attributes.version + '/downloads';
+    },
+    parse: function (response) {
+        this.attributes.downloadGroups = clusterRunDownloads(response.data);
     }
 });

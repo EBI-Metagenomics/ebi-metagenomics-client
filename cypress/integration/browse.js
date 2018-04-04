@@ -78,7 +78,7 @@ describe('Browse page - Studies table', function () {
     });
 
     it('Studies table should contain correct number of studies', function () {
-        studiesTable.checkLoadedCorrectly(1, studiesTableDefaultSize, 122, studiesTableColumns);
+        studiesTable.checkLoadedCorrectly(1, studiesTableDefaultSize, 123, studiesTableColumns);
     });
 
     it('Studies table should respond to ordering', function () {
@@ -106,9 +106,9 @@ describe('Browse page - Studies table', function () {
             pageNum: 3
         }, {
             index: 'last',
-            data: ['', 'MetaSoil', '13', '20-Jan-2016'],
+            data: ['', 'Antarctica Aquatic Microbial Metagenome', '18', '20-Jan-2016'],
             pageNum: 5,
-            pageSize: 22
+            pageSize: 23
         }, {
             index: 'first',
             data: ['', 'Longitudinal study of the diabetic skin and wound microbiome', '258', '27-Nov-2017'],
@@ -198,7 +198,7 @@ describe('Browse page - Samples table', function () {
     });
 
     it('Samples table should contain correct number of samples', function () {
-        samplesTable.checkLoadedCorrectly(1, samplesTableDefaultSize, 9157, samplesTableColumns);
+        samplesTable.checkLoadedCorrectly(1, samplesTableDefaultSize, 9158, samplesTableColumns);
     });
 
     it('Samples table should respond to ordering', function () {
@@ -226,9 +226,9 @@ describe('Browse page - Samples table', function () {
             pageNum: 3
         }, {
             index: 'last',
-            data: ['', 'SRS211742', 'J21, fermented Kimchi day 21', '(CLOB) Community DNA obtained by 454 GS FLX titanium sequencing from sample at 21days of kimchi fermentation', '13-Aug-2015'],
+            data: ['', 'SRS211741', 'J18, fermented Kimchi day 18', '(CLOB) Community DNA obtained by 454 GS FLX titanium sequencing from sample at 18days of kimchi fermentation', '13-Aug-2015'],
             pageNum: 367,
-            pageSize: 7
+            pageSize: 8
         }, {
             index: 'first',
             data: ['', 'ERS1474797', 'Control patient 9 right foot time 1', 'control_skin_right', '27-Nov-2017'],
@@ -367,7 +367,7 @@ describe('Browse page - Generic - Filter propagation', function () {
         changeTab('samples');
         samplesTable.waitForTableLoad(1);
         samplesTable.getFilterInput().should('have.value', filterText);
-
+        samplesTable.checkRowData(0, ['', 'SRS000608', 'Glacier Metagenome','454 Sequencing of The Glacier Ice Metagenome Of The Northern Schneeferner','13-Aug-2015'])
         samplesTable.getClearButton().click();
         samplesTable.getFilterInput().should('have.value', '');
 

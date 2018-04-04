@@ -2,6 +2,7 @@ const tableTmpl = require('../commons').genericTable;
 const _ = require('underscore');
 const formatDownloadURL = require('../util').formatDownloadURL;
 const Commons = require('../commons');
+const Pagination = require('../components/pagination').Pagination;
 
 
 module.exports = class GenericTable {

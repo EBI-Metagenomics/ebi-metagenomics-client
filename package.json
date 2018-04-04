@@ -41,7 +41,7 @@
     "livefilter": "^2.7.1",
     "mocha-phantomjs": "^4.1.0",
     "motion-ui": "^1.2.3",
-    "npm": "^5.7.1",
+    "npm": "^5.8.0",
     "tablesorter": "^2.29.0",
     "twbs-pagination": "^1.4.1",
     "underscore": "^1.8.3"

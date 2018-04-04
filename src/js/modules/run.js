@@ -48,16 +48,15 @@ let RunView = Backbone.View.extend({
             success: function (data) {
                 const attr = data.attributes;
                 let version;
-                if (typeof pipeline_version !== 'undefined') {
+                if (typeof pipeline_version !== 'undefined' && pipeline_version !== null) {
                     version = pipeline_version;
                 } else {
                     version = attr.pipeline_versions[0];
                 }
-
-
+                that.model.attributes.version = version;
                 that.render(function () {
+                    attachViewControls();
                     $("#analysisSelect").val(version);
-                    console.log($('#analysisSelect'));
                     let description = {
                         Study: "<a href='" + attr.study_url + "'>" + attr.study_id + "</a>",
                         Sample: "<a href='" + attr.sample_url + "'>" + attr.sample_id + "</a>",
@@ -80,7 +79,7 @@ let RunView = Backbone.View.extend({
                         $('#overview').append(new detailList('Data analysis', dataAnalysis));
                     }
                     loadAnalysisData(run_id, version);
-
+                    loadDownloads(run_id, version);
                 });
             }
         });
@@ -109,30 +108,34 @@ function groupTaxonomyData(data, depth) {
     let clusteredData = _.sortBy(clusterData(data, depth), function (o) {
         return o.y;
     }).reverse();
-    _.each(clusteredData, function (o, i) {
-        if (o.name === "undefined") {
-            o.name = "Unassigned";
-            o.lineage = ["Unassigned"];
-        }
-    });
-    // if (clusteredData.length > 10) {
-    //     const top10 = clusteredData.slice(0, 10);
-    //     const others = {
-    //         name: 'Other',
-    //         lineage: [],
-    //         y: 0
-    //     };
-    //     _.each(clusteredData.slice(10, clusteredData.length), function (d) {
-    //         others.y += d.y;
-    //         if (others.lineage.indexOf(d.lineage[0]) === -1) {
-    //             others.lineage.push(d.lineage[0]);
-    //         }
-    //     });
-    //     others.lineage = others.lineage.join(", ");
-    //     top10.push(others);
-    //     clusteredData = top10;
-    // }
+    // _.each(clusteredData, function (o, i) {
+    //     if (o.name === "undefined") {
+    //         o.name = "Unassigned";
+    //         o.lineage = ["Unassigned"];
+    //     }
+    // });
     return clusteredData
+}
+
+function groupAfterN(clusteredData, n) {
+    if (clusteredData.length > n) {
+        const top10 = clusteredData.slice(0, n);
+        const others = {
+            name: 'Other',
+            lineage: [],
+            y: 0
+        };
+        _.each(clusteredData.slice(n, clusteredData.length), function (d) {
+            others.y += d.y;
+            if (others.lineage.indexOf(d.lineage[0]) === -1) {
+                others.lineage.push(d.lineage[0]);
+            }
+        });
+        others.lineage = others.lineage.join(", ");
+        top10.push(others);
+        clusteredData = top10;
+    }
+    return clusteredData;
 }
 
 // Cluster data by depth
@@ -147,6 +150,13 @@ function clusterData(data, depth) {
             category = lineage[lineage.length - 1]
         } else {
             category = lineage[depth]
+        }
+        if (depth > 0 && ['', 'Bacteria', 'Eukaryota', 'other_sequences', undefined].indexOf(category) > -1) {
+            if (lineage[0] === 'Bacteria') {
+                category = 'Unassigned Bacteria';
+            } else {
+                category = 'Unassigned';
+            }
         }
         let val = attr.count;
         if (clusteredData.hasOwnProperty(category)) {
@@ -173,103 +183,98 @@ let TaxonomyGraphView = Backbone.View.extend({
     model: api.Taxonomy,
     initialize: function () {
         const that = this;
-        this.model.fetch({
-            success: function (model) {
+        this.model.fetch().done(function (model) {
+            const clusteredData = groupTaxonomyData(model, 0);
+            const phylumData = groupTaxonomyData(model, 2);
+            // Pie tab
+            new TaxonomyPieChart('domain-composition-pie', 'Domain composition', clusteredData);
+            const phylumPieChart = new TaxonomyPieChart('phylum-composition-pie', 'Phylum composition', groupAfterN(phylumData, 10), true);
 
-                const clusteredData = groupTaxonomyData(model.attributes.data, 0);
-                const phylumData = groupTaxonomyData(model.attributes.data, 1);
+            const headers = [
+                {sortBy: 'a', name: ''},
+                {sortBy: 'a', name: 'Phylum'},
+                {sortBy: 'a', name: 'Domain'},
+                {sortBy: 'a', name: 'Unique OTUs'},
+                {sortBy: 'a', name: '%'},
+            ];
+            const total = _.reduce(phylumData, function (m, d) {
+                return m + d.y;
+            }, 0);
+            let i = 0;
+            const data = _.map(phylumData, function (d) {
+                const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
+                const colorDiv = getColourSquareIcon(i);
+                return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)]
+            });
+            const phylumPieTable = new ClientSideTable($('#pie').find(".phylum-table"), '', headers, DEFAULT_PAGE_SIZE);
+            phylumPieTable.update(data, false, 1);
 
-                // Pie tab
-                new TaxonomyPieChart('domain-composition-pie', 'Domain composition', clusteredData);
-                const phylumPieChart = new TaxonomyPieChart('phylum-composition-pie', 'Phylum composition', phylumData, true);
+            const numSeries = phylumPieChart.series[0].data.length;
+            phylumPieTable.$tbody.find('tr').hover(function () {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                phylumPieChart.series[0].data[index].setState('hover');
+            }, function () {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                phylumPieChart.series[0].data[index].setState();
+            });
 
-                const headers = [
-                    {sortBy: 'a', name: ''},
-                    {sortBy: 'a', name: 'Phylum'},
-                    {sortBy: 'a', name: 'Domain'},
-                    {sortBy: 'a', name: 'Unique OTUs'},
-                    {sortBy: 'a', name: '%'},
-                ];
-                const total = _.reduce(phylumData, function (m, d) {
-                    return m + d.y;
-                }, 0);
-                let i = 0;
-                const data = _.map(phylumData, function (d) {
-                    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
-                    const colorDiv = getColourSquareIcon(i);
-                    return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)]
-                });
-                const phylumPieTable = new ClientSideTable($('#pie').find(".phylum-table"), '', headers, DEFAULT_PAGE_SIZE);
-                phylumPieTable.update(data, false, 1);
+            phylumPieTable.$tbody.find('tr').click(function () {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                const series = phylumPieChart.series[0].data[index];
+                series.setVisible(!series.visible);
+                if (index === numSeries - 1) {
+                    ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled-clickable');
+                } else {
+                    $(this).toggleClass('disabled-clickable');
+                }
+            });
 
-                const numSeries = phylumPieChart.series[0].data.length;
-                phylumPieTable.$tbody.find('tr').hover(function () {
-                    let index = getSeriesIndex($(this).index(), numSeries);
-                    phylumPieChart.series[0].data[index].setState('hover');
-                }, function () {
-                    let index = getSeriesIndex($(this).index(), numSeries);
-                    phylumPieChart.series[0].data[index].setState();
-                });
+            new TaxonomyColumnChart('domain-composition-column', 'Domain composition', clusteredData, false);
+            const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column', 'Phylum composition', phylumData, false);
 
-                phylumPieTable.$tbody.find('tr').click(function () {
-                    let index = getSeriesIndex($(this).index(), numSeries);
-                    const series = phylumPieChart.series[0].data[index];
-                    series.setVisible(!series.visible);
-                    if (index === numSeries - 1) {
-                        ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled-clickable');
-                    } else {
-                        $(this).toggleClass('disabled-clickable');
-                    }
-                });
+            const phylumColumnTable = new ClientSideTable($('#column').find(".phylum-table"), '', headers, DEFAULT_PAGE_SIZE);
+            phylumColumnTable.update(data, false, 1);
+            phylumColumnTable.$tbody.find('tr').hover(function () {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                phylumColumnChart.series[0].data[index].setState('hover');
+            }, function () {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                phylumColumnChart.series[0].data[index].setState();
+            });
 
-                new TaxonomyColumnChart('domain-composition-column', 'Domain composition', clusteredData, false);
-                const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column', 'Phylum composition', phylumData, false);
+            phylumColumnTable.$tbody.find('tr').click(function () {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                const series = phylumColumnChart.series[0].data[index];
+                phylumColumnChart.series[0].data[index].visible = false;
+                series.visible = false;
+                if (index === numSeries - 1) {
+                    ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled-clickable');
+                } else {
+                    $(this).toggleClass('disabled-clickable');
+                }
+            });
 
-                const phylumColumnTable = new ClientSideTable($('#column').find(".phylum-table"), '', headers, DEFAULT_PAGE_SIZE);
-                phylumColumnTable.update(data, false, 1);
-                phylumColumnTable.$tbody.find('tr').hover(function () {
-                    let index = getSeriesIndex($(this).index(), numSeries);
-                    phylumColumnChart.series[0].data[index].setState('hover');
-                }, function () {
-                    let index = getSeriesIndex($(this).index(), numSeries);
-                    phylumColumnChart.series[0].data[index].setState();
-                });
-
-                phylumColumnTable.$tbody.find('tr').click(function () {
-                    let index = getSeriesIndex($(this).index(), numSeries);
-                    const series = phylumColumnChart.series[0].data[index];
-                    phylumColumnChart.series[0].data[index].visible = false;
-                    series.visible = false;
-                    if (index === numSeries - 1) {
-                        ($(this).parent().children().slice(numSeries - 1)).toggleClass('disabled-clickable');
-                    } else {
-                        $(this).toggleClass('disabled-clickable');
-                    }
-                });
-
-                const numSeriesPhylumColumn = phylumColumnChart.series[0].data.length;
-                phylumColumnTable.$tbody.find('tr').hover(function () {
-                    let index = getSeriesIndex($(this).index(), numSeriesPhylumColumn);
-                    phylumColumnChart.series[0].data[index].setState('hover');
-                }, function () {
-                    let index = getSeriesIndex($(this).index(), numSeriesPhylumColumn);
-                    phylumColumnChart.series[0].data[index].setState();
-                });
+            const numSeriesPhylumColumn = phylumColumnChart.series[0].data.length;
+            phylumColumnTable.$tbody.find('tr').hover(function () {
+                let index = getSeriesIndex($(this).index(), numSeriesPhylumColumn);
+                phylumColumnChart.series[0].data[index].setState('hover');
+            }, function () {
+                let index = getSeriesIndex($(this).index(), numSeriesPhylumColumn);
+                phylumColumnChart.series[0].data[index].setState();
+            });
 
 
-                // Column tab
-                const phylumStackedColumnChart = new TaxonomyStackedColumnChart('phylum-composition-stacked-column', 'Phylum composition', phylumData, false);
-                const phylumStackedColumnTable = new ClientSideTable($('#stacked-column').find(".phylum-table"), '', headers, DEFAULT_PAGE_SIZE);
-                phylumStackedColumnTable.update(data, false, 1);
-                phylumStackedColumnTable.$tbody.find('tr').hover(function () {
-                    let index = getSeriesIndex($(this).index(), numSeries);
-                    phylumStackedColumnChart.series[index].data[0].setState('hover');
-                }, function () {
-                    let index = getSeriesIndex($(this).index(), numSeries);
-                    phylumStackedColumnChart.series[index].data[0].setState();
-                });
-
-            }
+            // Column tab
+            const phylumStackedColumnChart = new TaxonomyStackedColumnChart('phylum-composition-stacked-column', 'Phylum composition', phylumData, false);
+            const phylumStackedColumnTable = new ClientSideTable($('#stacked-column').find(".phylum-table"), '', headers, DEFAULT_PAGE_SIZE);
+            phylumStackedColumnTable.update(data, false, 1);
+            phylumStackedColumnTable.$tbody.find('tr').hover(function () {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                phylumStackedColumnChart.series[index].data[0].setState('hover');
+            }, function () {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                phylumStackedColumnChart.series[index].data[0].setState();
+            });
         });
     }
 });
@@ -315,7 +320,6 @@ let InterProSummary = Backbone.View.extend({
                         name: 'pCDS matched'
                     }]
                 };
-
                 const taxonomyPieChart = new TaxonomyPieChart('InterProPie-chart', 'InterPro matches summary', top10AndOthers, false, chartOptions);
                 const tableData = [];
                 let i = 0;
@@ -375,8 +379,9 @@ let GoTermCharts = Backbone.View.extend({
             success: function (model) {
                 const data = model.attributes.data;
 
-                if (getTotalGoTermCount(data) === 0) {
-                    disableTab('functional');
+                if (getTotalGoTermCount(data) !== 0) {
+                    enableTab('functional');
+                } else {
                     return;
                 }
                 let biological_process_data = [];
@@ -419,41 +424,47 @@ let GoTermCharts = Backbone.View.extend({
 
 
 let DownloadView = Backbone.View.extend({
-    template: _.template($("#download-tmpl").html()),
+    model: api.RunDownloads,
+    template: _.template($("#downloadsTmpl").html()),
     el: '#download-list',
-    initialize: function (data) {
-        //    TODO implement downloads
-        data = {
-            groups: [
-                {
-                    group_name: "Name",
-                    entries: [
-                        {
-                            name: "Submitted nucleotide reads",
-                            type: 'DNA/RNA data type',
-                            compression: 'GZIP',
-                            format: 'FASTA',
-                            link: 'link'
-                        }
-                    ]
-                }, {
-                    group_name: "Name2",
-                    entries: [
-                        {
-                            name: "Submitted nucleotide reads",
-                            type: 'DNA/RNA data type',
-                            compression: 'GZIP',
-                            format: 'FASTA',
-                            link: 'link'
-                        }
-                    ]
-                }
-            ]
-        };
-        this.$el.html(this.template(data));
+    initialize: function () {
+        const that = this;
+        this.model.fetch({
+            data: $.param({page_size: 250}),
+            success: function (response, data) {
+                setAbundanceTab(response.attributes.downloadGroups['Statistics']);
+                that.$el.html(that.template({groups: response.attributes.downloadGroups}));
+            }
+        });
     }
 });
 
+// IFF svg exists display in tab, otherwise disable tab
+function setAbundanceTab(statisticsData) {
+    if (statisticsData !== undefined) {
+        const download = _.filter(statisticsData, function (entry) {
+            return entry.attributes.description.label = 'Taxa abundance distribution';
+        });
+        if (download.length>0){
+            $('#abundance-chart').attr('src', download[0].links.self);
+            $.get({
+                url: download[0].links.self,
+                success: function(svg){
+                    $('#abundance-disp').append(svg);
+                }
+            });
+            enableTab('abundance');
+            return;
+        }
+    }
+    disableTab('abundance');
+    console.log('Checking', window.location.hash.substr(1));
+    if (window.location.hash.substr(1) === 'abundance'){
+        util.changeTab('overview');
+        console.log('Changing tab');
+    }
+
+}
 
 // Compact groups other than top 10 largest into an 'other' category
 function groupGoTermData(data) {
@@ -500,6 +511,10 @@ function disableTab(id) {
     $("[href='#" + id + "']").parent('li').addClass('disabled');
 }
 
+function enableTab(id) {
+    $("[href='#" + id + "']").parent('li').removeClass('disabled');
+}
+
 function loadKronaChart(run_id, pipeline_version) {
     const krona_url = api.getKronaURL(run_id, pipeline_version);
     // $.ajax({
@@ -528,28 +543,55 @@ function loadAnalysisData(run_id, pipeline_version) {
         success: function (model) {
             const attr = model.attributes;
             let qcGraph = new QCGraphView(attr);
-            let downloadView = new DownloadView(attr.download)
         }
     });
 
     interproData = new api.InterproIden({id: run_id, version: pipeline_version});
     let interProSummary = new InterProSummary({model: interproData});
 
-    taxonomy = new api.Taxonomy({id: run_id, version: pipeline_version});
-    let taxonomyGraph = new TaxonomyGraphView({model: taxonomy});
+
+    let type = parseFloat(pipeline_version) >= 4.0 ? '/ssu' : '';
+    loadTaxonomy(run_id, pipeline_version, type);
 
     goTerm = new api.GoSlim({id: run_id, version: pipeline_version});
     let goTermCharts = new GoTermCharts({model: goTerm});
 }
 
-function onAnalysisSelect() {
-    loadAnalysisData(runView.model.attributes.run_id, $(this).val());
+function loadTaxonomy(run_id, pipeline_version, type) {
+    taxonomy = new api.Taxonomy({id: run_id, version: pipeline_version, type: type});
+    let taxonomyGraph = new TaxonomyGraphView({model: taxonomy});
 }
 
-$(document).ready(function () {
-    // TODO Handle change of analysis
+function loadDownloads(run_id, pipeline_version) {
+    let downloads = new api.RunDownloads({id: run_id, version: pipeline_version});
+    let downloadsView = new DownloadView({model: downloads});
+}
+
+function onAnalysisSelect() {
+    const run_id = runView.model.attributes.run_id;
+    const version = $(this).val();
+    loadAnalysisData(run_id, version);
+    loadDownloads(run_id, version);
+    const $btnContainer = $('#ssu-lsu-btns');
+    if (parseFloat(version) >= 4.0) {
+        $btnContainer.removeClass('hidden');
+    } else {
+        $btnContainer.addClass('hidden');
+    }
+}
+
+function onTaxonomySelect() {
+    const run_id = runView.model.attributes.run_id;
+    const version = $("#analysisSelect").val();
+    const type = $(this).val();
+    loadTaxonomy(run_id, version, type);
+}
+
+function attachViewControls() {
     $("#analysisSelect").change(onAnalysisSelect);
-});
+    $(".rna-select-button").click(onTaxonomySelect);
+}
+
 
 let run = new api.Run({id: run_id});
 let runView = new RunView({model: run});

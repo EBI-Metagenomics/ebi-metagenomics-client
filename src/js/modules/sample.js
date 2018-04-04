@@ -106,7 +106,7 @@ let StudiesView = Backbone.View.extend({
     update: function (page, pageSize, order, query) {
         this.tableObj.showLoadingGif();
         let params = {
-            sample_id: this.collection.params.sample_id,
+            sample_accession: this.collection.params.sample_accession,
             page: page,
             page_size: pageSize
         };
@@ -165,7 +165,7 @@ let RunsView = Backbone.View.extend({
     update: function (page, pageSize, order, query) {
         this.tableObj.showLoadingGif();
         let params = {
-            sample_id: this.collection.sample_id,
+            sample_accession: this.collection.sample_accession,
             page: page,
             page_size: pageSize
         };
@@ -217,10 +217,10 @@ function initPage() {
     let sample = new api.Sample({id: sample_id});
     let sampleView = new SampleView({model: sample});
 
-    let studies = new api.StudiesCollection({sample_id: sample_id}, API_URL + 'samples/' + sample_id + '/studies');
+    let studies = new api.StudiesCollection({sample_accession: sample_id}, API_URL + 'samples/' + sample_id + '/studies');
     let studiesView = new StudiesView({collection: studies});
 
-    let runs = new api.RunCollection({sample_id: sample_id});
+    let runs = new api.RunCollection({sample_accession: sample_id});
     let runsView = new RunsView({collection: runs});
 
     $.when(
