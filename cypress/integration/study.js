@@ -226,15 +226,15 @@ describe('Study page - Map', function () {
         cy.get('#map').should('not.have.class', 'disabled');
     });
 
-    it('Should be disabled if markers exist', function () {
-        const projectId = "SRP062418";
-        const origPage = "studies/" + projectId;
-        openPage(origPage);
-        waitForPageLoad("Oral Microbiome Metagenome");
-
-        cy.get('#map').should('have.class', 'disabled');
-        cy.get('.map > span').should('contain', 'No sample coordinates available to display.');
-    });
+    // it('Should be disabled if markers exist', function () {
+    //     const projectId = "SRP062418";
+    //     const origPage = "studies/" + projectId;
+    //     openPage(origPage);
+    //     waitForPageLoad("Oral Microbiome Metagenome");
+    //
+    //     cy.get('#map').should('have.class', 'disabled');
+    //     cy.get('.map > span').should('contain', 'No sample coordinates available to display.');
+    // });
 });
 
 // describe('Study page - Downloads tab', function () {
