@@ -45,6 +45,7 @@ module.exports = class Map {
             const $parentDiv = $("#"+elementId).parent();
             $("#"+elementId).addClass('disabled');
             $parentDiv.addClass('no-coords-tooltip');
+            $(".map > span.hidden").removeClass('hidden');
         }
         window.map = map;
         return map

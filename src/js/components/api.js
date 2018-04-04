@@ -367,7 +367,7 @@ export const RunDownloads = Backbone.Model.extend({
 
 export const StudyGeoCoordinates = Backbone.Model.extend({
     url: function () {
-        return API_URL + "studies/" + this.id + "/geocoordinates";
+        return API_URL + 'studies/' + this.study_accession + '/geocoordinates?page_size=500';
     },
     initialize: function (study_accession) {
         this.study_accession = study_accession;
