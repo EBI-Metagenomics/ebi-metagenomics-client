@@ -367,7 +367,7 @@ describe('Browse page - Generic - Filter propagation', function () {
         changeTab('samples');
         samplesTable.waitForTableLoad(1);
         samplesTable.getFilterInput().should('have.value', filterText);
-
+        samplesTable.checkRowData(0, ['', 'SRS000608', 'Glacier Metagenome','454 Sequencing of The Glacier Ice Metagenome Of The Northern Schneeferner','13-Aug-2015'])
         samplesTable.getClearButton().click();
         samplesTable.getFilterInput().should('have.value', '');
 

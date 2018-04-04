@@ -201,49 +201,49 @@ describe('Study page - Runs table', function () {
     });
 });
 
-describe('Study page - Runs table with >1 analysis per run', function () {
-    beforeEach(function () {
-        const projectId = "ERP009703";
-        const origPage = "studies/" + projectId;
-        openPage(origPage);
-        waitForPageLoad("Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing study from the June solstice in the year 2014");
-        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
-    });
-    it('Runs table should display both pipeline versions for a run', function () {
-        table.testFiltering('ERR770966', [['ERR770966', 'metagenomic', '', '', '2.0, 4.0'], ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']]);
-    });
-});
+// describe('Study page - Runs table with >1 analysis per run', function () {
+//     beforeEach(function () {
+//         const projectId = "ERP009703";
+//         const origPage = "studies/" + projectId;
+//         openPage(origPage);
+//         waitForPageLoad("Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing study from the June solstice in the year 2014");
+//         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+//     });
+//     it('Runs table should display both pipeline versions for a run', function () {
+//         table.testFiltering('ERR770966', [['ERR770966', 'metagenomic', '', '', '2.0, 4.0'], ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']]);
+//     });
+// });
 
 
 
-describe('Study page - Downloads tab', function () {
-    beforeEach(function () {
-        const projectId = "ERP009703";
-        const origPage = "studies/" + projectId;
-        openPage(origPage);
-        changeTab('analysis');
-    });
-    it('Download links for both pipeline versions should be present', function () {
-        const pipeline_versions = ['2.0', '4.0'];
-        let i = 0;
-        cy.get('#downloads h3').each(function ($el) {
-            expect(Cypress.$($el).text()).to.eq('Pipeline version: ' + pipeline_versions[i++]);
-        });
-    });
-    it('Download links should contain all files for each pipeline version', function () {
-        const pipeline2Files = ['GO slim annotation', 'Complete GO annotation', 'InterPro matches', 'Phylum level taxonomies', 'Taxonomic assignments'];
-        const pipeline4Files = ['GO slim annotation', 'Complete GO annotation', 'InterPro matches', 'Phylum level taxonomies SSU', 'Taxonomic assignments SSU', 'Phylum level taxonomies LSU', 'Taxonomic assignments LSU', 'Taxonomic diversity metrics LSU', 'Taxonomic diversity metrics SSU'];
-        const files = pipeline2Files.concat(pipeline4Files);
-        let i = 0;
-        cy.get('#downloads > div > p').each(function($el){
-            expect(Cypress.$($el).text()).to.eq(files[i++]);
-        });
-    });
-    // TODO test before release
-    // it('Download links should all be valid', function(){
-    //     cy.get('#downloads > div > p > a').each(function($el){
-    //         cy.request(Cypress.$($el).attr('href'));
-    //         cy.log(Cypress.$($el).attr('href'))
-    //     });
-    // });
-});
+// describe('Study page - Downloads tab', function () {
+//     beforeEach(function () {
+//         const projectId = "ERP009703";
+//         const origPage = "studies/" + projectId;
+//         openPage(origPage);
+//         changeTab('analysis');
+//     });
+//     it('Download links for both pipeline versions should be present', function () {
+//         const pipeline_versions = ['2.0', '4.0'];
+//         let i = 0;
+//         cy.get('#downloads h3').each(function ($el) {
+//             expect(Cypress.$($el).text()).to.eq('Pipeline version: ' + pipeline_versions[i++]);
+//         });
+//     });
+//     it('Download links should contain all files for each pipeline version', function () {
+//         const pipeline2Files = ['GO slim annotation', 'Complete GO annotation', 'InterPro matches', 'Phylum level taxonomies', 'Taxonomic assignments'];
+//         const pipeline4Files = ['GO slim annotation', 'Complete GO annotation', 'InterPro matches', 'Phylum level taxonomies SSU', 'Taxonomic assignments SSU', 'Phylum level taxonomies LSU', 'Taxonomic assignments LSU', 'Taxonomic diversity metrics LSU', 'Taxonomic diversity metrics SSU'];
+//         const files = pipeline2Files.concat(pipeline4Files);
+//         let i = 0;
+//         cy.get('#downloads > div > p').each(function($el){
+//             expect(Cypress.$($el).text()).to.eq(files[i++]);
+//         });
+//     });
+//     // TODO test before release
+//     // it('Download links should all be valid', function(){
+//     //     cy.get('#downloads > div > p > a').each(function($el){
+//     //         cy.request(Cypress.$($el).attr('href'));
+//     //         cy.log(Cypress.$($el).attr('href'))
+//     //     });
+//     // });
+// });
