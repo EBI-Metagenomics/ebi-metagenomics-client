@@ -201,8 +201,7 @@ describe('Study page - Runs table', function () {
     });
 });
 
-
-// describe('Study page - Runs table with >1 analysis per run', function(){
+// describe('Study page - Runs table with >1 analysis per run', function () {
 //     beforeEach(function () {
 //         const projectId = "ERP009703";
 //         const origPage = "studies/" + projectId;
@@ -210,32 +209,12 @@ describe('Study page - Runs table', function () {
 //         waitForPageLoad("Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing study from the June solstice in the year 2014");
 //         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
 //     });
-//     it('Runs table should display both pipeline versions for a run', function(){
+//     it('Runs table should display both pipeline versions for a run', function () {
 //         table.testFiltering('ERR770966', [['ERR770966', 'metagenomic', '', '', '2.0, 4.0'], ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']]);
 //     });
 // });
 
 
-describe('Study page - Map', function () {
-    it('Should not be disabled if markers exist', function () {
-        const projectId = "ERP009703";
-        const origPage = "studies/" + projectId;
-        openPage(origPage);
-        waitForPageLoad("Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing study from the June solstice in the year 2014");
-
-        cy.get('#map').should('not.have.class', 'disabled');
-    });
-
-    // it('Should be disabled if markers exist', function () {
-    //     const projectId = "SRP062418";
-    //     const origPage = "studies/" + projectId;
-    //     openPage(origPage);
-    //     waitForPageLoad("Oral Microbiome Metagenome");
-    //
-    //     cy.get('#map').should('have.class', 'disabled');
-    //     cy.get('.map > span').should('contain', 'No sample coordinates available to display.');
-    // });
-});
 
 // describe('Study page - Downloads tab', function () {
 //     beforeEach(function () {
