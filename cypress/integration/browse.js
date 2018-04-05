@@ -130,9 +130,9 @@ describe('Browse page - Studies table', function () {
         setSelectOption(studiesTable, selector, biome, 2);
         cy.get('span.biome_icon').should('have.class', 'air_b');
 
-            studiesTable.getClearButton().click();
+        studiesTable.getClearButton().click();
         studiesTable.waitForTableLoad(studiesTableDefaultSize);
-        cy.get('span.biome_icon').should('have.class', 'non_human_host_b');
+        cy.get('span.biome_icon').first().should('have.class', 'skin_b');
     });
 
     it('Download link should change with changes in filtering or ordering', function () {
@@ -252,7 +252,7 @@ describe('Browse page - Samples table', function () {
 
             samplesTable.getClearButton().click();
         samplesTable.waitForTableLoad(studiesTableDefaultSize);
-        cy.get('span.biome_icon').should('have.class', 'human_host_b');
+        cy.get('span.biome_icon').first().should('have.class', 'skin_b');
     });
 
     it('Download link should change with changes in filtering or ordering', function () {
