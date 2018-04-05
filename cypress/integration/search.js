@@ -132,20 +132,64 @@ describe('Search page - general Functionality', function () {
         waitForResultsLoad(initialResultSize);
 
     });
-    // it('Pagination - double page change', function () {
-    //     loadPage(origPage + '#runs');
-    //     waitForFacetFilters(facetRequests[0]);
-    //     validateFacetQuery(facetRequests[1]);
-    //     waitForFacetFilters(facetRequests[2]);
-    //     validateFacetQuery(facetRequests[3]);
-    //     waitForFacetFilters(facetRequests[4]);
-    //     validateFacetQuery(facetRequests[5]);
-    //
-    //     cy.get('#projects-pagination > ul > li.page-item.next').click();
-    //     waitForResultsLoad(initialResultSize);
-    //     cy.get('#projects-pagination > ul > li.page-item.first').click();
-    //     waitForResultsLoad(initialResultSize);
-    // });
+    it('Pagination - double page change', function () {
+        loadPage(origPage + '#runs');
+        waitForFacetFilters(facetRequests[0]);
+        validateFacetQuery(facetRequests[1]);
+        waitForFacetFilters(facetRequests[2]);
+        validateFacetQuery(facetRequests[3]);
+        waitForFacetFilters(facetRequests[4]);
+        validateFacetQuery(facetRequests[5]);
+
+        cy.get('#projects-pagination > ul > li.page-item.next').click();
+        waitForResultsLoad(initialResultSize);
+        cy.get('#projects-pagination > ul > li.page-item.first').click();
+        waitForResultsLoad(initialResultSize);
+    });
+});
+
+describe('Search page - Display additional columns', function(){
+    const projectsModal = 'projectsModal';
+    const column = "project-name";
+    beforeEach(function () {
+        loadPage(origPage+'#projects');
+    });
+
+    function openExtraColumnModal(){
+        cy.get("a[data-open='"+projectsModal+"']").click({force: true});
+        cy.get('#'+projectsModal).should('be.visible');
+    }
+
+    function closeExtraColumnModal(){
+        cy.get("#projectsModal button.close-button").click();
+        cy.get('#'+projectsModal).should('be.hidden');
+    }
+
+
+    it('Modal should open for extra column selection', function(){
+        openExtraColumnModal();
+    });
+
+    it('Added column should be visible', function(){
+        cy.get("td[data-column='"+column+"']").should('be.hidden');
+
+        openExtraColumnModal();
+        cy.get("input[data-column='"+column+"']").check();
+        closeExtraColumnModal();
+
+        cy.get("td[data-column='"+column+"']").should('be.visible');
+    });
+
+    it('Removed column should be hidden', function(){
+        const column = 'project-biome';
+        cy.get("td[data-column='"+column+"']").should('be.visible');
+
+        openExtraColumnModal();
+        cy.get("input[data-column='"+column+"']").uncheck();
+        closeExtraColumnModal();
+
+        cy.get("td[data-column='"+column+"']").should('be.hidden');
+    });
 });
 
 describe('Search page - Deep linking', function () {
@@ -240,7 +284,6 @@ describe('Search page - Sliders - ', function () {
 
         changeTab('samples');
         checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, samplesDisabledQueryText);
-
     })
 });
 // describe('Search page - CSV fetching', function () {
