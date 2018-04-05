@@ -1,32 +1,32 @@
 const searchUrl = process.env.SEARCH_URL;
 
-const util = require('../util');
-const _ = require('underscore');
-const Backbone = require('backbone');
-const Cookies = require('js-cookie');
+const util = require("../util");
+const _ = require("underscore");
+const Backbone = require("backbone");
+const Cookies = require("js-cookie");
 
-const commons = require('../commons');
+const commons = require("../commons");
 const cookieName = commons.COOKIE_NAME;
-const Pagination = require('../components/pagination').Pagination;
-require('webpack-jquery-ui/slider');
-require('webpack-jquery-ui/css');
-require('foundation-sites');
-require('../../../static/libraries/jquery.TableCSVExport');
+const Pagination = require("../components/pagination").Pagination;
+require("webpack-jquery-ui/slider");
+require("webpack-jquery-ui/css");
+require("foundation-sites");
+require("../../../static/libraries/jquery.TableCSVExport");
 
-const CheckboxTree = require('../components/checkboxTree');
+const CheckboxTree = require("../components/checkboxTree");
 
-const Slider = require('../components/slider.js');
+const Slider = require("../components/slider.js");
 
 util.checkAPIonline();
 
-util.setCurrentTab('#search-nav');
+util.setCurrentTab("#search-nav");
 util.attachTabHandlers();
 
 const DEFAULT_QUERIES = ["domain_source:metagenomics_projects", "domain_source:metagenomics_samples", "domain_source:metagenomics_runs"]
 
-const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)\]/;
+const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)]/;
 
-let queryText = util.getURLFilterParams().get('query');
+let queryText = util.getURLFilterParams().get("query");
 if (queryText === null) {
     queryText = getCookieQuery();
 }
@@ -39,26 +39,26 @@ $(document).ready(function () {
 });
 
 
-$("#pageSize").append(commons.pagesize).find('#pagesize').change(function () {
+$("#pageSize").append(commons.pagesize).find("#pagesize").change(function () {
     updateAll($(this).val())
 });
 
 function getPageSize() {
-    return $('#pagesize').val();
+    return $("#pagesize").val();
 }
 
 
 const Search = Backbone.Collection.extend({
     tab: null,
     params: {
-        format: 'json',
+        format: "json",
         size: 10,
         start: 0,
-        fields: 'id,name,biome_name,description',
+        fields: "id,name,biome_name,description",
         facetcount: 10,
         facetsdepth: 5,
     },
-    filterBtnContainer: 'div.btn-container',
+    filterBtnContainer: "div.btn-container",
     initialize: function () {
         if (queryText) {
             this.params.query = queryText;
@@ -67,13 +67,6 @@ const Search = Backbone.Collection.extend({
     url: function () {
         return searchUrl + this.tab;
     },
-    parse: function (response) {
-        if (this.pagination) {
-            // TODO pagination
-            // Pagination.update(response.meta.pagination);
-        }
-        return response.data;
-    }
 });
 
 const ResultsView = Backbone.View.extend({
@@ -82,27 +75,27 @@ const ResultsView = Backbone.View.extend({
         const defaultQueries = [ProjectsView.prototype.defaultQuery, SamplesView.prototype.defaultQuery, RunsView.prototype.defaultQuery];
 
         if (defaultQueries.indexOf(params.query) === -1) {
-            const splitParams = params.query.split(' AND ');
+            const splitParams = params.query.split(" AND ");
             templateData.queryText = _.reject(splitParams, isFacetParam)[0];
 
             const sliderParams = _.filter(splitParams, isFacetParam);
-            templateData.sliderText = sliderParams.join(', ');
+            templateData.sliderText = sliderParams.join(", ");
         } else {
             templateData.queryText = null;
             templateData.sliderText = null;
         }
 
         if (params.facets && params.facets.length > 0) {
-            templateData.filterText = params.facets.replace(/,/g, ', ');
+            templateData.filterText = params.facets.replace(/,/g, ", ");
         } else {
             templateData.filterText = null;
         }
-        templateData['subfolder'] = util.subfolder;
-        templateData['queryString'] = formatSearchSummaryStr(templateData);
+        templateData["subfolder"] = util.subfolder;
+        templateData["queryString"] = formatSearchSummaryStr(templateData);
         if (!no_display) {
             const $data = $(this.template(templateData));
             $data.find("td").map(function () {
-                if (columns.indexOf($(this).attr('data-column')) === -1) {
+                if (columns.indexOf($(this).attr("data-column")) === -1) {
                     $(this).hide();
                 }
             });
@@ -112,8 +105,8 @@ const ResultsView = Backbone.View.extend({
         }
     },
     fetchCSV: function ($buttonElem) {
-        $buttonElem.prop('disabled', true);
-        $buttonElem.addClass('loading-cursor');
+        $buttonElem.prop("disabled", true);
+        $buttonElem.addClass("loading-cursor");
         let tmpParams = $.extend(true, {}, this.params);
         tmpParams.facetcount = 0;
         tmpParams.facetsdepth = 1;
@@ -136,7 +129,7 @@ const ResultsView = Backbone.View.extend({
 
         $.when.apply($, fetches).done(function () {
             let args;
-            if (typeof(arguments[1]) === 'string') {
+            if (typeof(arguments[1]) === "string") {
                 args = [arguments];
             } else {
                 args = arguments;
@@ -151,112 +144,37 @@ const ResultsView = Backbone.View.extend({
                 }
             }
             const resultsTmpl = that.render(collection, tmpParams, true, []);
-            $(resultsTmpl).filter('table').TableCSVExport({
+            $(resultsTmpl).filter("table").TableCSVExport({
                 showHiddenRows: true,
-                delivery: 'download'
+                delivery: "download"
             });
         }).fail(function () {
-            alert('Could not download, an error has occured');
+            alert("Could not download, an error has occured");
             //    TODO improve error handling
         }).always(function () {
-            $buttonElem.removeClass('loading-cursor');
-            $buttonElem.prop('disabled', false);
+            $buttonElem.removeClass("loading-cursor");
+            $buttonElem.prop("disabled", false);
         });
     }
 });
-
-const FiltersView = Backbone.View.extend({
-    template: _.template($("#filtersTmpl").html()),
-    render: function (elem, data, formId, query) {
-        data.formId = formId;
-        data.elem = elem;
-        $(elem).html(this.template(data));
-        // attachCheckboxHandlers('#' + data.formId);
-        _.each(data.facets, function (facet) {
-            if (facet.type === 'slider') {
-                const initValues = getFacetValues(facet.label, query);
-
-                const initData = (initValues && initValues.length === 2) ? initValues : [facet.min, facet.max];
-                const sliderId = '#' + data.formId + facet.label + 'slider';
-                $(sliderId).slider({
-                    range: true,
-                    min: facet.min,
-                    max: facet.max,
-                    values: initData,
-                    minInput: $(this).siblings('[data-min]'),
-                    maxInput: $(this).siblings('[data-max]'),
-                    slide: function (event, ui) {
-                        const inputSelector = ui.handleIndex ? '[data-max]' : '[data-min]';
-                        $(this).siblings(inputSelector).val(ui.value);
-                        const sliderSelector = $(this).attr('data-facet-slider');
-                        // Apply to other facet's sliders and inputs
-                        _.each(getAllFormIds(), function (formId) {
-                            if (formId !== '#' + data.formId) {
-                                const $slider = $(formId).find('[data-facet-slider=' + sliderSelector + ']').slider('values', ui.handleIndex, ui.value);
-                                $slider.siblings(inputSelector).val(ui.value).trigger('change');
-                            }
-                        });
-                        updateAll();
-                    },
-                    create: function (event, ui) {
-                        $(this).siblings('[data-min]').val(initData[0]);
-                        $(this).siblings('[data-max]').val(initData[1]);
-                        $(this).siblings('.slider-input').on('change', function (e) {
-                            const index = $(this).is('[data-min]') ? 0 : 1;
-                            const val = parseInt($(this).val());
-                            $(sliderId).slider('values', index, val);
-
-                            // Apply to other facet's sliders and inputs
-                            const sliderSelector = $(sliderId).attr('data-facet-slider');
-                            const inputSelector = index ? '[data-max]' : '[data-min]';
-                            _.each(getAllFormIds(), function (formId) {
-                                if (formId !== '#' + data.formId) {
-                                    const $slider = $(formId).find('[data-facet-slider=' + sliderSelector + ']');
-                                    $slider.slider('values', index, val);
-                                    $slider.siblings(inputSelector).val(val);
-                                }
-                            });
-                            if (e.hasOwnProperty('originalEvent')) {
-                                updateAll();
-                            }
-                        });
-                    }
-                })
-            }
-        });
-        $('#' + formId).find('.switch-input').click(sliderToggleCallback);
-        return $(elem);
-    }
-});
-
-function getFacetValues(label, query) {
-    let params = query.split(' AND ');
-    for (let i = 0; i < params.length; i++) {
-        const d = SLIDER_PARAM_RE.exec(params[i]);
-        if (d && d[1] === label) {
-            return _.map(d.slice(2, 3), parseInt);
-        }
-    }
-}
 
 const Project = Backbone.Model.extend({
     parse: function (d) {
-        // d.biomes = [];
         // _.each(d.fields.biome, function(biome){
-        //     biome = 'root:'+biome.replace(/\/([^\/]*)$/, '').replace(/\//g, ':');
+        //     biome = "root:"+biome.replace(/\/([^\/]*)$/, "").replace(/\//g, ":");
         //     d.biomes.push({
         //         name: util.formatLineage(biome),
         //         icon: util.getBiomeIcon(biome)
         //     });
         // });
         d.biomes = convertBiomes(d);
-        d.study_link = util.subfolder + '/studies/' + d.id;
+        d.study_link = util.subfolder + "/studies/" + d.id;
         return d;
     }
 });
 
 const Projects = Search.extend({
-    tab: 'projects',
+    tab: "projects",
     parse: function (response) {
         let data = response.entries.map(Project.prototype.parse);
         return data;
@@ -264,16 +182,16 @@ const Projects = Search.extend({
 });
 
 const ProjectsView = ResultsView.extend({
-        el: '#projectsResults',
-        formEl: 'projectsFilters',
+        el: "#projectsResults",
+        formEl: "projectsFilters",
         params: {},
         pagination: new Pagination(),
         template: _.template($("#projectResultsTmpl").html()),
-        defaultQuery: 'domain_source:metagenomics_projects',
+        defaultQuery: "domain_source:metagenomics_projects",
 
         initialize: function () {
-            this.pagination.setPaginationElem('#projects-pagination');
-            const cookieParams = loadSearchParams('projects');
+            this.pagination.setPaginationElem("#projects-pagination");
+            const cookieParams = loadSearchParams("projects");
             this.params = $.extend(true, {}, Search.prototype.params);
             if (cookieParams) {
                 this.params.facets = cookieParams.filters || "";
@@ -287,7 +205,7 @@ const ProjectsView = ResultsView.extend({
         },
 
         update: function (page, pagesize) {
-            let formData = removeRedundantFilters($('#' + this.formEl).serializeArray());
+            let formData = removeRedundantFilters($("#" + this.formEl).serializeArray());
             this.params.facets = joinFilters(formData);
             if (!this.params.query.length) {
                 this.params.query = this.defaultQuery;
@@ -311,13 +229,13 @@ const ProjectsView = ResultsView.extend({
                 data: $.param(that.params),
                 success: function (collection, response) {
                     that.totalResults = response.hitCount;
-                    saveSearchParams('projects', that.params.facets, that.params.query);
+                    saveSearchParams("projects", that.params.facets, that.params.query);
 
-                    const columns = getVisibleColumns('projects') || ['project-ena-accession', 'project-id', 'project-biome', 'project-centre-name'];
+                    const columns = getVisibleColumns("projects") || ["project-ena-accession", "project-id", "project-biome", "project-centre-name"];
 
                     that.render(response, that.params, false, columns);
                     if (renderFilter) {
-                        createDataTable('projects', $('#projectsTable'), $('#projectsModal'), columns);
+                        createDataTable("projects", $("#projectsTable"), $("#projectsModal"), columns);
                         that.pagination.init(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
                             that.update(page);
                         });
@@ -349,28 +267,28 @@ function getPagesObj(hitcount, start, size) {
 
 const Sample = Backbone.Model.extend({
     parse: function (d) {
-        d.study_link = util.subfolder + '/studies/' + d.fields.METAGENOMICS_PROJECTS[0];
-        d.sample_link = util.subfolder + '/samples/' + d.id;
+        d.study_link = util.subfolder + "/studies/" + d.fields.METAGENOMICS_PROJECTS[0];
+        d.sample_link = util.subfolder + "/samples/" + d.id;
         return d;
     }
 });
 
 const Samples = Search.extend({
-    tab: 'samples',
+    tab: "samples",
     parse: function (response) {
-        // response.facets.unshift(addSliderFilter('Depth', 'Metres', 0, 2000));
-        // response.facets.unshift(addSliderFilter('Temperature', '°C', -20, 110));
+        // response.facets.unshift(addSliderFilter("Depth", "Metres", 0, 2000));
+        // response.facets.unshift(addSliderFilter("Temperature", "°C", -20, 110));
         response.entries = response.entries.map(Sample.prototype.parse);
         return response;
     }
 });
 
 const SamplesView = ResultsView.extend({
-    el: '#samplesResults',
-    formEl: 'samplesFilters',
+    el: "#samplesResults",
+    formEl: "samplesFilters",
     params: {},
     template: _.template($("#samplesResultsTmpl").html()),
-    defaultQuery: 'domain_source:metagenomics_samples',
+    defaultQuery: "domain_source:metagenomics_samples",
     pagination: new Pagination(),
 
     setDefaultParams: function () {
@@ -381,29 +299,29 @@ const SamplesView = ResultsView.extend({
 
     initialize: function () {
         //TODO fetch params from session storage
-        this.pagination.setPaginationElem('#samples-pagination');
+        this.pagination.setPaginationElem("#samples-pagination");
 
-        const cookieParams = loadSearchParams('samples');
+        const cookieParams = loadSearchParams("samples");
         this.params = $.extend(true, {}, Search.prototype.params);
         this.params.fields += ",METAGENOMICS_PROJECTS,project_name,biome_name";
 
         if (cookieParams) {
-            this.params.facets = cookieParams.filters || '';
+            this.params.facets = cookieParams.filters || "";
             this.params.query = getQueryText() || cookieParams.query || this.defaultQuery;
         } else {
             this.params.query = getQueryText() || this.defaultQuery;
         }
     },
     update: function (page = 1, pagesize = 25) {
-        var formData = processSliders(removeRedundantFilters($('#' + this.formEl).serializeArray()));
+        var formData = processSliders(removeRedundantFilters($("#" + this.formEl).serializeArray()));
         this.params.facets = joinFilters(formData.facets || []);
         const queryText = getQueryText();
         if (queryText) {
             formData.queryParams.push(queryText);
         }
-        this.params.query = formData.queryParams.join(' AND ');
+        this.params.query = formData.queryParams.join(" AND ");
 
-        if (this.params.query === '') {
+        if (this.params.query === "") {
             this.params.query = this.defaultQuery;
         }
 
@@ -425,14 +343,14 @@ const SamplesView = ResultsView.extend({
             data: $.param(this.params),
             success: function (collection, response) {
                 that.totalResults = response.hitCount;
-                saveSearchParams('samples', that.params.facets, that.params.query);
+                saveSearchParams("samples", that.params.facets, that.params.query);
 
-                const columns = getVisibleColumns('samples') || ['sample-id', 'sample-projects', 'sample-name', 'sample-desc'];
+                const columns = getVisibleColumns("samples") || ["sample-id", "sample-projects", "sample-name", "sample-desc"];
 
                 that.render(response, that.params, false, columns);
 
                 if (renderFilter) {
-                    createDataTable('samples', $('#samplesTable'), $('#samplesModal'), columns);
+                    createDataTable("samples", $("#samplesTable"), $("#samplesModal"), columns);
                     that.pagination.init(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
                         that.update(page);
                     });
@@ -453,18 +371,18 @@ const SamplesView = ResultsView.extend({
 
 const Run = Backbone.Model.extend({
     parse: function (d) {
-        d.run_id = d.fields['name'][0];
-        d.study_link = util.subfolder + '/studies/' + d.fields['METAGENOMICS_PROJECTS'][0];
-        d.sample_link = util.subfolder + '/samples/' + d.fields['METAGENOMICS_SAMPLES'][0];
-        d.run_link = util.subfolder + '/runs/' + d.fields['name'][0] + "?version=" + d.fields.pipeline_version[0];
-        d.pipeline_link = util.subfolder + '/pipelines/' + d.fields.pipeline_version[0];
+        d.run_id = d.fields["name"][0];
+        d.study_link = util.subfolder + "/studies/" + d.fields["METAGENOMICS_PROJECTS"][0];
+        d.sample_link = util.subfolder + "/samples/" + d.fields["METAGENOMICS_SAMPLES"][0];
+        d.run_link = util.subfolder + "/runs/" + d.fields["name"][0] + "?version=" + d.fields.pipeline_version[0];
+        d.pipeline_link = util.subfolder + "/pipelines/" + d.fields.pipeline_version[0];
         d.biomes = convertBiomes(d);
         return d;
     }
 });
 
 const Runs = Search.extend({
-    tab: 'runs',
+    tab: "runs",
     parse: function (response) {
         response.entries = response.entries.map(Run.prototype.parse);
         return response;
@@ -472,11 +390,11 @@ const Runs = Search.extend({
 });
 
 const RunsView = ResultsView.extend({
-    el: '#runsResults',
-    formEl: 'runsFilters',
+    el: "#runsResults",
+    formEl: "runsFilters",
     params: {},
     template: _.template($("#runsResultsTmpl").html()),
-    defaultQuery: 'domain_source:metagenomics_runs',
+    defaultQuery: "domain_source:metagenomics_runs",
     pagination: new Pagination(),
 
     setDefaultParams: function () {
@@ -487,13 +405,13 @@ const RunsView = ResultsView.extend({
 
     initialize: function () {
         //TODO fetch params from session storage
-        this.pagination.setPaginationElem('#runs-pagination');
-        const cookieParams = loadSearchParams('runs');
+        this.pagination.setPaginationElem("#runs-pagination");
+        const cookieParams = loadSearchParams("runs");
         this.params = $.extend(true, {}, Search.prototype.params);
         this.params.fields += ",METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,experiment_type,pipeline_version";
 
         if (cookieParams) {
-            this.params.facets = cookieParams.filters || '';
+            this.params.facets = cookieParams.filters || "";
             this.params.query = getQueryText() || cookieParams.query || this.defaultQuery;
         } else {
             this.params.query = getQueryText() || this.defaultQuery;
@@ -501,15 +419,15 @@ const RunsView = ResultsView.extend({
     },
 
     update: function (page, pagesize) {
-        var formData = processSliders(removeRedundantFilters($('#' + this.formEl).serializeArray()));
+        var formData = processSliders(removeRedundantFilters($("#" + this.formEl).serializeArray()));
         this.params.facets = joinFilters(formData.facets || []);
         const queryText = getQueryText();
         if (queryText) {
             formData.queryParams.push(queryText);
         }
-        this.params.query = formData.queryParams.join(' AND ');
+        this.params.query = formData.queryParams.join(" AND ");
 
-        if (this.params.query === '') {
+        if (this.params.query === "") {
             this.params.query = this.defaultQuery;
         }
 
@@ -533,14 +451,14 @@ const RunsView = ResultsView.extend({
             data: $.param(this.params),
             success: function (collection, response) {
                 that.totalResults = response.hitCount;
-                saveSearchParams('runs', that.params.facets, that.params.query);
+                saveSearchParams("runs", that.params.facets, that.params.query);
 
-                const columns = getVisibleColumns('runs') || ['run-id', 'run-sample', 'run-project', 'run-experiment-type', 'run-pipeline-vers'];
+                const columns = getVisibleColumns("runs") || ["run-id", "run-sample", "run-project", "run-experiment-type", "run-pipeline-vers"];
 
                 that.render(response, that.params, false, columns);
 
                 if (renderFilter) {
-                    createDataTable('runs', $('#runsTable'), $('#runsModal'), columns);
+                    createDataTable("runs", $("#runsTable"), $("#runsModal"), columns);
                     that.pagination.init(1, that.params.size, Math.ceil(response.hitCount / that.params.size), response.hitCount, function (page) {
                         that.update(page);
                     });
@@ -559,72 +477,29 @@ const RunsView = ResultsView.extend({
     }
 });
 
-// function addClearButton($input, $container) {
-//     let facet = $input.attr('name') || $input.attr('data-facet-name');
-//     if (facet) {
-//         facet = convertFacetLabelName(facet);
-//         // Verify checkbox is checked OR
-//         if ($input.is(':checked')) {
-//             if (!$container.find("[data-facet='" + facet + "']").length) {
-//                 const $button = $("<button data-facet='" + facet + "' class='button facet-remove-button'>" + facet + " <span class=\"icon icon-functional\" data-icon=\"x\"/></button>");
-//                 $button.click(function () {
-//                     resetInputsInElem($(".filters").find('.' + facet + '-group'));
-//                     $container.find("[data-facet='" + facet + "']").remove();
-//                     let cookie = Cookies.get(COOKIE_NAME);
-//                     if (cookie){
-//                         let cookieVal = JSON.parse(cookie);
-//                         _.each(['projects', 'samples', 'runs'], function(facet){
-//                             cookieVal[facet] = {
-//                                 query: null,
-//                                 filters: null
-//                             }
-//                         });
-//                         Cookies.set(COOKIE_NAME, cookieVal);
-//                     }
-//                     updateAll();
-//                 });
-//                 $container.append($button);
-//             }
-//         } else {
-//             // if any checkboxes on the same level are enabled
-//             // if (!getFacetCheckboxes($input).is(':checked')) {
-//             //     $container.find("[data-facet='" + facet + "']").remove();
-//             // }
-//         }
-//     }
-// }
 
 window.convertFacetLabelName = convertFacetLabelName;
 
 function convertFacetLabelName(label) {
-    return label.replace(' ', '_');
-}
-
-function resetInputsInElem($elem) {
-    _.each($elem.find('input:not([type="checkbox"])'), function (elem) {
-        $(elem).val($(elem).attr('defaultValue')).trigger('change');
-    });
-    $elem.find('input[type="checkbox"]').prop('checked', false);
-    $elem.find('input[type="checkbox"]').prop('indeterminate', false);
-    $elem.find('.switch-input').map(sliderToggleCallback);
+    return label.replace(" ", "_");
 }
 
 function processSliders(formData) {
-    const queryNames = ['temperaturemin', 'temperaturemax', 'depthmin', 'depthmax'];
+    const queryNames = ["temperaturemin", "temperaturemax", "depthmin", "depthmax"];
     const temp = [null, null];
     const depth = [null, null];
     _.each(formData, function (elem) {
         switch (elem.name) {
-            case 'temperaturemin':
+            case "temperaturemin":
                 temp[0] = elem.value;
                 break;
-            case 'temperaturemax':
+            case "temperaturemax":
                 temp[1] = elem.value;
                 break;
-            case 'depthmin':
+            case "depthmin":
                 depth[0] = elem.value;
                 break;
-            case 'depthmax':
+            case "depthmax":
                 depth[1] = elem.value;
                 break;
         }
@@ -632,10 +507,10 @@ function processSliders(formData) {
     let queryParams = [];
 
     if (temp.indexOf(null) === -1) {
-        queryParams.push('temperature:[' + temp[0] + ' TO ' + temp[1] + ']');
+        queryParams.push("temperature:[" + temp[0] + " TO " + temp[1] + "]");
     }
     if (depth.indexOf(null) === -1) {
-        queryParams.push('depth:[ ' + depth[0] + ' TO ' + depth[1] + ']');
+        queryParams.push("depth:[ " + depth[0] + " TO " + depth[1] + "]");
     }
     return {
         facets: formData.filter(function (elem) {
@@ -648,25 +523,25 @@ function processSliders(formData) {
 function joinFilters(filters) {
     return filters.map(function (elem) {
         return elem.name + ":" + elem.value;
-    }).join(',')
+    }).join(",")
 }
 
 function removeRedundantFilters(formData) {
     // var newData = formData.filter(function (elem) {
-    //     return elem.name !== 'biome';
+    //     return elem.name !== "biome";
     // });
     // var biomes = formData.filter(function (elem) {
-    //     return elem.name === 'biome';
+    //     return elem.name === "biome";
     // });
     let newData = [];
     _.each(formData, function (biome) {
         let parent = null;
         let biomeValue = biome.value;
-        if (biomeValue.indexOf('/') > -1) {
-            var pos = biomeValue.lastIndexOf('/');
+        if (biomeValue.indexOf("/") > -1) {
+            var pos = biomeValue.lastIndexOf("/");
             parent = biomeValue.substring(0, pos);
         } else {
-            parent = '';
+            parent = "";
         }
         var parentExists = _.find(formData, function (biome2) {
             return biome2.value === parent
@@ -682,7 +557,7 @@ function removeRedundantFilters(formData) {
 function convertBiomes(entry) {
     let biomes = [];
     _.each(entry.fields.biome, function (biome) {
-        biome = 'root:' + biome.replace(/\/([^\/]*)$/, '').replace(/\//g, ':');
+        biome = "root:" + biome.replace(/\/([^\/]*)$/, "").replace(/\//g, ":");
         biomes.push({
             name: util.formatLineage(biome, true),
             icon: util.getBiomeIcon(biome)
@@ -697,8 +572,8 @@ function setFacetFilters(formId, formData) {
         _.each(facetParams, function (param) {
             let [name, value] = param.split(":");
             // Set checkbox parent and propagate to parent
-            const selector = formId + " input[name='" + name + "'][value='" + value + "']";
-            $(selector).prop('checked', true).parent().show();
+            const selector = formId + " input[name='"+ name + "'][value='" + value + "']";
+            $(selector).prop("checked", true).parent().show();
         });
     }
     let setSliders = [];
@@ -713,24 +588,25 @@ function setFacetFilters(formId, formData) {
                 setSliders.push(facetName);
                 const valueMin = data[2];
                 const valueMax = data[3];
-                $form.find('[name=' + facetName + 'min]').val(valueMin).prop('disabled', false);
-                $form.find('[name=' + facetName + 'max]').val(valueMax).prop('disabled', false);
-                $form.find('.slider[data-facet-slider=' + facetName + ']').slider({
+                $form.find("[name=" + facetName + "min]").val(valueMin).prop("disabled", false);
+                $form.find("[name=" + facetName + "max]").val(valueMax).prop("disabled", false);
+                $form.find(".slider[data-facet-slider=" + facetName + "]").slider({
                     values: [valueMin, valueMax],
                     disabled: false
                 });
-                $form.find('.switch-input[data-facet-name=' + facetName + ']').prop('checked', true);
+                $form.find(".switch-input[data-facet-name=" + facetName + "]").prop("checked", true);
             }
         });
     }
-    _.each(['temperature', 'depth'], function (facetName) {
-        $(formId).find('.' + facetName + '-group').find('input.switch-input').each(function () {
+    _.each(["temperature", "depth"], function (facetName) {
+        $(formId).find("." + facetName + "-group").find("input.switch-input").each(function () {
             const enabled = setSliders.indexOf(facetName) > -1;
-            $(this).prop('checked', enabled);
+            $(this).prop("checked", enabled);
             enableSlider($(this), enabled, false);
-            // addClearButton($(this), $('.filter-clear'));
+            // addClearButton($(this), $(".filter-clear"));
         });
     });
+    $(formId).find(".switch-input").click(sliderToggleCallback);
 }
 
 function isFacetParam(elem) {
@@ -740,32 +616,33 @@ function isFacetParam(elem) {
 
 function sliderToggleCallback(e) {
     const $checkbox = $(this);
-    const enabled = $checkbox.is(':checked');
+    const dataFacetName = $checkbox.attr('data-facet-name');
+    const enabled = $checkbox.is(":checked");
+
     enableSlider($checkbox, enabled);
-    const formId = $(this).closest('form').attr('id');
+    const formId = $(this).closest("form").attr("id");
     if (e && e.originalEvent && e.originalEvent.isTrusted) {
-        const groupClass = '.' + $(this).parent().parent().attr('class').replace(' ', '.');
+
         _.map(getAllFormIds(formId), function (otherFacetForm) {
-            const $checkbox = $(otherFacetForm).find(groupClass).find('input.switch-input');
-            $checkbox.prop('checked', enabled);
+            const $checkbox = $(otherFacetForm).find("input.switch-input[data-facet-name='"+dataFacetName+"']");
+            $checkbox.trigger('click');
             enableSlider($checkbox, enabled);
         });
-        addClearButton($(this), $('.filter-clear'));
         updateAll();
     }
 }
 
 function enableSlider($checkbox, enabled) {
-    const $parent = $checkbox.parent();
-    const $elemGroup = $parent.siblings('.slider-group');
+    const $groupContainer = $checkbox.parent().parent();
+    const $elemGroup = $groupContainer.siblings(".slider-group");
     if (enabled) {
-        $elemGroup.removeClass('disabled');
-        $elemGroup.find('.slider').slider('enable');
+        $elemGroup.removeClass("disabled");
+        $elemGroup.find(".slider").slider("enable");
     } else {
-        $elemGroup.addClass('disabled');
-        $elemGroup.find('.slider').slider('disable');
+        $elemGroup.addClass("disabled");
+        $elemGroup.find(".slider").slider("disable");
     }
-    $elemGroup.find(':input').prop('disabled', !enabled);
+    $elemGroup.find(":input").prop("disabled", !enabled);
 }
 
 function updateAll(pagesize) {
@@ -780,35 +657,22 @@ function updateAll(pagesize) {
 }
 
 function showSpinner() {
-    $('#loading-icon').fadeIn();
+    $("#loading-icon").fadeIn();
 }
 
 function hideSpinner() {
-    $('#loading-icon').fadeOut();
+    $("#loading-icon").fadeOut();
 }
 
 function getAllFormIds(except) {
     return _.filter([
-        '#' + projectsView.formEl,
-        '#' + samplesView.formEl,
-        '#' + runsView.formEl
+        "#" + projectsView.formEl,
+        "#" + samplesView.formEl,
+        "#" + runsView.formEl
     ], function (e) {
         return e !== except;
     })
 }
-
-// function resetAllForms() {
-//     $(".facet-remove-button").remove();
-//     _.each(getAllFormIds(), function (id) {
-//         const $form = $(id);
-//         resetInputsInElem($form);
-//     });
-//     projectsView.initialize();
-//     samplesView.initialize();
-//     runsView.initialize();
-//
-//     initAll(projectsView, samplesView, runsView, false, false);
-// }
 
 String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
@@ -817,9 +681,9 @@ String.prototype.capitalize = function () {
 const button = $("<button id='search-reset' class='button' type='reset'>Clear all</button>");
 const $searchForm = $("#headerSearchForm");
 $searchForm.append(button);
-$searchForm.on('reset', function () {
+$searchForm.on("reset", function () {
     Cookies.remove(cookieName);
-    window.location.href = 'search';
+    window.location.href = "search";
 
 });
 
@@ -841,20 +705,20 @@ function initAll(projectsView, samplesView, runsView, renderFilters, setFilters)
         runFacet
     ).done(function () {
         hideSpinner();
-        createCheckboxTrees('projects', projectFacet.responseJSON.facets, projectsView, $('#projectsFilters'), $('#projects-search-params'), projectsView.update.bind(projectsView));
-        setFacetFilters('#projectsFilters', projectsView.params);
+        createCheckboxTrees("projects", projectFacet.responseJSON.facets, projectsView, $("#projectsFilters"), $("#projects-search-params"), projectsView.update.bind(projectsView));
+        setFacetFilters("#projectsFilters", projectsView.params);
 
-        const $samplesForm = $('#samplesFilters');
-        const $sampleBtnContainer = $('#samples-search-params');
-        createSliders($samplesForm, 'samples', samplesView.update.bind(samplesView), $sampleBtnContainer);
-        createCheckboxTrees('samples', sampleFacet.responseJSON.facets, samplesView, $samplesForm, $sampleBtnContainer, samplesView.update.bind(samplesView));
-        setFacetFilters('#samplesFilters', samplesView.params);
+        const $samplesForm = $("#samplesFilters");
+        const $sampleBtnContainer = $("#samples-search-params");
+        createSliders($samplesForm, "samples", samplesView.update.bind(samplesView), $sampleBtnContainer);
+        createCheckboxTrees("samples", sampleFacet.responseJSON.facets, samplesView, $samplesForm, $sampleBtnContainer, samplesView.update.bind(samplesView));
+        setFacetFilters("#samplesFilters", samplesView.params);
 
-        const $runsForm = $('#runsFilters');
-        const $runsBtnContainer = $('#runs-search-params');
-        createSliders($runsForm, 'runs', runsView.update.bind(runsView), $runsBtnContainer);
-        createCheckboxTrees('runs', runFacet.responseJSON.facets, runsView, $runsForm, $runsBtnContainer, runsView.update.bind(runsView));
-        setFacetFilters('#runsFilters', runsView.params);
+        const $runsForm = $("#runsFilters");
+        const $runsBtnContainer = $("#runs-search-params");
+        createSliders($runsForm, "runs", runsView.update.bind(runsView), $runsBtnContainer);
+        createCheckboxTrees("runs", runFacet.responseJSON.facets, runsView, $runsForm, $runsBtnContainer, runsView.update.bind(runsView));
+        setFacetFilters("#runsFilters", runsView.params);
 
     });
 }
@@ -873,16 +737,16 @@ function createDataTable(facet, $table, $modal, initColumns) {
         setColumnVisibility(checked, label);
 
         const $checkbox = $("<input data-column='" + label + "' type='checkbox' />");
-        $checkbox.prop('checked', checked);
+        $checkbox.prop("checked", checked);
 
         const $label = $("<label for='" + label + "'>" + text + "</label>");
         const $container = $("<div class='row column'></div>");
         $checkbox.click(function (e) {
-            setColumnVisibility($(this).is(":checked"), $(this).attr('data-column'));
+            setColumnVisibility($(this).is(":checked"), $(this).attr("data-column"));
 
             const visibleColumns = [];
-            $modal.find('input[type=checkbox]:checked').each(function () {
-                visibleColumns.push($(this).attr('data-column'));
+            $modal.find("input[type=checkbox]:checked").each(function () {
+                visibleColumns.push($(this).attr("data-column"));
             });
             saveVisibleColumns(facet, visibleColumns);
         });
@@ -891,16 +755,16 @@ function createDataTable(facet, $table, $modal, initColumns) {
         $modal.append($container);
     }
 
-    _.each($table.find('thead').find('td'), function (column) {
-        const text = $(column).attr('data-column');
+    _.each($table.find("thead").find("td"), function (column) {
+        const text = $(column).attr("data-column");
         const visible = initColumns.indexOf(text) !== -1;
-        addModalCheckbox($modal, $(column).text(), $(column).attr('data-column'), visible);
+        addModalCheckbox($modal, $(column).text(), $(column).attr("data-column"), visible);
     })
 }
 
 function createSliders($form, facet, callback, $btnContainer) {
-    new Slider().init($form, facet, 'Temperature', 'temperature', -20, 110, '°C', callback, $btnContainer);
-    new Slider().init($form, facet, 'Depth', 'depth', 0, 2000, 'meters', callback, $btnContainer);
+    new Slider().init($form, facet, "Temperature", "temperature", -20, 110, "°C", callback, $btnContainer);
+    new Slider().init($form, facet, "Depth", "depth", 0, 2000, "meters", callback, $btnContainer);
 }
 
 function createCheckboxTrees(facet, trees, facetView, $facetForm, $facetBtnContainer, callback) {
@@ -918,7 +782,7 @@ function createCheckboxTrees(facet, trees, facetView, $facetForm, $facetBtnConta
     }
 
     _.each(trees, function (tree) {
-        if (tree.id !== 'domain_source') {
+        if (tree.id !== "domain_source") {
             const cbTree = new CheckboxTree().init(facet, $facetForm, $facetBtnContainer, tree, callback, values, false);
         }
     });
@@ -936,16 +800,16 @@ function saveSearchParams(facet, filters, query) {
         }
     }
     if (filters) {
-        cookieParams[facet]['filters'] = filters;
+        cookieParams[facet]["filters"] = filters;
     } else {
-        delete cookieParams[facet]['filters'];
+        delete cookieParams[facet]["filters"];
     }
     if (query) {
         if (DEFAULT_QUERIES.indexOf(query) === -1) {
-            cookieParams[facet]['query'] = query;
+            cookieParams[facet]["query"] = query;
         }
     } else {
-        delete cookieParams[facet]['query'];
+        delete cookieParams[facet]["query"];
     }
 
     Cookies.set(cookieName, cookieParams);
@@ -957,13 +821,13 @@ function loadSearchParams(facet) {
     if (cookie) {
         cookie = JSON.parse(cookie);
         try {
-            data = cookie[facet]['filters'];
+            data = cookie[facet]["filters"];
         } catch (e) {
             data = null;
         }
 
         try {
-            query = cookie[facet]['query'];
+            query = cookie[facet]["query"];
         } catch (e) {
             query = null;
         }
@@ -979,7 +843,7 @@ function getCookieQuery() {
     if (cookie) {
         cookie = JSON.parse(cookie);
         try {
-            return cookie['projects']['query'];
+            return cookie["projects"]["query"];
         } catch (e) {
         }
     }
@@ -1017,24 +881,8 @@ function formatSearchSummaryStr(params) {
     if (!(validQueryText || validFilterText || validSliderText)) {
         str += " with no parameters"
     }
-    console.log(validQueryText, validFilterText, validSliderText);
-    str += '.';
+    str += ".";
     return str
-}
-
-function deleteCachedSearchParams() {
-    let cookie = Cookies.get(cookieName);
-    if (cookie) {
-        let cookieVal = JSON.parse(cookie);
-        _.each(['projects', 'samples', 'runs'], function (facet) {
-            cookieVal[facet] = {
-                query: null,
-                filters: null
-            }
-        });
-        Cookies.set(cookieName, cookieVal);
-    }
-    const new_url = window.location.toString();
 }
 
 window.getVisibleColumns = getVisibleColumns;
@@ -1044,7 +892,7 @@ function getVisibleColumns(facet) {
     if (cookieData) {
         cookieData = JSON.parse(cookieData);
         if (cookieData[facet]) {
-            return cookieData[facet]['columns']
+            return cookieData[facet]["columns"]
         }
     }
     return null
@@ -1060,7 +908,7 @@ function saveVisibleColumns(facet, columns) {
     if (cookieData[facet]) {
         cookieData[facet] = {
             columns: columns,
-            data: cookieData[facet]['data']
+            data: cookieData[facet]["data"]
         }
     } else {
         cookieData[facet] = {
@@ -1071,8 +919,8 @@ function saveVisibleColumns(facet, columns) {
 }
 
 function insertEbiSearchText() {
-    const html = '<p><small class="text-muted">Powered by <a href="https://www.ebi.ac.uk/ebisearch/&quot;" class="ext" target="_blank">EBI Search</a></small></p>';
-    $('.ebi-search').html(html);
+    const html = "<p><small class='text-muted'>Powered by <a href='https://www.ebi.ac.uk/ebisearch/&quot;' class='ext' target='_blank'>EBI Search</a></small></p>";
+    $(".ebi-search").html(html);
 }
 
 insertEbiSearchText();
@@ -1088,6 +936,6 @@ let samplesView = new SamplesView({collection: samples});
 let runs = new Runs();
 let runsView = new RunsView({collection: runs});
 
-let filters = new FiltersView(updateAll);
+// FiltersView(updateAll);
 
 initAll(projectsView, samplesView, runsView, true, true);

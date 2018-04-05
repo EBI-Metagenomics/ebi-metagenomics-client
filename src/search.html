@@ -30,8 +30,8 @@
             <div class="columns small- medium-6 large-6">
                 <form id="headerSearchForm" action="{{subfolder}}/search">
                     <input id='navbar-query' class='header-search-input' name="query" type="search"
-                           placeholder="Search">
-                    <button id="search" type="submit" class="button" class="header-search-button">Search
+                           placeholder="Search" data-cy="text-search-input">
+                    <button id="search" type="submit" class="button" class="header-search-button" data-cy="text-search-submit">Search
                     </button>
                 </form>
             </div>
@@ -245,8 +245,8 @@
 <script id="samplesResultsTmpl" type="text/template">
     <div class="row">
         <div class="columns small-8 medium-8 large-8">
-            <h5>You searched for samples<%=queryString%></h5>
-            <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
+            <h5 data-cy="samples-query-desc">You searched for samples<%=queryString%></h5>
+            <h6 data-cy="samples-query-desc">Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
         </div>
         <div class="columns small-4 medium-4 large-4">
             <button class="button right" name="download">Download results as CSV</button>
