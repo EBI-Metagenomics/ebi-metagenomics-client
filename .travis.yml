@@ -71,6 +71,7 @@ script:
   - npm run test -- --record --key $CYPRESS_RECORD_KEY
 
 after_success:
+  - cat coverage.lcov | codacy-coverage
   - npm run coverage
   - codecov
 
