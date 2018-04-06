@@ -85,13 +85,13 @@ describe("Search page - general Functionality", function () {
         cy.get("button.disp-children").first().click();
         cy.get("input[value='Environmental/Air']").check({force: true});
         waitForResultsLoad(2);
-        cy.get("tbody > tr > td[data-column='project-biome']").contains("Air")
+        cy.get("tbody > tr > td[data-column='project-biome']").contains("Air");
     });
 
     it("Centre name filters should restrict results", function () {
         cy.get("input[value='BioProject']").check({force: true});
         waitForResultsLoad(10);
-        cy.get("tbody > tr > td[data-column='project-centre-name']").contains("BioProject")
+        cy.get("tbody > tr > td[data-column='project-centre-name']").contains("BioProject");
     });
 
     it("Clear button should reset search completely", function () {
@@ -243,9 +243,9 @@ describe("Search page - Sliders - ", function () {
     }
 
     function validateQueryFromInputs(container, query){
-        getInputText(container, 'min').then(($min) => {
+        getInputText(container, "min").then(($min) => {
             const minVal = $min.val();
-            getInputText(container, 'max').then(($max) => {
+            getInputText(container, "max").then(($max) => {
                 cy.contains(query+minVal+" TO "+$max.val()+"].").should("be.visible");
             });
         });
@@ -259,7 +259,7 @@ describe("Search page - Sliders - ", function () {
     it("Moving slider handles should filter temperature", function () {
         enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
         cy.get(samplesTempSlider).click(50, 5).click(100, 5);
-        validateQueryFromInputs(samplesTempSliderContainer, "You searched for samples with temperature:[")
+        validateQueryFromInputs(samplesTempSliderContainer, "You searched for samples with temperature:[");
     });
 
     it("Disabling slider switch should disable slider and remove filter", function () {
