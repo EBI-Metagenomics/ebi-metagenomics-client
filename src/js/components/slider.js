@@ -5,8 +5,6 @@ let _ = require('underscore');
 
 
 module.exports = function Slider() {
-    const containerDiv = "<div class='facet-group'></div>";
-    const toggleContainer = "<div class='switch tiny'></div>";
     const allForms = ['#projectsFilters', '#samplesFilters', '#runsFilters'];
 
     const init = function ($elem, facet, label, name, min, max, units, callback, $btnContainer) {
@@ -38,11 +36,15 @@ module.exports = function Slider() {
                 $minInput.val(ui.values[0]);
                 $maxInput.val(ui.values[1]);
                 if (e.originalEvent) {
-                    propagateValues(name, sliderId, ui.values);
                     callback();
+                    propagateValues(name, sliderId, ui.values);
                 }
             }
         });
+        $slider.change(function(){
+            callback();
+        });
+
         attachInputHandler($minInput, $slider, 'min', callback);
         attachInputHandler($maxInput, $slider, 'max', callback);
 
@@ -65,8 +67,7 @@ module.exports = function Slider() {
         const $maxInput = $sliderContainer.find('input.right');
         $minInput.val(values[0]);
         $maxInput.val(values[1]);
-        $minInput.trigger('change');
-        $slider.trigger('slide').trigger('change')
+        $slider.trigger('slide').trigger('change');
     };
 
     const attachInputHandler = function ($input, $slider, minOrMax, callback) {
@@ -75,8 +76,8 @@ module.exports = function Slider() {
             $slider.slider('values', i, $input.val());
             if (e.originalEvent) {
                 propagateValues($slider.attr('data-facet-slider'), $slider.attr('id'), $slider.slider('values'));
-                callback();
             }
+            callback();
         });
     };
 

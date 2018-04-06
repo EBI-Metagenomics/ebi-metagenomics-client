@@ -510,7 +510,7 @@ function processSliders(formData) {
         queryParams.push("temperature:[" + temp[0] + " TO " + temp[1] + "]");
     }
     if (depth.indexOf(null) === -1) {
-        queryParams.push("depth:[ " + depth[0] + " TO " + depth[1] + "]");
+        queryParams.push("depth:[" + depth[0] + " TO " + depth[1] + "]");
     }
     return {
         facets: formData.filter(function (elem) {

@@ -1,6 +1,6 @@
-import {openPage, changeTab} from './util';
+import {openPage, changeTab} from "./util";
 
-const origPage = 'search';
+const origPage = "search";
 
 const initialResultSize = 10;
 
@@ -16,28 +16,28 @@ function waitForResultsLoad(results) {
 }
 
 function waitForFacetFilters(facetName) {
-    cy.wait('@' + facetName, {timeout: 20000}).its('url').should('include', 'size=1');
+    cy.wait("@" + facetName, {timeout: 20000}).its("url").should("include", "size=1");
 }
 
 function validateFacetQuery(facetName, testString) {
     const timeout = 10000;
     if (testString) {
-        cy.wait('@' + facetName, {timeout: timeout}).its('url').should('include', 'size=' + initialResultSize).should('include', 'query=' + encodeURIComponent(testString))
+        cy.wait("@" + facetName, {timeout: timeout}).its("url").should("include", "size=" + initialResultSize).should("include", "query=" + encodeURIComponent(testString))
     } else {
-        cy.wait('@' + facetName, {timeout: timeout}).its('url').should('include', 'size=' + initialResultSize)
+        cy.wait("@" + facetName, {timeout: timeout}).its("url").should("include", "size=" + initialResultSize)
     }
 }
 
-const facetRequests = ['projectsFacet', 'projectsQuery', 'samplesFacet', 'samplesQuery', 'runsFacet', 'runsQuery'];
+const facetRequests = ["projectsFacet", "projectsQuery", "samplesFacet", "samplesQuery", "runsFacet", "runsQuery"];
 
 function loadPage(page) {
     cy.server();
-    cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=1&*').as(facetRequests[0]);
-    cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=10&*').as(facetRequests[1]);
-    cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=1&*').as(facetRequests[2]);
-    cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=10&*').as(facetRequests[3]);
-    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=1&*').as(facetRequests[4]);
-    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=10&*').as(facetRequests[5]);
+    cy.route("/ebisearch/ws/rest/metagenomics_projects?*size=1&*").as(facetRequests[0]);
+    cy.route("/ebisearch/ws/rest/metagenomics_projects?*size=10&*").as(facetRequests[1]);
+    cy.route("/ebisearch/ws/rest/metagenomics_samples?*size=1&*").as(facetRequests[2]);
+    cy.route("/ebisearch/ws/rest/metagenomics_samples?*size=10&*").as(facetRequests[3]);
+    cy.route("/ebisearch/ws/rest/metagenomics_runs?*size=1&*").as(facetRequests[4]);
+    cy.route("/ebisearch/ws/rest/metagenomics_runs?*size=10&*").as(facetRequests[5]);
     openPage(page);
     waitForResultsLoad(initialResultSize);
 }
@@ -46,13 +46,13 @@ function loadPage(page) {
  * Verify number of results responds to selector
  */
 
-describe('Search page - general Functionality', function () {
+describe("Search page - general Functionality", function () {
     beforeEach(function () {
         loadPage(origPage);
     });
 
     // Text search should apply to all facets
-    it('Text query should apply to all facets', function () {
+    it("Text query should apply to all facets", function () {
         waitForFacetFilters(facetRequests[0]);
         validateFacetQuery(facetRequests[1]);
         waitForFacetFilters(facetRequests[2]);
@@ -71,31 +71,31 @@ describe('Search page - general Functionality', function () {
 
     });
 
-    it('Correct number of results.', function () {
+    it("Correct number of results.", function () {
         openPage(origPage);
         cy.wait(1000);
-        cy.get(pageSizeSelect).invoke('val').then((val) => {
+        cy.get(pageSizeSelect).invoke("val").then((val) => {
             waitForResultsLoad(val);
-            cy.get(pageSizeSelect).select('50');
+            cy.get(pageSizeSelect).select("50");
             waitForResultsLoad(50);
         });
     });
 
-    it('Biome filters should restrict results', function () {
-        cy.get('button.disp-children').first().click();
+    it("Biome filters should restrict results", function () {
+        cy.get("button.disp-children").first().click();
         cy.get("input[value='Environmental/Air']").check({force: true});
         waitForResultsLoad(2);
-        cy.get("tbody > tr > td[data-column='project-biome']").contains('Air')
+        cy.get("tbody > tr > td[data-column='project-biome']").contains("Air")
     });
 
-    it('Centre name filters should restrict results', function () {
+    it("Centre name filters should restrict results", function () {
         cy.get("input[value='BioProject']").check({force: true});
         waitForResultsLoad(10);
-        cy.get("tbody > tr > td[data-column='project-centre-name']").contains('BioProject')
+        cy.get("tbody > tr > td[data-column='project-centre-name']").contains("BioProject")
     });
 
-    it('Clear button should reset search completely', function () {
-        cy.get('button.disp-children').first().click();
+    it("Clear button should reset search completely", function () {
+        cy.get("button.disp-children").first().click();
         cy.get("input[value='Environmental/Air']").check({force: true});
         cy.get("input[value='BGI']").check({force: true});
         waitForResultsLoad(1);
@@ -103,7 +103,7 @@ describe('Search page - general Functionality', function () {
         waitForResultsLoad(initialResultSize);
     });
 
-    it('Should pre-fill cached search query', function () {
+    it("Should pre-fill cached search query", function () {
         waitForFacetFilters(facetRequests[0]);
         validateFacetQuery(facetRequests[1]);
         waitForFacetFilters(facetRequests[2]);
@@ -121,7 +121,7 @@ describe('Search page - general Functionality', function () {
         validateFacetQuery(facetRequests[5], encodeURIComponent(testString));
 
         // Navigate to another page, then return and verify string was pre-loaded
-        openPage('');
+        openPage("");
         openPage(origPage);
         waitForFacetFilters(facetRequests[0]);
         validateFacetQuery(facetRequests[1]);
@@ -132,8 +132,8 @@ describe('Search page - general Functionality', function () {
         waitForResultsLoad(initialResultSize);
 
     });
-    it('Pagination - double page change', function () {
-        loadPage(origPage + '#runs');
+    it("Pagination - double page change", function () {
+        loadPage(origPage + "#runs");
         waitForFacetFilters(facetRequests[0]);
         validateFacetQuery(facetRequests[1]);
         waitForFacetFilters(facetRequests[2]);
@@ -141,155 +141,193 @@ describe('Search page - general Functionality', function () {
         waitForFacetFilters(facetRequests[4]);
         validateFacetQuery(facetRequests[5]);
 
-        cy.get('#projects-pagination > ul > li.page-item.next').click();
+        cy.get("#projects-pagination > ul > li.page-item.next a").click();
         waitForResultsLoad(initialResultSize);
-        cy.get('#projects-pagination > ul > li.page-item.first').click();
+        cy.get("#projects-pagination > ul > li.page-item.first a").click();
         waitForResultsLoad(initialResultSize);
     });
 });
 
-describe('Search page - Display additional columns', function(){
-    const projectsModal = 'projectsModal';
+describe("Search page - Display additional columns", function(){
+    const projectsModal = "projectsModal";
     const column = "project-name";
     beforeEach(function () {
-        loadPage(origPage+'#projects');
+        loadPage(origPage+"#projects");
     });
 
     function openExtraColumnModal(){
         cy.get("a[data-open='"+projectsModal+"']").click({force: true});
-        cy.get('#'+projectsModal).should('be.visible');
+        cy.get("#"+projectsModal).should("be.visible");
     }
 
     function closeExtraColumnModal(){
         cy.get("#projectsModal button.close-button").click();
-        cy.get('#'+projectsModal).should('be.hidden');
+        cy.get("#"+projectsModal).should("be.hidden");
     }
 
 
-    it('Modal should open for extra column selection', function(){
+    it("Modal should open for extra column selection", function(){
         openExtraColumnModal();
     });
 
-    it('Added column should be visible', function(){
-        cy.get("td[data-column='"+column+"']").should('be.hidden');
+    it("Added column should be visible", function(){
+        cy.get("td[data-column='"+column+"']").should("be.hidden");
 
         openExtraColumnModal();
         cy.get("input[data-column='"+column+"']").check();
         closeExtraColumnModal();
 
-        cy.get("td[data-column='"+column+"']").should('be.visible');
+        cy.get("td[data-column='"+column+"']").should("be.visible");
     });
 
-    it('Removed column should be hidden', function(){
-        const column = 'project-biome';
-        cy.get("td[data-column='"+column+"']").should('be.visible');
+    it("Removed column should be hidden", function(){
+        const column = "project-biome";
+        cy.get("td[data-column='"+column+"']").should("be.visible");
 
         openExtraColumnModal();
         cy.get("input[data-column='"+column+"']").uncheck();
         closeExtraColumnModal();
 
-        cy.get("td[data-column='"+column+"']").should('be.hidden');
+        cy.get("td[data-column='"+column+"']").should("be.hidden");
     });
 });
 
-describe('Search page - Deep linking', function () {
-    it('Changing tabs should update result view', function () {
-        loadPage(origPage + '#projects');
-        cy.get('#projectsResults > div > div > h5').should('contain', 'projects');
-        loadPage(origPage + '#samples');
-        cy.get('#samplesResults > div > div > h5').should('contain', 'samples');
-        loadPage(origPage + '#runs');
-        cy.get('#runsResults > div > div > h5').should('contain', 'runs');
+describe("Search page - Deep linking", function () {
+    it("Changing tabs should update result view", function () {
+        loadPage(origPage + "#projects");
+        cy.get("#projectsResults > div > div > h5").should("contain", "projects");
+        loadPage(origPage + "#samples");
+        cy.get("#samplesResults > div > div > h5").should("contain", "samples");
+        loadPage(origPage + "#runs");
+        cy.get("#runsResults > div > div > h5").should("contain", "runs");
     });
 });
 
-describe('Search page - Sliders - ', function () {
+describe("Search page - Sliders - ", function () {
     const samplesTempSwitchToggle = "[for='samplesTemperatureSwitch']";
     const samplesTempSliderContainer = "#samplesFiltersTemperature";
-    const samplesTempCheckbox = '#samplesTemperatureSwitch';
+    const samplesTempCheckbox = "#samplesTemperatureSwitch";
     const samplesTempSlider = samplesTempSliderContainer + " > .ui-slider-range";
     const samplesDisabledQueryText = "You searched for samples with no parameters.";
 
     const runsTempSwitchToggle = "[for='runsTemperatureSwitch']";
     const runsTempSliderContainer = "#runsFiltersTemperature";
-    const runsTempCheckbox = '#runsTemperatureSwitch';
+    const runsTempCheckbox = "#runsTemperatureSwitch";
     const runsDisabledQueryText = "You searched for runs with no parameters.";
 
 
-
     beforeEach(function () {
-        loadPage(origPage + '#samples');
+        loadPage(origPage + "#samples");
     });
 
-    function getContainerTextInputs(container){
-        return cy.get(container).siblings('div.row').find('input')
+    function getContainerTextInputs(container) {
+        return cy.get(container).siblings("div.row").find("input")
     }
-    function enableSlider(toggle, container) {
+
+    function enableSlider(toggle, checkbox, container) {
         cy.get(toggle).click();
-        cy.get(container).should('not.have.class', 'ui-state-disabled');
-        getContainerTextInputs(container).should('not.be.disabled');
+        cy.get(checkbox).should("be.checked");
+        cy.get(container).should("not.have.class", "ui-state-disabled");
+        getContainerTextInputs(container).should("not.be.disabled");
     }
 
     function checkSliderDisabled(container, checkbox, query) {
-        cy.get(checkbox).should('not.be.checked');
-        cy.get(container).should('have.class', 'ui-state-disabled');
-        cy.contains(query).should('exist');
-        getContainerTextInputs(container).should('be.disabled');
+        cy.get(checkbox).should("not.be.checked");
+        cy.get(container).should("have.class", "ui-state-disabled");
+        cy.contains(query).should("exist");
+        getContainerTextInputs(container).should("be.disabled");
     }
 
-    it('Clicking slider switch should enable slider and filter results', function () {
+    it("Clicking slider switch should enable slider and filter results", function () {
         checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, samplesDisabledQueryText);
-        enableSlider(samplesTempSwitchToggle, samplesTempSliderContainer);
-        cy.contains('You searched for samples with temperature:[-20 TO 110].', {timeout: 40000}).should('exist');
+        enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
+        cy.contains("You searched for samples with temperature:[-20 TO 110].", {timeout: 40000}).should("exist");
     });
 
-    it('Moving slider handles should filter temperature', function () {
-        enableSlider(samplesTempSwitchToggle, samplesTempSliderContainer);
+    it("Moving slider handles should filter temperature", function () {
+        enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
         cy.get(samplesTempSlider).click(50, 5).click(100, 5);
-        cy.contains('You searched for samples with temperature:[16 TO 88].').should('be.visible');
+        cy.contains("You searched for samples with temperature:[16 TO 88].").should("be.visible");
     });
 
-
-    it('Disabling slider switch should disable slider and remove filter', function () {
-        enableSlider(samplesTempSwitchToggle, samplesTempSliderContainer);
-        cy.contains('You searched for samples with temperature:[-20 TO 110].').should('be.visible');
+    it("Disabling slider switch should disable slider and remove filter", function () {
+        enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
+        cy.contains("You searched for samples with temperature:[-20 TO 110].").should("be.visible");
 
         cy.get(samplesTempSwitchToggle).click();
         checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, samplesDisabledQueryText);
     });
 
-    it('Clicking filter button should should disable slider and remove filter', function () {
-        enableSlider(samplesTempSwitchToggle, samplesTempSliderContainer);
-        cy.contains('You searched for samples with temperature:[-20 TO 110].').should('be.visible');
+    it("Clicking filter button should should disable slider and remove filter", function () {
+        enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
+        cy.contains("You searched for samples with temperature:[-20 TO 110].").should("be.visible");
 
         cy.get("#samples [data-facet='Temperature'] button").click();
         checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, samplesDisabledQueryText);
     });
 
-    it('Slider value changes should apply to other relevant facets', function(){
-        enableSlider(samplesTempSwitchToggle, samplesTempSliderContainer);
-        cy.contains('You searched for samples with temperature:[-20 TO 110].').should('be.visible');
-        changeTab('runs');
-        cy.contains('You searched for runs with temperature:[-20 TO 110].').should('be.visible');
+    it("Slider value changes should apply to other relevant facets", function(){
+        enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
+        cy.contains("You searched for samples with temperature:[-20 TO 110].").should("be.visible");
+        changeTab("runs");
+        cy.contains("You searched for runs with temperature:[-20 TO 110].").should("be.visible");
     });
 
-    it('Slider toggling should apply to other facets', function(){
-        enableSlider(samplesTempSwitchToggle, samplesTempSliderContainer);
-        cy.contains('You searched for samples with temperature:[-20 TO 110].').should('be.visible');
+    it("Slider toggling should apply to other facets", function(){
+        enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
+        cy.contains("You searched for samples with temperature:[-20 TO 110].").should("be.visible");
 
-        changeTab('runs');
-        cy.contains('You searched for runs with temperature:[-20 TO 110].').should('be.visible');
+        changeTab("runs");
+        cy.contains("You searched for runs with temperature:[-20 TO 110].").should("be.visible");
         cy.get(runsTempSwitchToggle).click();
         checkSliderDisabled(runsTempSliderContainer, runsTempCheckbox, runsDisabledQueryText);
 
-        changeTab('samples');
+        changeTab("samples");
         checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, samplesDisabledQueryText);
+    });
+
+    it("Slider value should propagate to other facets", function () {
+        enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
+        cy.get(samplesTempSlider).click(50, 5).click(100, 5);
+        cy.contains("You searched for samples with temperature:[16 TO 88].").should("be.visible");
+        changeTab("runs");
+        cy.contains("You searched for runs with temperature:[16 TO 88].").should("be.visible");
+    });
+
+    it("Depth slider should not affect temp slider", function () {
+        const samplesDepthSwitchToggle = "[for='samplesDepthSwitch']";
+        const samplesDepthSliderContainer = "#samplesFiltersDepth";
+        const samplesDepthCheckbox = "#samplesDepthSwitch";
+        const samplesDepthSlider = samplesDepthSliderContainer + " > .ui-slider-range";
+        enableSlider(samplesDepthSwitchToggle, samplesDepthCheckbox, samplesDepthSliderContainer);
+        const queryText = "You searched for samples with depth:[0 TO 2000].";
+        cy.contains(queryText).should("be.visible");
+
+        checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, queryText);
+
+        cy.get(samplesDepthSlider).click(50, 5).click(100, 5);
+        cy.contains("You searched for samples with depth:[558 TO 1664].").should("be.visible");
+        changeTab("runs");
+        cy.contains("You searched for runs with depth:[558 TO 1664].").should("be.visible");
+    });
+
+    it("Changing textbox value should change slider value", function(){
+        const minVal = "20";
+        const maxVal = "40";
+        enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
+        cy.get(samplesTempSliderContainer).parent().find("input[data-min]").clear().type(minVal).trigger('change');
+        cy.get(samplesTempSliderContainer).parent().find("input[data-max]").clear().type(maxVal).trigger('change');
+        cy.contains("You searched for samples with temperature:["+minVal+" TO "+maxVal+"].").should("be.visible");
+
+        changeTab('runs');
+        cy.contains("You searched for runs with temperature:["+minVal+" TO "+maxVal+"].").should("be.visible");
+
     })
 });
-// describe('Search page - CSV fetching', function () {
-//     it('Download csv button should be disabled after click', function () {
-//         loadPage(origPage + '#projects');
-//         cy.get("#projectsResults button[name='download']").click().should('have.attr', 'disabled');
+// describe("Search page - CSV fetching", function () {
+//     it("Download csv button should be disabled after click", function () {
+//         loadPage(origPage + "#projects");
+//         cy.get("#projectsResults button[name="download"]").click().should("have.attr", "disabled");
 //     });
-// //    TODO test search page
+// //    TODO avoid download dialog box
 // });
