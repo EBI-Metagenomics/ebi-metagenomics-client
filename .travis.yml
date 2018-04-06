@@ -70,9 +70,9 @@ install:
 script:
   - npm run test -- --record --key $CYPRESS_RECORD_KEY
 
-after_success:
-  - cat coverage.lcov | codacy-coverage
+after_script:
   - npm run coverage
+  - cat coverage.lcov | codacy-coverage
   - codecov
 
 cache:
