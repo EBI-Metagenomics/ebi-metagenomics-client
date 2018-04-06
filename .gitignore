@@ -20,6 +20,7 @@ travis/emg_sql_fixtures/merged.sql
 .nyc_output
 nyc
 coverage
+coverage.lcov
 
 # Local API configs
 config

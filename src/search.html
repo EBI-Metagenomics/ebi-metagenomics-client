@@ -51,7 +51,7 @@
                     <div class="tabs-panel active" id="projects">
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
-                                <form id="projectsFilters"></form>
+                                <form id="projectsFilters" class="search-filters"></form>
                                 <div class="ebi-search"></div>
                             </div>
                             <div class="columns small-10 medium-10 large-10">
@@ -78,7 +78,7 @@
                     <div class="tabs-panel" id="samples">
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
-                                <form id="samplesFilters"></form>
+                                <form id="samplesFilters" class="search-filters"></form>
                                 <div class="ebi-search"></div>
                             </div>
                             <div class="columns small-10 medium-10 large-10">
@@ -105,7 +105,7 @@
                     <div class="tabs-panel" id="runs">
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
-                                <form id="runsFilters"></form>
+                                <form id="runsFilters"  class="search-filters"></form>
                                 <div class="ebi-search"></div>
                             </div>
                             <div class="columns small-10 medium-10 large-10">
@@ -157,7 +157,7 @@
         <% } %>
         <% _.each(facets, function(facet){ if (facet.label!=='Source'){ %>
         <% facet.label = facet.label.toLowerCase() %>
-        <div class="facet-group <%= convertFacetLabelName(facet.label)+'-group' %> ">
+        <div class="facet-group <%= facet.label.replace(' ', '_')+'-group' %> ">
             <% if (facet.type==='slider') {%>
             <div class="switch tiny">
                 <% const switchId = formId+facet.label+'slider-switch' %>
@@ -166,7 +166,7 @@
                 <label class="switch-paddle" for="<%= switchId %>">
                 </label>
             </div>
-            <h5><%= facet.label.capitalize() %> (<%= facet.units %>)</h5>
+            <h5><%= capitalize(facet.label) %> (<%= facet.units %>)</h5>
             <div class="row columns slider-group">
                 <div id="<%= formId+facet.label+'slider' %>" class="slider"
                      data-facet-slider="<%= facet.label+'slider' %>"></div>
@@ -177,7 +177,7 @@
             </div>
         </div>
         <% } else { %>
-        <h5><%= facet.label.capitalize() %></h5>
+        <h5><%= capitalize(facet.label) %></h5>
         <% _.each(facet.facetValues, function(child){ %>
         <div class="facet-child-group show">
             <% drawAndExpand(child, facet.id, '') %>
@@ -229,7 +229,7 @@
             <td data-column="project-ena-accession"><a
                     href="https://www.ebi.ac.uk/ena/data/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a>
             </td>
-            <td data-column="project-id"><a href="<%= entry.study_link %>"><%= fields.id %></a></td>
+            <td data-column="project-id"><a href="<%= entry.studyLink %>"><%= fields.id %></a></td>
             <td data-column="project-biome"><%= fields.biome_name %></td>
             <td data-column="project-name"><%= fields.name %></td>
             <td data-column="project-desc"><%= fields.description %></td>
@@ -268,8 +268,8 @@
         <% _.each(entries, function(entry){ %>
         <% const fields = entry.fields %>
         <tr class="search-row">
-            <td data-column="sample-id"><a href="<%= entry.sample_link %>"><%= entry.id %></a></td>
-            <td data-column="sample-projects"><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a>
+            <td data-column="sample-id"><a href="<%= entry.sampleLink %>"><%= entry.id %></a></td>
+            <td data-column="sample-projects"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a>
             </td>
             <td data-column="sample-name"><%= fields.name %></td>
             <td data-column="sample-desc"><%= fields.description %></td>
@@ -305,10 +305,10 @@
         <% _.each(entries, function(entry){ %>
         <% const fields = entry.fields %>
         <tr class="search-row">
-            <td data-column="run-id"><a href="<%= entry.run_link %>"><%= entry.run_id %></a></td>
-            <td data-column="run-pipeline-vers"><a href="<%= entry.pipeline_link %>"><%= fields.pipeline_version %></a>
-            <td data-column="run-sample"><a href="<%= entry.sample_link %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
-            <td data-column="run-project"><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
+            <td data-column="run-id"><a href="<%= entry.runLink %>"><%= entry.runId %></a></td>
+            <td data-column="run-pipeline-vers"><a href="<%= entry.pipelineLink %>"><%= fields.pipeline_version %></a>
+            <td data-column="run-sample"><a href="<%= entry.sampleLink %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
+            <td data-column="run-project"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
             <td data-column="run-experiment-type"><%= fields.experiment_type %></td>
             </td>
         </tr>
