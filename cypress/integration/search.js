@@ -148,47 +148,47 @@ describe("Search page - general Functionality", function () {
     });
 });
 
-describe("Search page - Display additional columns", function(){
+describe("Search page - Display additional columns", function () {
     const projectsModal = "projectsModal";
     const column = "project-name";
     beforeEach(function () {
-        loadPage(origPage+"#projects");
+        loadPage(origPage + "#projects");
     });
 
-    function openExtraColumnModal(){
-        cy.get("a[data-open='"+projectsModal+"']").click({force: true});
-        cy.get("#"+projectsModal).should("be.visible");
+    function openExtraColumnModal() {
+        cy.get("a[data-open='" + projectsModal + "']").click({force: true});
+        cy.get("#" + projectsModal).should("be.visible");
     }
 
-    function closeExtraColumnModal(){
+    function closeExtraColumnModal() {
         cy.get("#projectsModal button.close-button").click();
-        cy.get("#"+projectsModal).should("be.hidden");
+        cy.get("#" + projectsModal).should("be.hidden");
     }
 
 
-    it("Modal should open for extra column selection", function(){
+    it("Modal should open for extra column selection", function () {
         openExtraColumnModal();
     });
 
-    it("Added column should be visible", function(){
-        cy.get("td[data-column='"+column+"']").should("be.hidden");
+    it("Added column should be visible", function () {
+        cy.get("td[data-column='" + column + "']").should("be.hidden");
 
         openExtraColumnModal();
-        cy.get("input[data-column='"+column+"']").check();
+        cy.get("input[data-column='" + column + "']").check();
         closeExtraColumnModal();
 
-        cy.get("td[data-column='"+column+"']").should("be.visible");
+        cy.get("td[data-column='" + column + "']").should("be.visible");
     });
 
-    it("Removed column should be hidden", function(){
+    it("Removed column should be hidden", function () {
         const column = "project-biome";
-        cy.get("td[data-column='"+column+"']").should("be.visible");
+        cy.get("td[data-column='" + column + "']").should("be.visible");
 
         openExtraColumnModal();
-        cy.get("input[data-column='"+column+"']").uncheck();
+        cy.get("input[data-column='" + column + "']").uncheck();
         closeExtraColumnModal();
 
-        cy.get("td[data-column='"+column+"']").should("be.hidden");
+        cy.get("td[data-column='" + column + "']").should("be.hidden");
     });
 });
 
@@ -238,6 +238,18 @@ describe("Search page - Sliders - ", function () {
         getContainerTextInputs(container).should("be.disabled");
     }
 
+    function getInputText(container, minOrMax) {
+        return cy.get(container).parent().find("input[data-" + minOrMax + "]");
+    }
+
+    function validateQueryFromInputs(container, query){
+        getInputText(container, 'min').then(($min) => {
+            const minVal = $min.val();
+            getInputText(container, 'max').then(($max) => {
+                cy.contains(query+minVal+" TO "+$max.val()+"].").should("be.visible");
+            });
+        });
+    }
     it("Clicking slider switch should enable slider and filter results", function () {
         checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, samplesDisabledQueryText);
         enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
@@ -247,7 +259,7 @@ describe("Search page - Sliders - ", function () {
     it("Moving slider handles should filter temperature", function () {
         enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
         cy.get(samplesTempSlider).click(50, 5).click(100, 5);
-        cy.contains("You searched for samples with temperature:[16 TO 88].").should("be.visible");
+        validateQueryFromInputs(samplesTempSliderContainer, "You searched for samples with temperature:[")
     });
 
     it("Disabling slider switch should disable slider and remove filter", function () {
@@ -266,14 +278,14 @@ describe("Search page - Sliders - ", function () {
         checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, samplesDisabledQueryText);
     });
 
-    it("Slider value changes should apply to other relevant facets", function(){
+    it("Slider value changes should apply to other relevant facets", function () {
         enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
         cy.contains("You searched for samples with temperature:[-20 TO 110].").should("be.visible");
         changeTab("runs");
         cy.contains("You searched for runs with temperature:[-20 TO 110].").should("be.visible");
     });
 
-    it("Slider toggling should apply to other facets", function(){
+    it("Slider toggling should apply to other facets", function () {
         enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
         cy.contains("You searched for samples with temperature:[-20 TO 110].").should("be.visible");
 
@@ -289,9 +301,10 @@ describe("Search page - Sliders - ", function () {
     it("Slider value should propagate to other facets", function () {
         enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
         cy.get(samplesTempSlider).click(50, 5).click(100, 5);
-        cy.contains("You searched for samples with temperature:[16 TO 88].").should("be.visible");
+
+        validateQueryFromInputs(samplesTempSliderContainer, "You searched for samples with temperature:[");
         changeTab("runs");
-        cy.contains("You searched for runs with temperature:[16 TO 88].").should("be.visible");
+        validateQueryFromInputs(runsTempSliderContainer, "You searched for runs with temperature:[");
     });
 
     it("Depth slider should not affect temp slider", function () {
@@ -299,6 +312,9 @@ describe("Search page - Sliders - ", function () {
         const samplesDepthSliderContainer = "#samplesFiltersDepth";
         const samplesDepthCheckbox = "#samplesDepthSwitch";
         const samplesDepthSlider = samplesDepthSliderContainer + " > .ui-slider-range";
+        const runsDepthSliderContainer = "#runsFiltersDepth";
+
+
         enableSlider(samplesDepthSwitchToggle, samplesDepthCheckbox, samplesDepthSliderContainer);
         const queryText = "You searched for samples with depth:[0 TO 2000].";
         cy.contains(queryText).should("be.visible");
@@ -306,21 +322,21 @@ describe("Search page - Sliders - ", function () {
         checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, queryText);
 
         cy.get(samplesDepthSlider).click(50, 5).click(100, 5);
-        cy.contains("You searched for samples with depth:[558 TO 1664].").should("be.visible");
+        validateQueryFromInputs(samplesDepthSliderContainer, "You searched for samples with depth:[");
         changeTab("runs");
-        cy.contains("You searched for runs with depth:[558 TO 1664].").should("be.visible");
+        validateQueryFromInputs(runsDepthSliderContainer, "You searched for runs with depth:[");
     });
 
-    it("Changing textbox value should change slider value", function(){
+    it("Changing textbox value should change slider value", function () {
         const minVal = "20";
         const maxVal = "40";
         enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
-        cy.get(samplesTempSliderContainer).parent().find("input[data-min]").clear().type(minVal).trigger('change');
-        cy.get(samplesTempSliderContainer).parent().find("input[data-max]").clear().type(maxVal).trigger('change');
-        cy.contains("You searched for samples with temperature:["+minVal+" TO "+maxVal+"].").should("be.visible");
+        getInputText(samplesTempSliderContainer, "min").clear().type(minVal).trigger("change");
+        getInputText(samplesTempSliderContainer, "max").clear().type(maxVal).trigger("change");
+        cy.contains("You searched for samples with temperature:[" + minVal + " TO " + maxVal + "].").should("be.visible");
 
-        changeTab('runs');
-        cy.contains("You searched for runs with temperature:["+minVal+" TO "+maxVal+"].").should("be.visible");
+        changeTab("runs");
+        cy.contains("You searched for runs with temperature:[" + minVal + " TO " + maxVal + "].").should("be.visible");
 
     })
 });
