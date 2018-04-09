@@ -84,7 +84,7 @@ var studiesView = new StudiesView({collection: studies});
 const studiesSelect = '#studies';
 $(studiesSelect).change(function (e) {
     const study_id = $(this).val();
-    const collection = new api.RunCollection({study_id: study_id});
+    const collection = new api.RunsCollection({study_id: study_id});
     const runsView = new RunsView({collection: collection});
 });
 

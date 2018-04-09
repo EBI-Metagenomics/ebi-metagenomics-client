@@ -93,18 +93,19 @@ export function getKronaURL(run_id, pipeline_version) {
     return API_URL + "runs/" + run_id + "/pipelines/" + pipeline_version + "/krona"
 }
 
-export const RunCollection = Backbone.Collection.extend({
+export const RunsCollection = Backbone.Collection.extend({
     url: API_URL + 'runs',
     model: Run,
     initialize: function (data) {
         // Project/sample ID
-        if (data.hasOwnProperty(('study_accession'))) {
-            this.study_accession = data.study_accession;
-        }
-        // Sample ID
-        if (data.hasOwnProperty(('sample_accession'))) {
-            this.sample_accession = data.sample_accession;
-        }
+        // if (data.hasOwnProperty(('study_accession'))) {
+        //     this.study_accession = data.study_accession;
+        // }
+        // // Sample ID
+        // if (data.hasOwnProperty(('sample_accession'))) {
+        //     this.sample_accession = data.sample_accession;
+        // }
+        this.params = data;
     },
     parse: function (response) {
         return response.data
@@ -186,10 +187,7 @@ export const SamplesCollection = Backbone.Collection.extend({
     url: API_URL + "samples",
     model: Sample,
     initialize: function (data) {
-        // Sample ID
-        if (data && data.hasOwnProperty('study_accession')) {
-            this.study_accession = data.study_accession;
-        }
+        this.params = data;
     },
     parse: function (response) {
         return response.data;
