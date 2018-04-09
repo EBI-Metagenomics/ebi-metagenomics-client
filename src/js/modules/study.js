@@ -115,7 +115,7 @@ let SamplesView = StudyTableView.extend({
 });
 
 let MapData = api.StudyGeoCoordinates.extend({
-    fetchAll() {
+    initialize() {
         this.data = [];
         const that = this;
         this.fetch({
@@ -207,7 +207,7 @@ function initPage() {
     ).done(function() {
         samplesView.initialize();
         runsView.initialize();
-        new MapData(studyId).fetchAll();
+        new MapData(studyId)();
         DownloadsView({model: downloads});
     });
 }
