@@ -1,5 +1,4 @@
 const tmpl = require('../commons').detailList;
-const _ = require('underscore');
 
 /**
  * Widget for a simple bullet point list with key/value entries

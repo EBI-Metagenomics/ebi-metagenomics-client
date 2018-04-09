@@ -6,6 +6,12 @@ let _ = require('underscore');
 module.exports = function Slider() {
     const allForms = ['#projectsFilters', '#samplesFilters', '#runsFilters'];
 
+    const setRmvButton = function($btnContainer, $switch, $slider, label, name) {
+        $btnContainer.append(createRmvButton(label, name, function() {
+            $switch.click();
+        }));
+    };
+
     const attachSwitchHandler = function(
         $switch, $slider, $minInput, $maxInput, allFormIds, $btnContainer, label, name, callback) {
         $switch.click(function(e) {
@@ -106,12 +112,6 @@ module.exports = function Slider() {
             }
             callback();
         });
-    };
-
-    const setRmvButton = function($btnContainer, $switch, $slider, label, name) {
-        $btnContainer.append(createRmvButton(label, name, function() {
-            $switch.click();
-        }));
     };
 
     return {

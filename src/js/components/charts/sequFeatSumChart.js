@@ -1,7 +1,6 @@
 // Sequence feature summary chart
 
 const Highcharts = require('highcharts');
-const _ = require('underscore');
 require('highcharts/modules/exporting')(Highcharts);
 
 module.exports = class SeqFeatChart {

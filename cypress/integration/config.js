@@ -1,4 +1,4 @@
-let Config = module.exports = {
+module.exports = {
     BASE_URL: 'http://127.0.0.1:9000/metagenomics/',
     API_URL: 'http://127.0.0.1:9000/metagenomics/api/v1/',
     SEARCH_URL: 'https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_',

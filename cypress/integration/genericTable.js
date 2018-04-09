@@ -21,7 +21,7 @@ class GenericTableHandler {
         this.getPageInfoSpan('#currentPage').should('contain', currentPage);
         let firstRowData = [];
         let lastRowData = [];
-        for (const column in columnOrdering) {
+        for (let column in columnOrdering) {
             if (columnOrdering.hasOwnProperty(column)) {
                 firstRowData.push(columnOrdering[column].data[0]);
                 lastRowData.push(columnOrdering[column].data[1]);
