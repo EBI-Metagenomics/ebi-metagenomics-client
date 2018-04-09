@@ -183,7 +183,7 @@ export function hideTableLoadingGif() {
 export function attachTabHandlers() {
     // Deep linking
     const $dataTabs = $('[data-tabs]');
-    window.Foundation.Tabs($dataTabs);
+    new window.Foundation.Tabs($dataTabs);
     const linkTab = window.location.hash.substr(1);
     if (linkTab) {
         $($dataTabs).foundation('selectTab', linkTab);
