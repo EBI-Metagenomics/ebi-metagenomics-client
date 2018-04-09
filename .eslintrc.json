@@ -6,7 +6,9 @@
   "rules": {
     "max-len": [2, {"code": 100}],
     "no-console": "off",
-    "no-process-env": 0
+    "no-process-env": 0,
+    "comma-dangle": ["error", "never"],
+    "new-cap": [2, {"capIsNewExceptions": ["$.Deferred"]}]
   },
   "parserOptions": {
     "ecmaVersion": 6,
