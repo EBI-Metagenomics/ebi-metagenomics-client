@@ -4,68 +4,67 @@ import Config from './config';
 
 const origPage = 'browse';
 
-
 const studiesTableDefaultSize = 25;
 const samplesTableDefaultSize = 25;
 
-
-const initialResultSize = 25;
-
-function setSelectOption(table, selector, option, num_results) {
+function setSelectOption(table, selector, option, numResults) {
     cy.get(selector).select(option);
-    table.waitForTableLoad(num_results);
+    table.waitForTableLoad(numResults);
 }
 
 const studiesTableColumns = {
     biome_icon: {
         data: ['', ''],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     study_name: {
-        data: ['Longitudinal study of the diabetic skin and wound microbiome', 'Fungi associated with Rhamnus cathartica in Southwestern Ontario'],
+        data: [
+            'Longitudinal study of the diabetic skin and wound microbiome',
+            'Fungi associated with Rhamnus cathartica in Southwestern Ontario'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     samples_count: {
         data: ['258', '10'],
         type: datatype.NUM,
-        sortable: false,
+        sortable: false
     },
     last_update: {
         data: ['27-Nov-2017', '22-Mar-2017'],
         type: datatype.DATE,
-        sortable: false,
-    },
+        sortable: false
+    }
 };
-
 
 const samplesTableColumns = {
     biome_icon: {
         data: ['', ''],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     sample_id: {
         data: ['ERS1474797', 'ERS1474735'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     sample_name: {
-        data: ['Control patient 9 right foot time 1', 'Patient 8 skin contralateral foot to wound time 5'],
+        data: [
+            'Control patient 9 right foot time 1',
+            'Patient 8 skin contralateral foot to wound time 5'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     sample_desc: {
         data: ['control_skin_right', 'diabetic_skin_contra'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     last_update: {
         data: ['27-Nov-2017', '27-Nov-2017'],
         type: datatype.DATE,
-        sortable: false,
-    },
+        sortable: false
+    }
 };
 
 let studiesTable;
@@ -86,34 +85,52 @@ describe('Browse page - Studies table', function() {
     });
 
     it('Studies table should respond to filtering', function() {
-        studiesTable.testFiltering('Longitudinal', [['', 'Longitudinal study of the diabetic skin and wound microbiome', '258', '27-Nov-2017']]);
+        studiesTable.testFiltering('Longitudinal', [
+            [
+                '',
+                'Longitudinal study of the diabetic skin and wound microbiome',
+                '258',
+                '27-Nov-2017']]);
     });
 
     it('Studies table should respond to pagination', function() {
-        studiesTable.testPagination(studiesTableDefaultSize, [{
-            index: 1,
-            data: ['', 'Longitudinal study of the diabetic skin and wound microbiome', '258', '27-Nov-2017'],
-        }, {
-            index: 3,
-            data: ['', 'Forest Soil Targeted Locus (Loci)', '23', '6-Jun-2016'],
-        }, {
-            index: 'next',
-            data: ['', 'Skin microbiome in human volunteers inoculated with H. ducreyi Raw sequence reads', '191', '4-Feb-2016'], // 4th row
-            pageNum: 4,
-        }, {
-            index: 'prev',
-            data: ['', 'Forest Soil Targeted Locus (Loci)', '23', '6-Jun-2016'], // Back to 3rd row
-            pageNum: 3,
-        }, {
-            index: 'last',
-            data: ['', 'Antarctica Aquatic Microbial Metagenome', '18', '20-Jan-2016'],
-            pageNum: 5,
-            pageSize: 23,
-        }, {
-            index: 'first',
-            data: ['', 'Longitudinal study of the diabetic skin and wound microbiome', '258', '27-Nov-2017'],
-            pageNum: 1,
-        }]);
+        studiesTable.testPagination(studiesTableDefaultSize, [
+            {
+                index: 1,
+                data: [
+                    '',
+                    'Longitudinal study of the diabetic skin and wound microbiome',
+                    '258',
+                    '27-Nov-2017']
+            }, {
+                index: 3,
+                data: ['', 'Forest Soil Targeted Locus (Loci)', '23', '6-Jun-2016']
+            }, {
+                index: 'next',
+                data: [
+                    '',
+                    'Skin microbiome in human volunteers inoculated with H. ducreyi Raw sequence reads',
+                    '191',
+                    '4-Feb-2016'], // 4th row
+                pageNum: 4
+            }, {
+                index: 'prev',
+                data: ['', 'Forest Soil Targeted Locus (Loci)', '23', '6-Jun-2016'], // Back to 3rd row
+                pageNum: 3
+            }, {
+                index: 'last',
+                data: ['', 'Antarctica Aquatic Microbial Metagenome', '18', '20-Jan-2016'],
+                pageNum: 5,
+                pageSize: 23
+            }, {
+                index: 'first',
+                data: [
+                    '',
+                    'Longitudinal study of the diabetic skin and wound microbiome',
+                    '258',
+                    '27-Nov-2017'],
+                pageNum: 1
+            }]);
     });
 
     it('Studies table should respond to page size change', function() {
@@ -121,7 +138,8 @@ describe('Browse page - Studies table', function() {
     });
 
     it('Study table download link should be valid', function() {
-        studiesTable.testDownloadLink(Config.API_URL + 'studies?lineage=root&ordering=-last_update&format=csv');
+        studiesTable.testDownloadLink(Config.API_URL +
+            'studies?lineage=root&ordering=-last_update&format=csv');
     });
 
     it('Clicking clear button should remove filters', function() {
@@ -158,7 +176,8 @@ describe('Browse page - Studies table', function() {
         const params = studiesTableColumns.samples_count;
         studiesTable.checkOrdering(2, params.type, true);
 
-        const expectedLink = (Config.API_URL.replace('127.0.0.1', 'localhost')) + 'studies?lineage=root%3AEnvironmental%3AAir&ordering=samples_count&search=windshield&format=csv';
+        const expectedLink = (Config.API_URL.replace('127.0.0.1', 'localhost')) +
+            'studies?lineage=root%3AEnvironmental%3AAir&ordering=samples_count&search=windshield&format=csv';
         cy.get('a[href=\'' + expectedLink + '\']', {timeout: 10000});
     });
 
@@ -184,8 +203,8 @@ describe('Browse page - Studies table', function() {
         setSelectOption(studiesTable, selector, biome, 2);
         cy.get('span.biome_icon').should('have.class', 'air_b');
 
-        biome = 'root:Engineered:Biotransformation';
-        setSelectOption(studiesTable, selector, biome, 7);
+        let biome2 = 'root:Engineered:Biotransformation';
+        setSelectOption(studiesTable, selector, biome2, 7);
         cy.get('span.biome_icon').should('have.class', 'engineered_b');
     });
 });
@@ -206,34 +225,71 @@ describe('Browse page - Samples table', function() {
     });
 
     it('Samples table should respond to filtering', function() {
-        samplesTable.testFiltering('ERS1474797', [['', 'ERS1474797', 'Control patient 9 right foot time 1', 'control_skin_right', '27-Nov-2017']]);
+        samplesTable.testFiltering('ERS1474797', [
+            [
+                '',
+                'ERS1474797',
+                'Control patient 9 right foot time 1',
+                'control_skin_right',
+                '27-Nov-2017']]);
     });
 
     it('Samples table should respond to pagination', function() {
-        samplesTable.testPagination(samplesTableDefaultSize, [{
-            index: 1,
-            data: ['', 'ERS1474797', 'Control patient 9 right foot time 1', 'control_skin_right', '27-Nov-2017'],
-        }, {
-            index: 3,
-            data: ['', 'ERS1474798', 'Control patient 9 left foot time 2', 'control_skin_left', '27-Nov-2017'],
-        }, {
-            index: 'next',
-            data: ['', 'ERS1474557', 'Control patient 6 right foot time 1', 'control_skin_right', '27-Nov-2017'], // 4th row
-            pageNum: 4,
-        }, {
-            index: 'prev',
-            data: ['', 'ERS1474798', 'Control patient 9 left foot time 2', 'control_skin_left', '27-Nov-2017'],
-            pageNum: 3,
-        }, {
-            index: 'last',
-            data: ['', 'SRS211741', 'J18, fermented Kimchi day 18', '(CLOB) Community DNA obtained by 454 GS FLX titanium sequencing from sample at 18days of kimchi fermentation', '13-Aug-2015'],
-            pageNum: 367,
-            pageSize: 8,
-        }, {
-            index: 'first',
-            data: ['', 'ERS1474797', 'Control patient 9 right foot time 1', 'control_skin_right', '27-Nov-2017'],
-            pageNum: 1,
-        }]);
+        samplesTable.testPagination(samplesTableDefaultSize, [
+            {
+                index: 1,
+                data: [
+                    '',
+                    'ERS1474797',
+                    'Control patient 9 right foot time 1',
+                    'control_skin_right',
+                    '27-Nov-2017']
+            }, {
+                index: 3,
+                data: [
+                    '',
+                    'ERS1474798',
+                    'Control patient 9 left foot time 2',
+                    'control_skin_left',
+                    '27-Nov-2017']
+            }, {
+                index: 'next',
+                data: [
+                    '',
+                    'ERS1474557',
+                    'Control patient 6 right foot time 1',
+                    'control_skin_right',
+                    '27-Nov-2017'], // 4th row
+                pageNum: 4
+            }, {
+                index: 'prev',
+                data: [
+                    '',
+                    'ERS1474798',
+                    'Control patient 9 left foot time 2',
+                    'control_skin_left',
+                    '27-Nov-2017'],
+                pageNum: 3
+            }, {
+                index: 'last',
+                data: [
+                    '',
+                    'SRS211741',
+                    'J18, fermented Kimchi day 18',
+                    '(CLOB) Community DNA obtained by 454 GS FLX titanium sequencing from sample at 18days of kimchi fermentation',
+                    '13-Aug-2015'],
+                pageNum: 367,
+                pageSize: 8
+            }, {
+                index: 'first',
+                data: [
+                    '',
+                    'ERS1474797',
+                    'Control patient 9 right foot time 1',
+                    'control_skin_right',
+                    '27-Nov-2017'],
+                pageNum: 1
+            }]);
     });
 
     it('Samples table should respond to page size change', function() {
@@ -241,7 +297,8 @@ describe('Browse page - Samples table', function() {
     });
 
     it('Samples table download link should be valid', function() {
-        samplesTable.testDownloadLink(Config.API_URL + 'samples?lineage=root&ordering=-last_update&format=csv');
+        samplesTable.testDownloadLink(Config.API_URL +
+            'samples?lineage=root&ordering=-last_update&format=csv');
     });
 
     it('Clicking clear button should remove filters', function() {
@@ -250,7 +307,7 @@ describe('Browse page - Samples table', function() {
         setSelectOption(samplesTable, selector, biome, 4);
         cy.get('span.biome_icon').should('have.class', 'air_b');
 
-            samplesTable.getClearButton().click();
+        samplesTable.getClearButton().click();
         samplesTable.waitForTableLoad(studiesTableDefaultSize);
         cy.get('span.biome_icon').first().should('have.class', 'skin_b');
     });
@@ -278,7 +335,9 @@ describe('Browse page - Samples table', function() {
         samplesTable.waitForTableLoad(2);
         const params = samplesTableColumns.sample_name;
         samplesTable.checkOrdering(2, params.type, true);
-        samplesTable.testDownloadLink(Config.API_URL + 'samples?lineage=' + encodeURIComponent(biome) + '&ordering=sample_name&search=' + searchQuery + '&format=csv');
+        samplesTable.testDownloadLink(Config.API_URL + 'samples?lineage=' +
+            encodeURIComponent(biome) + '&ordering=sample_name&search=' + searchQuery +
+            '&format=csv');
     });
 
     it('Typing larger search query should cancel previous request.', function() {
@@ -309,7 +368,6 @@ describe('Browse page - Samples table', function() {
     });
 });
 
-
 let longBiome = 'root:Host-associated:Mammals:Digestive system:Fecal';
 describe('Browse page - URL arguments', function() {
     beforeEach(function() {
@@ -323,8 +381,14 @@ describe('Browse page - URL arguments', function() {
         const splitBiome = longBiome.split(':');
         for (let i = 1; i < splitBiome.length; i++) {
             let parentLineage = splitBiome.slice(0, i).join(':');
-            expect(cy.get('#studies-section .biome-select > option[value=\'' + parentLineage + '\']')).to.exist;
-            expect(cy.get('#samples-section .biome-select > option[value=\'' + parentLineage + '\']')).to.exist;
+            expect(
+                cy.get('#studies-section .biome-select > option[value=\'' + parentLineage + '\']')).
+                to.
+                exist();
+            expect(
+                cy.get('#samples-section .biome-select > option[value=\'' + parentLineage + '\']')).
+                to.
+                exist();
         }
         cy.get('#studies-section .biome-select').should('have.value', longBiome);
         cy.get('#samples-section .biome-select').should('have.value', longBiome);
@@ -347,7 +411,6 @@ describe('Browse page - Generic - Filter propagation', function() {
         changeTab('samples');
         samplesTable.waitForTableLoad(4);
         cy.get('#samples-section .biome-select').should('have.value', biome);
-
 
         biome = 'root:Environmental:Aquatic';
         setSelectOption(samplesTable, samplesSelector, biome, 25);
@@ -415,7 +478,7 @@ describe('Browse page - URL parameters', function() {
 
     it('Should filter results by biome', function() {
         const biome = 'root:Environmental:Air';
-        openPage('browse?lineage='+biome+'#studies');
+        openPage('browse?lineage=' + biome + '#studies');
         waitForPageLoad('Studies list');
         cy.get('.biome-select option:selected').then(($els) => {
             expect(Cypress.$($els).attr('value')).to.eq(biome);

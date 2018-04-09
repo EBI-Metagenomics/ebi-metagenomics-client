@@ -54,7 +54,7 @@ const pagesBreadcrumbs = {
     'browse': [''],
     'search': [''],
     'studies/ERP000118': ['', 'browse#studies'],
-    'submit': [''],
+    'submit': ['']
 };
 
 for (let page in pagesBreadcrumbs) {

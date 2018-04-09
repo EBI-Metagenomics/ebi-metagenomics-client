@@ -82,7 +82,7 @@ let BiomesView = Backbone.View.extend({
         this.fetchXhr = this.collection.fetch({
             data: $.param(this.params),
             remove: true,
-            success(collection, response) {
+            success(ignored, response) {
                 util.hideTableLoadingGif();
                 pagination.update(response.meta.pagination, changePage);
                 that.render();

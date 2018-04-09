@@ -14,7 +14,7 @@ module.exports = class SeqFeatChart {
             'Predicted CDS with InterProScan match'
         ];
         let series = [];
-        categories.forEach(function(e, o) {
+        categories.forEach(function(e) {
             series.push(parseInt(data[e]));
         });
 

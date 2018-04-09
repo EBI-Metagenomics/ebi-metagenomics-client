@@ -33,7 +33,7 @@ class GenericTableHandler {
 
     testSorting(pageSize, tests) {
         let i = 0;
-        for (const header in tests) {
+        for (let header in tests) {
             if (tests.hasOwnProperty(header)) {
                 const type = tests[header].type;
                 if (tests[header].sortable) {

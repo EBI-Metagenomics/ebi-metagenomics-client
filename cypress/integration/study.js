@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists, waitForPageLoad, changeTab} from './util';
+import {openPage, datatype, urlExists, waitForPageLoad} from './util';
 import Config from './config';
 import GenericTableHandler from './genericTable';
 
@@ -14,51 +14,51 @@ const sampleTableColumns = {
     sample_name: {
         data: ['Control patient 9 right foot time 1', 'Patient 7 skin adjacent to wound time 2'],
         type: datatype.STR,
-        sortable: true,
+        sortable: true
     },
     accession: {
         data: ['ERS1474797', 'ERS1474709'],
         type: datatype.STR,
-        sortable: true,
+        sortable: true
     },
     description: {
         data: ['control_skin_right', 'diabetic_skin_adj'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     last_update: {
         data: ['27-Nov-2017', '27-Nov-2017'],
         type: datatype.DATE,
-        sortable: true,
-    },
+        sortable: true
+    }
 };
 
 const runTableColumns = {
     accession: {
         data: ['ERR1760141', 'ERR1760117'],
         type: datatype.STR,
-        sortable: true,
+        sortable: true
     },
     experiment_type: {
         data: ['amplicon', 'amplicon'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     instrument_model: {
         data: ['Illumina MiSeq', 'Illumina MiSeq'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     instrument_platform: {
         data: ['Illumina platform', 'Illumina platform'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     pipeline_version: {
         data: ['4.0', '4.0'],
         type: datatype.STR,
-        sortable: false,
-    },
+        sortable: false
+    }
 };
 
 
@@ -112,27 +112,27 @@ describe('Study page - Samples table', function() {
     it('Samples table should respond to pagination', function() {
         table.testPagination(10, [{
             index: 1,
-            data: ['Control patient 9 right foot time 1', 'ERS1474797', 'control_skin_right', '27-Nov-2017'],
+            data: ['Control patient 9 right foot time 1', 'ERS1474797', 'control_skin_right', '27-Nov-2017']
         }, {
             index: 3,
-            data: ['Patient 5 wound debridement time 5', 'ERS1474870', 'wound_deb', '27-Nov-2017'],
+            data: ['Patient 5 wound debridement time 5', 'ERS1474870', 'wound_deb', '27-Nov-2017']
         }, {
             index: 'next',
             data: ['Patient 6 skin contralateral foot to wound time 4', 'ERS1474887', 'diabetic_skin_contra', '27-Nov-2017'], // 4th row
-            pageNum: 4,
+            pageNum: 4
         }, {
             index: 'prev',
             data: ['Patient 5 wound debridement time 5', 'ERS1474870', 'wound_deb', '27-Nov-2017'], // Back to 3rd row
-            pageNum: 3,
+            pageNum: 3
         }, {
             index: 'last',
             data: ['Patient 5 skin contralateral foot to wound time 2', 'ERS1474858', 'diabetic_skin_contra', '27-Nov-2017'],
             pageNum: 6,
-            pageSize: 8,
+            pageSize: 8
         }, {
             index: 'first',
             data: ['Control patient 9 right foot time 1', 'ERS1474797', 'control_skin_right', '27-Nov-2017'],
-            pageNum: 1,
+            pageNum: 1
         }]);
     });
 
@@ -168,27 +168,27 @@ describe('Study page - Runs table', function() {
     it('Runs table should respond to pagination', function() {
         table.testPagination(25, [{
             index: 1,
-            data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
+            data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']
         }, {
             index: 3,
-            data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
+            data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']
         }, {
             index: 'next',
             data: ['ERR1760066', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'], // 4th row
-            pageNum: 4,
+            pageNum: 4
         }, {
             index: 'prev',
             data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-            pageNum: 3,
+            pageNum: 3
         }, {
             index: 'last',
             data: ['ERR1759891', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
             pageNum: 11,
-            pageSize: 8,
+            pageSize: 8
         }, {
             index: 'first',
             data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-            pageNum: 1,
+            pageNum: 1
         }]);
     });
 

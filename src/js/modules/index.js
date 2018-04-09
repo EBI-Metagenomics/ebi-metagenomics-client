@@ -164,7 +164,7 @@ let RequestFormView = Backbone.View.extend({
             body = body.replace(/=/g, ': ').replace(/&/g, '%0D%0A');
             body += '%0D%0A'; // Newline
             body += 'Additional notes:';
-            window.location.href = 'mailto:mdb@ebi.ac.uk?subject=Analysis request&body=' + body;
+            window.location.href = 'mailto:metagenomics-help@ebi.ac.uk?subject=Analysis request&body=' + body;
         }
     }
 });
@@ -188,6 +188,23 @@ function initObjectCounts() {
     const metaGountReq = $.get(new ebisearch.MetagenomicCount().url);
     const metaTCountReq = $.get(new ebisearch.MetatranscriptomicCount().url);
     const metaBCountReq = $.get(new ebisearch.MetabarcodingCount().url);
+
+    /**
+     * Set filter in site cookie
+     * @param {string} experimentType
+     */
+    function setCookieFilter(experimentType) {
+        Cookies.remove(cookieName);
+        const defaultCookieParamsStr =
+            '{"samples":{"query":""},"projects":{"query":""},"runs":{"query":""}}';
+        let cookieParams = JSON.parse(defaultCookieParamsStr);
+
+        if (experimentType) {
+            cookieParams['samples']['filters'] = 'experiment_type:' + experimentType;
+            cookieParams['runs']['filters'] = 'experiment_type:' + experimentType;
+        }
+        Cookies.set(cookieName, cookieParams);
+    }
 
     /**
      * Create stats display tag
@@ -219,47 +236,6 @@ function initObjectCounts() {
     function appendNewAnchorEl(elementId, count, experimentType, hashAppend) {
         let statsElement = $(elementId);
         statsElement.append(createAnchorTag(count, experimentType, hashAppend));
-    }
-
-    // /**
-    //  * Generate link tags for every type of stats
-    //  * @param {number} ampliconCount
-    //  * @param {number} assemblyCount
-    //  * @param {number} metaBCount
-    //  * @param {number} metaGCount
-    //  * @param {number} metaTCount
-    //  * @param {number} projectCount
-    //  * @param {number} sampleCount
-    //  * @param {number} runCount
-    //  */
-    // function addStatsElementsToDOM(ampliconCount, assemblyCount,
-    //                                metaBCount, metaGCount, metaTCount,
-    //                                projectCount, sampleCount, runCount) {
-    //     appendNewAnchorEl('#amplicon-stats', ampliconCount, 'amplicon', '#runs');
-    //     appendNewAnchorEl('#assembly-stats', assemblyCount, 'assembly', '#runs');
-    //     appendNewAnchorEl('#metaB-stats', metaBCount, 'metabarcoding', '#runs');
-    //     appendNewAnchorEl('#metaG-stats', metaGCount, 'metagenomic', '#runs');
-    //     appendNewAnchorEl('#metaT-stats', metaTCount, 'metatranscriptomic', '#runs');
-    //     appendNewAnchorEl('#project-stats', projectCount, null, '#projects');
-    //     appendNewAnchorEl('#sample-stats', sampleCount, null, '#samples');
-    //     appendNewAnchorEl('#run-stats', runCount, null, '#runs');
-    // }
-
-    /**
-     * Set filter in site cookie
-     * @param {string} experimentType
-     */
-    function setCookieFilter(experimentType) {
-        Cookies.remove(cookieName);
-        const defaultCookieParamsStr =
-            '{"samples":{"query":""},"projects":{"query":""},"runs":{"query":""}}';
-        let cookieParams = JSON.parse(defaultCookieParamsStr);
-
-        if (experimentType) {
-            cookieParams['samples']['filters'] = 'experiment_type:' + experimentType;
-            cookieParams['runs']['filters'] = 'experiment_type:' + experimentType;
-        }
-        Cookies.set(cookieName, cookieParams);
     }
 
     // Use Promise to get acknowledged when succeeded

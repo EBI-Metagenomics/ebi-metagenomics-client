@@ -15,12 +15,18 @@ function checkTableOrderedBySampleCount(asc) {
     const selector = 'td.samples_count';
 
     cy.get(selector).first().should(function($el) {
-            if (asc) {
-                expect(parseInt(stripWhitespace(Cypress.$(selector).last().text()))).to.be.lte(parseInt(stripWhitespace($el.text())));
-            } else {
-                expect(parseInt(stripWhitespace(Cypress.$(selector).last().text()))).to.be.gte(parseInt(stripWhitespace($el.text())));
-            }
-        });
+        if (asc) {
+            expect(parseInt(stripWhitespace(Cypress.$(selector).last().text()))).
+                to.
+                be.
+                lte(parseInt(stripWhitespace($el.text())));
+        } else {
+            expect(parseInt(stripWhitespace(Cypress.$(selector).last().text()))).
+                to.
+                be.
+                gte(parseInt(stripWhitespace($el.text())));
+        }
+    });
 }
 
 describe('Biomes page - General', function() {
@@ -50,12 +56,18 @@ describe('Biomes page - Click actions', function() {
 
         setSortBy('th.biome-name');
         cy.get(selector).first().should(function($el) {
-            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).to.be.gte(stripWhitespace($el.text().toLowerCase()));
+            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).
+                to.
+                be.
+                gte(stripWhitespace($el.text().toLowerCase()));
         });
 
         setSortBy('th.biome-name');
         cy.get(selector).first().should(function($el) {
-            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).to.be.lte(stripWhitespace($el.text().toLowerCase()));
+            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).
+                to.
+                be.
+                lte(stripWhitespace($el.text().toLowerCase()));
         });
     });
 
@@ -102,7 +114,7 @@ describe('Biomes page - Click actions', function() {
         cy.get('td.biome-name').first().find('span').then(($el) => {
             expect($el.text()).to.contain('root > Host-associated > Plants');
             cy.get('td.biome-name').first().find('a').click();
-            let studiesTable = new GenericTableHandler('#studies-section', 25);
+            new GenericTableHandler('#studies-section', 25);
             cy.get('span.biome_icon').should('have.class', 'plant_host_b');
         });
     });
@@ -117,12 +129,11 @@ describe('Biomes page - Click actions', function() {
 
 describe('Biomes page - URL parameters', function() {
     it('Should order according to sample count', function() {
-        openPage(origPage+'?ordering=samples_count');
+        openPage(origPage + '?ordering=samples_count');
         waitForBiomesLoad(initialResultSize);
         checkTableOrderedBySampleCount(false);
 
-
-        openPage(origPage+'?ordering=-samples_count');
+        openPage(origPage + '?ordering=-samples_count');
         waitForBiomesLoad(initialResultSize);
         checkTableOrderedBySampleCount(true);
     });
@@ -130,18 +141,24 @@ describe('Biomes page - URL parameters', function() {
     it('Should order according to biome name', function() {
         const selector = 'td.biome-name';
 
-        openPage(origPage+'?ordering=biome_name');
+        openPage(origPage + '?ordering=biome_name');
         waitForBiomesLoad(initialResultSize);
 
         cy.get(selector).first().should(function($el) {
-            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).to.be.gte(stripWhitespace($el.text().toLowerCase()));
+            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).
+                to.
+                be.
+                gte(stripWhitespace($el.text().toLowerCase()));
         });
 
-        openPage(origPage+'?ordering=-biome_name');
+        openPage(origPage + '?ordering=-biome_name');
         waitForBiomesLoad(initialResultSize);
 
         cy.get(selector).first().should(function($el) {
-            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).to.be.lte(stripWhitespace($el.text().toLowerCase()));
+            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).
+                to.
+                be.
+                lte(stripWhitespace($el.text().toLowerCase()));
         });
     });
 });

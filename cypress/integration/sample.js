@@ -11,12 +11,12 @@ const studyTableColumn = {
     biome_icon: {
         data: ['', ''],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     study_id: {
         data: ['ERP104178', 'ERP005307'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     study_name: {
         data: ['EMG produced TPA metagenomics assembly of the Microbial Community of ' +
@@ -24,51 +24,51 @@ const studyTableColumn = {
         'data set', 'Microbial Community of Mobilong Acid Sulfate Soil depth profile ' +
         'using Metagenomics'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     study_desc: {
         data: ['The Mobilong Soil Profile Third Party Annotation (TPA) assembly was derived from the primary whole genome shotgun (WGS) data set PRJEB5872. This project includes samples from the following biomes : Grassland.', 'The latter part of the Australian Millenium drought in 2007-2009 caused the acidification of acid sulfate soils in wetland and former floodplain soils, which pose threats to terrestrial and coastal ecosystems even after the recovery of surface flows and ground water levels. Drying and subsequent oxidation of ASS materials caused soil pH to drop to less than 4 (forming sulfuric materials) in some areas, triggering environmental problems such as land degradation, loss of native plants and animals, and release of heavy metals and metalloids into ground water, rivers and wetlands. To understand this microbially-mediated oxidation process, microbial communities were studied within an acidified acid sulfate soil profile, to identify key microorganisms involved in soil acidification. Six soil layers were sampled from a soil profile according to soil morphology at the most acidic locationin the field. Total DNA from soil samples was extracted using MO-BIO PowerMax? Soil DNA Isolation Kit and sequenced by Illumina Miseq (250PE) by The Ramaciotti Centre, NSW, Australia, prepared with a Nextera DNA Sample Preparation Kit. There were five steps of non-specific amplification involved in Nextera-Miseq sequencing for obtaining enough DNA for sequencing.'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     samples_count: {
         data: ['2', '6'],
         type: datatype.NUM,
-        sortable: false,
+        sortable: false
     },
     last_update: {
         data: ['15-Nov-2017', '15-Mar-2016'],
         type: datatype.DATE,
-        sortable: false,
-    },
+        sortable: false
+    }
 };
 
 const runTableColumns = {
     accession: {
         data: ['SRR997122', 'SRR997098'],
         type: datatype.STR,
-        sortable: true,
+        sortable: true
     },
     experiment_type: {
         data: ['amplicon', 'amplicon'],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     instrument_model: {
         data: ['', ''],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     instrument_platform: {
         data: ['', ''],
         type: datatype.STR,
-        sortable: false,
+        sortable: false
     },
     pipeline_version: {
         data: ['2.0', '2.0'],
         type: datatype.STR,
-        sortable: false,
-    },
+        sortable: false
+    }
 };
 
 function waitForPageLoad(projectId) {

@@ -7,7 +7,9 @@
     "max-len": [2, {"code": 100}],
     "no-console": "off",
     "no-process-env": 0,
-    "require-jsdoc": "off"
+    "require-jsdoc": "off",
+    "comma-dangle": ["error", "never"],
+    "camelcase": [2, {"properties": "never"}]
   },
   "parserOptions": {
     "ecmaVersion": 6,

@@ -32,6 +32,6 @@ let Util = {
         STR: 0,
         NUM: 1,
         DATE: 2
-    },
+    }
 };
 module.exports = Util;

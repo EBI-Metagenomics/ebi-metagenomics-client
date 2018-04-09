@@ -1,6 +1,6 @@
 let _ = require('underscore');
 
-let Order = module.exports = {
+module.exports = {
     // orderSelector: "#sortBy",
     // getValue(){
     //     return $(this.orderSelector).val();
