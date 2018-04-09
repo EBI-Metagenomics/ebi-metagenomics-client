@@ -199,7 +199,7 @@ function initPage() {
     let downloads = new api.StudyDownloads({id: study_id});
 
     $.when(
-        studyView.fetchAndRender(),
+        studyView.fetchAndRender()
     ).done(function () {
         samplesView.initialize();
         runsView.initialize();
