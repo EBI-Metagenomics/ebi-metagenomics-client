@@ -548,7 +548,6 @@ function groupGoTermData(data) {
 }
 
 
-
 /**
  * Generate interpro link
  * @param {string} text to display in link tag

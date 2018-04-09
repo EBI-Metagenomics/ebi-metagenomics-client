@@ -247,7 +247,7 @@ export const Taxonomy = RunPipelineObject.extend({
                     for (let x = 2; x <= numPages; x++) {
                         requests.push($.get(that.url() + '?page=' + x));
                     }
-                    $.when.apply($, requests).done(function() {
+                    $.when(...requests).done(function() {
                         let page = 2;
                         _.each(requests, function(response) {
                             if (response.responseJSON === undefined ||

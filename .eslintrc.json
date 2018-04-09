@@ -9,7 +9,8 @@
     "no-process-env": 0,
     "comma-dangle": ["error", "never"],
     "new-cap": [2, {"capIsNewExceptions": ["$.Deferred", "DownloadsView"]}],
-    "camelcase": [2, {"properties": "never"}]
+    "camelcase": [2, {"properties": "never"}],
+    "no-invalid-this": "off"
   },
   "parserOptions": {
     "ecmaVersion": 6,

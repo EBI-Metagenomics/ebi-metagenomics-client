@@ -17,7 +17,7 @@ class Count {
         searchQuery = searchQuery.replace('value1', this.domainIdShort);
         searchQuery = searchQuery.replace('value2', this.domainId);
         if (this.params.facet.experimentType !== null) {
-            searchQuery += '&facets=experiment_type:' + this.params.facet.experimentType
+            searchQuery += '&facets=experiment_type:' + this.params.facet.experimentType;
         }
         return searchUrl + searchQuery;
     }

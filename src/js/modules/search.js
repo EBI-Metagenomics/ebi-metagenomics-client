@@ -169,7 +169,7 @@ function hideSpinner() {
 /**
  * Retrieve list of other facet form Ids other than specified id
  * @param except id to exclude from list
- * @returns {[string]} Array of form ids
+ * @return {[string]} Array of form ids
  */
 function getAllFormIds(except) {
     return $('form.search-filters:not(#' + except + ')').map((i, elem) => {
