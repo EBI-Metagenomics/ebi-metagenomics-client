@@ -13,7 +13,8 @@
   },
   "parserOptions": {
     "ecmaVersion": 6,
-    "strict": "implied"
+    "strict": "implied",
+    "sourceType": "module"
   },
   "env": {
     "amd": true,

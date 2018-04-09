@@ -16,7 +16,7 @@ function duplicateLastColor(colours, data) {
 module.exports = class TaxonomyPie {
     constructor(containerId, chartTitle, pieData, legend, extraOptions) {
         const categories = [];
-        pieData.forEach(function (e) {
+        pieData.forEach(function(e) {
             categories.push(e.name);
         });
         let options = {
@@ -43,7 +43,7 @@ module.exports = class TaxonomyPie {
                             color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                         }
                     },
-                    colors: duplicateLastColor(Commons.TAXONOMY_COLOURS, pieData),
+                    colors: duplicateLastColor(Commons.TAXONOMY_COLOURS, pieData)
                 }
             },
             credits: {
@@ -52,8 +52,8 @@ module.exports = class TaxonomyPie {
             series: [{
                 name: 'reads',
                 colorByPoint: true,
-                data: pieData,
-            }],
+                data: pieData
+            }]
         };
         if (extraOptions) {
             options = $.extend(true, options, extraOptions);
@@ -66,13 +66,12 @@ module.exports = class TaxonomyPie {
                 align: 'right',
                 verticalAlign: 'middle',
                 layout: 'vertical',
-                labelFormatter: function () {
+                labelFormatter() {
                     if (this.name.length > 15) {
-                        return this.name.slice(0, 15) + '...'
+                        return this.name.slice(0, 15) + '...';
                     } else {
-                        return this.name
+                        return this.name;
                     }
-
                 }
             };
             options.plotOptions.pie.showInLegend = true;

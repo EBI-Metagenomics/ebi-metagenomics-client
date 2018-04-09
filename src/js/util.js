@@ -15,35 +15,64 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 
 const DEFAULT_PAGE_SIZE = Commons.DEFAULT_PAGE_SIZE;
 
+/**
+ * Format lineage by removing root and replacing ':' with '>'
+ * @param {string} lineage
+ * @param {boolean} removeRoot
+ * @return {string}
+ */
 export function formatLineage(lineage, removeRoot) {
     let splitLineage = lineage.split(':');
     if (removeRoot) {
         splitLineage.shift();
     }
     return splitLineage.join(' > ');
-
 }
 
+/**
+ * Retrieve biome from lineage
+ * @param {string} lineage
+ * @return {string}
+ */
 export function lineageToBiome(lineage) {
     return lineage.split(':').splice(-1);
 }
 
+/**
+ * Format datestr for readability
+ * @param {string} dateStr
+ * @return {string}
+ */
 export function formatDate(dateStr) {
     let d = new Date(dateStr);
     return d.getDate() + '-' + MONTHS[d.getMonth()] + '-' + d.getFullYear();
 }
 
+/**
+ * Set visible tab by id
+ * @param {string} id
+ */
 export function setCurrentTab(id) {
     document.addEventListener('DOMContentLoaded', function() {
         $(id).addClass('active');
     });
 }
 
+/**
+ * Retrieve icon and name from biome object
+ * @param {object} biomeData
+ * @return {{name: string, icon}}
+ */
 export function getBiomeIconData(biomeData) {
     const name = biomeData.id;
     return {name: formatLineage(name, true), icon: getBiomeIcon(name)};
 }
 
+/**
+ * Create biome select filter
+ * @param {jQuery.HTMLElement} $div
+ * @param {callback} callback
+ */
 export function initBiomeFilter($div, callback) {
     $div.before(biomeFilter);
     const $biomeSelect = $('.biome-select');
@@ -57,15 +86,28 @@ export function initBiomeFilter($div, callback) {
     });
 }
 
+/**
+ * Retrieve URL parameter after last /
+ * @return {string}
+ */
 export function getURLParameter() {
-    let regex = /\/([A-z0-9|\.]+)(?:$|[?])/g;
+    let regex = /\/([A-z0-9|.]+)(?:$|[?])/g;
     return regex.exec(window.location.pathname)[1];
 }
 
+/**
+ * Get filter parameters from page URL
+ * @return {*}
+ */
 export function getURLFilterParams() {
     return new URL(window.location).searchParams;
 }
 
+/**
+ * Format lineage text for biome selector
+ * @param {string} lineage
+ * @return {string}
+ */
 export function stripLineage(lineage) {
     let depth;
     if (lineage.includes(':')) {
@@ -140,6 +182,11 @@ const biomeIconMapD6 = {
 
 // .biome_icon.default_b {  background-image: url(../images/biome_icons/biome_default.svg);  }
 
+/**
+ * Retrieve biome icon for a lineage
+ * @param {string} lineage
+ * @return {string} css class for biome
+ */
 export function getBiomeIcon(lineage) {
     const lineageList = lineage.split(':').map(function(x) {
         return x.toLowerCase();
@@ -152,7 +199,8 @@ export function getBiomeIcon(lineage) {
     const lineageD6 = lineageList.slice(0, 6).join(':');
     // if (lineageD4 === 'root:environmental:terrestrial:soil' && lineageD5.includes('forest')) {
     //     return 'forest_b';
-    // } else if (lineageD4 === 'root:environmental:terrestrial:soil' && lineageD5.includes('grassland')) {
+    // } else if (lineageD4 === 'root:
+    // environmental:terrestrial:soil' && lineageD5.includes('grassland')) {
     //     return 'grassland_b';
     // }
 
@@ -163,6 +211,11 @@ export function getBiomeIcon(lineage) {
         }());
 }
 
+/**
+ * Set URL GET parameters from object
+ * @param {object} params
+ * @param {boolean} refresh page
+ */
 export function setURLParams(params, refresh) {
     if (refresh) {
         window.location.search = $.param(params);
@@ -172,14 +225,23 @@ export function setURLParams(params, refresh) {
     }
 }
 
+/**
+ * Display loading gif
+ */
 export function showTableLoadingGif() {
     $('.loading-gif-row').show();
 }
 
+/**
+ * Hide loading gif
+ */
 export function hideTableLoadingGif() {
     $('.loading-gif-row').hide();
 }
 
+/**
+ * Attach tab handler callback to switch tabs
+ */
 export function attachTabHandlers() {
     // Deep linking
     const $dataTabs = $('[data-tabs]');
@@ -205,6 +267,10 @@ export function attachTabHandlers() {
     });
 }
 
+/**
+ * Change tab visibility such that all tabs are hidden except specified tab
+ * @param {string} tabId (without leading hash) to display
+ */
 export function changeTab(tabId) {
     // Tab header
     $('ul.tabs > li > a').each((i, el) => {
@@ -230,6 +296,11 @@ export function changeTab(tabId) {
     // $("div.tabs-panel"+tabId).addClass('active');
 }
 
+/**
+ * Create biome select option from lineage
+ * @param {string} lineage
+ * @return {string} <option>
+ */
 function createBiomeOption(lineage) {
     return '<option value="' + lineage + '">' + stripLineage(lineage) + '</option> ';
 }
@@ -288,10 +359,20 @@ export const BiomeCollectionView = Backbone.View.extend({
     }
 });
 
+/**
+ * Capitalize a word.
+ * @param {string} string to capitalize
+ * @return {string}
+ */
 export const capitalizeWord = function(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+/**
+ * Add additional URL parameters to convert a URL into a downloadable URL
+ * @param {object} params
+ * @return {object} params for download
+ */
 export const getDownloadParams = function(params) {
     const downloadParams = $.extend(true, {}, params);
     delete downloadParams['page'];
@@ -300,6 +381,10 @@ export const getDownloadParams = function(params) {
     return downloadParams;
 };
 
+/**
+ * Set download tag url
+ * @param {string} url
+ */
 export const setDownloadResultURL = function(url) {
     $('#download-results').attr('href', url);
 };
@@ -307,8 +392,9 @@ export const setDownloadResultURL = function(url) {
 /**
  * Truncates the given string to the given maximum length.
  *
- * @param str String to truncate.
- * @param maxLength Maximum length.
+ * @param {string} str to truncate.
+ * @param {maxLength} maxLength .
+ * @return {string} truncated input with ellipsis
  */
 export function truncateString(str, maxLength = 190) {
     return (str.length > maxLength) ? str.substr(0, maxLength - 1) + '&hellip;' : str;
@@ -316,7 +402,8 @@ export function truncateString(str, maxLength = 190) {
 
 /**
  * Format request for URL (remove result size limit, add csv format
- * @param requestURL: api url to format for download
+ * @param {string} requestURL api url to format for download
+ * @return {string} formatted url for download
  */
 export function formatDownloadURL(requestURL) {
     const splitURL = requestURL.split('?');
@@ -328,14 +415,30 @@ export function formatDownloadURL(requestURL) {
     return splitURL[0] + '?' + params.join('&');
 }
 
+/**
+ * Create a string representation of a hyperlink tag
+ * @param {string} url to follow on click
+ * @param {string} text to display
+ * @return {string}
+ */
 export function createLinkTag(url, text) {
     return '<a href=\'' + url + '\'>' + text + '</a>';
 }
 
+/**
+ * Create a list item
+ * @param {string} html content of tag
+ * @return {string}
+ */
 export function createListItem(html) {
     return '<li>' + html + '</li>';
 }
 
+/**
+ * Return promise of request of URL, used to validate if URL is valid
+ * @param {string} url
+ * @return {jQuery.promise}
+ */
 export function checkURLExists(url) {
     return $.ajax({
         type: 'HEAD',
@@ -343,26 +446,24 @@ export function checkURLExists(url) {
     });
 }
 
+/**
+ * Check API is online, replace body with error message if not.
+ */
 export function checkAPIonline() {
-    $.ajax({
-        url: process.env.API_URL,
-        success() {
-            console.log('API is online.');
-        },
-        error() {
-            $('body').html('Error: API Offline');
-            // throw new Error("API is offline.");
-        }
+    checkURLExists(process.env.API_URL).fail(()=>{
+        $('body').html('Error: API Offline');
+    }).done(()=>{
+        console.log('API is online.');
     });
 }
 
 /**
  * Method to update Samples or Runs view from pagination event
- * @param view Backbone view for sample or studies
- * @param page current page number
- * @param pageSize size of current page
- * @param order ordering string
- * @param query filtering string
+ * @param {Backbone.View} view Backbone view for sample or studies
+ * @param {number} page current page number
+ * @param {number} pageSize size of current page
+ * @param {string} order ordering string
+ * @param {string} query filtering string
  */
 export function updateTableFromPagination(view, page, pageSize, order, query) {
     view.tableObj.showLoadingGif();

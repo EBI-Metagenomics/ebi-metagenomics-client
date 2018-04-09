@@ -48,25 +48,27 @@ let SampleView = Backbone.View.extend({
 
 /**
  * Sort by parameter name ignoring case
- * @param a object to sort
- * @param b object to sort
+ * @param {object} a to sort
+ * @param {object} b  to sort
  * @return {number} ordering
  */
 function compareByName(a, b) {
     const textA = a.name.toUpperCase();
     const textB = b.name.toUpperCase();
+    let val;
     if (textA < textB) {
-        return -1;
+        val = -1;
     } else if (textB < textA) {
-        return 1;
+        val = 1;
     } else {
-        return 0;
+        val = 0;
     }
+    return val;
 }
 
 /**
  * Generate link to ENA if sample accession exists in ENA
- * @param sampleAccession ENA secondary sample accession
+ * @param {string} sampleAccession ENA secondary sample accession
  * @return {promise} with valid urls as data.
  */
 function getExternalLinks(sampleAccession) {

@@ -11,10 +11,10 @@ module.exports = class SeqFeatChart {
             'Nucleotide sequences with predicted rRNA',
             'Nucleotide sequences with InterProScan match',
             'Predicted CDS',
-            'Predicted CDS with InterProScan match',
+            'Predicted CDS with InterProScan match'
         ];
         let series = [];
-        categories.forEach(function(e, o){
+        categories.forEach(function(e, o) {
             series.push(parseInt(data[e]));
         });
 
@@ -23,7 +23,7 @@ module.exports = class SeqFeatChart {
                 type: 'bar'
             },
             title: {
-                text: chartTitle,
+                text: chartTitle
             },
             yAxis: {
                 min: 0,
@@ -32,7 +32,7 @@ module.exports = class SeqFeatChart {
                 }
             },
             xAxis: {
-                categories: categories,
+                categories: categories
             },
             plotOptions: {
                 series: {

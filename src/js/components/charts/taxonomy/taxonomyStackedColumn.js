@@ -15,8 +15,8 @@ module.exports = class TaxonomyStackedColumns extends TaxonomyColumn {
                 series: {
                     stacking: 'percent',
                     dataLabels: {
-                        enabled: true,
-                    },
+                        enabled: true
+                    }
                 }
             },
             yAxis: {
@@ -26,7 +26,7 @@ module.exports = class TaxonomyStackedColumns extends TaxonomyColumn {
             xAxis: {
                 title: {
                     text: null,
-                    enabled: false,
+                    enabled: false
                 },
                 labels: {
                     enabled: false
@@ -39,7 +39,7 @@ module.exports = class TaxonomyStackedColumns extends TaxonomyColumn {
         } else {
             extraOptions = barOptions;
         }
-        super(containerId, chartTitle, data, legend, extraOptions)
+        super(containerId, chartTitle, data, legend, extraOptions);
     }
 };
 
@@ -47,7 +47,7 @@ function transformData(data) {
     let transformedData = [];
     let i = 0;
     const maxColorIndex = Commons.TAXONOMY_COLOURS.length - 1;
-    data.forEach(function (e) {
+    data.forEach(function(e) {
         transformedData.push({
             name: e.name,
             data: [e.y],

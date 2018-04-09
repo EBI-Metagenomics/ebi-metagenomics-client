@@ -20,7 +20,7 @@ module.exports = class Map {
 
         // // Do not display markers with invalid Lat/Long values
         const that = this;
-        let markers = samples.reduce(function (result, sample) {
+        let markers = samples.reduce(function(result, sample) {
             const lat = sample.latitude;
             const lng = sample.longitude;
 
@@ -41,23 +41,23 @@ module.exports = class Map {
                     imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
                     maxZoom: 17
                 });
-        } else if (markers.length === 0){
-            const $parentDiv = $("#"+elementId).parent();
-            $("#"+elementId).addClass('disabled');
+        } else if (markers.length === 0) {
+            const $parentDiv = $('#'+elementId).parent();
+            $('#'+elementId).addClass('disabled');
             $parentDiv.addClass('no-coords-tooltip');
-            $(".map > span.hidden").removeClass('hidden');
+            $('.map > span.hidden').removeClass('hidden');
         }
         window.map = map;
-        return map
-    };
+        return map;
+    }
 
     getSamplePosition(sample) {
-        return {lat: parseFloat(sample.latitude), lng: parseFloat(sample.longitude)}
-    };
+        return {lat: parseFloat(sample.latitude), lng: parseFloat(sample.longitude)};
+    }
 
     createMarkerLabel(template, sample) {
         return template(sample);
-    };
+    }
 
     placeMarker(map, oms, template, sample, displayMarkerDetails) {
         const pos = this.getSamplePosition(sample);
@@ -74,13 +74,12 @@ module.exports = class Map {
                 content: contentString
             });
 
-            google.maps.event.addListener(marker, 'spider_click', function (e) {
+            google.maps.event.addListener(marker, 'spider_click', function(e) {
                 infowindow.open(map, marker);
             });
         }
         oms.addMarker(marker);
         return marker;
-    };
-
+    }
 };
 

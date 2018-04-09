@@ -1,12 +1,18 @@
 const _ = require('underscore');
 const GenericTable = require('./genericTable');
 
-
 module.exports = class ClientSideTable extends GenericTable {
+    /**
+     * Initialize handles, pagination and callback for table
+     * @param {jQuery.HTMLElement} $container  jQuery container elem
+     * @param {string} title string Title of table
+     * @param {[*]} headers [string] list of table headers
+     * @param {number} initPageSize int number of results in a page
+     */
     constructor($container, title, headers, initPageSize) {
         super($container, title, headers, null);
         const that = this;
-        this.$filterInput.on('keyup', function () {
+        this.$filterInput.on('keyup', function() {
             const str = $(this).val();
             that.filterTable(str);
         });
@@ -15,6 +21,12 @@ module.exports = class ClientSideTable extends GenericTable {
         this.initHeaders(this.$table);
     }
 
+    /**
+     * Clear and update table with new data
+     * @param {[*]} dataset new data
+     * @param {number} clear boolean remove existing data
+     * @param {number} page set pagination page
+     */
     update(dataset, clear, page) {
         let resultCount = dataset.length;
         const that = this;
@@ -22,7 +34,7 @@ module.exports = class ClientSideTable extends GenericTable {
             this.$tbody.empty();
         }
 
-        _.each(dataset, function (row) {
+        _.each(dataset, function(row) {
             that.addRow(row);
         });
 
@@ -33,19 +45,25 @@ module.exports = class ClientSideTable extends GenericTable {
         this.hideLoadingGif();
         this.$table.tablesorter({
             theme: 'dropbox',
-            cssIcon: 'tablesorter-icon',
+            cssIcon: 'tablesorter-icon'
         });
-        this.$table.bind('sortStart', function () {
+        this.$table.bind('sortStart', function() {
             that.$tbody.children('tr').show();
-        }).bind('sortEnd', function () {
-            that.setVisibleRows(0, that.getPageSize())
-        })
+        }).bind('sortEnd', function() {
+            that.setVisibleRows(0, that.getPageSize());
+        });
     }
 
+    /**
+     * Filter table results by string
+     * @param {string} searchString filter parameter
+     */
     filterTable(searchString) {
         this.searchString = searchString;
-        this.$tbody.children('tr').filter(":contains('" + searchString + "')").addClass('match');
-        this.$tbody.children('tr').filter(":not(:contains('" + searchString + "'))").removeClass('match');
+        this.$tbody.children('tr').filter(':contains(\'' + searchString + '\')').addClass('match');
+        this.$tbody.children('tr').
+            filter(':not(:contains(\'' + searchString + '\'))').
+            removeClass('match');
 
         const pageSize = this.getPageSize();
         this.$tbody.children('tr').hide();
@@ -54,19 +72,28 @@ module.exports = class ClientSideTable extends GenericTable {
         this.setPagination(1, matchedRows.length, pageSize);
     }
 
+    /**
+     * Attach handler for page size select events
+     */
     attachPageSizeCallback() {
         const that = this;
-        this.$pageSizeSelect.change(function () {
+        this.$pageSizeSelect.change(function() {
             const resultCount = that.$tbody.children('tr').length;
             const pageSize = parseInt(that.$pageSizeSelect.val());
             that.setPagination(1, resultCount, pageSize);
-            that.setVisibleRows(0, pageSize)
-        })
+            that.setVisibleRows(0, pageSize);
+        });
     }
 
+    /**
+     * Update pagination display
+     * @param {number} page int current page
+     * @param {number} resultCount int total number of results
+     * @param {number} pagesize int
+     */
     setPagination(page, resultCount, pagesize) {
         const that = this;
-        if (this.$pagination.data("twbs-pagination")) {
+        if (this.$pagination.data('twbs-pagination')) {
             this.$pagination.twbsPagination('destroy');
         }
         let totalPages = Math.max(Math.ceil(resultCount / pagesize));
@@ -77,14 +104,18 @@ module.exports = class ClientSideTable extends GenericTable {
             this.$pagination.twbsPagination({
                 startPage: page,
                 totalPages: totalPages
-            }).on('page', function (evt, page) {
-                that.changePage(page)
+            }).on('page', function(evt, page) {
+                that.changePage(page);
             });
         }
         this.$currentPageDisp.text(page);
         this.$maxPageDisp.text(totalPages);
     }
 
+    /**
+     * Change page that is currently displayed
+     * @param {number} page from-1 page index
+     */
     changePage(page) {
         const pageSize = this.getPageSize();
         const initIndex = (page - 1) * pageSize;
@@ -93,34 +124,32 @@ module.exports = class ClientSideTable extends GenericTable {
         this.$currentPageDisp.text(page);
     }
 
+    /**
+     * Hide or display rows by index in dataset
+     * @param {number} min starting index
+     * @param {number} finalIndex end index
+     */
     setVisibleRows(min, finalIndex) {
-        // this.$tbody.children('tr').slice(min).show();
-
         if (this.searchString) {
             this.filterTable(this.searchString);
         }
 
-        let count = 0;
         this.$tbody.children('tr').hide();
         const remainingRows = this.$tbody.children(this.searchString ? 'tr.match' : 'tr');
         remainingRows.slice(min, finalIndex).show();
-        // remainingRows.each(function (i, e) {
-        //     if (!(min <= i && i < pageSize)) {
-        //         $(e).hide();
-        //     } else {
-        //         console.log('Index:', i);
-        //         $(e).show();
-        //         count++;
-        //     }
-        // });
     }
 
+    /**
+     * Create headers with sorting icons
+     * @param {jQuery.HTMLElement} $table table elem
+     * @param {string} initialSort initialSort parameter
+     */
     initHeaders($table, initialSort) {
         const that = this;
         that.order = initialSort;
-        $table.find("th.sort-both").on('click', function () {
+        $table.find('th.sort-both').on('click', function() {
             const siblings = $(this).siblings('[data-sortby]');
-            _.each(siblings, function (s) {
+            _.each(siblings, function(s) {
                 const sibling = $(s);
                 if (sibling.hasClass('sort-desc') || sibling.hasClass('sort-asc')) {
                     siblings.removeClass('sort-desc');
@@ -144,7 +173,9 @@ module.exports = class ClientSideTable extends GenericTable {
             that.order = sort;
         });
         if (initialSort) {
-            $table.find("[data-sortby='" + initialSort + "']").removeClass('sort-both').addClass(initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
+            $table.find('[data-sortby=\'' + initialSort + '\']').
+                removeClass('sort-both').
+                addClass(initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
         }
     }
 };

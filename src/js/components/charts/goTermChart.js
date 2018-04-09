@@ -7,7 +7,7 @@ module.exports = class GoTermChart {
     constructor(containerId, chartTitle, data, color) {
         let series = [];
         let categories = [];
-        data.forEach(function (d) {
+        data.forEach(function(d) {
             d = d.attributes;
             categories.push(d.description);
             series.push(d.count);
@@ -18,10 +18,10 @@ module.exports = class GoTermChart {
                 type: 'bar',
                 height: 800,
                 zoomType: 'xy',
-                renderTo: 'container',
+                renderTo: 'container'
             },
             title: {
-                text: chartTitle,
+                text: chartTitle
             },
             yAxis: {
                 min: 0,
@@ -30,7 +30,7 @@ module.exports = class GoTermChart {
                 }
             },
             xAxis: {
-                categories: categories,
+                categories: categories
             },
             plotOptions: {
                 series: {
@@ -46,7 +46,7 @@ module.exports = class GoTermChart {
                             color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                         }
                     },
-                    colors: Commons.TAXONOMY_COLOURS,
+                    colors: Commons.TAXONOMY_COLOURS
                 }
             },
             credits: {

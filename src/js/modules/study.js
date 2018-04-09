@@ -44,7 +44,7 @@ let MapData = api.StudyGeoCoordinates.extend({
         this.data = [];
         const that = this;
         this.fetch({
-            success: function(response, meta) {
+            success(response, meta) {
                 let data = _.map(response.attributes.data, function(model) {
                     return model.attributes;
                 });
@@ -56,7 +56,7 @@ let MapData = api.StudyGeoCoordinates.extend({
                     Map('map', that.data, true);
                 }
             },
-            error: function() {
+            error() {
             }
         });
     }
@@ -69,7 +69,7 @@ let DownloadsView = Backbone.View.extend({
     initialize() {
         const that = this;
         this.model.fetch({
-            success: function(response) {
+            success(response) {
                 const pipelineFiles = response.attributes.pipelineFiles;
                 that.$el.html(that.template({pipeline_files: pipelineFiles}));
             }

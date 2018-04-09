@@ -14,12 +14,11 @@ util.attachTabHandlers();
 
 const BIOME_FILTER_DEPTH = 3;
 
-
 util.checkAPIonline();
 util.setCurrentTab('#browse-nav');
 
-$("#pagination").append(commons.pagination);
-$("#pageSize").append(commons.pagesize);
+$('#pagination').append(commons.pagination);
+$('#pageSize').append(commons.pagesize);
 
 const pageFilters = util.getURLFilterParams();
 
@@ -28,23 +27,24 @@ let StudiesView = Backbone.View.extend({
     pagination: null,
     params: {},
 
-    init: function () {
+    init() {
         const that = this;
         const columns = [
             {sortBy: null, name: 'Biome'},
             {sortBy: 'study_name', name: 'Study name'},
             {sortBy: 'samples_count', name: 'Samples'},
-            {sortBy: 'last_update', name: 'Last updated'},
+            {sortBy: 'last_update', name: 'Last updated'}
         ];
         const $studiesSection = $('#studies-section');
-        this.tableObj = new GenericTable($studiesSection, 'Studies list', columns, Commons.DEFAULT_PAGE_SIZE, true, function (page, pageSize, order, search) {
-            that.update({
-                page: page,
-                page_size: pageSize,
-                ordering: order,
-                search: search
+        this.tableObj = new GenericTable($studiesSection, 'Studies list', columns,
+            Commons.DEFAULT_PAGE_SIZE, true, function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order,
+                    search: search
+                });
             });
-        });
 
         let params = {};
         params.page = pagination.currentPage;
@@ -66,7 +66,7 @@ let StudiesView = Backbone.View.extend({
         const search = pageFilters.get('search');
         if (search) {
             params.search = search;
-            $("#search").val(search);
+            $('#search').val(search);
         }
         params.page_size = pageFilters.get('pagesize') || Commons.DEFAULT_PAGE_SIZE;
         params.page = parseInt(pageFilters.get('page')) || 1;
@@ -74,28 +74,30 @@ let StudiesView = Backbone.View.extend({
         this.update(params);
     },
 
-    update: function (params) {
+    update(params) {
         this.params = $.extend({}, this.params, params);
 
         const that = this;
         this.fetchXhr = this.collection.fetch({
             data: $.param(this.params),
-            success: function (data, response) {
+            success(data, response) {
                 const pagination = response.meta.pagination;
-                that.renderData(pagination.page, that.params.page_size, pagination.count, response.links.first);
+                that.renderData(pagination.page, that.params.page_size, pagination.count,
+                    response.links.first);
                 that.tableObj.hideLoadingGif();
-            },
-        })
+            }
+        });
     },
 
-    renderData: function (page, pageSize, resultCount, requestURL) {
-        const tableData = _.map(this.collection.models, function (m) {
+    renderData(page, pageSize, resultCount, requestURL) {
+        const tableData = _.map(this.collection.models, function(m) {
             const attr = m.attributes;
-            const biomes = _.map(m.attributes.biomes, function (biome) {
-                return "<span class=\"biome_icon icon_xs " + biome.icon + "\" title=\"" + biome.name + "\"></span>";
+            const biomes = _.map(m.attributes.biomes, function(biome) {
+                return '<span class="biome_icon icon_xs ' + biome.icon + '" title="' + biome.name +
+                    '"></span>';
             }).join();
-            const study_link = "<a href='" + attr.study_link + "'>" + attr.study_name + "</a>";
-            return [biomes, study_link, attr.samples_count, attr.last_update];
+            const studyLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_name + '</a>';
+            return [biomes, studyLink, attr.samples_count, attr.last_update];
         });
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
@@ -106,31 +108,25 @@ let SamplesView = Backbone.View.extend({
     pagination: null,
     params: {},
 
-    init: function () {
+    init() {
         const that = this;
         const columns = [
             {sortBy: null, name: 'Biome'},
             {sortBy: 'accession', name: 'Sample ID'},
             {sortBy: 'sample_name', name: 'Name'},
             {sortBy: null, name: 'Description'},
-            {sortBy: 'last_update', name: 'Last updated'},
+            {sortBy: 'last_update', name: 'Last updated'}
         ];
         const $samplesSection = $('#samples-section');
-        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns, Commons.DEFAULT_PAGE_SIZE, true, function (page, pageSize, order, search) {
-            that.update({
-                page: page,
-                page_size: pageSize,
-                ordering: order,
-                search: search
+        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns,
+            Commons.DEFAULT_PAGE_SIZE, true, function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order,
+                    search: search
+                });
             });
-        });
-
-        // initBiomeFilter($studiesSection.find('div.row:nth-child(2) > div.columns:nth-child(2)'), function () {
-        //     that.update({
-        //         lineage: $(this).val(),
-        //         search: $('#tableFilter').val()
-        //     });
-        // });
 
         let params = {};
         params.page = pagination.currentPage;
@@ -152,7 +148,7 @@ let SamplesView = Backbone.View.extend({
         const search = pageFilters.get('search');
         if (search) {
             params.search = search;
-            $("#search").val(search);
+            $('#search').val(search);
         }
         params.page_size = pageFilters.get('pagesize') || Commons.DEFAULT_PAGE_SIZE;
         params.page = parseInt(pageFilters.get('page')) || 1;
@@ -160,26 +156,29 @@ let SamplesView = Backbone.View.extend({
         return this.update(params);
     },
 
-    update: function (params) {
+    update(params) {
         this.params = $.extend({}, this.params, params);
 
         const that = this;
         this.fetchXhr = this.collection.fetch({
             data: $.param(this.params),
-            success: function (data, response) {
+            success(data, response) {
                 const pagination = response.meta.pagination;
-                that.renderData(pagination.page, that.params.page_size, pagination.count, response.links.first);
+                that.renderData(pagination.page, that.params.page_size, pagination.count,
+                    response.links.first);
                 that.tableObj.hideLoadingGif();
-            },
+            }
         });
     },
 
-    renderData: function (page, pageSize, resultCount, requestURL) {
-        const tableData = _.map(this.collection.models, function (m) {
+    renderData(page, pageSize, resultCount, requestURL) {
+        const tableData = _.map(this.collection.models, function(m) {
             const attr = m.attributes;
-            const biomes = "<span class=\"biome_icon icon_xs " + attr.biome_icon + "\" title=\"" + attr.biome_name + "\"></span>";
-            const sample_link = "<a href='" + attr.sample_url + "'>" + attr.sample_accession + "</a>";
-            return [biomes, sample_link, attr.sample_name, attr.sample_desc, attr.last_update];
+            const biomes = '<span class="biome_icon icon_xs ' + attr.biome_icon + '" title="' +
+                attr.biome_name + '"></span>';
+            const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
+                '</a>';
+            return [biomes, sampleLink, attr.sample_name, attr.sample_desc, attr.last_update];
         });
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
@@ -187,37 +186,37 @@ let SamplesView = Backbone.View.extend({
 
 function syncFilterFields() {
     const events = 'input select change';
-    $('.biome-select').on(events, function () {
+    $('.biome-select').on(events, function() {
         $('.biome-select').val($(this).val());
     });
-    $('.table-filter').on('input select', function () {
+    $('.table-filter').on('input select', function() {
         $('.table-filter').not(this).val($(this).val()).trigger('keyup');
     });
 }
 
-var biomes = new api.BiomeCollection();
-var biomesSelectView = new util.BiomeCollectionView({
+let biomes = new api.BiomeCollection();
+new util.BiomeCollectionView({
     collection: biomes,
     maxDepth: BIOME_FILTER_DEPTH
 }, pageFilters.get('lineage'));
 
-var studies = new api.StudiesCollection();
-var studiesView = new StudiesView({collection: studies});
+let studies = new api.StudiesCollection();
+let studiesView = new StudiesView({collection: studies});
 
-var samples = new api.SamplesCollection();
-var samplesView = new SamplesView({collection: samples});
+let samples = new api.SamplesCollection();
+let samplesView = new SamplesView({collection: samples});
 
 studiesView.init();
 samplesView.init();
 
-
-util.initBiomeFilter($("section").find('div.row:nth-child(2) > div.columns:nth-child(2)'), function () {
-    const updateObj = {
-        lineage: $(this).val(),
-        search: $('#tableFilter').val()
-    };
-    studiesView.update(updateObj);
-    samplesView.update(updateObj);
-});
+util.initBiomeFilter($('section').find('div.row:nth-child(2) > div.columns:nth-child(2)'),
+    function() {
+        const updateObj = {
+            lineage: $(this).val(),
+            search: $('#tableFilter').val()
+        };
+        studiesView.update(updateObj);
+        samplesView.update(updateObj);
+    });
 $('.table-filter').val(pageFilters.get('search'));
 syncFilterFields();
