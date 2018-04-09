@@ -1,18 +1,17 @@
 const tableTmpl = require('../commons').genericTable;
 const _ = require('underscore');
 const formatDownloadURL = require('../util').formatDownloadURL;
-const Commons = require('../commons');
-const Pagination = require('../components/pagination').Pagination;
 
 module.exports = class GenericTable {
     /**
-     * Instantiate pagination display and event handlers for table which requires page-by-page loading
-     * @param $container jQuery container of table
-     * @param title string title of table
-     * @param headers string list of table header names
-     * @param initPageSize initial page size
-     * @param isPageHeader boolean true if table should have a larger header
-     * @param callback function on event callback to load data
+     * Instantiate pagination display and event handlers for table which requires
+     * page-by-page loading
+     * @param {jQuery.HTMLElement} $container  container of table
+     * @param {string} title title of table
+     * @param {[string]} headers list of table header names
+     * @param {number} initPageSize initial page size
+     * @param {boolean} isPageHeader true if table should have a larger header
+     * @param {callback} callback function on event callback to load data
      */
     constructor($container, title, headers, initPageSize, isPageHeader, callback) {
         this.headers = headers;
@@ -46,7 +45,7 @@ module.exports = class GenericTable {
 
     /**
      * Store jQuery references to elements in table
-     * @param $sectionContent {jQuery.HTMLElement} elem containing table
+     * @param {jQuery.HTMLElement} $sectionContent elem containing table
      */
     storeElemRefs($sectionContent) {
         this.$pagination = $sectionContent.find('ul.pagination');
@@ -60,8 +59,8 @@ module.exports = class GenericTable {
 
     /**
      * Instantiate page size callback handler
-     * @param $elem {jQuery.HTMLElement} elem for PageSize select
-     * @param callback on change callback to load data
+     * @param {jQuery.HTMLElement} $elem elem for PageSize select
+     * @param {callback} callback on change callback to load data
      */
     attachPageSizeCallback($elem, callback) {
         const that = this;
@@ -73,8 +72,8 @@ module.exports = class GenericTable {
     /**
      * Instantiate table filtering handler (debounce used to avoid pre-emptively
      * filtering on partial query strings
-     * @param {jQuery.HTMLElement} text input elem
-     * @param {function} callback
+     * @param {jQuery.HTMLElement} $elem input elem
+     * @param {callback} callback
      */
     attachFilterCallback($elem, callback) {
         const that = this;
@@ -85,12 +84,12 @@ module.exports = class GenericTable {
 
     /**
      * Clear table, update pagination and download link following a data update
-     * @param dataset new data to display
-     * @param clear {boolean} clear table
-     * @param page {number} 1-indexed page
-     * @param pageSize {number} number of results per page
-     * @param resultCount  {number} total results
-     * @param requestURL  {string} URL used to request data
+     * @param {[*]} dataset new data to display
+     * @param {boolean} clear clear table
+     * @param {number} page 1-indexed page
+     * @param {number} pageSize results per page
+     * @param {number} resultCount  total results
+     * @param {string} requestURL URL used to request data
      */
     update(dataset, clear, page, pageSize, resultCount, requestURL) {
         const that = this;
@@ -128,7 +127,7 @@ module.exports = class GenericTable {
 
     /**
      * Append a row of data to the table
-     * @param data row data
+     * @param {[*]}data row data
      */
     addRow(data) {
         const that = this;
@@ -213,27 +212,45 @@ module.exports = class GenericTable {
     }
 
     /**
-     * Get
-     * @returns {Number}
+     * Get page size fom selector
+     * @return {number}
      */
     getPageSize() {
         return parseInt(this.$pageSizeSelect.val());
     }
 
+    /**
+     * Get filter text input value
+     * @return {string}
+     */
     getFilterText() {
         return this.$filterInput.val();
     }
 
+    /**
+     * Get ordering string
+     * @return {string}
+     */
     getCurrentOrder() {
         return this.order;
     }
 
+    /**
+     * Set pagination display
+     * @param {number} currentPage
+     * @param {number} totalResults
+     * @param {number} totalPages
+     */
     setPageDisplay(currentPage, totalResults, totalPages) {
         this.$currentPageDisp.text(currentPage);
         this.$totalResultsDisp.text(totalResults);
         this.$maxPageDisp.text(totalPages);
     }
 
+    /**
+     * Set download URL for table
+     * @param {string} url
+     */
     setDownloadURL(url) {
         this.$downloadLink.attr('href', url);
     }

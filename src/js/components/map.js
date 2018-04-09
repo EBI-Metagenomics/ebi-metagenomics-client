@@ -1,7 +1,3 @@
-const Handlebars = require('handlebars');
-const _ = require('underscore');
-
-
 module.exports = class Map {
     constructor(elementId, samples, displayMarkerDetails) {
         let map = new google.maps.Map(document.getElementById(elementId), {
@@ -36,14 +32,13 @@ module.exports = class Map {
                 bounds.extend(markers[i].getPosition());
             }
 
-            let markerCluster = new MarkerClusterer(map, markers,
-                {
-                    imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
-                    maxZoom: 17
-                });
+            new MarkerClusterer(map, markers, {
+                imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+                maxZoom: 17
+            });
         } else if (markers.length === 0) {
-            const $parentDiv = $('#'+elementId).parent();
-            $('#'+elementId).addClass('disabled');
+            const $parentDiv = $('#' + elementId).parent();
+            $('#' + elementId).addClass('disabled');
             $parentDiv.addClass('no-coords-tooltip');
             $('.map > span.hidden').removeClass('hidden');
         }
@@ -74,7 +69,7 @@ module.exports = class Map {
                 content: contentString
             });
 
-            google.maps.event.addListener(marker, 'spider_click', function(e) {
+            google.maps.event.addListener(marker, 'spider_click', function() {
                 infowindow.open(map, marker);
             });
         }

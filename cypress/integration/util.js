@@ -1,46 +1,37 @@
 import Config from './config';
 
-const sortBySelector = '#sortBy';
-
-
-var Util = module.exports = {
-    getBaseURL: function () {
+let Util = {
+    getBaseURL: function() {
         return Config.BASE_URL;
     },
-    getPageURL: function (page) {
+    getPageURL: function(page) {
         return Config.BASE_URL + (page !== 'overview' ? page : '');
     },
-    openPage: function (page) {
+    openPage: function(page) {
         cy.visit(Util.getPageURL(page));
     },
-    setSortBy: function (optionValue, numResults, waitCallback) {
-        cy.get(sortBySelector).select('-last_update');
-        waitCallback(numResults);
+    waitForPageLoad: function(projectId) {
+        cy.get('h2').should('contain', projectId);
     },
-    waitForPageLoad: function (projectId) {
-        cy.get('h2').should('contain', projectId)
+    waitForBiomesLoad: function(results) {
+        cy.get('table tr.biome', {timeout: 10000}).should('have.length', parseInt(results));
     },
-    waitForBiomesLoad: function (results) {
-        cy.get("table tr.biome", {timeout: 10000}).should("have.length", parseInt(results));
+    assertTableIsCleared: function() {
+        cy.get('table tr.sample').should('not.exist');
     },
-    waitForStudiesLoad: function (results) {
-        cy.get("table > tbody > tr", {timeout: 10000}).should("have.length", parseInt(results));
+    changeTab: function(tabName) {
+        cy.get('ul.tabs > li.tabs-title a[href=\'#' + tabName + '\']').click();
     },
-    assertTableIsCleared: function () {
-        cy.get("table tr.sample").should('not.exist');
-    },
-    changeTab: function(tabName){
-        cy.get("ul.tabs > li.tabs-title a[href='#"+tabName+"']").click();
-    },
-    urlExists: function (url) {
+    urlExists: function(url) {
         cy.request(url);
     },
-    stripWhitespace: function (str) {
-        return str.replace(/\s/g, "");
+    stripWhitespace: function(str) {
+        return str.replace(/\s/g, '');
     },
     datatype: {
         STR: 0,
         NUM: 1,
         DATE: 2
-    }
+    },
 };
+module.exports = Util;

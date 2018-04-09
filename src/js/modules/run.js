@@ -191,6 +191,19 @@ function clusterData(data, depth) {
     return clusteredData;
 }
 
+/**
+ * Converts series index to capped index, used to handle events
+ * @param {number} index
+ * @param {number} numSeries
+ * @return {number}
+ */
+function getSeriesIndex(index, numSeries) {
+    if (index >= numSeries - 1) {
+        index = numSeries - 1;
+    }
+    return index;
+}
+
 let TaxonomyGraphView = Backbone.View.extend({
     model: api.Taxonomy,
     initialize() {
@@ -534,18 +547,7 @@ function groupGoTermData(data) {
     return data;
 }
 
-/**
- * Converts series index to capped index, used to handle events
- * @param {number} index
- * @param {number} numSeries
- * @return {number}
- */
-function getSeriesIndex(index, numSeries) {
-    if (index >= numSeries - 1) {
-        index = numSeries - 1;
-    }
-    return index;
-}
+
 
 /**
  * Generate interpro link

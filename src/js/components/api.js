@@ -64,8 +64,8 @@ export const Run = Backbone.Model.extend({
         const rel = data.relationships;
         const pipelines = rel.pipelines;
         // const analysis = rel.analysis;
-        const sample_id = rel.sample.data.id;
-        const study_id = rel.study.data.id;
+        const sampleId = rel.sample.data.id;
+        const studyId = rel.study.data.id;
         return {
             run_id: attr['accession'],
             // analyses: [{
@@ -73,8 +73,8 @@ export const Run = Backbone.Model.extend({
             //     pipeline_version: 'x.x',
             //     date: 'xx/xx/xxxx'
             // }],
-            sample_id: sample_id,
-            sample_url: util.subfolder + '/samples/' + sample_id,
+            sample_id: sampleId,
+            sample_url: util.subfolder + '/samples/' + sampleId,
             run_url: util.subfolder + '/runs/' + attr.accession,
             experiment_type: attr['experiment-type'],
             instrument_model: attr['instrument-model'],
@@ -83,12 +83,18 @@ export const Run = Backbone.Model.extend({
                 return x.id;
             }),
             analysis_results: 'TAXONOMIC / FUNCTION / DOWNLOAD',
-            study_id: study_id,
-            study_url: util.subfolder + '/studies/' + study_id
+            study_id: studyId,
+            study_url: util.subfolder + '/studies/' + studyId
         };
     }
 });
 
+/**
+ * Generate Krona URL
+ * @param {string} runId ENA Run primary accession
+ * @param {string} pipelineVersion
+ * @return {string} url
+ */
 export function getKronaURL(runId, pipelineVersion) {
     return API_URL + 'runs/' + runId + '/pipelines/' + pipelineVersion + '/krona';
 }
@@ -165,10 +171,10 @@ export const Sample = Backbone.Model.extend({
 
         // Adaption to handle 'includes' on API calls which would wrap the response
         const biome = data.relationships.biome;
-        const biome_name = biome.data.id;
+        const biomeName = biome.data.id;
         return {
-            biome_icon: getBiomeIcon(biome_name),
-            biome_name: formatLineage(biome_name),
+            biome_icon: getBiomeIcon(biomeName),
+            biome_name: formatLineage(biomeName),
             sample_name: attr['sample-name'] || NO_DATA_MSG,
             sample_desc: attr['sample-desc'],
             sample_url: util.subfolder + '/samples/' + attr['accession'],
@@ -298,6 +304,11 @@ export const Publication = Backbone.Model.extend({
     }
 });
 
+/**
+ * Cluster study download results by type and parts
+ * @param {[object]} downloads
+ * @return {[object]} grouped downloads
+ */
 function clusterStudyDownloads(downloads) {
     const pipelines = {};
     _.each(downloads, function(download) {
@@ -318,6 +329,11 @@ function clusterStudyDownloads(downloads) {
     return pipelines;
 }
 
+/**
+ * Cluster run download results by type and parts
+ * @param {[object]} downloads
+ * @return {[object]} grouped downloads
+ */
 function clusterRunDownloads(downloads) {
     const groups = {};
     _.each(downloads, function(download) {
@@ -367,7 +383,7 @@ export const StudyGeoCoordinates = Backbone.Model.extend({
     url() {
         return API_URL + 'studies/' + this.study_accession + '/geocoordinates?page_size=500';
     },
-    initialize(study_accession) {
-        this.study_accession = study_accession;
+    initialize(studyAccession) {
+        this.study_accession = studyAccession;
     }
 });

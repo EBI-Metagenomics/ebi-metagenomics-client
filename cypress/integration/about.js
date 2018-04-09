@@ -1,12 +1,12 @@
-import {openPage, waitForBiomesLoad, assertTableIsCleared, stripWhitespace} from './util';
+import {openPage} from './util';
 
 const origPage = 'about';
 
-describe('About page - Dropdown citations view', function () {
-    beforeEach(function () {
+describe('About page - Dropdown citations view', function() {
+    beforeEach(function() {
         openPage(origPage);
     });
-    it('Clicking button should display / hide publications', function () {
+    it('Clicking button should display / hide publications', function() {
         const citationDiv = '#extra_citation';
         const button = 'a.expand-button';
         cy.get(citationDiv).should('be.hidden');
@@ -14,5 +14,5 @@ describe('About page - Dropdown citations view', function () {
         cy.get(citationDiv).should('be.visible');
         cy.get(button).click();
         cy.get(citationDiv).should('be.hidden');
-    })
+    });
 });

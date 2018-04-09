@@ -3,46 +3,46 @@ import {openPage, changeTab} from './util';
 const origPage = 'runs/ERR1022502';
 
 function waitForPageLoad() {
-    cy.get('#overview', {timeout: 20000}).children().should('have.length', 2)
+    cy.get('#overview', {timeout: 20000}).children().should('have.length', 2);
 }
 
 function verifyTabIsVisible(tabId) {
     // Verify correct tab button is active
-    cy.get("[href='" + tabId + "']").parent().should('have.class', 'is-active');
+    cy.get('[href=\'' + tabId + '\']').parent().should('have.class', 'is-active');
     // Verify tab content is active
-    cy.get(tabId).should('have.class', 'active')
+    cy.get(tabId).should('have.class', 'active');
 }
 
 function openTab(tabId) {
-    cy.get("[href='" + tabId + "']").parent().click()
+    cy.get('[href=\'' + tabId + '\']').parent().click();
 }
 
-function checkTabIsDisabled(tabId){
-    cy.get("[href='" + tabId + "']").parent('li.disabled', {timeout: 40000});
+function checkTabIsDisabled(tabId) {
+    cy.get('[href=\'' + tabId + '\']').parent('li.disabled', {timeout: 40000});
 }
 
 /**
  * Verify number of results responds to selector
  */
-describe('Run page - general', function () {
-    it('Should display overview if no deeplink is provided', function () {
+describe('Run page - general', function() {
+    it('Should display overview if no deeplink is provided', function() {
         openPage(origPage);
         waitForPageLoad();
-        verifyTabIsVisible('#overview')
+        verifyTabIsVisible('#overview');
     });
-    it('Should only display available tabs', function () {
+    it('Should only display available tabs', function() {
         openPage(origPage);
         waitForPageLoad();
         verifyTabIsVisible('#overview');
         // const tabs = ['#qc', '#functional', '#taxonomic', '#abundance', '#download', '#overview'];
         const tabs = ['#qc', '#taxonomic', '#download', '#overview'];
-        for (var i in tabs) {
+        for (let i in tabs) {
             const tabId = tabs[i];
             openTab(tabId);
             verifyTabIsVisible(tabId);
         }
     });
-    it('Should display metadata if available', function () {
+    it('Should display metadata if available', function() {
         openPage('runs/ERR867946');
         waitForPageLoad();
         verifyTabIsVisible('#overview');
@@ -52,26 +52,26 @@ describe('Run page - general', function () {
         cy.contains('Instrument model:').next().should('contain', 'Illumina MiSeq');
         cy.contains('Instrument platform:').next().should('contain', 'ILLUMINA');
     });
-    it('SSU/LSU buttons should appear/dissapear if pipeline version >=4.0', function(){
+    it('SSU/LSU buttons should appear/dissapear if pipeline version >=4.0', function() {
         openPage('runs/ERR1022502');
         waitForPageLoad();
         changeTab('taxonomic');
         cy.get('#ssu-lsu-btns').should('be.hidden');
         cy.get('#analysisSelect').select('V4.0');
         cy.get('#ssu-lsu-btns').should('be.visible', {timeout: 40000});
-    })
+    });
 });
 
 
-describe('Run page - url parameters', function () {
-    it('Should load correct analysis version', function () {
+describe('Run page - url parameters', function() {
+    it('Should load correct analysis version', function() {
         const pipeline_version = '4.0';
         openPage(origPage + '?version=' + pipeline_version);
         waitForPageLoad();
         cy.get('#analysisSelect').should('have.value', pipeline_version);
         //    TODO add check that data matches pipeline version, not just selector
     });
-    it('Should load first analysis version if no URL parameter', function () {
+    it('Should load first analysis version if no URL parameter', function() {
         const pipeline_version = '2.0';
         openPage(origPage);
         waitForPageLoad();
@@ -79,17 +79,17 @@ describe('Run page - url parameters', function () {
     });
 });
 
-describe('Run page - download tab', function () {
-    beforeEach(function () {
+describe('Run page - download tab', function() {
+    beforeEach(function() {
         openPage(origPage);
         waitForPageLoad();
-        changeTab('download')
+        changeTab('download');
     });
 
-    it('Should display correct number of results', function () {
+    it('Should display correct number of results', function() {
         cy.get('#download-list tbody > tr a', {timeout: 40000}).should('have.length', 149);
     });
-    it('Should display download groups correctly', function () {
+    it('Should display download groups correctly', function() {
         const headers = ['Sequence data', 'Functional analysis', 'Taxonomic analysis', 'Taxonomic analysis SSU rRNA', 'Taxonomic analysis LSU rRNA', 'non-coding RNAs'];
         let i = 0;
         cy.get('#download-list h3').should('have.length', 6).each(($el) => {
@@ -105,14 +105,14 @@ describe('Run page - download tab', function () {
     // });
 });
 
-describe('Run page - charts', function () {
-    it('QC chart should display correctly', function () {
+describe('Run page - charts', function() {
+    it('QC chart should display correctly', function() {
         openPage('runs/ERR867655');
         waitForPageLoad();
         changeTab('qc');
         // Verify graph via tooltip values
 
-        function hoverAndValidateTooltip(series, tooltipText1, tooltipText2){
+        function hoverAndValidateTooltip(series, tooltipText1, tooltipText2) {
             cy.get(series).first().trigger('mouseover', {force: true}).then(() => {
                 cy.get('svg g text').contains(tooltipText1);
                 cy.get('svg g.highcharts-tooltip text').contains(tooltipText2);
@@ -129,7 +129,7 @@ describe('Run page - charts', function () {
         const series2 = readsRemainingSeries + ':nth-child(2)';
         hoverAndValidateTooltip(series2, 'Trimming', 'Reads remaining: 43 933');
 
-        //Length filtering
+        // Length filtering
         const series3 = readsRemainingSeries + ':nth-child(3)';
         hoverAndValidateTooltip(series3, 'Length filtering', 'Reads remaining: 43 045');
 
@@ -147,19 +147,19 @@ describe('Run page - charts', function () {
     });
 });
 
-describe('Run page - Abundance tab', function(){
-    it('Tab should be disabled if no data available.', function(){
+describe('Run page - Abundance tab', function() {
+    it('Tab should be disabled if no data available.', function() {
         openPage(origPage);
         waitForPageLoad();
-        checkTabIsDisabled('#abundance')
+        checkTabIsDisabled('#abundance');
     });
-    it('Tab should change to default if no data available.', function(){
+    it('Tab should change to default if no data available.', function() {
         openPage(origPage+'#abundance');
         waitForPageLoad();
         // Check defaulted to overview tab
         cy.contains('Description', {timeout: 40000}).should('be.visible');
-        cy.get("a[href='#abundance']").should('have.attr', 'aria-selected', 'false').parent().should('not.have.class', 'is-active');
-        cy.get("a[href='#overview']").should('have.attr', 'aria-selected', 'true').parent().should('have.class', 'is-active');
+        cy.get('a[href=\'#abundance\']').should('have.attr', 'aria-selected', 'false').parent().should('not.have.class', 'is-active');
+        cy.get('a[href=\'#overview\']').should('have.attr', 'aria-selected', 'true').parent().should('have.class', 'is-active');
     });
 });
 

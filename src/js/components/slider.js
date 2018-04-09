@@ -1,10 +1,35 @@
 const tmpl = require('../../partials/slider.handlebars');
-const filterBtnWidget = require('./rmv_filter_widget');
-const createRmvButton = new filterBtnWidget().create;
+const FilterBtnWidget = require('./rmv_filter_widget');
+const createRmvButton = new FilterBtnWidget().create;
 let _ = require('underscore');
 
 module.exports = function Slider() {
     const allForms = ['#projectsFilters', '#samplesFilters', '#runsFilters'];
+
+    const attachSwitchHandler = function(
+        $switch, $slider, $minInput, $maxInput, allFormIds, $btnContainer, label, name, callback) {
+        $switch.click(function(e) {
+            const disabled = !$switch.is(':checked');
+            // const disabled = $slider.slider('option', 'disabled');
+            $slider.slider('option', 'disabled', disabled);
+            $minInput.prop('disabled', disabled);
+            $maxInput.prop('disabled', disabled);
+            if (disabled) {
+                $btnContainer.find('div[data-facet=\'' + label + '\'][data-value=\'' + name +
+                    '\']').remove();
+            } else {
+                setRmvButton($btnContainer, $switch, $slider, label, name);
+            }
+            if (e.originalEvent.isTrusted) {
+                _.each(allFormIds, function(formId) {
+                    const $facetButton = $(formId).
+                        find('.switch-input[data-facet-name=\'' + label + '\']');
+                    $facetButton.click();
+                });
+            }
+            callback();
+        });
+    };
 
     const init = function($elem, facet, label, name, min, max, units, callback, $btnContainer) {
         const sliderId = $elem.attr('id') + label;
@@ -78,31 +103,6 @@ module.exports = function Slider() {
             if (e.originalEvent) {
                 propagateValues($slider.attr('data-facet-slider'), $slider.attr('id'),
                     $slider.slider('values'));
-            }
-            callback();
-        });
-    };
-
-    const attachSwitchHandler = function(
-        $switch, $slider, $minInput, $maxInput, allFormIds, $btnContainer, label, name, callback) {
-        $switch.click(function(e) {
-            const disabled = !$switch.is(':checked');
-            // const disabled = $slider.slider('option', 'disabled');
-            $slider.slider('option', 'disabled', disabled);
-            $minInput.prop('disabled', disabled);
-            $maxInput.prop('disabled', disabled);
-            if (disabled) {
-                $btnContainer.find('div[data-facet=\'' + label + '\'][data-value=\'' + name +
-                    '\']').remove();
-            } else {
-                setRmvButton($btnContainer, $switch, $slider, label, name);
-            }
-            if (e.originalEvent.isTrusted) {
-                _.each(allFormIds, function(formId) {
-                    const $facetButton = $(formId).
-                        find('.switch-input[data-facet-name=\'' + label + '\']');
-                    $facetButton.click();
-                });
             }
             callback();
         });

@@ -53,7 +53,7 @@ let BiomesView = Backbone.View.extend({
         this.fetchXhr = this.collection.fetch({
             data: $.param(params),
             remove: true,
-            success(collection, response) {
+            success(ignored, response) {
                 that.render();
                 const pag = response.meta.pagination;
                 pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
@@ -102,6 +102,9 @@ let BiomesView = Backbone.View.extend({
     }
 });
 
+let biomes = new api.BiomeCollection();
+let biomesView = new BiomesView({collection: biomes});
+
 /**
  * Update page size callback for pageSize select
  * @param {number} pageSize
@@ -128,5 +131,4 @@ function changePage(page) {
 
 pagination.setPageSizeChangeCallback(updatePageSize);
 
-let biomes = new api.BiomeCollection();
-let biomesView = new BiomesView({collection: biomes});
+
