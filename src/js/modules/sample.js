@@ -12,6 +12,26 @@ util.setCurrentTab('#browse-nav');
 
 let sampleId = util.getURLParameter();
 
+/**
+ * Sort by parameter name ignoring case
+ * @param {object} a to sort
+ * @param {object} b  to sort
+ * @return {number} ordering
+ */
+function compareByName(a, b) {
+    const textA = a.name.toUpperCase();
+    const textB = b.name.toUpperCase();
+    let val;
+    if (textA < textB) {
+        val = -1;
+    } else if (textB < textA) {
+        val = 1;
+    } else {
+        val = 0;
+    }
+    return val;
+}
+
 let SampleView = Backbone.View.extend({
     model: api.Sample,
     template: _.template($('#sampleTmpl').html()),
@@ -46,25 +66,7 @@ let SampleView = Backbone.View.extend({
     }
 });
 
-/**
- * Sort by parameter name ignoring case
- * @param {object} a to sort
- * @param {object} b  to sort
- * @return {number} ordering
- */
-function compareByName(a, b) {
-    const textA = a.name.toUpperCase();
-    const textB = b.name.toUpperCase();
-    let val;
-    if (textA < textB) {
-        val = -1;
-    } else if (textB < textA) {
-        val = 1;
-    } else {
-        val = 0;
-    }
-    return val;
-}
+
 
 /**
  * Generate link to ENA if sample accession exists in ENA
