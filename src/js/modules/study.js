@@ -73,7 +73,22 @@ function updateTableFromPagination(view, page, pageSize, order, query) {
     });
 }
 
-let SamplesView = Backbone.View.extend({
+let StudyTableView = Backbone.View.extend({
+    update(page, pageSize, order, query) {
+        updateTableFromPagination(this, page, pageSize, order, query);
+    },
+
+    renderData(page, pageSize, resultCount, requestURL) {
+        const that = this;
+        const tableData = _.map(this.collection.models, function(m) {
+            const attr = m.attributes;
+            return that.getRowData(attr);
+        });
+        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
+    }
+});
+
+let SamplesView = StudyTableView.extend({
     tableObj: null,
     pagination: null,
 
@@ -92,18 +107,10 @@ let SamplesView = Backbone.View.extend({
         this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, null, null);
     },
 
-    update(page, pageSize, order, query) {
-        updateTableFromPagination(this, page, pageSize, order, query);
-    },
-
-    renderData(page, pageSize, resultCount, requestURL) {
-        const tableData = _.map(this.collection.models, function(m) {
-            const attr = m.attributes;
-            const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
-                '</a>';
-            return [attr.sample_name, sampleLink, attr.sample_desc, attr.last_update];
-        });
-        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
+    getRowData(attr) {
+        const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
+            '</a>';
+        return [attr.sample_name, sampleLink, attr.sample_desc, attr.last_update];
     }
 });
 
@@ -130,7 +137,7 @@ let MapData = api.StudyGeoCoordinates.extend({
     }
 });
 
-let RunsView = Backbone.View.extend({
+let RunsView = StudyTableView.extend({
     tableObj: null,
     pagination: null,
 
@@ -154,18 +161,14 @@ let RunsView = Backbone.View.extend({
         updateTableFromPagination(this, page, pageSize, order, query);
     },
 
-    renderData(page, pageSize, resultCount, requestURL) {
-        const tableData = _.map(this.collection.models, function(m) {
-            const attr = m.attributes;
-            const runLink = '<a href=\'' + attr.run_url + '\'>' + attr.run_id + '</a>';
-            return [
-                runLink,
-                attr['experiment_type'],
-                attr['instrument_model'],
-                attr['instrument_platform'],
-                attr['pipeline_versions'].join(', ')];
-        });
-        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
+    getRowData(attr) {
+        const runLink = '<a href=\'' + attr.run_url + '\'>' + attr.run_id + '</a>';
+        return [
+            runLink,
+            attr['experiment_type'],
+            attr['instrument_model'],
+            attr['instrument_platform'],
+            attr['pipeline_versions'].join(', ')];
     }
 });
 
@@ -205,7 +208,7 @@ function initPage() {
         samplesView.initialize();
         runsView.initialize();
         new MapData(studyId).fetchAll();
-        new DownloadsView({model: downloads});
+        DownloadsView({model: downloads});
     });
 }
 
