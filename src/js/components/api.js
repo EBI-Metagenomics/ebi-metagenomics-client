@@ -3,7 +3,7 @@ const Commons = require('../commons');
 const API_URL = process.env.API_URL;
 const NO_DATA_MSG = Commons.NO_DATA_MSG;
 const util = require('../util');
-import {formatDate, formatLineage, getBiomeIcon, lineage2Biome, getBiomeIconData} from "../util";
+import {formatDate, formatLineage, getBiomeIcon, lineageToBiome, getBiomeIconData} from '../util';
 
 const _ = require('underscore');
 
@@ -13,18 +13,18 @@ const DX_DOI_URL = Commons.DX_DOI_URL;
 
 // Model for an individual study
 export const Study = Backbone.Model.extend({
-    url: function () {
+    url() {
         return API_URL + 'studies/' + this.id;
     },
-    parse: function (d) {
+    parse(d) {
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
         const biomes = data.relationships.biomes.data.map(getBiomeIconData);
         return {
             bioproject: attr['bioproject'],
             biomes: biomes,
-            study_link: util.subfolder + "/studies/" + data.id,
-            samples_link: util.subfolder + "/studies/" + data.id + "#samples-section",
+            study_link: util.subfolder + '/studies/' + data.id,
+            samples_link: util.subfolder + '/studies/' + data.id + '#samples-section',
             study_name: attr['study-name'],
             samples_count: attr['samples-count'],
             study_id: data.id,
@@ -32,15 +32,15 @@ export const Study = Backbone.Model.extend({
             last_update: formatDate(attr['last-update']),
             abstract: attr['study-abstract'],
             ena_url: ENA_VIEW_URL + data.id
-        }
+        };
     }
 });
 
 // Model for a collection of studies,
 export const StudiesCollection = Backbone.Collection.extend({
-    url: API_URL + "studies",
+    url: API_URL + 'studies',
     model: Study,
-    initialize: function (params, url) {
+    initialize(params, url) {
         if (url) {
             this.url = url;
         }
@@ -48,22 +48,22 @@ export const StudiesCollection = Backbone.Collection.extend({
             this.params = params;
         }
     },
-    parse: function (response) {
+    parse(response) {
         return response.data;
     }
 });
 
 export const Run = Backbone.Model.extend({
-    url: function () {
+    url() {
         return API_URL + 'runs/' + this.id;
     },
-    parse: function (d) {
+    parse(d) {
         // Adaption to handle 'includes' on API calls which would wrap the response
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
         const rel = data.relationships;
         const pipelines = rel.pipelines;
-        const analysis = rel.analysis;
+        // const analysis = rel.analysis;
         const sample_id = rel.sample.data.id;
         const study_id = rel.study.data.id;
         return {
@@ -79,24 +79,24 @@ export const Run = Backbone.Model.extend({
             experiment_type: attr['experiment-type'],
             instrument_model: attr['instrument-model'],
             instrument_platform: attr['instrument-platform'],
-            pipeline_versions: pipelines.data.map(function (x) {
-                return x.id
+            pipeline_versions: pipelines.data.map(function(x) {
+                return x.id;
             }),
             analysis_results: 'TAXONOMIC / FUNCTION / DOWNLOAD',
             study_id: study_id,
-            study_url: util.subfolder + '/studies/' + study_id,
-        }
+            study_url: util.subfolder + '/studies/' + study_id
+        };
     }
 });
 
-export function getKronaURL(run_id, pipeline_version) {
-    return API_URL + "runs/" + run_id + "/pipelines/" + pipeline_version + "/krona"
+export function getKronaURL(runId, pipelineVersion) {
+    return API_URL + 'runs/' + runId + '/pipelines/' + pipelineVersion + '/krona';
 }
 
 export const RunsCollection = Backbone.Collection.extend({
     url: API_URL + 'runs',
     model: Run,
-    initialize: function (data) {
+    initialize(data) {
         // Project/sample ID
         // if (data.hasOwnProperty(('study_accession'))) {
         //     this.study_accession = data.study_accession;
@@ -107,18 +107,20 @@ export const RunsCollection = Backbone.Collection.extend({
         // }
         this.params = data;
     },
-    parse: function (response) {
-        return response.data
+    parse(response) {
+        return response.data;
     }
 });
 
 export const Biome = Backbone.Model.extend({
-    url: function () {
-        var base = API_URL + 'biomes';
-        if (this.isNew()) return base;
-        return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id;
+    url() {
+        let base = API_URL + 'biomes';
+        if (this.isNew()) {
+            base += (base.charAt(base.length - 1) === '/' ? '' : '/') + this.id;
+        }
+        return base;
     },
-    parse: function (data) {
+    parse(data) {
         // Work-around when requesting root biome
         if (data.data) {
             data = data.data;
@@ -126,41 +128,39 @@ export const Biome = Backbone.Model.extend({
         const attr = data.attributes;
         const lineage = attr['lineage'];
         return {
-            name: lineage2Biome(lineage),
+            name: lineageToBiome(lineage),
             icon: getBiomeIcon(lineage),
             lineage: lineage,
             samples_count: attr['samples-count'],
             // lineage_projects_no_children: attr['studies-count'],
-            biome_studies_link: util.subfolder + '/browse?lineage=' + lineage + '#studies',
+            biome_studies_link: util.subfolder + '/browse?lineage=' + lineage + '#studies'
             // biome_studies_link_no_children: 'TODO2',
         };
     }
 });
 
-
 export const BiomeCollection = Backbone.Collection.extend({
     model: Biome,
-    url: API_URL + "biomes/root/children",
-    parse: function (response) {
-        return response.data
+    url: API_URL + 'biomes/root/children',
+    parse(response) {
+        return response.data;
     }
 });
 
-
 export const Sample = Backbone.Model.extend({
-    url: function () {
+    url() {
         return API_URL + 'samples/' + this.id;
     },
-    parse: function (d) {
+    parse(d) {
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
 
-        let metadatas = _.map(attr['sample-metadata'], function (el) {
+        let metadatas = _.map(attr['sample-metadata'], function(el) {
             const key = el.key;
             return {
                 name: key[0].toUpperCase() + key.slice(1),
                 value: el.value
-            }
+            };
         });
 
         // Adaption to handle 'includes' on API calls which would wrap the response
@@ -178,24 +178,24 @@ export const Sample = Backbone.Model.extend({
             runs: d.included,
             last_update: formatDate(attr['last-update']),
             latitude: attr.latitude,
-            longitude: attr.longitude,
-        }
+            longitude: attr.longitude
+        };
     }
 });
 
 export const SamplesCollection = Backbone.Collection.extend({
-    url: API_URL + "samples",
+    url: API_URL + 'samples',
     model: Sample,
-    initialize: function (data) {
+    initialize(data) {
         this.params = data;
     },
-    parse: function (response) {
+    parse(response) {
         return response.data;
     }
 });
 
 export const RunPipelineObject = Backbone.Model.extend({
-    initialize: function (params) {
+    initialize(params) {
         this.id = params.id;
         this.version = params.version;
         if (params.hasOwnProperty('type')) {
@@ -205,10 +205,10 @@ export const RunPipelineObject = Backbone.Model.extend({
 });
 
 export const Analysis = RunPipelineObject.extend({
-    url: function () {
+    url() {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version;
     },
-    parse: function (d) {
+    parse(d) {
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
         return {
@@ -219,21 +219,21 @@ export const Analysis = RunPipelineObject.extend({
             instrument_platform: attr['instrument-platform'],
             pipeline_version: attr['pipeline-version'],
             download: attr['download']
-        }
+        };
     }
 });
 
 export const Taxonomy = RunPipelineObject.extend({
-    url: function () {
+    url() {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/taxonomy' + this.type;
     },
-    fetch: function () {
+    fetch() {
         const that = this;
         const promise = $.Deferred();
         let data = [];
         $.get({
             url: this.url(),
-            success: function (response) {
+            success(response) {
                 data = data.concat(response.data);
                 const numPages = response.meta.pagination.pages;
                 if (numPages > 1) {
@@ -241,10 +241,11 @@ export const Taxonomy = RunPipelineObject.extend({
                     for (let x = 2; x <= numPages; x++) {
                         requests.push($.get(that.url() + '?page=' + x));
                     }
-                    $.when.apply($, requests).done(function () {
+                    $.when.apply($, requests).done(function() {
                         let page = 2;
-                        _.each(requests, function (response) {
-                            if (response.responseJSON === undefined || response.responseJSON.data === undefined) {
+                        _.each(requests, function(response) {
+                            if (response.responseJSON === undefined ||
+                                response.responseJSON.data === undefined) {
                                 console.error('Could not retrieve data for page ', page);
                             } else {
                                 data = data.concat(response.responseJSON.data);
@@ -263,19 +264,19 @@ export const Taxonomy = RunPipelineObject.extend({
 });
 
 export const InterproIden = RunPipelineObject.extend({
-    url: function () {
+    url() {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/interpro-identifiers';
-    },
+    }
 });
 
 export const GoSlim = RunPipelineObject.extend({
-    url: function () {
+    url() {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.version + '/go-slim';
     }
 });
 
 export const Publication = Backbone.Model.extend({
-    parse: function (d) {
+    parse(d) {
         const data = d.data !== undefined ? d.data : d;
         const attrs = data.attributes;
         let authors = attrs['authors'];
@@ -293,13 +294,13 @@ export const Publication = Backbone.Model.extend({
             doi_url: DX_DOI_URL + attrs['doi'],
             year: attrs['published-year'],
             volume: attrs['volume']
-        }
+        };
     }
 });
 
 function clusterStudyDownloads(downloads) {
     const pipelines = {};
-    _.each(downloads, function (download) {
+    _.each(downloads, function(download) {
         const attr = download.attributes;
         const group = attr['group-type'];
         const pipeline = download.relationships.pipeline.data.id;
@@ -314,13 +315,12 @@ function clusterStudyDownloads(downloads) {
 
         pipelines[pipeline][group] = pipelines[pipeline][group].concat(download);
     });
-    return pipelines
+    return pipelines;
 }
-
 
 function clusterRunDownloads(downloads) {
     const groups = {};
-    _.each(downloads, function (download) {
+    _.each(downloads, function(download) {
         const attr = download.attributes;
         const group = attr['group-type'];
         const label = attr.description.label;
@@ -331,7 +331,7 @@ function clusterRunDownloads(downloads) {
             groups[group] = [];
         }
         let grouped = false;
-        _.each(groups[group], function (d) {
+        _.each(groups[group], function(d) {
             if (d.attributes.description.label === label) {
                 d.attributes.links = d.attributes.links.concat(download.links.self);
                 grouped = true;
@@ -342,32 +342,32 @@ function clusterRunDownloads(downloads) {
         }
     });
 
-    return groups
+    return groups;
 }
 
 export const StudyDownloads = Backbone.Model.extend({
-    url: function () {
+    url() {
         return API_URL + 'studies/' + this.id + '/downloads';
     },
-    parse: function (response) {
+    parse(response) {
         this.attributes.pipelineFiles = clusterStudyDownloads(response.data);
     }
 });
 
 export const RunDownloads = Backbone.Model.extend({
-    url: function () {
+    url() {
         return API_URL + 'runs/' + this.id + '/pipelines/' + this.attributes.version + '/downloads';
     },
-    parse: function (response) {
+    parse(response) {
         this.attributes.downloadGroups = clusterRunDownloads(response.data);
     }
 });
 
 export const StudyGeoCoordinates = Backbone.Model.extend({
-    url: function () {
+    url() {
         return API_URL + 'studies/' + this.study_accession + '/geocoordinates?page_size=500';
     },
-    initialize: function (study_accession) {
+    initialize(study_accession) {
         this.study_accession = study_accession;
     }
 });

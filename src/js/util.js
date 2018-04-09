@@ -4,6 +4,7 @@ const Backbone = require('backbone');
 const api = require('./components/api');
 const Commons = require('./commons');
 const GenericTable = require('./components/genericTable');
+import 'process';
 
 export const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 $.typeWatch = require('jquery.typewatch');
@@ -14,7 +15,6 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 
 const DEFAULT_PAGE_SIZE = Commons.DEFAULT_PAGE_SIZE;
 
-
 export function formatLineage(lineage, removeRoot) {
     let splitLineage = lineage.split(':');
     if (removeRoot) {
@@ -24,12 +24,12 @@ export function formatLineage(lineage, removeRoot) {
 
 }
 
-export function lineage2Biome(lineage) {
+export function lineageToBiome(lineage) {
     return lineage.split(':').splice(-1);
 }
 
-export function formatDate(date_str) {
-    var d = new Date(date_str);
+export function formatDate(dateStr) {
+    let d = new Date(dateStr);
     return d.getDate() + '-' + MONTHS[d.getMonth()] + '-' + d.getFullYear();
 }
 
@@ -39,8 +39,8 @@ export function setCurrentTab(id) {
     });
 }
 
-export function getBiomeIconData(biome_data) {
-    const name = biome_data.id;
+export function getBiomeIconData(biomeData) {
+    const name = biomeData.id;
     return {name: formatLineage(name, true), icon: getBiomeIcon(name)};
 }
 
@@ -58,7 +58,7 @@ export function initBiomeFilter($div, callback) {
 }
 
 export function getURLParameter() {
-    var regex = /\/([A-z0-9|\.]+)(?:$|[?])/g;
+    let regex = /\/([A-z0-9|\.]+)(?:$|[?])/g;
     return regex.exec(window.location.pathname)[1];
 }
 
@@ -67,7 +67,7 @@ export function getURLFilterParams() {
 }
 
 export function stripLineage(lineage) {
-    var depth;
+    let depth;
     if (lineage.includes(':')) {
         depth = lineage.match(/:/g).length;
     } else {
@@ -183,7 +183,7 @@ export function hideTableLoadingGif() {
 export function attachTabHandlers() {
     // Deep linking
     const $dataTabs = $('[data-tabs]');
-    new window.Foundation.Tabs($dataTabs);
+    window.Foundation.Tabs($dataTabs);
     const linkTab = window.location.hash.substr(1);
     if (linkTab) {
         $($dataTabs).foundation('selectTab', linkTab);
@@ -193,13 +193,13 @@ export function attachTabHandlers() {
 
     // Linking click actions
     $('li.tabs-title > a').on('click', function() {
-        var tabButtonContainer = $(this).closest('ul');
+        let tabButtonContainer = $(this).closest('ul');
         $(tabButtonContainer).children().children('a').attr('aria-selected', 'false');
         $(this).attr('aria-selected', 'true');
 
         // Remove active class from all sibling buttons
-        var tabId = $(this).attr('href');
-        var tabGroup = tabButtonContainer.attr('id');
+        let tabId = $(this).attr('href');
+        let tabGroup = tabButtonContainer.attr('id');
         $('[data-tab-content=' + tabGroup + '] > .tabs-panel').removeClass('active');
         $(tabId).addClass('active');
     });
@@ -230,17 +230,23 @@ export function changeTab(tabId) {
     // $("div.tabs-panel"+tabId).addClass('active');
 }
 
+function createBiomeOption(lineage) {
+    return '<option value="' + lineage + '">' + stripLineage(lineage) + '</option> ';
+}
+
 export const BiomeCollectionView = Backbone.View.extend({
     selector: '.biome-select',
     initialize(options, biome) {
         for (let arg in options) {
-            this[arg] = options[arg];
+            if (options.hasOwnProperty(arg)) {
+                this[arg] = options[arg];
+            }
         }
-        var that = this;
+        let that = this;
         this.collection.fetch({
             data: $.param({depth_lte: this.maxDepth, page_size: 100}), success() {
                 // Fetch and pre-pend root node to list
-                var root = new api.Biome({id: 'root'});
+                let root = new api.Biome({id: 'root'});
                 root.fetch({
                     success() {
                         that.render();
@@ -271,7 +277,7 @@ export const BiomeCollectionView = Backbone.View.extend({
     },
     render() {
         const that = this;
-        var biomes = this.collection.models.map(function(model) {
+        let biomes = this.collection.models.map(function(model) {
             return model.attributes.lineage;
         });
         _.each(biomes.sort(), function(lineage) {
@@ -281,10 +287,6 @@ export const BiomeCollectionView = Backbone.View.extend({
         return this;
     }
 });
-
-function createBiomeOption(lineage) {
-    return '<option value="' + lineage + '">' + stripLineage(lineage) + '</option> ';
-}
 
 export const capitalizeWord = function(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);

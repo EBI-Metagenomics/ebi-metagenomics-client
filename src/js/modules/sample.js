@@ -28,20 +28,18 @@ let SampleView = Backbone.View.extend({
                 _.each(that.model.attributes.metadatas, function(e) {
                     metadataObj[e.name] = e.value;
                 });
-                getExternalLinks(attr.id, attr.bioproject).done(function(data) {
-                    that.model.attributes.external_links = _.map(data, function(url, text) {
-                        return util.createListItem(util.createLinkTag(url, text));
-                    });
-                    that.$el.html(that.template(that.model.toJSON()));
-                    if (Object.keys(metadataObj).length > 0) {
-                        $('#sample-metadata').html(new DetailList('Sample metadata', metadataObj));
-                    } else {
-                        $('#sample-metadata').html('No metadata to be displayed.');
-                    }
-                    new Map('map', [that.model.attributes], false);
-                    deferred.resolve(true);
+                const urls = getExternalLinks(attr.id);
+                that.model.attributes.external_links = _.map(urls, function(url, text) {
+                    return util.createListItem(util.createLinkTag(url, text));
                 });
-
+                that.$el.html(that.template(that.model.toJSON()));
+                if (Object.keys(metadataObj).length > 0) {
+                    $('#sample-metadata').html(new DetailList('Sample metadata', metadataObj));
+                } else {
+                    $('#sample-metadata').html('No metadata to be displayed.');
+                }
+                new Map('map', [that.model.attributes], false);
+                deferred.resolve(true);
             }
         });
         return deferred.promise();
@@ -52,7 +50,7 @@ let SampleView = Backbone.View.extend({
  * Sort by parameter name ignoring case
  * @param a object to sort
  * @param b object to sort
- * @returns {number} ordering
+ * @return {number} ordering
  */
 function compareByName(a, b) {
     const textA = a.name.toUpperCase();
@@ -66,23 +64,21 @@ function compareByName(a, b) {
     }
 }
 
+/**
+ * Generate link to ENA if sample accession exists in ENA
+ * @param sampleAccession ENA secondary sample accession
+ * @return {promise} with valid urls as data.
+ */
 function getExternalLinks(sampleAccession) {
-    let deferred = new $.Deferred();
-    const enaUrl = 'https://www.ebi.ac.uk/ena/data/view/' + sampleAccession;
-    const enaUrlCheck = util.checkURLExists(enaUrl);
     let urls = {};
-    $.when(
-        enaUrlCheck
-    ).done(function() {
-        if (enaUrlCheck.status === 200) {
-            urls['ENA website (' + sampleAccession + ')'] = enaUrl;
-        }
-        deferred.resolve(urls);
-    });
-    return deferred.promise();
+    urls['ENA website (' + sampleAccession + ')'] = 'https://www.ebi.ac.uk/ena/data/view/' +
+        sampleAccession;
+    return urls;
 }
 
-// Called by googleMaps import callback
+/**
+ * Method to initialise page load from googleMaps loading callback
+ */
 function initPage() {
     let sample = new api.Sample({id: sampleId});
     let sampleView = new SampleView({model: sample});

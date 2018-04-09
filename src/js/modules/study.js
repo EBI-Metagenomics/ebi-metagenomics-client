@@ -53,7 +53,7 @@ let MapData = api.StudyGeoCoordinates.extend({
                     that.url = meta.links.next;
                     that.fetchAll();
                 } else {
-                    new Map('map', that.data, true);
+                    Map('map', that.data, true);
                 }
             },
             error: function() {
