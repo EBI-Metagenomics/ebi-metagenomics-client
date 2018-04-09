@@ -246,7 +246,7 @@ export const BiomeCollectionView = Backbone.View.extend({
         this.collection.fetch({
             data: $.param({depth_lte: this.maxDepth, page_size: 100}), success() {
                 // Fetch and pre-pend root node to list
-                let root = new api.Biome({id: 'root'});
+                let root = new api.BiomeCollection();
                 root.fetch({
                     success() {
                         that.render();
