@@ -31,7 +31,7 @@ module.exports = (env = {prod: false}) => {
                 {from: 'static/images', to: '../static/images'},
                 {from: 'static/fonts', to: '../static/fonts'},
                 {from: 'static/js', to: '../static/js'},
-                {from: 'static/libraries', to: '../static/libraries'},
+                {from: 'static/css', to: '../static/css'},
                 {from: 'static/krona', to: '../'}
             ]),
             // GZIP compression

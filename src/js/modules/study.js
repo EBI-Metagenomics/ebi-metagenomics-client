@@ -4,7 +4,7 @@ const api = require('../components/api');
 const Map = require('../components/map');
 const util = require('../util');
 
-// const OverlappingMarkerSpiderfier = require('../../../static/libraries/oms.min.js');
+// const OverlappingMarkerSpiderfier = require('../../../static/js/oms.min.js');
 require('js-marker-clusterer');
 
 util.checkAPIonline();

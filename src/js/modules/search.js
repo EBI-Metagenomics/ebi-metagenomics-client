@@ -10,7 +10,7 @@ const Pagination = require('../components/pagination').Pagination;
 require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
 require('foundation-sites');
-require('../../../static/libraries/jquery.TableCSVExport');
+require('../../../static/js/jquery.TableCSVExport');
 
 const CheckboxTree = require('../components/checkboxTree');
 
@@ -105,7 +105,7 @@ function formatSearchSummaryStr(params) {
 /**
  * Retrieve names of visible columns of facets
  * @param {string} facet string {projects, samples, runs}
- * @return null or [string] of visible columns
+ * @return {null||[string]} of visible columns
  */
 function getVisibleColumns(facet) {
     let cookieData = Cookies.get(cookieName);
@@ -168,7 +168,7 @@ function hideSpinner() {
 
 /**
  * Retrieve list of other facet form Ids other than specified id
- * @param except id to exclude from list
+ * @param {string} except id to exclude from list
  * @return {[string]} Array of form ids
  */
 function getAllFormIds(except) {
@@ -190,7 +190,7 @@ $searchForm.on('reset', function() {
  * Retrieve query text from search form
  */
 function getQueryText() {
-    return $searchForm.find('#navbar-query').val();
+    return $searchForm.find('#local-searchbox').val();
 }
 
 /**
@@ -410,6 +410,11 @@ function isSliderParam(name) {
  * @param {[string]} initColumns initially visible columns
  */
 function createDataTable(facet, $table, $modal, initColumns) {
+    /**
+     * Set column visibility
+     * @param {boolean} visible
+     * @param {string} dataColumn attribute value
+     */
     function setColumnVisibility(visible, dataColumn) {
         const tds = $table.find('td[data-column="' + dataColumn + '"]');
         if (visible) {
@@ -536,7 +541,8 @@ function saveSearchParams(facet, filters, query) {
  * @return {{filters: *, query: *}}
  */
 function loadSearchParams(facet) {
-    let data, query = null;
+    let data = null;
+    let query = null;
     let cookie = Cookies.get(cookieName);
     if (cookie) {
         cookie = JSON.parse(cookie);
@@ -743,11 +749,11 @@ function genInitParams(view, cookieParams) {
 
     if (cookieParams) {
         view.params.facets = cookieParams.filters || '';
-        view.params.query = getQueryText() || cookieParams.query ||
+        view.params.query = queryText || getQueryText() || cookieParams.query ||
             view.defaultQuery;
     } else {
         view.params.facets = '';
-        view.params.query = getQueryText() || view.defaultQuery;
+        view.params.query = queryText || getQueryText() || view.defaultQuery;
     }
     view.params.fields += view.defaultParamFields;
 }
@@ -823,9 +829,10 @@ const ProjectsView = ResultsView.extend({
     initialize() {
         this.pagination.setPaginationElem('#projects-pagination');
         const cookieParams = loadSearchParams('projects');
-
         genInitParams(this, cookieParams);
-        this.params.fields = 'ENA_PROJECT,METAGENOMICS_RUNS,METAGENOMICS_SAMPLES,biome_name,centre_name,creation_date,description,domain_source,id,last_modification_date,name,releaseDate_date';
+        this.params.fields = 'ENA_PROJECT,METAGENOMICS_RUNS,METAGENOMICS_SAMPLES,biome_name,' +
+            'centre_name,creation_date,description,domain_source,id,last_modification_date,' +
+            'name,releaseDate_date';
     },
 
     update(page, pagesize) {
@@ -970,12 +977,14 @@ const RunsView = ComplexResultsView.extend({
         'run-experiment-type',
         'run-pipeline-vers'],
     paginationElem: '#runs-pagination',
-    defaultParamFields: ',METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,experiment_type,pipeline_version'
+    defaultParamFields: ',METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,' +
+    'experiment_type,pipeline_version'
 });
 
 /**
  * Method to update all views following form events
  * @param {number} pagesize
+ * @return {jQuery.promise}
  */
 function updateAll(pagesize) {
     showSpinner();

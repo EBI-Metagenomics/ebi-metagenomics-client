@@ -21,30 +21,6 @@ $(function() {
     $('#blog-url').attr('href', blogUrl);
 });
 
-//  re-style the twitter component
-$('iframe').ready(function() {
-    let timer = setInterval(function() {
-        const $iFrame = $($('iframe').contents());
-        if ($iFrame.find('.avatar').length > 0) {
-            $iFrame.
-                find('.avatar, .timeline-Tweet-author, .timeline-Tweet-media').
-                css({display: 'none'});
-            $iFrame.
-                find('.timeline-Tweet-retweetCredit').
-                css({'text-align': 'center'});
-            /* style retweet info text*/
-            $iFrame.find('.timeline-Tweet-text').css({
-                'text-align': 'center',
-                'font-size': '157%',
-                'line-height': '1.4'
-            });
-            /* style tweet main text*/
-            $iFrame.find('img.autosized-media').css({'max-height': '175px'});
-            /* don't know if this is relevant anymore*/
-            clearInterval(timer);
-        }
-    }, 100);
-});
 
 let BiomeView = Backbone.View.extend({
     tagName: 'div',
@@ -164,7 +140,8 @@ let RequestFormView = Backbone.View.extend({
             body = body.replace(/=/g, ': ').replace(/&/g, '%0D%0A');
             body += '%0D%0A'; // Newline
             body += 'Additional notes:';
-            window.location.href = 'mailto:metagenomics-help@ebi.ac.uk?subject=Analysis request&body=' + body;
+            window.location.href =
+                'mailto:metagenomics-help@ebi.ac.uk?subject=Analysis request&body=' + body;
         }
     }
 });
