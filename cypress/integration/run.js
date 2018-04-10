@@ -96,7 +96,7 @@ describe('Run page - download tab', function() {
     });
 
     it('Should display correct number of results', function() {
-        cy.get('#download-list tbody > tr a', {timeout: 40000}).should('have.length', 149);
+        cy.get('#download-list tbody > tr a', {timeout: 40000}).should('have.length', 64);
     });
     it('Should display download groups correctly', function() {
         const headers = [
@@ -107,7 +107,7 @@ describe('Run page - download tab', function() {
             'Taxonomic analysis LSU rRNA',
             'non-coding RNAs'];
         let i = 0;
-        cy.get('#download-list h3').should('have.length', 6).each(($el) => {
+        cy.get('#download-list h3').should('have.length', 3).each(($el) => {
             expect($el).to.contain(headers[i++]);
         });
     });
