@@ -18,8 +18,7 @@ let StudyView = Backbone.View.extend({
     el: '#main-content-area',
     fetchAndRender() {
         const that = this;
-        const deferred = $.Deferred();
-        this.model.fetch({
+        return this.model.fetch({
             data: $.param({
                 include: 'publications'
             }),
@@ -31,19 +30,17 @@ let StudyView = Backbone.View.extend({
 
                 that.$el.html(that.template(that.model.toJSON()));
                 util.attachTabHandlers();
-
-                deferred.resolve(true);
             }
         });
-        return deferred.promise();
     }
 });
 
-let MapData = api.StudyGeoCoordinates.extend({
+let MapData = Backbone.View.extend({
+    model: api.StudyGeoCoordinates,
     initialize() {
         this.data = [];
         const that = this;
-        this.fetch({
+        this.model.fetch({
             success(response, meta) {
                 let data = _.map(response.attributes.data, function(model) {
                     return model.attributes;
@@ -53,7 +50,7 @@ let MapData = api.StudyGeoCoordinates.extend({
                     that.url = meta.links.next;
                     that.fetchAll();
                 } else {
-                    Map('map', that.data, true);
+                    new Map('map', that.data, true);
                 }
             },
             error() {
@@ -70,6 +67,7 @@ let DownloadsView = Backbone.View.extend({
         const that = this;
         this.model.fetch({
             success(response) {
+                console.log(response);
                 const pipelineFiles = response.attributes.pipelineFiles;
                 that.$el.html(that.template({pipeline_files: pipelineFiles}));
             }
@@ -93,13 +91,11 @@ function initPage() {
     let downloads = new api.StudyDownloads({id: studyId});
 
     let coordinates = new api.StudyGeoCoordinates({study_accession: studyId});
-    $.when(
-        studyView.fetchAndRender()
-    ).done(function() {
+    studyView.fetchAndRender().then(() => {
         samplesView.initialize();
         runsView.initialize();
-        new MapData({model: coordinates})();
-        DownloadsView({model: downloads});
+        new MapData({model: coordinates});
+        new DownloadsView({model: downloads});
     });
 }
 

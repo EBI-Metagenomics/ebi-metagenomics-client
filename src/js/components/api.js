@@ -381,9 +381,6 @@ export const RunDownloads = Backbone.Model.extend({
 
 export const StudyGeoCoordinates = Backbone.Model.extend({
     url() {
-        return API_URL + 'studies/' + this.study_accession + '/geocoordinates?page_size=500';
+        return API_URL + 'studies/' + this.attributes.study_accession + '/geocoordinates?page_size=500';
     },
-    initialize(studyAccession) {
-        this.study_accession = studyAccession;
-    }
 });
