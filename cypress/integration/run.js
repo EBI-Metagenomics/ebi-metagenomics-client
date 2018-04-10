@@ -21,6 +21,11 @@ function checkTabIsDisabled(tabId) {
     cy.get('[href=\'' + tabId + '\']').parent('li.disabled', {timeout: 40000});
 }
 
+function selectAnalysis(analysis) {
+    cy.get('#analysisSelect').select(analysis);
+    waitForPageLoad();
+}
+
 /**
  * Verify number of results responds to selector
  */
@@ -34,12 +39,16 @@ describe('Run page - general', function() {
         openPage(origPage);
         waitForPageLoad();
         verifyTabIsVisible('#overview');
-        // const tabs = ['#qc', '#functional', '#taxonomic', '#abundance', '#download', '#overview'];
+        // const tabs =
+        // ['#qc', '#functional', '#taxonomic', '#abundance', '#download', '#overview'];
         const tabs = ['#qc', '#taxonomic', '#download', '#overview'];
         for (let i in tabs) {
-            const tabId = tabs[i];
-            openTab(tabId);
-            verifyTabIsVisible(tabId);
+            if (Object.prototype.hasOwnProperty.call(tabs, i)) {
+                const tabId = tabs[i];
+                openTab(tabId);
+                verifyTabIsVisible(tabId);
+            }
+
         }
     });
     it('Should display metadata if available', function() {
@@ -57,25 +66,25 @@ describe('Run page - general', function() {
         waitForPageLoad();
         changeTab('taxonomic');
         cy.get('#ssu-lsu-btns').should('be.hidden');
-        cy.get('#analysisSelect').select('V4.0');
+        selectAnalysis('V4.0');
         cy.get('#ssu-lsu-btns').should('be.visible', {timeout: 40000});
     });
-});
-
+})
+;
 
 describe('Run page - url parameters', function() {
     it('Should load correct analysis version', function() {
-        const pipeline_version = '4.0';
-        openPage(origPage + '?version=' + pipeline_version);
+        const pipelineVersion = '4.0';
+        openPage(origPage + '?version=' + pipelineVersion);
         waitForPageLoad();
-        cy.get('#analysisSelect').should('have.value', pipeline_version);
+        cy.get('#analysisSelect').should('have.value', pipelineVersion);
         //    TODO add check that data matches pipeline version, not just selector
     });
     it('Should load first analysis version if no URL parameter', function() {
-        const pipeline_version = '2.0';
+        const pipelineVersion = '2.0';
         openPage(origPage);
         waitForPageLoad();
-        cy.get('#analysisSelect').should('have.value', pipeline_version);
+        cy.get('#analysisSelect').should('have.value', pipelineVersion);
     });
 });
 
@@ -90,7 +99,13 @@ describe('Run page - download tab', function() {
         cy.get('#download-list tbody > tr a', {timeout: 40000}).should('have.length', 149);
     });
     it('Should display download groups correctly', function() {
-        const headers = ['Sequence data', 'Functional analysis', 'Taxonomic analysis', 'Taxonomic analysis SSU rRNA', 'Taxonomic analysis LSU rRNA', 'non-coding RNAs'];
+        const headers = [
+            'Sequence data',
+            'Functional analysis',
+            'Taxonomic analysis',
+            'Taxonomic analysis SSU rRNA',
+            'Taxonomic analysis LSU rRNA',
+            'non-coding RNAs'];
         let i = 0;
         cy.get('#download-list h3').should('have.length', 6).each(($el) => {
             expect($el).to.contain(headers[i++]);
@@ -110,6 +125,7 @@ describe('Run page - charts', function() {
         openPage('runs/ERR867655');
         waitForPageLoad();
         changeTab('qc');
+
         // Verify graph via tooltip values
 
         function hoverAndValidateTooltip(series, tooltipText1, tooltipText2) {
@@ -154,15 +170,36 @@ describe('Run page - Abundance tab', function() {
         checkTabIsDisabled('#abundance');
     });
     it('Tab should change to default if no data available.', function() {
-        openPage(origPage+'#abundance');
+        openPage(origPage + '#abundance');
         waitForPageLoad();
         // Check defaulted to overview tab
         cy.contains('Description', {timeout: 40000}).should('be.visible');
-        cy.get('a[href=\'#abundance\']').should('have.attr', 'aria-selected', 'false').parent().should('not.have.class', 'is-active');
-        cy.get('a[href=\'#overview\']').should('have.attr', 'aria-selected', 'true').parent().should('have.class', 'is-active');
+        cy.get('a[href=\'#abundance\']').
+            should('have.attr', 'aria-selected', 'false').
+            parent().
+            should('not.have.class', 'is-active');
+        cy.get('a[href=\'#overview\']').
+            should('have.attr', 'aria-selected', 'true').
+            parent().
+            should('have.class', 'is-active');
     });
 });
 
+describe('Run page - Changing pipeline version', function() {
+    it('Should not duplicate krona chart', function() {
+        const kronaChartClass = '.krona_chart';
+        openPage(origPage);
+        waitForPageLoad();
+        changeTab('taxonomic');
+        changeTab('krona');
+        cy.get(kronaChartClass).should('have.length', 1);
+
+        selectAnalysis('V2.0');
+
+        selectAnalysis('V4.0');
+        cy.get(kronaChartClass).should('have.length', 1);
+    });
+});
 // TODO check taxonomy request does not have LSU/SSU if pipeline version < 4.0
 // TODO test version selector
 // TODO test all download links are valid/organised correctly

@@ -18,23 +18,6 @@ module.exports = function CheckboxTree() {
         $elem.append('<h5>' + title + '</h5>');
     };
 
-    const drawAndPropagate = function($elem, node, treeLabel, $btnContainer, callback) {
-        const $checkbox = $(createCheckbox(treeLabel, node, $btnContainer, callback));
-        const $groupContainer = $(groupContainerTmpl);
-
-        if (node.children) {
-            // Button click handler
-            const $button = createExpandButton();
-            $button.appendTo($groupContainer);
-        }
-        $groupContainer.append($checkbox);
-        _.each(node.children, function(node2) {
-            node2.value = node.value + '/' + node2.value;
-            drawAndPropagate($groupContainer, node2, treeLabel, $btnContainer, callback);
-        });
-        $groupContainer.appendTo($elem);
-    };
-
     const createCheckbox = function(name, node, $btnContainer, callback) {
         const id = name + '_' + node.value;
         const $checkbox = $('<input name="' + name + '" type="checkbox" value="' + node.value +
@@ -53,6 +36,23 @@ module.exports = function CheckboxTree() {
         const $label = $('<label for=\'' + id + '\'>' + node.label + ' (' + node.count +
             ')</label>');
         return $().add($checkbox).add($label);
+    };
+
+    const drawAndPropagate = function($elem, node, treeLabel, $btnContainer, callback) {
+        const $checkbox = $(createCheckbox(treeLabel, node, $btnContainer, callback));
+        const $groupContainer = $(groupContainerTmpl);
+
+        if (node.children) {
+            // Button click handler
+            const $button = createExpandButton();
+            $button.appendTo($groupContainer);
+        }
+        $groupContainer.append($checkbox);
+        _.each(node.children, function(node2) {
+            node2.value = node.value + '/' + node2.value;
+            drawAndPropagate($groupContainer, node2, treeLabel, $btnContainer, callback);
+        });
+        $groupContainer.appendTo($elem);
     };
 
     const setRmvButton = function($btnContainer, $this) {

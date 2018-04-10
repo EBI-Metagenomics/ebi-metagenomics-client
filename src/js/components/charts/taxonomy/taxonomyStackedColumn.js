@@ -3,6 +3,21 @@ require('highcharts/modules/exporting')(Highcharts);
 const Commons = require('../../../commons');
 const TaxonomyColumn = require('./taxonomyColumn');
 
+function transformData(data) {
+    let transformedData = [];
+    let i = 0;
+    const maxColorIndex = Commons.TAXONOMY_COLOURS.length - 1;
+    data.forEach(function(e) {
+        transformedData.push({
+            name: e.name,
+            data: [e.y],
+            color: Commons.TAXONOMY_COLOURS[Math.min(i, maxColorIndex)]
+        });
+        i++;
+    });
+    return transformedData;
+}
+
 module.exports = class TaxonomyStackedColumns extends TaxonomyColumn {
     constructor(containerId, chartTitle, data, legend, extraOptions) {
         const transformedData = transformData(data);
@@ -42,17 +57,4 @@ module.exports = class TaxonomyStackedColumns extends TaxonomyColumn {
     }
 };
 
-function transformData(data) {
-    let transformedData = [];
-    let i = 0;
-    const maxColorIndex = Commons.TAXONOMY_COLOURS.length - 1;
-    data.forEach(function(e) {
-        transformedData.push({
-            name: e.name,
-            data: [e.y],
-            color: Commons.TAXONOMY_COLOURS[Math.min(i, maxColorIndex)]
-        });
-        i++;
-    });
-    return transformedData;
-}
+

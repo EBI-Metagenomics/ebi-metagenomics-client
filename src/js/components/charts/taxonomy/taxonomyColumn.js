@@ -15,6 +15,14 @@ const Commons = require('../../../commons');
 // rgb(202, 174, 116)
 // rgb(204, 204, 204)
 
+function sumData(data) {
+    let sum = 0;
+    data.forEach(function(e) {
+        sum += e.y;
+    });
+    return sum;
+}
+
 module.exports = class TaxonomyColumn {
     constructor(containerId, chartTitle, chartData, legend, extraOptions) {
         const categories = [];
@@ -52,11 +60,12 @@ module.exports = class TaxonomyColumn {
             credits: {
                 enabled: false
             },
-            series: [{
-                colorByPoint: true,
-                data: chartData,
-                colors: Commons.TAXONOMY_COLOURS
-            }],
+            series: [
+                {
+                    colorByPoint: true,
+                    data: chartData,
+                    colors: Commons.TAXONOMY_COLOURS
+                }],
             xAxis: {
                 categories: categories,
                 title: {
@@ -82,10 +91,10 @@ module.exports = class TaxonomyColumn {
                         perc = 100 * this.y / sum;
                     }
                     let title = this.x;
-                    if (title==='0') {
+                    if (title === '0') {
                         title = this.series.name;
                     }
-                    return title+ '<br/>' + '<b>' + this.y +
+                    return title + '<br/>' + '<b>' + this.y +
                         '</b> reads (' + (perc).toFixed(2) + '%)';
                 }
             }
@@ -123,7 +132,6 @@ module.exports = class TaxonomyColumn {
 
     clusterData(data, depth) {
         let clusteredData = {};
-        let total = 0;
         _.each(data, function(d) {
             const attr = d.attributes;
             const lineage = attr.lineage.split(':');
@@ -142,7 +150,6 @@ module.exports = class TaxonomyColumn {
                     l: lineage
                 };
             }
-            total += val;
         });
         clusteredData = _.map(clusteredData, function(values, k) {
             return {
@@ -155,11 +162,3 @@ module.exports = class TaxonomyColumn {
     }
 };
 
-
-function sumData(data) {
-    let sum = 0;
-    data.forEach(function(e) {
-        sum += e.y;
-    });
-    return sum;
-}

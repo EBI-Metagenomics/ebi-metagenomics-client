@@ -66,8 +66,6 @@ let SampleView = Backbone.View.extend({
     }
 });
 
-
-
 /**
  * Generate link to ENA if sample accession exists in ENA
  * @param {string} sampleAccession ENA secondary sample accession

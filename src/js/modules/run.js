@@ -601,10 +601,10 @@ function loadKronaChart(runId, pipelineVersion) {
     //         $('#krona').append(frame);
     //     }
     // });
-    const kronaChart = '<object class="krona_chart"\n' +
+    const kronaChart = '<object class="krona_chart" ' +
         'data="' + kronaUrl + '" ' +
         'type="text/html"></object>';
-    $('#krona').append(kronaChart);
+    $('#krona').html(kronaChart);
 // <object class="krona_chart"
 //     data="<%= kronaUrl %>"
 //     type="text/html"></object>
