@@ -30,6 +30,9 @@ let StudyView = Backbone.View.extend({
 
                 that.$el.html(that.template(that.model.toJSON()));
                 util.attachTabHandlers();
+            },
+            error(ignored, response) {
+                util.displayError(response.status, 'Could not retrieve study: ' + studyId);
             }
         });
     }
@@ -91,7 +94,7 @@ function initPage() {
     let downloads = new api.StudyDownloads({id: studyId});
 
     let coordinates = new api.StudyGeoCoordinates({study_accession: studyId});
-    studyView.fetchAndRender().then(() => {
+    studyView.fetchAndRender().done(() => {
         samplesView.initialize();
         runsView.initialize();
         new MapData({model: coordinates});

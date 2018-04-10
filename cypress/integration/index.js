@@ -1,7 +1,7 @@
 import {openPage, getBaseURL} from './util';
 
 const origPage = '';
-
+const options = {timeout: 40000};
 describe('Home page: Test Browse by selected biomes component', function() {
     context('Check for elements', function() {
         before(function() {
@@ -47,48 +47,48 @@ describe('Home page: Test Browse by selected biomes component', function() {
         });
 
         it('Browse amplicon runs', function() {
-            cy.get('#amplicon-stats a').click();
+            cy.get('#amplicon-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
             cy.get('#runsResults h5')
             .contains('You searched for runs with filters: experiment_type:amplicon.');
         });
         it('Browse assemblies', function() {
-            cy.get('#assembly-stats a').click();
+            cy.get('#assembly-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
             cy.get('#runsResults h5')
             .contains('You searched for runs with filters: experiment_type:assembly.');
         });
         it('Browse metabarcoding runs', function() {
-            cy.get('#metaB-stats a').click();
+            cy.get('#metaB-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
             cy.get('#runsResults h5')
             .contains('You searched for runs with filters: experiment_type:metabarcoding.');
         });
         it('Browse metagenome runs', function() {
-            cy.get('#metaG-stats a').click();
+            cy.get('#metaG-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
             cy.get('#runsResults h5')
             .contains('You searched for runs with filters: experiment_type:metagenomic.');
         });
         it('Browse metatranscriptomes runs', function() {
-            cy.get('#metaT-stats a').click();
+            cy.get('#metaT-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
             cy.get('#runsResults h5')
             .contains('You searched for runs with filters: experiment_type:metatranscriptomic.');
         });
         it('Browse studies', function() {
-            cy.get('#project-stats a').click();
+            cy.get('#project-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#projects');
             cy.get('#projectsResults h5')
             .contains('You searched for projects with no parameters.');
         });
         it('Browse samples', function() {
-            cy.get('#sample-stats a').click();
+            cy.get('#sample-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#samples');
             cy.get('#samplesResults h5').contains('You searched for samples with no parameters.');
         });
         it('Browse runs', function() {
-            cy.get('#run-stats a').click();
+            cy.get('#run-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
             cy.get('#runsResults h5').contains('You searched for runs with no parameters.');
         });

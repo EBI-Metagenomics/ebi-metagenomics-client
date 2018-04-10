@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists, waitForPageLoad} from './util';
+import {openPage, datatype, urlExists, waitForPageLoad, changeTab} from './util';
 import Config from './config';
 import GenericTableHandler from './genericTable';
 
@@ -61,7 +61,6 @@ const runTableColumns = {
     }
 };
 
-
 describe('Study page - General', function() {
     beforeEach(function() {
         openPage(origPage);
@@ -70,10 +69,13 @@ describe('Study page - General', function() {
 
     it('Verify elements are present', function() {
         cy.get('h3').should('contain', projectId);
-        cy.get('h2').should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
+        cy.get('h2').
+            should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
         cy.get('#ebi_ena_links').should('contain', 'ENA website (ERP019566)');
-        cy.get('#europe_pmc_links > li').should('contain', 'A longitudinal study of the diabetic skin and wound microbiome.');
-        cy.get('#europe_pmc_links > li').should('contain', 'Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.');
+        cy.get('#europe_pmc_links > li').
+            should('contain', 'A longitudinal study of the diabetic skin and wound microbiome.');
+        cy.get('#europe_pmc_links > li').
+            should('contain', 'Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.');
         cy.get('#europe_pmc_links > li').should('contain', '2017 5');
         cy.get('#europe_pmc_links > li > a').should('contain', '28740749');
         cy.get('#europe_pmc_links > li > a').should('contain', '10.7717/peerj.3543');
@@ -106,34 +108,64 @@ describe('Study page - Samples table', function() {
     });
 
     it('Samples table should respond to filtering', function() {
-        table.testFiltering('ERS1474800', [['Control patient 9 left foot time 3', 'ERS1474800', 'control_skin_left', '27-Nov-2017']]);
+        table.testFiltering('ERS1474800', [
+            [
+                'Control patient 9 left foot time 3',
+                'ERS1474800',
+                'control_skin_left',
+                '27-Nov-2017']]);
     });
 
     it('Samples table should respond to pagination', function() {
-        table.testPagination(10, [{
-            index: 1,
-            data: ['Control patient 9 right foot time 1', 'ERS1474797', 'control_skin_right', '27-Nov-2017']
-        }, {
-            index: 3,
-            data: ['Patient 5 wound debridement time 5', 'ERS1474870', 'wound_deb', '27-Nov-2017']
-        }, {
-            index: 'next',
-            data: ['Patient 6 skin contralateral foot to wound time 4', 'ERS1474887', 'diabetic_skin_contra', '27-Nov-2017'], // 4th row
-            pageNum: 4
-        }, {
-            index: 'prev',
-            data: ['Patient 5 wound debridement time 5', 'ERS1474870', 'wound_deb', '27-Nov-2017'], // Back to 3rd row
-            pageNum: 3
-        }, {
-            index: 'last',
-            data: ['Patient 5 skin contralateral foot to wound time 2', 'ERS1474858', 'diabetic_skin_contra', '27-Nov-2017'],
-            pageNum: 6,
-            pageSize: 8
-        }, {
-            index: 'first',
-            data: ['Control patient 9 right foot time 1', 'ERS1474797', 'control_skin_right', '27-Nov-2017'],
-            pageNum: 1
-        }]);
+        table.testPagination(10, [
+            {
+                index: 1,
+                data: [
+                    'Control patient 9 right foot time 1',
+                    'ERS1474797',
+                    'control_skin_right',
+                    '27-Nov-2017']
+            }, {
+                index: 3,
+                data: [
+                    'Patient 5 wound debridement time 5',
+                    'ERS1474870',
+                    'wound_deb',
+                    '27-Nov-2017']
+            }, {
+                index: 'next',
+                data: [
+                    'Patient 6 skin contralateral foot to wound time 4',
+                    'ERS1474887',
+                    'diabetic_skin_contra',
+                    '27-Nov-2017'], // 4th row
+                pageNum: 4
+            }, {
+                index: 'prev',
+                data: [
+                    'Patient 5 wound debridement time 5',
+                    'ERS1474870',
+                    'wound_deb',
+                    '27-Nov-2017'], // Back to 3rd row
+                pageNum: 3
+            }, {
+                index: 'last',
+                data: [
+                    'Patient 5 skin contralateral foot to wound time 2',
+                    'ERS1474858',
+                    'diabetic_skin_contra',
+                    '27-Nov-2017'],
+                pageNum: 6,
+                pageSize: 8
+            }, {
+                index: 'first',
+                data: [
+                    'Control patient 9 right foot time 1',
+                    'ERS1474797',
+                    'control_skin_right',
+                    '27-Nov-2017'],
+                pageNum: 1
+            }]);
     });
 
     it('Samples table should respond to page size change', function() {
@@ -141,7 +173,8 @@ describe('Study page - Samples table', function() {
     });
 
     it('Sample table download link should be valid', function() {
-        table.testDownloadLink(Config.API_URL + 'samples?study_accession=' + projectId + '&format=csv');
+        table.testDownloadLink(Config.API_URL + 'samples?study_accession=' + projectId +
+            '&format=csv');
     });
 });
 
@@ -161,35 +194,36 @@ describe('Study page - Runs table', function() {
     });
 
     it('Runs table should respond to filtering', function() {
-        table.testFiltering('ERR1760140', [['ERR1760140', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']]);
+        table.testFiltering('ERR1760140',
+            [['ERR1760140', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']]);
     });
 
-
     it('Runs table should respond to pagination', function() {
-        table.testPagination(25, [{
-            index: 1,
-            data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']
-        }, {
-            index: 3,
-            data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']
-        }, {
-            index: 'next',
-            data: ['ERR1760066', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'], // 4th row
-            pageNum: 4
-        }, {
-            index: 'prev',
-            data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-            pageNum: 3
-        }, {
-            index: 'last',
-            data: ['ERR1759891', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-            pageNum: 11,
-            pageSize: 8
-        }, {
-            index: 'first',
-            data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-            pageNum: 1
-        }]);
+        table.testPagination(25, [
+            {
+                index: 1,
+                data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']
+            }, {
+                index: 3,
+                data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']
+            }, {
+                index: 'next',
+                data: ['ERR1760066', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'], // 4th row
+                pageNum: 4
+            }, {
+                index: 'prev',
+                data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
+                pageNum: 3
+            }, {
+                index: 'last',
+                data: ['ERR1759891', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
+                pageNum: 11,
+                pageSize: 8
+            }, {
+                index: 'first',
+                data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
+                pageNum: 1
+            }]);
     });
 
     it('Runs table should respond to page size change', function() {
@@ -197,52 +231,72 @@ describe('Study page - Runs table', function() {
     });
 
     it('Runs table download link should be valid', function() {
-        table.testDownloadLink(Config.API_URL + 'runs?study_accession=' + projectId + '&format=csv');
+        table.testDownloadLink(Config.API_URL + 'runs?study_accession=' + projectId +
+            '&format=csv');
     });
 });
 
-// describe('Study page - Runs table with >1 analysis per run', function () {
-//     beforeEach(function () {
-//         const projectId = "ERP009703";
-//         const origPage = "studies/" + projectId;
-//         openPage(origPage);
-//         waitForPageLoad("Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing study from the June solstice in the year 2014");
-//         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
-//     });
-//     it('Runs table should display both pipeline versions for a run', function () {
-//         table.testFiltering('ERR770966', [['ERR770966', 'metagenomic', '', '', '2.0, 4.0'], ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']]);
-//     });
-// });
+describe('Study page - Runs table with >1 analysis per run', function() {
+    beforeEach(function() {
+        const projectId = 'ERP009703';
+        const origPage = 'studies/' + projectId;
+        openPage(origPage);
+        waitForPageLoad(
+            'Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing ' +
+            'study from the June solstice in the year 2014');
+        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+    });
+    it('Runs table should display both pipeline versions for a run', function() {
+        table.testFiltering('ERR770966', [
+            ['ERR770966', 'metagenomic', '', '', '2.0, 4.0'],
+            ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']
+        ]);
+    });
+});
 
+describe('Study page - Error handling', function() {
+    it('Should display error message if invalid accession passed in URL', function() {
+        const studyId = projectId+'00000';
+        const origPage = 'studies/' + projectId;
+        openPage(origPage);
+        cy.contains('Oh no! An error has occured!');
+        cy.contains('Error: 404');
+        cy.contains('Could not retrieve study: '+studyId);
+    });
+});
 
-// describe('Study page - Downloads tab', function () {
-//     beforeEach(function () {
-//         const projectId = "ERP009703";
-//         const origPage = "studies/" + projectId;
-//         openPage(origPage);
-//         changeTab('analysis');
-//     });
-//     it('Download links for both pipeline versions should be present', function () {
-//         const pipeline_versions = ['2.0', '4.0'];
-//         let i = 0;
-//         cy.get('#downloads h3').each(function ($el) {
-//             expect(Cypress.$($el).text()).to.eq('Pipeline version: ' + pipeline_versions[i++]);
-//         });
-//     });
-//     it('Download links should contain all files for each pipeline version', function () {
-//         const pipeline2Files = ['GO slim annotation', 'Complete GO annotation', 'InterPro matches', 'Phylum level taxonomies', 'Taxonomic assignments'];
-//         const pipeline4Files = ['GO slim annotation', 'Complete GO annotation', 'InterPro matches', 'Phylum level taxonomies SSU', 'Taxonomic assignments SSU', 'Phylum level taxonomies LSU', 'Taxonomic assignments LSU', 'Taxonomic diversity metrics LSU', 'Taxonomic diversity metrics SSU'];
-//         const files = pipeline2Files.concat(pipeline4Files);
-//         let i = 0;
-//         cy.get('#downloads > div > p').each(function($el){
-//             expect(Cypress.$($el).text()).to.eq(files[i++]);
-//         });
-//     });
-//     // TODO test before release
-//     // it('Download links should all be valid', function(){
-//     //     cy.get('#downloads > div > p > a').each(function($el){
-//     //         cy.request(Cypress.$($el).attr('href'));
-//     //         cy.log(Cypress.$($el).attr('href'))
-//     //     });
-//     // });
-// });
+describe('Study page - Downloads tab', function() {
+    beforeEach(function() {
+        const projectId = 'ERP009703';
+        const origPage = 'studies/' + projectId;
+        openPage(origPage);
+        changeTab('analysis');
+    });
+    it('Download links for both pipeline versions should be present', function() {
+        const pipelineVersions = ['2.0', '4.0'];
+        let i = 0;
+        cy.get('#downloads h3').each(function($el) {
+            expect(Cypress.$($el).text()).to.eq('Pipeline version: ' + pipelineVersions[i++]);
+        });
+    });
+    it('Download links should contain all files for each pipeline version', function() {
+        const pipeline2Files = ['GO slim annotation', 'Complete GO annotation', 'InterPro matches',
+            'Phylum level taxonomies', 'Taxonomic assignments'];
+        const pipeline4Files = ['GO slim annotation', 'Complete GO annotation', 'InterPro matches',
+            'Phylum level taxonomies SSU', 'Taxonomic assignments SSU',
+            'Phylum level taxonomies LSU', 'Taxonomic assignments LSU',
+            'Taxonomic diversity metrics LSU', 'Taxonomic diversity metrics SSU'];
+        const files = pipeline2Files.concat(pipeline4Files);
+        let i = 0;
+        cy.get('#downloads > div > p').each(function($el) {
+            expect(Cypress.$($el).text()).to.eq(files[i++]);
+        });
+    });
+    // TODO test before release
+    // it('Download links should all be valid', function(){
+    //     cy.get('#downloads > div > p > a').each(function($el){
+    //         cy.request(Cypress.$($el).attr('href'));
+    //         cy.log(Cypress.$($el).attr('href'))
+    //     });
+    // });
+});

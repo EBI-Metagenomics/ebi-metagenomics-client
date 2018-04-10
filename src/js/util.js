@@ -450,9 +450,9 @@ export function checkURLExists(url) {
  * Check API is online, replace body with error message if not.
  */
 export function checkAPIonline() {
-    checkURLExists(process.env.API_URL).fail(()=>{
+    checkURLExists(process.env.API_URL).fail(() => {
         $('body').html('Error: API Offline');
-    }).done(()=>{
+    }).done(() => {
         console.log('API is online.');
     });
 }
@@ -609,3 +609,13 @@ export let RunsView = GenericTableView.extend({
             attr['pipeline_versions'].join(', ')];
     }
 });
+
+/**
+ * Replace page with error message
+ * @param {string} errorcode HTTP error code
+ * @param {string} errormsg
+ */
+export function displayError(errorcode, errormsg) {
+    const tmpl = Commons.errorTmpl({errorcode, errormsg});
+    $('#main-content-area').html(tmpl);
+}
