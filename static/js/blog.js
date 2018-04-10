@@ -1,8 +1,8 @@
-(function (document, getJSON) {
+(function(document, $) {
     var dummyElement = document.createElement('p');
     var blogURL = 'https://ebi-metagenomics.github.io/ebi-metagenomics-blog/';
 
-    var processPost = function (data, source) {
+    var processPost = function(data, source) {
         var dest = source.cloneNode(true);
         // process title
         dest.querySelector('h3').innerText = data.title;
@@ -27,12 +27,12 @@
     };
 
     // You didn't see anything...
-    var hideContainers = function () {
+    var hideContainers = function() {
         var blogSection = document.getElementById('blog');
         blogSection.parentElement.removeChild(blogSection);
     };
 
-    var handleData = function (data) {
+    var handleData = function(data) {
         try {
             processPost(data.spotlight, document.getElementById('blog-spotlight'));
             processPost(data.tools, document.getElementById('blog-tools'));
@@ -42,14 +42,12 @@
         }
     };
 
-    var handleError = function (jqXHR) {
+    var handleError = function(jqXHR) {
         hideContainers();
     };
 
-    var main = function () {
-        getJSON(blogURL + 'feed-first-of-each.json')
-            .done(handleData)
-            .fail(handleError);
+    var main = function() {
+        $.get(blogURL + 'feed-first-of-each.json').done(handleData).fail(handleError);
     };
 
     if (document.readyState !== 'loading') {
@@ -58,4 +56,4 @@
     }
 
     document.addEventListener('DOMContentLoaded', main, {once: true});
-})(document, jQuery.getJSON);
+})(document, jQuery);

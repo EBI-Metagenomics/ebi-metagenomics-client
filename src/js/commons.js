@@ -1,6 +1,3 @@
-// export const header = require("../partials/header.handlebars");
-// export const head = require("../partials/head.handlebars");
-// export const footer = require("../partials/footer.handlebars");
 export const pagination = require('../partials/pagination.handlebars');
 export const pagesize = require('../partials/pagesize.handlebars');
 export const resultsFilter = require('../partials/results_filter.handlebars');
@@ -17,9 +14,9 @@ export const pipelines = [
 
 require('style-loader?name=[name].[ext]!../../static/css/elixir-banner.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');
-require('style-loader?name=[name].[ext]!../../static/css/foundation.css');
 require('style-loader?name=[name].[ext]!../../static/css/theme-embl-petrol.css');
 require('style-loader?name=[name].[ext]!../../static/fonts/fonts.css');
+
 require(
     'style-loader?name=[name].[ext]!../../node_modules/tablesorter/dist/css/theme.default.min.css');
 require('style-loader?name=[name].[ext]!../../static/css/site.css');

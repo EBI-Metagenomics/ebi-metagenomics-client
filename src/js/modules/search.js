@@ -10,7 +10,7 @@ const Pagination = require('../components/pagination').Pagination;
 require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
 require('foundation-sites');
-require('../../../static/libraries/jquery.TableCSVExport');
+require('../../../static/js/jquery.TableCSVExport');
 
 const CheckboxTree = require('../components/checkboxTree');
 
@@ -51,7 +51,7 @@ if (queryText === null) {
     queryText = getCookieQuery();
 }
 
-$('#navbar-query').val(queryText);
+$('#local-searchbox').val(queryText);
 
 $(document).ready(function() {
     // TODO convert to template argument
@@ -190,7 +190,7 @@ $searchForm.on('reset', function() {
  * Retrieve query text from search form
  */
 function getQueryText() {
-    return $searchForm.find('#navbar-query').val();
+    return $searchForm.find('#local-searchbox').val();
 }
 
 /**
