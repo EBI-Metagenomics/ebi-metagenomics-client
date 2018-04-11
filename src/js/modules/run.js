@@ -507,7 +507,7 @@ function setAbundanceTab(statisticsData) {
             $.get({
                 url: download[0].links.self,
                 success(svg) {
-                    $('#abundance-disp').append(svg);
+                    $('#abundance-disp').html(svg);
                 }
             });
             enableTab('abundance');

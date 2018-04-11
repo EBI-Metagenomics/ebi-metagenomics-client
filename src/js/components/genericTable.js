@@ -15,6 +15,7 @@ module.exports = class GenericTable {
      * @param {callback} callback function on event callback to load data
      */
     constructor($container, title, headers, initPageSize, isPageHeader, callback) {
+        $container.empty();
         this.headers = headers;
         let params = {
             section_title: title,
