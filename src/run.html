@@ -251,7 +251,6 @@
                 <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Data type</th>
                     <th>Compression</th>
                     <th>Format</th>
                     <th></th>
@@ -261,7 +260,6 @@
                 <% _.each(group, function(entry){ %>
                 <tr>
                     <td><%= entry.attributes.description.label %></td>
-                    <td><%= entry.type %> </td>
                     <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].extension :
                         '-' %>
                     </td>
