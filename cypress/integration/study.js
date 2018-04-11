@@ -256,7 +256,7 @@ describe('Study page - Runs table with >1 analysis per run', function() {
 
 describe('Study page - Error handling', function() {
     it('Should display error message if invalid accession passed in URL', function() {
-        const studyId = projectId+'00000';
+        const studyId = 'ERP019566012345';
         const origPage = 'studies/' + projectId;
         openPage(origPage);
         cy.contains('Oh no! An error has occured!');
