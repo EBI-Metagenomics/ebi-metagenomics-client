@@ -340,7 +340,7 @@ function clusterRunDownloads(downloads) {
         const attr = download.attributes;
         const group = attr['group-type'];
         const label = attr.description.label;
-
+        const format = attr['file-format']['name'];
         attr['links'] = [download.links.self];
 
         if (!groups.hasOwnProperty(group)) {
@@ -348,7 +348,9 @@ function clusterRunDownloads(downloads) {
         }
         let grouped = false;
         _.each(groups[group], function(d) {
-            if (d.attributes.description.label === label) {
+            const groupLabel = d.attributes.description.label;
+            const groupFormat = d.attributes['file-format']['name'];
+            if (groupLabel === label && groupFormat === format) {
                 d.attributes.links = d.attributes.links.concat(download.links.self);
                 grouped = true;
             }
@@ -381,6 +383,7 @@ export const RunDownloads = Backbone.Model.extend({
 
 export const StudyGeoCoordinates = Backbone.Model.extend({
     url() {
-        return API_URL + 'studies/' + this.attributes.study_accession + '/geocoordinates?page_size=500';
-    },
+        return API_URL + 'studies/' + this.attributes.study_accession +
+            '/geocoordinates?page_size=500';
+    }
 });
