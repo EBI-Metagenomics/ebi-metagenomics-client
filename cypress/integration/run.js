@@ -48,7 +48,6 @@ describe('Run page - general', function() {
                 openTab(tabId);
                 verifyTabIsVisible(tabId);
             }
-
         }
     });
     it('Should display metadata if available', function() {
@@ -136,7 +135,8 @@ describe('Run page - charts', function() {
             cy.get(series).first().trigger('mouseout', {force: true});
         }
 
-        const readsRemainingSeries = '.highcharts-series-group .highcharts-series-1 > .highcharts-point';
+        const readsRemainingSeries =
+            '.highcharts-series-group .highcharts-series-1 > .highcharts-point';
         // Initial reads
         const series1 = readsRemainingSeries + ':nth-child(1)';
         hoverAndValidateTooltip(series1, 'Initial reads', 'Reads remaining: 43 947');
@@ -150,8 +150,9 @@ describe('Run page - charts', function() {
         hoverAndValidateTooltip(series3, 'Length filtering', 'Reads remaining: 43 045');
 
         // Length filtering (reads filtered out)
-        const filtered_out_series = '.highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(3)';
-        hoverAndValidateTooltip(filtered_out_series, 'Length filtering', 'Reads filtered out: 888');
+        const filteredOutSeries =
+            '.highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(3)';
+        hoverAndValidateTooltip(filteredOutSeries, 'Length filtering', 'Reads filtered out: 888');
 
         // Ambiguous base filtering
         const series4 = readsRemainingSeries + ':nth-child(4)';
@@ -200,7 +201,22 @@ describe('Run page - Changing pipeline version', function() {
         cy.get(kronaChartClass).should('have.length', 1);
     });
 });
-// TODO check taxonomy request does not have LSU/SSU if pipeline version < 4.0
+
+describe('Run page - Changing analysis version', function() {
+    it('Should not duplicate taxonomic phylum table', function() {
+        const tableClass = '#pie .phylum-table';
+        openPage('runs/SRR5947897#taxonomic');
+        waitForPageLoad();
+        changeTab('taxonomic');
+        changeTab('pie');
+
+        cy.get(tableClass).should('have.length', 1);
+
+        cy.get('[data-cy=\'lsu-btn\']').click();
+        cy.get('[data-cy=\'ssu-btn\']').click();
+        cy.get(tableClass).should('have.length', 1);
+    });
+});
 // TODO test version selector
 // TODO test all download links are valid/organised correctly
 
