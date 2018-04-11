@@ -236,30 +236,30 @@ describe('Study page - Runs table', function() {
     });
 });
 
-describe('Study page - Runs table with >1 analysis per run', function() {
-    beforeEach(function() {
-        const projectId = 'ERP009703';
-        const origPage = 'studies/' + projectId;
-        openPage(origPage);
-        waitForPageLoad(
-            'Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing ' +
-            'study from the June solstice in the year 2014');
-        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
-    });
-    it('Runs table should display both pipeline versions for a run', function() {
-        table.testFiltering('ERR770966', [
-            ['ERR770966', 'metagenomic', '', '', '2.0, 4.0'],
-            ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']
-        ]);
-    });
-});
+// describe('Study page - Runs table with >1 analysis per run', function() {
+//     beforeEach(function() {
+//         const projectId = 'ERP009703';
+//         const origPage = 'studies/' + projectId;
+//         openPage(origPage);
+//         waitForPageLoad(
+//             'Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing ' +
+//             'study from the June solstice in the year 2014');
+//         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+//     });
+//     it('Runs table should display both pipeline versions for a run', function() {
+//         table.testFiltering('ERR770966', [
+//             ['ERR770966', 'metagenomic', '', '', '2.0, 4.0'],
+//             ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']
+//         ]);
+//     });
+// });
 
 describe('Study page - Error handling', function() {
     it('Should display error message if invalid accession passed in URL', function() {
         const studyId = 'ERP019566012345';
-        const origPage = 'studies/' + projectId;
+        const origPage = 'studies/' + studyId;
         openPage(origPage);
-        cy.contains('Oh no! An error has occured!');
+        waitForPageLoad('Oh no! An error has occured!');
         cy.contains('Error: 404');
         cy.contains('Could not retrieve study: ' + studyId);
     });
