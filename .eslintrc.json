@@ -8,7 +8,7 @@
     "no-console": "off",
     "no-process-env": 0,
     "comma-dangle": ["error", "never"],
-    "new-cap": [2, {"capIsNewExceptions": ["$.Deferred", "DownloadsView"]}],
+    "new-cap": [2, {"capIsNewExceptions": ["$.Deferred", "DownloadsView", "TableCSVExport"]}],
     "camelcase": [2, {"properties": "never"}],
     "no-invalid-this": "off"
   },

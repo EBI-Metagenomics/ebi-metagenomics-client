@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const GenericTable = require('./genericTable');
+require('../../../static/js/jquery.TableCSVExport');
 
 module.exports = class ClientSideTable extends GenericTable {
     /**
@@ -17,8 +18,10 @@ module.exports = class ClientSideTable extends GenericTable {
             that.filterTable(str);
         });
         this.$pageSizeSelect.val(initPageSize);
-        that.attachPageSizeCallback(initPageSize);
+        this.attachPageSizeCallback(initPageSize);
         this.initHeaders(this.$table);
+
+        this.attachDownloadHandler();
     }
 
     /**
@@ -177,6 +180,19 @@ module.exports = class ClientSideTable extends GenericTable {
                 removeClass('sort-both').
                 addClass(initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
         }
+    }
+
+    /**
+     * Add click handler to download link in table template
+     */
+    attachDownloadHandler() {
+        const that = this;
+        this.$downloadLink.click(() => {
+            $(that.$table).TableCSVExport({
+                showHiddenRows: true,
+                delivery: 'download'
+            });
+        });
     }
 };
 

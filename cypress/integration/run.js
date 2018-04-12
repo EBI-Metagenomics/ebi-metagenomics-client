@@ -205,7 +205,8 @@ describe('Run page - Changing pipeline version', function() {
 describe('Run page - Changing analysis version', function() {
     it('Should not duplicate taxonomic phylum table', function() {
         const tableClass = '#pie .phylum-table';
-        openPage('runs/SRR5947897#taxonomic');
+        const pipelineVersion = '4.0';
+        openPage(origPage + '?version=' + pipelineVersion);
         waitForPageLoad();
         changeTab('taxonomic');
         changeTab('pie');
