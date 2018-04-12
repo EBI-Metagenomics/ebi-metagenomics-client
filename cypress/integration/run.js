@@ -225,7 +225,7 @@ describe('Run page - Error handling', function() {
         const origPage = 'runs/' + runId;
         openPage(origPage);
         cy.contains('Error: 404', {timeout: 40000});
-        cy.contains('Could not retrieve run": ' + runId, {timeout: 40000});
+        cy.contains('Could not retrieve run: ' + runId, {timeout: 40000});
     });
 });
 
