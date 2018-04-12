@@ -16,6 +16,9 @@ let Util = {
     waitForBiomesLoad: function(results) {
         cy.get('table tr.biome', {timeout: 10000}).should('have.length', parseInt(results));
     },
+    waitForSearchResults: function(rowSelector, numResults) {
+        cy.get(rowSelector, {timeout: 20000}).should('have.length', parseInt(numResults));
+    },
     assertTableIsCleared: function() {
         cy.get('table tr.sample').should('not.exist');
     },

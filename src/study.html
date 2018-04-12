@@ -217,6 +217,8 @@
 <script src="{{subfolder}}/static/js/foundation.min.js"></script>
 <script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
 <script type="text/JavaScript">
+    window.Foundation = Foundation;
+    Foundation.addToJquery($);
     $(document).ready(function () {
         $(document).foundation();
         $(document).foundationExtendEBI();

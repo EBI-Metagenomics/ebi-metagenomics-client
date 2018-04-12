@@ -1,8 +1,8 @@
-import {openPage, changeTab} from './util';
+import {openPage, changeTab, waitForSearchResults} from './util';
 
 const origPage = 'search';
 
-const initialResultSize = 10;
+const initialResultSize = 25;
 
 const rowSelector = 'table tr.search-row:visible';
 
@@ -10,10 +10,6 @@ const textQueryInput = '[data-cy=\'text-search-input\']';
 const submitTextQuery = '[data-cy=\'text-search-submit\']';
 
 const pageSizeSelect = '[data-cy=\'page-size-select\']';
-
-function waitForResultsLoad(results) {
-    cy.get(rowSelector, {timeout: 20000}).should('have.length', parseInt(results));
-}
 
 function waitForFacetFilters(facetName) {
     cy.wait('@' + facetName, {timeout: 20000}).its('url').should('include', 'size=1');
@@ -44,13 +40,16 @@ const facetRequests = [
 function loadPage(page) {
     cy.server();
     cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=1&*').as(facetRequests[0]);
-    cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=10&*').as(facetRequests[1]);
+    cy.route('/ebisearch/ws/rest/metagenomics_projects?*size='+initialResultSize.toString()+'&*')
+        .as(facetRequests[1]);
     cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=1&*').as(facetRequests[2]);
-    cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=10&*').as(facetRequests[3]);
+    cy.route('/ebisearch/ws/rest/metagenomics_samples?*size='+initialResultSize.toString()+'&*')
+        .as(facetRequests[3]);
     cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=1&*').as(facetRequests[4]);
-    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=10&*').as(facetRequests[5]);
+    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size='+initialResultSize.toString()+'&*')
+        .as(facetRequests[5]);
     openPage(page);
-    waitForResultsLoad(initialResultSize);
+    waitForSearchResults(rowSelector, initialResultSize);
 }
 
 function waitForAllFacets() {
@@ -97,22 +96,22 @@ describe('Search page - general Functionality', function() {
         openPage(origPage);
         cy.wait(1000);
         cy.get(pageSizeSelect).invoke('val').then((val) => {
-            waitForResultsLoad(val);
+            waitForSearchResults(rowSelector, val);
             cy.get(pageSizeSelect).select('50');
-            waitForResultsLoad(50);
+            waitForSearchResults(rowSelector, 50);
         });
     });
 
     it('Biome filters should restrict results', function() {
         cy.get('button.disp-children').first().click();
         cy.get('input[value=\'Environmental/Air\']').check({force: true});
-        waitForResultsLoad(2);
+        waitForSearchResults(rowSelector, 2);
         cy.get('tbody > tr > td[data-column=\'project-biome\']').contains('Air');
     });
 
     it('Centre name filters should restrict results', function() {
         cy.get('input[value=\'BioProject\']').check({force: true});
-        waitForResultsLoad(10);
+        waitForSearchResults(rowSelector, 25);
         cy.get('tbody > tr > td[data-column=\'project-centre-name\']').contains('BioProject');
     });
 
@@ -120,9 +119,9 @@ describe('Search page - general Functionality', function() {
         cy.get('button.disp-children').first().click();
         cy.get('input[value=\'Environmental/Air\']').check({force: true});
         cy.get('input[value=\'BGI\']').check({force: true});
-        waitForResultsLoad(1);
+        waitForSearchResults(rowSelector, 1);
         cy.get('#search-reset').click();
-        waitForResultsLoad(initialResultSize);
+        waitForSearchResults(rowSelector, initialResultSize);
     });
 
     it('Should pre-fill cached search query', function() {
@@ -137,16 +136,16 @@ describe('Search page - general Functionality', function() {
         openPage(origPage);
         waitForAllFacets();
 
-        waitForResultsLoad(initialResultSize);
+        waitForSearchResults(rowSelector, initialResultSize);
     });
     it('Pagination - double page change', function() {
         loadPage(origPage + '#runs');
         waitForAllFacets();
 
         cy.get('#projects-pagination > ul > li.page-item.next a').click({force: true});
-        waitForResultsLoad(initialResultSize);
+        waitForSearchResults(rowSelector, initialResultSize);
         cy.get('#projects-pagination > ul > li.page-item.first a').click({force: true});
-        waitForResultsLoad(initialResultSize);
+        waitForSearchResults(rowSelector, initialResultSize);
     });
 });
 
