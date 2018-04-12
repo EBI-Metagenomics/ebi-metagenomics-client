@@ -2,7 +2,7 @@ import {openPage, changeTab, waitForSearchResults} from './util';
 
 const origPage = 'search';
 
-const initialResultSize = 10;
+const initialResultSize = 25;
 
 const rowSelector = 'table tr.search-row:visible';
 
@@ -40,11 +40,14 @@ const facetRequests = [
 function loadPage(page) {
     cy.server();
     cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=1&*').as(facetRequests[0]);
-    cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=10&*').as(facetRequests[1]);
+    cy.route('/ebisearch/ws/rest/metagenomics_projects?*size='+initialResultSize.toString()+'&*')
+        .as(facetRequests[1]);
     cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=1&*').as(facetRequests[2]);
-    cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=10&*').as(facetRequests[3]);
+    cy.route('/ebisearch/ws/rest/metagenomics_samples?*size='+initialResultSize.toString()+'&*')
+        .as(facetRequests[3]);
     cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=1&*').as(facetRequests[4]);
-    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=10&*').as(facetRequests[5]);
+    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size='+initialResultSize.toString()+'&*')
+        .as(facetRequests[5]);
     openPage(page);
     waitForSearchResults(rowSelector, initialResultSize);
 }
@@ -108,7 +111,7 @@ describe('Search page - general Functionality', function() {
 
     it('Centre name filters should restrict results', function() {
         cy.get('input[value=\'BioProject\']').check({force: true});
-        waitForSearchResults(rowSelector, 10);
+        waitForSearchResults(rowSelector, 25);
         cy.get('tbody > tr > td[data-column=\'project-centre-name\']').contains('BioProject');
     });
 
