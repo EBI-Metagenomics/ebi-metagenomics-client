@@ -61,7 +61,7 @@ describe('Run page - general', function() {
         cy.contains('Instrument platform:').next().should('contain', 'ILLUMINA');
     });
     it('SSU/LSU buttons should appear/dissapear if pipeline version >=4.0', function() {
-        openPage('runs/ERR1022502');
+        openPage(origPage);
         waitForPageLoad();
         changeTab('taxonomic');
         cy.get('#ssu-lsu-btns').should('be.hidden');
@@ -218,6 +218,18 @@ describe('Run page - Changing analysis version', function() {
         cy.get(tableClass).should('have.length', 1);
     });
 });
+
+describe('Run page - Error handling', function() {
+    it('Should display error message if invalid accession passed in URL', function() {
+        const runId = 'ERR1231231231';
+        const origPage = 'runs/' + runId;
+        openPage(origPage);
+        waitForPageLoad('Oh no! An error has occured!');
+        cy.contains('Error: 404');
+        cy.contains('Could not retrieve sample: ' + runId);
+    });
+});
+
 // TODO test version selector
 // TODO test all download links are valid/organised correctly
 

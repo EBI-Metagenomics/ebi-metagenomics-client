@@ -27,7 +27,24 @@ const studyTableColumn = {
         sortable: false
     },
     study_desc: {
-        data: ['The Mobilong Soil Profile Third Party Annotation (TPA) assembly was derived from the primary whole genome shotgun (WGS) data set PRJEB5872. This project includes samples from the following biomes : Grassland.', 'The latter part of the Australian Millenium drought in 2007-2009 caused the acidification of acid sulfate soils in wetland and former floodplain soils, which pose threats to terrestrial and coastal ecosystems even after the recovery of surface flows and ground water levels. Drying and subsequent oxidation of ASS materials caused soil pH to drop to less than 4 (forming sulfuric materials) in some areas, triggering environmental problems such as land degradation, loss of native plants and animals, and release of heavy metals and metalloids into ground water, rivers and wetlands. To understand this microbially-mediated oxidation process, microbial communities were studied within an acidified acid sulfate soil profile, to identify key microorganisms involved in soil acidification. Six soil layers were sampled from a soil profile according to soil morphology at the most acidic locationin the field. Total DNA from soil samples was extracted using MO-BIO PowerMax? Soil DNA Isolation Kit and sequenced by Illumina Miseq (250PE) by The Ramaciotti Centre, NSW, Australia, prepared with a Nextera DNA Sample Preparation Kit. There were five steps of non-specific amplification involved in Nextera-Miseq sequencing for obtaining enough DNA for sequencing.'],
+        data: ['The Mobilong Soil Profile Third Party Annotation (TPA) assembly was derived from ' +
+        'the primary whole genome shotgun (WGS) data set PRJEB5872. This project includes samples' +
+        ' from the following biomes : Grassland.', 'The latter part of the Australian Millenium' +
+        ' drought in 2007-2009 caused the acidification of acid sulfate soils in wetland and' +
+        ' former floodplain soils, which pose threats to terrestrial and coastal ecosystems even' +
+        ' after the recovery of surface flows and ground water levels. Drying and subsequent' +
+        ' oxidation of ASS materials caused soil pH to drop to less than 4 (forming sulfuric' +
+        ' materials) in some areas, triggering environmental problems such as land degradation,' +
+        ' loss of native plants and animals, and release of heavy metals and metalloids into' +
+        ' ground water, rivers and wetlands. To understand this microbially-mediated oxidation' +
+        ' process, microbial communities were studied within an acidified acid sulfate soil' +
+        ' profile, to identify key microorganisms involved in soil acidification. Six soil layers' +
+        ' were sampled from a soil profile according to soil morphology at the most acidic' +
+        ' locationin the field. Total DNA from soil samples was extracted using MO-BIO PowerMax?' +
+        ' Soil DNA Isolation Kit and sequenced by Illumina Miseq (250PE) by The Ramaciotti' +
+        ' Centre, NSW, Australia, prepared with a Nextera DNA Sample Preparation Kit. There were' +
+        ' five steps of non-specific amplification involved in Nextera-Miseq sequencing for' +
+        ' obtaining enough DNA for sequencing.'],
         type: datatype.STR,
         sortable: false
     },
@@ -135,7 +152,9 @@ describe('Sample page - Runs table', function() {
     });
 
     it('Runs table should respond to filtering', function() {
-        table.testFiltering('GCA', [['GCA_900215965', 'assembly', 'Illumina MiSeq', 'ILLUMINA', '4.0']]);
+        table.testFiltering('GCA', [
+            ['GCA_900215965', 'assembly', 'Illumina MiSeq', 'ILLUMINA', '4.0']
+        ]);
     });
 
 
@@ -172,7 +191,9 @@ describe('Sample page - Runs table', function() {
     // });
 
     it('Runs table download link should be valid', function() {
-        table.testDownloadLink(Config.API_URL + 'runs?sample_accession=' + sampleId + '&format=csv');
+        table.testDownloadLink(
+            Config.API_URL + 'runs?sample_accession=' + sampleId + '&format=csv'
+        );
     });
 });
 
@@ -199,5 +220,16 @@ describe('Sample page - Metadata display', function() {
     });
     it('Info message should be displayed if no metadata available for display', function() {
         cy.get('#sample-metadata').contains('No metadata to be displayed.');
+    });
+});
+
+describe('Sample page - Error handling', function() {
+    it('Should display error message if invalid accession passed in URL', function() {
+        const sampleId = 'ERS14747971323123';
+        const origPage = 'samples/' + sampleId;
+        openPage(origPage);
+        waitForPageLoad('Oh no! An error has occured!');
+        cy.contains('Error: 404');
+        cy.contains('Could not retrieve sample: ' + sampleId);
     });
 });

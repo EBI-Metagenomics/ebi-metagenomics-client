@@ -60,6 +60,9 @@ let SampleView = Backbone.View.extend({
                 }
                 new Map('map', [that.model.attributes], false);
                 deferred.resolve(true);
+            },
+            error(ignored, response) {
+                util.displayError(response.status, 'Could not retrieve sample: ' + sampleId);
             }
         });
         return deferred.promise();

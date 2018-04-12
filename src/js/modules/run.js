@@ -79,6 +79,9 @@ let RunView = Backbone.View.extend({
                     loadAnalysisData(runId, version);
                     loadDownloads(runId, version);
                 });
+            },
+            error(ignored, response) {
+                util.displayError(response.status, 'Could not retrieve run: ' + runId);
             }
         });
     },
