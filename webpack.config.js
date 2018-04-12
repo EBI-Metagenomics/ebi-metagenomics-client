@@ -1,10 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HandlebarsPlugin = require("handlebars-webpack-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-
+const HandlebarsPlugin = require('handlebars-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const getCompressionPlugin = (() => {
     let plugin;
@@ -14,26 +12,24 @@ const getCompressionPlugin = (() => {
     };
 })();
 
-
 module.exports = (env = {prod: false}) => {
     const config = {
         plugins: [
             new webpack.EnvironmentPlugin(
-                ["API_URL", "SEARCH_URL", "INTERPRO_URL", "SEQUENCE_SEARCH_URL", "ENA_URL", "DEPLOYMENT_SUBFOLDER"]
+                [
+                    'API_URL',
+                    'SEARCH_URL',
+                    'INTERPRO_URL',
+                    'SEQUENCE_SEARCH_URL',
+                    'ENA_URL',
+                    'DEPLOYMENT_SUBFOLDER']
             ),
             new CleanWebpackPlugin(['dist']),
             new webpack.ProvidePlugin({
-                $: 'jquery',
-                jQuery: 'jquery',
+                '$': 'jquery',
+                'jQuery': 'jquery',
                 'window.jQuery': 'jquery'
             }),
-            new CopyWebpackPlugin([
-                {from: 'static/images', to: '../static/images'},
-                {from: 'static/fonts', to: '../static/fonts'},
-                {from: 'static/js', to: '../static/js'},
-                {from: 'static/css', to: '../static/css'},
-                {from: 'static/krona', to: '../'}
-            ]),
             // GZIP compression
             env.prod ? new (getCompressionPlugin())({
                     asset: '[path].gz[query]',
@@ -41,7 +37,7 @@ module.exports = (env = {prod: false}) => {
                     cache: true,
                     algorithm(buffer, options, callback) {
                         require('node-zopfli').gzip(buffer, options, callback);
-                    },
+                    }
                 })
                 : null,
             // // Brotli compression
@@ -55,19 +51,19 @@ module.exports = (env = {prod: false}) => {
                             buffer,
                             {
                                 mode: 1, // text
-                                quality: 11, // goes from 1 (but quick) to 11 (but slow)
+                                quality: 11 // goes from 1 (but quick) to 11 (but slow)
                             },
                             callback
                         );
-                    },
+                    }
                 })
                 : null,
             new HandlebarsPlugin({
                 // path to hbs entry file(s)
-                entry: path.join(__dirname, "src", "*.html"),
+                entry: path.join(__dirname, 'src', '*.html'),
                 // output path and filename(s). This should lie within the webpacks output-folder
                 // if ommited, the input filepath stripped of its extension will be used
-                output: path.join(__dirname, "dist", "[name].html"),
+                output: path.join(__dirname, 'dist', '[name].html'),
                 // data passed to main hbs template: `main-template(data)`
                 data: {
                     subfolder: process.env.DEPLOYMENT_SUBFOLDER,
@@ -77,10 +73,10 @@ module.exports = (env = {prod: false}) => {
                 // path.join(__dirname, configFile),
                 // globbed path to partials, where folder/filename is unique
                 partials: [
-                    path.join(__dirname, "src", "partials", "*.handlebars")
-                ],
+                    path.join(__dirname, 'src', 'partials', '*.handlebars')
+                ]
             }),
-            new ExtractTextPlugin("[name].css")
+            new ExtractTextPlugin('[name].css')
         ].filter(Boolean), // filter out empty values
         entry: {
             index: 'src/js/modules/index.js',
@@ -108,7 +104,7 @@ module.exports = (env = {prod: false}) => {
             pipelines:
                 'src/js/modules/pipelines.js',
             pipeline:
-                'src/js/modules/pipeline.js',
+                'src/js/modules/pipeline.js'
         },
         output: {
             filename: '[name].js',
@@ -119,18 +115,18 @@ module.exports = (env = {prod: false}) => {
             modules: [__dirname, 'node_modules'],
             alias:
                 {
-                    handlebars: 'handlebars/dist/handlebars.min.js',
-                },
+                    handlebars: 'handlebars/dist/handlebars.min.js'
+                }
         },
         module: {
-            rules: [(env === 'prod' ?
-                {
+            rules: [
+                (env === 'prod' ? {
                     test: /\.js$/,
                     exclude: /(node_modules|bower_components)/,
                     use: {
                         loader: 'babel-loader',
                         options: {
-                            presets: ['env'],
+                            presets: ['env']
                         }
                     }
                 } : {
@@ -140,38 +136,49 @@ module.exports = (env = {prod: false}) => {
                         loader: 'istanbul-instrumenter-loader',
                         query: {
                             esModules: true
-                        },
+                        }
                     }
                 }), {
-                test: /\.handlebars$/,
-                loader: "handlebars-loader"
-            }, {
-                test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: [
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                // If you are having trouble with urls not resolving add this setting.
-                                // See https://github.com/webpack-contrib/css-loader#url
-                                minimize: true,
-                                sourceMap: true
-                            }
-                        }]
-                })
+                    test: /\.(html)$/,
+                    use: {
+                        loader: 'html-loader',
+                        options: {
+                            attrs: [':data-src'],
+                            fallback: 'handlebars-loader'
+                        }
+                    }
+                }, {
+                    test: /\.handlebars$/,
+                    loader: 'handlebars-loader',
+                    query: {inlineRequires: '/images/'}
+                }, {
+                    test: /\.css$/,
+                    use: ExtractTextPlugin.extract({
+                        fallback: 'style-loader',
+                        use: [
+                            {
+                                loader: 'css-loader',
+                                options: {
+                                    minimize: true,
+                                    sourceMap: true
+                                }
+                            }]
+                    })
 
-            }, {
-                test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg)$/,
-                loader: 'url-loader?name=[path][name].[ext]?limit=100000'
-            }
+                }, {
+                    test: /\.(png|woff|woff2|eot|ttf|gif|jpg|svg)$/,
+                    loader: 'url-loader',
+                    options: {
+                        fallback: 'file-loader'
+                    }
+                }
 // }, {
                 //     test: /\.(jpe?g|png|gif|svg)$/i,
                 //     loader: 'file-loader?name=../[path][name].[ext]!html-loader'
                 // }
             ]
         },
-        devtool: "#inline-source-map",
+        devtool: '#inline-source-map'
     };
     return config;
 };

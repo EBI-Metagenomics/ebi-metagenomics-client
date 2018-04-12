@@ -1,3 +1,8 @@
+require('what-input');
+require('ebi-framework/libraries/foundation-6/js/foundation.js');
+require('ebi-framework/js/script');
+window.Foundation.addToJquery($);
+
 export const pagination = require('../partials/pagination.handlebars');
 export const pagesize = require('../partials/pagesize.handlebars');
 export const resultsFilter = require('../partials/results_filter.handlebars');
