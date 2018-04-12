@@ -224,9 +224,8 @@ describe('Run page - Error handling', function() {
         const runId = 'ERR1231231231';
         const origPage = 'runs/' + runId;
         openPage(origPage);
-        waitForPageLoad('Oh no! An error has occured!');
-        cy.contains('Error: 404');
-        cy.contains('Could not retrieve sample: ' + runId);
+        cy.contains('Error: 404', {timeout: 40000});
+        cy.contains('Could not retrieve sample: ' + runId, {timeout: 40000});
     });
 });
 
