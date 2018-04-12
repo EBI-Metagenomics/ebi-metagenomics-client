@@ -1,4 +1,5 @@
-import {openPage, getBaseURL} from './util';
+import {openPage, getBaseURL, waitForBiomesLoad, waitForSearchResults} from './util';
+import GenericTableHandler from './genericTable';
 
 const origPage = '';
 const options = {timeout: 40000};
@@ -37,11 +38,13 @@ describe('Home page: Test Browse by selected biomes component', function() {
 
         it('Browse all biomes', function() {
             cy.contains('Browse all biomes').click();
+            waitForBiomesLoad(25);
             cy.url().should('eq', getBaseURL() + 'biomes');
         });
 
         it('Browse human biomes', function() {
             cy.get('#top10biomes').get('.skin_b.Skin').click();
+            new GenericTableHandler('#studies-section', 9);
             cy.url().should('include',
                 getBaseURL() + 'browse?lineage=root:Host-associated:Human:Skin#studies');
         });
@@ -49,47 +52,54 @@ describe('Home page: Test Browse by selected biomes component', function() {
         it('Browse amplicon runs', function() {
             cy.get('#amplicon-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
-            cy.get('#runsResults h5')
-            .contains('You searched for runs with filters: experiment_type:amplicon.');
+            waitForSearchResults('table tr.search-row:visible', 25);
+            cy.get('#runsResults h5').
+                contains('You searched for runs with filters: experiment_type:amplicon.');
         });
         it('Browse assemblies', function() {
             cy.get('#assembly-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
-            cy.get('#runsResults h5')
-            .contains('You searched for runs with filters: experiment_type:assembly.');
+            waitForSearchResults('table tr.search-row:visible', 25);
+            cy.get('#runsResults h5').
+                contains('You searched for runs with filters: experiment_type:assembly.');
         });
         it('Browse metabarcoding runs', function() {
             cy.get('#metaB-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
-            cy.get('#runsResults h5')
-            .contains('You searched for runs with filters: experiment_type:metabarcoding.');
+            waitForSearchResults('table tr.search-row:visible', 25);
+            cy.get('#runsResults h5').
+                contains('You searched for runs with filters: experiment_type:metabarcoding.');
         });
         it('Browse metagenome runs', function() {
             cy.get('#metaG-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
-            cy.get('#runsResults h5')
-            .contains('You searched for runs with filters: experiment_type:metagenomic.');
+            waitForSearchResults('table tr.search-row:visible', 25);
+            cy.get('#runsResults h5').
+                contains('You searched for runs with filters: experiment_type:metagenomic.');
         });
         it('Browse metatranscriptomes runs', function() {
             cy.get('#metaT-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
-            cy.get('#runsResults h5')
-            .contains('You searched for runs with filters: experiment_type:metatranscriptomic.');
+            waitForSearchResults('table tr.search-row:visible', 25);
+            cy.get('#runsResults h5').
+                contains('You searched for runs with filters: experiment_type:metatranscriptomic.');
         });
         it('Browse studies', function() {
             cy.get('#project-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#projects');
-            cy.get('#projectsResults h5')
-            .contains('You searched for projects with no parameters.');
+            waitForSearchResults('table tr.search-row:visible', 25);
+            cy.get('#projectsResults h5').contains('You searched for projects with no parameters.');
         });
         it('Browse samples', function() {
             cy.get('#sample-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#samples');
+            waitForSearchResults('table tr.search-row:visible', 25);
             cy.get('#samplesResults h5').contains('You searched for samples with no parameters.');
         });
         it('Browse runs', function() {
             cy.get('#run-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#runs');
+            waitForSearchResults('table tr.search-row:visible', 25);
             cy.get('#runsResults h5').contains('You searched for runs with no parameters.');
         });
     });

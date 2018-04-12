@@ -64,8 +64,8 @@ $('#pageSize').append(commons.pagesize).find('#pagesize').change(function() {
 
 /**
  * Format search summary from params
- * @params {object} params with properties queryText, filterText and sliderText
- * @return string
+ * @param {object} params with properties queryText, filterText and sliderText
+ * @return {string}
  */
 function formatSearchSummaryStr(params) {
     let str = '';
@@ -104,8 +104,8 @@ function formatSearchSummaryStr(params) {
 
 /**
  * Retrieve names of visible columns of facets
- * @param {string} facet string {projects, samples, runs}
- * @return {null||[string]} of visible columns
+ * @param {string} facet string  should be in [projects, samples, runs]
+ * @return {[string]} of visible columns or null
  */
 function getVisibleColumns(facet) {
     let cookieData = Cookies.get(cookieName);
@@ -188,13 +188,15 @@ $searchForm.on('reset', function() {
 
 /**
  * Retrieve query text from search form
+ * @return {string}
  */
 function getQueryText() {
     return $searchForm.find('#local-searchbox').val();
 }
 
 /**
- * Retrieve value from slider and facets to which the slider is applied, and the query text for the slider
+ * Retrieve value from slider and facets to which the slider is applied,
+ * and the query text for the slider
  * @param {object} formData
  * @return {{facets, queryParams: Array}}
  */
@@ -242,6 +244,7 @@ function processSliders(formData) {
 /**
  * Form search filters for submission to search
  * @param {[string]} filters
+ * @return {string}
  */
 function joinFilters(filters) {
     return filters.map(function(elem) {
@@ -252,7 +255,7 @@ function joinFilters(filters) {
 /**
  * Simplify filters (i.e do not query by sub-biome if parent biome is already included in filter
  * @param {[string]} formData list of filters
- * @return simplified list of filters
+ * @return {[string]} simplified list of filters
  */
 function removeRedundantFilters(formData) {
     let newData = [];
@@ -284,7 +287,7 @@ function removeRedundantFilters(formData) {
 function convertBiomes(entry) {
     let biomes = [];
     _.each(entry.fields.biome, function(biome) {
-        biome = 'root:' + biome.replace(/\/([^\/]*)$/, '').replace(/\//g, ':');
+        biome = 'root:' + biome.replace(/\/([^/]*)$/, '').replace(/\//g, ':');
         biomes.push({
             name: util.formatLineage(biome, true),
             icon: util.getBiomeIcon(biome)
@@ -424,6 +427,13 @@ function createDataTable(facet, $table, $modal, initColumns) {
         }
     }
 
+    /**
+     * Add checkbox to a modal
+     * @param {jQuery.HTMLElement} $modal
+     * @param {string} text
+     * @param {string} label
+     * @param {boolean} checked
+     */
     function addModalCheckbox($modal, text, label, checked) {
         setColumnVisibility(checked, label);
 
@@ -587,7 +597,7 @@ const Search = Backbone.Collection.extend({
     tab: null,
     params: {
         format: 'json',
-        size: 10,
+        size: 25,
         start: 0,
         fields: 'id,name,biome_name,description',
         facetcount: 10,
@@ -668,12 +678,12 @@ const ResultsView = Backbone.View.extend({
             }));
         }
 
-        $.when(...fetches).done(function() {
+        $.when(...fetches).done(function(...rawArgs) {
             let args;
-            if (typeof(arguments[1]) === 'string') {
-                args = [arguments];
+            if (typeof(rawArgs[1]) === 'string') {
+                args = [rawArgs];
             } else {
-                args = arguments;
+                args = rawArgs;
             }
             let collection = null;
             // Concatenate collection entries onto first collection
@@ -784,13 +794,6 @@ function updateParams(view, page, pagesize, formData) {
  */
 const Project = Backbone.Model.extend({
     parse(d) {
-        // _.each(d.fields.biome, function(biome){
-        //     biome = "root:"+biome.replace(/\/([^\/]*)$/, "").replace(/\//g, ":");
-        //     d.biomes.push({
-        //         name: util.formatLineage(biome),
-        //         icon: util.getBiomeIcon(biome)
-        //     });
-        // });
         d.biomes = convertBiomes(d);
         d.studyLink = util.subfolder + '/studies/' + d.id;
         return d;
