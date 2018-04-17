@@ -1,6 +1,7 @@
 require('what-input');
 require('ebi-framework/libraries/foundation-6/js/foundation.js');
 require('ebi-framework/js/script');
+require('ebi-framework/js/foundationExtendEBI');
 window.Foundation.addToJquery($);
 
 export const pagination = require('../partials/pagination.handlebars');
@@ -18,6 +19,7 @@ export const pipelines = [
     require('../partials/pipelines/4.handlebars')
 ];
 
+
 require('style-loader?name=[name].[ext]!../../static/css/elixir-banner.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');
 require('style-loader?name=[name].[ext]!../../static/css/theme-embl-petrol.css');
@@ -25,7 +27,11 @@ require('style-loader?name=[name].[ext]!../../static/fonts/fonts.css');
 
 require(
     'style-loader?name=[name].[ext]!../../node_modules/tablesorter/dist/css/theme.default.min.css');
-require('style-loader?name=[name].[ext]!../../static/css/site.css');
+
+require('style-loader!ebi-framework/css/ebi-global.css');
+require('style-loader!ebi-framework/css/theme-embl-petrol.css');
+
+require('style-loader!../../static/css/site.css');
 
 export const BLOG_URL = 'https://ebi-metagenomics.github.io/ebi-metagenomics-blog/';
 export const READTHEDOCS_URL = 'https://emg-docs.readthedocs.io';
@@ -49,3 +55,6 @@ export const TAXONOMY_COLOURS = [
     '#caae74',
     '#cccccc'
 ];
+
+$(document).foundation();
+$(document).foundationExtendEBI();

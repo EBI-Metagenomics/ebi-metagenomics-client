@@ -826,7 +826,7 @@ a.ext:hover, a.ext:active, a.ext:focus {
 }
 
 .masthead {
-    background-image: url(../images/backgrounds/embl-ebi-background-4.jpg);
+    background-image: url(../images/backgrounds/embl-ebi-background-4.jpg) !important;
     max-width: 1920px;
     margin-top: 0px;
     bottom: auto;
@@ -877,10 +877,8 @@ img.publication-cover {
 }
 
 .header-logo {
-    background-image: url(../images/logos/mgnify_logo.svg);
     background-size: contain;
     background-repeat: no-repeat;
-    width: 100%;
     height: 5em;
 }
 

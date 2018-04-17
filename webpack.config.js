@@ -1,8 +1,7 @@
-const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HandlebarsPlugin = require('handlebars-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const getCompressionPlugin = (() => {
     let plugin;
@@ -15,6 +14,14 @@ const getCompressionPlugin = (() => {
 module.exports = (env = {prod: false}) => {
     const config = {
         plugins: [
+            new HtmlWebpackPlugin({
+                title: 'Browse page',
+                inject: true,
+                filename: 'browse.html',
+                template: 'handlebars-loader!./src/browse.html',
+                chunks: ['browse']
+            }),
+
             new webpack.EnvironmentPlugin(
                 [
                     'API_URL',
@@ -58,24 +65,24 @@ module.exports = (env = {prod: false}) => {
                     }
                 })
                 : null,
-            new HandlebarsPlugin({
-                // path to hbs entry file(s)
-                entry: path.join(__dirname, 'src', '*.html'),
-                // output path and filename(s). This should lie within the webpacks output-folder
-                // if ommited, the input filepath stripped of its extension will be used
-                output: path.join(__dirname, 'dist', '[name].html'),
-                // data passed to main hbs template: `main-template(data)`
-                data: {
-                    subfolder: process.env.DEPLOYMENT_SUBFOLDER,
-                    apiUrl: process.env.API_URL,
-                    sequenceSearchUrl: process.env.SEQUENCE_SEARCH_URL
-                },
-                // path.join(__dirname, configFile),
-                // globbed path to partials, where folder/filename is unique
-                partials: [
-                    path.join(__dirname, 'src', 'partials', '*.handlebars')
-                ]
-            }),
+            // new HandlebarsPlugin({
+            //     // path to hbs entry file(s)
+            //     entry: path.join(__dirname, 'src', '*.html'),
+            //     // output path and filename(s). This should lie within the webpacks output-folder
+            //     // if ommited, the input filepath stripped of its extension will be used
+            //     output: path.join(__dirname, 'dist', '[name].html'),
+            //     // data passed to main hbs template: `main-template(data)`
+            //     data: {
+            //         subfolder: process.env.DEPLOYMENT_SUBFOLDER,
+            //         apiUrl: process.env.API_URL,
+            //         sequenceSearchUrl: process.env.SEQUENCE_SEARCH_URL
+            //     },
+            //     // path.join(__dirname, configFile),
+            //     // globbed path to partials, where folder/filename is unique
+            //     partials: [
+            //         path.join(__dirname, 'src', 'partials', '*.handlebars')
+            //     ]
+            // }),
             new ExtractTextPlugin('[name].css')
         ].filter(Boolean), // filter out empty values
         entry: {
@@ -107,9 +114,10 @@ module.exports = (env = {prod: false}) => {
                 'src/js/modules/pipeline.js'
         },
         output: {
-            filename: '[name].js',
+            filename: '[name].[hash].js',
             path:
-            __dirname + '/dist/js'
+            __dirname + '/dist',
+            publicPath: process.env.DEPLOYMENT_SUBFOLDER + '/'
         },
         resolve: {
             modules: [__dirname, 'node_modules'],
@@ -139,16 +147,7 @@ module.exports = (env = {prod: false}) => {
                         }
                     }
                 }), {
-                    test: /\.(html)$/,
-                    use: {
-                        loader: 'html-loader',
-                        options: {
-                            attrs: [':data-src'],
-                            fallback: 'handlebars-loader'
-                        }
-                    }
-                }, {
-                    test: /\.handlebars$/,
+                    test: /\.(handlebars)$/,
                     loader: 'handlebars-loader',
                     query: {inlineRequires: '/images/'}
                 }, {
@@ -166,16 +165,21 @@ module.exports = (env = {prod: false}) => {
                     })
 
                 }, {
-                    test: /\.(png|woff|woff2|eot|ttf|gif|jpg|svg)$/,
-                    loader: 'url-loader',
+                    test: /\.(woff|woff2|eot|ttf)$/,
+                    use: {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[path][name].[hash].[ext]'
+                        }
+                    }
+                }, {
+                    test: /\.(jpe?g|png|gif|svg|ico)$/,
+                    loader: 'file-loader',
                     options: {
-                        fallback: 'file-loader'
+                        name: '[path][name].[ext]',
+                        context: ''
                     }
                 }
-// }, {
-                //     test: /\.(jpe?g|png|gif|svg)$/i,
-                //     loader: 'file-loader?name=../[path][name].[ext]!html-loader'
-                // }
             ]
         },
         devtool: '#inline-source-map'
