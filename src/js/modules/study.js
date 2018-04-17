@@ -69,7 +69,6 @@ let DownloadsView = Backbone.View.extend({
         const that = this;
         this.model.fetch({
             success(response) {
-                console.log(response);
                 const pipelineFiles = response.attributes.pipelineFiles;
                 that.$el.html(that.template({pipeline_files: pipelineFiles}));
             }

@@ -1,7 +1,6 @@
-const MarkerClusterer = require('js-marker-clusterer');
+// const MarkerClusterer = require('js-marker-clusterer');
 const OverlappingMarkerSpiderfier = require('../../../static/js/oms.min.js')
     .OverlappingMarkerSpiderfier;
-
 module.exports = class MapHandler {
     /**
      * Create a new instance of a google map in the element with id
@@ -42,11 +41,11 @@ module.exports = class MapHandler {
                 bounds.extend(markers[i].getPosition());
             }
 
-            new MarkerClusterer(map, markers, {
-                imagePath: 'https://developers.google.com/maps/documentation/' +
-                'javascript/examples/markerclusterer/m',
-                maxZoom: 17
-            });
+            // new MarkerClusterer(map, markers, {
+            //     imagePath: 'https://developers.google.com/maps/documentation/' +
+            //     'javascript/examples/markerclusterer/m',
+            //     maxZoom: 17
+            // });
         } else if (markers.length === 0) {
             const $parentDiv = $('#' + elementId).parent();
             $('#' + elementId).addClass('disabled');

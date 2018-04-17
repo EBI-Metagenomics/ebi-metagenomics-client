@@ -45,6 +45,7 @@
     "mocha-phantomjs": "^4.1.0",
     "motion-ui": "^1.2.3",
     "npm": "^5.8.0",
+    "script-ext-html-webpack-plugin": "^2.0.1",
     "tablesorter": "^2.29.0",
     "twbs-pagination": "^1.4.1",
     "underscore": "^1.8.3",

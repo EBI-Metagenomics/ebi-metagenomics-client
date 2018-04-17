@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const getCompressionPlugin = (() => {
     let plugin;
     return () => {
@@ -143,6 +143,10 @@ module.exports = (env = {prod: false}) => {
                 template: 'handlebars-loader!./src/submit.html',
                 chunks: ['submit'],
                 templateData: templateFixtures
+            }),
+            new ScriptExtHtmlWebpackPlugin({
+                // Used to ensure map API callback exists
+                defer: ['sample.js', 'study.js']
             }),
             new webpack.EnvironmentPlugin(
                 [
