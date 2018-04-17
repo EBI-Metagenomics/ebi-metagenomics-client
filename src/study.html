@@ -3,7 +3,6 @@
 <head id="head">
     <title>Study &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/study.css" type="text/css" media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -16,8 +15,8 @@
             <script id="studyTmpl" type="text/template">
                 <nav aria-label="You are here:" role="navigation">
                     <ul class="breadcrumbs columns">
-                        <li><a href="{{subfolder}}/">Home</a></li>
-                        <li><a href="{{subfolder}}/browse#studies">Browse studies</a></li>
+                        <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
+                        <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies">Browse studies</a></li>
                         <li>
                             <span class="show-for-sr">Current: </span> Study <%= study_accession %>
                         </li>
@@ -186,59 +185,16 @@
         <% } %>
     </script>
 </div>
-<!-- Optional local footer (insert citation / project-specific copyright / etc here -->
-<!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
-<!-- <div class="row"> -->
-<!-- <span class="reference">How to reference this page: ...</span> -->
-<!-- </div> -->
-<!-- </footer> -->
-<!-- End optional local footer -->
-<!-- </div> -->
-<!-- End suggested layout containers / #content -->
-
 
 <div id="footer">
     {{>partials/elixir}}
     {{>partials/footer}}
 </div>
-<!-- JavaScript -->
 
-<script src="{{subfolder}}/static/js/markerclusterer/src/markerclusterer.js"></script>
-<script src="{{subfolder}}/static/js/oms.min.js"></script>
-
-<!-- JavaScript -->
-
-<script src="{{subfolder}}/static/js/jquery.liveFilter.js"></script>
-<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
-
-
-<!-- The Foundation theme JavaScript -->
-
-<script src="{{subfolder}}/static/js/foundation.min.js"></script>
-<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    window.Foundation = Foundation;
-    Foundation.addToJquery($);
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-<script src="{{subfolder}}/js/study.js"></script>
+</body>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAivAQNT-w_7wzIJ9nf7E9GTOzn1mkDGzE&callback=initPage">
 </script>
-<!-- Google Analytics details... -->
-<!-- Change UA-XXXXX-X to be your util's ID -->
-<!--
-<script>
-  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
-  Modernizr.load({
-    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-  });
-</script>
--->
-</body>
 
 
 </html>

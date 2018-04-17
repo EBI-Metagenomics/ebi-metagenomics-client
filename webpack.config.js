@@ -11,17 +11,139 @@ const getCompressionPlugin = (() => {
     };
 })();
 
+const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
+const apiUrl = process.env.API_URL;
+const sequenceSearchUrl = process.env.SEQUENCE_SEARCH_URL;
+
+const templateFixtures = {
+    subfolder: subfolder,
+    apiUrl: apiUrl,
+    sequenceSearchUrl: sequenceSearchUrl
+};
+
 module.exports = (env = {prod: false}) => {
-    const config = {
+    return {
         plugins: [
+            new HtmlWebpackPlugin({
+                title: 'About page',
+                inject: true,
+                filename: 'about.html',
+                template: 'handlebars-loader!./src/about.html',
+                chunks: ['about'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Biomes page',
+                inject: true,
+                filename: 'biomes.html',
+                template: 'handlebars-loader!./src/biomes.html',
+                chunks: ['biomes'],
+                templateData: templateFixtures
+            }),
             new HtmlWebpackPlugin({
                 title: 'Browse page',
                 inject: true,
                 filename: 'browse.html',
                 template: 'handlebars-loader!./src/browse.html',
-                chunks: ['browse']
+                chunks: ['browse'],
+                templateData: templateFixtures
             }),
-
+            new HtmlWebpackPlugin({
+                title: 'Compare page',
+                inject: true,
+                filename: 'compare.html',
+                template: 'handlebars-loader!./src/compare.html',
+                chunks: ['compare'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Healthcheck page',
+                inject: true,
+                filename: 'healthcheck.html',
+                template: 'handlebars-loader!./src/healthcheck.html',
+                chunks: ['healthcheck'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Help page',
+                inject: true,
+                filename: 'help.html',
+                template: 'handlebars-loader!./src/help.html',
+                chunks: ['help'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Index page',
+                inject: true,
+                filename: 'index.html',
+                template: 'handlebars-loader!./src/index.html',
+                chunks: ['index'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Login page',
+                inject: true,
+                filename: 'login.html',
+                template: 'handlebars-loader!./src/login.html',
+                chunks: ['login'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Pipeline page',
+                inject: true,
+                filename: 'pipeline.html',
+                template: 'handlebars-loader!./src/pipeline.html',
+                chunks: ['pipeline'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Pipelines page',
+                inject: true,
+                filename: 'pipelines.html',
+                template: 'handlebars-loader!./src/pipelines.html',
+                chunks: ['pipelines'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Run page',
+                inject: true,
+                filename: 'run.html',
+                template: 'handlebars-loader!./src/run.html',
+                chunks: ['run'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Sample page',
+                inject: true,
+                filename: 'sample.html',
+                template: 'handlebars-loader!./src/sample.html',
+                chunks: ['sample'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Search page',
+                inject: true,
+                filename: 'search.html',
+                template: 'handlebars-loader!./src/search.html',
+                chunks: ['search'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Study page',
+                inject: true,
+                filename: 'study.html',
+                template: 'handlebars-loader!./src/study.html',
+                chunks: ['study'],
+                templateData: templateFixtures
+            }),
+            new HtmlWebpackPlugin({
+                title: 'Submit page',
+                inject: true,
+                filename: 'submit.html',
+                template: 'handlebars-loader!./src/submit.html',
+                chunks: ['submit'],
+                templateData: templateFixtures
+            }),
             new webpack.EnvironmentPlugin(
                 [
                     'API_URL',
@@ -184,5 +306,4 @@ module.exports = (env = {prod: false}) => {
         },
         devtool: '#inline-source-map'
     };
-    return config;
 };

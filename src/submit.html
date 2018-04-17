@@ -3,7 +3,6 @@
 <head id="head">
     <title>Submit &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/submit.css" type="text/css" media="all"/>
 </head>
 
 
@@ -16,7 +15,7 @@
         <div class="columns small-12 medium-12 large-12">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
-                     <li><a href="{{subfolder}}">Home</a></li>
+                     <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
                     <li>
                         <span class="show-for-sr">Current: </span> Submit
                     </li>
@@ -47,7 +46,7 @@
             </p>
         </div>
         <div id="submissionModal" class="reveal" role="dialog" data-reveal>
-            <img src="{{subfolder}}/static/images/graphic_submission_00.gif"/>
+            <img src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/graphic_submission_00.gif"/>
             <h4>Detail of the submission and analysis process on the EBI metagenomics website</h4>
             <button class="close-button" data-close aria-label="Close modal" type="button">
                 <span aria-hidden="true">&times;</span>
@@ -71,21 +70,6 @@
     {{>partials/footer}}
 </div>
 <!-- JavaScript -->
-
-<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
-
-
-<!-- The Foundation theme JavaScript -->
-
-<script src="{{subfolder}}/static/js/foundation.js"></script>
-<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-<script src="{{subfolder}}/js/submit.js"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->

@@ -6,13 +6,13 @@
         <div class="masthead-inner row">
             <!-- local-title -->
             <div class="columns medium-7" id="local-title">
-                <a href="{{subfolder}}" title="Back to homepage"><img class="header-logo" src="static/images/logos/mgnify_logo.svg"/></a>
-                <!--<h1><a href="{{subfolder}}" title="Back to homepage">Microbial Communities Portal</a></h1>-->
+                <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}" title="Back to homepage"><img class="header-logo" src="static/images/logos/mgnify_logo.svg"/></a>
+                <!--<h1><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}" title="Back to homepage">Microbial Communities Portal</a></h1>-->
                 <h4>Submit, analyse, discover and compare data</h4>
             </div>
             {{#unless hideSearch }}
             <div class="column medium-5">
-                <form id="ebi_search" action="{{subfolder}}/search" method="get">
+                <form id="ebi_search" action="{{htmlWebpackPlugin.options.templateData.subfolder}}/search" method="get">
                     <fieldset>
                         <div id="headerSearchForm" class="input-group margin-bottom-none margin-top-large">
                             <input id='local-searchbox' name="query" type="search"
@@ -23,9 +23,9 @@
                         </div>
                     </fieldset>
                     <p id="example" class="small examples">
-                        Examples: <a href="{{subfolder}}/search?query=ERP001736" oldtitle="Study accession or a number (e.g. IPR020405 or 20405)">ERP001736</a>,
-                        <a href="{{subfolder}}/search?query=Tara+Oceans" oldtitle="Study title (e.g. Tara oceans)">Tara Oceans</a>,
-                        <a href="{{subfolder}}/search?query=Human+Gut" oldtitle="Biome name (e.g. Human Gut)">Human Gut</a>
+                        Examples: <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/search?query=ERP001736" oldtitle="Study accession or a number (e.g. IPR020405 or 20405)">ERP001736</a>,
+                        <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/search?query=Tara+Oceans" oldtitle="Study title (e.g. Tara oceans)">Tara Oceans</a>,
+                        <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/search?query=Human+Gut" oldtitle="Biome name (e.g. Human Gut)">Human Gut</a>
                     </p>
                 </form>
             </div>
@@ -35,17 +35,17 @@
             <nav>
                 <ul id="local-nav" class="dropdown menu float-left" data-description="navigational"
                     data-dropdown-menu>
-                    <li id="overview-nav"><a href="{{subfolder}}/">Overview</a></li>
-                    <li id="submit-nav"><a href="{{subfolder}}/submit">Submit data</a></li>
-                    <li id="search-nav"><a href="{{subfolder}}/search">Text search</a></li>
+                    <li id="overview-nav"><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Overview</a></li>
+                    <li id="submit-nav"><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/submit">Submit data</a></li>
+                    <li id="search-nav"><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/search">Text search</a></li>
                     <li id="sequence-search-nav"><a
-                            href="{{sequenceSearchUrl}}">Sequence search</a>
+                            href="{{htmlWebpackPlugin.options.templateData.sequenceSearchUrl}}">Sequence search</a>
                     </li>
-                    <li id="browse-nav"><a href="{{subfolder}}/browse">Browse data</a></li>
-                    <!--<li id="compare-nav"><a href="{{subfolder}}/compare">Comparison tool</a></li>-->
-                    <li id="api-nav"><a href="{{apiUrl}}">API</a></li>
-                    <li id="about-nav"><a href="{{subfolder}}/about">About</a></li>
-                    <li id="help-nav"><a href="{{subfolder}}/help">Help</a></li>
+                    <li id="browse-nav"><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse">Browse data</a></li>
+                    <!--<li id="compare-nav"><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/compare">Comparison tool</a></li>-->
+                    <li id="api-nav"><a href="{{htmlWebpackPlugin.options.templateData.apiUrl}}">API</a></li>
+                    <li id="about-nav"><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/about">About</a></li>
+                    <li id="help-nav"><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/help">Help</a></li>
                     <!--</ul>-->
                     <!--<ul class="menu dropdown float-right" data-dropdown-menu data-description="functional">-->
                     <li class="functional">

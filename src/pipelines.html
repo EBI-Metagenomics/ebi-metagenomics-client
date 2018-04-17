@@ -3,7 +3,6 @@
 <head id="head">
     <title>Pipelines &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/pipelines.css" type="text/css" media="all"/>
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
 <div id="header-container">{{> partials/header this}}</div>
@@ -24,7 +23,7 @@
             <h2>Pipeline release archive</h2>
             <p>You will find here the list of pipelines that were used to run the analyses.</p>
 
-            <h3 class="pi_arch_title"><span><a href="{{subfolder}}/pipelines/4.0">Pipeline v.4.0</a></span>
+            <h3 class="pi_arch_title"><span><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/pipelines/4.0">Pipeline v.4.0</a></span>
                 (04-Sep-2017)</h3>
 
             <ul>
@@ -42,7 +41,7 @@
             </ul>
 
 
-            <h3 class="pi_arch_title"><span><a href="{{subfolder}}/pipelines/3.0">Pipeline v.3.0</a></span>
+            <h3 class="pi_arch_title"><span><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/pipelines/3.0">Pipeline v.3.0</a></span>
                 (30-Jun-2016)</h3>
 
 
@@ -55,14 +54,14 @@
                 <li>Improved quality control statistics (sequence length summary, GC and nucleotide distribution)
                 </li>
             </ul>
-            <h3 class="pi_arch_title"><span><a href="{{subfolder}}/pipelines/2.0">Pipeline v.2.0</a></span>
+            <h3 class="pi_arch_title"><span><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/pipelines/2.0">Pipeline v.2.0</a></span>
                 (15-Feb-2015)</h3>
             <ul>
                 <li>Removed clustering step during the Quality control (QC)</li>
                 <li>Added step to mask rRNA on reads (instead of removing reads with rRNA)</li>
                 <li>Improved performance and tools update</li>
             </ul>
-            <h3 class="pi_arch_title"><span><a href="{{subfolder}}/pipelines/1.0">Pipeline v.1.0</a></span>
+            <h3 class="pi_arch_title"><span><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/pipelines/1.0">Pipeline v.1.0</a></span>
                 (09-Dec-2009)</h3>
         </div>
     </div>
@@ -82,23 +81,6 @@
     {{>partials/elixir}}
     {{>partials/footer}}
 </div>
-<!-- JavaScript -->
-
-<script defer="defer" src="../static/js/script.js"></script>
-
-<!-- The Foundation theme JavaScript -->
-
-<script src="{{subfolder}}/static/js/foundation.js"></script>
-<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-
-<script src="{{subfolder}}/js/pipelines.js"></script>
-
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->

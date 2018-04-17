@@ -1,4 +1,14 @@
-module.exports = class Map {
+const MarkerClusterer = require('js-marker-clusterer');
+const OverlappingMarkerSpiderfier = require('../../../static/js/oms.min.js')
+    .OverlappingMarkerSpiderfier;
+
+module.exports = class MapHandler {
+    /**
+     * Create a new instance of a google map in the element with id
+     * @param {string} elementId
+     * @param {[object]} samples
+     * @param {boolean} displayMarkerDetails
+     */
     constructor(elementId, samples, displayMarkerDetails) {
         let map = new google.maps.Map(document.getElementById(elementId), {
             streetViewControl: false,
@@ -33,7 +43,8 @@ module.exports = class Map {
             }
 
             new MarkerClusterer(map, markers, {
-                imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+                imagePath: 'https://developers.google.com/maps/documentation/' +
+                'javascript/examples/markerclusterer/m',
                 maxZoom: 17
             });
         } else if (markers.length === 0) {
@@ -46,14 +57,34 @@ module.exports = class Map {
         return map;
     }
 
+    /**
+     * Return sample coordinates from sample obj
+     * @param {object} sample
+     * @return {{lat: Number, lng: Number}}
+     */
     getSamplePosition(sample) {
         return {lat: parseFloat(sample.latitude), lng: parseFloat(sample.longitude)};
     }
 
+    /**
+     * Create marker from sample obj
+     * @param {object} template
+     * @param {object} sample
+     * @return {JQuery.HTMLElement}
+     */
     createMarkerLabel(template, sample) {
         return template(sample);
     }
 
+    /**
+     * Places a marker on the map
+     * @param {object} map
+     * @param {object} oms
+     * @param {object} template
+     * @param {object} sample
+     * @param {boolean} displayMarkerDetails
+     * @return {google.maps.Marker}
+     */
     placeMarker(map, oms, template, sample, displayMarkerDetails) {
         const pos = this.getSamplePosition(sample);
 
