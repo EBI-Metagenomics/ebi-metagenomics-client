@@ -259,7 +259,7 @@ export function attachTabHandlers() {
         $(tabButtonContainer).children().children('a').attr('aria-selected', 'false');
         $(this).attr('aria-selected', 'true');
 
-        // Remove active class from all sibling buttons
+        // Hide all other tabs
         let tabId = $(this).attr('href');
         let tabGroup = tabButtonContainer.attr('id');
         $('[data-tab-content=' + tabGroup + '] > .tabs-panel').removeClass('active');

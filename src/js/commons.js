@@ -24,6 +24,10 @@ require('../../static/images/funding/BBSRC.png');
 require('../../static/images/funding/embl_logo.png');
 require('../../static/images/funding/excelerate_whitebackground.png');
 require('../../static/images/funding/innovate-uk-logo.png');
+require('../../static/images/ico_graph_krona_on.svg');
+require('../../static/images/ico_graph_pie_on.svg');
+require('../../static/images/ico_graph_barh_on.svg');
+require('../../static/images/ico_graph_col_on.svg');
 
 
 require('style-loader?name=[name].[ext]!../../static/css/elixir-banner.css');
