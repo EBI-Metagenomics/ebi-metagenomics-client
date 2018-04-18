@@ -184,6 +184,9 @@ let SamplesView = Backbone.View.extend({
     }
 });
 
+/**
+ * Maintain value of filter fields across tabs
+ */
 function syncFilterFields() {
     const events = 'input select change';
     $('.biome-select').on(events, function() {
@@ -213,10 +216,11 @@ util.initBiomeFilter($('section').find('div.row:nth-child(2) > div.columns:nth-c
     function() {
         const updateObj = {
             lineage: $(this).val(),
-            search: $('#tableFilter').val()
+            search: $('.table-filter').val()
         };
         studiesView.update(updateObj);
         samplesView.update(updateObj);
     });
 $('.table-filter').val(pageFilters.get('search'));
+
 syncFilterFields();

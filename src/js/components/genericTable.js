@@ -28,7 +28,7 @@ module.exports = class GenericTable {
         this.$table = $sectionContent.find('table');
         this.$loadingGif = $sectionContent.find('.loading-gif-medium');
         this.$tbody = $sectionContent.find('tbody');
-        this.$filterInput = $sectionContent.find('#tableFilter');
+        this.$filterInput = $sectionContent.find('.table-filter');
 
         this.storeElemRefs($sectionContent);
         this.$pageSizeSelect.val(initPageSize);

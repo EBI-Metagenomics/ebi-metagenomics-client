@@ -619,3 +619,13 @@ export function displayError(errorcode, errormsg) {
     const tmpl = Commons.errorTmpl({errorcode, errormsg});
     $('#main-content-area').html(tmpl);
 }
+
+/**
+ * Fetches loading form via API and appends to div in modal
+ */
+export function loadLoginForm() {
+    api.getLoginForm().done(function(data, response) {
+        $('#login-form').html(data);
+        $(data).find('form').appendTo('#login-form');
+    });
+}

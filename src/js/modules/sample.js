@@ -9,7 +9,7 @@ const util = require('../util');
 require('../../../static/js/jquery.liveFilter.js');
 
 util.checkAPIonline();
-
+util.loadLoginForm();
 util.setCurrentTab('#browse-nav');
 
 let sampleId = util.getURLParameter();
