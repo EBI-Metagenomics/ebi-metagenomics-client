@@ -262,7 +262,6 @@ export function attachTabHandlers() {
         // Hide all other tabs
         let tabId = $(this).attr('href');
         let tabGroup = tabButtonContainer.attr('id');
-        console.log($('[data-tab-content=' + tabGroup + '] > .tabs-panel'));
         $('[data-tab-content=' + tabGroup + '] > .tabs-panel').removeClass('active');
         $(tabId).addClass('active');
     });
