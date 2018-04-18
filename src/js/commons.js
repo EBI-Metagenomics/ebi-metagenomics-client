@@ -19,6 +19,17 @@ export const pipelines = [
     require('../partials/pipelines/4.handlebars')
 ];
 
+require('../../static/images/nucleic_acids_research_D1_cover.gif');
+require('../../static/images/funding/BBSRC.png');
+require('../../static/images/funding/embl_logo.png');
+require('../../static/images/funding/excelerate_whitebackground.png');
+require('../../static/images/funding/innovate-uk-logo.png');
+require('../../static/images/ico_graph_krona_on.svg');
+require('../../static/images/ico_graph_pie_on.svg');
+require('../../static/images/ico_graph_barh_on.svg');
+require('../../static/images/ico_graph_col_on.svg');
+
+
 require('style-loader?name=[name].[ext]!../../static/css/elixir-banner.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');
 require('style-loader?name=[name].[ext]!../../static/css/theme-embl-petrol.css');
