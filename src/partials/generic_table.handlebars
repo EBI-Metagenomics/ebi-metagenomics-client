@@ -1,7 +1,7 @@
-<{{header_class}}>
-    {{section_title}}
+<{{headerClass}}>
+    {{sectionTitle}}
     <img class="loading-gif-medium" src="static/images/ajax-loader.gif">
-</{{header_class}}>
+</{{headerClass}}>
 <div class="row">
     <div class="columns small-12 medium-6 large-6 pagesize">
         {{#if this.pagination}}
@@ -31,7 +31,7 @@
     <a class="right download-link">Download results</a>
 </div>
 <div class="row columns small-12 medium-12 large-12">
-    <table>
+    <table class="{{tableClass}}">
         <thead>
         <tr>
             {{#each headers}}

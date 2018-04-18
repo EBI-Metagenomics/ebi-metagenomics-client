@@ -12,17 +12,19 @@ module.exports = class GenericTable {
      * @param {[string]} headers list of table header names
      * @param {number} initPageSize initial page size
      * @param {boolean} isPageHeader true if table should have a larger header
+     * @param {string} tableClass to assign to table elem
      * @param {callback} callback function on event callback to load data
      */
-    constructor($container, title, headers, initPageSize, isPageHeader, callback) {
+    constructor($container, title, headers, initPageSize, isPageHeader, tableClass, callback) {
         $container.empty();
         this.headers = headers;
         let params = {
-            section_title: title,
+            sectionTitle: title,
             headers: headers,
             pagination: true,
             filter: true,
-            header_class: isPageHeader ? 'h2' : 'h3'
+            headerClass: isPageHeader ? 'h2' : 'h3',
+            tableClass: tableClass
         };
         const $sectionContent = $(tableTmpl(params));
         this.$table = $sectionContent.find('table');

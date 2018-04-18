@@ -69,22 +69,22 @@ const samplesTableColumns = {
 
 let studiesTable;
 let samplesTable;
-describe('Browse page - Studies table', function() {
+describe('Browse page - Studies table - ', function() {
     beforeEach(function() {
         openPage(origPage + '#studies');
         waitForPageLoad('Studies list');
         studiesTable = new GenericTableHandler('#studies-section', studiesTableDefaultSize);
     });
 
-    it('Studies table should contain correct number of studies', function() {
+    it('Should contain correct number of studies', function() {
         studiesTable.checkLoadedCorrectly(1, studiesTableDefaultSize, 123, studiesTableColumns);
     });
 
-    it('Studies table should respond to ordering', function() {
+    it('Should respond to ordering', function() {
         studiesTable.testSorting(studiesTableDefaultSize, studiesTableColumns);
     });
 
-    it('Studies table should respond to filtering', function() {
+    it('Should respond to filtering', function() {
         studiesTable.testFiltering('Longitudinal', [
             [
                 '',
@@ -93,7 +93,7 @@ describe('Browse page - Studies table', function() {
                 '27-Nov-2017']]);
     });
 
-    it('Studies table should respond to pagination', function() {
+    it('Should respond to pagination', function() {
         studiesTable.testPagination(studiesTableDefaultSize, [
             {
                 index: 1,
@@ -109,13 +109,16 @@ describe('Browse page - Studies table', function() {
                 index: 'next',
                 data: [
                     '',
-                    'Skin microbiome in human volunteers inoculated with H. ducreyi Raw sequence reads',
+                    'Skin microbiome in human volunteers inoculated with H. ' +
+                    'ducreyi Raw sequence reads',
                     '191',
                     '4-Feb-2016'], // 4th row
                 pageNum: 4
             }, {
                 index: 'prev',
-                data: ['', 'Forest Soil Targeted Locus (Loci)', '23', '6-Jun-2016'], // Back to 3rd row
+                data: [
+                    '', 'Forest Soil Targeted Locus (Loci)', '23',
+                    '6-Jun-2016'], // Back to 3rd row
                 pageNum: 3
             }, {
                 index: 'last',
@@ -133,11 +136,11 @@ describe('Browse page - Studies table', function() {
             }]);
     });
 
-    it('Studies table should respond to page size change', function() {
+    it('Should respond to page size change', function() {
         studiesTable.testPageSizeChange(studiesTableDefaultSize, 50);
     });
 
-    it('Study table download link should be valid', function() {
+    it('Download link should be valid', function() {
         studiesTable.testDownloadLink(Config.API_URL +
             'studies?lineage=root&ordering=-last_update&format=csv');
     });
@@ -177,7 +180,8 @@ describe('Browse page - Studies table', function() {
         studiesTable.checkOrdering(2, params.type, true);
 
         const expectedLink = (Config.API_URL.replace('127.0.0.1', 'localhost')) +
-            'studies?lineage=root%3AEnvironmental%3AAir&ordering=samples_count&search=windshield&format=csv';
+            'studies?lineage=root%3AEnvironmental%3AAir&' +
+            'ordering=samples_count&search=windshield&format=csv';
         cy.get('a[href=\'' + expectedLink + '\']', {timeout: 10000});
     });
 
@@ -186,11 +190,14 @@ describe('Browse page - Studies table', function() {
 
         studiesTable.waitForTableLoad(studiesTableDefaultSize);
         cy.server();
-        // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
+        // Typing text incrementally causes multiple requests to be made,
+        // resulting in a results table concatenating the response of all requests
         cy.route('**/studies?**').as('apiQuery');
         for (let i in searchQuery) {
-            studiesTable.getFilterInput().type(searchQuery[i]);
-            cy.wait('@apiQuery');
+            if (Object.prototype.hasOwnProperty.call(searchQuery, i)) {
+                studiesTable.getFilterInput().type(searchQuery[i]);
+                cy.wait('@apiQuery');
+            }
         }
 
         // Actual result set for query 'abc' should have size 1
@@ -209,22 +216,22 @@ describe('Browse page - Studies table', function() {
     });
 });
 
-describe('Browse page - Samples table', function() {
+describe('Browse page - Samples table - ', function() {
     beforeEach(function() {
         openPage(origPage + '#samples');
         waitForPageLoad('Samples list');
         samplesTable = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
     });
 
-    it('Samples table should contain correct number of samples', function() {
+    it('Should contain correct number of samples', function() {
         samplesTable.checkLoadedCorrectly(1, samplesTableDefaultSize, 9158, samplesTableColumns);
     });
 
-    it('Samples table should respond to ordering', function() {
+    it('should respond to ordering', function() {
         samplesTable.testSorting(samplesTableDefaultSize, samplesTableColumns);
     });
 
-    it('Samples table should respond to filtering', function() {
+    it('Should respond to filtering', function() {
         samplesTable.testFiltering('ERS1474797', [
             [
                 '',
@@ -234,7 +241,7 @@ describe('Browse page - Samples table', function() {
                 '27-Nov-2017']]);
     });
 
-    it('Samples table should respond to pagination', function() {
+    it('Should respond to pagination', function() {
         samplesTable.testPagination(samplesTableDefaultSize, [
             {
                 index: 1,
@@ -276,7 +283,8 @@ describe('Browse page - Samples table', function() {
                     '',
                     'SRS211741',
                     'J18, fermented Kimchi day 18',
-                    '(CLOB) Community DNA obtained by 454 GS FLX titanium sequencing from sample at 18days of kimchi fermentation',
+                    '(CLOB) Community DNA obtained by 454 GS FLX titanium sequencing ' +
+                    'from sample at 18days of kimchi fermentation',
                     '13-Aug-2015'],
                 pageNum: 367,
                 pageSize: 8
@@ -341,15 +349,18 @@ describe('Browse page - Samples table', function() {
     });
 
     it('Typing larger search query should cancel previous request.', function() {
-        const searchQuery = ['Control patient 9', ' foot time', ' 44'];
+        const searchQuery = ['', 'Control patient 9', ' foot time', ' 44'];
 
         samplesTable.waitForTableLoad(studiesTableDefaultSize);
         cy.server();
-        // Typing text incrementally causes multiple requests to be made, resulting in a results table concatenating the response of all requests
+        // Typing text incrementally causes multiple requests to be made, resulting in a
+        // results table concatenating the response of all requests
         cy.route('**/samples?**').as('apiQuery');
         for (let i in searchQuery) {
-            samplesTable.getFilterInput().type(searchQuery[i]);
-            cy.wait('@apiQuery');
+            if (Object.prototype.hasOwnProperty.call(searchQuery, i)) {
+                samplesTable.getFilterInput().type(searchQuery[i]);
+                cy.wait('@apiQuery');
+            }
         }
 
         // Actual result set for query 'abc' should have size 1
@@ -428,7 +439,8 @@ describe('Browse page - Generic - Filter propagation', function() {
     //     changeTab('samples');
     //     samplesTable.waitForTableLoad(1);
     //     samplesTable.getFilterInput().should('have.value', filterText);
-    //     samplesTable.checkRowData(0, ['', 'SRS000608', 'Glacier Metagenome','454 Sequencing of The Glacier Ice Metagenome Of The Northern Schneeferner','13-Aug-2015'])
+    //     samplesTable.checkRowData(0, ['', 'SRS000608', 'Glacier Metagenome','454
+    // Sequencing of The Glacier Ice Metagenome Of The Northern Schneeferner','13-Aug-2015'])
     //     samplesTable.getClearButton().click();
     //     samplesTable.getFilterInput().should('have.value', '');
     //

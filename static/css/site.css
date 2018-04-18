@@ -8,6 +8,34 @@
     table-layout: fixed;
 }
 
+.studies-table tr, .samples-table tr {
+
+}
+
+.studies-table th:first-child {
+    width: 5em;
+}
+
+.studies-table th:nth-child(3) {
+    width: 7em;
+}
+
+.studies-table th:last-child {
+    width: 10em;
+}
+
+.samples-table th:first-child {
+    width: 5em;
+}
+
+.samples-table th:nth-child(2) {
+    width: 8em;
+}
+
+.samples-table th:last-child {
+    width: 10em;
+}
+
 td, th {
     word-wrap: break-word;
 }
@@ -894,4 +922,9 @@ a.download-part {
 .download-part {
     float: left;
     padding-right: 0.5em;
+}
+
+/*Fix for bug in ebi-global.css*/
+.pagination.disabled {
+    padding: 0.1875rem 0 !important;
 }

@@ -11,13 +11,18 @@ const samplesTableDefaultSize = 10;
 const runsTableDefaultSize = 25;
 
 const sampleTableColumns = {
-    sample_name: {
-        data: ['Control patient 9 right foot time 1', 'Patient 7 skin adjacent to wound time 2'],
+    biome: {
+        data: ['', ''],
         type: datatype.STR,
-        sortable: true
+        sortable: false
     },
     accession: {
         data: ['ERS1474797', 'ERS1474709'],
+        type: datatype.STR,
+        sortable: true
+    },
+    sample_name: {
+        data: ['Control patient 9 right foot time 1', 'Patient 7 skin adjacent to wound time 2'],
         type: datatype.STR,
         sortable: true
     },
@@ -110,8 +115,9 @@ describe('Study page - Samples table', function() {
     it('Samples table should respond to filtering', function() {
         table.testFiltering('ERS1474800', [
             [
-                'Control patient 9 left foot time 3',
+                '',
                 'ERS1474800',
+                'Control patient 9 left foot time 3',
                 'control_skin_left',
                 '27-Nov-2017']]);
     });
@@ -121,38 +127,43 @@ describe('Study page - Samples table', function() {
             {
                 index: 1,
                 data: [
-                    'Control patient 9 right foot time 1',
+                    '',
                     'ERS1474797',
+                    'Control patient 9 right foot time 1',
                     'control_skin_right',
                     '27-Nov-2017']
             }, {
                 index: 3,
                 data: [
-                    'Patient 5 wound debridement time 5',
+                    '',
                     'ERS1474870',
+                    'Patient 5 wound debridement time 5',
                     'wound_deb',
                     '27-Nov-2017']
             }, {
                 index: 'next',
                 data: [
-                    'Patient 6 skin contralateral foot to wound time 4',
+                    '',
                     'ERS1474887',
+                    'Patient 6 skin contralateral foot to wound time 4',
                     'diabetic_skin_contra',
                     '27-Nov-2017'], // 4th row
                 pageNum: 4
             }, {
                 index: 'prev',
                 data: [
-                    'Patient 5 wound debridement time 5',
+                    '',
                     'ERS1474870',
+                    'Patient 5 wound debridement time 5',
                     'wound_deb',
                     '27-Nov-2017'], // Back to 3rd row
                 pageNum: 3
             }, {
                 index: 'last',
                 data: [
-                    'Patient 5 skin contralateral foot to wound time 2',
+                    '',
                     'ERS1474858',
+                    'Patient 5 skin contralateral foot to wound time 2',
                     'diabetic_skin_contra',
                     '27-Nov-2017'],
                 pageNum: 6,
@@ -160,8 +171,9 @@ describe('Study page - Samples table', function() {
             }, {
                 index: 'first',
                 data: [
-                    'Control patient 9 right foot time 1',
+                    '',
                     'ERS1474797',
+                    'Control patient 9 right foot time 1',
                     'control_skin_right',
                     '27-Nov-2017'],
                 pageNum: 1
