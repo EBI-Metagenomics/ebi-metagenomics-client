@@ -4,8 +4,7 @@ const api = require('../components/api');
 const Map = require('../components/map');
 const util = require('../util');
 
-// const OverlappingMarkerSpiderfier = require('../../../static/js/oms.min.js');
-require('js-marker-clusterer');
+require('../../../static/js/jquery.liveFilter.js');
 
 util.checkAPIonline();
 
@@ -70,7 +69,6 @@ let DownloadsView = Backbone.View.extend({
         const that = this;
         this.model.fetch({
             success(response) {
-                console.log(response);
                 const pipelineFiles = response.attributes.pipelineFiles;
                 that.$el.html(that.template({pipeline_files: pipelineFiles}));
             }

@@ -22,5 +22,8 @@
     "browser": true,
     "node": true,
     "jquery": true
+  },
+  "globals": {
+    "google": true
   }
 }

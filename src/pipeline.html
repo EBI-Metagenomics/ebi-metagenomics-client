@@ -3,7 +3,6 @@
 <head id="head">
     <title>Pipeline &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/pipeline.css" type="text/css" media="all"/>
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
 <div id="header-container">{{> partials/header this}}</div>
@@ -13,8 +12,8 @@
     <div id="main-content-area" class="row" role="main">
         <nav aria-label="You are here:" role="navigation">
             <ul class="breadcrumbs columns">
-                 <li><a href="{{subfolder}}">Home</a></li>
-                 <li><a href="{{subfolder}}/pipelines">Pipelines</a></li>
+                 <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
+                 <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/pipelines">Pipelines</a></li>
                 <li>
                     <span class="show-for-sr">Current: </span> Pipeline
                 </li>
@@ -25,48 +24,10 @@
     </div>
 </div>
 
-<!-- Optional local footer (insert citation / project-specific copyright / etc here -->
-<!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
-<!-- <div class="row"> -->
-<!-- <span class="reference">How to reference this page: ...</span> -->
-<!-- </div> -->
-<!-- </footer> -->
-<!-- End optional local footer -->
-<!-- </div> -->
-<!-- End suggested layout containers / #content -->
-
 <div id="footer">
     {{>partials/elixir}}
     {{>partials/footer}}
 </div>
-<!-- JavaScript -->
-
-<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
-
-<!-- The Foundation theme JavaScript -->
-
-<script src="{{subfolder}}/static/js/foundation.js"></script>
-<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-
-<script src="{{subfolder}}/js/pipeline.js"></script>
-
-
-<!-- Google Analytics details... -->
-<!-- Change UA-XXXXX-X to be your util's ID -->
-<!--
-<script>
-  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
-  Modernizr.load({
-    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-  });
-</script>
--->
 </body>
 
 

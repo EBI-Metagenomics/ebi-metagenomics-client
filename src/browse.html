@@ -3,7 +3,6 @@
 <head id="head">
     <title>Studies &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/browse.css" type="text/css" media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -16,7 +15,7 @@
         <div class="columns small-12 medium-12 large-12">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
-                    <li><a href="{{subfolder}}">Home</a></li>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
                     <li>
                         <span class="show-for-sr">Current: </span> Browse
                     </li>
@@ -40,6 +39,8 @@
         </div>
     </section>
 </div>
+
+
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
 <!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
 <!-- <div class="row"> -->
@@ -55,22 +56,6 @@
     {{>partials/elixir}}
     {{>partials/footer}}
 </div>
-<!-- JavaScript -->
-<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
-
-<!-- The Foundation theme JavaScript -->
-
-<script src="{{subfolder}}/static/js/foundation.js"></script>
-<script src="{{subfolder}}/static/js/what-input.js"></script>
-<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        window.Foundation = Foundation;
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-<script src="{{subfolder}}/js/browse.js"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->
