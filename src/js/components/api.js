@@ -93,10 +93,11 @@ export const Run = Backbone.Model.extend({
  * Generate Krona URL
  * @param {string} runId ENA Run primary accession
  * @param {string} pipelineVersion
+ * @param {string} ssuOrLsu subunit type (for pipeline version 4.0 and above)
  * @return {string} url
  */
-export function getKronaURL(runId, pipelineVersion) {
-    return API_URL + 'runs/' + runId + '/pipelines/' + pipelineVersion + '/krona';
+export function getKronaURL(runId, pipelineVersion, ssuOrLsu) {
+    return API_URL + 'runs/' + runId + '/pipelines/' + pipelineVersion + '/krona'+ssuOrLsu;
 }
 
 export const RunsCollection = Backbone.Collection.extend({

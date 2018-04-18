@@ -3,6 +3,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const getCompressionPlugin = (() => {
     let plugin;
     return () => {
@@ -24,6 +25,12 @@ const templateFixtures = {
 module.exports = (env = {prod: false}) => {
     return {
         plugins: [
+            new CopyWebpackPlugin([
+                {from: 'static/images', to: '../static/images'},
+                {from: 'static/fonts', to: '../static/fonts'},
+                {from: 'static/js', to: '../static/js'},
+                {from: 'static/krona', to: ''}
+            ]),
             new HtmlWebpackPlugin({
                 title: 'About page',
                 inject: true,
@@ -191,24 +198,7 @@ module.exports = (env = {prod: false}) => {
                     }
                 })
                 : null,
-            // new HandlebarsPlugin({
-            //     // path to hbs entry file(s)
-            //     entry: path.join(__dirname, 'src', '*.html'),
-            //     // output path and filename(s). This should lie within the webpacks output-folder
-            //     // if ommited, the input filepath stripped of its extension will be used
-            //     output: path.join(__dirname, 'dist', '[name].html'),
-            //     // data passed to main hbs template: `main-template(data)`
-            //     data: {
-            //         subfolder: process.env.DEPLOYMENT_SUBFOLDER,
-            //         apiUrl: process.env.API_URL,
-            //         sequenceSearchUrl: process.env.SEQUENCE_SEARCH_URL
-            //     },
-            //     // path.join(__dirname, configFile),
-            //     // globbed path to partials, where folder/filename is unique
-            //     partials: [
-            //         path.join(__dirname, 'src', 'partials', '*.handlebars')
-            //     ]
-            // }),
+
             new ExtractTextPlugin('[name].css')
         ].filter(Boolean), // filter out empty values
         entry: {

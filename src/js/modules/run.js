@@ -550,7 +550,6 @@ function groupGoTermData(data) {
     return data;
 }
 
-
 /**
  * Generate interpro link
  * @param {string} text to display in link tag
@@ -593,9 +592,10 @@ function enableTab(id) {
  * Load krona chart for current view
  * @param {string} runId ENA primary accession for run
  * @param {string} pipelineVersion
+ * @param {string} type subunit type (for pipeline version 4.0 and above) ("ssu" or "lsu")
  */
-function loadKronaChart(runId, pipelineVersion) {
-    const kronaUrl = api.getKronaURL(runId, pipelineVersion);
+function loadKronaChart(runId, pipelineVersion, type) {
+    const kronaUrl = api.getKronaURL(runId, pipelineVersion, type);
     // $.ajax({
     //     url: kronaUrl,
     //     success (e) {
@@ -619,8 +619,6 @@ function loadKronaChart(runId, pipelineVersion) {
  * @param {string} pipelineVersion
  */
 function loadAnalysisData(runId, pipelineVersion) {
-    loadKronaChart(runView.model.attributes.run_id, pipelineVersion);
-
     analysis = new api.Analysis({id: runId, version: pipelineVersion});
     analysis.fetch({
         success(model) {
@@ -648,6 +646,7 @@ function loadAnalysisData(runId, pipelineVersion) {
 function loadTaxonomy(runId, pipelineVersion, type) {
     taxonomy = new api.Taxonomy({id: runId, version: pipelineVersion, type: type});
     new TaxonomyGraphView({model: taxonomy});
+    loadKronaChart(runView.model.attributes.run_id, pipelineVersion, type);
 }
 
 /**
