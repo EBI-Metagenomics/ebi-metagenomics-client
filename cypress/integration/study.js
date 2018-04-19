@@ -97,22 +97,26 @@ describe('Study page - General', function() {
 });
 
 let table;
-describe('Study page - Samples table', function() {
+describe('Study page - Samples table - ', function() {
     beforeEach(function() {
         openPage(origPage);
         waitForPageLoad(pageTitle);
         table = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
     });
 
-    it('Samples table should contain correct number of samples', function() {
+    it('Should be toggleable', function() {
+        table.testTableHiding();
+    });
+
+    it('Should contain correct number of samples', function() {
         table.checkLoadedCorrectly(1, 10, 258, sampleTableColumns);
     });
 
-    it('Samples table should respond to ordering', function() {
+    it('Should respond to ordering', function() {
         table.testSorting(10, sampleTableColumns);
     });
 
-    it('Samples table should respond to filtering', function() {
+    it('Should respond to filtering', function() {
         table.testFiltering('ERS1474800', [
             [
                 '',
@@ -122,7 +126,7 @@ describe('Study page - Samples table', function() {
                 '27-Nov-2017']]);
     });
 
-    it('Samples table should respond to pagination', function() {
+    it('Should respond to pagination', function() {
         table.testPagination(10, [
             {
                 index: 1,
@@ -180,7 +184,7 @@ describe('Study page - Samples table', function() {
             }]);
     });
 
-    it('Samples table should respond to page size change', function() {
+    it('Should respond to page size change', function() {
         table.testPageSizeChange(samplesTableDefaultSize, 25);
     });
 
@@ -195,6 +199,10 @@ describe('Study page - Runs table', function() {
         openPage(origPage);
         waitForPageLoad(pageTitle);
         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+    });
+
+    it('Should be toggleable', function() {
+        table.testTableHiding();
     });
 
     it('Runs table should contain correct number of runs', function() {

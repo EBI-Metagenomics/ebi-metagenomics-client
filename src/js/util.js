@@ -74,7 +74,6 @@ export function getBiomeIconData(biomeData) {
  * @param {callback} callback
  */
 export function initBiomeFilter($div, callback) {
-    console.log($div);
     $div.before(biomeFilter);
     const $biomeSelect = $('.biome-select');
     $biomeSelect.on('change', callback);

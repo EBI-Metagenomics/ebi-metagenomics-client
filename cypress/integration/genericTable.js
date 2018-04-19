@@ -137,6 +137,15 @@ class GenericTableHandler {
         });
     }
 
+    testTableHiding() {
+        const headerSelector = this.parentId + ' .expand-button';
+        this.getTableElem().should('be.visible');
+        cy.get(headerSelector).click();
+        this.getTableElem().should('be.hidden');
+        cy.get(headerSelector).click();
+        this.getTableElem().should('be.visible');
+    }
+
     checkRowData(rowIndex, data) {
         for (let column in data) {
             if (data.hasOwnProperty(column)) {
@@ -212,6 +221,10 @@ class GenericTableHandler {
 
     getDownloadLink() {
         return cy.get(this.parentId + ' div.row.columns > a.download-link');
+    }
+
+    getTableElem() {
+        return cy.get(this.getTableSelector());
     }
 
     getTableSelector() {
