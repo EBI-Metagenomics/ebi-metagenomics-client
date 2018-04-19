@@ -531,7 +531,7 @@ export let StudiesView = GenericTableView.extend({
             {sortBy: null, name: 'Last update'}
         ];
         this.tableObj = new GenericTable($('#studies-section'), 'Associated studies', columns,
-            DEFAULT_PAGE_SIZE, false, function(page, pageSize, order, query) {
+            DEFAULT_PAGE_SIZE, false, 'studies-table', function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
         this.update(1, DEFAULT_PAGE_SIZE, null, null);
@@ -560,13 +560,15 @@ export let SamplesView = GenericTableView.extend({
     initialize() {
         const that = this;
         const columns = [
-            {sortBy: 'sample_name', name: 'Sample name'},
+            {sortBy: null, name: 'Biome'},
             {sortBy: 'accession', name: 'Sample ID'},
+            {sortBy: 'sample_name', name: 'Sample name'},
             {sortBy: null, name: 'Description'},
             {sortBy: 'last_update', name: 'Last update'}
         ];
         this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns,
-            Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, function(page, pageSize, order, query) {
+            Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, 'samples-table',
+            function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
         this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, null, null);
@@ -575,7 +577,9 @@ export let SamplesView = GenericTableView.extend({
     getRowData(attr) {
         const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
             '</a>';
-        return [attr.sample_name, sampleLink, attr.sample_desc, attr.last_update];
+        const biomes = '<span class="biome_icon icon_xs ' + attr.biome_icon + '" title="' +
+            attr.biome_name + '"></span>';
+        return [biomes, sampleLink, attr.sample_name, attr.sample_desc, attr.last_update];
     }
 });
 
@@ -593,7 +597,7 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline versions'}
         ];
         this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns,
-            Commons.DEFAULT_PAGE_SIZE, false, function(page, pageSize, order, query) {
+            Commons.DEFAULT_PAGE_SIZE, false, 'runs-table', function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
         this.update(1, Commons.DEFAULT_PAGE_SIZE, null, null);
@@ -618,4 +622,19 @@ export let RunsView = GenericTableView.extend({
 export function displayError(errorcode, errormsg) {
     const tmpl = Commons.errorTmpl({errorcode, errormsg});
     $('#main-content-area').html(tmpl);
+}
+
+/**
+ * Attach click handler for expandable div button
+ */
+export function attachExpandButtonCallback() {
+    $('.expand-button').on('click', function() {
+        if ($(this).hasClass('min')) {
+            $(this).removeClass('min');
+            $($(this).attr('for')).slideUp();
+        } else {
+            $(this).addClass('min');
+            $($(this).attr('for')).slideDown();
+        }
+    });
 }

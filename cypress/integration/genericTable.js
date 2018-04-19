@@ -137,6 +137,15 @@ class GenericTableHandler {
         });
     }
 
+    testTableHiding() {
+        const headerSelector = this.parentId + ' .expand-button';
+        this.getTableElem().should('be.visible');
+        cy.get(headerSelector).click();
+        this.getTableElem().should('be.hidden');
+        cy.get(headerSelector).click();
+        this.getTableElem().should('be.visible');
+    }
+
     checkRowData(rowIndex, data) {
         for (let column in data) {
             if (data.hasOwnProperty(column)) {
@@ -155,19 +164,19 @@ class GenericTableHandler {
     }
 
     getPageInfoSpan(spanId) {
-        return cy.get(this.parentId + ' > div.row > div.pagesize > label > span > span' + spanId);
+        return cy.get(this.parentId + ' div.row > div.pagesize > label > span > span' + spanId);
     }
 
     getLoadingIcon() {
-        return cy.get(this.parentId + '> * > img.loading-gif-medium');
+        return cy.get(this.parentId + ' img.loading-gif-medium');
     }
 
     getFilterInput() {
-        return cy.get(this.parentId + '> div.row > div.columns > label > input#tableFilter');
+        return cy.get(this.parentId + ' div.row > div.columns > label > input#tableFilter');
     }
 
     getColumnSelector(columnIndex) {
-        return this.getTableSelector() + '> tbody > tr td:nth-child(' + (columnIndex + 1) + ')';
+        return this.getTableSelector() + ' tbody > tr td:nth-child(' + (columnIndex + 1) + ')';
     }
 
     /**
@@ -184,7 +193,7 @@ class GenericTableHandler {
     }
 
     getPageSizeSelector() {
-        return cy.get(this.parentId + '> div.row div.columns > label > select#pagesize');
+        return cy.get(this.parentId + ' div.row div.columns > label > select#pagesize');
     }
 
     getPaginationButton(buttonIndex) {
@@ -192,30 +201,34 @@ class GenericTableHandler {
         switch (buttonIndex) {
             case 0:
             case 'first':
-                str = '> div.pagination > ul.pagination > li:nth-child(1)';
+                str = ' div.pagination > ul.pagination > li:nth-child(1)';
                 break;
             case 'prev':
-                str = '> div.pagination > ul.pagination > li:nth-child(2)';
+                str = ' div.pagination > ul.pagination > li:nth-child(2)';
                 break;
             case 'next':
-                str = '> div.pagination > ul.pagination > li:nth-child(8)';
+                str = ' div.pagination > ul.pagination > li:nth-child(8)';
                 break;
             case 'last':
-                str = '> div.pagination > ul.pagination > li:nth-child(9)';
+                str = ' div.pagination > ul.pagination > li:nth-child(9)';
                 break;
             default:
-                str = '> div.pagination > ul.pagination > li:nth-child(' +
+                str = ' div.pagination > ul.pagination > li:nth-child(' +
                     (buttonIndex + 2) + ')';
         }
         return cy.get(this.parentId + str);
     }
 
     getDownloadLink() {
-        return cy.get(this.parentId + '> div.row.columns > a.download-link');
+        return cy.get(this.parentId + ' div.row.columns > a.download-link');
+    }
+
+    getTableElem() {
+        return cy.get(this.getTableSelector());
     }
 
     getTableSelector() {
-        return this.parentId + '> div.row.columns > table ';
+        return this.parentId + ' table ';
     }
 
     getClearButton() {

@@ -16,7 +16,7 @@ function waitForFacetFilters(facetName) {
 }
 
 function validateFacetQuery(facetName, testString) {
-    const timeout = 10000;
+    const timeout = 20000;
     if (testString) {
         cy.wait('@' + facetName, {timeout}).
             its('url').
