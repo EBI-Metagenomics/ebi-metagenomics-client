@@ -16,7 +16,8 @@
                     <nav aria-label="You are here:" role="navigation">
                         <ul class="breadcrumbs columns">
                             <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
-                            <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#samples">Browse samples</a></li>
+                            <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#samples">Browse
+                                samples</a></li>
                             <li>
                                 <span class="show-for-sr">Current: </span> Sample <%= sample_accession %>
                             </li>
@@ -38,6 +39,11 @@
                 <div class="column small-6 medium-6 large-6 map">
                     <div id="map">
                     </div>
+                    <span class="no-coords-span">No sample coordinates available to display.</span>
+                    <!--<div id="warning" class="map-alert text-center">-->
+                    <!--Some samples have no associated latitude/longitude coordinates and could not be-->
+                    <!--marked on the map.-->
+                    <!--</div>-->
                 </div>
             </div>
             <hr>
@@ -48,8 +54,8 @@
             <hr>
             <div class="row">
                 <div class="column small-12 medium-12 large-12">
-                     <section id="studies-section">
-                     </section>
+                    <section id="studies-section">
+                    </section>
                 </div>
             </div>
             <hr>

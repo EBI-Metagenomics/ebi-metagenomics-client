@@ -198,17 +198,15 @@ select.table-tools {
     width: 100%;
 }
 
-.no-coords-tooltip span {
-    display: none;
+.no-coords-span {
     background: #333;
     color: #fff;
-    bottom: 5em;
+    position: relative;
+    bottom: 15em;
     text-align: center;
     margin: 0 auto;
-}
-
-.no-coords-tooltip:hover span.no-coords {
-    display: block;
+    display: none;
+    width: 12em;
 }
 
 .expand-button {
