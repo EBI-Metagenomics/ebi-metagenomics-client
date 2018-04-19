@@ -97,7 +97,7 @@ export const Run = Backbone.Model.extend({
  * @return {string} url
  */
 export function getKronaURL(runId, pipelineVersion, ssuOrLsu) {
-    return API_URL + 'runs/' + runId + '/pipelines/' + pipelineVersion + '/krona'+ssuOrLsu;
+    return API_URL + 'runs/' + runId + '/pipelines/' + pipelineVersion + '/krona' + ssuOrLsu;
 }
 
 export const RunsCollection = Backbone.Collection.extend({
@@ -353,6 +353,9 @@ function clusterRunDownloads(downloads) {
             const groupFormat = d.attributes['file-format']['name'];
             if (groupLabel === label && groupFormat === format) {
                 d.attributes.links = d.attributes.links.concat(download.links.self);
+                if (attr['file-format']['compression']) {
+                    d.attributes['file-format']['compExtension'] = attr.alias.split('.').slice(-1);
+                }
                 grouped = true;
             }
         });
