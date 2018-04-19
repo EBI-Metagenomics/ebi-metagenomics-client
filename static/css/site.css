@@ -36,6 +36,23 @@
     width: 10em;
 }
 
+.runs-download-table {
+    table-layout: fixed;
+    text-align: center;
+}
+
+.runs-download-table th:first-child {
+    width: 20em;
+}
+
+.runs-download-table th:nth-child(2) {
+    width: 8em;
+}
+
+.runs-download-table th:nth-child(3) {
+    width: 5em;
+}
+
 td, th {
     word-wrap: break-word;
 }
