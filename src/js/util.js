@@ -74,6 +74,7 @@ export function getBiomeIconData(biomeData) {
  * @param {callback} callback
  */
 export function initBiomeFilter($div, callback) {
+    console.log($div);
     $div.before(biomeFilter);
     const $biomeSelect = $('.biome-select');
     $biomeSelect.on('change', callback);
@@ -622,4 +623,19 @@ export let RunsView = GenericTableView.extend({
 export function displayError(errorcode, errormsg) {
     const tmpl = Commons.errorTmpl({errorcode, errormsg});
     $('#main-content-area').html(tmpl);
+}
+
+/**
+ * Attach click handler for expandable div button
+ */
+export function attachExpandButtonCallback() {
+    $('.expand-button').on('click', function() {
+        if ($(this).hasClass('min')) {
+            $(this).removeClass('min');
+            $($(this).attr('for')).slideUp();
+        } else {
+            $(this).addClass('min');
+            $($(this).attr('for')).slideDown();
+        }
+    });
 }

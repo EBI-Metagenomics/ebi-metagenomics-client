@@ -124,7 +124,7 @@ describe('Home page: Test Browse latest projects component', function() {
         it('View all projects', function() {
             cy.contains('View all projects').click();
             cy.contains('Studies list');
-            cy.title().should('include', 'Studies');
+            cy.title().should('include', 'Browse');
         });
 
         it('View specific study', function() {

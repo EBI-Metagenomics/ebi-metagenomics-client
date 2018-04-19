@@ -23,8 +23,9 @@ module.exports = class GenericTable {
             headers: headers,
             pagination: true,
             filter: true,
-            headerClass: isPageHeader ? 'h2' : 'h3',
-            tableClass: tableClass
+            isPageHeader: isPageHeader,
+            tableClass: tableClass,
+            tableContainer: _.uniqueId('tablecontainer')
         };
         const $sectionContent = $(tableTmpl(params));
         this.$table = $sectionContent.find('table');

@@ -349,7 +349,7 @@ describe('Browse page - Samples table - ', function() {
     });
 
     it('Typing larger search query should cancel previous request.', function() {
-        const searchQuery = ['', 'Control patient 9', ' foot time', ' 44'];
+        const searchQuery = ['Control patient 9', ' foot time', ' 44'];
 
         samplesTable.waitForTableLoad(studiesTableDefaultSize);
         cy.server();
@@ -373,8 +373,8 @@ describe('Browse page - Samples table - ', function() {
         setSelectOption(studiesTable, selector, biome, 4);
         cy.get('span.biome_icon').should('have.class', 'air_b');
 
-        biome = 'root:Engineered:Biotransformation';
-        setSelectOption(studiesTable, selector, biome, 25);
+        let biome2 = 'root:Engineered:Biotransformation';
+        setSelectOption(studiesTable, selector, biome2, 25);
         cy.get('span.biome_icon').should('have.class', 'engineered_b');
     });
 });

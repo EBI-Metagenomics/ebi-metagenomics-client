@@ -100,6 +100,7 @@ function initPage() {
     ).done(function() {
         new util.StudiesView({collection: studies});
         new util.RunsView({collection: runs});
+        util.attachExpandButtonCallback();
     });
 }
 
