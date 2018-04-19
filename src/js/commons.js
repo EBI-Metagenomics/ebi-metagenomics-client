@@ -28,6 +28,7 @@ require('../../static/images/ico_graph_krona_on.svg');
 require('../../static/images/ico_graph_pie_on.svg');
 require('../../static/images/ico_graph_barh_on.svg');
 require('../../static/images/ico_graph_col_on.svg');
+require('../../static/images/ico_ena_user.jpg');
 require('../../static/images/graphic_submission_00.gif');
 
 
