@@ -29,6 +29,7 @@
     "foundation-cli": "^2.2.3",
     "foundation-sites": "^6.4.3",
     "handlebars": "^4.0.10",
+    "hard-source-webpack-plugin": "^0.6.4",
     "highcharts": "^5.0.14",
     "http": "0.0.0",
     "i": "^0.3.5",
