@@ -96,6 +96,25 @@ describe('Study page - General', function() {
     });
 });
 
+describe('Study page - Related studies - ', function() {
+    const relatedStudiesList = '[data-cy=\'relatedStudies\']';
+    it('Should display related study section', function() {
+        openPage('studies/ERP104178');
+        waitForPageLoad('EMG produced TPA metagenomics assembly of the Microbial Community of ' +
+            'Mobilong Acid Sulfate Soil depth profile using Metagenomics (Mobilong Soil Profile)' +
+            ' data set');
+        cy.contains('Related studies');
+        cy.get(relatedStudiesList).should('have.length', 1);
+        cy.get(relatedStudiesList + ' a').contains('ERP005307').click();
+        waitForPageLoad('Microbial Community of Mobilong Acid Sulfate Soil ' +
+            'depth profile using Metagenomics');
+    });
+    it('Should not display related study section if no related studies available', function() {
+        openPage(origPage);
+        cy.get(relatedStudiesList).should('not.exist');
+    });
+});
+
 let table;
 describe('Study page - Samples table - ', function() {
     beforeEach(function() {
