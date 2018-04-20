@@ -79,8 +79,9 @@
                                             %>)</a>
                                     </ul>
                                 </div>
+                                <% if (publications.length>0) { %>
                                 <h3>Publications</h3>
-                                <div class="row columns">
+                                <div class="row columns" data-cy="publications">
                                     <ul id="europe_pmc_links">
                                         <% _.each(publications, function(pub){ %>
                                         <li>
@@ -94,6 +95,7 @@
                                         <% }); %>
                                     </ul>
                                 </div>
+                                <% } %>
                             </div>
                         </div>
                     </section>

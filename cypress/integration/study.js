@@ -115,6 +115,16 @@ describe('Study page - Related studies - ', function() {
     });
 });
 
+describe('Study page - Hiding Publications display -', function() {
+    const pubsList = '[data-cy=\'publications\']';
+    it('Should not display empty section if no publications available', function() {
+        openPage('studies/ERP104236');
+        waitForPageLoad('EMG produced TPA metagenomics assembly of the Identification of fungi' +
+            ' and ameba from human wound genomic sequencing (human wound) data set');
+        cy.get(pubsList).should('not.exist');
+    });
+});
+
 let table;
 describe('Study page - Samples table - ', function() {
     beforeEach(function() {
