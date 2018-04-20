@@ -79,7 +79,6 @@
                                             %>)</a>
                                     </ul>
                                 </div>
-                                <% if (publications.length>0) { %>
                                 <h3>Publications</h3>
                                 <div class="row columns" data-cy="publications">
                                     <ul id="europe_pmc_links">
@@ -93,9 +92,11 @@
                                             </p>
                                         </li>
                                         <% }); %>
+                                        <% if (publications.length===0) { %>
+                                        <li>No known publications.</li>
+                                        <% } %>
                                     </ul>
                                 </div>
-                                <% } %>
                             </div>
                         </div>
                     </section>
