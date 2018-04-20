@@ -625,7 +625,6 @@ export function displayError(errorcode, errormsg) {
  */
 export function loadLoginForm() {
     api.getLoginForm().done(function(data, response) {
-        $('#login-form').html(data);
-        $(data).find('form').appendTo('#login-form');
+        $(data).appendTo('#login-form');
     });
 }
