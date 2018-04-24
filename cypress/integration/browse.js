@@ -180,7 +180,9 @@ describe('Browse page - Studies table', function() {
         const expectedLink = Config.API_URL +
             'studies?lineage=root%3AEnvironmental%3AAir&ordering=' +
             'samples_count&search=windshield&format=csv';
-        cy.get('a[href=\'' + expectedLink + '\']', {timeout: 10000});
+        cy.get('a.download-link:visible').then(($el) => {
+            expect(Cypress.$($el).attr('href')).to.eq(expectedLink);
+        });
     });
 
     it('Typing larger search query should cancel previous request.', function() {
@@ -223,7 +225,8 @@ describe('Browse page - Samples table', function() {
     });
 
     it('Samples table should contain correct number of samples', function() {
-        samplesTable.checkLoadedCorrectly(1, samplesTableDefaultSize, 9158, samplesTableColumns);
+        samplesTable.checkLoadedCorrectly(1, samplesTableDefaultSize, 9158,
+            samplesTableColumns);
     });
 
     it('Samples table should respond to ordering', function() {
@@ -392,11 +395,13 @@ describe('Browse page - URL arguments', function() {
         for (let i = 1; i < splitBiome.length; i++) {
             let parentLineage = splitBiome.slice(0, i).join(':');
             expect(
-                cy.get('#studies-section .biome-select > option[value=\'' + parentLineage + '\']')).
+                cy.get('#studies-section .biome-select > option[value=\'' + parentLineage +
+                    '\']')).
                 to.
                 exist;
             expect(
-                cy.get('#samples-section .biome-select > option[value=\'' + parentLineage + '\']')).
+                cy.get('#samples-section .biome-select > option[value=\'' + parentLineage +
+                    '\']')).
                 to.
                 exist;
         }
