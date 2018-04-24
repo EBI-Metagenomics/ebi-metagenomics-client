@@ -174,6 +174,7 @@ describe('Browse page - Studies table', function() {
         });
 
         studiesTable.getHeader(2).click();
+        studiesTable.waitForLoadingIcon();
         const params = studiesTableColumns.samples_count;
         studiesTable.checkOrdering(2, params.type, true);
 

@@ -133,7 +133,9 @@ class GenericTableHandler {
 
     testDownloadLink(expectedURL) {
         this.getDownloadLink().should(($el) => {
-            expect($el.attr('href').replace('localhost', '127.0.0.1')).to.eq(expectedURL);
+            expect($el.attr('href').replace('localhost', '127.0.0.1')).to.eq(
+                expectedURL.replace('localhost', '127.0.0.1')
+            );
         });
     }
 
