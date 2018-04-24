@@ -895,3 +895,8 @@ a.download-part {
     float: left;
     padding-right: 0.5em;
 }
+
+/*Overwrite CSS from API generated login form*/
+.well {
+    width: inherit !important;
+}

@@ -163,7 +163,7 @@ class GenericTableHandler {
     }
 
     getFilterInput() {
-        return cy.get(this.parentId + '> div.row > div.columns > label > input#tableFilter');
+        return cy.get(this.parentId + '> div.row > div.columns > label > input.table-filter');
     }
 
     getColumnSelector(columnIndex) {

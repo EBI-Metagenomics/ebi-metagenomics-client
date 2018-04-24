@@ -97,7 +97,7 @@ export const Run = Backbone.Model.extend({
  * @return {string} url
  */
 export function getKronaURL(runId, pipelineVersion, ssuOrLsu) {
-    return API_URL + 'runs/' + runId + '/pipelines/' + pipelineVersion + '/krona'+ssuOrLsu;
+    return API_URL + 'runs/' + runId + '/pipelines/' + pipelineVersion + '/krona' + ssuOrLsu;
 }
 
 export const RunsCollection = Backbone.Collection.extend({
@@ -394,6 +394,16 @@ export const StudyGeoCoordinates = Backbone.Model.extend({
  * @return {jQuery.Promise}
  */
 export function getLoginForm() {
-    const url = API_URL.split('/').slice(0, -2).join('/')+'/http-auth/login_form';
-    return $.get(url);
+    const url = API_URL.split('/').slice(0, -2).join('/') + '/http-auth/login_form';
+    return $.ajax({
+        method: 'get',
+        url: url,
+        credentials: 'same-origin'
+    });
 }
+
+export const UserStudies = StudiesCollection.extend({
+    url() {
+        return API_URL + 'mydata';
+    }
+});

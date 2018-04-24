@@ -6,8 +6,8 @@ emg:
       USER: 'travis'
       HOST: localhost
       PORT: 3306
-  session_engine: 'django.contrib.sessions.backends.cache'
-  emg_backend_auth: "https://backend"
+  session_engine: 'django.contrib.sessions.backends.cached_db'
+  emg_backend_auth: "https://www.ebi.ac.uk/ena/auth/login"
   prefix: "/metagenomics/api"
   mongodb:
     db: 'emg'
@@ -15,4 +15,4 @@ emg:
   documentation:
     title: 'EBI Metagenomics API'
     description: 'Is a free resource to visualise and discover metagenomic datasets. For more details go to http://www.ebi.ac.uk/metagenomics/'
-  allowed_host: ['localhost']
+  allowed_host: ['localhost', '127.0.0.1']

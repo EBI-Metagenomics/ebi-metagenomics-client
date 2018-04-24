@@ -1,27 +1,24 @@
 const Backbone = require('backbone');
-const _ = require('underscore');
 require('../commons');
 const api = require('../components/api');
 const util = require('../util');
 
-util.checkAPIonline();
+util.setupPage('#compare-nav');
 
-util.setCurrentTab('#compare-nav');
-
-let StudyView = Backbone.View.extend({
-    tagName: 'option',
-    template: _.template($('#compare-option').html()),
-    attributes: {
-        value: '',
-        class: 'compare-option'
-    },
-    render() {
-        const d = this.model.toJSON();
-        this.attributes.value = d.study_accession;
-        this.$el.html(this.template({name: d.study_name}));
-        return this.$el;
-    }
-});
+// let StudyView = Backbone.View.extend({
+//     tagName: 'option',
+//     template: _.template($('#compare-option').html()),
+//     attributes: {
+//         value: '',
+//         class: 'compare-option'
+//     },
+//     render() {
+//         const d = this.model.toJSON();
+//         this.attributes.value = d.study_accession;
+//         this.$el.html(this.template({name: d.study_name}));
+//         return this.$el;
+//     }
+// });
 
 let StudiesView = Backbone.View.extend({
     el: '#studies',

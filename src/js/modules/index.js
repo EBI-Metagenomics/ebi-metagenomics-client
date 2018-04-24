@@ -11,9 +11,8 @@ const Cookies = require('js-cookie');
 const util = require('../util');
 window.Foundation.addToJquery($);
 
-util.checkAPIonline();
+util.setupPage('#overview-nav');
 
-util.setCurrentTab('#overview-nav');
 
 // Shorthand for $( document ).ready()
 $(function() {

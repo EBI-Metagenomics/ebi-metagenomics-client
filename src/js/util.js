@@ -248,9 +248,12 @@ export function attachTabHandlers() {
     new window.Foundation.Tabs($dataTabs);
     const linkTab = window.location.hash.substr(1);
     if (linkTab) {
-        $($dataTabs).foundation('selectTab', linkTab);
-        $('div.tabs-panel:not(\'' + linkTab + '\')').removeClass('active');
-        $('#' + linkTab).addClass('active');
+        const tabExists = $('a[href=\'#' + linkTab + '\']').length > 0;
+        if (tabExists) {
+            $($dataTabs).foundation('selectTab', linkTab);
+            $('div.tabs-panel:not(\'' + linkTab + '\')').removeClass('active');
+            $('#' + linkTab).addClass('active');
+        }
     }
 
     // Linking click actions
@@ -472,12 +475,12 @@ export function updateTableFromPagination(view, page, pageSize, order, query) {
         page_size: pageSize
     };
 
-    let collectionParams = view.collection.params;
-    if (collectionParams.hasOwnProperty('study_accession')) {
+    let collectionParams = view.collection.params || {};
+    if (Object.prototype.hasOwnProperty.call(collectionParams, 'study_accession')) {
         params['study_accession'] = collectionParams.study_accession;
-    } else if (collectionParams.hasOwnProperty('sample_accession')) {
+    } else if (Object.prototype.hasOwnProperty.call(collectionParams, 'sample_accession')) {
         params['sample_accession'] = collectionParams.sample_accession;
-    } else if (collectionParams.hasOwnProperty('run_accession')) {
+    } else if (Object.prototype.hasOwnProperty.call(collectionParams, 'run_accession')) {
         params['run_accession'] = collectionParams.run_accession;
     }
 
@@ -622,9 +625,108 @@ export function displayError(errorcode, errormsg) {
 
 /**
  * Fetches loading form via API and appends to div in modal
+ * @param {string} next location to redirect to.
  */
-export function loadLoginForm() {
-    api.getLoginForm().done(function(data, response) {
-        $(data).appendTo('#login-form');
+export function loadLoginForm(next) {
+    if (!next) {
+        next = subfolder + '/mydata';
+    }
+    getLoginStatus().done(function(status) {
+        if (!status) {
+            api.getLoginForm().then(function(data, response, xhr) {
+                const $div = $(data);
+                const $form = $div.find('form');
+                $form.submit(function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'post',
+                        url: $form.attr('action'),
+                        data: $form.serialize(),
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader('X-CSRFToken',
+                                jQuery('[name=csrfmiddlewaretoken]').val());
+                        },
+                        success: function() {
+                            sessionStorage.setItem('username',
+                                $form.find('[name=\'username\']').val());
+                            window.location = $form.find('[name=\'next\']').val();
+                        },
+                        error: function(a, b, c) {
+                            console.error(a, b, c);
+                        }
+                    });
+                });
+                $div.find('input[type=\'hidden\'][name=\'next\']').val(next);
+                $div.appendTo('#login-form');
+            });
+        }
     });
+}
+
+/**
+ * Set navbar to reflect user login status
+ */
+export function setNavLoginButton() {
+    getLoginStatus().done(function(status) {
+        if (status) {
+            const $a = $('<a></a>');
+            $a.text('Welcome, ' + getUsername() + ' ');
+            $a.attr({
+                'class': 'button',
+                'href': subfolder + '/mydata'
+            });
+            $a.append('<span class=\'icon icon-generic\' data-icon=\'H\'></span>');
+            const $ul = $('#mgnify').find('ul');
+            $ul.find('li.functional').html($a);
+            const $logout = $('<li><a class=\'button\'>Logout</a></li>');
+            $logout.click(function() {
+                logout().done(function(a, b, c) {
+                    console.log(a, b, c);
+                    window.location = subfolder;
+                });
+            });
+            $ul.append($logout);
+        }
+    });
+}
+
+/**
+ * Check is user is logged in
+ * @return {jQuery.jqXHR} true if user is logged in
+ */
+export function getLoginStatus() {
+    const deferred = new $.Deferred();
+
+    $.get(subfolder + '/api/v1/utils/myaccounts').always(function(xhr) {
+        console.log(xhr.status);
+        deferred.resolve(xhr.status !== 401);
+    });
+    return deferred.promise();
+}
+
+/**
+ * Returns username from session storage if possible
+ * @return {string} username
+ */
+export function getUsername() {
+    return sessionStorage.getItem('username');
+}
+
+/**
+ * Log user out using API endpoint
+ * @return {JQuery.jqXHR}
+ */
+export function logout() {
+    return $.get(subfolder + '/api/http-auth/logout/?next=' + subfolder);
+}
+
+/**
+ * Basic setup for any page on site
+ * @param {string} tab tabID
+ */
+export function setupPage(tab) {
+    checkAPIonline();
+    loadLoginForm(null);
+    setNavLoginButton();
+    setCurrentTab(tab);
 }

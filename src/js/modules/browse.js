@@ -14,8 +14,8 @@ util.attachTabHandlers();
 
 const BIOME_FILTER_DEPTH = 3;
 
-util.checkAPIonline();
-util.setCurrentTab('#browse-nav');
+util.setupPage('#browse-nav');
+
 
 $('#pagination').append(commons.pagination);
 $('#pageSize').append(commons.pagesize);

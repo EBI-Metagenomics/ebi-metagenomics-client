@@ -16,10 +16,8 @@ const CheckboxTree = require('../components/checkboxTree');
 
 const Slider = require('../components/slider.js');
 
-util.checkAPIonline();
+util.setupPage('#search-nav');
 
-util.setCurrentTab('#search-nav');
-util.attachTabHandlers();
 
 const DEFAULT_QUERIES = [
     'domain_source:metagenomics_projects',

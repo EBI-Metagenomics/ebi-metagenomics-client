@@ -2,9 +2,8 @@ const commons = require('../commons');
 const util = require('../util');
 require('static/css/pipeline.css');
 
-util.checkAPIonline();
+util.setupPage('#about-nav');
 
-util.setCurrentTab('#about-nav');
 
 let pipelineVersion = util.getURLParameter();
 
