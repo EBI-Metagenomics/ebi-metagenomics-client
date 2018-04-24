@@ -40,14 +40,14 @@ const facetRequests = [
 function loadPage(page) {
     cy.server();
     cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=1&*').as(facetRequests[0]);
-    cy.route('/ebisearch/ws/rest/metagenomics_projects?*size='+initialResultSize.toString()+'&*')
-        .as(facetRequests[1]);
+    cy.route('/ebisearch/ws/rest/metagenomics_projects?*size=' + initialResultSize.toString() +
+        '&*').as(facetRequests[1]);
     cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=1&*').as(facetRequests[2]);
-    cy.route('/ebisearch/ws/rest/metagenomics_samples?*size='+initialResultSize.toString()+'&*')
-        .as(facetRequests[3]);
+    cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=' + initialResultSize.toString() +
+        '&*').as(facetRequests[3]);
     cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=1&*').as(facetRequests[4]);
-    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size='+initialResultSize.toString()+'&*')
-        .as(facetRequests[5]);
+    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=' + initialResultSize.toString() + '&*').
+        as(facetRequests[5]);
     openPage(page);
     waitForSearchResults(rowSelector, initialResultSize);
 }
@@ -299,6 +299,9 @@ describe('Search page - Sliders - ', function() {
         const samplesDepthCheckbox = '#samplesDepthSwitch';
         const samplesDepthSlider = samplesDepthSliderContainer + ' > .ui-slider-range';
         const runsDepthSliderContainer = '#runsFiltersDepth';
+
+        checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox,
+            'You searched for samples with no parameters.');
 
         enableSlider(samplesDepthSwitchToggle, samplesDepthCheckbox, samplesDepthSliderContainer);
         const queryText = 'You searched for samples with depth:[0 TO 2000].';
