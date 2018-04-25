@@ -735,6 +735,7 @@ export function setupPage(tab) {
     setCurrentTab(tab);
 }
 
+/**
  * Attach click handler for expandable div button
  */
 export function attachExpandButtonCallback() {
