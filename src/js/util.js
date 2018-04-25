@@ -633,7 +633,7 @@ export function loadLoginForm(next) {
     }
     getLoginStatus().done(function(status) {
         if (!status) {
-            api.getLoginForm().then(function(data, response, xhr) {
+            api.getLoginForm().then(function(data) {
                 const $div = $(data);
                 const $form = $div.find('form');
                 $form.submit(function(e) {
