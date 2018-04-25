@@ -28,8 +28,9 @@ require('../../static/images/ico_graph_krona_on.svg');
 require('../../static/images/ico_graph_pie_on.svg');
 require('../../static/images/ico_graph_barh_on.svg');
 require('../../static/images/ico_graph_col_on.svg');
-require('../../static/images/ico_ena_user.jpg');
+
 require('../../static/images/graphic_submission_00.gif');
+require('../../static/images/ajax-loader.gif');
 
 require('style-loader?name=[name].[ext]!../../static/css/elixir-banner.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');

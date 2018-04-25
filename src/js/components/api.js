@@ -20,6 +20,18 @@ export const Study = Backbone.Model.extend({
         const data = d.data !== undefined ? d.data : d;
         const attr = data.attributes;
         const biomes = data.relationships.biomes.data.map(getBiomeIconData);
+        let relatedStudies;
+        if (data.relationships.hasOwnProperty('studies')) {
+            relatedStudies = data.relationships.studies.data;
+            for (let i in relatedStudies) {
+                if (Object.prototype.hasOwnProperty.call(relatedStudies, i)) {
+                    relatedStudies[i].study_link = util.subfolder + '/studies/' +
+                        relatedStudies[i].id;
+                }
+            }
+        } else {
+            relatedStudies = [];
+        }
         return {
             bioproject: attr['bioproject'],
             biomes: biomes,
@@ -31,7 +43,8 @@ export const Study = Backbone.Model.extend({
             study_accession: attr['accession'],
             last_update: formatDate(attr['last-update']),
             abstract: attr['study-abstract'],
-            ena_url: ENA_VIEW_URL + data.id
+            ena_url: ENA_VIEW_URL + data.id,
+            related_studies: relatedStudies
         };
     }
 });
@@ -353,6 +366,9 @@ function clusterRunDownloads(downloads) {
             const groupFormat = d.attributes['file-format']['name'];
             if (groupLabel === label && groupFormat === format) {
                 d.attributes.links = d.attributes.links.concat(download.links.self);
+                if (attr['file-format']['compression']) {
+                    d.attributes['file-format']['compExtension'] = attr.alias.split('.').slice(-1);
+                }
                 grouped = true;
             }
         });

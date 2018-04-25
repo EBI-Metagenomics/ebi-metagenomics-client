@@ -11,13 +11,18 @@ const samplesTableDefaultSize = 10;
 const runsTableDefaultSize = 25;
 
 const sampleTableColumns = {
-    sample_name: {
-        data: ['Control patient 9 right foot time 1', 'Patient 7 skin adjacent to wound time 2'],
+    biome: {
+        data: ['', ''],
         type: datatype.STR,
-        sortable: true
+        sortable: false
     },
     accession: {
         data: ['ERS1474797', 'ERS1474709'],
+        type: datatype.STR,
+        sortable: true
+    },
+    sample_name: {
+        data: ['Control patient 9 right foot time 1', 'Patient 7 skin adjacent to wound time 2'],
         type: datatype.STR,
         sortable: true
     },
@@ -91,68 +96,107 @@ describe('Study page - General', function() {
     });
 });
 
+describe('Study page - Related studies - ', function() {
+    const relatedStudiesList = '[data-cy=\'relatedStudies\']';
+    it('Should display related study section', function() {
+        openPage('studies/ERP104178');
+        waitForPageLoad('EMG produced TPA metagenomics assembly of the Microbial Community of ' +
+            'Mobilong Acid Sulfate Soil depth profile using Metagenomics (Mobilong Soil Profile)' +
+            ' data set');
+        cy.contains('Related studies');
+        cy.get(relatedStudiesList).should('have.length', 1);
+        cy.get(relatedStudiesList + ' a').contains('ERP005307').click();
+        waitForPageLoad('Microbial Community of Mobilong Acid Sulfate Soil ' +
+            'depth profile using Metagenomics');
+    });
+    it('Should not display related study section if no related studies available', function() {
+        openPage(origPage);
+        cy.get(relatedStudiesList).should('not.exist');
+    });
+});
+
+describe('Study page - Hiding Publications display -', function() {
+    const pubsList = '[data-cy=\'publications\']';
+    it('Should not display empty section if no publications available', function() {
+        openPage('studies/ERP104236');
+        waitForPageLoad('EMG produced TPA metagenomics assembly of the Identification of fungi' +
+            ' and ameba from human wound genomic sequencing (human wound) data set');
+        cy.get(pubsList + ' li').should('have.length', 1).contains('No known publications.');
+    });
+});
+
 let table;
-describe('Study page - Samples table', function() {
+describe('Study page - Samples table - ', function() {
     beforeEach(function() {
         openPage(origPage);
         waitForPageLoad(pageTitle);
         table = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
     });
 
-    it('Samples table should contain correct number of samples', function() {
+    it('Should be toggleable', function() {
+        table.testTableHiding();
+    });
+
+    it('Should contain correct number of samples', function() {
         table.checkLoadedCorrectly(1, 10, 258, sampleTableColumns);
     });
 
-    it('Samples table should respond to ordering', function() {
+    it('Should respond to ordering', function() {
         table.testSorting(10, sampleTableColumns);
     });
 
-    it('Samples table should respond to filtering', function() {
+    it('Should respond to filtering', function() {
         table.testFiltering('ERS1474800', [
             [
-                'Control patient 9 left foot time 3',
+                '',
                 'ERS1474800',
+                'Control patient 9 left foot time 3',
                 'control_skin_left',
                 '27-Nov-2017']]);
     });
 
-    it('Samples table should respond to pagination', function() {
+    it('Should respond to pagination', function() {
         table.testPagination(10, [
             {
                 index: 1,
                 data: [
-                    'Control patient 9 right foot time 1',
+                    '',
                     'ERS1474797',
+                    'Control patient 9 right foot time 1',
                     'control_skin_right',
                     '27-Nov-2017']
             }, {
                 index: 3,
                 data: [
-                    'Patient 5 wound debridement time 5',
+                    '',
                     'ERS1474870',
+                    'Patient 5 wound debridement time 5',
                     'wound_deb',
                     '27-Nov-2017']
             }, {
                 index: 'next',
                 data: [
-                    'Patient 6 skin contralateral foot to wound time 4',
+                    '',
                     'ERS1474887',
+                    'Patient 6 skin contralateral foot to wound time 4',
                     'diabetic_skin_contra',
                     '27-Nov-2017'], // 4th row
                 pageNum: 4
             }, {
                 index: 'prev',
                 data: [
-                    'Patient 5 wound debridement time 5',
+                    '',
                     'ERS1474870',
+                    'Patient 5 wound debridement time 5',
                     'wound_deb',
                     '27-Nov-2017'], // Back to 3rd row
                 pageNum: 3
             }, {
                 index: 'last',
                 data: [
-                    'Patient 5 skin contralateral foot to wound time 2',
+                    '',
                     'ERS1474858',
+                    'Patient 5 skin contralateral foot to wound time 2',
                     'diabetic_skin_contra',
                     '27-Nov-2017'],
                 pageNum: 6,
@@ -160,15 +204,16 @@ describe('Study page - Samples table', function() {
             }, {
                 index: 'first',
                 data: [
-                    'Control patient 9 right foot time 1',
+                    '',
                     'ERS1474797',
+                    'Control patient 9 right foot time 1',
                     'control_skin_right',
                     '27-Nov-2017'],
                 pageNum: 1
             }]);
     });
 
-    it('Samples table should respond to page size change', function() {
+    it('Should respond to page size change', function() {
         table.testPageSizeChange(samplesTableDefaultSize, 25);
     });
 
@@ -183,6 +228,10 @@ describe('Study page - Runs table', function() {
         openPage(origPage);
         waitForPageLoad(pageTitle);
         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+    });
+
+    it('Should be toggleable', function() {
+        table.testTableHiding();
     });
 
     it('Runs table should contain correct number of runs', function() {

@@ -16,7 +16,7 @@ function waitForFacetFilters(facetName) {
 }
 
 function validateFacetQuery(facetName, testString) {
-    const timeout = 10000;
+    const timeout = 20000;
     if (testString) {
         cy.wait('@' + facetName, {timeout}).
             its('url').
@@ -309,7 +309,7 @@ describe('Search page - Sliders - ', function() {
 
         checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, queryText);
 
-        cy.get(samplesDepthSlider).click(50, 5).click(100, 5);
+        cy.get(samplesDepthSlider, {timeout: 40000}).click(50, 5).click(100, 5);
         validateQueryFromInputs(samplesDepthSliderContainer,
             'You searched for samples with depth:[');
         changeTab('runs');
