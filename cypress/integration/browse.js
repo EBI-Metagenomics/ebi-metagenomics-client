@@ -180,7 +180,7 @@ describe('Browse page - Studies table - ', function() {
         studiesTable.checkOrdering(2, params.type, true);
 
 
-        const expectedLink = Config.API_URL +
+        const expectedLink = Config.API_URL.replace('127.0.0.1', 'localhost') +
             'studies?lineage=root%3AEnvironmental%3AAir&ordering=' +
             'samples_count&search=windshield&format=csv';
         cy.get('a[href=\'' + expectedLink + '\']', {timeout: 10000});
@@ -231,7 +231,6 @@ describe('Browse page - Samples table - ', function() {
     it('Samples table should contain correct number of samples', function() {
         samplesTable.checkLoadedCorrectly(1, samplesTableDefaultSize, 9158,
             samplesTableColumns);
-
     });
 
     it('should respond to ordering', function() {
