@@ -12,12 +12,14 @@ module.exports = class GenericTable {
      * @param {[string]} headers list of table header names
      * @param {number} initPageSize initial page size
      * @param {boolean} isPageHeader true if table should have a larger header
+     * @param {string} tableClass CSS class for table obj
      * @param {callback} callback function on event callback to load data
      */
-    constructor($container, title, headers, initPageSize, isPageHeader, callback) {
+    constructor($container, title, headers, initPageSize, isPageHeader, tableClass, callback) {
         $container.empty();
         this.headers = headers;
         let params = {
+            table_class: tableClass,
             section_title: title,
             headers: headers,
             pagination: true,

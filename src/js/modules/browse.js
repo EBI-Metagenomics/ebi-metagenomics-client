@@ -37,7 +37,8 @@ let StudiesView = Backbone.View.extend({
         ];
         const $studiesSection = $('#studies-section');
         this.tableObj = new GenericTable($studiesSection, 'Studies list', columns,
-            Commons.DEFAULT_PAGE_SIZE, true, function(page, pageSize, order, search) {
+            Commons.DEFAULT_PAGE_SIZE, true, 'studies-table',
+            function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
@@ -119,7 +120,8 @@ let SamplesView = Backbone.View.extend({
         ];
         const $samplesSection = $('#samples-section');
         this.tableObj = new GenericTable($samplesSection, 'Samples list', columns,
-            Commons.DEFAULT_PAGE_SIZE, true, function(page, pageSize, order, search) {
+            Commons.DEFAULT_PAGE_SIZE, true, 'samples-table',
+            function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
