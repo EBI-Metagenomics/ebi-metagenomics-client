@@ -197,9 +197,9 @@ module.exports = class GenericTable {
             onOrderCallback(1, that.getPageSize(), sort, that.getFilterText());
         });
         if (initialSort) {
-            $table.find('[data-sortby=\'' + initialSort + '\']').
-                removeClass('sort-both').
-                addClass(initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
+            $table.find('[data-sortby=\'' + initialSort + '\']')
+                .removeClass('sort-both')
+                .addClass(initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
         }
     }
 

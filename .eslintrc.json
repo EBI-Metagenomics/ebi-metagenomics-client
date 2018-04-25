@@ -10,7 +10,8 @@
     "comma-dangle": ["error", "never"],
     "new-cap": [2, {"capIsNewExceptions": ["$.Deferred", "DownloadsView", "TableCSVExport"]}],
     "camelcase": [2, {"properties": "never"}],
-    "no-invalid-this": "off"
+    "no-invalid-this": "off",
+    "dot-location": ["error", "property"]
   },
   "parserOptions": {
     "ecmaVersion": 6,

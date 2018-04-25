@@ -28,8 +28,8 @@ module.exports = function Slider() {
             }
             if (e.originalEvent.isTrusted) {
                 _.each(allFormIds, function(formId) {
-                    const $facetButton = $(formId).
-                        find('.switch-input[data-facet-name=\'' + label + '\']');
+                    const $facetButton = $(formId)
+                        .find('.switch-input[data-facet-name=\'' + label + '\']');
                     $facetButton.click();
                 });
             }

@@ -330,8 +330,8 @@ export const BiomeCollectionView = Backbone.View.extend({
                         } else {
                             let splitBiome = biome.split(':');
                             if (splitBiome.length > that.maxDepth) {
-                                const existingParentBiome = splitBiome.slice(0, that.maxDepth).
-                                    join(':');
+                                const existingParentBiome = splitBiome.slice(0, that.maxDepth)
+                                    .join(':');
                                 const $previousBiome = $biomeSelect.children('option[value=\'' +
                                     existingParentBiome + '\']');
                                 const newOptions = [];
@@ -523,7 +523,7 @@ export let StudiesView = GenericTableView.extend({
         return this.collection.fetch();
     },
 
-    initialize() {
+    initialize(options) {
         const that = this;
         const columns = [
             {sortBy: null, name: 'Biome'},
@@ -533,8 +533,9 @@ export let StudiesView = GenericTableView.extend({
             {sortBy: null, name: 'Samples count'},
             {sortBy: null, name: 'Last update'}
         ];
-        this.tableObj = new GenericTable($('#studies-section'), 'Associated studies', columns,
-            DEFAULT_PAGE_SIZE, false, 'studies-table', function(page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#studies-section'), options.sectionTitle, columns,
+            DEFAULT_PAGE_SIZE, options.isPageHeader, options.tableClass,
+            function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
         this.update(1, DEFAULT_PAGE_SIZE, null, null);
@@ -677,12 +678,13 @@ export function setNavLoginButton() {
             $a.text('Welcome, ' + getUsername() + ' ');
             $a.attr({
                 'class': 'button',
-                'href': subfolder + '/mydata'
+                'href': subfolder + '/mydata',
+                'data-cy': 'mydata'
             });
             $a.append('<span class=\'icon icon-generic\' data-icon=\'H\'></span>');
             const $ul = $('#mgnify').find('ul');
             $ul.find('li.functional').html($a);
-            const $logout = $('<li><a class=\'button\'>Logout</a></li>');
+            const $logout = $('<li><a data-cy=\'logout\' class=\'button\'>Logout</a></li>');
             $logout.click(function() {
                 logout().done(function(a, b, c) {
                     console.log(a, b, c);

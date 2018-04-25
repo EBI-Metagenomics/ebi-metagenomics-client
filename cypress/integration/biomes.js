@@ -16,15 +16,15 @@ function checkTableOrderedBySampleCount(asc) {
 
     cy.get(selector).first().should(function($el) {
         if (asc) {
-            expect(parseInt(stripWhitespace(Cypress.$(selector).last().text()))).
-                to.
-                be.
-                lte(parseInt(stripWhitespace($el.text())));
+            expect(parseInt(stripWhitespace(Cypress.$(selector).last().text())))
+                .to
+                .be
+                .lte(parseInt(stripWhitespace($el.text())));
         } else {
-            expect(parseInt(stripWhitespace(Cypress.$(selector).last().text()))).
-                to.
-                be.
-                gte(parseInt(stripWhitespace($el.text())));
+            expect(parseInt(stripWhitespace(Cypress.$(selector).last().text())))
+                .to
+                .be
+                .gte(parseInt(stripWhitespace($el.text())));
         }
     });
 }
@@ -56,18 +56,18 @@ describe('Biomes page - Click actions', function() {
 
         setSortBy('th.biome-name');
         cy.get(selector).first().should(function($el) {
-            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).
-                to.
-                be.
-                gte(stripWhitespace($el.text().toLowerCase()));
+            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase()))
+                .to
+                .be
+                .gte(stripWhitespace($el.text().toLowerCase()));
         });
 
         setSortBy('th.biome-name');
         cy.get(selector).first().should(function($el) {
-            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).
-                to.
-                be.
-                lte(stripWhitespace($el.text().toLowerCase()));
+            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase()))
+                .to
+                .be
+                .lte(stripWhitespace($el.text().toLowerCase()));
         });
     });
 
@@ -145,20 +145,20 @@ describe('Biomes page - URL parameters', function() {
         waitForBiomesLoad(initialResultSize);
 
         cy.get(selector).first().should(function($el) {
-            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).
-                to.
-                be.
-                gte(stripWhitespace($el.text().toLowerCase()));
+            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase()))
+                .to
+                .be
+                .gte(stripWhitespace($el.text().toLowerCase()));
         });
 
         openPage(origPage + '?ordering=-biome_name');
         waitForBiomesLoad(initialResultSize);
 
         cy.get(selector).first().should(function($el) {
-            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase())).
-                to.
-                be.
-                lte(stripWhitespace($el.text().toLowerCase()));
+            expect(stripWhitespace(Cypress.$(selector).last().text().toLowerCase()))
+                .to
+                .be
+                .lte(stripWhitespace($el.text().toLowerCase()));
         });
     });
 });

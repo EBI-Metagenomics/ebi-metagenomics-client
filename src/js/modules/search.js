@@ -325,8 +325,8 @@ function sliderToggleCallback(e) {
     const formId = $(this).closest('form').attr('id');
     if (e && e.originalEvent && e.originalEvent.isTrusted) {
         _.map(getAllFormIds(formId), function(otherFacetForm) {
-            const $checkbox = $(otherFacetForm).
-                find('input.switch-input[data-facet-name="' + dataFacetName +
+            const $checkbox = $(otherFacetForm)
+                .find('input.switch-input[data-facet-name="' + dataFacetName +
                     '"]');
             $checkbox.trigger('click');
             setSlider($checkbox, enabled);
@@ -363,27 +363,27 @@ function setFacetFilters(formId, formData) {
                 setSliders.push(facetName);
                 const valueMin = data[2];
                 const valueMax = data[3];
-                $form.find('[name=' + facetName + 'min]').
-                    val(valueMin).
-                    prop('disabled', false);
-                $form.find('[name=' + facetName + 'max]').
-                    val(valueMax).
-                    prop('disabled', false);
-                $form.find('.slider[data-facet-slider=' + facetName + ']').
-                    slider({
+                $form.find('[name=' + facetName + 'min]')
+                    .val(valueMin)
+                    .prop('disabled', false);
+                $form.find('[name=' + facetName + 'max]')
+                    .val(valueMax)
+                    .prop('disabled', false);
+                $form.find('.slider[data-facet-slider=' + facetName + ']')
+                    .slider({
                         values: [valueMin, valueMax],
                         disabled: false
                     });
-                $form.find('.switch-input[data-facet-name=' + facetName + ']').
-                    prop('checked', true);
+                $form.find('.switch-input[data-facet-name=' + facetName + ']')
+                    .prop('checked', true);
             }
         });
     }
     _.each(['temperature', 'depth'], function(facetName) {
-        $(formId).
-            find('.' + facetName + '-group').
-            find('input.switch-input').
-            each(function() {
+        $(formId)
+            .find('.' + facetName + '-group')
+            .find('input.switch-input')
+            .each(function() {
                 const enabled = setSliders.indexOf(facetName) > -1;
                 $(this).prop('checked', enabled);
                 setSlider($(this), enabled, false);

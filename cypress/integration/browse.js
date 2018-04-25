@@ -403,14 +403,14 @@ describe('Browse page - URL arguments', function() {
             let parentLineage = splitBiome.slice(0, i).join(':');
             expect(
                 cy.get('#studies-section .biome-select > option[value=\'' + parentLineage +
-                    '\']')).
-                to.
-                exist;
+                    '\']'))
+                .to
+                .exist;
             expect(
                 cy.get('#samples-section .biome-select > option[value=\'' + parentLineage +
-                    '\']')).
-                to.
-                exist;
+                    '\']'))
+                .to
+                .exist;
         }
         cy.get('#studies-section .biome-select').should('have.value', longBiome);
         cy.get('#samples-section .biome-select').should('have.value', longBiome);

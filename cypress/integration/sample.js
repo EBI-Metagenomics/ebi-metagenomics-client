@@ -120,9 +120,9 @@ describe('Sample page - General', function() {
         cy.get(colSelector + ' > h3:nth-child(2)').should('contain', 'Description');
         cy.get(colSelector + ' > h3').should('contain', 'Classification');
         cy.get(colSelector + ' > p').should('contain', 'ASS depth profile');
-        cy.get('#sample-metadata').
-            should('contain', 'Collection date:').
-            should('contain', '01/02/2013');
+        cy.get('#sample-metadata')
+            .should('contain', 'Collection date:')
+            .should('contain', '01/02/2013');
         //    TODO add more verifications
     });
     it('External links should all be valid', function() {
