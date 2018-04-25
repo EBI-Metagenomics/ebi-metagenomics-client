@@ -1,6 +1,5 @@
 require('../commons');
 const util = require('../util');
 
-util.checkAPIonline();
+util.setupPage('#about-nav');
 
-util.setCurrentTab('#about-nav');

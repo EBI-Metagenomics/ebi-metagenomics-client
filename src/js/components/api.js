@@ -404,3 +404,22 @@ export const StudyGeoCoordinates = Backbone.Model.extend({
             '/geocoordinates?page_size=500';
     }
 });
+
+/**
+ * Fetch login form from API
+ * @return {jQuery.Promise}
+ */
+export function getLoginForm() {
+    const url = API_URL.split('/').slice(0, -2).join('/') + '/http-auth/login_form';
+    return $.ajax({
+        method: 'get',
+        url: url,
+        credentials: 'same-origin'
+    });
+}
+
+export const UserStudies = StudiesCollection.extend({
+    url() {
+        return API_URL + 'mydata';
+    }
+});

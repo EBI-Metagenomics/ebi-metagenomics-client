@@ -14,8 +14,8 @@ util.attachTabHandlers();
 
 const BIOME_FILTER_DEPTH = 3;
 
-util.checkAPIonline();
-util.setCurrentTab('#browse-nav');
+util.setupPage('#browse-nav');
+
 
 $('#pagination').append(commons.pagination);
 $('#pageSize').append(commons.pagesize);
@@ -187,7 +187,7 @@ let SamplesView = Backbone.View.extend({
 });
 
 /**
- * Keep filter elements across both tabs in sync
+ * Maintain value of filter fields across tabs
  */
 function syncFilterFields() {
     const events = 'input select change';
@@ -218,11 +218,11 @@ util.initBiomeFilter($('section').find('.tableFilters'),
     function() {
         const updateObj = {
             lineage: $(this).val(),
-            search: $('#tableFilter').val()
+            search: $('.table-filter').val()
         };
         studiesView.update(updateObj);
         samplesView.update(updateObj);
-        util.attachExpandButtonCallback();
     });
 $('.table-filter').val(pageFilters.get('search'));
+
 syncFilterFields();

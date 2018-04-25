@@ -18,8 +18,8 @@ module.exports = function CheckboxTree() {
         $elem.append('<h5>' + title + '</h5>');
     };
 
-    const createCheckbox = function(name, node, $btnContainer, callback) {
-        const id = name + '_' + node.value;
+    const createCheckbox = function(name, facet, node, $btnContainer, callback) {
+        const id = name + '_' + node.value + '_' + facet;
         const $checkbox = $('<input name="' + name + '" type="checkbox" value="' + node.value +
             '" class="facet-checkbox" id="' + id + '"/>');
         $checkbox.click(function(e) {
@@ -33,13 +33,13 @@ module.exports = function CheckboxTree() {
             callback();
         });
 
-        const $label = $('<label for=\'' + id + '\'>' + node.label + ' (' + node.count +
+        const $label = $('<label>' + node.label + ' (' + node.count +
             ')</label>');
         return $().add($checkbox).add($label);
     };
 
-    const drawAndPropagate = function($elem, node, treeLabel, $btnContainer, callback) {
-        const $checkbox = $(createCheckbox(treeLabel, node, $btnContainer, callback));
+    const drawAndPropagate = function($elem, facet, node, treeLabel, $btnContainer, callback) {
+        const $checkbox = $(createCheckbox(treeLabel, facet, node, $btnContainer, callback));
         const $groupContainer = $(groupContainerTmpl);
 
         if (node.children) {
@@ -50,7 +50,7 @@ module.exports = function CheckboxTree() {
         $groupContainer.append($checkbox);
         _.each(node.children, function(node2) {
             node2.value = node.value + '/' + node2.value;
-            drawAndPropagate($groupContainer, node2, treeLabel, $btnContainer, callback);
+            drawAndPropagate($groupContainer, facet, node2, treeLabel, $btnContainer, callback);
         });
         $groupContainer.appendTo($elem);
     };
@@ -218,7 +218,7 @@ module.exports = function CheckboxTree() {
 
         // Create and expand nodes
         _.each(tree.facetValues, function(node) {
-            drawAndPropagate($treeContainer, node, tree.id, $btnContainer, callback);
+            drawAndPropagate($treeContainer, facet, node, tree.id, $btnContainer, callback);
         });
 
         if (!inModal) {
@@ -273,7 +273,7 @@ module.exports = function CheckboxTree() {
                         value: facetValue.value,
                         count: ''
                     };
-                    drawAndPropagate($treeContainer, node, tree.id, $btnContainer, callback);
+                    drawAndPropagate($treeContainer, facet, node, tree.id, $btnContainer, callback);
                     $checkbox = $treeContainer.find('input[value=\'' + facetValue.value + '\']');
                     $checkbox.prop('checked', true);
                 }

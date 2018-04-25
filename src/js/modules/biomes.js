@@ -9,9 +9,8 @@ const pagination = new Pagination();
 
 const DEFAULT_PAGE_SIZE = commons.DEFAULT_PAGE_SIZE;
 
-util.checkAPIonline();
+util.setupPage('#browse-nav');
 
-util.setCurrentTab('');
 
 $('#pagination').append(commons.pagination);
 $('#pageSize').append(commons.pagesize);

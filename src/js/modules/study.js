@@ -6,9 +6,7 @@ const util = require('../util');
 
 require('../../../static/js/jquery.liveFilter.js');
 
-util.checkAPIonline();
-
-util.setCurrentTab('#browse-nav');
+util.setupPage('#browse-nav');
 
 let studyId = util.getURLParameter();
 let StudyView = Backbone.View.extend({

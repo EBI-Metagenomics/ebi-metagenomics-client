@@ -1,3 +1,2 @@
 const util = require('../util');
-util.checkAPIonline();
-util.setCurrentTab('#submit-nav');
+util.setupPage('#submit-nav');

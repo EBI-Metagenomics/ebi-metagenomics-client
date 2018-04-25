@@ -32,7 +32,7 @@
             {{/unless}}
             <!-- /local-title -->
             <!-- local-nav -->
-            <nav>
+            <nav id="mgnify">
                 <ul id="local-nav" class="dropdown menu float-left" data-description="navigational"
                     data-dropdown-menu>
                     <li id="overview-nav"><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Overview</a></li>
@@ -49,7 +49,7 @@
                     <!--</ul>-->
                     <!--<ul class="menu dropdown float-right" data-dropdown-menu data-description="functional">-->
                     <li class="functional">
-                        <a class="icon icon-functional button" data-icon="l" href="../login.html">
+                        <a class="icon icon-functional button" data-icon="l" data-open="loginModal">
                             Login
                         </a>
                     </li>

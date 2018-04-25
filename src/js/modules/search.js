@@ -16,9 +16,7 @@ const CheckboxTree = require('../components/checkboxTree');
 
 const Slider = require('../components/slider.js');
 
-util.checkAPIonline();
-
-util.setCurrentTab('#search-nav');
+util.setupPage('#search-nav');
 util.attachTabHandlers();
 
 const DEFAULT_QUERIES = [

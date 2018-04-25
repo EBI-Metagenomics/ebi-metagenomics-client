@@ -939,6 +939,11 @@ a.download-part {
     padding-right: 0.5em;
 }
 
+
+/*Overwrite CSS from API generated login form*/
+.well {
+    width: inherit !important;
+}
 /*Fix for bug in ebi-global.css*/
 .pagination.disabled {
     padding: 0.1875rem 0 !important;

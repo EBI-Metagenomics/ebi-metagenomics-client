@@ -12,7 +12,7 @@ module.exports = class GenericTable {
      * @param {[string]} headers list of table header names
      * @param {number} initPageSize initial page size
      * @param {boolean} isPageHeader true if table should have a larger header
-     * @param {string} tableClass to assign to table elem
+     * @param {string} tableClass CSS class for table obj
      * @param {callback} callback function on event callback to load data
      */
     constructor($container, title, headers, initPageSize, isPageHeader, tableClass, callback) {
@@ -26,12 +26,13 @@ module.exports = class GenericTable {
             isPageHeader: isPageHeader,
             tableClass: tableClass,
             tableContainer: _.uniqueId('tablecontainer')
+
         };
         const $sectionContent = $(tableTmpl(params));
         this.$table = $sectionContent.find('table');
         this.$loadingGif = $sectionContent.find('.loading-gif-medium');
         this.$tbody = $sectionContent.find('tbody');
-        this.$filterInput = $sectionContent.find('#tableFilter');
+        this.$filterInput = $sectionContent.find('.table-filter');
 
         this.storeElemRefs($sectionContent);
         this.$pageSizeSelect.val(initPageSize);

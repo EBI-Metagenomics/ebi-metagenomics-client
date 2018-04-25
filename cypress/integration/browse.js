@@ -109,8 +109,8 @@ describe('Browse page - Studies table - ', function() {
                 index: 'next',
                 data: [
                     '',
-                    'Skin microbiome in human volunteers inoculated with H. ' +
-                    'ducreyi Raw sequence reads',
+                    'Skin microbiome in human volunteers inoculated with ' +
+                    'H. ducreyi Raw sequence reads',
                     '191',
                     '4-Feb-2016'], // 4th row
                 pageNum: 4
@@ -179,10 +179,11 @@ describe('Browse page - Studies table - ', function() {
         const params = studiesTableColumns.samples_count;
         studiesTable.checkOrdering(2, params.type, true);
 
-        const expectedLink = (Config.API_URL.replace('127.0.0.1', 'localhost')) +
-            'studies?lineage=root%3AEnvironmental%3AAir&' +
-            'ordering=samples_count&search=windshield&format=csv';
-        cy.get('a[href=\'' + expectedLink + '\']', {timeout: 10000});
+        const expectedLink = Config.API_URL +
+            'studies?lineage=root%3AEnvironmental%3AAir&ordering=' +
+            'samples_count&search=windshield&format=csv';
+        cy.get('a[href=\'' + expectedLink + '\'], a[href=\'' +
+            expectedLink.replace('127.0.0.1', 'localhost') + '\']', {timeout: 10000});
     });
 
     it('Typing larger search query should cancel previous request.', function() {
@@ -190,8 +191,10 @@ describe('Browse page - Studies table - ', function() {
 
         studiesTable.waitForTableLoad(studiesTableDefaultSize);
         cy.server();
+
         // Typing text incrementally causes multiple requests to be made,
         // resulting in a results table concatenating the response of all requests
+
         cy.route('**/studies?**').as('apiQuery');
         for (let i in searchQuery) {
             if (Object.prototype.hasOwnProperty.call(searchQuery, i)) {
@@ -203,6 +206,7 @@ describe('Browse page - Studies table - ', function() {
         // Actual result set for query 'abc' should have size 1
         studiesTable.waitForTableLoad(1);
     });
+
     it('Should respond to biome selector', function() {
         studiesTable = new GenericTableHandler('#studies-section', studiesTableDefaultSize);
         const selector = '#studies-section .biome-select';
@@ -223,8 +227,9 @@ describe('Browse page - Samples table - ', function() {
         samplesTable = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
     });
 
-    it('Should contain correct number of samples', function() {
-        samplesTable.checkLoadedCorrectly(1, samplesTableDefaultSize, 9158, samplesTableColumns);
+    it('Samples table should contain correct number of samples', function() {
+        samplesTable.checkLoadedCorrectly(1, samplesTableDefaultSize, 9158,
+            samplesTableColumns);
     });
 
     it('should respond to ordering', function() {
@@ -283,8 +288,10 @@ describe('Browse page - Samples table - ', function() {
                     '',
                     'SRS211741',
                     'J18, fermented Kimchi day 18',
-                    '(CLOB) Community DNA obtained by 454 GS FLX titanium sequencing ' +
-                    'from sample at 18days of kimchi fermentation',
+
+                    '(CLOB) Community DNA obtained by 454 GS FLX titanium ' +
+                    'sequencing from sample at 18days of kimchi fermentation',
+
                     '13-Aug-2015'],
                 pageNum: 367,
                 pageSize: 8
@@ -353,8 +360,10 @@ describe('Browse page - Samples table - ', function() {
 
         samplesTable.waitForTableLoad(studiesTableDefaultSize);
         cy.server();
-        // Typing text incrementally causes multiple requests to be made, resulting in a
-        // results table concatenating the response of all requests
+
+        // Typing text incrementally causes multiple requests to be made, resulting in
+        // a results table concatenating the response of all requests
+
         cy.route('**/samples?**').as('apiQuery');
         for (let i in searchQuery) {
             if (Object.prototype.hasOwnProperty.call(searchQuery, i)) {
@@ -393,11 +402,13 @@ describe('Browse page - URL arguments', function() {
         for (let i = 1; i < splitBiome.length; i++) {
             let parentLineage = splitBiome.slice(0, i).join(':');
             expect(
-                cy.get('#studies-section .biome-select > option[value=\'' + parentLineage + '\']')).
+                cy.get('#studies-section .biome-select > option[value=\'' + parentLineage +
+                    '\']')).
                 to.
                 exist;
             expect(
-                cy.get('#samples-section .biome-select > option[value=\'' + parentLineage + '\']')).
+                cy.get('#samples-section .biome-select > option[value=\'' + parentLineage +
+                    '\']')).
                 to.
                 exist;
         }
@@ -439,8 +450,10 @@ describe('Browse page - Generic - Filter propagation', function() {
     //     changeTab('samples');
     //     samplesTable.waitForTableLoad(1);
     //     samplesTable.getFilterInput().should('have.value', filterText);
+
     //     samplesTable.checkRowData(0, ['', 'SRS000608', 'Glacier Metagenome','454
     // Sequencing of The Glacier Ice Metagenome Of The Northern Schneeferner','13-Aug-2015'])
+
     //     samplesTable.getClearButton().click();
     //     samplesTable.getFilterInput().should('have.value', '');
     //

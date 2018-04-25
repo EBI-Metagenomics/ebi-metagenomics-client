@@ -23,7 +23,7 @@ const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 
 const DEFAULT_PAGE_SIZE = 25;
 
-util.setCurrentTab('#browse-nav');
+util.setupPage('#browse-nav');
 
 window.Foundation.addToJquery($);
 

@@ -133,7 +133,9 @@ class GenericTableHandler {
 
     testDownloadLink(expectedURL) {
         this.getDownloadLink().should(($el) => {
-            expect($el.attr('href').replace('localhost', '127.0.0.1')).to.eq(expectedURL);
+            expect($el.attr('href').replace('localhost', '127.0.0.1')).to.eq(
+                expectedURL.replace('localhost', '127.0.0.1')
+            );
         });
     }
 
@@ -172,7 +174,7 @@ class GenericTableHandler {
     }
 
     getFilterInput() {
-        return cy.get(this.parentId + ' div.row > div.columns > label > input#tableFilter');
+        return cy.get(this.parentId + ' input.table-filter');
     }
 
     getColumnSelector(columnIndex) {

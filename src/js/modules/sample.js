@@ -8,9 +8,8 @@ const util = require('../util');
 
 require('../../../static/js/jquery.liveFilter.js');
 
-util.checkAPIonline();
+util.setupPage('#browse-nav');
 
-util.setCurrentTab('#browse-nav');
 
 let sampleId = util.getURLParameter();
 

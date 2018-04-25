@@ -28,14 +28,16 @@ require('../../static/images/ico_graph_krona_on.svg');
 require('../../static/images/ico_graph_pie_on.svg');
 require('../../static/images/ico_graph_barh_on.svg');
 require('../../static/images/ico_graph_col_on.svg');
+
 require('../../static/images/graphic_submission_00.gif');
 require('../../static/images/ajax-loader.gif');
-
 
 require('style-loader?name=[name].[ext]!../../static/css/elixir-banner.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');
 require('style-loader?name=[name].[ext]!../../static/css/theme-embl-petrol.css');
-require('style-loader?name=[name].[ext]!../../static/fonts/fonts.css');
+require('style-loader!EBI-Icon-fonts/fonts.css');
+require('style-loader!EBI-Icon-fonts/EBI-Functional/fonts/EBI-Functional.css');
+require('style-loader!EBI-Icon-fonts/EBI-Common/fonts/EBI-Common.css');
 
 require(
     'style-loader?name=[name].[ext]!../../node_modules/tablesorter/dist/css/theme.default.min.css');

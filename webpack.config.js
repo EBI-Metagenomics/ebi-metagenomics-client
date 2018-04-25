@@ -6,7 +6,6 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
-
 const getCompressionPlugin = (() => {
     let plugin;
     return () => {
@@ -52,6 +51,14 @@ module.exports = (env = {prod: false}) => {
                 {from: 'static/js', to: '../static/js'},
                 {from: 'static/krona', to: ''}
             ]),
+            new HtmlWebpackPlugin({
+                title: 'My data page',
+                inject: true,
+                filename: 'mydata.html',
+                template: 'handlebars-loader!./src/mydata.html',
+                chunks: ['mydata'],
+                templateData: templateFixtures
+            }),
             new HtmlWebpackPlugin({
                 title: 'About page',
                 inject: true,
@@ -223,6 +230,7 @@ module.exports = (env = {prod: false}) => {
             new ExtractTextPlugin('[name].css')
         ].filter(Boolean), // filter out empty values
         entry: {
+            mydata: 'src/js/modules/mydata.js',
             index: 'src/js/modules/index.js',
             search:
                 'src/js/modules/search.js',
@@ -319,6 +327,9 @@ module.exports = (env = {prod: false}) => {
                 }
             ]
         },
-        devtool: '#inline-source-map'
+        devtool: '#inline-source-map',
+        node: {
+            fs: 'empty'
+        }
     };
 };
