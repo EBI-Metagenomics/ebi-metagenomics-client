@@ -100,6 +100,7 @@ function initPage() {
             collection: studies,
             tableClass: 'studies-table',
             isPageHeader: false,
+            filter: true,
             sectionTitle: 'Associated studies'
         });
         new util.RunsView({collection: runs});

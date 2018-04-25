@@ -10,8 +10,8 @@ let Util = {
     openPage: function(page) {
         cy.visit(Util.getPageURL(page));
     },
-    waitForPageLoad: function(projectId) {
-        cy.get('h2').should('contain', projectId);
+    waitForPageLoad: function(title) {
+        cy.get('h2').should('contain', title);
     },
     waitForBiomesLoad: function(results) {
         cy.get('table tr.biome', {timeout: 10000}).should('have.length', parseInt(results));

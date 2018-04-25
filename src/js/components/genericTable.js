@@ -3,6 +3,7 @@ const _ = require('underscore');
 const formatDownloadURL = require('../util').formatDownloadURL;
 require('../components/pagination').Pagination;
 
+// TODO refactor into template options parameter
 module.exports = class GenericTable {
     /**
      * Instantiate pagination display and event handlers for table which requires
@@ -11,19 +12,20 @@ module.exports = class GenericTable {
      * @param {string} title title of table
      * @param {[string]} headers list of table header names
      * @param {number} initPageSize initial page size
-     * @param {boolean} isPageHeader true if table should have a larger header
+     * @param {boolean} isHeader true if table should have a larger header
+     * @param {boolean} filter if true display text filter
      * @param {string} tableClass CSS class for table obj
      * @param {callback} callback function on event callback to load data
      */
-    constructor($container, title, headers, initPageSize, isPageHeader, tableClass, callback) {
+    constructor($container, title, headers, initPageSize, isHeader, filter, tableClass, callback) {
         $container.empty();
         this.headers = headers;
         let params = {
             sectionTitle: title,
             headers: headers,
             pagination: true,
-            filter: true,
-            isPageHeader: isPageHeader,
+            filter: filter,
+            isPageHeader: isHeader,
             tableClass: tableClass,
             tableContainer: _.uniqueId('tablecontainer')
 

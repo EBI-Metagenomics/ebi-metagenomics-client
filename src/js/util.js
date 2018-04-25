@@ -534,7 +534,7 @@ export let StudiesView = GenericTableView.extend({
             {sortBy: null, name: 'Last update'}
         ];
         this.tableObj = new GenericTable($('#studies-section'), options.sectionTitle, columns,
-            DEFAULT_PAGE_SIZE, options.isPageHeader, options.tableClass,
+            DEFAULT_PAGE_SIZE, options.isPageHeader, options.filter, options.tableClass,
             function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
@@ -571,7 +571,7 @@ export let SamplesView = GenericTableView.extend({
             {sortBy: 'last_update', name: 'Last update'}
         ];
         this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns,
-            Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, 'samples-table',
+            Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, true, 'samples-table',
             function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
@@ -601,7 +601,8 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline versions'}
         ];
         this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns,
-            Commons.DEFAULT_PAGE_SIZE, false, 'runs-table', function(page, pageSize, order, query) {
+            Commons.DEFAULT_PAGE_SIZE, false, true, 'runs-table',
+            function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
         this.update(1, Commons.DEFAULT_PAGE_SIZE, null, null);
