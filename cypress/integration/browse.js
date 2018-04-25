@@ -174,16 +174,13 @@ describe('Browse page - Studies table', function() {
         });
 
         studiesTable.getHeader(2).click();
-        studiesTable.waitForLoadingIcon();
         const params = studiesTableColumns.samples_count;
         studiesTable.checkOrdering(2, params.type, true);
 
         const expectedLink = Config.API_URL +
             'studies?lineage=root%3AEnvironmental%3AAir&ordering=' +
             'samples_count&search=windshield&format=csv';
-        cy.get('a.download-link:visible').then(($el) => {
-            expect(Cypress.$($el).attr('href')).to.eq(expectedLink);
-        });
+        cy.get('a[href=\'' + expectedLink + '\']', {timeout: 10000});
     });
 
     it('Typing larger search query should cancel previous request.', function() {
