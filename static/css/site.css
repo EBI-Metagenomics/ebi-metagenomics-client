@@ -8,6 +8,51 @@
     table-layout: fixed;
 }
 
+.studies-table tr, .samples-table tr {
+
+}
+
+.studies-table th:first-child {
+    width: 5em;
+}
+
+.studies-table th:nth-child(3) {
+    width: 7em;
+}
+
+.studies-table th:last-child {
+    width: 10em;
+}
+
+.samples-table th:first-child {
+    width: 5em;
+}
+
+.samples-table th:nth-child(2) {
+    width: 8em;
+}
+
+.samples-table th:last-child {
+    width: 10em;
+}
+
+.runs-download-table {
+    table-layout: fixed;
+    text-align: center;
+}
+
+.runs-download-table th:first-child {
+    width: 20em;
+}
+
+.runs-download-table th:nth-child(2) {
+    width: 8em;
+}
+
+.runs-download-table th:nth-child(3) {
+    width: 5em;
+}
+
 td, th {
     word-wrap: break-word;
 }
@@ -153,17 +198,15 @@ select.table-tools {
     width: 100%;
 }
 
-.no-coords-tooltip span {
-    display: none;
+.no-coords-span {
     background: #333;
     color: #fff;
-    bottom: 5em;
+    position: relative;
+    bottom: 15em;
     text-align: center;
     margin: 0 auto;
-}
-
-.no-coords-tooltip:hover span.no-coords {
-    display: block;
+    display: none;
+    width: 12em;
 }
 
 .expand-button {
@@ -896,7 +939,12 @@ a.download-part {
     padding-right: 0.5em;
 }
 
+
 /*Overwrite CSS from API generated login form*/
 .well {
     width: inherit !important;
+}
+/*Fix for bug in ebi-global.css*/
+.pagination.disabled {
+    padding: 0.1875rem 0 !important;
 }

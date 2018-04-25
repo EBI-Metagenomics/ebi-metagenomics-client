@@ -95,6 +95,7 @@ function initPage() {
         runsView.initialize();
         new MapData({model: coordinates});
         new DownloadsView({model: downloads});
+        util.attachExpandButtonCallback();
     });
 }
 

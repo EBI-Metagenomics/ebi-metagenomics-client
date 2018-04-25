@@ -1,6 +1,6 @@
 // const MarkerClusterer = require('js-marker-clusterer');
-const OverlappingMarkerSpiderfier = require('../../../static/js/oms.min.js')
-    .OverlappingMarkerSpiderfier;
+const OverlappingMarkerSpiderfier = require(
+    '../../../static/js/oms.min.js').OverlappingMarkerSpiderfier;
 module.exports = class MapHandler {
     /**
      * Create a new instance of a google map in the element with id
@@ -34,8 +34,9 @@ module.exports = class MapHandler {
             }
             return result;
         }, []);
-
+        const $map = $('#' + elementId);
         if (markers.length > 1) {
+            $map.siblings('.no-coords-span').hide();
             let bounds = new google.maps.LatLngBounds();
             for (let i = 0; i < markers.length; i++) {
                 bounds.extend(markers[i].getPosition());
@@ -47,10 +48,15 @@ module.exports = class MapHandler {
             //     maxZoom: 17
             // });
         } else if (markers.length === 0) {
-            const $parentDiv = $('#' + elementId).parent();
-            $('#' + elementId).addClass('disabled');
-            $parentDiv.addClass('no-coords-tooltip');
-            $('.map > span.hidden').removeClass('hidden');
+            const $parentDiv = $map.parent();
+            $map.addClass('disabled');
+
+            $parentDiv.hover(function() {
+                    $map.siblings('.no-coords-span').css('display', 'block');
+                }, function() {
+                    $map.siblings('.no-coords-span').css('display', 'none');
+                }
+            );
         }
         window.map = map;
         return map;
