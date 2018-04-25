@@ -214,7 +214,7 @@ let samplesView = new SamplesView({collection: samples});
 studiesView.init();
 samplesView.init();
 
-util.initBiomeFilter($('section').find('div.row:nth-child(2) > div.columns:nth-child(2)'),
+util.initBiomeFilter($('section').find('.tableFilters'),
     function() {
         const updateObj = {
             lineage: $(this).val(),
