@@ -179,11 +179,11 @@ describe('Browse page - Studies table - ', function() {
         const params = studiesTableColumns.samples_count;
         studiesTable.checkOrdering(2, params.type, true);
 
-
-        const expectedLink = Config.API_URL.replace('127.0.0.1', 'localhost') +
+        const expectedLink = Config.API_URL +
             'studies?lineage=root%3AEnvironmental%3AAir&ordering=' +
             'samples_count&search=windshield&format=csv';
-        cy.get('a[href=\'' + expectedLink + '\']', {timeout: 10000});
+        cy.get('a[href=\'' + expectedLink + '\'], a[href=\'' +
+            expectedLink.replace('127.0.0.1', 'localhost') + '\']', {timeout: 10000});
     });
 
     it('Typing larger search query should cancel previous request.', function() {
@@ -226,7 +226,6 @@ describe('Browse page - Samples table - ', function() {
         waitForPageLoad('Samples list');
         samplesTable = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
     });
-
 
     it('Samples table should contain correct number of samples', function() {
         samplesTable.checkLoadedCorrectly(1, samplesTableDefaultSize, 9158,
