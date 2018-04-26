@@ -7,7 +7,7 @@ emg:
       HOST: localhost
       PORT: 3306
   session_engine: 'django.contrib.sessions.backends.cached_db'
-  auth_backends: ('test_utils.FakeEMGBackend',)
+  auth_backends: ['test_utils.FakeEMGBackend',]
   secure_cookies: false
   prefix: "/metagenomics/api"
   mongodb:
