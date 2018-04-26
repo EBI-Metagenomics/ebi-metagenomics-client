@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists, waitForPageLoad} from './util';
+import {openPage, datatype, urlExists, waitForPageLoad, login} from './util';
 import Config from './config';
 import GenericTableHandler from './genericTable';
 
@@ -99,6 +99,8 @@ describe('Study page - General', function() {
 describe('Study page - Related studies - ', function() {
     const relatedStudiesList = '[data-cy=\'relatedStudies\']';
     it('Should display related study section', function() {
+        openPage('');
+        login();
         openPage('studies/ERP104178');
         waitForPageLoad('EMG produced TPA metagenomics assembly of the Microbial Community of ' +
             'Mobilong Acid Sulfate Soil depth profile using Metagenomics (Mobilong Soil Profile)' +
@@ -111,6 +113,7 @@ describe('Study page - Related studies - ', function() {
     });
     it('Should not display related study section if no related studies available', function() {
         openPage(origPage);
+        login();
         cy.get(relatedStudiesList).should('not.exist');
     });
 });

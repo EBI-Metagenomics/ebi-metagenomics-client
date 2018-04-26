@@ -1,15 +1,9 @@
-import {openPage, waitForPageLoad} from './util';
+import {
+    openPage, login, loginButton, logoutButton, usernameInput, passwordInput, loginModal
+} from './util';
 import GenericTableHandler from './genericTable';
 
 const origPage = '';
-const loginButton = '[data-cy=\'login\']';
-const myDataBtn = '[data-cy=\'mydata\']';
-const logoutButton = '[data-cy=\'logout\']:visible';
-const loginModal = '[data-cy=\'loginModal\']';
-const usernameInput = 'input[name=\'username\']';
-const passwordInput = 'input[name=\'password\'][type=\'password\']';
-const username = Cypress.env('WEBIN_USERNAME');
-const password = Cypress.env('WEBIN_PASSWORD');
 
 Cypress.Cookies.debug(true);
 
@@ -24,18 +18,6 @@ function openModal() {
     cy.get(loginModal).should('be.hidden');
     cy.get(loginButton).click();
     cy.get(loginModal).should('be.visible');
-}
-
-function login() {
-    cy.get(loginButton).click();
-    cy.get(usernameInput).type(username);
-    cy.get(passwordInput).type(password);
-    cy.get(loginModal).find('input[name=\'submit\']').click();
-    waitForPageLoad('My studies');
-    cy.get(loginModal).should('be.hidden');
-    cy.get(loginButton).should('not.exist');
-    cy.get(logoutButton).should('be.visible');
-    cy.get(myDataBtn).should('be.visible').contains('Welcome, ' + username);
 }
 
 describe('Login process', function() {

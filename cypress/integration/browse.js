@@ -21,17 +21,18 @@ const studiesTableColumns = {
     study_name: {
         data: [
             'Longitudinal study of the diabetic skin and wound microbiome',
-            'Fungi associated with Rhamnus cathartica in Southwestern Ontario'],
+            'Changeability of bacterial community composition caused by seawater exposure' +
+            ' to crude oil at low temperature'],
         type: datatype.STR,
         sortable: false
     },
     samples_count: {
-        data: ['258', '10'],
+        data: ['258', '8'],
         type: datatype.NUM,
         sortable: false
     },
     last_update: {
-        data: ['27-Nov-2017', '22-Mar-2017'],
+        data: ['27-Nov-2017', '16-Mar-2017'],
         type: datatype.DATE,
         sortable: false
     }
@@ -77,7 +78,7 @@ describe('Browse page - Studies table - ', function() {
     });
 
     it('Should contain correct number of studies', function() {
-        studiesTable.checkLoadedCorrectly(1, studiesTableDefaultSize, 123, studiesTableColumns);
+        studiesTable.checkLoadedCorrectly(1, studiesTableDefaultSize, 122, studiesTableColumns);
     });
 
     it('Should respond to ordering', function() {
@@ -104,27 +105,32 @@ describe('Browse page - Studies table - ', function() {
                     '27-Nov-2017']
             }, {
                 index: 3,
-                data: ['', 'Forest Soil Targeted Locus (Loci)', '23', '6-Jun-2016']
+                data: [
+                    '',
+                    'Metacommunity analysis of two protozoan taxa (Amoebozoa) in grassland soils',
+                    '1',
+                    '6-Jun-2016']
             }, {
                 index: 'next',
                 data: [
                     '',
-                    'Skin microbiome in human volunteers inoculated with ' +
-                    'H. ducreyi Raw sequence reads',
-                    '191',
-                    '4-Feb-2016'], // 4th row
+                    'Gene-Environment Interactions at the Skin Surface',
+                    '2560',
+                    '3-Feb-2016'], // 4th page
                 pageNum: 4
             }, {
                 index: 'prev',
                 data: [
-                    '', 'Forest Soil Targeted Locus (Loci)', '23',
-                    '6-Jun-2016'], // Back to 3rd row
+                    '',
+                    'Metacommunity analysis of two protozoan taxa (Amoebozoa) in grassland soils',
+                    '1',
+                    '6-Jun-2016'],
                 pageNum: 3
             }, {
                 index: 'last',
-                data: ['', 'Antarctica Aquatic Microbial Metagenome', '18', '20-Jan-2016'],
+                data: ['', 'MetaSoil', '13', '20-Jan-2016'],
                 pageNum: 5,
-                pageSize: 23
+                pageSize: 22
             }, {
                 index: 'first',
                 data: [

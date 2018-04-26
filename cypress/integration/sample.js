@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists} from './util';
+import {openPage, datatype, urlExists, login} from './util';
 import Config from './config';
 import GenericTableHandler from './genericTable';
 
@@ -135,6 +135,8 @@ describe('Sample page - General', function() {
 let table;
 describe('Sample page - Study table', function() {
     beforeEach(function() {
+        openPage('');
+        login();
         openPage(origPage);
         waitForPageLoad(sampleId);
         table = new GenericTableHandler('#studies-section', studiesTableDefaultSize);
@@ -144,7 +146,8 @@ describe('Sample page - Study table', function() {
         table.testTableHiding();
     });
 
-    it('Studies table should contain correct number of samples', function() {
+    it('Studies table should contain correct number of results', function() {
+        // Login to view private data.
         table.checkLoadedCorrectly(1, 2, 2, studyTableColumn);
     });
 
