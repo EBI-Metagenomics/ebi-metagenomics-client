@@ -40,7 +40,9 @@ before_install:
   - emgcli collectstatic --noinput
   - emgcli check --deploy
   # Add backend auth package to path for emgapi
-  - export PYTHONPATH=~/.local/lib/python3.6/site-packages/emgcli/tests/:$PYTHONPATH
+
+  - git clone https://github.com/EBI-Metagenomics/emgapi.git
+  - export PYTHONPATH=$(echo pwd)/emgapi/tests:$PYTHONPATH
   - emgdeploy --daemon -p ~/emg.pid emgcli.wsgi:application --workers 5
   - sudo chmod 777 /var/log/nginx/*
   - sudo chmod 777 /var/run/nginx.pid
