@@ -706,7 +706,7 @@ export function setNavLoginButton(isLoggedIn) {
         $a.text('Welcome, ' + getUsername() + ' ');
         $a.attr({
             'class': 'button',
-            'href': api.API_URL + '/mydata',
+            'href': subfolder + '/mydata',
             'data-cy': 'mydata'
         });
         $a.append('<span class=\'icon icon-generic\' data-icon=\'H\'></span>');
