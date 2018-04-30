@@ -1,6 +1,7 @@
 const Backbone = require('backbone');
 const Commons = require('../commons');
-const API_URL = process.env.API_URL;
+export const API_URL = process.env.API_URL;
+export const API_LOGIN_ROOT = API_URL.split('/').slice(0, -2).join('/')+'/';
 const NO_DATA_MSG = Commons.NO_DATA_MSG;
 const util = require('../util');
 import {formatDate, formatLineage, getBiomeIcon, lineageToBiome, getBiomeIconData} from '../util';
@@ -405,14 +406,12 @@ export const StudyGeoCoordinates = Backbone.Model.extend({
     }
 });
 
-const apiLoginRoot = API_URL.split('/').slice(0, -2).join('/');
-
 /**
  * Fetch login form from API
  * @return {jQuery.Promise}
  */
 export function getLoginForm() {
-    const url = apiLoginRoot + '/http-auth/login_form';
+    const url = API_LOGIN_ROOT + 'http-auth/login_form';
     return $.ajax({
         method: 'get',
         url: url,

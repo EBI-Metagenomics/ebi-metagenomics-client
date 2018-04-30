@@ -626,8 +626,8 @@ export let RunsView = GenericTableView.extend({
 export function getLoginStatus() {
     const deferred = new $.Deferred();
 
-    $.get(subfolder + '/api/v1/utils/myaccounts').always(function(xhr) {
-        deferred.resolve(xhr.status !== 401);
+    $.get(api.API_URL + 'utils/myaccounts').always(function(xhr) {
+        deferred.resolve(String(xhr.status)[0] !== '4');
     });
     return deferred.promise();
 }
@@ -706,7 +706,7 @@ export function setNavLoginButton(isLoggedIn) {
         $a.text('Welcome, ' + getUsername() + ' ');
         $a.attr({
             'class': 'button',
-            'href': subfolder + '/mydata',
+            'href': api.API_URL + '/mydata',
             'data-cy': 'mydata'
         });
         $a.append('<span class=\'icon icon-generic\' data-icon=\'H\'></span>');
@@ -736,7 +736,7 @@ export function getUsername() {
  * @return {JQuery.jqXHR}
  */
 export function logout() {
-    return $.get(subfolder + '/api/http-auth/logout/?next=' + subfolder);
+    return $.get(api.API_LOGIN_ROOT + 'http-auth/logout/?next=' + subfolder);
 }
 
 /**
