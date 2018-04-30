@@ -405,12 +405,14 @@ export const StudyGeoCoordinates = Backbone.Model.extend({
     }
 });
 
+const apiLoginRoot = API_URL.split('/').slice(0, -2).join('/');
+
 /**
  * Fetch login form from API
  * @return {jQuery.Promise}
  */
 export function getLoginForm() {
-    const url = API_URL.split('/').slice(0, -2).join('/') + '/http-auth/login_form';
+    const url = apiLoginRoot + '/http-auth/login_form';
     return $.ajax({
         method: 'get',
         url: url,
@@ -421,5 +423,21 @@ export function getLoginForm() {
 export const UserStudies = StudiesCollection.extend({
     url() {
         return API_URL + 'mydata';
+    }
+});
+
+export const UserDetails = Backbone.Model.extend({
+    url() {
+        return API_URL + 'utils/myaccounts';
+    },
+    parse(response) {
+        const attr = response.data[0].attributes;
+        return {
+            'firstName': attr['first-name'],
+            'surname': attr['surname'],
+            'email': attr['email-address'],
+            'analysis': attr['analysis'],
+            'submitter': attr['submitter']
+        };
     }
 });
