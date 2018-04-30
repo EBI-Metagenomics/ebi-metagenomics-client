@@ -642,21 +642,6 @@ export function displayError(errorcode, errormsg) {
     $('#main-content-area').html(tmpl);
 }
 
-// export function setupLogin(isLoggedIn, next) {
-//     if (!next) {
-//         next = subfolder + '/mydata';
-//     }
-//     const loginStatus = getLoginStatus();
-//     loginStatus.done(function(isLo) {
-//         console.log('Status is:', isLoggedIn);
-//         if (!isLoggedIn) {
-//             loadLoginForm(next);
-//         }
-//     });
-//     console.log('Fetching status');
-//     return getLoginStatus();
-// }
-
 /**
  * Set a redirection for the login's response
  * @param {string} url to redirect to on succesful login
@@ -673,7 +658,6 @@ export function setLoginRedirect(url) {
 export function getLoginLink(text) {
     return '<a data-open=\'loginModal\'>' + text + '</a>';
 }
-
 
 /**
  * Fetches loading form via API and appends to div in modal
@@ -714,6 +698,7 @@ export function loadLoginForm(next) {
 
 /**
  * Set navbar to reflect user login status
+ * @param {boolean} isLoggedIn true if user is authenticated
  */
 export function setNavLoginButton(isLoggedIn) {
     if (isLoggedIn) {
@@ -757,6 +742,8 @@ export function logout() {
 /**
  * Basic setup for any page on site
  * @param {string} tab tabID
+ * @param {string} loginRedirect url to redirect on succesful login
+ * @return {jQuery.promise} of login status
  */
 export function setupPage(tab, loginRedirect) {
     const loginStatus = getLoginStatus();
