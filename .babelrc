@@ -1,9 +1,19 @@
 {
-  "presets": [
-    "env"
-  ],
-  "plugins": [
-    "instanbul"
-  ],
-  "retainLines": true
+  "env": {
+    "devevelopment": {
+      "presets": [
+        "env"
+      ],
+      "plugins": [
+        "instanbul"
+      ],
+      "retainLines": true
+    },
+    "production": {
+      "presets": [
+        "env"
+      ],
+      "retainLines": true
+    }
+  }
 }

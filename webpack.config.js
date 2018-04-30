@@ -25,6 +25,13 @@ const templateFixtures = {
 };
 
 module.exports = (env = {prod: false}) => {
+    let version;
+    if (env.prod) {
+        const major = process.env.WEBPACK_VERS_MAJOR;
+        const minor = process.env.WEBPACK_VERS_MINOR;
+        const build = process.env.WEBPACK_VERS_BUILD;
+        version = major + '_' + minor + '_' + build;
+    }
     return {
         plugins: [
             new HardSourceWebpackPlugin({
@@ -259,7 +266,7 @@ module.exports = (env = {prod: false}) => {
                 'src/js/modules/pipeline.js'
         },
         output: {
-            filename: '[name].[hash].js',
+            filename: (env.prod ? '[name]' + 'v' + version : '[name].[hash]') + '.js',
             path:
             __dirname + '/dist',
             publicPath: process.env.DEPLOYMENT_SUBFOLDER + '/'
