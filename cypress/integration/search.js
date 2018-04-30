@@ -18,14 +18,14 @@ function waitForFacetFilters(facetName) {
 function validateFacetQuery(facetName, testString) {
     const timeout = 20000;
     if (testString) {
-        cy.wait('@' + facetName, {timeout}).
-            its('url').
-            should('include', 'size=' + initialResultSize).
-            should('include', 'query=' + encodeURIComponent(testString));
+        cy.wait('@' + facetName, {timeout})
+            .its('url')
+            .should('include', 'size=' + initialResultSize)
+            .should('include', 'query=' + encodeURIComponent(testString));
     } else {
-        cy.wait('@' + facetName, {timeout}).
-            its('url').
-            should('include', 'size=' + initialResultSize);
+        cy.wait('@' + facetName, {timeout})
+            .its('url')
+            .should('include', 'size=' + initialResultSize);
     }
 }
 
@@ -46,8 +46,8 @@ function loadPage(page) {
     cy.route('/ebisearch/ws/rest/metagenomics_samples?*size=' + initialResultSize.toString() +
         '&*').as(facetRequests[3]);
     cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=1&*').as(facetRequests[4]);
-    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=' + initialResultSize.toString() + '&*').
-        as(facetRequests[5]);
+    cy.route('/ebisearch/ws/rest/metagenomics_runs?*size=' + initialResultSize.toString() + '&*')
+        .as(facetRequests[5]);
     openPage(page);
     waitForSearchResults(rowSelector, initialResultSize);
 }
@@ -326,8 +326,8 @@ describe('Search page - Sliders - ', function() {
             '].').should('be.visible');
 
         changeTab('runs');
-        cy.contains('You searched for runs with temperature:[' + minVal + ' TO ' + maxVal + '].').
-            should('be.visible');
+        cy.contains('You searched for runs with temperature:[' + minVal + ' TO ' + maxVal + '].')
+            .should('be.visible');
     });
 });
 // describe("Search page - CSV fetching", function () {

@@ -9,7 +9,8 @@
     "no-process-env": 0,
     "require-jsdoc": "off",
     "comma-dangle": ["error", "never"],
-    "camelcase": [2, {"properties": "never"}]
+    "camelcase": [2, {"properties": "never"}],
+    "dot-location": ["error", "property"]
   },
   "parserOptions": {
     "ecmaVersion": 6,

@@ -7,9 +7,9 @@ module.exports = function FilterButtonCtnr() {
             const facet = $parent.attr('data-facet');
             const value = $parent.attr('data-value');
             $(this).parent().remove();
-            $('div[data-facet=\'' + facet + '\'][data-value=\'' + value + '\']').
-                children('button').
-                click();
+            $('div[data-facet=\'' + facet + '\'][data-value=\'' + value + '\']')
+                .children('button')
+                .click();
             callback();
         });
         const $toggleContainer = $('<div data-facet=\'' + facet + '\' data-value=\'' + value +

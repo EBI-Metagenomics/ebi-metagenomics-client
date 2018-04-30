@@ -10,7 +10,6 @@ require('../../../static/js/jquery.liveFilter.js');
 
 util.setupPage('#browse-nav');
 
-
 let sampleId = util.getURLParameter();
 
 /**
@@ -97,11 +96,16 @@ function initPage() {
     $.when(
         sampleView.fetchAndRender()
     ).done(function() {
-        new util.StudiesView({collection: studies});
+        new util.StudiesView({
+            collection: studies,
+            tableClass: 'studies-table',
+            isPageHeader: false,
+            filter: true,
+            sectionTitle: 'Associated studies'
+        });
         new util.RunsView({collection: runs});
         util.attachExpandButtonCallback();
     });
 }
-
 
 window.initPage = initPage;

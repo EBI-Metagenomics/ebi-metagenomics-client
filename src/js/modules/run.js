@@ -17,8 +17,6 @@ const DetailList = require('../components/detailList');
 
 require('tablesorter');
 
-util.checkAPIonline();
-
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 
 const DEFAULT_PAGE_SIZE = 25;

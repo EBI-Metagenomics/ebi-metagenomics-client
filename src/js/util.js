@@ -330,8 +330,8 @@ export const BiomeCollectionView = Backbone.View.extend({
                         } else {
                             let splitBiome = biome.split(':');
                             if (splitBiome.length > that.maxDepth) {
-                                const existingParentBiome = splitBiome.slice(0, that.maxDepth).
-                                    join(':');
+                                const existingParentBiome = splitBiome.slice(0, that.maxDepth)
+                                    .join(':');
                                 const $previousBiome = $biomeSelect.children('option[value=\'' +
                                     existingParentBiome + '\']');
                                 const newOptions = [];
@@ -523,7 +523,7 @@ export let StudiesView = GenericTableView.extend({
         return this.collection.fetch();
     },
 
-    initialize() {
+    initialize(options) {
         const that = this;
         const columns = [
             {sortBy: null, name: 'Biome'},
@@ -533,8 +533,9 @@ export let StudiesView = GenericTableView.extend({
             {sortBy: null, name: 'Samples count'},
             {sortBy: null, name: 'Last update'}
         ];
-        this.tableObj = new GenericTable($('#studies-section'), 'Associated studies', columns,
-            DEFAULT_PAGE_SIZE, false, 'studies-table', function(page, pageSize, order, query) {
+        this.tableObj = new GenericTable($('#studies-section'), options.sectionTitle, columns,
+            DEFAULT_PAGE_SIZE, options.isPageHeader, options.filter, options.tableClass,
+            function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
         this.update(1, DEFAULT_PAGE_SIZE, null, null);
@@ -570,7 +571,7 @@ export let SamplesView = GenericTableView.extend({
             {sortBy: 'last_update', name: 'Last update'}
         ];
         this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns,
-            Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, 'samples-table',
+            Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, true, 'samples-table',
             function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
@@ -600,7 +601,8 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline versions'}
         ];
         this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns,
-            Commons.DEFAULT_PAGE_SIZE, false, 'runs-table', function(page, pageSize, order, query) {
+            Commons.DEFAULT_PAGE_SIZE, false, true, 'runs-table',
+            function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
         this.update(1, Commons.DEFAULT_PAGE_SIZE, null, null);
@@ -618,6 +620,19 @@ export let RunsView = GenericTableView.extend({
 });
 
 /**
+ * Check is user is logged in
+ * @return {jQuery.jqXHR} true if user is logged in
+ */
+export function getLoginStatus() {
+    const deferred = new $.Deferred();
+
+    $.get(subfolder + '/api/v1/utils/myaccounts').always(function(xhr) {
+        deferred.resolve(xhr.status !== 401);
+    });
+    return deferred.promise();
+}
+
+/**
  * Replace page with error message
  * @param {string} errorcode HTTP error code
  * @param {string} errormsg
@@ -628,6 +643,23 @@ export function displayError(errorcode, errormsg) {
 }
 
 /**
+ * Set a redirection for the login's response
+ * @param {string} url to redirect to on succesful login
+ */
+export function setLoginRedirect(url) {
+    $('#loginModal').find('input[name=\'next\']').val(url);
+}
+
+/**
+ * Returns string for a modal-opening link
+ * @param {string} text to display in link
+ * @return {string} HTML <a>
+ */
+export function getLoginLink(text) {
+    return '<a data-open=\'loginModal\'>' + text + '</a>';
+}
+
+/**
  * Fetches loading form via API and appends to div in modal
  * @param {string} next location to redirect to.
  */
@@ -635,77 +667,60 @@ export function loadLoginForm(next) {
     if (!next) {
         next = subfolder + '/mydata';
     }
-    getLoginStatus().done(function(status) {
-        if (!status) {
-            api.getLoginForm().then(function(data) {
-                const $div = $(data);
-                const $form = $div.find('form');
-                $form.submit(function(e) {
-                    e.preventDefault();
-                    $.ajax({
-                        type: 'post',
-                        url: $form.attr('action'),
-                        data: $form.serialize(),
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader('X-CSRFToken',
-                                jQuery('[name=csrfmiddlewaretoken]').val());
-                        },
-                        success: function() {
-                            sessionStorage.setItem('username',
-                                $form.find('[name=\'username\']').val());
-                            window.location = $form.find('[name=\'next\']').val();
-                        },
-                        error: function(a, b, c) {
-                            console.error(a, b, c);
-                        }
-                    });
-                });
-                $div.find('input[type=\'hidden\'][name=\'next\']').val(next);
-                $div.appendTo('#login-form');
+    console.log(next);
+    api.getLoginForm().then(function(data) {
+        const $div = $(data);
+        const $form = $div.find('form');
+        $form.submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'post',
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRFToken',
+                        jQuery('[name=csrfmiddlewaretoken]').val());
+                },
+                success: function() {
+                    sessionStorage.setItem('username',
+                        $form.find('[name=\'username\']').val());
+                    window.location = $form.find('[name=\'next\']').val();
+                },
+                error: function(a, b, c) {
+                    console.error(a, b, c);
+                }
             });
-        }
+        });
+        $div.find('input[type=\'hidden\'][name=\'next\']').val(next);
+        $div.appendTo('#login-form');
     });
 }
 
 /**
  * Set navbar to reflect user login status
+ * @param {boolean} isLoggedIn true if user is authenticated
  */
-export function setNavLoginButton() {
-    getLoginStatus().done(function(status) {
-        if (status) {
-            const $a = $('<a></a>');
-            $a.text('Welcome, ' + getUsername() + ' ');
-            $a.attr({
-                'class': 'button',
-                'href': subfolder + '/mydata'
+export function setNavLoginButton(isLoggedIn) {
+    if (isLoggedIn) {
+        const $a = $('<a></a>');
+        $a.text('Welcome, ' + getUsername() + ' ');
+        $a.attr({
+            'class': 'button',
+            'href': subfolder + '/mydata',
+            'data-cy': 'mydata'
+        });
+        $a.append('<span class=\'icon icon-generic\' data-icon=\'H\'></span>');
+        const $ul = $('#mgnify').find('ul');
+        $ul.find('li.functional').html($a);
+        const $logout = $('<li><a data-cy=\'logout\' class=\'button\'>Logout</a></li>');
+        $logout.click(function() {
+            logout().done(function(a, b, c) {
+                console.log(a, b, c);
+                window.location = subfolder;
             });
-            $a.append('<span class=\'icon icon-generic\' data-icon=\'H\'></span>');
-            const $ul = $('#mgnify').find('ul');
-            $ul.find('li.functional').html($a);
-            const $logout = $('<li><a class=\'button\'>Logout</a></li>');
-            $logout.click(function() {
-                logout().done(function(a, b, c) {
-                    console.log(a, b, c);
-                    window.location = subfolder;
-                });
-            });
-            $ul.append($logout);
-        }
-    });
-}
-
-/**
- * Check is user is logged in
- * @return {jQuery.jqXHR} true if user is logged in
- */
-export function getLoginStatus() {
-    const deferred = new $.Deferred();
-
-    $.get(subfolder + '/api/v1/utils/myaccounts').always(function(xhr) {
-        console.log(xhr.status);
-        deferred.resolve(xhr.status !== 401);
-    });
-    return deferred.promise();
+        });
+        $ul.append($logout);
+    }
 }
 
 /**
@@ -727,12 +742,20 @@ export function logout() {
 /**
  * Basic setup for any page on site
  * @param {string} tab tabID
+ * @param {string} loginRedirect url to redirect on succesful login
+ * @return {jQuery.promise} of login status
  */
-export function setupPage(tab) {
+export function setupPage(tab, loginRedirect) {
+    const loginStatus = getLoginStatus();
+    loginStatus.done(function(isLoggedIn) {
+        setNavLoginButton(isLoggedIn);
+        if (!isLoggedIn) {
+            loadLoginForm(loginRedirect);
+        }
+    });
     checkAPIonline();
-    loadLoginForm(null);
-    setNavLoginButton();
     setCurrentTab(tab);
+    return loginStatus;
 }
 
 /**

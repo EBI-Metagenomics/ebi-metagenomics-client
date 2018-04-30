@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists, waitForPageLoad} from './util';
+import {openPage, datatype, urlExists, waitForPageLoad, login} from './util';
 import Config from './config';
 import GenericTableHandler from './genericTable';
 
@@ -74,13 +74,13 @@ describe('Study page - General', function() {
 
     it('Verify elements are present', function() {
         cy.get('h3').should('contain', projectId);
-        cy.get('h2').
-            should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
+        cy.get('h2')
+            .should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
         cy.get('#ebi_ena_links').should('contain', 'ENA website (ERP019566)');
-        cy.get('#europe_pmc_links > li').
-            should('contain', 'A longitudinal study of the diabetic skin and wound microbiome.');
-        cy.get('#europe_pmc_links > li').
-            should('contain', 'Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.');
+        cy.get('#europe_pmc_links > li')
+            .should('contain', 'A longitudinal study of the diabetic skin and wound microbiome.');
+        cy.get('#europe_pmc_links > li')
+            .should('contain', 'Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.');
         cy.get('#europe_pmc_links > li').should('contain', '2017 5');
         cy.get('#europe_pmc_links > li > a').should('contain', '28740749');
         cy.get('#europe_pmc_links > li > a').should('contain', '10.7717/peerj.3543');
@@ -99,6 +99,8 @@ describe('Study page - General', function() {
 describe('Study page - Related studies - ', function() {
     const relatedStudiesList = '[data-cy=\'relatedStudies\']';
     it('Should display related study section', function() {
+        openPage('');
+        login();
         openPage('studies/ERP104178');
         waitForPageLoad('EMG produced TPA metagenomics assembly of the Microbial Community of ' +
             'Mobilong Acid Sulfate Soil depth profile using Metagenomics (Mobilong Soil Profile)' +
@@ -111,6 +113,7 @@ describe('Study page - Related studies - ', function() {
     });
     it('Should not display related study section if no related studies available', function() {
         openPage(origPage);
+        login();
         cy.get(relatedStudiesList).should('not.exist');
     });
 });

@@ -175,14 +175,14 @@ describe('Run page - Abundance tab', function() {
         waitForPageLoad();
         // Check defaulted to overview tab
         cy.contains('Description', {timeout: 40000}).should('be.visible');
-        cy.get('a[href=\'#abundance\']').
-            should('have.attr', 'aria-selected', 'false').
-            parent().
-            should('not.have.class', 'is-active');
-        cy.get('a[href=\'#overview\']').
-            should('have.attr', 'aria-selected', 'true').
-            parent().
-            should('have.class', 'is-active');
+        cy.get('a[href=\'#abundance\']')
+            .should('have.attr', 'aria-selected', 'false')
+            .parent()
+            .should('not.have.class', 'is-active');
+        cy.get('a[href=\'#overview\']')
+            .should('have.attr', 'aria-selected', 'true')
+            .parent()
+            .should('have.class', 'is-active');
     });
 });
 

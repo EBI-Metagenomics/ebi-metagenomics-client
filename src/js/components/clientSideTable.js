@@ -64,9 +64,9 @@ module.exports = class ClientSideTable extends GenericTable {
     filterTable(searchString) {
         this.searchString = searchString;
         this.$tbody.children('tr').filter(':contains(\'' + searchString + '\')').addClass('match');
-        this.$tbody.children('tr').
-            filter(':not(:contains(\'' + searchString + '\'))').
-            removeClass('match');
+        this.$tbody.children('tr')
+            .filter(':not(:contains(\'' + searchString + '\'))')
+            .removeClass('match');
 
         const pageSize = this.getPageSize();
         this.$tbody.children('tr').hide();
@@ -176,9 +176,9 @@ module.exports = class ClientSideTable extends GenericTable {
             that.order = sort;
         });
         if (initialSort) {
-            $table.find('[data-sortby=\'' + initialSort + '\']').
-                removeClass('sort-both').
-                addClass(initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
+            $table.find('[data-sortby=\'' + initialSort + '\']')
+                .removeClass('sort-both')
+                .addClass(initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
         }
     }
 
