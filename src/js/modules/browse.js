@@ -16,7 +16,6 @@ const BIOME_FILTER_DEPTH = 3;
 
 util.setupPage('#browse-nav');
 
-
 $('#pagination').append(commons.pagination);
 $('#pageSize').append(commons.pagesize);
 
@@ -31,6 +30,7 @@ let StudiesView = Backbone.View.extend({
         const that = this;
         const columns = [
             {sortBy: null, name: 'Biome'},
+            {sortBy: 'accession', name: 'Accession'},
             {sortBy: 'study_name', name: 'Study name'},
             {sortBy: 'samples_count', name: 'Samples'},
             {sortBy: 'last_update', name: 'Last updated'}
@@ -96,9 +96,11 @@ let StudiesView = Backbone.View.extend({
             const biomes = _.map(m.attributes.biomes, function(biome) {
                 return '<span class="biome_icon icon_xs ' + biome.icon + '" title="' + biome.name +
                     '"></span>';
-            }).join();
-            const studyLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_name + '</a>';
-            return [biomes, studyLink, attr.samples_count, attr.last_update];
+            }).join('');
+            const accessionLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_accession +
+                '</a>';
+            const nameLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_name + '</a>';
+            return [biomes, accessionLink, nameLink, attr.samples_count, attr.last_update];
         });
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
@@ -113,8 +115,8 @@ let SamplesView = Backbone.View.extend({
         const that = this;
         const columns = [
             {sortBy: null, name: 'Biome'},
-            {sortBy: 'accession', name: 'Sample ID'},
-            {sortBy: 'sample_name', name: 'Name'},
+            {sortBy: 'accession', name: 'Accession'},
+            {sortBy: 'sample_name', name: 'Sample name'},
             {sortBy: null, name: 'Description'},
             {sortBy: 'last_update', name: 'Last updated'}
         ];
@@ -164,7 +166,7 @@ let SamplesView = Backbone.View.extend({
         const that = this;
         this.fetchXhr = this.collection.fetch({
             data: $.param(this.params),
-            success(data, response) {
+            success(ignored, response) {
                 const pagination = response.meta.pagination;
                 that.renderData(pagination.page, that.params.page_size, pagination.count,
                     response.links.first);

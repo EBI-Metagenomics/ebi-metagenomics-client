@@ -18,6 +18,11 @@ const studiesTableColumns = {
         type: datatype.STR,
         sortable: false
     },
+    accession: {
+        data: ['ERP019566', 'ERP009442'],
+        type: datatype.STR,
+        sortable: false // TODO fix test
+    },
     study_name: {
         data: [
             'Longitudinal study of the diabetic skin and wound microbiome',
@@ -89,6 +94,7 @@ describe('Browse page - Studies table - ', function() {
         studiesTable.testFiltering('Longitudinal', [
             [
                 '',
+                'ERP019566',
                 'Longitudinal study of the diabetic skin and wound microbiome',
                 '258',
                 '27-Nov-2017']]);
@@ -100,6 +106,7 @@ describe('Browse page - Studies table - ', function() {
                 index: 1,
                 data: [
                     '',
+                    'ERP019566',
                     'Longitudinal study of the diabetic skin and wound microbiome',
                     '258',
                     '27-Nov-2017']
@@ -107,6 +114,7 @@ describe('Browse page - Studies table - ', function() {
                 index: 3,
                 data: [
                     '',
+                    'SRP046300',
                     'Metacommunity analysis of two protozoan taxa (Amoebozoa) in grassland soils',
                     '1',
                     '6-Jun-2016']
@@ -114,6 +122,7 @@ describe('Browse page - Studies table - ', function() {
                 index: 'next',
                 data: [
                     '',
+                    'SRP002480',
                     'Gene-Environment Interactions at the Skin Surface',
                     '2560',
                     '3-Feb-2016'], // 4th page
@@ -122,19 +131,21 @@ describe('Browse page - Studies table - ', function() {
                 index: 'prev',
                 data: [
                     '',
+                    'SRP046300',
                     'Metacommunity analysis of two protozoan taxa (Amoebozoa) in grassland soils',
                     '1',
                     '6-Jun-2016'],
                 pageNum: 3
             }, {
                 index: 'last',
-                data: ['', 'MetaSoil', '13', '20-Jan-2016'],
+                data: ['', 'MetaSoil', 'MetaSoil', '13', '20-Jan-2016'],
                 pageNum: 5,
                 pageSize: 22
             }, {
                 index: 'first',
                 data: [
                     '',
+                    'ERP019566',
                     'Longitudinal study of the diabetic skin and wound microbiome',
                     '258',
                     '27-Nov-2017'],
@@ -181,9 +192,9 @@ describe('Browse page - Studies table - ', function() {
             expect($el[0].href).to.include(encodeURIComponent(searchQuery));
         });
 
-        studiesTable.getHeader(2).click();
+        studiesTable.getHeader(3).click();
         const params = studiesTableColumns.samples_count;
-        studiesTable.checkOrdering(2, params.type, true);
+        studiesTable.checkOrdering(3, params.type, true);
 
         const expectedLink = Config.API_URL +
             'studies?lineage=root%3AEnvironmental%3AAir&ordering=' +
@@ -355,7 +366,7 @@ describe('Browse page - Samples table - ', function() {
         samplesTable.getHeader(2).click();
         samplesTable.waitForTableLoad(2);
         const params = samplesTableColumns.sample_name;
-        samplesTable.checkOrdering(2, params.type, true);
+        samplesTable.checkOrdering(3, params.type, true);
         samplesTable.testDownloadLink(Config.API_URL + 'samples?lineage=' +
             encodeURIComponent(biome) + '&ordering=sample_name&search=' + searchQuery +
             '&format=csv');
@@ -408,13 +419,11 @@ describe('Browse page - URL arguments', function() {
         for (let i = 1; i < splitBiome.length; i++) {
             let parentLineage = splitBiome.slice(0, i).join(':');
             expect(
-                cy.get('#studies-section .biome-select > option[value=\'' + parentLineage +
-                    '\']'))
+                cy.get('#studies-section .biome-select > option[value=\'' + parentLineage + '\']'))
                 .to
                 .exist;
             expect(
-                cy.get('#samples-section .biome-select > option[value=\'' + parentLineage +
-                    '\']'))
+                cy.get('#samples-section .biome-select > option[value=\'' + parentLineage + '\']'))
                 .to
                 .exist;
         }
@@ -478,7 +487,7 @@ describe('Browse page - URL parameters', function() {
         openPage('browse?ordering=samples_count#studies');
         waitForPageLoad('Studies list');
         studiesTable = new GenericTableHandler('#studies-section', studiesTableDefaultSize);
-        studiesTable.checkOrdering(2, datatype.NUM, false);
+        studiesTable.checkOrdering(4, datatype.NUM, false);
     });
     it('Should order results according to URL parameters (samples tab)', function() {
         openPage('browse?ordering=accession#samples');
@@ -490,7 +499,7 @@ describe('Browse page - URL parameters', function() {
         openPage('browse?ordering=last_updated#studies');
         waitForPageLoad('Studies list');
         studiesTable = new GenericTableHandler('#studies-section', studiesTableDefaultSize);
-        studiesTable.checkOrdering(3, datatype.DATE, false);
+        studiesTable.checkOrdering(4, datatype.DATE, false);
         changeTab('samples');
         samplesTable = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
         samplesTable.checkOrdering(4, datatype.DATE, false);
