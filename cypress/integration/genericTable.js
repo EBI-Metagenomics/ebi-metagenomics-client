@@ -1,9 +1,10 @@
 import {datatype} from './util';
 
 class GenericTableHandler {
-    constructor(parentId, defaultPageSize) {
+    constructor(parentId, defaultPageSize, hasLoadingGif) {
         this.parentId = parentId;
         this.defaultPageSize = defaultPageSize;
+        this.hasLoadingGif = (typeof hasLoadingGif !== 'undefined') ? hasLoadingGif : true;
         this.waitForLoadingIcon();
         this.waitForTableLoad(defaultPageSize);
     }
@@ -56,14 +57,17 @@ class GenericTableHandler {
     }
 
     waitForLoadingIcon() {
-        this.getLoadingIcon().should('be.hidden', {timeout: 40000});
+        if (this.hasLoadingGif) {
+            this.getLoadingIcon().should('be.hidden', {timeout: 40000});
+        }
     }
 
     checkOrdering(index, type, gte) {
         const selector = this.getColumnSelector(index);
-        cy.get(selector).first().should(function($el) {
+        cy.get(selector).first().then(function($el) {
             let txt = $el.text();
             let txt2 = Cypress.$(selector).last().text();
+            cy.log(txt, txt2);
             if (!gte) {
                 txt = [txt2, txt2 = txt][0]; // Swap variables
             }
