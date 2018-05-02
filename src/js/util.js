@@ -5,6 +5,7 @@ const api = require('./components/api');
 const Commons = require('./commons');
 const GenericTable = require('./components/genericTable');
 import 'process';
+require('babel-polyfill');
 
 export const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 $.typeWatch = require('jquery.typewatch');
