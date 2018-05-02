@@ -157,9 +157,9 @@ class GenericTableHandler {
             if (data.hasOwnProperty(column)) {
                 const txt = data[column];
                 const selector = this.getRowColumnSelector(rowIndex, column);
-                cy.get(selector).first().should(($el) => {
-                    expect($el.text()).to.include(txt);
-                });
+                if (txt.length > 0) {
+                    cy.get(selector).first().contains(txt);
+                }
             }
         }
     }

@@ -62,7 +62,7 @@ function routeWithTextQuery() {
 
     cy.route('GET',
         '**/ebisearch/ws/rest/metagenomics_runs?**query=Test**',
-        'fixture:runsTextquery').as('textQueryRuns');
+        'fixture:runsTextQuery').as('textQueryRuns');
 }
 
 function routeWithBiomeFilter(biome) {
