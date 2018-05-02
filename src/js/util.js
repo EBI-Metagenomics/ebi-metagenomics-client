@@ -668,7 +668,6 @@ export function loadLoginForm(next) {
     if (!next) {
         next = subfolder + '/mydata';
     }
-    console.log(next);
     api.getLoginForm().then(function(data) {
         const $div = $(data);
         const $form = $div.find('form');

@@ -1,0 +1,4437 @@
+{
+  "_comment": "Projects (no filters), page 2",
+  "hitCount": 1555,
+  "entries": [
+    {
+      "id": "SRP115612",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA396275"
+        ],
+        "METAGENOMICS_RUNS": [
+          "SRR5942119",
+          "SRR5942118",
+          "SRR5942111",
+          "SRR5942087",
+          "SRR5942113",
+          "SRR5942112",
+          "SRR5942115",
+          "SRR5942114",
+          "SRR5942117",
+          "SRR5942116",
+          "SRR5942089",
+          "SRR5942088",
+          "SRR5942083",
+          "SRR5942082",
+          "SRR5942081",
+          "SRR5942106",
+          "SRR5942086",
+          "SRR5942085",
+          "SRR5942084",
+          "SRR5942124",
+          "SRR5942107",
+          "SRR5942125",
+          "SRR5942100",
+          "SRR5942108",
+          "SRR5942109",
+          "SRR5942128",
+          "SRR5942129",
+          "SRR5942102",
+          "SRR5942103",
+          "SRR5942126",
+          "SRR5942127",
+          "SRR5942120",
+          "SRR5942121",
+          "SRR5942122",
+          "SRR5942105",
+          "SRR5942104",
+          "SRR5942123",
+          "SRR5942110",
+          "SRR5942101",
+          "SRR5942094",
+          "SRR5942095",
+          "SRR5942096",
+          "SRR5942097",
+          "SRR5942090",
+          "SRR5942091",
+          "SRR5942092",
+          "SRR5942093",
+          "SRR5942098",
+          "SRR5942099"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS2436677",
+          "SRS2436678",
+          "SRS2436679",
+          "SRS2436719",
+          "SRS2436718",
+          "SRS2436717",
+          "SRS2436716",
+          "SRS2436715",
+          "SRS2436714",
+          "SRS2436713",
+          "SRS2436712",
+          "SRS2436711",
+          "SRS2436710",
+          "SRS2436698",
+          "SRS2436699",
+          "SRS2436692",
+          "SRS2436693",
+          "SRS2436690",
+          "SRS2436691",
+          "SRS2436696",
+          "SRS2436697",
+          "SRS2436694",
+          "SRS2436695",
+          "SRS2436708",
+          "SRS2436709",
+          "SRS2436700",
+          "SRS2436701",
+          "SRS2436702",
+          "SRS2436703",
+          "SRS2436704",
+          "SRS2436705",
+          "SRS2436706",
+          "SRS2436707",
+          "SRS2436689",
+          "SRS2436688",
+          "SRS2436724",
+          "SRS2436725",
+          "SRS2436722",
+          "SRS2436723",
+          "SRS2436720",
+          "SRS2436721",
+          "SRS2436681",
+          "SRS2436680",
+          "SRS2436683",
+          "SRS2436682",
+          "SRS2436685",
+          "SRS2436684",
+          "SRS2436687",
+          "SRS2436686"
+        ],
+        "biome_name": [
+          "Fecal"
+        ],
+        "centre_name": [
+          "BioProject"
+        ],
+        "creation_date": [],
+        "description": [
+          "Is it possible that the relationship between periodontitis and these diseases are indirectly linked to disturbances on the intestinal microbiome?"
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "SRP115612"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Association between oral and gut microbiota in Periodontal Disease"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP008596",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB7664"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR665272"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS576869"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "centre_name": [
+          "PML"
+        ],
+        "creation_date": [],
+        "description": [
+          "The impact of the seasonal deposition of phytoplankton and phytodetritus on surface sediment bacterial abundance and community composition was investigated at the Western English Channel site L4. Sediment and water samples were collected from January to September in 2012, increasing in frequency during periods of high water column phytoplankton abundance. Compared to the past two decades, the spring bloom in 2012 was both unusually long in duration and contained higher than average biomass. Within spring months, the phytoplankton bloom was well mixed through the water column and showed accumulations near the sea bed, as evidenced by flow cytometry measurements of nanoeukaryotes, water column chlorophyll and the appearance of pelagic phytoplankton at the sediment. Measurements of chlorophyll and chlorophyll degradation products indicated phytoplankton material was heavily degraded only when it reached the sediment surface: the nature of the chlorophyll degradation products was indicative of grazing activity. The abundance of bacterial 16S rRNA genes per gram sediment (used as a proxy for bacterial biomass) increased markedly with the onset of the phytoplankton bloom, and correlated with measurements of chlorophyll at the sediment surface. Together, this suggests that bacteria may have responded to nutrients released via grazing activity. In depth sequencing of 16S rRNA genes was also performed on four replicate samples from eight sampling point throughout the duration of the spring bloom. This indicated that the composition of the bacterial community shifted rapidly through-out the prolonged spring bloom period; primarily due to an increase in the abundance of members of the Flavobacteria."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP008596"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Response of the sediment bacterial community to a spring phytoplankton bloom at the Western English Channel Observatory site L4"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP009222",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB8180"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR726153",
+          "ERR726152",
+          "ERR726151",
+          "ERR726150",
+          "ERR726111",
+          "ERR726155",
+          "ERR726154",
+          "ERR726110",
+          "ERR726131",
+          "ERR726116",
+          "ERR726115",
+          "ERR726114",
+          "ERR726135",
+          "ERR726112",
+          "ERR726137",
+          "ERR726136",
+          "ERR726139",
+          "ERR726138",
+          "ERR726119",
+          "ERR726156",
+          "ERR726118",
+          "ERR726144",
+          "ERR726145",
+          "ERR726146",
+          "ERR726147",
+          "ERR726140",
+          "ERR726141",
+          "ERR726142",
+          "ERR726143",
+          "ERR726148",
+          "ERR726149",
+          "ERR726109",
+          "ERR726122",
+          "ERR726123",
+          "ERR726120",
+          "ERR726121",
+          "ERR726126",
+          "ERR726127",
+          "ERR726124",
+          "ERR726125",
+          "ERR726128",
+          "ERR726129",
+          "ERR726117",
+          "ERR726130",
+          "ERR726133",
+          "ERR726132",
+          "ERR726113",
+          "ERR726134"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS637687",
+          "ERS637686",
+          "ERS637685",
+          "ERS637684",
+          "ERS637683",
+          "ERS637682",
+          "ERS637681",
+          "ERS637680",
+          "ERS637689",
+          "ERS637688",
+          "ERS637665",
+          "ERS637664",
+          "ERS637704",
+          "ERS637705",
+          "ERS637702",
+          "ERS637660",
+          "ERS637700",
+          "ERS637662",
+          "ERS637669",
+          "ERS637668",
+          "ERS637698",
+          "ERS637699",
+          "ERS637663",
+          "ERS637707",
+          "ERS637690",
+          "ERS637691",
+          "ERS637692",
+          "ERS637693",
+          "ERS637694",
+          "ERS637667",
+          "ERS637696",
+          "ERS637697",
+          "ERS637695",
+          "ERS637666",
+          "ERS637706",
+          "ERS637661",
+          "ERS637703",
+          "ERS637676",
+          "ERS637677",
+          "ERS637674",
+          "ERS637675",
+          "ERS637672",
+          "ERS637673",
+          "ERS637670",
+          "ERS637671",
+          "ERS637701",
+          "ERS637678",
+          "ERS637679"
+        ],
+        "biome_name": [
+          "Dairy products"
+        ],
+        "centre_name": [
+          "TEAGASC"
+        ],
+        "creation_date": [],
+        "description": [
+          "The microbial composition of raw and pasteurised milk is assessed by industry on a daily basis. However, many such tests are culture-dependent and thus bacteria that are present at sub-dominant levels and/or that cannot be easily grown in the laboratory may be overlooked. To address this potential bias, we have employed a number of culture-independent techniques, including flow cytometry, real-time qPCR and high throughput sequencing, to assess the microbial population of milk from a selection of commercial milk producers, pre- and post-pasteurisation. The combination of techniques employed reveals the presence of a previously unrecognised and diverse bacterial population in unpasteurised cow's milk. Most notably, the use of high throughput sequencing resulted in a number of bacterial genera being identified in milk samples for the first time. These included Bacteroides, Faecalibacterium, Prevotella and Catenibacterium. Our culture-independent analyses also indicate that the bacterial population of pasteurised milk is more diverse than previously appreciated but that non-thermoduric bacteria within these populations are likely to be in a damaged, non-culturable form. It is thus apparent that the application of state-of-the-art approaches can provide a detailed insight into the bacterial composition of milk and could potentially be employed in the future to investigate the factors that influence the composition of these populations."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP009222"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "The microbial content of raw and pasteurised cow's milk as determined by molecular approaches including sequencing"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "SRP029612",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA218160"
+        ],
+        "METAGENOMICS_RUNS": [
+          "SRR971580",
+          "SRR971576",
+          "SRR971579"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS477426",
+          "SRS477425",
+          "SRS477424"
+        ],
+        "biome_name": [
+          "Permafrost"
+        ],
+        "centre_name": [
+          "BioProject"
+        ],
+        "creation_date": [],
+        "description": [
+          "The goal of this study is to uncover the inter-reflections between microbes and environment in continuous permafrost near bitumen in Qiangtang basin.  Organisms were grown in pure culture after isolation from permafrost soil."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "SRP029612"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Study of microbial community structure of permafrost soil"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "SRP033553",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA230363"
+        ],
+        "METAGENOMICS_RUNS": [
+          "SRR1044006",
+          "SRR2034639",
+          "SRR2034638",
+          "SRR1045100",
+          "SRR2034637",
+          "SRR1044033",
+          "SRR1044032",
+          "SRR1044036",
+          "SRR1044035",
+          "SRR1044034",
+          "SRR2037090",
+          "SRR2037091",
+          "SRR1044017",
+          "SRR1045098",
+          "SRR1045099",
+          "SRR2034640",
+          "SRR2037089",
+          "SRR2037088",
+          "SRR2037087",
+          "SRR1045093",
+          "SRR2037085",
+          "SRR2037084",
+          "SRR2037083",
+          "SRR1045097",
+          "SRR1045094",
+          "SRR1045095",
+          "SRR1045092",
+          "SRR1045096"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS512698",
+          "SRS512699",
+          "SRS512696",
+          "SRS512697",
+          "SRS512694",
+          "SRS512695",
+          "SRS942321",
+          "SRS942320",
+          "SRS512700",
+          "SRS512701",
+          "SRS512702",
+          "SRS511706",
+          "SRS943650",
+          "SRS511712",
+          "SRS511709",
+          "SRS511708",
+          "SRS511713",
+          "SRS511711",
+          "SRS942313",
+          "SRS942319",
+          "SRS943643",
+          "SRS511714",
+          "SRS943647",
+          "SRS943646",
+          "SRS943645",
+          "SRS943644",
+          "SRS943649",
+          "SRS943648"
+        ],
+        "biome_name": [
+          "Oral"
+        ],
+        "centre_name": [
+          "BioProject"
+        ],
+        "creation_date": [],
+        "description": [
+          "Microbiome associated with periodontal health and disease"
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "SRP033553"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Oral Microbiome"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP014473",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB12940"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR1303295",
+          "ERR1303296"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS1075580",
+          "ERS1075581"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "centre_name": [
+          "ESTACION EXPERIMENTAL DE ZONAS ARIDAS. CSIC."
+        ],
+        "creation_date": [],
+        "description": [
+          "Comparison of two microbiomes of two adjacents environments in Florianopolis (Brasil): a rich organic matter/high plant diversity env. (\"Forest\") and a poor sand-like dune env. with sea influence (\"Dune\")."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP014473"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Comparison of two soil microbiomes with different organic matter content"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "SRP005264",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA79907"
+        ],
+        "METAGENOMICS_RUNS": [
+          "SRR091238",
+          "SRR091237"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS151797"
+        ],
+        "biome_name": [
+          "Forest soil"
+        ],
+        "centre_name": [
+          "Massachusetts Institute of Technology"
+        ],
+        "creation_date": [],
+        "description": [
+          "This project sequenced the metagenome and metatranscriptome of a temperate forest soil microbial community.  Soil was collected from within a transition hardwood-white pine/hemlock forest in the Prospect Hill Tract of Harvard Forest (Massachusetts, USA; 42.54 N 72.18W; elevation: 385 m) on 27 September, 2010.  Two cores were taken from 1-10 cm below the leaf horizon using a 10 mm diameter soil corer.  These cores were homogenized, placed into 50 ml Falcon tubes, flash frozen in liquid nitrogen, and transported to the lab on dry ice.  Visible pieces of plant material were removed from soil subsamples with sterile forceps.  During plant removal, the subsamples were placed on a sterile surface, laid within a bed of dry ice.  Total microbial DNA and RNA was then extracted from these subsamples using PowerSoil Total RNA and DNA isolation kits (MoBio), according to the manufacturer's protocol.  Total DNA was quantified and used directly for pyrosequencing.  Total RNA was further processed to reduce the proportion of ribosomal RNA transcripts via a custom subtractive hybridization procedure.  Remaining total RNA was then linearly amplified, converted to cDNA, and used for pyrosequencing.  Soil DNA and cDNA were sequenced with full plate runs on a Roche Genome Sequencer FLX instrument using Titanium chemistry."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "SRP005264"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Harvard Forest soil microbial gene expression"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "SRP026166",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA208897"
+        ],
+        "METAGENOMICS_RUNS": [
+          "SRR1016836",
+          "SRR1016789",
+          "SRR1016830",
+          "SRR1016831",
+          "SRR1016832",
+          "SRR1016833",
+          "SRR1016834",
+          "SRR1016835",
+          "SRR1016818",
+          "SRR1016819",
+          "SRR1016816",
+          "SRR1016817",
+          "SRR1016814",
+          "SRR1016815",
+          "SRR1016812",
+          "SRR1016813",
+          "SRR1016810",
+          "SRR1016811",
+          "SRR1016852",
+          "SRR1016853",
+          "SRR1016850",
+          "SRR1016851",
+          "SRR1016856",
+          "SRR1016857",
+          "SRR1016854",
+          "SRR1016855",
+          "SRR1016858",
+          "SRR1016838",
+          "SRR1016803",
+          "SRR1016802",
+          "SRR1016837",
+          "SRR1016791",
+          "SRR1016790",
+          "SRR1016793",
+          "SRR1016792",
+          "SRR1016795",
+          "SRR1016794",
+          "SRR1016797",
+          "SRR1016796",
+          "SRR1016799",
+          "SRR1016798",
+          "SRR1016827",
+          "SRR1016826",
+          "SRR1016825",
+          "SRR1016824",
+          "SRR1016809",
+          "SRR1016808",
+          "SRR1016821",
+          "SRR1016820",
+          "SRR1016805",
+          "SRR1016804",
+          "SRR1016807",
+          "SRR1016806",
+          "SRR1016801",
+          "SRR1016800",
+          "SRR1016829",
+          "SRR1016828",
+          "SRR1016841",
+          "SRR1016840",
+          "SRR1016843",
+          "SRR1016842",
+          "SRR1016845",
+          "SRR1016844",
+          "SRR1016847",
+          "SRR1016846",
+          "SRR1016849",
+          "SRR1016848",
+          "SRR1016839",
+          "SRR1016823",
+          "SRR1016822"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS493948",
+          "SRS493940",
+          "SRS493883",
+          "SRS493882",
+          "SRS493881",
+          "SRS493880",
+          "SRS493887",
+          "SRS493886",
+          "SRS493885",
+          "SRS493884",
+          "SRS493920",
+          "SRS493921",
+          "SRS493889",
+          "SRS493888",
+          "SRS493924",
+          "SRS493922",
+          "SRS493923",
+          "SRS493927",
+          "SRS493902",
+          "SRS493903",
+          "SRS493900",
+          "SRS493901",
+          "SRS493906",
+          "SRS493907",
+          "SRS493904",
+          "SRS493905",
+          "SRS493942",
+          "SRS493908",
+          "SRS493909",
+          "SRS493928",
+          "SRS493946",
+          "SRS493925",
+          "SRS493926",
+          "SRS493929",
+          "SRS493931",
+          "SRS493941",
+          "SRS493937",
+          "SRS493934",
+          "SRS493943",
+          "SRS493936",
+          "SRS493947",
+          "SRS493935",
+          "SRS493894",
+          "SRS493895",
+          "SRS493896",
+          "SRS493897",
+          "SRS493890",
+          "SRS493891",
+          "SRS493892",
+          "SRS493893",
+          "SRS493933",
+          "SRS493898",
+          "SRS493899",
+          "SRS493932",
+          "SRS493911",
+          "SRS493910",
+          "SRS493913",
+          "SRS493912",
+          "SRS493915",
+          "SRS493914",
+          "SRS493917",
+          "SRS493916",
+          "SRS493919",
+          "SRS493918",
+          "SRS493944",
+          "SRS493930",
+          "SRS493939",
+          "SRS493938",
+          "SRS493945",
+          "SRS448664"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "centre_name": [
+          "BioProject"
+        ],
+        "creation_date": [],
+        "description": [
+          "To understanding the relationships between bacterial community structure and environmental variables in Arctic tundra soil."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "SRP026166"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Arctic tundra soils Targeted Locus (Loci)"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "SRP073172",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA318004"
+        ],
+        "METAGENOMICS_RUNS": [
+          "SRR3361496",
+          "SRR3361492",
+          "SRR3361558",
+          "SRR3361490",
+          "SRR3361556",
+          "SRR3361557",
+          "SRR3361554",
+          "SRR3361555",
+          "SRR3361552",
+          "SRR3361553",
+          "SRR3361499",
+          "SRR3361551",
+          "SRR3362266",
+          "SRR3362148",
+          "SRR3362149",
+          "SRR3362131",
+          "SRR3362070",
+          "SRR3362071",
+          "SRR3362072",
+          "SRR3362073",
+          "SRR3362074",
+          "SRR3362075",
+          "SRR3362130",
+          "SRR3362140",
+          "SRR3361491",
+          "SRR3361679",
+          "SRR3361678",
+          "SRR3361677",
+          "SRR3361676",
+          "SRR3361675",
+          "SRR3361674",
+          "SRR3361673",
+          "SRR3361672",
+          "SRR3361671",
+          "SRR3361670",
+          "SRR3361479",
+          "SRR3361478",
+          "SRR3361471",
+          "SRR3361470",
+          "SRR3361473",
+          "SRR3361472",
+          "SRR3361475",
+          "SRR3361474",
+          "SRR3361477",
+          "SRR3361476",
+          "SRR3362258",
+          "SRR3362250",
+          "SRR3362139",
+          "SRR3362252",
+          "SRR3362253",
+          "SRR3362255",
+          "SRR3362138",
+          "SRR3362153",
+          "SRR3362152",
+          "SRR3361608",
+          "SRR3362150",
+          "SRR3362157",
+          "SRR3362156",
+          "SRR3362155",
+          "SRR3362154",
+          "SRR3361602",
+          "SRR3361603",
+          "SRR3361600",
+          "SRR3362158",
+          "SRR3361606",
+          "SRR3361607",
+          "SRR3361604",
+          "SRR3361605",
+          "SRR3361501",
+          "SRR3361500",
+          "SRR3361503",
+          "SRR3361502",
+          "SRR3361505",
+          "SRR3361504",
+          "SRR3361507",
+          "SRR3361506",
+          "SRR3361509",
+          "SRR3361508",
+          "SRR3362181",
+          "SRR3362182",
+          "SRR3362183",
+          "SRR3362184",
+          "SRR3362185",
+          "SRR3362186",
+          "SRR3362187",
+          "SRR3362188",
+          "SRR3362189",
+          "SRR3362294",
+          "SRR3362296",
+          "SRR3362290",
+          "SRR3362291",
+          "SRR3362119",
+          "SRR3362118",
+          "SRR3362117",
+          "SRR3362116",
+          "SRR3362115",
+          "SRR3362114",
+          "SRR3362113",
+          "SRR3362112",
+          "SRR3362111",
+          "SRR3362110",
+          "SRR3361646",
+          "SRR3361647",
+          "SRR3361644",
+          "SRR3361645",
+          "SRR3361642",
+          "SRR3361643",
+          "SRR3361640",
+          "SRR3361641",
+          "SRR3361648",
+          "SRR3361649",
+          "SRR3362203",
+          "SRR3362202",
+          "SRR3362201",
+          "SRR3362200",
+          "SRR3362207",
+          "SRR3362206",
+          "SRR3362205",
+          "SRR3362204",
+          "SRR3362162",
+          "SRR3362163",
+          "SRR3362209",
+          "SRR3362208",
+          "SRR3362166",
+          "SRR3362167",
+          "SRR3362164",
+          "SRR3362165",
+          "SRR3361549",
+          "SRR3361545",
+          "SRR3361544",
+          "SRR3361547",
+          "SRR3361546",
+          "SRR3361541",
+          "SRR3361540",
+          "SRR3361543",
+          "SRR3362067",
+          "SRR3362066",
+          "SRR3362065",
+          "SRR3362064",
+          "SRR3362063",
+          "SRR3362061",
+          "SRR3362060",
+          "SRR3362069",
+          "SRR3362068",
+          "SRR3362277",
+          "SRR3361682",
+          "SRR3361683",
+          "SRR3361680",
+          "SRR3361681",
+          "SRR3361686",
+          "SRR3361687",
+          "SRR3361684",
+          "SRR3361685",
+          "SRR3361688",
+          "SRR3361689",
+          "SRR3361482",
+          "SRR3361483",
+          "SRR3362176",
+          "SRR3361523",
+          "SRR3361489",
+          "SRR3361619",
+          "SRR3362249",
+          "SRR3362127",
+          "SRR3362247",
+          "SRR3362246",
+          "SRR3362245",
+          "SRR3362244",
+          "SRR3362242",
+          "SRR3362241",
+          "SRR3362126",
+          "SRR3361618",
+          "SRR3362124",
+          "SRR3362125",
+          "SRR3362123",
+          "SRR3362120",
+          "SRR3362121",
+          "SRR3361611",
+          "SRR3361610",
+          "SRR3361613",
+          "SRR3361612",
+          "SRR3361615",
+          "SRR3361614",
+          "SRR3362128",
+          "SRR3362129",
+          "SRR3362293",
+          "SRR3362238",
+          "SRR3362239",
+          "SRR3361617",
+          "SRR3362232",
+          "SRR3362233",
+          "SRR3361616",
+          "SRR3362236",
+          "SRR3362235",
+          "SRR3362298",
+          "SRR3361534",
+          "SRR3361535",
+          "SRR3361536",
+          "SRR3361537",
+          "SRR3361530",
+          "SRR3361531",
+          "SRR3361533",
+          "SRR3361538",
+          "SRR3361539",
+          "SRR3362197",
+          "SRR3362196",
+          "SRR3362195",
+          "SRR3362194",
+          "SRR3362193",
+          "SRR3362192",
+          "SRR3362058",
+          "SRR3362190",
+          "SRR3362056",
+          "SRR3362057",
+          "SRR3362054",
+          "SRR3362055",
+          "SRR3362199",
+          "SRR3362198",
+          "SRR3362288",
+          "SRR3362281",
+          "SRR3362287",
+          "SRR3362285",
+          "SRR3362284",
+          "SRR3361655",
+          "SRR3361654",
+          "SRR3361657",
+          "SRR3361656",
+          "SRR3361651",
+          "SRR3361650",
+          "SRR3361653",
+          "SRR3361652",
+          "SRR3361717",
+          "SRR3361659",
+          "SRR3361658",
+          "SRR3361748",
+          "SRR3362179",
+          "SRR3362178",
+          "SRR3362274",
+          "SRR3362275",
+          "SRR3362272",
+          "SRR3361778",
+          "SRR3362270",
+          "SRR3362171",
+          "SRR3362170",
+          "SRR3362173",
+          "SRR3362172",
+          "SRR3362175",
+          "SRR3362174",
+          "SRR3362177",
+          "SRR3362279",
+          "SRR3362231",
+          "SRR3361691",
+          "SRR3361690",
+          "SRR3361693",
+          "SRR3361692",
+          "SRR3361695",
+          "SRR3361694",
+          "SRR3361697",
+          "SRR3361696",
+          "SRR3361699",
+          "SRR3362008",
+          "SRR3362168",
+          "SRR3361598",
+          "SRR3362169",
+          "SRR3361592",
+          "SRR3361593",
+          "SRR3361590",
+          "SRR3361591",
+          "SRR3361596",
+          "SRR3361597",
+          "SRR3361594",
+          "SRR3361595",
+          "SRR3362160",
+          "SRR3362161",
+          "SRR3362098",
+          "SRR3362135",
+          "SRR3362134",
+          "SRR3362137",
+          "SRR3362136",
+          "SRR3361628",
+          "SRR3361629",
+          "SRR3362133",
+          "SRR3362132",
+          "SRR3361624",
+          "SRR3361625",
+          "SRR3361626",
+          "SRR3361627",
+          "SRR3361620",
+          "SRR3361621",
+          "SRR3361622",
+          "SRR3361623",
+          "SRR3362099",
+          "SRR3362257",
+          "SRR3362151",
+          "SRR3362229",
+          "SRR3362228",
+          "SRR3361609",
+          "SRR3362221",
+          "SRR3362220",
+          "SRR3362222",
+          "SRR3362225",
+          "SRR3362224",
+          "SRR3361480",
+          "SRR3361481",
+          "SRR3361529",
+          "SRR3361528",
+          "SRR3361484",
+          "SRR3361485",
+          "SRR3361486",
+          "SRR3361488",
+          "SRR3362159",
+          "SRR3361521",
+          "SRR3361520",
+          "SRR3361527",
+          "SRR3361526",
+          "SRR3361525",
+          "SRR3361524",
+          "SRR3361601",
+          "SRR3362096",
+          "SRR3362097",
+          "SRR3361668",
+          "SRR3361669",
+          "SRR3361660",
+          "SRR3361661",
+          "SRR3361662",
+          "SRR3361663",
+          "SRR3361664",
+          "SRR3361665",
+          "SRR3361666",
+          "SRR3361667",
+          "SRR3361702",
+          "SRR3361468",
+          "SRR3361700",
+          "SRR3361466",
+          "SRR3361467",
+          "SRR3361701",
+          "SRR3362264",
+          "SRR3362267",
+          "SRR3361469",
+          "SRR3362261",
+          "SRR3362260",
+          "SRR3362263",
+          "SRR3362144",
+          "SRR3362145",
+          "SRR3362146",
+          "SRR3362147",
+          "SRR3362269",
+          "SRR3362141",
+          "SRR3362142",
+          "SRR3362143",
+          "SRR3361565",
+          "SRR3361564",
+          "SRR3361563",
+          "SRR3361562",
+          "SRR3361561",
+          "SRR3361698",
+          "SRR3362191",
+          "SRR3362059",
+          "SRR3361512",
+          "SRR3361513",
+          "SRR3361510",
+          "SRR3361511",
+          "SRR3361516",
+          "SRR3361517",
+          "SRR3361514",
+          "SRR3361515",
+          "SRR3361518",
+          "SRR3361519",
+          "SRR3361599",
+          "SRR3362034",
+          "SRR3362036",
+          "SRR3361749",
+          "SRR3362033",
+          "SRR3361747",
+          "SRR3361746",
+          "SRR3361589",
+          "SRR3361588",
+          "SRR3361587",
+          "SRR3361586",
+          "SRR3362108",
+          "SRR3362109",
+          "SRR3362100",
+          "SRR3362101",
+          "SRR3362102",
+          "SRR3362103",
+          "SRR3362104",
+          "SRR3362105",
+          "SRR3362106",
+          "SRR3362107",
+          "SRR3361633",
+          "SRR3361632",
+          "SRR3361631",
+          "SRR3361630",
+          "SRR3361637",
+          "SRR3361636",
+          "SRR3361635",
+          "SRR3361634",
+          "SRR3361639",
+          "SRR3361638",
+          "SRR3362218",
+          "SRR3362219",
+          "SRR3362214",
+          "SRR3362215",
+          "SRR3362216",
+          "SRR3362217",
+          "SRR3362210",
+          "SRR3362211",
+          "SRR3362212",
+          "SRR3362213"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS1390070",
+          "SRS1390071",
+          "SRS1390072",
+          "SRS1390073",
+          "SRS1390074",
+          "SRS1390075",
+          "SRS1390076",
+          "SRS1390077",
+          "SRS1390078",
+          "SRS1390079",
+          "SRS1390672",
+          "SRS1390673",
+          "SRS1390670",
+          "SRS1390671",
+          "SRS1390676",
+          "SRS1390677",
+          "SRS1390674",
+          "SRS1390675",
+          "SRS1390678",
+          "SRS1390679",
+          "SRS1387023",
+          "SRS1387022",
+          "SRS1387021",
+          "SRS1387020",
+          "SRS1387027",
+          "SRS1387026",
+          "SRS1387025",
+          "SRS1387024",
+          "SRS1387029",
+          "SRS1387028",
+          "SRS1390098",
+          "SRS1390099",
+          "SRS1390092",
+          "SRS1390093",
+          "SRS1390090",
+          "SRS1390091",
+          "SRS1390096",
+          "SRS1390097",
+          "SRS1390094",
+          "SRS1390095",
+          "SRS1390737",
+          "SRS1390736",
+          "SRS1390735",
+          "SRS1390734",
+          "SRS1390733",
+          "SRS1390732",
+          "SRS1390731",
+          "SRS1390730",
+          "SRS1390739",
+          "SRS1390738",
+          "SRS1386903",
+          "SRS1386902",
+          "SRS1386901",
+          "SRS1386900",
+          "SRS1386907",
+          "SRS1386906",
+          "SRS1386905",
+          "SRS1386904",
+          "SRS1386909",
+          "SRS1386908",
+          "SRS1387114",
+          "SRS1387113",
+          "SRS1387112",
+          "SRS1387111",
+          "SRS1387110",
+          "SRS1390089",
+          "SRS1390029",
+          "SRS1390088",
+          "SRS1390742",
+          "SRS1390743",
+          "SRS1390740",
+          "SRS1390741",
+          "SRS1390746",
+          "SRS1390747",
+          "SRS1390744",
+          "SRS1390745",
+          "SRS1387018",
+          "SRS1387019",
+          "SRS1387017",
+          "SRS1390087",
+          "SRS1390119",
+          "SRS1390118",
+          "SRS1390117",
+          "SRS1390116",
+          "SRS1390115",
+          "SRS1390114",
+          "SRS1390113",
+          "SRS1390112",
+          "SRS1390111",
+          "SRS1390110",
+          "SRS1387069",
+          "SRS1387068",
+          "SRS1387067",
+          "SRS1387066",
+          "SRS1387065",
+          "SRS1387064",
+          "SRS1387063",
+          "SRS1387062",
+          "SRS1387061",
+          "SRS1387060",
+          "SRS1386960",
+          "SRS1386949",
+          "SRS1386948",
+          "SRS1386947",
+          "SRS1386946",
+          "SRS1386945",
+          "SRS1386944",
+          "SRS1386943",
+          "SRS1386942",
+          "SRS1386941",
+          "SRS1386940",
+          "SRS1390067",
+          "SRS1390066",
+          "SRS1390065",
+          "SRS1390064",
+          "SRS1390063",
+          "SRS1390062",
+          "SRS1390061",
+          "SRS1390709",
+          "SRS1390706",
+          "SRS1390707",
+          "SRS1390704",
+          "SRS1390705",
+          "SRS1390702",
+          "SRS1390703",
+          "SRS1390700",
+          "SRS1390701",
+          "SRS1390661",
+          "SRS1390660",
+          "SRS1390663",
+          "SRS1390662",
+          "SRS1390665",
+          "SRS1390664",
+          "SRS1390667",
+          "SRS1390666",
+          "SRS1390669",
+          "SRS1390668",
+          "SRS1386938",
+          "SRS1386939",
+          "SRS1386932",
+          "SRS1386933",
+          "SRS1386930",
+          "SRS1386931",
+          "SRS1386936",
+          "SRS1386937",
+          "SRS1386934",
+          "SRS1386935",
+          "SRS1387056",
+          "SRS1387057",
+          "SRS1387054",
+          "SRS1387055",
+          "SRS1387052",
+          "SRS1387053",
+          "SRS1387050",
+          "SRS1387051",
+          "SRS1387058",
+          "SRS1387059",
+          "SRS1386899",
+          "SRS1390126",
+          "SRS1390127",
+          "SRS1390124",
+          "SRS1390125",
+          "SRS1390122",
+          "SRS1390123",
+          "SRS1390120",
+          "SRS1390121",
+          "SRS1390081",
+          "SRS1390080",
+          "SRS1390083",
+          "SRS1390082",
+          "SRS1390085",
+          "SRS1390084",
+          "SRS1390128",
+          "SRS1390129",
+          "SRS1386983",
+          "SRS1386982",
+          "SRS1386981",
+          "SRS1386980",
+          "SRS1386984",
+          "SRS1390684",
+          "SRS1386877",
+          "SRS1386976",
+          "SRS1386977",
+          "SRS1386974",
+          "SRS1386975",
+          "SRS1386972",
+          "SRS1386973",
+          "SRS1386970",
+          "SRS1386971",
+          "SRS1386978",
+          "SRS1386979",
+          "SRS1386951",
+          "SRS1390058",
+          "SRS1390059",
+          "SRS1390056",
+          "SRS1390057",
+          "SRS1390054",
+          "SRS1390055",
+          "SRS1390052",
+          "SRS1390053",
+          "SRS1390050",
+          "SRS1390051",
+          "SRS1390698",
+          "SRS1390699",
+          "SRS1390690",
+          "SRS1390691",
+          "SRS1390692",
+          "SRS1390693",
+          "SRS1390694",
+          "SRS1390695",
+          "SRS1390696",
+          "SRS1390697",
+          "SRS1390086",
+          "SRS1387092",
+          "SRS1387093",
+          "SRS1387090",
+          "SRS1387091",
+          "SRS1387096",
+          "SRS1387097",
+          "SRS1387094",
+          "SRS1387095",
+          "SRS1387098",
+          "SRS1387099",
+          "SRS1390719",
+          "SRS1390718",
+          "SRS1390715",
+          "SRS1390714",
+          "SRS1390717",
+          "SRS1390716",
+          "SRS1390711",
+          "SRS1390710",
+          "SRS1390713",
+          "SRS1390712",
+          "SRS1390654",
+          "SRS1390655",
+          "SRS1390656",
+          "SRS1390657",
+          "SRS1390650",
+          "SRS1390651",
+          "SRS1390652",
+          "SRS1390653",
+          "SRS1390658",
+          "SRS1390659",
+          "SRS1386929",
+          "SRS1386928",
+          "SRS1386921",
+          "SRS1386920",
+          "SRS1386923",
+          "SRS1386922",
+          "SRS1386925",
+          "SRS1386924",
+          "SRS1386927",
+          "SRS1386926",
+          "SRS1387045",
+          "SRS1387044",
+          "SRS1387047",
+          "SRS1387046",
+          "SRS1387041",
+          "SRS1387040",
+          "SRS1387043",
+          "SRS1387042",
+          "SRS1387049",
+          "SRS1387048",
+          "SRS1390135",
+          "SRS1390134",
+          "SRS1390137",
+          "SRS1390136",
+          "SRS1390131",
+          "SRS1390130",
+          "SRS1390133",
+          "SRS1390132",
+          "SRS1390138",
+          "SRS1386886",
+          "SRS1386887",
+          "SRS1386884",
+          "SRS1386885",
+          "SRS1386888",
+          "SRS1386889",
+          "SRS1386965",
+          "SRS1386964",
+          "SRS1386967",
+          "SRS1386966",
+          "SRS1386961",
+          "SRS1390708",
+          "SRS1386963",
+          "SRS1386962",
+          "SRS1390060",
+          "SRS1386969",
+          "SRS1386968",
+          "SRS1390049",
+          "SRS1390048",
+          "SRS1390045",
+          "SRS1390044",
+          "SRS1390047",
+          "SRS1390046",
+          "SRS1390041",
+          "SRS1390040",
+          "SRS1390043",
+          "SRS1390042",
+          "SRS1390069",
+          "SRS1390689",
+          "SRS1390688",
+          "SRS1390687",
+          "SRS1390686",
+          "SRS1390685",
+          "SRS1390068",
+          "SRS1390683",
+          "SRS1390682",
+          "SRS1390681",
+          "SRS1390680",
+          "SRS1387038",
+          "SRS1387039",
+          "SRS1387034",
+          "SRS1387035",
+          "SRS1387036",
+          "SRS1387037",
+          "SRS1387030",
+          "SRS1387031",
+          "SRS1387032",
+          "SRS1387033",
+          "SRS1387081",
+          "SRS1387080",
+          "SRS1387083",
+          "SRS1387082",
+          "SRS1387085",
+          "SRS1387084",
+          "SRS1387087",
+          "SRS1387086",
+          "SRS1387089",
+          "SRS1387088",
+          "SRS1390720",
+          "SRS1390721",
+          "SRS1390722",
+          "SRS1390723",
+          "SRS1390724",
+          "SRS1390725",
+          "SRS1390726",
+          "SRS1390727",
+          "SRS1390728",
+          "SRS1390729",
+          "SRS1386891",
+          "SRS1386918",
+          "SRS1386919",
+          "SRS1386890",
+          "SRS1386914",
+          "SRS1386915",
+          "SRS1386916",
+          "SRS1386917",
+          "SRS1386910",
+          "SRS1386911",
+          "SRS1386912",
+          "SRS1386913",
+          "SRS1387100",
+          "SRS1387101",
+          "SRS1387102",
+          "SRS1387103",
+          "SRS1387104",
+          "SRS1387105",
+          "SRS1387106",
+          "SRS1387107",
+          "SRS1387108",
+          "SRS1387109",
+          "SRS1390034",
+          "SRS1390035",
+          "SRS1390036",
+          "SRS1390037",
+          "SRS1390030",
+          "SRS1390031",
+          "SRS1390032",
+          "SRS1390033",
+          "SRS1390038",
+          "SRS1390039",
+          "SRS1390108",
+          "SRS1390109",
+          "SRS1390100",
+          "SRS1390101",
+          "SRS1390102",
+          "SRS1390103",
+          "SRS1390104",
+          "SRS1390105",
+          "SRS1390106",
+          "SRS1390107",
+          "SRS1387078",
+          "SRS1387079",
+          "SRS1387070",
+          "SRS1387071",
+          "SRS1387072",
+          "SRS1387073",
+          "SRS1387074",
+          "SRS1387075",
+          "SRS1387076",
+          "SRS1387077",
+          "SRS1386958",
+          "SRS1386959",
+          "SRS1386893",
+          "SRS1386892",
+          "SRS1386895",
+          "SRS1386894",
+          "SRS1386897",
+          "SRS1386896",
+          "SRS1386950",
+          "SRS1386898",
+          "SRS1386952",
+          "SRS1386953",
+          "SRS1386954",
+          "SRS1386955",
+          "SRS1386956",
+          "SRS1386957"
+        ],
+        "biome_name": [
+          "Fecal"
+        ],
+        "centre_name": [
+          "University of Michigan"
+        ],
+        "creation_date": [],
+        "description": [
+          "Using DNA extracted from fecal immunochemical test cartridges rather than directly from stool for detecting colorectal cancer based on the gut microbiome."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "SRP073172"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "DNA from FIT can replace stool for microbiota-based colorectal"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP007030",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB7319"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR738433",
+          "ERR738432",
+          "ERR629093",
+          "ERR647945"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS550436",
+          "ERS559123",
+          "ERS559122",
+          "ERS559121"
+        ],
+        "biome_name": [
+          "Phylloplane"
+        ],
+        "centre_name": [
+          "INRA Bordeaux-Aquitaine (Biodiversity, Genes and Communities)"
+        ],
+        "creation_date": [],
+        "description": [
+          "Plant-inhabiting microorganisms interact directly with each other, forming complex microbial interaction networks. These networks may be disrupted by the arrival of a new species, such as a pathogen infecting the plant. Here we decipher intra-kingdom and cross-kingdom interactions involving a pathogen species, by using a Bayesian method of network inference.  We use this method to highlight the most likely interactions between Erysiphe alphitoides, the causal agent of oak powdery mildew, and other foliar microorganisms of pedunculate oak (Quercus robur L.). Our results showed that infection by E. alphitoides is accompanied by drastic changes in the foliar fungal community composition but no significant change in the bacterial community composition. Our analyses highlighted 13 fungal Operational Taxonomic Units (OTUs) and 13 bacterial OTUs that are likely to interact directly with E. alphitoides. Four of the fungal OTUs were phyllosphere yeasts. The fungal endophytes Mycosphaerella punctiformis and Monochaetia kansensis were highlighted as potential antagonists of E. alphitoides. These potential interactions will have to be validated experimentally. The study of the temporal dynamics of microbial networks during the course of infection also appears to be a promising research avenue, that will undoubtedly give deeper insights into the ecology of this disease. Overall, we showed that combining metagenomics and network ecology may improve biological control of plant diseases, by highlighting potential antagonists of pathogen species."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP007030"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Deciphering the pathobiome: intra-and inter-kingdom interactions involving the pathogen Erysiphe alphitoides."
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "SRP095053",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA356078"
+        ],
+        "METAGENOMICS_RUNS": [
+          "SRR5105309",
+          "SRR5105312",
+          "SRR5105310",
+          "SRR5105311"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS1858268",
+          "SRS1858265",
+          "SRS1858266",
+          "SRS1858267"
+        ],
+        "biome_name": [
+          "Biotransformation"
+        ],
+        "centre_name": [
+          "BioProject"
+        ],
+        "creation_date": [],
+        "description": [
+          "Recycled paper sludge microbial community as a potential source of enzymes"
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "SRP095053"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Paper sludge microbial community"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP000339",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB2280"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR019478",
+          "ERR019477"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS015567",
+          "ERS015568"
+        ],
+        "biome_name": [
+          "Lentic"
+        ],
+        "centre_name": [
+          "UBP-CNRS"
+        ],
+        "creation_date": [],
+        "description": [
+          "Viruses are known to be the most abundant biological entities in\n    aquatic environment, where they are (i) important top-down regulation factors for\n    microbial communities, (ii) known to interfere in major biogeochemical cycles, and\n    (iii) thought to be an important source of genetic diversity. Yet, diversity and\n    distribution of these viruses is still far from being understood, especially in\n    freshwater ecosystems. Metagenomic analysis of two different temperate freshwater\n    viral communities showed that most of the viral sequences were not similar to those\n    in the current databases. A deep sequencing (1.5 billion sequences) associated to a\n    large read size (400 bp) allowed us to assess, for the first time, the diversity in\n    the main viral families through direct phylogenetic analysis of specific marker\n    genes. The analysis of the major viral groups found in the two lakes shed light on a\n    great diversity, and retrieved previously unknown clades among single-stranded DNA\n    viruses (Microviridae, Circoviridae, Nanoviridae) and among Caudovirales. The\n    absence of lake-specific clade indicated that the new viruses identified were\n    ubiquitous, at least on a regional freshwater lake scale. Compared to the previously\n    published viromes, a significant genetic similarity between viral communities of\n    related environments was highlighted for the first time, despite the great\n    geographical distances separating these different communities. Thus, viruses appear\n    to be distributed worldwide, and are likely selected by the presence or absence of\n    their hosts. Gene richness analysis assessed through rarefaction curves showed an\n    extraordinary genetic diversity of viruses in each of the two lakes under study.\n    Such diversity was never retrieved previously, even in the last generation of\n    published viromes. The global virome is thereby a fantastic pool of unknown genes,\n    which remains partially sampled and understood."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP000339"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Viral metagenomic study of two freshwater Lakes"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "SRP040500",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA242522"
+        ],
+        "METAGENOMICS_RUNS": [
+          "SRR1202217",
+          "SRR1202215",
+          "SRR1202214",
+          "SRR1202124",
+          "SRR1202220",
+          "SRR1202218",
+          "SRR1202123",
+          "SRR1202219",
+          "SRR1202280",
+          "SRR1202282",
+          "SRR1202283",
+          "SRR1202284",
+          "SRR1202285",
+          "SRR1202286",
+          "SRR1202287"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS580621",
+          "SRS580620",
+          "SRS580619",
+          "SRS580512",
+          "SRS580618",
+          "SRS580615",
+          "SRS580614",
+          "SRS580617",
+          "SRS580616",
+          "SRS580612"
+        ],
+        "biome_name": [
+          "Uranium contaminated"
+        ],
+        "centre_name": [
+          "BioProject"
+        ],
+        "creation_date": [],
+        "description": [
+          "High throughput pyrosequencing was used to assess the impact of uranium on bacterial communities by a comparative analysis of uranium-rich and control soil samples.  Soil samples with high and low uranium content were collected in the region of Bessines (Limousin, France), one of the most important natural uranium deposits in France."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "SRP040500"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Natural uranium-rich soils Targeted Locus (Loci)"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP104211",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB22530"
+        ],
+        "METAGENOMICS_RUNS": [
+          "GCA_900216645",
+          "GCA_900216655",
+          "GCA_900216635",
+          "GCA_900216665"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS345522",
+          "SRS345600",
+          "SRS345606",
+          "SRS345598"
+        ],
+        "biome_name": [
+          "Permafrost"
+        ],
+        "centre_name": [
+          "EMG"
+        ],
+        "creation_date": [],
+        "description": [
+          "The permafrost metagenome Third Party Annotation (TPA) assembly was derived from the primary whole genome shotgun (WGS) data set PRJNA72925. This project includes samples from the following biomes : Soil."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP104211"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "EMG produced TPA metagenomics assembly of the Central Alaskan Permafrost Metagenome (permafrost metagenome) data set"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP105190",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB23435"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR2204557",
+          "ERR2204556",
+          "ERR2204555",
+          "ERR2204554",
+          "ERR2204553",
+          "ERR2204552",
+          "ERR2204551",
+          "ERR2204564",
+          "ERR2204562",
+          "ERR2204563",
+          "ERR2204560",
+          "ERR2204561",
+          "ERR2204559",
+          "ERR2204558"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS2020058",
+          "ERS2020048",
+          "ERS2020049",
+          "ERS2020046",
+          "ERS2020051",
+          "ERS2020050",
+          "ERS2020053",
+          "ERS2020052",
+          "ERS2020055",
+          "ERS2020047",
+          "ERS2020044",
+          "ERS2020056",
+          "ERS2020054",
+          "ERS2020045"
+        ],
+        "biome_name": [
+          "Respiratory system"
+        ],
+        "centre_name": [
+          "NORTHUMBRIA UNIVERSITY, NEWCASTLE"
+        ],
+        "creation_date": [],
+        "description": [
+          "Exhaled breath condensate is a promising way in identifying biomarkers of lung disease but the  current devices used have disadvantages. The EcoScreen has the disadvantage of not being portable and the R-Tube cannot efficiently keep the sample cool. A 'prototpye' was been created to alleviate these issues. With the 'prototype', EBC  samples were taken and files were concatenated together with md5 checksums allowing for data verification. Data was uploaded and results were compared to current type of collection devices."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP105190"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "The Investigation and Analysis of Microbiomic Data Relating to Diseases Surrounding the Deep Lung Tissue"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP005316",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB5881"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR459279",
+          "ERR459278",
+          "ERR459280",
+          "ERR459281",
+          "ERR459282",
+          "ERR459283",
+          "ERR459273",
+          "ERR459272",
+          "ERR459275",
+          "ERR459274",
+          "ERR459277",
+          "ERR459276"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS423488",
+          "ERS423478",
+          "ERS423482",
+          "ERS423483",
+          "ERS423480",
+          "ERS423481",
+          "ERS423486",
+          "ERS423487",
+          "ERS423484",
+          "ERS423485",
+          "ERS423489",
+          "ERS423479"
+        ],
+        "biome_name": [
+          "Activated Sludge"
+        ],
+        "centre_name": [
+          "XIAMEN UNIVERSITY"
+        ],
+        "creation_date": [],
+        "description": [
+          "Volatile fatty acids (VFAs) production through anaerobic fermentation is an effective way. Microbes in active sludge play key roles in VFAs production. In present study, VFAs were produced by sludge from five representative waste organic materials. We investigated prokaryotic community structure and diversity in sludge samples using 454 pyrosequencing technique based on 16S rRNA gene. Samples were collected as replicate samples for every waste organic material."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP005316"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Volatile fatty acids (VFAs) production through anaerobic fermentation"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP016724",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB15034"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR1559795",
+          "ERR1559794",
+          "ERR1559797",
+          "ERR1559796",
+          "ERR1559791",
+          "ERR1559790",
+          "ERR1559793",
+          "ERR1559792",
+          "ERR1559799",
+          "ERR1559798",
+          "ERR1559809",
+          "ERR1559808",
+          "ERR1559801",
+          "ERR1559800",
+          "ERR1559803",
+          "ERR1559802",
+          "ERR1559805",
+          "ERR1559804",
+          "ERR1559807",
+          "ERR1559806",
+          "ERR1558701",
+          "ERR1558700",
+          "ERR1559787",
+          "ERR1559788",
+          "ERR1559789",
+          "ERR1558699",
+          "ERR1558698",
+          "ERR1558693",
+          "ERR1558697",
+          "ERR1558696",
+          "ERR1558695",
+          "ERR1558694",
+          "ERR1559810",
+          "ERR1559811"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS1284764",
+          "ERS1284765",
+          "ERS1284766",
+          "ERS1284767",
+          "ERS1284762",
+          "ERS1284763",
+          "ERS1284768",
+          "ERS1284769",
+          "ERS1284786",
+          "ERS1284784",
+          "ERS1284785",
+          "ERS1284782",
+          "ERS1284783",
+          "ERS1284780",
+          "ERS1284781",
+          "ERS1280331",
+          "ERS1280330",
+          "ERS1284779",
+          "ERS1284778",
+          "ERS1284773",
+          "ERS1284772",
+          "ERS1284771",
+          "ERS1284770",
+          "ERS1284777",
+          "ERS1284776",
+          "ERS1284775",
+          "ERS1284774",
+          "ERS1280328",
+          "ERS1280329",
+          "ERS1280323",
+          "ERS1280324",
+          "ERS1280325",
+          "ERS1280326",
+          "ERS1280327"
+        ],
+        "biome_name": [
+          "Contaminated"
+        ],
+        "centre_name": [
+          "UNIVERSITY OF SZEGED"
+        ],
+        "creation_date": [],
+        "description": [
+          "Samples were taken from 3 contaminated and 1 non contaminated sites of the military base in 3 depth (1m, 5.5-5.8m and 7.5-7.8m). After DNA extraction whole metagenome sequencing was performed on Illumina MiSeq platform."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP016724"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Metagenomic analysis of soil samples from an oil contaminated military base"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP104935",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB23198"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR2193706",
+          "ERR2193705",
+          "ERR2193093",
+          "ERR2194487",
+          "ERR2194489",
+          "ERR2194488",
+          "ERR2216058",
+          "ERR2193551",
+          "ERR2193100",
+          "ERR2193099",
+          "ERR2193098",
+          "ERR2185274",
+          "ERR2185275",
+          "ERR2185276",
+          "ERR2185277",
+          "ERR2185278",
+          "ERR2193092",
+          "ERR2193097",
+          "ERR2193096",
+          "ERR2193095",
+          "ERR2193094",
+          "ERR2193548",
+          "ERR2193547",
+          "ERR2185273"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS1984178",
+          "ERS1984179",
+          "ERS1984174",
+          "ERS1984176",
+          "ERS1984177",
+          "ERS1984170",
+          "ERS1984171",
+          "ERS1984172",
+          "ERS1984173",
+          "ERS1984189",
+          "ERS1984188",
+          "ERS1984185",
+          "ERS1984184",
+          "ERS1984187",
+          "ERS1984186",
+          "ERS1984181",
+          "ERS1984180",
+          "ERS1984183",
+          "ERS1984182",
+          "ERS1984167",
+          "ERS1984169",
+          "ERS1984168",
+          "ERS1984190"
+        ],
+        "biome_name": [
+          "Large intestine"
+        ],
+        "centre_name": [
+          "IUT de Caen Universite de Caen Normandie"
+        ],
+        "creation_date": [],
+        "description": [
+          "A growing body of research suggests that dysbiosis of the gut microbiota induced by environmental pollutants, such as pesticides, could have a role in the development of metabolic disorders.  We have examined the long-term effects of 3 doses of the Roundup herbicide (made of glyphosate and formulants) on the gut microbiota in male and female Sprague-Dawley rats. A total of 141 bacteria families were identified by a high-throughput sequencing metagenomics approach. An OPLS-DA analysis revealed an increased Bacteroidetes family S24-7 and a decreased Lactobacillaceae in 8 out of the 9 females treated with Roundup. These effects were confirmed by repetitive sequence-based PCR fingerprinting showing a clustering of treated females. A traditional culture-based method showed that Roundup had a direct effect on rat gut microbiota. Cultivable species showed different sensitivities to Roundup, including the presence of a high tolerant strain identified as Escherichia coli by 16S rRNA sequencing. The high tolerance of this E. Coli strain was explained by the absence of the EPSPS gene (coding glyphosate target enzyme) as studied by DNA amplification. Overall, these gut microbiome disturbances showed a substantial overlap with those associated with liver dysfunction in other studies. In conclusion, we revealed that environmental concentrations of R have a sex-dependent impact on rat gut microbiome composition and thus warrant further investigations."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP104935"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "16S RNA  high-throughput sequencing of the gut microbiota from chronic exposed Sprague-Dawley rats."
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "SRP043987",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA252756"
+        ],
+        "METAGENOMICS_RUNS": [
+          "SRR1505370",
+          "SRR1505362",
+          "SRR1505369",
+          "SRR1505375"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS652190",
+          "SRS652193",
+          "SRS652195",
+          "SRS652197"
+        ],
+        "biome_name": [
+          "Contaminated"
+        ],
+        "centre_name": [
+          "BioProject"
+        ],
+        "creation_date": [],
+        "description": [
+          "Changes in soil bacterial populations following incubation with mixtures of hydrocarbons"
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "SRP043987"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Soil Metagenome"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP020191",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB18265"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR1744184",
+          "ERR1744185",
+          "ERR1744186",
+          "ERR1744187",
+          "ERR1744180",
+          "ERR1744181",
+          "ERR1744182",
+          "ERR1744183",
+          "ERR1744188",
+          "ERR1744189"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS1462084",
+          "ERS1462087",
+          "ERS1462086",
+          "ERS1462085",
+          "ERS1462079",
+          "ERS1462083",
+          "ERS1462082",
+          "ERS1462081",
+          "ERS1462080",
+          "ERS1462088"
+        ],
+        "biome_name": [
+          "Fecal"
+        ],
+        "centre_name": [
+          "RIPCM"
+        ],
+        "creation_date": [],
+        "description": [
+          "A problem of antibiotic resistance emergence in microbiome will be investigated in the research. To date, gut microbiome (as well as soil microbiome) is considered to be antibiotic resistance reservoir. The resistance can accumulate in the microbiome after antibiotic treatment against infectious agents, and it can be passed to pathogenic bacteria during further infections, even though absence of the target infection is checked after each therapy. Moreover, use of antibiotics in agriculture and every day life (without doctor’s recommendations) creates an environment for antibiotic resistance transfer between microbiomes, as there is always a selective pressure for it. That is a quite dangerous situation, as there is a permanent ubiquitous antibiotic resistance (AR) background. In the framework of the research available data on Russian and worldwide microbiomes (more than 2000 by 2015 year) will be analyzed and groups of patients who passed antibiotic treatment will be studied. Using obtained results a map of antibiotic resistance expansion will be created, dominating mechanisms of the resistance transfer and AR genes hosts will be revealed. Additionally, laboratory methods and mathematical analysis for genes’ and mechanisms’ screening will be developed. The developed models AR transfer will make possible modeling of various methods for AR transfer prevention, or, alternatively, modeling of consequences of different antibiotics’ use. Concluding, basic mechanisms of AR emergence will be described (6-1-3) and new methods of screening will be proposed. Furthermore, principle of the screening operation will be demonstrated on available data on AR, as well as on chosen clinical groups."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP020191"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Estimation of variability in the gut microbiota resistome of the Russian citizens aimed at identification of pathways for transmission and spread of antibiotic resistance."
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "SRP047100",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA260660"
+        ],
+        "METAGENOMICS_RUNS": [
+          "SRR1574779",
+          "SRR1578058"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS700775"
+        ],
+        "biome_name": [
+          "Desert"
+        ],
+        "centre_name": [
+          "BioProject"
+        ],
+        "creation_date": [],
+        "description": [
+          "Targetted geno-diversity Of lipase genes in cold desert Of Drass (Ladakh, Jammu and Kashmir)"
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "SRP047100"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Cold desert Metagenome"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP005558",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB6092"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR505093",
+          "ERR505092",
+          "ERR505091",
+          "ERR505090",
+          "ERR505097",
+          "ERR505096",
+          "ERR505095",
+          "ERR505094",
+          "ERR505099",
+          "ERR505098",
+          "ERR505084",
+          "ERR505085",
+          "ERR505086",
+          "ERR505087",
+          "ERR505083",
+          "ERR505088",
+          "ERR505089",
+          "ERR505105",
+          "ERR505104",
+          "ERR505106",
+          "ERR505101",
+          "ERR505100",
+          "ERR505103",
+          "ERR505102"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS433548",
+          "ERS433549",
+          "ERS433559",
+          "ERS433558",
+          "ERS433555",
+          "ERS433554",
+          "ERS433557",
+          "ERS433556",
+          "ERS433551",
+          "ERS433550",
+          "ERS433553",
+          "ERS433552",
+          "ERS433564",
+          "ERS433565",
+          "ERS433560",
+          "ERS433561",
+          "ERS433562",
+          "ERS433563",
+          "ERS433546",
+          "ERS433547",
+          "ERS433544",
+          "ERS433545",
+          "ERS433542",
+          "ERS433543"
+        ],
+        "biome_name": [
+          "Fecal"
+        ],
+        "centre_name": [
+          "UNIVERSITY OF SYDNEY"
+        ],
+        "creation_date": [],
+        "description": [
+          "Two diets, Korean and Western diet. Each 6 individuals, half of which lost a lot of weight and half of which lost little weight. Fecal samples taken before and after diet (3 months)."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP005558"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Metagenome fecal microbiota, Illumina seq reads of 12 individuals at 2 timepoints"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "ERP016645",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB14963"
+        ],
+        "METAGENOMICS_RUNS": [
+          "ERR1551834",
+          "ERR1551835",
+          "ERR1551836",
+          "ERR1551837",
+          "ERR1551833",
+          "ERR1551838",
+          "ERR1551839",
+          "ERR1551841",
+          "ERR1551840",
+          "ERR1551842"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS1270428",
+          "ERS1270429",
+          "ERS1270423",
+          "ERS1270424",
+          "ERS1270425",
+          "ERS1270431",
+          "ERS1270427",
+          "ERS1270426",
+          "ERS1270432",
+          "ERS1270430"
+        ],
+        "biome_name": [
+          "Fecal"
+        ],
+        "centre_name": [
+          "TUM"
+        ],
+        "creation_date": [],
+        "description": [
+          "The high throughput sequencing powered by next generation sequencing offered unprecedented resolution in delineating the composition of microbial profiles. To best evaluate the biases and artifacts entangled within the sequencing output we had repeatedly sequenced an amplicon library from the same fecal sample 10 times in 4 distinct Illumina MiSeq sequencing runs. Analysis of the observed Operational Taxonomic Units (OTUs) showed as expected a strong correlation of relative abundance with the coefficient of variation. The results are used to argue about the appropriate relative abundance exclusion cutoff used in the Rhea pipeline for the analysis of microbial profiles."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "ERP016645"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Technical biases and variations on species abundances for a repetitively sequenced fecal sample 16S rRNA library."
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "SRP060310",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA274944"
+        ],
+        "METAGENOMICS_RUNS": [
+          "SRR2086890",
+          "SRR2086891",
+          "SRR2086895",
+          "SRR2086818",
+          "SRR2086819",
+          "SRR2086810",
+          "SRR2086811",
+          "SRR2086812",
+          "SRR2086813",
+          "SRR2086814",
+          "SRR2086815",
+          "SRR2086816",
+          "SRR2086817",
+          "SRR2086958",
+          "SRR2086835",
+          "SRR2086951",
+          "SRR2086950",
+          "SRR2086953",
+          "SRR2086952",
+          "SRR2086955",
+          "SRR2086954",
+          "SRR2086957",
+          "SRR2086956",
+          "SRR2086795",
+          "SRR2086887",
+          "SRR2086886",
+          "SRR2086885",
+          "SRR2086884",
+          "SRR2086883",
+          "SRR2086882",
+          "SRR2086881",
+          "SRR2086880",
+          "SRR2086874",
+          "SRR2086889",
+          "SRR2086888",
+          "SRR2086794",
+          "SRR2086809",
+          "SRR2086808",
+          "SRR2086807",
+          "SRR2086806",
+          "SRR2086805",
+          "SRR2086804",
+          "SRR2086803",
+          "SRR2086802",
+          "SRR2086801",
+          "SRR2086800",
+          "SRR2086780",
+          "SRR2086781",
+          "SRR2086782",
+          "SRR2086783",
+          "SRR2086784",
+          "SRR2086785",
+          "SRR2086786",
+          "SRR2086787",
+          "SRR2086788",
+          "SRR2086789",
+          "SRR2086798",
+          "SRR2086820",
+          "SRR2086768",
+          "SRR2086769",
+          "SRR2086762",
+          "SRR2086763",
+          "SRR2086760",
+          "SRR2086761",
+          "SRR2086766",
+          "SRR2086767",
+          "SRR2086764",
+          "SRR2086765",
+          "SRR2086827",
+          "SRR2086927",
+          "SRR2086797",
+          "SRR2086796",
+          "SRR2086878",
+          "SRR2086879",
+          "SRR2086793",
+          "SRR2086792",
+          "SRR2086791",
+          "SRR2086790",
+          "SRR2086872",
+          "SRR2086873",
+          "SRR2086870",
+          "SRR2086871",
+          "SRR2086876",
+          "SRR2086877",
+          "SRR2086799",
+          "SRR2086875",
+          "SRR2086779",
+          "SRR2086778",
+          "SRR2086771",
+          "SRR2086770",
+          "SRR2086773",
+          "SRR2086772",
+          "SRR2086775",
+          "SRR2086774",
+          "SRR2086777",
+          "SRR2086776",
+          "SRR2086869",
+          "SRR2086868",
+          "SRR2086904",
+          "SRR2086905",
+          "SRR2086902",
+          "SRR2086903",
+          "SRR2086900",
+          "SRR2086901",
+          "SRR2086861",
+          "SRR2086860",
+          "SRR2086863",
+          "SRR2086862",
+          "SRR2086865",
+          "SRR2086864",
+          "SRR2086867",
+          "SRR2086866",
+          "SRR2086748",
+          "SRR2086749",
+          "SRR2086850",
+          "SRR2086744",
+          "SRR2086745",
+          "SRR2086746",
+          "SRR2086747",
+          "SRR2086740",
+          "SRR2086741",
+          "SRR2086742",
+          "SRR2086743",
+          "SRR2086915",
+          "SRR2086917",
+          "SRR2086916",
+          "SRR2086858",
+          "SRR2086859",
+          "SRR2086913",
+          "SRR2086854",
+          "SRR2086855",
+          "SRR2086856",
+          "SRR2086857",
+          "SRR2086919",
+          "SRR2086851",
+          "SRR2086852",
+          "SRR2086853",
+          "SRR2086753",
+          "SRR2086752",
+          "SRR2086751",
+          "SRR2086750",
+          "SRR2086757",
+          "SRR2086756",
+          "SRR2086755",
+          "SRR2086754",
+          "SRR2086759",
+          "SRR2086758",
+          "SRR2086928",
+          "SRR2086929",
+          "SRR2086920",
+          "SRR2086921",
+          "SRR2086922",
+          "SRR2086923",
+          "SRR2086924",
+          "SRR2086925",
+          "SRR2086926",
+          "SRR2086918",
+          "SRR2086843",
+          "SRR2086842",
+          "SRR2086841",
+          "SRR2086840",
+          "SRR2086847",
+          "SRR2086846",
+          "SRR2086845",
+          "SRR2086844",
+          "SRR2086849",
+          "SRR2086848",
+          "SRR2086726",
+          "SRR2086727",
+          "SRR2086724",
+          "SRR2086725",
+          "SRR2086723",
+          "SRR2086728",
+          "SRR2086729",
+          "SRR2086906",
+          "SRR2086939",
+          "SRR2086938",
+          "SRR2086937",
+          "SRR2086936",
+          "SRR2086935",
+          "SRR2086934",
+          "SRR2086933",
+          "SRR2086932",
+          "SRR2086931",
+          "SRR2086930",
+          "SRR2086836",
+          "SRR2086837",
+          "SRR2086834",
+          "SRR2086949",
+          "SRR2086832",
+          "SRR2086833",
+          "SRR2086830",
+          "SRR2086831",
+          "SRR2086907",
+          "SRR2086838",
+          "SRR2086839",
+          "SRR2086735",
+          "SRR2086734",
+          "SRR2086737",
+          "SRR2086736",
+          "SRR2086731",
+          "SRR2086730",
+          "SRR2086733",
+          "SRR2086732",
+          "SRR2086739",
+          "SRR2086738",
+          "SRR2086829",
+          "SRR2086828",
+          "SRR2086825",
+          "SRR2086824",
+          "SRR2086948",
+          "SRR2086826",
+          "SRR2086821",
+          "SRR2086908",
+          "SRR2086823",
+          "SRR2086822",
+          "SRR2086942",
+          "SRR2086943",
+          "SRR2086940",
+          "SRR2086941",
+          "SRR2086946",
+          "SRR2086947",
+          "SRR2086944",
+          "SRR2086945"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS978713",
+          "SRS978712",
+          "SRS978711",
+          "SRS978710",
+          "SRS978717",
+          "SRS978716",
+          "SRS978715",
+          "SRS978714",
+          "SRS978719",
+          "SRS978718",
+          "SRS978629",
+          "SRS978560",
+          "SRS978653",
+          "SRS978650",
+          "SRS978651",
+          "SRS978656",
+          "SRS978565",
+          "SRS978654",
+          "SRS978655",
+          "SRS978569",
+          "SRS978658",
+          "SRS978659",
+          "SRS978749",
+          "SRS978743",
+          "SRS978599",
+          "SRS978598",
+          "SRS978595",
+          "SRS978594",
+          "SRS978597",
+          "SRS978596",
+          "SRS978591",
+          "SRS978590",
+          "SRS978593",
+          "SRS978592",
+          "SRS978704",
+          "SRS978705",
+          "SRS978706",
+          "SRS978707",
+          "SRS978700",
+          "SRS978701",
+          "SRS978702",
+          "SRS978703",
+          "SRS978788",
+          "SRS978708",
+          "SRS978709",
+          "SRS978789",
+          "SRS978667",
+          "SRS978666",
+          "SRS978665",
+          "SRS978664",
+          "SRS978663",
+          "SRS978662",
+          "SRS978661",
+          "SRS978660",
+          "SRS978784",
+          "SRS978785",
+          "SRS978786",
+          "SRS978787",
+          "SRS978780",
+          "SRS978781",
+          "SRS978782",
+          "SRS978668",
+          "SRS978578",
+          "SRS978588",
+          "SRS978589",
+          "SRS978586",
+          "SRS978587",
+          "SRS978584",
+          "SRS978585",
+          "SRS978582",
+          "SRS978583",
+          "SRS978580",
+          "SRS978581",
+          "SRS978678",
+          "SRS978679",
+          "SRS978669",
+          "SRS978670",
+          "SRS978671",
+          "SRS978672",
+          "SRS978673",
+          "SRS978674",
+          "SRS978675",
+          "SRS978676",
+          "SRS978677",
+          "SRS978771",
+          "SRS978770",
+          "SRS978773",
+          "SRS978772",
+          "SRS978775",
+          "SRS978774",
+          "SRS978777",
+          "SRS978776",
+          "SRS978779",
+          "SRS978778",
+          "SRS978072",
+          "SRS978652",
+          "SRS978609",
+          "SRS978608",
+          "SRS978605",
+          "SRS978604",
+          "SRS978607",
+          "SRS978606",
+          "SRS978601",
+          "SRS978600",
+          "SRS978603",
+          "SRS978657",
+          "SRS978766",
+          "SRS978767",
+          "SRS978764",
+          "SRS978765",
+          "SRS978768",
+          "SRS978783",
+          "SRS978685",
+          "SRS978684",
+          "SRS978687",
+          "SRS978686",
+          "SRS978681",
+          "SRS978680",
+          "SRS978683",
+          "SRS978682",
+          "SRS978689",
+          "SRS978688",
+          "SRS978618",
+          "SRS978619",
+          "SRS978616",
+          "SRS978617",
+          "SRS978614",
+          "SRS978615",
+          "SRS978612",
+          "SRS978613",
+          "SRS978610",
+          "SRS978611",
+          "SRS978752",
+          "SRS978751",
+          "SRS978750",
+          "SRS978730",
+          "SRS978696",
+          "SRS978697",
+          "SRS978694",
+          "SRS978695",
+          "SRS978692",
+          "SRS978693",
+          "SRS978690",
+          "SRS978691",
+          "SRS978602",
+          "SRS978698",
+          "SRS978699",
+          "SRS978640",
+          "SRS978748",
+          "SRS978622",
+          "SRS978621",
+          "SRS978620",
+          "SRS978627",
+          "SRS978626",
+          "SRS978625",
+          "SRS978624",
+          "SRS978740",
+          "SRS978741",
+          "SRS978742",
+          "SRS978628",
+          "SRS978744",
+          "SRS978745",
+          "SRS978746",
+          "SRS978747",
+          "SRS978559",
+          "SRS978558",
+          "SRS978647",
+          "SRS978553",
+          "SRS978552",
+          "SRS978555",
+          "SRS978554",
+          "SRS978557",
+          "SRS978556",
+          "SRS978649",
+          "SRS978576",
+          "SRS978739",
+          "SRS978631",
+          "SRS978769",
+          "SRS978634",
+          "SRS978635",
+          "SRS978636",
+          "SRS978637",
+          "SRS978630",
+          "SRS978738",
+          "SRS978632",
+          "SRS978633",
+          "SRS978735",
+          "SRS978734",
+          "SRS978737",
+          "SRS978736",
+          "SRS978638",
+          "SRS978639",
+          "SRS978733",
+          "SRS978732",
+          "SRS978731",
+          "SRS978547",
+          "SRS978544",
+          "SRS978545",
+          "SRS978728",
+          "SRS978729",
+          "SRS978726",
+          "SRS978727",
+          "SRS978724",
+          "SRS978725",
+          "SRS978722",
+          "SRS978723",
+          "SRS978720",
+          "SRS978721",
+          "SRS978641",
+          "SRS978623",
+          "SRS978643",
+          "SRS978642",
+          "SRS978645",
+          "SRS978644",
+          "SRS978579",
+          "SRS978646",
+          "SRS978577",
+          "SRS978648",
+          "SRS978575",
+          "SRS978574",
+          "SRS978573",
+          "SRS978572",
+          "SRS978571",
+          "SRS978570"
+        ],
+        "biome_name": [
+          "Subgingival plaque"
+        ],
+        "centre_name": [
+          "BioProject"
+        ],
+        "creation_date": [],
+        "description": [
+          "Subgingival samples from Healthy / Periodontitis subjects"
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "SRP060310"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Subgingival samples from Healthy / Periodontitis subjects Targeted Locus (Loci)"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "DRP003100",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJDB3211"
+        ],
+        "METAGENOMICS_RUNS": [
+          "DRR024151",
+          "DRR024150",
+          "DRR024153",
+          "DRR024152",
+          "DRR024155",
+          "DRR024154",
+          "DRR024157",
+          "DRR024156",
+          "DRR024159",
+          "DRR024158",
+          "DRR024069",
+          "DRR024068",
+          "DRR024065",
+          "DRR024064",
+          "DRR024067",
+          "DRR024066",
+          "DRR024061",
+          "DRR024060",
+          "DRR024063",
+          "DRR024062",
+          "DRR024142",
+          "DRR024143",
+          "DRR024140",
+          "DRR024141",
+          "DRR024146",
+          "DRR024147",
+          "DRR024144",
+          "DRR024145",
+          "DRR024148",
+          "DRR024149",
+          "DRR024078",
+          "DRR024079",
+          "DRR024077",
+          "DRR024070",
+          "DRR024050",
+          "DRR024118",
+          "DRR024043",
+          "DRR024042",
+          "DRR024041",
+          "DRR024040",
+          "DRR024047",
+          "DRR024046",
+          "DRR024045",
+          "DRR024044",
+          "DRR024160",
+          "DRR024161",
+          "DRR024049",
+          "DRR024048",
+          "DRR024164",
+          "DRR024165",
+          "DRR024166",
+          "DRR024111",
+          "DRR024110",
+          "DRR024054",
+          "DRR024055",
+          "DRR024056",
+          "DRR024057",
+          "DRR024119",
+          "DRR024051",
+          "DRR024052",
+          "DRR024053",
+          "DRR024115",
+          "DRR024114",
+          "DRR024117",
+          "DRR024116",
+          "DRR024058",
+          "DRR024059",
+          "DRR024113",
+          "DRR024112",
+          "DRR024108",
+          "DRR024109",
+          "DRR024106",
+          "DRR024107",
+          "DRR024104",
+          "DRR024105",
+          "DRR024102",
+          "DRR024103",
+          "DRR024100",
+          "DRR024101",
+          "DRR024027",
+          "DRR024026",
+          "DRR024029",
+          "DRR024028",
+          "DRR024162",
+          "DRR024163",
+          "DRR024089",
+          "DRR024088",
+          "DRR024087",
+          "DRR024086",
+          "DRR024085",
+          "DRR024084",
+          "DRR024083",
+          "DRR024082",
+          "DRR024081",
+          "DRR024080",
+          "DRR024133",
+          "DRR024132",
+          "DRR024131",
+          "DRR024130",
+          "DRR024137",
+          "DRR024136",
+          "DRR024135",
+          "DRR024134",
+          "DRR024139",
+          "DRR024138",
+          "DRR024032",
+          "DRR024033",
+          "DRR024030",
+          "DRR024031",
+          "DRR024036",
+          "DRR024037",
+          "DRR024034",
+          "DRR024035",
+          "DRR024038",
+          "DRR024039",
+          "DRR024090",
+          "DRR024091",
+          "DRR024092",
+          "DRR024093",
+          "DRR024094",
+          "DRR024095",
+          "DRR024096",
+          "DRR024097",
+          "DRR024098",
+          "DRR024099",
+          "DRR024124",
+          "DRR024125",
+          "DRR024126",
+          "DRR024127",
+          "DRR024120",
+          "DRR024121",
+          "DRR024122",
+          "DRR024123",
+          "DRR024128",
+          "DRR024129"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "DRS029562",
+          "DRS029563",
+          "DRS029560",
+          "DRS029561",
+          "DRS029566",
+          "DRS029567",
+          "DRS029564",
+          "DRS029565",
+          "DRS029568",
+          "DRS029569",
+          "DRS029485",
+          "DRS029484",
+          "DRS029487",
+          "DRS029486",
+          "DRS029481",
+          "DRS029480",
+          "DRS029483",
+          "DRS029482",
+          "DRS029489",
+          "DRS029488",
+          "DRS029438",
+          "DRS029557",
+          "DRS029556",
+          "DRS029555",
+          "DRS029554",
+          "DRS029553",
+          "DRS029552",
+          "DRS029551",
+          "DRS029550",
+          "DRS029559",
+          "DRS029558",
+          "DRS029496",
+          "DRS029497",
+          "DRS029494",
+          "DRS029495",
+          "DRS029492",
+          "DRS029493",
+          "DRS029490",
+          "DRS029491",
+          "DRS029498",
+          "DRS029499",
+          "DRS029548",
+          "DRS029549",
+          "DRS029427",
+          "DRS029426",
+          "DRS029540",
+          "DRS029541",
+          "DRS029542",
+          "DRS029543",
+          "DRS029544",
+          "DRS029545",
+          "DRS029546",
+          "DRS029547",
+          "DRS029434",
+          "DRS029435",
+          "DRS029436",
+          "DRS029437",
+          "DRS029430",
+          "DRS029538",
+          "DRS029432",
+          "DRS029433",
+          "DRS029535",
+          "DRS029534",
+          "DRS029537",
+          "DRS029536",
+          "DRS029531",
+          "DRS029530",
+          "DRS029533",
+          "DRS029532",
+          "DRS029539",
+          "DRS029431",
+          "DRS029529",
+          "DRS029441",
+          "DRS029440",
+          "DRS029443",
+          "DRS029442",
+          "DRS029445",
+          "DRS029444",
+          "DRS029447",
+          "DRS029446",
+          "DRS029449",
+          "DRS029448",
+          "DRS029439",
+          "DRS029513",
+          "DRS029512",
+          "DRS029511",
+          "DRS029510",
+          "DRS029515",
+          "DRS029514",
+          "DRS029452",
+          "DRS029453",
+          "DRS029450",
+          "DRS029451",
+          "DRS029456",
+          "DRS029457",
+          "DRS029454",
+          "DRS029455",
+          "DRS029458",
+          "DRS029459",
+          "DRS029504",
+          "DRS029505",
+          "DRS029506",
+          "DRS029507",
+          "DRS029500",
+          "DRS029501",
+          "DRS029502",
+          "DRS029503",
+          "DRS029509",
+          "DRS029508",
+          "DRS029429",
+          "DRS029467",
+          "DRS029466",
+          "DRS029465",
+          "DRS029428",
+          "DRS029463",
+          "DRS029462",
+          "DRS029461",
+          "DRS029460",
+          "DRS029469",
+          "DRS029468",
+          "DRS029478",
+          "DRS029479",
+          "DRS029464",
+          "DRS029470",
+          "DRS029471",
+          "DRS029472",
+          "DRS029473",
+          "DRS029474",
+          "DRS029475",
+          "DRS029476",
+          "DRS029477",
+          "DRS029571",
+          "DRS029570",
+          "DRS029573",
+          "DRS029572"
+        ],
+        "biome_name": [
+          "Digestive system"
+        ],
+        "centre_name": [
+          "UT_COB"
+        ],
+        "creation_date": [],
+        "description": [
+          "The V1 and V2 region of the 16S ribosomal RNA gene. 45 individuals (18 PPI-users and 22 PPI-nonusers) in total."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "DRP003100"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "16S amplicon sequence analysis of microbial communities in the oral cavity, stomach and gut"
+        ],
+        "releaseDate_date": []
+      }
+    }
+  ],
+  "facets": [
+    {
+      "id": "domain_source",
+      "label": "Source",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "Metagenomics Projects",
+          "value": "metagenomics_projects",
+          "count": 1555
+        }
+      ]
+    },
+    {
+      "id": "biome",
+      "label": "Biome",
+      "total": 4,
+      "facetValues": [
+        {
+          "label": "Environmental",
+          "value": "Environmental",
+          "count": 781,
+          "children": [
+            {
+              "label": "Terrestrial",
+              "value": "Terrestrial",
+              "count": 446,
+              "children": [
+                {
+                  "label": "Soil",
+                  "value": "Soil",
+                  "count": 438,
+                  "children": [
+                    {
+                      "label": "Agricultural",
+                      "value": "Agricultural",
+                      "count": 39
+                    },
+                    {
+                      "label": "Forest soil",
+                      "value": "Forest soil",
+                      "count": 35
+                    },
+                    {
+                      "label": "Contaminated",
+                      "value": "Contaminated",
+                      "count": 20
+                    },
+                    {
+                      "label": "Grasslands",
+                      "value": "Grasslands",
+                      "count": 19
+                    },
+                    {
+                      "label": "Desert",
+                      "value": "Desert",
+                      "count": 18
+                    },
+                    {
+                      "label": "Wetlands",
+                      "value": "Wetlands",
+                      "count": 15,
+                      "children": [
+                        {
+                          "label": "Permafrost",
+                          "value": "Permafrost",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Permafrost",
+                      "value": "Permafrost",
+                      "count": 13
+                    },
+                    {
+                      "label": "Sand",
+                      "value": "Sand",
+                      "count": 8,
+                      "children": [
+                        {
+                          "label": "Desert",
+                          "value": "Desert",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Crop",
+                      "value": "Crop",
+                      "count": 7,
+                      "children": [
+                        {
+                          "label": "Agricultural land",
+                          "value": "Agricultural land",
+                          "count": 5
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Tropical rainforest",
+                      "value": "Tropical rainforest",
+                      "count": 7
+                    }
+                  ]
+                },
+                {
+                  "label": "Rock-dwelling (subaerial biofilm)",
+                  "value": "Rock-dwelling (subaerial biofilm)",
+                  "count": 3
+                },
+                {
+                  "label": "Geologic",
+                  "value": "Geologic",
+                  "count": 2
+                },
+                {
+                  "label": "Volcanic",
+                  "value": "Volcanic",
+                  "count": 1
+                },
+                {
+                  "label": "Agricultural field",
+                  "value": "Agricultural field",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Aquatic",
+              "value": "Aquatic",
+              "count": 326,
+              "children": [
+                {
+                  "label": "Marine",
+                  "value": "Marine",
+                  "count": 158,
+                  "children": [
+                    {
+                      "label": "Oceanic",
+                      "value": "Oceanic",
+                      "count": 40,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 7
+                        },
+                        {
+                          "label": "Benthic",
+                          "value": "Benthic",
+                          "count": 5
+                        },
+                        {
+                          "label": "Photic zone",
+                          "value": "Photic zone",
+                          "count": 4
+                        },
+                        {
+                          "label": "Oil-contaminated",
+                          "value": "Oil-contaminated",
+                          "count": 4
+                        },
+                        {
+                          "label": "Abyssal plane",
+                          "value": "Abyssal plane",
+                          "count": 2
+                        },
+                        {
+                          "label": "Oil-contaminated sediments",
+                          "value": "Oil-contaminated sediments",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Intertidal zone",
+                      "value": "Intertidal zone",
+                      "count": 22,
+                      "children": [
+                        {
+                          "label": "Estuary",
+                          "value": "Estuary",
+                          "count": 5
+                        },
+                        {
+                          "label": "Salt marsh",
+                          "value": "Salt marsh",
+                          "count": 4
+                        },
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 4
+                        },
+                        {
+                          "label": "Coral reef",
+                          "value": "Coral reef",
+                          "count": 3
+                        },
+                        {
+                          "label": "Oil-contaminated",
+                          "value": "Oil-contaminated",
+                          "count": 2
+                        },
+                        {
+                          "label": "Microbialites",
+                          "value": "Microbialites",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Coastal",
+                      "value": "Coastal",
+                      "count": 19,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 7
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Hydrothermal vents",
+                      "value": "Hydrothermal vents",
+                      "count": 15,
+                      "children": [
+                        {
+                          "label": "Diffuse flow",
+                          "value": "Diffuse flow",
+                          "count": 4
+                        },
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 3
+                        },
+                        {
+                          "label": "Microbial mats",
+                          "value": "Microbial mats",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 6
+                    },
+                    {
+                      "label": "Oil-contaminated sediment",
+                      "value": "Oil-contaminated sediment",
+                      "count": 2
+                    },
+                    {
+                      "label": "Oil field",
+                      "value": "Oil field",
+                      "count": 1,
+                      "children": [
+                        {
+                          "label": "Bore hole",
+                          "value": "bore hole",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Cold seeps",
+                      "value": "Cold seeps",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Freshwater",
+                  "value": "Freshwater",
+                  "count": 118,
+                  "children": [
+                    {
+                      "label": "Groundwater",
+                      "value": "Groundwater",
+                      "count": 32,
+                      "children": [
+                        {
+                          "label": "Contaminated",
+                          "value": "Contaminated",
+                          "count": 6
+                        },
+                        {
+                          "label": "Biofilm",
+                          "value": "Biofilm",
+                          "count": 5
+                        },
+                        {
+                          "label": "Cave water",
+                          "value": "Cave water",
+                          "count": 2
+                        },
+                        {
+                          "label": "Acid Mine Drainage",
+                          "value": "Acid Mine Drainage",
+                          "count": 1
+                        },
+                        {
+                          "label": "Mine drainage",
+                          "value": "Mine drainage",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Lake",
+                      "value": "Lake",
+                      "count": 31
+                    },
+                    {
+                      "label": "Ice",
+                      "value": "Ice",
+                      "count": 13,
+                      "children": [
+                        {
+                          "label": "Glacier",
+                          "value": "Glacier",
+                          "count": 8
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Lentic",
+                      "value": "Lentic",
+                      "count": 7,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 2
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Lotic",
+                      "value": "Lotic",
+                      "count": 7,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 3
+                        },
+                        {
+                          "label": "Low land river systems",
+                          "value": "Low land river systems",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Drinking water",
+                      "value": "Drinking water",
+                      "count": 7,
+                      "children": [
+                        {
+                          "label": "Delivery networks",
+                          "value": "Delivery networks",
+                          "count": 3
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 6
+                    },
+                    {
+                      "label": "Wetlands",
+                      "value": "Wetlands",
+                      "count": 2,
+                      "children": [
+                        {
+                          "label": "Bog",
+                          "value": "Bog",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Pond",
+                      "value": "Pond",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Thermal springs",
+                  "value": "Thermal springs",
+                  "count": 26,
+                  "children": [
+                    {
+                      "label": "Hot (42-90C)",
+                      "value": "Hot (42-90C)",
+                      "count": 18,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 3
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 3
+                    },
+                    {
+                      "label": "Near-boiling (>90C)",
+                      "value": "Near-boiling (>90C)",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Non-marine Saline and Alkaline",
+                  "value": "Non-marine Saline and Alkaline",
+                  "count": 15,
+                  "children": [
+                    {
+                      "label": "Alkaline",
+                      "value": "Alkaline",
+                      "count": 7,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 4
+                        },
+                        {
+                          "label": "Microbial mats",
+                          "value": "Microbial mats",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Hypersaline",
+                      "value": "Hypersaline",
+                      "count": 5,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 2
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Salt crystallizer pond",
+                      "value": "Salt crystallizer pond",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Lentic",
+                  "value": "Lentic",
+                  "count": 2
+                },
+                {
+                  "label": "Estuary",
+                  "value": "Estuary",
+                  "count": 1
+                },
+                {
+                  "label": "Aquaculture",
+                  "value": "Aquaculture",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Air",
+              "value": "Air",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "label": "Host-associated",
+          "value": "Host-associated",
+          "count": 557,
+          "children": [
+            {
+              "label": "Human",
+              "value": "Human",
+              "count": 260,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 213,
+                  "children": [
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 113,
+                      "children": [
+                        {
+                          "label": "Fecal",
+                          "value": "Fecal",
+                          "count": 110
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Oral",
+                      "value": "Oral",
+                      "count": 82,
+                      "children": [
+                        {
+                          "label": "Saliva",
+                          "value": "Saliva",
+                          "count": 14
+                        },
+                        {
+                          "label": "Subgingival plaque",
+                          "value": "Subgingival plaque",
+                          "count": 8
+                        },
+                        {
+                          "label": "Tongue dorsum",
+                          "value": "tongue dorsum",
+                          "count": 2
+                        },
+                        {
+                          "label": "Supragingival plaque",
+                          "value": "Supragingival plaque",
+                          "count": 2
+                        },
+                        {
+                          "label": "Buccal mucosa",
+                          "value": "buccal mucosa",
+                          "count": 2
+                        },
+                        {
+                          "label": "Periodontal pockets",
+                          "value": "Periodontal pockets",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 3
+                    },
+                    {
+                      "label": "Hindgut",
+                      "value": "Hindgut",
+                      "count": 1,
+                      "children": [
+                        {
+                          "label": "Rectum",
+                          "value": "Rectum",
+                          "count": 1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 9,
+                  "children": [
+                    {
+                      "label": "Pulmonary system",
+                      "value": "Pulmonary system",
+                      "count": 8,
+                      "children": [
+                        {
+                          "label": "Sputum",
+                          "value": "Sputum",
+                          "count": 4
+                        },
+                        {
+                          "label": "Lung",
+                          "value": "Lung",
+                          "count": 2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Reproductive system",
+                  "value": "Reproductive system",
+                  "count": 9,
+                  "children": [
+                    {
+                      "label": "Vagina",
+                      "value": "Vagina",
+                      "count": 8
+                    },
+                    {
+                      "label": "Female",
+                      "value": "Female",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Skin",
+                  "value": "Skin",
+                  "count": 9
+                },
+                {
+                  "label": "Circulatory system",
+                  "value": "Circulatory system",
+                  "count": 2,
+                  "children": [
+                    {
+                      "label": "Blood",
+                      "value": "Blood",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Milk",
+                  "value": "Milk",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Mammals",
+              "value": "Mammals",
+              "count": 111,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 100,
+                  "children": [
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 51,
+                      "children": [
+                        {
+                          "label": "Fecal",
+                          "value": "Fecal",
+                          "count": 40
+                        },
+                        {
+                          "label": "Cecum",
+                          "value": "Cecum",
+                          "count": 4
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Stomach",
+                      "value": "Stomach",
+                      "count": 25,
+                      "children": [
+                        {
+                          "label": "Rumen",
+                          "value": "Rumen",
+                          "count": 25
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 14
+                    },
+                    {
+                      "label": "Foregut",
+                      "value": "Foregut",
+                      "count": 4,
+                      "children": [
+                        {
+                          "label": "Rumen",
+                          "value": "Rumen",
+                          "count": 4
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Oral cavity",
+                      "value": "Oral cavity",
+                      "count": 1,
+                      "children": [
+                        {
+                          "label": "Buccal mucosa",
+                          "value": "Buccal mucosa",
+                          "count": 1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 7,
+                  "children": [
+                    {
+                      "label": "Nasopharyngeal",
+                      "value": "Nasopharyngeal",
+                      "count": 4
+                    },
+                    {
+                      "label": "Pulmonary system",
+                      "value": "Pulmonary system",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Excretory system",
+                  "value": "Excretory system",
+                  "count": 1
+                },
+                {
+                  "label": "Nervous system",
+                  "value": "Nervous system",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Brain",
+                      "value": "Brain",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Gastrointestinal tract",
+                  "value": "Gastrointestinal tract",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 1,
+                      "children": [
+                        {
+                          "label": "Fecal",
+                          "value": "Fecal",
+                          "count": 1
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Plants",
+              "value": "Plants",
+              "count": 107,
+              "children": [
+                {
+                  "label": "Rhizosphere",
+                  "value": "Rhizosphere",
+                  "count": 63,
+                  "children": [
+                    {
+                      "label": "Soil",
+                      "value": "Soil",
+                      "count": 26
+                    },
+                    {
+                      "label": "Forest soil",
+                      "value": "Forest soil",
+                      "count": 7
+                    },
+                    {
+                      "label": "Epiphytes",
+                      "value": "Epiphytes",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Phylloplane",
+                  "value": "Phylloplane",
+                  "count": 9,
+                  "children": [
+                    {
+                      "label": "Endophytes",
+                      "value": "Endophytes",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Root",
+                  "value": "Root",
+                  "count": 5
+                },
+                {
+                  "label": "Rhizome",
+                  "value": "Rhizome",
+                  "count": 1
+                },
+                {
+                  "label": "Rhizoplane",
+                  "value": "Rhizoplane",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Endophytes",
+                      "value": "Endophytes",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Insecta",
+              "value": "Insecta",
+              "count": 15,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 7
+                }
+              ]
+            },
+            {
+              "label": "Birds",
+              "value": "Birds",
+              "count": 15,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 9,
+                  "children": [
+                    {
+                      "label": "Ceca",
+                      "value": "Ceca",
+                      "count": 4
+                    },
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 3
+                    },
+                    {
+                      "label": "Digestive tube",
+                      "value": "Digestive tube",
+                      "count": 2,
+                      "children": [
+                        {
+                          "label": "Cecum",
+                          "value": "Cecum",
+                          "count": 1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Fish",
+              "value": "Fish",
+              "count": 8,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 4,
+                  "children": [
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 2
+                    },
+                    {
+                      "label": "Foregut",
+                      "value": "Foregut",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Skin",
+                  "value": "Skin",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Arthropoda",
+              "value": "Arthropoda",
+              "count": 8,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 5,
+                  "children": [
+                    {
+                      "label": "Gut",
+                      "value": "Gut",
+                      "count": 5
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Gills",
+                      "value": "Gills",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Amphibia",
+              "value": "Amphibia",
+              "count": 5
+            },
+            {
+              "label": "Mollusca",
+              "value": "Mollusca",
+              "count": 4,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 2,
+                  "children": [
+                    {
+                      "label": "Glands",
+                      "value": "Glands",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Animal",
+              "value": "Animal",
+              "count": 3,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Engineered",
+          "value": "Engineered",
+          "count": 216,
+          "children": [
+            {
+              "label": "Wastewater",
+              "value": "Wastewater",
+              "count": 57,
+              "children": [
+                {
+                  "label": "Activated Sludge",
+                  "value": "Activated Sludge",
+                  "count": 18
+                },
+                {
+                  "label": "Water and sludge",
+                  "value": "Water and sludge",
+                  "count": 16
+                },
+                {
+                  "label": "Industrial wastewater",
+                  "value": "Industrial wastewater",
+                  "count": 11,
+                  "children": [
+                    {
+                      "label": "Petrochemical",
+                      "value": "Petrochemical",
+                      "count": 2
+                    },
+                    {
+                      "label": "Agricultural wastewater",
+                      "value": "Agricultural wastewater",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Nutrient removal",
+                  "value": "Nutrient removal",
+                  "count": 10,
+                  "children": [
+                    {
+                      "label": "Dissolved organics (anaerobic)",
+                      "value": "Dissolved organics (anaerobic)",
+                      "count": 6
+                    },
+                    {
+                      "label": "Biological phosphorus removal",
+                      "value": "Biological phosphorus removal",
+                      "count": 2,
+                      "children": [
+                        {
+                          "label": "Bioreactor",
+                          "value": "Bioreactor",
+                          "count": 1,
+                          "children": [
+                            {
+                              "label": "Continuous culture",
+                              "value": "Continuous culture",
+                              "count": 15,
+                              "children": [
+                                {
+                                  "label": "Marine sediment inoculum",
+                                  "value": "Marine sediment inoculum",
+                                  "count": 3
+                                },
+                                {
+                                  "label": "Marine intertidal flat sediment inoculum",
+                                  "value": "Marine intertidal flat sediment inoculum",
+                                  "count": 2
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "label": "Activated sludge",
+                          "value": "Activated sludge",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Nitrogen removal",
+                      "value": "Nitrogen removal",
+                      "count": 1
+                    },
+                    {
+                      "label": "Dissolved organics (aerobic)",
+                      "value": "Dissolved organics (aerobic)",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Food production",
+              "value": "Food production",
+              "count": 52,
+              "children": [
+                {
+                  "label": "Dairy products",
+                  "value": "Dairy products",
+                  "count": 26
+                },
+                {
+                  "label": "Fermented vegetables",
+                  "value": "Fermented vegetables",
+                  "count": 6
+                },
+                {
+                  "label": "Fermented beverages",
+                  "value": "Fermented beverages",
+                  "count": 5
+                },
+                {
+                  "label": "Fermented seafood",
+                  "value": "Fermented seafood",
+                  "count": 2
+                },
+                {
+                  "label": "Silage fermentation",
+                  "value": "Silage fermentation",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Bioreactor",
+              "value": "Bioreactor",
+              "count": 32
+            },
+            {
+              "label": "Modeled",
+              "value": "Modeled",
+              "count": 20,
+              "children": [
+                {
+                  "label": "Simulated communities (microbial mixture)",
+                  "value": "Simulated communities (microbial mixture)",
+                  "count": 7
+                },
+                {
+                  "label": "Simulated communities (DNA mixture)",
+                  "value": "Simulated communities (DNA mixture)",
+                  "count": 6
+                },
+                {
+                  "label": "Simulated communities (sequence read mixture)",
+                  "value": "Simulated communities (sequence read mixture)",
+                  "count": 4
+                }
+              ]
+            },
+            {
+              "label": "Solid waste",
+              "value": "Solid waste",
+              "count": 14,
+              "children": [
+                {
+                  "label": "Composting",
+                  "value": "Composting",
+                  "count": 13,
+                  "children": [
+                    {
+                      "label": "Grass",
+                      "value": "Grass",
+                      "count": 1
+                    },
+                    {
+                      "label": "Bioreactor",
+                      "value": "Bioreactor",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Solid animal waste",
+                  "value": "Solid animal waste",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Biogas plant",
+              "value": "Biogas plant",
+              "count": 11,
+              "children": [
+                {
+                  "label": "Wet fermentation",
+                  "value": "Wet fermentation",
+                  "count": 6
+                }
+              ]
+            },
+            {
+              "label": "Biotransformation",
+              "value": "Biotransformation",
+              "count": 8,
+              "children": [
+                {
+                  "label": "Mixed alcohol bioreactor",
+                  "value": "Mixed alcohol bioreactor",
+                  "count": 3
+                },
+                {
+                  "label": "Microbial enhanced oil recovery",
+                  "value": "Microbial enhanced oil recovery",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Lab enrichment",
+              "value": "Lab enrichment",
+              "count": 7,
+              "children": [
+                {
+                  "label": "Defined media",
+                  "value": "Defined media",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Bioremediation",
+              "value": "Bioremediation",
+              "count": 7,
+              "children": [
+                {
+                  "label": "Hydrocarbon",
+                  "value": "Hydrocarbon",
+                  "count": 3,
+                  "children": [
+                    {
+                      "label": "Benzene",
+                      "value": "Benzene",
+                      "count": 1,
+                      "children": [
+                        {
+                          "label": "Bioreactor",
+                          "value": "Bioreactor",
+                          "count": 1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Terephthalate",
+                  "value": "Terephthalate",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Wastewater",
+                      "value": "Wastewater",
+                      "count": 1,
+                      "children": [
+                        {
+                          "label": "Bioreactor",
+                          "value": "Bioreactor",
+                          "count": 1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Persistent organic pollutants (POP)",
+                  "value": "Persistent organic pollutants (POP)",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Built environment",
+              "value": "Built environment",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "label": "Mixed",
+          "value": "Mixed",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "centre_name",
+      "label": "Centre name",
+      "total": 509,
+      "facetValues": [
+        {
+          "label": "BioProject",
+          "value": "BioProject",
+          "count": 550
+        },
+        {
+          "label": "EMG",
+          "value": "EMG",
+          "count": 69
+        },
+        {
+          "label": "EMBL-EBI",
+          "value": "EMBL-EBI",
+          "count": 36
+        },
+        {
+          "label": "UNIMIB",
+          "value": "UNIMIB",
+          "count": 11
+        },
+        {
+          "label": "CSIRO",
+          "value": "CSIRO",
+          "count": 10
+        },
+        {
+          "label": "EESC/USP",
+          "value": "EESC/USP",
+          "count": 9
+        },
+        {
+          "label": "VTT",
+          "value": "VTT",
+          "count": 9
+        },
+        {
+          "label": "BGI",
+          "value": "BGI",
+          "count": 9
+        },
+        {
+          "label": "GSC",
+          "value": "GSC",
+          "count": 9
+        },
+        {
+          "label": "UNIVERSITY OF BRITISH COLUMBIA",
+          "value": "UNIVERSITY OF BRITISH COLUMBIA",
+          "count": 8
+        }
+      ]
+    }
+  ]
+}
