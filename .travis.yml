@@ -22,7 +22,7 @@ before_install:
   - python3 -V
   - pip3 -V
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@master#egg=emgcli"
+  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@2c75eec7611f3009300d91bc3003d5d9dfaf1d1e#egg=emgcli"
 
   - mysql -e 'CREATE DATABASE emg;'
 
@@ -39,7 +39,6 @@ before_install:
   # EMG api deployment and setup
   - emgcli collectstatic --noinput
   - emgcli check --deploy
-
   # Add backend auth package to path for emgapi
   - git clone https://github.com/EBI-Metagenomics/emgapi.git
   - export PYTHONPATH=/home/travis/build/EBI-Metagenomics/ebi-metagenomics-client/emgapi/tests/:$PYTHONPATH
