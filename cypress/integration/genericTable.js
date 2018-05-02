@@ -158,7 +158,7 @@ class GenericTableHandler {
                 const txt = data[column];
                 const selector = this.getRowColumnSelector(rowIndex, column);
                 if (txt.length > 0) {
-                    cy.get(selector).first().contains(txt);
+                    cy.get(selector).first().contains(txt, {timeout: 20000});
                 }
             }
         }

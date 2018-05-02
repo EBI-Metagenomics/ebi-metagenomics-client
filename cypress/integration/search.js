@@ -182,8 +182,10 @@ describe('Search page - general Functionality', function() {
     });
 
     it('Pagination - double page change', function() {
-        cy.route('**metagenomics_projects?**start=0**').as('fetchPage1');
-        cy.route('**metagenomics_projects?**start=25**').as('fetchPage2');
+        cy.route('**metagenomics_projects?**start=0**', 'fixture:projectsInitQuery')
+            .as('fetchPage1');
+        cy.route('**metagenomics_projects?**start=25**', 'fixture:projectsInitQueryPage2')
+            .as('fetchPage2');
         loadPage(origPage + '#projects');
         const firstPageFirstRowData = [
             'PRJEB4693',
