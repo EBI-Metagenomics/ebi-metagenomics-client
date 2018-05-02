@@ -1,20 +1,16 @@
 {
-  "env": {
-    "devevelopment": {
-      "presets": [
-        "env"
-      ],
-      "plugins": [
-        "instanbul"
-      ],
-      "retainLines": true
-    },
-    "production": {
-      "presets": [
-        "es2015",
-        "react"
-      ],
-      "retainLines": true
-    }
-  }
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "> 0.25%"
+          ]
+        },
+        "debug": false
+      }
+    ]
+  ],
+  "retainLines": true
 }

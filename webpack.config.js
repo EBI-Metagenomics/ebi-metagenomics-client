@@ -273,13 +273,13 @@ module.exports = (env = {prod: false}) => {
         },
         module: {
             rules: [
-                (env === 'prod' ? {
+                (env.prod ? {
                     test: /\.js$/,
                     exclude: /(node_modules|bower_components)/,
                     use: {
                         loader: 'babel-loader',
                         options: {
-                            presets: ['es2015']
+                            babelrc: true
                         }
                     }
                 } : {
