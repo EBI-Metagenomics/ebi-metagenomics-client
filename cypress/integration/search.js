@@ -1,4 +1,4 @@
-import {openPage, changeTab, waitForSearchResults} from './util';
+import {openPage, changeTab, waitForSearchResults, setupDefaultSearchPageRouting} from './util';
 import GenericTableHandler from './genericTable';
 
 const origPage = 'search';
@@ -15,40 +15,6 @@ const pageSizeSelect = '[data-cy=\'page-size-select\']';
 function loadPage(page) {
     openPage(page);
     waitForSearchResults(rowSelector, initialResultSize);
-}
-
-function setupDefaultRouting() {
-    cy.server();
-    // Basic page load
-    cy.route('GET',
-        '**/ebisearch/ws/rest/metagenomics_projects?format=json&size=25&start=0&**facetcount=10&' +
-        'facetsdepth=5&facets=&query=domain_source:metagenomics_projects',
-        'fixture:projectsInitQuery.json').as('basicProjects');
-
-    cy.route('GET',
-        '**/ebisearch/ws/rest/metagenomics_projects?format=json&size=1&start=0&facetcount=10&' +
-        'facetsdepth=3&query=domain_source:metagenomics_projects',
-        'fixture:projectsInitFilters.json').as('basicProjectFilters');
-
-    cy.route('GET',
-        '**/ebisearch/ws/rest/metagenomics_samples?format=json&size=25&start=0&**facetcount=10&' +
-        'facetsdepth=5&facets=&query=domain_source:metagenomics_samples',
-        'fixture:samplesInitQuery.json').as('basicSamples');
-
-    cy.route('GET',
-        '**/ebisearch/ws/rest/metagenomics_samples?format=json&size=1&start=0&facetcount=10&' +
-        'facetsdepth=3&query=domain_source:metagenomics_samples',
-        'fixture:samplesInitFilters.json').as('basicSampleFilters');
-
-    cy.route('GET',
-        '**/ebisearch/ws/rest/metagenomics_runs?format=json&size=25&start=0&**facetcount=10&' +
-        'facetsdepth=5&facets=&query=domain_source:metagenomics_runs',
-        'fixture:runsInitQuery.json').as('basicRuns');
-
-    cy.route('GET',
-        '**/ebisearch/ws/rest/metagenomics_runs?format=json&size=1&start=0&facetcount=10&' +
-        'facetsdepth=3&query=domain_source:metagenomics_runs',
-        'fixture:runsInitFilters.json').as('basicRunsFilters');
 }
 
 function routeWithTextQuery() {
@@ -119,7 +85,7 @@ function testResultsAreFilteredByString() {
 
 describe('Search page - general Functionality', function() {
     beforeEach(function() {
-        setupDefaultRouting();
+        setupDefaultSearchPageRouting();
         loadPage(origPage);
         initTableHandlers();
     });
@@ -217,7 +183,7 @@ describe('Search page - Display additional columns', function() {
     const column = 'project-name';
 
     beforeEach(function() {
-        setupDefaultRouting();
+        setupDefaultSearchPageRouting();
         loadPage(origPage + '#projects');
     });
 
@@ -259,7 +225,7 @@ describe('Search page - Display additional columns', function() {
 
 describe('Search page - Deep linking', function() {
     beforeEach(function() {
-        setupDefaultRouting();
+        setupDefaultSearchPageRouting();
     });
     it('Changing tabs should update result view', function() {
         loadPage(origPage + '#projects');
@@ -320,7 +286,7 @@ describe('Search page - Sliders - ', function() {
     const runsDisabledQueryText = 'You searched for runs with no parameters.';
 
     beforeEach(function() {
-        setupDefaultRouting();
+        setupDefaultSearchPageRouting();
         setupDefaultSliderRouting();
         loadPage(origPage + '#samples');
         initTableHandlers();

@@ -418,14 +418,10 @@ describe('Browse page - URL arguments', function() {
         const splitBiome = longBiome.split(':');
         for (let i = 1; i < splitBiome.length; i++) {
             let parentLineage = splitBiome.slice(0, i).join(':');
-            expect(
-                cy.get('#studies-section .biome-select > option[value=\'' + parentLineage + '\']'))
-                .to
-                .exist;
-            expect(
-                cy.get('#samples-section .biome-select > option[value=\'' + parentLineage + '\']'))
-                .to
-                .exist;
+            cy.get('#studies-section .biome-select > option[value=\'' + parentLineage + '\']')
+                .should('exist');
+            cy.get('#samples-section .biome-select > option[value=\'' + parentLineage + '\']')
+                .should('exist');
         }
         cy.get('#studies-section .biome-select').should('have.value', longBiome);
         cy.get('#samples-section .biome-select').should('have.value', longBiome);
