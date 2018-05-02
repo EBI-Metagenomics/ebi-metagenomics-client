@@ -11,7 +11,8 @@
     },
     "production": {
       "presets": [
-        "env"
+        "es2015",
+        "react"
       ],
       "retainLines": true
     }
