@@ -1,0 +1,808 @@
+{
+  "_comment": "Samples filtered by temperature (typed into input)",
+  "hitCount": 200,
+  "entries": [
+    {
+      "id": "SRS465016",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465016"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS674171",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS674171"
+        ],
+        "name": [
+          "NPK1_NO_3"
+        ],
+        "biome_name": [
+          "Contaminated"
+        ],
+        "description": [
+          "NPK only, Week 4"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP045266"
+        ],
+        "project_name": [
+          "CK1/MNPK1/NPK1 Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS676775",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS676775"
+        ],
+        "name": [
+          "NPK1_Bac_19"
+        ],
+        "biome_name": [
+          "Contaminated"
+        ],
+        "description": [
+          "NPK only, Week 20"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP045357"
+        ],
+        "project_name": [
+          "Bacteria Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS464990",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS464990"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS464953",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS464953"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS465051",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465051"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS464956",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS464956"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS465099",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465099"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS1935750",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS1935750"
+        ],
+        "name": [
+          "A21-Sal"
+        ],
+        "biome_name": [
+          "Oral"
+        ],
+        "description": [
+          "saliva from ASD patients"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP097646"
+        ],
+        "project_name": [
+          "Oral microbial changes in ASD children"
+        ]
+      }
+    },
+    {
+      "id": "SRS1935714",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS1935714"
+        ],
+        "name": [
+          "H25-Pla"
+        ],
+        "biome_name": [
+          "Oral"
+        ],
+        "description": [
+          "dental plaque from healthy controls"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP097646"
+        ],
+        "project_name": [
+          "Oral microbial changes in ASD children"
+        ]
+      }
+    },
+    {
+      "id": "SRS464965",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS464965"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS465092",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465092"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS500616",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS500616"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS1935719",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS1935719"
+        ],
+        "name": [
+          "H20-Pla"
+        ],
+        "biome_name": [
+          "Oral"
+        ],
+        "description": [
+          "dental plaque from healthy controls"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP097646"
+        ],
+        "project_name": [
+          "Oral microbial changes in ASD children"
+        ]
+      }
+    },
+    {
+      "id": "SRS676773",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS676773"
+        ],
+        "name": [
+          "NPK1_Bac_16"
+        ],
+        "biome_name": [
+          "Contaminated"
+        ],
+        "description": [
+          "NPK only, Week 17"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP045357"
+        ],
+        "project_name": [
+          "Bacteria Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS1935731",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS1935731"
+        ],
+        "name": [
+          "H6-Pla"
+        ],
+        "biome_name": [
+          "Oral"
+        ],
+        "description": [
+          "dental plaque from healthy controls"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP097646"
+        ],
+        "project_name": [
+          "Oral microbial changes in ASD children"
+        ]
+      }
+    },
+    {
+      "id": "SRS676756",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS676756"
+        ],
+        "name": [
+          "NPK1_Bac_2"
+        ],
+        "biome_name": [
+          "Contaminated"
+        ],
+        "description": [
+          "NPK only, Week 3"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP045357"
+        ],
+        "project_name": [
+          "Bacteria Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS464963",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS464963"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS500618",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS500618"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS1935723",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS1935723"
+        ],
+        "name": [
+          "H16-Pla"
+        ],
+        "biome_name": [
+          "Oral"
+        ],
+        "description": [
+          "dental plaque from healthy controls"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP097646"
+        ],
+        "project_name": [
+          "Oral microbial changes in ASD children"
+        ]
+      }
+    },
+    {
+      "id": "SRS500617",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS500617"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "ERS223622",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS223622"
+        ],
+        "name": [
+          "iron-silica sediments"
+        ],
+        "biome_name": [
+          "Hydrothermal vents"
+        ],
+        "description": [
+          "Tramway Ridge Site B, 2-4 cm depth"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP002340"
+        ],
+        "project_name": [
+          "Novel subsurface lineages dominate fumarolic microbial communities at Tramway Ridge, Mt. Erebus, Antarctica"
+        ]
+      }
+    },
+    {
+      "id": "SRS1935730",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS1935730"
+        ],
+        "name": [
+          "H7-Pla"
+        ],
+        "biome_name": [
+          "Oral"
+        ],
+        "description": [
+          "dental plaque from healthy controls"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP097646"
+        ],
+        "project_name": [
+          "Oral microbial changes in ASD children"
+        ]
+      }
+    },
+    {
+      "id": "SRS465053",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465053"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS465025",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465025"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    }
+  ],
+  "facets": [
+    {
+      "id": "domain_source",
+      "label": "Source",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "Metagenomics Samples",
+          "value": "metagenomics_samples",
+          "count": 200
+        }
+      ]
+    },
+    {
+      "id": "biome",
+      "label": "Biome",
+      "total": 3,
+      "facetValues": [
+        {
+          "label": "Environmental",
+          "value": "Environmental",
+          "count": 145,
+          "children": [
+            {
+              "label": "Terrestrial",
+              "value": "Terrestrial",
+              "count": 139,
+              "children": [
+                {
+                  "label": "Soil",
+                  "value": "Soil",
+                  "count": 139,
+                  "children": [
+                    {
+                      "label": "Contaminated",
+                      "value": "Contaminated",
+                      "count": 42
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Aquatic",
+              "value": "Aquatic",
+              "count": 6,
+              "children": [
+                {
+                  "label": "Marine",
+                  "value": "Marine",
+                  "count": 6,
+                  "children": [
+                    {
+                      "label": "Hydrothermal vents",
+                      "value": "Hydrothermal vents",
+                      "count": 6
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Host-associated",
+          "value": "Host-associated",
+          "count": 49,
+          "children": [
+            {
+              "label": "Human",
+              "value": "Human",
+              "count": 49,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 49,
+                  "children": [
+                    {
+                      "label": "Oral",
+                      "value": "Oral",
+                      "count": 49
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Engineered",
+          "value": "Engineered",
+          "count": 6,
+          "children": [
+            {
+              "label": "Biogas plant",
+              "value": "Biogas plant",
+              "count": 4
+            },
+            {
+              "label": "Bioreactor",
+              "value": "Bioreactor",
+              "count": 2,
+              "children": [
+                {
+                  "label": "Continuous culture",
+                  "value": "Continuous culture",
+                  "count": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "experiment_type",
+      "label": "Experiment type",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "Amplicon",
+          "value": "amplicon",
+          "count": 200
+        }
+      ]
+    },
+    {
+      "id": "sequencing_method",
+      "label": "Sequencing method",
+      "total": 2,
+      "facetValues": [
+        {
+          "label": "Pyrosequencing",
+          "value": "Pyrosequencing",
+          "count": 8
+        },
+        {
+          "label": "454 pyrosequencing",
+          "value": "454 pyrosequencing",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "location_name",
+      "label": "Location name",
+      "total": 26,
+      "facetValues": [
+        {
+          "label": "China:Suzhou",
+          "value": "China:Suzhou",
+          "count": 42
+        },
+        {
+          "label": "Dewar Creek, Canada",
+          "value": "Dewar Creek, Canada",
+          "count": 19
+        },
+        {
+          "label": "Ngatamariki, New Zealand",
+          "value": "Ngatamariki, New Zealand",
+          "count": 11
+        },
+        {
+          "label": "Tikitere, New Zealand",
+          "value": "Tikitere, New Zealand",
+          "count": 7
+        },
+        {
+          "label": "Lakelse Springs, Canada",
+          "value": "Lakelse Springs, Canada",
+          "count": 6
+        },
+        {
+          "label": "Antarctica",
+          "value": "Antarctica",
+          "count": 6
+        },
+        {
+          "label": "Rotokawa, New Zealand",
+          "value": "Rotokawa, New Zealand",
+          "count": 6
+        },
+        {
+          "label": "Grayling River, Canada",
+          "value": "Grayling River, Canada",
+          "count": 5
+        },
+        {
+          "label": "Loop Road Springs, New Zealand",
+          "value": "Loop Road Springs, New Zealand",
+          "count": 5
+        },
+        {
+          "label": "Larsen Creek S, Canada",
+          "value": "Larsen Creek S, Canada",
+          "count": 5
+        }
+      ]
+    }
+  ]
+}

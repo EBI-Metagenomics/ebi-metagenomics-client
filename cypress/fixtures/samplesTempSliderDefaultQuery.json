@@ -1,0 +1,1070 @@
+{
+  "_comment": "Samples filtered by temperature in [-20, 110]",
+  "hitCount": 4190,
+  "entries": [
+    {
+      "id": "ERS1431866",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1431866"
+        ],
+        "name": [
+          "TV9_176:TARA_N000001384"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "description": [
+          "Diplonemid fastq sequences in sample TARA_N000001384 (Template DNA) from Tara Station TARA_082 at Depth: 40 and Fraction 5-20"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP018626"
+        ],
+        "project_name": [
+          "Diplonemids are the most diverse planktonic eukaryotes in the world ocean"
+        ]
+      }
+    },
+    {
+      "id": "ERS187683",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS187683"
+        ],
+        "name": [
+          "Station inside the Rodia lagoon (replicate A)"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Station inside the Rodia lagoon (replicate A)"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP001946"
+        ],
+        "project_name": [
+          "Sediment microbial diversity from samples of the lagoons of the Amvrakikos Gulf (Ionian Sea, Western Greece)."
+        ]
+      }
+    },
+    {
+      "id": "ERS386583",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS386583"
+        ],
+        "name": [
+          "Amundsen Sea Polynya Microbiome"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "description": [
+          "Bacterial Diversity based on 16S rDNA amplicon sequencing"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP004192"
+        ],
+        "project_name": [
+          "Bacterial community during the Austral summer in the Amundsen Sea Polynya, Antarctica"
+        ]
+      }
+    },
+    {
+      "id": "ERS493460",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS493460"
+        ],
+        "name": [
+          "TARA_20111019T1928Z_133_Combined-EVENTS_CAST_MB_M_(650 m)_BACT_NUC-DNA(100L)_W0.22-3_TARA_B100001105"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "description": [
+          "This sample (TARA_B100001105) was collected during the Tara Oceans expedition (2009-2013) at station TARA_133 (latitudeN=35.2698, longitudeE=-127.7268) on date/time=2011-10-19T19:27:16, using a ROSETTE sampler with CTD (sbe9C) and 10 Niskin bottles.  The sample material (saline water, including plankton was collected at a depth of 646-655 m, targeting a mesopelagic zone in the marine biome. The sample was size-fractionated (0.22-3 micrometres), and stored in liquid nitrogen for later detection of prokaryote nucleic acid sequences by pyrosequencing methods, and for later metagenomics analysis. This sample has replicate sample(s): TARA_B100001106."
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP001736"
+        ],
+        "project_name": [
+          "Shotgun Sequencing of Tara Oceans DNA samples corresponding to size fractions for  prokaryotes."
+        ]
+      }
+    },
+    {
+      "id": "ERS756876",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS756876"
+        ],
+        "name": [
+          "Pacific oyster hemolymph microbiota from Sylt, translocated from Texel (NL)"
+        ],
+        "biome_name": [
+          "Digestive system"
+        ],
+        "description": [
+          "Pacific oyster (Crassostrea gigas) hemolymph microbiota; collected on Sylt, 2012-08-03; sample taken after field deployment; treated with mix of ampiciline, gentamicine, tetracycline and kanamycine (100 µg/l seawater each) between 2012-05-29 and 2012-06-01; oyster from Texel, translocated from Texel (NL) to Sylt (D)"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP010751"
+        ],
+        "project_name": [
+          "Natural variation of Pacific oyster hemolymph microbiota at two sites in the Wadden Sea (Texel, Netherlands, & Sylt, Germany) throughout the summer season 2012"
+        ]
+      }
+    },
+    {
+      "id": "ERS386601",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS386601"
+        ],
+        "name": [
+          "Amundsen Sea Polynya Microbiome"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "description": [
+          "Bacterial Diversity based on 16S rDNA amplicon sequencing"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP004192"
+        ],
+        "project_name": [
+          "Bacterial community during the Austral summer in the Amundsen Sea Polynya, Antarctica"
+        ]
+      }
+    },
+    {
+      "id": "ERS1568976",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1568976"
+        ],
+        "name": [
+          "Arctic sea ice metagenome, 0.7 m"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "description": [
+          "Arctic sea ice metagenome, 0.7 m"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP015773"
+        ],
+        "project_name": [
+          "Arctic Ocean metagenomes from HLY1502"
+        ]
+      }
+    },
+    {
+      "id": "ERS756691",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS756691"
+        ],
+        "name": [
+          "Pacific oyster hemolymph microbiota from Sylt"
+        ],
+        "biome_name": [
+          "Digestive system"
+        ],
+        "description": [
+          "Pacific oyster (Crassostrea gigas) hemolymph microbiota; collected on Sylt, 2012-07-19; sample taken after field deployment; not antibiotic treated; oyster from Sylt, not translocated"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP010751"
+        ],
+        "project_name": [
+          "Natural variation of Pacific oyster hemolymph microbiota at two sites in the Wadden Sea (Texel, Netherlands, & Sylt, Germany) throughout the summer season 2012"
+        ]
+      }
+    },
+    {
+      "id": "ERS386571",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS386571"
+        ],
+        "name": [
+          "Amundsen Sea Polynya Microbiome"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "description": [
+          "Bacterial Diversity based on 16S rDNA amplicon sequencing"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP004192"
+        ],
+        "project_name": [
+          "Bacterial community during the Austral summer in the Amundsen Sea Polynya, Antarctica"
+        ]
+      }
+    },
+    {
+      "id": "ERS756680",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS756680"
+        ],
+        "name": [
+          "Pacific oyster hemolymph microbiota from Texel"
+        ],
+        "biome_name": [
+          "Digestive system"
+        ],
+        "description": [
+          "Pacific oyster (Crassostrea gigas) hemolymph microbiota; collected on Texel, 2012-07-27; sample taken after field deployment; not antibiotic treated; oyster from Texel, not translocated"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP010751"
+        ],
+        "project_name": [
+          "Natural variation of Pacific oyster hemolymph microbiota at two sites in the Wadden Sea (Texel, Netherlands, & Sylt, Germany) throughout the summer season 2012"
+        ]
+      }
+    },
+    {
+      "id": "ERS386713",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS386713"
+        ],
+        "name": [
+          "Amundsen Sea Polynya Microbiome"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "description": [
+          "Bacterial Diversity based on 16S rDNA amplicon sequencing"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP004192"
+        ],
+        "project_name": [
+          "Bacterial community during the Austral summer in the Amundsen Sea Polynya, Antarctica"
+        ]
+      }
+    },
+    {
+      "id": "SRS464961",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS464961"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP028305"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "ERS187687",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS187687"
+        ],
+        "name": [
+          "Station in the channel connecting the Rodia lagoon to the Amvrakikos Gulf (replicate C)"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Station in the channel connecting the Rodia lagoon to the Amvrakikos Gulf (replicate C)"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP001946"
+        ],
+        "project_name": [
+          "Sediment microbial diversity from samples of the lagoons of the Amvrakikos Gulf (Ionian Sea, Western Greece)."
+        ]
+      }
+    },
+    {
+      "id": "ERS1432377",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1432377"
+        ],
+        "name": [
+          "TV9_658:TARA_N000001077"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "description": [
+          "Diplonemid fastq sequences in sample TARA_N000001077 (Template DNA) from Tara Station TARA_086 at Depth: 5 and Fraction 180-2000"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP018626"
+        ],
+        "project_name": [
+          "Diplonemids are the most diverse planktonic eukaryotes in the world ocean"
+        ]
+      }
+    },
+    {
+      "id": "ERS406802",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS406802"
+        ],
+        "name": [
+          "iron-rich microbial mat depth 2 sample 31"
+        ],
+        "biome_name": [
+          "Freshwater"
+        ],
+        "description": [
+          "metatranscriptome iron-rich microbial mat depth 2 sample 31"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP004890"
+        ],
+        "project_name": [
+          "Unraveling the stratification of an iron-oxidizing microbial mat by metatranscriptomics"
+        ]
+      }
+    },
+    {
+      "id": "ERS689168",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS689168"
+        ],
+        "name": [
+          "GS038 0.1µm"
+        ],
+        "biome_name": [
+          "Photic zone"
+        ],
+        "description": [
+          "Water sample taken on 2004-03-18T21:34:00+00:00 from site GS038 (lat:-2.597233333, long:-97.876), 0.1µm filter fraction. Samples were collected by filtering water pumped through a 20µm prefilter, then size-fractionating by serial filtration through 3µm, 0.8µm, and 0.1µm membrane filters, then finally, in some samples, through tangential flow filtration fitted with a 50kDa pore size filter to concentrate a viral fraction."
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP010013"
+        ],
+        "project_name": [
+          "Core genomes of cosmopolitan surface ocean plankton"
+        ]
+      }
+    },
+    {
+      "id": "ERS1432162",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1432162"
+        ],
+        "name": [
+          "TV9_462:TARA_N000002231"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "description": [
+          "Diplonemid fastq sequences in sample TARA_N000002231 (Template DNA) from Tara Station TARA_127 at Depth: 5 and Fraction 3-20"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP018626"
+        ],
+        "project_name": [
+          "Diplonemids are the most diverse planktonic eukaryotes in the world ocean"
+        ]
+      }
+    },
+    {
+      "id": "ERS689250",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS689250"
+        ],
+        "name": [
+          "GS117 3µm"
+        ],
+        "biome_name": [
+          "Photic zone"
+        ],
+        "description": [
+          "Water sample taken on 2005-09-09T08:00:00+00:00 from site GS117 (lat:-4.6274, long:55.5177), 3µm filter fraction. Samples were collected by filtering water pumped through a 20µm prefilter, then size-fractionating by serial filtration through 3µm, 0.8µm, and 0.1µm membrane filters, then finally, in some samples, through tangential flow filtration fitted with a 50kDa pore size filter to concentrate a viral fraction. This genetic information may be considered to be part of the genetic patrimony of Seychelles, the country from which the sample was obtained.  Users of this information agree to:  1) acknowledge Seychelles as the country of origin in any country where the genetic information is presented and 2) contact the CBD focal point identified on the CBD website:  http://www.cbd.int/countries/ if they intend to use the genetic information for commercial purposes."
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP010013"
+        ],
+        "project_name": [
+          "Core genomes of cosmopolitan surface ocean plankton"
+        ]
+      }
+    },
+    {
+      "id": "ERS1031697",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1031697"
+        ],
+        "name": [
+          "Metabarcoding on plankton along the Baltic salinity gradients"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "description": [
+          "18S rRNA amplicon"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP013833"
+        ],
+        "project_name": [
+          "Diversity of Pico- to Mesoplankton Along the 2000 km Salinity Gradient of the Baltic Sea"
+        ]
+      }
+    },
+    {
+      "id": "ERS756667",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS756667"
+        ],
+        "name": [
+          "Pacific oyster hemolymph microbiota from Sylt"
+        ],
+        "biome_name": [
+          "Digestive system"
+        ],
+        "description": [
+          "Pacific oyster (Crassostrea gigas) hemolymph microbiota; collected on Sylt, 2012-08-15; sample taken after field deployment; treated with mix of ampiciline, gentamicine, tetracycline and kanamycine (100 µg/l seawater each) between 2012-05-29 and 2012-06-01; oyster from Sylt, not translocated"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP010751"
+        ],
+        "project_name": [
+          "Natural variation of Pacific oyster hemolymph microbiota at two sites in the Wadden Sea (Texel, Netherlands, & Sylt, Germany) throughout the summer season 2012"
+        ]
+      }
+    },
+    {
+      "id": "ERS756936",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS756936"
+        ],
+        "name": [
+          "Pacific oyster hemolymph microbiota from Texel, translocated from Sylt"
+        ],
+        "biome_name": [
+          "Digestive system"
+        ],
+        "description": [
+          "Pacific oyster (Crassostrea gigas) hemolymph microbiota; collected on Texel, 2012-06-29; sample taken after field deployment; treated with mix of ampiciline, gentamicine, tetracycline and kanamycine (100 µg/l seawater each) between 2012-06-11 and 2012-06-14; oyster from Sylt, translocated from Sylt (D) to Texel (NL)"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP010751"
+        ],
+        "project_name": [
+          "Natural variation of Pacific oyster hemolymph microbiota at two sites in the Wadden Sea (Texel, Netherlands, & Sylt, Germany) throughout the summer season 2012"
+        ]
+      }
+    },
+    {
+      "id": "ERS1432554",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1432554"
+        ],
+        "name": [
+          "TV9_817:TARA_N000002132"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "description": [
+          "Diplonemid fastq sequences in sample TARA_N000002132 (Template WGA/DNA) from Tara Station TARA_148b at Depth: 250 and Fraction 5-20"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP018626"
+        ],
+        "project_name": [
+          "Diplonemids are the most diverse planktonic eukaryotes in the world ocean"
+        ]
+      }
+    },
+    {
+      "id": "ERS386711",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS386711"
+        ],
+        "name": [
+          "Amundsen Sea Polynya Microbiome"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "description": [
+          "Bacterial Diversity based on 16S rDNA amplicon sequencing"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP004192"
+        ],
+        "project_name": [
+          "Bacterial community during the Austral summer in the Amundsen Sea Polynya, Antarctica"
+        ]
+      }
+    },
+    {
+      "id": "SRS1036849",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS1036849"
+        ],
+        "name": [
+          "SEA_0280_2012_10_24_Bv6"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "description": [
+          "SEA_0280_2012_10_24_Bv6"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP026054"
+        ],
+        "project_name": [
+          "Plastisphere Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "ERS491421",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS491421"
+        ],
+        "name": [
+          "TARA_20110312T1134Z_093_EVENT_PUMP_P_S_(5 m)_BACT_NUC-DNA(100L)_W0.22-3_TARA_B100001063"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "description": [
+          "This sample (TARA_B100001063) was collected during the Tara Oceans expedition (2009-2013) at station TARA_093 (latitudeN=-34.0614, longitudeE=-73.1066) on date/time=2011-03-12T11:34, using a PUMP (High Volume Peristaltic Pump).  The sample material (saline water, including plankton was collected at a depth of 3-7 m, targeting a surface water layer in the marine biome. The sample was size-fractionated (0.22-3 micrometres), and stored in liquid nitrogen for later detection of prokaryote nucleic acid sequences by pyrosequencing methods, and for later metagenomics analysis. This sample has replicate sample(s): TARA_B100001062."
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP001736"
+        ],
+        "project_name": [
+          "Shotgun Sequencing of Tara Oceans DNA samples corresponding to size fractions for  prokaryotes."
+        ]
+      }
+    }
+  ],
+  "facets": [
+    {
+      "id": "domain_source",
+      "label": "Source",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "Metagenomics Samples",
+          "value": "metagenomics_samples",
+          "count": 4190
+        }
+      ]
+    },
+    {
+      "id": "biome",
+      "label": "Biome",
+      "total": 3,
+      "facetValues": [
+        {
+          "label": "Environmental",
+          "value": "Environmental",
+          "count": 3230,
+          "children": [
+            {
+              "label": "Aquatic",
+              "value": "Aquatic",
+              "count": 2869,
+              "children": [
+                {
+                  "label": "Marine",
+                  "value": "Marine",
+                  "count": 2751,
+                  "children": [
+                    {
+                      "label": "Oceanic",
+                      "value": "Oceanic",
+                      "count": 1425,
+                      "children": [
+                        {
+                          "label": "Photic zone",
+                          "value": "Photic zone",
+                          "count": 277
+                        },
+                        {
+                          "label": "Oil-contaminated",
+                          "value": "Oil-contaminated",
+                          "count": 32
+                        },
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 6
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Intertidal zone",
+                      "value": "Intertidal zone",
+                      "count": 125,
+                      "children": [
+                        {
+                          "label": "Oil-contaminated",
+                          "value": "Oil-contaminated",
+                          "count": 120
+                        },
+                        {
+                          "label": "Estuary",
+                          "value": "Estuary",
+                          "count": 5
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Coastal",
+                      "value": "Coastal",
+                      "count": 30,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 29
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Hydrothermal vents",
+                      "value": "Hydrothermal vents",
+                      "count": 6
+                    },
+                    {
+                      "label": "Oil field",
+                      "value": "Oil field",
+                      "count": 1,
+                      "children": [
+                        {
+                          "label": "Bore hole",
+                          "value": "bore hole",
+                          "count": 1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Freshwater",
+                  "value": "Freshwater",
+                  "count": 118,
+                  "children": [
+                    {
+                      "label": "Lake",
+                      "value": "Lake",
+                      "count": 71
+                    },
+                    {
+                      "label": "Groundwater",
+                      "value": "Groundwater",
+                      "count": 18
+                    },
+                    {
+                      "label": "Lotic",
+                      "value": "Lotic",
+                      "count": 4
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 4
+                    },
+                    {
+                      "label": "Lentic",
+                      "value": "Lentic",
+                      "count": 2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Terrestrial",
+              "value": "Terrestrial",
+              "count": 361,
+              "children": [
+                {
+                  "label": "Soil",
+                  "value": "Soil",
+                  "count": 361,
+                  "children": [
+                    {
+                      "label": "Contaminated",
+                      "value": "Contaminated",
+                      "count": 120
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Host-associated",
+          "value": "Host-associated",
+          "count": 871,
+          "children": [
+            {
+              "label": "Mollusca",
+              "value": "Mollusca",
+              "count": 730,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 727
+                }
+              ]
+            },
+            {
+              "label": "Human",
+              "value": "Human",
+              "count": 118,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 118,
+                  "children": [
+                    {
+                      "label": "Oral",
+                      "value": "Oral",
+                      "count": 118
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Insecta",
+              "value": "Insecta",
+              "count": 21
+            },
+            {
+              "label": "Porifera",
+              "value": "Porifera",
+              "count": 1
+            },
+            {
+              "label": "Arthropoda",
+              "value": "Arthropoda",
+              "count": 1,
+              "children": [
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Gills",
+                      "value": "Gills",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Engineered",
+          "value": "Engineered",
+          "count": 89,
+          "children": [
+            {
+              "label": "Modeled",
+              "value": "Modeled",
+              "count": 41
+            },
+            {
+              "label": "Food production",
+              "value": "Food production",
+              "count": 20
+            },
+            {
+              "label": "Bioreactor",
+              "value": "Bioreactor",
+              "count": 15,
+              "children": [
+                {
+                  "label": "Continuous culture",
+                  "value": "Continuous culture",
+                  "count": 3
+                }
+              ]
+            },
+            {
+              "label": "Biogas plant",
+              "value": "Biogas plant",
+              "count": 9,
+              "children": [
+                {
+                  "label": "Wet fermentation",
+                  "value": "Wet fermentation",
+                  "count": 5
+                }
+              ]
+            },
+            {
+              "label": "Wastewater",
+              "value": "Wastewater",
+              "count": 4,
+              "children": [
+                {
+                  "label": "Water and sludge",
+                  "value": "Water and sludge",
+                  "count": 4
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "experiment_type",
+      "label": "Experiment type",
+      "total": 4,
+      "facetValues": [
+        {
+          "label": "Amplicon",
+          "value": "amplicon",
+          "count": 3205
+        },
+        {
+          "label": "Metagenomic",
+          "value": "metagenomic",
+          "count": 1099
+        },
+        {
+          "label": "Assembly",
+          "value": "assembly",
+          "count": 188
+        },
+        {
+          "label": "Metatranscriptomic",
+          "value": "metatranscriptomic",
+          "count": 62
+        }
+      ]
+    },
+    {
+      "id": "sequencing_method",
+      "label": "Sequencing method",
+      "total": 15,
+      "facetValues": [
+        {
+          "label": "Sequencing by synthesis, Illumina paired-end",
+          "value": "Sequencing by synthesis, Illumina paired-end",
+          "count": 730
+        },
+        {
+          "label": "454 Sequencing",
+          "value": "454 Sequencing",
+          "count": 203
+        },
+        {
+          "label": "Pyrosequencing",
+          "value": "pyrosequencing",
+          "count": 124
+        },
+        {
+          "label": "Illumina",
+          "value": "Illumina",
+          "count": 47
+        },
+        {
+          "label": "16S ion torrent amplicon",
+          "value": "16S ion torrent amplicon",
+          "count": 44
+        },
+        {
+          "label": "Illumina MiSeq",
+          "value": "Illumina MiSeq",
+          "count": 41
+        },
+        {
+          "label": "Illumina MiSeq 2x250 PE",
+          "value": "Illumina MiSeq 2x250 PE",
+          "count": 38
+        },
+        {
+          "label": "Illumina PE 150x150",
+          "value": "Illumina PE 150x150",
+          "count": 24
+        },
+        {
+          "label": "Pyrosequencing",
+          "value": "Pyrosequencing",
+          "count": 10
+        },
+        {
+          "label": "454 pyrosequencing",
+          "value": "454 pyrosequencing",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "location_name",
+      "label": "Location name",
+      "total": 288,
+      "facetValues": [
+        {
+          "label": "North Sea",
+          "value": "North Sea",
+          "count": 730
+        },
+        {
+          "label": "Schleswig Holstein, Sylt, List, Odewatt",
+          "value": "Schleswig Holstein, Sylt, List, Odewatt",
+          "count": 423
+        },
+        {
+          "label": "Netherlands, Texel, de Cocksdorp",
+          "value": "Netherlands, Texel, de Cocksdorp",
+          "count": 295
+        },
+        {
+          "label": "Atlantic Ocean",
+          "value": "Atlantic Ocean",
+          "count": 223
+        },
+        {
+          "label": "Southern Ocean",
+          "value": "Southern Ocean",
+          "count": 203
+        },
+        {
+          "label": "China:Suzhou",
+          "value": "China:Suzhou",
+          "count": 120
+        },
+        {
+          "label": "Pacific Ocean",
+          "value": "Pacific Ocean",
+          "count": 114
+        },
+        {
+          "label": "USA",
+          "value": "USA",
+          "count": 104
+        },
+        {
+          "label": "Baltic Sea",
+          "value": "Baltic Sea",
+          "count": 85
+        },
+        {
+          "label": "France",
+          "value": "France",
+          "count": 52
+        }
+      ]
+    },
+    {
+      "id": "disease_status",
+      "label": "Disease status",
+      "total": 7,
+      "facetValues": [
+        {
+          "label": "Diseased, CAO's index = 11",
+          "value": "Diseased, CAO's index = 11",
+          "count": 2
+        },
+        {
+          "label": "Healthy, CAO's Index = 0",
+          "value": "Healthy, CAO's Index = 0",
+          "count": 2
+        },
+        {
+          "label": "Healthy",
+          "value": "healthy",
+          "count": 1
+        },
+        {
+          "label": "Diseased, CAO's index = 25",
+          "value": "Diseased, CAO's index = 25",
+          "count": 1
+        },
+        {
+          "label": "Diseased, CAO's index = 10",
+          "value": "Diseased, CAO's index = 10",
+          "count": 1
+        },
+        {
+          "label": "Diseased, CAO's index = 6",
+          "value": "Diseased, CAO's index = 6",
+          "count": 1
+        },
+        {
+          "label": "Diseased, CAO's index = 8",
+          "value": "Diseased, CAO's index = 8",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

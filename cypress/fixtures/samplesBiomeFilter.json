@@ -1,0 +1,1439 @@
+{
+  "_comment": "Samples filtered by biome=Environmental/Air",
+  "hitCount": 4,
+  "entries": [
+    {
+      "id": "SRS004667",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS004667"
+        ],
+        "name": [
+          "WindShield Splatter Trip B"
+        ],
+        "biome_name": [
+          "Air"
+        ],
+        "description": [
+          "The main aim of our study was to contrast eukaryotic species differences between two distinct geographical location in northeastern United States. DNA, isolated from the material stuck to the tapped front bumper of a car driven in these locations, was sequenced using 454 (Roche) FLX pyrosequencing technology."
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP000664"
+        ],
+        "project_name": [
+          "Windshield splatter"
+        ]
+      }
+    },
+    {
+      "id": "ERS1496756",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1496756"
+        ],
+        "name": [
+          "test5_title"
+        ],
+        "biome_name": [
+          "Air"
+        ],
+        "description": [
+          "test5_des"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP020679"
+        ],
+        "project_name": [
+          "GD_MGS_title"
+        ]
+      }
+    },
+    {
+      "id": "SRS002409",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS002409"
+        ],
+        "name": [
+          "WindShield Splatter Trip A"
+        ],
+        "biome_name": [
+          "Air"
+        ],
+        "description": [
+          "The main aim of our study was to contrast eukaryotic species differences between two distinct geographical location in northeastern United States. DNA, isolated from the material stuck to the tapped front bumper of a car driven in these locations, was sequenced using 454 (Roche) FLX pyrosequencing technology."
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "SRP000664"
+        ],
+        "project_name": [
+          "Windshield splatter"
+        ]
+      }
+    },
+    {
+      "id": "ERS1490083",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1490083"
+        ],
+        "name": [
+          "test_prefix_title"
+        ],
+        "biome_name": [
+          "Air"
+        ],
+        "description": [
+          "test_prefix_des"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "ERP020679"
+        ],
+        "project_name": [
+          "GD_MGS_title"
+        ]
+      }
+    }
+  ],
+  "facets": [
+    {
+      "id": "domain_source",
+      "label": "Source",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "Metagenomics Samples",
+          "value": "metagenomics_samples",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "biome",
+      "label": "Biome",
+      "total": 4,
+      "facetValues": [
+        {
+          "label": "Host-associated",
+          "value": "Host-associated",
+          "count": 63727,
+          "children": [
+            {
+              "label": "Human",
+              "value": "Human",
+              "count": 42737,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 24640,
+                  "children": [
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 16080,
+                      "children": [
+                        {
+                          "label": "Fecal",
+                          "value": "Fecal",
+                          "count": 14247
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Oral",
+                      "value": "Oral",
+                      "count": 5205,
+                      "children": [
+                        {
+                          "label": "Subgingival plaque",
+                          "value": "Subgingival plaque",
+                          "count": 637
+                        },
+                        {
+                          "label": "Saliva",
+                          "value": "Saliva",
+                          "count": 535
+                        },
+                        {
+                          "label": "Buccal mucosa",
+                          "value": "buccal mucosa",
+                          "count": 286
+                        },
+                        {
+                          "label": "Supragingival plaque",
+                          "value": "Supragingival plaque",
+                          "count": 23
+                        },
+                        {
+                          "label": "Periodontal pockets",
+                          "value": "Periodontal pockets",
+                          "count": 10
+                        },
+                        {
+                          "label": "Tongue dorsum",
+                          "value": "tongue dorsum",
+                          "count": 2
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 452
+                    },
+                    {
+                      "label": "Hindgut",
+                      "value": "Hindgut",
+                      "count": 84,
+                      "children": [
+                        {
+                          "label": "Rectum",
+                          "value": "Rectum",
+                          "count": 84
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Skin",
+                  "value": "Skin",
+                  "count": 4331
+                },
+                {
+                  "label": "Reproductive system",
+                  "value": "Reproductive system",
+                  "count": 3120,
+                  "children": [
+                    {
+                      "label": "Vagina",
+                      "value": "Vagina",
+                      "count": 3048
+                    },
+                    {
+                      "label": "Female",
+                      "value": "Female",
+                      "count": 72
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 174,
+                  "children": [
+                    {
+                      "label": "Pulmonary system",
+                      "value": "Pulmonary system",
+                      "count": 160,
+                      "children": [
+                        {
+                          "label": "Lung",
+                          "value": "Lung",
+                          "count": 59
+                        },
+                        {
+                          "label": "Sputum",
+                          "value": "Sputum",
+                          "count": 43
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Circulatory system",
+                  "value": "Circulatory system",
+                  "count": 29,
+                  "children": [
+                    {
+                      "label": "Blood",
+                      "value": "Blood",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Milk",
+                  "value": "Milk",
+                  "count": 10
+                }
+              ]
+            },
+            {
+              "label": "Plants",
+              "value": "Plants",
+              "count": 10316,
+              "children": [
+                {
+                  "label": "Rhizosphere",
+                  "value": "Rhizosphere",
+                  "count": 4241,
+                  "children": [
+                    {
+                      "label": "Forest soil",
+                      "value": "Forest soil",
+                      "count": 1602
+                    },
+                    {
+                      "label": "Soil",
+                      "value": "Soil",
+                      "count": 778
+                    },
+                    {
+                      "label": "Epiphytes",
+                      "value": "Epiphytes",
+                      "count": 36
+                    }
+                  ]
+                },
+                {
+                  "label": "Phylloplane",
+                  "value": "Phylloplane",
+                  "count": 1512,
+                  "children": [
+                    {
+                      "label": "Endophytes",
+                      "value": "Endophytes",
+                      "count": 48
+                    }
+                  ]
+                },
+                {
+                  "label": "Rhizome",
+                  "value": "Rhizome",
+                  "count": 370
+                },
+                {
+                  "label": "Root",
+                  "value": "Root",
+                  "count": 271
+                },
+                {
+                  "label": "Rhizoplane",
+                  "value": "Rhizoplane",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Endophytes",
+                      "value": "Endophytes",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Mammals",
+              "value": "Mammals",
+              "count": 6775,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 6223,
+                  "children": [
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 2999,
+                      "children": [
+                        {
+                          "label": "Fecal",
+                          "value": "Fecal",
+                          "count": 2353
+                        },
+                        {
+                          "label": "Cecum",
+                          "value": "Cecum",
+                          "count": 401
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 2375
+                    },
+                    {
+                      "label": "Stomach",
+                      "value": "Stomach",
+                      "count": 658,
+                      "children": [
+                        {
+                          "label": "Rumen",
+                          "value": "Rumen",
+                          "count": 658
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Foregut",
+                      "value": "Foregut",
+                      "count": 42,
+                      "children": [
+                        {
+                          "label": "Rumen",
+                          "value": "Rumen",
+                          "count": 42
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Oral cavity",
+                      "value": "Oral cavity",
+                      "count": 22,
+                      "children": [
+                        {
+                          "label": "Buccal mucosa",
+                          "value": "Buccal mucosa",
+                          "count": 22
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 339,
+                  "children": [
+                    {
+                      "label": "Nasopharyngeal",
+                      "value": "Nasopharyngeal",
+                      "count": 222
+                    },
+                    {
+                      "label": "Pulmonary system",
+                      "value": "Pulmonary system",
+                      "count": 111
+                    }
+                  ]
+                },
+                {
+                  "label": "Gastrointestinal tract",
+                  "value": "Gastrointestinal tract",
+                  "count": 16,
+                  "children": [
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 16,
+                      "children": [
+                        {
+                          "label": "Fecal",
+                          "value": "Fecal",
+                          "count": 16
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Nervous system",
+                  "value": "Nervous system",
+                  "count": 14,
+                  "children": [
+                    {
+                      "label": "Brain",
+                      "value": "Brain",
+                      "count": 14
+                    }
+                  ]
+                },
+                {
+                  "label": "Circulatory system",
+                  "value": "Circulatory system",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Blood",
+                      "value": "Blood",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Excretory system",
+                  "value": "Excretory system",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Birds",
+              "value": "Birds",
+              "count": 768,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 575,
+                  "children": [
+                    {
+                      "label": "Ceca",
+                      "value": "Ceca",
+                      "count": 457
+                    },
+                    {
+                      "label": "Digestive tube",
+                      "value": "Digestive tube",
+                      "count": 93,
+                      "children": [
+                        {
+                          "label": "Cecum",
+                          "value": "Cecum",
+                          "count": 76
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 25
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 31
+                }
+              ]
+            },
+            {
+              "label": "Mollusca",
+              "value": "Mollusca",
+              "count": 733,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 728,
+                  "children": [
+                    {
+                      "label": "Glands",
+                      "value": "Glands",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Fungi",
+              "value": "Fungi",
+              "count": 614
+            },
+            {
+              "label": "Fish",
+              "value": "Fish",
+              "count": 443,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 272,
+                  "children": [
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 54
+                    },
+                    {
+                      "label": "Foregut",
+                      "value": "Foregut",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Skin",
+                  "value": "Skin",
+                  "count": 5
+                }
+              ]
+            },
+            {
+              "label": "Insecta",
+              "value": "Insecta",
+              "count": 367,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 162
+                }
+              ]
+            },
+            {
+              "label": "Amphibia",
+              "value": "Amphibia",
+              "count": 121
+            },
+            {
+              "label": "Arthropoda",
+              "value": "Arthropoda",
+              "count": 74,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 32,
+                  "children": [
+                    {
+                      "label": "Gut",
+                      "value": "Gut",
+                      "count": 32
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Gills",
+                      "value": "Gills",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Environmental",
+          "value": "Environmental",
+          "count": 19106,
+          "children": [
+            {
+              "label": "Terrestrial",
+              "value": "Terrestrial",
+              "count": 10302,
+              "children": [
+                {
+                  "label": "Soil",
+                  "value": "Soil",
+                  "count": 10137,
+                  "children": [
+                    {
+                      "label": "Forest soil",
+                      "value": "Forest soil",
+                      "count": 1403
+                    },
+                    {
+                      "label": "Agricultural",
+                      "value": "Agricultural",
+                      "count": 858
+                    },
+                    {
+                      "label": "Contaminated",
+                      "value": "Contaminated",
+                      "count": 595
+                    },
+                    {
+                      "label": "Grasslands",
+                      "value": "Grasslands",
+                      "count": 355
+                    },
+                    {
+                      "label": "Loam",
+                      "value": "Loam",
+                      "count": 174,
+                      "children": [
+                        {
+                          "label": "Forest soil",
+                          "value": "Forest soil",
+                          "count": 173
+                        },
+                        {
+                          "label": "Agricultural",
+                          "value": "Agricultural",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Desert",
+                      "value": "Desert",
+                      "count": 172
+                    },
+                    {
+                      "label": "Sand",
+                      "value": "Sand",
+                      "count": 142,
+                      "children": [
+                        {
+                          "label": "Desert",
+                          "value": "Desert",
+                          "count": 4
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Clay",
+                      "value": "Clay",
+                      "count": 139,
+                      "children": [
+                        {
+                          "label": "Oil-contaminated",
+                          "value": "Oil-contaminated",
+                          "count": 134
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Tropical rainforest",
+                      "value": "Tropical rainforest",
+                      "count": 98
+                    },
+                    {
+                      "label": "Permafrost",
+                      "value": "Permafrost",
+                      "count": 80
+                    }
+                  ]
+                },
+                {
+                  "label": "Geologic",
+                  "value": "Geologic",
+                  "count": 65
+                },
+                {
+                  "label": "Agricultural field",
+                  "value": "Agricultural field",
+                  "count": 52
+                },
+                {
+                  "label": "Rock-dwelling (subaerial biofilm)",
+                  "value": "Rock-dwelling (subaerial biofilm)",
+                  "count": 45
+                },
+                {
+                  "label": "Volcanic",
+                  "value": "Volcanic",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Aquatic",
+              "value": "Aquatic",
+              "count": 8784,
+              "children": [
+                {
+                  "label": "Marine",
+                  "value": "Marine",
+                  "count": 5971,
+                  "children": [
+                    {
+                      "label": "Oceanic",
+                      "value": "Oceanic",
+                      "count": 2526,
+                      "children": [
+                        {
+                          "label": "Abyssal plane",
+                          "value": "Abyssal plane",
+                          "count": 397
+                        },
+                        {
+                          "label": "Photic zone",
+                          "value": "Photic zone",
+                          "count": 329
+                        },
+                        {
+                          "label": "Benthic",
+                          "value": "Benthic",
+                          "count": 123
+                        },
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 60
+                        },
+                        {
+                          "label": "Oil-contaminated",
+                          "value": "Oil-contaminated",
+                          "count": 49
+                        },
+                        {
+                          "label": "Oil-contaminated sediments",
+                          "value": "Oil-contaminated sediments",
+                          "count": 1
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Coastal",
+                      "value": "Coastal",
+                      "count": 592,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 468
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Intertidal zone",
+                      "value": "Intertidal zone",
+                      "count": 301,
+                      "children": [
+                        {
+                          "label": "Oil-contaminated",
+                          "value": "Oil-contaminated",
+                          "count": 120
+                        },
+                        {
+                          "label": "Estuary",
+                          "value": "Estuary",
+                          "count": 84
+                        },
+                        {
+                          "label": "Coral reef",
+                          "value": "Coral reef",
+                          "count": 37
+                        },
+                        {
+                          "label": "Salt marsh",
+                          "value": "Salt marsh",
+                          "count": 20
+                        },
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 16
+                        },
+                        {
+                          "label": "Microbialites",
+                          "value": "Microbialites",
+                          "count": 5
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Hydrothermal vents",
+                      "value": "Hydrothermal vents",
+                      "count": 152,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 46
+                        },
+                        {
+                          "label": "Diffuse flow",
+                          "value": "Diffuse flow",
+                          "count": 24
+                        },
+                        {
+                          "label": "Microbial mats",
+                          "value": "Microbial mats",
+                          "count": 21
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Oil-contaminated sediment",
+                      "value": "Oil-contaminated sediment",
+                      "count": 109
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 47
+                    },
+                    {
+                      "label": "Cold seeps",
+                      "value": "Cold seeps",
+                      "count": 1
+                    },
+                    {
+                      "label": "Oil field",
+                      "value": "Oil field",
+                      "count": 1,
+                      "children": [
+                        {
+                          "label": "Bore hole",
+                          "value": "bore hole",
+                          "count": 1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Freshwater",
+                  "value": "Freshwater",
+                  "count": 2339,
+                  "children": [
+                    {
+                      "label": "Groundwater",
+                      "value": "Groundwater",
+                      "count": 948,
+                      "children": [
+                        {
+                          "label": "Contaminated",
+                          "value": "Contaminated",
+                          "count": 186
+                        },
+                        {
+                          "label": "Biofilm",
+                          "value": "Biofilm",
+                          "count": 108
+                        },
+                        {
+                          "label": "Acid Mine Drainage",
+                          "value": "Acid Mine Drainage",
+                          "count": 15
+                        },
+                        {
+                          "label": "Cave water",
+                          "value": "Cave water",
+                          "count": 7
+                        },
+                        {
+                          "label": "Mine drainage",
+                          "value": "Mine drainage",
+                          "count": 4
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Lake",
+                      "value": "Lake",
+                      "count": 490
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 247
+                    },
+                    {
+                      "label": "Ice",
+                      "value": "Ice",
+                      "count": 207,
+                      "children": [
+                        {
+                          "label": "Glacier",
+                          "value": "Glacier",
+                          "count": 139
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Drinking water",
+                      "value": "Drinking water",
+                      "count": 189,
+                      "children": [
+                        {
+                          "label": "Delivery networks",
+                          "value": "Delivery networks",
+                          "count": 79
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Wetlands",
+                      "value": "Wetlands",
+                      "count": 50,
+                      "children": [
+                        {
+                          "label": "Bog",
+                          "value": "Bog",
+                          "count": 48
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Lentic",
+                      "value": "Lentic",
+                      "count": 39,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 27
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Lotic",
+                      "value": "Lotic",
+                      "count": 14,
+                      "children": [
+                        {
+                          "label": "Low land river systems",
+                          "value": "Low land river systems",
+                          "count": 4
+                        },
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 3
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Pond",
+                      "value": "Pond",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Non-marine Saline and Alkaline",
+                  "value": "Non-marine Saline and Alkaline",
+                  "count": 254,
+                  "children": [
+                    {
+                      "label": "Alkaline",
+                      "value": "Alkaline",
+                      "count": 142,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 139
+                        },
+                        {
+                          "label": "Microbial mats",
+                          "value": "Microbial mats",
+                          "count": 2
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Hypersaline",
+                      "value": "Hypersaline",
+                      "count": 36,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 16
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Salt crystallizer pond",
+                      "value": "Salt crystallizer pond",
+                      "count": 6
+                    }
+                  ]
+                },
+                {
+                  "label": "Lentic",
+                  "value": "Lentic",
+                  "count": 41
+                },
+                {
+                  "label": "Thermal springs",
+                  "value": "Thermal springs",
+                  "count": 32,
+                  "children": [
+                    {
+                      "label": "Hot (42-90C)",
+                      "value": "Hot (42-90C)",
+                      "count": 22,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 3
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 4
+                    },
+                    {
+                      "label": "Near-boiling (>90C)",
+                      "value": "Near-boiling (>90C)",
+                      "count": 3
+                    }
+                  ]
+                },
+                {
+                  "label": "Estuary",
+                  "value": "Estuary",
+                  "count": 4
+                },
+                {
+                  "label": "Aquaculture",
+                  "value": "Aquaculture",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Air",
+              "value": "Air",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "label": "Engineered",
+          "value": "Engineered",
+          "count": 5907,
+          "children": [
+            {
+              "label": "Wastewater",
+              "value": "Wastewater",
+              "count": 2472,
+              "children": [
+                {
+                  "label": "Activated Sludge",
+                  "value": "Activated Sludge",
+                  "count": 913
+                },
+                {
+                  "label": "Nutrient removal",
+                  "value": "Nutrient removal",
+                  "count": 752,
+                  "children": [
+                    {
+                      "label": "Biological phosphorus removal",
+                      "value": "Biological phosphorus removal",
+                      "count": 418,
+                      "children": [
+                        {
+                          "label": "Bioreactor",
+                          "value": "Bioreactor",
+                          "count": 414,
+                          "children": [
+                            {
+                              "label": "Continuous culture",
+                              "value": "Continuous culture",
+                              "count": 408,
+                              "children": [
+                                {
+                                  "label": "Marine sediment inoculum",
+                                  "value": "Marine sediment inoculum",
+                                  "count": 29
+                                },
+                                {
+                                  "label": "Marine intertidal flat sediment inoculum",
+                                  "value": "Marine intertidal flat sediment inoculum",
+                                  "count": 23
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "label": "Activated sludge",
+                          "value": "Activated sludge",
+                          "count": 4
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Dissolved organics (anaerobic)",
+                      "value": "Dissolved organics (anaerobic)",
+                      "count": 285
+                    },
+                    {
+                      "label": "Dissolved organics (aerobic)",
+                      "value": "Dissolved organics (aerobic)",
+                      "count": 48
+                    },
+                    {
+                      "label": "Nitrogen removal",
+                      "value": "Nitrogen removal",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Industrial wastewater",
+                  "value": "Industrial wastewater",
+                  "count": 403,
+                  "children": [
+                    {
+                      "label": "Agricultural wastewater",
+                      "value": "Agricultural wastewater",
+                      "count": 339
+                    },
+                    {
+                      "label": "Petrochemical",
+                      "value": "Petrochemical",
+                      "count": 16
+                    }
+                  ]
+                },
+                {
+                  "label": "Water and sludge",
+                  "value": "Water and sludge",
+                  "count": 316
+                }
+              ]
+            },
+            {
+              "label": "Food production",
+              "value": "Food production",
+              "count": 1245,
+              "children": [
+                {
+                  "label": "Dairy products",
+                  "value": "Dairy products",
+                  "count": 750
+                },
+                {
+                  "label": "Fermented vegetables",
+                  "value": "Fermented vegetables",
+                  "count": 78
+                },
+                {
+                  "label": "Fermented beverages",
+                  "value": "Fermented beverages",
+                  "count": 61
+                },
+                {
+                  "label": "Silage fermentation",
+                  "value": "Silage fermentation",
+                  "count": 12
+                },
+                {
+                  "label": "Fermented seafood",
+                  "value": "Fermented seafood",
+                  "count": 10
+                }
+              ]
+            },
+            {
+              "label": "Bioreactor",
+              "value": "Bioreactor",
+              "count": 617
+            },
+            {
+              "label": "Modeled",
+              "value": "Modeled",
+              "count": 526,
+              "children": [
+                {
+                  "label": "Simulated communities (microbial mixture)",
+                  "value": "Simulated communities (microbial mixture)",
+                  "count": 327
+                },
+                {
+                  "label": "Simulated communities (DNA mixture)",
+                  "value": "Simulated communities (DNA mixture)",
+                  "count": 59
+                },
+                {
+                  "label": "Simulated communities (sequence read mixture)",
+                  "value": "Simulated communities (sequence read mixture)",
+                  "count": 47
+                }
+              ]
+            },
+            {
+              "label": "Built environment",
+              "value": "Built environment",
+              "count": 322
+            },
+            {
+              "label": "Lab enrichment",
+              "value": "Lab enrichment",
+              "count": 150,
+              "children": [
+                {
+                  "label": "Defined media",
+                  "value": "Defined media",
+                  "count": 18
+                }
+              ]
+            },
+            {
+              "label": "Bioremediation",
+              "value": "Bioremediation",
+              "count": 106,
+              "children": [
+                {
+                  "label": "Hydrocarbon",
+                  "value": "Hydrocarbon",
+                  "count": 67,
+                  "children": [
+                    {
+                      "label": "Benzene",
+                      "value": "Benzene",
+                      "count": 2,
+                      "children": [
+                        {
+                          "label": "Bioreactor",
+                          "value": "Bioreactor",
+                          "count": 2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Terephthalate",
+                  "value": "Terephthalate",
+                  "count": 4,
+                  "children": [
+                    {
+                      "label": "Wastewater",
+                      "value": "Wastewater",
+                      "count": 4,
+                      "children": [
+                        {
+                          "label": "Bioreactor",
+                          "value": "Bioreactor",
+                          "count": 4
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Persistent organic pollutants (POP)",
+                  "value": "Persistent organic pollutants (POP)",
+                  "count": 3
+                }
+              ]
+            },
+            {
+              "label": "Biogas plant",
+              "value": "Biogas plant",
+              "count": 95,
+              "children": [
+                {
+                  "label": "Wet fermentation",
+                  "value": "Wet fermentation",
+                  "count": 74
+                }
+              ]
+            },
+            {
+              "label": "Solid waste",
+              "value": "Solid waste",
+              "count": 91,
+              "children": [
+                {
+                  "label": "Composting",
+                  "value": "Composting",
+                  "count": 79,
+                  "children": [
+                    {
+                      "label": "Grass",
+                      "value": "Grass",
+                      "count": 3
+                    },
+                    {
+                      "label": "Bioreactor",
+                      "value": "Bioreactor",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Solid animal waste",
+                  "value": "Solid animal waste",
+                  "count": 12
+                }
+              ]
+            },
+            {
+              "label": "Biotransformation",
+              "value": "Biotransformation",
+              "count": 46,
+              "children": [
+                {
+                  "label": "Mixed alcohol bioreactor",
+                  "value": "Mixed alcohol bioreactor",
+                  "count": 25
+                },
+                {
+                  "label": "Microbial enhanced oil recovery",
+                  "value": "Microbial enhanced oil recovery",
+                  "count": 8
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Control",
+          "value": "Control",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "experiment_type",
+      "label": "Experiment type",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "Metagenomic",
+          "value": "metagenomic",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "sequencing_method",
+      "label": "Sequencing method",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "454",
+          "value": "454",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "location_name",
+      "label": "Location name",
+      "total": 6,
+      "facetValues": [
+        {
+          "label": "USA; Route from Portland, Maine to Moncton, New Brunswick",
+          "value": "USA; Route from Portland, Maine to Moncton, New Brunswick",
+          "count": 1
+        },
+        {
+          "label": "USA; Maine, Portland, Maine to USA; New Brunswick, Moncton",
+          "value": "USA; Maine, Portland, Maine to USA; New Brunswick, Moncton",
+          "count": 1
+        },
+        {
+          "label": "USA; Route from State College, Pennsylvania to Manchester, Connecticut.",
+          "value": "USA; Route from State College, Pennsylvania to Manchester, Connecticut.",
+          "count": 1
+        },
+        {
+          "label": "USA; Pennsylvania, State College to USA;Connecticut,Manchester",
+          "value": "USA; Pennsylvania, State College to USA;Connecticut,Manchester",
+          "count": 1
+        },
+        {
+          "label": "Arctic Ocean",
+          "value": "Arctic Ocean",
+          "count": 1
+        },
+        {
+          "label": "China",
+          "value": "China",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}
