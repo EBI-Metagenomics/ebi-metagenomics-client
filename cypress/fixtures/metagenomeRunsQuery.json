@@ -424,7 +424,7 @@
           "Fecal"
         ],
         "description": [
-          "Ten IBD and 10 healthy individual"s fecal microbiomes were determined by NGS sequencing, to indentify features that are unique to each group.  This was done using shot-gun metagenomics of DNA extracted from fecal samples and run on a HiSeq 2500."
+          "Ten IBD and 10 healthy individual's fecal microbiomes were determined by NGS sequencing, to indentify features that are unique to each group.  This was done using shot-gun metagenomics of DNA extracted from fecal samples and run on a HiSeq 2500."
         ],
         "METAGENOMICS_PROJECTS": [
           "ERP008951"

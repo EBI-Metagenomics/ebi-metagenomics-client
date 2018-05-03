@@ -104,51 +104,6 @@ let QCGraphView = Backbone.View.extend({
 });
 
 /**
- * Cluster and compact groups other than top 10 largest into an 'other' category
- * @param {[*]}data
- * @param {number} depth
- * @return {Array.<*>} array data summed by parameter depth
- */
-function groupTaxonomyData(data, depth) {
-    // _.each(clusteredData, function (o, i) {
-    //     if (o.name === "undefined") {
-    //         o.name = "Unassigned";
-    //         o.lineage = ["Unassigned"];
-    //     }
-    // });
-    return _.sortBy(clusterData(data, depth), function(o) {
-        return o.y;
-    }).reverse();
-}
-
-/**
- * Group all data after index n into single category
- * @param {[*]} clusteredData
- * @param {number} n index after which to group data
- * @return {[*]} grouped data
- */
-function groupAfterN(clusteredData, n) {
-    if (clusteredData.length > n) {
-        const top10 = clusteredData.slice(0, n);
-        const others = {
-            name: 'Other',
-            lineage: [],
-            y: 0
-        };
-        _.each(clusteredData.slice(n, clusteredData.length), function(d) {
-            others.y += d.y;
-            if (others.lineage.indexOf(d.lineage[0]) === -1) {
-                others.lineage.push(d.lineage[0]);
-            }
-        });
-        others.lineage = others.lineage.join(', ');
-        top10.push(others);
-        clusteredData = top10;
-    }
-    return clusteredData;
-}
-
-/**
  * Cluster data by depth
  * @param {[*]} data
  * @param {number} depth
@@ -190,6 +145,51 @@ function clusterData(data, depth) {
             lineage: values.l
         };
     });
+    return clusteredData;
+}
+
+/**
+ * Cluster and compact groups other than top 10 largest into an 'other' category
+ * @param {[*]}data
+ * @param {number} depth
+ * @return {Array.<*>} array data summed by parameter depth
+ */
+function groupTaxonomyData(data, depth) {
+    // _.each(clusteredData, function (o, i) {
+    //     if (o.name === "undefined") {
+    //         o.name = "Unassigned";
+    //         o.lineage = ["Unassigned"];
+    //     }
+    // });
+    return _.sortBy(clusterData(data, depth), function(o) {
+        return o.y;
+    }).reverse();
+}
+
+/**
+ * Group all data after index n into single category
+ * @param {[*]} clusteredData
+ * @param {number} n index after which to group data
+ * @return {[*]} grouped data
+ */
+function groupAfterN(clusteredData, n) {
+    if (clusteredData.length > n) {
+        const top10 = clusteredData.slice(0, n);
+        const others = {
+            name: 'Other',
+            lineage: [],
+            y: 0
+        };
+        _.each(clusteredData.slice(n, clusteredData.length), function(d) {
+            others.y += d.y;
+            if (others.lineage.indexOf(d.lineage[0]) === -1) {
+                others.lineage.push(d.lineage[0]);
+            }
+        });
+        others.lineage = others.lineage.join(', ');
+        top10.push(others);
+        clusteredData = top10;
+    }
     return clusteredData;
 }
 
@@ -419,6 +419,22 @@ function getTotalGoTermCount(array) {
     return sum;
 }
 
+/**
+ * Disable tab by id
+ * @param {string} id of tab
+ */
+function disableTab(id) {
+    $('[href=\'#' + id + '\']').parent('li').addClass('disabled');
+}
+
+/**
+ * Enable tab by id
+ * @param {string} id of tab
+ */
+function enableTab(id) {
+    $('[href=\'#' + id + '\']').parent('li').removeClass('disabled');
+}
+
 let GoTermCharts = Backbone.View.extend({
     model: api.GoSlim,
     initialize() {
@@ -479,21 +495,6 @@ let GoTermCharts = Backbone.View.extend({
     }
 });
 
-let DownloadView = Backbone.View.extend({
-    model: api.RunDownloads,
-    template: _.template($('#downloadsTmpl').html()),
-    el: '#download-list',
-    initialize() {
-        const that = this;
-        this.model.fetch({
-            data: $.param({page_size: 250}),
-            success(response) {
-                setAbundanceTab(response.attributes.downloadGroups['Statistics']);
-                that.$el.html(that.template({groups: response.attributes.downloadGroups}));
-            }
-        });
-    }
-});
 
 /**
  * Display abundance tab if data exists to populate it
@@ -521,6 +522,22 @@ function setAbundanceTab(statisticsData) {
         util.changeTab('overview');
     }
 }
+
+let DownloadView = Backbone.View.extend({
+    model: api.RunDownloads,
+    template: _.template($('#downloadsTmpl').html()),
+    el: '#download-list',
+    initialize() {
+        const that = this;
+        this.model.fetch({
+            data: $.param({page_size: 250}),
+            success(response) {
+                setAbundanceTab(response.attributes.downloadGroups['Statistics']);
+                that.$el.html(that.template({groups: response.attributes.downloadGroups}));
+            }
+        });
+    }
+});
 
 /**
  *  Compact groups other than top 10 largest into an 'other' category
@@ -569,22 +586,6 @@ function getColourSquareIcon(i) {
     const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
     return '<div class=\'puce-square-legend\' style=\'background-color: ' +
         Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
-}
-
-/**
- * Disable tab by id
- * @param {string} id of tab
- */
-function disableTab(id) {
-    $('[href=\'#' + id + '\']').parent('li').addClass('disabled');
-}
-
-/**
- * Enable tab by id
- * @param {string} id of tab
- */
-function enableTab(id) {
-    $('[href=\'#' + id + '\']').parent('li').removeClass('disabled');
 }
 
 /**

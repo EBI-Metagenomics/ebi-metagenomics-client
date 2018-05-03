@@ -25,7 +25,6 @@ module.exports = function CheckboxTree() {
         $checkbox.click(function(e) {
             setChildrenCheckboxes($checkbox);
             setParentCheckboxStatus($checkbox);
-            // addClearButton($(this), $('.filter-clear'));
             if (e.originalEvent.isTrusted) {
                 propagateToFacets($(this).attr('name'), $(this).val(), $(this).is(':checked'));
             }
@@ -36,6 +35,22 @@ module.exports = function CheckboxTree() {
         const $label = $('<label>' + node.label + ' (' + node.count +
             ')</label>');
         return $().add($checkbox).add($label);
+    };
+
+    const createExpandButton = function() {
+        const $button = $('<button class=\'disp-children\'>&#9654;</button>');
+        $button.click(function(e) {
+            e.preventDefault();
+            const $group = $(this).siblings('.facet-child-group');
+
+            $group.toggle();
+            if ($group.is(':visible')) {
+                $(this).text('\u25BC');
+            } else {
+                $(this).text('\u25B6');
+            }
+        });
+        return $button;
     };
 
     const drawAndPropagate = function($elem, facet, node, treeLabel, $btnContainer, callback) {
@@ -53,6 +68,18 @@ module.exports = function CheckboxTree() {
             drawAndPropagate($groupContainer, facet, node2, treeLabel, $btnContainer, callback);
         });
         $groupContainer.appendTo($elem);
+    };
+
+    const getChildrenCheckboxes = function($elem) {
+        return $elem.siblings('.facet-child-group').children('.facet-checkbox');
+    };
+
+    const getParentCheckbox = function($elem) {
+        return $elem.parent().siblings('.facet-checkbox');
+    };
+
+    const getSiblingsCheckboxes = function($elem) {
+        return $elem.parent().siblings('div.facet-child-group').children('input');
     };
 
     const setRmvButton = function($btnContainer, $this) {
@@ -117,34 +144,6 @@ module.exports = function CheckboxTree() {
             }
         });
     }
-
-    const createExpandButton = function() {
-        const $button = $('<button class=\'disp-children\'>&#9654;</button>');
-        $button.click(function(e) {
-            e.preventDefault();
-            const $group = $(this).siblings('.facet-child-group');
-
-            $group.toggle();
-            if ($group.is(':visible')) {
-                $(this).text('\u25BC');
-            } else {
-                $(this).text('\u25B6');
-            }
-        });
-        return $button;
-    };
-
-    const getChildrenCheckboxes = function($elem) {
-        return $elem.siblings('.facet-child-group').children('.facet-checkbox');
-    };
-
-    const getParentCheckbox = function($elem) {
-        return $elem.parent().siblings('.facet-checkbox');
-    };
-
-    const getSiblingsCheckboxes = function($elem) {
-        return $elem.parent().siblings('div.facet-child-group').children('input');
-    };
 
     // const getFacetCheckboxes = function ($elem) {
     //     return $elem.closest('.facet-group').find('input');
