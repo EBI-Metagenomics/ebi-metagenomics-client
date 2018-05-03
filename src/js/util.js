@@ -621,7 +621,7 @@ export let RunsView = GenericTableView.extend({
     },
 
     getRowData(attr) {
-        const runLink = '<a href=\'' + attr.run_url + '\'>' + attr.run_id + '</a>';
+        const runLink = '<a href=\'' + attr.analysis_url + '\'>' + attr.run_id + '</a>';
         return [
             runLink,
             attr['experiment_type'],

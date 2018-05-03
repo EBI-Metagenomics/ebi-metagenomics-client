@@ -49,7 +49,7 @@ const pagesBreadcrumbs = {
     // 'login': [''],
     'pipelines/4.0': ['', 'pipelines'],
     'pipelines': [''],
-    'runs/SRR997120': [''],
+    'analysis/SRR997120': [''],
     'samples/ERS1474828': ['', 'browse#samples'],
     'browse': [''],
     'search': [''],
@@ -64,19 +64,21 @@ for (let page in pagesBreadcrumbs) {
             it('Test breadcrumb link validity', function() {
                 cy.log(page);
                 for (let i in breadcrumbs) {
-                    openPage(page);
-                    cy.get('h2', {timeout: 50000});
-                    cy.log(breadcrumbs.length, i);
-                    cy.log(breadcrumbs);
-                    const expectedPage = breadcrumbs[i];
-                    cy.get('.breadcrumbs>li>a').each(($el, index) => {
-                        cy.log(i, expectedPage);
-                        if (parseInt(i) === parseInt(index)) {
-                            cy.wrap($el).click();
-                            cy.url().should('equal', getPageURL(expectedPage));
-                            openPage(page);
-                        }
-                    });
+                    if (Object.prototype.hasOwnProperty.call(breadcrumbs, i)) {
+                        openPage(page);
+                        cy.get('h2', {timeout: 50000});
+                        cy.log(breadcrumbs.length, i);
+                        cy.log(breadcrumbs);
+                        const expectedPage = breadcrumbs[i];
+                        cy.get('.breadcrumbs>li>a').each(($el, index) => {
+                            cy.log(i, expectedPage);
+                            if (parseInt(i) === parseInt(index)) {
+                                cy.wrap($el).click();
+                                cy.url().should('equal', getPageURL(expectedPage));
+                                openPage(page);
+                            }
+                        });
+                    }
                 }
             });
         });

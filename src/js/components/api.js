@@ -77,19 +77,14 @@ export const Run = Backbone.Model.extend({
         const attr = data.attributes;
         const rel = data.relationships;
         const pipelines = rel.pipelines;
-        // const analysis = rel.analysis;
         const sampleId = rel.sample.data.id;
         const studyId = rel.study.data.id;
         return {
             run_id: attr['accession'],
-            // analyses: [{
-            //     experiment_type: 'A',
-            //     pipeline_version: 'x.x',
-            //     date: 'xx/xx/xxxx'
-            // }],
+            ena_url: ENA_VIEW_URL + attr['accession'],
             sample_id: sampleId,
             sample_url: util.subfolder + '/samples/' + sampleId,
-            run_url: util.subfolder + '/runs/' + attr.accession,
+            analysis_url: util.subfolder + '/analysis/' + attr.accession,
             experiment_type: attr['experiment-type'],
             instrument_model: attr['instrument-model'],
             instrument_platform: attr['instrument-platform'],

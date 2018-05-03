@@ -1,6 +1,6 @@
 import {openPage, changeTab} from './util';
 
-const origPage = 'runs/ERR1022502';
+const origPage = 'analysis/ERR1022502';
 
 function waitForPageLoad() {
     cy.get('#overview', {timeout: 20000}).children().should('have.length', 2);
@@ -29,7 +29,7 @@ function selectAnalysis(analysis) {
 /**
  * Verify number of results responds to selector
  */
-describe('Run page - general', function() {
+describe('Analysis page - general', function() {
     it('Should display overview if no deeplink is provided', function() {
         openPage(origPage);
         waitForPageLoad();
@@ -51,7 +51,7 @@ describe('Run page - general', function() {
         }
     });
     it('Should display metadata if available', function() {
-        openPage('runs/ERR867946');
+        openPage('analysis/ERR867946');
         waitForPageLoad();
         verifyTabIsVisible('#overview');
         cy.contains('Study:').next().should('contain', 'ERP009703');
@@ -71,7 +71,7 @@ describe('Run page - general', function() {
 })
 ;
 
-describe('Run page - url parameters', function() {
+describe('Analysis page - url parameters', function() {
     it('Should load correct analysis version', function() {
         const pipelineVersion = '4.0';
         openPage(origPage + '?version=' + pipelineVersion);
@@ -87,7 +87,7 @@ describe('Run page - url parameters', function() {
     });
 });
 
-describe('Run page - download tab', function() {
+describe('Analysis page - download tab', function() {
     beforeEach(function() {
         openPage(origPage);
         waitForPageLoad();
@@ -119,9 +119,9 @@ describe('Run page - download tab', function() {
     // });
 });
 
-describe('Run page - charts', function() {
+describe('Analysis page - charts', function() {
     it('QC chart should display correctly', function() {
-        openPage('runs/ERR867655');
+        openPage('analysis/ERR867655');
         waitForPageLoad();
         changeTab('qc');
 
@@ -164,7 +164,7 @@ describe('Run page - charts', function() {
     });
 });
 
-describe('Run page - Abundance tab', function() {
+describe('Analysis page - Abundance tab', function() {
     it('Tab should be disabled if no data available.', function() {
         openPage(origPage);
         waitForPageLoad();
@@ -186,7 +186,7 @@ describe('Run page - Abundance tab', function() {
     });
 });
 
-describe('Run page - Changing pipeline version', function() {
+describe('Analysis page - Changing pipeline version', function() {
     it('Should not duplicate krona chart', function() {
         const kronaChartClass = '.krona_chart';
         openPage(origPage);
@@ -202,7 +202,7 @@ describe('Run page - Changing pipeline version', function() {
     });
 });
 
-describe('Run page - Changing analysis version', function() {
+describe('Analysis page - Changing analysis version', function() {
     it('Should not duplicate taxonomic phylum table', function() {
         const tableClass = '#pie .phylum-table';
         const pipelineVersion = '4.0';
@@ -219,10 +219,10 @@ describe('Run page - Changing analysis version', function() {
     });
 });
 
-describe('Run page - Error handling', function() {
+describe('Analysis page - Error handling', function() {
     it('Should display error message if invalid accession passed in URL', function() {
         const runId = 'ERR1231231231';
-        const origPage = 'runs/' + runId;
+        const origPage = 'analysis/' + runId;
         openPage(origPage);
         cy.contains('Error: 404', {timeout: 40000});
         cy.contains('Could not retrieve run: ' + runId, {timeout: 40000});

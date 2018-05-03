@@ -54,8 +54,9 @@ let RunView = Backbone.View.extend({
                     attachViewControls();
                     $('#analysisSelect').val(version);
                     let description = {
-                        Study: '<a href=\'' + attr.study_url + '\'>' + attr.study_id + '</a>',
-                        Sample: '<a href=\'' + attr.sample_url + '\'>' + attr.sample_id + '</a>'
+                        'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_id + '</a>',
+                        'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_id + '</a>',
+                        'Run (in ENA)': '<a href=\'' + attr.ena_url + '\'>' + attr.run_id + '</a>'
                     };
                     const dataAnalysis = {};
                     if (attr['experiment_type']) {
