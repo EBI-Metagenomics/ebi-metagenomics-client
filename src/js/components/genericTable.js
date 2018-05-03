@@ -28,7 +28,6 @@ module.exports = class GenericTable {
             isPageHeader: isHeader,
             tableClass: tableClass,
             tableContainer: _.uniqueId('tablecontainer')
-
         };
         const $sectionContent = $(tableTmpl(params));
         this.$table = $sectionContent.find('table');

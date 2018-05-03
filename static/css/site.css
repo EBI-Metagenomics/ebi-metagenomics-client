@@ -216,11 +216,11 @@ select.table-tools {
 }
 
 .expand-button:after {
-    content: '+';
+    content: ' [+]';
 }
 
 .expand-button.min:after {
-    content: '-';
+    content: ' [-]';
 }
 
 /* Index page */
