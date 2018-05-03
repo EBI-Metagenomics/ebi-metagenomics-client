@@ -50,27 +50,27 @@ let StudiesView = Backbone.View.extend({
         let params = {};
         params.page = pagination.currentPage;
 
-        const biome = pageFilters.get('lineage');
+        const biome = pageFilters['lineage'];
         if (biome) {
             params.lineage = biome;
         } else {
             params.lineage = 'root';
         }
 
-        const ordering = pageFilters.get('ordering');
+        const ordering = pageFilters['ordering'];
         if (ordering) {
             params.ordering = ordering;
         } else {
             params.ordering = '-last_update';
         }
 
-        const search = pageFilters.get('search');
+        const search = pageFilters['search'];
         if (search) {
             params.search = search;
             $('#search').val(search);
         }
-        params.page_size = pageFilters.get('pagesize') || Commons.DEFAULT_PAGE_SIZE;
-        params.page = parseInt(pageFilters.get('page')) || 1;
+        params.page_size = pageFilters['pagesize'] || Commons.DEFAULT_PAGE_SIZE;
+        params.page = parseInt(pageFilters['page']) || 1;
 
         this.update(params);
     },
@@ -135,27 +135,27 @@ let SamplesView = Backbone.View.extend({
         let params = {};
         params.page = pagination.currentPage;
 
-        const biome = pageFilters.get('lineage');
+        const biome = pageFilters['lineage'];
         if (biome) {
             params.lineage = biome;
         } else {
             params.lineage = 'root';
         }
 
-        const ordering = pageFilters.get('ordering');
+        const ordering = pageFilters['ordering'];
         if (ordering) {
             params.ordering = ordering;
         } else {
             params.ordering = '-last_update';
         }
 
-        const search = pageFilters.get('search');
+        const search = pageFilters['search'];
         if (search) {
             params.search = search;
             $('#search').val(search);
         }
-        params.page_size = pageFilters.get('pagesize') || Commons.DEFAULT_PAGE_SIZE;
-        params.page = parseInt(pageFilters.get('page')) || 1;
+        params.page_size = pageFilters['pagesize'] || Commons.DEFAULT_PAGE_SIZE;
+        params.page = parseInt(pageFilters['page']) || 1;
 
         return this.update(params);
     },
@@ -205,7 +205,7 @@ let biomes = new api.BiomeCollection();
 new util.BiomeCollectionView({
     collection: biomes,
     maxDepth: BIOME_FILTER_DEPTH
-}, pageFilters.get('lineage'));
+}, pageFilters['lineage']);
 
 let studies = new api.StudiesCollection();
 let studiesView = new StudiesView({collection: studies});
@@ -225,6 +225,6 @@ util.initBiomeFilter($('section').find('.tableFilters'),
         studiesView.update(updateObj);
         samplesView.update(updateObj);
     });
-$('.table-filter').val(pageFilters.get('search'));
+$('.table-filter').val(pageFilters['search']);
 
 syncFilterFields();

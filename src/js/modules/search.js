@@ -44,7 +44,7 @@ function getCookieQuery() {
     return data;
 }
 
-let queryText = util.getURLFilterParams().get('query');
+let queryText = util.getURLFilterParams()['query'];
 if (queryText === null) {
     queryText = getCookieQuery();
 }

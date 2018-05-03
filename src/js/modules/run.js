@@ -26,7 +26,7 @@ util.setupPage('#browse-nav');
 window.Foundation.addToJquery($);
 
 let runId = util.getURLParameter();
-let pipelineVersion = new URL(window.location).searchParams.get('version');
+let pipelineVersion = util.getURLFilterParams()['version'];
 
 let analysis = null;
 let interproData = null;

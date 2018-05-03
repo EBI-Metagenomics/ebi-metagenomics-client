@@ -37,16 +37,16 @@ let BiomesView = Backbone.View.extend({
         params.page = pagination.currentPage;
         params.page_size = pagination.getPageSize();
 
-        const ordering = pageFilters.get('ordering');
+        const ordering = pageFilters['ordering'];
         if (ordering) {
             params.ordering = ordering;
         } else {
             params.ordering = '-samples_count';
         }
 
-        const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
+        const pagesize = pageFilters['pagesize'] || DEFAULT_PAGE_SIZE;
         params.page_size = pagesize;
-        params.page = pageFilters.get('page') || 1;
+        params.page = pageFilters['page'] || 1;
         this.params = params;
 
         this.fetchXhr = this.collection.fetch({

@@ -5,6 +5,7 @@ const api = require('./components/api');
 const Commons = require('./commons');
 const GenericTable = require('./components/genericTable');
 import 'process';
+
 require('babel-polyfill');
 
 export const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
@@ -101,7 +102,17 @@ export function getURLParameter() {
  * @return {*}
  */
 export function getURLFilterParams() {
-    return new URL(window.location).searchParams;
+    let sPageURL = decodeURIComponent(window.location.search.substring(1));
+    let sURLVariables = sPageURL.split('&');
+    let sParameterName;
+    let i;
+    let params = {};
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+        params[sParameterName[0]] = decodeURIComponent(sParameterName[1]);
+    }
+    return params;
 }
 
 /**
