@@ -13,29 +13,29 @@
 }
 
 .studies-table th:first-child {
-    width: 5em;
+    width: 7%;
 }
 .studies-table th:nth-child(2){
-    width: 8em;
+    width: 9%;
 }
 .studies-table th:nth-child(4) {
-    width: 35em;
+    width: 45%;
 }
 
 .studies-table th:last-child {
-    width: 10em;
+    width: 10%;
 }
 
 .samples-table th:first-child {
-    width: 5em;
+    width: 6%;
 }
 
 .samples-table th:nth-child(2) {
-    width: 8em;
+    width: 10%;
 }
 
 .samples-table th:last-child {
-    width: 10em;
+    width: 11%;
 }
 
 .runs-download-table {
