@@ -32,6 +32,8 @@ let analysis = null;
 let interproData = null;
 let taxonomy = null;
 let goTerm = null;
+let runView = null;
+let run = null;
 
 let RunView = Backbone.View.extend({
     model: api.Run,
@@ -204,6 +206,17 @@ function getSeriesIndex(index, numSeries) {
         index = numSeries - 1;
     }
     return index;
+}
+
+/**
+ * Create a display of the series color
+ * @param {number} i index of series color
+ * @return {string} display element
+ */
+function getColourSquareIcon(i) {
+    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
+    return '<div class=\'puce-square-legend\' style=\'background-color: ' +
+        Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
 }
 
 let TaxonomyGraphView = Backbone.View.extend({
@@ -435,6 +448,33 @@ function enableTab(id) {
     $('[href=\'#' + id + '\']').parent('li').removeClass('disabled');
 }
 
+/**
+ *  Compact groups other than top 10 largest into an 'other' category
+ * @param {[*]} data
+ * @return {*} data grouped into top 10 categories, and all following summed into 'Other'
+ */
+function groupGoTermData(data) {
+    let top10 = data.slice(0, 10).map(function(d) {
+        d = d.attributes;
+        return {
+            name: d.description,
+            y: d.count
+        };
+    });
+    if (data.length > 10) {
+        const others = {
+            name: 'Other',
+            y: 0
+        };
+        _.each(data.slice(10), function(d) {
+            others.y += d.attributes.count;
+        });
+        top10.push(others);
+        data = top10;
+    }
+    return data;
+}
+
 let GoTermCharts = Backbone.View.extend({
     model: api.GoSlim,
     initialize() {
@@ -495,7 +535,6 @@ let GoTermCharts = Backbone.View.extend({
     }
 });
 
-
 /**
  * Display abundance tab if data exists to populate it
  * @param {[*]} statisticsData
@@ -540,33 +579,6 @@ let DownloadView = Backbone.View.extend({
 });
 
 /**
- *  Compact groups other than top 10 largest into an 'other' category
- * @param {[*]} data
- * @return {*} data grouped into top 10 categories, and all following summed into 'Other'
- */
-function groupGoTermData(data) {
-    let top10 = data.slice(0, 10).map(function(d) {
-        d = d.attributes;
-        return {
-            name: d.description,
-            y: d.count
-        };
-    });
-    if (data.length > 10) {
-        const others = {
-            name: 'Other',
-            y: 0
-        };
-        _.each(data.slice(10), function(d) {
-            others.y += d.attributes.count;
-        });
-        top10.push(others);
-        data = top10;
-    }
-    return data;
-}
-
-/**
  * Generate interpro link
  * @param {string} text to display in link tag
  * @param {string} id of interpro result
@@ -575,17 +587,6 @@ function groupGoTermData(data) {
 function createInterProLink(text, id) {
     const url = INTERPRO_URL + 'entry/' + id;
     return '<a href=\'' + url + '\'>' + text + '</a>';
-}
-
-/**
- * Create a display of the series color
- * @param {number} i index of series color
- * @return {string} display element
- */
-function getColourSquareIcon(i) {
-    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
-    return '<div class=\'puce-square-legend\' style=\'background-color: ' +
-        Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
 }
 
 /**
@@ -693,5 +694,5 @@ function attachViewControls() {
     $('.rna-select-button').click(onTaxonomySelect);
 }
 
-let run = new api.Run({id: runId});
-let runView = new RunView({model: run});
+run = new api.Run({id: runId});
+runView = new RunView({model: run});
