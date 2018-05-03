@@ -9,7 +9,7 @@ const fetch = userData.fetch();
 
 fetchLogin.done(function(loggedIn) {
     if (!loggedIn) {
-        const $button = $(util.getLoginLink('Please click here to login.'));
+        const $button = $(util.getLoginLink('Please click here to login'));
         $button.attr({'class': 'button'});
         $actionDiv.html($button);
     } else {

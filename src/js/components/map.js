@@ -1,6 +1,3 @@
-// const MarkerClusterer = require('js-marker-clusterer');
-const OverlappingMarkerSpiderfier = require(
-    '../../../static/js/oms.min.js').OverlappingMarkerSpiderfier;
 module.exports = class MapHandler {
     /**
      * Create a new instance of a google map in the element with id
@@ -17,12 +14,6 @@ module.exports = class MapHandler {
 
         const template = require('../../partials/map_marker.handlebars');
 
-        let oms = new OverlappingMarkerSpiderfier(map, {
-            markersWontMove: true,
-            markersWontHide: true,
-            basicFormatEvents: true
-        });
-
         // // Do not display markers with invalid Lat/Long values
         const that = this;
         let markers = samples.reduce(function(result, sample) {
@@ -30,7 +21,7 @@ module.exports = class MapHandler {
             const lng = sample.longitude;
 
             if ((lat !== null) && (lng !== null)) {
-                result.push(that.placeMarker(map, oms, template, sample, displayMarkerDetails));
+                result.push(that.placeMarker(map, template, sample, displayMarkerDetails));
             }
             return result;
         }, []);
@@ -84,13 +75,12 @@ module.exports = class MapHandler {
     /**
      * Places a marker on the map
      * @param {object} map
-     * @param {object} oms
      * @param {object} template
      * @param {object} sample
      * @param {boolean} displayMarkerDetails
      * @return {google.maps.Marker}
      */
-    placeMarker(map, oms, template, sample, displayMarkerDetails) {
+    placeMarker(map, template, sample, displayMarkerDetails) {
         const pos = this.getSamplePosition(sample);
 
         let marker = new google.maps.Marker({
@@ -109,7 +99,6 @@ module.exports = class MapHandler {
                 infowindow.open(map, marker);
             });
         }
-        oms.addMarker(marker);
         return marker;
     }
 };

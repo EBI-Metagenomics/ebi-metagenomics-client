@@ -72,7 +72,7 @@ let RunView = Backbone.View.extend({
                     const $overview = $('#overview');
                     $overview.append(new DetailList('Description', description));
                     if (Object.keys(dataAnalysis).length > 0) {
-                        $overview.append(new DetailList('Data analysis', dataAnalysis));
+                        $overview.append(new DetailList('Experiment details', dataAnalysis));
                     }
                     loadAnalysisData(runId, version);
                     loadDownloads(runId, version);
