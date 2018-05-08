@@ -97,7 +97,7 @@ let StudiesView = Backbone.View.extend({
                 return '<span class="biome_icon icon_xs ' + biome.icon + '" title="' + biome.name +
                     '"></span>';
             }).join('');
-            const accessionLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_accession +
+            const accessionLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_id +
                 '</a>';
             const nameLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_name + '</a>';
             return [biomes, accessionLink, nameLink, attr.samples_count, attr.last_update];

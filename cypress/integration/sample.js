@@ -14,7 +14,7 @@ const studyTableColumn = {
         sortable: false
     },
     study_id: {
-        data: ['ERP104178', 'ERP005307'],
+        data: ['MGYS00002011', 'MGYS00000369'],
         type: datatype.STR,
         sortable: false
     },

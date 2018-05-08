@@ -55,7 +55,7 @@ describe('Login process', function() {
             table = new GenericTableHandler('#studies-section', 3);
             table.checkRowData(0, [
                 '',
-                'ERP104178',
+                'MGYS00002011',
                 'EMG produced TPA metagenomics assembly of the Microbial Community',
                 'The Mobilong Soil Profile Third Party Annotation (TPA) assembly was derived ' +
                 'from the primary whole genome shotgun (WGS) data set PRJEB5872.',
@@ -63,7 +63,7 @@ describe('Login process', function() {
                 '15-Nov-2017']);
             table.checkRowData(1, [
                 '',
-                'ERP104179',
+                'MGYS00002012',
                 'EMG produced TPA metagenomics assembly of the Microbial Community',
                 'The Mobilong Soil Profile Third Party Annotation (TPA) assembly was derived ' +
                 'from the primary whole genome shotgun (WGS) data set PRJEB5872.',
@@ -71,7 +71,7 @@ describe('Login process', function() {
                 '15-Nov-2017']);
             table.checkRowData(2, [
                 '',
-                'ERP104236',
+                'MGYS00002062',
                 'EMG produced TPA metagenomics assembly of the Identification of fungi',
                 'The human wound Third Party Annotation (TPA) assembly was derived from the' +
                 ' primary whole genome shotgun (WGS) data set PRJNA344941',

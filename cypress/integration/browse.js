@@ -19,7 +19,7 @@ const studiesTableColumns = {
         sortable: false
     },
     accession: {
-        data: ['ERP019566', 'ERP009442'],
+        data: ['MGYS00002072', 'MGYS00001587'],
         type: datatype.STR,
         sortable: false // TODO fix test
     },
@@ -94,7 +94,7 @@ describe('Browse page - Studies table - ', function() {
         studiesTable.testFiltering('Longitudinal', [
             [
                 '',
-                'ERP019566',
+                'MGYS00002072',
                 'Longitudinal study of the diabetic skin and wound microbiome',
                 '258',
                 '27-Nov-2017']]);
@@ -106,7 +106,7 @@ describe('Browse page - Studies table - ', function() {
                 index: 1,
                 data: [
                     '',
-                    'ERP019566',
+                    'MGYS00002072',
                     'Longitudinal study of the diabetic skin and wound microbiome',
                     '258',
                     '27-Nov-2017']
@@ -114,7 +114,7 @@ describe('Browse page - Studies table - ', function() {
                 index: 3,
                 data: [
                     '',
-                    'SRP046300',
+                    'MGYS00001019',
                     'Metacommunity analysis of two protozoan taxa (Amoebozoa) in grassland soils',
                     '1',
                     '6-Jun-2016']
@@ -122,7 +122,7 @@ describe('Browse page - Studies table - ', function() {
                 index: 'next',
                 data: [
                     '',
-                    'SRP002480',
+                    'MGYS00000604',
                     'Gene-Environment Interactions at the Skin Surface',
                     '2560',
                     '3-Feb-2016'], // 4th page
@@ -131,21 +131,21 @@ describe('Browse page - Studies table - ', function() {
                 index: 'prev',
                 data: [
                     '',
-                    'SRP046300',
+                    'MGYS00001019',
                     'Metacommunity analysis of two protozoan taxa (Amoebozoa) in grassland soils',
                     '1',
                     '6-Jun-2016'],
                 pageNum: 3
             }, {
                 index: 'last',
-                data: ['', 'MetaSoil', 'MetaSoil', '13', '20-Jan-2016'],
+                data: ['', 'MGYS00000283', 'MetaSoil', '13', '20-Jan-2016'],
                 pageNum: 5,
                 pageSize: 22
             }, {
                 index: 'first',
                 data: [
                     '',
-                    'ERP019566',
+                    'MGYS00002072',
                     'Longitudinal study of the diabetic skin and wound microbiome',
                     '258',
                     '27-Nov-2017'],
