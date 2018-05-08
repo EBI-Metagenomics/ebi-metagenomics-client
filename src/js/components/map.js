@@ -1,17 +1,8 @@
 const d3 = require('d3');
 const _ = require('underscore');
-const template = require('../../partials/map_marker.handlebars');
+const template = require('../commons').mapMarkerTmpl;
 const api = require('./api');
-
-/**
- * Create marker from sample obj
- * @param {object} template
- * @param {object} sample
- * @return {JQuery.HTMLElement}
- */
-function createMarkerLabel(template, sample) {
-    return template(sample);
-}
+const subfolder = require('../util').subfolder;
 
 /**
  * Return sample coordinates from sample obj
@@ -24,7 +15,8 @@ function getSamplePosition(sample) {
         'lng': parseFloat(sample.longitude),
         'count': sample['samples-count'],
         'uuid-samples': _.uniqueId('marker-tooltip-list'),
-        'uuid-loading-icon': _.uniqueId('loading-icon')
+        'uuid-loading-icon': _.uniqueId('loading-icon'),
+        'subfolder': subfolder
     };
 }
 
@@ -184,7 +176,7 @@ module.exports = class MapHandler {
             });
             if (enableTooltips) {
                 let infowindow = new google.maps.InfoWindow({
-                    content: createMarkerLabel(template, formattedCoords)
+                    content: template(formattedCoords)
                 });
                 marker.addListener('click', function() {
                     infowindow.open(map, marker);
