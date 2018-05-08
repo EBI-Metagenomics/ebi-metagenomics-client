@@ -10,7 +10,7 @@ const cookieName = commons.COOKIE_NAME;
 const Cookies = require('js-cookie');
 const util = require('../util');
 window.Foundation.addToJquery($);
-
+require('static/js/blog');
 util.setupPage('#overview-nav');
 
 
