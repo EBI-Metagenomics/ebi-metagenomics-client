@@ -2,30 +2,13 @@
 
 <div class="map-marker-data">
     <div class="row">
-        <div class="columns small-2 medium-2 large-2">
-            <span class="biome_icon icon_xs {{biome_icon}}" title="{{biome_name}}"></span>
-        </div>
-        <div class="columns small-10 medium-10 large-10">
-            <h5>{{sample_name}}</h5>
-            <h6>{{sample_accession}}</h6>
-        </div>
-    </div>
-    <div class="row columns">
-        <p>{{sample_desc}}</p>
-    </div>
-    <div class="row">
         <div class="columns">
-            <ul>
-                <li>
-                    Classification: {{biome_name}}
-                </li>
-                <li>
-                    Lat/Long: {{latitude}}, {{longitude}}
-                </li>
-            </ul>
+            <h5>Lat/Long: {{lat}}, {{lng}}</h5>
         </div>
     </div>
-    <div class="row text-center">
-        <a href="{{sample_url}}" class="button">View more</a>
+    <img id="{{uuid-loading-icon}}" class="loading-gif-large" src="{{subfolder}}/static/images/ajax-loader.gif">
+    <div class="row columns">
+        <ul id="{{uuid-samples}}">
+        </ul>
     </div>
 </div>

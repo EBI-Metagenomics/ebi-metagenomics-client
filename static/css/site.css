@@ -722,6 +722,11 @@ select.table-tools {
     width: 2em;
 }
 
+.loading-gif-large {
+    height: 10em;
+    width: 10em;
+}
+
 .loading-gif-medium {
     height: 1.5em;
     width: 1.5em;

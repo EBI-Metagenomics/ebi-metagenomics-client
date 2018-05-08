@@ -228,7 +228,7 @@ describe('Sample page - Runs table with >1 analysis per run', function() {
         const origPage = 'samples/' + projectId;
         openPage(origPage);
         waitForPageLoad(projectId);
-        table = new GenericTableHandler('#runs-section', 2);
+        table = new GenericTableHandler('#runs-section', 1);
     });
 
     it('Runs table should display both pipeline versions for a run', function() {

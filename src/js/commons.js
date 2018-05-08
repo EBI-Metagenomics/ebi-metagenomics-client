@@ -10,6 +10,7 @@ export const genericTable = require('../partials/generic_table.handlebars');
 export const detailList = require('../partials/detailList.handlebars');
 export const biomeFilter = require('../partials/biome_filter.handlebars');
 export const errorTmpl = require('../partials/errorTemplate.handlebars');
+export const mapMarkerTmpl = require('../partials/map_marker.handlebars');
 
 export const pipelines = [
     require('../partials/pipelines/1.handlebars'),
