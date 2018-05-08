@@ -10,7 +10,9 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const getCompressionPlugin = (() => {
     let plugin;
     return () => {
-        if (!plugin) plugin = require('compression-webpack-plugin');
+        if (!plugin) {
+            plugin = require('compression-webpack-plugin');
+        }
         return plugin;
     };
 })();
