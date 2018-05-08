@@ -155,7 +155,7 @@ describe('Home page: Test Browse latest projects component', function() {
         it('View specific study', function() {
             cy.get('#studies > .study', {timeout: 5000}).should('have.length', parseInt(25));
             cy.get('#latestStudies').contains('View more').first().click();
-            cy.contains('Project');
+            cy.contains('Study');
             cy.title().should('include', 'Study');
         });
     });

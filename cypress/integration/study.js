@@ -73,7 +73,7 @@ describe('Study page - General', function() {
     });
 
     it('Verify elements are present', function() {
-        cy.get('h3').should('contain', projectId);
+        cy.get('h3').should('contain', 'MGYS00002072');
         cy.get('h2')
             .should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
         cy.get('#ebi_ena_links').should('contain', 'ENA website (ERP019566)');
