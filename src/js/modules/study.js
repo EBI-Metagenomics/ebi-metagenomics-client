@@ -50,7 +50,7 @@ let MapData = Backbone.View.extend({
                     that.url = meta.links.next;
                     that.fetchAll();
                 } else {
-                    new Map('map', that.data, true);
+                    new Map('map', that.data, true, studyId);
                 }
             },
             error() {

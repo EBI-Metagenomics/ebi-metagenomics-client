@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const Commons = require('../commons');
 export const API_URL = process.env.API_URL;
-export const API_LOGIN_ROOT = API_URL.split('/').slice(0, -2).join('/')+'/';
+export const API_LOGIN_ROOT = API_URL.split('/').slice(0, -2).join('/') + '/';
 const NO_DATA_MSG = Commons.NO_DATA_MSG;
 const util = require('../util');
 import {formatDate, formatLineage, getBiomeIcon, lineageToBiome, getBiomeIconData} from '../util';
@@ -203,7 +203,7 @@ export const SamplesCollection = Backbone.Collection.extend({
     url: API_URL + 'samples',
     model: Sample,
     initialize(data) {
-        this.params = data;
+        this.params = data || {};
     },
     parse(response) {
         return response.data;
