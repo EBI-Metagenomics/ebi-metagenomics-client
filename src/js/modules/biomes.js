@@ -1,6 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const api = require('mgnify').api;
+const apiUtil = require('mgnify').util;
 const Pagination = require('../components/pagination').Pagination;
 const commons = require('../commons');
 const Order = require('../components/order');
@@ -92,7 +93,7 @@ let BiomesView = Backbone.View.extend({
     render() {
         $('.biome').remove();
         this.collection.each(function(biome) {
-            biome.attributes.lineage = util.formatLineage(biome.attributes.lineage);
+            biome.attributes.lineage = apiUtil.formatLineage(biome.attributes.lineage);
             let biomeView = new BiomeView({model: biome});
             $(this.$el).append(biomeView.render());
         }, this);
