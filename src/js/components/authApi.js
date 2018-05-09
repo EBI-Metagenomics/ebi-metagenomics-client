@@ -1,7 +1,6 @@
 const api = require('mgnify/lib/api');
 const Backbone = require('backbone');
-const API_LOGIN_ROOT = api.API_URL.split('/').slice(0, -2).join('/') + '/';
-
+export const API_LOGIN_ROOT = api.API_URL.split('/').slice(0, -2).join('/') + '/';
 
 /**
  * Fetch login form from API

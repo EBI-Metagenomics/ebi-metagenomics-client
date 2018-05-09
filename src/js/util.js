@@ -590,6 +590,7 @@ export function setNavLoginButton(isLoggedIn) {
         const $logout = $('<li><a data-cy=\'logout\' class=\'button\'>Logout</a></li>');
         $logout.click(function() {
             logout().done(function() {
+                console.log(subfolder);
                 window.location = subfolder;
             });
         });
@@ -610,7 +611,7 @@ export function getUsername() {
  * @return {JQuery.jqXHR}
  */
 export function logout() {
-    return $.get(api.API_LOGIN_ROOT + 'http-auth/logout/?next=' + subfolder);
+    return $.get(authApi.API_LOGIN_ROOT + 'http-auth/logout/?next=' + subfolder);
 }
 
 /**
