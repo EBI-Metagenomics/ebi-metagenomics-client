@@ -69,7 +69,7 @@ install:
   - npm install -g codecov
   - npm install -g nyc
   - npm install
-  - npm run build
+  - npm run build:prod
   - sudo mv dist/* /usr/share/nginx/html/
 
 script:
