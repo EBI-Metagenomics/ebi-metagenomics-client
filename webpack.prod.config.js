@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const getCompressionPlugin = (() => {
     let plugin;
@@ -29,7 +29,7 @@ const templateFixtures = {
 
 module.exports = {
     plugins: [
-        new BundleAnalyzerPlugin(),
+        // new BundleAnalyzerPlugin(),
         new HardSourceWebpackPlugin({
             // Either an absolute path or relative to webpack's options.context.
             cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
