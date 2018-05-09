@@ -1,10 +1,11 @@
 const util = require('../util');
-const api = require('../components/api');
+const authApi = require('../components/authApi');
+
 const fetchLogin = util.setupPage('#submit-nav', window.location.href);
 
 const $actionDiv = $('#action');
 
-const userData = new api.UserDetails();
+const userData = new authApi.UserDetails();
 const fetch = userData.fetch();
 
 fetchLogin.done(function(loggedIn) {

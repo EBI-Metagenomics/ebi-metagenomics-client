@@ -1,6 +1,6 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const api = require('../components/api');
+const api = require('mgnify').api;
 const Pagination = require('../components/pagination').Pagination;
 const commons = require('../commons');
 const Order = require('../components/order');

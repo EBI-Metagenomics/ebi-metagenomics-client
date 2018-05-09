@@ -1,10 +1,11 @@
 const util = require('../util');
-const api = require('../components/api');
+const authApi = require('../components/authApi');
+
 util.setupPage('#overview');
 
 util.getLoginStatus().done(function(isLoggedIn) {
     if (isLoggedIn) {
-        const userStudies = new api.UserStudies();
+        const userStudies = new authApi.UserStudies();
         new util.StudiesView({
             collection: userStudies,
             tableClass: 'my-studies-table',
