@@ -725,7 +725,7 @@ export function setNavLoginButton(isLoggedIn) {
         $ul.find('li.functional').html($a);
         const $logout = $('<li><a data-cy=\'logout\' class=\'button\'>Logout</a></li>');
         $logout.click(function() {
-            logout().done(function(a, b, c) {
+            logout().done(function() {
                 window.location = subfolder;
             });
         });

@@ -32,6 +32,18 @@ function compareByName(a, b) {
     return val;
 }
 
+/**
+ * Generate link to ENA if sample accession exists in ENA
+ * @param {string} sampleAccession ENA secondary sample accession
+ * @return {promise} with valid urls as data.
+ */
+function getExternalLinks(sampleAccession) {
+    let urls = {};
+    urls['ENA website (' + sampleAccession + ')'] = 'https://www.ebi.ac.uk/ena/data/view/' +
+        sampleAccession;
+    return urls;
+}
+
 let SampleView = Backbone.View.extend({
     model: api.Sample,
     template: _.template($('#sampleTmpl').html()),
@@ -68,18 +80,6 @@ let SampleView = Backbone.View.extend({
         return deferred.promise();
     }
 });
-
-/**
- * Generate link to ENA if sample accession exists in ENA
- * @param {string} sampleAccession ENA secondary sample accession
- * @return {promise} with valid urls as data.
- */
-function getExternalLinks(sampleAccession) {
-    let urls = {};
-    urls['ENA website (' + sampleAccession + ')'] = 'https://www.ebi.ac.uk/ena/data/view/' +
-        sampleAccession;
-    return urls;
-}
 
 /**
  * Method to initialise page load from googleMaps loading callback

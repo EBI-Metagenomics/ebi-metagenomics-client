@@ -430,7 +430,7 @@
           "ERP008951"
         ],
         "project_name": [
-          "The fecal microbiome was studied in a group of IBD suffers and compared to a control group"s fecal microbiome"
+          "The fecal microbiome was studied in a group of IBD suffers and compared to a control group's fecal microbiome"
         ]
       }
     },
@@ -1692,13 +1692,13 @@
           "count": 13
         },
         {
-          "label": "Crohn"s Disease",
-          "value": "Crohn"s Disease",
+          "label": "Crohn's Disease",
+          "value": "Crohn's Disease",
           "count": 12
         },
         {
-          "label": "Id: DOID:8778 Crohn"s disease",
-          "value": "id: DOID:8778 Crohn"s disease",
+          "label": "Id: DOID:8778 Crohn's disease",
+          "value": "id: DOID:8778 Crohn's disease",
           "count": 11
         },
         {
@@ -1707,13 +1707,13 @@
           "count": 7
         },
         {
-          "label": "Diseased, CAO"s index = 11",
-          "value": "Diseased, CAO"s index = 11",
+          "label": "Diseased, CAO's index = 11",
+          "value": "Diseased, CAO's index = 11",
           "count": 2
         },
         {
-          "label": "Healthy, CAO"s Index = 0",
-          "value": "Healthy, CAO"s Index = 0",
+          "label": "Healthy, CAO's Index = 0",
+          "value": "Healthy, CAO's Index = 0",
           "count": 2
         },
         {
@@ -1734,8 +1734,8 @@
           "count": 17
         },
         {
-          "label": "Crohn"s Disease",
-          "value": "Crohn"s Disease",
+          "label": "Crohn's Disease",
+          "value": "Crohn's Disease",
           "count": 12
         },
         {

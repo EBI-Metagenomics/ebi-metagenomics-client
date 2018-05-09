@@ -325,6 +325,17 @@ let TaxonomyGraphView = Backbone.View.extend({
     }
 });
 
+/**
+ * Generate interpro link
+ * @param {string} text to display in link tag
+ * @param {string} id of interpro result
+ * @return {string}
+ */
+function createInterProLink(text, id) {
+    const url = INTERPRO_URL + 'entry/' + id;
+    return '<a href=\'' + url + '\'>' + text + '</a>';
+}
+
 let InterProSummary = Backbone.View.extend({
     model: api.InterproIden,
     initialize() {
@@ -577,17 +588,6 @@ let DownloadView = Backbone.View.extend({
         });
     }
 });
-
-/**
- * Generate interpro link
- * @param {string} text to display in link tag
- * @param {string} id of interpro result
- * @return {string}
- */
-function createInterProLink(text, id) {
-    const url = INTERPRO_URL + 'entry/' + id;
-    return '<a href=\'' + url + '\'>' + text + '</a>';
-}
 
 /**
  * Load krona chart for current view
