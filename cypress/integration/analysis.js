@@ -54,13 +54,13 @@ describe('Analysis page - general', function() {
         openPage('analysis/ERR867946');
         waitForPageLoad();
         verifyTabIsVisible('#overview');
-        cy.contains('Study:').next().should('contain', 'ERP009703');
+        cy.contains('Study:').next().should('contain', 'MGYS00000462');
         cy.contains('Sample:').next().should('contain', 'ERS667564');
         cy.contains('Experiment type:').next().should('contain', 'amplicon');
         cy.contains('Instrument model:').next().should('contain', 'Illumina MiSeq');
         cy.contains('Instrument platform:').next().should('contain', 'ILLUMINA');
     });
-    it('SSU/LSU buttons should appear/dissapear if pipeline version >=4.0', function() {
+    it('SSU/LSU buttons should appear/dissapear if pipeline version <4.0', function() {
         openPage(origPage);
         waitForPageLoad();
         changeTab('taxonomic');
