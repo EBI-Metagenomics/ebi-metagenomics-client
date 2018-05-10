@@ -1,9 +1,16 @@
 {
   "presets": [
-    "env"
-  ],
-  "plugins": [
-    "instanbul"
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "> 0.25%"
+          ]
+        },
+        "debug": false
+      }
+    ]
   ],
   "retainLines": true
 }

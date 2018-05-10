@@ -3,21 +3,21 @@
 <head id="head">
     <title>Sample &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/sample.css" type="text/css" media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
 <div id="header-container">{{> partials/header this}}</div>
 <!-- Suggested layout containers / #content -->
 <div id="content">
-    <div id="main-content-area" role="main">
+    <div id="main-content-area" class="row column small-12 medium-12 large-12" role="main">
         <script id="sampleTmpl" type="text/template">
             <div class="row">
                 <div class="column small-12 medium-12 large-12">
                     <nav aria-label="You are here:" role="navigation">
                         <ul class="breadcrumbs columns">
-                            <li><a href="{{subfolder}}">Home</a></li>
-                            <li><a href="{{subfolder}}/browse#samples">Browse samples</a></li>
+                            <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
+                            <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#samples">Browse
+                                samples</a></li>
                             <li>
                                 <span class="show-for-sr">Current: </span> Sample <%= sample_accession %>
                             </li>
@@ -39,18 +39,25 @@
                 <div class="column small-6 medium-6 large-6 map">
                     <div id="map">
                     </div>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div id='sample-metadata' class="column small-12 medium-12 large-12">
+                    <span class="no-coords-span">No sample coordinates available to display.</span>
+                    <!--<div id="warning" class="map-alert text-center">-->
+                    <!--Some samples have no associated latitude/longitude coordinates and could not be-->
+                    <!--marked on the map.-->
+                    <!--</div>-->
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="column small-12 medium-12 large-12">
-                     <section id="studies-section">
-                     </section>
+                    <section id='sample-metadata'>
+                    </section>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="column small-12 medium-12 large-12">
+                    <section id="studies-section">
+                    </section>
                 </div>
             </div>
             <hr>
@@ -72,10 +79,10 @@
         </script>
     </div>
     <script id="runRow" type="text/template">
-        <td><a href="<%= run_url %>"><%= run_id %></a></td>
+        <td><a href="<%= analysis_url %>"><%= run_id %></a></td>
         <td><%= experiment_type %></td>
         <td><%= instrument_model %></td>
-        <td><a href="<%= run_url %>">View analyses</a></td>
+        <td><a href="<%= analysis_url %>">View analyses</a></td>
     </script>
 </div>
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
@@ -92,41 +99,13 @@
     {{>partials/elixir}}
     {{>partials/footer}}
 </div>
-<script src="../static/libraries/markerclusterer/src/markerclusterer.js"></script>
-<script src="../static/libraries/oms.min.js"></script>
 
 <!-- JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="../static/libraries/jquery.liveFilter.js"></script>
-<script defer="defer" src="../static/js/script.js"></script>
 
-<!-- The Foundation theme JavaScript -->
-
-<script src="{{subfolder}}/static/js/foundation.js"></script>
-<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-
-<script src="{{subfolder}}/js/sample.js"></script>
-<script async defer
+</body>
+<script defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAivAQNT-w_7wzIJ9nf7E9GTOzn1mkDGzE&callback=initPage">
 </script>
-<!-- Google Analytics details... -->
-<!-- Change UA-XXXXX-X to be your util's ID -->
-<!--
-<script>
-  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
-  Modernizr.load({
-    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-  });
-</script>
--->
-</body>
-
 <!--Google Map marker API-->
 <!--<script id="marker-template" type="text/x-handlebars-template">-->
 <!--<div class="row">-->

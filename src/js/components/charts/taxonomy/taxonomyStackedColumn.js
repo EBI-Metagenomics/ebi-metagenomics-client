@@ -1,28 +1,59 @@
 const Highcharts = require('highcharts');
-const _ = require('underscore');
 require('highcharts/modules/exporting')(Highcharts);
 const Commons = require('../../../commons');
 const TaxonomyColumn = require('./taxonomyColumn');
 
+/**
+ * Reformat data into multiple series
+ * @param {object} data
+ * @return {Array} of data
+ */
+function transformData(data) {
+    let transformedData = [];
+    let i = 0;
+    const maxColorIndex = Commons.TAXONOMY_COLOURS.length - 1;
+    data.forEach(function(e) {
+        transformedData.push({
+            name: e.name,
+            data: [e.y],
+            color: Commons.TAXONOMY_COLOURS[Math.min(i, maxColorIndex)]
+        });
+        i++;
+    });
+    return transformedData;
+}
+
 module.exports = class TaxonomyStackedColumns extends TaxonomyColumn {
-    constructor(containerId, chartTitle, data, legend, extraOptions) {
-        const transformedData = transformData(data);
+    /**
+     * Handler for stacked taxonomy column chart, in taxonomy page
+     * @param {string} containerId
+     * @param {string} chartTitle
+     * @param {object} chartData
+     * @param {boolean} legend
+     * @param {object} extraOptions
+     */
+    constructor(containerId, chartTitle, chartData, legend, extraOptions) {
+        const transformedData = transformData(chartData);
         const barOptions = {
             chart: {
                 type: 'column'
             },
             plotOptions: {
                 series: {
-                    stacking: 'normal',
+                    stacking: 'percent',
                     dataLabels: {
-                        enabled: true,
-                    },
+                        enabled: true
+                    }
                 }
+            },
+            yAxis: {
+                min: 0,
+                max: 100
             },
             xAxis: {
                 title: {
                     text: null,
-                    enabled: false,
+                    enabled: false
                 },
                 labels: {
                     enabled: false
@@ -35,21 +66,8 @@ module.exports = class TaxonomyStackedColumns extends TaxonomyColumn {
         } else {
             extraOptions = barOptions;
         }
-        super(containerId, chartTitle, data, legend, extraOptions)
+        super(containerId, chartTitle, chartData, legend, extraOptions);
     }
 };
 
-function transformData(data) {
-    let transformedData = [];
-    let i = 0;
-    const maxColorIndex = Commons.TAXONOMY_COLOURS.length - 1;
-    data.forEach(function (e) {
-        transformedData.push({
-            name: e.name,
-            data: [e.y],
-            color: Commons.TAXONOMY_COLOURS[Math.min(i, maxColorIndex)]
-        });
-        i++;
-    });
-    return transformedData;
-}
+

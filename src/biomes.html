@@ -3,7 +3,6 @@
 <head id="head">
     <title>Biomes &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/biomes.css" type="text/css" media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -41,7 +40,7 @@
                         <tbody id='biomes-table-body'>
                         <tr>
                             <td class='loading-gif-row' colspan="4">
-                                <img class='loading-gif' src="{{subfolder}}/static/images/ajax-loader.gif"/>
+                                <img class='loading-gif' src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"/>
                             </td>
                         </tr>
                         </tbody>
@@ -75,25 +74,6 @@
     {{>partials/elixir}}
     {{>partials/footer}}
 </div>
-<!-- JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script defer="defer" src="static/js/script.js"></script>
 
-<!-- The Foundation theme JavaScript -->
-<script src="static/js/foundation.js"></script>
-<script src="static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">$(document).foundation();</script>
-<script type="text/JavaScript">$(document).foundationExtendEBI();</script>
-<script src="js/biomes.js"></script>
-<!-- Google Analytics details... -->
-<!-- Change UA-XXXXX-X to be your util's ID -->
-<!--
-<script>
-  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
-  Modernizr.load({
-    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-  });
-</script>
--->
 </body>
 </html>

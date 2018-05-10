@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head id="head">
+    <title>My data < EBI Metagenomics &lt; EMBL-EBI</title>
+    {{> partials/head this}}
+</head>
+<body class="level2"><!-- add any of your classes or IDs -->
+<div id="header-container">{{> partials/header this}}</div>
+
+<!-- Suggested layout containers / #content -->
+<div id="content">
+    <div id="main-content-area" class="row" role="main">
+        <div class="column small-12 medium-12 large-12">
+            <nav aria-label="You are here:" role="navigation">
+                <ul class="breadcrumbs columns">
+                    <li><a href="./">Home</a></li>
+                    <li>
+                        <span class="show-for-sr">Current: </span> My data
+                    </li>
+                </ul>
+            </nav>
+            <div class="row">
+                <div class="column small-12 medium-12 large-12">
+                    <section id="studies-section">
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="footer">
+    {{>partials/elixir}}
+    {{>partials/footer}}
+</div>
+
+</body>
+
+</html>

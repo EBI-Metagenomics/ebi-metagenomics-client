@@ -18,44 +18,66 @@ env:
   - API_URL=http://localhost:9000/metagenomics/api/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
 
 before_install:
-  - mysql -e 'CREATE DATABASE emg;'
-  - mysql -u root --password="" --database=emg < travis/schema.sql
-  # Join fixtures from multiple .sql files to populate db.
   - pip3 install --user --upgrade pip setuptools
   - python3 -V
   - pip3 -V
-
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
   - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
 
-  - emgcli migrate --fake-initial
 
+  - mysql -e 'CREATE DATABASE emg;'
+
+  # Create schema from django model
+  - emgcli migrate
+
+  # TEMPORARY fix for non-necessary primary keys in db
+  - mysql -u root --password="" --database=emg < travis/temp_fix.sql
+
+  # Join fixtures from multiple .sql files to populate db.
   - echo -e "SET FOREIGN_KEY_CHECKS = 0;\n$(cat travis/emg_sql_fixtures/*.sql)\nSET FOREIGN_KEY_CHECKS = 1;" > travis/emg_sql_fixtures/merged.sql
   - mysql -u root --password="" --database=emg < travis/emg_sql_fixtures/merged.sql
 
+  # EMG api deployment and setup
   - emgcli collectstatic --noinput
   - emgcli check --deploy
-  - emgdeploy --daemon -p ~/emg.pid emgcli.wsgi:application
 
-  - npm install cypress
+  # Add backend auth package to path for emgapi
+  - git clone https://github.com/EBI-Metagenomics/emgapi.git
+  - export PYTHONPATH=/home/travis/build/EBI-Metagenomics/ebi-metagenomics-client/emgapi/tests/:$PYTHONPATH
+  - emgdeploy --daemon -p ~/emg.pid emgcli.wsgi:application --workers 5
+  - sudo chmod 777 /var/log/nginx/*
+  - sudo chmod 777 /var/run/nginx.pid
+
+  # Inject travis build dir into nginx conf for location of downloads
+  - sed -i s#{TRAVIS_BUILD_DIR}#$TRAVIS_BUILD_DIR#g $TRAVIS_BUILD_DIR/travis/nginx.conf
+  - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
+  - curl -I http://localhost:9000/metagenomics/
+
+
+  # Touch download files
+  - travis/create_download_files.sh
+  - emgcli import_taxonomy ERR1022502 $TRAVIS_BUILD_DIR/results
+  - emgcli import_qc ERR1022502 $TRAVIS_BUILD_DIR/results
+  - emgcli import_summary ERR1022502 $TRAVIS_BUILD_DIR/results .ipr
+  - emgcli import_summary ERR1022502 $TRAVIS_BUILD_DIR/results .go_slim
+  - emgcli import_summary ERR1022502 $TRAVIS_BUILD_DIR/results .go
 
 install:
+
+  - npm install cypress
   - npm install webpack -g
   - npm install -g codecov
   - npm install -g nyc
   - npm install
-  - npm run build
+  - npm run build:prod
   - sudo mv dist/* /usr/share/nginx/html/
-  - sudo chmod 777 /var/log/nginx/*
-  - sudo chmod 777 /var/run/nginx.pid
-  - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
-  - curl -I http://localhost:9000/metagenomics/
 
 script:
   - npm run test -- --record --key $CYPRESS_RECORD_KEY
 
-after_success:
+after_script:
   - npm run coverage
+  - cat coverage.lcov | codacy-coverage
   - codecov
 
 cache:

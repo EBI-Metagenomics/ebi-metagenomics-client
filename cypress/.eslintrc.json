@@ -1,0 +1,32 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "google"
+  ],
+  "rules": {
+    "max-len": [2, {"code": 100}],
+    "no-console": "off",
+    "no-process-env": 0,
+    "require-jsdoc": "off",
+    "comma-dangle": ["error", "never"],
+    "camelcase": [2, {"properties": "never"}],
+    "dot-location": ["error", "property"]
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "strict": "implied"
+  },
+  "env": {
+    "amd": true,
+    "browser": true,
+    "node": true,
+    "jquery": true,
+    "cypress/globals": true
+  },
+  "globals": {
+    "cy": false
+  },
+  "plugins": [
+    "cypress"
+  ]
+}

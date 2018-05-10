@@ -3,7 +3,6 @@
 <head id="head">
     <title>Login &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/login.css" type="text/css" media="all"/>
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
 <div id="header-container">{{> partials/header this}}</div>
@@ -14,7 +13,7 @@
         <div class="column small-12 medium-12 large-12">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
-                    <li><a href="{{subfolder}}">Home</a></li>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
                     <li>
                         <span class="show-for-sr">Current: </span> Login
                     </li>
@@ -47,20 +46,6 @@
     {{>partials/footer}}
 </div>
 
-<!-- JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
-
-<!-- The Foundation theme JavaScript -->
-
-<script src="{{subfolder}}/static/js/foundation.js"></script>
-<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
 <!--<script src="/js/login.js"></script>-->
 
 <!-- Google Analytics details... -->

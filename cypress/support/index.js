@@ -14,7 +14,7 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import './commands';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
@@ -23,7 +23,7 @@ const istanbul = require('istanbul-lib-coverage');
 
 const map = istanbul.createCoverageMap({});
 
-Cypress.on('window:before:unload', e => {
+Cypress.on('window:before:unload', (e) => {
     const coverage = e.currentTarget.__coverage__;
 
     if (coverage) {
@@ -32,7 +32,7 @@ Cypress.on('window:before:unload', e => {
 });
 
 after(() => {
-    cy.window().then(win => {
+    cy.window().then((win) => {
         const coverage = win.__coverage__;
 
         if (coverage) {

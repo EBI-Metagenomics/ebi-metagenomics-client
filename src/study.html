@@ -3,7 +3,6 @@
 <head id="head">
     <title>Study &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/study.css" type="text/css" media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -11,212 +10,161 @@
 
 <!-- Suggested layout containers / #content -->
 <div id="content">
-    <div class="row" role="main">
-        <div id="main-content-area" class="columns small-12 medium-12 large-12">
-            <script id="studyTmpl" type="text/template">
-                <nav aria-label="You are here:" role="navigation">
-                    <ul class="breadcrumbs columns">
-                        <li><a href="{{subfolder}}/">Home</a></li>
-                        <li><a href="{{subfolder}}/browse#studies">Browse studies</a></li>
-                        <li>
-                            <span class="show-for-sr">Current: </span> Study <%= study_accession %>
-                        </li>
-                    </ul>
-                </nav>
-                <h3>Project <%= study_accession %> (<%= bioproject %>) </h3>
-                <h2><%= study_name %></h2>
-                <ul class="tabs" data-tabs id="study-tabs">
-                    <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
-                    <li class="tabs-title"><a href="#analysis">Analysis summary</a></li>
+    <div id="main-content-area" class="row columns small-12 medium-12 large-12" role="main">
+        <script id="studyTmpl" type="text/template">
+            <nav aria-label="You are here:" role="navigation">
+                <ul class="breadcrumbs columns">
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies">Browse studies</a>
+                    </li>
+                    <li>
+                        <span class="show-for-sr">Current: </span> Study <%= study_accession %>
+                    </li>
                 </ul>
-                <div class="tabs-content" data-tab-content="study-tabs">
-                    <div class="tabs-panel active" id="overview">
-                        <div class="row">
-                            <div class="columns small-4 medium-4 large-4">
-                                <h4>Last updated: <%= last_update %></h4>
-                                <section>
-                                    <h3>Description</h3>
-                                    <p class="study-abstract"> <%= abstract %></p>
-                                    <h3>Classification</h3>
-                                    <% _.each(biomes, function(biome){ %>
+            </nav>
+            <h3>Study <%= study_id %></h3>
+            <h2><%= study_name %></h2>
+            <ul class="tabs" data-tabs id="study-tabs">
+                <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
+                <li class="tabs-title"><a href="#analysis">Analysis summary</a></li>
+            </ul>
+            <div class="tabs-content" data-tab-content="study-tabs">
+                <div class="tabs-panel active" id="overview">
+                    <div class="row">
+                        <div class="columns small-12 medium-4 large-4">
+                            <h4>Last updated: <%= last_update %></h4>
+                            <section>
+                                <h3>Classification</h3>
+                                <% _.each(biomes, function(biome){ %>
+                                <div class="row columns">
                                     <span class="biome_icon icon_sm <%= biome.icon %>" title="<%= biome.name %>"></span>
+                                    <%= biome.name %>
                                     <!--<p> <%= biome.name %></p>-->
-                                    <% }); %>
-                                </section>
-                            </div>
-                            <div class="columns small-8 medium-8 large-8 map">
-                                <div id="map">
                                 </div>
-                                <div id="warning" class="map-alert text-center">
-                                    Some samples have no associated latitude/longitude coordinates and could not be
-                                    marked on the map.
+                                <% }); %>
+                                <h3>Description</h3>
+                                <p class="study-abstract"> <%= abstract %></p>
+                            </section>
+                        </div>
+                        <div class="columns small-12 medium-8 large-8 map">
+                            <div id="map">
+                            </div>
+                            <span class="no-coords-span">No sample coordinates available to display.</span>
+                            <!--<div id="warning" class="map-alert text-center">-->
+                            <!--Some samples have no associated latitude/longitude coordinates and could not be-->
+                            <!--marked on the map.-->
+                            <!--</div>-->
+                        </div>
+                    </div>
+                    <hr>
+                    <section id="external-links-section">
+                        <div class="row">
+                            <% if (related_studies.length>0) { %>
+                            <div class="columns small-12 medium-4 large-4">
+                                <h3>Related studies</h3>
+                                <div class="row columns">
+                                    <ul data-cy="relatedStudies">
+                                        <% _.each(related_studies, function(study) { %>
+                                        <li><a href="<%= study.study_link %>"><%= study.id %></a></li>
+                                        <% }); %>
+                                    </ul>
+                                </div>
+                            </div>
+                            <% } %>
+                            <div class="columns small-12 medium-8 large-8">
+                                <h3>External links</h3>
+                                <div class="row columns">
+                                    <ul id="ebi_ena_links">
+                                        <a class="ext" href="<%= ena_url %>">ENA website (<%= study_accession
+                                            %>)</a>
+                                    </ul>
+                                </div>
+                                <h3>Publications</h3>
+                                <div class="row columns" data-cy="publications">
+                                    <ul id="europe_pmc_links">
+                                        <% _.each(publications, function(pub){ %>
+                                        <li>
+                                            <span class="pub-title"><%= pub.title %> <br></span>
+                                            <%= pub.authors %> <br>
+                                            <%= pub.year %> <%= pub.volume %>
+                                            (PMID: <a class="ext" href="<%= pub.pmc_url %>"><%= pub.pubmed_id %></a>)
+                                            (DOI: <a class="ext" href="<%= pub.doi_url %>"><%= pub.doi %></a>)
+                                            </p>
+                                        </li>
+                                        <% }); %>
+                                        <% if (publications.length===0) { %>
+                                        <li>No known publications.</li>
+                                        <% } %>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                        <section id="external-links-section">
-                            <div class="row columns">
-                                <h3>External links</h3>
-                                <div class="row">
-                                    <div class="columns small-6">
-                                        <ul id="ebi_ena_links">
-                                            <a class="ext" href="<%= ena_url %>">ENA website (<%= study_accession %>)</a>
-                                        </ul>
-                                    </div>
-                                    <div class="columns small-6">
-                                        <ul id="europe_pmc_links">
-                                            <% _.each(publications, function(pub){ %>
-                                                <li>
-                                                    <span class="pub-title"><%= pub.title %> <br></span>
-                                                    <%= pub.authors %> <br>
-                                                    <%= pub.year %> <%= pub.volume %>
-                                                        (PMID: <a class="ext" href="<%= pub.pmc_url %>"><%= pub.pubmed_id %></a>)
-                                                        (DOI: <a class="ext" href="<%= pub.doi_url %>"><%= pub.doi %></a>)
-                                                    </p>
-                                                </li>
-                                            <% }); %>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                        <hr>
-                        <section id="samples-section">
-                            <!--<h3>Associated samples</h3>-->
-                            <!--<div id="pageSize2"></div>-->
-                            <!--<table id='samplesTable'>-->
-                            <!--<thead>-->
-                            <!--<tr>-->
-                            <!--<th>Sample name</th>-->
-                            <!--<th>Sample ID</th>-->
-                            <!--<th>Description</th>-->
-                            <!--<th>Last-update</th>-->
-                            <!--</tr>-->
-                            <!--</thead>-->
-                            <!--<tbody id="samplesTableBody" class="live-filter-table">-->
-                            <!--</tbody>-->
-                            <!--</table>-->
-                            <!--<div id="pagination2"></div>-->
-                        </section>
-                        <hr>
-                        <section id="runs-section">
-                            <!--<h3>Associated runs</h3>-->
-                            <!--<div class="row">-->
-                            <!--<div class="columns small-12 medium-6 large-6">-->
-                            <!--<div id="pageSize"></div>-->
-                            <!--</div>-->
-                            <!--<div class="columns small-12 medium-6 large-6">-->
-                            <!--<label class="right" for="tableFilter">Filter rows: <input id="tableFilter" class="search"></label>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--<table id='runsTable'>-->
-                            <!--<thead>-->
-                            <!--<tr>-->
-                            <!--<th>Sample name</th>-->
-                            <!--<th>Sample ID</th>-->
-                            <!--<th>Run ID</th>-->
-                            <!--<th>Experiment type</th>-->
-                            <!--<th>Instrument platform</th>-->
-                            <!--<th>Instrument model</th>-->
-                            <!--<th>Analyses</th>-->
-                            <!--</tr>-->
-                            <!--</thead>-->
-                            <!--<tbody id="runsTableBody" class="list">-->
-                            <!--<tr>-->
-                            <!--<td class='loading-gif-row' colspan="7">-->
-                            <!--<img class='loading-gif' src="/static/images/ajax-loader.gif"/>-->
-                            <!--</td>-->
-                            <!--</tr>-->
-                            <!--</tbody>-->
-                            <!--</table>-->
-                            <!--<div id="pagination"></div>-->
-                        </section>
-                    </div>
+                    </section>
+                    <hr>
+                    <section id="samples-section">
+                    </section>
+                    <hr>
+                    <section id="runs-section">
+                    </section>
+                </div>
 
-                    <div class="tabs-panel" id="analysis">
-                        <p>In this section you can download the different results matrix files summarising the project.
-                            Each
-                            downloadable file contains an aggregation of the analysis results from the individual
-                            project
-                            runs. To visualise and download the analysis results for individual runs, please access
-                            their
-                            respective pages.</p>
-                        <h4>Pipeline version...</h4>
+                <div class="tabs-panel" id="analysis">
+                    <p>In this section you can download the different results matrix files summarising the project.
+                        Each
+                        downloadable file contains an aggregation of the analysis results from the individual
+                        project
+                        runs. To visualise and download the analysis results for individual runs, please access
+                        their
+                        respective pages.</p>
+                    <div id="downloads">
+
                     </div>
                 </div>
-            </script>
-        </div>
+            </div>
+        </script>
     </div>
     <script id="sampleRow" type="text/template">
         <td class="sample_name"><%= sample_name %></td>
         <td class="sample_id"><a href="<%= sample_url %>"><%= sample_id %></a></td>
-        <td class="run_id"><a href="<%= run_url %>"><%= run_id %></a></td>
+        <td class="run_id"><a href="<%= analysis_url %>"><%= run_id %></a></td>
         <td class="experiment_type"><%= experiment_type %></td>
         <td class="instrument_platform"><%= instrument_platform %></td>
         <td class="instrument_model"><%= instrument_model %></td>
-        <td><a href="<%= run_url %>">View analyses</a></td>
+        <td><a href="<%= analysis_url %>">View analyses</a></td>
     </script>
     <script id="runRow" type="text/template">
         <td class="sample_name"><%= sample_name %></td>
         <td class="sample_id"><a href="<%= sample_url %>"><%= sample_id %></a></td>
-        <td class="run_id"><a href="<%= run_url %>"><%= run_id %></a></td>
+        <td class="run_id"><a href="<%= analysis_url %>"><%= run_id %></a></td>
         <td class="experiment_type"><%= experiment_type %></td>
         <td class="instrument_platform"><%= instrument_platform %></td>
         <td class="instrument_model"><%= instrument_model %></td>
-        <td><a href="<%= run_url %>">View analyses</a></td>
+        <td><a href="<%= analysis_url %>">View analyses</a></td>
+    </script>
+    <script id="downloadsTmpl" type="text/template">
+        <% for (let [pipeline, groups] of Object.entries(pipeline_files)){ %>
+        <div class="row columns">
+            <h3>Pipeline version: <%= pipeline %></h3>
+            <% for (let [key, downloads] of Object.entries(groups)){ %>
+            <h4><%= key %></h4>
+            <% _.each(downloads, function(download){ %>
+            <p><a href="<%= download.attributes.link %>"><%= download.attributes.description.label %></a></p>
+            <% }); %>
+            <% } %>
+        </div>
+        <br>
+        <% } %>
     </script>
 </div>
-<!-- Optional local footer (insert citation / project-specific copyright / etc here -->
-<!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
-<!-- <div class="row"> -->
-<!-- <span class="reference">How to reference this page: ...</span> -->
-<!-- </div> -->
-<!-- </footer> -->
-<!-- End optional local footer -->
-<!-- </div> -->
-<!-- End suggested layout containers / #content -->
-
 
 <div id="footer">
     {{>partials/elixir}}
     {{>partials/footer}}
 </div>
-<!-- JavaScript -->
 
-<script src="{{subfolder}}/static/libraries/markerclusterer/src/markerclusterer.js"></script>
-<script src="{{subfolder}}/static/libraries/oms.min.js"></script>
-
-<!-- JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="{{subfolder}}/static/libraries/jquery.liveFilter.js"></script>
-<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
-
-
-<!-- The Foundation theme JavaScript -->
-
-<script src="{{subfolder}}/static/js/foundation.min.js"></script>
-<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-<script src="{{subfolder}}/js/study.js"></script>
-<script async defer
+</body>
+<script defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAivAQNT-w_7wzIJ9nf7E9GTOzn1mkDGzE&callback=initPage">
 </script>
-<!-- Google Analytics details... -->
-<!-- Change UA-XXXXX-X to be your util's ID -->
-<!--
-<script>
-  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
-  Modernizr.load({
-    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-  });
-</script>
--->
-</body>
-
 
 </html>

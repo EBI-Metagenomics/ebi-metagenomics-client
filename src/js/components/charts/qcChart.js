@@ -1,5 +1,4 @@
 const Highcharts = require('highcharts');
-const _ = require('underscore');
 require('highcharts/modules/exporting')(Highcharts);
 
 module.exports = class QCChart {
@@ -17,7 +16,7 @@ module.exports = class QCChart {
                 type: 'bar'
             },
             title: {
-                text: chartTitle,
+                text: chartTitle
             },
             yAxis: {
                 min: 0,
@@ -48,7 +47,7 @@ module.exports = class QCChart {
                     // }, {
                     name: 'Reads remaining',
                     data: remaining,
-                    color: '#058DC7',
+                    color: '#058DC7'
                 }]
         };
         return Highcharts.chart(containerId, options);

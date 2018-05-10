@@ -3,7 +3,6 @@
 <head id="head">
     <title>Search &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/search.css" type="text/css" media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -14,7 +13,7 @@
     <div id="main-content-area" class="row" role="main">
         <nav aria-label="You are here:" role="navigation">
             <ul class="breadcrumbs columns">
-                 <li><a href="{{subfolder}}">Home</a></li>
+                 <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
                 <li>
                     <span class="show-for-sr">Current: </span> Search
                 </li>
@@ -24,14 +23,14 @@
             <div id="bonsai"></div>
 
             <h2>Search EBI Metagenomics <img id='loading-icon' class='loading-gif-small'
-                                             src="{{subfolder}}/static/images/ajax-loader.gif"/></h2>
+                                             src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"/></h2>
         </div>
         <div class="row">
             <div class="columns small- medium-6 large-6">
-                <form id="headerSearchForm" action="{{subfolder}}/search">
+                <form id="headerSearchForm" action="{{htmlWebpackPlugin.options.templateData.subfolder}}/search">
                     <input id='navbar-query' class='header-search-input' name="query" type="search"
-                           placeholder="Search">
-                    <button id="search" type="submit" class="button" class="header-search-button">Search
+                           placeholder="Search" data-cy="text-search-input">
+                    <button id="search" type="submit" class="button" class="header-search-button" data-cy="text-search-submit">Search
                     </button>
                 </form>
             </div>
@@ -51,7 +50,7 @@
                     <div class="tabs-panel active" id="projects">
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
-                                <form id="projectsFilters"></form>
+                                <form id="projectsFilters" class="search-filters"></form>
                                 <div class="ebi-search"></div>
                             </div>
                             <div class="columns small-10 medium-10 large-10">
@@ -78,7 +77,7 @@
                     <div class="tabs-panel" id="samples">
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
-                                <form id="samplesFilters"></form>
+                                <form id="samplesFilters" class="search-filters"></form>
                                 <div class="ebi-search"></div>
                             </div>
                             <div class="columns small-10 medium-10 large-10">
@@ -105,7 +104,7 @@
                     <div class="tabs-panel" id="runs">
                         <div class="row">
                             <div class="columns small-2 medium-2 large-2 filters">
-                                <form id="runsFilters"></form>
+                                <form id="runsFilters"  class="search-filters"></form>
                                 <div class="ebi-search"></div>
                             </div>
                             <div class="columns small-10 medium-10 large-10">
@@ -157,7 +156,7 @@
         <% } %>
         <% _.each(facets, function(facet){ if (facet.label!=='Source'){ %>
         <% facet.label = facet.label.toLowerCase() %>
-        <div class="facet-group <%= convertFacetLabelName(facet.label)+'-group' %> ">
+        <div class="facet-group <%= facet.label.replace(' ', '_')+'-group' %> ">
             <% if (facet.type==='slider') {%>
             <div class="switch tiny">
                 <% const switchId = formId+facet.label+'slider-switch' %>
@@ -166,7 +165,7 @@
                 <label class="switch-paddle" for="<%= switchId %>">
                 </label>
             </div>
-            <h5><%= facet.label.capitalize() %> (<%= facet.units %>)</h5>
+            <h5><%= capitalize(facet.label) %> (<%= facet.units %>)</h5>
             <div class="row columns slider-group">
                 <div id="<%= formId+facet.label+'slider' %>" class="slider"
                      data-facet-slider="<%= facet.label+'slider' %>"></div>
@@ -177,7 +176,7 @@
             </div>
         </div>
         <% } else { %>
-        <h5><%= facet.label.capitalize() %></h5>
+        <h5><%= capitalize(facet.label) %></h5>
         <% _.each(facet.facetValues, function(child){ %>
         <div class="facet-child-group show">
             <% drawAndExpand(child, facet.id, '') %>
@@ -199,7 +198,7 @@
         <div class="columns small-4 medium-4 large-4">
             <button class="button right" name="download">Download results as CSV</button>
 
-            <p><a data-open="projectsModal">Show / Hide columns</a></p>
+            <a data-open="projectsModal"><p>Show / Hide columns</p></a>
         </div>
     </div>
     <div class="row btn-container">
@@ -229,7 +228,7 @@
             <td data-column="project-ena-accession"><a
                     href="https://www.ebi.ac.uk/ena/data/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a>
             </td>
-            <td data-column="project-id"><a href="<%= entry.study_link %>"><%= fields.id %></a></td>
+            <td data-column="project-id"><a href="<%= entry.studyLink %>"><%= fields.id %></a></td>
             <td data-column="project-biome"><%= fields.biome_name %></td>
             <td data-column="project-name"><%= fields.name %></td>
             <td data-column="project-desc"><%= fields.description %></td>
@@ -245,8 +244,8 @@
 <script id="samplesResultsTmpl" type="text/template">
     <div class="row">
         <div class="columns small-8 medium-8 large-8">
-            <h5>You searched for samples<%=queryString%></h5>
-            <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
+            <h5 data-cy="samples-query-desc">You searched for samples<%=queryString%></h5>
+            <h6 data-cy="samples-query-desc">Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
         </div>
         <div class="columns small-4 medium-4 large-4">
             <button class="button right" name="download">Download results as CSV</button>
@@ -268,8 +267,8 @@
         <% _.each(entries, function(entry){ %>
         <% const fields = entry.fields %>
         <tr class="search-row">
-            <td data-column="sample-id"><a href="<%= entry.sample_link %>"><%= entry.id %></a></td>
-            <td data-column="sample-projects"><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a>
+            <td data-column="sample-id"><a href="<%= entry.sampleLink %>"><%= entry.id %></a></td>
+            <td data-column="sample-projects"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a>
             </td>
             <td data-column="sample-name"><%= fields.name %></td>
             <td data-column="sample-desc"><%= fields.description %></td>
@@ -305,10 +304,10 @@
         <% _.each(entries, function(entry){ %>
         <% const fields = entry.fields %>
         <tr class="search-row">
-            <td data-column="run-id"><a href="<%= entry.run_link %>"><%= entry.run_id %></a></td>
-            <td data-column="run-pipeline-vers"><a href="<%= entry.pipeline_link %>"><%= fields.pipeline_version %></a>
-            <td data-column="run-sample"><a href="<%= entry.sample_link %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
-            <td data-column="run-project"><a href="<%= entry.study_link %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
+            <td data-column="run-id"><a href="<%= entry.runLink %>"><%= entry.runId %></a></td>
+            <td data-column="run-pipeline-vers"><a href="<%= entry.pipelineLink %>"><%= fields.pipeline_version %></a>
+            <td data-column="run-sample"><a href="<%= entry.sampleLink %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
+            <td data-column="run-project"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
             <td data-column="run-experiment-type"><%= fields.experiment_type %></td>
             </td>
         </tr>
@@ -340,22 +339,6 @@
     {{>partials/elixir}}
     {{>partials/footer}}
 </div>
-<!-- JavaScript -->
-<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
-
-<!-- The Foundation theme JavaScript -->
-<script src="{{subfolder}}/static/js/foundation.min.js"></script>
-<script src="{{subfolder}}/static/libraries/foundation.util.touch.js"></script>
-<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-
-<script src="{{subfolder}}/js/search.js"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->

@@ -1,5 +1,4 @@
 const Highcharts = require('highcharts');
-const _ = require('underscore');
 require('highcharts/modules/exporting')(Highcharts);
 const Commons = require('../../../commons');
 
@@ -15,11 +14,33 @@ const Commons = require('../../../commons');
 // rgb(202, 174, 116)
 // rgb(204, 204, 204)
 
+/**
+ * Get sum total of series values in dataset
+ * @param {object} data
+ * @return {number}
+ */
+function sumData(data) {
+    let sum = 0;
+    data.forEach(function(e) {
+        sum += e.y;
+    });
+    return sum;
+}
+
 module.exports = class TaxonomyColumn {
+    /**
+     * Handler for taxonomy column chart, in taxonomy page
+     * @param {string} containerId
+     * @param {string} chartTitle
+     * @param {object} chartData
+     * @param {boolean} legend
+     * @param {object} extraOptions
+     * @return {Highcharts.Chart}
+     */
     constructor(containerId, chartTitle, chartData, legend, extraOptions) {
         const categories = [];
 
-        chartData.forEach(function (e) {
+        chartData.forEach(function(e) {
             categories.push(e.name);
         });
         let options = {
@@ -32,31 +53,15 @@ module.exports = class TaxonomyColumn {
             title: {
                 text: chartTitle
             },
-            // tooltip: {
-            //     pointFormat: '<b>{point.y}</b> {series.name} ({point.percentage:.1f}%)'
-            // },
-            // plotOptions: {
-            //     pie: {
-            //         allowPointSelect: true,
-            //         cursor: 'pointer',
-            //         dataLabels: {
-            //             enabled: true,
-            //             format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-            //             style: {
-            //                 color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-            //             }
-            //         },
-            //         colors: Commons.TAXONOMY_COLOURS,
-            //     }
-            // },
             credits: {
                 enabled: false
             },
-            series: [{
-                colorByPoint: true,
-                data: chartData,
-                colors: Commons.TAXONOMY_COLOURS,
-            }],
+            series: [
+                {
+                    colorByPoint: true,
+                    data: chartData,
+                    colors: Commons.TAXONOMY_COLOURS
+                }],
             xAxis: {
                 categories: categories,
                 title: {
@@ -74,21 +79,22 @@ module.exports = class TaxonomyColumn {
                 }
             },
             tooltip: {
-                formatter: function () {
+                formatter() {
                     let perc = this.percentage;
-                    // Percentage in highcharts is not defined within series, hence the alternative calculation below
+                    // Percentage in highcharts is not defined within series, hence the
+                    // alternative calculation below
                     if (!this.percentage) {
                         const sum = sumData(this.series.data);
                         perc = 100 * this.y / sum;
                     }
                     let title = this.x;
-                    if (title=='0'){
+                    if (title === '0') {
                         title = this.series.name;
                     }
-                    return title+ '<br/>' + '<b>' + this.y +
+                    return title + '<br/>' + '<b>' + this.y +
                         '</b> reads (' + (perc).toFixed(2) + '%)';
                 }
-            },
+            }
         };
 
         if (legend) {
@@ -98,13 +104,12 @@ module.exports = class TaxonomyColumn {
                 },
                 align: 'right',
                 verticalAlign: 'top',
-                layout: 'vertical',
+                layout: 'vertical'
             };
-            // options.plotOptions.pie.showInLegend = true;
         } else {
             options.legend = {
                 enabled: false
-            }
+            };
         }
 
         if (extraOptions) {
@@ -113,55 +118,7 @@ module.exports = class TaxonomyColumn {
         const chart = Highcharts.chart(containerId, options);
         chart.sum = sumData(chartData);
 
-        return chart
-        // $('button.column').click(function () {
-        //     options.chart.renderTo = 'container';
-        //     options.chart.type = 'column';
-        //     chart = Highcharts.chart(containerId, options);
-        // });
-
-
-    }
-
-    clusterData(data, depth) {
-        let clusteredData = {};
-        let total = 0;
-        _.each(data, function (d) {
-            const attr = d.attributes;
-            const lineage = attr.lineage.split(':');
-            let category;
-            if (lineage.length < depth) {
-                category = lineage[lineage.length - 1]
-            } else {
-                category = lineage[depth]
-            }
-            let val = attr.count;
-            if (clusteredData.hasOwnProperty(category)) {
-                clusteredData[category]['v'] += val;
-            } else {
-                clusteredData[category] = {
-                    v: val,
-                    l: lineage,
-                };
-            }
-            total += val;
-        });
-        clusteredData = _.map(clusteredData, function (values, k) {
-            return {
-                name: k,
-                y: values.v,
-                lineage: values.l
-            }
-        });
-        return clusteredData;
+        return chart;
     }
 };
 
-
-function sumData(data) {
-    let sum = 0;
-    data.forEach(function (e) {
-        sum += e.y;
-    });
-    return sum
-}

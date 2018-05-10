@@ -2,16 +2,16 @@ const commons = require('../commons');
 const util = require('../util');
 require('static/css/pipeline.css');
 
-util.checkAPIonline();
+util.setupPage('#about-nav');
 
-util.setCurrentTab('#about-nav');
 
-let pipeline_version = util.getURLParameter();
+let pipelineVersion = util.getURLParameter();
 
-$(document).ready(function () {
-    if (pipeline_version <= 0 || pipeline_version - 1 >= commons.pipelines.length) {
-        $('#content-full').append("<h3>No pipeline version found, available versions are 1, 2, 3 & 4.</h3>");
+$(document).ready(function() {
+    if (pipelineVersion <= 0 || pipelineVersion - 1 >= commons.pipelines.length) {
+        $('#content-full')
+            .append('<h3>No pipeline version found, available versions are 1, 2, 3 & 4.</h3>');
     } else {
-        $('#content-full').append(commons.pipelines[parseInt(pipeline_version) - 1]);
+        $('#content-full').append(commons.pipelines[parseInt(pipelineVersion) - 1]);
     }
 });

@@ -1,55 +1,70 @@
-<{{header_class}}>
-    {{section_title}}
-    <img class="loading-gif-medium" src="{{subfolder}}/static/images/ajax-loader.gif">
-</{{header_class}}>
-<div class="row">
-    <div class="columns small-12 medium-6 large-6 pagesize">
-        {{#if this.pagination}}
-            <label for="pagesize">Show:
-                <select id="pagesize" class="inline-select">
-                    <option value=50>50</option>
-                    <option value=25>25</option>
-                    <option selected value=10>10</option>
-                </select>
-                results
-                <span id="pagesize-text">
-                from a total of <span
-                        id="totalResults"></span> (page <span id="currentPage"></span> of <span
-                        id="maxPage"></span>).
-            </span>
-            </label>
-        {{/if}}
-    </div>
-    <div class="columns small-12 medium-3 large-3">
-        {{#if this.filter}}
-            <label class="right" for="tableFilter">Filter rows: <input id="tableFilter" class="table-filter search"
-                                                                       type="text"></label>
-        {{/if}}
-    </div>
-</div>
-<div class="row columns small-12 medium-12 large-12">
-    <a class="right download-link">Download results</a>
-</div>
-<div class="row columns small-12 medium-12 large-12">
-    <table>
-        <thead>
-        <tr>
-            {{#each headers}}
-                {{#if this.sortBy}}
-                    <th data-sortby='{{this.sortBy}}' class="sort-both">{{this.name}}</th>
-                {{else}}
-                    <th>{{this.name}}</th>
-                {{/if}}
-            {{/each}}
-        </tr>
-        </thead>
-        <tbody id="{{tbody_id}}">
-        </tbody>
-    </table>
-</div>
-{{#if this.pagination}}
-    <div class="pagination row columns">
-        <ul class="pagination pagination-sm" role="navigation" aria-label="Pagination">
-        </ul>
+{{#if sectionTitle}}
+    <div class="row">
+        <div class="columns small-8 medium-8 large-8">
+            {{#if isPageHeader}}
+                <h2>
+                    {{sectionTitle}}
+                    <img class="loading-gif-medium" src="static/images/ajax-loader.gif">
+                </h2>
+            {{else}}
+                <h4>
+                    <a class="expand-button min" for="#{{tableContainer}}">{{sectionTitle}}</a>
+                    <img class="loading-gif-medium" src="static/images/ajax-loader.gif">
+                </h4>
+            {{/if}}
+        </div>
     </div>
 {{/if}}
+<div id="{{tableContainer}}">
+    <div class="row">
+        <div class="columns small-12 medium-6 large-6 pagesize">
+            {{#if this.pagination}}
+                <label for="pagesize">Show:
+                    <select id="pagesize" class="inline-select">
+                        <option value=50>50</option>
+                        <option value=25>25</option>
+                        <option selected value=10>10</option>
+                    </select>
+                    results
+                    <span id="pagesize-text">
+                from a total of <span
+                            id="totalResults"></span> (page <span id="currentPage"></span> of <span
+                            id="maxPage"></span>).
+            </span>
+                </label>
+            {{/if}}
+        </div>
+        <div class="columns small-12 medium-3 large-3 tableFilters">
+            {{#if filter}}
+                <label class="right" for="tableFilter">Filter rows: <input class="table-filter search"
+                                                                           type="text"></label>
+            {{/if}}
+        </div>
+    </div>
+    <div class="row columns small-12 medium-12 large-12">
+        <a class="right download-link">Download results</a>
+    </div>
+    <div class="row columns small-12 medium-12 large-12">
+        <table class="{{tableClass}}">
+            <thead>
+            <tr>
+                {{#each headers}}
+                    {{#if this.sortBy}}
+                        <th data-sortby='{{this.sortBy}}' class="sort-both">{{this.name}}</th>
+                    {{else}}
+                        <th>{{this.name}}</th>
+                    {{/if}}
+                {{/each}}
+            </tr>
+            </thead>
+            <tbody id="{{tbody_id}}">
+            </tbody>
+        </table>
+    </div>
+    {{#if this.pagination}}
+        <div class="pagination row columns">
+            <ul class="pagination pagination-sm" role="navigation" aria-label="Pagination">
+            </ul>
+        </div>
+    {{/if}}
+</div>

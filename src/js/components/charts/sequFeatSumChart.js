@@ -1,20 +1,19 @@
 // Sequence feature summary chart
 
 const Highcharts = require('highcharts');
-const _ = require('underscore');
 require('highcharts/modules/exporting')(Highcharts);
 
-module.exports = class QCChart {
+module.exports = class SeqFeatChart {
     constructor(containerId, chartTitle, data) {
         const categories = [
             'Nucleotide sequences with predicted CDS',
             'Nucleotide sequences with predicted rRNA',
             'Nucleotide sequences with InterProScan match',
             'Predicted CDS',
-            'Predicted CDS with InterProScan match',
+            'Predicted CDS with InterProScan match'
         ];
         let series = [];
-        categories.forEach(function(e, o){
+        categories.forEach(function(e) {
             series.push(parseInt(data[e]));
         });
 
@@ -23,7 +22,7 @@ module.exports = class QCChart {
                 type: 'bar'
             },
             title: {
-                text: chartTitle,
+                text: chartTitle
             },
             yAxis: {
                 min: 0,
@@ -32,7 +31,7 @@ module.exports = class QCChart {
                 }
             },
             xAxis: {
-                categories: categories,
+                categories: categories
             },
             plotOptions: {
                 series: {

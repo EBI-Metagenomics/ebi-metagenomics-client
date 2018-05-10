@@ -12,3 +12,15 @@ cypress/screenshots/
 
 # Merged fixture file
 travis/emg_sql_fixtures/merged.sql
+
+# MacOS specific
+.DS_STORE
+
+# Coverage tmp files
+.nyc_output
+nyc
+coverage
+coverage.lcov
+
+# Local API configs
+config

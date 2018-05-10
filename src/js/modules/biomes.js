@@ -9,71 +9,67 @@ const pagination = new Pagination();
 
 const DEFAULT_PAGE_SIZE = commons.DEFAULT_PAGE_SIZE;
 
+util.setupPage('#browse-nav');
 
-util.checkAPIonline();
 
-
-util.setCurrentTab('');
-
-$("#pagination").append(commons.pagination);
-$("#pageSize").append(commons.pagesize);
+$('#pagination').append(commons.pagination);
+$('#pageSize').append(commons.pagesize);
 
 const pageFilters = util.getURLFilterParams();
 
-
-var BiomeView = Backbone.View.extend({
+let BiomeView = Backbone.View.extend({
     tagName: 'tr',
-    template: _.template($("#biome-row").html()),
+    template: _.template($('#biome-row').html()),
     attributes: {
-        class: 'biome',
+        class: 'biome'
     },
-    render: function () {
+    render() {
         this.$el.html(this.template(this.model.toJSON()));
-        return this.$el
+        return this.$el;
     }
 });
 
-var BiomesView = Backbone.View.extend({
+let BiomesView = Backbone.View.extend({
     el: '#biomes-table-body',
-    initialize: function () {
-        var that = this;
+    initialize() {
+        let that = this;
         let params = {};
         params.page = pagination.currentPage;
         params.page_size = pagination.getPageSize();
 
-        const ordering = pageFilters.get('ordering');
+        const ordering = pageFilters['ordering'];
         if (ordering) {
             params.ordering = ordering;
         } else {
             params.ordering = '-samples_count';
         }
 
-        const pagesize = pageFilters.get('pagesize') || DEFAULT_PAGE_SIZE;
+        const pagesize = pageFilters['pagesize'] || DEFAULT_PAGE_SIZE;
         params.page_size = pagesize;
-        params.page = pageFilters.get('page') || 1;
+        params.page = pageFilters['page'] || 1;
         this.params = params;
 
         this.fetchXhr = this.collection.fetch({
             data: $.param(params),
             remove: true,
-            success: function (collection, response, options) {
+            success(ignored, response) {
                 that.render();
                 const pag = response.meta.pagination;
                 pagination.init(params.page, pagesize, pag.pages, pag.count, changePage);
-                Order.initHeaders(params.ordering, function (sort) {
+                Order.initHeaders(params.ordering, function(sort) {
                     const params = {
                         page: 1,
                         page_size: pagination.getPageSize(),
                         ordering: sort
                     };
                     that.update(params);
-                })
+                });
             }
         });
         return this;
     },
-    update: function (params) {
-        var that = this;
+    update(params) {
+        let that = this;
         this.params = $.extend(this.params, params);
         $('.biome').remove();
         util.showTableLoadingGif();
@@ -83,7 +79,9 @@ var BiomesView = Backbone.View.extend({
             this.fetchXhr.abort();
         }
         this.fetchXhr = this.collection.fetch({
-            data: $.param(this.params), remove: true, success: function (collection, response, options) {
+            data: $.param(this.params),
+            remove: true,
+            success(ignored, response) {
                 util.hideTableLoadingGif();
                 pagination.update(response.meta.pagination, changePage);
                 that.render();
@@ -91,11 +89,11 @@ var BiomesView = Backbone.View.extend({
         });
         return this;
     },
-    render: function () {
+    render() {
         $('.biome').remove();
-        this.collection.each(function (biome) {
+        this.collection.each(function(biome) {
             biome.attributes.lineage = util.formatLineage(biome.attributes.lineage);
-            var biomeView = new BiomeView({model: biome});
+            let biomeView = new BiomeView({model: biome});
             $(this.$el).append(biomeView.render());
         }, this);
 
@@ -103,20 +101,29 @@ var BiomesView = Backbone.View.extend({
     }
 });
 
+let biomes = new api.BiomeCollection();
+let biomesView = new BiomesView({collection: biomes});
 
+/**
+ * Update page size callback for pageSize select
+ * @param {number} pageSize
+ */
 function updatePageSize(pageSize) {
     const params = {
         page_size: pageSize,
-        page: 1,
+        page: 1
     };
     biomesView.update(params);
 }
 
+/**
+ * Update page callback for pagination event
+ * @param {number} page
+ */
 function changePage(page) {
-    console.log(page);
     const params = {
         page_size: pagination.getPageSize(),
-        page: page,
+        page: page
     };
     biomesView.update(params);
 }
@@ -124,5 +131,3 @@ function changePage(page) {
 pagination.setPageSizeChangeCallback(updatePageSize);
 
 
-var biomes = new api.BiomeCollection();
-var biomesView = new BiomesView({collection: biomes});

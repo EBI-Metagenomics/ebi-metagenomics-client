@@ -3,7 +3,6 @@
 <head id="head">
     <title>Submit &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/submit.css" type="text/css" media="all"/>
 </head>
 
 
@@ -16,7 +15,7 @@
         <div class="columns small-12 medium-12 large-12">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
-                     <li><a href="{{subfolder}}">Home</a></li>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
                     <li>
                         <span class="show-for-sr">Current: </span> Submit
                     </li>
@@ -25,8 +24,6 @@
             <h2>Submit data</h2>
             <p>We provide a free service for submission of raw metagenomics sequence data and associated metadata to the
                 European Nucleotide Archive (ENA) and analysis by EBI Metagenomics.</p>
-            <a class="button">New user</a>
-            <a class="button">Existing user</a>
             <p>If you have data that you wish to have analysed, you need an ENA submitter account that has been
                 registered with EBI Metagenomics. This allows us to track your submitted data and ensures that we have
                 consent to access it for analysis.
@@ -45,9 +42,13 @@
                 Metagenomics
                 homepage to be able to view the results of the analysis.
             </p>
+            <div id="action">
+                <a id="submit" href="https://www.ebi.ac.uk/ena/submit/sra/#home" class="button">Click here to submit
+                    data</a>
+            </div>
         </div>
         <div id="submissionModal" class="reveal" role="dialog" data-reveal>
-            <img src="{{subfolder}}/static/images/graphic_submission_00.gif"/>
+            <img src="static/images/graphic_submission_00.gif"/>
             <h4>Detail of the submission and analysis process on the EBI metagenomics website</h4>
             <button class="close-button" data-close aria-label="Close modal" type="button">
                 <span aria-hidden="true">&times;</span>
@@ -71,21 +72,6 @@
     {{>partials/footer}}
 </div>
 <!-- JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
-
-
-<!-- The Foundation theme JavaScript -->
-
-<script src="{{subfolder}}/static/js/foundation.js"></script>
-<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-<script src="{{subfolder}}/js/submit.js"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->

@@ -6,10 +6,17 @@ const _ = require('underscore');
  * @type {module.DetailList}
  */
 module.exports = class DetailList {
+    /**
+     * Create a detailList from template and return jQuery elem
+     * @param {string} title
+     * @param {[{key: string, value: string}]} properties
+     * @return {jQuery.HTMLElement}
+     */
     constructor(title, properties) {
         return $(tmpl({
             title: title,
-            properties: properties
+            properties: properties,
+            listContainer: _.uniqueId('listContainer')
         }));
     }
 };

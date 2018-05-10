@@ -3,7 +3,6 @@
 <head id="head">
     <title>Home &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/index.css" type="text/css" media="all"/>
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
 <div id="header2">
@@ -21,18 +20,18 @@
                 <div class="columns small-12 medium-6 large-6">
                     <div class="row columns text-center">
                         <div class="row columns text-center getting-started">
-                            <h3>Request analysis</h3>
+                            <h3>Request analysis of</h3>
                             <div class="row">
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
-                                        <p>Submit your data for analysis.</p>
-                                        <a class="button" href="{{subfolder}}/submit">Submit</a>
+                                        <p>Your data</p>
+                                        <a class="button" href="{{htmlWebpackPlugin.options.templateData.subfolder}}/submit">Submit</a>
                                     </div>
                                 </div>
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
-                                        <p>Request an analysis of a public dataset.</p>
-                                        <a class="button">Request</a>
+                                        <p>A public dataset</p>
+                                        <button class="button" data-open="requestAnalysisModal">Request</button>
                                     </div>
                                 </div>
                             </div>
@@ -46,14 +45,14 @@
                             <div class="row">
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
-                                        <p>Name, biome, or keyword. </p>
-                                        <a class="button" href="{{subfolder}}/search">Search text</a>
+                                        <p>Name, biome, or keyword </p>
+                                        <a class="button" href="{{htmlWebpackPlugin.options.templateData.subfolder}}/search">Search text</a>
                                     </div>
                                 </div>
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
                                         <p>Sequence similarity</p>
-                                        <a class="button" href="{{sequenceSearchUrl}}">Search sequences</a>
+                                        <a class="button" href="{{htmlWebpackPlugin.options.templateData.sequenceSearchUrl}}">Search sequences</a>
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +68,7 @@
                     <h3>By data type</h3>
                     <div class="index-stats-disp">
                         <div id="stats-loading">
-                            <img class="loading-gif-large" src="{{subfolder}}/static/images/ajax-loader.gif">
+                            <img class="loading-gif-large" src="static/images/ajax-loader.gif">
                         </div>
                         <div id="stats-disp" class="row hidden">
                             <div class="columns small-1 medium-1 large-1">
@@ -126,8 +125,8 @@
                         <script id="biomeTmpl" type="text/template">
                             <a href="<%= biome_studies_link %>">
                                 <div>
-                                    <img class="spacer" alt="icon"
-                                         src="{{subfolder}}/static/images/backgrounds/bgd_transparent_1x1.png">
+                                    <!--<img class="spacer" alt="icon"-->
+                                         <!--src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/backgrounds/bgd_transparent_1x1.png">-->
                                     <span class="biome_icon icon_sm <%= icon %> <%= name%>"></span>
                                 </div>
                                 <div class="biome-text">
@@ -137,7 +136,7 @@
                         </script>
                     </div>
                     <div class="row columns">
-                        <a href="{{subfolder}}/biomes" class="all right" data-hasqtip="27"
+                        <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/biomes" class="all right" data-hasqtip="27"
                            oldtitle="View projects and filter by biome" title=""
                            aria-describedby="qtip-27">Browse all biomes</a>
                     </div>
@@ -167,7 +166,7 @@
                         </div>
                     </div>
                     <div class="row columns">
-                        <a href="{{subfolder}}/browse#studies"
+                        <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies"
                            class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
                            aria-describedby="qtip-42">View all projects</a>
                     </div>
@@ -228,7 +227,7 @@
                 <h2>How to cite</h2>
                 <div class="home-blog-box">
                     <img alt="Cover of the Nucleic Acids Research journal"
-                         src="{{subfolder}}/static/images/nucleic_acids_research_D1_cover.gif"
+                         src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/nucleic_acids_research_D1_cover.gif"
                          class="publication-cover">
                     <p>To cite EBI Metagenomics, please refer to the following publication:</p>
                     <p>
@@ -262,39 +261,60 @@
         <section class="jumbo-news">
             <div class="grid_24 jumbo-news-container">
                 <div class="jumbo-news-centred" style="text-align: center">
-
                     <h3 class="icon icon-socialmedia icon-s2" data-icon="T"></h3>
-                    <a class="twitter-timeline" height="100" data-dnt="true"
-                       href="https://twitter.com/EBImetagenomics"
-                       data-widget-id="345516657369837568"
-                       data-chrome="nofooter noborders noheader noscrollbar transparent" data-tweet-limit="1">Tweets
-                        by
-                        @EBImetagenomics</a>
-
-                    <p class="jumbo-news-contact"><strong><a
-                            href="http://twitter.com/EBImetagenomics"
-                            alt="Follow us on Twitter">@EBImetagenomics</a></strong>
-                    </p>
-                    <script>
-                        !function (d, s, id) {
-                            var
-                                js, fjs = d.getElementsByTagName(s)[0],
-                                p = /^http:/.test(d.location) ? 'http' : 'https';
-                            if (!d.getElementById(id)) {
-                                js = d.createElement(s);
-                                js.id = id;
-                                js.src = p + "://platform.twitter.com/widgets.js";
-                                fjs.parentNode.insertBefore(js, fjs);
-                            }
-                        }(document, "script", "twitter-wjs");</script>
-
-
+                    <a class="twitter-timeline" data-width="520" data-height="600" data-dnt="true" data-link-color="#2B7BB9" href="https://twitter.com/EBImetagenomics?ref_src=twsrc%5Etfw">Tweets by EBImetagenomics</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                 </div>
             </div>
         </section>
         <!-- END Twitter section-->
     </div>
 </div>
+<div class="reveal" id="requestAnalysisModal" data-reveal>
+    <h2>Request an analysis of a public dataset</h2>
+    <!--No validate attribute forces browser to ignore validation and instead allow FoundationAbide to enforce it. -->
+    <form id="analysisRequestForm" data-abide novalidate>
+        <div class="grid-container fluid">
+            <div class="grid-x">
+                <div class="medium-6 cell">
+                    <label>Study accession
+                        <input id="study-accession" name="study-accession" type="text" placeholder="ERP###### or SRP###### or DRP######" required pattern="study_accession">
+                        <span class="form-error">
+                            Improperly formatted accession, format should be ERP, SRP, DRP, PRJEB, PRJNA followed by a number.
+                        </span>
+                    </label>
+                </div>
+                <div class="medium-6 cell">
+                    <label>Analysis type
+                        <select name="analysis-type" type="text" required>
+                            <option value="amplicon">Amplicon</option>
+                            <option value="raw reads">Raw reads</option>
+                            <option value="assembly">Assembly</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="medium-6 cell">
+                    <label>Contact name
+                        <input name="contact-name" type="text" required>
+                    </label>
+                </div>
+                <div class="medium-6 cell">
+                    <label>Contact email address
+                        <input name="contact-email" type="email" required pattern="email">
+                        <span class="form-error">
+                            Improperly formatted email address.
+                        </span>
+                    </label>
+                </div>
+                <!-- Add type of analysis: assembly | amplicon | raw read -->
+            </div>
+        </div>
+        <button class="button mailtobtn" type="button" >Submit request</button>
+    </form>
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
 <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
 <!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
 <!-- <div class="row"> -->
@@ -310,23 +330,6 @@
     {{>partials/footer}}
 </div>
 <!-- JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-
-<script defer="defer" src="{{subfolder}}/static/js/script.js"></script>
-
-
-<!-- The Foundation theme JavaScript -->
-
-<script src="{{subfolder}}/static/js/foundation.js"></script>
-<script src="{{subfolder}}/static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-<script src="{{subfolder}}/js/index.js"></script>
-<script defer="defer" src="{{subfolder}}/static/js/blog.js" type="text/javascript"></script>
 
 <!-- Google Analytics details... -->
 <!-- Change UA-XXXXX-X to be your util's ID -->

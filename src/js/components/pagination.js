@@ -1,10 +1,8 @@
 require('twbs-pagination');
 
-export const Pagination = function () {
+export const Pagination = function() {
     let pageSize = '#pagesize';
     let pagination = '#pagination';
-
-    let currentPage = 1;
 
     let opts = {
         startPage: null,
@@ -12,7 +10,7 @@ export const Pagination = function () {
         activeClass: 'current',
         disabledClass: 'disabled',
         hideOnlyOnePage: true,
-        visiblePages: 5,
+        visiblePages: 5
     };
 
     function setPaginationElem(selector) {
@@ -24,14 +22,14 @@ export const Pagination = function () {
         opts.totalPages = Math.max(1, parseInt(totalPages));
         setPageDisplay(initPage, totalPages, totalResults);
         $(pageSize).val(initPageSize);
-        $(pagination).twbsPagination(opts).on('page', function (evt, page) {
+        $(pagination).twbsPagination(opts).on('page', function(evt, page) {
             callback(page);
         });
     }
 
     function setPageSizeChangeCallback(callback) {
         const that = this;
-        $(document).on('change', that.pageSize, function (e) {
+        $(document).on('change', that.pageSize, function() {
             callback(that.getPageSize());
         });
     }
@@ -48,16 +46,16 @@ export const Pagination = function () {
         $(pagination).twbsPagination('destroy');
         $(pagination).twbsPagination($.extend({}, opts, {
             startPage: p.PAGE,
-            totalPages: totPages,
-        })).on('page', function (evt, page) {
+            totalPages: totPages
+        })).on('page', function(evt, page) {
             callback(page);
         });
     }
 
     function setPageDisplay(currentPage, maxPage, totalResults) {
-        $("#currentPage").text(currentPage);
-        $("#maxPage").text(maxPage);
-        $("#totalResults").text(totalResults);
+        $('#currentPage').text(currentPage);
+        $('#maxPage').text(maxPage);
+        $('#totalResults').text(totalResults);
     }
 
     return {
@@ -69,8 +67,7 @@ export const Pagination = function () {
         getPageSize: getPageSize,
         update: update,
         setPageDisplay: setPageDisplay
-    }
+    };
 };
-
 
 // window.Pagination = Pagination;

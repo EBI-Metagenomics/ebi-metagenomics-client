@@ -1,11 +1,11 @@
 let _ = require('underscore');
 
-var Order = module.exports = {
+module.exports = {
     // orderSelector: "#sortBy",
-    // getValue: function(){
+    // getValue(){
     //     return $(this.orderSelector).val();
     // },
-    // initSelector: function (fields, initOption, onChangeCallback){
+    // initSelector (fields, initOption, onChangeCallback){
     //     let opts = [];
     //     fields.map(function(field){
     //         opts.push($("<option value=\'"+field.value+"\'>"+field.name+" (asc)</option>"));
@@ -21,15 +21,15 @@ var Order = module.exports = {
 
     currentOrder: null,
 
-    initHeaders: function (initialSort, onChangeCallback){
+    initHeaders(initialSort, onChangeCallback) {
         const that = this;
         that.currentOrder = initialSort;
 
-        $("th.sort-both").on('click', function(){
+        $('th.sort-both').on('click', function() {
             const siblings = $(this).siblings('[data-sortby]');
-            _.each(siblings, function(s){
+            _.each(siblings, function(s) {
                 const sibling = $(s);
-                if (sibling.hasClass('sort-desc') || sibling.hasClass('sort-asc')){
+                if (sibling.hasClass('sort-desc') || sibling.hasClass('sort-asc')) {
                     siblings.removeClass('sort-desc');
                     siblings.removeClass('sort-asc');
                     siblings.addClass('sort-both');
@@ -38,7 +38,7 @@ var Order = module.exports = {
 
             const elem = $(this);
             let sort = null;
-            if (elem.hasClass('sort-both') || elem.hasClass('sort-desc')){
+            if (elem.hasClass('sort-both') || elem.hasClass('sort-desc')) {
                 elem.removeClass('sort-both');
                 elem.removeClass('sort-desc');
                 elem.addClass('sort-asc');
@@ -51,9 +51,8 @@ var Order = module.exports = {
                 onChangeCallback(sort);
             }
             that.currentOrder = sort;
-
         });
         const sortby = initialSort.replace('-', '');
-        $("[data-sortby='"+sortby+"']").removeClass('sort-both').addClass(initialSort.charAt(0)==='-' ? 'sort-desc' : 'sort-asc');
+        $('[data-sortby=\''+sortby+'\']').removeClass('sort-both').addClass(initialSort.charAt(0)==='-' ? 'sort-desc' : 'sort-asc');
     }
 };

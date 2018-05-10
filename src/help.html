@@ -3,7 +3,6 @@
 <head id="head">
     <title>Help &lt; EBI Metagenomics &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{subfolder}}/js/help.css" type="text/css" media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -24,10 +23,10 @@
             <h2>EBI Metagenomics Help</h2>
 
             <p>All <a id="doc-link" title="EMG-docs"
-                      class="ext">documentation</a> relating to the use of the EBI metagenomics has been moved to
+                      class="ext">documentation</a> relating to the use of the EBI metagenomics was moved to
                 <a title="Read the Docs" href="https://readthedocs.org/" class="ext">Read the Docs</a>.
-                This allows us to provide a rich, searchable and downloadable document, as well as enables us to store
-                different versions corresponding to the different pipelines (accessed via the bottom left corner of the
+                This allows us to provide a rich, searchable and downloadable document, in addition to different
+                versions of the documentation corresponding to the different pipelines (accessed via the bottom left corner of the
                 <a id="doc-link-2" title="EMG-docs" class="ext">EMG Read the Docs site</a>). Answers to many of the most
                 commonly asked questions can be found under the FAQ section. Furthermore, there are also the following
                 training materials as part of the <a title="EBI Train online"
@@ -58,32 +57,6 @@
     {{>partials/elixir}}
     {{>partials/footer}}
 </div>
-<!-- JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script defer="defer" src="static/js/script.js"></script>
-
-<!-- The Foundation theme JavaScript -->
-
-<script src="static/js/foundation.js"></script>
-<script src="static/js/foundationExtendEBI.js"></script>
-<script type="text/JavaScript">
-    $(document).ready(function () {
-        $(document).foundation();
-        $(document).foundationExtendEBI();
-    });
-</script>
-<script src="js/help.js"></script>
-
-<!-- Google Analytics details... -->
-<!-- Change UA-XXXXX-X to be your util's ID -->
-<!--
-<script>
-  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
-  Modernizr.load({
-    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-  });
-</script>
--->
 </body>
 
 </html>

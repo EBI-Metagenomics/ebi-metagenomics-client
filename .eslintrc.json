@@ -1,0 +1,30 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "google"
+  ],
+  "rules": {
+    "max-len": [2, {"code": 100}],
+    "no-console": "off",
+    "no-process-env": 0,
+    "comma-dangle": ["error", "never"],
+    "new-cap": [2, {"capIsNewExceptions": ["$.Deferred", "DownloadsView", "TableCSVExport"]}],
+    "camelcase": [2, {"properties": "never"}],
+    "no-invalid-this": "off",
+    "dot-location": ["error", "property"]
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "strict": "implied",
+    "sourceType": "module"
+  },
+  "env": {
+    "amd": true,
+    "browser": true,
+    "node": true,
+    "jquery": true
+  },
+  "globals": {
+    "google": true
+  }
+}
