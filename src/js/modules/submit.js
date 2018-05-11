@@ -18,6 +18,7 @@ fetchLogin.done(function(loggedIn) {
             if (userData.attributes['analysis'] !== true) {
                 const $button = $('<fetchLogin class=\'button\'>Give consent.</fetchLogin>');
                 $actionDiv.html($button);
+                $('#consent').removeClass('hidden');
                 // TODO send email using API
             }
         });

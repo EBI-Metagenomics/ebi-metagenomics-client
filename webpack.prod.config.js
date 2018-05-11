@@ -139,11 +139,11 @@ module.exports = {
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
-            title: 'Analysis page',
+            title: 'Run page',
             inject: true,
-            filename: 'analysis.html',
-            template: 'handlebars-loader!./src/analysis.html',
-            chunks: ['analysis', 'commons'],
+            filename: 'run.html',
+            template: 'handlebars-loader!./src/run.html',
+            chunks: ['run', 'commons'],
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -240,8 +240,8 @@ module.exports = {
             'src/js/modules/browse.js',
         sample:
             'src/js/modules/sample.js',
-        analysis:
-            'src/js/modules/analysis.js',
+        run:
+            'src/js/modules/run.js',
         compare:
             'src/js/modules/compare.js',
         about:
