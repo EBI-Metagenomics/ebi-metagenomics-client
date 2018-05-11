@@ -107,7 +107,7 @@ describe('Study page - Related studies - ', function() {
             ' data set');
         cy.contains('Related studies');
         cy.get(relatedStudiesList).should('have.length', 1);
-        cy.get(relatedStudiesList + ' a').contains('ERP005307').click();
+        cy.get(relatedStudiesList + ' a').contains('MGYS00000369').click();
         waitForPageLoad('Microbial Community of Mobilong Acid Sulfate Soil ' +
             'depth profile using Metagenomics');
     });

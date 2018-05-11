@@ -1,7 +1,8 @@
 const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
-const api = require('./components/api');
+const api = require('mgnify').api;
+const authApi = require('./components/authApi');
 const Commons = require('./commons');
 const GenericTable = require('./components/genericTable');
 import 'process';
@@ -13,42 +14,7 @@ $.typeWatch = require('jquery.typewatch');
 
 const biomeFilter = require('./commons').biomeFilter;
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
 const DEFAULT_PAGE_SIZE = Commons.DEFAULT_PAGE_SIZE;
-
-/**
- * Format lineage by removing root and replacing ':' with '>'
- * @param {string} lineage
- * @param {boolean} removeRoot
- * @return {string}
- */
-export function formatLineage(lineage, removeRoot) {
-    let splitLineage = lineage.split(':');
-    if (removeRoot) {
-        splitLineage.shift();
-    }
-    return splitLineage.join(' > ');
-}
-
-/**
- * Retrieve biome from lineage
- * @param {string} lineage
- * @return {string}
- */
-export function lineageToBiome(lineage) {
-    return lineage.split(':').splice(-1);
-}
-
-/**
- * Format datestr for readability
- * @param {string} dateStr
- * @return {string}
- */
-export function formatDate(dateStr) {
-    let d = new Date(dateStr);
-    return d.getDate() + '-' + MONTHS[d.getMonth()] + '-' + d.getFullYear();
-}
 
 /**
  * Set visible tab by id
@@ -58,16 +24,6 @@ export function setCurrentTab(id) {
     document.addEventListener('DOMContentLoaded', function() {
         $(id).addClass('active');
     });
-}
-
-/**
- * Retrieve icon and name from biome object
- * @param {object} biomeData
- * @return {{name: string, icon}}
- */
-export function getBiomeIconData(biomeData) {
-    const name = biomeData.id;
-    return {name: formatLineage(name, true), icon: getBiomeIcon(name)};
 }
 
 /**
@@ -129,98 +85,6 @@ export function stripLineage(lineage) {
     }
 
     return '&nbsp;'.repeat(depth * 4) + lineage.split(':').pop();
-}
-
-const biomeIconMapD2 = {
-    'root:engineered': 'engineered_b'
-    // 'root:host-associated': 'non_human_host_b'
-};
-const biomeIconMapD3 = {
-    'root:engineered:wastewater': 'wastewater_b',
-    'root:environmental:air': 'air_b',
-    'root:host-associated:amphibia': 'amphibian_b',
-    'root:host-associated:arthropoda': 'arthropoda_b',
-    'root:host-associated:fish': 'fish_b',
-    'root:host-associated:human': 'human_host_b',
-    'root:host-associated:insecta': 'insect_b',
-    'root:host-associated:mammals': 'mammals_b',
-    'root:host-associated:mollusca': 'mollusca_b',
-    'root:host-associated:plants': 'plant_host_b',
-    'root:host-associated:porifera': 'porifera_b'
-    // 'root:environmental:air': 'air_b',
-    // 'root:environmental:aquatic': 'freshwater_b',
-    // 'root:engineered:wastewater': 'wastewater_b',
-    // 'root:host-associated:human': 'human_host_b',
-    // 'root:host-associated:plants': 'plant_host_b',
-
-};
-const biomeIconMapD4 = {
-    'root:environmental:aquatic:freshwater': 'freshwater_b',
-    'root:environmental:aquatic:marine': 'marine_b',
-    'root:environmental:aquatic:thermal springs': 'hotspring_b',
-    'root:environmental:terrestrial:soil': 'soil_b',
-    'root:environmental:terrestrial:volcanic': 'vulcano_b',
-    'root:host-associated:human:digestive system': 'human_gut_b',
-    'root:host-associated:human:skin': 'skin_b'
-    // 'root:environmental:aquatic:marine': 'marine_b',
-    // 'root:environmental:terrestrial:volcanic': 'vulcano_b',
-    // 'root:environmental:aquatic:marine:volcanic': 'vulcano_b',
-    // 'root:environmental:aquatic:thermal springs': 'hotspring_b',
-    // 'root:environmental:aquatic:freshwater': 'freshwater_b',
-    // 'root:environmental:terrestrial:soil': 'soil_b',
-    // 'root:host-associated:human:digestive system': 'human_gut_b',
-};
-
-const biomeIconMapD5 = {
-    'root:environmental:aquatic:freshwater:drinking water': 'drinking_water_b',
-    'root:environmental:aquatic:freshwater:groundwater': 'groundwater_b',
-    'root:environmental:aquatic:freshwater:ice': 'ice_b',
-    'root:environmental:aquatic:freshwater:lake': 'lake_b',
-    'root:environmental:aquatic:freshwater:lotic': 'river_b',
-    'root:environmental:aquatic:marine:hydrothermal vents': 'hydrothermal_vents_b',
-    'root:environmental:terrestrial:soil:wetlands': 'wetlands_b',
-    'root:host-associated:human:digestive system:oral': 'mouth_b',
-    'root:host-associated:human:respiratory system:pulmonary system': 'lung_b',
-    'root:host-associated:mammals:nervous system:brain': 'brain_b'
-};
-
-const biomeIconMapD6 = {
-    'root:environmental:aquatic:freshwater:groundwater:cave water': 'cave_b',
-    'root:environmental:aquatic:freshwater:ice:glacier': 'glacier_b',
-    'root:environmental:terrestrial:soil:grasslands': 'grassland_b',
-    'root:environmental:terrestrial:soil:loam:forest soil': 'forest_b',
-    'root:environmental:terrestrial:soil:sand:desert': 'desert_b'
-};
-
-// .biome_icon.default_b {  background-image: url(../images/biome_icons/biome_default.svg);  }
-
-/**
- * Retrieve biome icon for a lineage
- * @param {string} lineage
- * @return {string} css class for biome
- */
-export function getBiomeIcon(lineage) {
-    const lineageList = lineage.split(':').map(function(x) {
-        return x.toLowerCase();
-    });
-
-    const lineageD2 = lineageList.slice(0, 2).join(':');
-    const lineageD3 = lineageList.slice(0, 3).join(':');
-    const lineageD4 = lineageList.slice(0, 4).join(':');
-    const lineageD5 = lineageList.slice(0, 5).join(':');
-    const lineageD6 = lineageList.slice(0, 6).join(':');
-    // if (lineageD4 === 'root:environmental:terrestrial:soil' && lineageD5.includes('forest')) {
-    //     return 'forest_b';
-    // } else if (lineageD4 === 'root:
-    // environmental:terrestrial:soil' && lineageD5.includes('grassland')) {
-    //     return 'grassland_b';
-    // }
-
-    return biomeIconMapD6[lineageD6] || biomeIconMapD5[lineageD5] || biomeIconMapD4[lineageD4] ||
-        biomeIconMapD3[lineageD3] || biomeIconMapD2[lineageD2] || (function() {
-            console.warn('Could not match lineage "' + lineage + '" with any biome icons');
-            return 'default_b';
-        }());
 }
 
 /**
@@ -679,7 +543,7 @@ export function loadLoginForm(next) {
     if (!next) {
         next = subfolder + '/mydata';
     }
-    api.getLoginForm().then(function(data) {
+    authApi.getLoginForm().then(function(data) {
         const $div = $(data);
         const $form = $div.find('form');
         $form.submit(function(e) {
@@ -726,6 +590,7 @@ export function setNavLoginButton(isLoggedIn) {
         const $logout = $('<li><a data-cy=\'logout\' class=\'button\'>Logout</a></li>');
         $logout.click(function() {
             logout().done(function() {
+                console.log(subfolder);
                 window.location = subfolder;
             });
         });
@@ -746,7 +611,7 @@ export function getUsername() {
  * @return {JQuery.jqXHR}
  */
 export function logout() {
-    return $.get(api.API_LOGIN_ROOT + 'http-auth/logout/?next=' + subfolder);
+    return $.get(authApi.API_LOGIN_ROOT + 'http-auth/logout/?next=' + subfolder);
 }
 
 /**

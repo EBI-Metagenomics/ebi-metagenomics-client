@@ -1,6 +1,6 @@
 const Backbone = require('backbone');
 require('../commons');
-const api = require('../components/api');
+const api = require('mgnify').api;
 const util = require('../util');
 
 util.setupPage('#compare-nav');

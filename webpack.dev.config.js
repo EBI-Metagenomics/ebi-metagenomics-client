@@ -24,9 +24,6 @@ module.exports = {
         new HardSourceWebpackPlugin({
             // Either an absolute path or relative to webpack's options.context.
             cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
-            // Either an absolute path or relative to webpack's options.context.
-            // Sets webpack's recordsPath if not already set.
-            recordsPath: 'node_modules/.cache/hard-source/[confighash]/records.json',
             // Either a string of object hash function given a webpack config.
             configHash: function(webpackConfig) {
                 // node-object-hash on npm can be used to build this.
