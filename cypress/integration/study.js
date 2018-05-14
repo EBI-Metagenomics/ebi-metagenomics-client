@@ -87,7 +87,7 @@ describe('Study page - General', function() {
     });
 
     it('External links should all be valid', function() {
-        cy.get('#ebi_ena_links > a').each(($el) => {
+        cy.get('#ebi_ena_links > li > a').each(($el) => {
             urlExists($el.attr('href'));
         });
         cy.get('#europe_pmc_links > li > a').each(($el) => {

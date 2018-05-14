@@ -4,6 +4,7 @@ LIMIT 0, 50000
 
 -- Date: 2018-03-28 13:45
 */
+INSERT INTO `DOWNLOAD_DESCRIPTION_LABEL` (`DESCRIPTION_ID`,`DESCRIPTION`,`DESCRIPTION_LABEL`) VALUES (32,'Taxonomic assignments LSU (TSV)','Taxonomic assignments LSU');
 INSERT INTO `DOWNLOAD_DESCRIPTION_LABEL` (`DESCRIPTION_ID`,`DESCRIPTION`,`DESCRIPTION_LABEL`) VALUES (33,'PCA for runs (based on phylum proportions)','PCA for runs (based on phylum proportions)');
 INSERT INTO `DOWNLOAD_DESCRIPTION_LABEL` (`DESCRIPTION_ID`,`DESCRIPTION`,`DESCRIPTION_LABEL`) VALUES (34,'Taxa abundance distribution','Taxa abundance distribution');
 INSERT INTO `DOWNLOAD_DESCRIPTION_LABEL` (`DESCRIPTION_ID`,`DESCRIPTION`,`DESCRIPTION_LABEL`) VALUES (35,'Predicted Alphaproteobacteria transfer-messenger RNA (RF01849)','Predicted alpha tmRNA');

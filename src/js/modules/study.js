@@ -24,7 +24,7 @@ let StudyView = Backbone.View.extend({
                 that.model.attributes.publications = _.map(response.included, function(d) {
                     return pubObj.parse(d);
                 });
-
+                console.log(that.model);
                 that.$el.html(that.template(that.model.toJSON()));
                 util.attachTabHandlers();
             },
