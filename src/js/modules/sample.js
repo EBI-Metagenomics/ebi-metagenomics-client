@@ -1,6 +1,6 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const api = require('../components/api');
+const api = require('mgnify').api;
 const API_URL = process.env.API_URL;
 const Map = require('../components/map');
 const DetailList = require('../components/detailList');

@@ -24,9 +24,6 @@ module.exports = {
         new HardSourceWebpackPlugin({
             // Either an absolute path or relative to webpack's options.context.
             cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
-            // Either an absolute path or relative to webpack's options.context.
-            // Sets webpack's recordsPath if not already set.
-            recordsPath: 'node_modules/.cache/hard-source/[confighash]/records.json',
             // Either a string of object hash function given a webpack config.
             configHash: function(webpackConfig) {
                 // node-object-hash on npm can be used to build this.
@@ -140,11 +137,11 @@ module.exports = {
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
-            title: 'Analysis page',
+            title: 'Run page',
             inject: true,
-            filename: 'analysis.html',
-            template: 'handlebars-loader!src/analysis.html',
-            chunks: ['analysis', 'commons'],
+            filename: 'run.html',
+            template: 'handlebars-loader!src/run.html',
+            chunks: ['run', 'commons'],
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -206,7 +203,7 @@ module.exports = {
         study: 'src/js/modules/study.js',
         browse: 'src/js/modules/browse.js',
         sample: 'src/js/modules/sample.js',
-        analysis: 'src/js/modules/analysis.js',
+        run: 'src/js/modules/run.js',
         compare: 'src/js/modules/compare.js',
         about: 'src/js/modules/about.js',
         help: 'src/js/modules/help.js',

@@ -33,8 +33,22 @@
                     <h4>Last updated: <%= last_update %></h4>
                     <h3>Description</h3>
                     <p><%= sample_desc %></p>
+                    <h3>External links</h3>
+                    <div class="row columns">
+                        <ul id="ebi_ena_links">
+                            <li><a class="ext" href="<%= ena_url %>">
+                                ENA website (<%= sample_accession %>)
+                            </a></li>
+                            <li><a class="ext" href="<%= biosample_url %>">
+                                NCBI biosample (<%= biosample %>)
+                            </a></li>
+                        </ul>
+                    </div>
                     <h3>Classification</h3>
-                    <span class="biome_icon icon_sm <%= biome_icon %>" title="<%= biome_name %>"></span>
+                    <p>
+                        <span class="biome_icon icon_sm <%= biome_icon %>" title="<%= biome_name %>"></span>
+                        <%= biome_name %>
+                    </p>
                 </div>
                 <div class="column small-6 medium-6 large-6 map">
                     <div id="map">

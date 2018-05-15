@@ -1,7 +1,7 @@
 const d3 = require('d3');
 const _ = require('underscore');
 const template = require('../commons').mapMarkerTmpl;
-const api = require('./api');
+const api = require('mgnify').api;
 const subfolder = require('../util').subfolder;
 
 /**

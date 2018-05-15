@@ -1,6 +1,6 @@
 import {openPage, changeTab} from './util';
 
-const origPage = 'analysis/ERR1022502';
+const origPage = 'run/ERR1022502';
 
 function waitForPageLoad() {
     cy.get('#overview', {timeout: 20000}).children().should('have.length', 2);
@@ -51,16 +51,16 @@ describe('Analysis page - general', function() {
         }
     });
     it('Should display metadata if available', function() {
-        openPage('analysis/ERR867946');
+        openPage('run/ERR867946');
         waitForPageLoad();
         verifyTabIsVisible('#overview');
-        cy.contains('Study:').next().should('contain', 'ERP009703');
+        cy.contains('Study:').next().should('contain', 'MGYS00000462');
         cy.contains('Sample:').next().should('contain', 'ERS667564');
         cy.contains('Experiment type:').next().should('contain', 'amplicon');
         cy.contains('Instrument model:').next().should('contain', 'Illumina MiSeq');
         cy.contains('Instrument platform:').next().should('contain', 'ILLUMINA');
     });
-    it('SSU/LSU buttons should appear/dissapear if pipeline version >=4.0', function() {
+    it('SSU/LSU buttons should appear/dissapear if pipeline version <4.0', function() {
         openPage(origPage);
         waitForPageLoad();
         changeTab('taxonomic');
@@ -121,7 +121,7 @@ describe('Analysis page - download tab', function() {
 
 describe('Analysis page - charts', function() {
     it('QC chart should display correctly', function() {
-        openPage('analysis/ERR867655');
+        openPage('run/ERR867655');
         waitForPageLoad();
         changeTab('qc');
 
@@ -222,7 +222,7 @@ describe('Analysis page - Changing analysis version', function() {
 describe('Analysis page - Error handling', function() {
     it('Should display error message if invalid accession passed in URL', function() {
         const runId = 'ERR1231231231';
-        const origPage = 'analysis/' + runId;
+        const origPage = 'run/' + runId;
         openPage(origPage);
         cy.contains('Error: 404', {timeout: 40000});
         cy.contains('Could not retrieve run: ' + runId, {timeout: 40000});

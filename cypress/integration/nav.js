@@ -49,7 +49,7 @@ const pagesBreadcrumbs = {
     // 'login': [''],
     'pipelines/4.0': ['', 'pipelines'],
     'pipelines': [''],
-    'analysis/SRR997120': [''],
+    'run/SRR997120': [''],
     'samples/ERS1474828': ['', 'browse#samples'],
     'browse': [''],
     'search': [''],

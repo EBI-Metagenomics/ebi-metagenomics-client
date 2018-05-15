@@ -87,7 +87,7 @@ describe('Study page - General', function() {
     });
 
     it('External links should all be valid', function() {
-        cy.get('#ebi_ena_links > a').each(($el) => {
+        cy.get('#ebi_ena_links > li > a').each(($el) => {
             urlExists($el.attr('href'));
         });
         cy.get('#europe_pmc_links > li > a').each(($el) => {
@@ -107,7 +107,7 @@ describe('Study page - Related studies - ', function() {
             ' data set');
         cy.contains('Related studies');
         cy.get(relatedStudiesList).should('have.length', 1);
-        cy.get(relatedStudiesList + ' a').contains('ERP005307').click();
+        cy.get(relatedStudiesList + ' a').contains('MGYS00000369').click();
         waitForPageLoad('Microbial Community of Mobilong Acid Sulfate Soil ' +
             'depth profile using Metagenomics');
     });

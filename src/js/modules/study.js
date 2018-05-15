@@ -1,6 +1,6 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const api = require('../components/api');
+const api = require('mgnify').api;
 const Map = require('../components/map');
 const util = require('../util');
 
@@ -24,7 +24,7 @@ let StudyView = Backbone.View.extend({
                 that.model.attributes.publications = _.map(response.included, function(d) {
                     return pubObj.parse(d);
                 });
-
+                console.log(that.model);
                 that.$el.html(that.template(that.model.toJSON()));
                 util.attachTabHandlers();
             },

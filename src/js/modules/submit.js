@@ -1,10 +1,11 @@
 const util = require('../util');
-const api = require('../components/api');
+const authApi = require('../components/authApi');
+
 const fetchLogin = util.setupPage('#submit-nav', window.location.href);
 
 const $actionDiv = $('#action');
 
-const userData = new api.UserDetails();
+const userData = new authApi.UserDetails();
 const fetch = userData.fetch();
 
 fetchLogin.done(function(loggedIn) {
@@ -17,6 +18,7 @@ fetchLogin.done(function(loggedIn) {
             if (userData.attributes['analysis'] !== true) {
                 const $button = $('<fetchLogin class=\'button\'>Give consent.</fetchLogin>');
                 $actionDiv.html($button);
+                $('#consent').removeClass('hidden');
                 // TODO send email using API
             }
         });
