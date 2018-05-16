@@ -132,7 +132,7 @@ let AnalysesView = Backbone.View.extend({
     },
 
     update(params) {
-        this.params = $.extend({}, this.params, params);
+        this.params = $.extend({'include': 'sample'}, this.params, params);
 
         const that = this;
         this.fetchXhr = this.collection.fetch({
@@ -148,19 +148,18 @@ let AnalysesView = Backbone.View.extend({
 
     renderData(page, pageSize, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function(m) {
-            console.log(m);
             const attr = m.attributes;
-            const biomes = _.map(m.attributes.biomes, function(biome) {
-                return '<span class="biome_icon icon_xs ' + biome.icon + '" title="' + biome.name +
-                    '"></span>';
-            }).join('');
+            const biome ='<span class="biome_icon icon_xs ' + m.attributes.biome.icon + '" title="'
+                + m.attributes.biome.name + '"></span>';
             const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
                 '</a>';
             const runLink = '<a href=\'' + attr.run_url + '\'>' + attr.run_accession +
                 '</a>';
-            const analysisLink = '<a href=\'' + attr.analysis_url + '\'>' + attr.analysis_accession +
+            const analysisLink = '<a href=\'' + attr.analysis_url + '\'>' +
+                attr.analysis_accession +
                 '</a>';
-            return [biomes, sampleLink, 'Sample desc',
+            return [
+                biome, sampleLink, attr['sample_desc'],
                 runLink, attr['pipeline_version'], analysisLink];
         });
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
