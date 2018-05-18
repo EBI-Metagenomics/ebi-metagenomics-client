@@ -104,9 +104,11 @@ module.exports = class GenericTable {
             this.$tbody.empty();
         }
 
-        _.each(dataset, function(row) {
-            that.addRow(row);
-        });
+        if (dataset.length>0){
+            _.each(dataset, function(row) {
+                that.addRow(row);
+            });
+        }
 
         if (this.$pagination.data('twbs-pagination')) {
             this.$pagination.twbsPagination('destroy');

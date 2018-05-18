@@ -304,7 +304,7 @@
         <% _.each(entries, function(entry){ %>
         <% const fields = entry.fields %>
         <tr class="search-row">
-            <td data-column="run-id"><a href="<%= entry.runLink %>"><%= entry.runId %></a></td>
+            <td data-column="run-id"><a href="<%= entry.runLink %>"><%= entry.analysisID %></a></td>
             <td data-column="run-pipeline-vers"><a href="<%= entry.pipelineLink %>"><%= fields.pipeline_version %></a>
             <td data-column="run-sample"><a href="<%= entry.sampleLink %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
             <td data-column="run-project"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
