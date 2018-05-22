@@ -9,7 +9,6 @@ const cookieName = commons.COOKIE_NAME;
 const Pagination = require('../components/pagination').Pagination;
 require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
-require('foundation-sites');
 require('../../../static/js/jquery.TableCSVExport');
 
 const CheckboxTree = require('../components/checkboxTree');

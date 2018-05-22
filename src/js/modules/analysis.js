@@ -9,10 +9,12 @@ const TaxonomyColumnChart = require('../components/charts/taxonomy/taxonomyColum
 const TaxonomyStackedColumnChart = require('../components/charts/taxonomy/taxonomyStackedColumn');
 const ClientSideTable = require('../components/clientSideTable');
 
-const QCChart = require('../components/charts/qcChart');
-const GoTermChart = require('../components/charts/goTermChart');
+const QCChart = require('../components/charts/qc/qcChart');
+const SeqLengthChart = require('../components/charts/qc/seqLengthHist');
+const GCDispChart = require('../components/charts/qc/readsGCDisp');
+const NucleotideChart = require('../components/charts/qc/nucleotideHist');
 const SeqFeatChart = require('../components/charts/sequFeatSumChart');
-
+const GoTermChart = require('../components/charts/goTermChart');
 const DetailList = require('../components/detailList');
 
 require('tablesorter');
@@ -28,10 +30,61 @@ window.Foundation.addToJquery($);
 let analysisID = util.getURLParameter();
 
 let analysis = null;
-let analysisView = null;
+let analysisView;
 let interproData = null;
 let taxonomy = null;
 let goTerm = null;
+
+/**
+ * Fetch data and render read length charts in QC tab
+ * @param {string} analysisID Accession of analysis
+ * @param {object} statsData Stats data associated with analysis
+ */
+function loadReadLengthDisp(analysisID, statsData) {
+    const seqLengthData = new api.QcChartData({id: analysisID, type: 'seq-length'});
+    seqLengthData.fetch({
+        dataType: 'text',
+        success(ignored, response) {
+            SeqLengthChart.drawSequenceLengthHistogram('readsLengthHist', response, false,
+                statsData,
+                seqLengthData.url());
+            SeqLengthChart.drawSequencesLength('readsLengthBarChart', statsData);
+        }
+    });
+}
+
+/**
+ * Fetch data and render GC length charts in QC tab
+ * @param {string} analysisID Accession of analysis
+ * @param {object} statsData Stats data associated with analysis
+ */
+function loadGCDistributionDisp(analysisID, statsData) {
+    const gcDistributionData = new api.QcChartData({id: analysisID, type: 'gc-distribution'});
+    gcDistributionData.fetch({
+        dataType: 'text',
+        success(ignored, response) {
+            GCDispChart.drawSequenceGCDistribution('readsGCHist', response, false, statsData,
+                gcDistributionData.url());
+            GCDispChart.drawGCContent('readsGCBarChart', statsData);
+        }
+    });
+}
+
+/**
+ * Fetch data and render nucleotide position chart in QC tab
+ * @param {string} analysisID Accession of analysis
+ */
+function loadNucleotideDisp(analysisID) {
+    const nucleotideDistData = new api.QcChartData(
+        {id: analysisID, type: 'nucleotide-distribution'});
+    nucleotideDistData.fetch({
+        dataType: 'text',
+        success(ignored, response) {
+            NucleotideChart.drawNucleotidePositionHistogram('nucleotide', response, false,
+                nucleotideDistData.url());
+        }
+    });
+}
 
 let AnalysisView = Backbone.View.extend({
     model: api.Analysis,
@@ -47,7 +100,6 @@ let AnalysisView = Backbone.View.extend({
                 attr['displaySsuButtons'] = (attr.pipeline_version >= 4.0 &&
                     attr.experiment_type !== 'amplicon');
                 that.render(function() {
-                    attachViewControls();
                     $('#analysisSelect').val(attr['pipeline_version']);
                     let description = {
                         'Study': '<a href=\'' + attr['study_url'] + '\'>' +
@@ -75,8 +127,26 @@ let AnalysisView = Backbone.View.extend({
                     if (Object.keys(dataAnalysis).length > 0) {
                         $overview.append(new DetailList('Experiment details', dataAnalysis));
                     }
+                    util.attachExpandButtonCallback();
+
                     loadAnalysisData(analysisID, attr['pipeline_version']);
                     loadDownloads(analysisID, attr['pipeline_version']);
+
+                    new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary',
+                        attr['analysis_summary']);
+
+                    // QC charts
+                    const statsData = new api.QcChartStats({id: analysisID});
+                    statsData.fetch({
+                        dataType: 'text',
+                        success(model, response) {
+                            loadReadLengthDisp(analysisID, model.attributes);
+                            loadGCDistributionDisp(analysisID, model.attributes);
+                            loadNucleotideDisp(analysisID, model.attributes);
+                            new QCChart('QC-step-chart', attr['analysis_summary'],
+                                model.attributes['sequence_count']);
+                        }
+                    });
                 });
             },
             error(ignored, response) {
@@ -87,22 +157,21 @@ let AnalysisView = Backbone.View.extend({
     render(callback) {
         this.$el.html(this.template(this.model.toJSON()));
         util.attachTabHandlers();
-        util.attachExpandButtonCallback();
         callback();
         return this.$el;
     }
 });
 
-let QCGraphView = Backbone.View.extend({
-    initialize(attr) {
-        const data = {};
-        attr['analysis_summary'].forEach(function(e) {
-            data[e.key] = e.value;
-        });
-        new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
-        new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
-    }
-});
+// let QCGraphView = Backbone.View.extend({
+//     initialize(attr) {
+//         const data = {};
+//         attr['analysis_summary'].forEach(function(e) {
+//             data[e.key] = e.value;
+//         });
+//         new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
+//         new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
+//     }
+// });
 
 /**
  * Cluster data by depth
@@ -610,14 +679,6 @@ function loadKronaChart(analysisID, type) {
  * @param {string} pipelineVersion
  */
 function loadAnalysisData(analysisID, pipelineVersion) {
-    analysis = new api.Analysis({id: analysisID});
-    analysis.fetch({
-        success(model) {
-            const attr = model.attributes;
-            new QCGraphView(attr);
-        }
-    });
-
     interproData = new api.InterproIden({id: analysisID});
     new InterProSummary({model: interproData});
 
@@ -681,3 +742,5 @@ function attachViewControls() {
 
 analysis = new api.Analysis({id: analysisID});
 analysisView = new AnalysisView({model: analysis});
+
+

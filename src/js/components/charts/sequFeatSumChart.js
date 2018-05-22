@@ -6,15 +6,21 @@ require('highcharts/modules/exporting')(Highcharts);
 module.exports = class SeqFeatChart {
     constructor(containerId, chartTitle, data) {
         const categories = [
-            'Nucleotide sequences with predicted CDS',
-            'Nucleotide sequences with predicted rRNA',
-            'Nucleotide sequences with InterProScan match',
+            'Reads with predicted CDS',
+            'Reads with predicted rRNA',
+            'Reads with InterProScan match',
             'Predicted CDS',
             'Predicted CDS with InterProScan match'
         ];
-        let series = [];
-        categories.forEach(function(e) {
-            series.push(parseInt(data[e]));
+
+        let series = [
+            data['Nucleotide sequences with predicted CDS'],
+            data['Nucleotide sequences with predicted RNA'],
+            data['Predicted CDS with InterProScan match'],
+            data['Predicted CDS'],
+            data['Predicted CDS with InterProScan match']
+        ].map(function(e) {
+            return parseInt(e);
         });
 
         let options = {

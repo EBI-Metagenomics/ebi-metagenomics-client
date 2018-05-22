@@ -27,8 +27,7 @@
         </nav>
         <h2>Analysis <%= analysis_accession %></h2>
         <section>
-            <h4><a>Other analysis</a>
-
+            <h4><a href="<%= run_url %>">Other analyses</a>
             </h4>
         </section>
 
@@ -60,6 +59,24 @@
                             the minimum, average and maximum length and average GC and AT content, respectively.</p>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="columns small-12 medium-6 large-6">
+                        <div id='readsLengthHist' class="row columns"></div>
+                        <div id='readsLengthBarChart' class="row columns"></div>
+
+                    </div>
+                    <div class="columns small-12 medium-6 large-6">
+                        <div id='readsGCHist' class="row columns"></div>
+                        <div id='readsGCBarChart' class="row columns"></div>
+                    </div>
+                </div>
+                <div class="row columns">
+                    <p>The graph below show the relative abundance of nucletotides (A, C, G, T, or ambiguous base "N")
+                        at each position starting from the beginning of each read up to the first 500 base pairs.</p>
+                </div>
+                <div id='nucleotide' class="row columns">
+
+                </div>
             </div>
             <div class="tabs-panel" id="taxonomic">
                 <% if (displaySsuButtons){ %>
@@ -76,22 +93,26 @@
                 <ul class="tabs" data-tabs id="taxonomy-tabs">
                     <li class="tabs-title active">
                         <a class="chart-icon-cont" href="#krona" aria-selected="true">
-                            <img class="chart-icon" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_krona_on.svg"/>
+                            <img class="chart-icon"
+                                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_krona_on.svg"/>
                         </a>
                     </li>
                     <li class="tabs-title">
                         <a class="chart-icon-cont" href="#pie" aria-selected="false">
-                            <img class="chart-icon" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_pie_on.svg"/>
+                            <img class="chart-icon"
+                                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_pie_on.svg"/>
                         </a>
                     </li>
                     <li class="tabs-title">
                         <a class="chart-icon-cont" href="#column" aria-selected="false">
-                            <img class="chart-icon" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_barh_on.svg"/>
+                            <img class="chart-icon"
+                                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_barh_on.svg"/>
                         </a>
                     </li>
                     <li class="tabs-title">
                         <a class="chart-icon-cont" href="#stacked-column" aria-selected="false">
-                            <img class="chart-icon" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_col_on.svg"/>
+                            <img class="chart-icon"
+                                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_col_on.svg"/>
                         </a>
                     </li>
                 </ul>
@@ -184,12 +205,14 @@
                     <ul class="tabs">
                         <li class="tabs-title" id="go-bar-btn">
                             <a class="chart-icon-cont" href="#go-bar" aria-selected="true">
-                                <img class="chart-icon" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_barh_on.svg"/>
+                                <img class="chart-icon"
+                                     src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_barh_on.svg"/>
                             </a>
                         </li>
                         <li class="tabs-title" id="go-pie-btn">
                             <a class="chart-icon-cont" href="#go-pie" aria-selected="false">
-                                <img class="chart-icon" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_pie_on.svg"/>
+                                <img class="chart-icon"
+                                     src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_pie_on.svg"/>
                             </a>
                         </li>
                     </ul>
@@ -257,19 +280,22 @@
                 <% _.each(group, function(entry){ %>
                 <tr>
                     <td><%= entry.attributes.description.label %></td>
-                    <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].compExtension :
+                    <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].compExtension
+                        :
                         '-' %>
                     </td>
                     <td><%= entry.attributes['file-format'].name %></td>
                     <td><% if (entry.attributes.links.length===1){ %>
                         <div class="download-part">
-                            <a href="<%= entry.attributes.links[0] %>"><span class="icon  icon-functional" data-icon="="></span>
+                            <a href="<%= entry.attributes.links[0] %>"><span class="icon  icon-functional"
+                                                                             data-icon="="></span>
                             </a>
                         </div>
                         <% } else { %>
                         <% _.each(entry.attributes.links, function(link, i){ %>
                         <div class="download-part">
-                            <a  href="<%= link %>">Part <%= (i+1) %><span class="icon  icon-functional" data-icon="="></span>
+                            <a href="<%= link %>">Part <%= (i+1) %><span class="icon  icon-functional"
+                                                                         data-icon="="></span>
                             </a>
                         </div>
                         <% }) %>
