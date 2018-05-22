@@ -1,5 +1,4 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const baseConfig = require('./webpack.base.config');
 
@@ -22,6 +21,19 @@ module.exports = {
                     use: [{loader: 'css-loader', options: {minimize: true, sourceMap: true}}]
                 })
             }].concat(baseConfig.module.rules)
+    },
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    name: 'commons',
+                    chunks: 'initial',
+                    minChunks: 2
+                }
+            }
+        },
+        noEmitOnErrors: true, // NoEmitOnErrorsPlugin
+        concatenateModules: true // ModuleConcatenationPlugin
     },
     devtool: '#inline-source-map',
     node: baseConfig.node
