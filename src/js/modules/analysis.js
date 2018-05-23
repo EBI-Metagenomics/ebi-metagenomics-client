@@ -104,7 +104,7 @@ let AnalysisView = Backbone.View.extend({
                         attr['study_accession'] + '</a>',
                         'Sample': '<a href=\'' + attr['sample_url'] + '\'>' +
                         attr['sample_accession'] + '</a>',
-                        'Run (in ENA)': '<a href=\'' + attr['ena_url'] + '\'>' +
+                        'Run': '<a href=\'' + attr['run_url'] + '\'>' +
                         attr['run_accession'] + '</a>',
                         'Pipeline version': attr['pipeline_version'] + '</a>'
                     };

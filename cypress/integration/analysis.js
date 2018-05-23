@@ -65,7 +65,7 @@ describe('Analysis page - general', function() {
         verifyTabIsVisible('#overview');
         cy.contains('Study:').next().should('contain', 'MGYS00000553');
         cy.contains('Sample:').next().should('contain', 'ERS853149');
-        cy.contains('Run (in ENA):').next().should('contain', 'ERR1022500');
+        cy.contains('Run:').next().should('contain', 'ERR1022500');
         cy.contains('Pipeline version:').next().should('contain', '4.0');
         cy.contains('Experiment type:').next().should('contain', 'metatranscriptomic');
         cy.contains('Instrument model:').next().should('contain', 'Illumina HiSeq 2500');
