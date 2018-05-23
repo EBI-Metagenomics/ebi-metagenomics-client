@@ -880,7 +880,7 @@ const Run = Backbone.Model.extend({
             d.fields['METAGENOMICS_PROJECTS'][0];
         d.sampleLink = util.subfolder + '/samples/' +
             d.fields['METAGENOMICS_SAMPLES'][0];
-        d.runLink = util.subfolder + '/run/' + d.fields['name'][0] +
+        d.runLink = util.subfolder + '/runs/' + d.fields['name'][0] +
             '?version=' + d.fields.pipeline_version[0];
         d.pipelineLink = util.subfolder + '/pipelines/' +
             d.fields.pipeline_version[0];

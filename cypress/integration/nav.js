@@ -7,39 +7,39 @@ import {openPage, getPageURL} from './util';
 /**
  * Check all links in navbar towards other pages of the site are functional
  */
-for (let orig = 0; orig < navNames.length; orig++) {
-    for (let dest = 1; dest < navNames.length; dest++) {
-        const origPage = navNames[orig];
-        const destPage = navNames[dest];
-        describe('Nav test ' + origPage + '->' + destPage, function() {
-            it('Navbar link is valid.', function() {
-                openPage(origPage);
-                cy.get('#' + destPage + '-nav').click();
-
-                if (origPage !== 'overview') {
-                    cy.url().should('include', destPage);
-                }
-                cy.get('h2').should('contain', pageTitles[dest]);
-            });
-        });
-    }
-}
-
-/**
- * Check that search redirects correctly and passes parameter via URL
- */
-const testQuery = 'testQuery';
-for (let orig = 0; orig < navNames.length; orig++) {
-    const origPage = navNames[orig];
-    describe(origPage + ' - Search redirects correctly', function() {
-        it('Navbar search re-directed correctly.', function() {
-            openPage(origPage);
-            cy.get('#headerSearchForm > input').type(testQuery);
-            cy.get('#search').click();
-            cy.url().should('include', 'search?query=' + testQuery);
-        });
-    });
-}
+// for (let orig = 0; orig < navNames.length; orig++) {
+//     for (let dest = 1; dest < navNames.length; dest++) {
+//         const origPage = navNames[orig];
+//         const destPage = navNames[dest];
+//         describe('Nav test ' + origPage + '->' + destPage, function() {
+//             it('Navbar link is valid.', function() {
+//                 openPage(origPage);
+//                 cy.get('#' + destPage + '-nav').click();
+//
+//                 if (origPage !== 'overview') {
+//                     cy.url().should('include', destPage);
+//                 }
+//                 cy.get('h2').should('contain', pageTitles[dest]);
+//             });
+//         });
+//     }
+// }
+//
+// /**
+//  * Check that search redirects correctly and passes parameter via URL
+//  */
+// const testQuery = 'testQuery';
+// for (let orig = 0; orig < navNames.length; orig++) {
+//     const origPage = navNames[orig];
+//     describe(origPage + ' - Search redirects correctly', function() {
+//         it('Navbar search re-directed correctly.', function() {
+//             openPage(origPage);
+//             cy.get('#headerSearchForm > input').type(testQuery);
+//             cy.get('#search').click();
+//             cy.url().should('include', 'search?query=' + testQuery);
+//         });
+//     });
+// }
 
 const pagesBreadcrumbs = {
     'about': [''],
@@ -49,7 +49,7 @@ const pagesBreadcrumbs = {
     // 'login': [''],
     'pipelines/4.0': ['', 'pipelines'],
     'pipelines': [''],
-    'run/SRR997120': [''],
+    'analysis/MGYA00141547': ['', 'samples/ERS853149', 'runs/ERR1022500'],
     'samples/ERS1474828': ['', 'browse#samples'],
     'browse': [''],
     'search': [''],
@@ -62,16 +62,11 @@ for (let page in pagesBreadcrumbs) {
         describe(page + ' page breadcrumbs should be valid.', function() {
             const breadcrumbs = pagesBreadcrumbs[page];
             it('Test breadcrumb link validity', function() {
-                cy.log(page);
                 for (let i in breadcrumbs) {
                     if (Object.prototype.hasOwnProperty.call(breadcrumbs, i)) {
                         openPage(page);
-                        cy.get('h2', {timeout: 50000});
-                        cy.log(breadcrumbs.length, i);
-                        cy.log(breadcrumbs);
                         const expectedPage = breadcrumbs[i];
                         cy.get('.breadcrumbs>li>a').each(($el, index) => {
-                            cy.log(i, expectedPage);
                             if (parseInt(i) === parseInt(index)) {
                                 cy.wrap($el).click();
                                 cy.url().should('equal', getPageURL(expectedPage));

@@ -50,6 +50,7 @@
                             implemented in our pipeline. Sequence merging may have occurred with paired-end data, so the
                             initial number of reads may differ from the number given by ENA.</p>
                         <div id="QC-step-chart" class="run-qc-chart"></div>
+                        <% if (pipeline_version>2){ %>
                         <p>The histograms below show the distribution of sequence lengths, in basepairs, (left) and GC
                             percentage (right) for the sequences having passed our quality control steps. Note that for
                             large files, the distributions were compiled from a random subset of 2 millions sequence
@@ -57,8 +58,11 @@
                             The standard deviations are shown on each plot. The bar chart underneath each graph
                             indicates
                             the minimum, average and maximum length and average GC and AT content, respectively.</p>
+                        <% } %>
                     </div>
                 </div>
+                <% if (pipeline_version>2){ %>
+
                 <div class="row">
                     <div class="columns small-12 medium-6 large-6">
                         <div id='readsLengthHist' class="row columns"></div>
@@ -75,8 +79,8 @@
                         at each position starting from the beginning of each read up to the first 500 base pairs.</p>
                 </div>
                 <div id='nucleotide' class="row columns">
-
                 </div>
+                <% } %>
             </div>
             <div class="tabs-panel" id="taxonomic">
                 <% if (displaySsuButtons){ %>

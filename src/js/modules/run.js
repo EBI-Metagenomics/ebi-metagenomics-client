@@ -40,16 +40,8 @@ let RunView = Backbone.View.extend({
                     version = attr.pipeline_versions[0];
                 }
                 that.model.attributes.version = version;
-                that.render(function() {
-                    $('#analysisSelect').val(version);
-                    let description = {
-                        'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_id + '</a>',
-                        'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_id + '</a>',
-                        'Run (in ENA)': '<a href=\'' + attr.ena_url + '\'>' + attr.run_id + '</a>'
-                    };
-                    $('#overview').append(new DetailList('Description', description));
-                    deferred.resolve();
-                });
+                that.render(attr);
+                deferred.resolve();
             },
             error(ignored, response) {
                 util.displayError(response.status, 'Could not retrieve run: ' + runId);
@@ -58,9 +50,14 @@ let RunView = Backbone.View.extend({
         });
         return deferred.promise();
     },
-    render(callback) {
+    render(attr) {
         this.$el.html(this.template(this.model.toJSON()));
-        callback();
+        let description = {
+            'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_id + '</a>',
+            'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_id + '</a>',
+            'Run (in ENA)': '<a href=\'' + attr.ena_url + '\'>' + attr.run_id + '</a>'
+        };
+        $('#overview').append(new DetailList('Description', description));
         util.attachExpandButtonCallback();
         return this.$el;
     }
@@ -101,7 +98,6 @@ let RunAnalysesView = Backbone.View.extend({
         this.fetchXhr = this.collection.fetch({
             data: $.param(this.params),
             success(data, response) {
-                console.log('Analyses', data.length, $('#analyses'));
                 if (data.length > 0) {
                     const pagination = response.meta.pagination;
                     that.renderData(pagination.page, that.params.page_size, pagination.count,
@@ -166,7 +162,6 @@ let RunAssemblyView = Backbone.View.extend({
         this.fetchXhr = this.collection.fetch({
             data: $.param(this.params),
             success(data, response) {
-                console.log('Assemblies', data.length, $('#assemblies'));
                 if (data.length > 0) {
                     const pagination = response.meta.pagination;
                     that.renderData(pagination.page, that.params.page_size, pagination.count,

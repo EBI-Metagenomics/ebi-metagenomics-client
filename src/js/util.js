@@ -512,7 +512,7 @@ export const AnalysesView = GenericTableView.extend({
             {sortBy: null, name: 'Analysis accession'}
         ];
         this.tableObj = new GenericTable($('#analysis-section'), 'Analyses', columns,
-            Commons.DEFAULT_PAGE_SIZE, false, true, 'analyses-table',
+            Commons.DEFAULT_PAGE_SIZE, false, false, 'analyses-table',
             function(page, pageSize, order, search) {
                 that.update({
                     page: page,
@@ -544,6 +544,9 @@ export const AnalysesView = GenericTableView.extend({
                 that.renderData(pagination.page, that.params.page_size, pagination.count,
                     response.links.first);
                 that.tableObj.hideLoadingGif();
+            },
+            error(ignored){
+                console.log('error');
             }
         });
     },
@@ -664,7 +667,6 @@ export function setNavLoginButton(isLoggedIn) {
         const $logout = $('<li><a data-cy=\'logout\' class=\'button\'>Logout</a></li>');
         $logout.click(function() {
             logout().done(function() {
-                console.log(subfolder);
                 window.location = subfolder;
             });
         });

@@ -140,13 +140,16 @@ let AnalysisView = Backbone.View.extend({
                     statsData.fetch({
                         dataType: 'text',
                         success(model, response) {
-                            loadReadLengthDisp(analysisID, model.attributes);
-                            loadGCDistributionDisp(analysisID, model.attributes);
-                            loadNucleotideDisp(analysisID, model.attributes);
+                            if (attr['pipeline_version'] > 2) {
+                                loadReadLengthDisp(analysisID, model.attributes);
+                                loadGCDistributionDisp(analysisID, model.attributes);
+                                loadNucleotideDisp(analysisID, model.attributes);
+                            }
                             new QCChart('QC-step-chart', attr['analysis_summary'],
                                 model.attributes['sequence_count']);
                         }
                     });
+
                 });
             },
             error(ignored, response) {
