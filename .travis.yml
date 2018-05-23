@@ -87,6 +87,7 @@ after_script:
   - codecov
 
 cache:
+  pip
   directories:s
     - ~/.npm
     - node_modules

@@ -31,4 +31,4 @@ touch $TRAVIS_BUILD_DIR/results/2015/03/ERP009703/version_4.0/project-summary/SS
 touch $TRAVIS_BUILD_DIR/results/2015/03/ERP009703/version_4.0/project-summary/taxonomy_abundances_LSU_v4.0.tsv
 touch $TRAVIS_BUILD_DIR/results/2015/03/ERP009703/version_4.0/project-summary/taxonomy_abundances_SSU_v4.0.tsv
 
-mv $TRAVIS_BUILD_DIR/travis/emg_api_datafiles/results $TRAVIS_BUILD_DIR/results
+cp $TRAVIS_BUILD_DIR/travis/emg_api_datafiles/results   $TRAVIS_BUILD_DIR/
