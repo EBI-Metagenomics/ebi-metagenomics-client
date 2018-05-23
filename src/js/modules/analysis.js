@@ -29,8 +29,6 @@ window.Foundation.addToJquery($);
 
 let analysisID = util.getURLParameter();
 
-let analysis = null;
-let analysisView;
 let interproData = null;
 let taxonomy = null;
 let goTerm = null;
@@ -139,7 +137,7 @@ let AnalysisView = Backbone.View.extend({
                     const statsData = new api.QcChartStats({id: analysisID});
                     statsData.fetch({
                         dataType: 'text',
-                        success(model, response) {
+                        success(model) {
                             if (attr['pipeline_version'] > 2) {
                                 loadReadLengthDisp(analysisID, model.attributes);
                                 loadGCDistributionDisp(analysisID, model.attributes);
@@ -149,7 +147,6 @@ let AnalysisView = Backbone.View.extend({
                                 model.attributes['sequence_count']);
                         }
                     });
-
                 });
             },
             error(ignored, response) {
@@ -159,22 +156,12 @@ let AnalysisView = Backbone.View.extend({
     },
     render(callback) {
         this.$el.html(this.template(this.model.toJSON()));
+        $('.rna-select-button').click(onTaxonomySelect);
         util.attachTabHandlers();
         callback();
         return this.$el;
     }
 });
-
-// let QCGraphView = Backbone.View.extend({
-//     initialize(attr) {
-//         const data = {};
-//         attr['analysis_summary'].forEach(function(e) {
-//             data[e.key] = e.value;
-//         });
-//         new QCChart('QC-step-chart', 'Number of sequence reads per QC step', data);
-//         new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary', data);
-//     }
-// });
 
 /**
  * Cluster data by depth
@@ -677,6 +664,25 @@ function loadKronaChart(analysisID, type) {
 }
 
 /**
+ * Load taxonomy data and create graphs
+ * @param {string} analysisID ENA analysis primary accession
+ * @param {string} type of analysis (see API documentation for endpoint)
+ */
+function loadTaxonomy(analysisID, type) {
+    taxonomy = new api.Taxonomy({id: analysisID, type: type});
+    new TaxonomyGraphView({model: taxonomy});
+    loadKronaChart(analysisID, type);
+}
+
+/**
+ * Callback for taxonomy size selection in taxonomic analysis tab
+ */
+function onTaxonomySelect() {
+    const type = $(this).val();
+    loadTaxonomy(analysisID, type);
+}
+
+/**
  * Load and displaycharts for selected view
  * @param {string} analysisID ENA analysis primary accession
  * @param {string} pipelineVersion
@@ -693,17 +699,6 @@ function loadAnalysisData(analysisID, pipelineVersion) {
 }
 
 /**
- * Load taxonomy data and create graphs
- * @param {string} analysisID ENA analysis primary accession
- * @param {string} type of analysis (see API documentation for endpoint)
- */
-function loadTaxonomy(analysisID, type) {
-    taxonomy = new api.Taxonomy({id: analysisID, type: type});
-    new TaxonomyGraphView({model: taxonomy});
-    loadKronaChart(analysisID, type);
-}
-
-/**
  *
  * @param {string} analysisID ENA analysis primary accession
  */
@@ -712,38 +707,8 @@ function loadDownloads(analysisID) {
     new DownloadView({model: downloads});
 }
 
-/**
- * Callback for change of analysis version
- */
-function onAnalysisSelect() {
-    const pipelineVersion = $(this).val();
-    loadAnalysisData(analysisID, pipelineVersion);
-    loadDownloads(analysisID, pipelineVersion);
-    const $btnContainer = $('#ssu-lsu-btns');
-    if (parseFloat(pipelineVersion) >= 4.0) {
-        $btnContainer.removeClass('hidden');
-    } else {
-        $btnContainer.addClass('hidden');
-    }
-}
 
-/**
- * Callback for taxonomy size selection in taxonomic analysis tab
- */
-function onTaxonomySelect() {
-    const type = $(this).val();
-    loadTaxonomy(analysisID, type);
-}
-
-/**
- * Attach event handlers for analysis version selection or rna size selection
- */
-function attachViewControls() {
-    $('#analysisSelect').change(onAnalysisSelect);
-    $('.rna-select-button').click(onTaxonomySelect);
-}
-
-analysis = new api.Analysis({id: analysisID});
-analysisView = new AnalysisView({model: analysis});
+let analysis = new api.Analysis({id: analysisID});
+new AnalysisView({model: analysis});
 
 

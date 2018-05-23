@@ -3,7 +3,9 @@ import {getExportingStructure, zoomMsg} from './qcChartUtil';
 const Highcharts = require('highcharts');
 
 export let drawGCContent = function(elem, data) {
-    if (typeof data == 'undefined' || data == null) return;
+    if (typeof data === 'undefined' || data === null) {
+        return;
+    }
     new Highcharts.Chart({
         chart: {
             renderTo: elem,
@@ -42,7 +44,9 @@ export let drawGCContent = function(elem, data) {
                 pointPadding: 0.25,
                 color: 'rgb(63, 114, 191)',
                 // tooltip: {
-                //    pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>'+data["average_gc_content"]+'</b><br/><span style="color:{point.color}">\u25CF</span> GC ratio: <b>'+data["average_gc_ratio"]+'</b><br/>',
+                //    pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}:
+                // <b>'+data["average_gc_content"]+'</b><br/><span style="color:{point.color}">
+                // \u25CF</span> GC ratio: <b>'+data["average_gc_ratio"]+'</b><br/>',
                 // },
                 tooltip: {
                     pointFormatter: function() {
@@ -56,16 +60,17 @@ export let drawGCContent = function(elem, data) {
                 color: 'rgb(114, 63, 191)',
                 pointPadding: 0.25,
                 threshold: data['average_gc_content'],
-                // tooltip: {
-                //    pointFormat: '<span style="color:{point.color}">\u25CF</span> {this.series.name}: <b>'+(100-data["average_gc_content"])+'</b><br/>',
-                // },
                 tooltip: {
-                    pointFormatter: function() {
-                        return '<span style="color:' + this.color + '">\u25CF</span> ' +
-                            this.series.name + ': <b>' +
-                            (100 - data['average_gc_content']).toFixed(2) + '%</b><br/>';
-                    }
+                    pointFormat: '<span style="color:{point.color}">\u25CF</span> ' +
+                    '{this.series.name}: <b>' + (100 - data['average_gc_content']) + '</b><br/>'
                 },
+                // tooltip: {
+                //     pointFormatter: function() {
+                //         return '<span style="color:' + this.color + '">\u25CF</span> ' +
+                //             this.series.name + ': <b>' +
+                //             (100 - data['average_gc_content']).toFixed(2) + '%</b><br/>';
+                //     }
+                // },
                 data: [100]
             }
         ],
@@ -84,20 +89,26 @@ export let drawGCContent = function(elem, data) {
 };
 
 export let drawSequenceGCDistribution = function(elem, rawdata, isFromSubset, stats, urlToFile) {
-    if (typeof rawdata == 'undefined' || rawdata == null) return;
-    var data = rawdata.split('\n').map(function(line) {
-        if (line.trim() != '')
-            return line.split('\t').map(function(v) { return 1 * v; });
+    if (typeof rawdata === 'undefined' || rawdata === null) {
+        return;
+    }
+    let data = rawdata.split('\n').map(function(line) {
+        if (line.trim() !== '') {
+            return line.split('\t').map(function(v) {
+                return 1 * v;
+            });
+        }
     }).reduce(
         function(acc, v) {
             if (v) {
-                var key = Math.min(100, Math.max(0, Math.round(v[0])));
+                let key = Math.min(100, Math.max(0, Math.round(v[0])));
                 acc[key][1] += v[1];
             }
             return acc;
         },
-        Array(101).fill(null).map(function(d, i) {return [i, 0];})
-    );
+        new Array(101).fill(null).map(function(d, i) {
+            return [i, 0];
+        }));
     // Create the chart
     new Highcharts.Chart({
         // $('#seq_gc').highcharts({
@@ -127,7 +138,7 @@ export let drawSequenceGCDistribution = function(elem, rawdata, isFromSubset, st
             min: 0,
             max: 100,
 
-            plotBands: (stats == null) ? [] : [
+            plotBands: (stats === null) ? [] : [
                 { // visualize the standard deviation
                     from: stats['average_gc_content'] - stats['standard_deviation_gc_content'],
                     to: stats['average_gc_content'] + stats['standard_deviation_gc_content'],

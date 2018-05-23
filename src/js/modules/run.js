@@ -15,13 +15,6 @@ window.Foundation.addToJquery($);
 let runId = util.getURLParameter();
 let pipelineVersion = util.getURLFilterParams()['version'];
 
-let run = null;
-let runView = null;
-let runAnalyses = null;
-let runAssemblies = null;
-let runAnalysesView = null;
-let runAssemblyView = null;
-
 let RunView = Backbone.View.extend({
     model: api.Run,
     template: _.template($('#runTmpl').html()),
@@ -191,12 +184,12 @@ let RunAssemblyView = Backbone.View.extend({
     }
 });
 
-run = new api.Run({id: runId});
-runView = new RunView({model: run});
+let run = new api.Run({id: runId});
+let runView = new RunView({model: run});
 
-runAnalyses = new api.RunAnalyses({id: runId});
-runAssemblies = new api.RunAssemblies({id: runId});
+let runAnalyses = new api.RunAnalyses({id: runId});
+let runAssemblies = new api.RunAssemblies({id: runId});
 runView.init().then(() => {
-    runAnalysesView = new RunAnalysesView({collection: runAnalyses});
-    runAssemblyView = new RunAssemblyView({collection: runAssemblies});
+    new RunAnalysesView({collection: runAnalyses});
+    new RunAssemblyView({collection: runAssemblies});
 });

@@ -1,7 +1,18 @@
 const Highcharts = require('highcharts');
 require('highcharts/modules/exporting')(Highcharts);
 
+/**
+ * Container for QCChart
+ * @type {module.QCChart}
+ */
 module.exports = class QCChart {
+    /**
+     * Initialize QCChart in container
+     * @param {string} containerId
+     * @param {object} data
+     * @param {integer} numSequences
+     * @return {Highcharts.Chart}
+     */
     constructor(containerId, data, numSequences) {
         let remaining = [0, 0, 0, 0, 0];
         let filtered = [0, 0, 0, 0, 0];

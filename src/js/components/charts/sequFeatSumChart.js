@@ -3,7 +3,18 @@
 const Highcharts = require('highcharts');
 require('highcharts/modules/exporting')(Highcharts);
 
+/**
+ * Container for SeqFeatChart
+ * @type {module.SeqFeatChart}
+ */
 module.exports = class SeqFeatChart {
+    /**
+     * Initialise seqfeatchart in container
+     * @param {string} containerId
+     * @param {string} chartTitle
+     * @param {object} data
+     * @return {Highcharts.Chart}
+     */
     constructor(containerId, chartTitle, data) {
         const categories = [
             'Reads with predicted CDS',

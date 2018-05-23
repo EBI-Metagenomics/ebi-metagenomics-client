@@ -545,7 +545,7 @@ export const AnalysesView = GenericTableView.extend({
                     response.links.first);
                 that.tableObj.hideLoadingGif();
             },
-            error(ignored){
+            error(ignored) {
                 console.log('error');
             }
         });
@@ -722,7 +722,7 @@ export function attachExpandButtonCallback() {
             $(this).addClass('min');
             $($(this).attr('for')).slideDown();
         }
-        $($(this).attr('for'))
+        $($(this).attr('for'));
     });
 }
 

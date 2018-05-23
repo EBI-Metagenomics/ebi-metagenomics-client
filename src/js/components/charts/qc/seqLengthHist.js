@@ -3,9 +3,9 @@ import {getExportingStructure, zoomMsg} from './qcChartUtil';
 const Highcharts = require('highcharts');
 
 export let drawSequenceLengthHistogram = function(elem, rawdata, isFromSubset, stats, urlToFile) {
-    if (typeof rawdata == 'undefined' || rawdata == null) return;
+    if (typeof rawdata === 'undefined' || rawdata === null) return;
     let data = rawdata.split('\n').filter(function(line) {
-        return line.trim() != '';
+        return line.trim() !== '';
     }).map(function(line) {
         return line.split('\t').map(function(v) {
             return 1 * v;
@@ -44,7 +44,7 @@ export let drawSequenceLengthHistogram = function(elem, rawdata, isFromSubset, s
         xAxis: {
             min: 0,
             max: 100 * (Math.floor(lengthMax / 100) + 1),
-            plotBands: (stats == null) ? [] : [
+            plotBands: (stats === null) ? [] : [
                 { // visualize the standard deviation
                     from: stats['average_length'] - stats['standard_deviation_length'],
                     to: stats['average_length'] + stats['standard_deviation_length'],
@@ -82,7 +82,7 @@ export let drawSequenceLengthHistogram = function(elem, rawdata, isFromSubset, s
 };
 
 export let drawSequencesLength = function(elem, data) {
-    if (typeof data == 'undefined' || data == null) return;
+    if (typeof data === 'undefined' || data === null) return;
     new Highcharts.Chart({
         chart: {
             renderTo: elem,

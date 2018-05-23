@@ -104,7 +104,7 @@ module.exports = class GenericTable {
             this.$tbody.empty();
         }
 
-        if (dataset.length>0){
+        if (dataset.length > 0) {
             _.each(dataset, function(row) {
                 that.addRow(row);
             });
