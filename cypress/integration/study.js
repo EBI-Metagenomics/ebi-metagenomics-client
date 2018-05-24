@@ -16,17 +16,17 @@ const analysisTableColumns = {
         sortable: false
     },
     accession: {
-        data: ['ERS1474796', 'ERS1474768'],
+        data: ['ERS1474796', 'ERS1474806'],
         type: datatype.STR,
         sortable: false
     },
     sample_name: {
-        data: ['control_skin_left', 'control_skin_right'],
+        data: ['control_skin_left', 'diabetic_skin_contra'],
         type: datatype.STR,
         sortable: false
     },
     run_accession: {
-        data: ['ERR1760043', 'ERR1760013'],
+        data: ['ERR1760043', 'ERR1760053'],
         type: datatype.STR,
         sortable: false
     },
@@ -36,7 +36,7 @@ const analysisTableColumns = {
         sortable: false
     },
     analysis_accession: {
-        data: ['MGYA00140353', 'MGYA00140378'],
+        data: ['MGYA00140353', 'MGYA00140377'],
         type: datatype.STR,
         sortable: false
     }
@@ -54,7 +54,7 @@ describe('Study page - General', function() {
             .should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
         cy.get('#ebi_ena_links').should('contain', 'ENA website (ERP019566)');
         cy.get('#europe_pmc_links > li')
-          .should('contain', 'A longitudinal study of the diabetic skin and wound microbiome.');
+            .should('contain', 'A longitudinal study of the diabetic skin and wound microbiome.');
         cy.get('#europe_pmc_links > li')
             .should('contain', 'Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.');
         cy.get('#europe_pmc_links > li').should('contain', '2017 5');
@@ -79,7 +79,7 @@ describe('Study page - Related studies - ', function() {
         login();
         openPage('studies/MGYS00002011');
         waitForPageLoad('EMG produced TPA metagenomics assembly of the Microbial Community of ' +
-          'Mobilong Acid Sulfate Soil depth profile using Metagenomics (Mobilong Soil Profile)' +
+            'Mobilong Acid Sulfate Soil depth profile using Metagenomics (Mobilong Soil Profile)' +
             ' data set');
         cy.contains('Related studies');
         cy.get(relatedStudiesList).should('have.length', 1);
@@ -145,25 +145,25 @@ describe('Study page - Analysis table - ', function() {
                 index: 3,
                 data: [
                     '',
-                    'ERS1474736', 'wound_deb', 'ERR1759984', '4.0', 'MGYA00140404']
+                    'ERS1474615', 'wound_swab', 'ERR1759931', '4.0', 'MGYA00140403']
             }, {
                 index: 'next', // 4th page
                 data: [
-                    '', 'ERS1474521', 'control_skin_right', 'ERR1759901', '4.0', 'MGYA00140429'],
+                    '', 'ERS1474560', 'control_skin_left', 'ERR1759912', '4.0', 'MGYA00140428'],
                 pageNum: 4
             }, {
                 index: 'prev',
                 data: [
                     '',
-                    'ERS1474736', 'wound_deb', 'ERR1759984', '4.0', 'MGYA00140404'],
+                    'ERS1474615', 'wound_swab', 'ERR1759931', '4.0', 'MGYA00140403'],
                 pageNum: 3
             }, {
                 index: 'last',
                 data: [
                     '',
-                    'ERS1474839', 'diabetic_skin_contra', 'ERR1760084', '4.0', 'MGYA00140605'],
+                    'ERS1474833', 'diabetic_skin_adj', 'ERR1760080', '4.0', 'MGYA00140603'],
                 pageNum: 11,
-                pageSize: 6
+                pageSize: 8
             }, {
                 index: 'first',
                 data: [
