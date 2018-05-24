@@ -495,6 +495,83 @@ export let RunsView = GenericTableView.extend({
     }
 });
 
+
+export const AnalysesView = GenericTableView.extend({
+    tableObj: null,
+    pagination: null,
+    params: {},
+
+    initialize() {
+        const that = this;
+        const columns = [
+            {sortBy: null, name: 'Biome'},
+            {sortBy: null, name: 'Sample accession'},
+            {sortBy: null, name: 'Sample description'},
+            {sortBy: null, name: 'Run accession'},
+            {sortBy: null, name: 'Pipeline version'},
+            {sortBy: null, name: 'Analysis accession'}
+        ];
+        this.tableObj = new GenericTable($('#analysis-section'), 'Analyses', columns,
+            Commons.DEFAULT_PAGE_SIZE, false, false, 'analyses-table',
+            function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order,
+                    search: search
+                });
+            });
+        let params = {};
+
+        // if (search) {
+        //     params.search = search;
+        //     $('#search').val(search);
+        // }
+        params.page_size = Commons.DEFAULT_PAGE_SIZE;
+        params.page = 1;
+
+        this.update(params);
+    },
+
+    update(params) {
+        this.params = $.extend({'include': 'sample'}, this.params, params);
+
+        const that = this;
+        this.fetchXhr = this.collection.fetch({
+            data: $.param(this.params),
+            success(ignored, response) {
+                const pagination = response.meta.pagination;
+                that.renderData(pagination.page, that.params.page_size, pagination.count,
+                    response.links.first);
+                that.tableObj.hideLoadingGif();
+            },
+            error() {
+                console.log('error');
+            }
+        });
+    },
+
+    renderData(page, pageSize, resultCount, requestURL) {
+        const tableData = _.map(this.collection.models, function(m) {
+            const attr = m.attributes;
+            const biome ='<span class="biome_icon icon_xs ' + m.attributes.biome.icon + '" title="'
+                + m.attributes.biome.name + '"></span>';
+            const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
+                '</a>';
+            const runLink = '<a href=\'' + attr.run_url + '\'>' + attr.run_accession +
+                '</a>';
+            const analysisLink = '<a href=\'' + attr.analysis_url + '\'>' +
+                attr.analysis_accession +
+                '</a>';
+            return [
+                biome, sampleLink, attr['sample_desc'],
+                runLink, attr['pipeline_version'], analysisLink];
+        });
+        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
+    }
+});
+
+
 /**
  * Check is user is logged in
  * @return {jQuery.jqXHR} true if user is logged in
@@ -590,7 +667,6 @@ export function setNavLoginButton(isLoggedIn) {
         const $logout = $('<li><a data-cy=\'logout\' class=\'button\'>Logout</a></li>');
         $logout.click(function() {
             logout().done(function() {
-                console.log(subfolder);
                 window.location = subfolder;
             });
         });
@@ -638,6 +714,7 @@ export function setupPage(tab, loginRedirect) {
  */
 export function attachExpandButtonCallback() {
     $('.expand-button').on('click', function() {
+        console.log('click');
         if ($(this).hasClass('min')) {
             $(this).removeClass('min');
             $($(this).attr('for')).slideUp();
@@ -645,6 +722,7 @@ export function attachExpandButtonCallback() {
             $(this).addClass('min');
             $($(this).attr('for')).slideDown();
         }
+        $($(this).attr('for'));
     });
 }
 

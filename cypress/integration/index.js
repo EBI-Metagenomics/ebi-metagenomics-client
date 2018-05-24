@@ -49,7 +49,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
             cy.url().should('eq', getBaseURL() + 'biomes');
         });
 
-        it('Browse human biomes', function() {
+        it('Browse human skin biomes', function() {
             cy.get('#top10biomes').get('.skin_b.Skin').click();
             new GenericTableHandler('#studies-section', 9);
             cy.url().should('include',

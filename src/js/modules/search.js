@@ -9,7 +9,6 @@ const cookieName = commons.COOKIE_NAME;
 const Pagination = require('../components/pagination').Pagination;
 require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
-require('foundation-sites');
 require('../../../static/js/jquery.TableCSVExport');
 
 const CheckboxTree = require('../components/checkboxTree');
@@ -881,7 +880,7 @@ const Run = Backbone.Model.extend({
             d.fields['METAGENOMICS_PROJECTS'][0];
         d.sampleLink = util.subfolder + '/samples/' +
             d.fields['METAGENOMICS_SAMPLES'][0];
-        d.runLink = util.subfolder + '/run/' + d.fields['name'][0] +
+        d.runLink = util.subfolder + '/runs/' + d.fields['name'][0] +
             '?version=' + d.fields.pipeline_version[0];
         d.pipelineLink = util.subfolder + '/pipelines/' +
             d.fields.pipeline_version[0];

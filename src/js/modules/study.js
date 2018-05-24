@@ -24,7 +24,6 @@ let StudyView = Backbone.View.extend({
                 that.model.attributes.publications = _.map(response.included, function(d) {
                     return pubObj.parse(d);
                 });
-                console.log(that.model);
                 that.$el.html(that.template(that.model.toJSON()));
                 util.attachTabHandlers();
             },
@@ -81,18 +80,12 @@ function initPage() {
     let study = new api.Study({id: studyId});
     let studyView = new StudyView({model: study});
 
-    let samples = new api.SamplesCollection({study_accession: studyId});
-    let samplesView = new util.SamplesView({collection: samples});
-
-    let runs = new api.RunsCollection({study_accession: studyId});
-    let runsView = new util.RunsView({collection: runs});
-
+    let analyses = new api.StudyAnalyses({id: studyId});
     let downloads = new api.StudyDownloads({id: studyId});
-
     let coordinates = new api.StudyGeoCoordinates({study_accession: studyId});
+
     studyView.fetchAndRender().done(() => {
-        samplesView.initialize();
-        runsView.initialize();
+        new util.AnalysesView({collection: analyses});
         new MapData({model: coordinates});
         new DownloadsView({model: downloads});
         util.attachExpandButtonCallback();

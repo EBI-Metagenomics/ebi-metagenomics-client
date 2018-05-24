@@ -1,6 +1,6 @@
 const d3 = require('d3');
 const _ = require('underscore');
-const template = require('../commons').mapMarkerTmpl;
+const template = require('../../partials/map_marker.handlebars');
 const api = require('mgnify').api;
 const subfolder = require('../util').subfolder;
 

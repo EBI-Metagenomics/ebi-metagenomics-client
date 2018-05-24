@@ -2,7 +2,19 @@ const Highcharts = require('highcharts');
 require('highcharts/modules/exporting')(Highcharts);
 const Commons = require('../../commons');
 
+/**
+ * Container for GoTermChart
+ * @type {module.GoTermChart}
+ */
 module.exports = class GoTermChart {
+    /**
+     * Initialise GoTermChart in container
+     * @param {string} containerId
+     * @param {string} chartTitle
+     * @param {object} data
+     * @param {string} color
+     * @return {Highcharts.Chart}
+     */
     constructor(containerId, chartTitle, data, color) {
         let series = [];
         let categories = [];
@@ -42,7 +54,8 @@ module.exports = class GoTermChart {
                         enabled: true,
                         format: '<b>{point.name}</b>: {point.percentage:.1f} %',
                         style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor)
+                            || 'black'
                         }
                     },
                     colors: Commons.TAXONOMY_COLOURS

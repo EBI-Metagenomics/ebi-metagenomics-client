@@ -47,12 +47,13 @@ module.exports = {
             } else {
                 elem.removeClass('sort-asc');
                 elem.addClass('sort-desc');
-                sort = '-'+elem.attr('data-sortby');
+                sort = '-' + elem.attr('data-sortby');
                 onChangeCallback(sort);
             }
             that.currentOrder = sort;
         });
         const sortby = initialSort.replace('-', '');
-        $('[data-sortby=\''+sortby+'\']').removeClass('sort-both').addClass(initialSort.charAt(0)==='-' ? 'sort-desc' : 'sort-asc');
+        $('[data-sortby=\'' + sortby + '\']').removeClass('sort-both').addClass(
+            initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
     }
 };
