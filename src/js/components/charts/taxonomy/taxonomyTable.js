@@ -73,7 +73,8 @@
 //             startPage: page,
 //             totalPages: Math.max(Math.ceil(resultCount/this.getPageSize()), 1),
 //         }).on('page', function (evt, page) {
-//             that.callback(page, that.getPageSize(), that.getCurrentOrder(), that.getFilterText());
+//             that.callback(page, that.getPageSize(), that.getCurrentOrder(),
+//              that.getFilterText());
 //         });
 //         this.setPageDisplay(1, resultCount);
 //         this.hideLoadingGif();
@@ -129,7 +130,8 @@
 //             onChangeCallback(1, that.getPageSize(), sort, that.getFilterText());
 //         });
 //         if (initialSort){
-//             $table.find("[data-sortby='"+initialSort+"']").removeClass('sort-both').addClass(initialSort.charAt(0)==='-' ? 'sort-desc' : 'sort-asc');
+//             $table.find("[data-sortby='"+initialSort+"']").removeClass('sort-both').addClass(
+//              initialSort.charAt(0)==='-' ? 'sort-desc' : 'sort-asc');
 //         }
 //     }
 //

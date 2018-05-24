@@ -2,65 +2,41 @@ import {openPage, datatype, urlExists, waitForPageLoad, login} from './util';
 import Config from './config';
 import GenericTableHandler from './genericTable';
 
-const projectId = 'ERP019566';
+const projectId = 'MGYS00002072';
 const origPage = 'studies/' + projectId;
 
 const pageTitle = 'Longitudinal study of the diabetic skin and wound microbiome';
 
-const samplesTableDefaultSize = 10;
-const runsTableDefaultSize = 25;
+const analysesTableDefaultSize = 25;
 
-const sampleTableColumns = {
+const analysisTableColumns = {
     biome: {
         data: ['', ''],
         type: datatype.STR,
         sortable: false
     },
     accession: {
-        data: ['ERS1474797', 'ERS1474709'],
+        data: ['ERS1474796', 'ERS1474806'],
         type: datatype.STR,
-        sortable: true
+        sortable: false
     },
     sample_name: {
-        data: ['Control patient 9 right foot time 1', 'Patient 7 skin adjacent to wound time 2'],
-        type: datatype.STR,
-        sortable: true
-    },
-    description: {
-        data: ['control_skin_right', 'diabetic_skin_adj'],
+        data: ['control_skin_left', 'diabetic_skin_contra'],
         type: datatype.STR,
         sortable: false
     },
-    last_update: {
-        data: ['27-Nov-2017', '27-Nov-2017'],
-        type: datatype.DATE,
-        sortable: true
-    }
-};
-
-const runTableColumns = {
-    accession: {
-        data: ['ERR1760141', 'ERR1760117'],
-        type: datatype.STR,
-        sortable: true
-    },
-    experiment_type: {
-        data: ['amplicon', 'amplicon'],
-        type: datatype.STR,
-        sortable: false
-    },
-    instrument_model: {
-        data: ['Illumina MiSeq', 'Illumina MiSeq'],
-        type: datatype.STR,
-        sortable: false
-    },
-    instrument_platform: {
-        data: ['Illumina platform', 'Illumina platform'],
+    run_accession: {
+        data: ['ERR1760043', 'ERR1760053'],
         type: datatype.STR,
         sortable: false
     },
     pipeline_version: {
         data: ['4.0', '4.0'],
+        type: datatype.NUM,
+        sortable: false
+    },
+    analysis_accession: {
+        data: ['MGYA00140353', 'MGYA00140377'],
         type: datatype.STR,
         sortable: false
     }
@@ -101,7 +77,7 @@ describe('Study page - Related studies - ', function() {
     it('Should display related study section', function() {
         openPage('');
         login();
-        openPage('studies/ERP104178');
+        openPage('studies/MGYS00002011');
         waitForPageLoad('EMG produced TPA metagenomics assembly of the Microbial Community of ' +
             'Mobilong Acid Sulfate Soil depth profile using Metagenomics (Mobilong Soil Profile)' +
             ' data set');
@@ -121,7 +97,7 @@ describe('Study page - Related studies - ', function() {
 describe('Study page - Hiding Publications display -', function() {
     const pubsList = '[data-cy=\'publications\']';
     it('Should not display empty section if no publications available', function() {
-        openPage('studies/ERP104236');
+        openPage('studies/MGYS00002062');
         waitForPageLoad('EMG produced TPA metagenomics assembly of the Identification of fungi' +
             ' and ameba from human wound genomic sequencing (human wound) data set');
         cy.get(pubsList + ' li').should('have.length', 1).contains('No known publications.');
@@ -129,162 +105,81 @@ describe('Study page - Hiding Publications display -', function() {
 });
 
 let table;
-describe('Study page - Samples table - ', function() {
+describe('Study page - Analysis table - ', function() {
     beforeEach(function() {
         openPage(origPage);
         waitForPageLoad(pageTitle);
-        table = new GenericTableHandler('#samples-section', samplesTableDefaultSize);
+        table = new GenericTableHandler('#analysis-section', analysesTableDefaultSize);
     });
 
     it('Should be toggleable', function() {
         table.testTableHiding();
     });
 
-    it('Should contain correct number of samples', function() {
-        table.checkLoadedCorrectly(1, 10, 258, sampleTableColumns);
+    it('Should contain correct number of analyses', function() {
+        table.checkLoadedCorrectly(1, analysesTableDefaultSize, 258, analysisTableColumns);
     });
 
-    it('Should respond to ordering', function() {
-        table.testSorting(10, sampleTableColumns);
-    });
-
-    it('Should respond to filtering', function() {
-        table.testFiltering('ERS1474800', [
-            [
-                '',
-                'ERS1474800',
-                'Control patient 9 left foot time 3',
-                'control_skin_left',
-                '27-Nov-2017']]);
-    });
+    // it('Should respond to ordering', function() {
+    //     table.testSorting(10, analysisTableColumns);
+    // });
+    //
+    // it('Should respond to filtering', function() {
+    //     table.testFiltering('ERS1474800', [
+    //         [
+    //             '',
+    //             'ERS1474800',
+    //             'Control patient 9 left foot time 3',
+    //             'control_skin_left',
+    //             '27-Nov-2017']]);
+    // });
 
     it('Should respond to pagination', function() {
-        table.testPagination(10, [
+        table.testPagination(25, [
             {
                 index: 1,
                 data: [
                     '',
-                    'ERS1474797',
-                    'Control patient 9 right foot time 1',
-                    'control_skin_right',
-                    '27-Nov-2017']
+                    'ERS1474796', 'control_skin_left', 'ERR1760043', '4.0', 'MGYA00140353']
             }, {
                 index: 3,
                 data: [
                     '',
-                    'ERS1474870',
-                    'Patient 5 wound debridement time 5',
-                    'wound_deb',
-                    '27-Nov-2017']
+                    'ERS1474615', 'wound_swab', 'ERR1759931', '4.0', 'MGYA00140403']
             }, {
-                index: 'next',
+                index: 'next', // 4th page
                 data: [
-                    '',
-                    'ERS1474887',
-                    'Patient 6 skin contralateral foot to wound time 4',
-                    'diabetic_skin_contra',
-                    '27-Nov-2017'], // 4th row
+                    '', 'ERS1474560', 'control_skin_left', 'ERR1759912', '4.0', 'MGYA00140428'],
                 pageNum: 4
             }, {
                 index: 'prev',
                 data: [
                     '',
-                    'ERS1474870',
-                    'Patient 5 wound debridement time 5',
-                    'wound_deb',
-                    '27-Nov-2017'], // Back to 3rd row
+                    'ERS1474615', 'wound_swab', 'ERR1759931', '4.0', 'MGYA00140403'],
                 pageNum: 3
             }, {
                 index: 'last',
                 data: [
                     '',
-                    'ERS1474858',
-                    'Patient 5 skin contralateral foot to wound time 2',
-                    'diabetic_skin_contra',
-                    '27-Nov-2017'],
-                pageNum: 6,
+                    'ERS1474833', 'diabetic_skin_adj', 'ERR1760080', '4.0', 'MGYA00140603'],
+                pageNum: 11,
                 pageSize: 8
             }, {
                 index: 'first',
                 data: [
                     '',
-                    'ERS1474797',
-                    'Control patient 9 right foot time 1',
-                    'control_skin_right',
-                    '27-Nov-2017'],
+                    'ERS1474796', 'control_skin_left', 'ERR1760043', '4.0', 'MGYA00140353'],
                 pageNum: 1
             }]);
     });
 
     it('Should respond to page size change', function() {
-        table.testPageSizeChange(samplesTableDefaultSize, 25);
+        table.testPageSizeChange(analysesTableDefaultSize, 25);
     });
 
-    it('Sample table download link should be valid', function() {
-        table.testDownloadLink(Config.API_URL + 'samples?study_accession=' + projectId +
-            '&format=csv');
-    });
-});
-
-describe('Study page - Runs table', function() {
-    beforeEach(function() {
-        openPage(origPage);
-        waitForPageLoad(pageTitle);
-        table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
-    });
-
-    it('Should be toggleable', function() {
-        table.testTableHiding();
-    });
-
-    it('Runs table should contain correct number of runs', function() {
-        table.checkLoadedCorrectly(1, 25, 258);
-    });
-
-    it('Runs table should respond to ordering', function() {
-        table.testSorting(25, runTableColumns);
-    });
-
-    it('Runs table should respond to filtering', function() {
-        table.testFiltering('ERR1760140',
-            [['ERR1760140', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']]);
-    });
-
-    it('Runs table should respond to pagination', function() {
-        table.testPagination(25, [
-            {
-                index: 1,
-                data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']
-            }, {
-                index: 3,
-                data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0']
-            }, {
-                index: 'next',
-                data: ['ERR1760066', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'], // 4th row
-                pageNum: 4
-            }, {
-                index: 'prev',
-                data: ['ERR1760091', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-                pageNum: 3
-            }, {
-                index: 'last',
-                data: ['ERR1759891', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-                pageNum: 11,
-                pageSize: 8
-            }, {
-                index: 'first',
-                data: ['ERR1760141', 'amplicon', 'Illumina MiSeq', 'ILLUMINA', '4.0'],
-                pageNum: 1
-            }]);
-    });
-
-    it('Runs table should respond to page size change', function() {
-        table.testPageSizeChange(runsTableDefaultSize, 50);
-    });
-
-    it('Runs table download link should be valid', function() {
-        table.testDownloadLink(Config.API_URL + 'runs?study_accession=' + projectId +
-            '&format=csv');
+    it('Analysis table download link should be valid', function() {
+        table.testDownloadLink(Config.API_URL + 'studies/' + projectId +
+            '/analysis?include=sample&format=csv');
     });
 });
 

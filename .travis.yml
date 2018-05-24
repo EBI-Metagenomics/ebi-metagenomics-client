@@ -62,6 +62,12 @@ before_install:
   - emgcli import_summary ERR1022502 $TRAVIS_BUILD_DIR/results .go_slim
   - emgcli import_summary ERR1022502 $TRAVIS_BUILD_DIR/results .go
 
+  - emgcli import_taxonomy ERR1022500 $TRAVIS_BUILD_DIR/results
+  - emgcli import_qc ERR1022500 $TRAVIS_BUILD_DIR/results
+  - emgcli import_summary ERR1022500 $TRAVIS_BUILD_DIR/results .ipr
+  - emgcli import_summary ERR1022500 $TRAVIS_BUILD_DIR/results .go_slim
+  - emgcli import_summary ERR1022500 $TRAVIS_BUILD_DIR/results .go
+
 install:
 
   - npm install cypress
@@ -81,6 +87,7 @@ after_script:
   - codecov
 
 cache:
+  pip
   directories:s
     - ~/.npm
     - node_modules

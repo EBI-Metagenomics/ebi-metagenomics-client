@@ -13,7 +13,7 @@ function duplicateLastColor(colours, data) {
     let newColours = [];
     let i = 0;
     while (i < data.length) {
-        newColours.push(colours[Math.min(i, colours.length-1)]);
+        newColours.push(colours[Math.min(i, colours.length - 1)]);
         i++;
     }
     return newColours;
@@ -55,7 +55,8 @@ module.exports = class TaxonomyPie {
                         enabled: true,
                         format: '<b>{point.name}</b>: {point.percentage:.1f} %',
                         style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor)
+                            || 'black'
                         }
                     },
                     colors: duplicateLastColor(Commons.TAXONOMY_COLOURS, pieData)
@@ -64,11 +65,12 @@ module.exports = class TaxonomyPie {
             credits: {
                 enabled: false
             },
-            series: [{
-                name: 'reads',
-                colorByPoint: true,
-                data: pieData
-            }]
+            series: [
+                {
+                    name: 'reads',
+                    colorByPoint: true,
+                    data: pieData
+                }]
         };
         if (extraOptions) {
             options = $.extend(true, options, extraOptions);
