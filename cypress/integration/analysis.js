@@ -26,15 +26,15 @@ function selectAnalysis(analysis) {
     waitForPageLoad();
 }
 
-function verifyTabsEnabled(tabs) {
-    for (let i in tabs) {
-        if (Object.prototype.hasOwnProperty.call(tabs, i)) {
-            const tabId = tabs[i];
-            openTab(tabId);
-            verifyTabIsVisible(tabId);
-        }
-    }
-}
+// function verifyTabsEnabled(tabs) {
+//     for (let i in tabs) {
+//         if (Object.prototype.hasOwnProperty.call(tabs, i)) {
+//             const tabId = tabs[i];
+//             openTab(tabId);
+//             verifyTabIsVisible(tabId);
+//         }
+//     }
+// }
 
 /**
  * Verify number of results responds to selector

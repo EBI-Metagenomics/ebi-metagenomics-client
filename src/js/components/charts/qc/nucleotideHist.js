@@ -3,7 +3,9 @@ import {getExportingStructure} from './qcChartUtil';
 const Highcharts = require('highcharts');
 
 export const drawNucleotidePositionHistogram = function(elem, rawdata, isFromSubset, urlToFile) {
-    if (typeof rawdata === 'undefined' || rawdata === null) return;
+    if (typeof rawdata === 'undefined' || rawdata === null) {
+        return;
+    }
     let data = {'pos': [], 'A': [], 'G': [], 'T': [], 'C': [], 'N': []};
     let colors = {
         'A': 'rgb(16, 150, 24)',

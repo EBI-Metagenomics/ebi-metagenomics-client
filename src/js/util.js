@@ -545,7 +545,7 @@ export const AnalysesView = GenericTableView.extend({
                     response.links.first);
                 that.tableObj.hideLoadingGif();
             },
-            error(ignored) {
+            error() {
                 console.log('error');
             }
         });

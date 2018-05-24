@@ -79,7 +79,9 @@ function testResultsAreFilteredByString() {
     // Tables have hidden columns
     studyTable.checkRowData(0,
         ['PRJEB14421', 'ERP016063', 'Sediment', '', '', '', '', 'UNIVERSITY OF CAMBRIDGE']);
+    changeTab('samples');
     sampleTable.checkRowData(0, ['ERS782466', 'ERP010900', 'Test Brassicae', 'Test Brassicae']);
+    changeTab('runs');
     runTable.checkRowData(0, ['ERR950224', '3.0', 'ERS782466', 'ERP010900', 'amplicon']);
 }
 
@@ -143,7 +145,9 @@ describe('Search page - general Functionality', function() {
         runTable.waitForTableLoad(25);
         studyTable.checkRowData(0,
             ['PRJEB14421', 'ERP016063', 'Sediment', '', '', '', '', 'UNIVERSITY OF CAMBRIDGE']);
+        changeTab('samples');
         sampleTable.checkRowData(0, ['ERS782466', 'ERP010900', 'Test Brassicae', 'Test Brassicae']);
+        changeTab('runs');
         runTable.checkRowData(0, ['ERR950224', '3.0', 'ERS782466', 'ERP010900', 'amplicon']);
     });
 

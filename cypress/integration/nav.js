@@ -49,7 +49,7 @@ const pagesBreadcrumbs = {
     // 'login': [''],
     'pipelines/4.0': ['', 'pipelines'],
     'pipelines': [''],
-    'analysis/MGYA00141547': ['', 'samples/ERS853149', 'runs/ERR1022500'],
+    'analysis/MGYA00141547': ['', 'samples/ERS853149', 'runs/ERR1022502'],
     'samples/ERS1474828': ['', 'browse#samples'],
     'browse': [''],
     'search': [''],

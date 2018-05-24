@@ -26,7 +26,7 @@ const analysisTableColumns = {
         sortable: false
     },
     run_accession: {
-        data: ['ERR1760041', 'ERR1760013'],
+        data: ['ERR1760043', 'ERR1760013'],
         type: datatype.STR,
         sortable: false
     },
@@ -117,7 +117,7 @@ describe('Study page - Analysis table - ', function() {
     });
 
     it('Should contain correct number of analyses', function() {
-        table.checkLoadedCorrectly(1, analysesTableDefaultSize, 256, analysisTableColumns);
+        table.checkLoadedCorrectly(1, analysesTableDefaultSize, 258, analysisTableColumns);
     });
 
     // it('Should respond to ordering', function() {
@@ -140,7 +140,7 @@ describe('Study page - Analysis table - ', function() {
                 index: 1,
                 data: [
                     '',
-                    'ERS1474796', 'control_skin_left', 'ERR1760041', '4.0', 'MGYA00140353']
+                    'ERS1474796', 'control_skin_left', 'ERR1760043', '4.0', 'MGYA00140353']
             }, {
                 index: 3,
                 data: [
@@ -168,7 +168,7 @@ describe('Study page - Analysis table - ', function() {
                 index: 'first',
                 data: [
                     '',
-                    'ERS1474796', 'control_skin_left', 'ERR1760041', '4.0', 'MGYA00140353'],
+                    'ERS1474796', 'control_skin_left', 'ERR1760043', '4.0', 'MGYA00140353'],
                 pageNum: 1
             }]);
     });
