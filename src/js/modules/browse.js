@@ -37,7 +37,7 @@ let StudiesView = Backbone.View.extend({
         ];
         const $studiesSection = $('#studies-section');
         this.tableObj = new GenericTable($studiesSection, 'Studies list', columns,
-            Commons.DEFAULT_PAGE_SIZE, true, true, 'studies-table',
+            Commons.DEFAULT_PAGE_SIZE, true, true, 'browse-studies-table',
             function(page, pageSize, order, search) {
                 that.update({
                     page: page,
