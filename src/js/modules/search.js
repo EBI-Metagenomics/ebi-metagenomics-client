@@ -793,6 +793,11 @@ const Project = Backbone.Model.extend({
     parse(d) {
         d.biomes = convertBiomes(d);
         d.studyLink = util.subfolder + '/studies/' + d.id;
+
+        // Fix for ebi search issues
+        if (d.fields.ENA_PROJECT.length === 0) {
+            d.fields.ENA_PROJECT = d.fields.id;
+        }
         return d;
     }
 });

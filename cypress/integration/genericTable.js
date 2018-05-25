@@ -33,17 +33,24 @@ class GenericTableHandler {
     }
 
     testSorting(pageSize, tests) {
+        const that = this;
+
         let i = 0;
         for (let header in tests) {
             if (tests.hasOwnProperty(header)) {
                 const type = tests[header].type;
                 if (tests[header].sortable) {
-                    this.getHeader(i).click();
+                    const i2 = i;
+                    this.getHeader(i2).click();
                     this.waitForTableLoad(pageSize);
-                    this.checkOrdering(i, type, true);
-                    this.getHeader(i).click();
-                    this.waitForTableLoad(pageSize);
-                    this.checkOrdering(i, type, false);
+                    this.getHeader(i2).then(($el) => {
+                        const asc = Cypress.$($el).hasClass('sort-asc');
+                        that.checkOrdering(i2, type, !asc);
+                        that.getHeader(i2).click();
+                        that.waitForTableLoad(pageSize);
+                        that.checkOrdering(i2, type, asc);
+                    });
+
                 }
                 i += 1;
             }
@@ -67,7 +74,6 @@ class GenericTableHandler {
         cy.get(selector).first().then(function($el) {
             let txt = $el.text();
             let txt2 = Cypress.$(selector).last().text();
-            cy.log(txt, txt2);
             if (!gte) {
                 txt = [txt2, txt2 = txt][0]; // Swap variables
             }
