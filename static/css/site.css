@@ -981,3 +981,7 @@ a.download-part {
 .pagination.disabled {
     padding: 0.1875rem 0 !important;
 }
+
+.error {
+    color: red;
+}

@@ -16,7 +16,17 @@ fetchLogin.done(function(loggedIn) {
     } else {
         fetch.done(function() {
             if (userData.attributes['analysis'] !== true) {
-                const $button = $('<fetchLogin class=\'button\'>Give consent.</fetchLogin>');
+                const $button = $('<button class=\'button\'>Give consent.</button>');
+                $button.click(function() {
+                    console.log('click');
+                    const consentGiven = $('#consent-given').is(':checked');
+                    const $consentGivenError = $('#consent-given-error');
+                    if (!consentGiven) {
+                        $consentGivenError.show();
+                    } else {
+                        $consentGivenError.hide();
+                    }
+                });
                 $actionDiv.html($button);
                 $('#consent').removeClass('hidden');
                 // TODO send email using API
