@@ -39,7 +39,7 @@ export function initBiomeFilter($div, callback) {
     const $clearBtn = $('.clear-filter');
     $clearBtn.click(function() {
         $('.table-filter').val('');
-        $biomeSelect.val($biomeSelect.find('option:first').val());
+        $biomeSelect.prop("selectedIndex", -1);
         $biomeSelect.trigger('change');
     });
 }
