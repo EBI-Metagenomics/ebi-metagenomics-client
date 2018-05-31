@@ -985,3 +985,7 @@ a.download-part {
 .error {
     color: red;
 }
+
+.biome-select {
+    width: 75%;
+}

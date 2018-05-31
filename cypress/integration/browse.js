@@ -340,7 +340,7 @@ describe('Browse page - Samples table - ', function() {
         cy.get('span.biome_icon').should('have.class', 'air_b');
 
         samplesTable.getClearButton().click();
-        samplesTable.waitForTableLoad(studiesTableDefaultSize);
+        samplesTable.waitForTableLoad(samplesTableDefaultSize);
         cy.get('span.biome_icon').first().should('have.class', 'skin_b');
     });
 
@@ -405,26 +405,22 @@ describe('Browse page - Samples table - ', function() {
     });
 });
 
-let longBiome = 'root:Host-associated:Mammals:Digestive system:Fecal';
+let lineage = 'root:Host-associated:Mammals:Digestive system:Fecal';
 describe('Browse page - URL arguments', function() {
     beforeEach(function() {
-        openPage('browse?lineage=' + longBiome + '#samples');
+        openPage('browse?lineage=' + lineage + '#samples');
         waitForPageLoad('Samples list');
         studiesTable = new GenericTableHandler('#studies-section', 1);
         samplesTable = new GenericTableHandler('#samples-section', 1);
     });
     it('Providing a biome with depth>3 should cause page to insert select options', function() {
         // Check all options exist
-        const splitBiome = longBiome.split(':');
-        for (let i = 1; i < splitBiome.length; i++) {
-            let parentLineage = splitBiome.slice(0, i).join(':');
-            cy.get('#studies-section .biome-select > option[value=\'' + parentLineage + '\']')
-                .should('exist');
-            cy.get('#samples-section .biome-select > option[value=\'' + parentLineage + '\']')
-                .should('exist');
-        }
-        cy.get('#studies-section .biome-select').should('have.value', longBiome);
-        cy.get('#samples-section .biome-select').should('have.value', longBiome);
+        cy.get('#studies-section .biome-select > option[value=\'' + lineage + '\']')
+            .should('exist');
+        cy.get('#samples-section .biome-select > option[value=\'' + lineage + '\']')
+            .should('exist');
+        cy.get('#studies-section .biome-select').should('have.value', lineage);
+        cy.get('#samples-section .biome-select').should('have.value', lineage);
     });
 });
 
