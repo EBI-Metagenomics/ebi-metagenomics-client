@@ -94,9 +94,15 @@ let AnalysisView = Backbone.View.extend({
             data: {},
             success(data) {
                 const attr = data.attributes;
-
                 attr['displaySsuButtons'] = (attr.pipeline_version >= 4.0 &&
                     attr.experiment_type !== 'amplicon');
+
+                if (attr.experiment_type !== 'amplicon') {
+                    enableTab('functional');
+                } else {
+                    disableTab('functional');
+                }
+
                 that.render(function() {
                     $('#analysisSelect').val(attr['pipeline_version']);
                     let description = {
@@ -550,12 +556,6 @@ let GoTermCharts = Backbone.View.extend({
         this.model.fetch({
             success(model) {
                 const data = model.attributes.data;
-
-                if (getTotalGoTermCount(data) !== 0) {
-                    enableTab('functional');
-                } else {
-                    return;
-                }
                 let bioProcessData = [];
                 let molecularFuncData = [];
                 let cellularComponentData = [];
@@ -706,7 +706,6 @@ function loadDownloads(analysisID) {
     let downloads = new api.AnalysisDownloads({id: analysisID});
     new DownloadView({model: downloads});
 }
-
 
 let analysis = new api.Analysis({id: analysisID});
 new AnalysisView({model: analysis});

@@ -7,12 +7,11 @@ const Pagination = require('../components/pagination').Pagination;
 const GenericTable = require('../components/genericTable');
 const Commons = require('../commons');
 const pagination = new Pagination();
+const biomeFilter = require('../commons').biomeFilter;
 
 window.Foundation.addToJquery($);
 
 util.attachTabHandlers();
-
-const BIOME_FILTER_DEPTH = 3;
 
 util.setupPage('#browse-nav');
 
@@ -36,7 +35,7 @@ let StudiesView = Backbone.View.extend({
             {sortBy: 'last_update', name: 'Last updated'}
         ];
         const $studiesSection = $('#studies-section');
-        this.tableObj = new GenericTable($studiesSection, 'Studies list', columns,
+        this.tableObj = new GenericTable($studiesSection, 'Studies list', columns, '-last_update',
             Commons.DEFAULT_PAGE_SIZE, true, true, 'browse-studies-table',
             function(page, pageSize, order, search) {
                 that.update({
@@ -121,7 +120,7 @@ let SamplesView = Backbone.View.extend({
             {sortBy: 'last_update', name: 'Last updated'}
         ];
         const $samplesSection = $('#samples-section');
-        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns,
+        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns, '-last_update',
             Commons.DEFAULT_PAGE_SIZE, true, true, 'samples-table',
             function(page, pageSize, order, search) {
                 that.update({
@@ -201,11 +200,15 @@ function syncFilterFields() {
     });
 }
 
-let biomes = new api.BiomeCollection();
-new util.BiomeCollectionView({
-    collection: biomes,
-    maxDepth: BIOME_FILTER_DEPTH
-}, pageFilters['lineage']);
+let rootLineage;
+if (pageFilters.hasOwnProperty('lineage')) {
+    rootLineage = pageFilters['lineage'];
+} else {
+    rootLineage = 'root';
+}
+let biomes = new api.BiomeWithChildren({rootLineage: rootLineage});
+
+new util.BiomeCollectionView({collection: biomes});
 
 let studies = new api.StudiesCollection();
 let studiesView = new StudiesView({collection: studies});
@@ -216,8 +219,15 @@ let samplesView = new SamplesView({collection: samples});
 studiesView.init();
 samplesView.init();
 
-util.initBiomeFilter($('section').find('.tableFilters'),
-    function() {
+/**
+ * Create biome select filter
+ * @param {jQuery.HTMLElement} $div
+ * @param {callback} callback
+ */
+function initBiomeFilter($div) {
+    $div.before(biomeFilter);
+    const $biomeSelect = $('.biome-select');
+    $biomeSelect.on('change', function() {
         const updateObj = {
             lineage: $(this).val(),
             search: $('.table-filter').val()
@@ -225,6 +235,19 @@ util.initBiomeFilter($('section').find('.tableFilters'),
         studiesView.update(updateObj);
         samplesView.update(updateObj);
     });
+
+    const $clearBtn = $('.clear-filter');
+    $clearBtn.click(function() {
+        $('.table-filter').val('');
+        $biomeSelect.prop('selectedIndex', -1);
+        $biomeSelect.trigger('change');
+        biomes = new api.BiomeWithChildren({rootLineage: 'root'});
+        new util.BiomeCollectionView({collection: biomes});
+    });
+}
+
+initBiomeFilter($('section').find('.tableFilters'));
+
 $('.table-filter').val(pageFilters['search']);
 
 syncFilterFields();

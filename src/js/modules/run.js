@@ -48,7 +48,7 @@ let RunView = Backbone.View.extend({
         let description = {
             'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_id + '</a>',
             'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_id + '</a>',
-            'Run (in ENA)': '<a href=\'' + attr.ena_url + '\'>' + attr.run_id + '</a>'
+            'Run (in ENA)': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.run_id + '</a>'
         };
         $('#overview').append(new DetailList('Description', description));
         util.attachExpandButtonCallback();
@@ -71,7 +71,7 @@ let RunAnalysesView = Backbone.View.extend({
             {sortBy: null, name: 'Pipeline version'}
         ];
         const $studiesSection = $('#analyses');
-        this.tableObj = new GenericTable($studiesSection, 'Analyses', columns,
+        this.tableObj = new GenericTable($studiesSection, 'Analyses', columns, null,
             Commons.DEFAULT_PAGE_SIZE, false, false, 'analyses-table',
             function(page, pageSize, order, search) {
                 that.update({
@@ -135,7 +135,7 @@ let RunAssemblyView = Backbone.View.extend({
             {sortBy: null, name: 'Pipeline version'}
         ];
         const $studiesSection = $('#assemblies');
-        this.tableObj = new GenericTable($studiesSection, 'Assemblies', columns,
+        this.tableObj = new GenericTable($studiesSection, 'Assemblies', columns, null,
             Commons.DEFAULT_PAGE_SIZE, false, false, 'assembly-table',
             function(page, pageSize, order, search) {
                 that.update({

@@ -17,7 +17,7 @@ let Util = {
         cy.get('h2').should('contain', title);
     },
     waitForBiomesLoad: function(results) {
-        cy.get('table tr.biome', {timeout: 10000}).should('have.length', parseInt(results));
+        cy.get('table tbody tr', {timeout: 10000}).should('have.length', parseInt(results));
     },
     waitForSearchResults: function(rowSelector, numResults) {
         cy.get(rowSelector, {timeout: 40000}).should('have.length', parseInt(numResults));

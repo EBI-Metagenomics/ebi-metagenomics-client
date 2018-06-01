@@ -5,7 +5,7 @@ class GenericTableHandler {
         this.parentId = parentId;
         this.defaultPageSize = defaultPageSize;
         this.hasLoadingGif = (typeof hasLoadingGif !== 'undefined') ? hasLoadingGif : true;
-        this.waitForLoadingIcon();
+        this.waitForLoadingIconHidden();
         this.waitForTableLoad(defaultPageSize);
     }
 
@@ -33,17 +33,27 @@ class GenericTableHandler {
     }
 
     testSorting(pageSize, tests) {
+        const that = this;
+
         let i = 0;
         for (let header in tests) {
             if (tests.hasOwnProperty(header)) {
                 const type = tests[header].type;
+                cy.log('Testing sorting for ' + header + '.');
                 if (tests[header].sortable) {
-                    this.getHeader(i).click();
+                    const i2 = i;
+                    this.getHeader(i2).click();
                     this.waitForTableLoad(pageSize);
-                    this.checkOrdering(i, type, true);
-                    this.getHeader(i).click();
-                    this.waitForTableLoad(pageSize);
-                    this.checkOrdering(i, type, false);
+                    this.getHeader(i2).then(($el) => {
+                        const asc = Cypress.$($el).hasClass('sort-asc');
+                        cy.log(Cypress.$($el));
+                        cy.log('Should be ' + (asc ? 'ascending' : 'descending'));
+                        that.checkOrdering(i2, type, asc);
+                        that.getHeader(i2).click();
+                        that.waitForTableLoad(pageSize);
+                        cy.log('Should be ' + (!asc ? 'ascending' : 'descending'));
+                        that.checkOrdering(i2, type, !asc);
+                    });
                 }
                 i += 1;
             }
@@ -51,12 +61,12 @@ class GenericTableHandler {
     }
 
     waitForTableLoad(pageSize) {
-        this.waitForLoadingIcon();
+        this.waitForLoadingIconHidden();
         cy.get(this.getTableSelector() + '> tbody > tr', {timeout: 20000})
             .should('have.length', pageSize);
     }
 
-    waitForLoadingIcon() {
+    waitForLoadingIconHidden() {
         if (this.hasLoadingGif) {
             this.getLoadingIcon().should('be.hidden', {timeout: 40000});
         }
@@ -67,7 +77,6 @@ class GenericTableHandler {
         cy.get(selector).first().then(function($el) {
             let txt = $el.text();
             let txt2 = Cypress.$(selector).last().text();
-            cy.log(txt, txt2);
             if (!gte) {
                 txt = [txt2, txt2 = txt][0]; // Swap variables
             }
@@ -158,7 +167,7 @@ class GenericTableHandler {
                 const txt = data[column];
                 const selector = this.getRowColumnSelector(rowIndex, column);
                 if (txt.length > 0) {
-                    cy.get(selector).first().contains(txt, {timeout: 20000});
+                    cy.get(selector).first().scrollIntoView().contains(txt, {timeout: 20000});
                 }
             }
         }

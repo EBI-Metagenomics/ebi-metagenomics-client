@@ -42,15 +42,24 @@
                 Metagenomics
                 homepage to be able to view the results of the analysis.
             </p>
-            <p id="consent" class="hidden">
-                Note, if you plan to
-                submit pre-publication data for analysis, which is to be held as confidential, we need consent to access
-                your data in accordance with ENA’s policies. By keeping this box checked, you consent to the EBI
-                Metagenomics team analysing your private data. Note that the data, as well as the analysis results, will
-                remain confidential until the release date you specify when submitting your sequencing study. You also
-                confirm that the data submitted through this account is NOT sensitive, restricted-access or
-                human-identifiable.
-            </p>
+            <div id="consent" class="hidden">
+                <h4>Your Webin account is currently not registered with EBI metagenomics. You have the choice to register
+                    with us now.</h4>
+                <p>
+                    Note, if you plan to
+                    submit pre-publication data for analysis, which is to be held as confidential, we need consent to access
+                    your data in accordance with ENA’s policies. By keeping this box checked, you consent to the EBI
+                    Metagenomics team analysing your private data. Note that the data, as well as the analysis results, will
+                    remain confidential until the release date you specify when submitting your sequencing study. You also
+                    confirm that the data submitted through this account is NOT sensitive, restricted-access or
+                    human-identifiable.
+                </p>
+                <br>
+                <label> <input id="consent-given" type="checkbox"/>I give consent for the EBI Metagenomics team to analyse
+                    my private data.</label>
+                <p id='consent-given-error' class="error hidden">Please check the box above.</p>
+            </div>
+
             <div id="action">
                 <a id="submit" href="https://www.ebi.ac.uk/ena/submit/sra/#home" class="button">Click here to submit
                     data</a>

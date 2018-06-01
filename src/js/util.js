@@ -12,8 +12,6 @@ require('babel-polyfill');
 export const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 $.typeWatch = require('jquery.typewatch');
 
-const biomeFilter = require('./commons').biomeFilter;
-
 const DEFAULT_PAGE_SIZE = Commons.DEFAULT_PAGE_SIZE;
 
 /**
@@ -23,24 +21,6 @@ const DEFAULT_PAGE_SIZE = Commons.DEFAULT_PAGE_SIZE;
 export function setCurrentTab(id) {
     document.addEventListener('DOMContentLoaded', function() {
         $(id).addClass('active');
-    });
-}
-
-/**
- * Create biome select filter
- * @param {jQuery.HTMLElement} $div
- * @param {callback} callback
- */
-export function initBiomeFilter($div, callback) {
-    $div.before(biomeFilter);
-    const $biomeSelect = $('.biome-select');
-    $biomeSelect.on('change', callback);
-
-    const $clearBtn = $('.clear-filter');
-    $clearBtn.click(function() {
-        $('.table-filter').val('');
-        $biomeSelect.val($biomeSelect.find('option:first').val());
-        $biomeSelect.trigger('change');
     });
 }
 
@@ -193,50 +173,31 @@ export const BiomeCollectionView = Backbone.View.extend({
             }
         }
         let that = this;
-        this.collection.fetch({
-            data: $.param({depth_lte: this.maxDepth, page_size: 100}), success() {
-                // Fetch and pre-pend root node to list
-                let root = new api.BiomeCollection();
-                root.fetch({
-                    success() {
-                        that.render();
-                        const $biomeSelect = $(that.selector);
-                        if (!biome) {
-                            biome = 'root';
-                        } else {
-                            let splitBiome = biome.split(':');
-                            if (splitBiome.length > that.maxDepth) {
-                                const existingParentBiome = splitBiome.slice(0, that.maxDepth)
-                                    .join(':');
-                                const $previousBiome = $biomeSelect.children('option[value=\'' +
-                                    existingParentBiome + '\']');
-                                const newOptions = [];
-                                for (let i = that.maxDepth + 1; i < splitBiome.length + 1; i++) {
-                                    const newLineage = splitBiome.slice(0, i).join(':');
-                                    const newOption = createBiomeOption(newLineage);
-                                    newOptions.push(newOption);
-                                }
-                                $previousBiome.after(newOptions);
-                            }
-                        }
-                        $biomeSelect.val(biome);
-                    }
-                });
-            }
+        this.collection.fetchWithRoot().then((data) => {
+            that.addOptionsToSelect(data.models, that.collection.rootLineage);
         });
     },
-    render() {
-        const that = this;
-        let biomes = this.collection.models.map(function(model) {
-            return model.attributes.lineage;
+    addOptionsToSelect(data, biome) {
+        const $biomeSelect = $(this.selector);
+        _.each(data, function(d) {
+            const newOption = createBiomeOption(d.attributes.lineage);
+            $biomeSelect.append(newOption);
         });
-        _.each(biomes.sort(), function(lineage) {
-            const option = createBiomeOption(lineage);
-            $(that.selector).append($(option));
-        });
-        return this;
+        $biomeSelect.val(biome);
     }
 });
+//
+// render() {
+//     const that = this;
+//     let biomes = this.collection.models.map(function(model) {
+//         return model.attributes.lineage;
+//     });
+//     _.each(biomes.sort(), function(lineage) {
+//         const option = createBiomeOption(lineage);
+//         $(that.selector).append($(option));
+//     });
+//     return this;
+// }
 
 /**
  * Capitalize a word.
@@ -409,7 +370,7 @@ export let StudiesView = GenericTableView.extend({
             {sortBy: null, name: 'Samples count'},
             {sortBy: null, name: 'Last update'}
         ];
-        this.tableObj = new GenericTable($('#studies-section'), options.sectionTitle, columns,
+        this.tableObj = new GenericTable($('#studies-section'), options.sectionTitle, columns, null,
             DEFAULT_PAGE_SIZE, options.isPageHeader, options.filter, options.tableClass,
             function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
@@ -447,11 +408,11 @@ export let SamplesView = GenericTableView.extend({
             {sortBy: 'last_update', name: 'Last update'}
         ];
         this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns,
-            Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, true, 'samples-table',
+            'accession', Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, true, 'samples-table',
             function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
-        this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, null, null);
+        this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, 'accession', null);
     },
 
     getRowData(attr) {
@@ -477,11 +438,11 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline versions'}
         ];
         this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns,
-            Commons.DEFAULT_PAGE_SIZE, false, true, 'runs-table',
+            'accession', Commons.DEFAULT_PAGE_SIZE, false, true, 'runs-table',
             function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
-        this.update(1, Commons.DEFAULT_PAGE_SIZE, null, null);
+        this.update(1, Commons.DEFAULT_PAGE_SIZE, 'accession', null);
     },
 
     getRowData(attr) {
@@ -494,7 +455,6 @@ export let RunsView = GenericTableView.extend({
             attr['pipeline_versions'].join(', ')];
     }
 });
-
 
 export const AnalysesView = GenericTableView.extend({
     tableObj: null,
@@ -511,7 +471,7 @@ export const AnalysesView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline version'},
             {sortBy: null, name: 'Analysis accession'}
         ];
-        this.tableObj = new GenericTable($('#analysis-section'), 'Analyses', columns,
+        this.tableObj = new GenericTable($('#analysis-section'), 'Analyses', columns, null,
             Commons.DEFAULT_PAGE_SIZE, false, false, 'analyses-table',
             function(page, pageSize, order, search) {
                 that.update({
@@ -554,7 +514,7 @@ export const AnalysesView = GenericTableView.extend({
     renderData(page, pageSize, resultCount, requestURL) {
         const tableData = _.map(this.collection.models, function(m) {
             const attr = m.attributes;
-            const biome ='<span class="biome_icon icon_xs ' + m.attributes.biome.icon + '" title="'
+            const biome = '<span class="biome_icon icon_xs ' + m.attributes.biome.icon + '" title="'
                 + m.attributes.biome.name + '"></span>';
             const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
                 '</a>';
@@ -570,7 +530,6 @@ export const AnalysesView = GenericTableView.extend({
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
 });
-
 
 /**
  * Check is user is logged in
@@ -714,7 +673,6 @@ export function setupPage(tab, loginRedirect) {
  */
 export function attachExpandButtonCallback() {
     $('.expand-button').on('click', function() {
-        console.log('click');
         if ($(this).hasClass('min')) {
             $(this).removeClass('min');
             $($(this).attr('for')).slideUp();
