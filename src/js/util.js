@@ -174,8 +174,6 @@ export const BiomeCollectionView = Backbone.View.extend({
         }
         let that = this;
         this.collection.fetchWithRoot().then((data) => {
-            console.log(data);
-            console.log(that.collection);
             that.addOptionsToSelect(data.models, that.collection.rootLineage);
         });
     },

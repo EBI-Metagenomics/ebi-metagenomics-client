@@ -18,7 +18,6 @@ fetchLogin.done(function(loggedIn) {
             if (userData.attributes['analysis'] !== true) {
                 const $button = $('<button class=\'button\'>Give consent.</button>');
                 $button.click(function() {
-                    console.log('click');
                     const consentGiven = $('#consent-given').is(':checked');
                     const $consentGivenError = $('#consent-given-error');
                     if (!consentGiven) {
