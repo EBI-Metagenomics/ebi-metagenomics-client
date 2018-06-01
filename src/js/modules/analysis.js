@@ -97,12 +97,6 @@ let AnalysisView = Backbone.View.extend({
                 attr['displaySsuButtons'] = (attr.pipeline_version >= 4.0 &&
                     attr.experiment_type !== 'amplicon');
 
-                if (attr.experiment_type !== 'amplicon') {
-                    enableTab('functional');
-                } else {
-                    disableTab('functional');
-                }
-
                 that.render(function() {
                     $('#analysisSelect').val(attr['pipeline_version']);
                     let description = {
@@ -139,20 +133,28 @@ let AnalysisView = Backbone.View.extend({
                     new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary',
                         attr['analysis_summary']);
 
-                    // QC charts
-                    const statsData = new api.QcChartStats({id: analysisID});
-                    statsData.fetch({
-                        dataType: 'text',
-                        success(model) {
-                            if (attr['pipeline_version'] > 2) {
-                                loadReadLengthDisp(analysisID, model.attributes);
-                                loadGCDistributionDisp(analysisID, model.attributes);
-                                loadNucleotideDisp(analysisID, model.attributes);
+                    if (attr.experiment_type !== 'amplicon') {
+                        enableTab('functional');
+                        // QC charts
+                        const statsData = new api.QcChartStats({id: analysisID});
+                        statsData.fetch({
+                            dataType: 'text',
+                            success(model) {
+                                if (attr['pipeline_version'] > 2) {
+                                    loadReadLengthDisp(analysisID, model.attributes);
+                                    loadGCDistributionDisp(analysisID, model.attributes);
+                                    loadNucleotideDisp(analysisID, model.attributes);
+                                }
+                                new QCChart('QC-step-chart', attr['analysis_summary'],
+                                    model.attributes['sequence_count']);
                             }
-                            new QCChart('QC-step-chart', attr['analysis_summary'],
-                                model.attributes['sequence_count']);
+                        });
+                    } else {
+                        disableTab('functional');
+                        if (window.location.hash.substr(1) === 'functional') {
+                            util.changeTab('overview');
                         }
-                    });
+                    }
                 });
             },
             error(ignored, response) {
@@ -512,6 +514,9 @@ function getTotalGoTermCount(array) {
  * @param {string} id of tab
  */
 function disableTab(id) {
+    console.log(id, '[href=\'#' + id + '\']');
+    console.log($('[href=\'#' + id + '\']').parent('li'));
+    console.log($('[href=\'#' + id + '\']'));
     $('[href=\'#' + id + '\']').parent('li').addClass('disabled');
 }
 
