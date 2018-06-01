@@ -53,6 +53,7 @@ describe('Study page - General', function() {
         cy.get('h2')
             .should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
         cy.get('#ebi_ena_links').should('contain', 'ENA website (ERP019566)');
+        cy.contains('Human > Skin').should('exist');
         cy.get('#europe_pmc_links > li')
             .should('contain', 'A longitudinal study of the diabetic skin and wound microbiome.');
         cy.get('#europe_pmc_links > li')
