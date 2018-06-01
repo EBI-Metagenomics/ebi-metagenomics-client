@@ -51,7 +51,6 @@ let RunView = Backbone.View.extend({
             'Run (in ENA)': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.run_id + '</a>'
         };
         $('#overview').append(new DetailList('Description', description));
-        util.attachExpandButtonCallback();
         return this.$el;
     }
 });
@@ -81,7 +80,7 @@ let RunAnalysesView = Backbone.View.extend({
                     search: search
                 });
             });
-        this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
+        return this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
     },
 
     update(params) {
@@ -101,6 +100,7 @@ let RunAnalysesView = Backbone.View.extend({
                 }
             }
         });
+        return this.fetchXhr;
     },
 
     renderData(page, pageSize, resultCount, requestURL) {
@@ -165,6 +165,7 @@ let RunAssemblyView = Backbone.View.extend({
                 }
             }
         });
+        return this.fetchXhr;
     },
 
     renderData(page, pageSize, resultCount, requestURL) {
@@ -190,6 +191,8 @@ let runView = new RunView({model: run});
 let runAnalyses = new api.RunAnalyses({id: runId});
 let runAssemblies = new api.RunAssemblies({id: runId});
 runView.init().then(() => {
-    new RunAnalysesView({collection: runAnalyses});
-    new RunAssemblyView({collection: runAssemblies});
+    return $.when(new RunAnalysesView({collection: runAnalyses}),
+        new RunAssemblyView({collection: runAssemblies}));
+}).then(() => {
+    util.attachExpandButtonCallback();
 });
