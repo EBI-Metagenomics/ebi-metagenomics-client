@@ -18,7 +18,7 @@
                     <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies">Browse studies</a>
                     </li>
                     <li>
-                        <span class="show-for-sr">Current: </span> Study <%= study_accession %>
+                        <span class="show-for-sr">Current: </span> Study <%= study_id %>
                     </li>
                 </ul>
             </nav>
@@ -77,9 +77,6 @@
                                     <ul id="ebi_ena_links">
                                         <li><a class="ext" href="<%= ena_url %>">
                                             ENA website (<%= study_accession%>)
-                                        </a></li>
-                                        <li><a class="ext" href="<%= bioproject_url %>">
-                                            NCBI bioproject (<%= bioproject %>)
                                         </a></li>
                                     </ul>
                                 </div>

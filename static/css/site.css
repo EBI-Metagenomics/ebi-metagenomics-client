@@ -2,22 +2,48 @@
     display: block;
 }
 
-.studies-table, .samples-table {
+.studies-table, .browse-studies-table, .samples-table {
     overflow: hidden;
     /*white-space: nowrap;*/
     table-layout: fixed;
 }
 
-.studies-table tr, .samples-table tr {
+.browse-studies-table tr, .samples-table tr {
 
+}
+
+.browse-studies-table th:first-child {
+    width: 5%;
+}
+
+.browse-studies-table th:nth-child(2) {
+    width: 10%;
+}
+
+.browse-studies-table th:nth-child(3) {
+    width: 50%;
+}
+
+.browse-studies-table th:nth-child(4) {
+    width: 7%;
+}
+
+.browse-studies-table th:last-child {
+    width: 10%;
+}
+
+.biomes-table th:first-child {
+    width: 5%;
 }
 
 .studies-table th:first-child {
     width: 7%;
 }
-.studies-table th:nth-child(2){
+
+.studies-table th:nth-child(2) {
     width: 10%;
 }
+
 .studies-table th:nth-child(4) {
     width: 45%;
 }
@@ -946,12 +972,20 @@ a.download-part {
     padding-right: 0.5em;
 }
 
-
 /*Overwrite CSS from API generated login form*/
 .well {
     width: inherit !important;
 }
+
 /*Fix for bug in ebi-global.css*/
 .pagination.disabled {
     padding: 0.1875rem 0 !important;
+}
+
+.error {
+    color: red;
+}
+
+.biome-select {
+    width: 75%;
 }
