@@ -71,7 +71,7 @@ let RunAnalysesView = Backbone.View.extend({
             {sortBy: null, name: 'Pipeline version'}
         ];
         const $studiesSection = $('#analyses');
-        this.tableObj = new GenericTable($studiesSection, 'Analyses', columns,
+        this.tableObj = new GenericTable($studiesSection, 'Analyses', columns, null,
             Commons.DEFAULT_PAGE_SIZE, false, false, 'analyses-table',
             function(page, pageSize, order, search) {
                 that.update({
@@ -135,7 +135,7 @@ let RunAssemblyView = Backbone.View.extend({
             {sortBy: null, name: 'Pipeline version'}
         ];
         const $studiesSection = $('#assemblies');
-        this.tableObj = new GenericTable($studiesSection, 'Assemblies', columns,
+        this.tableObj = new GenericTable($studiesSection, 'Assemblies', columns, null,
             Commons.DEFAULT_PAGE_SIZE, false, false, 'assembly-table',
             function(page, pageSize, order, search) {
                 that.update({

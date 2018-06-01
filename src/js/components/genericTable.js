@@ -17,7 +17,7 @@ module.exports = class GenericTable {
      * @param {string} tableClass CSS class for table obj
      * @param {callback} callback function on event callback to load data
      */
-    constructor($container, title, headers, initPageSize, isHeader, filter, tableClass, callback) {
+    constructor($container, title, headers, initialOrdering, initPageSize, isHeader, filter, tableClass, callback) {
         $container.empty();
         this.headers = headers;
         let params = {
@@ -40,7 +40,7 @@ module.exports = class GenericTable {
 
         if (callback) {
             this.callback = callback;
-            this.initHeaders(this.$table, null, callback);
+            this.initHeaders(this.$table, initialOrdering, callback);
 
             this.attachFilterCallback(this.$filterInput, callback);
 
@@ -200,9 +200,18 @@ module.exports = class GenericTable {
             onOrderCallback(1, that.getPageSize(), sort, that.getFilterText());
         });
         if (initialSort) {
-            $table.find('[data-sortby=\'' + initialSort + '\']')
+            let column;
+            let sort;
+            if (initialSort.charAt(0) === '-'){
+                column = initialSort.slice(1);
+                sort = 'sort-desc';
+            } else {
+                column = initialSort;
+                sort = 'sort-asc';
+            }
+            $table.find('[data-sortby=\'' + column + '\']')
                 .removeClass('sort-both')
-                .addClass(initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
+                .addClass(sort);
         }
     }
 

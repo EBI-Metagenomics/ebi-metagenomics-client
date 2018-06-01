@@ -370,7 +370,7 @@ export let StudiesView = GenericTableView.extend({
             {sortBy: null, name: 'Samples count'},
             {sortBy: null, name: 'Last update'}
         ];
-        this.tableObj = new GenericTable($('#studies-section'), options.sectionTitle, columns,
+        this.tableObj = new GenericTable($('#studies-section'), options.sectionTitle, columns, null,
             DEFAULT_PAGE_SIZE, options.isPageHeader, options.filter, options.tableClass,
             function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
@@ -408,11 +408,11 @@ export let SamplesView = GenericTableView.extend({
             {sortBy: 'last_update', name: 'Last update'}
         ];
         this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns,
-            Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, true, 'samples-table',
+            'accession', Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, true, 'samples-table',
             function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
-        this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, null, null);
+        this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, 'accession', null);
     },
 
     getRowData(attr) {
@@ -438,11 +438,11 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline versions'}
         ];
         this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns,
-            Commons.DEFAULT_PAGE_SIZE, false, true, 'runs-table',
+            'accession', Commons.DEFAULT_PAGE_SIZE, false, true, 'runs-table',
             function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
-        this.update(1, Commons.DEFAULT_PAGE_SIZE, null, null);
+        this.update(1, Commons.DEFAULT_PAGE_SIZE, 'accession', null);
     },
 
     getRowData(attr) {
@@ -471,7 +471,7 @@ export const AnalysesView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline version'},
             {sortBy: null, name: 'Analysis accession'}
         ];
-        this.tableObj = new GenericTable($('#analysis-section'), 'Analyses', columns,
+        this.tableObj = new GenericTable($('#analysis-section'), 'Analyses', columns, null,
             Commons.DEFAULT_PAGE_SIZE, false, false, 'analyses-table',
             function(page, pageSize, order, search) {
                 that.update({
@@ -673,7 +673,6 @@ export function setupPage(tab, loginRedirect) {
  */
 export function attachExpandButtonCallback() {
     $('.expand-button').on('click', function() {
-        console.log('click');
         if ($(this).hasClass('min')) {
             $(this).removeClass('min');
             $($(this).attr('for')).slideUp();

@@ -28,7 +28,7 @@ let BiomesView = Backbone.View.extend({
             {sortBy: 'samples_count', name: 'Samples including sub-lineages'}
         ];
         const $samplesSection = $('#biomes-section');
-        this.tableObj = new GenericTable($samplesSection, 'Biomes list', columns,
+        this.tableObj = new GenericTable($samplesSection, 'Biomes list', columns, '-samples_count',
             Commons.DEFAULT_PAGE_SIZE, true, true, 'biomes-table',
             function(page, pageSize, order, search) {
                 that.update({
@@ -69,8 +69,6 @@ let BiomesView = Backbone.View.extend({
 
     update(params) {
         this.params = $.extend({}, this.params, params);
-        console.log(this.params);
-        console.log(params);
         const that = this;
         this.fetchXhr = this.collection.fetch({
             data: $.param(this.params),

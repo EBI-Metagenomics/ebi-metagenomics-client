@@ -35,7 +35,7 @@ let StudiesView = Backbone.View.extend({
             {sortBy: 'last_update', name: 'Last updated'}
         ];
         const $studiesSection = $('#studies-section');
-        this.tableObj = new GenericTable($studiesSection, 'Studies list', columns,
+        this.tableObj = new GenericTable($studiesSection, 'Studies list', columns, '-last_update',
             Commons.DEFAULT_PAGE_SIZE, true, true, 'browse-studies-table',
             function(page, pageSize, order, search) {
                 that.update({
@@ -120,7 +120,7 @@ let SamplesView = Backbone.View.extend({
             {sortBy: 'last_update', name: 'Last updated'}
         ];
         const $samplesSection = $('#samples-section');
-        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns,
+        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns, '-last_update',
             Commons.DEFAULT_PAGE_SIZE, true, true, 'samples-table',
             function(page, pageSize, order, search) {
                 that.update({
