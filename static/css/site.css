@@ -925,8 +925,8 @@ li.page-item.active {
 div.home-blog-box img {
     float: left;
     padding: 0.5em;
-    height: 6em;
-    width: 6em;
+    max-height: 10em;
+    max-width: 10em;
 }
 
 img.publication-cover {
