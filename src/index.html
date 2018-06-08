@@ -20,27 +20,6 @@
                 <div class="columns small-12 medium-6 large-6">
                     <div class="row columns text-center">
                         <div class="row columns text-center getting-started">
-                            <h3>Request analysis of</h3>
-                            <div class="row">
-                                <div class="columns small-12 medium-6 large-6">
-                                    <div class="text-center">
-                                        <p>Your data</p>
-                                        <a class="button" href="{{htmlWebpackPlugin.options.templateData.subfolder}}/submit">Submit</a>
-                                    </div>
-                                </div>
-                                <div class="columns small-12 medium-6 large-6">
-                                    <div class="text-center">
-                                        <p>A public dataset</p>
-                                        <button class="button" data-open="requestAnalysisModal">Request</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="columns small-12 medium-6 large-6">
-                    <div class="row columns text-center">
-                        <div class="row columns text-center getting-started">
                             <h3>Search by</h3>
                             <div class="row">
                                 <div class="columns small-12 medium-6 large-6">
@@ -59,39 +38,31 @@
                         </div>
                     </div>
                 </div>
+                <div class="columns small-12 medium-6 large-6">
+                    <div class="row columns text-center">
+                        <div class="row columns text-center getting-started">
+                            <h3>Request analysis of</h3>
+                            <div class="row">
+                                <div class="columns small-12 medium-6 large-6">
+                                    <div class="text-center">
+                                        <p>Your data</p>
+                                        <a class="button" href="{{htmlWebpackPlugin.options.templateData.subfolder}}/submit">Submit</a>
+                                    </div>
+                                </div>
+                                <div class="columns small-12 medium-6 large-6">
+                                    <div class="text-center">
+                                        <p>A public dataset</p>
+                                        <button class="button" data-open="requestAnalysisModal">Request</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
         <section id="browse">
             <div class="row">
-                <div class="columns small-12 medium-6 large-6">
-                    <div id="latestStudies">
-                        <h3>Latest projects</h3>
-                        <div id="studies" class="studies-list">
-                            <script id="studyTmpl" type="text/template">
-
-                                <p>
-                                    <% _.each(biomes, function(biome){ %>
-                                    <span class="biome_icon icon_xs <%= biome.icon %>"></span>
-                                    <% }); %>
-                                    <%= study_name %>
-                                </p>
-                                <%= abstract %>
-                                <p>
-                                    <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%=
-                                    samples_count
-                                    %>
-                                    samples</a>
-                                </p>
-                                <hr>
-                            </script>
-                        </div>
-                    </div>
-                    <div class="row columns">
-                        <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies"
-                           class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
-                           aria-describedby="qtip-42">View all projects</a>
-                    </div>
-                </div>
                 <div class="columns small-12 medium-6 large-6">
                     <h3>Browse by data type</h3>
                     <div class="index-stats-disp">
@@ -167,6 +138,35 @@
                         <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/biomes" class="all right" data-hasqtip="27"
                            oldtitle="View projects and filter by biome" title=""
                            aria-describedby="qtip-27">Browse all biomes</a>
+                    </div>
+                </div>
+                <div class="columns small-12 medium-6 large-6">
+                    <div id="latestStudies">
+                        <h3>Latest projects</h3>
+                        <div id="studies" class="studies-list">
+                            <script id="studyTmpl" type="text/template">
+
+                                <p>
+                                    <% _.each(biomes, function(biome){ %>
+                                    <span class="biome_icon icon_xs <%= biome.icon %>"></span>
+                                    <% }); %>
+                                    <%= study_name %>
+                                </p>
+                                <%= abstract %>
+                                <p>
+                                    <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%=
+                                    samples_count
+                                    %>
+                                    samples</a>
+                                </p>
+                                <hr>
+                            </script>
+                        </div>
+                    </div>
+                    <div class="row columns">
+                        <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies"
+                           class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
+                           aria-describedby="qtip-42">View all projects</a>
                     </div>
                 </div>
             </div>
