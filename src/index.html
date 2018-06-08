@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head id="head">
-    <title>Home &lt; EBI Metagenomics &lt; EMBL-EBI</title>
+    <title>Home &lt; MGnify &lt; EMBL-EBI</title>
     {{> partials/head this}}
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -62,10 +62,38 @@
             </div>
         </section>
         <section id="browse">
-            <h2>Browse</h2>
             <div class="row">
                 <div class="columns small-12 medium-6 large-6">
-                    <h3>By data type</h3>
+                    <div id="latestStudies">
+                        <h3>Latest projects</h3>
+                        <div id="studies" class="studies-list">
+                            <script id="studyTmpl" type="text/template">
+
+                                <p>
+                                    <% _.each(biomes, function(biome){ %>
+                                    <span class="biome_icon icon_xs <%= biome.icon %>"></span>
+                                    <% }); %>
+                                    <%= study_name %>
+                                </p>
+                                <%= abstract %>
+                                <p>
+                                    <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%=
+                                    samples_count
+                                    %>
+                                    samples</a>
+                                </p>
+                                <hr>
+                            </script>
+                        </div>
+                    </div>
+                    <div class="row columns">
+                        <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies"
+                           class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
+                           aria-describedby="qtip-42">View all projects</a>
+                    </div>
+                </div>
+                <div class="columns small-12 medium-6 large-6">
+                    <h3>Browse by data type</h3>
                     <div class="index-stats-disp">
                         <div id="stats-loading">
                             <img class="loading-gif-large" src="static/images/ajax-loader.gif">
@@ -120,7 +148,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3>By selected biomes</h3>
+                    <h3>Browse by selected biomes</h3>
                     <div id="top10biomes" class="row columns">
                         <script id="biomeTmpl" type="text/template">
                             <a href="<%= biome_studies_link %>">
@@ -139,36 +167,6 @@
                         <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/biomes" class="all right" data-hasqtip="27"
                            oldtitle="View projects and filter by biome" title=""
                            aria-describedby="qtip-27">Browse all biomes</a>
-                    </div>
-                </div>
-
-                <div class="columns small-12 medium-6 large-6">
-                    <div id="latestStudies">
-                        <h3>Latest projects</h3>
-                        <div id="studies" class="studies-list">
-                            <script id="studyTmpl" type="text/template">
-
-                                <p>
-                                    <% _.each(biomes, function(biome){ %>
-                                    <span class="biome_icon icon_xs <%= biome.icon %>"></span>
-                                    <% }); %>
-                                    <%= study_name %>
-                                </p>
-                                <%= abstract %>
-                                <p>
-                                    <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%=
-                                    samples_count
-                                    %>
-                                    samples</a>
-                                </p>
-                                <hr>
-                            </script>
-                        </div>
-                    </div>
-                    <div class="row columns">
-                        <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies"
-                           class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
-                           aria-describedby="qtip-42">View all projects</a>
                     </div>
                 </div>
             </div>
@@ -229,7 +227,7 @@
                     <img alt="Cover of the Nucleic Acids Research journal"
                          src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/nucleic_acids_research_D1_cover.gif"
                          class="publication-cover">
-                    <p>To cite EBI Metagenomics, please refer to the following publication:</p>
+                    <p>To cite MGnify, please refer to the following publication:</p>
                     <p>
                         Alex L. Mitchell, Maxim Scheremetjew, Hubert Denise, Simon Potter, Aleksandra Tarkowska,
                         Matloob
