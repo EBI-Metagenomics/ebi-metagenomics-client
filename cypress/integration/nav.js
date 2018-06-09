@@ -1,7 +1,7 @@
 const navNames = ['overview', 'search', 'submit', 'browse', 'about', 'help'];
 const pageTitles = [
-    'Browse projects', 'Search EBI Metagenomics', 'Submit data', 'Studies list',
-    'About EBI metagenomics', 'EBI Metagenomics Help'];
+    'Browse projects', 'Search', 'Submit data', 'Studies list',
+    'About', 'Help'];
 import {openPage, getPageURL} from './util';
 
 /**

@@ -16,7 +16,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
         });
 
         it('Browse by selected biomes"', function() {
-            cy.get('#browse').contains('By selected biomes');
+            cy.get('#browse').contains('Browse by selected biomes');
             // Check biome icons are loaded
             cy.get('#top10biomes span.biome_icon').then(($els) => {
                 expect($els).to.have.length(10);
