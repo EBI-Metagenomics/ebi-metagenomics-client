@@ -304,8 +304,9 @@ select.table-tools {
 }
 
 .studies-list {
-    max-height: 25em;
-    overflow: scroll;
+    max-height: 30em;
+    overflow-x: scroll;
+    overflow-x: hidden;
 }
 
 .inline-select {
