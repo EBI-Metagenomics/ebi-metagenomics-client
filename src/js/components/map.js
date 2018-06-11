@@ -48,7 +48,10 @@ function generateIcon(number, callback) {
 
     let svg = d3.select(document.createElement('div')).append('svg')
         .attr('viewBox', '0 0 54.4 54.4')
+        .attr('height', imageHeight + 'px')
+        .attr('width', imageWidth + 'px')
         .append('g');
+
 
     svg.append('circle')
         .attr('cx', '27.2')
@@ -70,14 +73,12 @@ function generateIcon(number, callback) {
         .attr('style', 'font-size:' + fontSize +
             'px; fill: #FFFFFF; font-family: Arial, Verdana; font-weight: bold')
         .text(number);
-
     let svgNode = svg.node().parentNode.cloneNode(true);
     let image = new Image();
 
     d3.select(svgNode).select('clippath').remove();
 
     let xmlSource = (new XMLSerializer()).serializeToString(svgNode);
-
     image.onload = (function(imageWidth, imageHeight) {
         let canvas = document.createElement('canvas');
         let context = canvas.getContext('2d');
@@ -86,7 +87,6 @@ function generateIcon(number, callback) {
         d3.select(canvas)
             .attr('width', imageWidth)
             .attr('height', imageHeight);
-
         context.drawImage(image, 0, 0, imageWidth, imageHeight);
 
         dataURL = canvas.toDataURL();
@@ -95,10 +95,11 @@ function generateIcon(number, callback) {
         callback(dataURL);
     }).bind(this, imageWidth, imageHeight);
 
-    image.src = 'data:image/svg+xml;base64,' +
-        btoa(encodeURIComponent(xmlSource).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+    const base64img = btoa(
+        encodeURIComponent(xmlSource).replace(/%([0-9A-F]{2})/g, function(match, p1) {
             return String.fromCharCode('0x' + p1);
         }));
+    image.src = 'data:image/svg+xml;base64,' + base64img;
 }
 
 /**
@@ -107,7 +108,8 @@ function generateIcon(number, callback) {
  * @param {object} sample data
  */
 function addSampleToList(listObj, sample) {
-    listObj.append('<li><a href="'+sample.sample_url+'">'+sample.sample_accession+'</a></li>');
+    listObj.append('<li><a href="' + sample.sample_url + '">' + sample.sample_accession +
+        '</a></li>');
 }
 
 module.exports = class MapHandler {
