@@ -305,7 +305,7 @@ select.table-tools {
 
 .studies-list {
     max-height: 30em;
-    overflow-x: scroll;
+    overflow-y: scroll;
     overflow-x: hidden;
 }
 
