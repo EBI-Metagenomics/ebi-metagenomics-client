@@ -1,4 +1,5 @@
 import {datatype} from './util';
+import config from './config';
 
 class GenericTableHandler {
     constructor(parentId, defaultPageSize, hasLoadingGif) {
@@ -34,6 +35,8 @@ class GenericTableHandler {
 
     testSorting(pageSize, tests) {
         const that = this;
+        cy.server();
+        cy.route(config.API_URL + '*').as('apiCall');
 
         let i = 0;
         for (let header in tests) {
@@ -43,6 +46,7 @@ class GenericTableHandler {
                 if (tests[header].sortable) {
                     const i2 = i;
                     this.getHeader(i2).click();
+                    cy.wait('@apiCall');
                     this.waitForTableLoad(pageSize);
                     this.getHeader(i2).then(($el) => {
                         const asc = Cypress.$($el).hasClass('sort-asc');
