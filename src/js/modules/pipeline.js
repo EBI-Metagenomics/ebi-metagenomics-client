@@ -1,3 +1,4 @@
+const $ = require('jquery');
 const commons = require('../commons');
 const util = require('../util');
 require('static/css/pipeline.css');
