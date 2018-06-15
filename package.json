@@ -7,6 +7,8 @@
     "cypress:open": "cypress open",
     "test": "cypress run",
     "watch": "webpack --mode development --watch --config webpack.dev.config.js",
+    "watch:prod": "webpack --mode production --watch --config webpack.prod.config.js",
+    "server:watch": "webpack-dev-server --config webpack.dev.config.js --watch",
     "build": "webpack --mode development --config webpack.dev.config.js",
     "build:prod": "webpack --mode production --config webpack.prod.config.js",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov;",
