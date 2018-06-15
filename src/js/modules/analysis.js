@@ -292,7 +292,7 @@ let TaxonomyGraphView = Backbone.View.extend({
     initialize() {
         this.model.fetch().done(function(model) {
             const clusteredData = groupTaxonomyData(model, 0);
-            const phylumData = groupTaxonomyData(model, 2);
+            const phylumData = groupTaxonomyData(model, 1);
             // Pie tab
             new TaxonomyPieChart('domain-composition-pie', 'Domain composition', clusteredData);
             const phylumPieChart = new TaxonomyPieChart('phylum-composition-pie',
