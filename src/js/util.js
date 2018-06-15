@@ -538,8 +538,10 @@ export const AnalysesView = GenericTableView.extend({
 export function getLoginStatus() {
     const deferred = new $.Deferred();
 
-    $.get(api.API_URL + 'utils/myaccounts').always(function(xhr) {
+    $.get(api.API_URL + 'utils/myaccounts').done((xhr) => {
         deferred.resolve(String(xhr.status)[0] !== '4');
+    }).fail(() => {
+        deferred.resolve(false);
     });
     return deferred.promise();
 }
@@ -612,9 +614,10 @@ export function loadLoginForm(next) {
  * @param {boolean} isLoggedIn true if user is authenticated
  */
 export function setNavLoginButton(isLoggedIn) {
-    if (isLoggedIn) {
+    const username = getUsername();
+    if (isLoggedIn && username !== null) {
         const $a = $('<a></a>');
-        $a.text('Welcome, ' + getUsername() + ' ');
+        $a.text('Welcome, ' + username + ' ');
         $a.attr({
             'class': 'button',
             'href': subfolder + '/mydata',
