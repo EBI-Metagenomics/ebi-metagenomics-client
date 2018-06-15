@@ -12,41 +12,126 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
-        <section class="getting-started-banner">
+        <section id="getting-started-section">
             <div class="row columns">
                 <h2 class="text-center">Getting started</h2>
             </div>
             <div class="row">
-                <div class="columns small-12 medium-6 large-6">
-                    <div class="row columns text-center">
-                        <div class="row columns text-center getting-started">
+                <div class="columns small-12 medium-12 large-6">
+                    <div class="home-blog-box">
+                        <div class="row columns text-center">
                             <h3>Search by</h3>
                             <div class="row">
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
                                         <p>Name, biome, or keyword </p>
-                                        <a class="button" href="{{htmlWebpackPlugin.options.templateData.subfolder}}/search">Search text</a>
+                                        <a class="button"
+                                           href="{{htmlWebpackPlugin.options.templateData.subfolder}}/search">Search
+                                            text</a>
                                     </div>
                                 </div>
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
                                         <p>Sequence similarity</p>
-                                        <a class="button" href="{{htmlWebpackPlugin.options.templateData.sequenceSearchUrl}}">Search sequences</a>
+                                        <a class="button"
+                                           href="{{htmlWebpackPlugin.options.templateData.sequenceSearchUrl}}">Search
+                                            sequences</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="row columns">
+                            <h3>Or by data type</h3>
+                            <div class="index-stats-disp">
+                                <div id="stats-loading">
+                                    <img class="loading-gif-large" src="static/images/ajax-loader.gif">
+                                </div>
+                                <div id="stats-disp" class="row hidden">
+                                    <div class="columns small-1 medium-1 large-1">
+                             <span class="icon icon-conceptual icon-c3"
+                                   style="font-size: 2rem"
+                                   data-icon="d"></span>
+                                    </div>
+                                    <div class="columns small-5 medium-5 large-5">
+                                        <div class="columns small-12 medium-12 index-stats">
+                                            <div class="index-stats-label"><span id="amplicon-stats"></span></div>
+                                            amplicon
+                                        </div>
+                                        <div class="columns small-12 medium-12 index-stats">
+                                            <div class="index-stats-label"><span id="assembly-stats"></span></div>
+                                            assemblies
+                                        </div>
+                                        <div class="columns small-12 medium-12 index-stats">
+                                            <div class="index-stats-label"><span id="metaB-stats"></span></div>
+                                            metabarcoding
+                                        </div>
+                                        <div class="columns small-12 medium-12 index-stats">
+                                            <div class="index-stats-label"><span id="metaG-stats"></span></div>
+                                            metagenomes
+                                        </div>
+                                        <div class="columns small-12 medium-12 index-stats">
+                                            <div class="index-stats-label"><span id="metaT-stats"></span></div>
+                                            metatranscriptomes
+                                        </div>
+                                    </div>
+                                    <div class="columns small-1 medium-1 large-1">
+                                        <div class="columns small-1">
+                                        <span class="icon icon-functional icon-c9" style="font-size: 2rem"
+                                              data-icon="U"></span>
+                                        </div>
+                                    </div>
+                                    <div class="columns small-5 medium-5 large-5">
+                                        <div class="columns small-12 medium-12 index-stats">
+                                            <div class="index-stats-label"><span id="project-stats"></span></div>
+                                            studies
+                                        </div>
+                                        <div class="columns small-12 medium-12 index-stats">
+                                            <div class="index-stats-label"><span id="sample-stats"></span></div>
+                                            samples
+                                        </div>
+                                        <div class="columns small-12 medium-12 index-stats">
+                                            <div class="index-stats-label"><span id="run-stats"></span></div>
+                                            runs
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row columns">
+                            <h3>Or by selected biomes</h3>
+                            <div id="top10biomes" class="row columns">
+                                <script id="biomeTmpl" type="text/template">
+                                    <a href="<%= biome_studies_link %>">
+                                        <div>
+                                            <!--<img class="spacer" alt="icon"-->
+                                            <!--src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/backgrounds/bgd_transparent_1x1.png">-->
+                                            <span class="biome_icon icon_sm <%= icon %> <%= name%>"></span>
+                                        </div>
+                                        <div class="biome-text">
+                                            <%= name %> (<%= samples_count %>)
+                                        </div>
+                                    </a>
+                                </script>
+                            </div>
+                            <div class="row columns">
+                                <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/biomes" class="all right"
+                                   data-hasqtip="27"
+                                   oldtitle="View projects and filter by biome" title=""
+                                   aria-describedby="qtip-27">Browse all biomes</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="columns small-12 medium-6 large-6">
-                    <div class="row columns text-center">
-                        <div class="row columns text-center getting-started">
+                <div class="columns small-12 medium-12 large-6">
+                    <div class="row home-blog-box">
+                        <div class="row columns text-center">
                             <h3>Request analysis of</h3>
                             <div class="row">
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
                                         <p>Your data</p>
-                                        <a class="button" href="{{htmlWebpackPlugin.options.templateData.subfolder}}/submit">Submit</a>
+                                        <a class="button"
+                                           href="{{htmlWebpackPlugin.options.templateData.subfolder}}/submit">Submit</a>
                                     </div>
                                 </div>
                                 <div class="columns small-12 medium-6 large-6">
@@ -58,213 +143,139 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="row columns">
+                            <div id="latestStudies">
+                                <h3>Latest projects</h3>
+                                <div id="studies" class="studies-list">
+                                    <script id="studyTmpl" type="text/template">
+
+                                        <p>
+                                            <% _.each(biomes, function(biome){ %>
+                                            <span class="biome_icon icon_xs <%= biome.icon %>"></span>
+                                            <% }); %>
+                                            <a href="<%= study_link %>"><%= study_name %></a>
+                                        </p>
+                                        <%= abstract %>
+                                        <p>
+                                            <a href="<%= study_link %>">View more</a> - <a
+                                                href="<%= samples_link %>"><%=
+                                            samples_count
+                                            %>
+                                            samples</a>
+                                        </p>
+                                        <hr>
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="row columns">
+                                <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies"
+                                   class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
+                                   aria-describedby="qtip-42">View all projects</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
-        <section id="browse">
+
+        <hr>
+        <section id="blog-section">
+            <div class="row">
+                <div id="blogSpotlight" class="columns small-12 medium-6 large-6"><h2>Spotlight</h2></div>
+                <div id="blogTools" class="columns small-12 medium-6 large-6"><h2>Tools</h2></div>
+            </div>
+            <div id="blog" class="row">
+                <div class="columns small-12 medium-6 large-6">
+                    <div class="home-blog-box">
+                        <div class="hlight-spot grid_12 alpha" id="blog-spotlight">
+                            <div class="hlight_subtitle"><h3></h3></div>
+                            <div class="home_box alpha">
+                                <div>
+                                    <p class="placeholder"
+                                       style="width: 50%;"></p>
+                                </div>
+                                <a href="#" title="Read more on the blog" class="all left">Read more</a>
+                                <!-- For links inside the blog post -->
+                                <a href="#" class="all right"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns small-12 medium-6 large-6">
+                    <div class="home-blog-box">
+                        <div class="hlight-spot grid_12 omega" id="blog-tools">
+                            <div class="hlight_subtitle"><h3></h3></div>
+                            <div class="home_box omega">
+                                <div>
+                                    <p class="placeholder"
+                                       style="width: 50%;"></p>
+                                </div>
+                                <a href="#" title="Read more on the blog" class="all left">Read more</a>
+                                <!-- For links inside the blog post -->
+                                <a href="#" class="all right"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="columns small-12 medium-6 large-6">
-                    <h3>Browse by data type</h3>
-                    <div class="index-stats-disp">
-                        <div id="stats-loading">
-                            <img class="loading-gif-large" src="static/images/ajax-loader.gif">
-                        </div>
-                        <div id="stats-disp" class="row hidden">
-                            <div class="columns small-1 medium-1 large-1">
-                             <span class="icon icon-conceptual icon-c3"
-                                   style="font-size: 2rem"
-                                   data-icon="d"></span>
-                            </div>
-                            <div class="columns small-5 medium-5 large-5">
-                                <div class="columns small-12 medium-12 index-stats">
-                                    <div class="index-stats-label"><span id="amplicon-stats"></span></div>
-                                    amplicon
-                                </div>
-                                <div class="columns small-12 medium-12 index-stats">
-                                    <div class="index-stats-label"><span id="assembly-stats"></span></div>
-                                    assemblies
-                                </div>
-                                <div class="columns small-12 medium-12 index-stats">
-                                    <div class="index-stats-label"><span id="metaB-stats"></span></div>
-                                    metabarcoding
-                                </div>
-                                <div class="columns small-12 medium-12 index-stats">
-                                    <div class="index-stats-label"><span id="metaG-stats"></span></div>
-                                    metagenomes
-                                </div>
-                                <div class="columns small-12 medium-12 index-stats">
-                                    <div class="index-stats-label"><span id="metaT-stats"></span></div>
-                                    metatranscriptomes
-                                </div>
-                            </div>
-                            <div class="columns small-1 medium-1 large-1">
-                                <div class="columns small-1">
-                                        <span class="icon icon-functional icon-c9" style="font-size: 2rem"
-                                              data-icon="U"></span>
-                                </div>
-                            </div>
-                            <div class="columns small-5 medium-5 large-5">
-                                <div class="columns small-12 medium-12 index-stats">
-                                    <div class="index-stats-label"><span id="project-stats"></span></div>
-                                    studies
-                                </div>
-                                <div class="columns small-12 medium-12 index-stats">
-                                    <div class="index-stats-label"><span id="sample-stats"></span></div>
-                                    samples
-                                </div>
-                                <div class="columns small-12 medium-12 index-stats">
-                                    <div class="index-stats-label"><span id="run-stats"></span></div>
-                                    runs
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <h3>Browse by selected biomes</h3>
-                    <div id="top10biomes" class="row columns">
-                        <script id="biomeTmpl" type="text/template">
-                            <a href="<%= biome_studies_link %>">
-                                <div>
-                                    <!--<img class="spacer" alt="icon"-->
-                                         <!--src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/backgrounds/bgd_transparent_1x1.png">-->
-                                    <span class="biome_icon icon_sm <%= icon %> <%= name%>"></span>
-                                </div>
-                                <div class="biome-text">
-                                    <%= name %> (<%= samples_count %>)
-                                </div>
-                            </a>
-                        </script>
-                    </div>
-                    <div class="row columns">
-                        <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/biomes" class="all right" data-hasqtip="27"
-                           oldtitle="View projects and filter by biome" title=""
-                           aria-describedby="qtip-27">Browse all biomes</a>
-                    </div>
+                    <a id="blog-url" href="#" class="all left" data-hasqtip="27"
+                       oldtitle="View projects and filter by biome" title=""
+                       aria-describedby="qtip-27">See all articles</a>
                 </div>
-                <div class="columns small-12 medium-6 large-6">
-                    <div id="latestStudies">
-                        <h3>Latest projects</h3>
-                        <div id="studies" class="studies-list">
-                            <script id="studyTmpl" type="text/template">
-
-                                <p>
-                                    <% _.each(biomes, function(biome){ %>
-                                    <span class="biome_icon icon_xs <%= biome.icon %>"></span>
-                                    <% }); %>
-                                    <a href="<%= study_link %>"><%= study_name %></a>
-                                </p>
-                                <%= abstract %>
-                                <p>
-                                    <a href="<%= study_link %>">View more</a> - <a href="<%= samples_link %>"><%=
-                                    samples_count
-                                    %>
-                                    samples</a>
-                                </p>
-                                <hr>
-                            </script>
-                        </div>
-                    </div>
-                    <div class="row columns">
-                        <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies"
-                           class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
-                           aria-describedby="qtip-42">View all projects</a>
+            </div>
+        </section>
+        <hr>
+        <section id="citation-section">
+            <div class="row">
+                <div class="columns small-12 medium-12 large-12">
+                    <h2>How to cite</h2>
+                    <div class="home-blog-box">
+                        <img alt="Cover of the Nucleic Acids Research journal"
+                             src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/nucleic_acids_research_D1_cover.gif"
+                             class="publication-cover">
+                        <p>To cite MGnify, please refer to the following publication:</p>
+                        <p>
+                            Alex L. Mitchell, Maxim Scheremetjew, Hubert Denise, Simon Potter, Aleksandra Tarkowska,
+                            Matloob
+                            Qureshi, Gustavo A. Salazar, Sebastien Pesseat, Miguel A. Boland, Fiona M. I. Hunter, Petra
+                            ten
+                            Hoopen,
+                            Blaise Alako, Clara Amid, Darren J. Wilkinson, Thomas P. Curtis, Guy Cochrane, Robert D.
+                            Finn
+                            (2017).
+                            <br>
+                            <strong>EBI Metagenomics in 2017: enriching the analysis of microbial communities, from
+                                sequence
+                                reads
+                                to assemblies.</strong> Nucleic Acids Research (2017) doi: <a
+                                title="EBI Metagenomics in 2017: enriching the analysis of microbial communities, from sequence reads to assemblies"
+                                href="https://doi.org/10.1093/nar/gkx967" class="ext">10.1093/nar/gkx967</a>
+                        </p>
+                        <a href="about#h_site" class="all right" data-hasqtip="40" oldtitle="About page - How to cite"
+                           title=""
+                           aria-describedby="qtip-40">
+                            More citations
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
         <hr>
-        <div class="row">
-            <div id="blogSpotlight" class="columns small-12 medium-6 large-6"><h2>Spotlight</h2></div>
-            <div id="blogTools" class="columns small-12 medium-6 large-6"><h2>Tools</h2></div>
-        </div>
-        <div id="blog" class="row">
-            <div class="columns small-12 medium-6 large-6">
-                <div class="home-blog-box">
-                    <div class="hlight-spot grid_12 alpha" id="blog-spotlight">
-                        <div class="hlight_subtitle"><h3></h3></div>
-                        <div class="home_box alpha">
-                            <div>
-                                <p class="placeholder"
-                                   style="width: 50%;"></p>
-                            </div>
-                            <a href="#" title="Read more on the blog" class="all left">Read more</a>
-                            <!-- For links inside the blog post -->
-                            <a href="#" class="all right"></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="columns small-12 medium-6 large-6">
-                <div class="home-blog-box">
-                    <div class="hlight-spot grid_12 omega" id="blog-tools">
-                        <div class="hlight_subtitle"><h3></h3></div>
-                        <div class="home_box omega">
-                            <div>
-                                <p class="placeholder"
-                                   style="width: 50%;"></p>
-                            </div>
-                            <a href="#" title="Read more on the blog" class="all left">Read more</a>
-                            <!-- For links inside the blog post -->
-                            <a href="#" class="all right"></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="columns small-12 medium-6 large-6">
-                <a id="blog-url" href="#" class="all left" data-hasqtip="27"
-                   oldtitle="View projects and filter by biome" title=""
-                   aria-describedby="qtip-27">See all articles</a>
-            </div>
-        </div>
-        <!-- END Blog post section-->
-        <hr>
-        <!-- START Citation section-->
-        <div class="row">
-            <div class="columns small-12 medium-12 large-12">
-                <h2>How to cite</h2>
-                <div class="home-blog-box">
-                    <img alt="Cover of the Nucleic Acids Research journal"
-                         src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/nucleic_acids_research_D1_cover.gif"
-                         class="publication-cover">
-                    <p>To cite MGnify, please refer to the following publication:</p>
-                    <p>
-                        Alex L. Mitchell, Maxim Scheremetjew, Hubert Denise, Simon Potter, Aleksandra Tarkowska,
-                        Matloob
-                        Qureshi, Gustavo A. Salazar, Sebastien Pesseat, Miguel A. Boland, Fiona M. I. Hunter, Petra
-                        ten
-                        Hoopen,
-                        Blaise Alako, Clara Amid, Darren J. Wilkinson, Thomas P. Curtis, Guy Cochrane, Robert D.
-                        Finn
-                        (2017).
-                        <br>
-                        <strong>EBI Metagenomics in 2017: enriching the analysis of microbial communities, from
-                            sequence
-                            reads
-                            to assemblies.</strong> Nucleic Acids Research (2017) doi: <a
-                            title="EBI Metagenomics in 2017: enriching the analysis of microbial communities, from sequence reads to assemblies"
-                            href="https://doi.org/10.1093/nar/gkx967" class="ext">10.1093/nar/gkx967</a>
-                    </p>
-                    <a href="about#h_site" class="all right" data-hasqtip="40" oldtitle="About page - How to cite"
-                       title=""
-                       aria-describedby="qtip-40">
-                        More citations
-                    </a>
-                </div>
-            </div>
-        </div>
-        <!-- END Citation section-->
-        <hr>
-        <!-- START Twitter section-->
+
         <section class="jumbo-news">
             <div class="grid_24 jumbo-news-container">
                 <div class="jumbo-news-centred" style="text-align: center">
                     <h3 class="icon icon-socialmedia icon-s2" data-icon="T"></h3>
-                    <a class="twitter-timeline" data-width="520" data-height="600" data-dnt="true" data-link-color="#2B7BB9" href="https://twitter.com/EBImetagenomics?ref_src=twsrc%5Etfw">Tweets by EBImetagenomics</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    <a class="twitter-timeline" data-width="520" data-height="600" data-dnt="true"
+                       data-link-color="#2B7BB9" href="https://twitter.com/EBImetagenomics?ref_src=twsrc%5Etfw">Tweets
+                        by EBImetagenomics</a>
+                    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                 </div>
             </div>
         </section>
-        <!-- END Twitter section-->
     </div>
 </div>
 <div class="reveal" id="requestAnalysisModal" data-reveal>
@@ -275,7 +286,8 @@
             <div class="grid-x">
                 <div class="medium-6 cell">
                     <label>Study accession
-                        <input id="study-accession" name="study-accession" type="text" placeholder="ERP###### or SRP###### or DRP######" required pattern="study_accession">
+                        <input id="study-accession" name="study-accession" type="text"
+                               placeholder="ERP###### or SRP###### or DRP######" required pattern="study_accession">
                         <span class="form-error">
                             Improperly formatted accession, format should be ERP, SRP, DRP, PRJEB, PRJNA followed by a number.
                         </span>
@@ -306,7 +318,7 @@
                 <!-- Add type of analysis: assembly | amplicon | raw read -->
             </div>
         </div>
-        <button class="button mailtobtn" type="button" >Submit request</button>
+        <button class="button mailtobtn" type="button">Submit request</button>
     </form>
     <button class="close-button" data-close aria-label="Close modal" type="button">
         <span aria-hidden="true">&times;</span>

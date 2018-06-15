@@ -26,7 +26,7 @@ let BiomeView = Backbone.View.extend({
     first: false,
     template: _.template($('#biomeTmpl').html()),
     attributes: {
-        class: 'small-6 medium-6 large-2 columns biome-disp'
+        class: 'small-6 medium-2 large-2 columns biome-disp'
     },
     render() {
         this.$el.html(this.template(this.model.toJSON()));

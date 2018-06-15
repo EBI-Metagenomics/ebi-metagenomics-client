@@ -944,6 +944,11 @@ img.publication-cover {
     border: solid black 1px;
 }
 
+.boxed {
+    border: solid black 1px;
+    padding: 1em;
+}
+
 .index-stats-label {
     float: left;
     min-width: 4em;
