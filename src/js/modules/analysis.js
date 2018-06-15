@@ -28,6 +28,7 @@ util.setupPage('#browse-nav');
 window.Foundation.addToJquery($);
 
 let analysisID = util.getURLParameter();
+util.specifyPageTitle('Analysis', analysisID);
 
 let interproData = null;
 let taxonomy = null;

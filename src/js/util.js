@@ -684,3 +684,11 @@ export function attachExpandButtonCallback() {
     });
 }
 
+/**
+ * Add an id to the start of the page title
+ * @param {string} objectType Study | Sample | Run | Analysis
+ * @param {string} id to add to page title
+ */
+export function specifyPageTitle(objectType, id) {
+    document.title = `${objectType}: ${id} < ${document.title}`;
+}
