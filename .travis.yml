@@ -68,12 +68,14 @@ before_install:
   - emgcli import_summary ERR1022500 $TRAVIS_BUILD_DIR/results .go_slim
   - emgcli import_summary ERR1022500 $TRAVIS_BUILD_DIR/results .go
 
-install:
-
+  # Install build dependencies
   - npm install cypress
-  - npm install webpack -g
+  - npm install -g webpack
   - npm install -g codecov
   - npm install -g nyc
+
+install:
+  # Install npm packages
   - npm install
   - npm run build
   - sudo mv dist/* /usr/share/nginx/html/
