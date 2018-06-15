@@ -134,6 +134,7 @@ let AnalysisView = Backbone.View.extend({
                     new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary',
                         attr['analysis_summary']);
 
+
                     if (attr.experiment_type !== 'amplicon') {
                         enableTab('functional');
                         // QC charts
@@ -515,9 +516,6 @@ function getTotalGoTermCount(array) {
  * @param {string} id of tab
  */
 function disableTab(id) {
-    console.log(id, '[href=\'#' + id + '\']');
-    console.log($('[href=\'#' + id + '\']').parent('li'));
-    console.log($('[href=\'#' + id + '\']'));
     $('[href=\'#' + id + '\']').parent('li').addClass('disabled');
 }
 
