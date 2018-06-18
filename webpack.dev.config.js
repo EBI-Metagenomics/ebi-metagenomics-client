@@ -1,15 +1,10 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const {StatsWriterPlugin} = require('webpack-stats-plugin');
 
 const baseConfig = require('./webpack.base.config');
 
 module.exports = {
     mode: 'development',
-    plugins: baseConfig.plugins.concat([
-        new StatsWriterPlugin({
-            filename: 'stats.json'
-        })
-    ]), // filter out empty values
+    plugins: baseConfig.plugins, // filter out empty values
     entry: baseConfig.entry,
     output: baseConfig.output,
     resolve: baseConfig.resolve,
