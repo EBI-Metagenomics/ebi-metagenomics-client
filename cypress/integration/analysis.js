@@ -52,7 +52,7 @@ describe('Analysis page - general', function() {
     //     let tabs = ['#qc', '#functional', '#taxonomic', '#download', '#overview'];
     //     verifyTabsEnabled(tabs);
     //
-    //     openPage('analysis/MGYA00141547');
+    //     openPage('analyses/MGYA00141547');
     //     waitForPageLoad();
     //     verifyTabIsVisible('#overview');
     //     let tabs2 = ['#qc', '#functional', '#abundance', '#taxonomic', '#download', '#overview'];
@@ -60,7 +60,7 @@ describe('Analysis page - general', function() {
     // });
 
     it('Should display metadata if available', function() {
-        openPage('analysis/MGYA00141547');
+        openPage('analyses/MGYA00141547');
         waitForPageLoad();
         verifyTabIsVisible('#overview');
         cy.contains('Study:').next().should('contain', 'MGYS00000553');
@@ -72,11 +72,11 @@ describe('Analysis page - general', function() {
         cy.contains('Instrument platform:').next().should('contain', 'ILLUMINA');
     });
     it('SSU/LSU buttons should appear/dissapear if pipeline version <4.0', function() {
-        openPage('analysis/MGYA00011845');
+        openPage('analyses/MGYA00011845');
         waitForPageLoad();
         changeTab('taxonomic');
         cy.get('#ssu-lsu-btns').should('not.exist');
-        openPage('analysis/MGYA00141547');
+        openPage('analyses/MGYA00141547');
         waitForPageLoad();
         changeTab('taxonomic');
         cy.get('#ssu-lsu-btns').should('be.visible', {timeout: 40000});
@@ -117,7 +117,7 @@ describe('Analysis page - download tab', function() {
 
 // describe('Analysis page - charts', function() {
 // it('QC chart should display correctly', function() {
-//     openPage('analysis/ERR867655');
+//     openPage('analyses/ERR867655');
 //     waitForPageLoad();
 //     changeTab('qc');
 //
