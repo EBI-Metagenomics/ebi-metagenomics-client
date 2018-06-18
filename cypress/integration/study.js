@@ -180,7 +180,7 @@ describe('Study page - Analysis table - ', function() {
 
     it('Analysis table download link should be valid', function() {
         table.testDownloadLink(Config.API_URL + 'studies/' + projectId +
-            '/analysis?include=sample&format=csv');
+            '/analyses?include=sample&format=csv');
     });
 });
 

@@ -1,6 +1,6 @@
 import {openPage, changeTab} from './util';
 
-const origPage = 'analysis/MGYA00011845';
+const origPage = 'analyses/MGYA00011845';
 
 function waitForPageLoad() {
     cy.get('#overview', {timeout: 20000}).children().should('have.length', 2);
@@ -185,7 +185,7 @@ describe('Analysis page - Abundance tab', function() {
 describe('Analysis page - Changing pipeline version', function() {
     it('Should not duplicate krona chart', function() {
         const kronaChartClass = '.krona_chart';
-        openPage('analysis/MGYA00141547');
+        openPage('analyses/MGYA00141547');
         waitForPageLoad();
         changeTab('taxonomic');
         changeTab('krona');
@@ -201,7 +201,7 @@ describe('Analysis page - Changing pipeline version', function() {
 describe('Analysis page - Changing analysis version', function() {
     it('Should not duplicate taxonomic phylum table', function() {
         const tableClass = '#pie .phylum-table';
-        openPage('analysis/MGYA00141547');
+        openPage('analyses/MGYA00141547');
         waitForPageLoad();
         changeTab('taxonomic');
         changeTab('pie');
@@ -217,7 +217,7 @@ describe('Analysis page - Changing analysis version', function() {
 describe('Analysis page - Error handling', function() {
     it('Should display error message if invalid accession passed in URL', function() {
         const runId = 'MGYA00141547XXXX';
-        const origPage = 'analysis/' + runId;
+        const origPage = 'analyses/' + runId;
         openPage(origPage);
         cy.contains('Error: 404', {timeout: 40000});
         cy.contains('Could not retrieve analysis: ' + runId, {timeout: 40000});
