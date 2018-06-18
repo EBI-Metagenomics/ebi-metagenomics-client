@@ -1,10 +1,15 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const {StatsWriterPlugin} = require('webpack-stats-plugin');
 
 const baseConfig = require('./webpack.base.config');
 
 module.exports = {
     mode: 'development',
-    plugins: baseConfig.plugins, // filter out empty values
+    plugins: baseConfig.plugins.concat([
+        new StatsWriterPlugin({
+            filename: 'stats.json'
+        })
+    ]), // filter out empty values
     entry: baseConfig.entry,
     output: baseConfig.output,
     resolve: baseConfig.resolve,
@@ -24,13 +29,18 @@ module.exports = {
     },
     optimization: {
         splitChunks: {
-            cacheGroups: {
-                commons: {
-                    name: 'commons',
-                    chunks: 'initial',
-                    minChunks: 2
-                }
-            }
+            chunks: 'async',
+            minSize: 1000,
+            minChunks: 3,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            // cacheGroups: {
+            //     commons: {
+            //         name: 'common',
+            //         chunks: 'all',
+            //         minChunks: 2
+            //     }
+            // }
         },
         noEmitOnErrors: true, // NoEmitOnErrorsPlugin
         concatenateModules: true // ModuleConcatenationPlugin
