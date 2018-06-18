@@ -995,3 +995,16 @@ a.download-part {
 .biome-select {
     width: 75%;
 }
+
+@keyframes highlight {
+    0% {
+        background: #007c82;
+    }
+    100% {
+        background: none;
+    }
+}
+
+.highlight {
+    animation: highlight 3s;
+}
