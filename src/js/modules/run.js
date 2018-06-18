@@ -13,6 +13,8 @@ util.setupPage('#browse-nav');
 window.Foundation.addToJquery($);
 
 let runId = util.getURLParameter();
+util.specifyPageTitle('Run', runId);
+
 let pipelineVersion = util.getURLFilterParams()['version'];
 
 let RunView = Backbone.View.extend({

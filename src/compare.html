@@ -3,7 +3,8 @@
 <head id="head">
     <title>Compare &lt; MGnify &lt; EMBL-EBI</title>
     {{> partials/head this}}
-    <link rel="stylesheet" href="{{htmlWebpackPlugin.options.templateData.subfolder}}/js/compare.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="{{htmlWebpackPlugin.options.templateData.subfolder}}/js/compare.css" type="text/css"
+          media="all"/>
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -15,7 +16,7 @@
         <section id="runSelection">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
-                     <li><a href="./">Home</a></li>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
                     <li>
                         <span class="show-for-sr">Current: </span> Comparison tool
                     </li>

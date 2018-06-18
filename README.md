@@ -38,10 +38,14 @@ source env-config.sh
 ```
 
 ##### Run 'npm install' in the project's main directory.
- Serve with own server, or use biult-in dev system by calling 'webpack-dev-server' in main directory.
+ Serve with own server, or use built-in dev system by calling 'npm run server:watch'' in main directory.
  Access local web server under http://localhost:9000/index.html .
 ```
+export DEPLOYMENT_SUBFOLDER=“/metagenomics”;
 npm install
 
-npm run watch
+npm run watch 
+
+OR with server:
+npm run server:watch
 ```

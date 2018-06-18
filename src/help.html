@@ -14,24 +14,46 @@
         <div class="column small-12 medium-12 large-12">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
-                    <li><a href="./">Home</a></li>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
                     <li>
                         <span class="show-for-sr">Current: </span> Help
                     </li>
                 </ul>
             </nav>
             <h2>Help</h2>
+            <p>MGnify is a freely available hub for the analysis and
+                exploration of metagenomic, metatranscriptomic, amplicon and
+                assembly data. The resource provides rich functional and taxonomic
+                analyses of user-submitted sequences, as well as analysis of
+                publicly available metagenomic datasets drawn from the European
+                Nucleotide Archive (ENA).</p>
 
-            <p>All <a id="doc-link" title="EMG-docs"
-                      class="ext">documentation</a> relating to the use of MGnify was moved to
-                <a title="Read the Docs" href="https://readthedocs.org/" class="ext">Read the Docs</a>.
-                This allows us to provide a rich, searchable and downloadable document, in addition to different
-                versions of the documentation corresponding to the different pipelines (accessed via the bottom left corner of the
-                <a id="doc-link-2" title="EMG-docs" class="ext">EMG Read the Docs site</a>). Answers to many of the most
-                commonly asked questions can be found under the FAQ section. Furthermore, there are also the following
-                training materials as part of the <a title="EBI Train online"
-                                                     href="https://www.ebi.ac.uk/training/online/about-train-online"
-                                                     class="ext">EBI Train online</a>:
+            <div class="notifications-js row margin-top-medium">
+                <div class="callout notice"><h3>User Documentation</h3>MGnify user documentation is located at the MGnify <a
+                        id="doc-link-2" title="MGnify docs" class="ext">Read the Docs site</a>.
+                    <p>This provides a rich, searchable and downloadable overview of
+                        the service for scientists and a complete version history
+                        corresponding to the different pipelines (accessed via the bottom left hand corner of the page). Answers to many of the most
+                        commonly asked questions can be found under the <a class="ext"
+                                                                           href="https://emg-docs.readthedocs.io/en/latest/faqs.html">FAQ</a>.
+                    </p>
+                </div>
+            </div>
+
+            <h3>Sequence search</h3>
+
+            <p>This allows protein sequence searches of our non-redundant
+            protein database using HMMER. Comprehensive documentation describing the sequence search website and available options is available on the <a class="ext"
+                               href="https://hmmer-web-docs.readthedocs.io/en/latest/index.html">HMMER Read the Docs
+                    site</a>.
+            </p>
+
+            <h3>Training materials</h3>
+
+            <p>This provide training materials as
+                part of the <a title="EBI Train online"
+                               href="https://www.ebi.ac.uk/training/online/about-train-online"
+                               class="ext">EBI Train online</a>:
             <ol>
                 <li><a title="Quick Tour"
                        href="https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-portal-quick-tour"
@@ -43,8 +65,12 @@
                        href="https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-analysing-and-exploring-metagenomics-data"
                        class="ext">A webinar explaining about MGnify and the analysis you can perform</a></li>
             </ol>
+            </p>
+
+            <h3>Contact us</h3>
+
             <p>
-                However, if neither the documentation nor online materials answer your question, please <a
+            If neither the documentation nor our online materials answer your questions, please <a
                     title="EBI's support & feedback form"
                     href="https://www.ebi.ac.uk/support/metagenomics"
                     class="ext">contact us</a>.

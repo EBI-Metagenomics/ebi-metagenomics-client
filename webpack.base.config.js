@@ -17,6 +17,15 @@ const templateFixtures = {
     sequenceSearchUrl: sequenceSearchUrl
 };
 
+const minifyOptions = process.argv.mode === 'development' ? false : {
+    removeAttributeQuotes: true,
+    collapseWhitespace: true,
+    html5: true,
+    minifyCSS: true,
+    removeComments: true,
+    removeEmptyAttributes: true
+};
+
 module.exports = {
     entry: {
         mydata: 'src/js/modules/mydata.js',
@@ -77,6 +86,7 @@ module.exports = {
             filename: 'mydata.html',
             template: 'handlebars-loader!./src/mydata.html',
             chunks: ['mydata', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -85,6 +95,7 @@ module.exports = {
             filename: 'about.html',
             template: 'handlebars-loader!./src/about.html',
             chunks: ['about', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -93,6 +104,7 @@ module.exports = {
             filename: 'biomes.html',
             template: 'handlebars-loader!./src/biomes.html',
             chunks: ['biomes', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -101,6 +113,7 @@ module.exports = {
             filename: 'browse.html',
             template: 'handlebars-loader!./src/browse.html',
             chunks: ['browse', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -109,6 +122,7 @@ module.exports = {
             filename: 'compare.html',
             template: 'handlebars-loader!./src/compare.html',
             chunks: ['compare', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -117,6 +131,7 @@ module.exports = {
             filename: 'healthcheck.html',
             template: 'handlebars-loader!./src/healthcheck.html',
             chunks: ['healthcheck', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -125,6 +140,7 @@ module.exports = {
             filename: 'help.html',
             template: 'handlebars-loader!./src/help.html',
             chunks: ['help', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -133,6 +149,7 @@ module.exports = {
             filename: 'index.html',
             template: 'handlebars-loader!./src/index.html',
             chunks: ['index', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -141,6 +158,7 @@ module.exports = {
             filename: 'login.html',
             template: 'handlebars-loader!./src/login.html',
             chunks: ['login', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -149,6 +167,7 @@ module.exports = {
             filename: 'pipeline.html',
             template: 'handlebars-loader!./src/pipeline.html',
             chunks: ['pipeline', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -157,6 +176,7 @@ module.exports = {
             filename: 'pipelines.html',
             template: 'handlebars-loader!./src/pipelines.html',
             chunks: ['pipelines', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -165,6 +185,7 @@ module.exports = {
             filename: 'run.html',
             template: 'handlebars-loader!./src/run.html',
             chunks: ['run', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -173,6 +194,7 @@ module.exports = {
             filename: 'analysis.html',
             template: 'handlebars-loader!./src/analysis.html',
             chunks: ['analysis', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -181,6 +203,7 @@ module.exports = {
             filename: 'sample.html',
             template: 'handlebars-loader!./src/sample.html',
             chunks: ['sample', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -189,6 +212,7 @@ module.exports = {
             filename: 'search.html',
             template: 'handlebars-loader!./src/search.html',
             chunks: ['search', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -197,6 +221,7 @@ module.exports = {
             filename: 'study.html',
             template: 'handlebars-loader!./src/study.html',
             chunks: ['study', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
@@ -205,6 +230,7 @@ module.exports = {
             filename: 'submit.html',
             template: 'handlebars-loader!./src/submit.html',
             chunks: ['submit', 'commons'],
+            minify: minifyOptions,
             templateData: templateFixtures
         }),
         new ScriptExtHtmlWebpackPlugin({

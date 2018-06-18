@@ -90,7 +90,7 @@ describe('Login process', function() {
         it('Logout should redirect to overview', function() {
             login();
             cy.get(logoutButton).click();
-            cy.get('.getting-started-banner').find('h2').contains('Getting started');
+            cy.contains('Getting started');
         });
     });
     context('Edge cases', function() {

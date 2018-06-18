@@ -28,6 +28,7 @@ util.setupPage('#browse-nav');
 window.Foundation.addToJquery($);
 
 let analysisID = util.getURLParameter();
+util.specifyPageTitle('Analysis', analysisID);
 
 let interproData = null;
 let taxonomy = null;
@@ -133,22 +134,23 @@ let AnalysisView = Backbone.View.extend({
                     new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary',
                         attr['analysis_summary']);
 
+                    const statsData = new api.QcChartStats({id: analysisID});
+                    statsData.fetch({
+                        dataType: 'text',
+                        success(model) {
+                            new QCChart('QC-step-chart', attr['analysis_summary'],
+                                model.attributes['sequence_count']);
+                            if (attr['pipeline_version'] > 2) {
+                                loadReadLengthDisp(analysisID, model.attributes);
+                                loadGCDistributionDisp(analysisID, model.attributes);
+                                loadNucleotideDisp(analysisID, model.attributes);
+                            }
+                        }
+                    });
+
                     if (attr.experiment_type !== 'amplicon') {
                         enableTab('functional');
                         // QC charts
-                        const statsData = new api.QcChartStats({id: analysisID});
-                        statsData.fetch({
-                            dataType: 'text',
-                            success(model) {
-                                if (attr['pipeline_version'] > 2) {
-                                    loadReadLengthDisp(analysisID, model.attributes);
-                                    loadGCDistributionDisp(analysisID, model.attributes);
-                                    loadNucleotideDisp(analysisID, model.attributes);
-                                }
-                                new QCChart('QC-step-chart', attr['analysis_summary'],
-                                    model.attributes['sequence_count']);
-                            }
-                        });
                     } else {
                         disableTab('functional');
                         if (window.location.hash.substr(1) === 'functional') {
@@ -290,7 +292,7 @@ let TaxonomyGraphView = Backbone.View.extend({
     initialize() {
         this.model.fetch().done(function(model) {
             const clusteredData = groupTaxonomyData(model, 0);
-            const phylumData = groupTaxonomyData(model, 2);
+            const phylumData = groupTaxonomyData(model, 1);
             // Pie tab
             new TaxonomyPieChart('domain-composition-pie', 'Domain composition', clusteredData);
             const phylumPieChart = new TaxonomyPieChart('phylum-composition-pie',
@@ -514,9 +516,6 @@ function getTotalGoTermCount(array) {
  * @param {string} id of tab
  */
 function disableTab(id) {
-    console.log(id, '[href=\'#' + id + '\']');
-    console.log($('[href=\'#' + id + '\']').parent('li'));
-    console.log($('[href=\'#' + id + '\']'));
     $('[href=\'#' + id + '\']').parent('li').addClass('disabled');
 }
 

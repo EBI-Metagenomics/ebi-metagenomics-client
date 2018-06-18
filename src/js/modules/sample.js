@@ -11,6 +11,7 @@ require('../../../static/js/jquery.liveFilter.js');
 util.setupPage('#browse-nav');
 
 let sampleId = util.getURLParameter();
+util.specifyPageTitle('Sample', sampleId);
 
 /**
  * Sort by parameter name ignoring case
