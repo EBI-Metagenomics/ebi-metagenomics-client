@@ -152,7 +152,7 @@ let AnalysisView = Backbone.View.extend({
                         enableTab('functional');
                         // QC charts
                     } else {
-                        disableTab('functional');
+                        removeTab('functional');
                         if (window.location.hash.substr(1) === 'functional') {
                             util.changeTab('overview');
                         }
@@ -515,8 +515,8 @@ function getTotalGoTermCount(array) {
  * Disable tab by id
  * @param {string} id of tab
  */
-function disableTab(id) {
-    $('[href=\'#' + id + '\']').parent('li').addClass('disabled');
+function removeTab(id) {
+    $('[href=\'#' + id + '\']').parent('li').remove();
 }
 
 /**
@@ -629,7 +629,7 @@ function setAbundanceTab(statisticsData) {
             return;
         }
     }
-    disableTab('abundance');
+    removeTab('abundance');
     if (window.location.hash.substr(1) === 'abundance') {
         util.changeTab('overview');
     }

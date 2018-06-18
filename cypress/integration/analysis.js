@@ -17,8 +17,8 @@ function openTab(tabId) {
     cy.get('[href=\'' + tabId + '\']').parent().click();
 }
 
-function checkTabIsDisabled(tabId) {
-    cy.get('[href=\'' + tabId + '\']').parent('li.disabled', {timeout: 40000});
+function checkTabWasRemoved(tabId) {
+    cy.get('[href=\'' + tabId + '\']').should('not.exist');
 }
 
 function selectAnalysis(analysis) {
@@ -161,10 +161,10 @@ describe('Analysis page - download tab', function() {
 // });
 
 describe('Analysis page - Abundance tab', function() {
-    it('Tab should be disabled if no data available.', function() {
+    it('Tab should be removed if no data available.', function() {
         openPage(origPage);
         waitForPageLoad();
-        checkTabIsDisabled('#abundance');
+        checkTabWasRemoved('#abundance');
     });
     it('Tab should change to default if no data available.', function() {
         openPage(origPage + '#abundance');
@@ -172,9 +172,7 @@ describe('Analysis page - Abundance tab', function() {
         // Check defaulted to overview tab
         cy.contains('Description', {timeout: 40000}).should('be.visible');
         cy.get('a[href=\'#abundance\']')
-            .should('have.attr', 'aria-selected', 'false')
-            .parent()
-            .should('not.have.class', 'is-active');
+            .should('not.exist');
         cy.get('a[href=\'#overview\']')
             .should('have.attr', 'aria-selected', 'true')
             .parent()
