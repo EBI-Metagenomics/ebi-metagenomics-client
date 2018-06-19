@@ -332,6 +332,7 @@ select.table-tools {
     border: 1px #cbcbcb solid;
     overflow: hidden /*when resizing*/;
     padding: 5px 20px;
+    min-height: 19.5em;
 }
 
 .home-blog-box.tall {
