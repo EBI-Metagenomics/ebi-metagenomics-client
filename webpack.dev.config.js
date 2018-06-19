@@ -24,13 +24,18 @@ module.exports = {
     },
     optimization: {
         splitChunks: {
-            cacheGroups: {
-                commons: {
-                    name: 'commons',
-                    chunks: 'initial',
-                    minChunks: 2
-                }
-            }
+            chunks: 'async',
+            minSize: 1000,
+            minChunks: 3,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            // cacheGroups: {
+            //     commons: {
+            //         name: 'common',
+            //         chunks: 'all',
+            //         minChunks: 2
+            //     }
+            // }
         },
         noEmitOnErrors: true, // NoEmitOnErrorsPlugin
         concatenateModules: true // ModuleConcatenationPlugin

@@ -334,6 +334,10 @@ select.table-tools {
     padding: 5px 20px;
 }
 
+.home-blog-box.tall{
+    min-height: 48.4em;
+}
+
 /************* BIOME ICONS ************/
 /*biome gal*/
 .biome_icon {
@@ -994,4 +998,33 @@ a.download-part {
 
 .biome-select {
     width: 75%;
+}
+
+@keyframes highlight {
+    0% {
+        background: #007c82;
+    }
+    100% {
+        background: none;
+    }
+}
+
+.highlight {
+    animation: highlight 3s;
+}
+
+ul.training {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+ul.training > li:before {
+    font-family: 'EBI-Generic';
+    content: 't';
+    margin: 0 5px 0 -15px;
+}
+
+ul.training > li:last-child:before {
+    content: "K";
+    font-family: EBI-Common;
 }

@@ -152,7 +152,7 @@ let AnalysisView = Backbone.View.extend({
                         enableTab('functional');
                         // QC charts
                     } else {
-                        disableTab('functional');
+                        removeTab('functional');
                         if (window.location.hash.substr(1) === 'functional') {
                             util.changeTab('overview');
                         }
@@ -407,10 +407,8 @@ function createInterProLink(text, id) {
 let InterProSummary = Backbone.View.extend({
     model: api.InterproIden,
     initialize() {
-        this.model.fetch({
-            data: $.param({page_size: 7000}),
-            success(model) {
-                const data = model.attributes.data;
+        this.model.fetch()
+            .done(function(data) {
                 let top10AndOthers = [];
                 let totalCount = 0;
 
@@ -493,8 +491,7 @@ let InterProSummary = Backbone.View.extend({
                         $(this).toggleClass('disabled-clickable');
                     }
                 });
-            }
-        });
+            });
     }
 });
 
@@ -515,8 +512,8 @@ function getTotalGoTermCount(array) {
  * Disable tab by id
  * @param {string} id of tab
  */
-function disableTab(id) {
-    $('[href=\'#' + id + '\']').parent('li').addClass('disabled');
+function removeTab(id) {
+    $('[href=\'#' + id + '\']').parent('li').remove();
 }
 
 /**
@@ -629,7 +626,7 @@ function setAbundanceTab(statisticsData) {
             return;
         }
     }
-    disableTab('abundance');
+    removeTab('abundance');
     if (window.location.hash.substr(1) === 'abundance') {
         util.changeTab('overview');
     }
