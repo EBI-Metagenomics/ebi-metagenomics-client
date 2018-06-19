@@ -3,6 +3,20 @@
 <head id="head">
     <title>Home &lt; MGnify &lt; EMBL-EBI</title>
     {{> partials/head this}}
+    <meta property="og:type" content="website">
+
+    <meta property="og:site_name" content="MGnify">
+    <meta property="og:url" content="https://ebi.ac.uk/metagenomics/beta/">
+    <meta property="og:title" content="MGnify home page > EMBL-EBI">
+    <meta property="og:image" content="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/twitter_card/card_image.jpg">
+
+    <!-- Documentation: https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@EBImetagenomics">
+    <meta name="twitter:creator" content="@EBImetagenomics">
+    <meta name="twitter:description" content="MGnify website">
+    <meta name="twitter:image" content="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/twitter_card/card_image.jpg">
+
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
 <div id="header2">
