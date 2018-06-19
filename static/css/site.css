@@ -332,6 +332,7 @@ select.table-tools {
     border: 1px #cbcbcb solid;
     overflow: hidden /*when resizing*/;
     padding: 5px 20px;
+    min-height: 48.4em;
 }
 
 /************* BIOME ICONS ************/
@@ -1007,4 +1008,20 @@ a.download-part {
 
 .highlight {
     animation: highlight 3s;
+}
+
+ul.training {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+ul.training > li:before {
+    font-family: 'EBI-Generic';
+    content: 't';
+    margin: 0 5px 0 -15px;
+}
+
+ul.training > li:last-child:before {
+    content: "K";
+    font-family: EBI-Common;
 }
