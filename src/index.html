@@ -12,6 +12,13 @@
 <!-- Suggested layout containers / #content -->
 <div id="content">
     <div id="main-content-area" class="row" role="main">
+        <div class="row columns">
+            <a href="#blog-section">
+                <div class="callout alert rebranding-announcement"><h3>We've changed name!</h3>Click here to find out
+                    more.
+                </div>
+            </a>
+        </div>
         <section id="getting-started-section">
             <div class="row columns">
                 <h2 class="text-center">Getting started</h2>
@@ -218,8 +225,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="columns small-12 medium-6 large-6">
-                    <a id="blog-url" href="#" class="all left" data-hasqtip="27"
+                <div class="columns small-12 medium-12 large-12 centered">
+                    <a id="blog-url" href="#" class="button" data-hasqtip="27"
                        oldtitle="View projects and filter by biome" title=""
                        aria-describedby="qtip-27">See all articles</a>
                 </div>
@@ -276,47 +283,56 @@
         </section>
     </div>
 </div>
-<div class="reveal" id="requestAnalysisModal" data-reveal>
-    <h2>Request an analysis of a public dataset</h2>
+<div class="reveal small" id="requestAnalysisModal" data-reveal>
+    <h2 class="centered">Request an analysis of a public dataset</h2>
     <!--No validate attribute forces browser to ignore validation and instead allow FoundationAbide to enforce it. -->
     <form id="analysisRequestForm" data-abide novalidate>
-        <div class="grid-container fluid">
-            <div class="grid-x">
-                <div class="medium-6 cell">
-                    <label>Study accession
-                        <input id="study-accession" name="study-accession" type="text"
-                               placeholder="ERP###### or SRP###### or DRP######" required pattern="study_accession">
-                        <span class="form-error">
-                            Improperly formatted accession, format should be ERP, SRP, DRP, PRJEB, PRJNA followed by a number.
+        <div class="row">
+            <div class="columns medium-12">
+                <label>Study accession
+                    <input id="study-accession" name="study-accession" type="text"
+                           placeholder="MGYS###### / ERP###### / SRP###### / DRP###### / PRJ######" required>
+                    <span class="form-error">
+                            Improperly formatted accession, format should be MGYS, ERP, SRP, DRP, PRJEB, PRJNA, PRJDA, PRJDB followed by a number.
                         </span>
-                    </label>
-                </div>
-                <div class="medium-6 cell">
-                    <label>Analysis type
-                        <select name="analysis-type" type="text" required>
-                            <option value="amplicon">Amplicon</option>
-                            <option value="raw reads">Raw reads</option>
-                            <option value="assembly">Assembly</option>
-                        </select>
-                    </label>
-                </div>
-                <div class="medium-6 cell">
-                    <label>Contact name
-                        <input name="contact-name" type="text" required>
-                    </label>
-                </div>
-                <div class="medium-6 cell">
-                    <label>Contact email address
-                        <input name="contact-email" type="email" required pattern="email">
-                        <span class="form-error">
-                            Improperly formatted email address.
-                        </span>
-                    </label>
-                </div>
-                <!-- Add type of analysis: assembly | amplicon | raw read -->
+                </label>
             </div>
         </div>
-        <button class="button mailtobtn" type="button">Submit request</button>
+        <div class="row">
+            <div class="columns medium-6">
+                <fieldset class="">
+                    <legend>Analysis type</legend>
+                    <input type="radio" name="analysis-type" id="analysisOnly" checked><label
+                        for="analysisOnly">Analysis only</label>
+                    <input type="radio" name="analysis-type" id="assemblyAndAnalysis"><label
+                        for="assemblyAndAnalysis">Assembly and analysis</label>
+                </fieldset>
+            </div>
+            <div class="columns medium-6">
+                <label>Webin username
+                    <input name="contact-username" type="text" required>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns medium-6">
+                <label>Contact name
+                    <input name="contact-name" type="text" required>
+                </label>
+            </div>
+            <div class="columns medium-6">
+                <label>Contact email address
+                    <input name="contact-email" type="email" required pattern="email">
+                    <span class="form-error">
+                            Improperly formatted email address.
+                    </span>
+                </label>
+            </div>
+            <!-- Add type of analysis: assembly | amplicon | raw read -->
+        </div>
+        <div class="row columns centered">
+            <button class="button mailtobtn" type="button">Submit request</button>
+        </div>
     </form>
     <button class="close-button" data-close aria-label="Close modal" type="button">
         <span aria-hidden="true">&times;</span>

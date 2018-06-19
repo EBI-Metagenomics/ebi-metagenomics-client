@@ -9,17 +9,17 @@ const blogUrl = commons.BLOG_URL;
 const cookieName = commons.COOKIE_NAME;
 const Cookies = require('js-cookie');
 const util = require('../util');
+
 window.Foundation.addToJquery($);
+
 require('static/js/blog');
 util.setupPage('#overview-nav');
-
 
 // Shorthand for $( document ).ready()
 $(function() {
     // Sets the blog url for 'See all articles' link
     $('#blog-url').attr('href', blogUrl);
 });
-
 
 let BiomeView = Backbone.View.extend({
     tagName: 'div',
@@ -120,19 +120,35 @@ let StudiesView = Backbone.View.extend({
     }
 });
 
+Foundation.Abide.defaults.patterns['study_accession']
+    // = ;
+    = /^[EDS]RP\d{6,}$/;
+
+
 let RequestFormView = Backbone.View.extend({
     el: '#analysisRequestForm',
     tagName: 'form',
     initialize() {
         new window.Foundation.Abide(this.$el, {
-            'data-live-validate': true
+            'data-live-validate': true,
+            'data-validate-on-blur': true
         });
         this.render();
         const that = this;
-        that.$el.find('button.mailtobtn').click(that.sendMail.bind(that));
+        this.$el.find('button.mailtobtn').click(function(e) {
+            e.preventDefault();
+            that.sendMail();
+        });
     },
     sendMail() {
-        if (this.$el.find('[data-invalid]').length !== 0) {
+        this.$el.foundation('validateForm');
+        const hasEmptyField = this.$el.serializeArray().filter(function(e) {
+            console.log(e.value);
+            return e.value.length === 0;
+        }).length > 0;
+
+        console.log(hasEmptyField);
+        if (this.$el.find('[data-invalid]').length !== 0 || hasEmptyField) {
             console.error('Did not submit, errors in form.');
         } else {
             let body = this.$el.serialize();
