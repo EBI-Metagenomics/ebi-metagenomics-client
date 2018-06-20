@@ -332,9 +332,10 @@ select.table-tools {
     border: 1px #cbcbcb solid;
     overflow: hidden /*when resizing*/;
     padding: 5px 20px;
+    min-height: 19.5em;
 }
 
-.home-blog-box.tall{
+.home-blog-box.tall {
     min-height: 48.4em;
 }
 
@@ -1027,4 +1028,9 @@ ul.training > li:before {
 ul.training > li:last-child:before {
     content: "K";
     font-family: EBI-Common;
+}
+
+.rebranding-announcement {
+    margin-top: 1em;
+    text-align: center;
 }

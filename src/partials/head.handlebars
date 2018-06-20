@@ -17,11 +17,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="theme-color" content="#70BDBD"/> <!-- Android Chrome mobile browser tab color -->
 
+<meta name="ebi:head-color" content="#70BDBD">
+<meta name="ebi:head-image" content="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/backgrounds/embl-ebi-background-4.jpg">
+
 <!-- Add information on the life cycle of this page -->
-<meta name="ebi:owner" content="John Doe"/> <!-- Who should be contacted about changes -->
-<meta name="ebi:review-cycle" content="30"/> <!-- In days, how often should the content be reviewed -->
-<meta name="ebi:last-review" content="2015-12-20"/> <!-- The last time the content was reviewed -->
-<meta name="ebi:expiry" content="2016-01-20"/> <!-- When this content is no longer relevant -->
+<meta name="ebi:owner" content="MGnify team"/> <!-- Who should be contacted about changes -->
+<meta name="ebi:review-cycle" content="60"/> <!-- In days, how often should the content be reviewed -->
+<meta name="ebi:last-review" content="2018-06-19"/> <!-- The last time the content was reviewed -->
+<meta name="ebi:expiry" content="2019-01-01"/> <!-- When this content is no longer relevant -->
 
 <!-- If you link to any other sites frequently, consider optimising performance with a DNS prefetch -->
 <link rel="dns-prefetch" href="//embl.de"/>
@@ -37,5 +40,19 @@
 <link rel="icon" type="image/x-icon" href="node_modules/ebi-framework/images/logos/EMBL-EBI/favicons/apple-touch-icon-57x57.png"/>
 <link rel="icon" type="image/x-icon" href="node_modules/ebi-framework/images/logos/EMBL-EBI/favicons/safari-pinned-tab.svg"/>
 <link rel="icon" type="image/x-icon" href="node_modules/ebi-framework/images/logos/EMBL-EBI/favicons/mstile-144x144.png"/>
+
+
+<!-- Generic social media tags -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ebi.ac.uk/metagenomics/beta/">
+<meta property="og:site_name" content="MGnify">
+<meta property="og:image"
+      content="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/twitter_card/card_image.jpg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@EBImetagenomics">
+<meta name="twitter:creator" content="@EBImetagenomics">
+<meta name="twitter:image"
+      content="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/twitter_card/card_image.jpg">
 
 

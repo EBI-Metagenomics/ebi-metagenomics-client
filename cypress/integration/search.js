@@ -233,7 +233,7 @@ describe('Search page - Deep linking', function() {
     });
     it('Changing tabs should update result view', function() {
         loadPage(origPage + '#projects');
-        cy.get('#projectsResults > div > div > h5').should('contain', 'projects');
+        cy.get('#projectsResults > div > div > h5').should('contain', 'studies');
         loadPage(origPage + '#samples');
         cy.get('#samplesResults > div > div > h5').should('contain', 'samples');
         loadPage(origPage + '#runs');

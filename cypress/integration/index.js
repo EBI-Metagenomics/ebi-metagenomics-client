@@ -130,14 +130,14 @@ describe('Home page: Test Browse by selected biomes component', function() {
     });
 });
 
-describe('Home page: Test Browse latest projects component', function() {
+describe('Home page: Test Browse latest studies component', function() {
     context('Check for elements', function() {
         before(function() {
             openPage(origPage);
         });
 
-        it('Browse by latest projects"', function() {
-            cy.get('#latestStudies').contains('Latest projects');
+        it('Browse by latest studies"', function() {
+            cy.get('#latestStudies').contains('Latest studies');
         });
     });
 
@@ -146,8 +146,8 @@ describe('Home page: Test Browse latest projects component', function() {
             openPage(origPage);
         });
 
-        it('View all projects', function() {
-            cy.contains('View all projects').click();
+        it('View all studies', function() {
+            cy.contains('View all studies').click();
             cy.contains('Studies list');
             cy.title().should('include', 'Browse');
         });

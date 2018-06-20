@@ -3,27 +3,29 @@
     var blogURL = 'https://ebi-metagenomics.github.io/ebi-metagenomics-blog/';
 
     var processPost = function(data, source) {
-        var dest = source.cloneNode(true);
+        var dest = $(source).clone();
         // process title
-        dest.querySelector('h3').innerText = data.title;
+        $(dest).find('h3').text(data.title);
         // process content
         dummyElement.innerHTML = data.excerpt;
-        dest.querySelector('.home_box > div').innerHTML = dummyElement.textContent;
+        $(dest).find('.home_box > div').html(dummyElement.textContent);
 
         // var header = dest.querySelector('div.home_box h2');
         // replaceWith(header);
 
         // process links
-        var links = dest.querySelectorAll('.home_box > a');
+        var links = $(dest).find('.home_box > a');
         // Read more
-        links[0].href = data.url;
+        $(links[0]).attr('href', data.url);
         if (data.emg) {
-            links[1].href = data.emg.url;
-            links[1].innerText = links[1].title = data.emg.text;
+            links[1] = $(links[1]).attr('href', data.emg.url);
+            links[1] = $(links[1]).text(data.emg.text);
         } else {
-            links[1].parentElement.removeChild(links[1]);
+            links[1] = $(links[1]).parent().remove(links[1]);
         }
-        source.parentElement.replaceChild(dest, source);
+        $(dest).find('h2').remove();
+        $(source).replaceWith(dest);
+        // source.parentElement.replaceChild(dest, source);
     };
 
     // You didn't see anything...

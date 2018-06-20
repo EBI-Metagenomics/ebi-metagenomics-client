@@ -5,6 +5,11 @@
     {{> partials/head this}}
     <link rel="stylesheet" href="{{htmlWebpackPlugin.options.templateData.subfolder}}/js/compare.css" type="text/css"
           media="all"/>
+    <meta property="og:title" content="MGnify comparison page > EMBL-EBI">
+    <meta property="twitter:title" content="MGnify comparison page > EMBL-EBI">
+
+    <meta name="og:description" content="Compare data on MGnify.">
+    <meta name="twitter:description" content="Compare data on MGnify.">
 </head>
 
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -30,7 +35,7 @@
             </p>
             <div class="row">
                 <div class="columns small-12 medium-6 large-6">
-                    <h3>Project list</h3>
+                    <h3>Study list</h3>
                     <select size="10" id="studies" class="comparison-select">
                     </select>
                 </div>
