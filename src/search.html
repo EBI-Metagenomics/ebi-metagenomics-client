@@ -39,7 +39,7 @@
             <div class="columns small-12 medium-12 large-12">
                 <ul class="tabs" data-tabs id="results-tabs" data-deep-link="true">
                     <li class="tabs-title is-active"><a href="#projects" class="search-panel-tab"
-                                                        aria-selected="true">Projects</a></li>
+                                                        aria-selected="true">Studies</a></li>
                     <li class="tabs-title"><a href="#samples" class="search-panel-tab">Samples</a></li>
                     <li class="tabs-title"><a href="#runs" class="search-panel-tab">Runs</a></li>
                     <li style="float:right">
@@ -191,7 +191,7 @@
 <script id="projectResultsTmpl" type="text/template">
     <div class="row">
         <div class="columns small-8 medium-8 large-8">
-            <h5>You searched for projects<%=queryString%></h5>
+            <h5>You searched for studies<%=queryString%></h5>
             <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
 
         </div>
@@ -258,7 +258,7 @@
         <thead>
         <tr>
             <td data-column="sample-id">Sample</td>
-            <td data-column="sample-projects">Project</td>
+            <td data-column="sample-projects">Study</td>
             <td data-column="sample-name">Name</td>
             <td data-column="sample-desc">Description</td>
         </tr>
@@ -296,7 +296,7 @@
             <td data-column="run-id">Run</td>
             <td data-column="run-pipeline-vers">Pipeline Version</td>
             <td data-column="run-sample">Sample</td>
-            <td data-column="run-project">Project</td>
+            <td data-column="run-project">Study</td>
             <td data-column="run-experiment-type">Experiment Type</td>
         </tr>
         </thead>
