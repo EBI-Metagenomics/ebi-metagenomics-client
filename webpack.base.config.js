@@ -152,15 +152,6 @@ module.exports = {
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
-            title: 'Login page',
-            inject: true,
-            filename: 'login.html',
-            template: 'handlebars-loader!./src/login.html',
-            chunks: ['login', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
             title: 'Pipeline page',
             inject: true,
             filename: 'pipeline.html',
