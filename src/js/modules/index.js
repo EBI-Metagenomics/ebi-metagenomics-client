@@ -9,6 +9,7 @@ const blogUrl = commons.BLOG_URL;
 const cookieName = commons.COOKIE_NAME;
 const Cookies = require('js-cookie');
 const util = require('../util');
+const subfolder = require('../util').subfolder;
 
 window.Foundation.addToJquery($);
 
@@ -124,9 +125,8 @@ Foundation.Abide.defaults.patterns['study_accession']
     // = ;
     = /^[EDS]RP\d{6,}$/;
 
-
-let RequestFormView = Backbone.View.extend({
-    el: '#analysisRequestForm',
+let RequestPublicFormView = Backbone.View.extend({
+    el: '#analysisPublicRequestForm',
     tagName: 'form',
     initialize() {
         new window.Foundation.Abide(this.$el, {
@@ -135,28 +135,47 @@ let RequestFormView = Backbone.View.extend({
         });
         this.render();
         const that = this;
-        this.$el.find('button.mailtobtn').click(function(e) {
-            e.preventDefault();
-            that.sendMail();
-        });
+        this.$el.find('button.mailtobtn').click(that.submitHandler.bind(this));
+    },
+    submitHandler(e) {
+        e.preventDefault();
+        this.sendMail();
     },
     sendMail() {
         this.$el.foundation('validateForm');
-        const hasEmptyField = this.$el.serializeArray().filter(function(e) {
-            console.log(e.value);
-            return e.value.length === 0;
-        }).length > 0;
-
-        console.log(hasEmptyField);
-        if (this.$el.find('[data-invalid]').length !== 0 || hasEmptyField) {
+        // const hasEmptyField = this.$el.find('input:visible').filter(function(e) {
+        //     console.log(e.value);
+        //     return e.value.length === 0;
+        // }).length > 0;
+        console.log(this.$el.serializeArray());
+        if (this.$el.find('[data-invalid]:visible').length !== 0) {
             console.error('Did not submit, errors in form.');
+            return false;
         } else {
-            let body = this.$el.serialize();
+            let body = this.$el.find('input:visible').serialize();
             body = body.replace(/=/g, ': ').replace(/&/g, '%0D%0A');
             body += '%0D%0A'; // Newline
             body += 'Additional notes:';
-            window.location.href =
-                'mailto:metagenomics-help@ebi.ac.uk?subject=Analysis request&body=' + body;
+            let win = window.open('mailto:metagenomics-help@ebi.ac.uk?subject=Analysis request&body=' +
+                body, '_blank');
+            setTimeout(function() {
+                win.close();
+            }, 1000);
+
+            console.log('mailto:metagenomics-help@ebi.ac.uk?subject=Analysis request&body=' + body);
+            this.$el.parent().foundation('toggle');
+            return true;
+        }
+    }
+});
+
+let RequestPrivateFormView = RequestPublicFormView.extend({
+    el: '#analysisPrivateRequestForm',
+    submitHandler(e) {
+        e.preventDefault();
+        const dataToSubmit = $('#dataNotSubmitted').is(':checked');
+        if (this.sendMail() && dataToSubmit) {
+            window.location.href = subfolder + '/submit';
         }
     }
 });
@@ -164,7 +183,8 @@ let RequestFormView = Backbone.View.extend({
 let studies = new StudiesCollection();
 new StudiesView({collection: studies});
 
-new RequestFormView();
+new RequestPublicFormView();
+new RequestPrivateFormView();
 
 /**
  * Intialise stats section
@@ -268,4 +288,42 @@ function initObjectCounts() {
     });
 }
 
-initObjectCounts();
+$(document).ready(function() {
+    function conditionalElementsEBI(watchedParentClass) {
+        watchedParentClass = watchedParentClass || '.conditional-form';
+        $(watchedParentClass).on('change', function() {
+            let activeSet = this;
+            $(activeSet).children().each(function() {
+                if ($(this).data('condition')) {
+                    console.log($(this));
+                    let conditionTarget = 'input[name=\'' + $(this).data('condition') + '\']';
+                    if ($(conditionTarget).attr('type') === 'radio') {
+                        conditionTarget += ':checked';
+                    }
+                    let conditionRequirement = $(this).data('condition-val') || 1;
+
+                    let show;
+                    if (conditionRequirement.indexOf(',') > -1) {
+                        conditionRequirement = conditionRequirement.split(',');
+                        show = conditionRequirement.indexOf($(conditionTarget).val()) > -1;
+                    } else {
+                        show = $(conditionTarget).val() === conditionRequirement;
+                    }
+                    console.log($(conditionTarget));
+                    console.log($(conditionTarget).val(), conditionRequirement);
+
+                    if (show) {
+                        $(this).removeClass('hidden');
+                    } else {
+                        $(this).addClass('hidden');
+                    }
+                }
+            });
+        });
+    }
+
+    // bootstrap it
+    conditionalElementsEBI();
+});
+
+

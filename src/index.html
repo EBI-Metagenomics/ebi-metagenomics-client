@@ -8,14 +8,16 @@
     <meta property="og:site_name" content="MGnify">
     <meta property="og:url" content="https://ebi.ac.uk/metagenomics/beta/">
     <meta property="og:title" content="MGnify home page > EMBL-EBI">
-    <meta property="og:image" content="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/twitter_card/card_image.jpg">
+    <meta property="og:image"
+          content="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/twitter_card/card_image.jpg">
 
     <!-- Documentation: https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@EBImetagenomics">
     <meta name="twitter:creator" content="@EBImetagenomics">
     <meta name="twitter:description" content="MGnify website">
-    <meta name="twitter:image" content="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/twitter_card/card_image.jpg">
+    <meta name="twitter:image"
+          content="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/twitter_card/card_image.jpg">
 
 </head>
 <body class="level2"><!-- add any of your classes or IDs -->
@@ -30,6 +32,7 @@
             <a href="#blog-section">
                 <div class="callout alert rebranding-announcement"><h3>We've changed name!</h3>Click here to find out
                     more.
+                    <p>BETA: This is a trial service. Help us improve it - send your feedback.</p>
                 </div>
             </a>
         </div>
@@ -137,7 +140,7 @@
                             <div class="row columns">
                                 <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/biomes" class="all right"
                                    data-hasqtip="27"
-                                   oldtitle="View projects and filter by biome" title=""
+                                   oldtitle="View studies and filter by biome" title=""
                                    aria-describedby="qtip-27">Browse all biomes</a>
                             </div>
                         </div>
@@ -150,15 +153,16 @@
                             <div class="row">
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
-                                        <p>Your data</p>
-                                        <a class="button"
-                                           href="{{htmlWebpackPlugin.options.templateData.subfolder}}/submit">Submit</a>
+                                        <p>Your private data</p>
+                                        <button class="button" data-open="requestPrivateAnalysisModal">Submit and/or
+                                            Request
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
                                         <p>A public dataset</p>
-                                        <button class="button" data-open="requestAnalysisModal">Request</button>
+                                        <button class="button" data-open="requestPublicAnalysisModal">Request</button>
                                     </div>
                                 </div>
                             </div>
@@ -166,10 +170,9 @@
                         <hr/>
                         <div class="row columns">
                             <div id="latestStudies">
-                                <h3>Latest projects</h3>
+                                <h3>Latest studies</h3>
                                 <div id="studies" class="studies-list">
                                     <script id="studyTmpl" type="text/template">
-
                                         <p>
                                             <% _.each(biomes, function(biome){ %>
                                             <span class="biome_icon icon_xs <%= biome.icon %>"></span>
@@ -190,8 +193,8 @@
                             </div>
                             <div class="row columns">
                                 <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies"
-                                   class="all right" data-hasqtip="42" oldtitle="View all public projects" title=""
-                                   aria-describedby="qtip-42">View all projects</a>
+                                   class="all right" data-hasqtip="42" oldtitle="View all public studies" title=""
+                                   aria-describedby="qtip-42">View all studies</a>
                             </div>
                         </div>
                     </div>
@@ -241,7 +244,7 @@
             <div class="row">
                 <div class="columns small-12 medium-12 large-12 centered">
                     <a id="blog-url" href="#" class="button" data-hasqtip="27"
-                       oldtitle="View projects and filter by biome" title=""
+                       oldtitle="View studies and filter by biome" title=""
                        aria-describedby="qtip-27">See all articles</a>
                 </div>
             </div>
@@ -297,10 +300,12 @@
         </section>
     </div>
 </div>
-<div class="reveal small" id="requestAnalysisModal" data-reveal>
+
+<div class="reveal small" id="requestPublicAnalysisModal" data-reveal>
     <h2 class="centered">Request an analysis of a public dataset</h2>
-    <!--No validate attribute forces browser to ignore validation and instead allow FoundationAbide to enforce it. -->
-    <form id="analysisRequestForm" data-abide novalidate>
+    <p>Using this form, you can request analysis of a suitable publicly available dataset, held within an INSDC
+        database. Enter the study accession below and we will prioritise it for analysis with our pipeline.</p>
+    <form id="analysisPublicRequestForm" data-abide novalidate>
         <div class="row">
             <div class="columns medium-12">
                 <label>Study accession
@@ -315,11 +320,16 @@
         <div class="row">
             <div class="columns medium-6">
                 <fieldset class="">
-                    <legend>Analysis type</legend>
-                    <input type="radio" name="analysis-type" id="analysisOnly" checked><label
-                        for="analysisOnly">Analysis only</label>
-                    <input type="radio" name="analysis-type" id="assemblyAndAnalysis"><label
-                        for="assemblyAndAnalysis">Assembly and analysis</label>
+                    <label>Analysis type
+                        <span data-tooltip tabindex="1"
+                              title="You can request either analysis of raw reads or assembly of the data (where suitable) prior to analysis. Note, assembly may not be feasible for all datasets and may take additional time, particularly for larger studies.">
+                            <i class="icon icon-common" data-icon="&#x3f;"></i>
+                        </span>
+                    </label>
+                    <input type="radio" name="analysis-type" value="Analysis" id="analysisOnlyPublic" checked><label
+                        for="analysisOnlyPublic">Analysis only</label>
+                    <input type="radio" name="analysis-type" value="Assembly+Analysis" id="assemblyAndAnalysisPublic"><label
+                        for="assemblyAndAnalysisPublic">Assembly and analysis</label>
                 </fieldset>
             </div>
             <div class="columns medium-6">
@@ -346,6 +356,93 @@
         </div>
         <div class="row columns centered">
             <button class="button mailtobtn" type="button">Submit request</button>
+        </div>
+    </form>
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+
+<div class="reveal small" id="requestPrivateAnalysisModal" data-reveal>
+    <h2 class="centered">Request an analysis of a public dataset</h2>
+    <!--No validate attribute forces browser to ignore validation and instead allow FoundationAbide to enforce it. -->
+    <form id="analysisPrivateRequestForm" class="conditional-form" data-abide novalidate>
+        <div class="row columns medium-12">
+            <fieldset class="">
+                <label>Has your data already been submitted?</label>
+                <input type="radio" name="dataSubmitted" value="yes" id="dataSubmitted"><label
+                    for="dataSubmitted">Yes</label>
+                <input type="radio" name="dataSubmitted" value="no" id="dataNotSubmitted"><label
+                    for="dataNotSubmitted">No</label>
+            </fieldset>
+        </div>
+        <div class="row conditional-div hidden" data-condition="dataSubmitted" data-condition-val="yes">
+            <div class="columns medium-12">
+                <label>Study accession
+                    <input name="study-accession" type="text"
+                           placeholder="MGYS###### / ERP###### / SRP###### / DRP###### / PRJ######" required>
+                    <span class="form-error">
+                        Improperly formatted accession, format should be MGYS, ERP, SRP, DRP, PRJEB, PRJNA, PRJDA, PRJDB followed by a number.
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="conditional-div hidden" data-condition="dataSubmitted" data-condition-val="no">
+            <div class="row columns">
+                <p>You will be re-directed to the ENA to submit this data; please provide us with enough information
+                    to
+                    find this data.</p>
+            </div>
+            <div class="row">
+                <div class="columns">
+                    <label>Study title
+                        <input name="study-title" type="text" required>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="conditional-div hidden" data-condition="dataSubmitted" data-condition-val="yes,no">
+            <div class="row">
+                <div class="columns medium-6">
+                    <fieldset class="">
+                        <label>Analysis type
+                            <span data-tooltip tabindex="1"
+                                  title="You can request either analysis of raw reads or assembly of the data (where suitable) prior to analysis. Note, assembly may not be feasible for all datasets and may take additional time, particularly for larger studies.">
+                            <i class="icon icon-common" data-icon="&#x3f;"></i>
+                        </span>
+                        </label>
+                        <input type="radio" name="analysis-type" value="Analysis" id="analysisOnlyPrivate" checked><label
+                            for="analysisOnlyPrivate">Analysis only</label>
+                        <input type="radio" name="analysis-type" value="Assembly+Analysis" id="assemblyAndAnalysisPrivate"><label
+                            for="assemblyAndAnalysisPrivate">Assembly and analysis</label>
+                    </fieldset>
+                </div>
+                <div class="columns medium-6">
+                    <label>Webin username
+                        <input name="contact-username" type="text" required>
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns medium-6">
+                    <label>Contact name
+                        <input name="contact-name" type="text" required>
+                    </label>
+                </div>
+                <div class="columns medium-6">
+                    <label>Contact email address
+                        <input name="contact-email" type="email" required pattern="email">
+                        <span class="form-error">
+                            Improperly formatted email address.
+                    </span>
+                    </label>
+                </div>
+                <!-- Add type of analysis: assembly | amplicon | raw read -->
+            </div>
+            <div class="row columns centered">
+                <button class="button mailtobtn" type="button">Submit request</button>
+            </div>
         </div>
     </form>
     <button class="close-button" data-close aria-label="Close modal" type="button">
