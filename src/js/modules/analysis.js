@@ -98,17 +98,30 @@ let AnalysisView = Backbone.View.extend({
                 attr['displaySsuButtons'] = (attr.pipeline_version >= 4.0 &&
                     attr.experiment_type !== 'amplicon');
 
+                if (attr['experiment_type'] === 'assembly') {
+                    attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
+                }
                 that.render(function() {
                     $('#analysisSelect').val(attr['pipeline_version']);
+
                     let description = {
                         'Study': '<a href=\'' + attr['study_url'] + '\'>' +
                         attr['study_accession'] + '</a>',
                         'Sample': '<a href=\'' + attr['sample_url'] + '\'>' +
-                        attr['sample_accession'] + '</a>',
-                        'Run': '<a href=\'' + attr['run_url'] + '\'>' +
-                        attr['run_accession'] + '</a>',
-                        'Pipeline version': attr['pipeline_version'] + '</a>'
-                    };
+                        attr['sample_accession'] + '</a>'
+                    }
+
+                    if (attr['experiment_type'] === 'assembly') {
+                        attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
+                        description['Assembly'] = '<a href=\'' + attr['run_url'] + '\'>' +
+                            attr['run_accession'] + '</a>';
+                    } else {
+                        description['Run'] = '<a href=\'' + attr['run_url'] + '\'>' +
+                            attr['run_accession'] + '</a>';
+                    }
+
+                    description['Pipeline version'] = attr['pipeline_version'];
+
                     const dataAnalysis = {};
                     if (attr['experiment_type']) {
                         dataAnalysis['Experiment type'] = attr['experiment_type'];

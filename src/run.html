@@ -26,11 +26,15 @@
                 <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/studies/<%= study_id %>">Study <%= study_id %></a></li>
                 <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/samples/<%= sample_id %>">Sample <%= sample_id %></a></li>
                 <li>
-                    <span class="show-for-sr">Current: </span> Run <%= run_id %>
+                    <span class="show-for-sr">Current: </span> <%= (experiment_type==='assembly' ? 'Assembly' : 'Run') %> <%= run_id %>
                 </li>
             </ul>
         </nav>
+        <% if (experiment_type==='assembly'){ %>
+        <h2>Assembly <%= run_id %></h2>
+        <% } else { %>
         <h2>Run <%= run_id %></h2>
+        <% } %>
         <section id="overview">
 
         </section>

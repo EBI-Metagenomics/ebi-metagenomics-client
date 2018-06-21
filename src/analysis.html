@@ -27,7 +27,7 @@
                 <li><a href="<%= sample_url %>">Sample <%= sample_accession %></a></li>
                 <li><a href="<%= run_url %>">Run <%= run_accession %></a></li>
                 <li>
-                    <span class="show-for-sr">Current: </span> Analysis <%= analysis_accession %>
+                    <span class="show-for-sr">Current: </span> <%= (experiment_type==='assembly' ? 'Assembly' : 'Run') %> <%= run_id %>
                 </li>
             </ul>
         </nav>
