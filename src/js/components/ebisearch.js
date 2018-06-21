@@ -65,7 +65,7 @@ export class SampleCount extends Count {
  */
 export class RunCount extends Count {
     constructor() {
-        super('runs', 'metagenomics_runs', null);
+        super('analyses', 'metagenomics_analyses', null);
     }
 }
 
@@ -74,7 +74,7 @@ export class RunCount extends Count {
  */
 export class AmpliconCount extends Count {
     constructor() {
-        super('runs', 'metagenomics_runs', 'amplicon');
+        super('analyses', 'metagenomics_analyses', 'amplicon');
     }
 }
 
@@ -83,7 +83,7 @@ export class AmpliconCount extends Count {
  */
 export class AssemblyCount extends Count {
     constructor() {
-        super('runs', 'metagenomics_runs', 'assembly');
+        super('analyses', 'metagenomics_analyses', 'assembly');
     }
 }
 
@@ -92,7 +92,7 @@ export class AssemblyCount extends Count {
  */
 export class MetatranscriptomicCount extends Count {
     constructor() {
-        super('runs', 'metagenomics_runs', 'metatranscriptomic');
+        super('analyses', 'metagenomics_analyses', 'metatranscriptomic');
     }
 }
 
@@ -101,7 +101,7 @@ export class MetatranscriptomicCount extends Count {
  */
 export class MetabarcodingCount extends Count {
     constructor() {
-        super('runs', 'metagenomics_runs', 'metabarcoding');
+        super('analyses', 'metagenomics_analyses', 'metabarcoding');
     }
 }
 
@@ -110,6 +110,6 @@ export class MetabarcodingCount extends Count {
  */
 export class MetagenomicCount extends Count {
     constructor() {
-        super('runs', 'metagenomics_runs', 'metagenomic');
+        super('analyses', 'metagenomics_analyses', 'metagenomic');
     }
 }
