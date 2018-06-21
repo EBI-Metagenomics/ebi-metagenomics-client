@@ -171,7 +171,10 @@ class GenericTableHandler {
                 const txt = data[column];
                 const selector = this.getRowColumnSelector(rowIndex, column);
                 if (txt.length > 0) {
-                    cy.get(selector, {timeout: 40000}).first().scrollIntoView().contains(txt, {timeout: 20000});
+                    cy.get(selector, {timeout: 40000})
+                        .first()
+                        .scrollIntoView()
+                        .contains(txt, {timeout: 20000});
                 }
             }
         }

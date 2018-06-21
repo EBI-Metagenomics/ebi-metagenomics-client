@@ -212,12 +212,8 @@
     <table id="projectsTable">
         <thead>
         <tr>
-            <!--<td>Biome</td>-->
-            <!--<td>Project</td>-->
-            <!--<td>Name</td>-->
-            <!--<td>Description</td>-->
+            <td data-column="project-id">MGnify ID</td>
             <td data-column="project-ena-accession">ENA accession</td>
-            <td data-column="project-id">ID</td>
             <td data-column="project-biome">Biome</td>
             <td data-column="project-name">Name</td>
             <td data-column="project-desc">Description</td>
@@ -230,10 +226,10 @@
         <% _.each(entries, function(entry){ %>
         <% const fields = entry.fields %>
         <tr class="search-row">
+            <td data-column="project-id"><a href="<%= entry.studyLink %>"><%= fields.id %></a></td>
             <td data-column="project-ena-accession"><a class="ext"
                     href="https://www.ebi.ac.uk/ena/data/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a>
             </td>
-            <td data-column="project-id"><a href="<%= entry.studyLink %>"><%= fields.id %></a></td>
             <td data-column="project-biome"><%= fields.biome_name %></td>
             <td data-column="project-name"><%= fields.name %></td>
             <td data-column="project-desc"><%= fields.description %></td>

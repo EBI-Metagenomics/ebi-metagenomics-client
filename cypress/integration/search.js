@@ -79,7 +79,7 @@ function testResultsAreFilteredByString() {
     filterByText(testString);
     // Tables have hidden columns
     studyTable.checkRowData(0,
-        ['PRJEB14421', 'MGYS00001105', 'Sediment', '', '', '', '', 'UNIVERSITY OF CAMBRIDGE']);
+        ['MGYS00001105', 'PRJEB14421', 'Sediment', '', '', '', '', 'UNIVERSITY OF CAMBRIDGE']);
     changeTab('samples');
     sampleTable.checkRowData(0, ['ERS782465', 'MGYS00001332', 'Test Brassicae', 'Test Brassicae']);
     changeTab('analyses');
@@ -145,7 +145,7 @@ describe('Search page - general Functionality', function() {
         sampleTable.waitForTableLoad(25);
         analysisTable.waitForTableLoad(25);
         studyTable.checkRowData(0,
-            ['PRJEB14421', 'MGYS00001105', 'Sediment', '', '', '', '', 'UNIVERSITY OF CAMBRIDGE']);
+            ['MGYS00001105', 'PRJEB14421', 'Sediment', '', '', '', '', 'UNIVERSITY OF CAMBRIDGE']);
         changeTab('samples');
         sampleTable.checkRowData(0, ['ERS782465', 'MGYS00001332', 'Test Brassicae', 'Test Brassicae']);
         changeTab('analyses');
