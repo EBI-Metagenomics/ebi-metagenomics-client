@@ -109,7 +109,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
             cy.url().should('eq', getBaseURL() + 'search#projects');
             waitForSearchResults('table tr.search-row:visible', 25);
             cy.get('#projectsResults h5', {timeout: 20000})
-                .contains('You searched for projects with no parameters.');
+                .contains('You searched for studies with no parameters.');
         });
         it('Browse samples', function() {
             setupDefaultSearchPageRouting();

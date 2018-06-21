@@ -18,12 +18,13 @@
 <div id="content">
     <div id="main-content-area" class="row" role="main">
         <div class="row columns">
-                <div class="callout alert rebranding-announcement"><h3>Our name has changed!</h3>
-                    <a href="#blog-section">
-                        Click here to find out more.
-                    </a>
-                    <p>BETA: This is a trial service. Help us improve it - <a href="https://www.ebi.ac.uk/support/metagenomics">send your feedback.</a></p>
-                </div>
+            <div class="callout alert rebranding-announcement"><h3>Our name has changed!</h3>
+                <a href="#blog-section">
+                    Click here to find out more.
+                </a>
+                <p>BETA: This is a trial service. Help us improve it - <a
+                        href="https://www.ebi.ac.uk/support/metagenomics">send your feedback.</a></p>
+            </div>
             </a>
         </div>
         <section id="getting-started-section">
@@ -40,14 +41,16 @@
                                     <div class="text-center">
                                         <p>Name, biome, or keyword </p>
                                         <a class="button"
-                                           href="{{htmlWebpackPlugin.options.templateData.subfolder}}/search">Text search</a>
+                                           href="{{htmlWebpackPlugin.options.templateData.subfolder}}/search">Text
+                                            search</a>
                                     </div>
                                 </div>
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
                                         <p>Sequence similarity</p>
                                         <a class="button"
-                                           href="{{htmlWebpackPlugin.options.templateData.sequenceSearchUrl}}">Sequence search</a>
+                                           href="{{htmlWebpackPlugin.options.templateData.sequenceSearchUrl}}">Sequence
+                                            search</a>
                                     </div>
                                 </div>
                             </div>
@@ -316,7 +319,8 @@
                     </label>
                     <input type="radio" name="analysis-type" value="Analysis" id="analysisOnlyPublic" checked><label
                         for="analysisOnlyPublic">Analysis only</label>
-                    <input type="radio" name="analysis-type" value="Assembly+Analysis" id="assemblyAndAnalysisPublic"><label
+                    <input type="radio" name="analysis-type" value="Assembly+Analysis"
+                           id="assemblyAndAnalysisPublic"><label
                         for="assemblyAndAnalysisPublic">Assembly and analysis</label>
                 </fieldset>
             </div>
@@ -341,6 +345,12 @@
                 </label>
             </div>
             <!-- Add type of analysis: assembly | amplicon | raw read -->
+        </div>
+        <div class="row columns">
+            <label>
+                Comment / additional information:
+                <input type="text" name="reason">
+            </label>
         </div>
         <div class="row columns centered">
             <button class="button mailtobtn" type="button">Submit request</button>
@@ -400,9 +410,11 @@
                             <i class="icon icon-common" data-icon="&#x3f;"></i>
                         </span>
                         </label>
-                        <input type="radio" name="analysis-type" value="Analysis" id="analysisOnlyPrivate" checked><label
+                        <input type="radio" name="analysis-type" value="Analysis" id="analysisOnlyPrivate"
+                               checked><label
                             for="analysisOnlyPrivate">Analysis only</label>
-                        <input type="radio" name="analysis-type" value="Assembly+Analysis" id="assemblyAndAnalysisPrivate"><label
+                        <input type="radio" name="analysis-type" value="Assembly+Analysis"
+                               id="assemblyAndAnalysisPrivate"><label
                             for="assemblyAndAnalysisPrivate">Assembly and analysis</label>
                     </fieldset>
                 </div>
@@ -427,6 +439,12 @@
                     </label>
                 </div>
                 <!-- Add type of analysis: assembly | amplicon | raw read -->
+            </div>
+            <div class="row columns">
+                <label>
+                    Comment / additional information:
+                    <input type="text" name="reason">
+                </label>
             </div>
             <div class="row columns centered">
                 <button class="button mailtobtn" type="button">Submit request</button>
