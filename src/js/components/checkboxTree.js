@@ -1,3 +1,5 @@
+const searchUrl = process.env.SEARCH_URL;
+
 const _ = require('underscore');
 const FilterBtnWidget = require('./rmv_filter_widget');
 const createRmvButton = new FilterBtnWidget().create;
@@ -201,7 +203,7 @@ module.exports = function CheckboxTree() {
     };
 
     const getFacetFields = function(facet, field) {
-        const fetch = $.get('https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_' + facet +
+        const fetch = $.get(searchUrl + facet +
             '?query=domain_source%3Ametagenomics_' + facet + '&format=json&size=0&facetfields=' +
             field + '&facetcount=1000&facetsdepth=10');
         return fetch.promise();
