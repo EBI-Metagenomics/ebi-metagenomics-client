@@ -9,6 +9,11 @@ import GenericTableHandler from './genericTable';
 
 const origPage = '';
 const options = {timeout: 40000};
+
+function waitForStatsLoadingGif() {
+    cy.get('.loading-gif-large').should('be.hidden');
+}
+
 describe('Home page: Test Browse by selected biomes component', function() {
     context('Check for elements', function() {
         before(function() {
@@ -59,6 +64,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
         it('Browse amplicon assemblies', function() {
             cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:amplicon**',
                 'fixture:ampliconAnalysesQuery.json');
+            waitForStatsLoadingGif();
             cy.get('#amplicon-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 2);
@@ -68,6 +74,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
         it('Browse assemblies', function() {
             cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:assembly**',
                 'fixture:assemblyAnalysesQuery.json');
+            waitForStatsLoadingGif();
             cy.get('#assembly-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 2);
@@ -77,6 +84,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
         it('Browse metabarcoding analyses', function() {
             cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metabarcoding**',
                 'fixture:metabarcodingAnalysesQuery.json');
+            waitForStatsLoadingGif();
             cy.get('#metaB-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 2);
@@ -86,6 +94,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
         it('Browse metagenome analyses', function() {
             cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metagenomic**',
                 'fixture:metagenomeAnalysesQuery.json');
+            waitForStatsLoadingGif();
             cy.get('#metaG-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 2);
@@ -96,6 +105,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
             cy.route(
                 '**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metatranscriptomic**',
                 'fixture:metatranscriptomesAnalysesQuery.json');
+            waitForStatsLoadingGif();
             cy.get('#metaT-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 2);
@@ -105,6 +115,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
         });
         it('Browse studies', function() {
             setupDefaultSearchPageRouting();
+            waitForStatsLoadingGif();
             cy.get('#project-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#projects');
             waitForSearchResults('table tr.search-row:visible', 3);
@@ -113,6 +124,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
         });
         it('Browse samples', function() {
             setupDefaultSearchPageRouting();
+            waitForStatsLoadingGif();
             cy.get('#sample-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#samples');
             waitForSearchResults('table tr.search-row:visible', 3);
@@ -121,6 +133,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
         });
         it('Browse analyses', function() {
             setupDefaultSearchPageRouting();
+            waitForStatsLoadingGif();
             cy.get('#run-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 3);
