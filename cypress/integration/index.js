@@ -60,36 +60,36 @@ describe('Home page: Test Browse by selected biomes component', function() {
             cy.route('**/ebisearch/ws/rest/metagenomics_runs?**experiment_type:amplicon**',
                 'fixture:ampliconRunsQuery.json');
             cy.get('#amplicon-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 25);
-            cy.get('#runsResults h5', {timeout: 20000})
+            cy.get('#analysesResults h5', {timeout: 20000})
                 .contains('You searched for analyses with filters: experiment_type:amplicon.');
         });
         it('Browse assemblies', function() {
             cy.route('**/ebisearch/ws/rest/metagenomics_runs?**experiment_type:assembly**',
                 'fixture:assemblyRunsQuery.json');
             cy.get('#assembly-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 25);
-            cy.get('#runsResults h5', {timeout: 20000})
+            cy.get('#analysesResults h5', {timeout: 20000})
                 .contains('You searched for analyses with filters: experiment_type:assembly.');
         });
         it('Browse metabarcoding runs', function() {
             cy.route('**/ebisearch/ws/rest/metagenomics_runs?**experiment_type:metabarcoding**',
                 'fixture:metabarcodingRunsQuery.json');
             cy.get('#metaB-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 25);
-            cy.get('#runsResults h5', {timeout: 20000})
+            cy.get('#analysesResults h5', {timeout: 20000})
                 .contains('You searched for analyses with filters: experiment_type:metabarcoding.');
         });
         it('Browse metagenome runs', function() {
             cy.route('**/ebisearch/ws/rest/metagenomics_runs?**experiment_type:metagenome**',
                 'fixture:metagenomeRunsQuery.json');
             cy.get('#metaG-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 25);
-            cy.get('#runsResults h5', {timeout: 20000})
+            cy.get('#analysesResults h5', {timeout: 20000})
                 .contains('You searched for analyses with filters: experiment_type:metagenomic.');
         });
         it('Browse metatranscriptomes runs', function() {
@@ -97,14 +97,14 @@ describe('Home page: Test Browse by selected biomes component', function() {
                 '**/ebisearch/ws/rest/metagenomics_runs?**experiment_type:metatranscriptomes**',
                 'fixture:metatranscriptomesRunsQuery.json');
             cy.get('#metaT-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 25);
-            cy.get('#runsResults h5', {timeout: 20000})
+            cy.get('#analysesResults h5', {timeout: 20000})
                 .contains(
                     'You searched for analyses with filters: experiment_type:metatranscriptomic.');
         });
         it('Browse studies', function() {
-            setupDefaultSearchPageRouting();
+            // setupDefaultSearchPageRouting();
             cy.get('#project-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#projects');
             waitForSearchResults('table tr.search-row:visible', 25);
@@ -112,7 +112,7 @@ describe('Home page: Test Browse by selected biomes component', function() {
                 .contains('You searched for studies with no parameters.');
         });
         it('Browse samples', function() {
-            setupDefaultSearchPageRouting();
+            // setupDefaultSearchPageRouting();
             cy.get('#sample-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#samples');
             waitForSearchResults('table tr.search-row:visible', 25);
@@ -120,11 +120,11 @@ describe('Home page: Test Browse by selected biomes component', function() {
                 .contains('You searched for samples with no parameters.');
         });
         it('Browse runs', function() {
-            setupDefaultSearchPageRouting();
+            // setupDefaultSearchPageRouting();
             cy.get('#run-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#runs');
+            cy.url().should('eq', getBaseURL() + 'search#analyses');
             waitForSearchResults('table tr.search-row:visible', 25);
-            cy.get('#runsResults h5', {timeout: 20000})
+            cy.get('#analysesResults h5', {timeout: 20000})
                 .contains('You searched for analyses with no parameters.');
         });
     });
