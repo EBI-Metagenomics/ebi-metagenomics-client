@@ -92,11 +92,9 @@
                 <% if (displaySsuButtons){ %>
                 <div id="ssu-lsu-btns" class="row columns">
                     <fieldset class="rna-select-fieldset">
-                        <legend>Select rRNA type:</legend>
-                        <input type="radio" class="rna-select-button" name="rRNA-type" value="/ssu" data-cy='ssu-btn' id="smallrRNA" checked><label
-                            for="smallrRNA">Small</label>
-                        <input type="radio" class="rna-select-button" name="rRNA-type" value="/lsu" data-cy='lsu-btn' id="largerRNA"><label
-                            for="largerRNA">Large</label>
+                        <legend>Select analysis</legend>
+                        <label for="smallrRNA"><input type="radio" class="rna-select-button" name="rRNA-type" value="/ssu" data-cy='ssu-btn' id="smallrRNA" checked>small subunit rRNA</label>
+                        <label for="largerRNA"><input type="radio" class="rna-select-button" name="rRNA-type" value="/lsu" data-cy='lsu-btn' id="largerRNA">large subunit rRNA</label>
                     </fieldset>
                 </div>
                 <% } %>
