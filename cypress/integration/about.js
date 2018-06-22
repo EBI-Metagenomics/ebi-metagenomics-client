@@ -1,4 +1,4 @@
-import {openPage} from './util';
+import {openPage} from '../util/util';
 
 const origPage = 'about';
 

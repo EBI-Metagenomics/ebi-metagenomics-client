@@ -1,6 +1,6 @@
-import {openPage, datatype, urlExists, login} from './util';
-import Config from './config';
-import GenericTableHandler from './genericTable';
+import {openPage, datatype, urlExists, login} from '../util/util';
+import Config from '../util/config';
+import GenericTableHandler from '../util/genericTable';
 
 const sampleId = 'ERS434640';
 const origPage = 'samples/' + sampleId;

@@ -1,5 +1,5 @@
-import {openPage, changeTab, waitForSearchResults, setupDefaultSearchPageRouting} from './util';
-import GenericTableHandler from './genericTable';
+import {openPage, changeTab, waitForSearchResults, setupDefaultSearchPageRouting} from '../util/util';
+import GenericTableHandler from '../util/genericTable';
 
 const origPage = 'search';
 

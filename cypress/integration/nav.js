@@ -2,7 +2,7 @@ const navNames = ['overview', 'search', 'submit', 'browse', 'about', 'help'];
 const pageTitles = [
     'Browse projects', 'Search', 'Submit data', 'Studies list',
     'About', 'Help'];
-import {openPage, getPageURL} from './util';
+import {openPage, getPageURL} from '../util/util';
 
 /**
  * Check all links in navbar towards other pages of the site are functional

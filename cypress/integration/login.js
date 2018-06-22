@@ -1,7 +1,7 @@
 import {
     openPage, login, loginButton, logoutButton, usernameInput, passwordInput, loginModal
-} from './util';
-import GenericTableHandler from './genericTable';
+} from '../util/util';
+import GenericTableHandler from '../util/genericTable';
 
 const origPage = '';
 

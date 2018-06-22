@@ -4,8 +4,8 @@ import {
     waitForBiomesLoad,
     waitForSearchResults,
     setupDefaultSearchPageRouting
-} from './util';
-import GenericTableHandler from './genericTable';
+} from '../util/util';
+import GenericTableHandler from '../util/genericTable';
 
 const origPage = '';
 const options = {timeout: 40000};
