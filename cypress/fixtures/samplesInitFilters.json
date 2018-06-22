@@ -1,9 +1,9 @@
 {
-  "_comment": "Basic samples filters",
-  "hitCount": 88743,
+  "_comment": "Basic ebiSearch query for sample filters",
+  "hitCount": 94347,
   "entries": [
     {
-      "id": "ERS706390",
+      "id": "SRS371887",
       "source": "metagenomics_samples"
     }
   ],
@@ -16,29 +16,29 @@
         {
           "label": "Metagenomics Samples",
           "value": "metagenomics_samples",
-          "count": 88743
+          "count": 94347
         }
       ]
     },
     {
       "id": "biome",
       "label": "Biome",
-      "total": 4,
+      "total": 5,
       "facetValues": [
         {
           "label": "Host-associated",
           "value": "Host-associated",
-          "count": 63727,
+          "count": 68968,
           "children": [
             {
               "label": "Human",
               "value": "Human",
-              "count": 42737,
+              "count": 46908,
               "children": [
                 {
                   "label": "Digestive system",
                   "value": "Digestive system",
-                  "count": 24640
+                  "count": 28809
                 },
                 {
                   "label": "Skin",
@@ -58,7 +58,7 @@
                 {
                   "label": "Circulatory system",
                   "value": "Circulatory system",
-                  "count": 29
+                  "count": 31
                 },
                 {
                   "label": "Milk",
@@ -70,7 +70,7 @@
             {
               "label": "Plants",
               "value": "Plants",
-              "count": 10316,
+              "count": 10317,
               "children": [
                 {
                   "label": "Rhizosphere",
@@ -226,17 +226,17 @@
         {
           "label": "Environmental",
           "value": "Environmental",
-          "count": 19106,
+          "count": 19231,
           "children": [
             {
               "label": "Terrestrial",
               "value": "Terrestrial",
-              "count": 10302,
+              "count": 10305,
               "children": [
                 {
                   "label": "Soil",
                   "value": "Soil",
-                  "count": 10137
+                  "count": 10140
                 },
                 {
                   "label": "Geologic",
@@ -263,12 +263,12 @@
             {
               "label": "Aquatic",
               "value": "Aquatic",
-              "count": 8784,
+              "count": 8906,
               "children": [
                 {
                   "label": "Marine",
                   "value": "Marine",
-                  "count": 5971
+                  "count": 6093
                 },
                 {
                   "label": "Freshwater",
@@ -312,7 +312,7 @@
         {
           "label": "Engineered",
           "value": "Engineered",
-          "count": 5907,
+          "count": 5951,
           "children": [
             {
               "label": "Wastewater",
@@ -376,24 +376,24 @@
             {
               "label": "Bioreactor",
               "value": "Bioreactor",
-              "count": 617,
+              "count": 651,
               "children": [
                 {
                   "label": "Continuous culture",
                   "value": "Continuous culture",
-                  "count": 408
+                  "count": 441
                 }
               ]
             },
             {
               "label": "Modeled",
               "value": "Modeled",
-              "count": 526,
+              "count": 536,
               "children": [
                 {
                   "label": "Simulated communities (microbial mixture)",
                   "value": "Simulated communities (microbial mixture)",
-                  "count": 327
+                  "count": 333
                 },
                 {
                   "label": "Simulated communities (DNA mixture)",
@@ -403,7 +403,7 @@
                 {
                   "label": "Simulated communities (sequence read mixture)",
                   "value": "Simulated communities (sequence read mixture)",
-                  "count": 47
+                  "count": 51
                 }
               ]
             },
@@ -495,6 +495,11 @@
           ]
         },
         {
+          "label": "Mixed",
+          "value": "Mixed",
+          "count": 194
+        },
+        {
           "label": "Control",
           "value": "Control",
           "count": 3
@@ -509,17 +514,22 @@
         {
           "label": "Amplicon",
           "value": "amplicon",
-          "count": 74992
+          "count": 80399
         },
         {
           "label": "Metagenomic",
           "value": "metagenomic",
-          "count": 9456
+          "count": 9318
         },
         {
           "label": "Assembly",
           "value": "assembly",
-          "count": 2805
+          "count": 2667
+        },
+        {
+          "label": "Metatranscriptomic",
+          "value": "metatranscriptomic",
+          "count": 1301
         },
         {
           "label": "Metabarcoding",
@@ -527,31 +537,26 @@
           "count": 1164
         },
         {
-          "label": "Metatranscriptomic",
-          "value": "metatranscriptomic",
-          "count": 1114
-        },
-        {
           "label": "Unknown",
           "value": "unknown",
-          "count": 132
+          "count": 133
         }
       ]
     },
     {
       "id": "sequencing_method",
       "label": "Sequencing method",
-      "total": 268,
+      "total": 269,
       "facetValues": [
         {
           "label": "Illumina",
           "value": "Illumina",
-          "count": 6783
+          "count": 6808
         },
         {
           "label": "Illumina MiSeq",
           "value": "Illumina MiSeq",
-          "count": 5541
+          "count": 5574
         },
         {
           "label": "Illumina Miseq",
@@ -598,17 +603,22 @@
     {
       "id": "location_name",
       "label": "Location name",
-      "total": 1267,
+      "total": 1277,
       "facetValues": [
         {
           "label": "USA",
           "value": "USA",
-          "count": 17562
+          "count": 17698
         },
         {
           "label": "United Kingdom",
           "value": "United Kingdom",
-          "count": 6172
+          "count": 6183
+        },
+        {
+          "label": "GAZ:United States of America",
+          "value": "GAZ:United States of America",
+          "count": 4103
         },
         {
           "label": "Canada",
@@ -626,6 +636,11 @@
           "count": 2847
         },
         {
+          "label": "Japan",
+          "value": "Japan",
+          "count": 2718
+        },
+        {
           "label": "Denmark",
           "value": "Denmark",
           "count": 2538
@@ -639,16 +654,6 @@
           "label": "USA:CO:Boulder",
           "value": "USA:CO:Boulder",
           "count": 1968
-        },
-        {
-          "label": "GAZ:United States of America",
-          "value": "GAZ:United States of America",
-          "count": 1716
-        },
-        {
-          "label": "Missing",
-          "value": "missing",
-          "count": 1542
         }
       ]
     },
@@ -698,8 +703,8 @@
           "count": 25
         },
         {
-          "label": "Id: DOID:8778 Crohn's disease",
-          "value": "id: DOID:8778 Crohn's disease",
+          "label": "Control non-asthmatic patient",
+          "value": "control non-asthmatic patient",
           "count": 22
         },
         {
@@ -745,13 +750,13 @@
           "count": 12
         },
         {
-          "label": "Healthy",
-          "value": "Healthy",
+          "label": "Obese",
+          "value": "obese",
           "count": 7
         },
         {
-          "label": "Obese",
-          "value": "obese",
+          "label": "Healthy",
+          "value": "Healthy",
           "count": 7
         },
         {

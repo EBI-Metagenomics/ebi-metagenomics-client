@@ -56,74 +56,74 @@ describe('Home page: Test Browse by selected biomes component', function() {
                 getBaseURL() + 'browse?lineage=root:Host-associated:Human:Skin#studies');
         });
 
-        it('Browse amplicon runs', function() {
-            cy.route('**/ebisearch/ws/rest/metagenomics_runs?**experiment_type:amplicon**',
-                'fixture:ampliconRunsQuery.json');
+        it('Browse amplicon assemblies', function() {
+            cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:amplicon**',
+                'fixture:ampliconAnalysesQuery.json');
             cy.get('#amplicon-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 25);
+            waitForSearchResults('table tr.search-row:visible', 2);
             cy.get('#analysesResults h5', {timeout: 20000})
                 .contains('You searched for analyses with filters: experiment_type:amplicon.');
         });
         it('Browse assemblies', function() {
-            cy.route('**/ebisearch/ws/rest/metagenomics_runs?**experiment_type:assembly**',
-                'fixture:assemblyRunsQuery.json');
+            cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:assembly**',
+                'fixture:assemblyAnalysesQuery.json');
             cy.get('#assembly-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 25);
+            waitForSearchResults('table tr.search-row:visible', 2);
             cy.get('#analysesResults h5', {timeout: 20000})
                 .contains('You searched for analyses with filters: experiment_type:assembly.');
         });
-        it('Browse metabarcoding runs', function() {
-            cy.route('**/ebisearch/ws/rest/metagenomics_runs?**experiment_type:metabarcoding**',
-                'fixture:metabarcodingRunsQuery.json');
+        it('Browse metabarcoding analyses', function() {
+            cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metabarcoding**',
+                'fixture:metabarcodingAnalysesQuery.json');
             cy.get('#metaB-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 25);
+            waitForSearchResults('table tr.search-row:visible', 2);
             cy.get('#analysesResults h5', {timeout: 20000})
                 .contains('You searched for analyses with filters: experiment_type:metabarcoding.');
         });
-        it('Browse metagenome runs', function() {
-            cy.route('**/ebisearch/ws/rest/metagenomics_runs?**experiment_type:metagenome**',
-                'fixture:metagenomeRunsQuery.json');
+        it('Browse metagenome analyses', function() {
+            cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metagenomic**',
+                'fixture:metagenomeAnalysesQuery.json');
             cy.get('#metaG-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 25);
+            waitForSearchResults('table tr.search-row:visible', 2);
             cy.get('#analysesResults h5', {timeout: 20000})
                 .contains('You searched for analyses with filters: experiment_type:metagenomic.');
         });
-        it('Browse metatranscriptomes runs', function() {
+        it('Browse metatranscriptomes analyses', function() {
             cy.route(
-                '**/ebisearch/ws/rest/metagenomics_runs?**experiment_type:metatranscriptomes**',
-                'fixture:metatranscriptomesRunsQuery.json');
+                '**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metatranscriptomic**',
+                'fixture:metatranscriptomesAnalysesQuery.json');
             cy.get('#metaT-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 25);
+            waitForSearchResults('table tr.search-row:visible', 2);
             cy.get('#analysesResults h5', {timeout: 20000})
                 .contains(
                     'You searched for analyses with filters: experiment_type:metatranscriptomic.');
         });
         it('Browse studies', function() {
-            // setupDefaultSearchPageRouting();
+            setupDefaultSearchPageRouting();
             cy.get('#project-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#projects');
-            waitForSearchResults('table tr.search-row:visible', 25);
+            waitForSearchResults('table tr.search-row:visible', 3);
             cy.get('#projectsResults h5', {timeout: 20000})
                 .contains('You searched for studies with no parameters.');
         });
         it('Browse samples', function() {
-            // setupDefaultSearchPageRouting();
+            setupDefaultSearchPageRouting();
             cy.get('#sample-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#samples');
-            waitForSearchResults('table tr.search-row:visible', 25);
+            waitForSearchResults('table tr.search-row:visible', 3);
             cy.get('#samplesResults h5', {timeout: 20000})
                 .contains('You searched for samples with no parameters.');
         });
-        it('Browse runs', function() {
-            // setupDefaultSearchPageRouting();
+        it('Browse analyses', function() {
+            setupDefaultSearchPageRouting();
             cy.get('#run-stats a', options).click();
             cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 25);
+            waitForSearchResults('table tr.search-row:visible', 3);
             cy.get('#analysesResults h5', {timeout: 20000})
                 .contains('You searched for analyses with no parameters.');
         });

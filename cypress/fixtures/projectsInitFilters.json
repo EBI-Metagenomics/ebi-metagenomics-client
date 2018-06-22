@@ -1,9 +1,9 @@
 {
-  "_comment": "Basic projects filters",
-  "hitCount": 1555,
+  "_comment": "Basic ebiSearch query response for filters of projects",
+  "hitCount": 1583,
   "entries": [
     {
-      "id": "ERP004004",
+      "id": "MGYS00000277",
       "source": "metagenomics_projects"
     }
   ],
@@ -16,7 +16,7 @@
         {
           "label": "Metagenomics Projects",
           "value": "metagenomics_projects",
-          "count": 1555
+          "count": 1583
         }
       ]
     },
@@ -28,17 +28,17 @@
         {
           "label": "Environmental",
           "value": "Environmental",
-          "count": 781,
+          "count": 788,
           "children": [
             {
               "label": "Terrestrial",
               "value": "Terrestrial",
-              "count": 446,
+              "count": 447,
               "children": [
                 {
                   "label": "Soil",
                   "value": "Soil",
-                  "count": 438
+                  "count": 439
                 },
                 {
                   "label": "Rock-dwelling (subaerial biofilm)",
@@ -65,12 +65,12 @@
             {
               "label": "Aquatic",
               "value": "Aquatic",
-              "count": 326,
+              "count": 332,
               "children": [
                 {
                   "label": "Marine",
                   "value": "Marine",
-                  "count": 158
+                  "count": 164
                 },
                 {
                   "label": "Freshwater",
@@ -93,13 +93,13 @@
                   "count": 2
                 },
                 {
-                  "label": "Estuary",
-                  "value": "Estuary",
+                  "label": "Aquaculture",
+                  "value": "Aquaculture",
                   "count": 1
                 },
                 {
-                  "label": "Aquaculture",
-                  "value": "Aquaculture",
+                  "label": "Estuary",
+                  "value": "Estuary",
                   "count": 1
                 }
               ]
@@ -114,17 +114,17 @@
         {
           "label": "Host-associated",
           "value": "Host-associated",
-          "count": 557,
+          "count": 573,
           "children": [
             {
               "label": "Human",
               "value": "Human",
-              "count": 260,
+              "count": 274,
               "children": [
                 {
                   "label": "Digestive system",
                   "value": "Digestive system",
-                  "count": 213
+                  "count": 226
                 },
                 {
                   "label": "Respiratory system",
@@ -144,7 +144,7 @@
                 {
                   "label": "Circulatory system",
                   "value": "Circulatory system",
-                  "count": 2
+                  "count": 3
                 },
                 {
                   "label": "Milk",
@@ -169,6 +169,11 @@
                   "count": 7
                 },
                 {
+                  "label": "Gastrointestinal tract",
+                  "value": "Gastrointestinal tract",
+                  "count": 1
+                },
+                {
                   "label": "Excretory system",
                   "value": "Excretory system",
                   "count": 1
@@ -177,18 +182,13 @@
                   "label": "Nervous system",
                   "value": "Nervous system",
                   "count": 1
-                },
-                {
-                  "label": "Gastrointestinal tract",
-                  "value": "Gastrointestinal tract",
-                  "count": 1
                 }
               ]
             },
             {
               "label": "Plants",
               "value": "Plants",
-              "count": 107,
+              "count": 108,
               "children": [
                 {
                   "label": "Rhizosphere",
@@ -206,13 +206,30 @@
                   "count": 5
                 },
                 {
-                  "label": "Rhizome",
-                  "value": "Rhizome",
+                  "label": "Rhizoplane",
+                  "value": "Rhizoplane",
                   "count": 1
                 },
                 {
-                  "label": "Rhizoplane",
-                  "value": "Rhizoplane",
+                  "label": "Rhizome",
+                  "value": "Rhizome",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Birds",
+              "value": "Birds",
+              "count": 15,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 9
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
                   "count": 1
                 }
               ]
@@ -230,14 +247,14 @@
               ]
             },
             {
-              "label": "Birds",
-              "value": "Birds",
-              "count": 15,
+              "label": "Arthropoda",
+              "value": "Arthropoda",
+              "count": 8,
               "children": [
                 {
                   "label": "Digestive system",
                   "value": "Digestive system",
-                  "count": 9
+                  "count": 5
                 },
                 {
                   "label": "Respiratory system",
@@ -264,23 +281,6 @@
               ]
             },
             {
-              "label": "Arthropoda",
-              "value": "Arthropoda",
-              "count": 8,
-              "children": [
-                {
-                  "label": "Digestive system",
-                  "value": "Digestive system",
-                  "count": 5
-                },
-                {
-                  "label": "Respiratory system",
-                  "value": "Respiratory system",
-                  "count": 1
-                }
-              ]
-            },
-            {
               "label": "Amphibia",
               "value": "Amphibia",
               "count": 5
@@ -298,23 +298,16 @@
               ]
             },
             {
-              "label": "Animal",
-              "value": "Animal",
-              "count": 3,
-              "children": [
-                {
-                  "label": "Digestive system",
-                  "value": "Digestive system",
-                  "count": 2
-                }
-              ]
+              "label": "Porifera",
+              "value": "Porifera",
+              "count": 3
             }
           ]
         },
         {
           "label": "Engineered",
           "value": "Engineered",
-          "count": 216,
+          "count": 220,
           "children": [
             {
               "label": "Wastewater",
@@ -378,24 +371,24 @@
             {
               "label": "Bioreactor",
               "value": "Bioreactor",
-              "count": 32,
+              "count": 34,
               "children": [
                 {
                   "label": "Continuous culture",
                   "value": "Continuous culture",
-                  "count": 15
+                  "count": 16
                 }
               ]
             },
             {
               "label": "Modeled",
               "value": "Modeled",
-              "count": 20,
+              "count": 22,
               "children": [
                 {
                   "label": "Simulated communities (microbial mixture)",
                   "value": "Simulated communities (microbial mixture)",
-                  "count": 7
+                  "count": 8
                 },
                 {
                   "label": "Simulated communities (DNA mixture)",
@@ -405,7 +398,7 @@
                 {
                   "label": "Simulated communities (sequence read mixture)",
                   "value": "Simulated communities (sequence read mixture)",
-                  "count": 4
+                  "count": 5
                 }
               ]
             },
@@ -456,18 +449,6 @@
               ]
             },
             {
-              "label": "Lab enrichment",
-              "value": "Lab enrichment",
-              "count": 7,
-              "children": [
-                {
-                  "label": "Defined media",
-                  "value": "Defined media",
-                  "count": 2
-                }
-              ]
-            },
-            {
               "label": "Bioremediation",
               "value": "Bioremediation",
               "count": 7,
@@ -478,14 +459,26 @@
                   "count": 3
                 },
                 {
-                  "label": "Terephthalate",
-                  "value": "Terephthalate",
-                  "count": 1
-                },
-                {
                   "label": "Persistent organic pollutants (POP)",
                   "value": "Persistent organic pollutants (POP)",
                   "count": 1
+                },
+                {
+                  "label": "Terephthalate",
+                  "value": "Terephthalate",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Lab enrichment",
+              "value": "Lab enrichment",
+              "count": 7,
+              "children": [
+                {
+                  "label": "Defined media",
+                  "value": "Defined media",
+                  "count": 2
                 }
               ]
             },
@@ -499,24 +492,24 @@
         {
           "label": "Mixed",
           "value": "Mixed",
-          "count": 1
+          "count": 2
         }
       ]
     },
     {
       "id": "centre_name",
       "label": "Centre name",
-      "total": 509,
+      "total": 516,
       "facetValues": [
         {
           "label": "BioProject",
           "value": "BioProject",
-          "count": 550
+          "count": 558
         },
         {
           "label": "EMG",
           "value": "EMG",
-          "count": 69
+          "count": 68
         },
         {
           "label": "EMBL-EBI",
@@ -531,6 +524,11 @@
         {
           "label": "CSIRO",
           "value": "CSIRO",
+          "count": 10
+        },
+        {
+          "label": "GSC",
+          "value": "GSC",
           "count": 10
         },
         {
@@ -549,13 +547,8 @@
           "count": 9
         },
         {
-          "label": "GSC",
-          "value": "GSC",
-          "count": 9
-        },
-        {
-          "label": "UNIVERSITY OF BRITISH COLUMBIA",
-          "value": "UNIVERSITY OF BRITISH COLUMBIA",
+          "label": "ANAND",
+          "value": "ANAND",
           "count": 8
         }
       ]

@@ -57,40 +57,40 @@ let Util = {
         cy.get(Util.myDataBtn).should('be.visible').contains('Welcome, ' + username);
     },
     setupDefaultSearchPageRouting: function() {
-        // cy.server();
+        cy.server();
         // Basic page load
-        // cy.route('GET',
-        //     '**/ebisearch/ws/rest/metagenomics_projects?format=json&size=25&start=0&**' +
-        //     'facetcount=10&' +
-        //     'facetsdepth=5&facets=&query=domain_source:metagenomics_projects',
-        //     'fixture:projectsInitQuery.json').as('basicProjects');
+        cy.route('GET',
+            '**/ebisearch/ws/rest/metagenomics_projects?format=json&size=25&start=0&**' +
+            'facetcount=10&' +
+            'facetsdepth=5&facets=&query=domain_source:metagenomics_projects',
+            'fixture:projectsInitQuery.json').as('basicProjects');
 
-        // cy.route('GET',
-        //     '**/ebisearch/ws/rest/metagenomics_projects?format=json&size=1&start=0&' +
-        //     'facetcount=10&' +
-        //     'facetsdepth=3&query=domain_source:metagenomics_projects',
-        //     'fixture:projectsInitFilters.json').as('basicProjectFilters');
+        cy.route('GET',
+            '**/ebisearch/ws/rest/metagenomics_projects?format=json&size=1&start=0&' +
+            'facetcount=10&' +
+            'facetsdepth=3&query=domain_source:metagenomics_projects',
+            'fixture:projectsInitFilters.json').as('basicProjectFilters');
 
-        // cy.route('GET',
-        //     '**/ebisearch/ws/rest/metagenomics_samples?format=json&size=25&start=0&**' +
-        //     'facetcount=10&' +
-        //     'facetsdepth=5&facets=&query=domain_source:metagenomics_samples',
-        //     'fixture:samplesInitQuery.json').as('basicSamples');
-        //
-        // cy.route('GET',
-        //     '**/ebisearch/ws/rest/metagenomics_samples?format=json&size=1&start=0&facetcount=10&' +
-        //     'facetsdepth=3&query=domain_source:metagenomics_samples',
-        //     'fixture:samplesInitFilters.json').as('basicSampleFilters');
+        cy.route('GET',
+            '**/ebisearch/ws/rest/metagenomics_samples?format=json&size=25&start=0&**' +
+            'facetcount=10&' +
+            'facetsdepth=5&facets=&query=domain_source:metagenomics_samples',
+            'fixture:samplesInitQuery.json').as('basicSamples');
 
-        // cy.route('GET',
-        //     '**/ebisearch/ws/rest/metagenomics_analyses?format=json&size=25&start=0&**facetcount=10&' +
-        //     'facetsdepth=5&facets=&query=domain_source:metagenomics_analyses',
-        //     'fixture:analysesInitQuery.json').as('basicAnalyses');
-        //
-        // cy.route('GET',
-        //     '**/ebisearch/ws/rest/metagenomics_analyses?format=json&size=1&start=0&facetcount=10&' +
-        //     'facetsdepth=3&query=domain_source:metagenomics_analyses',
-        //     'fixture:analysesInitFilters.json').as('basicAnalysesFilters');
+        cy.route('GET',
+            '**/ebisearch/ws/rest/metagenomics_samples?format=json&size=1&start=0&facetcount=10&' +
+            'facetsdepth=3&query=domain_source:metagenomics_samples',
+            'fixture:samplesInitFilters.json').as('basicSampleFilters');
+
+        cy.route('GET',
+            '**/ebisearch/ws/rest/metagenomics_analyses?format=json&size=25&start=0&**facetcount=10&' +
+            'facetsdepth=5&facets=&query=domain_source:metagenomics_analyses',
+            'fixture:analysesInitQuery.json').as('basicAnalyses');
+
+        cy.route('GET',
+            '**/ebisearch/ws/rest/metagenomics_analyses?format=json&size=1&start=0&facetcount=10&' +
+            'facetsdepth=3&query=domain_source:metagenomics_analyses',
+            'fixture:analysesInitFilters.json').as('basicAnalysesFilters');
     }
 };
 module.exports = Util;

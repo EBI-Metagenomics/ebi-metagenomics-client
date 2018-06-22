@@ -1,0 +1,67 @@
+{
+  "hitCount": 2,
+  "entries": [
+    {
+      "id": "MGYA00005890_2.0",
+      "source": "metagenomics_analyses",
+      "fields": {
+        "id": [
+          "MGYA00005890_2.0"
+        ],
+        "name": [
+          "MGYA00005890"
+        ],
+        "biome_name": [],
+        "description": [],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000482"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS624611"
+        ],
+        "experiment_type": [
+          "metagenomic"
+        ],
+        "pipeline_version": [
+          "2.0"
+        ],
+        "ASSEMBLY": [],
+        "ENA_RUN": [
+          "ERR695595"
+        ],
+        "ENA_WGS_SEQUENCE_SET": []
+      }
+    },
+    {
+      "id": "MGYA00025480_2.0",
+      "source": "metagenomics_analyses",
+      "fields": {
+        "id": [
+          "MGYA00025480_2.0"
+        ],
+        "name": [
+          "MGYA00025480"
+        ],
+        "biome_name": [],
+        "description": [],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000604"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS731945"
+        ],
+        "experiment_type": [
+          "metagenomic"
+        ],
+        "pipeline_version": [
+          "2.0"
+        ],
+        "ASSEMBLY": [],
+        "ENA_RUN": [
+          "SRR1632391"
+        ],
+        "ENA_WGS_SEQUENCE_SET": []
+      }
+    }
+  ]
+}
