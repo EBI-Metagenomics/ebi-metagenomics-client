@@ -25,9 +25,9 @@
                 <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
                 <li><a href="<%= study_url %>">Study <%= study_accession %></a></li>
                 <li><a href="<%= sample_url %>">Sample <%= sample_accession %></a></li>
-                <li><a href="<%= run_url %>">Run <%= run_accession %></a></li>
+                <li><a href="<%= run_url %>"><%= (experiment_type==='assembly' ? 'Assembly' : 'Run') %> <%= run_accession %></a></li>
                 <li>
-                    <span class="show-for-sr">Current: </span> Analysis <%= analysis_accession %>
+                    <span class="show-for-sr">Current: </span>Analysis <%= analysis_accession %>
                 </li>
             </ul>
         </nav>
@@ -92,11 +92,9 @@
                 <% if (displaySsuButtons){ %>
                 <div id="ssu-lsu-btns" class="row columns">
                     <fieldset class="rna-select-fieldset">
-                        <legend>Select rRNA type:</legend>
-                        <input type="radio" class="rna-select-button" name="rRNA-type" value="/ssu" id="smallrRNA" checked><label
-                            for="smallrRNA">Small</label>
-                        <input type="radio" class="rna-select-button" name="rRNA-type" value="/lsu" id="largerRNA"><label
-                            for="largerRNA">Large</label>
+                        <legend>Select analysis</legend>
+                        <label for="smallrRNA"><input type="radio" class="rna-select-button" name="rRNA-type" value="/ssu" data-cy='ssu-btn' id="smallrRNA" checked>small subunit rRNA</label>
+                        <label for="largerRNA"><input type="radio" class="rna-select-button" name="rRNA-type" value="/lsu" data-cy='lsu-btn' id="largerRNA">large subunit rRNA</label>
                     </fieldset>
                 </div>
                 <% } %>

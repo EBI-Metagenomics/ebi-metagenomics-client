@@ -25,7 +25,7 @@ let BiomesView = Backbone.View.extend({
         const columns = [
             {sortBy: null, name: ''},
             {sortBy: 'biome_name', name: 'Biome name and lineage'},
-            {sortBy: 'samples_count', name: 'Samples including sub-lineages'}
+            {sortBy: 'samples_count', name: 'Samples excluding sub-lineages'}
         ];
         const $samplesSection = $('#biomes-section');
         this.tableObj = new GenericTable($samplesSection, 'Biomes list', columns, '-samples_count',

@@ -437,7 +437,7 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Instrument platform'},
             {sortBy: null, name: 'Pipeline versions'}
         ];
-        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs', columns,
+        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs & assemblies', columns,
             'accession', Commons.DEFAULT_PAGE_SIZE, false, true, 'runs-table',
             function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
@@ -446,6 +446,9 @@ export let RunsView = GenericTableView.extend({
     },
 
     getRowData(attr) {
+        if (attr['experiment_type'] === 'assembly') {
+            attr['analysis_url'] = attr['analysis_url'].replace('runs', 'assemblies');
+        }
         const runLink = '<a href=\'' + attr.analysis_url + '\'>' + attr.run_id + '</a>';
         return [
             runLink,

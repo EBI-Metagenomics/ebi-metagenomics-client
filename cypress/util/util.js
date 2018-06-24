@@ -1,4 +1,4 @@
-import Config from './config';
+import Config from 'config';
 
 const username = Cypress.env('WEBIN_USERNAME');
 const password = Cypress.env('WEBIN_PASSWORD');
@@ -83,14 +83,14 @@ let Util = {
             'fixture:samplesInitFilters.json').as('basicSampleFilters');
 
         cy.route('GET',
-            '**/ebisearch/ws/rest/metagenomics_runs?format=json&size=25&start=0&**facetcount=10&' +
-            'facetsdepth=5&facets=&query=domain_source:metagenomics_runs',
-            'fixture:runsInitQuery.json').as('basicRuns');
+            '**/ebisearch/ws/rest/metagenomics_analyses?format=json&size=25&start=0&**facetcount=10&' +
+            'facetsdepth=5&facets=&query=domain_source:metagenomics_analyses',
+            'fixture:analysesInitQuery.json').as('basicAnalyses');
 
         cy.route('GET',
-            '**/ebisearch/ws/rest/metagenomics_runs?format=json&size=1&start=0&facetcount=10&' +
-            'facetsdepth=3&query=domain_source:metagenomics_runs',
-            'fixture:runsInitFilters.json').as('basicRunsFilters');
+            '**/ebisearch/ws/rest/metagenomics_analyses?format=json&size=1&start=0&facetcount=10&' +
+            'facetsdepth=3&query=domain_source:metagenomics_analyses',
+            'fixture:analysesInitFilters.json').as('basicAnalysesFilters');
     }
 };
 module.exports = Util;

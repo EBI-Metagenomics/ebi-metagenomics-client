@@ -18,12 +18,13 @@
 <div id="content">
     <div id="main-content-area" class="row" role="main">
         <div class="row columns">
-                <div class="callout alert rebranding-announcement"><h3>Our name has changed!</h3>
-                    <a href="#blog-section">
-                        Click here to find out more.
-                    </a>
-                    <p>BETA: This is a trial service. Help us improve it - <a href="https://www.ebi.ac.uk/support/metagenomics">send your feedback.</a></p>
-                </div>
+            <div class="callout alert rebranding-announcement"><h3>Our name has changed!</h3>
+                <a href="#blog-section">
+                    Click here to find out more.
+                </a>
+                <p>BETA: This is a trial service. Help us improve it - <a
+                        href="https://www.ebi.ac.uk/support/metagenomics">send your feedback.</a></p>
+            </div>
             </a>
         </div>
         <section id="getting-started-section">
@@ -40,14 +41,16 @@
                                     <div class="text-center">
                                         <p>Name, biome, or keyword </p>
                                         <a class="button"
-                                           href="{{htmlWebpackPlugin.options.templateData.subfolder}}/search">Text search</a>
+                                           href="{{htmlWebpackPlugin.options.templateData.subfolder}}/search">Text
+                                            search</a>
                                     </div>
                                 </div>
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
                                         <p>Sequence similarity</p>
                                         <a class="button"
-                                           href="{{htmlWebpackPlugin.options.templateData.sequenceSearchUrl}}">Sequence search</a>
+                                           href="{{htmlWebpackPlugin.options.templateData.sequenceSearchUrl}}">Sequence
+                                            search</a>
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +67,7 @@
                                    style="font-size: 2rem"
                                    data-icon="d"></span>
                                     </div>
-                                    <div class="columns small-5 medium-5 large-5">
+                                    <div class="columns small-6 medium-6 large-6">
                                         <div class="columns small-12 medium-12 index-stats">
                                             <div class="index-stats-label"><span id="amplicon-stats"></span></div>
                                             amplicon
@@ -92,7 +95,7 @@
                                               data-icon="U"></span>
                                         </div>
                                     </div>
-                                    <div class="columns small-5 medium-5 large-5">
+                                    <div class="columns small-4 medium-4 large-4">
                                         <div class="columns small-12 medium-12 index-stats">
                                             <div class="index-stats-label"><span id="project-stats"></span></div>
                                             studies
@@ -280,8 +283,8 @@
                 <div class="jumbo-news-centred" style="text-align: center">
                     <h3 class="icon icon-socialmedia icon-s2" data-icon="T"></h3>
                     <a class="twitter-timeline" data-width="520" data-height="600" data-dnt="true"
-                       data-link-color="#2B7BB9" href="https://twitter.com/EBImetagenomics?ref_src=twsrc%5Etfw">Tweets
-                        by EBImetagenomics</a>
+                       data-link-color="#2B7BB9" href="https://twitter.com/MgnifyDB?ref_src=twsrc%5Etfw">Tweets
+                        by MGnifyDB</a>
                     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                 </div>
             </div>
@@ -316,7 +319,8 @@
                     </label>
                     <input type="radio" name="analysis-type" value="Analysis" id="analysisOnlyPublic" checked><label
                         for="analysisOnlyPublic">Analysis only</label>
-                    <input type="radio" name="analysis-type" value="Assembly+Analysis" id="assemblyAndAnalysisPublic"><label
+                    <input type="radio" name="analysis-type" value="Assembly+Analysis"
+                           id="assemblyAndAnalysisPublic"><label
                         for="assemblyAndAnalysisPublic">Assembly and analysis</label>
                 </fieldset>
             </div>
@@ -342,6 +346,12 @@
             </div>
             <!-- Add type of analysis: assembly | amplicon | raw read -->
         </div>
+        <div class="row columns">
+            <label>
+                Comment / additional information:
+                <input type="text" name="reason">
+            </label>
+        </div>
         <div class="row columns centered">
             <button class="button mailtobtn" type="button">Submit request</button>
         </div>
@@ -353,7 +363,7 @@
 
 
 <div class="reveal small" id="requestPrivateAnalysisModal" data-reveal>
-    <h2 class="centered">Request an analysis of a public dataset</h2>
+    <h2 class="centered">Request an analysis of a private dataset</h2>
     <!--No validate attribute forces browser to ignore validation and instead allow FoundationAbide to enforce it. -->
     <form id="analysisPrivateRequestForm" class="conditional-form" data-abide novalidate>
         <div class="row columns medium-12">
@@ -400,9 +410,11 @@
                             <i class="icon icon-common" data-icon="&#x3f;"></i>
                         </span>
                         </label>
-                        <input type="radio" name="analysis-type" value="Analysis" id="analysisOnlyPrivate" checked><label
+                        <input type="radio" name="analysis-type" value="Analysis" id="analysisOnlyPrivate"
+                               checked><label
                             for="analysisOnlyPrivate">Analysis only</label>
-                        <input type="radio" name="analysis-type" value="Assembly+Analysis" id="assemblyAndAnalysisPrivate"><label
+                        <input type="radio" name="analysis-type" value="Assembly+Analysis"
+                               id="assemblyAndAnalysisPrivate"><label
                             for="assemblyAndAnalysisPrivate">Assembly and analysis</label>
                     </fieldset>
                 </div>
@@ -427,6 +439,12 @@
                     </label>
                 </div>
                 <!-- Add type of analysis: assembly | amplicon | raw read -->
+            </div>
+            <div class="row columns">
+                <label>
+                    Comment / additional information:
+                    <input type="text" name="reason">
+                </label>
             </div>
             <div class="row columns centered">
                 <button class="button mailtobtn" type="button">Submit request</button>

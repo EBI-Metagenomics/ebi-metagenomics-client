@@ -1,4 +1,4 @@
-import {openPage, changeTab} from './util';
+import {openPage, changeTab} from '../util/util';
 
 const origPage = 'analyses/MGYA00011845';
 

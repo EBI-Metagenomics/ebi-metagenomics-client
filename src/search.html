@@ -46,7 +46,7 @@
                     <li class="tabs-title is-active"><a href="#projects" class="search-panel-tab"
                                                         aria-selected="true">Studies</a></li>
                     <li class="tabs-title"><a href="#samples" class="search-panel-tab">Samples</a></li>
-                    <li class="tabs-title"><a href="#runs" class="search-panel-tab">Runs</a></li>
+                    <li class="tabs-title"><a href="#analyses" class="search-panel-tab">Analyses</a></li>
                     <li style="float:right">
                         <div id="pageSize" class="pagesize-container"></div>
                     </li>
@@ -106,20 +106,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tabs-panel" id="runs">
+                    <div class="tabs-panel" id="analyses">
                         <div class="row">
                             <div class="columns small-3 medium-3 large-3 filters">
-                                <form id="runsFilters"  class="search-filters"></form>
+                                <form id="analysesFilters"  class="search-filters"></form>
                                 <div class="ebi-search"></div>
                             </div>
                             <div class="columns small-9 medium-9 large-9">
                                 <div class="row columns">
-                                    <div id="runs-search-params">
+                                    <div id="analyses-search-params">
                                         <div class="filter-clear"></div>
                                     </div>
                                 </div>
                                 <div class="row columns">
-                                    <div class="reveal" id="runsModal" data-reveal>
+                                    <div class="reveal" id="analysesModal" data-reveal>
                                         <h4>Available columns</h4>
                                         <ul>
                                         </ul>
@@ -127,8 +127,8 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <div id="runsResults"></div>
-                                    <div id="runs-pagination"></div>
+                                    <div id="analysesResults"></div>
+                                    <div id="analyses-pagination"></div>
                                 </div>
                             </div>
                         </div>
@@ -212,17 +212,13 @@
     <table id="projectsTable">
         <thead>
         <tr>
-            <!--<td>Biome</td>-->
-            <!--<td>Project</td>-->
-            <!--<td>Name</td>-->
-            <!--<td>Description</td>-->
+            <td data-column="project-id">MGnify ID</td>
             <td data-column="project-ena-accession">ENA accession</td>
-            <td data-column="project-id">ID</td>
             <td data-column="project-biome">Biome</td>
             <td data-column="project-name">Name</td>
             <td data-column="project-desc">Description</td>
             <td data-column="project-sample-count">Samples</td>
-            <td data-column="project-run-count">Runs</td>
+            <td data-column="project-analysis-count">Analyses</td>
             <td data-column="project-centre-name">Centre name</td>
         </tr>
         </thead>
@@ -230,15 +226,15 @@
         <% _.each(entries, function(entry){ %>
         <% const fields = entry.fields %>
         <tr class="search-row">
-            <td data-column="project-ena-accession"><a
+            <td data-column="project-id"><a href="<%= entry.studyLink %>"><%= fields.id %></a></td>
+            <td data-column="project-ena-accession"><a class="ext"
                     href="https://www.ebi.ac.uk/ena/data/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a>
             </td>
-            <td data-column="project-id"><a href="<%= entry.studyLink %>"><%= fields.id %></a></td>
             <td data-column="project-biome"><%= fields.biome_name %></td>
             <td data-column="project-name"><%= fields.name %></td>
             <td data-column="project-desc"><%= fields.description %></td>
             <td data-column="project-sample-count"><%= fields.METAGENOMICS_SAMPLES.length %></td>
-            <td data-column="project-run-count"><%= fields.METAGENOMICS_RUNS.length %></td>
+            <td data-column="project-analysis-count"><%= fields.METAGENOMICS_ANALYSES.length %></td>
             <td data-column="project-centre-name"><%= fields.centre_name %></td>
         </tr>
         <% }); %>
@@ -283,37 +279,43 @@
     </table>
 </script>
 
-<script id="runsResultsTmpl" type="text/template">
+<script id="analysesResultsTmpl" type="text/template">
     <div class="row">
         <div class="columns small-8 medium-8 large-8">
-            <h5>You searched for runs<%=queryString%></h5>
+            <h5>You searched for analyses<%=queryString%></h5>
             <h6>Displaying: <%= entries.length %> out of <%= hitCount %> results</h6>
 
         </div>
         <div class="columns small-4 medium-4 large-4">
             <button class="button right" name="download">Download results as CSV</button>
-            <p><a data-open="runsModal">Show / Hide columns</a></p>
+            <p><a data-open="analysesModal">Show / Hide columns</a></p>
         </div>
     </div>
-    <table id="runsTable">
+    <table id="analysesTable">
         <thead>
         <tr>
-            <td data-column="run-id">Run</td>
-            <td data-column="run-pipeline-vers">Pipeline Version</td>
-            <td data-column="run-sample">Sample</td>
-            <td data-column="run-project">Study</td>
-            <td data-column="run-experiment-type">Experiment Type</td>
+            <td data-column="analysis-id">Analysis</td>
+            <td data-column="analysis-pipeline-vers">Pipeline Version</td>
+            <td data-column="analysis-sample">Sample</td>
+            <td data-column="analysis-project">Study</td>
+            <td data-column="analysis-experiment-type">Experiment Type</td>
+            <td data-column="analysis-assembly">Assembly</td>
+            <td data-column="analysis-ena-run">ENA run</td>
+            <td data-column="analysis-ena-wgs-seq-set">ENA WGS sequence set</td>
         </tr>
         </thead>
         <tbody>
         <% _.each(entries, function(entry){ %>
         <% const fields = entry.fields %>
         <tr class="search-row">
-            <td data-column="run-id"><a href="<%= entry.runLink %>"><%= entry.runId %></a></td>
-            <td data-column="run-pipeline-vers"><a href="<%= entry.pipelineLink %>"><%= fields.pipeline_version %></a>
-            <td data-column="run-sample"><a href="<%= entry.sampleLink %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
-            <td data-column="run-project"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
-            <td data-column="run-experiment-type"><%= fields.experiment_type %></td>
+            <td data-column="analysis-id"><a href="<%= entry.analysisLink %>"><%= entry.analysisId %></a></td>
+            <td data-column="analysis-pipeline-vers"><a href="<%= entry.pipelineLink %>"><%= fields.pipeline_version %></a>
+            <td data-column="analysis-sample"><a href="<%= entry.sampleLink %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
+            <td data-column="analysis-project"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
+            <td data-column="analysis-experiment-type"><%= fields.experiment_type %></td>
+            <td data-column="analysis-assembly"><a class="ext" href="https://www.ebi.ac.uk/ena/data/view/<%= entry.assemblyLink %>"><%= fields.ASSEMBLY %></a></td>
+            <td data-column="analysis-ena-run"><a class="ext" href="https://www.ebi.ac.uk/ena/data/view/<%= entry.runLink %>"><%= fields.ENA_RUN %></a></td>
+            <td data-column="analysis-ena-wgs-seq-set"><%= fields.ENA_WGS_SEQUENCE_SET %></td>
             </td>
         </tr>
         <% }); %>

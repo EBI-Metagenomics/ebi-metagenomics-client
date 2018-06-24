@@ -208,12 +208,12 @@ function initObjectCounts() {
     function setCookieFilter(experimentType) {
         Cookies.remove(cookieName);
         const defaultCookieParamsStr =
-            '{"samples":{"query":""},"projects":{"query":""},"runs":{"query":""}}';
+            '{"samples":{"query":""},"projects":{"query":""},"analyses":{"query":""}}';
         let cookieParams = JSON.parse(defaultCookieParamsStr);
 
         if (experimentType) {
             cookieParams['samples']['filters'] = 'experiment_type:' + experimentType;
-            cookieParams['runs']['filters'] = 'experiment_type:' + experimentType;
+            cookieParams['analyses']['filters'] = 'experiment_type:' + experimentType;
         }
         Cookies.set(cookieName, cookieParams);
     }
@@ -271,14 +271,14 @@ function initObjectCounts() {
         const metaBCount = metaBCountReq.responseJSON.hitCount;
 
         const data = [
-            ['#amplicon-stats', ampliconCount, 'amplicon', '#runs'],
-            ['#assembly-stats', assemblyCount, 'assembly', '#runs'],
-            ['#metaB-stats', metaBCount, 'metabarcoding', '#runs'],
-            ['#metaG-stats', metaGCount, 'metagenomic', '#runs'],
-            ['#metaT-stats', metaTCount, 'metatranscriptomic', '#runs'],
+            ['#amplicon-stats', ampliconCount, 'amplicon', '#analyses'],
+            ['#assembly-stats', assemblyCount, 'assembly', '#analyses'],
+            ['#metaB-stats', metaBCount, 'metabarcoding', '#analyses'],
+            ['#metaG-stats', metaGCount, 'metagenomic', '#analyses'],
+            ['#metaT-stats', metaTCount, 'metatranscriptomic', '#analyses'],
             ['#project-stats', projectCount, null, '#projects'],
             ['#sample-stats', sampleCount, null, '#samples'],
-            ['#run-stats', runCount, null, '#runs']
+            ['#run-stats', runCount, null, '#analyses']
         ];
         _.each(data, function(d) {
             appendNewAnchorEl(...d);
@@ -287,6 +287,8 @@ function initObjectCounts() {
         $('#stats-disp').show();
     });
 }
+
+initObjectCounts();
 
 $(document).ready(function() {
     function conditionalElementsEBI(watchedParentClass) {

@@ -1,0 +1,72 @@
+{
+  "_comment": "assembly analyses",
+  "hitCount": 3,
+  "entries": [
+    {
+      "id": "MGYA00139784_4.0",
+      "source": "metagenomics_analyses",
+      "fields": {
+        "id": [
+          "MGYA00139784_4.0"
+        ],
+        "name": [
+          "MGYA00139784"
+        ],
+        "biome_name": [],
+        "description": [],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002019"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS473175"
+        ],
+        "experiment_type": [
+          "assembly"
+        ],
+        "pipeline_version": [
+          "4.0"
+        ],
+        "ASSEMBLY": [
+          "GCA_900211725"
+        ],
+        "ENA_RUN": [],
+        "ENA_WGS_SEQUENCE_SET": [
+          "ERZ476541"
+        ]
+      }
+    },
+    {
+      "id": "MGYA00171482_4.1",
+      "source": "metagenomics_analyses",
+      "fields": {
+        "id": [
+          "MGYA00171482_4.1"
+        ],
+        "name": [
+          "MGYA00171482"
+        ],
+        "biome_name": [],
+        "description": [],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002419"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS585792"
+        ],
+        "experiment_type": [
+          "assembly"
+        ],
+        "pipeline_version": [
+          "4.1"
+        ],
+        "ASSEMBLY": [
+          "GCA_900271085"
+        ],
+        "ENA_RUN": [],
+        "ENA_WGS_SEQUENCE_SET": [
+          "OLAA01"
+        ]
+      }
+    }
+  ]
+}

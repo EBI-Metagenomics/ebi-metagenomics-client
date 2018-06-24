@@ -21,7 +21,7 @@ util.attachTabHandlers();
 const DEFAULT_QUERIES = [
     'domain_source:metagenomics_projects',
     'domain_source:metagenomics_samples',
-    'domain_source:metagenomics_runs'];
+    'domain_source:metagenomics_analyses'];
 
 const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)]/;
 
@@ -101,7 +101,7 @@ function formatSearchSummaryStr(params) {
 
 /**
  * Retrieve names of visible columns of facets
- * @param {string} facet string  should be in [projects, samples, runs]
+ * @param {string} facet string  should be in [projects, samples, analyses]
  * @return {[string]} of visible columns or null
  */
 function getVisibleColumns(facet) {
@@ -118,7 +118,7 @@ function getVisibleColumns(facet) {
 
 /**
  * Store list of visible colums to cookie
- * @param {string} facet string {projects, samples, runs}
+ * @param {string} facet string {projects, samples, analyses}
  * @param {[string]} columns list of column names
  */
 function saveVisibleColumns(facet, columns) {
@@ -404,7 +404,7 @@ function isSliderParam(name) {
 
 /**
  * Instantiate result view with modal for column toggling
- * @param {string} facet {projects, samples, runs}
+ * @param {string} facet {projects, samples, analyses}
  * @param {jQuery.HTMLElement} $table jQuery elem of table for facet
  * @param {jQuery.HTMLElement} $modal jQuery elem of modal for table and facet
  * @param {[string]} initColumns initially visible columns
@@ -466,7 +466,7 @@ function createDataTable(facet, $table, $modal, initColumns) {
 /**
  * Instantiate sliders in form
  * @param {jQuery.HTMLElement} $form jQuery elem of form
- * @param {string} facet {projects, samples, runs}
+ * @param {string} facet {projects, samples, analyses}
  * @param {callback} callback action required on slider value change
  * @param {jQuery.HTMLElement} $btnContainer container of button
  */
@@ -479,7 +479,7 @@ function createSliders($form, facet, callback, $btnContainer) {
 
 /**
  * Create waterfall of expandable checkboxes
- * @param {string} facet name {projects, samples, runs}
+ * @param {string} facet name {projects, samples, analyses}
  * @param {{}} trees trees to create
  * @param {Backbone.View} facetView view to update on checkbox action
  * @param {jQuery.HTMLElement} $facetForm jQuery elem for facet form
@@ -511,7 +511,7 @@ function createCheckboxTrees(
 
 /**
  * Save search filters to cookie
- * @param {string} facet {projects, samples, runs}
+ * @param {string} facet {projects, samples, analyses}
  * @param {string} filters
  * @param {string} query
  */
@@ -544,7 +544,7 @@ function saveSearchParams(facet, filters, query) {
 
 /**
  * Load filters from cookies
- * @param {string} facet {projects, samples, runs}
+ * @param {string} facet {projects, samples, analyses}
  * @return {{filters: *, query: *}}
  */
 function loadSearchParams(facet) {
@@ -620,7 +620,7 @@ const ResultsView = Backbone.View.extend({
         const defaultQueries = [
             ProjectsView.prototype.defaultQuery,
             SamplesView.prototype.defaultQuery,
-            RunsView.prototype.defaultQuery];
+            AnalysesView.prototype.defaultQuery];
 
         if (defaultQueries.indexOf(params.query) === -1) {
             const splitParams = params.query.split(' AND ');
@@ -748,7 +748,7 @@ const ResultsView = Backbone.View.extend({
 
 /**
  * Method to generate initial search parameters for a view, either from stored cookie or defaults
- * @param {Backbone.View} view instance of facet {projects, samples, runs}
+ * @param {Backbone.View} view instance of facet {projects, samples, analysess}
  * @param {{}} cookieParams
  */
 function genInitParams(view, cookieParams) {
@@ -767,7 +767,7 @@ function genInitParams(view, cookieParams) {
 
 /**
  * Method to update search parameters for a view based on form data, pagination data or defaults
- * @param {Backbone.View} view instance of facet {projects, samples, runs}
+ * @param {Backbone.View} view instance of facet {projects, samples, analyses}
  * @param {number} page currentPage (1-indexed)
  * @param {number} pagesize
  * @param {{}} formData
@@ -835,7 +835,7 @@ const ProjectsView = ResultsView.extend({
         this.pagination.setPaginationElem('#projects-pagination');
         const cookieParams = loadSearchParams('projects');
         genInitParams(this, cookieParams);
-        this.params.fields = 'ENA_PROJECT,METAGENOMICS_RUNS,METAGENOMICS_SAMPLES,biome_name,' +
+        this.params.fields = 'ENA_PROJECT,METAGENOMICS_ANALYSES,METAGENOMICS_SAMPLES,biome_name,' +
             'centre_name,creation_date,description,domain_source,id,last_modification_date,' +
             'name,releaseDate_date';
     },
@@ -876,38 +876,40 @@ const Samples = Search.extend({
 });
 
 /**
- * Run model parser
+ * Analysis model parser
  */
-const Run = Backbone.Model.extend({
+const Analysis = Backbone.Model.extend({
     parse(d) {
-        d.runId = d.fields['name'][0];
+        d.analysisId = d.fields['name'][0];
         d.studyLink = util.subfolder + '/studies/' +
             d.fields['METAGENOMICS_PROJECTS'][0];
         d.sampleLink = util.subfolder + '/samples/' +
             d.fields['METAGENOMICS_SAMPLES'][0];
-        d.runLink = util.subfolder + '/runs/' + d.fields['name'][0] +
+        d.analysisLink = util.subfolder + '/analyses/' + d.fields['name'][0] +
             '?version=' + d.fields.pipeline_version[0];
         d.pipelineLink = util.subfolder + '/pipelines/' +
             d.fields.pipeline_version[0];
         d.biomes = convertBiomes(d);
+        d.assemblyLink = d.fields['ASSEMBLY'][0];
+        d.runLink = d.fields['ENA_RUN'][0];
         return d;
     }
 });
 
 /**
- * Collection of run results to call parser
+ * Collection of analysis results to call parser
  */
-const Runs = Search.extend({
-    tab: 'runs',
+const Analyses = Search.extend({
+    tab: 'analyses',
     parse(response) {
-        response.entries = response.entries.map(Run.prototype.parse);
+        response.entries = response.entries.map(Analysis.prototype.parse);
         return response;
     }
 });
 
 /**
  * Generic results view with slider handling, should be parametrised via subclass
- * (see SamplesView, RunsView)
+ * (see SamplesView, AnalysesView)
  */
 const ComplexResultsView = ResultsView.extend({
     params: {},
@@ -967,23 +969,23 @@ const SamplesView = ComplexResultsView.extend({
 /**
  * Parametrised subclass of results view w/ sliders
  */
-const RunsView = ComplexResultsView.extend({
-    facetName: 'runs',
-    el: '#runsResults',
-    formEl: 'runsFilters',
-    template: _.template($('#runsResultsTmpl').html()),
-    defaultQuery: 'domain_source:metagenomics_runs',
-    tableElem: '#runsTable',
-    tableModal: '#runsModal',
+const AnalysesView = ComplexResultsView.extend({
+    facetName: 'analyses',
+    el: '#analysesResults',
+    formEl: 'analysesFilters',
+    template: _.template($('#analysesResultsTmpl').html()),
+    defaultQuery: 'domain_source:metagenomics_analyses',
+    tableElem: '#analysesTable',
+    tableModal: '#analysesModal',
     initColumns: [
-        'run-id',
-        'run-sample',
-        'run-project',
-        'run-experiment-type',
-        'run-pipeline-vers'],
-    paginationElem: '#runs-pagination',
+        'analysis-id',
+        'analysis-sample',
+        'analysis-project',
+        'analysis-experiment-type',
+        'analysis-pipeline-vers'],
+    paginationElem: '#analyses-pagination',
     defaultParamFields: ',METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,' +
-    'experiment_type,pipeline_version'
+    'experiment_type,pipeline_version,ASSEMBLY,ENA_RUN,ENA_WGS_SEQUENCE_SET'
 });
 
 /**
@@ -996,7 +998,7 @@ function updateAll(pagesize) {
     return $.when(
         projectsView.update(null, pagesize),
         samplesView.update(null, pagesize),
-        runsView.update(null, pagesize)
+        analysesView.update(null, pagesize)
     ).done(function() {
         hideSpinner();
     });
@@ -1006,10 +1008,10 @@ function updateAll(pagesize) {
  * Method to instantiate all views on page load
  * @param {Backbone.View} projectsView
  * @param {Backbone.View} samplesView
- * @param {Backbone.View} runsView
+ * @param {Backbone.View} analysesView
  * @return {jQuery.promise}
  */
-function initAll(projectsView, samplesView, runsView) {
+function initAll(projectsView, samplesView, analysesView) {
     showSpinner();
     const projectFacet = $.get(searchUrl +
         'projects?format=json&size=1&start=0&' +
@@ -1017,16 +1019,16 @@ function initAll(projectsView, samplesView, runsView) {
     const sampleFacet = $.get(searchUrl +
         'samples?format=json&size=1&start=0&' +
         'facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_samples');
-    const runFacet = $.get(searchUrl +
-        'runs?format=json&size=1&start=0&' +
-        'facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_runs');
+    const analysisFacet = $.get(searchUrl +
+        'analyses?format=json&size=1&start=0&' +
+        'facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_analyses');
     return $.when(
         projectsView.fetchAndRender(true, true),
         samplesView.fetchAndRender(true, true),
-        runsView.fetchAndRender(true, true),
+        analysesView.fetchAndRender(true, true),
         projectFacet,
         sampleFacet,
-        runFacet
+        analysisFacet
     ).done(function() {
         hideSpinner();
         createCheckboxTrees('projects', projectFacet.responseJSON.facets,
@@ -1043,13 +1045,13 @@ function initAll(projectsView, samplesView, runsView) {
             samplesView.update.bind(samplesView));
         setFacetFilters('#samplesFilters', samplesView.params);
 
-        const $runsForm = $('#runsFilters');
-        const $runsBtnContainer = $('#runs-search-params');
-        createSliders($runsForm, 'runs', runsView.update.bind(runsView),
-            $runsBtnContainer);
-        createCheckboxTrees('runs', runFacet.responseJSON.facets, runsView,
-            $runsForm, $runsBtnContainer, runsView.update.bind(runsView));
-        setFacetFilters('#runsFilters', runsView.params);
+        const $analysesForm = $('#analysesFilters');
+        const $analysesBtnContainer = $('#analyses-search-params');
+        createSliders($analysesForm, 'analyses', analysesView.update.bind(analysesView),
+            $analysesBtnContainer);
+        createCheckboxTrees('analyses', analysisFacet.responseJSON.facets, analysesView,
+            $analysesForm, $analysesBtnContainer, analysesView.update.bind(analysesView));
+        setFacetFilters('#analysesFilters', analysesView.params);
     });
 }
 
@@ -1078,9 +1080,9 @@ let projectsView = new ProjectsView({collection: projects});
 let samples = new Samples();
 let samplesView = new SamplesView({collection: samples});
 
-let runs = new Runs();
-let runsView = new RunsView({collection: runs});
+let analyses = new Analyses();
+let analysesView = new AnalysesView({collection: analyses});
 
-initAll(projectsView, samplesView, runsView);
+initAll(projectsView, samplesView, analysesView);
 
 

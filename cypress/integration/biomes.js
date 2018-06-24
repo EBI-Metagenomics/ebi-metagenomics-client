@@ -1,6 +1,6 @@
-import {openPage, waitForPageLoad, assertTableIsCleared, stripWhitespace, datatype} from './util';
-import GenericTableHandler from './genericTable';
-import Config from './config';
+import {openPage, waitForPageLoad, assertTableIsCleared, stripWhitespace, datatype} from '../util/util';
+import GenericTableHandler from '../util/genericTable';
+import Config from '../util/config';
 
 const origPage = 'biomes';
 

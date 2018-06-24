@@ -50,7 +50,7 @@ let RunView = Backbone.View.extend({
         let description = {
             'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_id + '</a>',
             'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_id + '</a>',
-            'Run (in ENA)': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.run_id + '</a>'
+            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.run_id + '</a>'
         };
         $('#overview').append(new DetailList('Description', description));
         return this.$el;

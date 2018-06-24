@@ -1,6 +1,6 @@
-import {openPage, datatype, urlExists, login} from './util';
-import Config from './config';
-import GenericTableHandler from './genericTable';
+import {openPage, datatype, urlExists, login} from '../util/util';
+import Config from '../util/config';
+import GenericTableHandler from '../util/genericTable';
 
 const sampleId = 'ERS434640';
 const origPage = 'samples/' + sampleId;
@@ -162,7 +162,7 @@ describe('Sample page - Runs table', function() {
     beforeEach(function() {
         openPage(origPage);
         waitForPageLoad(sampleId);
-        table = new GenericTableHandler('#runs-section', 2);
+        table = new GenericTableHandler('#analyses-section', 2);
     });
 
     // it('Runs table should contain correct number of runs', function() {
@@ -228,7 +228,7 @@ describe('Sample page - Runs table with >1 analysis per run', function() {
         const origPage = 'samples/' + projectId;
         openPage(origPage);
         waitForPageLoad(projectId);
-        table = new GenericTableHandler('#runs-section', 1);
+        table = new GenericTableHandler('#analyses-section', 1);
     });
 
     it('Runs table should display both pipeline versions for a run', function() {
@@ -242,7 +242,7 @@ describe('Sample page - Metadata display', function() {
         const origPage = 'samples/' + projectId;
         openPage(origPage);
         waitForPageLoad(projectId);
-        table = new GenericTableHandler('#runs-section', 1);
+        table = new GenericTableHandler('#analyses-section', 1);
     });
     it('Info message should be displayed if no metadata available for display', function() {
         cy.get('#sample-metadata').contains('No metadata to be displayed.');

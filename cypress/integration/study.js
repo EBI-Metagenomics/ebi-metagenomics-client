@@ -1,6 +1,6 @@
-import {openPage, datatype, urlExists, waitForPageLoad, login} from './util';
-import Config from './config';
-import GenericTableHandler from './genericTable';
+import {openPage, datatype, urlExists, waitForPageLoad, login} from '../util/util';
+import Config from '../util/config';
+import GenericTableHandler from '../util/genericTable';
 
 const projectId = 'MGYS00002072';
 const origPage = 'studies/' + projectId;
@@ -192,7 +192,7 @@ describe('Study page - Analysis table - ', function() {
 //         waitForPageLoad(
 //             'Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing ' +
 //             'study from the June solstice in the year 2014');
-//         table = new GenericTableHandler('#runs-section', runsTableDefaultSize);
+//         table = new GenericTableHandler('#analyses-section', runsTableDefaultSize);
 //     });
 //     it('Runs table should display both pipeline versions for a run', function() {
 //         table.testFiltering('ERR770966', [
