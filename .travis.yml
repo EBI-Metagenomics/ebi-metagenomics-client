@@ -92,5 +92,6 @@ cache:
   pip
   directories:s
     - ~/.npm
+    - ~/.cache
     - node_modules
     - /home/travis/.cypress/Cypress
