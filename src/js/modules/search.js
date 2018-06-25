@@ -35,7 +35,6 @@ function getCookieQuery() {
     if (cookie) {
         cookie = JSON.parse(cookie);
         try {
-            console.log(data);
             data = cookie['projects']['query'];
         } catch (e) {
             console.warn('Could not retrieve site data from cookie.');
