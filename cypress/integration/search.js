@@ -293,8 +293,8 @@ describe('Search page - Sliders - ', function() {
     const analysesDisabledQueryText = 'You searched for analyses with no parameters.';
 
     beforeEach(function() {
-        // setupDefaultSearchPageRouting();
-        // setupDefaultSliderRouting();
+        setupDefaultSearchPageRouting();
+        setupDefaultSliderRouting();
         loadPage(origPage + '#samples');
         initTableHandlers();
     });
@@ -399,7 +399,7 @@ describe('Search page - Sliders - ', function() {
         const min = '40';
         const max = '88';
         enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
-        // setupFilteredSliderRoutingTyped();
+        setupFilteredSliderRoutingTyped();
         getInputText(samplesTempSliderContainer, 'min').clear().type(min).trigger('change');
         getInputText(samplesTempSliderContainer, 'max').clear().type(max).trigger('change');
         cy.contains('You searched for samples with temperature:[' + min + ' TO ' + max + '].');

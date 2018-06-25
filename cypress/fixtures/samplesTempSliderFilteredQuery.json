@@ -1,157 +1,12 @@
 {
-  "_comment": "Samples filtered by temperature",
-  "hitCount": 4154,
+  "hitCount": 185,
   "entries": [
     {
-      "id": "ERS1432620",
+      "id": "SRS464959",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS1432620"
-        ],
-        "name": [
-          "TV9_89:TARA_N000000625"
-        ],
-        "biome_name": [
-          "Oceanic"
-        ],
-        "description": [
-          "Diplonemid fastq sequences in sample TARA_N000000625 (Template DNA) from Tara Station TARA_078 at Depth: 5 and Fraction 180-2000"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP018626"
-        ],
-        "project_name": [
-          "Diplonemids are the most diverse planktonic eukaryotes in the world ocean"
-        ]
-      }
-    },
-    {
-      "id": "ERS569735",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS569735"
-        ],
-        "name": [
-          "2009_36"
-        ],
-        "biome_name": [
-          "Lake"
-        ],
-        "description": [
-          "2009_36"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP008491"
-        ],
-        "project_name": [
-          "Seasonal assemblages and short-lived blooms in coastal northwest Atlantic Ocean bacterioplankton"
-        ]
-      }
-    },
-    {
-      "id": "ERS689230",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS689230"
-        ],
-        "name": [
-          "GS108 3µm"
-        ],
-        "biome_name": [
-          "Photic zone"
-        ],
-        "description": [
-          "Water sample taken on 2005-08-04T01:33:00+00:00 from site GS108 (lat:-12.1019, long:96.8968), 3µm filter fraction. Samples were collected by filtering water pumped through a 20µm prefilter, then size-fractionating by serial filtration through 3µm, 0.8µm, and 0.1µm membrane filters, then finally, in some samples, through tangential flow filtration fitted with a 50kDa pore size filter to concentrate a viral fraction. This genetic information may be considered to be part of the genetic patrimony of Australia, the country from which the sample was obtained.  Users of this information agree to:  1) acknowledge Australia as the country of origin in any country where the genetic information is presented and 2) contact the CBD focal point identified on the CBD website:  http://www.cbd.int/countries/ if they intend to use the genetic information for commercial purposes."
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP010013"
-        ],
-        "project_name": [
-          "Core genomes of cosmopolitan surface ocean plankton"
-        ]
-      }
-    },
-    {
-      "id": "ERS1432076",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1432076"
-        ],
-        "name": [
-          "TV9_385:TARA_N000001688"
-        ],
-        "biome_name": [
-          "Oceanic"
-        ],
-        "description": [
-          "Diplonemid fastq sequences in sample TARA_N000001688 (Template DNA) from Tara Station TARA_106 at Depth: 40 and Fraction 0.8-3"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP018626"
-        ],
-        "project_name": [
-          "Diplonemids are the most diverse planktonic eukaryotes in the world ocean"
-        ]
-      }
-    },
-    {
-      "id": "ERS901514",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS901514"
-        ],
-        "name": [
-          "Danube_2013_Agricultural_Left36"
-        ],
-        "biome_name": [
-          "Lotic"
-        ],
-        "description": [
-          "Danube downstream Tisza (Serbia)"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP012642"
-        ],
-        "project_name": [
-          "16S V3-V4 metagenome from four Danube water samples"
-        ]
-      }
-    },
-    {
-      "id": "ERS1432501",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1432501"
-        ],
-        "name": [
-          "TV9_76:TARA_N000000311"
-        ],
-        "biome_name": [
-          "Oceanic"
-        ],
-        "description": [
-          "Diplonemid fastq sequences in sample TARA_N000000311 (Template DNA) from Tara Station TARA_036 at Depth: 5 and Fraction 0.8-5"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP018626"
-        ],
-        "project_name": [
-          "Diplonemids are the most diverse planktonic eukaryotes in the world ocean"
-        ]
-      }
-    },
-    {
-      "id": "SRS465016",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "SRS465016"
+          "SRS464959"
         ],
         "name": [
           "MIMARKS Survey related sample from hot springs metagenome"
@@ -163,7 +18,7 @@
           "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "METAGENOMICS_PROJECTS": [
-          "SRP028305"
+          "MGYS00000789"
         ],
         "project_name": [
           "Geothermal Springs Targeted Locus (Loci)"
@@ -171,143 +26,143 @@
       }
     },
     {
-      "id": "ERS1568973",
+      "id": "SRS676761",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS1568973"
+          "SRS676761"
         ],
         "name": [
-          "Arctic sea ice metagenome, 0.1 m"
-        ],
-        "biome_name": [
-          "Oceanic"
-        ],
-        "description": [
-          "Arctic sea ice metagenome, 0.1 m"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP015773"
-        ],
-        "project_name": [
-          "Arctic Ocean metagenomes from HLY1502"
-        ]
-      }
-    },
-    {
-      "id": "ERS1871384",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1871384"
-        ],
-        "name": [
-          "EMOSE_201705300746Z_DAY1_PUMP_SRF_(3m)_SEQ-(2.5L-on-sterivex)_W>0.22_N020000991"
-        ],
-        "biome_name": [
-          "Marine"
-        ],
-        "description": [
-          "This sample (EMOSE_N020000991) was created in silico using samples EMOSE_N010000991, EMOSE_N010000993, EMOSE_N010000992 and EMOSE_N010000994. The latter samples were collected on board the RV Nereis II (Observatoire Oceanologique de Banyuls), using a high volume well pump, in the context of the EMOSE (2017) Inter-Comparison of Marine Plankton Metagenome Analysis Methods. The sampling event (EMOSE_201705300746Z_DAY1_EVENT-PUMP) occurred at position latitudeN=42.486817 and longitudeE=003.168633, on date/time=2017-05-30T07:46Z00, at a depth of 3 m. The sample material was collected in the marine biome targeting a [SRF] surface water layer. The sample material was size-fractionated and prepared back in the lab using protocol [SEQ-(2.5L-on-sterivex)_W>0.22] for later detection and identification of biological and molecular entities (nucleotides) by sequencing (SEQ) methods. The pooled samples were extracted separately and parts of the DNA from each replicate (100 ng each) are pooled (R01.1-R01.4) before sequencing. This sample may be used for example in biodiversity and metagenomics studies of prokaryotes and eukaryotes. This sample has replicate sample(s): EMOSE_N020000421,EMOSE_N020000414"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP090011"
-        ],
-        "project_name": [
-          "EMOSE (2017) Inter-Comparison of Marine Plankton Metagenome Analysis Methods"
-        ]
-      }
-    },
-    {
-      "id": "ERS756379",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS756379"
-        ],
-        "name": [
-          "Pacific oyster hemolymph microbiota from Texel, translocated from Sylt"
-        ],
-        "biome_name": [
-          "Digestive system"
-        ],
-        "description": [
-          "Pacific oyster (Crassostrea gigas) hemolymph microbiota; collected on Texel, 2012-06-14; sample taken in the lab, after the treatment and before field deployment; treated with mix of ampiciline, gentamicine, tetracycline and kanamycine (100 µg/l seawater each) between 2012-06-11 and 2012-06-14; oyster from Sylt, translocated from Sylt (D) to Texel (NL)"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP010751"
-        ],
-        "project_name": [
-          "Natural variation of Pacific oyster hemolymph microbiota at two sites in the Wadden Sea (Texel, Netherlands, & Sylt, Germany) throughout the summer season 2012"
-        ]
-      }
-    },
-    {
-      "id": "ERS1432597",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1432597"
-        ],
-        "name": [
-          "TV9_86:TARA_X000001010"
-        ],
-        "biome_name": [
-          "Oceanic"
-        ],
-        "description": [
-          "Diplonemid fastq sequences in sample TARA_X000001010 (Template DNA) from Tara Station TARA_009 at Depth: 60 and Fraction 180-2000"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP018626"
-        ],
-        "project_name": [
-          "Diplonemids are the most diverse planktonic eukaryotes in the world ocean"
-        ]
-      }
-    },
-    {
-      "id": "ERS756695",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS756695"
-        ],
-        "name": [
-          "Pacific oyster hemolymph microbiota from Texel"
-        ],
-        "biome_name": [
-          "Digestive system"
-        ],
-        "description": [
-          "Pacific oyster (Crassostrea gigas) hemolymph microbiota; collected on Texel, 2012-07-27; sample taken after field deployment; treated with mix of ampiciline, gentamicine, tetracycline and kanamycine (100 µg/l seawater each) between 2012-06-11 and 2012-06-14; oyster from Texel, not translocated"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP010751"
-        ],
-        "project_name": [
-          "Natural variation of Pacific oyster hemolymph microbiota at two sites in the Wadden Sea (Texel, Netherlands, & Sylt, Germany) throughout the summer season 2012"
-        ]
-      }
-    },
-    {
-      "id": "SRS674171",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "SRS674171"
-        ],
-        "name": [
-          "NPK1_NO_3"
+          "NPK1_Bac_4"
         ],
         "biome_name": [
           "Contaminated"
         ],
         "description": [
-          "NPK only, Week 4"
+          "NPK only, Week 5"
         ],
         "METAGENOMICS_PROJECTS": [
-          "SRP045266"
+          "MGYS00001057"
+        ],
+        "project_name": [
+          "Bacteria Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS676771",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS676771"
+        ],
+        "name": [
+          "NPK1_Bac_15"
+        ],
+        "biome_name": [
+          "Contaminated"
+        ],
+        "description": [
+          "NPK only, Week 16"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001057"
+        ],
+        "project_name": [
+          "Bacteria Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS465026",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465026"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000789"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS465085",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465085"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000789"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS465047",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465047"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000789"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS674175",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS674175"
+        ],
+        "name": [
+          "NPK1_NO_7"
+        ],
+        "biome_name": [
+          "Contaminated"
+        ],
+        "description": [
+          "NPK only, Week 8"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001008"
         ],
         "project_name": [
           "CK1/MNPK1/NPK1 Targeted Locus (Loci)"
@@ -315,294 +170,434 @@
       }
     },
     {
-      "id": "ERS689358",
+      "id": "SRS465032",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS689358"
+          "SRS465032"
         ],
         "name": [
-          "GS300 3µm"
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "biome_name": [
-          "Photic zone"
+          "Soil"
         ],
         "description": [
-          "Water sample taken on 2007-07-09T20:01:00+00:00 from site GS300 (lat:50.5099, long:-126.4975333), 3µm filter fraction. Samples were collected by filtering water pumped through a 20µm prefilter, then size-fractionating by serial filtration through 3µm, 0.8µm, and 0.1µm membrane filters, then finally, in some samples, through tangential flow filtration fitted with a 50kDa pore size filter to concentrate a viral fraction. This genetic information may be considered to be part of the genetic patrimony of Canada, the country from which the sample was obtained.  Users of this information agree to:  1) acknowledge Canada as the country of origin in any country where the genetic information is presented and 2) contact the CBD focal point identified on the CBD website:  http://www.cbd.int/countries/ if they intend to use the genetic information for commercial purposes."
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP010013"
+          "MGYS00000789"
         ],
         "project_name": [
-          "Core genomes of cosmopolitan surface ocean plankton"
+          "Geothermal Springs Targeted Locus (Loci)"
         ]
       }
     },
     {
-      "id": "ERS1568971",
+      "id": "SRS1935727",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS1568971"
+          "SRS1935727"
         ],
         "name": [
-          "Arctic sea ice metagenome, 1.5 m"
+          "H10-Pla"
         ],
         "biome_name": [
-          "Oceanic"
+          "Oral"
         ],
         "description": [
-          "Arctic sea ice metagenome, 1.5 m"
+          "dental plaque from healthy controls"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP015773",
-          "ERP104203"
+          "MGYS00002238"
         ],
         "project_name": [
-          "Arctic Ocean metagenomes from HLY1502",
-          "EMG produced TPA metagenomics assembly of the Arctic Ocean metagenomes from HLY1502 (Arctic Ocean metagenomes) data set"
+          "Oral microbial changes in ASD children"
         ]
       }
     },
     {
-      "id": "ERS667596",
+      "id": "SRS1935750",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS667596"
+          "SRS1935750"
         ],
         "name": [
-          "OSD64_2014-06-21_1m_NPL022"
+          "A21-Sal"
         ],
         "biome_name": [
-          "Marine"
+          "Oral"
         ],
         "description": [
-          "OSD in the bay of Odessa, Black Sea, Ukraine"
+          "saliva from ASD patients"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP024424",
-          "ERP009703"
+          "MGYS00002238"
         ],
         "project_name": [
-          "EMG produced TPA metagenomics assembly of the Ocean Sampling Day (OSD) 2014: AUTHORITY-RAW amplicon and metagenome sequencing study from the June solstice in the year 2014 (osd-2014) data set",
-          "Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing study from the June solstice in the year 2014"
+          "Oral microbial changes in ASD children"
         ]
       }
     },
     {
-      "id": "SRS1036907",
+      "id": "SRS676770",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "SRS1036907"
+          "SRS676770"
         ],
         "name": [
-          "SEA_0190_20121010_Bv6"
+          "NPK1_Bac_14"
         ],
         "biome_name": [
-          "Marine"
+          "Contaminated"
         ],
         "description": [
-          "SEA_0190_20121010_Bv6"
+          "NPK only, Week 15"
         ],
         "METAGENOMICS_PROJECTS": [
-          "SRP026054"
+          "MGYS00001057"
         ],
         "project_name": [
-          "Plastisphere Targeted Locus (Loci)"
+          "Bacteria Targeted Locus (Loci)"
         ]
       }
     },
     {
-      "id": "ERS689222",
+      "id": "SRS464988",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS689222"
+          "SRS464988"
         ],
         "name": [
-          "GS094 0.1µm"
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "biome_name": [
-          "Photic zone"
+          "Soil"
         ],
         "description": [
-          "Water sample taken on 2005-04-26T23:13:00+00:00 from site GS094 (lat:-23.45446667, long:151.8857333), 0.1µm filter fraction. Samples were collected by filtering water pumped through a 20µm prefilter, then size-fractionating by serial filtration through 3µm, 0.8µm, and 0.1µm membrane filters, then finally, in some samples, through tangential flow filtration fitted with a 50kDa pore size filter to concentrate a viral fraction. This genetic information may be considered to be part of the genetic patrimony of Australia, the country from which the sample was obtained.  Users of this information agree to:  1) acknowledge Australia as the country of origin in any country where the genetic information is presented and 2) contact the CBD focal point identified on the CBD website:  http://www.cbd.int/countries/ if they intend to use the genetic information for commercial purposes."
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP010013"
+          "MGYS00000789"
         ],
         "project_name": [
-          "Core genomes of cosmopolitan surface ocean plankton"
+          "Geothermal Springs Targeted Locus (Loci)"
         ]
       }
     },
     {
-      "id": "ERS569710",
+      "id": "SRS674172",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS569710"
+          "SRS674172"
         ],
         "name": [
-          "2006_51"
+          "NPK1_NO_5"
         ],
         "biome_name": [
-          "Lake"
+          "Contaminated"
         ],
         "description": [
-          "2006_51"
+          "NPK only, Week 6"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP008491"
+          "MGYS00001008"
         ],
         "project_name": [
-          "Seasonal assemblages and short-lived blooms in coastal northwest Atlantic Ocean bacterioplankton"
+          "CK1/MNPK1/NPK1 Targeted Locus (Loci)"
         ]
       }
     },
     {
-      "id": "ERS756380",
+      "id": "SRS1935715",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS756380"
+          "SRS1935715"
         ],
         "name": [
-          "Pacific oyster hemolymph microbiota from Texel, translocated from Sylt"
+          "H24-Pla"
         ],
         "biome_name": [
-          "Digestive system"
+          "Oral"
         ],
         "description": [
-          "Pacific oyster (Crassostrea gigas) hemolymph microbiota; collected on Texel, 2012-08-24; sample taken after field deployment; not antibiotic treated; oyster from Sylt, translocated from Sylt (D) to Texel (NL)"
+          "dental plaque from healthy controls"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP010751"
+          "MGYS00002238"
         ],
         "project_name": [
-          "Natural variation of Pacific oyster hemolymph microbiota at two sites in the Wadden Sea (Texel, Netherlands, & Sylt, Germany) throughout the summer season 2012"
+          "Oral microbial changes in ASD children"
         ]
       }
     },
     {
-      "id": "SRS1036937",
+      "id": "SRS464993",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "SRS1036937"
+          "SRS464993"
         ],
         "name": [
-          "SEA_0128_20120609_Bv6"
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "biome_name": [
-          "Marine"
+          "Soil"
         ],
         "description": [
-          "SEA_0128_20120609_Bv6"
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "METAGENOMICS_PROJECTS": [
-          "SRP026054"
+          "MGYS00000789"
         ],
         "project_name": [
-          "Plastisphere Targeted Locus (Loci)"
+          "Geothermal Springs Targeted Locus (Loci)"
         ]
       }
     },
     {
-      "id": "SRS992709",
+      "id": "SRS500617",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "SRS992709"
+          "SRS500617"
         ],
         "name": [
-          "sample25"
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "biome_name": [
-          "Marine"
+          "Soil"
         ],
         "description": [
-          "108"
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "METAGENOMICS_PROJECTS": [
-          "SRP061183"
+          "MGYS00000789"
         ],
         "project_name": [
-          "Red Sea metagenomes"
+          "Geothermal Springs Targeted Locus (Loci)"
         ]
       }
     },
     {
-      "id": "ERS386534",
+      "id": "SRS464994",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS386534"
+          "SRS464994"
         ],
         "name": [
-          "Amundsen Sea Polynya Microbiome"
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "biome_name": [
-          "Marine"
+          "Soil"
         ],
         "description": [
-          "Bacterial Diversity based on 16S rDNA amplicon sequencing"
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP004192"
+          "MGYS00000789"
         ],
         "project_name": [
-          "Bacterial community during the Austral summer in the Amundsen Sea Polynya, Antarctica"
+          "Geothermal Springs Targeted Locus (Loci)"
         ]
       }
     },
     {
-      "id": "ERS2085465",
+      "id": "SRS674169",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS2085465"
+          "SRS674169"
         ],
         "name": [
-          "G12"
+          "NPK1_NO_1"
         ],
         "biome_name": [
-          "Oil-contaminated"
+          "Contaminated"
         ],
         "description": [
-          "Svalbard seawater-control-day7"
+          "NPK only, Week 2"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP106182"
+          "MGYS00001008"
         ],
         "project_name": [
-          "PETROMAKS_E12"
+          "CK1/MNPK1/NPK1 Targeted Locus (Loci)"
         ]
       }
     },
     {
-      "id": "ERS756352",
+      "id": "SRS465051",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS756352"
+          "SRS465051"
         ],
         "name": [
-          "Pacific oyster hemolymph microbiota from Texel, translocated from Sylt"
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "biome_name": [
-          "Digestive system"
+          "Soil"
         ],
         "description": [
-          "Pacific oyster (Crassostrea gigas) hemolymph microbiota; collected on Texel, 2012-08-24; sample taken after field deployment; treated with mix of ampiciline, gentamicine, tetracycline and kanamycine (100 µg/l seawater each) between 2012-06-11 and 2012-06-14; oyster from Sylt, translocated from Sylt (D) to Texel (NL)"
+          "MIMARKS Survey related sample from hot springs metagenome"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP010751"
+          "MGYS00000789"
         ],
         "project_name": [
-          "Natural variation of Pacific oyster hemolymph microbiota at two sites in the Wadden Sea (Texel, Netherlands, & Sylt, Germany) throughout the summer season 2012"
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS465015",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465015"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000789"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS500616",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS500616"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000789"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS465061",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465061"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000789"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS464996",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS464996"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000789"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "SRS1935735",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS1935735"
+        ],
+        "name": [
+          "H2-Pla"
+        ],
+        "biome_name": [
+          "Oral"
+        ],
+        "description": [
+          "dental plaque from healthy controls"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002238"
+        ],
+        "project_name": [
+          "Oral microbial changes in ASD children"
+        ]
+      }
+    },
+    {
+      "id": "SRS465081",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS465081"
+        ],
+        "name": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "description": [
+          "MIMARKS Survey related sample from hot springs metagenome"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000789"
+        ],
+        "project_name": [
+          "Geothermal Springs Targeted Locus (Loci)"
         ]
       }
     }
@@ -616,7 +611,7 @@
         {
           "label": "Metagenomics Samples",
           "value": "metagenomics_samples",
-          "count": 4154
+          "count": 185
         }
       ]
     },
@@ -628,131 +623,41 @@
         {
           "label": "Environmental",
           "value": "Environmental",
-          "count": 3216,
+          "count": 138,
           "children": [
             {
-              "label": "Aquatic",
-              "value": "Aquatic",
-              "count": 2871,
+              "label": "Terrestrial",
+              "value": "Terrestrial",
+              "count": 132,
               "children": [
                 {
-                  "label": "Marine",
-                  "value": "Marine",
-                  "count": 2750,
+                  "label": "Soil",
+                  "value": "Soil",
+                  "count": 132,
                   "children": [
                     {
-                      "label": "Oceanic",
-                      "value": "Oceanic",
-                      "count": 1425,
-                      "children": [
-                        {
-                          "label": "Photic zone",
-                          "value": "Photic zone",
-                          "count": 277
-                        },
-                        {
-                          "label": "Oil-contaminated",
-                          "value": "Oil-contaminated",
-                          "count": 32
-                        },
-                        {
-                          "label": "Sediment",
-                          "value": "Sediment",
-                          "count": 6
-                        }
-                      ]
-                    },
-                    {
-                      "label": "Intertidal zone",
-                      "value": "Intertidal zone",
-                      "count": 125,
-                      "children": [
-                        {
-                          "label": "Oil-contaminated",
-                          "value": "Oil-contaminated",
-                          "count": 120
-                        },
-                        {
-                          "label": "Estuary",
-                          "value": "Estuary",
-                          "count": 5
-                        }
-                      ]
-                    },
-                    {
-                      "label": "Coastal",
-                      "value": "Coastal",
-                      "count": 30,
-                      "children": [
-                        {
-                          "label": "Sediment",
-                          "value": "Sediment",
-                          "count": 29
-                        }
-                      ]
-                    },
-                    {
-                      "label": "Hydrothermal vents",
-                      "value": "Hydrothermal vents",
-                      "count": 6
-                    }
-                  ]
-                },
-                {
-                  "label": "Freshwater",
-                  "value": "Freshwater",
-                  "count": 121,
-                  "children": [
-                    {
-                      "label": "Lake",
-                      "value": "Lake",
-                      "count": 71
-                    },
-                    {
-                      "label": "Groundwater",
-                      "value": "Groundwater",
-                      "count": 21,
-                      "children": [
-                        {
-                          "label": "Cave water",
-                          "value": "Cave water",
-                          "count": 3
-                        }
-                      ]
-                    },
-                    {
-                      "label": "Lotic",
-                      "value": "Lotic",
-                      "count": 4
-                    },
-                    {
-                      "label": "Sediment",
-                      "value": "Sediment",
-                      "count": 4
-                    },
-                    {
-                      "label": "Lentic",
-                      "value": "Lentic",
-                      "count": 2
+                      "label": "Contaminated",
+                      "value": "Contaminated",
+                      "count": 42
                     }
                   ]
                 }
               ]
             },
             {
-              "label": "Terrestrial",
-              "value": "Terrestrial",
-              "count": 345,
+              "label": "Aquatic",
+              "value": "Aquatic",
+              "count": 6,
               "children": [
                 {
-                  "label": "Soil",
-                  "value": "Soil",
-                  "count": 345,
+                  "label": "Marine",
+                  "value": "Marine",
+                  "count": 6,
                   "children": [
                     {
-                      "label": "Contaminated",
-                      "value": "Contaminated",
-                      "count": 120
+                      "label": "Hydrothermal vents",
+                      "value": "Hydrothermal vents",
+                      "count": 6
                     }
                   ]
                 }
@@ -763,63 +668,22 @@
         {
           "label": "Host-associated",
           "value": "Host-associated",
-          "count": 849,
+          "count": 41,
           "children": [
-            {
-              "label": "Mollusca",
-              "value": "Mollusca",
-              "count": 730,
-              "children": [
-                {
-                  "label": "Digestive system",
-                  "value": "Digestive system",
-                  "count": 727
-                }
-              ]
-            },
             {
               "label": "Human",
               "value": "Human",
-              "count": 96,
+              "count": 41,
               "children": [
                 {
                   "label": "Digestive system",
                   "value": "Digestive system",
-                  "count": 96,
+                  "count": 41,
                   "children": [
                     {
                       "label": "Oral",
                       "value": "Oral",
-                      "count": 96
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "label": "Insecta",
-              "value": "Insecta",
-              "count": 21
-            },
-            {
-              "label": "Porifera",
-              "value": "Porifera",
-              "count": 1
-            },
-            {
-              "label": "Arthropoda",
-              "value": "Arthropoda",
-              "count": 1,
-              "children": [
-                {
-                  "label": "Respiratory system",
-                  "value": "Respiratory system",
-                  "count": 1,
-                  "children": [
-                    {
-                      "label": "Gills",
-                      "value": "Gills",
-                      "count": 1
+                      "count": 41
                     }
                   ]
                 }
@@ -830,51 +694,22 @@
         {
           "label": "Engineered",
           "value": "Engineered",
-          "count": 89,
+          "count": 6,
           "children": [
             {
-              "label": "Modeled",
-              "value": "Modeled",
-              "count": 41
-            },
-            {
-              "label": "Food production",
-              "value": "Food production",
-              "count": 20
+              "label": "Biogas plant",
+              "value": "Biogas plant",
+              "count": 4
             },
             {
               "label": "Bioreactor",
               "value": "Bioreactor",
-              "count": 15,
+              "count": 2,
               "children": [
                 {
                   "label": "Continuous culture",
                   "value": "Continuous culture",
-                  "count": 3
-                }
-              ]
-            },
-            {
-              "label": "Biogas plant",
-              "value": "Biogas plant",
-              "count": 9,
-              "children": [
-                {
-                  "label": "Wet fermentation",
-                  "value": "Wet fermentation",
-                  "count": 5
-                }
-              ]
-            },
-            {
-              "label": "Wastewater",
-              "value": "Wastewater",
-              "count": 4,
-              "children": [
-                {
-                  "label": "Water and sludge",
-                  "value": "Water and sludge",
-                  "count": 4
+                  "count": 2
                 }
               ]
             }
@@ -885,79 +720,24 @@
     {
       "id": "experiment_type",
       "label": "Experiment type",
-      "total": 4,
+      "total": 1,
       "facetValues": [
         {
           "label": "Amplicon",
           "value": "amplicon",
-          "count": 3167
-        },
-        {
-          "label": "Metagenomic",
-          "value": "metagenomic",
-          "count": 1101
-        },
-        {
-          "label": "Assembly",
-          "value": "assembly",
-          "count": 188
-        },
-        {
-          "label": "Metatranscriptomic",
-          "value": "metatranscriptomic",
-          "count": 62
+          "count": 185
         }
       ]
     },
     {
       "id": "sequencing_method",
       "label": "Sequencing method",
-      "total": 16,
+      "total": 2,
       "facetValues": [
-        {
-          "label": "Sequencing by synthesis, Illumina paired-end",
-          "value": "Sequencing by synthesis, Illumina paired-end",
-          "count": 730
-        },
-        {
-          "label": "454 Sequencing",
-          "value": "454 Sequencing",
-          "count": 203
-        },
-        {
-          "label": "Pyrosequencing",
-          "value": "pyrosequencing",
-          "count": 124
-        },
-        {
-          "label": "Illumina",
-          "value": "Illumina",
-          "count": 49
-        },
-        {
-          "label": "16S ion torrent amplicon",
-          "value": "16S ion torrent amplicon",
-          "count": 44
-        },
-        {
-          "label": "Illumina MiSeq",
-          "value": "Illumina MiSeq",
-          "count": 41
-        },
-        {
-          "label": "Illumina MiSeq 2x250 PE",
-          "value": "Illumina MiSeq 2x250 PE",
-          "count": 38
-        },
-        {
-          "label": "Illumina PE 150x150",
-          "value": "Illumina PE 150x150",
-          "count": 24
-        },
         {
           "label": "Pyrosequencing",
           "value": "Pyrosequencing",
-          "count": 10
+          "count": 8
         },
         {
           "label": "454 pyrosequencing",
@@ -969,99 +749,57 @@
     {
       "id": "location_name",
       "label": "Location name",
-      "total": 289,
+      "total": 25,
       "facetValues": [
-        {
-          "label": "North Sea",
-          "value": "North Sea",
-          "count": 730
-        },
-        {
-          "label": "Schleswig Holstein, Sylt, List, Odewatt",
-          "value": "Schleswig Holstein, Sylt, List, Odewatt",
-          "count": 423
-        },
-        {
-          "label": "Netherlands, Texel, de Cocksdorp",
-          "value": "Netherlands, Texel, de Cocksdorp",
-          "count": 295
-        },
-        {
-          "label": "Atlantic Ocean",
-          "value": "Atlantic Ocean",
-          "count": 223
-        },
-        {
-          "label": "Southern Ocean",
-          "value": "Southern Ocean",
-          "count": 203
-        },
         {
           "label": "China:Suzhou",
           "value": "China:Suzhou",
-          "count": 120
+          "count": 42
         },
         {
-          "label": "Pacific Ocean",
-          "value": "Pacific Ocean",
-          "count": 114
+          "label": "Dewar Creek, Canada",
+          "value": "Dewar Creek, Canada",
+          "count": 17
         },
         {
-          "label": "USA",
-          "value": "USA",
-          "count": 104
+          "label": "Ngatamariki, New Zealand",
+          "value": "Ngatamariki, New Zealand",
+          "count": 11
         },
         {
-          "label": "Baltic Sea",
-          "value": "Baltic Sea",
-          "count": 85
+          "label": "Rotokawa, New Zealand",
+          "value": "Rotokawa, New Zealand",
+          "count": 6
         },
         {
-          "label": "France",
-          "value": "France",
-          "count": 52
-        }
-      ]
-    },
-    {
-      "id": "disease_status",
-      "label": "Disease status",
-      "total": 7,
-      "facetValues": [
-        {
-          "label": "Diseased, CAO's index = 11",
-          "value": "Diseased, CAO's index = 11",
-          "count": 2
+          "label": "Lakelse Springs, Canada",
+          "value": "Lakelse Springs, Canada",
+          "count": 6
         },
         {
-          "label": "Healthy, CAO's Index = 0",
-          "value": "Healthy, CAO's Index = 0",
-          "count": 2
+          "label": "Antarctica",
+          "value": "Antarctica",
+          "count": 6
         },
         {
-          "label": "Diseased, CAO's index = 6",
-          "value": "Diseased, CAO's index = 6",
-          "count": 1
+          "label": "Tikitere, New Zealand",
+          "value": "Tikitere, New Zealand",
+          "count": 6
         },
         {
-          "label": "Healthy",
-          "value": "healthy",
-          "count": 1
+          "label": "Larsen Creek S, Canada",
+          "value": "Larsen Creek S, Canada",
+          "count": 5
         },
         {
-          "label": "Diseased, CAO's index = 8",
-          "value": "Diseased, CAO's index = 8",
-          "count": 1
+          "label": "Grayling River, Canada",
+          "value": "Grayling River, Canada",
+          "count": 5
         },
         {
-          "label": "Diseased, CAO's index = 10",
-          "value": "Diseased, CAO's index = 10",
-          "count": 1
-        },
-        {
-          "label": "Diseased, CAO's index = 25",
-          "value": "Diseased, CAO's index = 25",
-          "count": 1
+          "label": "Loop Road Springs, New Zealand",
+          "value": "Loop Road Springs, New Zealand",
+          "count": 5
         }
       ]
     }
