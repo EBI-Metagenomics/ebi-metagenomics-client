@@ -1,5 +1,5 @@
-import {datatype} from 'util';
-import config from 'config';
+import {datatype} from './util';
+import config from './config';
 
 class GenericTableHandler {
     constructor(parentId, defaultPageSize, hasLoadingGif) {

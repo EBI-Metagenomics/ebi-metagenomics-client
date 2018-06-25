@@ -1,4 +1,4 @@
-import Config from 'config';
+import Config from './config';
 
 const username = Cypress.env('WEBIN_USERNAME');
 const password = Cypress.env('WEBIN_PASSWORD');

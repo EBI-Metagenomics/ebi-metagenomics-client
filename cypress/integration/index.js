@@ -11,7 +11,7 @@ const origPage = '';
 const options = {timeout: 40000};
 
 function waitForStatsLoadingGif() {
-    cy.get('.loading-gif-large').should('be.hidden');
+    cy.get('.loading-gif-large').should('be.hidden', {timeout: 20000});
 }
 
 describe('Home page: Test Browse by selected biomes component', function() {
