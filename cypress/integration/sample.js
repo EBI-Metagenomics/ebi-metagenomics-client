@@ -162,7 +162,7 @@ describe('Sample page - Runs table', function() {
     beforeEach(function() {
         openPage(origPage);
         waitForPageLoad(sampleId);
-        table = new GenericTableHandler('#analyses-section', 2);
+        table = new GenericTableHandler('#runs-section', 2);
     });
 
     // it('Runs table should contain correct number of runs', function() {
