@@ -106,7 +106,7 @@
                                         </div>
                                         <div class="columns small-12 medium-12 index-stats">
                                             <div class="index-stats-label"><span id="run-stats"></span></div>
-                                            runs
+                                            analyses
                                         </div>
                                     </div>
                                 </div>
@@ -144,7 +144,7 @@
                             <div class="row">
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
-                                        <p>Your private data</p>
+                                        <p>Your data</p>
                                         <button class="button" data-open="requestPrivateAnalysisModal">Submit and/or
                                             Request
                                         </button>
@@ -348,9 +348,12 @@
         </div>
         <div class="row columns">
             <label>
-                Comment / additional information:
+                Comment / additional information
                 <input type="text" name="reason">
             </label>
+        </div>
+        <div class="row columns cnetered">
+            <p>The analysis of your data will be held confidentially on our site until the hold date expires.</p>
         </div>
         <div class="row columns centered">
             <button class="button mailtobtn" type="button">Submit request</button>
@@ -363,7 +366,7 @@
 
 
 <div class="reveal small" id="requestPrivateAnalysisModal" data-reveal>
-    <h2 class="centered">Request an analysis of a private dataset</h2>
+    <h2 class="centered">Request an analysis of your data</h2>
     <!--No validate attribute forces browser to ignore validation and instead allow FoundationAbide to enforce it. -->
     <form id="analysisPrivateRequestForm" class="conditional-form" data-abide novalidate>
         <div class="row columns medium-12">
@@ -442,7 +445,7 @@
             </div>
             <div class="row columns">
                 <label>
-                    Comment / additional information:
+                    Comment / additional information
                     <input type="text" name="reason">
                 </label>
             </div>

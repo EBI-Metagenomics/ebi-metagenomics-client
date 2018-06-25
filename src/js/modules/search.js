@@ -35,6 +35,7 @@ function getCookieQuery() {
     if (cookie) {
         cookie = JSON.parse(cookie);
         try {
+            console.log(data);
             data = cookie['projects']['query'];
         } catch (e) {
             console.warn('Could not retrieve site data from cookie.');
@@ -44,11 +45,11 @@ function getCookieQuery() {
 }
 
 let queryText = util.getURLFilterParams()['query'];
-if (queryText === null) {
+if (queryText === undefined || queryText === null) {
     queryText = getCookieQuery();
 }
-
 $('#navbar-query').val(queryText);
+
 
 $(document).ready(function() {
     // TODO convert to template argument
