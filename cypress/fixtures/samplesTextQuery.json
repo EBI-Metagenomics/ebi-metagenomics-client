@@ -1,31 +1,6 @@
 {
-  "_comment": "Samples data (filtered by text query=Test)",
   "hitCount": 35,
   "entries": [
-    {
-      "id": "ERS782466",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS782466"
-        ],
-        "name": [
-          "Test Brassicae"
-        ],
-        "biome_name": [
-          "Phylloplane"
-        ],
-        "description": [
-          "Test Brassicae"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP010900"
-        ],
-        "project_name": [
-          "tes"
-        ]
-      }
-    },
     {
       "id": "ERS782465",
       "source": "metagenomics_samples",
@@ -43,7 +18,31 @@
           "Test Brassicae"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP010900"
+          "MGYS00001332"
+        ],
+        "project_name": [
+          "tes"
+        ]
+      }
+    },
+    {
+      "id": "ERS782466",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS782466"
+        ],
+        "name": [
+          "Test Brassicae"
+        ],
+        "biome_name": [
+          "Phylloplane"
+        ],
+        "description": [
+          "Test Brassicae"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001332"
         ],
         "project_name": [
           "tes"
@@ -67,7 +66,7 @@
           "s1 for test"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP106503"
+          "MGYS00002185"
         ],
         "project_name": [
           "metagenome"
@@ -91,130 +90,10 @@
           "Catching diversity using denovo sequenzing"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP009522"
+          "MGYS00000464"
         ],
         "project_name": [
           "Denovo test of eDNA sample"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443833",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443833"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443827",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443827"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1436509",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1436509"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443841",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443841"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443831",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443831"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
         ]
       }
     },
@@ -235,151 +114,7 @@
           "Daisy Lake Shotgun"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443826",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443826"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443834",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443834"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443843",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443843"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443842",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443842"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443835",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443835"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443845",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443845"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
+          "MGYS00001105"
         ],
         "project_name": [
           "Daisy Lake Shotgun Test"
@@ -403,7 +138,7 @@
           "Daisy Lake Shotgun"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP016063"
+          "MGYS00001105"
         ],
         "project_name": [
           "Daisy Lake Shotgun Test"
@@ -411,11 +146,35 @@
       }
     },
     {
-      "id": "ERS1443743",
+      "id": "ERS1205946",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS1443743"
+          "ERS1205946"
+        ],
+        "name": [
+          "Daisy Lake shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443845",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443845"
         ],
         "name": [
           "Daisy Lake Shotgun"
@@ -427,79 +186,7 @@
           "Daisy Lake Shotgun"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443838",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443838"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443839",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443839"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
-        ],
-        "project_name": [
-          "Daisy Lake Shotgun Test"
-        ]
-      }
-    },
-    {
-      "id": "ERS1443832",
-      "source": "metagenomics_samples",
-      "fields": {
-        "id": [
-          "ERS1443832"
-        ],
-        "name": [
-          "Daisy Lake Shotgun"
-        ],
-        "biome_name": [
-          "Sediment"
-        ],
-        "description": [
-          "Daisy Lake Shotgun"
-        ],
-        "METAGENOMICS_PROJECTS": [
-          "ERP016063"
+          "MGYS00001105"
         ],
         "project_name": [
           "Daisy Lake Shotgun Test"
@@ -523,7 +210,319 @@
           "Daisy Lake Shotgun"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP016063"
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443826",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443826"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443841",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443841"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443838",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443838"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443843",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443843"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443839",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443839"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443835",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443835"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1436509",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1436509"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443743",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443743"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443742",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443742"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443831",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443831"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443840",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443840"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443833",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443833"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443834",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443834"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
         ],
         "project_name": [
           "Daisy Lake Shotgun Test"
@@ -547,7 +546,7 @@
           "Daisy Lake Shotgun"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP016063"
+          "MGYS00001105"
         ],
         "project_name": [
           "Daisy Lake Shotgun Test"
@@ -555,11 +554,11 @@
       }
     },
     {
-      "id": "ERS1443829",
+      "id": "ERS1443832",
       "source": "metagenomics_samples",
       "fields": {
         "id": [
-          "ERS1443829"
+          "ERS1443832"
         ],
         "name": [
           "Daisy Lake Shotgun"
@@ -571,7 +570,7 @@
           "Daisy Lake Shotgun"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP016063"
+          "MGYS00001105"
         ],
         "project_name": [
           "Daisy Lake Shotgun Test"
@@ -595,7 +594,7 @@
           "Daisy Lake Shotgun"
         ],
         "METAGENOMICS_PROJECTS": [
-          "ERP016063"
+          "MGYS00001105"
         ],
         "project_name": [
           "Daisy Lake Shotgun Test"

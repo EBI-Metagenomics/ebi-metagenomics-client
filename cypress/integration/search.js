@@ -1,9 +1,14 @@
-import {openPage, changeTab, waitForSearchResults, setupDefaultSearchPageRouting} from '../util/util';
+import {
+    openPage,
+    changeTab,
+    waitForSearchResults,
+    setupDefaultSearchPageRouting
+} from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
 const origPage = 'search';
 
-const initialResultSize = 25;
+const initialResultSize = 3;
 
 const rowSelector = 'table tr.search-row:visible';
 
@@ -18,13 +23,13 @@ function loadPage(page) {
 }
 
 function routeWithTextQuery() {
-    // cy.route('GET',
-    //     '**/ebisearch/ws/rest/metagenomics_projects?**query=Test**',
-    //     'fixture:projectsTextQuery').as('textQueryProjects');
-    //
-    // cy.route('GET',
-    //     '**/ebisearch/ws/rest/metagenomics_samples?**query=Test**',
-    //     'fixture:samplesTextQuery').as('textQuerySamples');
+    cy.route('GET',
+        '**/ebisearch/ws/rest/metagenomics_projects?**query=Test**',
+        'fixture:projectsTextQuery').as('textQueryProjects');
+
+    cy.route('GET',
+        '**/ebisearch/ws/rest/metagenomics_samples?**query=Test**',
+        'fixture:samplesTextQuery').as('textQuerySamples');
 
     cy.route('GET',
         '**/ebisearch/ws/rest/metagenomics_analyses?**query=Test**',
@@ -33,13 +38,13 @@ function routeWithTextQuery() {
 
 function routeWithBiomeFilter(biome) {
     let biomeParam = 'biome:' + biome;
-    // cy.route('GET',
-    //     '**/ebisearch/ws/rest/metagenomics_projects?**' + biomeParam + '**',
-    //     'fixture:projectsBiomeFilter').as('biomeQueryProjects');
-    //
-    // cy.route('GET',
-    //     '**/ebisearch/ws/rest/metagenomics_samples?**' + biomeParam + '**',
-    //     'fixture:samplesBiomeFilter').as('biomeQuerySamples');
+    cy.route('GET',
+        '**/ebisearch/ws/rest/metagenomics_projects?**' + biomeParam + '**',
+        'fixture:projectsBiomeFilter').as('biomeQueryProjects');
+
+    cy.route('GET',
+        '**/ebisearch/ws/rest/metagenomics_samples?**' + biomeParam + '**',
+        'fixture:samplesBiomeFilter').as('biomeQuerySamples');
 
     cy.route('GET',
         '**/ebisearch/ws/rest/metagenomics_analyses?**' + biomeParam + '**',
@@ -48,9 +53,9 @@ function routeWithBiomeFilter(biome) {
 
 function routeWithCenterName(center) {
     let centerParam = 'centre_name:' + center;
-    // cy.route('GET',
-    //     '**/ebisearch/ws/rest/metagenomics_projects?**' + centerParam + '**',
-    //     'fixture:projectsCenterFilter').as('centerQueryProjects');
+    cy.route('GET',
+        '**/ebisearch/ws/rest/metagenomics_projects?**' + centerParam + '**',
+        'fixture:projectsCenterFilter').as('centerQueryProjects');
 }
 
 function filterByText(testString) {
@@ -67,14 +72,13 @@ let sampleTable;
 let analysisTable;
 
 function initTableHandlers() {
-    studyTable = new GenericTableHandler('#projectsResults', 25, false);
-    sampleTable = new GenericTableHandler('#samplesResults', 25, false);
-    analysisTable = new GenericTableHandler('#analysesResults', 25, false);
+    studyTable = new GenericTableHandler('#projectsResults', 3, false);
+    sampleTable = new GenericTableHandler('#samplesResults', 3, false);
+    analysisTable = new GenericTableHandler('#analysesResults', 3, false);
 }
 
 function testResultsAreFilteredByString() {
-    // routeWithTextQuery();
-    //TODO reimplement routing with updated EBI SEARCH responses
+    routeWithTextQuery();
     const testString = 'Test';
     filterByText(testString);
     // Tables have hidden columns
@@ -83,12 +87,13 @@ function testResultsAreFilteredByString() {
     changeTab('samples');
     sampleTable.checkRowData(0, ['ERS782465', 'MGYS00001332', 'Test Brassicae', 'Test Brassicae']);
     changeTab('analyses');
-    analysisTable.checkRowData(0, ['MGYA00087095', '3.0', 'ERS782465', 'MGYS00001332', 'amplicon', '', '', '']);
+    analysisTable.checkRowData(0,
+        ['MGYA00087095', '3.0', 'ERS782465', 'MGYS00001332', 'amplicon', '', '', '']);
 }
 
 describe('Search page - general Functionality', function() {
     beforeEach(function() {
-        // setupDefaultSearchPageRouting();
+        setupDefaultSearchPageRouting();
         loadPage(origPage);
         initTableHandlers();
     });
@@ -100,16 +105,13 @@ describe('Search page - general Functionality', function() {
     it('Correct number of results.', function() {
         openPage(origPage);
         cy.wait(1000);
-        cy.get(pageSizeSelect).invoke('val').then((val) => {
-            waitForSearchResults(rowSelector, val);
-            cy.get(pageSizeSelect).select('50');
-            waitForSearchResults(rowSelector, 50);
-        });
+        cy.get(pageSizeSelect).select('50');
+        waitForSearchResults(rowSelector, 50);
     });
 
     it('Biome filters should restrict results', function() {
         const biome = 'Environmental/Air';
-        // routeWithBiomeFilter(biome);
+        routeWithBiomeFilter(biome);
         cy.get('button.disp-children').first().click();
         cy.get('input[value=\'' + biome + '\']').check({force: true});
         waitForSearchResults(rowSelector, 2);
@@ -118,7 +120,7 @@ describe('Search page - general Functionality', function() {
 
     it('Centre name filters should restrict results', function() {
         const centerName = 'BioProject';
-        // routeWithCenterName(centerName);
+        routeWithCenterName(centerName);
         cy.get('input[value=\'' + centerName + '\']').check({force: true});
         waitForSearchResults(rowSelector, 25);
         cy.get(studyTable.getColumnSelector(7)).contains(centerName);
@@ -127,13 +129,13 @@ describe('Search page - general Functionality', function() {
 
     it('Clear button should reset search', function() {
         const biome = 'Environmental/Air';
-        // routeWithBiomeFilter(biome);
+        routeWithBiomeFilter(biome);
         cy.get('button.disp-children').first().click();
         cy.get('input[value=\'' + biome + '\']').check({force: true});
         studyTable.waitForTableLoad(2);
         cy.get(studyTable.getColumnSelector(2)).contains('Air');
         cy.get('#search-reset').click();
-        studyTable.waitForTableLoad(25);
+        studyTable.waitForTableLoad(3);
     });
 
     it('Should pre-fill cached search query', function() {
@@ -147,9 +149,11 @@ describe('Search page - general Functionality', function() {
         studyTable.checkRowData(0,
             ['MGYS00001105', 'PRJEB14421', 'Sediment', '', '', '', '', 'UNIVERSITY OF CAMBRIDGE']);
         changeTab('samples');
-        sampleTable.checkRowData(0, ['ERS782465', 'MGYS00001332', 'Test Brassicae', 'Test Brassicae']);
+        sampleTable.checkRowData(0,
+            ['ERS782465', 'MGYS00001332', 'Test Brassicae', 'Test Brassicae']);
         changeTab('analyses');
-        analysisTable.checkRowData(0, ['MGYA00087095', '3.0', 'ERS782465', 'MGYS00001332', 'amplicon', '', '', '']);
+        analysisTable.checkRowData(0,
+            ['MGYA00087095', '3.0', 'ERS782465', 'MGYS00001332', 'amplicon', '', '', '']);
     });
 
     // it('Pagination - double page change', function() {
@@ -186,7 +190,7 @@ describe('Search page - Display additional columns', function() {
     const column = 'project-name';
 
     beforeEach(function() {
-        // setupDefaultSearchPageRouting();
+        setupDefaultSearchPageRouting();
         loadPage(origPage + '#projects');
     });
 
@@ -228,7 +232,7 @@ describe('Search page - Display additional columns', function() {
 
 describe('Search page - Deep linking', function() {
     beforeEach(function() {
-    // setupDefaultSearchPageRouting();
+        setupDefaultSearchPageRouting();
     });
     it('Changing tabs should update result view', function() {
         loadPage(origPage + '#projects');
@@ -289,8 +293,8 @@ describe('Search page - Sliders - ', function() {
     const analysesDisabledQueryText = 'You searched for analyses with no parameters.';
 
     beforeEach(function() {
-        // setupDefaultSearchPageRouting();
-        // setupDefaultSliderRouting();
+        setupDefaultSearchPageRouting();
+        setupDefaultSliderRouting();
         loadPage(origPage + '#samples');
         initTableHandlers();
     });
@@ -395,7 +399,7 @@ describe('Search page - Sliders - ', function() {
         const min = '40';
         const max = '88';
         enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
-        // setupFilteredSliderRoutingTyped();
+        setupFilteredSliderRoutingTyped();
         getInputText(samplesTempSliderContainer, 'min').clear().type(min).trigger('change');
         getInputText(samplesTempSliderContainer, 'max').clear().type(max).trigger('change');
         cy.contains('You searched for samples with temperature:[' + min + ' TO ' + max + '].');

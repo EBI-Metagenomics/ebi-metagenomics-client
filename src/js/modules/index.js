@@ -144,10 +144,8 @@ let RequestPublicFormView = Backbone.View.extend({
     sendMail() {
         this.$el.foundation('validateForm');
         // const hasEmptyField = this.$el.find('input:visible').filter(function(e) {
-        //     console.log(e.value);
         //     return e.value.length === 0;
         // }).length > 0;
-        console.log(this.$el.serializeArray());
         if (this.$el.find('[data-invalid]:visible').length !== 0) {
             console.error('Did not submit, errors in form.');
             return false;
@@ -162,7 +160,6 @@ let RequestPublicFormView = Backbone.View.extend({
                 win.close();
             }, 1000);
 
-            console.log('mailto:metagenomics-help@ebi.ac.uk?subject=Analysis request&body=' + body);
             this.$el.parent().foundation('toggle');
             return true;
         }
@@ -297,7 +294,6 @@ $(document).ready(function() {
             let activeSet = this;
             $(activeSet).children().each(function() {
                 if ($(this).data('condition')) {
-                    console.log($(this));
                     let conditionTarget = 'input[name=\'' + $(this).data('condition') + '\']';
                     if ($(conditionTarget).attr('type') === 'radio') {
                         conditionTarget += ':checked';
@@ -311,8 +307,6 @@ $(document).ready(function() {
                     } else {
                         show = $(conditionTarget).val() === conditionRequirement;
                     }
-                    console.log($(conditionTarget));
-                    console.log($(conditionTarget).val(), conditionRequirement);
 
                     if (show) {
                         $(this).removeClass('hidden');

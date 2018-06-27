@@ -1,52 +1,14 @@
 {
-  "_comment": "Projects filtered by biome=Environmental/Air",
   "hitCount": 2,
   "entries": [
     {
-      "id": "ERP020679",
-      "source": "metagenomics_projects",
-      "fields": {
-        "ENA_PROJECT": [
-          "PRJEB18726"
-        ],
-        "METAGENOMICS_RUNS": [
-          "ERR1772200"
-        ],
-        "METAGENOMICS_SAMPLES": [
-          "ERS1490083",
-          "ERS1496756"
-        ],
-        "biome_name": [
-          "Air"
-        ],
-        "centre_name": [
-          "BGI"
-        ],
-        "creation_date": [],
-        "description": [
-          "GD_MGS_describe"
-        ],
-        "domain_source": [
-          "metagenomics_projects"
-        ],
-        "id": [
-          "ERP020679"
-        ],
-        "last_modification_date": [],
-        "name": [
-          "GD_MGS_title"
-        ],
-        "releaseDate_date": []
-      }
-    },
-    {
-      "id": "SRP000664",
+      "id": "MGYS00000274",
       "source": "metagenomics_projects",
       "fields": {
         "ENA_PROJECT": [],
-        "METAGENOMICS_RUNS": [
-          "SRR014855,SRR014856",
-          "SRR014853,SRR014854"
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000200",
+          "MGYA00000201"
         ],
         "METAGENOMICS_SAMPLES": [
           "SRS002409",
@@ -66,11 +28,48 @@
           "metagenomics_projects"
         ],
         "id": [
-          "SRP000664"
+          "MGYS00000274"
         ],
         "last_modification_date": [],
         "name": [
           "Windshield splatter"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "MGYS00001379",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB18726"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00094697"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS1490083",
+          "ERS1496756"
+        ],
+        "biome_name": [
+          "Air"
+        ],
+        "centre_name": [
+          "BGI"
+        ],
+        "creation_date": [],
+        "description": [
+          "GD_MGS_describe"
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "MGYS00001379"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "GD_MGS_title"
         ],
         "releaseDate_date": []
       }
@@ -97,17 +96,17 @@
         {
           "label": "Environmental",
           "value": "Environmental",
-          "count": 781,
+          "count": 788,
           "children": [
             {
               "label": "Terrestrial",
               "value": "Terrestrial",
-              "count": 446,
+              "count": 447,
               "children": [
                 {
                   "label": "Soil",
                   "value": "Soil",
-                  "count": 438,
+                  "count": 439,
                   "children": [
                     {
                       "label": "Agricultural",
@@ -176,8 +175,8 @@
                       ]
                     },
                     {
-                      "label": "Tropical rainforest",
-                      "value": "Tropical rainforest",
+                      "label": "Oil-contaminated",
+                      "value": "Oil-contaminated",
                       "count": 7
                     }
                   ]
@@ -207,17 +206,17 @@
             {
               "label": "Aquatic",
               "value": "Aquatic",
-              "count": 326,
+              "count": 332,
               "children": [
                 {
                   "label": "Marine",
                   "value": "Marine",
-                  "count": 158,
+                  "count": 164,
                   "children": [
                     {
                       "label": "Oceanic",
                       "value": "Oceanic",
-                      "count": 40,
+                      "count": 41,
                       "children": [
                         {
                           "label": "Sediment",
@@ -291,7 +290,7 @@
                     {
                       "label": "Coastal",
                       "value": "Coastal",
-                      "count": 19,
+                      "count": 20,
                       "children": [
                         {
                           "label": "Sediment",
@@ -325,12 +324,17 @@
                     {
                       "label": "Sediment",
                       "value": "Sediment",
-                      "count": 6
+                      "count": 9
                     },
                     {
                       "label": "Oil-contaminated sediment",
                       "value": "Oil-contaminated sediment",
                       "count": 2
+                    },
+                    {
+                      "label": "Cold seeps",
+                      "value": "Cold seeps",
+                      "count": 1
                     },
                     {
                       "label": "Oil field",
@@ -343,11 +347,6 @@
                           "count": 1
                         }
                       ]
-                    },
-                    {
-                      "label": "Cold seeps",
-                      "value": "Cold seeps",
-                      "count": 1
                     }
                   ]
                 },
@@ -546,13 +545,13 @@
                   "count": 2
                 },
                 {
-                  "label": "Estuary",
-                  "value": "Estuary",
+                  "label": "Aquaculture",
+                  "value": "Aquaculture",
                   "count": 1
                 },
                 {
-                  "label": "Aquaculture",
-                  "value": "Aquaculture",
+                  "label": "Estuary",
+                  "value": "Estuary",
                   "count": 1
                 }
               ]
@@ -567,17 +566,17 @@
         {
           "label": "Host-associated",
           "value": "Host-associated",
-          "count": 557,
+          "count": 573,
           "children": [
             {
               "label": "Human",
               "value": "Human",
-              "count": 260,
+              "count": 274,
               "children": [
                 {
                   "label": "Digestive system",
                   "value": "Digestive system",
-                  "count": 213,
+                  "count": 226,
                   "children": [
                     {
                       "label": "Large intestine",
@@ -594,27 +593,27 @@
                     {
                       "label": "Oral",
                       "value": "Oral",
-                      "count": 82,
+                      "count": 95,
                       "children": [
                         {
                           "label": "Saliva",
                           "value": "Saliva",
-                          "count": 14
+                          "count": 24
                         },
                         {
                           "label": "Subgingival plaque",
                           "value": "Subgingival plaque",
-                          "count": 8
-                        },
-                        {
-                          "label": "Tongue dorsum",
-                          "value": "tongue dorsum",
-                          "count": 2
+                          "count": 9
                         },
                         {
                           "label": "Supragingival plaque",
                           "value": "Supragingival plaque",
-                          "count": 2
+                          "count": 3
+                        },
+                        {
+                          "label": "Tongue dorsum",
+                          "value": "tongue dorsum",
+                          "count": 3
                         },
                         {
                           "label": "Buccal mucosa",
@@ -696,12 +695,12 @@
                 {
                   "label": "Circulatory system",
                   "value": "Circulatory system",
-                  "count": 2,
+                  "count": 3,
                   "children": [
                     {
                       "label": "Blood",
                       "value": "Blood",
-                      "count": 1
+                      "count": 2
                     }
                   ]
                 },
@@ -800,23 +799,6 @@
                   ]
                 },
                 {
-                  "label": "Excretory system",
-                  "value": "Excretory system",
-                  "count": 1
-                },
-                {
-                  "label": "Nervous system",
-                  "value": "Nervous system",
-                  "count": 1,
-                  "children": [
-                    {
-                      "label": "Brain",
-                      "value": "Brain",
-                      "count": 1
-                    }
-                  ]
-                },
-                {
                   "label": "Gastrointestinal tract",
                   "value": "Gastrointestinal tract",
                   "count": 1,
@@ -834,13 +816,30 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "label": "Excretory system",
+                  "value": "Excretory system",
+                  "count": 1
+                },
+                {
+                  "label": "Nervous system",
+                  "value": "Nervous system",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Brain",
+                      "value": "Brain",
+                      "count": 1
+                    }
+                  ]
                 }
               ]
             },
             {
               "label": "Plants",
               "value": "Plants",
-              "count": 107,
+              "count": 108,
               "children": [
                 {
                   "label": "Rhizosphere",
@@ -882,11 +881,6 @@
                   "count": 5
                 },
                 {
-                  "label": "Rhizome",
-                  "value": "Rhizome",
-                  "count": 1
-                },
-                {
                   "label": "Rhizoplane",
                   "value": "Rhizoplane",
                   "count": 1,
@@ -897,18 +891,11 @@
                       "count": 1
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "label": "Insecta",
-              "value": "Insecta",
-              "count": 15,
-              "children": [
+                },
                 {
-                  "label": "Digestive system",
-                  "value": "Digestive system",
-                  "count": 7
+                  "label": "Rhizome",
+                  "value": "Rhizome",
+                  "count": 1
                 }
               ]
             },
@@ -954,31 +941,14 @@
               ]
             },
             {
-              "label": "Fish",
-              "value": "Fish",
-              "count": 8,
+              "label": "Insecta",
+              "value": "Insecta",
+              "count": 15,
               "children": [
                 {
                   "label": "Digestive system",
                   "value": "Digestive system",
-                  "count": 4,
-                  "children": [
-                    {
-                      "label": "Intestine",
-                      "value": "Intestine",
-                      "count": 2
-                    },
-                    {
-                      "label": "Foregut",
-                      "value": "Foregut",
-                      "count": 1
-                    }
-                  ]
-                },
-                {
-                  "label": "Skin",
-                  "value": "Skin",
-                  "count": 1
+                  "count": 7
                 }
               ]
             },
@@ -1014,6 +984,35 @@
               ]
             },
             {
+              "label": "Fish",
+              "value": "Fish",
+              "count": 8,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 4,
+                  "children": [
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 2
+                    },
+                    {
+                      "label": "Foregut",
+                      "value": "Foregut",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Skin",
+                  "value": "Skin",
+                  "count": 1
+                }
+              ]
+            },
+            {
               "label": "Amphibia",
               "value": "Amphibia",
               "count": 5
@@ -1038,23 +1037,16 @@
               ]
             },
             {
-              "label": "Animal",
-              "value": "Animal",
-              "count": 3,
-              "children": [
-                {
-                  "label": "Digestive system",
-                  "value": "Digestive system",
-                  "count": 2
-                }
-              ]
+              "label": "Porifera",
+              "value": "Porifera",
+              "count": 3
             }
           ]
         },
         {
           "label": "Engineered",
           "value": "Engineered",
-          "count": 216,
+          "count": 220,
           "children": [
             {
               "label": "Wastewater",
@@ -1104,6 +1096,11 @@
                       "count": 2,
                       "children": [
                         {
+                          "label": "Activated sludge",
+                          "value": "Activated sludge",
+                          "count": 1
+                        },
+                        {
                           "label": "Bioreactor",
                           "value": "Bioreactor",
                           "count": 1,
@@ -1111,7 +1108,7 @@
                             {
                               "label": "Continuous culture",
                               "value": "Continuous culture",
-                              "count": 15,
+                              "count": 16,
                               "children": [
                                 {
                                   "label": "Marine sediment inoculum",
@@ -1126,11 +1123,6 @@
                               ]
                             }
                           ]
-                        },
-                        {
-                          "label": "Activated sludge",
-                          "value": "Activated sludge",
-                          "count": 1
                         }
                       ]
                     },
@@ -1183,17 +1175,17 @@
             {
               "label": "Bioreactor",
               "value": "Bioreactor",
-              "count": 32
+              "count": 34
             },
             {
               "label": "Modeled",
               "value": "Modeled",
-              "count": 20,
+              "count": 22,
               "children": [
                 {
                   "label": "Simulated communities (microbial mixture)",
                   "value": "Simulated communities (microbial mixture)",
-                  "count": 7
+                  "count": 8
                 },
                 {
                   "label": "Simulated communities (DNA mixture)",
@@ -1203,7 +1195,7 @@
                 {
                   "label": "Simulated communities (sequence read mixture)",
                   "value": "Simulated communities (sequence read mixture)",
-                  "count": 4
+                  "count": 5
                 }
               ]
             },
@@ -1218,13 +1210,13 @@
                   "count": 13,
                   "children": [
                     {
-                      "label": "Grass",
-                      "value": "Grass",
+                      "label": "Bioreactor",
+                      "value": "Bioreactor",
                       "count": 1
                     },
                     {
-                      "label": "Bioreactor",
-                      "value": "Bioreactor",
+                      "label": "Grass",
+                      "value": "Grass",
                       "count": 1
                     }
                   ]
@@ -1266,18 +1258,6 @@
               ]
             },
             {
-              "label": "Lab enrichment",
-              "value": "Lab enrichment",
-              "count": 7,
-              "children": [
-                {
-                  "label": "Defined media",
-                  "value": "Defined media",
-                  "count": 2
-                }
-              ]
-            },
-            {
               "label": "Bioremediation",
               "value": "Bioremediation",
               "count": 7,
@@ -1302,6 +1282,11 @@
                   ]
                 },
                 {
+                  "label": "Persistent organic pollutants (POP)",
+                  "value": "Persistent organic pollutants (POP)",
+                  "count": 1
+                },
+                {
                   "label": "Terephthalate",
                   "value": "Terephthalate",
                   "count": 1,
@@ -1319,11 +1304,18 @@
                       ]
                     }
                   ]
-                },
+                }
+              ]
+            },
+            {
+              "label": "Lab enrichment",
+              "value": "Lab enrichment",
+              "count": 7,
+              "children": [
                 {
-                  "label": "Persistent organic pollutants (POP)",
-                  "value": "Persistent organic pollutants (POP)",
-                  "count": 1
+                  "label": "Defined media",
+                  "value": "Defined media",
+                  "count": 2
                 }
               ]
             },
@@ -1337,7 +1329,7 @@
         {
           "label": "Mixed",
           "value": "Mixed",
-          "count": 1
+          "count": 2
         }
       ]
     },
