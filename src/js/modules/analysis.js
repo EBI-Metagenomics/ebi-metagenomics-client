@@ -109,7 +109,7 @@ let AnalysisView = Backbone.View.extend({
                         attr['study_accession'] + '</a>',
                         'Sample': '<a href=\'' + attr['sample_url'] + '\'>' +
                         attr['sample_accession'] + '</a>'
-                    }
+                    };
 
                     if (attr['experiment_type'] === 'assembly') {
                         attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
@@ -120,7 +120,11 @@ let AnalysisView = Backbone.View.extend({
                             attr['run_accession'] + '</a>';
                     }
 
-                    description['Pipeline version'] = attr['pipeline_version'];
+                    const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
+                        attr.pipeline_version +
+                        '</a>';
+
+                    description['Pipeline version'] = pipelineLink;
 
                     const dataAnalysis = {};
                     if (attr['experiment_type']) {

@@ -526,9 +526,12 @@ export const AnalysesView = GenericTableView.extend({
             const analysisLink = '<a href=\'' + attr.analysis_url + '\'>' +
                 attr.analysis_accession +
                 '</a>';
+            const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
+                attr.pipeline_version +
+                '</a>';
             return [
                 biome, sampleLink, attr['sample_desc'],
-                runLink, attr['pipeline_version'], analysisLink];
+                runLink, pipelineLink, analysisLink];
         });
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
