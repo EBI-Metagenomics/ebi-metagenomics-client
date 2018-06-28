@@ -58,8 +58,9 @@ let SampleView = Backbone.View.extend({
                 const attr = data.attributes;
                 that.model.attributes.metadatas.sort(compareByName);
                 const metadataObj = {};
+
                 _.each(that.model.attributes.metadatas, function(e) {
-                    metadataObj[e.name] = e.value;
+                    metadataObj[e.name] = e.value + (e.unit !== null ? ' ' + e.unit : '');
                 });
                 const urls = getExternalLinks(attr.id);
                 that.model.attributes.external_links = _.map(urls, function(url, text) {
