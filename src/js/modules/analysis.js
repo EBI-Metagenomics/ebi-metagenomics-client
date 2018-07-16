@@ -196,13 +196,16 @@ function clusterData(data, depth) {
     let clusteredData = {};
     _.each(data, function(d) {
         const attr = d.attributes;
-        const lineage = attr.lineage.split(':');
+        let lineage = attr.lineage.split(':');
+        // Remove empty strings
+        lineage = lineage.filter((v)=>v!=='');
         let category;
         if (lineage.length < depth) {
             category = lineage[lineage.length - 1];
         } else {
             category = lineage[depth];
         }
+        console.log(lineage, category);
         if (depth > 0 &&
             ['', 'Bacteria', 'Eukaryota', 'other_sequences', undefined].indexOf(category) > -1) {
             if (lineage[0] === 'Bacteria') {
@@ -304,8 +307,10 @@ let TaxonomyGraphView = Backbone.View.extend({
     model: api.Taxonomy,
     initialize() {
         this.model.fetch().done(function(model) {
+            console.log(model);
             const clusteredData = groupTaxonomyData(model, 0);
             const phylumData = groupTaxonomyData(model, 1);
+            console.log(phylumData);
             // Pie tab
             new TaxonomyPieChart('domain-composition-pie', 'Domain composition', clusteredData);
             const phylumPieChart = new TaxonomyPieChart('phylum-composition-pie',
