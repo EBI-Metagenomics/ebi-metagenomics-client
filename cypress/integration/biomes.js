@@ -1,4 +1,4 @@
-import {openPage, waitForPageLoad, assertTableIsCleared, stripWhitespace, datatype} from '../util/util';
+import {openPage, waitForPageLoad, datatype} from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 import Config from '../util/config';
 
@@ -37,14 +37,14 @@ describe('Biomes page - General', function() {
     });
 
     // TODO fix test, table-reloading is not being detected.
-    // it('Should contain correct number of studies', function() {
-    //     biomesTable.checkLoadedCorrectly(1, biomesTableDefaultSize, 490, biomesTableColumns);
-    // });
+    it('Should contain correct number of studies', function() {
+        biomesTable.checkLoadedCorrectly(1, biomesTableDefaultSize, 490, biomesTableColumns);
+    });
 
     // TODO fix test, table-reloading is not being detected.
-    // it('Should respond to ordering', function() {
-    //     biomesTable.testSorting(biomesTableDefaultSize, biomesTableColumns);
-    // });
+    it('Should respond to ordering', function() {
+        biomesTable.testSorting(biomesTableDefaultSize, biomesTableColumns);
+    });
 
     it('Should respond to filtering', function() {
         biomesTable.testFiltering('beach', [
