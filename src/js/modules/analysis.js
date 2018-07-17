@@ -183,7 +183,7 @@ let AnalysisView = Backbone.View.extend({
                     } else {
                         removeTab('functional');
                         if (window.location.hash.substr(1) === 'functional') {
-                            util.changeTab('overview');
+                            util.changeTab($('#overview'));
                         }
                     }
                 });
@@ -196,7 +196,7 @@ let AnalysisView = Backbone.View.extend({
     render(pipelineVersion, callback) {
         this.$el.html(this.template(this.model.toJSON()));
         $('.rna-select-button').click(function() {
-            onTaxonomySelect(pipelineVersion);
+            onTaxonomySelect(this, pipelineVersion);
         });
         util.attachTabHandlers();
         callback();
@@ -566,11 +566,9 @@ function enableTab(id) {
  * @return {*} data grouped into top 10 categories, and all following summed into 'Other'
  */
 function groupGoTermData(data) {
-    console.log(data);
     data = _.sortBy(data, function(o) {
         return o.attributes.count;
     }).reverse();
-    console.log(data);
     let top10 = data.slice(0, 10).map(function(d) {
         d = d.attributes;
         return {
@@ -672,7 +670,7 @@ function setAbundanceTab(statisticsData) {
     }
     removeTab('abundance');
     if (window.location.hash.substr(1) === 'abundance') {
-        util.changeTab('overview');
+        util.changeTab($('#overview'));
     }
 }
 
@@ -722,9 +720,10 @@ function loadTaxonomy(analysisID, type, pipelineVersion) {
 
 /**
  * Callback for taxonomy size selection in taxonomic analysis tab
+ * @param {number} pipelineVersion
  */
-function onTaxonomySelect(pipelineVersion) {
-    const type = $(this).val();
+function onTaxonomySelect(srcElem, pipelineVersion) {
+    const type = $(srcElem).val();
     loadTaxonomy(analysisID, type, pipelineVersion);
 }
 

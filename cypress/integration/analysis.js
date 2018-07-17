@@ -204,6 +204,20 @@ describe('Analysis page - Error handling', function() {
     });
 });
 
+describe('Analysis page - Embedded tabs', function(){
+    it('Deep linking to embedded tabs should work', function(){
+        openPage(origPage+'#pie');
+        cy.get('#taxonomic').should('be.visible');
+        cy.get('#overview').should('be.hidden');
+        cy.get('#qc').should('be.hidden');
+        cy.get('#functional').should('be.hidden');
+        cy.get('#download').should('be.hidden');
+        cy.get('#pie').should('be.visible');
+        cy.get('#krona').should('be.hidden');
+        cy.get('#column').should('be.hidden');
+        cy.get('#stacked-column').should('be.hidden');
+    });
+});
 // TODO test version selector
 // TODO test all download links are valid/organised correctly
 
