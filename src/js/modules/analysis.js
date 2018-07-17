@@ -212,7 +212,6 @@ let AnalysisView = Backbone.View.extend({
  */
 function clusterData(data, depth) {
     let clusteredData = {};
-    console.log(depth);
     _.each(data, function(d) {
         const attr = d.attributes;
         let lineage = attr.lineage.split(':');
@@ -224,8 +223,6 @@ function clusterData(data, depth) {
             category = lineage[depth];
         }
 
-        console.log(lineage);
-        console.log(1, category);
         if (depth > 0 &&
             ['', 'Bacteria', 'Eukaryota', 'other_sequences', undefined].indexOf(category) > -1) {
             if (lineage[0] === 'Bacteria') {
@@ -234,7 +231,6 @@ function clusterData(data, depth) {
                 category = 'Unassigned';
             }
         }
-        console.log(2, category);
 
         let val = attr.count;
         if (clusteredData.hasOwnProperty(category)) {
@@ -459,6 +455,7 @@ let InterProSummary = Backbone.View.extend({
                     });
                     totalCount += d.count;
                 });
+
                 let sumOthers = 0;
                 _.each(data.slice(10), function(d) {
                     sumOthers += d.attributes.count;
@@ -569,6 +566,11 @@ function enableTab(id) {
  * @return {*} data grouped into top 10 categories, and all following summed into 'Other'
  */
 function groupGoTermData(data) {
+    console.log(data);
+    data = _.sortBy(data, function(o) {
+        return o.attributes.count;
+    }).reverse();
+    console.log(data);
     let top10 = data.slice(0, 10).map(function(d) {
         d = d.attributes;
         return {
@@ -576,6 +578,8 @@ function groupGoTermData(data) {
             y: d.count
         };
     });
+
+
     if (data.length > 10) {
         const others = {
             name: 'Other',
@@ -620,6 +624,7 @@ let GoTermCharts = Backbone.View.extend({
                     molecularFuncData, Commons.TAXONOMY_COLOURS[1]);
                 new GoTermChart('cellular-component-bar-chart', 'Cellular component',
                     cellularComponentData, Commons.TAXONOMY_COLOURS[2]);
+
 
                 new TaxonomyPieChart('biological-process-pie-chart', 'Biological process',
                     groupGoTermData(bioProcessData), true,
