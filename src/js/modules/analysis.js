@@ -44,6 +44,10 @@ function loadReadLengthDisp(analysisID, statsData) {
     seqLengthData.fetch({
         dataType: 'text',
         success(ignored, response) {
+            if (typeof(response) === 'string') {
+                console.log('Could not load ReadLengthDisp data');
+                return;
+            }
             SeqLengthChart.drawSequenceLengthHistogram('readsLengthHist', response, false,
                 statsData,
                 seqLengthData.url());
@@ -62,6 +66,10 @@ function loadGCDistributionDisp(analysisID, statsData) {
     gcDistributionData.fetch({
         dataType: 'text',
         success(ignored, response) {
+            if (typeof(response) === 'string') {
+                console.log('Could not load ReadsGCHist data');
+                return;
+            }
             GCDispChart.drawSequenceGCDistribution('readsGCHist', response, false, statsData,
                 gcDistributionData.url());
             GCDispChart.drawGCContent('readsGCBarChart', statsData);
@@ -79,6 +87,10 @@ function loadNucleotideDisp(analysisID) {
     nucleotideDistData.fetch({
         dataType: 'text',
         success(ignored, response) {
+            if (typeof(response) === 'string') {
+                console.log('Could not load nucleotide data');
+                return;
+            }
             NucleotideChart.drawNucleotidePositionHistogram('nucleotide', response, false,
                 nucleotideDistData.url());
         }
@@ -109,7 +121,7 @@ let AnalysisView = Backbone.View.extend({
                         attr['study_accession'] + '</a>',
                         'Sample': '<a href=\'' + attr['sample_url'] + '\'>' +
                         attr['sample_accession'] + '</a>'
-                    }
+                    };
 
                     if (attr['experiment_type'] === 'assembly') {
                         attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
@@ -120,7 +132,11 @@ let AnalysisView = Backbone.View.extend({
                             attr['run_accession'] + '</a>';
                     }
 
-                    description['Pipeline version'] = attr['pipeline_version'];
+                    const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
+                        attr.pipeline_version +
+                        '</a>';
+
+                    description['Pipeline version'] = pipelineLink;
 
                     const dataAnalysis = {};
                     if (attr['experiment_type']) {
@@ -198,7 +214,7 @@ function clusterData(data, depth) {
         const attr = d.attributes;
         let lineage = attr.lineage.split(':');
         // Remove empty strings
-        lineage = lineage.filter((v)=>v!=='');
+        lineage = lineage.filter((v) => v !== '');
         let category;
         if (lineage.length < depth) {
             category = lineage[lineage.length - 1];

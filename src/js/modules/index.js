@@ -139,9 +139,9 @@ let RequestPublicFormView = Backbone.View.extend({
     },
     submitHandler(e) {
         e.preventDefault();
-        this.sendMail();
+        this.sendMail(false);
     },
-    sendMail() {
+    sendMail(priv) {
         this.$el.foundation('validateForm');
         // const hasEmptyField = this.$el.find('input:visible').filter(function(e) {
         //     return e.value.length === 0;
@@ -153,7 +153,14 @@ let RequestPublicFormView = Backbone.View.extend({
             let body = this.$el.find('input:visible').serialize();
             body = body.replace(/=/g, ': ').replace(/&/g, '%0D%0A');
             body += '%0D%0A'; // Newline
+            if (priv) {
+                body += 'Private analysis';
+            } else {
+                body += 'Public analysis';
+            }
+            body += '%0D%0A'; // Newline
             body += 'Additional notes:';
+
             let win = window.open('mailto:metagenomics-help@ebi.ac.uk?subject=Analysis request&body=' +
                 body, '_blank');
             setTimeout(function() {
@@ -171,7 +178,7 @@ let RequestPrivateFormView = RequestPublicFormView.extend({
     submitHandler(e) {
         e.preventDefault();
         const dataToSubmit = $('#dataNotSubmitted').is(':checked');
-        if (this.sendMail() && dataToSubmit) {
+        if (this.sendMail(true) && dataToSubmit) {
             window.location.href = subfolder + '/submit';
         }
     }

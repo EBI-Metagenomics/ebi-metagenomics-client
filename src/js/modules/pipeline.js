@@ -5,14 +5,18 @@ require('static/css/pipeline.css');
 
 util.setupPage('#about-nav');
 
-
 let pipelineVersion = util.getURLParameter();
 
 $(document).ready(function() {
-    if (pipelineVersion <= 0 || pipelineVersion - 1 >= commons.pipelines.length) {
+    const pipelineVersions = Object.keys(commons.pipelines);
+
+    if (pipelineVersions.indexOf(pipelineVersion) === -1) {
+        const dispPipelineVersions = pipelineVersions.slice(0, -1).join(', ') + '& ' +
+            pipelineVersions.pop() + '.';
         $('#content-full')
-            .append('<h3>No pipeline version found, available versions are 1, 2, 3 & 4.</h3>');
+            .append('<h3>No pipeline version found, available versions are ' +
+                dispPipelineVersions + '</h3>');
     } else {
-        $('#content-full').append(commons.pipelines[parseInt(pipelineVersion) - 1]);
+        $('#content-full').append(commons.pipelines[pipelineVersion]);
     }
 });

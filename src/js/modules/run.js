@@ -111,12 +111,15 @@ let RunAnalysesView = Backbone.View.extend({
             const accessionLink = '<a href=\'' + attr.analysis_url + '\'>' +
                 attr.analysis_accession +
                 '</a>';
+            const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
+                attr.pipeline_version +
+                '</a>';
             return [
                 accessionLink,
                 attr['experiment_type'],
                 attr['instrument_model'],
                 attr['instrument_platform'],
-                attr['pipeline_version']];
+                pipelineLink];
         });
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
