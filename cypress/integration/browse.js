@@ -334,16 +334,18 @@ describe('Browse page - Samples table - ', function() {
     });
 
     // TODO fix synchronisation of test with API call in client
-    // it('Clicking clear button should remove filters', function() {
-    //     const selector = '#samples-section .biome-select';
-    //     let biome = 'root:Environmental:Air';
-    //     setSelectOption(samplesTable, selector, biome, 4);
-    //     cy.get('span.biome_icon').should('have.class', 'air_b');
-    //
-    //     samplesTable.getClearButton().click();
-    //     samplesTable.waitForTableLoad(samplesTableDefaultSize);
-    //     cy.get('span.biome_icon').first().should('have.class', 'skin_b');
-    // });
+    it('Clicking clear button should remove filters', function() {
+        cy.server();
+        cy.route('**/biomes?**').as('apiQuery');
+        const selector = '#samples-section .biome-select';
+        let biome = 'root:Environmental:Air';
+        setSelectOption(samplesTable, selector, biome, 4);
+        cy.get('span.biome_icon').should('have.class', 'air_b');
+        cy.wait('@apiQuery');
+        samplesTable.getClearButton().click();
+        samplesTable.waitForTableLoad(samplesTableDefaultSize);
+        cy.get('span.biome_icon').first().should('have.class', 'skin_b');
+    });
 
     it('Download link should change with changes in filtering or ordering', function() {
         const selector = '#samples-section .biome-select';
@@ -449,30 +451,33 @@ describe('Browse page - Generic - Filter propagation', function() {
         cy.get('#studies-section .biome-select').should('have.value', biome);
     });
 
-    // it('Changes in filter text should propagate to other facets', function () {
-    //     let filterText = "Glacier Metagenome";
-    //     studiesTable.getFilterInput().type(filterText);
-    //     studiesTable.waitForTableLoad(1);
-    //     studiesTable.checkRowData(0, ['', 'Glacier Metagenome', '1', '20-Jan-2016']);
-    //
-    //     changeTab('samples');
-    //     samplesTable.waitForTableLoad(1);
-    //     samplesTable.getFilterInput().should('have.value', filterText);
+    it('Changes in filter text should propagate to other facets', function() {
+        let filterText = 'Glacier Metagenome';
+        studiesTable.getFilterInput().type(filterText);
+        studiesTable.waitForTableLoad(1);
+        studiesTable.checkRowData(0, ['', 'Glacier Metagenome', '1', '20-Jan-2016']);
 
-    //     samplesTable.checkRowData(0, ['', 'SRS000608', 'Glacier Metagenome','454
-    // Sequencing of The Glacier Ice Metagenome Of The Northern Schneeferner','13-Aug-2015'])
+        changeTab('samples');
+        samplesTable.waitForTableLoad(1);
+        samplesTable.getFilterInput().should('have.value', filterText);
 
-    //     samplesTable.getClearButton().click();
-    //     samplesTable.getFilterInput().should('have.value', '');
-    //
-    //
-    //     filterText = "OSD";
-    //     samplesTable.getFilterInput().type(filterText);
-    //     samplesTable.waitForTableLoad(25);
-    //     changeTab('studies');
-    //     studiesTable.waitForTableLoad(1);
-    //     studiesTable.getFilterInput().should('have.value', filterText);
-    // });
+        samplesTable.checkRowData(0, [
+            '',
+            'SRS000608',
+            'Glacier Metagenome',
+            '454 Sequencing of The Glacier Ice Metagenome Of The Northern Schneeferner',
+            '13-Aug-2015']);
+
+        samplesTable.getClearButton().click();
+        samplesTable.getFilterInput().should('have.value', '');
+
+        filterText = 'OSD';
+        samplesTable.getFilterInput().type(filterText);
+        samplesTable.waitForTableLoad(25);
+        changeTab('studies');
+        studiesTable.waitForTableLoad(1);
+        studiesTable.getFilterInput().should('have.value', filterText);
+    });
 });
 
 describe('Browse page - URL parameters', function() {
