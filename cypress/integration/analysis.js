@@ -40,19 +40,6 @@ describe('Analysis page - general', function() {
         waitForPageLoad();
         verifyTabIsVisible('#overview');
     });
-    it('Should only display available tabs', function() {
-        openPage(origPage);
-        waitForPageLoad();
-        verifyTabIsVisible('#overview');
-        let tabs = ['#qc', '#functional', '#taxonomic', '#download', '#overview'];
-        verifyTabsEnabled(tabs);
-
-        openPage('analyses/MGYA00067696');
-        waitForPageLoad();
-        verifyTabIsVisible('#overview');
-        let tabs2 = ['#qc', '#functional', '#abundance', '#taxonomic', '#download', '#overview'];
-        verifyTabsEnabled(tabs2);
-    });
 
     it('Should display metadata if available', function() {
         openPage('analyses/MGYA00141547');
@@ -112,7 +99,7 @@ describe('Analysis page - download tab', function() {
 
 describe('Analysis page - charts', function() {
     it('QC chart should display correctly', function() {
-        openPage('analyses/MGYA00157376');
+        openPage('analyses/MGYA00136035');
         waitForPageLoad();
         changeTab('qc');
 
@@ -130,29 +117,28 @@ describe('Analysis page - charts', function() {
             '.highcharts-series-group .highcharts-series-1 > .highcharts-point';
         // Initial reads
         const series1 = readsRemainingSeries + ':nth-child(1)';
-        hoverAndValidateTooltip(series1, 'Initial reads', 'Reads remaining: 5 256');
+        hoverAndValidateTooltip(series1, 'Initial reads', 'Reads remaining: 43 947');
 
         // Trimming
         const series2 = readsRemainingSeries + ':nth-child(2)';
-        hoverAndValidateTooltip(series2, 'Trimming', 'Reads remaining: 5 256');
+        hoverAndValidateTooltip(series2, 'Trimming', 'Reads remaining: 43 933');
 
         // Length filtering
         const series3 = readsRemainingSeries + ':nth-child(3)';
-        hoverAndValidateTooltip(series3, 'Length filtering', 'Reads remaining: 4 885');
+        hoverAndValidateTooltip(series3, 'Length filtering', 'Reads remaining: 43 045');
 
         // Length filtering (reads filtered out)
         const filteredOutSeries =
             '.highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(3)';
-        hoverAndValidateTooltip(filteredOutSeries, 'Length filtering', 'Reads filtered out: 371');
+        hoverAndValidateTooltip(filteredOutSeries, 'Length filtering', 'Reads filtered out: 888');
 
         // Ambiguous base filtering
         const series4 = readsRemainingSeries + ':nth-child(4)';
-        hoverAndValidateTooltip(series4, 'Ambiguous base filtering', 'Reads remaining: 4 885');
+        hoverAndValidateTooltip(series4, 'Ambiguous base filtering', 'Reads remaining: 43 045');
 
-        const readsAfterSamplingSeries = '.highcharts-series-group .highcharts-series-2 > .highcharts-point'
         // Reads subsampled for QC analysis
-        const series5 = readsAfterSamplingSeries + ':nth-child(5)';
-        hoverAndValidateTooltip(series5, 'Reads subsampled for QC analysis', 'Reads after sampling: 4 885');
+        const series5 = readsRemainingSeries + ':nth-child(5)';
+        hoverAndValidateTooltip(series5, 'Reads subsampled for QC analysis', 'Reads remaining: 0');
     });
 });
 
