@@ -34,17 +34,6 @@ let StudiesView = Backbone.View.extend({
             {sortBy: 'samples_count', name: 'Samples'},
             {sortBy: 'last_update', name: 'Last updated'}
         ];
-        const $studiesSection = $('#studies-section');
-        this.tableObj = new GenericTable($studiesSection, 'Studies list', columns, '-last_update',
-            Commons.DEFAULT_PAGE_SIZE, true, true, 'browse-studies-table',
-            function(page, pageSize, order, search) {
-                that.update({
-                    page: page,
-                    page_size: pageSize,
-                    ordering: order,
-                    search: search
-                });
-            });
 
         let params = {};
         params.page = pagination.currentPage;
@@ -62,7 +51,6 @@ let StudiesView = Backbone.View.extend({
         } else {
             params.ordering = '-last_update';
         }
-
         const search = pageFilters['search'];
         if (search) {
             params.search = search;
@@ -70,6 +58,18 @@ let StudiesView = Backbone.View.extend({
         }
         params.page_size = pageFilters['pagesize'] || Commons.DEFAULT_PAGE_SIZE;
         params.page = parseInt(pageFilters['page']) || 1;
+
+        const $studiesSection = $('#studies-section');
+        this.tableObj = new GenericTable($studiesSection, 'Studies list', columns, ordering,
+            Commons.DEFAULT_PAGE_SIZE, true, true, 'browse-studies-table',
+            function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order,
+                    search: search
+                });
+            });
 
         this.update(params);
     },
@@ -119,18 +119,6 @@ let SamplesView = Backbone.View.extend({
             {sortBy: null, name: 'Description'},
             {sortBy: 'last_update', name: 'Last updated'}
         ];
-        const $samplesSection = $('#samples-section');
-        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns, '-last_update',
-            Commons.DEFAULT_PAGE_SIZE, true, true, 'samples-table',
-            function(page, pageSize, order, search) {
-                that.update({
-                    page: page,
-                    page_size: pageSize,
-                    ordering: order,
-                    search: search
-                });
-            });
-
         let params = {};
         params.page = pagination.currentPage;
 
@@ -155,6 +143,19 @@ let SamplesView = Backbone.View.extend({
         }
         params.page_size = pageFilters['pagesize'] || Commons.DEFAULT_PAGE_SIZE;
         params.page = parseInt(pageFilters['page']) || 1;
+
+        const $samplesSection = $('#samples-section');
+
+        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns, ordering,
+            Commons.DEFAULT_PAGE_SIZE, true, true, 'samples-table',
+            function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order,
+                    search: search
+                });
+            });
 
         return this.update(params);
     },
