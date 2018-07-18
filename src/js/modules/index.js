@@ -294,39 +294,4 @@ function initObjectCounts() {
 
 initObjectCounts();
 
-$(document).ready(function() {
-    function conditionalElementsEBI(watchedParentClass) {
-        watchedParentClass = watchedParentClass || '.conditional-form';
-        $(watchedParentClass).on('change', function() {
-            let activeSet = this;
-            $(activeSet).children().each(function() {
-                if ($(this).data('condition')) {
-                    let conditionTarget = 'input[name=\'' + $(this).data('condition') + '\']';
-                    if ($(conditionTarget).attr('type') === 'radio') {
-                        conditionTarget += ':checked';
-                    }
-                    let conditionRequirement = $(this).data('condition-val') || 1;
-
-                    let show;
-                    if (conditionRequirement.indexOf(',') > -1) {
-                        conditionRequirement = conditionRequirement.split(',');
-                        show = conditionRequirement.indexOf($(conditionTarget).val()) > -1;
-                    } else {
-                        show = $(conditionTarget).val() === conditionRequirement;
-                    }
-
-                    if (show) {
-                        $(this).removeClass('hidden');
-                    } else {
-                        $(this).addClass('hidden');
-                    }
-                }
-            });
-        });
-    }
-
-    // bootstrap it
-    conditionalElementsEBI();
-});
-
 
