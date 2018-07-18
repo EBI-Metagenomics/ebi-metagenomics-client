@@ -44,14 +44,14 @@ function loadReadLengthDisp(analysisID, statsData) {
     seqLengthData.fetch({
         dataType: 'text',
         success(ignored, response) {
-            if (typeof(response) === 'string') {
+            try {
+                SeqLengthChart.drawSequenceLengthHistogram('readsLengthHist', response, false,
+                    statsData,
+                    seqLengthData.url());
+                SeqLengthChart.drawSequencesLength('readsLengthBarChart', statsData);
+            } catch (e) {
                 console.log('Could not load ReadLengthDisp data');
-                return;
             }
-            SeqLengthChart.drawSequenceLengthHistogram('readsLengthHist', response, false,
-                statsData,
-                seqLengthData.url());
-            SeqLengthChart.drawSequencesLength('readsLengthBarChart', statsData);
         }
     });
 }
@@ -66,13 +66,13 @@ function loadGCDistributionDisp(analysisID, statsData) {
     gcDistributionData.fetch({
         dataType: 'text',
         success(ignored, response) {
-            if (typeof(response) === 'string') {
+            try {
+                GCDispChart.drawSequenceGCDistribution('readsGCHist', response, false, statsData,
+                    gcDistributionData.url());
+                GCDispChart.drawGCContent('readsGCBarChart', statsData);
+            } catch (e) {
                 console.log('Could not load ReadsGCHist data');
-                return;
             }
-            GCDispChart.drawSequenceGCDistribution('readsGCHist', response, false, statsData,
-                gcDistributionData.url());
-            GCDispChart.drawGCContent('readsGCBarChart', statsData);
         }
     });
 }
@@ -87,12 +87,12 @@ function loadNucleotideDisp(analysisID) {
     nucleotideDistData.fetch({
         dataType: 'text',
         success(ignored, response) {
-            if (typeof(response) === 'string') {
-                console.log('Could not load nucleotide data');
-                return;
+            try {
+                NucleotideChart.drawNucleotidePositionHistogram('nucleotide', response, false,
+                    nucleotideDistData.url());
+            } catch (e) {
+                console.log('Could not load nucleotide position chart.');
             }
-            NucleotideChart.drawNucleotidePositionHistogram('nucleotide', response, false,
-                nucleotideDistData.url());
         }
     });
 }
@@ -577,7 +577,6 @@ function groupGoTermData(data) {
         };
     });
 
-
     if (data.length > 10) {
         const others = {
             name: 'Other',
@@ -622,7 +621,6 @@ let GoTermCharts = Backbone.View.extend({
                     molecularFuncData, Commons.TAXONOMY_COLOURS[1]);
                 new GoTermChart('cellular-component-bar-chart', 'Cellular component',
                     cellularComponentData, Commons.TAXONOMY_COLOURS[2]);
-
 
                 new TaxonomyPieChart('biological-process-pie-chart', 'Biological process',
                     groupGoTermData(bioProcessData), true,
