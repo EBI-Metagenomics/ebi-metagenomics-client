@@ -163,11 +163,14 @@ describe('Browse page - Studies table - ', function() {
     });
 
     it('Clicking clear button should remove filters', function() {
+        cy.server();
+        cy.route('**/studies?**').as('apiQuery');
+
         const selector = '#studies-section .biome-select';
         let biome = 'root:Environmental:Air';
         setSelectOption(studiesTable, selector, biome, 2);
+        cy.wait('@apiQuery');
         cy.get('span.biome_icon').should('have.class', 'air_b');
-
         studiesTable.getClearButton().click();
         studiesTable.waitForTableLoad(studiesTableDefaultSize);
         cy.get('span.biome_icon').first().should('have.class', 'skin_b');
@@ -227,7 +230,13 @@ describe('Browse page - Studies table - ', function() {
     it('Should respond to biome selector', function() {
         studiesTable = new GenericTableHandler('#studies-section', studiesTableDefaultSize);
         const selector = '#studies-section .biome-select';
+
+        cy.server();
+        cy.route('**/samples?**').as('apiQuery');
+
         let biome = 'root:Environmental:Air';
+        setSelectOption(studiesTable, selector, biome, 2);
+        cy.wait('@apiQuery');
         setSelectOption(studiesTable, selector, biome, 2);
         cy.get('span.biome_icon').should('have.class', 'air_b');
 
