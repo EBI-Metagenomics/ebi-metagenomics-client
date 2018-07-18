@@ -44,6 +44,10 @@ function loadReadLengthDisp(analysisID, statsData) {
     seqLengthData.fetch({
         dataType: 'text',
         success(ignored, response) {
+            if (typeof(response) === 'string') {
+                console.log('Could not load ReadLengthDisp data');
+                return;
+            }
             SeqLengthChart.drawSequenceLengthHistogram('readsLengthHist', response, false,
                 statsData,
                 seqLengthData.url());
@@ -62,6 +66,10 @@ function loadGCDistributionDisp(analysisID, statsData) {
     gcDistributionData.fetch({
         dataType: 'text',
         success(ignored, response) {
+            if (typeof(response) === 'string') {
+                console.log('Could not load ReadsGCHist data');
+                return;
+            }
             GCDispChart.drawSequenceGCDistribution('readsGCHist', response, false, statsData,
                 gcDistributionData.url());
             GCDispChart.drawGCContent('readsGCBarChart', statsData);
@@ -79,6 +87,10 @@ function loadNucleotideDisp(analysisID) {
     nucleotideDistData.fetch({
         dataType: 'text',
         success(ignored, response) {
+            if (typeof(response) === 'string') {
+                console.log('Could not load nucleotide data');
+                return;
+            }
             NucleotideChart.drawNucleotidePositionHistogram('nucleotide', response, false,
                 nucleotideDistData.url());
         }
@@ -101,7 +113,7 @@ let AnalysisView = Backbone.View.extend({
                 if (attr['experiment_type'] === 'assembly') {
                     attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
                 }
-                that.render(function() {
+                that.render(attr.pipeline_version, function() {
                     $('#analysisSelect').val(attr['pipeline_version']);
 
                     let description = {
@@ -109,7 +121,7 @@ let AnalysisView = Backbone.View.extend({
                         attr['study_accession'] + '</a>',
                         'Sample': '<a href=\'' + attr['sample_url'] + '\'>' +
                         attr['sample_accession'] + '</a>'
-                    }
+                    };
 
                     if (attr['experiment_type'] === 'assembly') {
                         attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
@@ -120,7 +132,11 @@ let AnalysisView = Backbone.View.extend({
                             attr['run_accession'] + '</a>';
                     }
 
-                    description['Pipeline version'] = attr['pipeline_version'];
+                    const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
+                        attr.pipeline_version +
+                        '</a>';
+
+                    description['Pipeline version'] = pipelineLink;
 
                     const dataAnalysis = {};
                     if (attr['experiment_type']) {
@@ -167,7 +183,7 @@ let AnalysisView = Backbone.View.extend({
                     } else {
                         removeTab('functional');
                         if (window.location.hash.substr(1) === 'functional') {
-                            util.changeTab('overview');
+                            util.changeTab($('#overview'));
                         }
                     }
                 });
@@ -177,9 +193,11 @@ let AnalysisView = Backbone.View.extend({
             }
         });
     },
-    render(callback) {
+    render(pipelineVersion, callback) {
         this.$el.html(this.template(this.model.toJSON()));
-        $('.rna-select-button').click(onTaxonomySelect);
+        $('.rna-select-button').click(function() {
+            onTaxonomySelect(this, pipelineVersion);
+        });
         util.attachTabHandlers();
         callback();
         return this.$el;
@@ -190,19 +208,21 @@ let AnalysisView = Backbone.View.extend({
  * Cluster data by depth
  * @param {[*]} data
  * @param {number} depth
- * @return {[*]}
+ * @return {[*]}≈
  */
 function clusterData(data, depth) {
     let clusteredData = {};
     _.each(data, function(d) {
         const attr = d.attributes;
-        const lineage = attr.lineage.split(':');
+        let lineage = attr.lineage.split(':');
+        // Remove empty strings
         let category;
         if (lineage.length < depth) {
             category = lineage[lineage.length - 1];
         } else {
             category = lineage[depth];
         }
+
         if (depth > 0 &&
             ['', 'Bacteria', 'Eukaryota', 'other_sequences', undefined].indexOf(category) > -1) {
             if (lineage[0] === 'Bacteria') {
@@ -211,6 +231,7 @@ function clusterData(data, depth) {
                 category = 'Unassigned';
             }
         }
+
         let val = attr.count;
         if (clusteredData.hasOwnProperty(category)) {
             clusteredData[category]['v'] += val;
@@ -302,10 +323,11 @@ function getColourSquareIcon(i) {
 
 let TaxonomyGraphView = Backbone.View.extend({
     model: api.Taxonomy,
-    initialize() {
+    initialize(model, pipelineVersion) {
         this.model.fetch().done(function(model) {
             const clusteredData = groupTaxonomyData(model, 0);
-            const phylumData = groupTaxonomyData(model, 1);
+            const phylumDepth = parseFloat(pipelineVersion) >= 4 ? 2 : 1;
+            const phylumData = groupTaxonomyData(model, phylumDepth);
             // Pie tab
             new TaxonomyPieChart('domain-composition-pie', 'Domain composition', clusteredData);
             const phylumPieChart = new TaxonomyPieChart('phylum-composition-pie',
@@ -433,6 +455,7 @@ let InterProSummary = Backbone.View.extend({
                     });
                     totalCount += d.count;
                 });
+
                 let sumOthers = 0;
                 _.each(data.slice(10), function(d) {
                     sumOthers += d.attributes.count;
@@ -543,6 +566,9 @@ function enableTab(id) {
  * @return {*} data grouped into top 10 categories, and all following summed into 'Other'
  */
 function groupGoTermData(data) {
+    data = _.sortBy(data, function(o) {
+        return o.attributes.count;
+    }).reverse();
     let top10 = data.slice(0, 10).map(function(d) {
         d = d.attributes;
         return {
@@ -550,6 +576,8 @@ function groupGoTermData(data) {
             y: d.count
         };
     });
+
+
     if (data.length > 10) {
         const others = {
             name: 'Other',
@@ -594,6 +622,7 @@ let GoTermCharts = Backbone.View.extend({
                     molecularFuncData, Commons.TAXONOMY_COLOURS[1]);
                 new GoTermChart('cellular-component-bar-chart', 'Cellular component',
                     cellularComponentData, Commons.TAXONOMY_COLOURS[2]);
+
 
                 new TaxonomyPieChart('biological-process-pie-chart', 'Biological process',
                     groupGoTermData(bioProcessData), true,
@@ -641,7 +670,7 @@ function setAbundanceTab(statisticsData) {
     }
     removeTab('abundance');
     if (window.location.hash.substr(1) === 'abundance') {
-        util.changeTab('overview');
+        util.changeTab($('#overview'));
     }
 }
 
@@ -681,19 +710,21 @@ function loadKronaChart(analysisID, type) {
  * Load taxonomy data and create graphs
  * @param {string} analysisID ENA analysis primary accession
  * @param {string} type of analysis (see API documentation for endpoint)
+ * @param {integer} pipelineVersion
  */
-function loadTaxonomy(analysisID, type) {
+function loadTaxonomy(analysisID, type, pipelineVersion) {
     taxonomy = new api.Taxonomy({id: analysisID, type: type});
-    new TaxonomyGraphView({model: taxonomy});
+    new TaxonomyGraphView({model: taxonomy}, pipelineVersion);
     loadKronaChart(analysisID, type);
 }
 
 /**
  * Callback for taxonomy size selection in taxonomic analysis tab
+ * @param {number} pipelineVersion
  */
-function onTaxonomySelect() {
-    const type = $(this).val();
-    loadTaxonomy(analysisID, type);
+function onTaxonomySelect(srcElem, pipelineVersion) {
+    const type = $(srcElem).val();
+    loadTaxonomy(analysisID, type, pipelineVersion);
 }
 
 /**
@@ -706,7 +737,7 @@ function loadAnalysisData(analysisID, pipelineVersion) {
     new InterProSummary({model: interproData});
 
     let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
-    loadTaxonomy(analysisID, type);
+    loadTaxonomy(analysisID, type, pipelineVersion);
 
     goTerm = new api.GoSlim({id: analysisID});
     new GoTermCharts({model: goTerm});

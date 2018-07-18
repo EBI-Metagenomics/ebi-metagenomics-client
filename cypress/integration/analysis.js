@@ -21,43 +21,25 @@ function checkTabWasRemoved(tabId) {
     cy.get('[href=\'' + tabId + '\']').should('not.exist');
 }
 
-function selectAnalysis(analysis) {
-    cy.get('#analysisSelect').select(analysis);
-    waitForPageLoad();
+function verifyTabsEnabled(tabs) {
+    for (let i in tabs) {
+        if (Object.prototype.hasOwnProperty.call(tabs, i)) {
+            const tabId = tabs[i];
+            openTab(tabId);
+            verifyTabIsVisible(tabId);
+        }
+    }
 }
-
-// function verifyTabsEnabled(tabs) {
-//     for (let i in tabs) {
-//         if (Object.prototype.hasOwnProperty.call(tabs, i)) {
-//             const tabId = tabs[i];
-//             openTab(tabId);
-//             verifyTabIsVisible(tabId);
-//         }
-//     }
-// }
 
 /**
  * Verify number of results responds to selector
  */
 describe('Analysis page - general', function() {
-    // it('Should display overview if no deeplink is provided', function() {
-    //     openPage(origPage);
-    //     waitForPageLoad();
-    //     verifyTabIsVisible('#overview');
-    // });
-    // it('Should only display available tabs', function() {
-    //     openPage(origPage);
-    //     waitForPageLoad();
-    //     verifyTabIsVisible('#overview');
-    //     let tabs = ['#qc', '#functional', '#taxonomic', '#download', '#overview'];
-    //     verifyTabsEnabled(tabs);
-    //
-    //     openPage('analyses/MGYA00141547');
-    //     waitForPageLoad();
-    //     verifyTabIsVisible('#overview');
-    //     let tabs2 = ['#qc', '#functional', '#abundance', '#taxonomic', '#download', '#overview'];
-    //     verifyTabsEnabled(tabs2);
-    // });
+    it('Should display overview if no deeplink is provided', function() {
+        openPage(origPage);
+        waitForPageLoad();
+        verifyTabIsVisible('#overview');
+    });
 
     it('Should display metadata if available', function() {
         openPage('analyses/MGYA00141547');
@@ -115,50 +97,50 @@ describe('Analysis page - download tab', function() {
     // });
 });
 
-// describe('Analysis page - charts', function() {
-// it('QC chart should display correctly', function() {
-//     openPage('analyses/ERR867655');
-//     waitForPageLoad();
-//     changeTab('qc');
-//
-//     // Verify graph via tooltip values
-//
-//     function hoverAndValidateTooltip(series, tooltipText1, tooltipText2) {
-//         cy.get(series).first().trigger('mouseover', {force: true}).then(() => {
-//             cy.get('svg g text').contains(tooltipText1);
-//             cy.get('svg g.highcharts-tooltip text').contains(tooltipText2);
-//         });
-//         cy.get(series).first().trigger('mouseout', {force: true});
-//     }
-//
-//     const readsRemainingSeries =
-//         '.highcharts-series-group .highcharts-series-1 > .highcharts-point';
-//     // Initial reads
-//     const series1 = readsRemainingSeries + ':nth-child(1)';
-//     hoverAndValidateTooltip(series1, 'Initial reads', 'Reads remaining: 43 947');
-//
-//     // Trimming
-//     const series2 = readsRemainingSeries + ':nth-child(2)';
-//     hoverAndValidateTooltip(series2, 'Trimming', 'Reads remaining: 43 933');
-//
-//     // Length filtering
-//     const series3 = readsRemainingSeries + ':nth-child(3)';
-//     hoverAndValidateTooltip(series3, 'Length filtering', 'Reads remaining: 43 045');
-//
-//     // Length filtering (reads filtered out)
-//     const filteredOutSeries =
-//         '.highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(3)';
-//     hoverAndValidateTooltip(filteredOutSeries, 'Length filtering', 'Reads filtered out: 888');
-//
-//     // Ambiguous base filtering
-//     const series4 = readsRemainingSeries + ':nth-child(4)';
-//     hoverAndValidateTooltip(series4, 'Ambiguous base filtering', 'Reads remaining: 43 045');
-//
-//     // Reads subsampled for QC analysis
-//     const series5 = readsRemainingSeries + ':nth-child(5)';
-//     hoverAndValidateTooltip(series5, 'Reads subsampled for QC analysis', 'Reads remaining: 0');
-// });
-// });
+describe('Analysis page - charts', function() {
+    it('QC chart should display correctly', function() {
+        openPage('analyses/MGYA00136035');
+        waitForPageLoad();
+        changeTab('qc');
+
+        // Verify graph via tooltip values
+
+        function hoverAndValidateTooltip(series, tooltipText1, tooltipText2) {
+            cy.get(series).first().trigger('mouseover', {force: true}).then(() => {
+                cy.get('svg g text').contains(tooltipText1);
+                cy.get('svg g.highcharts-tooltip text').contains(tooltipText2);
+            });
+            cy.get(series).first().trigger('mouseout', {force: true});
+        }
+
+        const readsRemainingSeries =
+            '.highcharts-series-group .highcharts-series-1 > .highcharts-point';
+        // Initial reads
+        const series1 = readsRemainingSeries + ':nth-child(1)';
+        hoverAndValidateTooltip(series1, 'Initial reads', 'Reads remaining: 43 947');
+
+        // Trimming
+        const series2 = readsRemainingSeries + ':nth-child(2)';
+        hoverAndValidateTooltip(series2, 'Trimming', 'Reads remaining: 43 933');
+
+        // Length filtering
+        const series3 = readsRemainingSeries + ':nth-child(3)';
+        hoverAndValidateTooltip(series3, 'Length filtering', 'Reads remaining: 43 045');
+
+        // Length filtering (reads filtered out)
+        const filteredOutSeries =
+            '.highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(3)';
+        hoverAndValidateTooltip(filteredOutSeries, 'Length filtering', 'Reads filtered out: 888');
+
+        // Ambiguous base filtering
+        const series4 = readsRemainingSeries + ':nth-child(4)';
+        hoverAndValidateTooltip(series4, 'Ambiguous base filtering', 'Reads remaining: 43 045');
+
+        // Reads subsampled for QC analysis
+        const series5 = readsRemainingSeries + ':nth-child(5)';
+        hoverAndValidateTooltip(series5, 'Reads subsampled for QC analysis', 'Reads remaining: 0');
+    });
+});
 
 describe('Analysis page - Abundance tab', function() {
     it('Tab should be removed if no data available.', function() {
@@ -222,6 +204,20 @@ describe('Analysis page - Error handling', function() {
     });
 });
 
+describe('Analysis page - Embedded tabs', function(){
+    it('Deep linking to embedded tabs should work', function(){
+        openPage(origPage+'#pie');
+        cy.get('#taxonomic').should('be.visible');
+        cy.get('#overview').should('be.hidden');
+        cy.get('#qc').should('be.hidden');
+        cy.get('#functional').should('be.hidden');
+        cy.get('#download').should('be.hidden');
+        cy.get('#pie').should('be.visible');
+        cy.get('#krona').should('be.hidden');
+        cy.get('#column').should('be.hidden');
+        cy.get('#stacked-column').should('be.hidden');
+    });
+});
 // TODO test version selector
 // TODO test all download links are valid/organised correctly
 

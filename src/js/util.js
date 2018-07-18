@@ -96,64 +96,83 @@ export function hideTableLoadingGif() {
 }
 
 /**
+ * Retrieve parent tab of elem
+ * @param {jQuery.Element} $elem
+ * @return {jQuery.Element} parent tab elem
+ */
+function getParentTab($elem) {
+    return $elem.parents('.tabs-panel');
+}
+
+/**
  * Attach tab handler callback to switch tabs
  */
 export function attachTabHandlers() {
     // Deep linking
     const $dataTabs = $('[data-tabs]');
-    new window.Foundation.Tabs($dataTabs);
+    $dataTabs.each(function() {
+        new window.Foundation.Tabs($(this));
+    });
     const linkTab = window.location.hash.substr(1);
     if (linkTab) {
-        const tabExists = $('a[href=\'#' + linkTab + '\']').length > 0;
-        if (tabExists) {
-            $($dataTabs).foundation('selectTab', linkTab);
-            $('div.tabs-panel:not(\'' + linkTab + '\')').removeClass('active');
-            $('#' + linkTab).addClass('active');
-        }
+        changeTab($('#' + linkTab));
     }
 
     // Linking click actions
     $('li.tabs-title > a').on('click', function() {
-        let tabButtonContainer = $(this).closest('ul');
-        $(tabButtonContainer).children().children('a').attr('aria-selected', 'false');
-        $(this).attr('aria-selected', 'true');
-
-        // Hide all other tabs
-        let tabId = $(this).attr('href');
-        let tabGroup = tabButtonContainer.attr('id');
-        $('[data-tab-content=' + tabGroup + '] > .tabs-panel').removeClass('active');
-        $(tabId).addClass('active');
+        changeTab($($(this).attr('href')));
+        window.location.hash = $(this).attr('href');
     });
 }
 
 /**
  * Change tab visibility such that all tabs are hidden except specified tab
- * @param {string} tabId (without leading hash) to display
+ * @param {jQuery.Element} $tab (without leading hash) to display
  */
-export function changeTab(tabId) {
-    // Tab header
-    $('ul.tabs > li > a').each((i, el) => {
-        const $el = $(el);
-        if ($($el).attr('href') === ('#' + tabId)) {
-            $($el).parent().addClass('is-active');
-            $el.attr('aria-selected', 'true');
-        } else {
-            $($el).parent().removeClass('is-active');
-            $el.attr('aria-selected', 'false');
-        }
+export function changeTab($tab) {
+    const $siblings = $tab.parent().children('.tabs-panel:not(\'#' + $tab.attr('id') + '\')');
+    $siblings.each((i, elem) => {
+        const $elem = $(elem);
+        $elem.removeClass('active');
+        const id = $elem.attr('id');
+        const $btn = $('a[href=\'#' + id + '\']');
+        $btn.attr('aria-selected', 'false');
     });
-    $('div.tabs-panel').each((i, el) => {
-        const $el = $(el);
-        if ($($el).attr('id') === tabId) {
-            $($el).addClass('active');
-        } else {
-            $($el).removeClass('active');
-        }
-    });
+    $tab.addClass('active');
+    const id = $tab.attr('id');
+    const $btn = $('a[href=\'#' + id + '\']');
+    $btn.attr('aria-selected', 'true').addClass('is-active');
+    $btn.parent().addClass('is-active');
+    let $parentTab = getParentTab($tab);
+    if ($parentTab.length > 0) {
+        changeTab($parentTab);
+    }
+    //
+    // // Tab header
+    // $('ul.tabs > li > a').each((i, el) => {
+    //     const $el = $(el);
+    //     if ($($el).attr('href') === ('#' + tabId)) {
+    //         $($el).parent().addClass('is-active');
+    //         $el.attr('aria-selected', 'true');
+    //     } else {
+    //         $($el).parent().removeClass('is-active');
+    //         $el.attr('aria-selected', 'false');
+    //     }
+    // });
+    // $('div.tabs-panel').each((i, el) => {
+    //     const $el = $(el);
+    //     if ($($el).attr('id') === tabId) {
+    //         $($el).addClass('active');
+    //     } else {
+    //         $($el).removeClass('active');
+    //     }
+    // });
     // Tab content
     // $("div.tabs-panel:not('" + tabId + "')").removeClass('active');
     // $("div.tabs-panel"+tabId).addClass('active');
 }
+
+window.changeTab = changeTab;
 
 /**
  * Create biome select option from lineage
@@ -437,8 +456,8 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Instrument platform'},
             {sortBy: null, name: 'Pipeline versions'}
         ];
-        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs & assemblies', columns,
-            'accession', Commons.DEFAULT_PAGE_SIZE, false, true, 'runs-table',
+        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs & assemblies',
+            columns, 'accession', Commons.DEFAULT_PAGE_SIZE, false, true, 'runs-table',
             function(page, pageSize, order, query) {
                 that.update(page, pageSize, order, query);
             });
@@ -526,9 +545,12 @@ export const AnalysesView = GenericTableView.extend({
             const analysisLink = '<a href=\'' + attr.analysis_url + '\'>' +
                 attr.analysis_accession +
                 '</a>';
+            const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
+                attr.pipeline_version +
+                '</a>';
             return [
                 biome, sampleLink, attr['sample_desc'],
-                runLink, attr['pipeline_version'], analysisLink];
+                runLink, pipelineLink, analysisLink];
         });
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }

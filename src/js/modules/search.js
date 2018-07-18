@@ -49,7 +49,6 @@ if (queryText === undefined || queryText === null) {
 }
 $('#navbar-query').val(queryText);
 
-
 $(document).ready(function() {
     // TODO convert to template argument
     $('#pagesize-text').hide();
@@ -616,6 +615,7 @@ const Search = Backbone.Collection.extend({
  */
 const ResultsView = Backbone.View.extend({
     render(response, params, noDisplay, columns) {
+        $(this.numResultDisp).text('('+response['hitCount']+')');
         let templateData = $.extend({}, response);
         const defaultQueries = [
             ProjectsView.prototype.defaultQuery,
@@ -830,6 +830,7 @@ const ProjectsView = ResultsView.extend({
         'project-centre-name'],
     tableElem: '#projectsTable',
     tableModal: '#projectsModal',
+    numResultDisp: '#numStudyResults',
 
     initialize() {
         this.pagination.setPaginationElem('#projects-pagination');
@@ -963,7 +964,9 @@ const SamplesView = ComplexResultsView.extend({
         'sample-name',
         'sample-desc'],
     paginationElem: '#samples-pagination',
-    defaultParamFields: ',METAGENOMICS_PROJECTS,project_name,biome_name'
+    defaultParamFields: ',METAGENOMICS_PROJECTS,project_name,biome_name',
+    numResultDisp: '#numSampleResults',
+
 });
 
 /**
@@ -985,7 +988,9 @@ const AnalysesView = ComplexResultsView.extend({
         'analysis-pipeline-vers'],
     paginationElem: '#analyses-pagination',
     defaultParamFields: ',METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,' +
-    'experiment_type,pipeline_version,ASSEMBLY,ENA_RUN,ENA_WGS_SEQUENCE_SET'
+    'experiment_type,pipeline_version,ASSEMBLY,ENA_RUN,ENA_WGS_SEQUENCE_SET',
+    numResultDisp: '#numAnalysisResults'
+
 });
 
 /**

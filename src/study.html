@@ -128,24 +128,6 @@
             </div>
         </script>
     </div>
-    <script id="sampleRow" type="text/template">
-        <td class="sample_name"><%= sample_name %></td>
-        <td class="sample_id"><a href="<%= sample_url %>"><%= sample_id %></a></td>
-        <td class="run_id"><a href="<%= analysis_url %>"><%= run_id %></a></td>
-        <td class="experiment_type"><%= experiment_type %></td>
-        <td class="instrument_platform"><%= instrument_platform %></td>
-        <td class="instrument_model"><%= instrument_model %></td>
-        <td><a href="<%= analysis_url %>">View analyses</a></td>
-    </script>
-    <script id="runRow" type="text/template">
-        <td class="sample_name"><%= sample_name %></td>
-        <td class="sample_id"><a href="<%= sample_url %>"><%= sample_id %></a></td>
-        <td class="run_id"><a href="<%= analysis_url %>"><%= run_id %></a></td>
-        <td class="experiment_type"><%= experiment_type %></td>
-        <td class="instrument_platform"><%= instrument_platform %></td>
-        <td class="instrument_model"><%= instrument_model %></td>
-        <td><a href="<%= analysis_url %>">View analyses</a></td>
-    </script>
     <script id="downloadsTmpl" type="text/template">
         <% for (let [pipeline, groups] of Object.entries(pipeline_files)){ %>
         <div class="row columns">
