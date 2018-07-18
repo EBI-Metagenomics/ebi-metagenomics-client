@@ -88,7 +88,7 @@ module.exports = class TaxonomyColumn {
                         perc = 100 * this.y / sum;
                     }
                     let title = this.x;
-                    if (title === '0') {
+                    if (title == '0' || title === 0) {
                         title = this.series.name;
                     }
                     return title + '<br/>' + '<b>' + this.y +
