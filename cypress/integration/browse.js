@@ -238,6 +238,7 @@ describe('Browse page - Studies table - ', function() {
         setSelectOption(studiesTable, selector, biome2, 7);
         cy.get('span.biome_icon').should('have.class', 'engineered_b');
     });
+    
 });
 
 describe('Browse page - Samples table - ', function() {
@@ -457,7 +458,8 @@ describe('Browse page - Generic - Filter propagation', function() {
         let filterText = 'Glacier Metagenome';
         studiesTable.getFilterInput().type(filterText);
         studiesTable.waitForTableLoad(1);
-        studiesTable.checkRowData(0, ['', 'MGYS00000259', 'Glacier Metagenome', '1', '20-Jan-2016']);
+        studiesTable.checkRowData(0,
+            ['', 'MGYS00000259', 'Glacier Metagenome', '1', '20-Jan-2016']);
 
         changeTab('samples');
         samplesTable.waitForTableLoad(1);
