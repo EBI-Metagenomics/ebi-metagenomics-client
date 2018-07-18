@@ -124,21 +124,6 @@ th.description {
 
 }
 
-th.sort-desc:after {
-    float: right;
-    content: url(../images/sort_desc.png);
-}
-
-th.sort-asc:after {
-    float: right;
-    content: url(../images/sort_asc.png);
-}
-
-th.sort-both:after {
-    float: right;
-    content: url(../images/sort_both.png);
-}
-
 .search-row > td > div {
     max-height: 5em;
     overflow-y: scroll;
