@@ -97,6 +97,53 @@ function loadNucleotideDisp(analysisID) {
     });
 }
 
+/**
+ *
+ * @param {string} analysisID ENA analysis primary accession
+ */
+function loadDownloads(analysisID) {
+    let downloads = new api.AnalysisDownloads({id: analysisID});
+    new DownloadView({model: downloads});
+}
+
+/**
+ * Load taxonomy data and create graphs
+ * @param {string} analysisID ENA analysis primary accession
+ * @param {string} type of analysis (see API documentation for endpoint)
+ * @param {integer} pipelineVersion
+ */
+function loadTaxonomy(analysisID, type, pipelineVersion) {
+    taxonomy = new api.Taxonomy({id: analysisID, type: type});
+    new TaxonomyGraphView({model: taxonomy}, pipelineVersion);
+    loadKronaChart(analysisID, type);
+}
+
+/**
+ * Load and displaycharts for selected view
+ * @param {string} analysisID ENA analysis primary accession
+ * @param {string} pipelineVersion
+ */
+function loadAnalysisData(analysisID, pipelineVersion) {
+    interproData = new api.InterproIden({id: analysisID});
+    new InterProSummary({model: interproData});
+
+    let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
+    loadTaxonomy(analysisID, type, pipelineVersion);
+
+    goTerm = new api.GoSlim({id: analysisID});
+    new GoTermCharts({model: goTerm});
+}
+
+/**
+ * Callback for taxonomy size selection in taxonomic analysis tab
+ * @param {string} srcElem jQuery selector string of event source element
+ * @param {number} pipelineVersion
+ */
+function onTaxonomySelect(srcElem, pipelineVersion) {
+    const type = $(srcElem).val();
+    loadTaxonomy(analysisID, type, pipelineVersion);
+}
+
 let AnalysisView = Backbone.View.extend({
     model: api.Analysis,
     template: _.template($('#runTmpl').html()),
@@ -321,6 +368,24 @@ function getColourSquareIcon(i) {
         Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
 }
 
+/**
+ * Enable toggling of series visibility, sync'd across table of series and chart
+ * @param {jQuery.element} elem table row
+ * @param {HighCharts.serie} series in chart
+ * @param {integer} index index of serie in chart
+ * @param {integer} numSeries total number of series
+ * @param {boolean} defaultVisibility true if series should be visible by default
+ */
+function setTableRowAndChartHiding(elem, series, index, numSeries, defaultVisibility) {
+    series.setVisible(defaultVisibility);
+    if (index === numSeries - 1) {
+        ($(elem).parent().children().slice(numSeries - 1)).toggleClass(
+            'disabled-clickable');
+    } else {
+        $(elem).toggleClass('disabled-clickable');
+    }
+}
+
 let TaxonomyGraphView = Backbone.View.extend({
     model: api.Taxonomy,
     initialize(model, pipelineVersion) {
@@ -364,13 +429,7 @@ let TaxonomyGraphView = Backbone.View.extend({
             phylumPieTable.$tbody.find('tr').click(function() {
                 let index = getSeriesIndex($(this).index(), numSeries);
                 const series = phylumPieChart.series[0].data[index];
-                series.setVisible(!series.visible);
-                if (index === numSeries - 1) {
-                    ($(this).parent().children().slice(numSeries - 1)).toggleClass(
-                        'disabled-clickable');
-                } else {
-                    $(this).toggleClass('disabled-clickable');
-                }
+                setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
             });
 
             new TaxonomyColumnChart('domain-composition-column', 'Domain composition',
@@ -393,13 +452,7 @@ let TaxonomyGraphView = Backbone.View.extend({
                 let index = getSeriesIndex($(this).index(), numSeries);
                 const series = phylumColumnChart.series[0].data[index];
                 phylumColumnChart.series[0].data[index].visible = false;
-                series.visible = false;
-                if (index === numSeries - 1) {
-                    ($(this).parent().children().slice(numSeries - 1)).toggleClass(
-                        'disabled-clickable');
-                } else {
-                    $(this).toggleClass('disabled-clickable');
-                }
+                setTableRowAndChartHiding(this, series, index, numSeries, false);
             });
 
             const numSeriesPhylumColumn = phylumColumnChart.series[0].data.length;
@@ -519,30 +572,11 @@ let InterProSummary = Backbone.View.extend({
                 interproTable.$tbody.find('tr').click(function() {
                     let index = getSeriesIndex($(this).index(), numSeries);
                     const series = taxonomyPieChart.series[0].data[index];
-                    series.setVisible(!series.visible);
-                    if (index === numSeries - 1) {
-                        ($(this).parent().children().slice(numSeries - 1)).toggleClass(
-                            'disabled-clickable');
-                    } else {
-                        $(this).toggleClass('disabled-clickable');
-                    }
+                    setTableRowAndChartHiding(this, series, index, numSeries, false);
                 });
             });
     }
 });
-
-/**
- * Count sum of data counts
- * @param {[]} array of data with counts
- * @return {number} sum of counts of data in array
- */
-function getTotalGoTermCount(array) {
-    let sum = 0;
-    _.each(array, function(e) {
-        sum += e.attributes.count;
-    });
-    return sum;
-}
 
 /**
  * Disable tab by id
@@ -702,52 +736,6 @@ function loadKronaChart(analysisID, type) {
 // <object class="krona_chart"
 //     data="<%= kronaUrl %>"
 //     type="text/html"></object>
-}
-
-/**
- * Load taxonomy data and create graphs
- * @param {string} analysisID ENA analysis primary accession
- * @param {string} type of analysis (see API documentation for endpoint)
- * @param {integer} pipelineVersion
- */
-function loadTaxonomy(analysisID, type, pipelineVersion) {
-    taxonomy = new api.Taxonomy({id: analysisID, type: type});
-    new TaxonomyGraphView({model: taxonomy}, pipelineVersion);
-    loadKronaChart(analysisID, type);
-}
-
-/**
- * Callback for taxonomy size selection in taxonomic analysis tab
- * @param {number} pipelineVersion
- */
-function onTaxonomySelect(srcElem, pipelineVersion) {
-    const type = $(srcElem).val();
-    loadTaxonomy(analysisID, type, pipelineVersion);
-}
-
-/**
- * Load and displaycharts for selected view
- * @param {string} analysisID ENA analysis primary accession
- * @param {string} pipelineVersion
- */
-function loadAnalysisData(analysisID, pipelineVersion) {
-    interproData = new api.InterproIden({id: analysisID});
-    new InterProSummary({model: interproData});
-
-    let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
-    loadTaxonomy(analysisID, type, pipelineVersion);
-
-    goTerm = new api.GoSlim({id: analysisID});
-    new GoTermCharts({model: goTerm});
-}
-
-/**
- *
- * @param {string} analysisID ENA analysis primary accession
- */
-function loadDownloads(analysisID) {
-    let downloads = new api.AnalysisDownloads({id: analysisID});
-    new DownloadView({model: downloads});
 }
 
 let analysis = new api.Analysis({id: analysisID});
