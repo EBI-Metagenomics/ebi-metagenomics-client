@@ -140,6 +140,11 @@ describe('Analysis page - charts', function() {
         const series5 = readsRemainingSeries + ':nth-child(5)';
         hoverAndValidateTooltip(series5, 'Reads subsampled for QC analysis', 'Reads remaining: 0');
     });
+    it('Reads length hist should be present', function() {
+        openPage('analyses/MGYA00136035');
+        waitForPageLoad();
+        changeTab('qc');
+    });
 });
 
 describe('Analysis page - Abundance tab', function() {

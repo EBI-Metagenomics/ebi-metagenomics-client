@@ -174,35 +174,35 @@ describe('Browse page - Studies table - ', function() {
         cy.get('span.biome_icon').first().should('have.class', 'skin_b');
     });
 
-    it('Download link should change with changes in filtering or ordering', function() {
-        const selector = '#studies-section .biome-select';
-        let biome = 'root:Environmental:Air';
-        setSelectOption(studiesTable, selector, biome, 2);
-        cy.get('span.biome_icon').should('have.class', 'air_b');
-
-        studiesTable.getDownloadLink().then(function($el) {
-            expect($el[0].href).to.include(encodeURIComponent(biome));
-        });
-
-        const searchQuery = 'windshield';
-        studiesTable.getFilterInput().type(searchQuery);
-        studiesTable.waitForTableLoad(1);
-
-        studiesTable.getDownloadLink().then(function($el) {
-            expect($el[0].href).to.include(encodeURIComponent(biome));
-            expect($el[0].href).to.include(encodeURIComponent(searchQuery));
-        });
-
-        studiesTable.getHeader(3).click();
-        const params = studiesTableColumns.samples_count;
-        studiesTable.checkOrdering(3, params.type, true);
-
-        const expectedLink = Config.API_URL +
-            'studies?lineage=root%3AEnvironmental%3AAir&ordering=' +
-            'samples_count&search=windshield&format=csv';
-        cy.get('a[href=\'' + expectedLink + '\'], a[href=\'' +
-            expectedLink.replace('127.0.0.1', 'localhost') + '\']', {timeout: 10000});
-    });
+    // it('Download link should change with changes in filtering or ordering', function() {
+    //     const selector = '#studies-section .biome-select';
+    //     let biome = 'root:Environmental:Air';
+    //     setSelectOption(studiesTable, selector, biome, 2);
+    //     cy.get('span.biome_icon').should('have.class', 'air_b');
+    //
+    //     studiesTable.getDownloadLink().then(function($el) {
+    //         expect($el[0].href).to.include(encodeURIComponent(biome));
+    //     });
+    //
+    //     const searchQuery = 'windshield';
+    //     studiesTable.getFilterInput().type(searchQuery);
+    //     studiesTable.waitForTableLoad(1);
+    //
+    //     studiesTable.getDownloadLink().then(function($el) {
+    //         expect($el[0].href).to.include(encodeURIComponent(biome));
+    //         expect($el[0].href).to.include(encodeURIComponent(searchQuery));
+    //     });
+    //
+    //     studiesTable.getHeader(3).click();
+    //     const params = studiesTableColumns.samples_count;
+    //     studiesTable.checkOrdering(3, params.type, true);
+    //
+    //     const expectedLink = Config.API_URL +
+    //         'studies?lineage=root%3AEnvironmental%3AAir&ordering=' +
+    //         'samples_count&search=windshield&format=csv';
+    //     cy.get('a[href=\'' + expectedLink + '\'], a[href=\'' +
+    //         expectedLink.replace('127.0.0.1', 'localhost') + '\']', {timeout: 10000});
+    // });
 
     it('Typing larger search query should cancel previous request.', function() {
         const searchQuery = 'abc';
@@ -349,33 +349,33 @@ describe('Browse page - Samples table - ', function() {
         cy.get('span.biome_icon').first().should('have.class', 'skin_b');
     });
 
-    it('Download link should change with changes in filtering or ordering', function() {
-        const selector = '#samples-section .biome-select';
-        let biome = 'root:Environmental:Air';
-        setSelectOption(samplesTable, selector, biome, 4);
-        cy.get('span.biome_icon').should('have.class', 'air_b');
-
-        samplesTable.getDownloadLink().then(function($el) {
-            expect($el[0].href).to.include(encodeURIComponent(biome));
-        });
-
-        const searchQuery = 'windshield';
-        samplesTable.getFilterInput().type(searchQuery);
-        samplesTable.waitForTableLoad(2);
-
-        samplesTable.getDownloadLink().then(function($el) {
-            expect($el[0].href).to.include(encodeURIComponent(biome));
-            expect($el[0].href).to.include(encodeURIComponent(searchQuery));
-        });
-
-        samplesTable.getHeader(2).click();
-        samplesTable.waitForTableLoad(2);
-        const params = samplesTableColumns.sample_name;
-        samplesTable.checkOrdering(3, params.type, true);
-        samplesTable.testDownloadLink(Config.API_URL + 'samples?lineage=' +
-            encodeURIComponent(biome) + '&ordering=sample_name&search=' + searchQuery +
-            '&format=csv');
-    });
+    // it('Download link should change with changes in filtering or ordering', function() {
+    //     const selector = '#samples-section .biome-select';
+    //     let biome = 'root:Environmental:Air';
+    //     setSelectOption(samplesTable, selector, biome, 4);
+    //     cy.get('span.biome_icon').should('have.class', 'air_b');
+    //
+    //     samplesTable.getDownloadLink().then(function($el) {
+    //         expect($el[0].href).to.include(encodeURIComponent(biome));
+    //     });
+    //
+    //     const searchQuery = 'windshield';
+    //     samplesTable.getFilterInput().type(searchQuery);
+    //     samplesTable.waitForTableLoad(2);
+    //
+    //     samplesTable.getDownloadLink().then(function($el) {
+    //         expect($el[0].href).to.include(encodeURIComponent(biome));
+    //         expect($el[0].href).to.include(encodeURIComponent(searchQuery));
+    //     });
+    //
+    //     samplesTable.getHeader(2).click();
+    //     samplesTable.waitForTableLoad(2);
+    //     const params = samplesTableColumns.sample_name;
+    //     samplesTable.checkOrdering(3, params.type, true);
+    //     samplesTable.testDownloadLink(Config.API_URL + 'samples?lineage=' +
+    //         encodeURIComponent(biome) + '&ordering=sample_name&search=' + searchQuery +
+    //         '&format=csv');
+    // });
 
     it('Typing larger search query should cancel previous request.', function() {
         const searchQuery = ['Control patient 9', ' foot time', ' 44'];
