@@ -93,6 +93,7 @@ describe('Login process', function() {
             cy.contains('Getting started');
         });
     });
+
     context('Edge cases', function() {
         it('Display error message when accessing mydata page without being logged in', function() {
             openPage('mydata');
@@ -107,6 +108,11 @@ describe('Login process', function() {
             cy.get('h2').contains('Oh no! An error has occured!');
             cy.get('h3').contains('Error: 404');
             cy.get('p').contains('Could not retrieve study: ERP104179');
+        });
+        it('Accessing page when not logged in should display error.', function() {
+            openPage('mydata');
+            cy.contains('You are not logged in.');
+            cy.contains('Click here to login and view your data.');
         });
     });
 });
