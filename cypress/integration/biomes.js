@@ -15,7 +15,7 @@ const biomesTableColumns = {
     biome_name: {
         data: [
             'Plants',
-            'Lake'],
+            'Agricultural'],
         type: datatype.STR,
         sortable: false // TODO fix test to account for text in column
     },
@@ -158,7 +158,7 @@ describe('Biomes page - Click actions', function() {
     });
 });
 
-describe('Browse page - URL parameters', function() {
+describe('Biomes page - URL parameters', function() {
     it('Should order results according to URL parameters', function() {
         openPage('biomes?ordering=-samples_count');
         biomesTable = new GenericTableHandler('#biomes-section', biomesTableDefaultSize);

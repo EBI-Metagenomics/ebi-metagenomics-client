@@ -114,18 +114,6 @@ function updatePageSize(pageSize) {
     biomesView.update(params);
 }
 
-/**
- * Update page callback for pagination event
- * @param {number} page
- */
-function changePage(page) {
-    const params = {
-        page_size: pagination.getPageSize(),
-        page: page
-    };
-    biomesView.update(params);
-}
-
 pagination.setPageSizeChangeCallback(updatePageSize);
 
 
