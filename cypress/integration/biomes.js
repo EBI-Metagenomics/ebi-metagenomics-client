@@ -102,24 +102,24 @@ describe('Biomes page - General', function() {
             'biomes?lineage=root&ordering=-samples_count&format=csv');
     });
 
-    // it('Download link should change with changes in filtering or ordering', function() {
-    //     const searchQuery = 'Beach';
-    //     biomesTable.getFilterInput().type(searchQuery);
-    //     biomesTable.waitForTableLoad(1);
-    //
-    //     biomesTable.getDownloadLink().then(function($el) {
-    //         expect($el[0].href).to.include(encodeURIComponent(searchQuery));
-    //     });
-    //
-    //     biomesTable.getHeader(2).click();
-    //     const params = biomesTableColumns.samples_count;
-    //     biomesTable.checkOrdering(2, params.type, true);
-    //
-    //     const expectedLink = Config.API_URL +
-    //         'biomes?lineage=root&ordering=samples_count&search=' + searchQuery + '&format=csv';
-    //     cy.get('a[href=\'' +
-    //         expectedLink.replace('127.0.0.1', 'localhost') + '\']', {timeout: 10000});
-    // });
+    it('Download link should change with changes in filtering or ordering', function() {
+        const searchQuery = 'Beach';
+        biomesTable.getFilterInput().type(searchQuery);
+        biomesTable.waitForTableLoad(1);
+
+        biomesTable.getDownloadLink().then(function($el) {
+            expect($el[0].href).to.include(encodeURIComponent(searchQuery));
+        });
+
+        biomesTable.getHeader(2).click();
+        const params = biomesTableColumns.samples_count;
+        biomesTable.checkOrdering(2, params.type, true);
+
+        const expectedLink = Config.API_URL +
+            'biomes?lineage=root&ordering=samples_count&search=' + searchQuery + '&format=csv';
+        cy.get('a[href=\'' +
+            expectedLink.replace('127.0.0.1', 'localhost') + '\']', {timeout: 10000});
+    });
 
     it('Typing larger search query should cancel previous request.', function() {
         const searchQuery = 'soil';
@@ -158,10 +158,10 @@ describe('Biomes page - Click actions', function() {
     });
 });
 
-// describe('Biomes page - URL parameters', function() {
-//     it('Should order results according to URL parameters', function() {
-//         openPage('biomes?ordering=-samples_count');
-//         biomesTable = new GenericTableHandler('#biomes-section', biomesTableDefaultSize);
-//         biomesTable.checkOrdering(2, datatype.NUM, false);
-//     });
-// });
+describe('Biomes page - URL parameters', function() {
+    it('Should order results according to URL parameters', function() {
+        openPage('biomes?ordering=-samples_count');
+        biomesTable = new GenericTableHandler('#biomes-section', biomesTableDefaultSize);
+        biomesTable.checkOrdering(2, datatype.NUM, false);
+    });
+});
