@@ -29,7 +29,7 @@ export function setCurrentTab(id) {
  * @return {string}
  */
 export function getURLParameter() {
-    let regex = /\/([A-z0-9|.]+)(?:$|[?])/g;
+    let regex = /([A-z0-9,%+]+)(?:$|[?])/g;
     return regex.exec(window.location.pathname)[1];
 }
 
