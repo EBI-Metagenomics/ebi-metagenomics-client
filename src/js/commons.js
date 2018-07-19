@@ -12,11 +12,11 @@ export const biomeFilter = require('../partials/biome_filter.handlebars');
 export const errorTmpl = require('../partials/errorTemplate.handlebars');
 
 export const pipelines = {
-    1: require('../partials/pipelines/1.handlebars'),
-    2: require('../partials/pipelines/2.handlebars'),
-    3: require('../partials/pipelines/3.handlebars'),
-    4: require('../partials/pipelines/4.handlebars'),
-    4.1: require('../partials/pipelines/4.1.handlebars')
+    '1.0': require('../partials/pipelines/1.handlebars'),
+    '2.0': require('../partials/pipelines/2.handlebars'),
+    '3.0': require('../partials/pipelines/3.handlebars'),
+    '4.0': require('../partials/pipelines/4.handlebars'),
+    '4.1': require('../partials/pipelines/4.1.handlebars')
 };
 
 require('../../static/images/nucleic_acids_research_D1_cover.gif');

@@ -5,13 +5,13 @@ require('static/css/pipeline.css');
 
 util.setupPage('#about-nav');
 
-let pipelineVersion = util.getURLParameter();
+let pipelineVersion = parseFloat(util.getURLParameter()).toFixed(1);
 
 $(document).ready(function() {
     const pipelineVersions = Object.keys(commons.pipelines);
-
+    console.log(pipelineVersion, pipelineVersions);
     if (pipelineVersions.indexOf(pipelineVersion) === -1) {
-        const dispPipelineVersions = pipelineVersions.slice(0, -1).join(', ') + '& ' +
+        const dispPipelineVersions = pipelineVersions.slice(0, -1).join(', ') + ' & ' +
             pipelineVersions.pop() + '.';
         $('#content-full')
             .append('<h3>No pipeline version found, available versions are ' +
