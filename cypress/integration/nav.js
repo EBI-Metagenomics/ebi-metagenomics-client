@@ -7,40 +7,43 @@ import {openPage, getPageURL} from '../util/util';
 /**
  * Check all links in navbar towards other pages of the site are functional
  */
-for (let orig = 0; orig < navNames.length; orig++) {
-    for (let dest = 1; dest < navNames.length; dest++) {
-        const origPage = navNames[orig];
-        const destPage = navNames[dest];
-        describe('Nav test ' + origPage + '->' + destPage, function() {
-            it('Navbar link is valid.', function() {
-                openPage(origPage);
-                cy.get('#' + destPage + '-nav').click();
+describe('Navbar test', function() {
+    for (let orig = 0; orig < navNames.length; orig++) {
+        for (let dest = 1; dest < navNames.length; dest++) {
+            const origPage = navNames[orig];
+            const destPage = navNames[dest];
+            context(origPage + '->' + destPage, function() {
+                it('Navbar link is valid.', function() {
+                    openPage(origPage);
+                    cy.get('#' + destPage + '-nav').click();
 
-                if (origPage !== 'overview') {
-                    cy.url().should('include', destPage);
-                }
-                cy.get('h2').should('contain', pageTitles[dest]);
+                    if (origPage !== 'overview') {
+                        cy.url().should('include', destPage);
+                    }
+                    cy.get('h2').should('contain', pageTitles[dest]);
+                });
             });
-        });
+        }
     }
-}
+});
 
 /**
  * Check that search redirects correctly and passes parameter via URL
  */
 const testQuery = 'testQuery';
-for (let orig = 0; orig < navNames.length; orig++) {
-    const origPage = navNames[orig];
-    describe(origPage + ' - Search redirects correctly', function() {
-        it('Navbar search re-directed correctly.', function() {
-            openPage(origPage);
-            cy.get('#headerSearchForm > input').type(testQuery);
-            cy.get('#search').click();
-            cy.url().should('include', 'search?query=' + testQuery);
+describe('Search bar redirection', function() {
+    for (let orig = 0; orig < navNames.length; orig++) {
+        const origPage = navNames[orig];
+        context(origPage + ' - Search redirects correctly', function() {
+            it('Navbar search re-directed correctly.', function() {
+                openPage(origPage);
+                cy.get('#headerSearchForm > input').type(testQuery);
+                cy.get('#search').click();
+                cy.url().should('include', 'search?query=' + testQuery);
+            });
         });
-    });
-}
-
+    }
+});
 const pagesBreadcrumbs = {
     'about': [''],
     'biomes': [''],
@@ -57,28 +60,30 @@ const pagesBreadcrumbs = {
     'submit': ['']
 };
 
-for (let page in pagesBreadcrumbs) {
-    if (pagesBreadcrumbs.hasOwnProperty((page))) {
-        describe(page + ' page breadcrumbs should be valid.', function() {
-            const breadcrumbs = pagesBreadcrumbs[page];
-            it('Test breadcrumb link validity', function() {
-                for (let i in breadcrumbs) {
-                    if (Object.prototype.hasOwnProperty.call(breadcrumbs, i)) {
-                        openPage(page);
-                        const expectedPage = breadcrumbs[i];
-                        cy.get('.breadcrumbs>li>a').each(($el, index) => {
-                            if (parseInt(i) === parseInt(index)) {
-                                cy.wrap($el).click();
-                                cy.url().should('equal', getPageURL(expectedPage));
-                                openPage(page);
-                            }
-                        });
+describe('Validate breadcrumb links are valid.', function() {
+    for (let page in pagesBreadcrumbs) {
+        if (pagesBreadcrumbs.hasOwnProperty((page))) {
+            context(page + ' page.', function() {
+                const breadcrumbs = pagesBreadcrumbs[page];
+                it('Link validity', function() {
+                    for (let i in breadcrumbs) {
+                        if (Object.prototype.hasOwnProperty.call(breadcrumbs, i)) {
+                            openPage(page);
+                            const expectedPage = breadcrumbs[i];
+                            cy.get('.breadcrumbs>li>a').each(($el, index) => {
+                                if (parseInt(i) === parseInt(index)) {
+                                    cy.wrap($el).click();
+                                    cy.url().should('equal', getPageURL(expectedPage));
+                                    openPage(page);
+                                }
+                            });
+                        }
                     }
-                }
+                });
             });
-        });
+        }
     }
-}
+});
 
 // describe('External link to HMMER sequence search redirects correctly', function () {
 //     it('Navbar link to sequence search is valid.', function () {
