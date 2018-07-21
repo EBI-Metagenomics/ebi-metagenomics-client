@@ -172,7 +172,7 @@ describe('Home page', function() {
             cy.get('h2').should('contain', 'Search');
         });
         it('Sequence search btn should link to seq search page', function() {
-            cy.contains('Sequence search').then(($el) => {
+            cy.get('[data-cy=\'seq-search-getting-started-btn\']').then(($el) => {
                 expect(Cypress.$($el).attr('href')).to.contain('sequence-search');
             });
         });
@@ -192,9 +192,6 @@ describe('Home page', function() {
             'provide us with enough information to find this data.';
         const confidentialityText = 'The analysis of your data will be held confidentially ' +
             'on our site until the hold date expires.';
-        const tooltipText = 'You can request either analysis of raw reads or assembly of the data' +
-            ' (where suitable) prior to analysis. Note, assembly may not be feasible for all' +
-            ' datasets and may take additional time, particularly for larger studies.';
 
         beforeEach(function() {
             openPage(origPage);

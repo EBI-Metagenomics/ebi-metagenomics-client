@@ -1,4 +1,3 @@
-const $ = require('jquery');
 require('../commons');
 const util = require('../util');
 

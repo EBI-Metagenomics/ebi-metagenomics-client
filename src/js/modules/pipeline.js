@@ -7,7 +7,7 @@ util.setupPage('#about-nav');
 
 let pipelineVersion = parseFloat(util.getURLParameter()).toFixed(1);
 
-$(document).ready(function() {
+$(function() {
     const pipelineVersions = Object.keys(commons.pipelines);
     console.log(pipelineVersion, pipelineVersions);
     if (pipelineVersions.indexOf(pipelineVersion) === -1) {
