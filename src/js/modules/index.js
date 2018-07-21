@@ -196,14 +196,14 @@ new RequestPrivateFormView();
  */
 function initObjectCounts() {
     // Perform Ajax request
-    const projectCountReq = $.get(new ebisearch.ProjectCount().url);
-    const sampleCountReq = $.get(new ebisearch.SampleCount().url);
-    const runCountReq = $.get(new ebisearch.RunCount().url);
-    const ampliconCountReq = $.get(new ebisearch.AmpliconCount().url);
-    const assemblyCountReq = $.get(new ebisearch.AssemblyCount().url);
-    const metaGountReq = $.get(new ebisearch.MetagenomicCount().url);
-    const metaTCountReq = $.get(new ebisearch.MetatranscriptomicCount().url);
-    const metaBCountReq = $.get(new ebisearch.MetabarcodingCount().url);
+    const projectCountReq = $.get({url: new ebisearch.ProjectCount().url, cache: false});
+    const sampleCountReq = $.get({url: new ebisearch.SampleCount().url, cache: false});
+    const runCountReq = $.get({url: new ebisearch.RunCount().url, cache: false});
+    const ampliconCountReq = $.get({url: new ebisearch.AmpliconCount().url, cache: false});
+    const assemblyCountReq = $.get({url: new ebisearch.AssemblyCount().url, cache: false});
+    const metaGountReq = $.get({url: new ebisearch.MetagenomicCount().url, cache: false});
+    const metaTCountReq = $.get({url: new ebisearch.MetatranscriptomicCount().url, cache: false});
+    const metaBCountReq = $.get({url: new ebisearch.MetabarcodingCount().url, cache: false});
 
     /**
      * Set filter in site cookie
