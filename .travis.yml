@@ -73,7 +73,6 @@ before_install:
   - npm install -g webpack
   - npm install -g codecov
   - npm install -g nyc
-  - npm install -g istanbul-combine
 
 install:
   # Install npm packages
