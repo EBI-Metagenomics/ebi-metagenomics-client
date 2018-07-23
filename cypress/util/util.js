@@ -11,7 +11,7 @@ let Util = {
         return Config.BASE_URL + (page !== 'overview' ? page : '');
     },
     openPage: function(page) {
-        cy.visit(Util.getPageURL(page));
+        return cy.visit(Util.getPageURL(page));
     },
     waitForPageLoad: function(title) {
         cy.get('h2').should('contain', title);
@@ -91,6 +91,11 @@ let Util = {
             '**/ebisearch/ws/rest/metagenomics_analyses?format=json&size=1&start=0&facetcount=10&' +
             'facetsdepth=3&query=domain_source:metagenomics_analyses',
             'fixture:analysesInitFilters.json').as('basicAnalysesFilters');
+    },
+    isValidLink: function($el) {
+        cy.request(Cypress.$($el).attr('href')).then((resp) => {
+            expect(resp['status']).to.eq(200);
+        });
     }
 };
 module.exports = Util;

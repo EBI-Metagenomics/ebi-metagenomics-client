@@ -1,4 +1,4 @@
-import {openPage, changeTab} from '../util/util';
+import {openPage, changeTab, isValidLink} from '../util/util';
 
 const origPage = 'analyses/MGYA00011845';
 
@@ -90,11 +90,11 @@ describe('Analysis page', function() {
         });
 
         // TODO check download link validity
-        // it('Download links should be valid', function () {
-        //     cy.get('#download-list a').first().then(($el) => {
-        //         cy.request(Cypress.$($el).attr('href'));
-        //     });
-        // });
+        it('Download links should be valid', function() {
+            cy.get('#download-list a').first(($el) => {
+                isValidLink($el);
+            });
+        });
     });
     context('Charts', function() {
         it('QC chart should display correctly', function() {
