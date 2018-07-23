@@ -73,6 +73,7 @@ before_install:
   - npm install -g webpack
   - npm install -g codecov
   - npm install -g nyc
+  - npm install -g istanbul-combine
 
 install:
   # Install npm packages
@@ -85,7 +86,7 @@ script:
 
 after_script:
   - npm run coverage
-  - cat coverage.lcov | codacy-coverage
+  - cat coverage/coverage.lcov | codacy-coverage
   - codecov
 
 cache:
