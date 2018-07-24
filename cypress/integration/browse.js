@@ -76,6 +76,11 @@ const samplesTableColumns = {
 let studiesTable;
 let samplesTable;
 describe('Browse page', function() {
+    beforeEach(function() {
+        cy.server();
+        cy.route(Config.API_URL + '**studies**').as('studiesCall');
+        cy.route(Config.API_URL + '**samples**').as('samplesCall');
+    });
     context('Studies table', function() {
         beforeEach(function() {
             openPage(origPage + '#studies');
@@ -98,7 +103,9 @@ describe('Browse page', function() {
                     'MGYS00002072',
                     'Longitudinal study of the diabetic skin and wound microbiome',
                     '258',
-                    '27-Nov-2017']]);
+                    '27-Nov-2017'
+                ]
+            ]);
         });
 
         it('Should respond to pagination', function() {
@@ -116,7 +123,8 @@ describe('Browse page', function() {
                     data: [
                         '',
                         'MGYS00001019',
-                        'Metacommunity analysis of two protozoan taxa (Amoebozoa) in grassland soils',
+                        'Metacommunity analysis of two protozoan ' +
+                        'taxa (Amoebozoa) in grassland soils',
                         '1',
                         '6-Jun-2016']
                 }, {
@@ -133,7 +141,8 @@ describe('Browse page', function() {
                     data: [
                         '',
                         'MGYS00001019',
-                        'Metacommunity analysis of two protozoan taxa (Amoebozoa) in grassland soils',
+                        'Metacommunity analysis of two protozoan ' +
+                        'taxa (Amoebozoa) in grassland soils',
                         '1',
                         '6-Jun-2016'],
                     pageNum: 3
@@ -179,6 +188,7 @@ describe('Browse page', function() {
             const selector = '#studies-section .biome-select';
             let biome = 'root:Environmental:Air';
             setSelectOption(studiesTable, selector, biome, 2);
+            cy.wait('@studiesCall');
             cy.get('span.biome_icon').should('have.class', 'air_b');
 
             studiesTable.getDownloadLink().then(function($el) {
@@ -188,6 +198,7 @@ describe('Browse page', function() {
             const searchQuery = 'windshield';
             studiesTable.getFilterInput().type(searchQuery);
             studiesTable.waitForTableLoad(1);
+            cy.wait('@studiesCall');
 
             studiesTable.getDownloadLink().then(function($el) {
                 expect($el[0].href).to.include(encodeURIComponent(biome));
@@ -195,6 +206,7 @@ describe('Browse page', function() {
             });
 
             studiesTable.getHeader(3).click();
+            cy.wait('@studiesCall');
             const params = studiesTableColumns.samples_count;
             studiesTable.checkOrdering(3, params.type, true);
 
@@ -209,16 +221,14 @@ describe('Browse page', function() {
             const searchQuery = 'abc';
 
             studiesTable.waitForTableLoad(studiesTableDefaultSize);
-            cy.server();
 
             // Typing text incrementally causes multiple requests to be made,
             // resulting in a results table concatenating the response of all requests
 
-            cy.route('**/studies?**').as('apiQuery');
             for (let i in searchQuery) {
                 if (Object.prototype.hasOwnProperty.call(searchQuery, i)) {
                     studiesTable.getFilterInput().type(searchQuery[i]);
-                    cy.wait('@apiQuery');
+                    cy.wait('@studiesCall');
                 }
             }
 
@@ -309,10 +319,8 @@ describe('Browse page', function() {
                         '',
                         'SRS211741',
                         'J18, fermented Kimchi day 18',
-
                         '(CLOB) Community DNA obtained by 454 GS FLX titanium ' +
                         'sequencing from sample at 18days of kimchi fermentation',
-
                         '13-Aug-2015'],
                     pageNum: 367,
                     pageSize: 8
@@ -353,6 +361,7 @@ describe('Browse page', function() {
             const selector = '#samples-section .biome-select';
             let biome = 'root:Environmental:Air';
             setSelectOption(samplesTable, selector, biome, 4);
+            cy.wait('@samplesCall');
             cy.get('span.biome_icon').should('have.class', 'air_b');
 
             samplesTable.getDownloadLink().then(function($el) {
@@ -362,6 +371,7 @@ describe('Browse page', function() {
             const searchQuery = 'windshield';
             samplesTable.getFilterInput().type(searchQuery);
             samplesTable.waitForTableLoad(2);
+            cy.wait('@samplesCall');
 
             samplesTable.getDownloadLink().then(function($el) {
                 expect($el[0].href).to.include(encodeURIComponent(biome));
@@ -369,7 +379,7 @@ describe('Browse page', function() {
             });
 
             samplesTable.getHeader(2).click();
-            samplesTable.waitForTableLoad(2);
+            cy.wait('@samplesCall');
             const params = samplesTableColumns.sample_name;
             samplesTable.checkOrdering(3, params.type, true);
             samplesTable.testDownloadLink(Config.API_URL + 'samples?lineage=' +
@@ -381,16 +391,14 @@ describe('Browse page', function() {
             const searchQuery = ['Control patient 9', ' foot time', ' 44'];
 
             samplesTable.waitForTableLoad(studiesTableDefaultSize);
-            cy.server();
 
             // Typing text incrementally causes multiple requests to be made, resulting in
             // a results table concatenating the response of all requests
 
-            cy.route('**/samples?**').as('apiQuery');
             for (let i in searchQuery) {
                 if (Object.prototype.hasOwnProperty.call(searchQuery, i)) {
                     samplesTable.getFilterInput().type(searchQuery[i]);
-                    cy.wait('@apiQuery');
+                    cy.wait('@samplesCall');
                 }
             }
 
@@ -416,9 +424,6 @@ describe('Browse page', function() {
             waitForPageLoad('Studies list');
             studiesTable = new GenericTableHandler('#studies-section', 25);
             samplesTable = new GenericTableHandler('#samples-section', 25);
-            cy.server();
-            cy.route(Config.API_URL + '**study**').as('studyCall');
-            cy.route(Config.API_URL + '**samples**').as('samplesCall');
         });
 
         it('Changes in biome select should propagate to other facets', function() {
@@ -426,7 +431,7 @@ describe('Browse page', function() {
             const samplesSelector = '#samples-section .biome-select';
             let biome = 'root:Environmental:Air';
             setSelectOption(studiesTable, studiesSelector, biome, 2);
-            cy.wait('@studyCall');
+            cy.wait('@studiesCall');
             cy.wait('@samplesCall');
             changeTab('samples');
             samplesTable.waitForTableLoad(4);
@@ -434,7 +439,7 @@ describe('Browse page', function() {
 
             biome = 'root:Environmental:Aquatic';
             setSelectOption(samplesTable, samplesSelector, biome, 25);
-            cy.wait('@studyCall');
+            cy.wait('@studiesCall');
             cy.wait('@samplesCall');
             changeTab('studies');
             studiesTable.waitForTableLoad(11);
@@ -444,7 +449,7 @@ describe('Browse page', function() {
         it('Changes in filter text should propagate to other facets', function() {
             let filterText = 'Glacier Metagenome';
             studiesTable.getFilterInput().type(filterText);
-            cy.wait('@studyCall');
+            cy.wait('@studiesCall');
             cy.wait('@samplesCall');
             studiesTable.waitForTableLoad(1);
             studiesTable.checkRowData(0,
@@ -453,8 +458,6 @@ describe('Browse page', function() {
             changeTab('samples');
             samplesTable.waitForTableLoad(1);
             samplesTable.getFilterInput().should('have.value', filterText);
-            cy.wait('@studyCall');
-            cy.wait('@samplesCall');
 
             samplesTable.checkRowData(0, [
                 '',
@@ -464,13 +467,13 @@ describe('Browse page', function() {
                 '13-Aug-2015']);
 
             samplesTable.getClearButton().click();
-            cy.wait('@studyCall');
+            cy.wait('@studiesCall');
             cy.wait('@samplesCall');
             samplesTable.getFilterInput().should('have.value', '');
 
             filterText = 'OSD';
             samplesTable.getFilterInput().type(filterText);
-            cy.wait('@studyCall');
+            cy.wait('@studiesCall');
             cy.wait('@samplesCall');
             samplesTable.waitForTableLoad(25);
             changeTab('studies');
@@ -484,7 +487,11 @@ describe('Browse page', function() {
             let lineage = 'root:Host-associated:Mammals:Digestive system:Fecal';
             openPage('browse?lineage=' + lineage + '#samples');
             waitForPageLoad('Samples list');
+            cy.wait('@studiesCall');
+            cy.wait('@samplesCall');
+            changeTab('studies');
             studiesTable = new GenericTableHandler('#studies-section', 1);
+            changeTab('samples');
             samplesTable = new GenericTableHandler('#samples-section', 1);
             // Check all options exist
             cy.get('#studies-section .biome-select > option[value=\'' + lineage + '\']')
@@ -495,10 +502,10 @@ describe('Browse page', function() {
             cy.get('#samples-section .biome-select').should('have.value', lineage);
         });
         it('Should order results according to URL parameters (studies tab)', function() {
-            openPage('browse?ordering=samples_count#studies');
+            openPage('browse?ordering=-samples_count#studies');
             waitForPageLoad('Studies list');
             studiesTable = new GenericTableHandler('#studies-section', studiesTableDefaultSize);
-            studiesTable.checkOrdering(4, datatype.NUM, false);
+            studiesTable.checkOrdering(3, datatype.NUM, false);
         });
         it('Should order results according to URL parameters (samples tab)', function() {
             openPage('browse?ordering=accession#samples');
@@ -531,6 +538,8 @@ describe('Browse page', function() {
             const biome = 'root:Environmental:Air';
             openPage('browse?lineage=' + biome + '#studies');
             waitForPageLoad('Studies list');
+            cy.wait('@studiesCall');
+            cy.wait('@samplesCall');
             cy.get('.biome-select option:selected').then(($els) => {
                 expect(Cypress.$($els).attr('value')).to.eq(biome);
             });

@@ -319,17 +319,23 @@ export function checkAPIonline() {
 /**
  * Method to update Samples or Runs view from pagination event
  * @param {Backbone.View} view Backbone view for sample or studies
- * @param {number} page current page number
- * @param {number} pageSize size of current page
- * @param {string} order ordering string
- * @param {string} query filtering string
+ * @param {object} params dict of API query parameters
  */
-export function updateTableFromPagination(view, page, pageSize, order, query) {
+export function updateTable(view, params) {
+// export function updateTable(view, page, pageSize, order, query) {
     view.tableObj.showLoadingGif();
-    let params = {
-        page: page,
-        page_size: pageSize
-    };
+    if (!params) {
+        params = {};
+    }
+    if (!params['page']) {
+        params['page'] = 1;
+    }
+    if (!params['page_size']) {
+        params['page_size'] = view.tableObj.getPageSize();
+    }
+    if (!params['ordering']){
+        params['ordering'] = view.tableObj.getCurrentOrder();
+    }
 
     let collectionParams = view.collection.params || {};
     if (Object.prototype.hasOwnProperty.call(collectionParams, 'study_accession')) {
@@ -340,17 +346,11 @@ export function updateTableFromPagination(view, page, pageSize, order, query) {
         params['run_accession'] = collectionParams.run_accession;
     }
 
-    if (order) {
-        params['ordering'] = order;
-    }
-    if (query) {
-        params['search'] = query;
-    }
     const that = view;
     view.fetchXhr = view.collection.fetch({
         data: $.param(params),
         success(ignored, response) {
-            that.renderData(page, pageSize, response.meta.pagination.count,
+            that.renderData(response.meta.pagination.page, params['page_size'], response.meta.pagination.count,
                 response.links.first);
             that.tableObj.hideLoadingGif();
         }
@@ -358,8 +358,8 @@ export function updateTableFromPagination(view, page, pageSize, order, query) {
 }
 
 export let GenericTableView = Backbone.View.extend({
-    update(page, pageSize, order, query) {
-        updateTableFromPagination(this, page, pageSize, order, query);
+    update(params) {
+        updateTable(this, params);
     },
 
     renderData(page, pageSize, resultCount, requestURL) {
@@ -407,7 +407,7 @@ export let StudiesView = GenericTableView.extend({
             }
         };
         this.tableObj = new GenericTable($('#studies-section'), tableOptions);
-        this.update(1, DEFAULT_PAGE_SIZE, null, null);
+        this.update({page: 1, page_size: DEFAULT_PAGE_SIZE, order: null, search: null});
     },
 
     getRowData(attr) {
@@ -457,7 +457,13 @@ export let SamplesView = GenericTableView.extend({
             }
         };
         this.tableObj = new GenericTable($('#samples-section'), tableOptions);
-        this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, 'accession', null);
+        this.update({
+            page: 1,
+            page_size: Commons.DEFAULT_PAGE_SIZE_SAMPLES,
+            order: 'accession',
+            search: null
+        });
+
     },
 
     getRowData(attr) {
@@ -495,7 +501,9 @@ export let RunsView = GenericTableView.extend({
             }
         };
         this.tableObj = new GenericTable($('#runs-section'), tableOptions);
-        this.update(1, Commons.DEFAULT_PAGE_SIZE, 'accession', null);
+        this.update(
+            {page: 1, page_size: Commons.DEFAULT_PAGE_SIZE, order: 'accession', search: null});
+
     },
 
     getRowData(attr) {

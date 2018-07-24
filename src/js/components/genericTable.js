@@ -110,6 +110,9 @@ module.exports = class GenericTable {
      * @param {string} requestURL URL used to request data
      */
     update(dataset, clear, page, pageSize, resultCount, requestURL) {
+        const downloadURL = formatDownloadURL(requestURL);
+        this.setDownloadURL(downloadURL);
+
         const that = this;
         if (clear) {
             this.$tbody.empty();
@@ -120,7 +123,6 @@ module.exports = class GenericTable {
                 that.addRow(row);
             });
         }
-
         if (this.$pagination.data('twbs-pagination')) {
             this.$pagination.twbsPagination('destroy');
         }
@@ -141,8 +143,6 @@ module.exports = class GenericTable {
         }
         this.setPageDisplay(page, resultCount, totalPages);
         this.hideLoadingGif();
-        const downloadURL = formatDownloadURL(requestURL);
-        this.setDownloadURL(downloadURL);
     }
 
     /**
