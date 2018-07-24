@@ -27,7 +27,6 @@ describe('Help page', function() {
     context('General', function() {
         before(function() {
             openPage(origPage);
-
         });
         it('Elements should be present', function() {
             cy.get('h2').then(($h2) => {

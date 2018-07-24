@@ -4,7 +4,7 @@ const origPage = 'about';
 
 describe('About page', function() {
     context('Dropdown citations view', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
         });
         it('Clicking button should display / hide publications', function() {

@@ -16,7 +16,7 @@ function waitForStatsLoadingGif() {
 
 describe('Home page', function() {
     context('Check for elements', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
         });
 
@@ -193,7 +193,7 @@ describe('Home page', function() {
         const confidentialityText = 'The analysis of your data will be held confidentially ' +
             'on our site until the hold date expires.';
 
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
             cy.contains('Submit and/or Request').click();
         });
@@ -238,7 +238,7 @@ describe('Home page', function() {
         });
     });
     context('Request analysis - public data', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
             cy.get('button[data-open=\'requestPublicAnalysisModal\']').click();
         });
