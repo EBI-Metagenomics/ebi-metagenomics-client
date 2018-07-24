@@ -66,7 +66,7 @@ describe('Assembly page', function() {
         });
     });
     context('Click actions', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
         });
         it('Description section should be hideable', function() {

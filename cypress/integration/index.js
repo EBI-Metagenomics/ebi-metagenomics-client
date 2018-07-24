@@ -43,9 +43,15 @@ describe('Home page', function() {
     });
 
     context('Perform click events', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
             cy.server();
+        });
+        beforeEach(function() {
+            cy.server();
+        });
+        afterEach(function() {
+            cy.go('back');
         });
 
         it('Browse all biomes', function() {
@@ -142,7 +148,7 @@ describe('Home page', function() {
         });
     });
     context('Latest studies', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
         });
 
@@ -164,7 +170,7 @@ describe('Home page', function() {
         });
     });
     context('Getting started section', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
         });
         it('Text search btn should link to text search page', function() {
