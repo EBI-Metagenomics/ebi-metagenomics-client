@@ -333,8 +333,11 @@ export function updateTable(view, params) {
     if (!params['page_size']) {
         params['page_size'] = view.tableObj.getPageSize();
     }
-    if (!params['ordering']){
+    if (!params['ordering']) {
         params['ordering'] = view.tableObj.getCurrentOrder();
+    }
+    if (!params['search']) {
+        delete params['search'];
     }
 
     let collectionParams = view.collection.params || {};
@@ -350,7 +353,8 @@ export function updateTable(view, params) {
     view.fetchXhr = view.collection.fetch({
         data: $.param(params),
         success(ignored, response) {
-            that.renderData(response.meta.pagination.page, params['page_size'], response.meta.pagination.count,
+            that.renderData(response.meta.pagination.page, params['page_size'],
+                response.meta.pagination.count,
                 response.links.first);
             that.tableObj.hideLoadingGif();
         }
@@ -407,7 +411,7 @@ export let StudiesView = GenericTableView.extend({
             }
         };
         this.tableObj = new GenericTable($('#studies-section'), tableOptions);
-        this.update({page: 1, page_size: DEFAULT_PAGE_SIZE, order: null, search: null});
+        this.update({page: 1, page_size: DEFAULT_PAGE_SIZE, ordering: null, search: null});
     },
 
     getRowData(attr) {
@@ -460,7 +464,7 @@ export let SamplesView = GenericTableView.extend({
         this.update({
             page: 1,
             page_size: Commons.DEFAULT_PAGE_SIZE_SAMPLES,
-            order: 'accession',
+            ordering: 'accession',
             search: null
         });
 
@@ -497,12 +501,12 @@ export let RunsView = GenericTableView.extend({
             filter: true,
             tableClass: 'runs-table',
             callback: function(page, pageSize, order, search) {
-                that.update(page, pageSize, order, search);
+                that.update({page: page, page_size: pageSize, ordering: order, search: search});
             }
         };
         this.tableObj = new GenericTable($('#runs-section'), tableOptions);
         this.update(
-            {page: 1, page_size: Commons.DEFAULT_PAGE_SIZE, order: 'accession', search: null});
+            {page: 1, page_size: Commons.DEFAULT_PAGE_SIZE, ordering: 'accession', search: null});
 
     },
 

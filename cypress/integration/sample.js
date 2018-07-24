@@ -153,7 +153,7 @@ describe('Sample page', function() {
 
         it('Studies table download link should be valid', function() {
             const url = Config.API_URL + 'samples/' + sampleId
-                + '/studies?sample_accession=' + sampleId + '&format=csv';
+                + '/studies?ordering=&sample_accession=' + sampleId + '&format=csv';
             table.testDownloadLink(url);
         });
     });

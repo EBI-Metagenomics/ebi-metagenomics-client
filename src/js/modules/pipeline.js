@@ -9,7 +9,6 @@ let pipelineVersion = parseFloat(util.getURLParameter()).toFixed(1);
 
 $(function() {
     const pipelineVersions = Object.keys(commons.pipelines);
-    console.log(pipelineVersion, pipelineVersions);
     if (pipelineVersions.indexOf(pipelineVersion) === -1) {
         const dispPipelineVersions = pipelineVersions.slice(0, -1).join(', ') + ' & ' +
             pipelineVersions.pop() + '.';
