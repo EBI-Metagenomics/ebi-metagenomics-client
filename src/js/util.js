@@ -320,6 +320,7 @@ export function checkAPIonline() {
  * Method to update Samples or Runs view from pagination event
  * @param {Backbone.View} view Backbone view for sample or studies
  * @param {object} params dict of API query parameters
+ * @return {jQuery.Promise} wrapping AJAX query to API
  */
 export function updateTable(view, params) {
 // export function updateTable(view, page, pageSize, order, query) {
@@ -350,6 +351,7 @@ export function updateTable(view, params) {
     }
 
     const that = view;
+    const deferred = $.Deferred();
     view.fetchXhr = view.collection.fetch({
         data: $.param(params),
         success(ignored, response) {
@@ -357,13 +359,18 @@ export function updateTable(view, params) {
                 response.meta.pagination.count,
                 response.links.first);
             that.tableObj.hideLoadingGif();
+            deferred.resolve(that.collection);
+        },
+        fail() {
+            deferred.fail();
         }
     });
+    return deferred.promise();
 }
 
 export let GenericTableView = Backbone.View.extend({
     update(params) {
-        updateTable(this, params);
+        return updateTable(this, params);
     },
 
     renderData(page, pageSize, resultCount, requestURL) {

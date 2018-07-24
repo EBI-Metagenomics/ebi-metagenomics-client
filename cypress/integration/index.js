@@ -148,7 +148,7 @@ describe('Home page', function() {
         });
     });
     context('Latest studies', function() {
-        before(function() {
+        beforeEach(function() {
             openPage(origPage);
         });
 

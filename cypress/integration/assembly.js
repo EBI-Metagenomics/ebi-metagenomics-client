@@ -44,7 +44,7 @@ describe('Assembly page', function() {
         it('Should display title', function() {
             cy.contains('Assembly ' + accession).should('be.visible');
         });
-        it('Should displace description section', function() {
+        it('Should display description section', function() {
             cy.contains('Description').should('be.visible');
             cy.get(descriptionSection).then(($el) => {
                 const text = $el.text();

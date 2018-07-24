@@ -473,8 +473,9 @@ describe('Browse page', function() {
 
             filterText = 'OSD';
             samplesTable.getFilterInput().type(filterText);
-            cy.wait('@studiesCall');
-            cy.wait('@samplesCall');
+            cy.route('**OSD**', 'osdApiCall');
+            cy.wait('@osdApiCall');
+            cy.wait('@osdApiCall');
             samplesTable.waitForTableLoad(25);
             changeTab('studies');
             studiesTable.waitForTableLoad(1);

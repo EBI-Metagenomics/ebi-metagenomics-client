@@ -55,10 +55,25 @@ let RunView = Backbone.View.extend({
     }
 });
 
-let RunAnalysesView = Backbone.View.extend({
+let RunAnalysesView = util.GenericTableView.extend({
     tableObj: null,
     pagination: null,
     params: {},
+
+    getRowData(attr) {
+        const accessionLink = '<a href=\'' + attr.analysis_url + '\'>' +
+            attr.analysis_accession +
+            '</a>';
+        const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
+            attr.pipeline_version +
+            '</a>';
+        return [
+            accessionLink,
+            attr['experiment_type'],
+            attr['instrument_model'],
+            attr['instrument_platform'],
+            pipelineLink];
+    },
 
     initialize() {
         const that = this;
@@ -69,7 +84,7 @@ let RunAnalysesView = Backbone.View.extend({
             {sortBy: null, name: 'Instrument platform'},
             {sortBy: 'pipeline', name: 'Pipeline version'}
         ];
-        const $studiesSection = $('#analyses');
+        const $analysesSection = $('#analyses');
         let tableOptions = {
             title: 'Analyses',
             headers: columns,
@@ -87,54 +102,33 @@ let RunAnalysesView = Backbone.View.extend({
                 });
             }
         };
-        this.tableObj = new GenericTable($studiesSection, tableOptions);
-        return this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
-    },
-
-    update(params) {
-        this.params = $.extend({}, this.params, params);
-
-        const that = this;
-        this.collection.fetch({
-            data: $.param(this.params),
-            success(data, response) {
-                if (data.length > 0) {
-                    const pagination = response.meta.pagination;
-                    that.renderData(pagination.page, that.params.page_size, pagination.count,
-                        response.links.first);
-                    that.tableObj.hideLoadingGif();
-                } else {
-                    $('#analyses').hide();
-                }
+        this.tableObj = new GenericTable($analysesSection, tableOptions);
+        const up = this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
+        up.always((data) => {
+            if (data.models.length === 0) {
+                $analysesSection.hide();
             }
         });
-    },
-
-    renderData(page, pageSize, resultCount, requestURL) {
-        const tableData = _.map(this.collection.models, function(m) {
-            const attr = m.attributes;
-            const accessionLink = '<a href=\'' + attr.analysis_url + '\'>' +
-                attr.analysis_accession +
-                '</a>';
-            const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
-                attr.pipeline_version +
-                '</a>';
-            return [
-                accessionLink,
-                attr['experiment_type'],
-                attr['instrument_model'],
-                attr['instrument_platform'],
-                pipelineLink];
-        });
-        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
+
 });
 
-let RunAssemblyView = Backbone.View.extend({
+let RunAssemblyView = util.GenericTableView.extend({
     tableObj: null,
     pagination: null,
     params: {},
 
+    getRowData(attr) {
+        const accessionLink = '<a href=\'' + attr.analysis_url + '\'>' +
+            attr.analysis_accession +
+            '</a>';
+        return [
+            accessionLink,
+            attr['experiment_type'],
+            attr['instrument_model'],
+            attr['instrument_platform'],
+            attr['pipeline_version']];
+    },
     initialize() {
         const that = this;
         const columns = [
@@ -144,7 +138,7 @@ let RunAssemblyView = Backbone.View.extend({
             {sortBy: null, name: 'Instrument platform'},
             {sortBy: 'pipeline', name: 'Pipeline version'}
         ];
-        const $studiesSection = $('#assemblies');
+        const $assembliesSection = $('#assemblies');
         let tableOptions = {
             title: 'Assemblies',
             headers: columns,
@@ -162,44 +156,15 @@ let RunAssemblyView = Backbone.View.extend({
                 });
             }
         };
-        this.tableObj = new GenericTable($studiesSection, tableOptions);
-        this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
-    },
-
-    update(params) {
-        this.params = $.extend({}, this.params, params);
-
-        const that = this;
-        this.collection.fetch({
-            data: $.param(this.params),
-            success(data, response) {
-                if (data.length > 0) {
-                    const pagination = response.meta.pagination;
-                    that.renderData(pagination.page, that.params.page_size, pagination.count,
-                        response.links.first);
-                    that.tableObj.hideLoadingGif();
-                } else {
-                    $('#assemblies').hide();
-                }
+        this.tableObj = new GenericTable($assembliesSection, tableOptions);
+        const up = this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
+        up.always((data) => {
+            if (data.models.length === 0) {
+                $assembliesSection.hide();
             }
         });
-    },
-
-    renderData(page, pageSize, resultCount, requestURL) {
-        const tableData = _.map(this.collection.models, function(m) {
-            const attr = m.attributes;
-            const accessionLink = '<a href=\'' + attr.analysis_url + '\'>' +
-                attr.analysis_accession +
-                '</a>';
-            return [
-                accessionLink,
-                attr['experiment_type'],
-                attr['instrument_model'],
-                attr['instrument_platform'],
-                attr['pipeline_version']];
-        });
-        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
+
 });
 
 let run = new api.Run({id: accession});
