@@ -15,8 +15,6 @@ window.Foundation.addToJquery($);
 let runId = util.getURLParameter();
 util.specifyPageTitle('Run', runId);
 
-let pipelineVersion = util.getURLFilterParams()['version'];
-
 let RunView = Backbone.View.extend({
     model: api.Run,
     template: _.template($('#runTmpl').html()),
@@ -28,13 +26,6 @@ let RunView = Backbone.View.extend({
             data: {},
             success(data) {
                 const attr = data.attributes;
-                let version;
-                if (typeof pipelineVersion !== 'undefined' && pipelineVersion !== null) {
-                    version = pipelineVersion;
-                } else {
-                    version = attr.pipeline_versions[0];
-                }
-                that.model.attributes.version = version;
                 that.render(attr);
                 deferred.resolve();
             },
@@ -50,7 +41,8 @@ let RunView = Backbone.View.extend({
         let description = {
             'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_id + '</a>',
             'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_id + '</a>',
-            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.run_id + '</a>'
+            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.run_id +
+            '</a>'
         };
         $('#overview').append(new DetailList('Description', description));
         return this.$el;
@@ -69,10 +61,10 @@ let RunAnalysesView = Backbone.View.extend({
             {sortBy: null, name: 'Experiment type'},
             {sortBy: null, name: 'Instrument model'},
             {sortBy: null, name: 'Instrument platform'},
-            {sortBy: null, name: 'Pipeline version'}
+            {sortBy: 'pipeline', name: 'Pipeline version'}
         ];
         const $studiesSection = $('#analyses');
-        this.tableObj = new GenericTable($studiesSection, 'Analyses', columns, null,
+        this.tableObj = new GenericTable($studiesSection, 'Analyses', columns, '-pipeline',
             Commons.DEFAULT_PAGE_SIZE, false, false, 'analyses-table',
             function(page, pageSize, order, search) {
                 that.update({
@@ -89,7 +81,7 @@ let RunAnalysesView = Backbone.View.extend({
         this.params = $.extend({}, this.params, params);
 
         const that = this;
-        this.fetchXhr = this.collection.fetch({
+        this.collection.fetch({
             data: $.param(this.params),
             success(data, response) {
                 if (data.length > 0) {
@@ -102,7 +94,6 @@ let RunAnalysesView = Backbone.View.extend({
                 }
             }
         });
-        return this.fetchXhr;
     },
 
     renderData(page, pageSize, resultCount, requestURL) {
@@ -137,10 +128,10 @@ let RunAssemblyView = Backbone.View.extend({
             {sortBy: null, name: 'Experiment type'},
             {sortBy: null, name: 'Instrument model'},
             {sortBy: null, name: 'Instrument platform'},
-            {sortBy: null, name: 'Pipeline version'}
+            {sortBy: 'pipeline', name: 'Pipeline version'}
         ];
         const $studiesSection = $('#assemblies');
-        this.tableObj = new GenericTable($studiesSection, 'Assemblies', columns, null,
+        this.tableObj = new GenericTable($studiesSection, 'Assemblies', columns, '-pipeline',
             Commons.DEFAULT_PAGE_SIZE, false, false, 'assembly-table',
             function(page, pageSize, order, search) {
                 that.update({
@@ -157,7 +148,7 @@ let RunAssemblyView = Backbone.View.extend({
         this.params = $.extend({}, this.params, params);
 
         const that = this;
-        this.fetchXhr = this.collection.fetch({
+        this.collection.fetch({
             data: $.param(this.params),
             success(data, response) {
                 if (data.length > 0) {
@@ -170,7 +161,6 @@ let RunAssemblyView = Backbone.View.extend({
                 }
             }
         });
-        return this.fetchXhr;
     },
 
     renderData(page, pageSize, resultCount, requestURL) {

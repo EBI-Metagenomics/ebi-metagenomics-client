@@ -36,14 +36,14 @@ class GenericTableHandler {
     testSorting(pageSize, tests) {
         const that = this;
         cy.server();
-        cy.route(config.API_URL + '*').as('apiCall');
+        cy.route(config.API_URL + '**').as('apiCall');
 
         let i = 0;
         for (let header in tests) {
             if (tests.hasOwnProperty(header)) {
                 const type = tests[header].type;
-                cy.log('Testing sorting for ' + header + '.');
                 if (tests[header].sortable) {
+                    cy.log('Testing sorting for ' + header + '.');
                     const i2 = i;
                     this.getHeader(i2).click();
                     cy.wait('@apiCall');
@@ -54,6 +54,7 @@ class GenericTableHandler {
                         cy.log('Should be ' + (asc ? 'ascending' : 'descending'));
                         that.checkOrdering(i2, type, asc);
                         that.getHeader(i2).click();
+                        cy.wait('@apiCall');
                         that.waitForTableLoad(pageSize);
                         cy.log('Should be ' + (!asc ? 'ascending' : 'descending'));
                         that.checkOrdering(i2, type, !asc);
