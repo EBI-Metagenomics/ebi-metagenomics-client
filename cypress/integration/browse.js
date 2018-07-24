@@ -478,6 +478,7 @@ describe('Browse page', function() {
             cy.wait('@osdApiCall');
             samplesTable.waitForTableLoad(25);
             changeTab('studies');
+            cy.wait(500);
             studiesTable.waitForTableLoad(1);
             studiesTable.getFilterInput().should('have.value', filterText);
         });
