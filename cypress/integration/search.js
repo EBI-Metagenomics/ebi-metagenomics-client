@@ -263,16 +263,6 @@ describe('Search page', function() {
             'fixture:analysesTempSliderDefaultQuery').as('tempSliderAnalyses');
     }
 
-    function setupFilteredSliderRouting() {
-        cy.route('GET',
-            '**/ebisearch/ws/rest/metagenomics_samples?**query=temperature:**[**-16**to**88**]**',
-            'fixture:samplesTempSliderFilteredQuery').as('tempSliderFilteredSamples');
-
-        cy.route('GET',
-            '**/ebisearch/ws/rest/metagenomics_analyses?**query=temperature:**[**-16**to**88**]**',
-            'fixture:analysesTempSliderFilteredQuery').as('tempSliderFilteredAnalyses');
-    }
-
     function setupFilteredSliderRoutingTyped() {
         cy.route('GET',
             '**/ebisearch/ws/rest/metagenomics_samples?**query=temperature:**[**40**to**88**]**',
@@ -281,12 +271,6 @@ describe('Search page', function() {
         cy.route('GET',
             '**/ebisearch/ws/rest/metagenomics_analyses?**query=temperature:**[**40**to**88**]**',
             'fixture:analysesTempSliderTypedQuery').as('tempSliderFilteredAnalyses');
-    }
-
-    function setupFilteredDepthSliderRouting() {
-        cy.route('GET',
-            '**/ebisearch/ws/rest/metagenomics_samples?**query=depth:*[*',
-            'fixture:samplesDepthSliderQuery').as('tempSliderFilteredSamples');
     }
 
     context('Sliders - ', function() {

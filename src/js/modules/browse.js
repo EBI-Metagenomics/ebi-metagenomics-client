@@ -60,16 +60,24 @@ let StudiesView = Backbone.View.extend({
         params.page = parseInt(pageFilters['page']) || 1;
 
         const $studiesSection = $('#studies-section');
-        this.tableObj = new GenericTable($studiesSection, 'Studies list', columns, ordering,
-            Commons.DEFAULT_PAGE_SIZE, true, true, 'browse-studies-table',
-            function(page, pageSize, order, search) {
+        let tableOptions = {
+            title: 'Studies list',
+            headers: columns,
+            initialOrdering: ordering,
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: true,
+            filter: true,
+            tableClass: 'browse-studies-table',
+            callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
                     ordering: order,
                     search: search
                 });
-            });
+            }
+        };
+        this.tableObj = new GenericTable($studiesSection, tableOptions);
 
         this.update(params);
     },
@@ -146,16 +154,24 @@ let SamplesView = Backbone.View.extend({
 
         const $samplesSection = $('#samples-section');
 
-        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns, ordering,
-            Commons.DEFAULT_PAGE_SIZE, true, true, 'samples-table',
-            function(page, pageSize, order, search) {
+        let tableOptions = {
+            title: 'Samples list',
+            headers: columns,
+            initialOrdering: ordering,
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: true,
+            filter: true,
+            tableClass: 'samples-table',
+            callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
                     ordering: order,
                     search: search
                 });
-            });
+            }
+        };
+        this.tableObj = new GenericTable($samplesSection, tableOptions);
 
         return this.update(params);
     },

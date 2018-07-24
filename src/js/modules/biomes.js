@@ -28,16 +28,26 @@ let BiomesView = Backbone.View.extend({
             {sortBy: 'samples_count', name: 'Samples excluding sub-lineages'}
         ];
         const $samplesSection = $('#biomes-section');
-        this.tableObj = new GenericTable($samplesSection, 'Biomes list', columns, '-samples_count',
-            Commons.DEFAULT_PAGE_SIZE, true, true, 'biomes-table',
-            function(page, pageSize, order, search) {
+        // ($container, title, headers, initialOrdering, initPageSize, isHeader,
+        // filter, tableClass, callback)
+        let tableOptions = {
+            title: 'Biomes list',
+            headers: columns,
+            initialOrdering: '-samples_count',
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: true,
+            filter: true,
+            tableClass: 'biomes-table',
+            callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
                     ordering: order,
                     search: search
                 });
-            });
+            }
+        };
+        this.tableObj = new GenericTable($samplesSection, tableOptions);
 
         let params = {};
         params.page = pagination.currentPage;

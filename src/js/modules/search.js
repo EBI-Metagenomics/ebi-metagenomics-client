@@ -470,10 +470,28 @@ function createDataTable(facet, $table, $modal, initColumns) {
  * @param {jQuery.HTMLElement} $btnContainer container of button
  */
 function createSliders($form, facet, callback, $btnContainer) {
-    new Slider().init($form, facet, 'Temperature', 'temperature', -20, 110,
-        '°C', callback, $btnContainer);
-    new Slider().init($form, facet, 'Depth', 'depth', 0, 2000, 'meters',
-        callback, $btnContainer);
+    let tempSliderOptions = {
+        facet: facet,
+        label: 'Temperature',
+        name: 'temperature',
+        min: -20,
+        max: 110,
+        units: '°C',
+        callback: callback,
+        $btnContainer: $btnContainer
+    };
+    new Slider().init($form, tempSliderOptions);
+    let depthSliderOptions = {
+        facet: facet,
+        label: 'Depth',
+        name: 'depth',
+        min: 0,
+        max: 2000,
+        units: 'meters',
+        callback: callback,
+        $btnContainer: $btnContainer
+    };
+    new Slider().init($form, depthSliderOptions);
 }
 
 /**
@@ -615,7 +633,7 @@ const Search = Backbone.Collection.extend({
  */
 const ResultsView = Backbone.View.extend({
     render(response, params, noDisplay, columns) {
-        $(this.numResultDisp).text('('+response['hitCount']+')');
+        $(this.numResultDisp).text('(' + response['hitCount'] + ')');
         let templateData = $.extend({}, response);
         const defaultQueries = [
             ProjectsView.prototype.defaultQuery,
@@ -965,7 +983,7 @@ const SamplesView = ComplexResultsView.extend({
         'sample-desc'],
     paginationElem: '#samples-pagination',
     defaultParamFields: ',METAGENOMICS_PROJECTS,project_name,biome_name',
-    numResultDisp: '#numSampleResults',
+    numResultDisp: '#numSampleResults'
 
 });
 

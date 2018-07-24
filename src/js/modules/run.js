@@ -12,8 +12,13 @@ util.setupPage('#browse-nav');
 
 window.Foundation.addToJquery($);
 
-let runId = util.getURLParameter();
-util.specifyPageTitle('Run', runId);
+let accession = util.getURLParameter();
+let isRun = ['SRR', 'ERR', 'DRR'].indexOf(accession.slice(0, 3)) > -1;
+let objType = 'Assembly';
+if (isRun) {
+    objType = 'Run';
+}
+util.specifyPageTitle(objType, accession);
 
 let RunView = Backbone.View.extend({
     model: api.Run,
@@ -30,7 +35,8 @@ let RunView = Backbone.View.extend({
                 deferred.resolve();
             },
             error(ignored, response) {
-                util.displayError(response.status, 'Could not retrieve run: ' + runId);
+                util.displayError(response.status, 'Could not retrieve ' +
+                    (isRun ? 'run' : 'assembly') + ': ' + accession);
                 deferred.reject();
             }
         });
@@ -64,16 +70,24 @@ let RunAnalysesView = Backbone.View.extend({
             {sortBy: 'pipeline', name: 'Pipeline version'}
         ];
         const $studiesSection = $('#analyses');
-        this.tableObj = new GenericTable($studiesSection, 'Analyses', columns, '-pipeline',
-            Commons.DEFAULT_PAGE_SIZE, false, false, 'analyses-table',
-            function(page, pageSize, order, search) {
+        let tableOptions = {
+            title: 'Analyses',
+            headers: columns,
+            initialOrdering: '-pipeline',
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: false,
+            filter: false,
+            tableClass: 'analyses-table',
+            callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
                     ordering: order,
                     search: search
                 });
-            });
+            }
+        };
+        this.tableObj = new GenericTable($studiesSection, tableOptions);
         return this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
     },
 
@@ -131,16 +145,24 @@ let RunAssemblyView = Backbone.View.extend({
             {sortBy: 'pipeline', name: 'Pipeline version'}
         ];
         const $studiesSection = $('#assemblies');
-        this.tableObj = new GenericTable($studiesSection, 'Assemblies', columns, '-pipeline',
-            Commons.DEFAULT_PAGE_SIZE, false, false, 'assembly-table',
-            function(page, pageSize, order, search) {
+        let tableOptions = {
+            title: 'Assemblies',
+            headers: columns,
+            initialOrdering: '-pipeline',
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: false,
+            filter: false,
+            tableClass: 'assemblies-table',
+            callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
                     ordering: order,
                     search: search
                 });
-            });
+            }
+        };
+        this.tableObj = new GenericTable($studiesSection, tableOptions);
         this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
     },
 
@@ -180,11 +202,11 @@ let RunAssemblyView = Backbone.View.extend({
     }
 });
 
-let run = new api.Run({id: runId});
+let run = new api.Run({id: accession});
 let runView = new RunView({model: run});
 
-let runAnalyses = new api.RunAnalyses({id: runId});
-let runAssemblies = new api.RunAssemblies({id: runId});
+let runAnalyses = new api.RunAnalyses({id: accession});
+let runAssemblies = new api.RunAssemblies({id: accession});
 runView.init().then(() => {
     return $.when(new RunAnalysesView({collection: runAnalyses}),
         new RunAssemblyView({collection: runAssemblies}));

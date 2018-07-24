@@ -144,6 +144,56 @@ function onTaxonomySelect(srcElem, pipelineVersion) {
     loadTaxonomy(analysisID, type, pipelineVersion);
 }
 
+/**
+ * Business logic to create table of info related to current analysis
+ * @param {object} attr attributes from BackBone AnalysesView model
+ * @return {{Study: string, Sample: string}}
+ */
+function constructDescriptionTable(attr) {
+    let description = {
+        'Study': '<a href=\'' + attr['study_url'] + '\'>' +
+        attr['study_accession'] + '</a>',
+        'Sample': '<a href=\'' + attr['sample_url'] + '\'>' +
+        attr['sample_accession'] + '</a>'
+    };
+
+    if (attr['experiment_type'] === 'assembly') {
+        attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
+        description['Assembly'] = '<a href=\'' + attr['run_url'] + '\'>' +
+            attr['run_accession'] + '</a>';
+    } else {
+        description['Run'] = '<a href=\'' + attr['run_url'] + '\'>' +
+            attr['run_accession'] + '</a>';
+    }
+
+    description['Pipeline version'] = '<a href=\'' + attr.pipeline_url + '\'>' +
+        attr.pipeline_version +
+        '</a>';
+
+    return description;
+}
+
+/**
+ * Business logic to create table of data analysis info related to current analysis
+ * @param {object} attr attributes from BackBone AnalysesView model
+ * @return {{Experiment type: string, Instrument model: string, Instrument platform: string}}
+ */
+function constructDataAnalysisTable(attr) {
+    const dataAnalysis = {};
+    if (attr['experiment_type']) {
+        dataAnalysis['Experiment type'] = attr['experiment_type'];
+    }
+
+    if (attr['instrument_model']) {
+        dataAnalysis['Instrument model'] = attr['instrument_model'];
+    }
+
+    if (attr['instrument_platform']) {
+        dataAnalysis['Instrument platform'] = attr['instrument_platform'];
+    }
+    return dataAnalysis;
+}
+
 let AnalysisView = Backbone.View.extend({
     model: api.Analysis,
     template: _.template($('#runTmpl').html()),
@@ -163,40 +213,9 @@ let AnalysisView = Backbone.View.extend({
                 that.render(attr.pipeline_version, function() {
                     $('#analysisSelect').val(attr['pipeline_version']);
 
-                    let description = {
-                        'Study': '<a href=\'' + attr['study_url'] + '\'>' +
-                        attr['study_accession'] + '</a>',
-                        'Sample': '<a href=\'' + attr['sample_url'] + '\'>' +
-                        attr['sample_accession'] + '</a>'
-                    };
+                    let description = constructDescriptionTable(attr);
+                    let dataAnalysis = constructDataAnalysisTable(attr);
 
-                    if (attr['experiment_type'] === 'assembly') {
-                        attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
-                        description['Assembly'] = '<a href=\'' + attr['run_url'] + '\'>' +
-                            attr['run_accession'] + '</a>';
-                    } else {
-                        description['Run'] = '<a href=\'' + attr['run_url'] + '\'>' +
-                            attr['run_accession'] + '</a>';
-                    }
-
-                    const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
-                        attr.pipeline_version +
-                        '</a>';
-
-                    description['Pipeline version'] = pipelineLink;
-
-                    const dataAnalysis = {};
-                    if (attr['experiment_type']) {
-                        dataAnalysis['Experiment type'] = attr['experiment_type'];
-                    }
-
-                    if (attr['instrument_model']) {
-                        dataAnalysis['Instrument model'] = attr['instrument_model'];
-                    }
-
-                    if (attr['instrument_platform']) {
-                        dataAnalysis['Instrument platform'] = attr['instrument_platform'];
-                    }
                     const $overview = $('#overview');
                     $overview.append(new DetailList('Description', description));
                     if (Object.keys(dataAnalysis).length > 0) {

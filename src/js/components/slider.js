@@ -12,8 +12,13 @@ module.exports = function Slider() {
         }));
     };
 
-    const attachSwitchHandler = function(
-        $switch, $slider, $minInput, $maxInput, allFormIds, $btnContainer, label, name, callback) {
+    const attachSwitchHandler = function($switch, $slider, options) {
+        let $minInput = options['$minInput'];
+        let $maxInput = options['$maxInput'];
+        let allFormIds = options['allFormIds'];
+        let $btnContainer = options['$btnContainer'];
+        let label = options['label'];
+        let callback = options['callback'];
         $switch.click(function(e) {
             const disabled = !$switch.is(':checked');
             // const disabled = $slider.slider('option', 'disabled');
@@ -37,7 +42,39 @@ module.exports = function Slider() {
         });
     };
 
-    const init = function($elem, facet, label, name, min, max, units, callback, $btnContainer) {
+    const propagateValues = function(label, sliderId, values) {
+        const $slider = $('.slider[data-facet-slider=\'' + label + '\']:not(\'#' + sliderId +
+            '\')');
+        $slider.slider('values', values);
+        const $sliderContainer = $slider.parent();
+        const $minInput = $sliderContainer.find('input.left');
+        const $maxInput = $sliderContainer.find('input.right');
+        $minInput.val(values[0]);
+        $maxInput.val(values[1]);
+        $slider.trigger('slide').trigger('change');
+    };
+
+    const attachInputHandler = function($input, $slider, minOrMax, callback) {
+        const i = minOrMax === 'max' ? 1 : 0;
+        $input.change(function(e) {
+            $slider.slider('values', i, $input.val());
+            if (e.originalEvent) {
+                propagateValues($slider.attr('data-facet-slider'), $slider.attr('id'),
+                    $slider.slider('values'));
+            }
+            callback();
+        });
+    };
+
+    const init = function($elem, options) {
+        let facet = options['facet'];
+        let label = options['label'];
+        let name = options['name'];
+        let min = options['min'];
+        let max = options['max'];
+        let units = options['units'];
+        let callback = options['callback'];
+        let $btnContainer = options['$btnContainer'];
         const sliderId = $elem.attr('id') + label;
         name = name.toLowerCase();
         const context = {
@@ -83,35 +120,19 @@ module.exports = function Slider() {
         $maxInput.prop('disabled', true);
 
         const $switch = $sliderContainer.find('.switch-input');
-        attachSwitchHandler($switch, $slider, $minInput, $maxInput, allForms, $btnContainer, label,
-            name, callback);
+        const switchOptions = {
+            $minInput: $minInput,
+            $maxInput: $maxInput,
+            allFormIds: allForms,
+            $btnContainer: $btnContainer,
+            label: label,
+            name: name,
+            callback: callback
+        };
+        attachSwitchHandler($switch, $slider, switchOptions);
         // setRmvButton($btnContainer, $switch, $slider, label, name);
         $elem.append($sliderContainer);
         return this;
-    };
-
-    const propagateValues = function(label, sliderId, values) {
-        const $slider = $('.slider[data-facet-slider=\'' + label + '\']:not(\'#' + sliderId +
-            '\')');
-        $slider.slider('values', values);
-        const $sliderContainer = $slider.parent();
-        const $minInput = $sliderContainer.find('input.left');
-        const $maxInput = $sliderContainer.find('input.right');
-        $minInput.val(values[0]);
-        $maxInput.val(values[1]);
-        $slider.trigger('slide').trigger('change');
-    };
-
-    const attachInputHandler = function($input, $slider, minOrMax, callback) {
-        const i = minOrMax === 'max' ? 1 : 0;
-        $input.change(function(e) {
-            $slider.slider('values', i, $input.val());
-            if (e.originalEvent) {
-                propagateValues($slider.attr('data-facet-slider'), $slider.attr('id'),
-                    $slider.slider('values'));
-            }
-            callback();
-        });
     };
 
     return {

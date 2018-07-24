@@ -185,7 +185,7 @@ function createBiomeOption(lineage) {
 
 export const BiomeCollectionView = Backbone.View.extend({
     selector: '.biome-select',
-    initialize(options, biome) {
+    initialize(options) {
         for (let arg in options) {
             if (options.hasOwnProperty(arg)) {
                 this[arg] = options[arg];
@@ -389,11 +389,24 @@ export let StudiesView = GenericTableView.extend({
             {sortBy: null, name: 'Samples count'},
             {sortBy: null, name: 'Last update'}
         ];
-        this.tableObj = new GenericTable($('#studies-section'), options.sectionTitle, columns, null,
-            DEFAULT_PAGE_SIZE, options.isPageHeader, options.filter, options.tableClass,
-            function(page, pageSize, order, query) {
-                that.update(page, pageSize, order, query);
-            });
+        let tableOptions = {
+            title: options.sectionTitle,
+            headers: columns,
+            initialOrdering: null,
+            initPageSize: DEFAULT_PAGE_SIZE,
+            isHeader: options.isPageHeader,
+            filter: options.filter,
+            tableClass: options.tableClass,
+            callback: function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order,
+                    search: search
+                });
+            }
+        };
+        this.tableObj = new GenericTable($('#studies-section'), tableOptions);
         this.update(1, DEFAULT_PAGE_SIZE, null, null);
     },
 
@@ -426,11 +439,24 @@ export let SamplesView = GenericTableView.extend({
             {sortBy: null, name: 'Description'},
             {sortBy: 'last_update', name: 'Last update'}
         ];
-        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns,
-            'accession', Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, true, 'samples-table',
-            function(page, pageSize, order, query) {
-                that.update(page, pageSize, order, query);
-            });
+        let tableOptions = {
+            title: 'Associated samples',
+            headers: columns,
+            initialOrdering: 'accession',
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: false,
+            filter: true,
+            tableClass: 'samples-table',
+            callback: function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order,
+                    search: search
+                });
+            }
+        };
+        this.tableObj = new GenericTable($('#samples-section'), tableOptions);
         this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, 'accession', null);
     },
 
@@ -456,11 +482,19 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Instrument platform'},
             {sortBy: null, name: 'Pipeline versions'}
         ];
-        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs & assemblies',
-            columns, 'accession', Commons.DEFAULT_PAGE_SIZE, false, true, 'runs-table',
-            function(page, pageSize, order, query) {
-                that.update(page, pageSize, order, query);
-            });
+        let tableOptions = {
+            title: 'Associated runs & assemblies',
+            headers: columns,
+            initialOrdering: 'accession',
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: false,
+            filter: true,
+            tableClass: 'runs-table',
+            callback: function(page, pageSize, order, search) {
+                that.update(page, pageSize, order, search);
+            }
+        };
+        this.tableObj = new GenericTable($('#runs-section'), tableOptions);
         this.update(1, Commons.DEFAULT_PAGE_SIZE, 'accession', null);
     },
 
@@ -493,16 +527,24 @@ export const AnalysesView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline version'},
             {sortBy: null, name: 'Analysis accession'}
         ];
-        this.tableObj = new GenericTable($('#analysis-section'), 'Analyses', columns, null,
-            Commons.DEFAULT_PAGE_SIZE, false, false, 'analyses-table',
-            function(page, pageSize, order, search) {
+        let tableOptions = {
+            title: 'Analyses',
+            headers: columns,
+            initialOrdering: null,
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: false,
+            filter: false,
+            tableClass: 'analyses-table',
+            callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
                     ordering: order,
                     search: search
                 });
-            });
+            }
+        };
+        this.tableObj = new GenericTable($('#analysis-section'), tableOptions);
         let params = {};
 
         // if (search) {

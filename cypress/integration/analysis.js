@@ -13,22 +13,8 @@ function verifyTabIsVisible(tabId) {
     cy.get(tabId).should('have.class', 'active');
 }
 
-function openTab(tabId) {
-    cy.get('[href=\'' + tabId + '\']').parent().click();
-}
-
 function checkTabWasRemoved(tabId) {
     cy.get('[href=\'' + tabId + '\']').should('not.exist');
-}
-
-function verifyTabsEnabled(tabs) {
-    for (let i in tabs) {
-        if (Object.prototype.hasOwnProperty.call(tabs, i)) {
-            const tabId = tabs[i];
-            openTab(tabId);
-            verifyTabIsVisible(tabId);
-        }
-    }
 }
 
 /**
