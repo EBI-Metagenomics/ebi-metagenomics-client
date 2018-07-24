@@ -121,7 +121,6 @@ class GenericTableHandler {
                 const pageNum = testData[i].index;
                 const pageData = testData[i].data;
                 this.getPaginationButton(pageNum).click({force: true});
-
                 // Edge case for last page
                 let size;
                 if (testData[i].pageSize) {

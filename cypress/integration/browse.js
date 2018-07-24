@@ -416,6 +416,9 @@ describe('Browse page', function() {
             waitForPageLoad('Studies list');
             studiesTable = new GenericTableHandler('#studies-section', 25);
             samplesTable = new GenericTableHandler('#samples-section', 25);
+            cy.server();
+            cy.route(Config.API_URL + '**study**').as('studyCall');
+            cy.route(Config.API_URL + '**samples**').as('samplesCall');
         });
 
         it('Changes in biome select should propagate to other facets', function() {
@@ -423,12 +426,16 @@ describe('Browse page', function() {
             const samplesSelector = '#samples-section .biome-select';
             let biome = 'root:Environmental:Air';
             setSelectOption(studiesTable, studiesSelector, biome, 2);
+            cy.wait('@studyCall');
+            cy.wait('@samplesCall');
             changeTab('samples');
             samplesTable.waitForTableLoad(4);
             cy.get('#samples-section .biome-select').should('have.value', biome);
 
             biome = 'root:Environmental:Aquatic';
             setSelectOption(samplesTable, samplesSelector, biome, 25);
+            cy.wait('@studyCall');
+            cy.wait('@samplesCall');
             changeTab('studies');
             studiesTable.waitForTableLoad(11);
             cy.get('#studies-section .biome-select').should('have.value', biome);
@@ -437,6 +444,8 @@ describe('Browse page', function() {
         it('Changes in filter text should propagate to other facets', function() {
             let filterText = 'Glacier Metagenome';
             studiesTable.getFilterInput().type(filterText);
+            cy.wait('@studyCall');
+            cy.wait('@samplesCall');
             studiesTable.waitForTableLoad(1);
             studiesTable.checkRowData(0,
                 ['', 'MGYS00000259', 'Glacier Metagenome', '1', '20-Jan-2016']);
@@ -444,6 +453,8 @@ describe('Browse page', function() {
             changeTab('samples');
             samplesTable.waitForTableLoad(1);
             samplesTable.getFilterInput().should('have.value', filterText);
+            cy.wait('@studyCall');
+            cy.wait('@samplesCall');
 
             samplesTable.checkRowData(0, [
                 '',
@@ -453,10 +464,14 @@ describe('Browse page', function() {
                 '13-Aug-2015']);
 
             samplesTable.getClearButton().click();
+            cy.wait('@studyCall');
+            cy.wait('@samplesCall');
             samplesTable.getFilterInput().should('have.value', '');
 
             filterText = 'OSD';
             samplesTable.getFilterInput().type(filterText);
+            cy.wait('@studyCall');
+            cy.wait('@samplesCall');
             samplesTable.waitForTableLoad(25);
             changeTab('studies');
             studiesTable.waitForTableLoad(1);

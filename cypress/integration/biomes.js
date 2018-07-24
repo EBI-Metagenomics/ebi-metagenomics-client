@@ -37,15 +37,14 @@ describe('Biomes page', function() {
             biomesTable = new GenericTableHandler('#biomes-section', biomesTableDefaultSize);
         });
 
-        // // TODO fix test, table-reloading is not being detected.
+        // // // TODO fix test, values do not correspond to API in travis
         // it('Should contain correct number of studies', function() {
         //     biomesTable.checkLoadedCorrectly(1, biomesTableDefaultSize, 490, biomesTableColumns);
         // });
-        //
-        // // TODO fix test, table-reloading is not being detected.
-        // it('Should respond to ordering', function() {
-        //     biomesTable.testSorting(biomesTableDefaultSize, biomesTableColumns);
-        // });
+
+        it('Should respond to ordering', function() {
+            biomesTable.testSorting(biomesTableDefaultSize, biomesTableColumns);
+        });
 
         it('Should respond to filtering', function() {
             biomesTable.testFiltering('beach', [
@@ -100,7 +99,7 @@ describe('Biomes page', function() {
         });
         it('Download link should be valid', function() {
             biomesTable.testDownloadLink(Config.API_URL +
-                'biomes?lineage=root&ordering=-samples_count&format=csv');
+                'biomes?ordering=-samples_count&format=csv');
         });
 
         it('Download link should change with changes in filtering or ordering', function() {
@@ -117,7 +116,7 @@ describe('Biomes page', function() {
             biomesTable.checkOrdering(2, params.type, true);
 
             const expectedLink = Config.API_URL +
-                'biomes?lineage=root&ordering=samples_count&search=' + searchQuery + '&format=csv';
+                'biomes?ordering=samples_count&search=' + searchQuery + '&format=csv';
             cy.get('a[href=\'' +
                 expectedLink.replace('127.0.0.1', 'localhost') + '\']', {timeout: 10000});
         });
@@ -162,6 +161,15 @@ describe('Biomes page', function() {
             openPage('biomes?ordering=-samples_count');
             biomesTable = new GenericTableHandler('#biomes-section', biomesTableDefaultSize);
             biomesTable.checkOrdering(2, datatype.NUM, false);
+        });
+        it('Should filter results according to URL parameters', function() {
+            const searchQuery = 'root';
+            openPage('biomes?search=' + searchQuery);
+            biomesTable = new GenericTableHandler('#biomes-section', biomesTableDefaultSize);
+            biomesTable.checkOrdering(2, datatype.NUM, false);
+            biomesTable.getFilterInput().then(($el) => {
+                expect(Cypress.$($el).val()).to.eq(searchQuery);
+            });
         });
     });
 });

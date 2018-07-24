@@ -52,13 +52,6 @@ let BiomesView = Backbone.View.extend({
         let params = {};
         params.page = pagination.currentPage;
 
-        const biome = pageFilters['lineage'];
-        if (biome) {
-            params.lineage = biome;
-        } else {
-            params.lineage = 'root';
-        }
-
         const ordering = pageFilters['ordering'];
         if (ordering) {
             params.ordering = ordering;
@@ -69,7 +62,7 @@ let BiomesView = Backbone.View.extend({
         const search = pageFilters['search'];
         if (search) {
             params.search = search;
-            $('#search').val(search);
+            $('input.table-filter.search').val(search);
         }
         params.page_size = pageFilters['pagesize'] || Commons.DEFAULT_PAGE_SIZE;
         params.page = parseInt(pageFilters['page']) || 1;
