@@ -2,7 +2,7 @@ const navNames = ['overview', 'search', 'submit', 'browse', 'about', 'help'];
 const pageTitles = [
     'Browse projects', 'Search', 'Submit data', 'Studies list',
     'About', 'Help'];
-import {openPage, getPageURL} from '../util/util';
+import {openPage, getPageURL, isValidLink} from '../util/util';
 
 const origPage = 'overview';
 /**
@@ -80,23 +80,13 @@ describe('Validate breadcrumb links are valid.', function() {
     }
 });
 
-// describe('External link to HMMER sequence search redirects correctly', function () {
-//     it('Navbar link to sequence search is valid.', function () {
-//         openPage('overview');
-//         cy.get('#sequence-search-nav > a ').then(($link) => {
-//             const url = $link.attr('href');
-//             cy.log($link);
-//             cy.request({
-//                 url: url,
-//                 followRedirect: true
-//             }). then((resp) => {
-//                 expect(resp.status).to.eq(200)
-//                 expect(url).to.contain('sequence-search/search/phmmer')
-//             })
-//         });
-//
-//
-//     });
-// });
+describe('External link to HMMER sequence search redirects correctly', function() {
+    it('Navbar link to sequence search is valid.', function() {
+        openPage('overview');
+        cy.get('#sequence-search-nav > a ').then(($link) => {
+            isValidLink($link);
+        });
+    });
+});
 
 // TODO Fix HMMER sequence link check

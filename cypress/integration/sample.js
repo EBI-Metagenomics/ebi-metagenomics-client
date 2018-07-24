@@ -183,6 +183,7 @@ describe('Sample page', function() {
             table.testTableHiding();
         });
 
+        // Redundant due to low number of runs per sample (2 rows in single page)
         // it('Runs table should respond to pagination', function () {
         //     table.testPagination(2, [{
         //         index: 1,

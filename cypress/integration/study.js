@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists, waitForPageLoad, login} from '../util/util';
+import {openPage, datatype, urlExists, waitForPageLoad, login, changeTab} from '../util/util';
 import Config from '../util/config';
 import GenericTableHandler from '../util/genericTable';
 
@@ -42,6 +42,8 @@ const analysisTableColumns = {
     }
 };
 
+let table;
+
 describe('Study page', function() {
     context('General', function() {
         beforeEach(function() {
@@ -81,9 +83,9 @@ describe('Study page', function() {
             openPage('');
             login();
             openPage('studies/MGYS00002011');
-            waitForPageLoad('EMG produced TPA metagenomics assembly of the Microbial Community of ' +
-                'Mobilong Acid Sulfate Soil depth profile using Metagenomics (Mobilong Soil Profile)' +
-                ' data set');
+            waitForPageLoad('EMG produced TPA metagenomics assembly of the Microbial ' +
+                'Community of Mobilong Acid Sulfate Soil depth profile using Metagenomics ' +
+                '(Mobilong Soil Profile) data set');
             cy.contains('Related studies');
             cy.get(relatedStudiesList).should('have.length', 1);
             cy.get(relatedStudiesList + ' a').contains('MGYS00000369').click();
@@ -101,13 +103,12 @@ describe('Study page', function() {
         const pubsList = '[data-cy=\'publications\']';
         it('Should not display empty section if no publications available', function() {
             openPage('studies/MGYS00002062');
-            waitForPageLoad('EMG produced TPA metagenomics assembly of the Identification of fungi' +
-                ' and ameba from human wound genomic sequencing (human wound) data set');
+            waitForPageLoad('EMG produced TPA metagenomics assembly of the Identification' +
+                ' of fungi and ameba from human wound genomic sequencing (human wound) data set');
             cy.get(pubsList + ' li').should('have.length', 1).contains('No known publications.');
         });
     });
 
-    let table;
     context('Analysis table', function() {
         beforeEach(function() {
             openPage(origPage);
@@ -123,10 +124,11 @@ describe('Study page', function() {
             table.checkLoadedCorrectly(1, analysesTableDefaultSize, 258, analysisTableColumns);
         });
 
-        // it('Should respond to ordering', function() {
-        //     table.testSorting(10, analysisTableColumns);
-        // });
-        //
+        it('Should respond to ordering', function() {
+            table.testSorting(10, analysisTableColumns);
+        });
+
+        // Filtering of analyses no longer enabled
         // it('Should respond to filtering', function() {
         //     table.testFiltering('ERS1474800', [
         //         [
@@ -185,70 +187,61 @@ describe('Study page', function() {
                 '/analyses?include=sample&format=csv');
         });
     });
-});
-// context('Runs table with >1 analysis per run', function() {
-//     beforeEach(function() {
-//         const projectId = 'ERP009703';
-//         const origPage = 'studies/' + projectId;
-//         openPage(origPage);
-//         waitForPageLoad(
-//             'Ocean Sampling Day (OSD) 2014: amplicon and metagenome sequencing ' +
-//             'study from the June solstice in the year 2014');
-//         table = new GenericTableHandler('#analyses-section', runsTableDefaultSize);
-//     });
-//     it('Runs table should display both pipeline versions for a run', function() {
-//         table.testFiltering('ERR770966', [
-//             ['ERR770966', 'metagenomic', '', '', '2.0, 4.0'],
-//             ['ERR770966', 'metagenomic', '', '', '2.0, 4.0']
-//         ]);
-//     });
-// });
 
-context('Error handling', function() {
-    it('Should display error message if invalid accession passed in URL', function() {
-        const studyId = 'ERP019566012345';
-        const origPage = 'studies/' + studyId;
-        openPage(origPage);
-        waitForPageLoad('Oh no! An error has occured!');
-        cy.contains('Error: 404');
-        cy.contains('Could not retrieve study: ' + studyId);
+    context('Error handling', function() {
+        it('Should display error message if invalid accession passed in URL', function() {
+            const studyId = 'ERP019566012345';
+            const origPage = 'studies/' + studyId;
+            openPage(origPage);
+            waitForPageLoad('Oh no! An error has occured!');
+            cy.contains('Error: 404');
+            cy.contains('Could not retrieve study: ' + studyId);
+        });
+    });
+
+    context('Downloads tab', function() {
+        beforeEach(function() {
+            const projectId = 'MGYS00000462';
+            const origPage = 'studies/' + projectId;
+            openPage(origPage);
+            changeTab('analysis');
+        });
+        it('Download links for both pipeline versions should be present', function() {
+            const pipelineVersions = ['2.0', '4.0'];
+            let i = 0;
+            cy.get('#downloads h3').each(function($el) {
+                expect(Cypress.$($el).text()).to.eq('Pipeline version: ' + pipelineVersions[i++]);
+            });
+        });
+        it('Download links should contain all files for each pipeline version', function() {
+            const pipeline2Files = [
+                'Phylum level taxonomies',
+                'Predicted tRNAs',
+                'GO slim annotation',
+                'Taxonomic diversity metrics',
+                'Taxonomic diversity metrics SSU'];
+            const pipeline4Files = [
+                'Phylum level taxonomies',
+                'Predicted tRNAs',
+                'GO slim annotation',
+                'Taxonomic assignments SSU',
+                'PCA for runs (based on phylum proportions)',
+                'Taxonomic assignments LSU',
+                'Taxa abundance distribution',
+                'Phylum level taxonomies LSU',
+                'Phylum level taxonomies SSU'];
+            const files = pipeline2Files.concat(pipeline4Files);
+            let i = 0;
+            cy.get('#downloads > div > p').each(function($el) {
+                expect(Cypress.$($el).text()).to.eq(files[i++]);
+            });
+        });
+        // TODO test before release
+        // it('Download links should all be valid', function(){
+        //     cy.get('#downloads > div > p > a').each(function($el){
+        //         cy.request(Cypress.$($el).attr('href'));
+        //         cy.log(Cypress.$($el).attr('href'))
+        //     });
+        // });
     });
 });
-
-// context('Downloads tab', function() {
-//     beforeEach(function() {
-//         const projectId = 'ERP009703';
-//         const origPage = 'studies/' + projectId;
-//         openPage(origPage);
-//         changeTab('analysis');
-//     });
-//     it('Download links for both pipeline versions should be present', function() {
-//         const pipelineVersions = ['2.0', '4.0'];
-//         let i = 0;
-//         cy.get('#downloads h3').each(function($el) {
-//             expect(Cypress.$($el).text()).to.eq('Pipeline version: ' + pipelineVersions[i++]);
-//         });
-//     });
-//     it('Download links should contain all files for each pipeline version', function() {
-//         const pipeline2Files = ['GO slim annotation', 'Complete GO annotation',
-// 'InterPro matches',
-//             'Phylum level taxonomies', 'Taxonomic assignments'];
-//         const pipeline4Files = ['GO slim annotation', 'Complete GO annotation',
-// 'InterPro matches',
-//             'Phylum level taxonomies SSU', 'Taxonomic assignments SSU',
-//             'Phylum level taxonomies LSU', 'Taxonomic assignments LSU',
-//             'Taxonomic diversity metrics LSU', 'Taxonomic diversity metrics SSU'];
-//         const files = pipeline2Files.concat(pipeline4Files);
-//         let i = 0;
-//         cy.get('#downloads > div > p').each(function($el) {
-//             expect(Cypress.$($el).text()).to.eq(files[i++]);
-//         });
-//     });
-//     // TODO test before release
-//     // it('Download links should all be valid', function(){
-//     //     cy.get('#downloads > div > p > a').each(function($el){
-//     //         cy.request(Cypress.$($el).attr('href'));
-//     //         cy.log(Cypress.$($el).attr('href'))
-//     //     });
-//     // });
-// });

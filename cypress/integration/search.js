@@ -273,6 +273,12 @@ describe('Search page', function() {
             'fixture:analysesTempSliderTypedQuery').as('tempSliderFilteredAnalyses');
     }
 
+    function setupFilteredDepthSliderRouting() {
+        cy.route('GET',
+            '**/ebisearch/ws/rest/metagenomics_samples?**query=depth:*[*',
+            'fixture:samplesDepthSliderQuery').as('tempSliderFilteredSamples');
+    }
+
     context('Sliders - ', function() {
         const samplesTempSwitchToggle = '[for=\'samplesTemperatureSwitch\']';
         const samplesTempSliderContainer = '#samplesFiltersTemperature';
@@ -354,40 +360,38 @@ describe('Search page', function() {
                 'You searched for analyses with temperature:[');
         });
 
-        // it('Depth slider should not affect temp slider', function() {
-        //     // setupFilteredDepthSliderRouting();
-        //     const samplesDepthSwitchToggle = '[for=\'samplesDepthSwitch\']';
-        //     const samplesDepthSliderContainer = '#samplesFiltersDepth';
-        //     const samplesDepthCheckbox = '#samplesDepthSwitch';
-        //     const samplesDepthSlider = samplesDepthSliderContainer + ' > .ui-slider-range';
-        //     const analysesDepthSliderContainer = '#analysesFiltersDepth';
-        //
-        //     checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox,
-        //         'You searched for samples with no parameters.');
-        //     sampleTable.checkRowData(1, [
-        //         'SRS878823',
-        //         'MGYS00000936',
-        //         'S364.1.2',
-        //         'Metagenome or environmental sample from unclassified sequences metagenome']);
-        //     enableSlider(samplesDepthSwitchToggle, samplesDepthCheckbox, samplesDepthSliderContainer);
-        //     const queryText = 'You searched for samples with depth:[0 TO 2000].';
-        //     cy.contains(queryText).should('be.visible');
-        //     // cy.wait('@tempSliderFilteredSamples');
-        //     sampleTable.checkRowData(1, [
-        //         'ERS549102',
-        //         'MGYS00001357',
-        //         'Lu-1_2_fun',
-        //         'Lu-1_2']);
-        //
-        //     checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, queryText);
-        //
-        //     cy.get(samplesDepthSlider, {timeout: 40000}).click(50, 5).click(100, 5);
-        //     validateQueryFromInputs(samplesDepthSliderContainer,
-        //         'You searched for samples with depth:[');
-        //     changeTab('analyses');
-        //     validateQueryFromInputs(analysesDepthSliderContainer,
-        //         'You searched for analyses with depth:[');
-        // });
+        it('Depth slider should not affect temp slider', function() {
+            setupFilteredDepthSliderRouting();
+            const samplesDepthSwitchToggle = '[for=\'samplesDepthSwitch\']';
+            const samplesDepthSliderContainer = '#samplesFiltersDepth';
+            const samplesDepthCheckbox = '#samplesDepthSwitch';
+            const samplesDepthSlider = samplesDepthSliderContainer + ' > .ui-slider-range';
+            const analysesDepthSliderContainer = '#analysesFiltersDepth';
+
+            checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox,
+                'You searched for samples with no parameters.');
+            sampleTable.checkRowData(0, [
+                'SRS371887',
+                'MGYS00000633',
+                'Generic sample from unclassified Bacteria (miscellaneous)',
+                'Generic sample from unclassified Bacteria (miscellaneous)']);
+            enableSlider(samplesDepthSwitchToggle, samplesDepthCheckbox,
+                samplesDepthSliderContainer);
+            const queryText = 'You searched for samples with depth:[0 TO 2000].';
+            cy.contains(queryText).should('be.visible');
+            // cy.wait('@tempSliderFilteredSamples');
+            sampleTable.checkRowData(0, [
+                'ERS706390', 'ERP010186', 'OL-KR13/296m_10', 'groundwater']);
+
+            checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, queryText);
+
+            cy.get(samplesDepthSlider, {timeout: 40000}).click(50, 5).click(100, 5);
+            validateQueryFromInputs(samplesDepthSliderContainer,
+                'You searched for samples with depth:[');
+            changeTab('analyses');
+            validateQueryFromInputs(analysesDepthSliderContainer,
+                'You searched for analyses with depth:[');
+        });
 
         it('Changing textbox value should change slider value', function() {
             const min = '40';
