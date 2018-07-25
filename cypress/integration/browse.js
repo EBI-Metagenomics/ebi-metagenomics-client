@@ -473,7 +473,7 @@ describe('Browse page', function() {
 
             filterText = 'OSD';
             samplesTable.getFilterInput().type(filterText);
-            cy.route('**OSD**', 'osdApiCall');
+            cy.route('**OSD**').as('osdApiCall');
             cy.wait('@osdApiCall');
             cy.wait('@osdApiCall');
             samplesTable.waitForTableLoad(25);

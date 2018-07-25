@@ -170,7 +170,7 @@ describe('Home page', function() {
         });
     });
     context('Getting started section', function() {
-        before(function() {
+        beforeEach(function() {
             openPage(origPage);
         });
         it('Text search btn should link to text search page', function() {
