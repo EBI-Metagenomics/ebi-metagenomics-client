@@ -12,7 +12,7 @@ describe('Submit page', function() {
         });
     });
     context('User is logged in', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
             cy.contains('Please click here to login').click();
             cy.get(loginModal).should('be.visible');
@@ -23,12 +23,14 @@ describe('Submit page', function() {
             cy.contains('Give consent').should('be.visible');
         });
         it('Should prevent clicking give consent without checking box', function() {
+            openPage(origPage);
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').click();
             cy.contains(errorText).should('be.visible');
         });
-        it('Should redirect ', function() {
+        it('Should create valid mailto link', function() {
+            openPage(origPage);
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
             cy.get('#consent-given').check({force: true});
