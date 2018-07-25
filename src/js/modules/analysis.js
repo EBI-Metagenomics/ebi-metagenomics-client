@@ -109,26 +109,62 @@ function loadDownloads(analysisID) {
 /**
  * Load taxonomy data and create graphs
  * @param {string} analysisID ENA analysis primary accession
- * @param {string} type of analysis (see API documentation for endpoint)
- * @param {integer} pipelineVersion
+ * @param {string} subunitType of analysis (see API documentation for endpoint)
+ * @param {float} pipelineVersion
+ * @return {jQuery.Promise} taxonomy backbone model
  */
-function loadTaxonomy(analysisID, type, pipelineVersion) {
-    taxonomy = new api.Taxonomy({id: analysisID, type: type});
-    new TaxonomyGraphView({model: taxonomy}, pipelineVersion);
-    loadKronaChart(analysisID, type);
+function loadTaxonomy(analysisID, subunitType, pipelineVersion) {
+    taxonomy = new api.Taxonomy({id: analysisID, type: subunitType});
+    loadKronaChart(analysisID, subunitType);
+    return new TaxonomyGraphView({model: taxonomy}).init(pipelineVersion);
+}
+
+/**
+ * Disable a subunit button and check the selected type
+ * @param {string} enableType /ssu or /lsu
+ */
+function disableSubUnitRadio(enableType) {
+    $('.rna-select-button[value!=\'' + enableType + '\']').attr('disabled', true);
+    $('.rna-select-button[value=\'' + enableType + '\']').attr('checked', true);
+}
+
+/**
+ * Attempt to load taxonomy, and fallback to /lsu if /ssu does not exist
+ * @param {string} analysisID accession of analysis
+ * @param {string} subunitType of analysis
+ * @param {float} pipelineVersion
+ * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
+ */
+function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, experimentType) {
+    loadTaxonomy(analysisID, subunitType, pipelineVersion).then((model) => {
+        if (model.length === 0 && subunitType === '/ssu') {
+            subunitType = '/lsu';
+            loadTaxonomy(analysisID, subunitType, pipelineVersion).then((model) => {
+                if (model.length === 0) {
+                    const error = $('<h4>Could not load taxonomic analysis</h4>');
+                    console.debug('Failed to load SSU and LSU taxonomic analysis.');
+                    $('#taxonomic').empty().append(error);
+                }
+            });
+        }
+        if (['amplicon', 'metabarcoding'].indexOf(experimentType) > -1 && pipelineVersion >= 4.0) {
+            disableSubUnitRadio(subunitType);
+        }
+    });
 }
 
 /**
  * Load and displaycharts for selected view
  * @param {string} analysisID ENA analysis primary accession
  * @param {string} pipelineVersion
+ * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
  */
-function loadAnalysisData(analysisID, pipelineVersion) {
+function loadAnalysisData(analysisID, pipelineVersion, experimentType) {
     interproData = new api.InterproIden({id: analysisID});
     new InterProSummary({model: interproData});
 
     let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
-    loadTaxonomy(analysisID, type, pipelineVersion);
+    loadTaxonomyWithFallback(analysisID, type, pipelineVersion, experimentType);
 
     goTerm = new api.GoSlim({id: analysisID});
     new GoTermCharts({model: goTerm});
@@ -204,9 +240,7 @@ let AnalysisView = Backbone.View.extend({
             data: {},
             success(data) {
                 const attr = data.attributes;
-                attr['displaySsuButtons'] = (attr.pipeline_version >= 4.0 &&
-                    attr.experiment_type !== 'amplicon');
-
+                attr['displaySsuButtons'] = attr.pipeline_version >= 4.0;
                 if (attr['experiment_type'] === 'assembly') {
                     attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
                 }
@@ -223,7 +257,7 @@ let AnalysisView = Backbone.View.extend({
                     }
                     util.attachExpandButtonCallback();
 
-                    loadAnalysisData(analysisID, attr['pipeline_version']);
+                    loadAnalysisData(analysisID, attr['pipeline_version'], attr['experiment_type']);
                     loadDownloads(analysisID, attr['pipeline_version']);
 
                     new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary',
@@ -233,12 +267,18 @@ let AnalysisView = Backbone.View.extend({
                     statsData.fetch({
                         dataType: 'text',
                         success(model) {
-                            new QCChart('QC-step-chart', attr['analysis_summary'],
-                                model.attributes['sequence_count']);
-                            if (attr['pipeline_version'] > 2) {
-                                loadReadLengthDisp(analysisID, model.attributes);
-                                loadGCDistributionDisp(analysisID, model.attributes);
-                                loadNucleotideDisp(analysisID, model.attributes);
+                            if (model.length > 0) {
+                                new QCChart('QC-step-chart', attr['analysis_summary'],
+                                    model.attributes['sequence_count']);
+                                if (attr['pipeline_version'] > 2) {
+                                    loadReadLengthDisp(analysisID, model.attributes);
+                                    loadGCDistributionDisp(analysisID, model.attributes);
+                                    loadNucleotideDisp(analysisID, model.attributes);
+                                }
+                            } else {
+                                const error = $('<h4>Could not load quality control analysis</h4>');
+                                console.debug('Failed to load QC analysis.');
+                                $('#qc').empty().append(error);
                             }
                         }
                     });
@@ -407,8 +447,13 @@ function setTableRowAndChartHiding(elem, series, index, numSeries, defaultVisibi
 
 let TaxonomyGraphView = Backbone.View.extend({
     model: api.Taxonomy,
-    initialize(model, pipelineVersion) {
-        this.model.fetch().done(function(model) {
+    init(pipelineVersion) {
+        return this.model.fetch().done(function(model) {
+            if (model.length === 0) {
+                console.debug('Could not load taxonomy graph view.');
+                return;
+            }
+
             const clusteredData = groupTaxonomyData(model, 0);
             const phylumDepth = parseFloat(pipelineVersion) >= 4 ? 2 : 1;
             const phylumData = groupTaxonomyData(model, phylumDepth);
@@ -432,8 +477,12 @@ let TaxonomyGraphView = Backbone.View.extend({
                 const colorDiv = getColourSquareIcon(i);
                 return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
             });
-            const phylumPieTable = new ClientSideTable($('#pie').find('.phylum-table'), '', headers,
-                DEFAULT_PAGE_SIZE);
+            const options = {
+                title: '',
+                headers: headers,
+                initPageSize: DEFAULT_PAGE_SIZE
+            };
+            const phylumPieTable = new ClientSideTable($('#pie').find('.phylum-table'), options);
             phylumPieTable.update(data, false, 1);
 
             const numSeries = phylumPieChart.series[0].data.length;
@@ -456,8 +505,8 @@ let TaxonomyGraphView = Backbone.View.extend({
             const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column',
                 'Phylum composition', phylumData, false);
 
-            const phylumColumnTable = new ClientSideTable($('#column').find('.phylum-table'), '',
-                headers, DEFAULT_PAGE_SIZE);
+            const phylumColumnTable = new ClientSideTable($('#column').find('.phylum-table'),
+                options);
             phylumColumnTable.update(data, false, 1);
             phylumColumnTable.$tbody.find('tr').hover(function() {
                 let index = getSeriesIndex($(this).index(), numSeries);
@@ -487,7 +536,7 @@ let TaxonomyGraphView = Backbone.View.extend({
             const phylumStackedColumnChart = new TaxonomyStackedColumnChart(
                 'phylum-composition-stacked-column', 'Phylum composition', phylumData, false);
             const phylumStackedColumnTable = new ClientSideTable(
-                $('#stacked-column').find('.phylum-table'), '', headers, DEFAULT_PAGE_SIZE);
+                $('#stacked-column').find('.phylum-table'), options);
             phylumStackedColumnTable.update(data, false, 1);
             phylumStackedColumnTable.$tbody.find('tr').hover(function() {
                 let index = getSeriesIndex($(this).index(), numSeries);

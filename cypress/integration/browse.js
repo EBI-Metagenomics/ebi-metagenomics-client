@@ -478,7 +478,7 @@ describe('Browse page', function() {
             cy.wait('@osdApiCall');
             samplesTable.waitForTableLoad(25);
             changeTab('studies');
-            cy.wait(500);
+            cy.contains('MGYS00000462').should('be.visible');
             studiesTable.waitForTableLoad(1);
             studiesTable.getFilterInput().should('have.value', filterText);
         });
