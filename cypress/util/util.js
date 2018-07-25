@@ -1,9 +1,6 @@
 import Config from './config';
 
-const username = Cypress.env('WEBIN_USERNAME');
-const password = Cypress.env('WEBIN_PASSWORD');
-
-let Util = {
+export let Util = {
     getBaseURL: function() {
         return Config.BASE_URL;
     },
@@ -45,16 +42,26 @@ let Util = {
     loginModal: '[data-cy=\'loginModal\']',
     usernameInput: 'input[name=\'username\']',
     passwordInput: 'input[name=\'password\'][type=\'password\']',
-    login: function() {
-        cy.get(Util.loginButton).click();
-        cy.get(Util.usernameInput).type(username);
-        cy.get(Util.passwordInput).type(password);
-        cy.get(Util.loginModal).find('input[name=\'submit\']').click();
-        Util.waitForPageLoad('My studies');
+
+    username: Cypress.env('WEBIN_USERNAME'),
+    password: Cypress.env('WEBIN_PASSWORD'),
+
+    checkIsLoggedIn: function() {
         cy.get(Util.loginModal).should('be.hidden');
         cy.get(Util.loginButton).should('not.exist');
         cy.get(Util.logoutButton).should('be.visible');
-        cy.get(Util.myDataBtn).should('be.visible').contains('Welcome, ' + username);
+    },
+    fillLoginModalForm: function() {
+        cy.get(Util.usernameInput).type(Util.username);
+        cy.get(Util.passwordInput).type(Util.password);
+        cy.get(Util.loginModal).find('input[name=\'submit\']').click();
+    },
+    login: function() {
+        cy.get(Util.loginButton).click();
+        Util.fillLoginModalForm();
+        Util.waitForPageLoad('My studies');
+        Util.checkIsLoggedIn();
+        cy.get(Util.myDataBtn).should('be.visible').contains('Welcome, ' + Util.username);
     },
     setupDefaultSearchPageRouting: function() {
         cy.server();

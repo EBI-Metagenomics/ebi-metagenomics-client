@@ -26,13 +26,19 @@ export const UserDetails = Backbone.Model.extend({
         return api.API_URL + 'utils/myaccounts';
     },
     parse(response) {
-        const attr = response.data[0].attributes;
-        return {
-            'firstName': attr['first-name'],
-            'surname': attr['surname'],
-            'email': attr['email-address'],
-            'analysis': attr['analysis'],
-            'submitter': attr['submitter']
-        };
+        let user;
+        if (response.data.length > 0) {
+            const attr = response.data[0].attributes;
+            user = {
+                'firstName': attr['first-name'],
+                'surname': attr['surname'],
+                'email': attr['email-address'],
+                'analysis': attr['analysis'],
+                'submitter': attr['submitter']
+            };
+        } else {
+            user = {};
+        }
+        return user;
     }
 });

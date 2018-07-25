@@ -8,6 +8,13 @@ const $actionDiv = $('#action');
 const userData = new authApi.UserDetails();
 const fetch = userData.fetch();
 
+function getMailToLink(userData) {
+    let body = 'I consent for the MGnify team to analyse the private data of my account ' +
+        util.getUsername() + '.';
+
+    return 'mailto:metagenomics-help@ebi.ac.uk?subject=Request consent&body=' + body;
+}
+
 fetchLogin.done(function(loggedIn) {
     if (!loggedIn) {
         const $button = $(util.getLoginLink('Please click here to login'));
@@ -17,13 +24,16 @@ fetchLogin.done(function(loggedIn) {
         fetch.done(function() {
             if (userData.attributes['analysis'] !== true) {
                 const $button = $('<button class=\'button\'>Give consent.</button>');
-                $button.click(function() {
+                $button.attr('href', getMailToLink(userData.attributes));
+                $button.click(function(e) {
                     const consentGiven = $('#consent-given').is(':checked');
                     const $consentGivenError = $('#consent-given-error');
                     if (!consentGiven) {
                         $consentGivenError.show();
+                        e.preventDefault();
                     } else {
                         $consentGivenError.hide();
+                        window.open($button.attr('href'), '_blank');
                     }
                 });
                 $actionDiv.html($button);
