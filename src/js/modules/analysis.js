@@ -267,13 +267,13 @@ let AnalysisView = Backbone.View.extend({
                     statsData.fetch({
                         dataType: 'text',
                         success(model) {
-                            if (model.length > 0) {
+                            if (model.attributes.hasOwnProperty('sequence_count')) {
                                 new QCChart('QC-step-chart', attr['analysis_summary'],
                                     model.attributes['sequence_count']);
                                 if (attr['pipeline_version'] > 2) {
                                     loadReadLengthDisp(analysisID, model.attributes);
                                     loadGCDistributionDisp(analysisID, model.attributes);
-                                    loadNucleotideDisp(analysisID, model.attributes);
+                                    loadNucleotideDisp(analysisID);
                                 }
                             } else {
                                 const error = $('<h4>Could not load quality control analysis</h4>');

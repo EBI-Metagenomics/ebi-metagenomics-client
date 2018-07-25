@@ -1,0 +1,830 @@
+Job <4230972> is submitted to queue <production-rh7>.
+Job <4231307> is submitted to queue <production-rh7>.
+Job <4231702> is submitted to queue <production-rh7>.
+Job <4232008> is submitted to queue <production-rh7>.
+Job <4232356> is submitted to queue <production-rh7>.
+Job <4232736> is submitted to queue <production-rh7>.
+Job <4234244> is submitted to queue <production-rh7>.
+Job <4234307> is submitted to queue <production-rh7>.
+Job <4234396> is submitted to queue <production-rh7>.
+Krona tool script path is set to /hps/nobackup/production/metagenomics/pipeline/tools-v4/KronaTools-2.3
+Writing /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/taxonomy-summary/SSU/krona.html...
+Job <4234882> is submitted to queue <production-rh7>.
+Job <4234956> is submitted to queue <production-rh7>.
+Start time: 2017-09-11 21:53:19
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Running FASTA header cleaning step...
+Start time: 2017-09-11 21:58:14
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Finished FASTA header cleaning step!
+Running the sequence file preparation (SeqPrep) step...
+Start time: 2017-09-11 22:03:08
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Start time: 2017-09-11 22:08:03
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Finished the sequence file preparation step!
+Input path is set to: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_merged.fastq
+Finished sequence file preparation step!
+Running sequence quality filtering step (including Trimmomatic)...
+Start time: 2017-09-11 22:12:37
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Sequences after fastq filtering:	43933
+Sequences rejected due to duplicate ids:	0
+Sequences rejected on length:	888
+Sequences rejected due to undetermined bases (N):	0
+Remaining sequences after QC filtering step:	43045
+Finished sequence quality filtering.
+Input file size (bytes): 13765758
+Generating QC report...
+Creating a new output directory at:
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/qc-statistics
+Number of sequences after filtering: 43045
+Generating statistics for all sequences...
+Start time: 2017-09-11 22:17:39
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Finished QC report step.
+Running Infernal's cmsearch...
+Cleaning the working directory
+About to chunk seqs
+Generate lsf commands
+Generating LSF bsub commands
+Monitoring LSF jobs
+Start time: 2017-09-11 22:25:04
+Total number of initially submitted jobs: 31
+Number of jobs registered so far: 31
+All submitted jobs have been registered.
+Concatenating results files
+Calling the following command:
+find /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/chunked_fasta -name '*cmsearch.tblout' | xargs cat | sed 's/^*//' > /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ.cmsearch.all.tblout
+Skipping monitoring of step: stepCMSearch, because log file does NOT exist!
+I/O error(2): No such file or directory: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/chunked_fasta/1/ERR867655.87-HWI-M02024:114:000000000-ACHFR:1:2102:3202:7145-1_ERR867655.43075-HWI-M02024:118:000000000-AD4V4:1:2101:9073:9345-1.out
+Finished the cmsearch step.
+Running CMSearch deoverlap step (cmsearchDeoverlap)...
+Start time: 2017-09-11 22:34:33
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Finished the CMSearchDeoverlap step.
+Running RNA selection step...
+Creating a new output directory at:
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/RNASelection/
+Start time: 2017-09-11 22:39:27
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Concatenating SSU/LSU FASTA sequence...
+Calling the following command:
+find /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/RNASelection/ -name '*SSU*fa' | xargs cat | sed 's/^*//' > /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_SSU.fasta
+Calling the following command:
+find /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/RNASelection/ -name '*LSU*fa' | xargs cat | sed 's/^*//' > /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_LSU.fasta
+Done.
+Finished RNA selection step.
+Running MAPseq on SSUs...
+Start time: 2017-09-11 22:46:46
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Finished the MAPseq on SSUs step.
+Running MAPseq on LSUs...
+Input file, /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_LSU.fasta is empty! Skipping this step now.
+Skipping monitoring of step: stepMAPseqLSUs, because log file does NOT exist!
+I/O error(2): No such file or directory: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/MAPseqLSU.out
+Finished the MAPseq on LSUs step.
+Running taxonomic analysis summary step...
+/hps/nobackup/production/metagenomics/production-scripts/clones/v4.0.1/analysis-pipeline/python/tools/miniconda2-4.0.5/bin/biom convert -i /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/taxonomy-summary/SSU/ERR867655_MERGED_FASTQ_SSU.fasta.mseq.tsv -o /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/taxonomy-summary/SSU/ERR867655_MERGED_FASTQ_SSU.fasta.mseq_json.biom --to-json --table-type="OTU table"
+Input file, /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/taxonomy-summary/LSU/ERR867655_MERGED_FASTQ_LSU.fasta.mseq, does not exist! Skipping this step now and continuing with the next.
+Finished taxonomic analysis summary step.
+Running coding sequences predication step (Joint gene caller)...
+Cleaning the working directory
+About to chunk seqs
+Generate lsf commands
+Generating LSF bsub commands
+Monitoring LSF jobs
+Start time: 2017-09-11 22:54:33
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Concatenating results files
+Calling the following command:
+find /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/chunked_fasta -name '*faa' | xargs cat | sed 's/^*//' > /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_CDS.faa
+Calling the following command:
+find /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/chunked_fasta -name '*ffn' | xargs cat | sed 's/^*//' > /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_CDS.ffn
+Finished coding sequences predication step.
+Running functional annotation step (InterProScan)...
+Cleaning the working directory
+About to chunk seqs
+Generate lsf commands
+Generating LSF bsub commands
+Monitoring LSF jobs
+Start time: 2017-09-11 23:07:41
+Total number of initially submitted jobs: 4
+Number of jobs registered so far: 4
+All submitted jobs have been registered.
+Running stepI5tsv...
+Here are some intermediate stats:
+Time: 2017-09-11 23:16:16
+Number of initially submitted jobs: 4
+Number of registered jobs: 3
+Number of finished jobs: 1
+Number of unfinished jobs: 3
+Number of running jobs: 3
+Number of suspended jobs: 0
+Total number of unknown jobs: 0
+Total number of zombi jobs: 0
+Total number of re-submitted jobs: 0
+Total number of failed jobs: 0
+Current sequence throughput per min: 1165.69954254
+Current sequence throughput per hour: 69941.9725523
+Concatenating results files
+Calling the following command:
+find /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/chunked_fasta -name '*tsv' | xargs cat | sed 's/^*//' > /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_I5.tsv
+Finished functional annotation step.
+Running full/slim GO summary step...
+Start time: 2017-09-11 23:21:38
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Finished full/slim GO summary step.
+Running functional analysis summary step...
+Start time: 2017-09-11 23:26:43
+Total number of initially submitted jobs: 1
+Number of jobs registered so far: 1
+All submitted jobs have been registered.
+Skipping monitoring of step: stepSummary, because log file does NOT exist!
+I/O error(2): No such file or directory: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/chunked_fasta/globalsummary.out
+Finished functional analysis summary step.
+Running sequence categorisation step...
+Finished sequence categorisation step.
+Running Google charts generation step...
+Finished Google charts generation step.
+=====>Starting chunking and compression job...
+Running the chunking program with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+resultFileSuffix:_I5.tsv
+lineNumber:10000000
+cutoff:2253.0MB
+Checking for the '.chunks' file
+The size of the file is below the cutoff (0.00401782989502MB < 2253.0MB). No chunking necessary!
+Parsing the InterProScan chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_I5.tsv.chunks
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_I5.tsv
+Using compression level 3
+Running the FASTA file chunking and compression sub-step with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/
+targetSize:1819
+resultFileSuffix:interproscan.fasta
+chunkFilePath:/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/interproscan.fasta.chunks
+Minimum size of a compressed chunk file:480.0MB
+Maximum size of a compressed chunk file:520.0MB
+Running the FASTA file chunking tool with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/
+resultFileSuffix:interproscan.fasta
+targetSize:1819
+cutoff:1819.0MB
+Checking for the '.chunks' file
+Input file size in MB: 0.00702667236328
+The size of the file is below the cutoff (0.00702667236328MB < 1819.0MB). No chunking necessary!
+FASTA file chunking tool finished.
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/interproscan.fasta
+Using compression level 3
+Finished the FASTA file chunking and compression sub-step.
+Running the FASTA file chunking and compression sub-step with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/
+targetSize:1847
+resultFileSuffix:pCDS.fasta
+chunkFilePath:/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/pCDS.fasta.chunks
+Minimum size of a compressed chunk file:480.0MB
+Maximum size of a compressed chunk file:520.0MB
+Running the FASTA file chunking tool with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/
+resultFileSuffix:pCDS.fasta
+targetSize:1847
+cutoff:1847.0MB
+Checking for the '.chunks' file
+Input file size in MB: 10.6892604828
+The size of the file is below the cutoff (10.6892604828MB < 1847.0MB). No chunking necessary!
+FASTA file chunking tool finished.
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/pCDS.fasta
+Using compression level 3
+Finished the FASTA file chunking and compression sub-step.
+Running the FASTA file chunking and compression sub-step with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/
+targetSize:1853
+resultFileSuffix:noFunction.fasta
+chunkFilePath:/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/noFunction.fasta.chunks
+Minimum size of a compressed chunk file:480.0MB
+Maximum size of a compressed chunk file:520.0MB
+Running the FASTA file chunking tool with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/
+resultFileSuffix:noFunction.fasta
+targetSize:1853
+cutoff:1853.0MB
+Checking for the '.chunks' file
+Input file size in MB: 10.6822338104
+The size of the file is below the cutoff (10.6822338104MB < 1853.0MB). No chunking necessary!
+FASTA file chunking tool finished.
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/noFunction.fasta
+Using compression level 3
+Finished the FASTA file chunking and compression sub-step.
+Running the FASTA file chunking and compression sub-step with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/
+targetSize:1853
+resultFileSuffix:SSU.fasta
+chunkFilePath:/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/SSU.fasta.chunks
+Minimum size of a compressed chunk file:480.0MB
+Maximum size of a compressed chunk file:520.0MB
+Running the FASTA file chunking tool with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/
+resultFileSuffix:SSU.fasta
+targetSize:1853
+cutoff:1853.0MB
+Checking for the '.chunks' file
+Input file size in MB: 13.5264606476
+The size of the file is below the cutoff (13.5264606476MB < 1853.0MB). No chunking necessary!
+FASTA file chunking tool finished.
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/SSU.fasta
+Using compression level 3
+Finished the FASTA file chunking and compression sub-step.
+Running the FASTA file chunking and compression sub-step with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/
+targetSize:1853
+resultFileSuffix:LSU.fasta
+chunkFilePath:/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/LSU.fasta.chunks
+Minimum size of a compressed chunk file:480.0MB
+Maximum size of a compressed chunk file:520.0MB
+Running the FASTA file chunking tool with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/
+resultFileSuffix:LSU.fasta
+targetSize:1853
+cutoff:1853.0MB
+Checking for the '.chunks' file
+Input file size in MB: 0.0
+The size of the file is below the cutoff (0.0MB < 1853.0MB). No chunking necessary!
+FASTA file chunking tool finished.
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation/LSU.fasta
+Using compression level 3
+Finished the FASTA file chunking and compression sub-step.
+Running the FASTA file chunking and compression sub-step with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+targetSize:1980
+resultFileSuffix:ERR867655_MERGED_FASTQ.fasta
+chunkFilePath:/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ.fasta.chunks
+Minimum size of a compressed chunk file:480.0MB
+Maximum size of a compressed chunk file:520.0MB
+Running the FASTA file chunking tool with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+resultFileSuffix:ERR867655_MERGED_FASTQ.fasta
+targetSize:1980
+cutoff:1980.0MB
+Checking for the '.chunks' file
+Input file size in MB: 13.1280498505
+The size of the file is below the cutoff (13.1280498505MB < 1980.0MB). No chunking necessary!
+FASTA file chunking tool finished.
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ.fasta
+Using compression level 3
+Finished the FASTA file chunking and compression sub-step.
+Running the FASTA file chunking and compression sub-step with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+targetSize:1442
+resultFileSuffix:_CDS_unannotated.faa
+chunkFilePath:/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_CDS_unannotated.faa.chunks
+Minimum size of a compressed chunk file:480.0MB
+Maximum size of a compressed chunk file:520.0MB
+Running the FASTA file chunking tool with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+resultFileSuffix:_CDS_unannotated.faa
+targetSize:1442
+cutoff:1442.0MB
+Checking for the '.chunks' file
+Input file size in MB: 5.10122776031
+The size of the file is below the cutoff (5.10122776031MB < 1442.0MB). No chunking necessary!
+FASTA file chunking tool finished.
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_CDS_unannotated.faa
+Using compression level 3
+Finished the FASTA file chunking and compression sub-step.
+Running the FASTA file chunking and compression sub-step with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+targetSize:1980
+resultFileSuffix:_CDS_unannotated.ffn
+chunkFilePath:/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_CDS_unannotated.ffn.chunks
+Minimum size of a compressed chunk file:480.0MB
+Maximum size of a compressed chunk file:520.0MB
+Running the FASTA file chunking tool with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+resultFileSuffix:_CDS_unannotated.ffn
+targetSize:1980
+cutoff:1980.0MB
+Checking for the '.chunks' file
+Input file size in MB: 10.0948762894
+The size of the file is below the cutoff (10.0948762894MB < 1980.0MB). No chunking necessary!
+FASTA file chunking tool finished.
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_CDS_unannotated.ffn
+Using compression level 3
+Finished the FASTA file chunking and compression sub-step.
+Running the FASTA file chunking and compression sub-step with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+targetSize:1442
+resultFileSuffix:_CDS_annotated.faa
+chunkFilePath:/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_CDS_annotated.faa.chunks
+Minimum size of a compressed chunk file:480.0MB
+Maximum size of a compressed chunk file:520.0MB
+Running the FASTA file chunking tool with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+resultFileSuffix:_CDS_annotated.faa
+targetSize:1442
+cutoff:1442.0MB
+Checking for the '.chunks' file
+Input file size in MB: 0.00402450561523
+The size of the file is below the cutoff (0.00402450561523MB < 1442.0MB). No chunking necessary!
+FASTA file chunking tool finished.
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_CDS_annotated.faa
+Using compression level 3
+Finished the FASTA file chunking and compression sub-step.
+Running the FASTA file chunking and compression sub-step with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+targetSize:1980
+resultFileSuffix:_CDS_annotated.ffn
+chunkFilePath:/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_CDS_annotated.ffn.chunks
+Minimum size of a compressed chunk file:480.0MB
+Maximum size of a compressed chunk file:520.0MB
+Running the FASTA file chunking tool with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+resultFileSuffix:_CDS_annotated.ffn
+targetSize:1980
+cutoff:1980.0MB
+Checking for the '.chunks' file
+Input file size in MB: 0.00763511657715
+The size of the file is below the cutoff (0.00763511657715MB < 1980.0MB). No chunking necessary!
+FASTA file chunking tool finished.
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_CDS_annotated.ffn
+Using compression level 3
+Finished the FASTA file chunking and compression sub-step.
+Chunked file does not exist:
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/taxonomy-summary/LSU/ERR867655_MERGED_FASTQ_LSU.fasta.mseq
+Chunked file compression skipped.
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/taxonomy-summary/SSU/ERR867655_MERGED_FASTQ_SSU.fasta.mseq
+Using compression level 3
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ.cmsearch.all.tblout
+Using compression level 3
+Compressing the following chunk file located at: 
+/hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ.cmsearch.all.tblout.deoverlapped
+Using compression level 3
+<=====Chunking and compression job finished.
+Starting deletion/cleaning of unnecessary pipeline result files (temp files etc.)...
+Running the cleaning program with the following settings:
+rootDir: /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ
+validResultFileNames: stepFinalCleaning-lock, run-log.txt, -success, _run.log, .gz, .chunks, _summary, .fasta.submitted.count, _summary.go, _summary.go_slim, _summary.ipr, kingdom-counts.txt, krona.html, new.summary, , README, RESOURCE_USAGE_PROFILE, summary.out, seq-length.out.sub-set_pcbin, seq-length.out.full_pcbin, seq-length.out.sub-set_bin, seq-length.out.full_bin, seq-length.out.sub-set, seq-length.out.full, nucleotide-distribution.out.sub-set, nucleotide-distribution.out.full, GC-distribution.out.sub-set_pcbin, GC-distribution.out.full_pcbin, GC-distribution.out.sub-set_bin, GC-distribution.out.full_bin, GC-distribution.out.sub-set, GC-distribution.out.full, _tRNAselect.fasta, _tRNAselect.fasta_formatted, _tRNAselect.fasta_uniq, _tRNAselect_reads_id_list.txt, _tRNAselect_reads_uniq_id_list.txt, .fasta.mseq.txt, .fasta.mseq.tsv, .fasta.mseq_json.biom, .fasta.mseq.txt, .fa
+Checking the following file: ERR867655_MERGED_FASTQ_SSU.fasta
+Not a valid file name. This file will be deleted.
+Checking the following file: stepQCStats-success
+Found the following substring -success at index 11
+Valid file name detected. This file will be kept.
+Checking the following file: seq-prep.err
+Not a valid file name. This file will be deleted.
+Checking the following file: README
+Found the following substring README at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_I5.tsv.gz
+Found the following substring .gz at index 29
+Valid file name detected. This file will be kept.
+Checking the following file: seq-prep.lsf
+Not a valid file name. This file will be deleted.
+Checking the following file: stepNewCharts-success
+Found the following substring -success at index 13
+Valid file name detected. This file will be kept.
+Checking the following file: fasta-header-clean.err
+Not a valid file name. This file will be deleted.
+Checking the following file: qc-statistics.err
+Not a valid file name. This file will be deleted.
+Checking the following file: globalsummary.lsf
+Not a valid file name. This file will be deleted.
+Checking the following file: go-summary.out
+Found the following substring summary.out at index 3
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_trim.fastq
+Not a valid file name. This file will be deleted.
+Checking the following file: qc-statistics.out
+Not a valid file name. This file will be deleted.
+Checking the following file: stepCMSearch-success
+Found the following substring -success at index 12
+Valid file name detected. This file will be kept.
+Checking the following file: stepSeqPrep-success
+Found the following substring -success at index 11
+Valid file name detected. This file will be kept.
+Checking the following file: stepSummary-success
+Found the following substring -success at index 11
+Valid file name detected. This file will be kept.
+Checking the following file: seq-prep-merge.lsf
+Not a valid file name. This file will be deleted.
+Checking the following file: stepSeqPrepMerge-success
+Found the following substring -success at index 16
+Valid file name detected. This file will be kept.
+Checking the following file: MAPseqSSU.err
+Not a valid file name. This file will be deleted.
+Checking the following file: CMSearchDeoverlap.out
+Not a valid file name. This file will be deleted.
+Checking the following file: qc-statistics.lsf
+Not a valid file name. This file will be deleted.
+Checking the following file: stepFastaHeaderClean-success
+Found the following substring -success at index 20
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_CDS.faa
+Not a valid file name. This file will be deleted.
+Checking the following file: decompression.lsf
+Not a valid file name. This file will be deleted.
+Checking the following file: stepCMSearchDeoverlap-success
+Found the following substring -success at index 21
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_trim.fastq.log
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ.fasta.chunks
+Found the following substring .chunks at index 28
+Valid file name detected. This file will be kept.
+Checking the following file: fasta-header-clean.out
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ.fasta.ssi
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ_LSU.fasta
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ_summary.versions
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ_CDS_annotated.ffn.gz
+Found the following substring .gz at index 40
+Valid file name detected. This file will be kept.
+Checking the following file: stepGOSummary-success
+Found the following substring -success at index 13
+Valid file name detected. This file will be kept.
+Checking the following file: stepI5tsv-success
+Found the following substring -success at index 9
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ.cmsearch.all.tblout.sort
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ_CDS_annotated.ffn.chunks
+Found the following substring .chunks at index 40
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ.fasta.filter-counts
+Not a valid file name. This file will be deleted.
+Checking the following file: seq-prep-merge.err
+Not a valid file name. This file will be deleted.
+Checking the following file: stepInit-success
+Found the following substring -success at index 8
+Valid file name detected. This file will be kept.
+Checking the following file: CMSearchDeoverlap.err
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_2.fastq
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ.cmsearch.all.tblout.deoverlapped.gz
+Found the following substring .gz at index 55
+Valid file name detected. This file will be kept.
+Checking the following file: stepDecompression-success
+Found the following substring -success at index 17
+Valid file name detected. This file will be kept.
+Checking the following file: CMSearchDeoverlap.lsf
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ_run.log
+Found the following substring _run.log at index 22
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ.fasta.submitted.count
+Found the following substring .fasta.submitted.count at index 22
+Valid file name detected. This file will be kept.
+Checking the following file: decompression.out
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ_CDS_unannotated.ffn.chunks
+Found the following substring .chunks at index 42
+Valid file name detected. This file will be kept.
+Checking the following file: stepRNASelection-success
+Found the following substring -success at index 16
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_summary
+Found the following substring _summary at index 22
+Valid file name detected. This file will be kept.
+Checking the following file: MAPseqSSU.lsf
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ_summary.ipr
+Found the following substring _summary.ipr at index 22
+Valid file name detected. This file will be kept.
+Checking the following file: stepCDS-success
+Found the following substring -success at index 7
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_CDS_annotated.faa.chunks
+Found the following substring .chunks at index 40
+Valid file name detected. This file will be kept.
+Checking the following file: stepFinalCleaning-lock
+Found the following substring stepFinalCleaning-lock at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_CDS_unannotated.faa.gz
+Found the following substring .gz at index 42
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_summary.go
+Found the following substring _summary.go at index 22
+Valid file name detected. This file will be kept.
+Checking the following file: RNASelection.err
+Not a valid file name. This file will be deleted.
+Checking the following file: globalsummary.out
+Found the following substring summary.out at index 6
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_CDS.ffn
+Not a valid file name. This file will be deleted.
+Checking the following file: stepChunkingAndCompression-success
+Found the following substring -success at index 26
+Valid file name detected. This file will be kept.
+Checking the following file: stepMAPseq-success
+Found the following substring -success at index 10
+Valid file name detected. This file will be kept.
+Checking the following file: RNASelection.out
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ_run.err
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_1.fastq
+Not a valid file name. This file will be deleted.
+Checking the following file: seq-prep.out
+Not a valid file name. This file will be deleted.
+Checking the following file: stepTaxonomySummary-success
+Found the following substring -success at index 19
+Valid file name detected. This file will be kept.
+Checking the following file: trimmomatic.out
+Not a valid file name. This file will be deleted.
+Checking the following file: trimmomatic.lsf
+Not a valid file name. This file will be deleted.
+Checking the following file: stepSequenceCategorisation-success
+Found the following substring -success at index 26
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ.cmsearch.all.tblout.gz
+Found the following substring .gz at index 42
+Valid file name detected. This file will be kept.
+Checking the following file: run-log.txt
+Found the following substring run-log.txt at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: RNASelection.lsf
+Not a valid file name. This file will be deleted.
+Checking the following file: go-summary.err
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ.fasta.gz
+Found the following substring .gz at index 28
+Valid file name detected. This file will be kept.
+Checking the following file: go-summary.lsf
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ.dat
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ_summary.go_slim
+Found the following substring _summary.go_slim at index 22
+Valid file name detected. This file will be kept.
+Checking the following file: RESOURCE_USAGE_PROFILE
+Found the following substring RESOURCE_USAGE_PROFILE at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_CDS_unannotated.ffn.gz
+Found the following substring .gz at index 42
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_CDS_annotated.faa.gz
+Found the following substring .gz at index 40
+Valid file name detected. This file will be kept.
+Checking the following file: fasta-header-clean.lsf
+Not a valid file name. This file will be deleted.
+Checking the following file: MAPseqSSU.out
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ_I5.tsv.chunks
+Found the following substring .chunks at index 29
+Valid file name detected. This file will be kept.
+Checking the following file: seq-prep-merge.out
+Not a valid file name. This file will be deleted.
+Checking the following file: decompression.err
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_MERGED_FASTQ_CDS_unannotated.faa.chunks
+Found the following substring .chunks at index 42
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_merged.fastq
+Not a valid file name. This file will be deleted.
+Checking the following file: kingdom-counts.txt
+Found the following substring kingdom-counts.txt at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_SSU.fasta.mseq.tsv
+Found the following substring .fasta.mseq.tsv at index 26
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_SSU.fasta.mseq_json.biom
+Found the following substring .fasta.mseq_json.biom at index 26
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_SSU.fasta.mseq.gz
+Found the following substring .gz at index 37
+Valid file name detected. This file will be kept.
+Checking the following file: krona.html
+Found the following substring krona.html at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_MERGED_FASTQ_SSU.fasta.mseq.txt
+Found the following substring .fasta.mseq.txt at index 26
+Valid file name detected. This file will be kept.
+Checking the following file: new.summary
+Found the following substring new.summary at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: seq-length.out.full
+Found the following substring seq-length.out.full at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: GC-distribution.out.full_bin
+Found the following substring GC-distribution.out.full_bin at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: nucleotide-distribution.out.full
+Found the following substring nucleotide-distribution.out.full at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: summary.out
+Found the following substring summary.out at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: GC-distribution.out.full_pcbin
+Found the following substring GC-distribution.out.full_pcbin at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: seq-length.out.full_bin
+Found the following substring seq-length.out.full_bin at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: seq-length.out.full_pcbin
+Found the following substring seq-length.out.full_pcbin at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: GC-distribution.out.full
+Found the following substring GC-distribution.out.full at index 0
+Valid file name detected. This file will be kept.
+Checking the following file: jobsSuccessful-flag
+Not a valid file name. This file will be deleted.
+Checking the following file: chunkedSequence.list
+Not a valid file name. This file will be deleted.
+Checking the following file: lsf.submit
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.24042-HWI-M02024:114:000000000-ACHFR:1:1108:3502:13120-1_1_252_+_ERR867655.36501-HWI-M02024:118:000000000-AD4V4:1:1109:10523:4156-1_163_252_+.out
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.24042-HWI-M02024:114:000000000-ACHFR:1:1108:3502:13120-1_1_252_+_ERR867655.36501-HWI-M02024:118:000000000-AD4V4:1:1109:10523:4156-1_163_252_+_out.tsv
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.11678-HWI-M02024:114:000000000-ACHFR:1:2116:4845:10831-1_1_252_+_ERR867655.24041-HWI-M02024:114:000000000-ACHFR:1:1108:24613:13077-1_1_252_+.err
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.36502-HWI-M02024:118:000000000-AD4V4:1:1109:20397:4281-1_1_252_+_ERR867655.43075-HWI-M02024:118:000000000-AD4V4:1:2101:9073:9345-1_110_252_-
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.36502-HWI-M02024:118:000000000-AD4V4:1:1109:20397:4281-1_1_252_+_ERR867655.43075-HWI-M02024:118:000000000-AD4V4:1:2101:9073:9345-1_110_252_-_out.tsv
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.36502-HWI-M02024:118:000000000-AD4V4:1:1109:20397:4281-1_1_252_+_ERR867655.43075-HWI-M02024:118:000000000-AD4V4:1:2101:9073:9345-1_110_252_-.err
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.24042-HWI-M02024:114:000000000-ACHFR:1:1108:3502:13120-1_1_252_+_ERR867655.36501-HWI-M02024:118:000000000-AD4V4:1:1109:10523:4156-1_163_252_+
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.324-HWI-M02024:114:000000000-ACHFR:1:1101:8898:14630-1_1_183_+_ERR867655.11677-HWI-M02024:114:000000000-ACHFR:1:2116:14415:10786-1_124_253_-.err
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.324-HWI-M02024:114:000000000-ACHFR:1:1101:8898:14630-1_1_183_+_ERR867655.11677-HWI-M02024:114:000000000-ACHFR:1:2116:14415:10786-1_124_253_-_out.tsv
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.11678-HWI-M02024:114:000000000-ACHFR:1:2116:4845:10831-1_1_252_+_ERR867655.24041-HWI-M02024:114:000000000-ACHFR:1:1108:24613:13077-1_1_252_+.out
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.11678-HWI-M02024:114:000000000-ACHFR:1:2116:4845:10831-1_1_252_+_ERR867655.24041-HWI-M02024:114:000000000-ACHFR:1:1108:24613:13077-1_1_252_+_out.tsv
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.24042-HWI-M02024:114:000000000-ACHFR:1:1108:3502:13120-1_1_252_+_ERR867655.36501-HWI-M02024:118:000000000-AD4V4:1:1109:10523:4156-1_163_252_+.err
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.324-HWI-M02024:114:000000000-ACHFR:1:1101:8898:14630-1_1_183_+_ERR867655.11677-HWI-M02024:114:000000000-ACHFR:1:2116:14415:10786-1_124_253_-.out
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.11678-HWI-M02024:114:000000000-ACHFR:1:2116:4845:10831-1_1_252_+_ERR867655.24041-HWI-M02024:114:000000000-ACHFR:1:1108:24613:13077-1_1_252_+
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.324-HWI-M02024:114:000000000-ACHFR:1:1101:8898:14630-1_1_183_+_ERR867655.11677-HWI-M02024:114:000000000-ACHFR:1:2116:14415:10786-1_124_253_-
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.36502-HWI-M02024:118:000000000-AD4V4:1:1109:20397:4281-1_1_252_+_ERR867655.43075-HWI-M02024:118:000000000-AD4V4:1:2101:9073:9345-1_110_252_-.out
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.SSU_rRNA_bacteria.RF00177.key
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.SSU_rRNA_bacteria.RF00177.fa
+Found the following substring .fa at index 35
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655.SSU_rRNA_archaea.RF01959.key
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655.SSU_rRNA_archaea.RF01959.fa
+Found the following substring .fa at index 34
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_2.fastq
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_paired.fastq.gz
+Found the following substring .gz at index 22
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_1_paired.fastq.gz
+Found the following substring .gz at index 24
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_1.fastq
+Not a valid file name. This file will be deleted.
+Checking the following file: ERR867655_1_unpaired.fastq.gz
+Found the following substring .gz at index 26
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_2_unpaired.fastq.gz
+Found the following substring .gz at index 26
+Valid file name detected. This file will be kept.
+Checking the following file: ERR867655_2_paired.fastq.gz
+Found the following substring .gz at index 24
+Valid file name detected. This file will be kept.
+Checking the following file: noFunction.fasta.chunks
+Found the following substring .chunks at index 16
+Valid file name detected. This file will be kept.
+Checking the following file: pCDS.fasta.gz
+Found the following substring .gz at index 10
+Valid file name detected. This file will be kept.
+Checking the following file: interproscan.fasta.gz
+Found the following substring .gz at index 18
+Valid file name detected. This file will be kept.
+Checking the following file: interproscan.fasta.chunks
+Found the following substring .chunks at index 18
+Valid file name detected. This file will be kept.
+Checking the following file: noFunction.fasta.gz
+Found the following substring .gz at index 16
+Valid file name detected. This file will be kept.
+Checking the following file: LSU.fasta.chunks
+Found the following substring .chunks at index 9
+Valid file name detected. This file will be kept.
+Checking the following file: SSU.fasta.gz
+Found the following substring .gz at index 9
+Valid file name detected. This file will be kept.
+Checking the following file: SSU.fasta.chunks
+Found the following substring .chunks at index 9
+Valid file name detected. This file will be kept.
+Checking the following file: pCDS.fasta.chunks
+Found the following substring .chunks at index 10
+Valid file name detected. This file will be kept.
+Checking the following file: LSU.fasta.gz
+Found the following substring .gz at index 9
+Valid file name detected. This file will be kept.
+Starting deletion of empty directories...
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/taxonomy-summary/SSU
+Directory is not empty! Skipping deletion of this directory.
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/taxonomy-summary/LSU
+Empty directory successfully deleted.
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/chunked_fasta/1
+Empty directory successfully deleted.
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/stepFinalCleaning
+Empty directory successfully deleted.
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/taxonomy-summary
+Directory is not empty! Skipping deletion of this directory.
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/charts
+Directory is not empty! Skipping deletion of this directory.
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/qc-statistics
+Directory is not empty! Skipping deletion of this directory.
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/chunked_fasta
+Empty directory successfully deleted.
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/stepChunkingAndCompression
+Empty directory successfully deleted.
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/RNASelection
+Directory is not empty! Skipping deletion of this directory.
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/clean
+Directory is not empty! Skipping deletion of this directory.
+Checking directory /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/sequence-categorisation
+Directory is not empty! Skipping deletion of this directory.
+Finished deletion of empty directories.
+
+------------------------------------------------------------
+Sender: LSF System <lsf@ebi5-204>
+Subject: Job 4230868: </hps/nobackup/production/metagenomics/pipeline/tools-v4/miniconda2-4.0.5/bin/python /hps/nobackup/production/metagenomics/production-scripts/clones/v4.0.1/analysis-pipeline/python/metagenomicsPipeline.py -i /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ.dat> in cluster <EBI> Done
+
+Job </hps/nobackup/production/metagenomics/pipeline/tools-v4/miniconda2-4.0.5/bin/python /hps/nobackup/production/metagenomics/production-scripts/clones/v4.0.1/analysis-pipeline/python/metagenomicsPipeline.py -i /hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ.dat> was submitted from host <ebi5-168> by user <maxim> in cluster <EBI>.
+Job was executed on host(s) <2*ebi5-204>, in queue <production-rh7>, as user <maxim> in cluster <EBI>.
+</homes/maxim> was used as the home directory.
+</homes/maxim> was used as the working directory.
+Started at Mon Sep 11 21:52:53 2017
+Results reported at Mon Sep 11 23:33:18 2017
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               45.16 sec.
+    Max Memory :             50 MB
+    Average Memory :         33.73 MB
+    Total Requested Memory : 4096.00 MB
+    Delta Memory :           4046.00 MB
+    (Delta: the difference between total requested memory and actual max usage.)
+    Max Swap :               591 MB
+
+    Max Processes :          4
+    Max Threads :            5
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </hps/nobackup/production/metagenomics/results/v4//ERP009703/results/ERR867655_MERGED_FASTQ/ERR867655_MERGED_FASTQ_run.err> for stderr output of this job.
+

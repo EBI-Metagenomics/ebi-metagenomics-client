@@ -1,0 +1,35 @@
+
+------------------------------------------------------------
+Sender: LSF System <lsf@ebi5-051>
+Subject: Job 4234956: <KPEYDG> in cluster <EBI> Done
+
+Job <KPEYDG> was submitted from host <ebi5-204> by user <maxim> in cluster <EBI>.
+Job was executed on host(s) <ebi5-051>, in queue <production-rh7>, as user <maxim> in cluster <EBI>.
+</homes/maxim> was used as the home directory.
+</homes/maxim> was used as the working directory.
+Started at Mon Sep 11 23:27:45 2017
+Results reported at Mon Sep 11 23:27:49 2017
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               1.83 sec.
+    Max Memory :             22 MB
+    Average Memory :         15.00 MB
+    Total Requested Memory : 8192.00 MB
+    Delta Memory :           8170.00 MB
+    (Delta: the difference between total requested memory and actual max usage.)
+    Max Swap :               335 MB
+
+    Max Processes :          3
+    Max Threads :            4
+
+The output (if any) is above this job summary.
+

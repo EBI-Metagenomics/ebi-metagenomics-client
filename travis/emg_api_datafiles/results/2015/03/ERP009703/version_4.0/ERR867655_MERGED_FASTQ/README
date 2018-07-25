@@ -1,0 +1,13 @@
+================ Program Versions Used in Analysis =====================
+INFERNAL : 1.1.2
+FragGeneScan : 1.20
+InterProScan : 5.25-64.0
+InterPro : 64.0
+Trimmomatic : 0.35
+========================= Analysis Details =============================
+The analyses were started on 11-09-2017 at 21:52:23.
+The file that was analysed was /hps/nobackup/production/metagenomics/results/v4//ERP009703/raw/ERR867655_1.fastq.gz,/hps/nobackup/production/metagenomics/results/v4//ERP009703/raw/ERR867655_2.fastq.gz.
+This is an initial full analysis performed for the first time on this data file.
+========================================================================
+The complete set of analyses took 6018 seconds, or 100.3 minutes!
+==============================================================================================

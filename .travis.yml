@@ -68,6 +68,12 @@ before_install:
   - emgcli import_summary ERR1022500 $TRAVIS_BUILD_DIR/results .go_slim
   - emgcli import_summary ERR1022500 $TRAVIS_BUILD_DIR/results .go
 
+  - emgcli import_taxonomy ERR867655 $TRAVIS_BUILD_DIR/results
+  - emgcli import_qc ERR867655 $TRAVIS_BUILD_DIR/results
+  - emgcli import_summary ERR867655 $TRAVIS_BUILD_DIR/results .ipr
+  - emgcli import_summary ERR867655 $TRAVIS_BUILD_DIR/results .go_slim
+  - emgcli import_summary ERR867655 $TRAVIS_BUILD_DIR/results .go
+
   # Install build dependencies
   - npm install cypress
   - npm install -g webpack

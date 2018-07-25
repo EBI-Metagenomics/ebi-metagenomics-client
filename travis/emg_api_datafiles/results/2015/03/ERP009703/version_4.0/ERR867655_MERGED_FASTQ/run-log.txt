@@ -1,0 +1,41 @@
+
+------------------------------------------------------------
+Sender: LSF System <lsf@ebi5-168>
+Subject: Job 4230818: <initStep> in cluster <EBI> Done
+
+Job <initStep> was submitted from host <hx-noah-04-10> by user <maxim> in cluster <EBI>.
+Job was executed on host(s) <ebi5-168>, in queue <production-rh7>, as user <maxim> in cluster <EBI>.
+</homes/maxim> was used as the home directory.
+</homes/maxim> was used as the working directory.
+Started at Mon Sep 11 21:52:16 2017
+Results reported at Mon Sep 11 21:52:52 2017
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               6.39 sec.
+    Max Memory :             18 MB
+    Average Memory :         13.00 MB
+    Total Requested Memory : 8000.00 MB
+    Delta Memory :           7982.00 MB
+    (Delta: the difference between total requested memory and actual max usage.)
+    Max Swap :               370 MB
+
+    Max Processes :          4
+    Max Threads :            5
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </hps/nobackup/production/metagenomics/results/v4//ERP009703/logs/ERR867655_MERGED_FASTQ.submitted> for stderr output of this job.
+
