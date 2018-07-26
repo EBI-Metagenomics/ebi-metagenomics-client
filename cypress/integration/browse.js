@@ -473,9 +473,10 @@ describe('Browse page', function() {
 
             filterText = 'OSD';
             samplesTable.getFilterInput().type(filterText);
-            cy.route('**OSD**').as('osdApiCall');
-            cy.wait('@osdApiCall');
-            cy.wait('@osdApiCall');
+            cy.route('**studies**OSD**').as('osdApiCall_studies');
+            cy.route('**samples**OSD**').as('osdApiCall_samples');
+            cy.wait('@osdApiCall_studies');
+            cy.wait('@osdApiCall_samples');
             samplesTable.waitForTableLoad(25);
             changeTab('studies');
             cy.contains('MGYS00000462').should('be.visible');
