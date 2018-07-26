@@ -128,6 +128,12 @@ function disableSubUnitRadio(enableType) {
     $('.rna-select-button[value=\'' + enableType + '\']').attr('checked', true);
 }
 
+function displayTaxonomyGraphError() {
+    const error = $('<h4>Could not load taxonomic analysis</h4>');
+    console.debug('Failed to load SSU and LSU taxonomic analysis.');
+    $('#taxonomic').empty().append(error);
+}
+
 /**
  * Attempt to load taxonomy, and fallback to /lsu if /ssu does not exist
  * @param {string} analysisID accession of analysis
@@ -141,11 +147,13 @@ function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, expe
             subunitType = '/lsu';
             loadTaxonomy(analysisID, subunitType, pipelineVersion).then((model) => {
                 if (model.length === 0) {
-                    const error = $('<h4>Could not load taxonomic analysis</h4>');
-                    console.debug('Failed to load SSU and LSU taxonomic analysis.');
-                    $('#taxonomic').empty().append(error);
+                    displayTaxonomyGraphError();
                 }
             });
+        } else {
+            if (model.length === 0) {
+                displayTaxonomyGraphError();
+            }
         }
         if (['amplicon', 'metabarcoding'].indexOf(experimentType) > -1 && pipelineVersion >= 4.0) {
             disableSubUnitRadio(subunitType);
