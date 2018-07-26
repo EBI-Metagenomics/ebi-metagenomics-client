@@ -30,56 +30,56 @@ function checkTabWasRemoved(tabId) {
  */
 describe('Analysis page', function() {
     context('General', function() {
-    it('Should display overview if no deeplink is provided', function() {
-        openPage(origPage);
-        waitForPageLoad();
-        verifyTabIsVisible('#overview');
-    });
+        it('Should display overview if no deeplink is provided', function() {
+            openPage(origPage);
+            waitForPageLoad();
+            verifyTabIsVisible('#overview');
+        });
 
-    it('Should display metadata if available', function() {
-        openPage('analyses/MGYA00136035');
-        waitForPageLoad();
-        verifyTabIsVisible('#overview');
-        cy.contains('Study:').next().should('contain', 'MGYS00000462');
-        cy.contains('Sample:').next().should('contain', 'ERS667575');
-        cy.contains('Run:').next().should('contain', 'ERR867655');
-        cy.contains('Pipeline version:').next().should('contain', '4.0');
-        cy.contains('Experiment type:').next().should('contain', 'amplicon');
-        cy.contains('Instrument model:').next().should('contain', 'Illumina MiSeq');
-        cy.contains('Instrument platform:').next().should('contain', 'ILLUMINA');
-    });
-    it('Should resolve hash links correctly (overview)', function() {
-        openPage('analyses/MGYA00136035#overview');
-        cy.contains('Experiment details').should('be.visible');
-    });
-    it('Should resolve hash links correctly (qc)', function() {
-        openPage('analyses/MGYA00136035#qc');
-        cy.get('.run-qc-chart').should('be.visible');
-    });
-    it('Should resolve hash links correctly (taxonomic)', function() {
-        openPage('analyses/MGYA00136035#taxonomic');
-        cy.get('.krona_chart').should('be.visible');
-    });
-    it('Should resolve hash links correctly (krona)', function() {
-        openPage('analyses/MGYA00136035#krona');
-        cy.get('.krona_chart').should('be.visible');
-    });
-    it('Should resolve hash links correctly (pie)', function() {
-        openPage('analyses/MGYA00136035#pie');
-        cy.get('#domain-composition-pie').should('be.visible');
-    });
-    it('Should resolve hash links correctly (column)', function() {
-        openPage('analyses/MGYA00136035#column');
-        cy.get('#domain-composition-column').should('be.visible');
-    });
-    it('Should resolve hash links correctly (stacked-column)', function() {
-        openPage('analyses/MGYA00136035#stacked-column');
-        cy.get('#phylum-composition-stacked-column').should('be.visible');
-    });
-    it('Should resolve hash links correctly (download)', function() {
-        openPage('analyses/MGYA00136035#download');
-        cy.contains('Here you may download').should('be.visible');
-    });
+        it('Should display metadata if available', function() {
+            openPage('analyses/MGYA00136035');
+            waitForPageLoad();
+            verifyTabIsVisible('#overview');
+            cy.contains('Study:').next().should('contain', 'MGYS00000462');
+            cy.contains('Sample:').next().should('contain', 'ERS667575');
+            cy.contains('Run:').next().should('contain', 'ERR867655');
+            cy.contains('Pipeline version:').next().should('contain', '4.0');
+            cy.contains('Experiment type:').next().should('contain', 'amplicon');
+            cy.contains('Instrument model:').next().should('contain', 'Illumina MiSeq');
+            cy.contains('Instrument platform:').next().should('contain', 'ILLUMINA');
+        });
+        it('Should resolve hash links correctly (overview)', function() {
+            openPage('analyses/MGYA00136035#overview');
+            cy.contains('Experiment details').should('be.visible');
+        });
+        it('Should resolve hash links correctly (qc)', function() {
+            openPage('analyses/MGYA00136035#qc');
+            cy.get('.run-qc-chart').should('be.visible');
+        });
+        it('Should resolve hash links correctly (taxonomic)', function() {
+            openPage('analyses/MGYA00136035#taxonomic');
+            cy.get('.krona_chart').should('be.visible');
+        });
+        it('Should resolve hash links correctly (krona)', function() {
+            openPage('analyses/MGYA00136035#krona');
+            cy.get('.krona_chart').should('be.visible');
+        });
+        it('Should resolve hash links correctly (pie)', function() {
+            openPage('analyses/MGYA00136035#pie');
+            cy.get('#domain-composition-pie').should('be.visible');
+        });
+        it('Should resolve hash links correctly (column)', function() {
+            openPage('analyses/MGYA00136035#column');
+            cy.get('#domain-composition-column').should('be.visible');
+        });
+        it('Should resolve hash links correctly (stacked-column)', function() {
+            openPage('analyses/MGYA00136035#stacked-column');
+            cy.get('#phylum-composition-stacked-column').should('be.visible');
+        });
+        it('Should resolve hash links correctly (download)', function() {
+            openPage('analyses/MGYA00136035#download');
+            cy.contains('Here you may download').should('be.visible');
+        });
     });
     context('Download tab', function() {
         beforeEach(function() {
@@ -388,11 +388,6 @@ describe('Analysis page', function() {
         });
     });
 });
-// TODO test version selector
 // TODO test all download links are valid/organised correctly
 
 // TODO test abundance graphic is loaded correctly
-
-// TODO test specifying pipeline version by URL parameter
-
-
