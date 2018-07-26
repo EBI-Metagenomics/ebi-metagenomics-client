@@ -632,8 +632,12 @@ let InterProSummary = Backbone.View.extend({
                     {sortBy: 'a', name: 'pCDS matched'},
                     {sortBy: 'a', name: '%'}
                 ];
-                const interproTable = new ClientSideTable($('#InterPro-table'), '', headers,
-                    DEFAULT_PAGE_SIZE);
+                const options = {
+                    title: '',
+                    headers: headers,
+                    initPageSize: DEFAULT_PAGE_SIZE
+                };
+                const interproTable = new ClientSideTable($('#InterPro-table'), options);
                 interproTable.update(tableData, false, 1, data.length);
 
                 const numSeries = taxonomyPieChart.series[0].data.length;
