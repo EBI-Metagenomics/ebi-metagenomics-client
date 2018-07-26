@@ -114,7 +114,7 @@ describe('Analysis page', function() {
     });
     context('Quality Control tab', function() {
         before(function() {
-            openPage('analyses/MGYA00136035');
+            openPage('analyses/MGYA00141547');
             waitForPageLoad();
             changeTab('qc');
         });
@@ -133,30 +133,37 @@ describe('Analysis page', function() {
                 '.highcharts-series-group .highcharts-series-1 > .highcharts-point';
             // Initial reads
             const series1 = readsRemainingSeries + ':nth-child(1)';
-            hoverAndValidateTooltip(series1, 'Initial reads', 'Reads remaining: 43 947');
+            hoverAndValidateTooltip(series1, 'Initial reads', 'Reads remaining: 213 741 460');
 
             // Trimming
             const series2 = readsRemainingSeries + ':nth-child(2)';
-            hoverAndValidateTooltip(series2, 'Trimming', 'Reads remaining: 43 933');
+            hoverAndValidateTooltip(series2, 'Trimming', 'Reads remaining: 213 741 430');
 
             // Length filtering
             const series3 = readsRemainingSeries + ':nth-child(3)';
-            hoverAndValidateTooltip(series3, 'Length filtering', 'Reads remaining: 43 045');
+            hoverAndValidateTooltip(series3, 'Length filtering', 'Reads remaining: 180 329 978');
 
             // Length filtering (reads filtered out)
             const filteredOutSeries =
                 '.highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(3)';
             hoverAndValidateTooltip(filteredOutSeries, 'Length filtering',
-                'Reads filtered out: 888');
+                'Reads filtered out: 33 411 452');
 
             // Ambiguous base filtering
             const series4 = readsRemainingSeries + ':nth-child(4)';
-            hoverAndValidateTooltip(series4, 'Ambiguous base filtering', 'Reads remaining: 43 045');
+            hoverAndValidateTooltip(series4, 'Ambiguous base filtering',
+                'Reads remaining: 180 329 978');
 
             // Reads subsampled for QC analysis
             const series5 = readsRemainingSeries + ':nth-child(5)';
             hoverAndValidateTooltip(series5, 'Reads subsampled for QC analysis',
                 'Reads remaining: 0');
+
+            const readsAfterSampling =
+                '.highcharts-series-group .highcharts-series-2 > .highcharts-point';
+            hoverAndValidateTooltip(readsAfterSampling + ':nth-child(5)',
+                'Reads subsampled for QC analysis',
+                'Reads after sampling: 1 997 827');
         });
         it('Reads length hist should be present', function() {
             //    TODO

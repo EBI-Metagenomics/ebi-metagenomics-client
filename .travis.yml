@@ -62,17 +62,17 @@ before_install:
   - emgcli import_summary ERR1022502 ~/results .go_slim
   - emgcli import_summary ERR1022502 ~/results .go
 
-  - emgcli import_taxonomy ERR1022500 ~/results
-  - emgcli import_qc ERR1022500 ~/results
-  - emgcli import_summary ERR1022500 ~/results .ipr
-  - emgcli import_summary ERR1022500 ~/results .go_slim
-  - emgcli import_summary ERR1022500 ~/results .go
-
+#  - emgcli import_taxonomy ERR1022500 ~/results
+#  - emgcli import_qc ERR1022500 ~/results
+#  - emgcli import_summary ERR1022500 ~/results .ipr
+#  - emgcli import_summary ERR1022500 ~/results .go_slim
+#  - emgcli import_summary ERR1022500 ~/results .go
+#
   - emgcli import_taxonomy ERR867655 ~/results
-  - emgcli import_qc ERR867655 ~/results
-  - emgcli import_summary ERR867655 ~/results .ipr
-  - emgcli import_summary ERR867655 ~/results .go_slim
-  - emgcli import_summary ERR867655 ~/results .go
+#  - emgcli import_qc ERR867655 ~/results
+#  - emgcli import_summary ERR867655 ~/results .ipr
+#  - emgcli import_summary ERR867655 ~/results .go_slim
+#  - emgcli import_summary ERR867655 ~/results .go
 
   # Install build dependencies
   - npm install cypress
