@@ -118,16 +118,19 @@ describe('Analysis page', function() {
             waitForPageLoad();
             changeTab('qc');
         });
+
+        function hoverAndValidateTooltip(series, tooltipText1, tooltipText2) {
+            const chart = series.split(' ')[0];
+            cy.get(series).first().trigger('mouseover', {force: true}).then(() => {
+                cy.get(chart + ' svg g text').contains(tooltipText1);
+                cy.get(chart + ' svg g.highcharts-tooltip text').contains(tooltipText2);
+            });
+            cy.get(series).first().trigger('mouseout', {force: true});
+        }
+
         it('QC chart should display correctly', function() {
             // Verify graph via tooltip values
 
-            function hoverAndValidateTooltip(series, tooltipText1, tooltipText2) {
-                cy.get(series).first().trigger('mouseover', {force: true}).then(() => {
-                    cy.get('svg g text').contains(tooltipText1);
-                    cy.get('svg g.highcharts-tooltip text').contains(tooltipText2);
-                });
-                cy.get(series).first().trigger('mouseout', {force: true});
-            }
 
             const readsRemainingSeries =
                 '.highcharts-series-group .highcharts-series-1 > .highcharts-point';
@@ -166,8 +169,30 @@ describe('Analysis page', function() {
                 'Reads after sampling: 1 997 827');
         });
         it('Reads length hist should be present', function() {
-            //    TODO
-
+            const series = '#readsLengthHist .highcharts-series-group .highcharts-markers .highcharts-point';
+            cy.get(series).should('be.visible');
+        });
+        it('Reads length bar chart should be present', function() {
+            let series0 = '#readsLengthBarChart svg .highcharts-series-0 > rect:nth-child(1)';
+            hoverAndValidateTooltip(series0, 'Minimum', 'Minimum: 100');
+            let series1 = '#readsLengthBarChart svg .highcharts-series-0 > rect:nth-child(2)';
+            hoverAndValidateTooltip(series1, 'Average', 'Average: 100');
+            let series2 = '#readsLengthBarChart svg .highcharts-series-0 > rect:nth-child(3)';
+            hoverAndValidateTooltip(series2, 'Maximum', 'Maximum: 100');
+        });
+        it('Reads GC distribution chart should be present', function() {
+            const series = '#readsGCHist .highcharts-series-group .highcharts-markers';
+            cy.get(series).should('be.visible');
+        });
+        it('Reads GC bar chart should be present', function() {
+            let series0 = '#readsGCBarChart svg .highcharts-series-0 > rect:nth-child(1)';
+            hoverAndValidateTooltip(series0, 'Content', 'GC Content: 44.51%');
+            let series1 = '#readsGCBarChart svg .highcharts-series-1 > rect:nth-child(1)';
+            hoverAndValidateTooltip(series1, 'Content', 'AT Content: 55.49%');
+        });
+        it('Nucleotide position hist chart should be present', function() {
+            const series = '#nucleotide .highcharts-series-2 .highcharts-point';
+            cy.get(series).should('be.visible');
         });
     });
     let taxonomyTable;
@@ -271,7 +296,8 @@ describe('Analysis page', function() {
             cy.get('#phylum-composition-column').should('be.visible');
             // Check elements in both charts
             cy.get('#domain-composition-column svg .highcharts-point').should('have.length', 3);
-            cy.get('#phylum-composition-column svg .highcharts-point').should('have.length', 34);
+            cy.get('#phylum-composition-column svg .highcharts-point')
+                .should('have.length', 34);
 
         });
         it('Taxonomy column chart table pagination', function() {
@@ -296,12 +322,14 @@ describe('Analysis page', function() {
         });
         it('Taxonomy stacked-column chart table pagination', function() {
             changeTab('stacked-column');
-            taxonomyTable = new ClientSideTableHandler('#stacked-column .phylum-table', 25, false);
+            taxonomyTable = new ClientSideTableHandler('#stacked-column .phylum-table', 25,
+                false);
             taxonomyTable.testPagination(25, taxonomyTablePagination);
         });
         it('Taxonomy stacked-column chart table ordering', function() {
             changeTab('stacked-column');
-            taxonomyTable = new ClientSideTableHandler('#stacked-column .phylum-table', 25, false);
+            taxonomyTable = new ClientSideTableHandler('#stacked-column .phylum-table', 25,
+                false);
             taxonomyTable.testSorting(25, taxonomyTableColumns);
         });
     });
