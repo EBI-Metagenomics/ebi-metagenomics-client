@@ -22,7 +22,7 @@ function verifyTabIsVisible(tabId) {
 }
 
 function checkTabWasRemoved(tabId) {
-    cy.get('[href=\'' + tabId + '\']').should('not.exist');
+    cy.get('[href=\'' + tabId + '\']').should('not.exist', {timeout: 40000});
 }
 
 /**

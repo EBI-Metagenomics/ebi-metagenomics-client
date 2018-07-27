@@ -446,43 +446,49 @@ describe('Browse page', function() {
             cy.get('#studies-section .biome-select').should('have.value', biome);
         });
 
-        it('Changes in filter text should propagate to other facets', function() {
-            let filterText = 'Glacier Metagenome';
-            studiesTable.getFilterInput().type(filterText);
-            cy.wait('@studiesCall');
-            cy.wait('@samplesCall');
-            studiesTable.waitForTableLoad(1);
-            studiesTable.checkRowData(0,
-                ['', 'MGYS00000259', 'Glacier Metagenome', '1', '20-Jan-2016']);
+        it('Changes in filter text should propagate to other facets (Studies -> Samples)',
+            function() {
+                let filterText = 'Glacier Metagenome';
+                studiesTable.getFilterInput().type(filterText);
+                cy.wait('@studiesCall');
+                cy.wait('@samplesCall');
+                studiesTable.waitForTableLoad(1);
+                studiesTable.checkRowData(0,
+                    ['', 'MGYS00000259', 'Glacier Metagenome', '1', '20-Jan-2016']);
 
-            changeTab('samples');
-            samplesTable.waitForTableLoad(1);
-            samplesTable.getFilterInput().should('have.value', filterText);
+                changeTab('samples');
+                samplesTable.waitForTableLoad(1);
+                samplesTable.getFilterInput().should('have.value', filterText);
 
-            samplesTable.checkRowData(0, [
-                '',
-                'SRS000608',
-                'Glacier Metagenome',
-                '454 Sequencing of The Glacier Ice Metagenome Of The Northern Schneeferner',
-                '13-Aug-2015']);
+                samplesTable.checkRowData(0, [
+                    '',
+                    'SRS000608',
+                    'Glacier Metagenome',
+                    '454 Sequencing of The Glacier Ice Metagenome Of The Northern Schneeferner',
+                    '13-Aug-2015']);
+            });
+        it('Changes in filter text should propagate to other facets (Samples -> Studies)',
+            function() {
+                changeTab('samples');
+                let filterText = 'Glacier Metagenome';
+                samplesTable.getFilterInput().type(filterText);
+                cy.wait('@studiesCall');
+                cy.wait('@samplesCall');
+                samplesTable.waitForTableLoad(1);
+                samplesTable.getFilterInput().should('have.value', filterText);
 
-            samplesTable.getClearButton().click();
-            cy.wait('@studiesCall');
-            cy.wait('@samplesCall');
-            samplesTable.getFilterInput().should('have.value', '');
+                samplesTable.checkRowData(0, [
+                    '',
+                    'SRS000608',
+                    'Glacier Metagenome',
+                    '454 Sequencing of The Glacier Ice Metagenome Of The Northern Schneeferner',
+                    '13-Aug-2015']);
 
-            filterText = 'OSD';
-            samplesTable.getFilterInput().type(filterText);
-            cy.route('**studies**OSD**').as('osdApiCall_studies');
-            cy.route('**samples**OSD**').as('osdApiCall_samples');
-            cy.wait('@osdApiCall_studies');
-            cy.wait('@osdApiCall_samples');
-            samplesTable.waitForTableLoad(25);
-            changeTab('studies');
-            cy.contains('MGYS00000462').should('be.visible');
-            studiesTable.waitForTableLoad(1);
-            studiesTable.getFilterInput().should('have.value', filterText);
-        });
+                changeTab('studies');
+                studiesTable.waitForTableLoad(1);
+                studiesTable.checkRowData(0,
+                    ['', 'MGYS00000259', 'Glacier Metagenome', '1', '20-Jan-2016']);
+            });
     });
 
     context('URL parameters', function() {
