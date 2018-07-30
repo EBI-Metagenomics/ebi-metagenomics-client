@@ -22,7 +22,7 @@ function verifyTabIsVisible(tabId) {
 }
 
 function checkTabWasRemoved(tabId) {
-    cy.get('[href=\'' + tabId + '\']').should('not.exist', {timeout: 40000});
+    cy.get('[href=\'' + tabId + '\']').should('not.exist', {timeout: 100000});
 }
 
 /**
@@ -131,9 +131,8 @@ describe('Analysis page', function() {
         it('QC chart should display correctly', function() {
             // Verify graph via tooltip values
 
-
             const readsRemainingSeries =
-                '.highcharts-series-group .highcharts-series-1 > .highcharts-point';
+                '#QC-step-chart .highcharts-series-group .highcharts-series-1 > .highcharts-point';
             // Initial reads
             const series1 = readsRemainingSeries + ':nth-child(1)';
             hoverAndValidateTooltip(series1, 'Initial reads', 'Reads remaining: 213 741 460');
@@ -148,7 +147,7 @@ describe('Analysis page', function() {
 
             // Length filtering (reads filtered out)
             const filteredOutSeries =
-                '.highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(3)';
+                '#QC-step-chart .highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(3)';
             hoverAndValidateTooltip(filteredOutSeries, 'Length filtering',
                 'Reads filtered out: 33 411 452');
 
@@ -163,7 +162,7 @@ describe('Analysis page', function() {
                 'Reads remaining: 0');
 
             const readsAfterSampling =
-                '.highcharts-series-group .highcharts-series-2 > .highcharts-point';
+                '#QC-step-chart .highcharts-series-group .highcharts-series-2 > .highcharts-point';
             hoverAndValidateTooltip(readsAfterSampling + ':nth-child(5)',
                 'Reads subsampled for QC analysis',
                 'Reads after sampling: 1 997 827');
@@ -243,10 +242,15 @@ describe('Analysis page', function() {
             waitForPageLoad();
         });
         it('Should pre-select SSU', function() {
-            cy.get('[data-cy=\'ssu-btn\']').should('be.checked');
+            cy.get('[data-cy=\'ssu-btn\']').should('be.checked', {timeout: 40000});
         });
         it('Should disable LSU', function() {
-            cy.get('[data-cy=\'lsu-btn\']').should('be.disabled');
+            cy.server();
+            cy.route('GET', '/metagenomics/api/v1/analyses/MGYA00136035/taxonomy/ssu').as('apiSsu');
+            openPage('analyses/MGYA00136035#taxonomic');
+            cy.wait('@apiSsu');
+            cy.get('[data-cy=\'lsu-btn\'][disabled=\'disabled\']', {timeout: 40000})
+                .should('exist');
         });
         it('Should default to krona tab', function() {
             openPage('analyses/MGYA00136035#taxonomic');
@@ -381,12 +385,15 @@ describe('Analysis page', function() {
         });
     });
     context('Abundance tab', function() {
-        it('Tab should be removed if no data available.', function() {
+        it('Should be removed if no data available.', function() {
+            cy.server();
+            cy.route('GET', '**downloads**').as('apiDownloads');
             openPage(origPage);
             waitForPageLoad();
+            cy.wait('@apiDownloads');
             checkTabWasRemoved('#abundance');
         });
-        it('Tab should change to default if no data available.', function() {
+        it('Should change to default if no data available.', function() {
             openPage(origPage + '#abundance');
             waitForPageLoad();
             // Check defaulted to overview tab

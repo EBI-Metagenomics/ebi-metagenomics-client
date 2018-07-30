@@ -84,7 +84,9 @@ describe('External link to HMMER sequence search redirects correctly', function(
     it('Navbar link to sequence search is valid.', function() {
         openPage('overview');
         cy.get('#sequence-search-nav > a ').then(($link) => {
-            isValidLink($link);
+            expect(Cypress.$($link).attr('href'))
+                .to
+                .eq('https://wwwdev.ebi.ac.uk/metagenomics/sequence-search/search/phmmer');
         });
     });
 });
