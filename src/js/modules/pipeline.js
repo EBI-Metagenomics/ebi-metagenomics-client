@@ -6,7 +6,6 @@ require('static/css/pipeline.css');
 util.setupPage('#about-nav');
 
 let pipelineVersion = parseFloat(util.getURLParameter()).toFixed(1);
-
 $(function() {
     const pipelineVersions = Object.keys(commons.pipelines);
     if (pipelineVersions.indexOf(pipelineVersion) === -1) {
