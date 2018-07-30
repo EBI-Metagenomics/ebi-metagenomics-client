@@ -474,7 +474,6 @@ export let SamplesView = GenericTableView.extend({
             ordering: 'accession',
             search: null
         });
-
     },
 
     getRowData(attr) {

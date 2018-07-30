@@ -2,7 +2,7 @@ const navNames = ['overview', 'search', 'submit', 'browse', 'about', 'help'];
 const pageTitles = [
     'Browse projects', 'Search', 'Submit data', 'Studies list',
     'About', 'Help'];
-import {openPage, getPageURL, isValidLink} from '../util/util';
+import {openPage, getPageURL} from '../util/util';
 
 const origPage = 'overview';
 /**

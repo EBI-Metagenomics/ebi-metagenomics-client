@@ -1,6 +1,3 @@
-import {datatype} from './util';
-import config from './config';
-
 const GenericTableHandler = require('./genericTable');
 
 /**

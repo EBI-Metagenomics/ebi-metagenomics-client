@@ -19,6 +19,10 @@ $('#pageSize').append(commons.pagesize);
 
 const pageFilters = util.getURLFilterParams();
 
+/**
+ * Create basic request parameters for calls to studies / samples on EMG API
+ * @return {object}
+ */
 function createInitParams() {
     let params = {};
     params.page = pagination.currentPage;

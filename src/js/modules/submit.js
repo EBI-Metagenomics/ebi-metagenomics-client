@@ -10,10 +10,9 @@ const fetch = userData.fetch();
 
 /**
  * General mailto url for give consent button
- * @param {object} userData description object
  * @return {string} href
  */
-function getMailToLink(userData) {
+function getMailToLink() {
     let body = 'I consent for the MGnify team to analyse the private data of my account ' +
         util.getUsername() + '.';
 
