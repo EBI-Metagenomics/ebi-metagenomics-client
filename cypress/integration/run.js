@@ -68,7 +68,7 @@ describe('Run page', function() {
         it('Description section should be hideable', function() {
             cy.get(descriptionSection).should('be.visible');
             cy.contains('Description').click();
-            cy.get(descriptionSection).should('be.hidden');
+            cy.get(descriptionSection).should('be.hidden', {timeout: 400000});
             cy.contains('Description').click();
             cy.get(descriptionSection).should('be.visible');
         });

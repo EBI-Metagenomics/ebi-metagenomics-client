@@ -72,14 +72,14 @@ describe('Assembly page', function() {
         it('Description section should be hideable', function() {
             cy.get(descriptionSection).should('be.visible');
             cy.contains('Description').click();
-            cy.get(descriptionSection).should('be.hidden');
+            cy.get(descriptionSection).should('be.hidden', {timeout: 400000});
             cy.contains('Description').click();
             cy.get(descriptionSection).should('be.visible');
         });
         it('Assemblies section should be hideable', function() {
             cy.get(assemblySection).should('be.visible');
             cy.contains('Assemblies').click();
-            cy.get(assemblySection).should('be.hidden');
+            cy.get(assemblySection).should('be.hidden', {timeout: 400000});
             cy.contains('Assemblies').click();
             cy.get(assemblySection).should('be.visible');
         });
