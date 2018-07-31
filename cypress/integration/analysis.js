@@ -11,7 +11,7 @@ const origPage = 'analyses/MGYA00011845';
  */
 
 function waitForPageLoad() {
-    cy.get('#overview', {timeout: 20000}).children().should('have.length', 2);
+    cy.get('#overview', {timeout: 100000}).children().should('have.length', 2);
 }
 
 function verifyTabIsVisible(tabId) {
