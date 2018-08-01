@@ -246,7 +246,7 @@ module.exports = {
     output: {
         filename: '[name].v' + version + '.[hash].js',
         path:
-        __dirname + '/dist',
+        __dirname + '/dist' + process.env.DEPLOYMENT_SUBFOLDER,
         publicPath: process.env.DEPLOYMENT_SUBFOLDER + '/'
     },
     resolve: {
