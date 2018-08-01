@@ -97,6 +97,163 @@ function loadNucleotideDisp(analysisID) {
     });
 }
 
+/**
+ *
+ * @param {string} analysisID ENA analysis primary accession
+ */
+function loadDownloads(analysisID) {
+    let downloads = new api.AnalysisDownloads({id: analysisID});
+    new DownloadView({model: downloads});
+}
+
+/**
+ * Load krona chart for current view
+ * @param {string} analysisID ENA primary accession for analysis
+ * @param {string} type subunit type (for pipeline version 4.0 and above) ("ssu" or "lsu")
+ */
+function loadKronaChart(analysisID, type) {
+    const kronaUrl = api.getKronaURL(analysisID, type);
+    const kronaChart = '<object class="krona_chart" ' +
+        'data="' + kronaUrl + '" ' +
+        'type="text/html"></object>';
+    $('#krona').html(kronaChart);
+}
+
+/**
+ * Load taxonomy data and create graphs
+ * @param {string} analysisID ENA analysis primary accession
+ * @param {string} subunitType of analysis (see API documentation for endpoint)
+ * @param {float} pipelineVersion
+ * @return {jQuery.Promise} taxonomy backbone model
+ */
+function loadTaxonomy(analysisID, subunitType, pipelineVersion) {
+    taxonomy = new api.Taxonomy({id: analysisID, type: subunitType});
+    loadKronaChart(analysisID, subunitType);
+    return new TaxonomyGraphView({model: taxonomy}).init(pipelineVersion);
+}
+
+/**
+ * Disable a subunit button and check the selected type
+ * @param {string} enableType /ssu or /lsu
+ */
+function disableSubUnitRadio(enableType) {
+    $('.rna-select-button[value!=\'' + enableType + '\']').attr('disabled', true);
+    $('.rna-select-button[value=\'' + enableType + '\']').attr('checked', true);
+}
+
+/**
+ * Displays error if taxonomy graph data could not be loaded
+ */
+function displayTaxonomyGraphError() {
+    const error = $('<h4>Could not load taxonomic analysis</h4>');
+    console.debug('Failed to load SSU and LSU taxonomic analysis.');
+    $('#taxonomic').empty().append(error);
+}
+
+/**
+ * Attempt to load taxonomy, and fallback to /lsu if /ssu does not exist
+ * @param {string} analysisID accession of analysis
+ * @param {string} subunitType of analysis
+ * @param {float} pipelineVersion
+ * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
+ */
+function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, experimentType) {
+    loadTaxonomy(analysisID, subunitType, pipelineVersion).then((model) => {
+        if (model.length === 0 && subunitType === '/ssu') {
+            subunitType = '/lsu';
+            loadTaxonomy(analysisID, subunitType, pipelineVersion).then((model) => {
+                if (model.length === 0) {
+                    displayTaxonomyGraphError();
+                }
+            });
+        } else {
+            if (model.length === 0) {
+                displayTaxonomyGraphError();
+            }
+        }
+        if (['amplicon', 'metabarcoding'].indexOf(experimentType) > -1 && pipelineVersion >= 4.0) {
+            disableSubUnitRadio(subunitType);
+        }
+    });
+}
+
+/**
+ * Load and displaycharts for selected view
+ * @param {string} analysisID ENA analysis primary accession
+ * @param {string} pipelineVersion
+ * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
+ */
+function loadAnalysisData(analysisID, pipelineVersion, experimentType) {
+    interproData = new api.InterproIden({id: analysisID});
+    new InterProSummary({model: interproData});
+
+    let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
+    loadTaxonomyWithFallback(analysisID, type, pipelineVersion, experimentType);
+
+    goTerm = new api.GoSlim({id: analysisID});
+    new GoTermCharts({model: goTerm});
+}
+
+/**
+ * Callback for taxonomy size selection in taxonomic analysis tab
+ * @param {string} srcElem jQuery selector string of event source element
+ * @param {number} pipelineVersion
+ */
+function onTaxonomySelect(srcElem, pipelineVersion) {
+    const type = $(srcElem).val();
+    loadTaxonomy(analysisID, type, pipelineVersion);
+}
+
+/**
+ * Business logic to create table of info related to current analysis
+ * @param {object} attr attributes from BackBone AnalysesView model
+ * @return {{Study: string, Sample: string}}
+ */
+function constructDescriptionTable(attr) {
+    let description = {
+        'Study': '<a href=\'' + attr['study_url'] + '\'>' +
+        attr['study_accession'] + '</a>',
+        'Sample': '<a href=\'' + attr['sample_url'] + '\'>' +
+        attr['sample_accession'] + '</a>'
+    };
+
+    if (attr['experiment_type'] === 'assembly') {
+        attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
+        description['Assembly'] = '<a href=\'' + attr['run_url'] + '\'>' +
+            attr['run_accession'] + '</a>';
+    } else {
+        description['Run'] = '<a href=\'' + attr['run_url'] + '\'>' +
+            attr['run_accession'] + '</a>';
+    }
+
+    description['Pipeline version'] = '<a href=\'' + attr.pipeline_url + '\'>' +
+        attr.pipeline_version +
+        '</a>';
+
+    return description;
+}
+
+/**
+ * Business logic to create table of data analysis info related to current analysis
+ * @param {object} attr attributes from BackBone AnalysesView model
+ * @return {object}
+ */
+function constructDataAnalysisTable(attr) {
+    const dataAnalysis = {};
+    if (attr['experiment_type']) {
+        dataAnalysis['Experiment type'] = attr['experiment_type'];
+    }
+
+    if (attr['instrument_model']) {
+        dataAnalysis['Instrument model'] = attr['instrument_model'];
+    }
+
+    if (attr['instrument_platform']) {
+        dataAnalysis['Instrument platform'] = attr['instrument_platform'];
+    }
+    return dataAnalysis;
+}
+
 let AnalysisView = Backbone.View.extend({
     model: api.Analysis,
     template: _.template($('#runTmpl').html()),
@@ -107,49 +264,16 @@ let AnalysisView = Backbone.View.extend({
             data: {},
             success(data) {
                 const attr = data.attributes;
-                attr['displaySsuButtons'] = (attr.pipeline_version >= 4.0 &&
-                    attr.experiment_type !== 'amplicon');
-
+                attr['displaySsuButtons'] = attr.pipeline_version >= 4.0;
                 if (attr['experiment_type'] === 'assembly') {
                     attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
                 }
                 that.render(attr.pipeline_version, function() {
                     $('#analysisSelect').val(attr['pipeline_version']);
 
-                    let description = {
-                        'Study': '<a href=\'' + attr['study_url'] + '\'>' +
-                        attr['study_accession'] + '</a>',
-                        'Sample': '<a href=\'' + attr['sample_url'] + '\'>' +
-                        attr['sample_accession'] + '</a>'
-                    };
+                    let description = constructDescriptionTable(attr);
+                    let dataAnalysis = constructDataAnalysisTable(attr);
 
-                    if (attr['experiment_type'] === 'assembly') {
-                        attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
-                        description['Assembly'] = '<a href=\'' + attr['run_url'] + '\'>' +
-                            attr['run_accession'] + '</a>';
-                    } else {
-                        description['Run'] = '<a href=\'' + attr['run_url'] + '\'>' +
-                            attr['run_accession'] + '</a>';
-                    }
-
-                    const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
-                        attr.pipeline_version +
-                        '</a>';
-
-                    description['Pipeline version'] = pipelineLink;
-
-                    const dataAnalysis = {};
-                    if (attr['experiment_type']) {
-                        dataAnalysis['Experiment type'] = attr['experiment_type'];
-                    }
-
-                    if (attr['instrument_model']) {
-                        dataAnalysis['Instrument model'] = attr['instrument_model'];
-                    }
-
-                    if (attr['instrument_platform']) {
-                        dataAnalysis['Instrument platform'] = attr['instrument_platform'];
-                    }
                     const $overview = $('#overview');
                     $overview.append(new DetailList('Description', description));
                     if (Object.keys(dataAnalysis).length > 0) {
@@ -157,7 +281,7 @@ let AnalysisView = Backbone.View.extend({
                     }
                     util.attachExpandButtonCallback();
 
-                    loadAnalysisData(analysisID, attr['pipeline_version']);
+                    loadAnalysisData(analysisID, attr['pipeline_version'], attr['experiment_type']);
                     loadDownloads(analysisID, attr['pipeline_version']);
 
                     new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary',
@@ -167,12 +291,18 @@ let AnalysisView = Backbone.View.extend({
                     statsData.fetch({
                         dataType: 'text',
                         success(model) {
-                            new QCChart('QC-step-chart', attr['analysis_summary'],
-                                model.attributes['sequence_count']);
-                            if (attr['pipeline_version'] > 2) {
-                                loadReadLengthDisp(analysisID, model.attributes);
-                                loadGCDistributionDisp(analysisID, model.attributes);
-                                loadNucleotideDisp(analysisID, model.attributes);
+                            if (model.attributes.hasOwnProperty('sequence_count')) {
+                                new QCChart('QC-step-chart', attr['analysis_summary'],
+                                    model.attributes['sequence_count']);
+                                if (attr['pipeline_version'] > 2) {
+                                    loadReadLengthDisp(analysisID, model.attributes);
+                                    loadGCDistributionDisp(analysisID, model.attributes);
+                                    loadNucleotideDisp(analysisID);
+                                }
+                            } else {
+                                const error = $('<h4>Could not load quality control analysis</h4>');
+                                console.debug('Failed to load QC analysis.');
+                                $('#qc').empty().append(error);
                             }
                         }
                     });
@@ -321,10 +451,33 @@ function getColourSquareIcon(i) {
         Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
 }
 
+/**
+ * Enable toggling of series visibility, sync'd across table of series and chart
+ * @param {jQuery.element} elem table row
+ * @param {HighCharts.serie} series in chart
+ * @param {integer} index index of serie in chart
+ * @param {integer} numSeries total number of series
+ * @param {boolean} defaultVisibility true if series should be visible by default
+ */
+function setTableRowAndChartHiding(elem, series, index, numSeries, defaultVisibility) {
+    series.setVisible(defaultVisibility);
+    if (index === numSeries - 1) {
+        ($(elem).parent().children().slice(numSeries - 1)).toggleClass(
+            'disabled-clickable');
+    } else {
+        $(elem).toggleClass('disabled-clickable');
+    }
+}
+
 let TaxonomyGraphView = Backbone.View.extend({
     model: api.Taxonomy,
-    initialize(model, pipelineVersion) {
-        this.model.fetch().done(function(model) {
+    init(pipelineVersion) {
+        return this.model.fetch().done(function(model) {
+            if (model.length === 0) {
+                console.debug('Could not load taxonomy graph view.');
+                return;
+            }
+
             const clusteredData = groupTaxonomyData(model, 0);
             const phylumDepth = parseFloat(pipelineVersion) >= 4 ? 2 : 1;
             const phylumData = groupTaxonomyData(model, phylumDepth);
@@ -348,8 +501,12 @@ let TaxonomyGraphView = Backbone.View.extend({
                 const colorDiv = getColourSquareIcon(i);
                 return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
             });
-            const phylumPieTable = new ClientSideTable($('#pie').find('.phylum-table'), '', headers,
-                DEFAULT_PAGE_SIZE);
+            const options = {
+                title: '',
+                headers: headers,
+                initPageSize: DEFAULT_PAGE_SIZE
+            };
+            const phylumPieTable = new ClientSideTable($('#pie').find('.phylum-table'), options);
             phylumPieTable.update(data, false, 1);
 
             const numSeries = phylumPieChart.series[0].data.length;
@@ -364,13 +521,7 @@ let TaxonomyGraphView = Backbone.View.extend({
             phylumPieTable.$tbody.find('tr').click(function() {
                 let index = getSeriesIndex($(this).index(), numSeries);
                 const series = phylumPieChart.series[0].data[index];
-                series.setVisible(!series.visible);
-                if (index === numSeries - 1) {
-                    ($(this).parent().children().slice(numSeries - 1)).toggleClass(
-                        'disabled-clickable');
-                } else {
-                    $(this).toggleClass('disabled-clickable');
-                }
+                setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
             });
 
             new TaxonomyColumnChart('domain-composition-column', 'Domain composition',
@@ -378,8 +529,8 @@ let TaxonomyGraphView = Backbone.View.extend({
             const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column',
                 'Phylum composition', phylumData, false);
 
-            const phylumColumnTable = new ClientSideTable($('#column').find('.phylum-table'), '',
-                headers, DEFAULT_PAGE_SIZE);
+            const phylumColumnTable = new ClientSideTable($('#column').find('.phylum-table'),
+                options);
             phylumColumnTable.update(data, false, 1);
             phylumColumnTable.$tbody.find('tr').hover(function() {
                 let index = getSeriesIndex($(this).index(), numSeries);
@@ -393,13 +544,7 @@ let TaxonomyGraphView = Backbone.View.extend({
                 let index = getSeriesIndex($(this).index(), numSeries);
                 const series = phylumColumnChart.series[0].data[index];
                 phylumColumnChart.series[0].data[index].visible = false;
-                series.visible = false;
-                if (index === numSeries - 1) {
-                    ($(this).parent().children().slice(numSeries - 1)).toggleClass(
-                        'disabled-clickable');
-                } else {
-                    $(this).toggleClass('disabled-clickable');
-                }
+                setTableRowAndChartHiding(this, series, index, numSeries, false);
             });
 
             const numSeriesPhylumColumn = phylumColumnChart.series[0].data.length;
@@ -415,7 +560,7 @@ let TaxonomyGraphView = Backbone.View.extend({
             const phylumStackedColumnChart = new TaxonomyStackedColumnChart(
                 'phylum-composition-stacked-column', 'Phylum composition', phylumData, false);
             const phylumStackedColumnTable = new ClientSideTable(
-                $('#stacked-column').find('.phylum-table'), '', headers, DEFAULT_PAGE_SIZE);
+                $('#stacked-column').find('.phylum-table'), options);
             phylumStackedColumnTable.update(data, false, 1);
             phylumStackedColumnTable.$tbody.find('tr').hover(function() {
                 let index = getSeriesIndex($(this).index(), numSeries);
@@ -503,8 +648,12 @@ let InterProSummary = Backbone.View.extend({
                     {sortBy: 'a', name: 'pCDS matched'},
                     {sortBy: 'a', name: '%'}
                 ];
-                const interproTable = new ClientSideTable($('#InterPro-table'), '', headers,
-                    DEFAULT_PAGE_SIZE);
+                const options = {
+                    title: '',
+                    headers: headers,
+                    initPageSize: DEFAULT_PAGE_SIZE
+                };
+                const interproTable = new ClientSideTable($('#InterPro-table'), options);
                 interproTable.update(tableData, false, 1, data.length);
 
                 const numSeries = taxonomyPieChart.series[0].data.length;
@@ -519,30 +668,11 @@ let InterProSummary = Backbone.View.extend({
                 interproTable.$tbody.find('tr').click(function() {
                     let index = getSeriesIndex($(this).index(), numSeries);
                     const series = taxonomyPieChart.series[0].data[index];
-                    series.setVisible(!series.visible);
-                    if (index === numSeries - 1) {
-                        ($(this).parent().children().slice(numSeries - 1)).toggleClass(
-                            'disabled-clickable');
-                    } else {
-                        $(this).toggleClass('disabled-clickable');
-                    }
+                    setTableRowAndChartHiding(this, series, index, numSeries, false);
                 });
             });
     }
 });
-
-/**
- * Count sum of data counts
- * @param {[]} array of data with counts
- * @return {number} sum of counts of data in array
- */
-function getTotalGoTermCount(array) {
-    let sum = 0;
-    _.each(array, function(e) {
-        sum += e.attributes.count;
-    });
-    return sum;
-}
 
 /**
  * Disable tab by id
@@ -687,68 +817,6 @@ let DownloadView = Backbone.View.extend({
         });
     }
 });
-
-/**
- * Load krona chart for current view
- * @param {string} analysisID ENA primary accession for analysis
- * @param {string} type subunit type (for pipeline version 4.0 and above) ("ssu" or "lsu")
- */
-function loadKronaChart(analysisID, type) {
-    const kronaUrl = api.getKronaURL(analysisID, type);
-    const kronaChart = '<object class="krona_chart" ' +
-        'data="' + kronaUrl + '" ' +
-        'type="text/html"></object>';
-    $('#krona').html(kronaChart);
-// <object class="krona_chart"
-//     data="<%= kronaUrl %>"
-//     type="text/html"></object>
-}
-
-/**
- * Load taxonomy data and create graphs
- * @param {string} analysisID ENA analysis primary accession
- * @param {string} type of analysis (see API documentation for endpoint)
- * @param {integer} pipelineVersion
- */
-function loadTaxonomy(analysisID, type, pipelineVersion) {
-    taxonomy = new api.Taxonomy({id: analysisID, type: type});
-    new TaxonomyGraphView({model: taxonomy}, pipelineVersion);
-    loadKronaChart(analysisID, type);
-}
-
-/**
- * Callback for taxonomy size selection in taxonomic analysis tab
- * @param {number} pipelineVersion
- */
-function onTaxonomySelect(srcElem, pipelineVersion) {
-    const type = $(srcElem).val();
-    loadTaxonomy(analysisID, type, pipelineVersion);
-}
-
-/**
- * Load and displaycharts for selected view
- * @param {string} analysisID ENA analysis primary accession
- * @param {string} pipelineVersion
- */
-function loadAnalysisData(analysisID, pipelineVersion) {
-    interproData = new api.InterproIden({id: analysisID});
-    new InterProSummary({model: interproData});
-
-    let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
-    loadTaxonomy(analysisID, type, pipelineVersion);
-
-    goTerm = new api.GoSlim({id: analysisID});
-    new GoTermCharts({model: goTerm});
-}
-
-/**
- *
- * @param {string} analysisID ENA analysis primary accession
- */
-function loadDownloads(analysisID) {
-    let downloads = new api.AnalysisDownloads({id: analysisID});
-    new DownloadView({model: downloads});
-}
 
 let analysis = new api.Analysis({id: analysisID});
 new AnalysisView({model: analysis});

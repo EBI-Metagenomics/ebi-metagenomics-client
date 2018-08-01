@@ -1,6 +1,8 @@
 language: node_js
 node_js:
  - "8"
+ - "8.11.2"
+ - "8.11.1"
 
 python:
   - "3.4"
@@ -56,17 +58,23 @@ before_install:
 
   # Touch download files
   - travis/create_download_files.sh
-  - emgcli import_taxonomy ERR1022502 $TRAVIS_BUILD_DIR/results
-  - emgcli import_qc ERR1022502 $TRAVIS_BUILD_DIR/results
-  - emgcli import_summary ERR1022502 $TRAVIS_BUILD_DIR/results .ipr
-  - emgcli import_summary ERR1022502 $TRAVIS_BUILD_DIR/results .go_slim
-  - emgcli import_summary ERR1022502 $TRAVIS_BUILD_DIR/results .go
+  - emgcli import_taxonomy ERR1022502 ~/results
+  - emgcli import_qc ERR1022502 ~/results
+  - emgcli import_summary ERR1022502 ~/results .ipr
+  - emgcli import_summary ERR1022502 ~/results .go_slim
+  - emgcli import_summary ERR1022502 ~/results .go
 
-  - emgcli import_taxonomy ERR1022500 $TRAVIS_BUILD_DIR/results
-  - emgcli import_qc ERR1022500 $TRAVIS_BUILD_DIR/results
-  - emgcli import_summary ERR1022500 $TRAVIS_BUILD_DIR/results .ipr
-  - emgcli import_summary ERR1022500 $TRAVIS_BUILD_DIR/results .go_slim
-  - emgcli import_summary ERR1022500 $TRAVIS_BUILD_DIR/results .go
+#  - emgcli import_taxonomy ERR1022500 ~/results
+#  - emgcli import_qc ERR1022500 ~/results
+#  - emgcli import_summary ERR1022500 ~/results .ipr
+#  - emgcli import_summary ERR1022500 ~/results .go_slim
+#  - emgcli import_summary ERR1022500 ~/results .go
+#
+  - emgcli import_taxonomy ERR867655 ~/results
+#  - emgcli import_qc ERR867655 ~/results
+#  - emgcli import_summary ERR867655 ~/results .ipr
+#  - emgcli import_summary ERR867655 ~/results .go_slim
+#  - emgcli import_summary ERR867655 ~/results .go
 
   # Install build dependencies
   - npm install cypress
@@ -85,7 +93,7 @@ script:
 
 after_script:
   - npm run coverage
-  - cat coverage.lcov | codacy-coverage
+  - cat coverage/lcov.info | codacy-coverage
   - codecov
 
 cache:

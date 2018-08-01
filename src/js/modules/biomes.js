@@ -28,26 +28,29 @@ let BiomesView = Backbone.View.extend({
             {sortBy: 'samples_count', name: 'Samples excluding sub-lineages'}
         ];
         const $samplesSection = $('#biomes-section');
-        this.tableObj = new GenericTable($samplesSection, 'Biomes list', columns, '-samples_count',
-            Commons.DEFAULT_PAGE_SIZE, true, true, 'biomes-table',
-            function(page, pageSize, order, search) {
+        // ($container, title, headers, initialOrdering, initPageSize, isHeader,
+        // filter, tableClass, callback)
+        let tableOptions = {
+            title: 'Biomes list',
+            headers: columns,
+            initialOrdering: '-samples_count',
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: true,
+            filter: true,
+            tableClass: 'biomes-table',
+            callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
                     ordering: order,
                     search: search
                 });
-            });
+            }
+        };
+        this.tableObj = new GenericTable($samplesSection, tableOptions);
 
         let params = {};
         params.page = pagination.currentPage;
-
-        const biome = pageFilters['lineage'];
-        if (biome) {
-            params.lineage = biome;
-        } else {
-            params.lineage = 'root';
-        }
 
         const ordering = pageFilters['ordering'];
         if (ordering) {
@@ -59,7 +62,7 @@ let BiomesView = Backbone.View.extend({
         const search = pageFilters['search'];
         if (search) {
             params.search = search;
-            $('#search').val(search);
+            $('input.table-filter.search').val(search);
         }
         params.page_size = pageFilters['pagesize'] || Commons.DEFAULT_PAGE_SIZE;
         params.page = parseInt(pageFilters['page']) || 1;
@@ -110,18 +113,6 @@ function updatePageSize(pageSize) {
     const params = {
         page_size: pageSize,
         page: 1
-    };
-    biomesView.update(params);
-}
-
-/**
- * Update page callback for pagination event
- * @param {number} page
- */
-function changePage(page) {
-    const params = {
-        page_size: pagination.getPageSize(),
-        page: page
     };
     biomesView.update(params);
 }

@@ -1,4 +1,3 @@
-const Backbone = require('backbone');
 const _ = require('underscore');
 const util = require('../util');
 const commons = require('../commons');
@@ -20,97 +19,104 @@ $('#pageSize').append(commons.pagesize);
 
 const pageFilters = util.getURLFilterParams();
 
-let StudiesView = Backbone.View.extend({
+/**
+ * Create basic request parameters for calls to studies / samples on EMG API
+ * @return {object}
+ */
+function createInitParams() {
+    let params = {};
+    params.page = pagination.currentPage;
+
+    const biome = pageFilters['lineage'];
+    if (biome) {
+        params.lineage = biome;
+    } else {
+        params.lineage = 'root';
+    }
+
+    const ordering = pageFilters['ordering'];
+    if (ordering) {
+        params.ordering = ordering;
+    } else {
+        params.ordering = '-last_update';
+    }
+
+    const search = pageFilters['search'];
+    if (search) {
+        params.search = search;
+        $('#search').val(search);
+    }
+    params.page_size = pageFilters['pagesize'] || Commons.DEFAULT_PAGE_SIZE;
+    params.page = parseInt(pageFilters['page']) || 1;
+    return params;
+}
+
+let StudiesView = util.GenericTableView.extend({
     tableObj: null,
     pagination: null,
     params: {},
 
-    init() {
+    getRowData(attr) {
+        const biomes = _.map(attr.biomes, function(biome) {
+            return '<span class="biome_icon icon_xs ' + biome.icon + '" title="' + biome.name +
+                '"></span>';
+        }).join('');
+        const accessionLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_id +
+            '</a>';
+        const nameLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_name + '</a>';
+        return [biomes, accessionLink, nameLink, attr.samples_count, attr.last_update];
+    },
+
+    initialize() {
         const that = this;
         const columns = [
             {sortBy: null, name: 'Biome'},
-            {sortBy: 'accession', name: 'Accession'},
+            {sortBy: 'study_id', name: 'Accession'},
             {sortBy: 'study_name', name: 'Study name'},
             {sortBy: 'samples_count', name: 'Samples'},
             {sortBy: 'last_update', name: 'Last updated'}
         ];
+
+        let params = createInitParams();
+
         const $studiesSection = $('#studies-section');
-        this.tableObj = new GenericTable($studiesSection, 'Studies list', columns, '-last_update',
-            Commons.DEFAULT_PAGE_SIZE, true, true, 'browse-studies-table',
-            function(page, pageSize, order, search) {
+        let tableOptions = {
+            title: 'Studies list',
+            headers: columns,
+            initialOrdering: params.ordering,
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: true,
+            filter: true,
+            tableClass: 'browse-studies-table',
+            callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
-                    ordering: order,
-                    search: search
+                    ordering: order || that.tableObj.getCurrentOrder(),
+                    search: search,
+                    lineage: $('.biome-select').val()
                 });
-            });
-
-        let params = {};
-        params.page = pagination.currentPage;
-
-        const biome = pageFilters['lineage'];
-        if (biome) {
-            params.lineage = biome;
-        } else {
-            params.lineage = 'root';
-        }
-
-        const ordering = pageFilters['ordering'];
-        if (ordering) {
-            params.ordering = ordering;
-        } else {
-            params.ordering = '-last_update';
-        }
-
-        const search = pageFilters['search'];
-        if (search) {
-            params.search = search;
-            $('#search').val(search);
-        }
-        params.page_size = pageFilters['pagesize'] || Commons.DEFAULT_PAGE_SIZE;
-        params.page = parseInt(pageFilters['page']) || 1;
-
-        this.update(params);
-    },
-
-    update(params) {
-        this.params = $.extend({}, this.params, params);
-
-        const that = this;
-        this.fetchXhr = this.collection.fetch({
-            data: $.param(this.params),
-            success(data, response) {
-                const pagination = response.meta.pagination;
-                that.renderData(pagination.page, that.params.page_size, pagination.count,
-                    response.links.first);
-                that.tableObj.hideLoadingGif();
             }
-        });
-    },
-
-    renderData(page, pageSize, resultCount, requestURL) {
-        const tableData = _.map(this.collection.models, function(m) {
-            const attr = m.attributes;
-            const biomes = _.map(m.attributes.biomes, function(biome) {
-                return '<span class="biome_icon icon_xs ' + biome.icon + '" title="' + biome.name +
-                    '"></span>';
-            }).join('');
-            const accessionLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_id +
-                '</a>';
-            const nameLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_name + '</a>';
-            return [biomes, accessionLink, nameLink, attr.samples_count, attr.last_update];
-        });
-        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
+        };
+        this.tableObj = new GenericTable($studiesSection, tableOptions);
+        this.tableObj.order = params.ordering;
+        this.update(params);
     }
 });
 
-let SamplesView = Backbone.View.extend({
+let SamplesView = util.GenericTableView.extend({
     tableObj: null,
     pagination: null,
     params: {},
 
-    init() {
+    getRowData(attr) {
+        const biomes = '<span class="biome_icon icon_xs ' + attr.biome_icon + '" title="' +
+            attr.biome_name + '"></span>';
+        const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
+            '</a>';
+        return [biomes, sampleLink, attr.sample_name, attr.sample_desc, attr.last_update];
+    },
+    initialize() {
         const that = this;
         const columns = [
             {sortBy: null, name: 'Biome'},
@@ -119,71 +125,31 @@ let SamplesView = Backbone.View.extend({
             {sortBy: null, name: 'Description'},
             {sortBy: 'last_update', name: 'Last updated'}
         ];
+        let params = createInitParams();
+
         const $samplesSection = $('#samples-section');
-        this.tableObj = new GenericTable($samplesSection, 'Samples list', columns, '-last_update',
-            Commons.DEFAULT_PAGE_SIZE, true, true, 'samples-table',
-            function(page, pageSize, order, search) {
+
+        let tableOptions = {
+            title: 'Samples list',
+            headers: columns,
+            initialOrdering: params.ordering,
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: true,
+            filter: true,
+            tableClass: 'samples-table',
+            callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
-                    ordering: order,
-                    search: search
+                    ordering: order || that.tableObj.getCurrentOrder(),
+                    search: search,
+                    lineage: $('.biome-select').val()
                 });
-            });
-
-        let params = {};
-        params.page = pagination.currentPage;
-
-        const biome = pageFilters['lineage'];
-        if (biome) {
-            params.lineage = biome;
-        } else {
-            params.lineage = 'root';
-        }
-
-        const ordering = pageFilters['ordering'];
-        if (ordering) {
-            params.ordering = ordering;
-        } else {
-            params.ordering = '-last_update';
-        }
-
-        const search = pageFilters['search'];
-        if (search) {
-            params.search = search;
-            $('#search').val(search);
-        }
-        params.page_size = pageFilters['pagesize'] || Commons.DEFAULT_PAGE_SIZE;
-        params.page = parseInt(pageFilters['page']) || 1;
-
-        return this.update(params);
-    },
-
-    update(params) {
-        this.params = $.extend({}, this.params, params);
-
-        const that = this;
-        this.fetchXhr = this.collection.fetch({
-            data: $.param(this.params),
-            success(ignored, response) {
-                const pagination = response.meta.pagination;
-                that.renderData(pagination.page, that.params.page_size, pagination.count,
-                    response.links.first);
-                that.tableObj.hideLoadingGif();
             }
-        });
-    },
-
-    renderData(page, pageSize, resultCount, requestURL) {
-        const tableData = _.map(this.collection.models, function(m) {
-            const attr = m.attributes;
-            const biomes = '<span class="biome_icon icon_xs ' + attr.biome_icon + '" title="' +
-                attr.biome_name + '"></span>';
-            const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
-                '</a>';
-            return [biomes, sampleLink, attr.sample_name, attr.sample_desc, attr.last_update];
-        });
-        this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
+        };
+        this.tableObj = new GenericTable($samplesSection, tableOptions);
+        this.tableObj.order = params.ordering;
+        this.update(params);
     }
 });
 
@@ -216,13 +182,9 @@ let studiesView = new StudiesView({collection: studies});
 let samples = new api.SamplesCollection();
 let samplesView = new SamplesView({collection: samples});
 
-studiesView.init();
-samplesView.init();
-
 /**
  * Create biome select filter
  * @param {jQuery.HTMLElement} $div
- * @param {callback} callback
  */
 function initBiomeFilter($div) {
     $div.before(biomeFilter);

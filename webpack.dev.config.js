@@ -28,7 +28,7 @@ module.exports = {
             minSize: 1000,
             minChunks: 3,
             maxAsyncRequests: 5,
-            maxInitialRequests: 3,
+            maxInitialRequests: 3
             // cacheGroups: {
             //     commons: {
             //         name: 'common',

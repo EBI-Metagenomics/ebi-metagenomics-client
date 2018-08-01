@@ -22,13 +22,12 @@ util.specifyPageTitle('Sample', sampleId);
 function compareByName(a, b) {
     const textA = a.name.toUpperCase();
     const textB = b.name.toUpperCase();
-    let val;
+
+    let val = 0;
     if (textA < textB) {
         val = -1;
     } else if (textB < textA) {
         val = 1;
-    } else {
-        val = 0;
     }
     return val;
 }

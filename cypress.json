@@ -4,5 +4,7 @@
   "viewportWidth": 1920,
   "viewportHeight": 983,
   "video": false,
-  "videoCompression": false
+  "videoCompression": false,
+  "watchForFileChanges": false,
+  "defaultCommandTimeout": 40000
 }

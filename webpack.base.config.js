@@ -10,6 +10,8 @@ const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 const apiUrl = process.env.API_URL;
 const sequenceSearchUrl = process.env.SEQUENCE_SEARCH_URL;
 
+const version = require('./package.json')['version'];
+
 const templateFixtures = {
     subfolder: subfolder,
     apiUrl: apiUrl,
@@ -242,9 +244,9 @@ module.exports = {
         new ExtractTextPlugin('[name].css')
     ],
     output: {
-        filename: '[name].[hash].js',
+        filename: '[name].v' + version + '.[hash].js',
         path:
-        __dirname + '/dist',
+        __dirname + '/dist' + process.env.DEPLOYMENT_SUBFOLDER,
         publicPath: process.env.DEPLOYMENT_SUBFOLDER + '/'
     },
     resolve: {
