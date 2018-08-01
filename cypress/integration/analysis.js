@@ -252,7 +252,7 @@ describe('Analysis page', function() {
             cy.server();
             cy.route('GET', '/metagenomics/api/v1/analyses/MGYA00136035/taxonomy/ssu').as('apiSsu');
             openPage('analyses/MGYA00136035#taxonomic');
-            cy.wait('@apiSsu');
+            cy.wait('@apiSsu', {timeout: 40000});
             cy.get('[data-cy=\'lsu-btn\'][disabled=\'disabled\']', {timeout: 40000})
                 .should('exist');
         });
