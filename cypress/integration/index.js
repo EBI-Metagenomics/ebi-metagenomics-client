@@ -14,7 +14,16 @@ function waitForStatsLoadingGif() {
     cy.get('.loading-gif-large').should('be.hidden', {timeout: 20000});
 }
 
-describe('Home page: Test Browse by selected biomes component', function() {
+function defaultLoginFieldsAreVisible(confidentialityText) {
+    cy.get('input[name=\'analysis-type\']').should('be.visible');
+    cy.get('input[name=\'contact-username\']').should('be.visible');
+    cy.get('input[name=\'contact-email\']').should('be.visible');
+    cy.get('input[name=\'reason\']').should('be.visible');
+    cy.contains(confidentialityText).should('be.visible');
+    cy.get('button.mailtobtn').should('be.visible');
+}
+
+describe('Home page', function() {
     context('Check for elements', function() {
         before(function() {
             openPage(origPage);
@@ -43,9 +52,15 @@ describe('Home page: Test Browse by selected biomes component', function() {
     });
 
     context('Perform click events', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
             cy.server();
+        });
+        beforeEach(function() {
+            cy.server();
+        });
+        afterEach(function() {
+            cy.go('back');
         });
 
         it('Browse all biomes', function() {
@@ -141,35 +156,107 @@ describe('Home page: Test Browse by selected biomes component', function() {
                 .contains('You searched for analyses with no parameters.');
         });
     });
-});
-
-describe('Home page: Test Browse latest studies component', function() {
-    context('Check for elements', function() {
-        before(function() {
-            openPage(origPage);
-        });
-
-        it('Browse by latest studies"', function() {
-            cy.get('#latestStudies').contains('Latest studies');
-        });
-    });
-
-    context('Perform click events', function() {
+    context('Latest studies', function() {
         beforeEach(function() {
             openPage(origPage);
         });
 
-        it('View all studies', function() {
+        it('Check for elements"', function() {
+            cy.get('#latestStudies').contains('Latest studies');
+        });
+
+        it('Click to view all studies', function() {
             cy.contains('View all studies').click();
             cy.contains('Studies list');
             cy.title().should('include', 'Browse');
         });
 
-        it('View specific study', function() {
+        it('Click to view specific study', function() {
             cy.get('#studies > .study', {timeout: 5000}).should('have.length', parseInt(25));
             cy.get('#latestStudies').contains('View more').first().click();
             cy.contains('Study');
             cy.title().should('include', 'Study');
+        });
+    });
+    context('Getting started section', function() {
+        beforeEach(function() {
+            openPage(origPage);
+        });
+        it('Text search btn should link to text search page', function() {
+            cy.contains('Text search').click();
+            cy.get('h2').should('contain', 'Search');
+        });
+        it('Sequence search btn should link to seq search page', function() {
+            cy.get('[data-cy=\'seq-search-getting-started-btn\']').then(($el) => {
+                expect(Cypress.$($el).attr('href')).to.contain('sequence-search');
+            });
+        });
+    });
+
+    function testAnalysisTypeTooltip(tooltipDataAttr) {
+        cy.get('[data-cy=\'' + tooltipDataAttr + '\']:visible')
+            .invoke('hover').invoke('mouseover').trigger('mouseover').trigger('hover')
+            .then(($el) => {
+                const tooltipId = Cypress.$($el).parent().attr('data-toggle');
+                cy.get('#' + tooltipId).should('be.visible');
+            });
+    }
+
+    context('Request analysis section - Private data', function() {
+        const redirectText = 'You will be re-directed to the ENA to submit this data; please ' +
+            'provide us with enough information to find this data.';
+        const confidentialityText = 'The analysis of your data will be held confidentially ' +
+            'on our site until the hold date expires.';
+
+        before(function() {
+            openPage(origPage);
+            cy.contains('Submit and/or Request').click();
+        });
+        it('Form elements should be hidden until a radio button is checked', function() {
+            cy.get('input[name=\'study-accession\']').should('be.hidden');
+            cy.get('input[name=\'analysis-type\']').should('be.hidden');
+            cy.get('input[name=\'contact-username\']').should('be.hidden');
+            cy.get('input[name=\'contact-email\']').should('be.hidden');
+            cy.get('input[name=\'reason\']').should('be.hidden');
+            cy.contains(confidentialityText).should('be.hidden');
+            cy.get('button.mailtobtn').should('be.hidden');
+            cy.contains(redirectText).should('be.hidden');
+        });
+
+        it('Checking yes radio box should display elements', function() {
+            cy.get('input[value=\'yes\']').click();
+            cy.get('input[name=\'study-accession\']').should('be.visible');
+            cy.get('input[name=\'study-title\']').should('be.hidden');
+            defaultLoginFieldsAreVisible(confidentialityText);
+            cy.contains(redirectText).should('be.hidden');
+        });
+        it('Checking no radio button should display elements', function() {
+            cy.get('input[value=\'no\']').click();
+            cy.get('input[name=\'study-accession\']').should('be.hidden');
+            cy.get('input[name=\'study-title\']').should('be.visible');
+            defaultLoginFieldsAreVisible(confidentialityText);
+            cy.contains(redirectText).should('be.visible');
+        });
+        it('Analysis type tooltip hover should display tooltip', function() {
+            cy.get('input[value=\'yes\']').click();
+            testAnalysisTypeTooltip('private-help-tooltip');
+        });
+    });
+    context('Request analysis - public data', function() {
+        before(function() {
+            openPage(origPage);
+            cy.get('button[data-open=\'requestPublicAnalysisModal\']').click();
+        });
+        it('Analysis type tooltip hover should display tooltip', function() {
+            testAnalysisTypeTooltip('public-help-tooltip');
+        });
+        it('Form elements should be visible', function() {
+            cy.get('input[name=\'study-accession\']').should('be.visible');
+            cy.get('input[name=\'analysis-type\']').should('be.visible');
+            cy.get('input[name=\'contact-username\']').should('be.visible');
+            cy.get('input[name=\'contact-email\']').should('be.visible');
+            cy.get('input[name=\'reason\']').should('be.visible');
+            cy.get('button.mailtobtn').should('be.visible');
         });
     });
 });

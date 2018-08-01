@@ -61,8 +61,11 @@ export let drawGCContent = function(elem, data) {
                 pointPadding: 0.25,
                 threshold: data['average_gc_content'],
                 tooltip: {
-                    pointFormat: '<span style="color:{point.color}">\u25CF</span> ' +
-                    '{this.series.name}: <b>' + (100 - data['average_gc_content']) + '</b><br/>'
+                    pointFormatter: function() {
+                        const val = (100 - data['average_gc_content']).toFixed(2);
+                        return '<span style="color:' + this.color + '">\u25CF</span> ' +
+                            this.series.name + ': <b>' + val + '%</b><br/>';
+                    }
                 },
                 // tooltip: {
                 //     pointFormatter: function() {

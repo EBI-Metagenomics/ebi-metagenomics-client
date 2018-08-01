@@ -38,7 +38,8 @@ after(() => {
         if (coverage) {
             map.merge(coverage);
         }
+        const spec = window.location.pathname.split('/').slice(-1);
 
-        cy.writeFile('.nyc_output/out.json', JSON.stringify(map));
+        cy.writeFile('coverage/' + spec + '.json', JSON.stringify(map));
     });
 });

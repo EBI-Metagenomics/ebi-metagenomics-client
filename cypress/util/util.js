@@ -1,9 +1,6 @@
 import Config from './config';
 
-const username = Cypress.env('WEBIN_USERNAME');
-const password = Cypress.env('WEBIN_PASSWORD');
-
-let Util = {
+export let Util = {
     getBaseURL: function() {
         return Config.BASE_URL;
     },
@@ -11,7 +8,7 @@ let Util = {
         return Config.BASE_URL + (page !== 'overview' ? page : '');
     },
     openPage: function(page) {
-        cy.visit(Util.getPageURL(page));
+        return cy.visit(Util.getPageURL(page));
     },
     waitForPageLoad: function(title) {
         cy.get('h2').should('contain', title);
@@ -45,16 +42,26 @@ let Util = {
     loginModal: '[data-cy=\'loginModal\']',
     usernameInput: 'input[name=\'username\']',
     passwordInput: 'input[name=\'password\'][type=\'password\']',
-    login: function() {
-        cy.get(Util.loginButton).click();
-        cy.get(Util.usernameInput).type(username);
-        cy.get(Util.passwordInput).type(password);
-        cy.get(Util.loginModal).find('input[name=\'submit\']').click();
-        Util.waitForPageLoad('My studies');
+
+    username: Cypress.env('WEBIN_USERNAME'),
+    password: Cypress.env('WEBIN_PASSWORD'),
+
+    checkIsLoggedIn: function() {
         cy.get(Util.loginModal).should('be.hidden');
         cy.get(Util.loginButton).should('not.exist');
         cy.get(Util.logoutButton).should('be.visible');
-        cy.get(Util.myDataBtn).should('be.visible').contains('Welcome, ' + username);
+    },
+    fillLoginModalForm: function() {
+        cy.get(Util.usernameInput).type(Util.username);
+        cy.get(Util.passwordInput).type(Util.password);
+        cy.get(Util.loginModal).find('input[name=\'submit\']').click();
+    },
+    login: function() {
+        cy.get(Util.loginButton).click();
+        Util.fillLoginModalForm();
+        Util.waitForPageLoad('My studies');
+        Util.checkIsLoggedIn();
+        cy.get(Util.myDataBtn).should('be.visible').contains('Welcome, ' + Util.username);
     },
     setupDefaultSearchPageRouting: function() {
         cy.server();
@@ -91,6 +98,11 @@ let Util = {
             '**/ebisearch/ws/rest/metagenomics_analyses?format=json&size=1&start=0&facetcount=10&' +
             'facetsdepth=3&query=domain_source:metagenomics_analyses',
             'fixture:analysesInitFilters.json').as('basicAnalysesFilters');
+    },
+    isValidLink: function($el) {
+        cy.request(Cypress.$($el).attr('href')).then((resp) => {
+            expect(resp['status']).to.eq(200);
+        });
     }
 };
 module.exports = Util;

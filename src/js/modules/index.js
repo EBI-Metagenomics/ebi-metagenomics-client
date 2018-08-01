@@ -294,6 +294,7 @@ function initObjectCounts() {
 
 initObjectCounts();
 
+// Needed for hideable form elements
 $(document).ready(function() {
     function conditionalElementsEBI(watchedParentClass) {
         watchedParentClass = watchedParentClass || '.conditional-form';

@@ -29,7 +29,7 @@ export function setCurrentTab(id) {
  * @return {string}
  */
 export function getURLParameter() {
-    let regex = /([A-z0-9,%+]+)(?:$|[?])/g;
+    let regex = /([A-z0-9,%+.]+)(?:$|[?])/g;
     return regex.exec(window.location.pathname)[1];
 }
 
@@ -185,7 +185,7 @@ function createBiomeOption(lineage) {
 
 export const BiomeCollectionView = Backbone.View.extend({
     selector: '.biome-select',
-    initialize(options, biome) {
+    initialize(options) {
         for (let arg in options) {
             if (options.hasOwnProperty(arg)) {
                 this[arg] = options[arg];
@@ -319,17 +319,27 @@ export function checkAPIonline() {
 /**
  * Method to update Samples or Runs view from pagination event
  * @param {Backbone.View} view Backbone view for sample or studies
- * @param {number} page current page number
- * @param {number} pageSize size of current page
- * @param {string} order ordering string
- * @param {string} query filtering string
+ * @param {object} params dict of API query parameters
+ * @return {jQuery.Promise} wrapping AJAX query to API
  */
-export function updateTableFromPagination(view, page, pageSize, order, query) {
+export function updateTable(view, params) {
+// export function updateTable(view, page, pageSize, order, query) {
     view.tableObj.showLoadingGif();
-    let params = {
-        page: page,
-        page_size: pageSize
-    };
+    if (!params) {
+        params = {};
+    }
+    if (!params['page']) {
+        params['page'] = 1;
+    }
+    if (!params['page_size']) {
+        params['page_size'] = view.tableObj.getPageSize();
+    }
+    if (!params['ordering']) {
+        params['ordering'] = view.tableObj.getCurrentOrder();
+    }
+    if (!params['search']) {
+        delete params['search'];
+    }
 
     let collectionParams = view.collection.params || {};
     if (Object.prototype.hasOwnProperty.call(collectionParams, 'study_accession')) {
@@ -340,26 +350,27 @@ export function updateTableFromPagination(view, page, pageSize, order, query) {
         params['run_accession'] = collectionParams.run_accession;
     }
 
-    if (order) {
-        params['ordering'] = order;
-    }
-    if (query) {
-        params['search'] = query;
-    }
     const that = view;
+    const deferred = $.Deferred();
     view.fetchXhr = view.collection.fetch({
         data: $.param(params),
         success(ignored, response) {
-            that.renderData(page, pageSize, response.meta.pagination.count,
+            that.renderData(response.meta.pagination.page, params['page_size'],
+                response.meta.pagination.count,
                 response.links.first);
             that.tableObj.hideLoadingGif();
+            deferred.resolve(that.collection);
+        },
+        fail() {
+            deferred.fail();
         }
     });
+    return deferred.promise();
 }
 
 export let GenericTableView = Backbone.View.extend({
-    update(page, pageSize, order, query) {
-        updateTableFromPagination(this, page, pageSize, order, query);
+    update(params) {
+        return updateTable(this, params);
     },
 
     renderData(page, pageSize, resultCount, requestURL) {
@@ -389,12 +400,25 @@ export let StudiesView = GenericTableView.extend({
             {sortBy: null, name: 'Samples count'},
             {sortBy: null, name: 'Last update'}
         ];
-        this.tableObj = new GenericTable($('#studies-section'), options.sectionTitle, columns, null,
-            DEFAULT_PAGE_SIZE, options.isPageHeader, options.filter, options.tableClass,
-            function(page, pageSize, order, query) {
-                that.update(page, pageSize, order, query);
-            });
-        this.update(1, DEFAULT_PAGE_SIZE, null, null);
+        let tableOptions = {
+            title: options.sectionTitle,
+            headers: columns,
+            initialOrdering: null,
+            initPageSize: DEFAULT_PAGE_SIZE,
+            isHeader: options.isPageHeader,
+            filter: options.filter,
+            tableClass: options.tableClass,
+            callback: function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order,
+                    search: search
+                });
+            }
+        };
+        this.tableObj = new GenericTable($('#studies-section'), tableOptions);
+        this.update({page: 1, page_size: DEFAULT_PAGE_SIZE, ordering: null, search: null});
     },
 
     getRowData(attr) {
@@ -426,12 +450,30 @@ export let SamplesView = GenericTableView.extend({
             {sortBy: null, name: 'Description'},
             {sortBy: 'last_update', name: 'Last update'}
         ];
-        this.tableObj = new GenericTable($('#samples-section'), 'Associated samples', columns,
-            'accession', Commons.DEFAULT_PAGE_SIZE_SAMPLES, false, true, 'samples-table',
-            function(page, pageSize, order, query) {
-                that.update(page, pageSize, order, query);
-            });
-        this.update(1, Commons.DEFAULT_PAGE_SIZE_SAMPLES, 'accession', null);
+        let tableOptions = {
+            title: 'Associated samples',
+            headers: columns,
+            initialOrdering: 'accession',
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: false,
+            filter: true,
+            tableClass: 'samples-table',
+            callback: function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order,
+                    search: search
+                });
+            }
+        };
+        this.tableObj = new GenericTable($('#samples-section'), tableOptions);
+        this.update({
+            page: 1,
+            page_size: Commons.DEFAULT_PAGE_SIZE_SAMPLES,
+            ordering: 'accession',
+            search: null
+        });
     },
 
     getRowData(attr) {
@@ -456,12 +498,22 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Instrument platform'},
             {sortBy: null, name: 'Pipeline versions'}
         ];
-        this.tableObj = new GenericTable($('#runs-section'), 'Associated runs & assemblies',
-            columns, 'accession', Commons.DEFAULT_PAGE_SIZE, false, true, 'runs-table',
-            function(page, pageSize, order, query) {
-                that.update(page, pageSize, order, query);
-            });
-        this.update(1, Commons.DEFAULT_PAGE_SIZE, 'accession', null);
+        let tableOptions = {
+            title: 'Associated runs & assemblies',
+            headers: columns,
+            initialOrdering: 'accession',
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: false,
+            filter: true,
+            tableClass: 'runs-table',
+            callback: function(page, pageSize, order, search) {
+                that.update({page: page, page_size: pageSize, ordering: order, search: search});
+            }
+        };
+        this.tableObj = new GenericTable($('#runs-section'), tableOptions);
+        this.update(
+            {page: 1, page_size: Commons.DEFAULT_PAGE_SIZE, ordering: 'accession', search: null});
+
     },
 
     getRowData(attr) {
@@ -493,16 +545,24 @@ export const AnalysesView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline version'},
             {sortBy: null, name: 'Analysis accession'}
         ];
-        this.tableObj = new GenericTable($('#analysis-section'), 'Analyses', columns, null,
-            Commons.DEFAULT_PAGE_SIZE, false, false, 'analyses-table',
-            function(page, pageSize, order, search) {
+        let tableOptions = {
+            title: 'Analyses',
+            headers: columns,
+            initialOrdering: null,
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: false,
+            filter: false,
+            tableClass: 'analyses-table',
+            callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
                     page_size: pageSize,
                     ordering: order,
                     search: search
                 });
-            });
+            }
+        };
+        this.tableObj = new GenericTable($('#analysis-section'), tableOptions);
         let params = {};
 
         // if (search) {

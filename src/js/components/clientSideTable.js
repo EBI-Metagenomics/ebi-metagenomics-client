@@ -6,20 +6,15 @@ module.exports = class ClientSideTable extends GenericTable {
     /**
      * Initialize handles, pagination and callback for table
      * @param {jQuery.HTMLElement} $container  jQuery container elem
-     * @param {string} title string Title of table
-     * @param {[*]} headers [string] list of table headers
-     * @param {number} initPageSize int number of results in a page
+     * @param {objects} options
      */
-    constructor($container, title, headers, initPageSize) {
-        super($container, title, headers, null);
+    constructor($container, options) {
+        super($container, options);
         const that = this;
         this.$filterInput.on('keyup', function() {
             const str = $(this).val();
             that.filterTable(str);
         });
-        this.$pageSizeSelect.val(initPageSize);
-        this.attachPageSizeCallback(initPageSize);
-        this.initHeaders(this.$table);
 
         this.attachDownloadHandler();
     }

@@ -1008,10 +1008,10 @@ a.download-part {
 
 @keyframes highlight {
     0% {
-        background: #007c82;
+        background: none;
     }
     100% {
-        background: none;
+        background: #007c82;
     }
 }
 

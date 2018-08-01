@@ -4,14 +4,14 @@ const pageTitles = [
     'About', 'Help'];
 import {openPage, getPageURL} from '../util/util';
 
+const origPage = 'overview';
 /**
  * Check all links in navbar towards other pages of the site are functional
  */
-for (let orig = 0; orig < navNames.length; orig++) {
+describe('Navbar test', function() {
     for (let dest = 1; dest < navNames.length; dest++) {
-        const origPage = navNames[orig];
         const destPage = navNames[dest];
-        describe('Nav test ' + origPage + '->' + destPage, function() {
+        context(origPage + '->' + destPage, function() {
             it('Navbar link is valid.', function() {
                 openPage(origPage);
                 cy.get('#' + destPage + '-nav').click();
@@ -23,15 +23,14 @@ for (let orig = 0; orig < navNames.length; orig++) {
             });
         });
     }
-}
+});
 
 /**
  * Check that search redirects correctly and passes parameter via URL
  */
 const testQuery = 'testQuery';
-for (let orig = 0; orig < navNames.length; orig++) {
-    const origPage = navNames[orig];
-    describe(origPage + ' - Search redirects correctly', function() {
+describe('Search bar redirection', function() {
+    context(origPage + ' - Search redirects correctly', function() {
         it('Navbar search re-directed correctly.', function() {
             openPage(origPage);
             cy.get('#headerSearchForm > input').type(testQuery);
@@ -39,8 +38,7 @@ for (let orig = 0; orig < navNames.length; orig++) {
             cy.url().should('include', 'search?query=' + testQuery);
         });
     });
-}
-
+});
 const pagesBreadcrumbs = {
     'about': [''],
     'biomes': [''],
@@ -57,46 +55,40 @@ const pagesBreadcrumbs = {
     'submit': ['']
 };
 
-for (let page in pagesBreadcrumbs) {
-    if (pagesBreadcrumbs.hasOwnProperty((page))) {
-        describe(page + ' page breadcrumbs should be valid.', function() {
-            const breadcrumbs = pagesBreadcrumbs[page];
-            it('Test breadcrumb link validity', function() {
-                for (let i in breadcrumbs) {
-                    if (Object.prototype.hasOwnProperty.call(breadcrumbs, i)) {
-                        openPage(page);
-                        const expectedPage = breadcrumbs[i];
-                        cy.get('.breadcrumbs>li>a').each(($el, index) => {
-                            if (parseInt(i) === parseInt(index)) {
-                                cy.wrap($el).click();
-                                cy.url().should('equal', getPageURL(expectedPage));
-                                openPage(page);
-                            }
-                        });
+describe('Validate breadcrumb links are valid.', function() {
+    for (let page in pagesBreadcrumbs) {
+        if (pagesBreadcrumbs.hasOwnProperty((page))) {
+            context(page + ' page.', function() {
+                const breadcrumbs = pagesBreadcrumbs[page];
+                it('Link validity', function() {
+                    for (let i in breadcrumbs) {
+                        if (Object.prototype.hasOwnProperty.call(breadcrumbs, i)) {
+                            openPage(page);
+                            const expectedPage = breadcrumbs[i];
+                            cy.get('.breadcrumbs>li>a').each(($el, index) => {
+                                if (parseInt(i) === parseInt(index)) {
+                                    cy.wrap($el).click();
+                                    cy.url().should('equal', getPageURL(expectedPage));
+                                    openPage(page);
+                                }
+                            });
+                        }
                     }
-                }
+                });
             });
-        });
+        }
     }
-}
+});
 
-// describe('External link to HMMER sequence search redirects correctly', function () {
-//     it('Navbar link to sequence search is valid.', function () {
-//         openPage('overview');
-//         cy.get('#sequence-search-nav > a ').then(($link) => {
-//             const url = $link.attr('href');
-//             cy.log($link);
-//             cy.request({
-//                 url: url,
-//                 followRedirect: true
-//             }). then((resp) => {
-//                 expect(resp.status).to.eq(200)
-//                 expect(url).to.contain('sequence-search/search/phmmer')
-//             })
-//         });
-//
-//
-//     });
-// });
+describe('External link to HMMER sequence search redirects correctly', function() {
+    it('Navbar link to sequence search is valid.', function() {
+        openPage('overview');
+        cy.get('#sequence-search-nav > a ').then(($link) => {
+            expect(Cypress.$($link).attr('href'))
+                .to
+                .eq('https://wwwdev.ebi.ac.uk/metagenomics/sequence-search/search/phmmer');
+        });
+    });
+});
 
 // TODO Fix HMMER sequence link check

@@ -3,22 +3,33 @@ const _ = require('underscore');
 const formatDownloadURL = require('../util').formatDownloadURL;
 require('../components/pagination').Pagination;
 
-// TODO refactor into template options parameter
 module.exports = class GenericTable {
     /**
      * Instantiate pagination display and event handlers for table which requires
      * page-by-page loading
      * @param {jQuery.HTMLElement} $container  container of table
-     * @param {string} title title of table
-     * @param {[string]} headers list of table header names
-     * @param {number} initPageSize initial page size
-     * @param {boolean} isHeader true if table should have a larger header
-     * @param {boolean} filter if true display text filter
-     * @param {string} tableClass CSS class for table obj
-     * @param {callback} callback function on event callback to load data
+     * @param {object} options Object containing the following properties:
+     * {string} title of table
+     * {[string]} headers list of table header names
+     * {number} initPageSize initial page size
+     * {boolean} isHeader true if table should have a larger header
+     * {boolean} filter if true display text filter
+     * {string} tableClass CSS class for table obj
+     * {callback} callback function on event callback to load data
      */
-    constructor($container, title, headers, initialOrdering, initPageSize, isHeader, filter, tableClass, callback) {
+    constructor($container, options) {
+        // constructor($container, title, headers, initialOrdering, initPageSize, isHeader,
+        // filter, tableClass, callback) {
         $container.empty();
+        let title = options['title'];
+        let headers = options['headers'];
+        let initialOrdering = options['initialOrdering'];
+        let initPageSize = options['initPageSize'];
+        let isHeader = options['isHeader'];
+        let tableClass = options['tableClass'];
+        let filter = options['filter'];
+        let callback = options['callback'];
+
         this.headers = headers;
         let params = {
             sectionTitle: title,
@@ -99,6 +110,9 @@ module.exports = class GenericTable {
      * @param {string} requestURL URL used to request data
      */
     update(dataset, clear, page, pageSize, resultCount, requestURL) {
+        const downloadURL = formatDownloadURL(requestURL);
+        this.setDownloadURL(downloadURL);
+
         const that = this;
         if (clear) {
             this.$tbody.empty();
@@ -109,11 +123,12 @@ module.exports = class GenericTable {
                 that.addRow(row);
             });
         }
-
         if (this.$pagination.data('twbs-pagination')) {
             this.$pagination.twbsPagination('destroy');
         }
-        this.$pageSizeSelect.val(pageSize);
+        if (pageSize) {
+            this.$pageSizeSelect.val(pageSize);
+        }
 
         let totalPages = Math.max(Math.ceil(resultCount / pageSize));
         if (isNaN(totalPages)) {
@@ -130,8 +145,6 @@ module.exports = class GenericTable {
         }
         this.setPageDisplay(page, resultCount, totalPages);
         this.hideLoadingGif();
-        const downloadURL = formatDownloadURL(requestURL);
-        this.setDownloadURL(downloadURL);
     }
 
     /**
@@ -202,7 +215,7 @@ module.exports = class GenericTable {
         if (initialSort) {
             let column;
             let sort;
-            if (initialSort.charAt(0) === '-'){
+            if (initialSort.charAt(0) === '-') {
                 column = initialSort.slice(1);
                 sort = 'sort-desc';
             } else {

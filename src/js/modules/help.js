@@ -8,9 +8,8 @@ util.setupPage('#help-nav');
 
 const prevPage = document.referrer;
 if (prevPage.indexOf('sequence-search/search/phmmer') > -1) {
-    $(document).ready(function() {
+    $(function() {
         const $seqSearch = $('#seq-search');
-        console.log($seqSearch);
         $seqSearch.addClass('highlight');
         $seqSearch[0].scrollIntoView({
             behavior: 'smooth',
