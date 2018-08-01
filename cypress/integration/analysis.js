@@ -1,4 +1,4 @@
-import {openPage, changeTab, isValidLink, datatype} from '../util/util';
+import {openPage, changeTab, isValidLink, datatype, waitForPageLoad} from '../util/util';
 import ClientSideTableHandler from '../util/clientSideTable';
 
 const origPage = 'analyses/MGYA00011845';
@@ -9,10 +9,6 @@ const origPage = 'analyses/MGYA00011845';
  * MGYA00136035 ERR867655   ERP009703 (amplicon, SSU only)
  * MGYA00141547 ERR1022502  ERP012221 (metatranscriptomic, SSU + LSU)
  */
-
-function waitForPageLoad() {
-    cy.get('#overview', {timeout: 100000}).children().should('have.length', 2);
-}
 
 function verifyTabIsVisible(tabId) {
     // Verify correct tab button is active
@@ -32,13 +28,13 @@ describe('Analysis page', function() {
     context('General', function() {
         it('Should display overview if no deeplink is provided', function() {
             openPage(origPage);
-            waitForPageLoad();
+            waitForPageLoad('Analysis MGYA00011845');
             verifyTabIsVisible('#overview');
         });
 
         it('Should display metadata if available', function() {
             openPage('analyses/MGYA00136035');
-            waitForPageLoad();
+            waitForPageLoad('Analysis MGYA00136035');
             verifyTabIsVisible('#overview');
             cy.contains('Study:').next().should('contain', 'MGYS00000462');
             cy.contains('Sample:').next().should('contain', 'ERS667575');
@@ -50,41 +46,49 @@ describe('Analysis page', function() {
         });
         it('Should resolve hash links correctly (overview)', function() {
             openPage('analyses/MGYA00136035#overview');
+            waitForPageLoad('Analysis MGYA00136035');
             cy.contains('Experiment details').should('be.visible');
         });
         it('Should resolve hash links correctly (qc)', function() {
             openPage('analyses/MGYA00136035#qc');
+            waitForPageLoad('Analysis MGYA00136035');
             cy.get('.run-qc-chart').should('be.visible');
         });
         it('Should resolve hash links correctly (taxonomic)', function() {
             openPage('analyses/MGYA00136035#taxonomic');
+            waitForPageLoad('Analysis MGYA00136035');
             cy.get('.krona_chart').should('be.visible');
         });
         it('Should resolve hash links correctly (krona)', function() {
             openPage('analyses/MGYA00136035#krona');
+            waitForPageLoad('Analysis MGYA00136035');
             cy.get('.krona_chart').should('be.visible');
         });
         it('Should resolve hash links correctly (pie)', function() {
             openPage('analyses/MGYA00136035#pie');
+            waitForPageLoad('Analysis MGYA00136035');
             cy.get('#domain-composition-pie').should('be.visible');
         });
         it('Should resolve hash links correctly (column)', function() {
             openPage('analyses/MGYA00136035#column');
+            waitForPageLoad('Analysis MGYA00136035');
             cy.get('#domain-composition-column').should('be.visible');
         });
         it('Should resolve hash links correctly (stacked-column)', function() {
             openPage('analyses/MGYA00136035#stacked-column');
+            waitForPageLoad('Analysis MGYA00136035');
             cy.get('#phylum-composition-stacked-column').should('be.visible');
         });
         it('Should resolve hash links correctly (download)', function() {
             openPage('analyses/MGYA00136035#download');
+            waitForPageLoad('Analysis MGYA00136035');
             cy.contains('Here you may download').should('be.visible');
         });
     });
     context('Download tab', function() {
         beforeEach(function() {
             openPage(origPage);
-            waitForPageLoad();
+            waitForPageLoad('Analysis MGYA00011845');
             changeTab('download');
         });
 
@@ -115,7 +119,7 @@ describe('Analysis page', function() {
     context('Quality Control tab', function() {
         before(function() {
             openPage('analyses/MGYA00141547');
-            waitForPageLoad();
+            waitForPageLoad('Analysis MGYA00141547');
             changeTab('qc');
         });
 
@@ -239,7 +243,7 @@ describe('Analysis page', function() {
     context('Taxonomy analysis tab (SSU only)', function() {
         before(function() {
             openPage('analyses/MGYA00136035#taxonomic');
-            waitForPageLoad();
+            waitForPageLoad('Analysis MGYA00136035');
         });
         it('Should pre-select SSU', function() {
             cy.get('[data-cy=\'ssu-btn\']').should('be.checked', {timeout: 40000});
@@ -254,7 +258,7 @@ describe('Analysis page', function() {
         });
         it('Should default to krona tab', function() {
             openPage('analyses/MGYA00136035#taxonomic');
-            waitForPageLoad();
+            waitForPageLoad('Analysis MGYA00136035');
             cy.get('.krona_chart').should('be.visible');
         });
         it('Changing tabs should change visible content', function() {
@@ -341,7 +345,7 @@ describe('Analysis page', function() {
     context('Taxonomy analysis tab (SSU & LSU)', function() {
         before(function() {
             openPage('analyses/MGYA00141547#taxonomic');
-            waitForPageLoad();
+            waitForPageLoad('Analysis MGYA00141547');
         });
 
         it('Should pre-select SSU', function() {
@@ -375,7 +379,7 @@ describe('Analysis page', function() {
     context('Taxonomy analysis tab (pipeline <4.0)', function() {
         it('SSU/LSU buttons should appear/dissapear if pipeline version <4.0', function() {
             openPage(origPage);
-            waitForPageLoad();
+            waitForPageLoad('Analysis MGYA0001845');
             changeTab('taxonomic');
             cy.get('#ssu-lsu-btns').should('not.exist');
             openPage('analyses/MGYA00141547');
@@ -389,13 +393,13 @@ describe('Analysis page', function() {
             cy.server();
             cy.route('GET', '**downloads**').as('apiDownloads');
             openPage(origPage);
-            waitForPageLoad();
+            waitForPageLoad('Analysis MGYA0001845');
             cy.wait('@apiDownloads');
             checkTabWasRemoved('#abundance');
         });
         it('Should change to default if no data available.', function() {
             openPage(origPage + '#abundance');
-            waitForPageLoad();
+            waitForPageLoad('Analysis MGYA0001845');
             // Check defaulted to overview tab
             cy.contains('Description', {timeout: 40000}).should('be.visible');
             cy.get('a[href=\'#abundance\']')

@@ -1,4 +1,4 @@
-import {openPage, isValidLink, datatype} from '../util/util';
+import {openPage, isValidLink, datatype, waitForPageLoad} from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
 const accession = 'ERR770966';
@@ -63,7 +63,13 @@ describe('Run page', function() {
     });
     context('Click actions', function() {
         before(function() {
+            cy.server();
+            cy.route('GET',
+                '**/ERR770966/analyses**')
+                .as('analyses');
             openPage(origPage);
+            cy.wait('@analyses');
+            cy.wait('@analyses');
         });
         it('Description section should be hideable', function() {
             cy.get(descriptionSection).should('be.visible');

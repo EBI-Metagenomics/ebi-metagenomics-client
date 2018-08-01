@@ -1,4 +1,4 @@
-import {openPage, isValidLink, datatype} from '../util/util';
+import {openPage, isValidLink, datatype, waitForPageLoad} from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
 const accession = 'GCA_900217105';
@@ -55,7 +55,7 @@ describe('Assembly page', function() {
         });
         it('Table of assemblies should load correctly', function() {
             assembliesTable = new GenericTableHandler('#assemblies', 1);
-            const rowData = Cypress._.map(assemblyTableColumns, function(a){
+            const rowData = Cypress._.map(assemblyTableColumns, function(a) {
                 return a['data'][0];
             });
             cy.log(rowData);
@@ -67,7 +67,14 @@ describe('Assembly page', function() {
     });
     context('Click actions', function() {
         before(function() {
+            cy.server();
+            cy.route('GET',
+                '**/GCA_900217105/analyses**')
+                .as('analyses');
             openPage(origPage);
+            cy.wait('@analyses');
+            cy.wait('@analyses');
+            waitForPageLoad('Assembly GCA_900217105');
         });
         it('Description section should be hideable', function() {
             cy.get(descriptionSection).should('be.visible');
