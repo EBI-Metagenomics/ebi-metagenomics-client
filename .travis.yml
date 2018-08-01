@@ -1,8 +1,8 @@
 language: node_js
 node_js:
  - "8"
- - "node"
- - "10"
+ - "8.11.2"
+ - "8.11.1"
 
 python:
   - "3.4"

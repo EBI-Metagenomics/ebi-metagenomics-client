@@ -55,6 +55,14 @@ let RunView = Backbone.View.extend({
     }
 });
 
+const columns = [
+    {sortBy: null, name: 'Analysis accession'},
+    {sortBy: null, name: 'Experiment type'},
+    {sortBy: null, name: 'Instrument model'},
+    {sortBy: null, name: 'Instrument platform'},
+    {sortBy: 'pipeline', name: 'Pipeline version'}
+];
+
 let RunAnalysesView = util.GenericTableView.extend({
     tableObj: null,
     pagination: null,
@@ -77,13 +85,6 @@ let RunAnalysesView = util.GenericTableView.extend({
 
     initialize() {
         const that = this;
-        const columns = [
-            {sortBy: null, name: 'Analysis accession'},
-            {sortBy: null, name: 'Experiment type'},
-            {sortBy: null, name: 'Instrument model'},
-            {sortBy: null, name: 'Instrument platform'},
-            {sortBy: 'pipeline', name: 'Pipeline version'}
-        ];
         const $analysesSection = $('#analyses');
         let tableOptions = {
             title: 'Analyses',
@@ -131,13 +132,6 @@ let RunAssemblyView = util.GenericTableView.extend({
     },
     initialize() {
         const that = this;
-        const columns = [
-            {sortBy: null, name: 'Analysis accession'},
-            {sortBy: null, name: 'Experiment type'},
-            {sortBy: null, name: 'Instrument model'},
-            {sortBy: null, name: 'Instrument platform'},
-            {sortBy: 'pipeline', name: 'Pipeline version'}
-        ];
         const $assembliesSection = $('#assemblies');
         let tableOptions = {
             title: 'Assemblies',

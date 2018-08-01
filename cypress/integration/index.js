@@ -14,6 +14,15 @@ function waitForStatsLoadingGif() {
     cy.get('.loading-gif-large').should('be.hidden', {timeout: 20000});
 }
 
+function defaultLoginFieldsAreVisible(confidentialityText) {
+    cy.get('input[name=\'analysis-type\']').should('be.visible');
+    cy.get('input[name=\'contact-username\']').should('be.visible');
+    cy.get('input[name=\'contact-email\']').should('be.visible');
+    cy.get('input[name=\'reason\']').should('be.visible');
+    cy.contains(confidentialityText).should('be.visible');
+    cy.get('button.mailtobtn').should('be.visible');
+}
+
 describe('Home page', function() {
     context('Check for elements', function() {
         before(function() {
@@ -213,29 +222,19 @@ describe('Home page', function() {
             cy.get('button.mailtobtn').should('be.hidden');
             cy.contains(redirectText).should('be.hidden');
         });
+
         it('Checking yes radio box should display elements', function() {
             cy.get('input[value=\'yes\']').click();
             cy.get('input[name=\'study-accession\']').should('be.visible');
             cy.get('input[name=\'study-title\']').should('be.hidden');
-            cy.get('input[name=\'analysis-type\']').should('be.visible');
-            cy.get('input[name=\'contact-username\']').should('be.visible');
-            cy.get('input[name=\'contact-email\']').should('be.visible');
-            cy.get('input[name=\'reason\']').should('be.visible');
-            cy.contains(confidentialityText).should('be.visible');
-            cy.get('button.mailtobtn').should('be.visible');
+            defaultLoginFieldsAreVisible(confidentialityText);
             cy.contains(redirectText).should('be.hidden');
         });
         it('Checking no radio button should display elements', function() {
             cy.get('input[value=\'no\']').click();
             cy.get('input[name=\'study-accession\']').should('be.hidden');
             cy.get('input[name=\'study-title\']').should('be.visible');
-            cy.get('input[name=\'analysis-type\']').should('be.visible');
-            cy.get('input[name=\'contact-username\']').should('be.visible');
-            cy.get('input[name=\'contact-email\']').should('be.visible');
-            cy.get('input[name=\'reason\']').should('be.visible');
-            cy.contains(confidentialityText).should('be.visible');
-            cy.contains(confidentialityText).should('be.visible');
-            cy.get('button.mailtobtn').should('be.visible');
+            defaultLoginFieldsAreVisible(confidentialityText);
             cy.contains(redirectText).should('be.visible');
         });
         it('Analysis type tooltip hover should display tooltip', function() {
@@ -252,6 +251,7 @@ describe('Home page', function() {
             testAnalysisTypeTooltip('public-help-tooltip');
         });
         it('Form elements should be visible', function() {
+            defaultLoginFieldsAreVisible();
             cy.get('input[name=\'study-accession\']').should('be.visible');
             cy.get('input[name=\'analysis-type\']').should('be.visible');
             cy.get('input[name=\'contact-username\']').should('be.visible');
