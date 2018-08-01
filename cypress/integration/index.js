@@ -251,7 +251,6 @@ describe('Home page', function() {
             testAnalysisTypeTooltip('public-help-tooltip');
         });
         it('Form elements should be visible', function() {
-            defaultLoginFieldsAreVisible();
             cy.get('input[name=\'study-accession\']').should('be.visible');
             cy.get('input[name=\'analysis-type\']').should('be.visible');
             cy.get('input[name=\'contact-username\']').should('be.visible');
