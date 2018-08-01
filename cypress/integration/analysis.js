@@ -50,8 +50,8 @@ describe('Analysis page', function() {
             cy.contains('Experiment details').should('be.visible');
         });
         it('Should resolve hash links correctly (qc)', function() {
-            openPage('analyses/MGYA00136035#qc');
-            waitForPageLoad('Analysis MGYA00136035');
+            openPage('analyses/MGYA00141547#qc');
+            waitForPageLoad('Analysis MGYA00141547');
             cy.get('.run-qc-chart').should('be.visible');
         });
         it('Should resolve hash links correctly (taxonomic)', function() {
@@ -379,11 +379,11 @@ describe('Analysis page', function() {
     context('Taxonomy analysis tab (pipeline <4.0)', function() {
         it('SSU/LSU buttons should appear/dissapear if pipeline version <4.0', function() {
             openPage(origPage);
-            waitForPageLoad('Analysis MGYA0001845');
+            waitForPageLoad('Analysis MGYA00011845');
             changeTab('taxonomic');
             cy.get('#ssu-lsu-btns').should('not.exist');
             openPage('analyses/MGYA00141547');
-            waitForPageLoad();
+            waitForPageLoad('Analysis MGYA00141547');
             changeTab('taxonomic');
             cy.get('#ssu-lsu-btns').should('be.visible', {timeout: 40000});
         });
@@ -393,13 +393,13 @@ describe('Analysis page', function() {
             cy.server();
             cy.route('GET', '**downloads**').as('apiDownloads');
             openPage(origPage);
-            waitForPageLoad('Analysis MGYA0001845');
+            waitForPageLoad('Analysis MGYA00011845');
             cy.wait('@apiDownloads');
             checkTabWasRemoved('#abundance');
         });
         it('Should change to default if no data available.', function() {
             openPage(origPage + '#abundance');
-            waitForPageLoad('Analysis MGYA0001845');
+            waitForPageLoad('Analysis MGYA00011845');
             // Check defaulted to overview tab
             cy.contains('Description', {timeout: 40000}).should('be.visible');
             cy.get('a[href=\'#abundance\']')

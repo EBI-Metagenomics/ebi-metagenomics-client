@@ -1,4 +1,4 @@
-import {openPage, isValidLink, datatype, waitForPageLoad} from '../util/util';
+import {openPage, isValidLink, datatype} from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
 const accession = 'ERR770966';

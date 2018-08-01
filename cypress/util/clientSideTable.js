@@ -56,12 +56,6 @@ class ClientSideTableHandler extends GenericTableHandler {
             .should('have.length', pageSize);
     }
 
-    waitForLoadingIconHidden() {
-        if (this.hasLoadingGif) {
-            this.getLoadingIcon().should('be.hidden', {timeout: 40000});
-        }
-    }
-
     testFiltering(query, page, pageSize, expectedData) {
         // Apply filter and check result
         this.getFilterInput().type(query);

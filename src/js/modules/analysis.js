@@ -107,6 +107,19 @@ function loadDownloads(analysisID) {
 }
 
 /**
+ * Load krona chart for current view
+ * @param {string} analysisID ENA primary accession for analysis
+ * @param {string} type subunit type (for pipeline version 4.0 and above) ("ssu" or "lsu")
+ */
+function loadKronaChart(analysisID, type) {
+    const kronaUrl = api.getKronaURL(analysisID, type);
+    const kronaChart = '<object class="krona_chart" ' +
+        'data="' + kronaUrl + '" ' +
+        'type="text/html"></object>';
+    $('#krona').html(kronaChart);
+}
+
+/**
  * Load taxonomy data and create graphs
  * @param {string} analysisID ENA analysis primary accession
  * @param {string} subunitType of analysis (see API documentation for endpoint)
@@ -128,6 +141,9 @@ function disableSubUnitRadio(enableType) {
     $('.rna-select-button[value=\'' + enableType + '\']').attr('checked', true);
 }
 
+/**
+ * Displays error if taxonomy graph data could not be loaded
+ */
 function displayTaxonomyGraphError() {
     const error = $('<h4>Could not load taxonomic analysis</h4>');
     console.debug('Failed to load SSU and LSU taxonomic analysis.');
@@ -220,7 +236,7 @@ function constructDescriptionTable(attr) {
 /**
  * Business logic to create table of data analysis info related to current analysis
  * @param {object} attr attributes from BackBone AnalysesView model
- * @return {{Experiment type: string, Instrument model: string, Instrument platform: string}}
+ * @return {object}
  */
 function constructDataAnalysisTable(attr) {
     const dataAnalysis = {};
@@ -801,22 +817,6 @@ let DownloadView = Backbone.View.extend({
         });
     }
 });
-
-/**
- * Load krona chart for current view
- * @param {string} analysisID ENA primary accession for analysis
- * @param {string} type subunit type (for pipeline version 4.0 and above) ("ssu" or "lsu")
- */
-function loadKronaChart(analysisID, type) {
-    const kronaUrl = api.getKronaURL(analysisID, type);
-    const kronaChart = '<object class="krona_chart" ' +
-        'data="' + kronaUrl + '" ' +
-        'type="text/html"></object>';
-    $('#krona').html(kronaChart);
-// <object class="krona_chart"
-//     data="<%= kronaUrl %>"
-//     type="text/html"></object>
-}
 
 let analysis = new api.Analysis({id: analysisID});
 new AnalysisView({model: analysis});
