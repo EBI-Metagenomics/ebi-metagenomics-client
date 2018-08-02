@@ -291,25 +291,26 @@ let AnalysisView = Backbone.View.extend({
                     statsData.fetch({
                         dataType: 'text',
                         success(model) {
-                            if (model.attributes.hasOwnProperty('sequence_count')) {
+                            if (Object.keys(attr['analysis_summary']).length > 0) {
                                 new QCChart('QC-step-chart', attr['analysis_summary'],
                                     model.attributes['sequence_count']);
+                            } else {
+                                const error = $('<h4>Could not load quality control analysis</h4>');
+                                console.debug('Failed to load QC analysis.');
+                                $('#qc').empty().append(error);
+                            }
+                            if (model.attributes.hasOwnProperty('sequence_count')) {
                                 if (attr['pipeline_version'] > 2) {
                                     loadReadLengthDisp(analysisID, model.attributes);
                                     loadGCDistributionDisp(analysisID, model.attributes);
                                     loadNucleotideDisp(analysisID);
                                 }
-                            } else {
-                                const error = $('<h4>Could not load quality control analysis</h4>');
-                                console.debug('Failed to load QC analysis.');
-                                $('#qc').empty().append(error);
                             }
                         }
                     });
 
                     if (attr.experiment_type !== 'amplicon') {
                         enableTab('functional');
-                        // QC charts
                     } else {
                         removeTab('functional');
                         if (window.location.hash.substr(1) === 'functional') {
