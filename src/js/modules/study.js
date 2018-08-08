@@ -9,7 +9,7 @@ require('../../../static/js/jquery.liveFilter.js');
 util.setupPage('#browse-nav');
 
 let studyId = util.getURLParameter();
-util.specifyPageTitle('Study', studyId);
+// util.specifyPageTitle('Study', studyId);
 
 let StudyView = Backbone.View.extend({
     model: api.Study,
