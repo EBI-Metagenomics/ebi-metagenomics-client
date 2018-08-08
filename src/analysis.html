@@ -52,18 +52,18 @@
             <div class="tabs-panel" id="qc">
                 <div class="row">
                     <div class="center column small-12 medium-12 large-12">
-                        <p>The chart below shows the number of reads which pass the quality control steps we have
-                            implemented in our pipeline. Sequence merging may have occurred with paired-end data, so the
-                            initial number of reads may differ from the number given by ENA.</p>
+                        <p>The chart below shows the number of reads which pass the quality control steps
+                            in the pipeline. Paired-end sequences may have been merged, in which case
+                            the initial number of reads may differ from the number given by ENA.</p>
                         <div id="QC-step-chart" class="run-qc-chart"></div>
                         <% if (pipeline_version>2){ %>
-                        <p>The histograms below show the distribution of sequence lengths, in basepairs, (left) and GC
-                            percentage (right) for the sequences having passed our quality control steps. Note that for
-                            large files, the distributions were compiled from a random subset of 2 millions sequence
+                        <p>The histograms below show the distributions of sequence lengths (left) and percentage GC
+                            content (right) for the sequences having passed quality control. Note that for
+                            large files, the distributions were compiled from a random subset of 2 million
                             reads.
                             The standard deviations are shown on each plot. The bar chart underneath each graph
                             indicates
-                            the minimum, average and maximum length and average GC and AT content, respectively.</p>
+                            the minimum, mean and maximum length and mean GC and AT content, respectively.</p>
                         <% } %>
                     </div>
                 </div>
@@ -193,14 +193,17 @@
                         on matches to the <a
                                 href="http://www.ebi.ac.uk/interpro" title="InterPro website"
                                 class="ext">InterPro
-                            database</a> and GO terms, which summarise the functional content of the sequences in the
+                            database</a> and <a
+                                href="https://www.uniprot.org/help/gene_ontology" title="Gene Ontology webpage"
+                                class="ext">GO</a> terms. These
+                        summarise the functional content of the sequences in the
                         sample. The full set of results files may be found under the "Download" tab.</p>
                 </div>
                 <div class="row column">
                     <div id="SeqFeat-chart" class="run-qc-chart"></div>
                 </div>
                 <div class="row column">
-                    <h4>Interpro match summary</h4>
+                    <h4>InterPro match summary</h4>
                 </div>
                 <div class="row">
                     <div class="columns small-12 medium-4 large-4">
@@ -211,7 +214,7 @@
                     </div>
                 </div>
                 <div class="row column">
-                    <h4>GO Terms annotation</h4>
+                    <h4>GO terms annotation</h4>
                     <p>A summary of Gene Ontology (GO) terms derived from InterPro matches to your sample is provided in
                         the charts below.</p>
                     <p>Switch view:
