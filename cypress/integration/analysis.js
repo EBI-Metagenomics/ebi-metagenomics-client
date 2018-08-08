@@ -189,9 +189,9 @@ describe('Analysis page', function() {
         });
         it('Reads GC bar chart should be present', function() {
             let series0 = '#readsGCBarChart svg .highcharts-series-0 > rect:nth-child(1)';
-            hoverAndValidateTooltip(series0, 'Content', 'GC Content: 44.51%');
+            hoverAndValidateTooltip(series0, 'Content', 'GC content: 44.51%');
             let series1 = '#readsGCBarChart svg .highcharts-series-1 > rect:nth-child(1)';
-            hoverAndValidateTooltip(series1, 'Content', 'AT Content: 55.49%');
+            hoverAndValidateTooltip(series1, 'Content', 'AT content: 55.49%');
         });
         it('Nucleotide position hist chart should be present', function() {
             const series = '#nucleotide .highcharts-series-2 .highcharts-point';
