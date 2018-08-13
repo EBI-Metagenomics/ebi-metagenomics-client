@@ -153,6 +153,59 @@ let SamplesView = util.GenericTableView.extend({
     }
 });
 
+let PublicationsView = util.GenericTableView.extend({
+    tableObj: null,
+    pagination: null,
+    params: {},
+
+    getRowData(attr) {
+        const pubmedLink = '<a href=\'' + attr.pubMgnifyURL + '\'>' + attr.pubmedID +
+            '</a>';
+        const titleLink = '<a href=\'' + attr.pubMgnifyURL + '\'>' + attr.title +
+            '</a>';
+        return [
+            pubmedLink,
+            titleLink,
+            attr['studiesCount'],
+            attr['samplesCount'],
+            attr['publishedYear']];
+    },
+    initialize() {
+        const that = this;
+        const columns = [
+            {sortBy: 'pubmed_id', name: 'Pubmed ID'},
+            {sortBy: null, name: 'Publication title'},
+            {sortBy: 'studies_count', name: 'Studies'},
+            {sortBy: null, name: 'Samples'},
+            {sortBy: 'published_year', name: 'Year of pub.'}
+        ];
+        let params = createInitParams();
+
+        const $samplesSection = $('#publications-section');
+
+        let tableOptions = {
+            title: 'Publications list',
+            headers: columns,
+            initialOrdering: '-pubmed_id',
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: true,
+            filter: true,
+            tableClass: 'publications-table',
+            callback: function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order || that.tableObj.getCurrentOrder(),
+                    search: search,
+                    lineage: $('.biome-select').val()
+                });
+            }
+        };
+        this.tableObj = new GenericTable($samplesSection, tableOptions);
+        this.update(params);
+    }
+});
+
 /**
  * Maintain value of filter fields across tabs
  */
@@ -182,6 +235,9 @@ let studiesView = new StudiesView({collection: studies});
 let samples = new api.SamplesCollection();
 let samplesView = new SamplesView({collection: samples});
 
+let publications = new api.PublicationsCollection();
+let publicationsView = new PublicationsView({collection: publications});
+
 /**
  * Create biome select filter
  * @param {jQuery.HTMLElement} $div
@@ -208,7 +264,7 @@ function initBiomeFilter($div) {
     });
 }
 
-initBiomeFilter($('section').find('.tableFilters'));
+initBiomeFilter($('section.table-container:not(#publications-section)').find('.tableFilters'));
 
 $('.table-filter').val(pageFilters['search']);
 
