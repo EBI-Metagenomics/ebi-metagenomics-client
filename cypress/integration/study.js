@@ -61,7 +61,6 @@ describe('Study page', function() {
             cy.contains('Human > Skin').should('exist');
             cy.contains('Publications').scrollIntoView();
             cy.contains('A longitudinal study of the diabetic skin and wound microbiome.');
-            cy.get('#europe_pmc_links > li').scrollIntoView();
             cy.contains('Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.')
                 .should('be.visible');
             cy.get('#europe_pmc_links > li').should('contain', '2017 5');
