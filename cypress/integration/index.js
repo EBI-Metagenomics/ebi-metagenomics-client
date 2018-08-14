@@ -203,7 +203,7 @@ describe('Home page', function() {
     }
 
     context('Request analysis section - Private data', function() {
-        const redirectText = 'You will be re-directed to the ENA to submit this data; please ' +
+        const redirectText = 'You will be re-directed to ENA to submit this data; please ' +
             'provide us with enough information to find this data.';
         const confidentialityText = 'The analysis of your data will be held confidentially ' +
             'on our site until the hold date expires.';
@@ -220,7 +220,6 @@ describe('Home page', function() {
             cy.get('input[name=\'reason\']').should('be.hidden');
             cy.contains(confidentialityText).should('be.hidden');
             cy.get('button.mailtobtn').should('be.hidden');
-            cy.contains(redirectText).should('be.hidden');
         });
 
         it('Checking yes radio box should display elements', function() {
@@ -228,7 +227,6 @@ describe('Home page', function() {
             cy.get('input[name=\'study-accession\']').should('be.visible');
             cy.get('input[name=\'study-title\']').should('be.hidden');
             defaultLoginFieldsAreVisible(confidentialityText);
-            cy.contains(redirectText).should('be.hidden');
         });
         it('Checking no radio button should display elements', function() {
             cy.get('input[value=\'no\']').click();

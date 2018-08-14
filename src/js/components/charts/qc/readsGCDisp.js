@@ -40,7 +40,7 @@ export let drawGCContent = function(elem, data) {
         },
         series: [
             {
-                name: 'GC Content',
+                name: 'GC content',
                 pointPadding: 0.25,
                 color: 'rgb(63, 114, 191)',
                 // tooltip: {
@@ -56,7 +56,7 @@ export let drawGCContent = function(elem, data) {
                 },
                 data: [data['average_gc_content']]
             }, {
-                name: 'AT Content',
+                name: 'AT content',
                 color: 'rgb(114, 63, 191)',
                 pointPadding: 0.25,
                 threshold: data['average_gc_content'],
