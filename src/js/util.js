@@ -299,10 +299,25 @@ export function createListItem(html) {
  * @return {jQuery.promise}
  */
 export function checkURLExists(url) {
-    return $.ajax({
+    const deferred = $.Deferred();
+    $.ajax({
         type: 'HEAD',
-        url: url
+        url: url,
+        tryCount: 0,
+        retryLimit: 5,
+        success: function() {
+            deferred.resolve();
+        },
+        error: function() {
+            this.tryCount++;
+            if (this.tryCount <= this.retryLimit) {
+                $.ajax(this);
+            } else {
+                deferred.reject();
+            }
+        }
     });
+    return deferred.promise();
 }
 
 /**
