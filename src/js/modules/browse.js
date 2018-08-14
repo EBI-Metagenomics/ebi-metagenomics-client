@@ -236,7 +236,7 @@ let samples = new api.SamplesCollection();
 let samplesView = new SamplesView({collection: samples});
 
 let publications = new api.PublicationsCollection();
-let publicationsView = new PublicationsView({collection: publications});
+new PublicationsView({collection: publications});
 
 /**
  * Create biome select filter

@@ -17,7 +17,7 @@ let PublicationView = Backbone.View.extend({
     fetchAndRender() {
         const that = this;
         return this.model.fetch({
-            success(ignored) {
+            success() {
                 that.$el.html(that.template(that.model.toJSON()));
                 const attr = that.model.attributes;
                 let description = {
