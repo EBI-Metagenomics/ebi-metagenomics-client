@@ -12,7 +12,7 @@ describe('Submit page', function() {
         });
     });
     context('User is logged in', function() {
-        before(function() {
+        beforeEach(function() {
             openPage(origPage);
             cy.contains('Please click here to login').click();
             cy.get(loginModal).should('be.visible');
