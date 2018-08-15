@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head id="head">
+    <title>MGnify &lt; EMBL-EBI</title>
+    {{> partials/head this}}
+    <meta property="og:title" content="MGnify study page > EMBL-EBI">
+    <meta property="twitter:title" content="MGnify study page > EMBL-EBI">
+
+    <meta name="og:description" content="View this study.">
+    <meta name="twitter:description" content="View this study.">
+</head>
+
+<body class="level2"><!-- add any of your classes or IDs -->
+<div id="header-container">{{> partials/header this}}</div>
+
+<!-- Suggested layout containers / #content -->
+<div id="content">
+    <div id="main-content-area" class="row columns small-12 medium-12 large-12" role="main">
+        <script id="studyTmpl" type="text/template">
+            <nav aria-label="You are here:" role="navigation">
+                <ul class="breadcrumbs columns">
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies">Browse
+                        publications</a>
+                    </li>
+                    <li>
+                        <span class="show-for-sr">Current: </span> Publication <%= pubmedID %>
+                    </li>
+                </ul>
+            </nav>
+            <h3>Publication <%= pubmedID %></h3>
+            <h2><%= title %></h2>
+            <h4><%= authors %></h4>
+            <div class="row">
+                <div class="columns small-12 medium-12 large-12">
+                    <p><%= abstract %></p>
+                </div>
+            </div>
+            <div class="row">
+                <div id='publication-details' class="columns small-12 medium-12 large-12">
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns small-12 medium-12 large-12">
+                    <section id="studies-section" class="table-container"></section>
+                </div>
+            </div>
+        </script>
+    </div>
+</div>
+
+<div id="footer">
+    {{>partials/elixir}}
+    {{>partials/footer}}
+</div>
+
+</body>
+<script defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAivAQNT-w_7wzIJ9nf7E9GTOzn1mkDGzE&callback=initPage">
+</script>
+
+</html>

@@ -57,7 +57,9 @@ module.exports = {
         pipelines:
             'src/js/modules/pipelines.js',
         pipeline:
-            'src/js/modules/pipeline.js'
+            'src/js/modules/pipeline.js',
+        publication:
+            'src/js/modules/publication.js'
     },
     plugins: [
         // new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)(),
@@ -213,6 +215,15 @@ module.exports = {
             filename: 'study.html',
             template: 'handlebars-loader!./src/study.html',
             chunks: ['study', 'commons'],
+            minify: minifyOptions,
+            templateData: templateFixtures
+        }),
+        new HtmlWebpackPlugin({
+            title: 'Publication page',
+            inject: true,
+            filename: 'publication.html',
+            template: 'handlebars-loader!./src/publication.html',
+            chunks: ['publication', 'commons'],
             minify: minifyOptions,
             templateData: templateFixtures
         }),

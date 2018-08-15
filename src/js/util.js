@@ -299,10 +299,25 @@ export function createListItem(html) {
  * @return {jQuery.promise}
  */
 export function checkURLExists(url) {
-    return $.ajax({
+    const deferred = $.Deferred();
+    $.ajax({
         type: 'HEAD',
-        url: url
+        url: url,
+        tryCount: 0,
+        retryLimit: 5,
+        success: function() {
+            deferred.resolve();
+        },
+        error: function() {
+            this.tryCount++;
+            if (this.tryCount <= this.retryLimit) {
+                $.ajax(this);
+            } else {
+                deferred.reject();
+            }
+        }
     });
+    return deferred.promise();
 }
 
 /**
@@ -386,23 +401,23 @@ export let GenericTableView = Backbone.View.extend({
 export let StudiesView = GenericTableView.extend({
     tableObj: null,
     pagination: null,
+    columns: [
+        {sortBy: null, name: 'Biome'},
+        {sortBy: null, name: 'Study Accession'},
+        {sortBy: null, name: 'Name'},
+        {sortBy: null, name: 'Abstract'},
+        {sortBy: null, name: 'Samples count'},
+        {sortBy: null, name: 'Last update'}
+    ],
     fetch() {
         return this.collection.fetch();
     },
 
     initialize(options) {
         const that = this;
-        const columns = [
-            {sortBy: null, name: 'Biome'},
-            {sortBy: null, name: 'Study ID'},
-            {sortBy: null, name: 'Name'},
-            {sortBy: null, name: 'Abstract'},
-            {sortBy: null, name: 'Samples count'},
-            {sortBy: null, name: 'Last update'}
-        ];
         let tableOptions = {
             title: options.sectionTitle,
-            headers: columns,
+            headers: this.columns,
             initialOrdering: null,
             initPageSize: DEFAULT_PAGE_SIZE,
             isHeader: options.isPageHeader,

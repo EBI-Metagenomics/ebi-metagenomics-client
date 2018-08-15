@@ -2,6 +2,10 @@
 <html lang="en">
 <head id="head">
     <title>MGnify &lt; EMBL-EBI</title>
+    <script>
+        var regex = /([A-z0-9,%+.]+)(?:$|[?])/g;
+        document.title = 'Study '+regex.exec(window.location.pathname)[1];
+    </script>
     {{> partials/head this}}
     <meta property="og:title" content="MGnify study page > EMBL-EBI">
     <meta property="twitter:title" content="MGnify study page > EMBL-EBI">
@@ -92,8 +96,8 @@
                                         <li>
                                             <span class="pub-title"><%= pub.title %> <br></span>
                                             <%= pub.authors %> <br>
-                                            <%= pub.year %> <%= pub.volume %>
-                                            (PMID: <a class="ext" href="<%= pub.pmc_url %>"><%= pub.pubmed_id %></a>)
+                                            <%= pub.publishedYear %> <%= pub.volume %>
+                                            (PMID: <a class="ext" href="<%= pub.pmc_url %>"><%= pub.pubmedID %></a>)
                                             (DOI: <a class="ext" href="<%= pub.doi_url %>"><%= pub.doi %></a>)
                                             </p>
                                         </li>

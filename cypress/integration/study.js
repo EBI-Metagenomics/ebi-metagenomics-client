@@ -49,6 +49,8 @@ describe('Study page', function() {
         beforeEach(function() {
             openPage(origPage);
             waitForPageLoad(pageTitle);
+            cy.contains('Longitudinal study of the diabetic skin and wound microbiome')
+                .should('be.visible');
         });
 
         it('Verify elements are present', function() {
@@ -57,11 +59,10 @@ describe('Study page', function() {
                 .should('contain', 'Longitudinal study of the diabetic skin and wound microbiome');
             cy.get('#ebi_ena_links').should('contain', 'ENA website (ERP019566)');
             cy.contains('Human > Skin').should('exist');
-            cy.get('#europe_pmc_links > li')
-                .should('contain',
-                    'A longitudinal study of the diabetic skin and wound microbiome.');
-            cy.get('#europe_pmc_links > li')
-                .should('contain', 'Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.');
+            cy.contains('Publications').scrollIntoView();
+            cy.contains('A longitudinal study of the diabetic skin and wound microbiome.');
+            cy.contains('Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.')
+                .should('be.visible');
             cy.get('#europe_pmc_links > li').should('contain', '2017 5');
             cy.get('#europe_pmc_links > li > a').should('contain', '28740749');
             cy.get('#europe_pmc_links > li > a').should('contain', '10.7717/peerj.3543');

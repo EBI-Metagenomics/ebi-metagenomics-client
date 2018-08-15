@@ -145,8 +145,8 @@ function disableSubUnitRadio(enableType) {
  * Displays error if taxonomy graph data could not be loaded
  */
 function displayTaxonomyGraphError() {
-    const error = $('<h4>Could not load taxonomic analysis</h4>');
-    console.debug('Failed to load SSU and LSU taxonomic analysis.');
+    const error = $('<h4>No taxonomy annotation has been associated with this analysis.</h4>');
+    console.debug('Failed to load taxonomy annotation associated with this analysis.');
     $('#taxonomic').empty().append(error);
 }
 
