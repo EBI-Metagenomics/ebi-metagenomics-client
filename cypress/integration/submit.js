@@ -19,18 +19,15 @@ describe('Submit page', function() {
             fillLoginModalForm();
         });
         it('Should display consent button', function() {
-            openPage(origPage);
             cy.contains('Give consent').should('be.visible');
         });
         it('Should prevent clicking give consent without checking box', function() {
-            openPage(origPage);
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').click();
             cy.contains(errorText).should('be.visible');
         });
         it('Should create valid mailto link', function() {
-            openPage(origPage);
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
             cy.get('#consent-given').check({force: true});
