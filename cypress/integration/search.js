@@ -277,6 +277,9 @@ describe('Search page', function() {
         cy.route('GET',
             '**/ebisearch/ws/rest/metagenomics_samples?**query=depth:*[*',
             'fixture:samplesDepthSliderQuery').as('tempSliderFilteredSamples');
+        cy.route('GET',
+            '**/ebisearch/ws/rest/metagenomics_analyses?**query=depth:*[*',
+            'fixture:analysesInitQuery').as('depthSliderFilteredAnalyses');
     }
 
     context('Sliders - ', function() {
