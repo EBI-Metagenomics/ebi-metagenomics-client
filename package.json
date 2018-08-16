@@ -5,7 +5,8 @@
   "main": "entry.js",
   "scripts": {
     "cypress:open": "cypress open",
-    "test": "cypress run --record --parallel",
+    "test:parallel": "cypress run --record --parallel",
+    "test": "cypress run",
     "watch": "webpack --mode development --watch --config webpack.dev.config.js",
     "watch:prod": "webpack --mode production --watch --config webpack.prod.config.js",
     "server:watch": "webpack-dev-server --config webpack.dev.config.js --watch",
