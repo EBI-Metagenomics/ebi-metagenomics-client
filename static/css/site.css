@@ -64,20 +64,12 @@
     width: 11%;
 }
 
-.publications-table th:first-child {
-    width: 8em;
-}
-
-.publications-table th:nth-child(3) {
+.publications-table th:nth-child(2) {
     width: 7em;
 }
 
-.publications-table th:nth-child(4) {
-    width: 6em;
-}
-
-.publications-table th:nth-child(5) {
-    width: 10em;
+.publications-table th:nth-child(3) {
+    width: 9em;
 }
 
 .runs-download-table {
