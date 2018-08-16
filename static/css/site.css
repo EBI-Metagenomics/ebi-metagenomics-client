@@ -1018,10 +1018,6 @@ a.download-part {
     color: red;
 }
 
-.biome-select {
-    width: 75%;
-}
-
 @keyframes highlight {
     0% {
         background: none;
@@ -1063,4 +1059,8 @@ ul.training > li:last-child:before {
     padding-bottom: 0.5em;
     margin-bottom: 3em;
     width: 14em;
+}
+
+.clear-filter {
+    margin-top: 1.5em;
 }

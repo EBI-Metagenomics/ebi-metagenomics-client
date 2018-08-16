@@ -10,7 +10,7 @@ util.getLoginStatus().done(function(isLoggedIn) {
             collection: userStudies,
             tableClass: 'my-studies-table',
             isPageHeader: true,
-            filter: false,
+            textFilter: false,
             sectionTitle: 'My studies'
         });
     } else {

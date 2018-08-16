@@ -27,7 +27,8 @@ module.exports = class GenericTable {
         let initPageSize = options['initPageSize'];
         let isHeader = options['isHeader'];
         let tableClass = options['tableClass'];
-        let filter = options['filter'];
+        let textFilter = options['textFilter'];
+        let biomeFilter = options['biomeFilter'];
         let callback = options['callback'];
 
         this.headers = headers;
@@ -35,7 +36,8 @@ module.exports = class GenericTable {
             sectionTitle: title,
             headers: headers,
             pagination: true,
-            filter: filter,
+            textFilter: textFilter,
+            biomeFilter: biomeFilter,
             isPageHeader: isHeader,
             tableClass: tableClass,
             tableContainer: _.uniqueId('tablecontainer')

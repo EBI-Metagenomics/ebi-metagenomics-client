@@ -34,11 +34,27 @@
                 </label>
             {{/if}}
         </div>
-        <div class="columns small-12 medium-3 large-3 tableFilters">
-            {{#if filter}}
-                <label class="right" for="tableFilter">Filter rows: <input class="table-filter search"
-                                                                           type="text"></label>
-            {{/if}}
+        <div class="columns small-12 medium-6 large-6">
+            <div class="row">
+                {{#if (or textFilter biomeFilter)}}
+                    <div class="columns small-2 medium-2 large-2 float-right">
+                        <button id='clear-filter' class="clear-filter button right">Clear</button>
+                    </div>
+                {{/if}}
+                {{#if textFilter}}
+                    <div class="columns small-5 medium-5 large-5 float-right">
+                        <label class="right" for="tableFilter">Filter rows: <input class="table-filter search"
+                                                                                   type="text"></label>
+                    </div>
+                {{/if}}
+                {{#if biomeFilter}}
+                    <div class="columns small-5 medium-5 large-5 float-right">
+                        <label class="right" for="biomeSelect">Biomes:
+                            <select name="biome" class="biome-select"></select>
+                        </label>
+                    </div>
+                {{/if}}
+            </div>
         </div>
     </div>
     <div class="row columns small-12 medium-12 large-12">

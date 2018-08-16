@@ -75,7 +75,7 @@ function initPage() {
             collection: publicationStudies,
             tableClass: 'my-studies-table',
             isPageHeader: false,
-            filter: false,
+            textFilter: false,
             sectionTitle: 'Associated studies'
         });
         util.attachExpandButtonCallback();

@@ -92,7 +92,7 @@ let RunAnalysesView = util.GenericTableView.extend({
             initialOrdering: '-pipeline',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: false,
-            filter: false,
+            textFilter: false,
             tableClass: 'analyses-table',
             callback: function(page, pageSize, order, search) {
                 that.update({
@@ -139,7 +139,7 @@ let RunAssemblyView = util.GenericTableView.extend({
             initialOrdering: '-pipeline',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: false,
-            filter: false,
+            textFilter: false,
             tableClass: 'assemblies-table',
             callback: function(page, pageSize, order, search) {
                 that.update({

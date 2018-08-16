@@ -421,7 +421,7 @@ export let StudiesView = GenericTableView.extend({
             initialOrdering: null,
             initPageSize: DEFAULT_PAGE_SIZE,
             isHeader: options.isPageHeader,
-            filter: options.filter,
+            textFilter: options.filter,
             tableClass: options.tableClass,
             callback: function(page, pageSize, order, search) {
                 that.update({
@@ -471,7 +471,7 @@ export let SamplesView = GenericTableView.extend({
             initialOrdering: 'accession',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: false,
-            filter: true,
+            textFilter: true,
             tableClass: 'samples-table',
             callback: function(page, pageSize, order, search) {
                 that.update({
@@ -519,7 +519,7 @@ export let RunsView = GenericTableView.extend({
             initialOrdering: 'accession',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: false,
-            filter: true,
+            textFilter: true,
             tableClass: 'runs-table',
             callback: function(page, pageSize, order, search) {
                 that.update({page: page, page_size: pageSize, ordering: order, search: search});
@@ -566,7 +566,7 @@ export const AnalysesView = GenericTableView.extend({
             initialOrdering: null,
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: false,
-            filter: false,
+            textFilter: false,
             tableClass: 'analyses-table',
             callback: function(page, pageSize, order, search) {
                 that.update({

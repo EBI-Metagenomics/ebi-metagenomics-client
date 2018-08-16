@@ -36,7 +36,7 @@ let BiomesView = Backbone.View.extend({
             initialOrdering: '-samples_count',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: true,
-            filter: true,
+            textFilter: true,
             tableClass: 'biomes-table',
             callback: function(page, pageSize, order, search) {
                 that.update({

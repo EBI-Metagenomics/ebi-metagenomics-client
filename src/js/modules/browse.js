@@ -7,7 +7,6 @@ const GenericTable = require('../components/genericTable');
 const Commons = require('../commons');
 const pagination = new Pagination();
 const biomeFilter = require('../commons').biomeFilter;
-
 window.Foundation.addToJquery($);
 
 util.attachTabHandlers();
@@ -86,7 +85,8 @@ let StudiesView = util.GenericTableView.extend({
             initialOrdering: params.ordering,
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: true,
-            filter: true,
+            textFilter: true,
+            biomeFilter: true,
             tableClass: 'browse-studies-table',
             callback: function(page, pageSize, order, search) {
                 that.update({
@@ -135,7 +135,8 @@ let SamplesView = util.GenericTableView.extend({
             initialOrdering: params.ordering,
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: true,
-            filter: true,
+            textFilter: true,
+            biomeFilter: true,
             tableClass: 'samples-table',
             callback: function(page, pageSize, order, search) {
                 that.update({
@@ -187,7 +188,8 @@ let PublicationsView = util.GenericTableView.extend({
             initialOrdering: '-pubmed_id',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: true,
-            filter: true,
+            textFilter: true,
+            biomeFilter: false,
             tableClass: 'publications-table',
             callback: function(page, pageSize, order, search) {
                 that.update({
@@ -241,7 +243,7 @@ new PublicationsView({collection: publications});
  * @param {jQuery.HTMLElement} $div
  */
 function initBiomeFilter($div) {
-    $div.before(biomeFilter);
+    // $div.before(biomeFilter);
     const $biomeSelect = $('.biome-select');
     $biomeSelect.on('change', function() {
         const updateObj = {
