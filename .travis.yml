@@ -21,12 +21,15 @@ env:
 
 before_install:
   - pip3 install --user --upgrade pip setuptools
+  - pip3 install --user --upgrade pip six==1.11.0
   - python3 -V
   - pip3 -V
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
   - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
 
 
+  # Add slack notification to config
+  - sed -i s#{SLACK_TOKEN}#$SLACK_TOKEN#g $TRAVIS_BUILD_DIR/travis/config.yaml
   - mysql -e 'CREATE DATABASE emg;'
 
   # Create schema from django model
@@ -90,6 +93,9 @@ install:
 
 script:
   - npm run test:parallel -- --record --key $CYPRESS_RECORD_KEY
+
+after_failure:
+  - cat ~/emg/log/emg.log
 
 after_script:
   - npm run coverage
