@@ -90,7 +90,7 @@ install:
 
 script:
   - npm run test:parallel -- --record --key $CYPRESS_RECORD_KEY
-
+  - cat ~/emg/log/emg.log
 after_script:
   - npm run coverage
   - cat coverage/lcov.info | codacy-coverage
