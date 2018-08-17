@@ -6,7 +6,6 @@ const Pagination = require('../components/pagination').Pagination;
 const GenericTable = require('../components/genericTable');
 const Commons = require('../commons');
 const pagination = new Pagination();
-const biomeFilter = require('../commons').biomeFilter;
 window.Foundation.addToJquery($);
 
 util.attachTabHandlers();
@@ -160,10 +159,10 @@ let PublicationsView = util.GenericTableView.extend({
     params: {},
 
     getRowData(attr) {
-        const title = attr['title'] + '(PMID: <a href=\'' + attr.pmc_url + '#studies-section\'> ' + attr.pubmedID +
-            '</a>)';
-        const studyLink = '<a href=\'' + attr.pubMgnifyURL + '#studies-section\'>' + attr.studiesCount +
-            '</a>';
+        const title = attr['title'] + '(PMID: <a href=\'' +
+            attr.pmc_url + '#studies-section\'> ' + attr.pubmedID + '</a>)';
+        const studyLink = '<a href=\'' + attr.pubMgnifyURL + '#studies-section\'>'
+            + attr.studiesCount + '</a>';
         return [
             title,
             studyLink,
@@ -240,7 +239,7 @@ new PublicationsView({collection: publications});
  * Create biome select filter
  * @param {jQuery.HTMLElement} $div
  */
-function initBiomeFilter($div) {
+function initBiomeFilter() {
     // $div.before(biomeFilter);
     const $biomeSelect = $('.biome-select');
     $biomeSelect.on('change', function() {

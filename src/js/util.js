@@ -528,7 +528,6 @@ export let RunsView = GenericTableView.extend({
         this.tableObj = new GenericTable($('#runs-section'), tableOptions);
         this.update(
             {page: 1, page_size: Commons.DEFAULT_PAGE_SIZE, ordering: 'accession', search: null});
-
     },
 
     getRowData(attr) {
