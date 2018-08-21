@@ -470,6 +470,14 @@ function setTableRowAndChartHiding(elem, series, index, numSeries, defaultVisibi
     }
 }
 
+Array.prototype.sum = function(prop) {
+    var total = 0;
+    for (var i = 0, _len = this.length; i < _len; i++) {
+        total += this[i][prop];
+    }
+    return total;
+};
+
 let TaxonomyGraphView = Backbone.View.extend({
     model: api.Taxonomy,
     init(pipelineVersion) {
@@ -484,8 +492,9 @@ let TaxonomyGraphView = Backbone.View.extend({
             const phylumData = groupTaxonomyData(model, phylumDepth);
             // Pie tab
             new TaxonomyPieChart('domain-composition-pie', 'Domain composition', clusteredData);
-            const phylumPieChart = new TaxonomyPieChart('phylum-composition-pie',
-                'Phylum composition', groupAfterN(phylumData, 10), true);
+            const phylumPieChart = new TaxonomyPieChart(
+                'phylum-composition-pie', 'Phylum composition', groupAfterN(phylumData, 10), true,
+                {subtitle: {text: 'Total: ' + phylumData.sum('y') + ' reads'}});
 
             const headers = [
                 {sortBy: 'a', name: ''},
@@ -528,7 +537,8 @@ let TaxonomyGraphView = Backbone.View.extend({
             new TaxonomyColumnChart('domain-composition-column', 'Domain composition',
                 clusteredData, false);
             const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column',
-                'Phylum composition', phylumData, false);
+                'Phylum composition', phylumData, false,
+                {subtitle: {text: 'Total: ' + phylumData.sum('y') + ' reads'}});
 
             const phylumColumnTable = new ClientSideTable($('#column').find('.phylum-table'),
                 options);
@@ -559,7 +569,8 @@ let TaxonomyGraphView = Backbone.View.extend({
 
             // Column tab
             const phylumStackedColumnChart = new TaxonomyStackedColumnChart(
-                'phylum-composition-stacked-column', 'Phylum composition', phylumData, false);
+                'phylum-composition-stacked-column', 'Phylum composition', phylumData, false,
+                {subtitle: {text: 'Total: ' + phylumData.sum('y') + ' reads'}});
             const phylumStackedColumnTable = new ClientSideTable(
                 $('#stacked-column').find('.phylum-table'), options);
             phylumStackedColumnTable.update(data, false, 1);
@@ -620,6 +631,9 @@ let InterProSummary = Backbone.View.extend({
                                 enabled: false
                             }
                         }
+                    },
+                    subtitle: {
+                        text: 'Total: ' + top10AndOthers.sum('y') + ' InterPro entries'
                     },
                     series: [
                         {
@@ -731,10 +745,12 @@ let GoTermCharts = Backbone.View.extend({
                 let bioProcessData = [];
                 let molecularFuncData = [];
                 let cellularComponentData = [];
+                let totalAnnotations = 0;
                 data.forEach(function(d) {
                     switch (d.attributes.lineage) {
                         case 'biological_process':
                             bioProcessData.push(d);
+                            totalAnnotations += d.attributes.count;
                             break;
                         case 'molecular_function':
                             molecularFuncData.push(d);
@@ -747,15 +763,22 @@ let GoTermCharts = Backbone.View.extend({
                     }
                 });
                 new GoTermChart('biological-process-bar-chart', 'Biological process',
-                    bioProcessData, Commons.TAXONOMY_COLOURS[0]);
+                    bioProcessData, Commons.TAXONOMY_COLOURS[0], {
+                        subtitle: {
+                            text: 'Total ' + totalAnnotations +
+                            ' annotations - Drag to zoom in/out'
+                        }
+                    });
                 new GoTermChart('molecular-function-bar-chart', 'Molecular function',
                     molecularFuncData, Commons.TAXONOMY_COLOURS[1]);
                 new GoTermChart('cellular-component-bar-chart', 'Cellular component',
                     cellularComponentData, Commons.TAXONOMY_COLOURS[2]);
 
                 new TaxonomyPieChart('biological-process-pie-chart', 'Biological process',
-                    groupGoTermData(bioProcessData), true,
-                    {plotOptions: {pie: {dataLabels: {enabled: false}}}});
+                    groupGoTermData(bioProcessData), true, {
+                        plotOptions: {pie: {dataLabels: {enabled: false}}},
+                        subtitle: {text: 'Total: ' + totalAnnotations + ' annotations'}
+                    });
                 new TaxonomyPieChart('molecular-function-pie-chart', 'Molecular function',
                     groupGoTermData(molecularFuncData), true,
                     {plotOptions: {pie: {dataLabels: {enabled: false}}}});

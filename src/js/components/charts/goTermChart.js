@@ -15,7 +15,7 @@ module.exports = class GoTermChart {
      * @param {string} color
      * @return {Highcharts.Chart}
      */
-    constructor(containerId, chartTitle, data, color) {
+    constructor(containerId, chartTitle, data, color, extraOptions) {
         let series = [];
         let categories = [];
         data.forEach(function(d) {
@@ -77,6 +77,9 @@ module.exports = class GoTermChart {
                     color: color
                 }]
         };
+        if (extraOptions) {
+            options = $.extend(options, extraOptions);
+        }
         return Highcharts.chart(containerId, options);
     }
 };
