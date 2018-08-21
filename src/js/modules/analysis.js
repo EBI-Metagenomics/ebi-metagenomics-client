@@ -813,7 +813,7 @@ let DownloadView = Backbone.View.extend({
             data: $.param({page_size: 250}),
             success(response) {
                 setAbundanceTab(response.attributes.downloadGroups['Statistics']);
-                that.$el.html(that.template({groups: response.attributes.downloadGroups}));
+                that.$el.html(that.template({groups: that.model.attributes.downloadGroups}));
             }
         });
     }
