@@ -123,7 +123,7 @@ let StudiesView = Backbone.View.extend({
 
 Foundation.Abide.defaults.patterns['study_accession']
     // = ;
-    = /^[EDS]RP\d{6,}$/;
+    = /^((MGYS)|(([EDS])RP)|(PRJ((EB)|(NA)|(DB)|(DA))))\d{5,}$/;
 
 let RequestPublicFormView = Backbone.View.extend({
     el: '#analysisPublicRequestForm',

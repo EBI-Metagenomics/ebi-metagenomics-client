@@ -300,7 +300,7 @@
         <div class="row">
             <div class="columns medium-12">
                 <label>Study accession
-                    <input id="study-accession" name="study-accession" type="text"
+                    <input id="study-accession" name="study-accession" type="text" pattern="study_accession"
                            placeholder="MGYS###### / ERP###### / SRP###### / DRP###### / PRJ######" required>
                     <span class="form-error">
                             Improperly formatted accession, format should be MGYS, ERP, SRP, DRP, PRJEB, PRJNA, PRJDA, PRJDB followed by a number.
@@ -383,7 +383,7 @@
         <div class="row conditional-div hidden" data-condition="dataSubmitted" data-condition-val="yes">
             <div class="columns medium-12">
                 <label>Study accession
-                    <input name="study-accession" type="text"
+                    <input name="study-accession" type="text" pattern="study_accession"
                            placeholder="MGYS###### / ERP###### / SRP###### / DRP###### / PRJ######" required>
                     <span class="form-error">
                         Improperly formatted accession, format should be MGYS, ERP, SRP, DRP, PRJEB, PRJNA, PRJDA, PRJDB followed by a number.
