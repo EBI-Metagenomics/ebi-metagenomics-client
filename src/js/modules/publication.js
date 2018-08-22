@@ -22,9 +22,9 @@ let PublicationView = Backbone.View.extend({
                 const attr = that.model.attributes;
                 let description = {
                     'Journal name': attr['isoJournal'],
-                    'DOI': '<a href=\'https://www.doi.org/' + attr['doi'] + '\'>' + attr['doi'] +
+                    'DOI': '<a class=\'ext\' href=\'https://www.doi.org/' + attr['doi'] + '\'>' + attr['doi'] +
                     '</a>',
-                    'PMID': attr['pubmedID'],
+                    'PMID': '<a class=\'ext\' href=\'' + attr.pmc_url + '\'> ' + attr['pubmedID'] + '</a> ',
                     'Published year': attr['publishedYear']
                     // 'ISBN': attr['isbn']
                 };
