@@ -64,11 +64,15 @@
     width: 11%;
 }
 
-.publications-table th:nth-child(2) {
-    width: 7em;
+.publications-table th:first-child {
+    width: 8em;
 }
 
 .publications-table th:nth-child(3) {
+    width: 7em;
+}
+
+.publications-table th:nth-child(4) {
     width: 9em;
 }
 
