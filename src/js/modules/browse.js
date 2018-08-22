@@ -6,8 +6,6 @@ const Pagination = require('../components/pagination').Pagination;
 const GenericTable = require('../components/genericTable');
 const Commons = require('../commons');
 const pagination = new Pagination();
-const biomeFilter = require('../commons').biomeFilter;
-
 window.Foundation.addToJquery($);
 
 util.attachTabHandlers();
@@ -86,7 +84,8 @@ let StudiesView = util.GenericTableView.extend({
             initialOrdering: params.ordering,
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: true,
-            filter: true,
+            textFilter: true,
+            biomeFilter: true,
             tableClass: 'browse-studies-table',
             callback: function(page, pageSize, order, search) {
                 that.update({
@@ -135,7 +134,8 @@ let SamplesView = util.GenericTableView.extend({
             initialOrdering: params.ordering,
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: true,
-            filter: true,
+            textFilter: true,
+            biomeFilter: true,
             tableClass: 'samples-table',
             callback: function(page, pageSize, order, search) {
                 that.update({
@@ -159,24 +159,20 @@ let PublicationsView = util.GenericTableView.extend({
     params: {},
 
     getRowData(attr) {
-        const pubmedLink = '<a href=\'' + attr.pubMgnifyURL + '\'>' + attr.pubmedID +
-            '</a>';
-        const titleLink = '<a href=\'' + attr.pubMgnifyURL + '\'>' + attr.title +
-            '</a>';
+      const title = '<a href=\'' + attr.pmc_url + '#studies-section\'> '
+          + attr['title'] + '</a> ' + ' (PMID: ' + attr.pubmedID + ')';
+        const studyLink = '<a href=\'' + attr.pubMgnifyURL + '#studies-section\'>'
+            + attr.studiesCount + '</a>';
         return [
-            pubmedLink,
-            titleLink,
-            attr['studiesCount'],
-            attr['samplesCount'],
+            title,
+            studyLink,
             attr['publishedYear']];
     },
     initialize() {
         const that = this;
         const columns = [
-            {sortBy: 'pubmed_id', name: 'Pubmed ID'},
             {sortBy: null, name: 'Publication title'},
             {sortBy: 'studies_count', name: 'Studies'},
-            {sortBy: null, name: 'Samples'},
             {sortBy: 'published_year', name: 'Year of pub.'}
         ];
         let params = createInitParams();
@@ -189,7 +185,8 @@ let PublicationsView = util.GenericTableView.extend({
             initialOrdering: '-pubmed_id',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: true,
-            filter: true,
+            textFilter: true,
+            biomeFilter: false,
             tableClass: 'publications-table',
             callback: function(page, pageSize, order, search) {
                 that.update({
@@ -242,8 +239,8 @@ new PublicationsView({collection: publications});
  * Create biome select filter
  * @param {jQuery.HTMLElement} $div
  */
-function initBiomeFilter($div) {
-    $div.before(biomeFilter);
+function initBiomeFilter() {
+    // $div.before(biomeFilter);
     const $biomeSelect = $('.biome-select');
     $biomeSelect.on('change', function() {
         const updateObj = {

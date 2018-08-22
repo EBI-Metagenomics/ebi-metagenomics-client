@@ -64,20 +64,12 @@
     width: 11%;
 }
 
-.publications-table th:first-child {
-    width: 8em;
-}
-
-.publications-table th:nth-child(3) {
+.publications-table th:nth-child(2) {
     width: 7em;
 }
 
-.publications-table th:nth-child(4) {
-    width: 6em;
-}
-
-.publications-table th:nth-child(5) {
-    width: 10em;
+.publications-table th:nth-child(3) {
+    width: 9em;
 }
 
 .runs-download-table {
@@ -1018,10 +1010,6 @@ a.download-part {
     color: red;
 }
 
-.biome-select {
-    width: 75%;
-}
-
 @keyframes highlight {
     0% {
         background: none;
@@ -1063,4 +1051,8 @@ ul.training > li:last-child:before {
     padding-bottom: 0.5em;
     margin-bottom: 3em;
     width: 14em;
+}
+
+.clear-filter {
+    margin-top: 1.5em;
 }

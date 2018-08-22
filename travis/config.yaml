@@ -17,3 +17,8 @@ emg:
     title: 'EBI Metagenomics API'
     description: 'Is a free resource to visualise and discover metagenomic datasets. For more details go to http://www.ebi.ac.uk/metagenomics/'
   allowed_host: ['localhost', '127.0.0.1']
+  slack:
+    token: '{SLACK_TOKEN}'
+    channel: 'metagenomics-test'
+    username: 'travis-tests'
+    fail_silently: false

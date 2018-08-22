@@ -21,8 +21,11 @@ let PublicationView = Backbone.View.extend({
                 that.$el.html(that.template(that.model.toJSON()));
                 const attr = that.model.attributes;
                 let description = {
+                    'Journal name': attr['isoJournal'],
                     'DOI': '<a href=\'https://www.doi.org/' + attr['doi'] + '\'>' + attr['doi'] +
-                    '</a>'
+                    '</a>',
+                    'PMID': attr['pubmedID'],
+                    'Published year': attr['publishedYear']
                     // 'ISBN': attr['isbn']
                 };
                 if (attr['medicineJournal']) {
@@ -75,7 +78,7 @@ function initPage() {
             collection: publicationStudies,
             tableClass: 'my-studies-table',
             isPageHeader: false,
-            filter: false,
+            textFilter: false,
             sectionTitle: 'Associated studies'
         });
         util.attachExpandButtonCallback();

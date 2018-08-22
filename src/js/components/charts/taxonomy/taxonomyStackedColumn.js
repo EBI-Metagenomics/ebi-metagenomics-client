@@ -34,7 +34,7 @@ module.exports = class TaxonomyStackedColumns extends TaxonomyColumn {
      */
     constructor(containerId, chartTitle, chartData, legend, extraOptions) {
         const transformedData = transformData(chartData);
-        const barOptions = {
+        let options = {
             chart: {
                 type: 'column'
             },
@@ -61,12 +61,10 @@ module.exports = class TaxonomyStackedColumns extends TaxonomyColumn {
             },
             series: transformedData
         };
-        if (!extraOptions) {
-            extraOptions = $.extend(true, extraOptions, barOptions);
-        } else {
-            extraOptions = barOptions;
+        if (options) {
+            options = $.extend(true, options, extraOptions);
         }
-        super(containerId, chartTitle, chartData, legend, extraOptions);
+        super(containerId, chartTitle, chartData, legend, options);
     }
 };
 

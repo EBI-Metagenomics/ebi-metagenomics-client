@@ -26,14 +26,13 @@ module.exports = class SeqFeatChart {
 
         let series = [
             data['Nucleotide sequences with predicted CDS'],
-            data['Nucleotide sequences with predicted RNA'],
+            data['Nucleotide sequences with predicted rRNA'],
             data['Predicted CDS with InterProScan match'],
             data['Predicted CDS'],
             data['Predicted CDS with InterProScan match']
         ].map(function(e) {
             return parseInt(e);
         });
-
         let options = {
             chart: {
                 type: 'bar'
@@ -42,9 +41,9 @@ module.exports = class SeqFeatChart {
                 text: chartTitle
             },
             yAxis: {
-                min: 0,
+                type: 'logarithmic',
                 title: {
-                    text: 'Count'
+                    text: 'Count (note the logarithmic scale)'
                 }
             },
             xAxis: {

@@ -269,7 +269,11 @@ module.exports = {
             {
                 test: /\.(handlebars)$/,
                 loader: 'handlebars-loader',
-                query: {inlineRequires: '/images/'}
+                options: {
+                    knownHelpersOnly: false,
+                    helperDirs: [__dirname + '/src/js/handlebars/helpers'],
+                    inlineRequires: '/images/'
+                }
             }, {
                 test: /\.(woff|woff2|eot|ttf)$/,
                 use: {loader: 'file-loader', options: {name: '[path][name].[hash].[ext]'}}

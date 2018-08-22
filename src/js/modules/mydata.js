@@ -1,16 +1,35 @@
 const util = require('../util');
 const authApi = require('../components/authApi');
+const _ = require('underscore');
 
 util.setupPage('#overview');
 
+const StudiesViewWithEna = util.StudiesView.extend({
+    getRowData(attr) {
+        const studyLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_id + '</a>';
+        const enaLink = '<a class=\'ext\' href=\'' + attr.ena_url + '\'>(' + attr.study_accession +
+            ')</a>';
+        const biomes = _.map(attr.biomes, function(b) {
+            return '<span class=\'biome_icon icon_xs ' + b.icon + '\' title=\'' + b.name +
+                '\'></span>';
+        });
+        return [
+            biomes.join(' '),
+            studyLink + '<br>' + enaLink,
+            attr['study_name'],
+            attr['abstract'],
+            attr['samples_count'],
+            attr['last_update']];
+    }
+});
 util.getLoginStatus().done(function(isLoggedIn) {
     if (isLoggedIn) {
         const userStudies = new authApi.UserStudies();
-        new util.StudiesView({
+        new StudiesViewWithEna({
             collection: userStudies,
             tableClass: 'my-studies-table',
             isPageHeader: true,
-            filter: false,
+            textFilter: false,
             sectionTitle: 'My studies'
         });
     } else {

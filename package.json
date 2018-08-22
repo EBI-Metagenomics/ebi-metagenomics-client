@@ -5,7 +5,8 @@
   "main": "entry.js",
   "scripts": {
     "cypress:open": "cypress open",
-    "test": "cypress run --record --parallel",
+    "test:parallel": "cypress run --record --parallel",
+    "test": "cypress run",
     "watch": "webpack --mode development --watch --config webpack.dev.config.js",
     "watch:prod": "webpack --mode production --watch --config webpack.prod.config.js",
     "server:watch": "webpack-dev-server --config webpack.dev.config.js --watch",
@@ -41,7 +42,7 @@
     "js-cookie": "^2.1.4",
     "list.js": "^1.5.0",
     "livefilter": "^2.13.0",
-    "mgnify": "^0.1.17",
+    "mgnify": "^0.1.18",
     "mocha-phantomjs": "^4.1.0",
     "motion-ui": "^1.2.3",
     "npm": "^6.3.0",
