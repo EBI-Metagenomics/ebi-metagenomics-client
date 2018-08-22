@@ -159,7 +159,7 @@ let PublicationsView = util.GenericTableView.extend({
     params: {},
 
     getRowData(attr) {
-      const title = '<a href=\'' + attr.pmc_url + '#studies-section\'> '
+      const title = '<a class=\'ext\' href=\'' + attr.pmc_url + '\'> '
           + attr['title'] + '</a> ' + ' (PMID: ' + attr.pubmedID + ')';
         const studyLink = '<a href=\'' + attr.pubMgnifyURL + '#studies-section\'>'
             + attr.studiesCount + '</a>';
