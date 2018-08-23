@@ -10,13 +10,13 @@ const fetch = userData.fetch();
 
 /**
  * General mailto url for give consent button
- * @return {string} href
+ * @return {object} userdata from API
  */
-function getMailToLink() {
+function sendMailToEmail(userData) {
     let body = 'I consent for the MGnify team to analyse the private data of my account ' +
         util.getUsername() + '.';
 
-    return 'mailto:metagenomics-help@ebi.ac.uk?subject=Request consent&body=' + body;
+    util.sendMail(userData['email'], 'Request consent', body);
 }
 
 /**
@@ -33,10 +33,8 @@ fetchLogin.done(function(loggedIn) {
         notLoggedInCallBack();
     } else {
         fetch.always(function() {
-            console.log(userData, fetch);
             if (userData.attributes['analysis'] !== true) {
                 const $button = $('<button class=\'button\'>Give consent.</button>');
-                $button.attr('href', getMailToLink(userData.attributes));
                 $button.click(function(e) {
                     const consentGiven = $('#consent-given').is(':checked');
                     const $consentGivenError = $('#consent-given-error');
@@ -45,12 +43,11 @@ fetchLogin.done(function(loggedIn) {
                         e.preventDefault();
                     } else {
                         $consentGivenError.hide();
-                        window.open($button.attr('href'), '_blank');
+                        sendMailToEmail(userData);
                     }
                 });
                 $actionDiv.html($button);
                 $('#consent').removeClass('hidden');
-                // TODO send email using API
             }
         });
     }

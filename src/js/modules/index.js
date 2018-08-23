@@ -10,6 +10,7 @@ const cookieName = commons.COOKIE_NAME;
 const Cookies = require('js-cookie');
 const util = require('../util');
 const subfolder = require('../util').subfolder;
+const authApi = require('../components/authApi');
 
 window.Foundation.addToJquery($);
 
@@ -75,9 +76,6 @@ let BiomesView = Backbone.View.extend({
     }
 });
 
-let biomes = new Biomes();
-new BiomesView({collection: biomes});
-
 let StudyView = Backbone.View.extend({
     tagName: 'div',
     template: _.template($('#studyTmpl').html()),
@@ -121,9 +119,8 @@ let StudiesView = Backbone.View.extend({
     }
 });
 
-Foundation.Abide.defaults.patterns['study_accession']
-    // = ;
-    = /^((MGYS)|(([EDS])RP)|(PRJ((EB)|(NA)|(DB)|(DA))))\d{5,}$/;
+window.Foundation.Abide.defaults.patterns['study_accession']
+    = /((?:PRJEB|PRJNA|PRJDB|PRJDA|MGYS|ERP|SRP|DRP)\d{5,})/;
 
 let RequestPublicFormView = Backbone.View.extend({
     el: '#analysisPublicRequestForm',
@@ -143,31 +140,35 @@ let RequestPublicFormView = Backbone.View.extend({
     },
     sendMail(priv) {
         this.$el.foundation('validateForm');
-        // const hasEmptyField = this.$el.find('input:visible').filter(function(e) {
-        //     return e.value.length === 0;
-        // }).length > 0;
         if (this.$el.find('[data-invalid]:visible').length !== 0) {
             console.error('Did not submit, errors in form.');
             return false;
         } else {
-            let body = this.$el.find('input:visible').serialize();
-            body = body.replace(/=/g, ': ').replace(/&/g, '%0D%0A');
-            body += '%0D%0A'; // Newline
-            if (priv) {
-                body += 'Private analysis';
-            } else {
-                body += 'Public analysis';
-            }
-            body += '%0D%0A'; // Newline
-            body += 'Additional notes:';
+            const that = this;
+            const userData = new authApi.UserDetails();
+            userData.fetch().done((response) => {
+                const attr = userData['attributes'];
+                const email = attr['email'];
+                const studyAcc = this.$el.find('input[name=study-accession]').val();
+                const comments = this.$el.find('input[name=reason]').val();
+                let body = 'Study accession: ' + studyAcc + '\n' +
+                    (priv ? 'Private' : 'Public') + ' analysis.\n' +
+                    'Requester name: ' + attr['first-name'] + ' ' + attr['surname'] + '.\n' +
+                    'Additional notes: ' + comments + '.';
+                const request = util.sendMail(email, 'Analysis request ' + studyAcc, body);
 
-            let win = window.open('mailto:metagenomics-help@ebi.ac.uk?subject=Analysis request&body=' +
-                body, '_blank');
-            setTimeout(function() {
-                win.close();
-            }, 1000);
-
-            this.$el.parent().foundation('toggle');
+                request.then((success) => {
+                    const txt = '<p>' + (success
+                        ? 'Analysis request was succesfully submitted.'
+                        : 'Failed to send analysis request, please try ' +
+                        'again or contact our helpdesk.')
+                        + '</p>';
+                    $(that.$el).find('.confirmation-text').html(txt);
+                    if (success) {
+                        $(that.$el).find('input[type=text], input[type=email], textarea').val('');
+                    }
+                });
+            });
             return true;
         }
     }
@@ -184,11 +185,37 @@ let RequestPrivateFormView = RequestPublicFormView.extend({
     }
 });
 
+/**
+ * Force check that users are logged in before allowing the analysis request form to be displayed.
+ */
+function setAnalysisRequestLoginCheck() {
+    $('button.requestAnalysis').click(function(e) {
+        const that = this;
+        e.preventDefault();
+        util.getLoginStatus().then((loginStatus) => {
+            let modalId;
+            if (loginStatus) {
+                modalId = $(that).attr('data-target-modal');
+                $(modalId).find('.confirmation-text').empty();
+            } else {
+                modalId = '#loginModal';
+                $('#loginModal').find('input[name=next]').attr('value', util.subfolder);
+            }
+            $(modalId).foundation('open');
+        });
+    });
+}
+
 let studies = new StudiesCollection();
 new StudiesView({collection: studies});
 
 new RequestPublicFormView();
 new RequestPrivateFormView();
+
+let biomes = new Biomes();
+new BiomesView({collection: biomes});
+
+setAnalysisRequestLoginCheck();
 
 /**
  * Intialise stats section

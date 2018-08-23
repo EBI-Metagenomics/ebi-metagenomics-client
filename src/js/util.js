@@ -5,6 +5,7 @@ const api = require('mgnify').api;
 const authApi = require('./components/authApi');
 const Commons = require('./commons');
 const GenericTable = require('./components/genericTable');
+const Cookies = require('js-cookie');
 import 'process';
 
 require('babel-polyfill');
@@ -793,4 +794,46 @@ export function attachExpandButtonCallback() {
  */
 export function specifyPageTitle(objectType, id) {
     document.title = `${objectType}: ${id} < ${document.title}`;
+}
+
+/**
+ * Send mail via API
+ * @param {string} fromEmail email address of sender
+ * @param {string} subject of email
+ * @param {string} body of email
+ */
+export function sendMail(fromEmail, subject, body) {
+    return $.ajax({
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader('X-CSRFToken', Cookies.get('csrftoken'));
+        },
+        type: 'post',
+        url: process.env.API_URL + 'utils/notify',
+        contentType: 'application/vnd.api+json',
+        data: JSON.stringify({
+            data: {
+                'id': null,
+                'type': 'notifies',
+                'attributes': {
+                    'from-email': fromEmail,
+                    'subject': subject,
+                    'message': body
+                }
+            }
+        })
+    }).then((...args) => {
+        let success;
+        switch (args[2]['status']) {
+            case 201:
+                console.debug('Sent email succesfully.');
+                success = true;
+                break;
+            default:
+                console.error(args[0]);
+                console.error(args[1]);
+                console.error('Failed to send email.');
+                success = false;
+        }
+        return success;
+    });
 }
