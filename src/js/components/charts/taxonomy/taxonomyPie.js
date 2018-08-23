@@ -45,7 +45,7 @@ module.exports = class TaxonomyPie {
                 text: chartTitle
             },
             tooltip: {
-                pointFormat: '<b>{point.y}</b> {series.name} ({point.percentage:.1f}%)'
+                pointFormat: '<b>{point.y}</b> {series.name} ({point.percentage:.2f}%)'
             },
             plotOptions: {
                 pie: {
@@ -53,7 +53,7 @@ module.exports = class TaxonomyPie {
                     cursor: 'pointer',
                     dataLabels: {
                         enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        format: '<b>{point.name}</b>: {point.percentage:.2f} %',
                         style: {
                             color: (Highcharts.theme && Highcharts.theme.contrastTextColor)
                             || 'black'

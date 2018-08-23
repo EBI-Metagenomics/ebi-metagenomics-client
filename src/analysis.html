@@ -220,13 +220,13 @@
                     <p>Switch view:
                     <ul class="tabs">
                         <li class="tabs-title" id="go-bar-btn">
-                            <a class="chart-icon-cont" href="#go-bar" aria-selected="true">
+                            <a class="chart-icon-cont" href="#go-slim-bar-charts" aria-selected="true">
                                 <img class="chart-icon"
                                      src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_barh_on.svg"/>
                             </a>
                         </li>
                         <li class="tabs-title" id="go-pie-btn">
-                            <a class="chart-icon-cont" href="#go-pie" aria-selected="false">
+                            <a class="chart-icon-cont" href="#go-slim-pie-charts" aria-selected="false">
                                 <img class="chart-icon"
                                      src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_pie_on.svg"/>
                             </a>
@@ -234,7 +234,7 @@
                     </ul>
                     </p>
                 </div>
-                <div class="row" id="go-slim-bar-charts">
+                <div class="tabs-panel active row" id="go-slim-bar-charts">
                     <div class="columns small-12 medium-4 large-4">
                         <div id="biological-process-bar-chart"></div>
                     </div>
@@ -245,7 +245,7 @@
                         <div id="cellular-component-bar-chart"></div>
                     </div>
                 </div>
-                <div class="row" id="go-slim-pie-charts" style="display:none">
+                <div class="tabs-panel row" id="go-slim-pie-charts">
                     <div class="columns small-12 medium-4 large-4">
                         <div id="biological-process-pie-chart"></div>
                     </div>
