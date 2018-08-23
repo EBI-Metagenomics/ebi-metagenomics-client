@@ -27,16 +27,14 @@ describe('Submit page', function() {
             cy.contains('Give consent.').click();
             cy.contains(errorText).should('be.visible');
         });
-        it('Should create valid mailto link', function() {
+        it('Should create consent given email request', function() {
+            cy.server();
+            cy.route('POST', '**/utils/notify').as('notifyRequest');
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
             cy.get('#consent-given').check({force: true});
-            const mailToLink = 'mailto:metagenomics-help@ebi.ac.uk?subject=Request consent&' +
-                'body=I consent for the MGnify team to analyse the ' +
-                'private data of my account Webin-000.';
-            cy.contains('Give consent.').then(($el) => {
-                expect(Cypress.$($el).attr('href')).to.eq(mailToLink);
-            });
+            cy.contains('Give consent.').click();
+            cy.wait('@notifyRequest');
             cy.contains(errorText).should('be.hidden');
         });
     });
