@@ -282,10 +282,10 @@ describe('Analysis page', function() {
             cy.get('#phylum-composition-pie').should('be.visible');
             // Check elements in both charts
             cy.get('#domain-composition-pie svg text:nth-child(1):first').then(($label) => {
-                expect(Cypress.$($label).text()).to.contain('Bacteria: 98.7 %');
+                expect(Cypress.$($label).text()).to.contain('Bacteria: 98.73 %');
             });
             cy.get('#phylum-composition-pie svg text:nth-child(1):first').then(($label) => {
-                expect(Cypress.$($label).text()).to.contain('Proteobacteria: 67.5 %');
+                expect(Cypress.$($label).text()).to.contain('Proteobacteria: 67.54 %');
             });
         });
         it('Taxonomy pie chart table pagination', function() {
