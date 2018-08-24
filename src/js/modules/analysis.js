@@ -633,7 +633,7 @@ let InterProSummary = Backbone.View.extend({
                         }
                     },
                     subtitle: {
-                        text: 'Total: ' + top10AndOthers.sum('y') + ' InterPro entries'
+                        text: 'Total: ' + top10AndOthers.sum('y') + ' InterPro matches'
                     },
                     series: [
                         {
@@ -746,6 +746,8 @@ let GoTermCharts = Backbone.View.extend({
                 let molecularFuncData = [];
                 let cellularComponentData = [];
                 let totalAnnotations = 0;
+                let totalMolecularFunctions = 0;
+                let totalCellComponent = 0;
                 data.forEach(function(d) {
                     switch (d.attributes.lineage) {
                         case 'biological_process':
@@ -754,9 +756,11 @@ let GoTermCharts = Backbone.View.extend({
                             break;
                         case 'molecular_function':
                             molecularFuncData.push(d);
+                            totalMolecularFunctions += d.attributes.count;
                             break;
                         case 'cellular_component':
                             cellularComponentData.push(d);
+                            totalCellComponent += d.attributes.count;
                             break;
                         default:
                             console.warn('Unknown lineage: ' + d.attributes.lineage);
@@ -770,9 +774,19 @@ let GoTermCharts = Backbone.View.extend({
                         }
                     });
                 new GoTermChart('molecular-function-bar-chart', 'Molecular function',
-                    molecularFuncData, Commons.TAXONOMY_COLOURS[1]);
+                    molecularFuncData, Commons.TAXONOMY_COLOURS[1], {
+                        subtitle: {
+                            text: 'Total ' + totalMolecularFunctions +
+                            ' annotations - Drag to zoom in/out'
+                        }
+                    });
                 new GoTermChart('cellular-component-bar-chart', 'Cellular component',
-                    cellularComponentData, Commons.TAXONOMY_COLOURS[2]);
+                    cellularComponentData, Commons.TAXONOMY_COLOURS[2], {
+                        subtitle: {
+                            text: 'Total ' + totalCellComponent +
+                            ' annotations - Drag to zoom in/out'
+                        }
+                    });
 
                 new TaxonomyPieChart('biological-process-pie-chart', 'Biological process',
                     groupGoTermData(bioProcessData), true, {
@@ -780,11 +794,16 @@ let GoTermCharts = Backbone.View.extend({
                         subtitle: {text: 'Total: ' + totalAnnotations + ' annotations'}
                     });
                 new TaxonomyPieChart('molecular-function-pie-chart', 'Molecular function',
-                    groupGoTermData(molecularFuncData), true,
-                    {plotOptions: {pie: {dataLabels: {enabled: false}}}});
+                    groupGoTermData(molecularFuncData), true, {
+                        plotOptions: {pie: {dataLabels: {enabled: false}}},
+                        subtitle: {text: 'Total: ' + totalMolecularFunctions + ' annotations'}
+                    });
                 new TaxonomyPieChart('cellular-component-pie-chart', 'Cellular component',
                     groupGoTermData(cellularComponentData), true,
-                    {plotOptions: {pie: {dataLabels: {enabled: false}}}});
+                    {
+                        plotOptions: {pie: {dataLabels: {enabled: false}}},
+                        subtitle: {text: 'Total: ' + totalCellComponent + ' annotations'}
+                    });
 
                 $('#go-bar-btn').click(function() {
                     $('#go-slim-pie-charts').hide();
