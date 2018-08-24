@@ -4,7 +4,6 @@ import {
     waitForBiomesLoad,
     waitForSearchResults,
     setupDefaultSearchPageRouting,
-    fillLoginModalForm,
     login
 } from '../util/util';
 import GenericTableHandler from '../util/genericTable';

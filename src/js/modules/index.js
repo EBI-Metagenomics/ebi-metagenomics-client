@@ -146,7 +146,7 @@ let RequestPublicFormView = Backbone.View.extend({
         } else {
             const that = this;
             const userData = new authApi.UserDetails();
-            userData.fetch().done((response) => {
+            userData.fetch().done(() => {
                 const attr = userData['attributes'];
                 const email = attr['email'];
                 const studyAcc = this.$el.find('input[name=study-accession]').val();
