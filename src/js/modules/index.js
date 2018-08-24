@@ -12,6 +12,9 @@ const util = require('../util');
 const subfolder = require('../util').subfolder;
 const authApi = require('../components/authApi');
 
+window.Foundation.Abide.defaults.patterns['study_accession']
+    = /((?:PRJEB|PRJNA|PRJDB|PRJDA|MGYS|ERP|SRP|DRP)\d{5,})/;
+
 window.Foundation.addToJquery($);
 
 require('static/js/blog');
@@ -119,9 +122,6 @@ let StudiesView = Backbone.View.extend({
     }
 });
 
-window.Foundation.Abide.defaults.patterns['study_accession']
-    = /((?:PRJEB|PRJNA|PRJDB|PRJDA|MGYS|ERP|SRP|DRP)\d{5,})/;
-
 let RequestPublicFormView = Backbone.View.extend({
     el: '#analysisPublicRequestForm',
     tagName: 'form',
@@ -139,8 +139,13 @@ let RequestPublicFormView = Backbone.View.extend({
         this.sendMail(false);
     },
     sendMail(priv) {
-        this.$el.foundation('validateForm');
-        if (this.$el.find('[data-invalid]:visible').length !== 0) {
+        const blankStudyAcc = this.$el.find('input[name=study-accession]').val().length === 0;
+        if (this.$el.find('[data-invalid]:visible').length !== 0 || blankStudyAcc) {
+            if (blankStudyAcc) {
+                this.$el.find('input[name=study-accession]')
+                    .attr('data-invalid', '')
+                    .addClass('is-invalid-input');
+            }
             console.error('Did not submit, errors in form.');
             return false;
         } else {
@@ -151,11 +156,13 @@ let RequestPublicFormView = Backbone.View.extend({
                 const email = attr['email'];
                 const studyAcc = this.$el.find('input[name=study-accession]').val();
                 const comments = this.$el.find('input[name=reason]').val();
+                const subject = (priv ? 'Public' : 'Private') + ' analysis request: ' + studyAcc;
                 let body = 'Study accession: ' + studyAcc + '\n' +
                     (priv ? 'Private' : 'Public') + ' analysis.\n' +
                     'Requester name: ' + attr['first-name'] + ' ' + attr['surname'] + '.\n' +
-                    'Additional notes: ' + comments + '.';
-                const request = util.sendMail(email, 'Analysis request ' + studyAcc, body);
+                    'Email: ' + email + '.\n' +
+                    'Additional notes: ' + comments + '.\n';
+                const request = util.sendMail(email, subject, body);
 
                 request.then((success) => {
                     const txt = '<p>' + (success

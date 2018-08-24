@@ -17,6 +17,10 @@ describe('Submit page', function() {
             cy.contains('Please click here to login').click();
             cy.get(loginModal).should('be.visible');
             fillLoginModalForm();
+            cy.window().then((win) => {
+                cy.spy(win.console, 'log');
+                cy.spy(win.console, 'error');
+            });
         });
         it('Should display consent button', function() {
             cy.contains('Give consent').should('be.visible');
@@ -29,14 +33,14 @@ describe('Submit page', function() {
         });
         it('Should create consent given email request', function() {
             cy.server();
-            cy.route('POST', '**/utils/notify').as('notifyRequest');
+            cy.route('POST', '**').as('notifyRequest');
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').should('be.visible');
             cy.get('#consent-given').check();
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').click();
-            cy.wait('@notifyRequest', {timeout: 40000});
+            cy.wait('@notifyRequest', {timeout: 5000});
         });
     });
 });

@@ -377,22 +377,6 @@
                     </span>
                 </label>
             </div>
-        </div>
-        <div class="conditional-div hidden" data-condition="dataSubmitted" data-condition-val="no">
-            <div class="row columns">
-                <p>You will be re-directed to ENA to submit this data; please provide us with enough information
-                    to
-                    find this data.</p>
-            </div>
-            <div class="row">
-                <div class="columns">
-                    <label>Study title
-                        <input name="study-title" type="text" required>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="conditional-div hidden" data-condition="dataSubmitted" data-condition-val="yes,no">
             <div class="row">
                 <div class="columns medium-6">
                     <fieldset class="">
@@ -430,6 +414,21 @@
             <div class="row columns centered confirmation-text">
 
             </div>
+        </div>
+        <div class="conditional-div hidden" data-condition="dataSubmitted" data-condition-val="no">
+            <div class="row columns centered">
+                <p>Please submit your data before requesting analysis as it must be archived in the ENA for us to process it.</p>
+            </div>
+            <div class="row columns centered">
+                <a class="button" href="https://www.ebi.ac.uk/ena/submit/sra/">Go to ENA submission page</a>
+            </div>
+            <!--<div class="row">-->
+                <!--<div class="columns">-->
+                    <!--<label>Study title-->
+                        <!--<input name="study-title" type="text" required>-->
+                    <!--</label>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
     </form>
     <button class="close-button" data-close aria-label="Close modal" type="button">

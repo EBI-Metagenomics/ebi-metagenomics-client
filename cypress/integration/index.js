@@ -4,7 +4,8 @@ import {
     waitForBiomesLoad,
     waitForSearchResults,
     setupDefaultSearchPageRouting,
-    login
+    login,
+    urlExists
 } from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
@@ -202,8 +203,6 @@ describe('Home page', function() {
     }
 
     context('Request analysis section - Private data', function() {
-        const redirectText = 'You will be re-directed to ENA to submit this data; please ' +
-            'provide us with enough information to find this data.';
         const confidentialityText = 'The analysis of your data will be held confidentially ' +
             'on our site until the hold date expires.';
 
@@ -224,15 +223,15 @@ describe('Home page', function() {
         it('Checking yes radio box should display elements', function() {
             cy.get('input[value=\'yes\']').click();
             cy.get('input[name=\'study-accession\']').should('be.visible');
-            cy.get('input[name=\'study-title\']').should('be.hidden');
             defaultLoginFieldsAreVisible(confidentialityText);
         });
         it('Checking no radio button should display elements', function() {
             cy.get('input[value=\'no\']').click();
             cy.get('input[name=\'study-accession\']').should('be.hidden');
-            cy.get('input[name=\'study-title\']').should('be.visible');
-            defaultLoginFieldsAreVisible(confidentialityText);
-            cy.contains(redirectText).should('be.visible');
+            cy.contains('Please submit your data before requesting analysis as it must be archived in the ENA for us to process it.').should('be.visible');
+            cy.contains('Go to ENA submission page').then(($el) => {
+                urlExists($el.attr('href'));
+            });
         });
         it('Analysis type tooltip hover should display tooltip', function() {
             cy.get('input[value=\'yes\']').click();
