@@ -32,7 +32,8 @@ describe('Submit page', function() {
             cy.route('POST', '**/utils/notify').as('notifyRequest');
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
-            cy.get('#consent-given').check({force: true});
+            cy.contains('Give consent.').should('be.visible');
+            cy.get('#consent-given').check();
             cy.contains('Give consent.').click();
             cy.contains(errorText).should('be.hidden');
             cy.wait('@notifyRequest');
