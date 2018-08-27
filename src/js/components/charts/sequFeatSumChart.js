@@ -26,8 +26,8 @@ module.exports = class SeqFeatChart {
 
         let series = [
             data['Nucleotide sequences with predicted CDS'],
-            data['Nucleotide sequences with predicted rRNA'],
-            data['Predicted CDS with InterProScan match'],
+            data['Nucleotide sequences with predicted RNA'],
+            data['Nucleotide sequences with InterProScan match'],
             data['Predicted CDS'],
             data['Predicted CDS with InterProScan match']
         ].map(function(e) {
