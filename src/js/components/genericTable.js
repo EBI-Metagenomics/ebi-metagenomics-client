@@ -84,7 +84,7 @@ module.exports = class GenericTable {
     attachPageSizeCallback(callback) {
         const that = this;
         this.$pageSizeSelect.change(function() {
-            callback(1, this.$pageSizeSelect.val(), that.getCurrentOrder(), that.getFilterText());
+            callback(1, that.$pageSizeSelect.val(), that.getCurrentOrder(), that.getFilterText());
         });
     }
 
