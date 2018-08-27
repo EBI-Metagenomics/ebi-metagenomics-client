@@ -15,7 +15,7 @@ module.exports = class ClientSideTable extends GenericTable {
             const str = $(this).val();
             that.filterTable(str);
         });
-
+        this.initHeaders(this.$tabl)
         this.attachDownloadHandler();
     }
 
@@ -139,13 +139,12 @@ module.exports = class ClientSideTable extends GenericTable {
 
     /**
      * Create headers with sorting icons
-     * @param {jQuery.HTMLElement} $table table elem
      * @param {string} initialSort initialSort parameter
      */
-    initHeaders($table, initialSort) {
+    initHeaders(initialSort) {
         const that = this;
         that.order = initialSort;
-        $table.find('th.sort-both').on('click', function() {
+        this.$table.find('th.sort-both').on('click', function() {
             const siblings = $(this).siblings('[data-sortby]');
             _.each(siblings, function(s) {
                 const sibling = $(s);
@@ -171,7 +170,7 @@ module.exports = class ClientSideTable extends GenericTable {
             that.order = sort;
         });
         if (initialSort) {
-            $table.find('[data-sortby=\'' + initialSort + '\']')
+            this.$table.find('[data-sortby=\'' + initialSort + '\']')
                 .removeClass('sort-both')
                 .addClass(initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
         }

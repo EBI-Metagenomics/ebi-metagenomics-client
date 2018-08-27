@@ -53,11 +53,11 @@ module.exports = class GenericTable {
 
         if (callback) {
             this.callback = callback;
-            this.initHeaders(this.$table, initialOrdering, callback);
+            this.initHeaders(initialOrdering, callback);
 
-            this.attachFilterCallback(this.$filterInput, callback);
+            this.attachFilterCallback(callback);
 
-            this.attachPageSizeCallback(this.$pageSizeSelect, callback);
+            this.attachPageSizeCallback(callback);
         }
         this.order = null;
         $container.append($sectionContent);
@@ -79,25 +79,23 @@ module.exports = class GenericTable {
 
     /**
      * Instantiate page size callback handler
-     * @param {jQuery.HTMLElement} $elem elem for PageSize select
      * @param {callback} callback on change callback to load data
      */
-    attachPageSizeCallback($elem, callback) {
+    attachPageSizeCallback(callback) {
         const that = this;
-        $elem.change(function() {
-            callback(1, $elem.val(), that.getCurrentOrder(), that.getFilterText());
+        this.$pageSizeSelect.change(function() {
+            callback(1, this.$pageSizeSelect.val(), that.getCurrentOrder(), that.getFilterText());
         });
     }
 
     /**
      * Instantiate table filtering handler (debounce used to avoid pre-emptively
      * filtering on partial query strings
-     * @param {jQuery.HTMLElement} $elem input elem
      * @param {callback} callback
      */
-    attachFilterCallback($elem, callback) {
+    attachFilterCallback(callback) {
         const that = this;
-        $elem.keyup(_.debounce(function() {
+        this.$filterInput.keyup(_.debounce(function() {
             callback(1, that.getPageSize(), that.getCurrentOrder(), that.getFilterText());
         }, 300));
     }
@@ -181,14 +179,13 @@ module.exports = class GenericTable {
 
     /**
      * Instantiate table headers with sorting callback
-     * @param {jQuery.HTMLElement} $table  elem for table header
      * @param {string} initialSort  initial sort type
      * @param {callback} onOrderCallback  callback for ordering change
      */
-    initHeaders($table, initialSort, onOrderCallback) {
+    initHeaders(initialSort, onOrderCallback) {
         const that = this;
         that.order = initialSort;
-        $table.find('th.sort-both').on('click', function() {
+        this.$table.find('th.sort-both').on('click', function() {
             const siblings = $(this).siblings('[data-sortby]');
             _.each(siblings, function(s) {
                 const sibling = $(s);
@@ -224,7 +221,7 @@ module.exports = class GenericTable {
                 column = initialSort;
                 sort = 'sort-asc';
             }
-            $table.find('[data-sortby=\'' + column + '\']')
+            this.$table.find('[data-sortby=\'' + column + '\']')
                 .removeClass('sort-both')
                 .addClass(sort);
         }
