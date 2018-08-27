@@ -602,7 +602,6 @@ let InterProSummary = Backbone.View.extend({
         this.model.fetch()
             .done(function(data) {
                 let top10AndOthers = [];
-                let totalCount = 0;
 
                 data.forEach(function(d) {
                     d = d.attributes;
@@ -610,20 +609,21 @@ let InterProSummary = Backbone.View.extend({
                         name: d.description,
                         y: d.count
                     });
-                    totalCount += d.count;
                 });
 
                 let sumOthers = 0;
                 _.each(data.slice(10), function(d) {
                     sumOthers += d.attributes.count;
                 });
-                totalCount += sumOthers;
                 const others = {
                     name: 'Other',
                     y: sumOthers
                 };
                 top10AndOthers = top10AndOthers.slice(0, 10);
                 top10AndOthers.push(others);
+
+                let totalCount = top10AndOthers.sum('y');
+
                 const chartOptions = {
                     plotOptions: {
                         pie: {
@@ -683,7 +683,7 @@ let InterProSummary = Backbone.View.extend({
                 interproTable.$tbody.find('tr').click(function() {
                     let index = getSeriesIndex($(this).index(), numSeries);
                     const series = taxonomyPieChart.series[0].data[index];
-                    setTableRowAndChartHiding(this, series, index, numSeries, false);
+                    setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
                 });
             });
     }
