@@ -491,10 +491,16 @@ let TaxonomyGraphView = Backbone.View.extend({
             const phylumDepth = parseFloat(pipelineVersion) >= 4 ? 2 : 1;
             const phylumData = groupTaxonomyData(model, phylumDepth);
             // Pie tab
-            new TaxonomyPieChart('domain-composition-pie', 'Domain composition', clusteredData);
+            new TaxonomyPieChart('domain-composition-pie', 'Domain composition', clusteredData,
+                false, {
+                    seriesName: 'reads'
+                });
             const phylumPieChart = new TaxonomyPieChart(
                 'phylum-composition-pie', 'Phylum composition', groupAfterN(phylumData, 10), true,
-                {subtitle: {text: 'Total: ' + phylumData.sum('y') + ' reads'}});
+                {
+                    subtitle: {text: 'Total: ' + phylumData.sum('y') + ' reads'},
+                    seriesName: 'reads'
+                });
 
             const headers = [
                 {sortBy: 'a', name: ''},
@@ -638,7 +644,8 @@ let InterProSummary = Backbone.View.extend({
                     series: [
                         {
                             name: 'pCDS matched'
-                        }]
+                        }],
+                    seriesName: 'reads'
                 };
                 const taxonomyPieChart = new TaxonomyPieChart('InterProPie-chart',
                     'InterPro matches summary', top10AndOthers, false, chartOptions);
@@ -791,18 +798,21 @@ let GoTermCharts = Backbone.View.extend({
                 new TaxonomyPieChart('biological-process-pie-chart', 'Biological process',
                     groupGoTermData(bioProcessData), true, {
                         plotOptions: {pie: {dataLabels: {enabled: false}}},
-                        subtitle: {text: 'Total: ' + totalAnnotations + ' annotations'}
+                        subtitle: {text: 'Total: ' + totalAnnotations + ' annotations'},
+                        seriesName: 'annotations'
                     });
                 new TaxonomyPieChart('molecular-function-pie-chart', 'Molecular function',
                     groupGoTermData(molecularFuncData), true, {
                         plotOptions: {pie: {dataLabels: {enabled: false}}},
-                        subtitle: {text: 'Total: ' + totalMolecularFunctions + ' annotations'}
+                        subtitle: {text: 'Total: ' + totalMolecularFunctions + ' annotations'},
+                        seriesName: 'annotations'
                     });
                 new TaxonomyPieChart('cellular-component-pie-chart', 'Cellular component',
                     groupGoTermData(cellularComponentData), true,
                     {
                         plotOptions: {pie: {dataLabels: {enabled: false}}},
-                        subtitle: {text: 'Total: ' + totalCellComponent + ' annotations'}
+                        subtitle: {text: 'Total: ' + totalCellComponent + ' annotations'},
+                        seriesName: 'annotations'
                     });
 
                 $('#go-bar-btn').click(function() {

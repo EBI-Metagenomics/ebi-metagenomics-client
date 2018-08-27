@@ -530,13 +530,13 @@ describe('Analysis page', function() {
             cy.get('#go-slim-bar-charts').should('be.visible');
             hoverAndValidateTooltip(
                 '#biological-process-bar-chart .highcharts-series-0 > .highcharts-point:nth-child(1)',
-                'biological process', '308 157');
+                'biological process', '308 157 annotations');
             hoverAndValidateTooltip(
                 '#molecular-function-bar-chart .highcharts-series-0 > .highcharts-point:nth-child(1)',
-                'molecular function', '122 365');
+                'molecular function', '122 365 annotations');
             hoverAndValidateTooltip(
                 '#cellular-component-bar-chart .highcharts-series-0 > .highcharts-point:nth-child(1)',
-                'cellular component', '6 719');
+                'cellular component', '6 719 annotations');
         });
         it('Go Term annotation bar charts should load correctly', function() {
             cy.get('#go-pie-btn').click();
