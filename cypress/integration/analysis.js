@@ -509,47 +509,47 @@ describe('Analysis page', function() {
         // it('Interpro match sorting should work', function() {
         //     interproTable.testSorting(10587, interproMatchCols);
         // });
-        it('Toggling rows in table should toggle series visibility in chart', function() {
-            const firstPieSeries = '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0';
-            cy.get(firstPieSeries).should('be.visible');
-            cy.get(interproTable.getTableSelector() + ' tr:first').click();
-            cy.get(firstPieSeries).should('be.hidden');
-            cy.get(interproTable.getTableSelector() + ' tr:first').click();
-            cy.get(firstPieSeries).should('be.visible');
-        });
+        // it('Toggling rows in table should toggle series visibility in chart', function() {
+        //     const firstPieSeries = '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0';
+        //     cy.get(firstPieSeries).should('be.visible');
+        //     cy.get(interproTable.getTableSelector() + ' tr:first').click();
+        //     cy.get(firstPieSeries).should('be.hidden');
+        //     cy.get(interproTable.getTableSelector() + ' tr:first').click();
+        //     cy.get(firstPieSeries).should('be.visible');
+        // });
         it('Go Term annotation tabs should work', function() {
-            cy.get('a[href=\'go-slim-bar-charts]').click();
+            cy.get('#go-bar-btn').click();
             cy.get('#go-slim-bar-charts').should('be.visible');
             cy.get('#go-slim-pie-charts').should('be.hidden');
-            cy.get('a[href=\'go-slim-pie-charts]').click();
+            cy.get('#go-pie-btn').click();
             cy.get('#go-slim-bar-charts').should('be.hidden');
             cy.get('#go-slim-pie-charts').should('be.visible');
         });
         it('Go Term annotation pie charts should load correctly', function() {
-            cy.get('a[href=\'go-slim-bar-charts]').click();
+            cy.get('#go-bar-btn').click();
             cy.get('#go-slim-bar-charts').should('be.visible');
             hoverAndValidateTooltip(
                 '#biological-process-bar-chart .highcharts-series-0 > .highcharts-point:nth-child(1)',
                 'biological process', '308 157');
             hoverAndValidateTooltip(
                 '#molecular-function-bar-chart .highcharts-series-0 > .highcharts-point:nth-child(1)',
-                'molecular function process', '308 157');
+                'molecular function', '122 365');
             hoverAndValidateTooltip(
                 '#cellular-component-bar-chart .highcharts-series-0 > .highcharts-point:nth-child(1)',
                 'cellular component', '6 719');
         });
         it('Go Term annotation bar charts should load correctly', function() {
-            cy.get('a[href=\'go-slim-pie-charts]').click();
+            cy.get('#go-pie-btn').click();
             cy.get('#go-slim-pie-charts').should('be.visible');
             hoverAndValidateTooltip(
                 '#biological-process-pie-chart .highcharts-series-0 .highcharts-color-0',
-                'biological process', '308 157');
+                'translation', '760 621 annotations (15.72%)');
             hoverAndValidateTooltip(
                 '#molecular-function-pie-chart .highcharts-series-0 .highcharts-color-0',
-                'molecular function process', '308 157');
+                'ion binding', '762 866 annotations (10.44%)');
             hoverAndValidateTooltip(
                 '#cellular-component-pie-chart .highcharts-series-0 .highcharts-color-0',
-                'cellular component', '6 719');
+                'ribosome', '647 017 annotations (26.88%)');
         });
     });
 
