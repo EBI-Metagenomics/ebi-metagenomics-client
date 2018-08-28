@@ -37,7 +37,6 @@ describe('Submit page', function() {
             cy.get('#consent-given').check();
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').click();
-            cy.wait('@notifyRequest', {timeout: 5000});
             cy.get('#consent-request-error').should('be.visible');
             cy.get('#consent-request-success').should('be.hidden');
         });
@@ -56,7 +55,6 @@ describe('Submit page', function() {
             cy.get('#consent-given').check();
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').click();
-            cy.wait('@notifyRequest', {timeout: 5000});
             cy.get('#consent-request-error').should('be.hidden');
             cy.get('#consent-request-success').should('be.visible');
         });
