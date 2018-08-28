@@ -17,10 +17,6 @@ describe('Submit page', function() {
             cy.contains('Please click here to login').click();
             cy.get(loginModal).should('be.visible');
             fillLoginModalForm();
-            cy.window().then((win) => {
-                cy.spy(win.console, 'log');
-                cy.spy(win.console, 'error');
-            });
         });
         it('Should display consent button', function() {
             cy.contains('Give consent').should('be.visible');
@@ -31,9 +27,10 @@ describe('Submit page', function() {
             cy.contains('Give consent.').click();
             cy.contains(errorText).should('be.visible');
         });
-        it('Should create consent given email request', function() {
+        it('Should display error message if consent request failed', function() {
             cy.server();
             cy.route('POST', '**').as('notifyRequest');
+            cy.route('GET', '**/myaccounts', 'fixture:user_account.json').as('myaccounts');
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').should('be.visible');
@@ -41,6 +38,27 @@ describe('Submit page', function() {
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').click();
             cy.wait('@notifyRequest', {timeout: 5000});
+            cy.get('#consent-request-error').should('be.visible');
+            cy.get('#consent-request-success').should('be.hidden');
+        });
+        it('Should display success message if consent request failed', function() {
+            cy.server();
+            cy.route({
+                method: 'POST',
+                url: '**',
+                status: 201,
+                response: []
+            }).as('notifyRequest');
+            cy.route('GET', '**/myaccounts', 'fixture:user_account.json').as('myaccounts');
+            const errorText = 'Please check the box above.';
+            cy.contains(errorText).should('be.hidden');
+            cy.contains('Give consent.').should('be.visible');
+            cy.get('#consent-given').check();
+            cy.contains(errorText).should('be.hidden');
+            cy.contains('Give consent.').click();
+            cy.wait('@notifyRequest', {timeout: 5000});
+            cy.get('#consent-request-error').should('be.hidden');
+            cy.get('#consent-request-success').should('be.visible');
         });
     });
 });

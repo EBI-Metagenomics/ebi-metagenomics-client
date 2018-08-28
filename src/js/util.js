@@ -801,9 +801,11 @@ export function specifyPageTitle(objectType, id) {
  * @param {string} fromEmail email address of sender
  * @param {string} subject of email
  * @param {string} body of email
+ * @return {(JQuery.Promise<TR, TJ, TN> & Object)} of ajax request
  */
 export function sendMail(fromEmail, subject, body) {
-    return $.ajax({
+    const deferred = $.Deferred();
+    $.ajax({
         beforeSend: function(xhr) {
             xhr.setRequestHeader('X-CSRFToken', Cookies.get('csrftoken'));
         },
@@ -820,20 +822,15 @@ export function sendMail(fromEmail, subject, body) {
                     'message': body
                 }
             }
-        })
-    }).then((...args) => {
-        let success;
-        switch (args[2]['status']) {
-            case 201:
-                console.debug('Sent email succesfully.');
-                success = true;
-                break;
-            default:
-                console.error(args[0]);
-                console.error(args[1]);
-                console.error('Failed to send email.');
-                success = false;
+        }),
+        success() {
+            console.debug('Sent email succesfully.');
+            deferred.resolve(true);
+        },
+        error() {
+            console.error('Failed to send email.');
+            deferred.resolve(false);
         }
-        return success;
     });
+    return deferred.promise();
 }

@@ -23,6 +23,11 @@ const istanbul = require('istanbul-lib-coverage');
 
 const map = istanbul.createCoverageMap({});
 
+Cypress.on('window:before:load', (win) => {
+    cy.spy(win.console, 'log');
+    cy.spy(win.console, 'error');
+});
+
 Cypress.on('window:before:unload', (e) => {
     const coverage = e.currentTarget.__coverage__;
 

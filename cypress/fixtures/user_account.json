@@ -1,0 +1,15 @@
+{
+  "data": [
+    {
+      "type": "submitters",
+      "id": "Webin-000",
+      "attributes": {
+        "first-name": "Test",
+        "surname": "SurTest",
+        "email-address": "test@test.ac.uk",
+        "analysis": false,
+        "submitter": true
+      }
+    }
+  ]
+}

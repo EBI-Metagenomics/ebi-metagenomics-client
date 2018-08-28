@@ -5,18 +5,17 @@ const fetchLogin = util.setupPage('#submit-nav', window.location.href);
 
 const $actionDiv = $('#action');
 
-const userData = new authApi.UserDetails();
-const fetch = userData.fetch();
+const userDetails = new authApi.UserDetails();
+const fetch = userDetails.fetch();
 
 /**
  * General mailto url for give consent button
  * @return {object} userdata from API
  */
-function sendMailToEmail(userData) {
+function sendConsentRequest(userData) {
     let body = 'I consent for the MGnify team to analyse the private data of my account ' +
         util.getUsername() + '.';
-
-    util.sendMail(userData['email'], 'Request consent', body);
+    return util.sendMail(userData['email'], 'Request consent', body);
 }
 
 /**
@@ -28,12 +27,29 @@ function notLoggedInCallBack() {
     $actionDiv.html($button);
 }
 
+/**
+ * Display success or error message on consent request callback
+ * @param {boolean} success true if request successfuly sent
+ **/
+function consentRequestCallback(success) {
+    if (success) {
+        $('#consent-request-success').show();
+        $('#consent-request-error').hide();
+    } else {
+        $('#consent-request-success').hide();
+        $('#consent-request-error').show();
+    }
+}
+
+// If user not logged in display login button
 fetchLogin.done(function(loggedIn) {
     if (!loggedIn) {
         notLoggedInCallBack();
     } else {
         fetch.always(function() {
-            if (userData.attributes['analysis'] !== true) {
+            let userData = userDetails.attributes;
+            // If consent not given display consent button
+            if (userData['analysis'] !== true) {
                 const $button = $('<button class=\'button\'>Give consent.</button>');
                 $button.click(function(e) {
                     const consentGiven = $('#consent-given').is(':checked');
@@ -43,7 +59,9 @@ fetchLogin.done(function(loggedIn) {
                         e.preventDefault();
                     } else {
                         $consentGivenError.hide();
-                        sendMailToEmail(userData);
+                        sendConsentRequest(userData).done((result) => {
+                            consentRequestCallback(result);
+                        });
                     }
                 });
                 $actionDiv.html($button);
