@@ -390,7 +390,6 @@ describe('Analysis page', function() {
             cy.get('#ssu-lsu-btns').should('be.visible', {timeout: 40000});
         });
     });
-    let interproTable;
     context('Functional tab', function() {
         beforeEach(function() {
             cy.server();
@@ -433,6 +432,7 @@ describe('Analysis page', function() {
                 'Other', '1 099 756 pCDS matched (42.77%)');
         });
         it('Toggling rows in table should toggle series visibility in chart', function() {
+            let interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
             const firstPieSeries = '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0';
             cy.get(firstPieSeries).should('be.visible');
             cy.get(interproTable.getTableSelector() + ' tr:first').click();
@@ -469,11 +469,11 @@ describe('Analysis page', function() {
         };
         it('Should load interpro matches table correctly', function() {
             cy.contains('Total: 2571357 InterPro matches').should('be.visible');
-            interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
+            let interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
             interproTable.checkLoadedCorrectly(1, 25, 50, interproMatchCols);
         });
         it('Interpro match pagination should work', function() {
-            interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
+            let interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
             interproTable.testPagination(25, [
                 {
                     index: 1,
@@ -501,7 +501,7 @@ describe('Analysis page', function() {
                 }], 2);
         });
         it('Interpro match sorting should work', function() {
-            interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
+            let interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
             interproTable.testSorting(25, interproMatchCols);
         });
 
