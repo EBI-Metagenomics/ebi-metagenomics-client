@@ -15,7 +15,7 @@ module.exports = class ClientSideTable extends GenericTable {
             const str = $(this).val();
             that.filterTable(str);
         });
-        this.initHeaders(this.$table);
+        this.initHeaders();
         this.attachDownloadHandler();
     }
 
