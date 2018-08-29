@@ -638,8 +638,8 @@ export const AnalysesView = GenericTableView.extend({
 export function getLoginStatus() {
     const deferred = new $.Deferred();
 
-    $.get(api.API_URL + 'utils/myaccounts').done((xhr) => {
-        deferred.resolve(String(xhr.status)[0] !== '4');
+    $.get(api.API_URL + 'utils/myaccounts').done((data, state, xhr) => {
+        deferred.resolve(String(xhr.status)[0] === '2', data['data'][0]);
     }).fail(() => {
         deferred.resolve(false);
     });
@@ -713,8 +713,7 @@ export function loadLoginForm(next) {
  * Set navbar to reflect user login status
  * @param {boolean} isLoggedIn true if user is authenticated
  */
-export function setNavLoginButton(isLoggedIn) {
-    const username = getUsername();
+export function setNavLoginButton(isLoggedIn, username) {
     if (isLoggedIn && username !== null) {
         const $a = $('<a></a>');
         $a.text('Welcome, ' + username + ' ');
@@ -760,10 +759,11 @@ export function logout() {
  */
 export function setupPage(tab, loginRedirect) {
     const loginStatus = getLoginStatus();
-    loginStatus.done(function(isLoggedIn) {
-        setNavLoginButton(isLoggedIn);
+    loginStatus.done((isLoggedIn, userData) => {
         if (!isLoggedIn) {
             loadLoginForm(loginRedirect);
+        } else {
+            setNavLoginButton(isLoggedIn, userData['id']);
         }
     });
     checkAPIonline();
