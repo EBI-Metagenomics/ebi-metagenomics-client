@@ -1,8 +1,6 @@
 language: node_js
 node_js:
- - "8.11.1"
- - "8.11.2"
- - "8.11.3"
+ - "8.11.4"
 
 python:
   - "3.4"
@@ -17,7 +15,12 @@ addons:
       - nginx
       - python3-pip
 env:
-  - API_URL=http://localhost:9000/metagenomics/api/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
+  global:
+    - API_URL=http://localhost:9000/metagenomics/api/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
+  matrix:
+    - WORKER=1
+    - WORKER=2
+    - WORKER=3
 
 before_install:
   - pip3 install --user --upgrade pip setuptools
