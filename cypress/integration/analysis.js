@@ -1,6 +1,5 @@
 import {openPage, changeTab, isValidLink, datatype, waitForPageLoad} from '../util/util';
 import ClientSideTableHandler from '../util/clientSideTable';
-import GenericTableHandler from '../util/genericTable';
 
 const origPage = 'analyses/MGYA00011845';
 

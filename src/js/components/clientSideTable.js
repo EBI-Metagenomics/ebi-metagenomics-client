@@ -15,7 +15,7 @@ module.exports = class ClientSideTable extends GenericTable {
             const str = $(this).val();
             that.filterTable(str);
         });
-        this.initHeaders(this.$tabl)
+        this.initHeaders(this.$table);
         this.attachDownloadHandler();
     }
 
@@ -68,19 +68,6 @@ module.exports = class ClientSideTable extends GenericTable {
         const matchedRows = this.$tbody.children('tr.match');
         matchedRows.slice(0, pageSize).show();
         this.setPagination(1, matchedRows.length, pageSize);
-    }
-
-    /**
-     * Attach handler for page size select events
-     */
-    attachPageSizeCallback() {
-        const that = this;
-        this.$pageSizeSelect.change(function() {
-            const resultCount = that.$tbody.children('tr').length;
-            const pageSize = parseInt(that.$pageSizeSelect.val());
-            that.setPagination(1, resultCount, pageSize);
-            that.setVisibleRows(0, pageSize);
-        });
     }
 
     /**
