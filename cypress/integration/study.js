@@ -153,25 +153,25 @@ describe('Study page', function() {
                         '',
                         'ERS1474615', 'wound_swab', 'ERR1759931', '4.0', 'MGYA00140403']
                 }, {
-                    index: 'next', // 4th page
+                    index: 'Next', // 4th page
                     data: [
                         '', 'ERS1474560', 'control_skin_left', 'ERR1759912', '4.0', 'MGYA00140428'],
                     pageNum: 4
                 }, {
-                    index: 'prev',
+                    index: 'Previous',
                     data: [
                         '',
                         'ERS1474615', 'wound_swab', 'ERR1759931', '4.0', 'MGYA00140403'],
                     pageNum: 3
                 }, {
-                    index: 'last',
+                    index: 'Last',
                     data: [
                         '',
                         'ERS1474833', 'diabetic_skin_adj', 'ERR1760080', '4.0', 'MGYA00140603'],
                     pageNum: 11,
                     pageSize: 8
                 }, {
-                    index: 'first',
+                    index: 'First',
                     data: [
                         '',
                         'ERS1474796', 'control_skin_left', 'ERR1760043', '4.0', 'MGYA00140353'],

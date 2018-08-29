@@ -66,27 +66,27 @@ describe('Biomes page', function() {
                         'Simulated communities (sequence read mixture)',
                         '0']
                 }, {
-                    index: 'next',
+                    index: 'Next',
                     data: [
                         '',
                         'Dissolved organics (anaerobic)', '0'], // 4th page
                     pageNum: 4
                 }, {
-                    index: 'prev',
+                    index: 'Previous',
                     data: [
                         '',
                         'Simulated communities (sequence read mixture)',
                         '0'],
                     pageNum: 3
                 }, {
-                    index: 'last',
+                    index: 'Last',
                     data: [
                         '', 'Epiphytes',
                         '0'],
                     pageNum: 20,
                     pageSize: 15
                 }, {
-                    index: 'first',
+                    index: 'First',
                     data: [
                         '',
                         'Engineered',

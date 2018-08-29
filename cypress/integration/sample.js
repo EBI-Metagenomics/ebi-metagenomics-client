@@ -192,20 +192,20 @@ describe('Sample page', function() {
         //         index: 3,
         //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
         //     }, {
-        //         index: 'next',
+        //         index: 'Next',
         //         data: ['SRR997047', 'amplicon', '', '', '2.0'],
         //         pageNum: 4
         //     }, {
-        //         index: 'prev',
+        //         index: 'Previous',
         //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
         //         pageNum: 3
         //     }, {
-        //         index: 'last',
+        //         index: 'Last',
         //         data: ['ERR010497', 'metatranscriptomic', '', '', '1.0'],
         //         pageNum: 506,
         //         pageSize: 18
         //     }, {
-        //         index: 'first',
+        //         index: 'First',
         //         data: ['SRR997122', 'amplicon', '', '', '2.0'],
         //         pageNum: 1
         //     }]);

@@ -1,0 +1,492 @@
+{
+  "links": {
+    "first": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=1",
+    "last": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=11",
+    "next": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=2",
+    "prev": null
+  },
+  "data": [
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR012347",
+      "attributes": {
+        "accession": "IPR012347",
+        "count": 337346,
+        "description": "Ferritin-related"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR012347/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR012347"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR013783",
+      "attributes": {
+        "accession": "IPR013783",
+        "count": 201381,
+        "description": "Immunoglobulin-like fold"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013783/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013783"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR011161",
+      "attributes": {
+        "accession": "IPR011161",
+        "count": 163987,
+        "description": "MHC class I-like antigen recognition"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR011161/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR011161"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR003191",
+      "attributes": {
+        "accession": "IPR003191",
+        "count": 145812,
+        "description": "Guanylate-binding protein, C-terminal"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR003191/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR003191"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR001694",
+      "attributes": {
+        "accession": "IPR001694",
+        "count": 124625,
+        "description": "NADH:ubiquinone oxidoreductase, subunit 1/F420H2 oxidoreductase subunit H"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR001694/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR001694"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR004000",
+      "attributes": {
+        "accession": "IPR004000",
+        "count": 115701,
+        "description": "Actin family"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR004000/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR004000"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR023616",
+      "attributes": {
+        "accession": "IPR023616",
+        "count": 106672,
+        "description": "Cytochrome c oxidase, subunit I domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR023616/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR023616"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR013544",
+      "attributes": {
+        "accession": "IPR013544",
+        "count": 94345,
+        "description": "Domain of unknown function DUF1725"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013544/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013544"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR013785",
+      "attributes": {
+        "accession": "IPR013785",
+        "count": 91769,
+        "description": "Aldolase-type TIM barrel"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013785/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013785"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR000571",
+      "attributes": {
+        "accession": "IPR000571",
+        "count": 89963,
+        "description": "Zinc finger, CCCH-type"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR000571/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR000571"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR013126",
+      "attributes": {
+        "accession": "IPR013126",
+        "count": 87054,
+        "description": "Heat shock protein 70 family"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013126/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013126"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR011991",
+      "attributes": {
+        "accession": "IPR011991",
+        "count": 86543,
+        "description": "Winged helix-turn-helix DNA-binding domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR011991/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR011991"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR000795",
+      "attributes": {
+        "accession": "IPR000795",
+        "count": 85302,
+        "description": "Elongation factor, GTP-binding domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR000795/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR000795"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR011993",
+      "attributes": {
+        "accession": "IPR011993",
+        "count": 83853,
+        "description": "Pleckstrin homology-like domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR011993/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR011993"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR019832",
+      "attributes": {
+        "accession": "IPR019832",
+        "count": 82912,
+        "description": "Manganese/iron superoxide dismutase, C-terminal"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR019832/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR019832"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR003597",
+      "attributes": {
+        "accession": "IPR003597",
+        "count": 77043,
+        "description": "Immunoglobulin C1-set"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR003597/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR003597"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR015894",
+      "attributes": {
+        "accession": "IPR015894",
+        "count": 73414,
+        "description": "Guanylate-binding protein, N-terminal"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR015894/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR015894"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR027387",
+      "attributes": {
+        "accession": "IPR027387",
+        "count": 67805,
+        "description": "Cytochrome b/b6-like domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR027387/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR027387"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR010630",
+      "attributes": {
+        "accession": "IPR010630",
+        "count": 66051,
+        "description": "Neuroblastoma breakpoint family (NBPF) domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR010630/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR010630"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR020683",
+      "attributes": {
+        "accession": "IPR020683",
+        "count": 63483,
+        "description": "Ankyrin repeat-containing domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR020683/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR020683"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR002429",
+      "attributes": {
+        "accession": "IPR002429",
+        "count": 61673,
+        "description": "Cytochrome c oxidase subunit II C-terminal"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR002429/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR002429"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR001806",
+      "attributes": {
+        "accession": "IPR001806",
+        "count": 58675,
+        "description": "Small GTPase superfamily"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR001806/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR001806"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR019831",
+      "attributes": {
+        "accession": "IPR019831",
+        "count": 58268,
+        "description": "Manganese/iron superoxide dismutase, N-terminal"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR019831/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR019831"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR035300",
+      "attributes": {
+        "accession": "IPR035300",
+        "count": 56702,
+        "description": "L1 transposable element, dsRBD-like domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR035300/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR035300"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR000568",
+      "attributes": {
+        "accession": "IPR000568",
+        "count": 53833,
+        "description": "ATPase, F0 complex, subunit A"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR000568/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR000568"
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pages": 2,
+      "count": 25
+    }
+  }
+}
