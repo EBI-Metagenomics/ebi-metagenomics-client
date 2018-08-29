@@ -219,7 +219,10 @@ class GenericTableHandler {
         return cy.get(this.parentId + ' div.row div.columns > label > select#pagesize');
     }
 
-    getPaginationButton(buttonIndex) {
+    getPaginationButton(buttonIndex, numPages) {
+        if (!numPages) {
+            numPages = 5;
+        }
         let str;
         switch (buttonIndex) {
             case 0:
@@ -230,10 +233,10 @@ class GenericTableHandler {
                 str = ' div.pagination > ul.pagination > li:nth-child(2)';
                 break;
             case 'next':
-                str = ' div.pagination > ul.pagination > li:nth-child(8)';
+                str = ' div.pagination > ul.pagination > li:nth-child(' + (numPages + 2) + ')';
                 break;
             case 'last':
-                str = ' div.pagination > ul.pagination > li:nth-child(9)';
+                str = ' div.pagination > ul.pagination > li:nth-child(' + (numPages + 2) + ')';
                 break;
             default:
                 str = ' div.pagination > ul.pagination > li:nth-child(' +

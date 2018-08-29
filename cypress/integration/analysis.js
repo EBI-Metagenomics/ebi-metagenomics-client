@@ -395,6 +395,10 @@ describe('Analysis page', function() {
         before(function() {
             cy.server();
             cy.route('GET', '**/analyses/MGYA00141547').as('analysisQuery');
+            cy.route('GET', '**/analyses/MGYA00141547/interpro-identifiers',
+                'fixture:interproIdentifiersPage1');
+            cy.route('GET', '**/analyses/MGYA00141547/interpro-identifiers?page=2',
+                'fixture:interproIdentifiersPage2');
             openPage('analyses/MGYA00141547#functional');
             waitForPageLoad('Analysis MGYA00141547');
         });
@@ -416,107 +420,91 @@ describe('Analysis page', function() {
                 '#SeqFeat-chart .highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(5)',
                 'Predicted CDS with InterProScan match', '12 488 689');
         });
-        // it('Should load interpro matches pie chart correctly', function() {
-        //     cy.contains('Total: 10833229 InterPro matches').should('be.visible');
-        //     hoverAndValidateTooltip(
-        //         '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0',
-        //         'Ferritin-related', '337 346 pCDS matched (3.11%)');
-        //     hoverAndValidateTooltip(
-        //         '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-1',
-        //         'Immunoglobulin-like fold', '201 381 pCDS matched (1.86%)');
-        //     hoverAndValidateTooltip(
-        //         '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-10',
-        //         'Other', '9 361 628 pCDS matched (86.42%)');
-        // });
-        // const interproMatchCols = {
-        //     index: {
-        //         data: ['1', '25'],
-        //         type: datatype.INT,
-        //         sortable: true
-        //     },
-        //     entry_name: {
-        //         data: ['Ferritin-related', 'ATPase, F0 complex, subunit A'],
-        //         type: datatype.STR,
-        //         sortable: true
-        //     },
-        //     ID: {
-        //         data: ['IPR012347', 'IPR000568'],
-        //         type: datatype.STR,
-        //         sortable: true
-        //     },
-        //     p_cds_match: {
-        //         data: ['337346', '53833'],
-        //         type: datatype.INT,
-        //         sortable: true
-        //     },
-        //     perc: {
-        //         data: ['3.11', '0.5'],
-        //         type: datatype.NUM,
-        //         sortable: true
-        //     }
-        // };
-        // it('Should load interpro matches table correctly', function() {
-        //     cy.contains('Total: 10833229 InterPro matches').should('be.visible');
-        //     interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
-        //     interproTable.checkLoadedCorrectly(1, 25, 10587, interproMatchCols);
-        // });
-        // it('Interpro match pagination should work', function() {
-        //     interproTable.testPagination(25, [
-        //         {
-        //             index: 1,
-        //             data: [
-        //                 '1', 'Ferritin-related', 'IPR012347', '337346', '3.11']
-        //         }, {
-        //             index: 3,
-        //             data: [
-        //                 '51',
-        //                 'Cytochrome c oxidase subunit III domain',
-        //                 'IPR000298',
-        //                 '32709',
-        //                 '0.30']
-        //         }, {
-        //             index: 'next',
-        //             data: [
-        //                 '76', 'Aquaporin-like', 'IPR023271', '23972', '0.22'], // 4th page
-        //             pageNum: 4
-        //         }, {
-        //             index: 'prev',
-        //             data: [
-        //                 '51',
-        //                 'Cytochrome c oxidase subunit III domain',
-        //                 'IPR000298',
-        //                 '32709',
-        //                 '0.30'],
-        //             pageNum: 3
-        //         }, {
-        //             index: 'last',
-        //             data: [
-        //                 '10576',
-        //                 'Photosystem I PsaA/PsaB, conserved site',
-        //                 'IPR020586',
-        //                 '1',
-        //                 '0.00'],
-        //             pageNum: 424,
-        //             pageSize: 12
-        //         }, {
-        //             index: 'first',
-        //             data: [
-        //                 '1', 'Ferritin-related', 'IPR012347', '337346', '3.11'],
-        //             pageNum: 1
-        //         }]);
-        // });
-        // TODO redesign of table required
-        // it('Interpro match sorting should work', function() {
-        //     interproTable.testSorting(10587, interproMatchCols);
-        // });
-        // it('Toggling rows in table should toggle series visibility in chart', function() {
-        //     const firstPieSeries = '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0';
-        //     cy.get(firstPieSeries).should('be.visible');
-        //     cy.get(interproTable.getTableSelector() + ' tr:first').click();
-        //     cy.get(firstPieSeries).should('be.hidden');
-        //     cy.get(interproTable.getTableSelector() + ' tr:first').click();
-        //     cy.get(firstPieSeries).should('be.visible');
-        // });
+        it('Should load interpro matches pie chart correctly', function() {
+            cy.contains('Total: 2571357 InterPro matches').should('be.visible');
+            hoverAndValidateTooltip(
+                '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0',
+                'Ferritin-related', '337 346 pCDS matched (13.12%)');
+            hoverAndValidateTooltip(
+                '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-1',
+                'Immunoglobulin-like fold', '201 381 pCDS matched (7.83%)');
+            hoverAndValidateTooltip(
+                '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-10',
+                'Other', '1 099 756 pCDS matched (42.77%)');
+        });
+        const interproMatchCols = {
+            index: {
+                data: ['1', '25'],
+                type: datatype.INT,
+                sortable: true
+            },
+            entry_name: {
+                data: ['Ferritin-related', 'ATPase, F0 complex, subunit A'],
+                type: datatype.STR,
+                sortable: true
+            },
+            ID: {
+                data: ['IPR012347', 'IPR000568'],
+                type: datatype.STR,
+                sortable: true
+            },
+            p_cds_match: {
+                data: ['337346', '53833'],
+                type: datatype.INT,
+                sortable: true
+            },
+            perc: {
+                data: ['13.12', '2.09'],
+                type: datatype.NUM,
+                sortable: true
+            }
+        };
+        it('Should load interpro matches table correctly', function() {
+            cy.contains('Total: 2571357 InterPro matches').should('be.visible');
+            interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
+            interproTable.checkLoadedCorrectly(1, 25, 50, interproMatchCols);
+        });
+        it('Interpro match pagination should work', function() {
+            interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
+            interproTable.testPagination(25, [
+                {
+                    index: 1,
+                    data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12']
+                }, {
+                    index: 2,
+                    data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06']
+                }, {
+                    index: 'prev',
+                    data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12'],
+                    pageNum: 1
+                }, {
+                    index: 'next',
+                    data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06'],
+                    pageNum: 2
+                }, {
+                    index: 'first',
+                    data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12'],
+                    pageNum: 1
+                }, {
+                    index: 'last',
+                    data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06'],
+                    pageNum: 2,
+                    pageSize: 25
+                }], 2);
+        });
+        it('Interpro match sorting should work', function() {
+            interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
+            interproTable.testSorting(25, interproMatchCols);
+        });
+        it('Toggling rows in table should toggle series visibility in chart', function() {
+            const firstPieSeries = '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0';
+            cy.get(firstPieSeries).should('be.visible');
+            cy.get(interproTable.getTableSelector() + ' tr:first').click();
+            cy.get(firstPieSeries).should('be.hidden');
+            cy.get(interproTable.getTableSelector() + ' tr:first').click();
+            cy.get(firstPieSeries).should('be.visible');
+        });
+
         it('Go Term annotation tabs should work', function() {
             cy.get('#go-bar-btn').click();
             cy.get('#go-slim-bar-charts').should('be.visible');
