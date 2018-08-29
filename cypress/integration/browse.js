@@ -128,7 +128,7 @@ describe('Browse page', function() {
                         '1',
                         '6-Jun-2016']
                 }, {
-                    index: 'next',
+                    index: 'Next',
                     data: [
                         '',
                         'MGYS00000604',
@@ -137,7 +137,7 @@ describe('Browse page', function() {
                         '3-Feb-2016'], // 4th page
                     pageNum: 4
                 }, {
-                    index: 'prev',
+                    index: 'Previous',
                     data: [
                         '',
                         'MGYS00001019',
@@ -147,12 +147,12 @@ describe('Browse page', function() {
                         '6-Jun-2016'],
                     pageNum: 3
                 }, {
-                    index: 'last',
+                    index: 'Last',
                     data: ['', 'MGYS00000283', 'MetaSoil', '13', '20-Jan-2016'],
                     pageNum: 5,
                     pageSize: 22
                 }, {
-                    index: 'first',
+                    index: 'First',
                     data: [
                         '',
                         'MGYS00002072',
@@ -160,7 +160,7 @@ describe('Browse page', function() {
                         '258',
                         '27-Nov-2017'],
                     pageNum: 1
-                }]);
+                }], 5);
         });
 
         it('Should respond to page size change', function() {
@@ -296,7 +296,7 @@ describe('Browse page', function() {
                         'control_skin_left',
                         '27-Nov-2017']
                 }, {
-                    index: 'next',
+                    index: 'Next',
                     data: [
                         '',
                         'ERS1474557',
@@ -305,7 +305,7 @@ describe('Browse page', function() {
                         '27-Nov-2017'], // 4th row
                     pageNum: 4
                 }, {
-                    index: 'prev',
+                    index: 'Previous',
                     data: [
                         '',
                         'ERS1474798',
@@ -314,7 +314,7 @@ describe('Browse page', function() {
                         '27-Nov-2017'],
                     pageNum: 3
                 }, {
-                    index: 'last',
+                    index: 'Last',
                     data: [
                         '',
                         'SRS211741',
@@ -325,7 +325,7 @@ describe('Browse page', function() {
                     pageNum: 367,
                     pageSize: 8
                 }, {
-                    index: 'first',
+                    index: 'First',
                     data: [
                         '',
                         'ERS1474797',

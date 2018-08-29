@@ -71,12 +71,12 @@ class ClientSideTableHandler extends GenericTableHandler {
         this.waitForTableLoad(this.defaultPageSize);
     }
 
-    testPagination(pageSize, testData, numPages) {
+    testPagination(pageSize, testData) {
         for (let i in testData) {
             if (testData.hasOwnProperty(i)) {
                 const index = testData[i].index;
                 const pageData = testData[i].data;
-                this.getPaginationButton(index, numPages).click({force: true});
+                this.getPaginationButton(index).click({force: true});
                 // Edge case for last page
                 let size;
                 if (testData[i].pageSize) {

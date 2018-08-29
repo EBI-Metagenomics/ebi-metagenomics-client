@@ -237,7 +237,7 @@ describe('Analysis page', function() {
             data: ['26', 'Gemmatimonadetes', 'Bacteria', '2', '0.00'],
             pageSize: 9
         }, {
-            index: 'first',
+            index: 'First',
             data: ['1', 'Proteobacteria', 'Bacteria', '29061', '67.54'],
             pageNum: 1
         }
@@ -482,23 +482,23 @@ describe('Analysis page', function() {
                     index: 2,
                     data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06']
                 }, {
-                    index: 'prev',
+                    index: 'Previous',
                     data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12'],
                     pageNum: 1
                 }, {
-                    index: 'next',
+                    index: 'Next',
                     data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06'],
                     pageNum: 2
                 }, {
-                    index: 'first',
+                    index: 'First',
                     data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12'],
                     pageNum: 1
                 }, {
-                    index: 'last',
+                    index: 'Last',
                     data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06'],
                     pageNum: 2,
                     pageSize: 25
-                }], 2);
+                }]);
         });
         it('Interpro match sorting should work', function() {
             let interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);

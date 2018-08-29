@@ -219,30 +219,30 @@ class GenericTableHandler {
         return cy.get(this.parentId + ' div.row div.columns > label > select#pagesize');
     }
 
-    getPaginationButton(buttonIndex, numPages) {
-        if (!numPages) {
-            numPages = 5;
-        }
-        let str;
-        switch (buttonIndex) {
-            case 0:
-            case 'first':
-                str = ' div.pagination > ul.pagination > li:nth-child(1)';
-                break;
-            case 'prev':
-                str = ' div.pagination > ul.pagination > li:nth-child(2)';
-                break;
-            case 'next':
-                str = ' div.pagination > ul.pagination > li:nth-child(' + (numPages + 2) + ')';
-                break;
-            case 'last':
-                str = ' div.pagination > ul.pagination > li:nth-child(' + (numPages + 2) + ')';
-                break;
-            default:
-                str = ' div.pagination > ul.pagination > li:nth-child(' +
-                    (buttonIndex + 2) + ')';
-        }
-        return cy.get(this.parentId + str);
+    getPaginationButton(buttonIndex) {
+        // if (!numPages) {
+        //     numPages = 5;
+        // }
+        // let str;
+        // switch (buttonIndex) {
+        //     case 0:
+        //     case 'first':
+        //         str = ' div.pagination > ul.pagination > li:nth-child(1)';
+        //         break;
+        //     case 'prev':
+        //         str = ' div.pagination > ul.pagination > li:nth-child(2)';
+        //         break;
+        //     case 'next':
+        //         str = ' div.pagination > ul.pagination > li:nth-child(' + (numPages + 2) + ')';
+        //         break;
+        //     case 'last':
+        //         str = ' div.pagination > ul.pagination > li:nth-child(' + (numPages + 2) + ')';
+        //         break;
+        //     default:
+        //         str = ' div.pagination > ul.pagination > li:nth-child(' +
+        //             (buttonIndex + 2) + ')';
+        // }
+        return cy.get(this.parentId + ' div.pagination > ul.pagination').contains(buttonIndex);
     }
 
     getDownloadLink() {
