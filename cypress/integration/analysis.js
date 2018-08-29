@@ -435,9 +435,9 @@ describe('Analysis page', function() {
             let interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
             const firstPieSeries = '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0';
             cy.get(firstPieSeries).should('be.visible');
-            cy.get(interproTable.getTableSelector() + ' tr:first').click();
+            cy.get(interproTable.getTableSelector() + ' tbody tr:first').click();
             cy.get(firstPieSeries).should('be.hidden');
-            cy.get(interproTable.getTableSelector() + ' tr:first').click();
+            cy.get(interproTable.getTableSelector() + ' tbody tr:first').click();
             cy.get(firstPieSeries).should('be.visible');
         });
         const interproMatchCols = {
