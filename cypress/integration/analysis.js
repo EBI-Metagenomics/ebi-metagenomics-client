@@ -392,7 +392,7 @@ describe('Analysis page', function() {
     });
     let interproTable;
     context('Functional tab', function() {
-        before(function() {
+        beforeEach(function() {
             cy.server();
             cy.route('GET', '**/analyses/MGYA00141547').as('analysisQuery');
             cy.route('GET', '**/analyses/MGYA00141547/interpro-identifiers',
@@ -431,6 +431,14 @@ describe('Analysis page', function() {
             hoverAndValidateTooltip(
                 '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-10',
                 'Other', '1 099 756 pCDS matched (42.77%)');
+        });
+        it('Toggling rows in table should toggle series visibility in chart', function() {
+            const firstPieSeries = '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0';
+            cy.get(firstPieSeries).should('be.visible');
+            cy.get(interproTable.getTableSelector() + ' tr:first').click();
+            cy.get(firstPieSeries).should('be.hidden');
+            cy.get(interproTable.getTableSelector() + ' tr:first').click();
+            cy.get(firstPieSeries).should('be.visible');
         });
         const interproMatchCols = {
             index: {
@@ -495,14 +503,6 @@ describe('Analysis page', function() {
         it('Interpro match sorting should work', function() {
             interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
             interproTable.testSorting(25, interproMatchCols);
-        });
-        it('Toggling rows in table should toggle series visibility in chart', function() {
-            const firstPieSeries = '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0';
-            cy.get(firstPieSeries).should('be.visible');
-            cy.get(interproTable.getTableSelector() + ' tr:first').click();
-            cy.get(firstPieSeries).should('be.hidden');
-            cy.get(interproTable.getTableSelector() + ' tr:first').click();
-            cy.get(firstPieSeries).should('be.visible');
         });
 
         it('Go Term annotation tabs should work', function() {
