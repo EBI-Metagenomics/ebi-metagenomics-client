@@ -768,7 +768,6 @@ export function setupPage(tab, loginRedirect) {
         if (!isLoggedIn) {
             loadLoginForm(loginRedirect);
         } else {
-            console.log(userData);
             setNavLoginButton(isLoggedIn, userData['id']);
         }
     });
