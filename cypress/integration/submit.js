@@ -1,4 +1,4 @@
-import {openPage, loginModal, fillLoginModalForm, isValidLink} from '../util/util';
+import {openPage, loginModal, fillLoginModalForm} from '../util/util';
 
 const origPage = 'submit';
 describe('Submit page', function() {
