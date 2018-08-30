@@ -639,8 +639,12 @@ export function getLoginStatus() {
     const deferred = new $.Deferred();
 
     $.get(api.API_URL + 'utils/myaccounts').done((data, state, xhr) => {
-        console.log(data);
-        deferred.resolve(String(xhr.status)[0] === '2', data['data'][0]);
+        try {
+            deferred.resolve(String(xhr.status)[0] === '2', data['data'][0]);
+        } catch (e) {
+            console.error(e);
+            deferred.resolve(false);
+        }
     }).fail(() => {
         deferred.resolve(false);
     });

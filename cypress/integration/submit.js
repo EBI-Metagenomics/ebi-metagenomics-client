@@ -13,13 +13,14 @@ describe('Submit page', function() {
     });
     context('User is logged in', function() {
         beforeEach(function() {
-            openPage(origPage);
-            cy.contains('Please click here to login').should('be.visible');
             cy.server();
             cy.route('GET', '**/myaccounts', 'fixture:user_account');
-            cy.contains('Please click here to login').click();
-            cy.get(loginModal).should('be.visible');
-            fillLoginModalForm();
+            openPage(origPage);
+            cy.contains('Submit data').should('be.visible');
+            // cy.contains('Please click here to login').should('be.visible');
+            // cy.contains('Please click here to login').click();
+            // cy.get(loginModal).should('be.visible');
+            // fillLoginModalForm();
         });
         it('Should display consent button if logged in but consent not given', function() {
             cy.contains('Give consent').should('be.visible');
