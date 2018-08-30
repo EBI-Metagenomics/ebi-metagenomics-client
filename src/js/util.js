@@ -811,6 +811,7 @@ export function specifyPageTitle(objectType, id) {
  */
 export function sendMail(fromEmail, subject, body) {
     const deferred = $.Deferred();
+    console.log('Sending mail');
     $.ajax({
         beforeSend: function(xhr) {
             xhr.setRequestHeader('X-CSRFToken', Cookies.get('csrftoken'));
@@ -830,7 +831,7 @@ export function sendMail(fromEmail, subject, body) {
             }
         }),
         success() {
-            console.debug('Sent email succesfully.');
+            console.log('Sent email successfully.');
             deferred.resolve(true);
         },
         error() {

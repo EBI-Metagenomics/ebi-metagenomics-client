@@ -13,7 +13,6 @@ describe('Submit page', function() {
     });
     context('User is logged in, consent not already given', function() {
         beforeEach(function() {
-            cy.server();
             openPage(origPage);
             cy.contains('Please click here to login').click();
             cy.get(loginModal).should('be.visible');
@@ -38,19 +37,31 @@ describe('Submit page', function() {
             cy.get('#consent-request-error').should('be.visible');
             cy.get('#consent-request-success').should('be.hidden');
         });
-        it('Should display success message on successful request', function() {
+    });
+    context('User is logged in, successful workflow', function() {
+        it('Should send request and display success', function() {
+            cy.server();
             cy.route({
                 method: 'POST',
-                url: '**',
+                url: '**/utils/notify',
                 status: 201,
                 response: []
             }).as('sendMail');
+
+            openPage(origPage);
+            cy.contains('Please click here to login').click();
+            cy.get(loginModal).should('be.visible');
+            fillLoginModalForm();
+            cy.contains('Your Webin account is currently not registered with MGnify')
+                .should('be.visible');
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').should('be.visible');
             cy.get('#consent-given').check();
-            cy.contains(errorText).should('be.hidden');
+            cy.wait(2000);
             cy.contains('Give consent.').click();
+            cy.contains('Give consent.').click({force: true});
+            cy.contains(errorText).should('be.hidden');
             cy.wait('@sendMail');
             cy.get('#consent-request-error').should('be.hidden');
             cy.get('#consent-request-success').should('be.visible');
