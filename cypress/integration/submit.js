@@ -1,4 +1,4 @@
-import {openPage, isValidLink} from '../util/util';
+import {openPage, loginModal, fillLoginModalForm, isValidLink} from '../util/util';
 
 const origPage = 'submit';
 describe('Submit page', function() {
@@ -14,9 +14,10 @@ describe('Submit page', function() {
     context('User is logged in, consent not already given', function() {
         beforeEach(function() {
             cy.server();
-            cy.route('GET', '**/myaccounts', 'fixture:user_account');
             openPage(origPage);
-            cy.contains('Submit data').should('be.visible');
+            cy.contains('Please click here to login').click();
+            cy.get(loginModal).should('be.visible');
+            fillLoginModalForm();
         });
         it('Should display consent button if logged in but consent not given', function() {
             cy.contains('Give consent').should('be.visible');
@@ -43,13 +44,14 @@ describe('Submit page', function() {
                 url: '**',
                 status: 201,
                 response: []
-            }).as('notifyRequest');
+            }).as('sendMail');
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').should('be.visible');
             cy.get('#consent-given').check();
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').click();
+            cy.wait('@sendMail');
             cy.get('#consent-request-error').should('be.hidden');
             cy.get('#consent-request-success').should('be.visible');
 

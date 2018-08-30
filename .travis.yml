@@ -30,12 +30,20 @@ before_install:
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
   - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@52fe822#egg=emgcli"
 
-
+  # EMG API CONFIG MODIFICATION
   # Add slack notification to config
   - sed -i s#{SLACK_TOKEN}#$SLACK_TOKEN#g $TRAVIS_BUILD_DIR/travis/config.yaml
-  - mysql -e 'CREATE DATABASE emg;'
 
-  # Create schema from django model
+  # Inject travis build dir into nginx conf for location of downloads
+  - sed -i s#{TRAVIS_BUILD_DIR}#$TRAVIS_BUILD_DIR#g $TRAVIS_BUILD_DIR/travis/nginx.conf
+
+  ### TEST DATABASE SETUP
+  # Create EMG and ENA user schemas
+  - mysql -e 'CREATE DATABASE emg;'
+  - mysql -e 'CREATE DATABASE ena;'
+
+  ## EMG SCHEMA
+  # Create tables from django model
   - emgcli migrate
 
   # TEMPORARY fix for non-necessary primary keys in db
@@ -45,23 +53,7 @@ before_install:
   - echo -e "SET FOREIGN_KEY_CHECKS = 0;\n$(cat travis/emg_sql_fixtures/*.sql)\nSET FOREIGN_KEY_CHECKS = 1;" > travis/emg_sql_fixtures/merged.sql
   - mysql -u root --password="" --database=emg < travis/emg_sql_fixtures/merged.sql
 
-  # EMG api deployment and setup
-  - emgcli collectstatic --noinput
-  - emgcli check --deploy
-
-  # Add backend auth package to path for emgapi
-  - git clone https://github.com/EBI-Metagenomics/emgapi.git
-  - export PYTHONPATH=/home/travis/build/EBI-Metagenomics/ebi-metagenomics-client/emgapi/tests/:$PYTHONPATH
-  - emgdeploy --daemon -p ~/emg.pid emgcli.wsgi:application --workers 5
-  - sudo chmod 777 /var/log/nginx/*
-  - sudo chmod 777 /var/run/nginx.pid
-
-  # Inject travis build dir into nginx conf for location of downloads
-  - sed -i s#{TRAVIS_BUILD_DIR}#$TRAVIS_BUILD_DIR#g $TRAVIS_BUILD_DIR/travis/nginx.conf
-  - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
-
-
-  # Touch download files
+  ## EMG FIXTURES
   - travis/create_download_files.sh
   - emgcli import_taxonomy ERR1022502 ~/results
   - emgcli import_qc ERR1022502 ~/results
@@ -69,17 +61,29 @@ before_install:
   - emgcli import_summary ERR1022502 ~/results .go_slim
   - emgcli import_summary ERR1022502 ~/results .go
 
-#  - emgcli import_taxonomy ERR1022500 ~/results
-#  - emgcli import_qc ERR1022500 ~/results
-#  - emgcli import_summary ERR1022500 ~/results .ipr
-#  - emgcli import_summary ERR1022500 ~/results .go_slim
-#  - emgcli import_summary ERR1022500 ~/results .go
-#
   - emgcli import_taxonomy ERR867655 ~/results
   - emgcli import_qc ERR867655 ~/results
   - emgcli import_summary ERR867655 ~/results .ipr
   - emgcli import_summary ERR867655 ~/results .go_slim
   - emgcli import_summary ERR867655 ~/results .go
+
+  ## ENA AUTHENTICATION FAKE DB
+  # Create fake ENA authentication tables
+  - mysql ena < $TRAVIS_BUILD_DIR/travis/ena_db.sql
+
+  # Add backend auth package to path for emgapi
+  - git clone https://github.com/EBI-Metagenomics/emgapi.git
+  - export PYTHONPATH=/home/travis/build/EBI-Metagenomics/ebi-metagenomics-client/emgapi/tests/:$PYTHONPATH
+
+  ## EMG API SETUP
+  - emgcli collectstatic --noinput
+  - emgcli check --deploy
+  - emgdeploy --daemon -p ~/emg.pid emgcli.wsgi:application --workers 5
+  
+  ## NGINX SETUP
+  - sudo chmod 777 /var/log/nginx/*
+  - sudo chmod 777 /var/run/nginx.pid
+  - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
 
   # Install build dependencies
   - npm install cypress
@@ -94,7 +98,7 @@ install:
   - sudo mv dist/* /usr/share/nginx/html/
 
 script:
-  - npm run test:parallel -- --record --key $CYPRESS_RECORD_KEY
+  - npm run test:parallel -- --record --key $CYPRESS_RECORD_KEY --spec $TRAVIS_BUILD_DIR/cypress/integration/submit.js
 
 after_script:
   - npm run coverage
