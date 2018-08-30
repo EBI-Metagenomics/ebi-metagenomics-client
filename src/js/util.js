@@ -639,6 +639,7 @@ export function getLoginStatus() {
     const deferred = new $.Deferred();
 
     $.get(api.API_URL + 'utils/myaccounts').done((data, state, xhr) => {
+        console.log(data);
         deferred.resolve(String(xhr.status)[0] === '2', data['data'][0]);
     }).fail(() => {
         deferred.resolve(false);
@@ -763,6 +764,7 @@ export function setupPage(tab, loginRedirect) {
         if (!isLoggedIn) {
             loadLoginForm(loginRedirect);
         } else {
+            console.log(userData);
             setNavLoginButton(isLoggedIn, userData['id']);
         }
     });

@@ -16,11 +16,11 @@ describe('Submit page', function() {
             openPage(origPage);
             cy.contains('Please click here to login').click();
             cy.get(loginModal).should('be.visible');
-            fillLoginModalForm();
             cy.server();
-            cy.route('GET', '**/utils/myaccounts', 'fixture:user_account');
+            cy.route('GET', '**/myaccounts', 'fixture:user_account.json');
+            fillLoginModalForm();
         });
-        it('Should display consent button', function() {
+        it('Should display consent button if logged in but consent not previously given', function() {
             cy.contains('Give consent').should('be.visible');
         });
         it('Should prevent clicking give consent without checking box', function() {
@@ -30,7 +30,6 @@ describe('Submit page', function() {
             cy.contains(errorText).should('be.visible');
         });
         it('Should display error message if consent request failed', function() {
-            cy.route('GET', '**/myaccounts', 'fixture:user_account.json').as('myaccounts');
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').should('be.visible');
@@ -47,7 +46,6 @@ describe('Submit page', function() {
                 status: 201,
                 response: []
             }).as('notifyRequest');
-            cy.route('GET', '**/myaccounts', 'fixture:user_account.json').as('myaccounts');
             const errorText = 'Please check the box above.';
             cy.contains(errorText).should('be.hidden');
             cy.contains('Give consent.').should('be.visible');
