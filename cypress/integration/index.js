@@ -3,7 +3,9 @@ import {
     getBaseURL,
     waitForBiomesLoad,
     waitForSearchResults,
-    setupDefaultSearchPageRouting
+    setupDefaultSearchPageRouting,
+    login,
+    urlExists
 } from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
@@ -16,8 +18,6 @@ function waitForStatsLoadingGif() {
 
 function defaultLoginFieldsAreVisible(confidentialityText) {
     cy.get('input[name=\'analysis-type\']').should('be.visible');
-    cy.get('input[name=\'contact-username\']').should('be.visible');
-    cy.get('input[name=\'contact-email\']').should('be.visible');
     cy.get('input[name=\'reason\']').should('be.visible');
     cy.contains(confidentialityText).should('be.visible');
     cy.get('button.mailtobtn').should('be.visible');
@@ -203,20 +203,18 @@ describe('Home page', function() {
     }
 
     context('Request analysis section - Private data', function() {
-        const redirectText = 'You will be re-directed to ENA to submit this data; please ' +
-            'provide us with enough information to find this data.';
         const confidentialityText = 'The analysis of your data will be held confidentially ' +
             'on our site until the hold date expires.';
 
         before(function() {
+            openPage(origPage);
+            login();
             openPage(origPage);
             cy.contains('Submit and/or Request').click();
         });
         it('Form elements should be hidden until a radio button is checked', function() {
             cy.get('input[name=\'study-accession\']').should('be.hidden');
             cy.get('input[name=\'analysis-type\']').should('be.hidden');
-            cy.get('input[name=\'contact-username\']').should('be.hidden');
-            cy.get('input[name=\'contact-email\']').should('be.hidden');
             cy.get('input[name=\'reason\']').should('be.hidden');
             cy.contains(confidentialityText).should('be.hidden');
             cy.get('button.mailtobtn').should('be.hidden');
@@ -225,15 +223,15 @@ describe('Home page', function() {
         it('Checking yes radio box should display elements', function() {
             cy.get('input[value=\'yes\']').click();
             cy.get('input[name=\'study-accession\']').should('be.visible');
-            cy.get('input[name=\'study-title\']').should('be.hidden');
             defaultLoginFieldsAreVisible(confidentialityText);
         });
         it('Checking no radio button should display elements', function() {
             cy.get('input[value=\'no\']').click();
             cy.get('input[name=\'study-accession\']').should('be.hidden');
-            cy.get('input[name=\'study-title\']').should('be.visible');
-            defaultLoginFieldsAreVisible(confidentialityText);
-            cy.contains(redirectText).should('be.visible');
+            cy.contains('Please submit your data before requesting analysis as it must be archived in the ENA for us to process it.').should('be.visible');
+            cy.contains('Go to ENA submission page').then(($el) => {
+                urlExists($el.attr('href'));
+            });
         });
         it('Analysis type tooltip hover should display tooltip', function() {
             cy.get('input[value=\'yes\']').click();
@@ -243,7 +241,9 @@ describe('Home page', function() {
     context('Request analysis - public data', function() {
         before(function() {
             openPage(origPage);
-            cy.get('button[data-open=\'requestPublicAnalysisModal\']').click();
+            login();
+            openPage(origPage);
+            cy.get('button[data-target-modal=\'#requestPublicAnalysisModal\']').click();
         });
         it('Analysis type tooltip hover should display tooltip', function() {
             testAnalysisTypeTooltip('public-help-tooltip');
@@ -251,10 +251,23 @@ describe('Home page', function() {
         it('Form elements should be visible', function() {
             cy.get('input[name=\'study-accession\']').should('be.visible');
             cy.get('input[name=\'analysis-type\']').should('be.visible');
-            cy.get('input[name=\'contact-username\']').should('be.visible');
-            cy.get('input[name=\'contact-email\']').should('be.visible');
             cy.get('input[name=\'reason\']').should('be.visible');
             cy.get('button.mailtobtn').should('be.visible');
+        });
+    });
+    context('Analyses request - Should force login prior to displaying forms', function() {
+        beforeEach(function() {
+            openPage(origPage);
+        });
+        it('Should display login form on public request btn click', function() {
+            cy.get('button[data-target-modal=\'#requestPublicAnalysisModal\']').click();
+            cy.get('#requestPublicAnalysisModal').should('be.hidden');
+            cy.get('#loginModal').should('be.visible');
+        });
+        it('Should display login form on private request btn click', function() {
+            cy.get('button[data-target-modal=\'#requestPrivateAnalysisModal\']').click();
+            cy.get('#requestPrivateAnalysisModal').should('be.hidden');
+            cy.get('#loginModal').should('be.visible');
         });
     });
 });

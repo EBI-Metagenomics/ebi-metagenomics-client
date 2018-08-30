@@ -5,6 +5,7 @@ const api = require('mgnify').api;
 const authApi = require('./components/authApi');
 const Commons = require('./commons');
 const GenericTable = require('./components/genericTable');
+const Cookies = require('js-cookie');
 import 'process';
 
 require('babel-polyfill');
@@ -637,8 +638,13 @@ export const AnalysesView = GenericTableView.extend({
 export function getLoginStatus() {
     const deferred = new $.Deferred();
 
-    $.get(api.API_URL + 'utils/myaccounts').done((xhr) => {
-        deferred.resolve(String(xhr.status)[0] !== '4');
+    $.get(api.API_URL + 'utils/myaccounts').done((data, state, xhr) => {
+        try {
+            deferred.resolve(String(xhr.status)[0] === '2', data['data'][0]);
+        } catch (e) {
+            console.error(e);
+            deferred.resolve(false);
+        }
     }).fail(() => {
         deferred.resolve(false);
     });
@@ -712,8 +718,7 @@ export function loadLoginForm(next) {
  * Set navbar to reflect user login status
  * @param {boolean} isLoggedIn true if user is authenticated
  */
-export function setNavLoginButton(isLoggedIn) {
-    const username = getUsername();
+export function setNavLoginButton(isLoggedIn, username) {
     if (isLoggedIn && username !== null) {
         const $a = $('<a></a>');
         $a.text('Welcome, ' + username + ' ');
@@ -759,10 +764,11 @@ export function logout() {
  */
 export function setupPage(tab, loginRedirect) {
     const loginStatus = getLoginStatus();
-    loginStatus.done(function(isLoggedIn) {
-        setNavLoginButton(isLoggedIn);
+    loginStatus.done((isLoggedIn, userData) => {
         if (!isLoggedIn) {
             loadLoginForm(loginRedirect);
+        } else {
+            setNavLoginButton(isLoggedIn, userData['id']);
         }
     });
     checkAPIonline();
@@ -793,4 +799,44 @@ export function attachExpandButtonCallback() {
  */
 export function specifyPageTitle(objectType, id) {
     document.title = `${objectType}: ${id} < ${document.title}`;
+}
+
+/**
+ * Send mail via API
+ * @param {string} fromEmail email address of sender
+ * @param {string} subject of email
+ * @param {string} body of email
+ * @return {(JQuery.Promise<TR, TJ, TN> & Object)} of ajax request
+ */
+export function sendMail(fromEmail, subject, body) {
+    const deferred = $.Deferred();
+    console.log('Sending mail');
+    $.ajax({
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader('X-CSRFToken', Cookies.get('csrftoken'));
+        },
+        type: 'post',
+        url: process.env.API_URL + 'utils/notify',
+        contentType: 'application/vnd.api+json',
+        data: JSON.stringify({
+            data: {
+                'id': null,
+                'type': 'notifies',
+                'attributes': {
+                    'from-email': fromEmail,
+                    'subject': subject,
+                    'message': body
+                }
+            }
+        }),
+        success() {
+            console.log('Sent email successfully.');
+            deferred.resolve(true);
+        },
+        error() {
+            console.error('Failed to send email.');
+            deferred.resolve(false);
+        }
+    });
+    return deferred.promise();
 }

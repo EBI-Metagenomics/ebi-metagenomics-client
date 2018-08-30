@@ -65,6 +65,14 @@
                 <a id="submit" href="https://www.ebi.ac.uk/ena/submit/sra/#home" class="button">Click here to submit
                     data</a>
             </div>
+            <p class="center hidden" id="consent-request-success">
+                Successfully requested consent to analyse user data. Click
+                <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">here</a>
+                to return to the home page.
+            </p>
+            <p class="center hidden error" id="consent-request-error">
+                Failed to send request, please try again or contact our helpdesk.
+            </p>
         </div>
         <div id="submissionModal" class="reveal" role="dialog" data-reveal>
             <img src="static/images/graphic_submission_00.gif"/>
