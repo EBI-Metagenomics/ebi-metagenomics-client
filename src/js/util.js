@@ -204,48 +204,6 @@ export const BiomeCollectionView = Backbone.View.extend({
         $biomeSelect.val(biome);
     }
 });
-//
-// render() {
-//     const that = this;
-//     let biomes = this.collection.models.map(function(model) {
-//         return model.attributes.lineage;
-//     });
-//     _.each(biomes.sort(), function(lineage) {
-//         const option = createBiomeOption(lineage);
-//         $(that.selector).append($(option));
-//     });
-//     return this;
-// }
-
-/**
- * Capitalize a word.
- * @param {string} string to capitalize
- * @return {string}
- */
-export const capitalizeWord = function(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-/**
- * Add additional URL parameters to convert a URL into a downloadable URL
- * @param {object} params
- * @return {object} params for download
- */
-export const getDownloadParams = function(params) {
-    const downloadParams = $.extend(true, {}, params);
-    delete downloadParams['page'];
-    delete downloadParams['page_size'];
-    downloadParams['format'] = 'csv';
-    return downloadParams;
-};
-
-/**
- * Set download tag url
- * @param {string} url
- */
-export const setDownloadResultURL = function(url) {
-    $('#download-results').attr('href', url);
-};
 
 /**
  * Truncates the given string to the given maximum length.
@@ -295,7 +253,7 @@ export function createListItem(html) {
 /**
  * Return promise of request of URL, used to validate if URL is valid
  * @param {string} url
- * @return {jQuery.promise}
+ * @return {jQuery.Promise}
  */
 export function checkURLExists(url) {
     const deferred = $.Deferred();
@@ -337,7 +295,6 @@ export function checkAPIonline() {
  * @return {jQuery.Promise} wrapping AJAX query to API
  */
 export function updateTable(view, params) {
-// export function updateTable(view, page, pageSize, order, query) {
     view.tableObj.showLoadingGif();
     if (!params) {
         params = {};
@@ -448,54 +405,6 @@ export let StudiesView = GenericTableView.extend({
             attr['abstract'],
             attr['samples_count'],
             attr['last_update']];
-    }
-});
-
-export let SamplesView = GenericTableView.extend({
-    tableObj: null,
-    pagination: null,
-
-    initialize() {
-        const that = this;
-        const columns = [
-            {sortBy: null, name: 'Biome'},
-            {sortBy: 'accession', name: 'Sample ID'},
-            {sortBy: 'sample_name', name: 'Sample name'},
-            {sortBy: null, name: 'Description'},
-            {sortBy: 'last_update', name: 'Last update'}
-        ];
-        let tableOptions = {
-            title: 'Associated samples',
-            headers: columns,
-            initialOrdering: 'accession',
-            initPageSize: Commons.DEFAULT_PAGE_SIZE,
-            isHeader: false,
-            textFilter: true,
-            tableClass: 'samples-table',
-            callback: function(page, pageSize, order, search) {
-                that.update({
-                    page: page,
-                    page_size: pageSize,
-                    ordering: order,
-                    search: search
-                });
-            }
-        };
-        this.tableObj = new GenericTable($('#samples-section'), tableOptions);
-        this.update({
-            page: 1,
-            page_size: Commons.DEFAULT_PAGE_SIZE_SAMPLES,
-            ordering: 'accession',
-            search: null
-        });
-    },
-
-    getRowData(attr) {
-        const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
-            '</a>';
-        const biomes = '<span class="biome_icon icon_xs ' + attr.biome_icon + '" title="' +
-            attr.biome_name + '"></span>';
-        return [biomes, sampleLink, attr.sample_name, attr.sample_desc, attr.last_update];
     }
 });
 
@@ -715,6 +624,7 @@ export function loadLoginForm(next) {
 /**
  * Set navbar to reflect user login status
  * @param {boolean} isLoggedIn true if user is authenticated
+ * @param {string} username of logged in user
  */
 export function setNavLoginButton(isLoggedIn, username) {
     if (isLoggedIn && username !== null) {
@@ -804,7 +714,7 @@ export function specifyPageTitle(objectType, id) {
  * @param {string} fromEmail email address of sender
  * @param {string} subject of email
  * @param {string} body of email
- * @return {(JQuery.Promise<TR, TJ, TN> & Object)} of ajax request
+ * @return {JQuery.Promise} of ajax request
  */
 export function sendMail(fromEmail, subject, body) {
     const deferred = $.Deferred();
