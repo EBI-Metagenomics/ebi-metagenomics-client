@@ -163,17 +163,12 @@ module.exports = class MapHandler {
         // transform icon into symbol - from
         // http://stackoverflow.com/questions/33353250/google-maps-api-markerclusterer-plus-set-icon
         let Symbol = function(id, width, height, fill, strokewidth, strokecolor) {
-            let s = {
-                luc: {
-                    p: ' M 100, 100m -75, 0a 75,75 0 1,0 150,0a 75,75 0 1,0 -150,0',
-                    v: '0 0 512 512'
-                }
-            };
             return ('data:image/svg+xml;base64,' +
                 window.btoa('<svg xmlns="http://www.w3.org/2000/svg" height="' + height +
                     '" viewBox="0 0 512 512" width="' + width + '" ><g><path stroke-width="' +
                     strokewidth + '" stroke="' + strokecolor + '" fill="' + fill + '" d="' +
-                    s[id].p + '" /></g></svg>'));
+                    ' M 100, 100m -75, 0a 75,75 0 1,0 150,0a 75,75 0 1,0 -150,0' +
+                    '" /></g></svg>'));
         };
 
         $.when(...markers).then((...markerObjs) => {
