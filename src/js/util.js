@@ -42,13 +42,11 @@ export function getURLFilterParams() {
     let sPageURL = decodeURIComponent(window.location.search.substring(1));
     let sURLVariables = sPageURL.split('&');
     let sParameterName;
-    let i;
     let params = {};
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
+    sURLVariables.forEach(function(e) {
+        sParameterName = e.split('=');
         params[sParameterName[0]] = decodeURIComponent(sParameterName[1]);
-    }
+    });
     return params;
 }
 
@@ -186,16 +184,16 @@ function createBiomeOption(lineage) {
 
 export const BiomeCollectionView = Backbone.View.extend({
     selector: '.biome-select',
-    initialize(options) {
-        for (let arg in options) {
-            if (options.hasOwnProperty(arg)) {
-                this[arg] = options[arg];
-            }
-        }
+    initialize() {
         let that = this;
         this.collection.fetchWithRoot().then((data) => {
+            that.clearSelectOptions();
             that.addOptionsToSelect(data.models, that.collection.rootLineage);
         });
+    },
+    clearSelectOptions() {
+        const $biomeSelect = $(this.selector);
+        $biomeSelect.empty();
     },
     addOptionsToSelect(data, biome) {
         const $biomeSelect = $(this.selector);
