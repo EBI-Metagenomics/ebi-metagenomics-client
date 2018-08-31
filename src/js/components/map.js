@@ -3,6 +3,25 @@ const _ = require('underscore');
 const template = require('../../partials/map_tooltip.handlebars');
 const api = require('mgnify').api;
 const subfolder = require('../util').subfolder;
+let MarkerClusterer = require('node-js-marker-clusterer');
+
+MarkerClusterer.prototype.calculator_ = function(markers, numStyles) {
+    let index = 0;
+    let count = markers.reduce((s, f) => {
+        return s + f.emg_sample_count;
+    }, 0);
+    let dv = count;
+    while (dv !== 0) {
+        dv = parseInt(dv / 10, 10);
+        index++;
+    }
+
+    index = Math.min(index, numStyles);
+    return {
+        text: count,
+        index: index
+    };
+};
 
 /**
  * Return sample coordinates from sample obj
@@ -26,8 +45,10 @@ let generateIconCache = {};
  * Generate marker icons
  * @param {number} number of samples at coordinates
  * @param {function} callback to use
+ * @return {jQuery.Deferred} promise of marker object
  */
 function generateIcon(number, callback) {
+    const deferred = $.Deferred();
     if (generateIconCache[number] !== undefined) {
         callback(generateIconCache[number]);
     }
@@ -51,7 +72,6 @@ function generateIcon(number, callback) {
         .attr('height', imageHeight + 'px')
         .attr('width', imageWidth + 'px')
         .append('g');
-
 
     svg.append('circle')
         .attr('cx', '27.2')
@@ -92,7 +112,8 @@ function generateIcon(number, callback) {
         dataURL = canvas.toDataURL();
         generateIconCache[number] = dataURL;
 
-        callback(dataURL);
+        let marker = callback(dataURL);
+        deferred.resolve(marker);
     }).bind(this, imageWidth, imageHeight);
 
     const base64img = btoa(
@@ -100,6 +121,7 @@ function generateIcon(number, callback) {
             return String.fromCharCode('0x' + p1);
         }));
     image.src = 'data:image/svg+xml;base64,' + base64img;
+    return deferred;
 }
 
 /**
@@ -137,14 +159,47 @@ module.exports = class MapHandler {
             }
             return result;
         }, []);
+
+        // transform icon into symbol - from
+        // http://stackoverflow.com/questions/33353250/google-maps-api-markerclusterer-plus-set-icon
+        let Symbol = function(id, width, height, fill, strokewidth, strokecolor) {
+            let s = {
+                luc: {
+                    p: ' M 100, 100m -75, 0a 75,75 0 1,0 150,0a 75,75 0 1,0 -150,0',
+                    v: '0 0 512 512'
+                }
+            };
+            return ('data:image/svg+xml;base64,' +
+                window.btoa('<svg xmlns="http://www.w3.org/2000/svg" height="' + height +
+                    '" viewBox="0 0 512 512" width="' + width + '" ><g><path stroke-width="' +
+                    strokewidth + '" stroke="' + strokecolor + '" fill="' + fill + '" d="' +
+                    s[id].p + '" /></g></svg>'));
+        };
+
+        $.when(...markers).then((...markerObjs) => {
+            let mcOptions = {
+                gridSize: 40, maxZoom: 15,
+                styles: [
+                    {
+                        textColor: 'white',
+                        width: 40,
+                        height: 40,
+                        url: Symbol('luc', 100, 100, '#1a5286', 16, 'white')
+                    },
+                    {
+                        textColor: 'white',
+                        textSize: '18',
+                        width: 78,
+                        height: 78,
+                        url: Symbol('luc', 200, 200, '#1a5286', 5, 'white')
+                    }
+                ]
+            };
+            new MarkerClusterer(map, markerObjs, mcOptions);
+        });
+
         const $map = $('#' + elementId);
-        if (markers.length > 1) {
-            // $map.siblings('.no-coords-span').hide();
-            // let bounds = new google.maps.LatLngBounds();
-            // for (let i = 0; i < markers.length; i++) {
-            //     bounds.extend(markers[i].getPosition());
-            // }
-        } else if (markers.length === 0) {
+        if (markers.length === 0) {
             const $parentDiv = $map.parent();
             $map.addClass('disabled');
 
@@ -165,44 +220,48 @@ module.exports = class MapHandler {
      * @param {object} coords
      * @param {boolean} enableTooltips if true add tooltips to markers
      * @param {string} studyAccession
+     * @return {jQuery.Deferred} promise of marker object
      */
     placeMarker(map, coords, enableTooltips, studyAccession) {
         const formattedCoords = getSamplePosition(coords);
-        generateIcon(formattedCoords.count, function(src) {
-            let pos = new google.maps.LatLng(formattedCoords.lat, formattedCoords.lng);
+        return generateIcon(formattedCoords.count, function(src) {
+                let pos = new google.maps.LatLng(formattedCoords.lat, formattedCoords.lng);
 
-            const marker = new google.maps.Marker({
-                position: pos,
-                map: map,
-                icon: src
-            });
-            if (enableTooltips) {
-                let infowindow = new google.maps.InfoWindow({
-                    content: template(formattedCoords)
+                const marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    icon: src
                 });
-                marker.addListener('click', function() {
-                    infowindow.open(map, marker);
-                    const samplesParams = $.param({
-                        latitude_gte: formattedCoords.lat,
-                        latitude_lte: formattedCoords.lat,
-                        longitude_gte: formattedCoords.lng,
-                        longitude_lte: formattedCoords.lng,
-                        study_accession: studyAccession
+                marker.emg_sample_count = formattedCoords.count;
+                if (enableTooltips) {
+                    let infowindow = new google.maps.InfoWindow({
+                        content: template(formattedCoords)
                     });
-                    const samples = new api.SamplesCollection();
-                    const $list = $('#' + formattedCoords['uuid-samples']);
-                    samples.fetch({
-                        data: samplesParams
-                    }).then((response) => {
-                        $list.empty();
-                        _.each(response.data, function(d) {
-                            addSampleToList($list, api.Sample.prototype.parse(d));
+                    marker.addListener('click', function() {
+                        infowindow.open(map, marker);
+                        const samplesParams = $.param({
+                            latitude_gte: formattedCoords.lat,
+                            latitude_lte: formattedCoords.lat,
+                            longitude_gte: formattedCoords.lng,
+                            longitude_lte: formattedCoords.lng,
+                            study_accession: studyAccession,
+                            page_size: 500
                         });
-                        $('#' + formattedCoords['uuid-loading-icon']).fadeOut();
+                        const samples = new api.SamplesCollection();
+                        const $list = $('#' + formattedCoords['uuid-samples']);
+                        samples.fetch({
+                            data: samplesParams
+                        }).then((response) => {
+                            $list.empty();
+                            _.each(response.data, function(d) {
+                                addSampleToList($list, api.Sample.prototype.parse(d));
+                            });
+                            $('#' + formattedCoords['uuid-loading-icon']).fadeOut();
+                        });
                     });
-                });
+                }
+                return marker;
             }
-        });
+        );
     }
 };
-
