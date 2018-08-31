@@ -297,6 +297,7 @@ describe('Search page', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
             setupDefaultSliderRouting();
+            setupFilteredSliderRoutingTyped();
             loadPage(origPage + '#samples');
             initTableHandlers();
         });
@@ -367,7 +368,6 @@ describe('Search page', function() {
             const min = '40';
             const max = '88';
             enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
-            setupFilteredSliderRoutingTyped();
             getInputText(samplesTempSliderContainer, 'min').clear().type(min).trigger('change');
             getInputText(samplesTempSliderContainer, 'max').clear().type(max).trigger('change');
             cy.contains('You searched for samples with temperature:[' + min + ' TO ' + max + '].');
