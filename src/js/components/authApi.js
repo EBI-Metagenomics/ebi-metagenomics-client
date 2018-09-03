@@ -1,4 +1,4 @@
-const api = require('mgnify/lib/api');
+const api = require('mgnify').api;
 const Backbone = require('backbone');
 export const API_LOGIN_ROOT = api.API_URL.split('/').slice(0, -2).join('/') + '/';
 
