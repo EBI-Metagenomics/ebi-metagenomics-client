@@ -297,6 +297,7 @@ describe('Search page', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
             setupDefaultSliderRouting();
+            setupFilteredSliderRoutingTyped();
             loadPage(origPage + '#samples');
             initTableHandlers();
         });
@@ -363,44 +364,10 @@ describe('Search page', function() {
                 'You searched for analyses with temperature:[');
         });
 
-        it('Depth slider should not affect temp slider', function() {
-            setupFilteredDepthSliderRouting();
-            const samplesDepthSwitchToggle = '[for=\'samplesDepthSwitch\']';
-            const samplesDepthSliderContainer = '#samplesFiltersDepth';
-            const samplesDepthCheckbox = '#samplesDepthSwitch';
-            const samplesDepthSlider = samplesDepthSliderContainer + ' > .ui-slider-range';
-            const analysesDepthSliderContainer = '#analysesFiltersDepth';
-
-            checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox,
-                'You searched for samples with no parameters.');
-            sampleTable.checkRowData(0, [
-                'SRS371887',
-                'MGYS00000633',
-                'Generic sample from unclassified Bacteria (miscellaneous)',
-                'Generic sample from unclassified Bacteria (miscellaneous)']);
-            enableSlider(samplesDepthSwitchToggle, samplesDepthCheckbox,
-                samplesDepthSliderContainer);
-            const queryText = 'You searched for samples with depth:[0 TO 2000].';
-            cy.contains(queryText).should('be.visible');
-            // cy.wait('@tempSliderFilteredSamples');
-            sampleTable.checkRowData(0, [
-                'ERS706390', 'ERP010186', 'OL-KR13/296m_10', 'groundwater']);
-
-            checkSliderDisabled(samplesTempSliderContainer, samplesTempCheckbox, queryText);
-
-            cy.get(samplesDepthSlider, {timeout: 40000}).click(50, 5).click(100, 5);
-            validateQueryFromInputs(samplesDepthSliderContainer,
-                'You searched for samples with depth:[');
-            changeTab('analyses');
-            validateQueryFromInputs(analysesDepthSliderContainer,
-                'You searched for analyses with depth:[');
-        });
-
         it('Changing textbox value should change slider value', function() {
             const min = '40';
             const max = '88';
             enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
-            setupFilteredSliderRoutingTyped();
             getInputText(samplesTempSliderContainer, 'min').clear().type(min).trigger('change');
             getInputText(samplesTempSliderContainer, 'max').clear().type(max).trigger('change');
             cy.contains('You searched for samples with temperature:[' + min + ' TO ' + max + '].');

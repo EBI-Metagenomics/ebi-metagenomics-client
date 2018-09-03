@@ -21,6 +21,15 @@ function checkTabWasRemoved(tabId) {
     cy.get('[href=\'' + tabId + '\']').should('not.exist', {timeout: 100000});
 }
 
+function hoverAndValidateTooltip(series, tooltipText1, tooltipText2) {
+    const chart = series.split(' ')[0];
+    cy.get(series).first().trigger('mouseover', {force: true}).then(() => {
+        cy.get(chart + ' svg g text').contains(tooltipText1);
+        cy.get(chart + ' svg g.highcharts-tooltip text').contains(tooltipText2);
+    });
+    cy.get(series).first().trigger('mouseout', {force: true});
+}
+
 /**
  * Verify number of results responds to selector
  */
@@ -116,21 +125,13 @@ describe('Analysis page', function() {
             });
         });
     });
+
     context('Quality Control tab', function() {
         before(function() {
             openPage('analyses/MGYA00141547');
             waitForPageLoad('Analysis MGYA00141547');
             changeTab('qc');
         });
-
-        function hoverAndValidateTooltip(series, tooltipText1, tooltipText2) {
-            const chart = series.split(' ')[0];
-            cy.get(series).first().trigger('mouseover', {force: true}).then(() => {
-                cy.get(chart + ' svg g text').contains(tooltipText1);
-                cy.get(chart + ' svg g.highcharts-tooltip text').contains(tooltipText2);
-            });
-            cy.get(series).first().trigger('mouseout', {force: true});
-        }
 
         it('QC chart should display correctly', function() {
             // Verify graph via tooltip values
@@ -235,7 +236,7 @@ describe('Analysis page', function() {
             data: ['26', 'Gemmatimonadetes', 'Bacteria', '2', '0.00'],
             pageSize: 9
         }, {
-            index: 'first',
+            index: 'First',
             data: ['1', 'Proteobacteria', 'Bacteria', '29061', '67.54'],
             pageNum: 1
         }
@@ -388,6 +389,157 @@ describe('Analysis page', function() {
             cy.get('#ssu-lsu-btns').should('be.visible', {timeout: 40000});
         });
     });
+    context('Functional tab', function() {
+        beforeEach(function() {
+            cy.server();
+            cy.route('GET', '**/analyses/MGYA00141547').as('analysisQuery');
+            cy.route('GET', '**/analyses/MGYA00141547/interpro-identifiers',
+                'fixture:interproIdentifiersPage1');
+            cy.route('GET', '**/analyses/MGYA00141547/interpro-identifiers?page=2',
+                'fixture:interproIdentifiersPage2');
+            openPage('analyses/MGYA00141547#functional');
+            waitForPageLoad('Analysis MGYA00141547');
+        });
+        it('Should load seq feat summary correctly', function() {
+            cy.wait('@analysisQuery');
+            hoverAndValidateTooltip(
+                '#SeqFeat-chart .highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(1)',
+                'Reads with predicted CDS', '129 224 380');
+            hoverAndValidateTooltip(
+                '#SeqFeat-chart .highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(2)',
+                'Reads with predicted rRNA', '7 159 621');
+            hoverAndValidateTooltip(
+                '#SeqFeat-chart .highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(3)',
+                'Reads with InterProScan match', '12 488 689');
+            hoverAndValidateTooltip(
+                '#SeqFeat-chart .highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(4)',
+                'Predicted CDS', '129 224 380');
+            hoverAndValidateTooltip(
+                '#SeqFeat-chart .highcharts-series-group .highcharts-series-0 > .highcharts-point:nth-child(5)',
+                'Predicted CDS with InterProScan match', '12 488 689');
+        });
+        it('Should load interpro matches pie chart correctly', function() {
+            cy.contains('Total: 2571357 InterPro matches').should('be.visible');
+            hoverAndValidateTooltip(
+                '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0',
+                'Ferritin-related', '337 346 pCDS matched (13.12%)');
+            hoverAndValidateTooltip(
+                '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-1',
+                'Immunoglobulin-like fold', '201 381 pCDS matched (7.83%)');
+            hoverAndValidateTooltip(
+                '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-10',
+                'Other', '1 099 756 pCDS matched (42.77%)');
+        });
+        it('Toggling rows in table should toggle series visibility in chart', function() {
+            let interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
+            const firstPieSeries = '#InterProPie-chart .highcharts-series-group .highcharts-series-0 .highcharts-color-0';
+            cy.get(firstPieSeries).should('be.visible');
+            cy.get(interproTable.getTableSelector() + ' tbody tr:first').click();
+            cy.get(firstPieSeries).should('be.hidden');
+            cy.get(interproTable.getTableSelector() + ' tbody tr:first').click();
+            cy.get(firstPieSeries).should('be.visible');
+        });
+        const interproMatchCols = {
+            index: {
+                data: ['1', '25'],
+                type: datatype.INT,
+                sortable: true
+            },
+            entry_name: {
+                data: ['Ferritin-related', 'ATPase, F0 complex, subunit A'],
+                type: datatype.STR,
+                sortable: true
+            },
+            ID: {
+                data: ['IPR012347', 'IPR000568'],
+                type: datatype.STR,
+                sortable: true
+            },
+            p_cds_match: {
+                data: ['337346', '53833'],
+                type: datatype.INT,
+                sortable: true
+            },
+            perc: {
+                data: ['13.12', '2.09'],
+                type: datatype.NUM,
+                sortable: true
+            }
+        };
+        it('Should load interpro matches table correctly', function() {
+            cy.contains('Total: 2571357 InterPro matches').should('be.visible');
+            let interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
+            interproTable.checkLoadedCorrectly(1, 25, 50, interproMatchCols);
+        });
+        it('Interpro match pagination should work', function() {
+            let interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
+            interproTable.testPagination(25, [
+                {
+                    index: 1,
+                    data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12']
+                }, {
+                    index: 2,
+                    data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06']
+                }, {
+                    index: 'Previous',
+                    data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12'],
+                    pageNum: 1
+                }, {
+                    index: 'Next',
+                    data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06'],
+                    pageNum: 2
+                }, {
+                    index: 'First',
+                    data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12'],
+                    pageNum: 1
+                }, {
+                    index: 'Last',
+                    data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06'],
+                    pageNum: 2,
+                    pageSize: 25
+                }]);
+        });
+        it('Interpro match sorting should work', function() {
+            let interproTable = new ClientSideTableHandler('#InterPro-table', 25, false);
+            interproTable.testSorting(25, interproMatchCols);
+        });
+
+        it('Go Term annotation tabs should work', function() {
+            cy.get('#go-bar-btn').click();
+            cy.get('#go-slim-bar-charts').should('be.visible');
+            cy.get('#go-slim-pie-charts').should('be.hidden');
+            cy.get('#go-pie-btn').click();
+            cy.get('#go-slim-bar-charts').should('be.hidden');
+            cy.get('#go-slim-pie-charts').should('be.visible');
+        });
+        it('Go Term annotation pie charts should load correctly', function() {
+            cy.get('#go-bar-btn').click();
+            cy.get('#go-slim-bar-charts').should('be.visible');
+            hoverAndValidateTooltip(
+                '#biological-process-bar-chart .highcharts-series-0 > .highcharts-point:nth-child(1)',
+                'biological process', '308 157 annotations');
+            hoverAndValidateTooltip(
+                '#molecular-function-bar-chart .highcharts-series-0 > .highcharts-point:nth-child(1)',
+                'molecular function', '122 365 annotations');
+            hoverAndValidateTooltip(
+                '#cellular-component-bar-chart .highcharts-series-0 > .highcharts-point:nth-child(1)',
+                'cellular component', '6 719 annotations');
+        });
+        it('Go Term annotation bar charts should load correctly', function() {
+            cy.get('#go-pie-btn').click();
+            cy.get('#go-slim-pie-charts').should('be.visible');
+            hoverAndValidateTooltip(
+                '#biological-process-pie-chart .highcharts-series-0 .highcharts-color-0',
+                'translation', '760 621 annotations (15.72%)');
+            hoverAndValidateTooltip(
+                '#molecular-function-pie-chart .highcharts-series-0 .highcharts-color-0',
+                'ion binding', '762 866 annotations (10.44%)');
+            hoverAndValidateTooltip(
+                '#cellular-component-pie-chart .highcharts-series-0 .highcharts-color-0',
+                'ribosome', '647 017 annotations (26.88%)');
+        });
+    });
+
     context('Abundance tab', function() {
         it('Should be removed if no data available.', function() {
             cy.server();
@@ -434,6 +586,3 @@ describe('Analysis page', function() {
         });
     });
 });
-// TODO test all download links are valid/organised correctly
-
-// TODO test abundance graphic is loaded correctly

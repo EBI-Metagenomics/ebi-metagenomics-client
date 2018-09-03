@@ -6,6 +6,12 @@ emg:
       USER: 'travis'
       HOST: localhost
       PORT: 3306
+    ena:
+      ENGINE: 'django.db.backends.mysql'
+      NAME: 'ena'
+      USER: 'travis'
+      HOST: localhost
+      PORT: 3306
   session_engine: 'django.contrib.sessions.backends.cached_db'
   auth_backends: ['test_utils.FakeEMGBackend',]
   secure_cookies: false

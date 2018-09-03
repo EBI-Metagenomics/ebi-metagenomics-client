@@ -103,8 +103,7 @@ class ClientSideTableHandler extends GenericTableHandler {
         for (let column in data) {
             if (data.hasOwnProperty(column)) {
                 const txt = data[column];
-                cy.log(page, page - 1, rowIndex, pageSize);
-                const selector = this.getRowColumnSelector(rowIndex + ((page - 1) * pageSize),
+                const selector = this.getRowColumnSelector(rowIndex + (Math.max(0,(page - 1)) * pageSize),
                     column);
                 if (txt.length > 0) {
                     cy.get(selector, {timeout: 40000})

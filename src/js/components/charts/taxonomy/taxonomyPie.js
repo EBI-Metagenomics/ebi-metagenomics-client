@@ -67,7 +67,7 @@ module.exports = class TaxonomyPie {
             },
             series: [
                 {
-                    name: 'reads',
+                    name: extraOptions['seriesName'],
                     colorByPoint: true,
                     data: pieData
                 }]

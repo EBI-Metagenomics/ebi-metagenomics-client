@@ -15,7 +15,7 @@ module.exports = class ClientSideTable extends GenericTable {
             const str = $(this).val();
             that.filterTable(str);
         });
-
+        this.initHeaders();
         this.attachDownloadHandler();
     }
 
@@ -68,19 +68,6 @@ module.exports = class ClientSideTable extends GenericTable {
         const matchedRows = this.$tbody.children('tr.match');
         matchedRows.slice(0, pageSize).show();
         this.setPagination(1, matchedRows.length, pageSize);
-    }
-
-    /**
-     * Attach handler for page size select events
-     */
-    attachPageSizeCallback() {
-        const that = this;
-        this.$pageSizeSelect.change(function() {
-            const resultCount = that.$tbody.children('tr').length;
-            const pageSize = parseInt(that.$pageSizeSelect.val());
-            that.setPagination(1, resultCount, pageSize);
-            that.setVisibleRows(0, pageSize);
-        });
     }
 
     /**
@@ -139,13 +126,12 @@ module.exports = class ClientSideTable extends GenericTable {
 
     /**
      * Create headers with sorting icons
-     * @param {jQuery.HTMLElement} $table table elem
      * @param {string} initialSort initialSort parameter
      */
-    initHeaders($table, initialSort) {
+    initHeaders(initialSort) {
         const that = this;
         that.order = initialSort;
-        $table.find('th.sort-both').on('click', function() {
+        this.$table.find('th.sort-both').on('click', function() {
             const siblings = $(this).siblings('[data-sortby]');
             _.each(siblings, function(s) {
                 const sibling = $(s);
@@ -171,7 +157,7 @@ module.exports = class ClientSideTable extends GenericTable {
             that.order = sort;
         });
         if (initialSort) {
-            $table.find('[data-sortby=\'' + initialSort + '\']')
+            this.$table.find('[data-sortby=\'' + initialSort + '\']')
                 .removeClass('sort-both')
                 .addClass(initialSort.charAt(0) === '-' ? 'sort-desc' : 'sort-asc');
         }

@@ -47,17 +47,9 @@ module.exports = class GoTermChart {
                 series: {
                     stacking: 'normal'
                 },
-                pie: {
+                bar: {
                     allowPointSelect: true,
                     cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.2f} %',
-                        style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor)
-                            || 'black'
-                        }
-                    },
                     colors: Commons.TAXONOMY_COLOURS
                 }
             },
@@ -68,7 +60,7 @@ module.exports = class GoTermChart {
                 enabled: false
             },
             tooltip: {
-                pointFormat: '<b>{point.y}</b>'
+                pointFormat: '<b>{point.y}</b> {series.name}'
             },
             series: [
                 {

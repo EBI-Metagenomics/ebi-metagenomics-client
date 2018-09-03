@@ -5,6 +5,7 @@ const api = require('mgnify').api;
 const authApi = require('./components/authApi');
 const Commons = require('./commons');
 const GenericTable = require('./components/genericTable');
+const Cookies = require('js-cookie');
 import 'process';
 
 require('babel-polyfill');
@@ -41,13 +42,11 @@ export function getURLFilterParams() {
     let sPageURL = decodeURIComponent(window.location.search.substring(1));
     let sURLVariables = sPageURL.split('&');
     let sParameterName;
-    let i;
     let params = {};
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
+    sURLVariables.forEach(function(e) {
+        sParameterName = e.split('=');
         params[sParameterName[0]] = decodeURIComponent(sParameterName[1]);
-    }
+    });
     return params;
 }
 
@@ -185,16 +184,16 @@ function createBiomeOption(lineage) {
 
 export const BiomeCollectionView = Backbone.View.extend({
     selector: '.biome-select',
-    initialize(options) {
-        for (let arg in options) {
-            if (options.hasOwnProperty(arg)) {
-                this[arg] = options[arg];
-            }
-        }
+    initialize() {
         let that = this;
         this.collection.fetchWithRoot().then((data) => {
+            that.clearSelectOptions();
             that.addOptionsToSelect(data.models, that.collection.rootLineage);
         });
+    },
+    clearSelectOptions() {
+        const $biomeSelect = $(this.selector);
+        $biomeSelect.empty();
     },
     addOptionsToSelect(data, biome) {
         const $biomeSelect = $(this.selector);
@@ -205,48 +204,6 @@ export const BiomeCollectionView = Backbone.View.extend({
         $biomeSelect.val(biome);
     }
 });
-//
-// render() {
-//     const that = this;
-//     let biomes = this.collection.models.map(function(model) {
-//         return model.attributes.lineage;
-//     });
-//     _.each(biomes.sort(), function(lineage) {
-//         const option = createBiomeOption(lineage);
-//         $(that.selector).append($(option));
-//     });
-//     return this;
-// }
-
-/**
- * Capitalize a word.
- * @param {string} string to capitalize
- * @return {string}
- */
-export const capitalizeWord = function(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-/**
- * Add additional URL parameters to convert a URL into a downloadable URL
- * @param {object} params
- * @return {object} params for download
- */
-export const getDownloadParams = function(params) {
-    const downloadParams = $.extend(true, {}, params);
-    delete downloadParams['page'];
-    delete downloadParams['page_size'];
-    downloadParams['format'] = 'csv';
-    return downloadParams;
-};
-
-/**
- * Set download tag url
- * @param {string} url
- */
-export const setDownloadResultURL = function(url) {
-    $('#download-results').attr('href', url);
-};
 
 /**
  * Truncates the given string to the given maximum length.
@@ -296,7 +253,7 @@ export function createListItem(html) {
 /**
  * Return promise of request of URL, used to validate if URL is valid
  * @param {string} url
- * @return {jQuery.promise}
+ * @return {jQuery.Promise}
  */
 export function checkURLExists(url) {
     const deferred = $.Deferred();
@@ -338,7 +295,6 @@ export function checkAPIonline() {
  * @return {jQuery.Promise} wrapping AJAX query to API
  */
 export function updateTable(view, params) {
-// export function updateTable(view, page, pageSize, order, query) {
     view.tableObj.showLoadingGif();
     if (!params) {
         params = {};
@@ -449,54 +405,6 @@ export let StudiesView = GenericTableView.extend({
             attr['abstract'],
             attr['samples_count'],
             attr['last_update']];
-    }
-});
-
-export let SamplesView = GenericTableView.extend({
-    tableObj: null,
-    pagination: null,
-
-    initialize() {
-        const that = this;
-        const columns = [
-            {sortBy: null, name: 'Biome'},
-            {sortBy: 'accession', name: 'Sample ID'},
-            {sortBy: 'sample_name', name: 'Sample name'},
-            {sortBy: null, name: 'Description'},
-            {sortBy: 'last_update', name: 'Last update'}
-        ];
-        let tableOptions = {
-            title: 'Associated samples',
-            headers: columns,
-            initialOrdering: 'accession',
-            initPageSize: Commons.DEFAULT_PAGE_SIZE,
-            isHeader: false,
-            textFilter: true,
-            tableClass: 'samples-table',
-            callback: function(page, pageSize, order, search) {
-                that.update({
-                    page: page,
-                    page_size: pageSize,
-                    ordering: order,
-                    search: search
-                });
-            }
-        };
-        this.tableObj = new GenericTable($('#samples-section'), tableOptions);
-        this.update({
-            page: 1,
-            page_size: Commons.DEFAULT_PAGE_SIZE_SAMPLES,
-            ordering: 'accession',
-            search: null
-        });
-    },
-
-    getRowData(attr) {
-        const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
-            '</a>';
-        const biomes = '<span class="biome_icon icon_xs ' + attr.biome_icon + '" title="' +
-            attr.biome_name + '"></span>';
-        return [biomes, sampleLink, attr.sample_name, attr.sample_desc, attr.last_update];
     }
 });
 
@@ -637,8 +545,13 @@ export const AnalysesView = GenericTableView.extend({
 export function getLoginStatus() {
     const deferred = new $.Deferred();
 
-    $.get(api.API_URL + 'utils/myaccounts').done((xhr) => {
-        deferred.resolve(String(xhr.status)[0] !== '4');
+    $.get(api.API_URL + 'utils/myaccounts').done((data, state, xhr) => {
+        try {
+            deferred.resolve(String(xhr.status)[0] === '2', data['data'][0]);
+        } catch (e) {
+            console.error(e);
+            deferred.resolve(false);
+        }
     }).fail(() => {
         deferred.resolve(false);
     });
@@ -711,9 +624,9 @@ export function loadLoginForm(next) {
 /**
  * Set navbar to reflect user login status
  * @param {boolean} isLoggedIn true if user is authenticated
+ * @param {string} username of logged in user
  */
-export function setNavLoginButton(isLoggedIn) {
-    const username = getUsername();
+export function setNavLoginButton(isLoggedIn, username) {
     if (isLoggedIn && username !== null) {
         const $a = $('<a></a>');
         $a.text('Welcome, ' + username + ' ');
@@ -759,10 +672,11 @@ export function logout() {
  */
 export function setupPage(tab, loginRedirect) {
     const loginStatus = getLoginStatus();
-    loginStatus.done(function(isLoggedIn) {
-        setNavLoginButton(isLoggedIn);
+    loginStatus.done((isLoggedIn, userData) => {
         if (!isLoggedIn) {
             loadLoginForm(loginRedirect);
+        } else {
+            setNavLoginButton(isLoggedIn, userData['id']);
         }
     });
     checkAPIonline();
@@ -793,4 +707,44 @@ export function attachExpandButtonCallback() {
  */
 export function specifyPageTitle(objectType, id) {
     document.title = `${objectType}: ${id} < ${document.title}`;
+}
+
+/**
+ * Send mail via API
+ * @param {string} fromEmail email address of sender
+ * @param {string} subject of email
+ * @param {string} body of email
+ * @return {JQuery.Promise} of ajax request
+ */
+export function sendMail(fromEmail, subject, body) {
+    const deferred = $.Deferred();
+    console.log('Sending mail');
+    $.ajax({
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader('X-CSRFToken', Cookies.get('csrftoken'));
+        },
+        type: 'post',
+        url: process.env.API_URL + 'utils/notify',
+        contentType: 'application/vnd.api+json',
+        data: JSON.stringify({
+            data: {
+                'id': null,
+                'type': 'notifies',
+                'attributes': {
+                    'from-email': fromEmail,
+                    'subject': subject,
+                    'message': body
+                }
+            }
+        }),
+        success() {
+            console.log('Sent email successfully.');
+            deferred.resolve(true);
+        },
+        error() {
+            console.error('Failed to send email.');
+            deferred.resolve(false);
+        }
+    });
+    return deferred.promise();
 }

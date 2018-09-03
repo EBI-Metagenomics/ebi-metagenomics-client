@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head id="head">
-    <meta name="google-site-verification" content="MZ2vU9XgNhi3qHpIu4gH31-7beUHdSm0Z18SRxmLUTo" />
+    <meta name="google-site-verification" content="MZ2vU9XgNhi3qHpIu4gH31-7beUHdSm0Z18SRxmLUTo"/>
     <title>Home &lt; MGnify &lt; EMBL-EBI</title>
     {{> partials/head this}}
     <meta property="og:title" content="MGnify home page > EMBL-EBI">
@@ -145,7 +145,8 @@
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
                                         <p>Your data</p>
-                                        <button class="button" data-open="requestPrivateAnalysisModal">Submit and/or
+                                        <button class="button requestAnalysis"
+                                                data-target-modal="#requestPrivateAnalysisModal">Submit and/or
                                             Request
                                         </button>
                                     </div>
@@ -153,7 +154,9 @@
                                 <div class="columns small-12 medium-6 large-6">
                                     <div class="text-center">
                                         <p>A public dataset</p>
-                                        <button class="button" data-open="requestPublicAnalysisModal">Request</button>
+                                        <button class="button requestAnalysis"
+                                                data-target-modal="#requestPublicAnalysisModal">Request
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -294,8 +297,10 @@
 
 <div class="reveal small" id="requestPublicAnalysisModal" data-reveal>
     <h2 class="centered">Request an analysis of a public dataset</h2>
-    <p>Using this form, you can request analysis of a suitable publicly available dataset, held within an INSDC
-        database. Enter the study accession below and we will prioritise it for analysis with our pipeline.</p>
+    <div class="row columns">
+        <p>Using this form, you can request analysis of a suitable publicly available dataset, held within an INSDC
+            database. Enter the study accession below and we will prioritise it for analysis with our pipeline.</p>
+    </div>
     <form id="analysisPublicRequestForm" data-abide novalidate>
         <div class="row">
             <div class="columns medium-12">
@@ -324,41 +329,23 @@
                     </label>
                     <label for="assemblyAndAnalysisPublic">
                         <input type="radio" name="analysis-type" value="Assembly+Analysis"
-                           id="assemblyAndAnalysisPublic">
+                               id="assemblyAndAnalysisPublic">
                         Assembly and analysis
                     </label>
                 </fieldset>
             </div>
             <div class="columns medium-6">
-                <label>Webin username
-                    <input name="contact-username" type="text">
+                <label>
+                    Comment / additional information
+                    <input type="text" name="reason">
                 </label>
             </div>
-        </div>
-        <div class="row">
-            <div class="columns medium-6">
-                <label>Contact name
-                    <input name="contact-name" type="text" required>
-                </label>
-            </div>
-            <div class="columns medium-6">
-                <label>Contact email address
-                    <input name="contact-email" type="email" required pattern="email">
-                    <span class="form-error">
-                            Improperly formatted email address.
-                    </span>
-                </label>
-            </div>
-            <!-- Add type of analysis: assembly | amplicon | raw read -->
-        </div>
-        <div class="row columns">
-            <label>
-                Comment / additional information
-                <input type="text" name="reason">
-            </label>
         </div>
         <div class="row columns centered">
             <button class="button mailtobtn" type="button">Submit request</button>
+        </div>
+        <div class="row columns centered confirmation-text">
+
         </div>
     </form>
     <button class="close-button" data-close aria-label="Close modal" type="button">
@@ -369,7 +356,7 @@
 
 <div class="reveal small" id="requestPrivateAnalysisModal" data-reveal>
     <h2 class="centered">Request an analysis of your data</h2>
-    <!--No validate attribute forces browser to ignore validation and instead allow FoundationAbide to enforce it. -->
+    <!--No validate attribute forces browser to ignore validation and instead allow Foundation.Abide to enforce it. -->
     <form id="analysisPrivateRequestForm" class="conditional-form" data-abide novalidate>
         <div class="row columns medium-12">
             <fieldset class="">
@@ -390,29 +377,13 @@
                     </span>
                 </label>
             </div>
-        </div>
-        <div class="conditional-div hidden" data-condition="dataSubmitted" data-condition-val="no">
-            <div class="row columns">
-                <p>You will be re-directed to ENA to submit this data; please provide us with enough information
-                    to
-                    find this data.</p>
-            </div>
-            <div class="row">
-                <div class="columns">
-                    <label>Study title
-                        <input name="study-title" type="text" required>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="conditional-div hidden" data-condition="dataSubmitted" data-condition-val="yes,no">
             <div class="row">
                 <div class="columns medium-6">
                     <fieldset class="">
                         <label>Analysis type
                             <span data-tooltip tabindex="1"
                                   title="You can request either analysis of raw reads or assembly of the data (where suitable) prior to analysis. Note, assembly may not be feasible for all datasets and may take additional time, particularly for larger studies.">
-                            <i class="icon icon-common" data-icon="&#x3f;"  data-cy="private-help-tooltip"></i>
+                            <i class="icon icon-common" data-icon="&#x3f;" data-cy="private-help-tooltip"></i>
                         </span>
                         </label>
                         <label for="analysisOnlyPrivate">
@@ -420,47 +391,44 @@
                             Analysis only
                         </label>
                         <label for="assemblyAndAnalysisPrivate">
-                        <input type="radio" name="analysis-type" value="Assembly+Analysis"
-                               id="assemblyAndAnalysisPrivate">
+                            <input type="radio" name="analysis-type" value="Assembly+Analysis"
+                                   id="assemblyAndAnalysisPrivate">
                             Assembly and analysis
                         </label>
                     </fieldset>
                 </div>
                 <div class="columns medium-6">
-                    <label>Webin username
-                        <input name="contact-username" type="text" aria-describedby="privateWebinHelp" required>
-                    </label>
-                    <p class="help-text" id="privateWebinHelp"><a href="https://www.ebi.ac.uk/ena/submit/sra/#metagenome_registration">Don't have a Webin account? Click here to sign up.</a></p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="columns medium-6">
-                    <label>Contact name
-                        <input name="contact-name" type="text" required>
+                    <label>
+                        Comment / additional information
+                        <input type="text" name="reason">
                     </label>
                 </div>
-                <div class="columns medium-6">
-                    <label>Contact email address
-                        <input name="contact-email" type="email" required pattern="email">
-                        <span class="form-error">
-                            Improperly formatted email address.
-                    </span>
-                    </label>
-                </div>
-                <!-- Add type of analysis: assembly | amplicon | raw read -->
             </div>
-            <div class="row columns">
-                <label>
-                    Comment / additional information
-                    <input type="text" name="reason">
-                </label>
-            </div>
+
             <div class="row columns centered">
                 <p>The analysis of your data will be held confidentially on our site until the hold date expires.</p>
             </div>
             <div class="row columns centered">
                 <button class="button mailtobtn" type="button">Submit request</button>
             </div>
+            <div class="row columns centered confirmation-text">
+
+            </div>
+        </div>
+        <div class="conditional-div hidden" data-condition="dataSubmitted" data-condition-val="no">
+            <div class="row columns centered">
+                <p>Please submit your data before requesting analysis as it must be archived in the ENA for us to process it.</p>
+            </div>
+            <div class="row columns centered">
+                <a class="button" href="https://www.ebi.ac.uk/ena/submit/sra/">Go to ENA submission page</a>
+            </div>
+            <!--<div class="row">-->
+                <!--<div class="columns">-->
+                    <!--<label>Study title-->
+                        <!--<input name="study-title" type="text" required>-->
+                    <!--</label>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
     </form>
     <button class="close-button" data-close aria-label="Close modal" type="button">

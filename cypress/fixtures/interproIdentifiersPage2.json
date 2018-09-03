@@ -1,0 +1,492 @@
+{
+  "links": {
+    "first": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=1",
+    "last": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=11",
+    "next": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=3",
+    "prev": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=1"
+  },
+  "data": [
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR002843",
+      "attributes": {
+        "accession": "IPR002843",
+        "count": 1507,
+        "description": "ATPase, V0 complex,  c/d subunit"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR002843/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR002843"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR011059",
+      "attributes": {
+        "accession": "IPR011059",
+        "count": 1506,
+        "description": "Metal-dependent hydrolase, composite domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR011059/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR011059"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR015849",
+      "attributes": {
+        "accession": "IPR015849",
+        "count": 1506,
+        "description": "Amyloidogenic glycoprotein, heparin-binding"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR015849/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR015849"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR001537",
+      "attributes": {
+        "accession": "IPR001537",
+        "count": 1504,
+        "description": "tRNA/rRNA methyltransferase, SpoU type"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR001537/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR001537"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR005531",
+      "attributes": {
+        "accession": "IPR005531",
+        "count": 1503,
+        "description": "Alkaline shock protein Asp23"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR005531/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR005531"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR002653",
+      "attributes": {
+        "accession": "IPR002653",
+        "count": 1502,
+        "description": "Zinc finger, A20-type"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR002653/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR002653"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR013750",
+      "attributes": {
+        "accession": "IPR013750",
+        "count": 1501,
+        "description": "GHMP kinase, C-terminal domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013750/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013750"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR001976",
+      "attributes": {
+        "accession": "IPR001976",
+        "count": 1500,
+        "description": "Ribosomal protein S24e"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR001976/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR001976"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR000832",
+      "attributes": {
+        "accession": "IPR000832",
+        "count": 1499,
+        "description": "GPCR, family 2, secretin-like"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR000832/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR000832"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR011042",
+      "attributes": {
+        "accession": "IPR011042",
+        "count": 1499,
+        "description": "Six-bladed beta-propeller, TolB-like"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR011042/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR011042"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR003890",
+      "attributes": {
+        "accession": "IPR003890",
+        "count": 1495,
+        "description": "MIF4G-like, type 3"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR003890/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR003890"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR018957",
+      "attributes": {
+        "accession": "IPR018957",
+        "count": 1486,
+        "description": "Zinc finger, C3HC4 RING-type"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR018957/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR018957"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR013497",
+      "attributes": {
+        "accession": "IPR013497",
+        "count": 1481,
+        "description": "DNA topoisomerase, type IA, central"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013497/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR013497"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR022671",
+      "attributes": {
+        "accession": "IPR022671",
+        "count": 1480,
+        "description": "Ribosomal protein L2, conserved site"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR022671/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR022671"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR027871",
+      "attributes": {
+        "accession": "IPR027871",
+        "count": 1477,
+        "description": "Protein of unknown function DUF4603"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR027871/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR027871"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR007624",
+      "attributes": {
+        "accession": "IPR007624",
+        "count": 1475,
+        "description": "RNA polymerase sigma-70 region 3"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR007624/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR007624"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR027819",
+      "attributes": {
+        "accession": "IPR027819",
+        "count": 1473,
+        "description": "C9orf72-like protein family"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR027819/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR027819"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR029099",
+      "attributes": {
+        "accession": "IPR029099",
+        "count": 1473,
+        "description": "Ribose-phosphate pyrophosphokinase, N-terminal domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR029099/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR029099"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR014031",
+      "attributes": {
+        "accession": "IPR014031",
+        "count": 1471,
+        "description": "Beta-ketoacyl synthase, C-terminal"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR014031/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR014031"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR003382",
+      "attributes": {
+        "accession": "IPR003382",
+        "count": 1470,
+        "description": "Flavoprotein"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR003382/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR003382"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR032377",
+      "attributes": {
+        "accession": "IPR032377",
+        "count": 1470,
+        "description": "STAR protein, homodimerisation region"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR032377/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR032377"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR012349",
+      "attributes": {
+        "accession": "IPR012349",
+        "count": 1468,
+        "description": "FMN-binding split barrel"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR012349/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR012349"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR014928",
+      "attributes": {
+        "accession": "IPR014928",
+        "count": 1467,
+        "description": "Serine rich protein interaction"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR014928/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR014928"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR006847",
+      "attributes": {
+        "accession": "IPR006847",
+        "count": 1466,
+        "description": "Translation initiation factor IF-2, N-terminal"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR006847/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR006847"
+      }
+    },
+    {
+      "type": "interpro-identifiers",
+      "id": "IPR000467",
+      "attributes": {
+        "accession": "IPR000467",
+        "count": 1466,
+        "description": "G-patch domain"
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR000467/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:9000/metagenomics/api/v1/annotations/interpro-identifiers/IPR000467"
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "page": 2,
+      "pages": 2,
+      "count": 25
+    }
+  }
+}
