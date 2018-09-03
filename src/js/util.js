@@ -728,10 +728,9 @@ export function sendMail(fromEmail, subject, body) {
         contentType: 'application/vnd.api+json',
         data: JSON.stringify({
             data: {
-                'id': null,
                 'type': 'notifies',
                 'attributes': {
-                    'from-email': fromEmail,
+                    'from_email': fromEmail,
                     'subject': subject,
                     'message': body
                 }
