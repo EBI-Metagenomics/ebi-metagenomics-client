@@ -1,7 +1,7 @@
 const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
 const authApi = require('./components/authApi');
 const Commons = require('./commons');
 const GenericTable = require('./components/genericTable');
@@ -186,9 +186,9 @@ export const BiomeCollectionView = Backbone.View.extend({
     selector: '.biome-select',
     initialize() {
         let that = this;
-        this.collection.fetchWithRoot().then((data) => {
+        this.collection.fetchWithParams().then(() => {
             that.clearSelectOptions();
-            that.addOptionsToSelect(data.models, that.collection.rootLineage);
+            that.addOptionsToSelect(that.collection.models, that.collection.rootLineage);
         });
     },
     clearSelectOptions() {
@@ -393,7 +393,7 @@ export let StudiesView = GenericTableView.extend({
     },
 
     getRowData(attr) {
-        const studyLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_id + '</a>';
+        const studyLink = '<a href=\'' + attr.study_url + '\'>' + attr.study_accession + '</a>';
         const biomes = _.map(attr.biomes, function(b) {
             return '<span class=\'biome_icon icon_xs ' + b.icon + '\' title=\'' + b.name +
                 '\'></span>';
@@ -442,7 +442,7 @@ export let RunsView = GenericTableView.extend({
         if (attr['experiment_type'] === 'assembly') {
             attr['analysis_url'] = attr['analysis_url'].replace('runs', 'assemblies');
         }
-        const runLink = '<a href=\'' + attr.analysis_url + '\'>' + attr.run_id + '</a>';
+        const runLink = '<a href=\'' + attr.analysis_url + '\'>' + attr.run_accession + '</a>';
         return [
             runLink,
             attr['experiment_type'],

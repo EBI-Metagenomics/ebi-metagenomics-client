@@ -1,6 +1,6 @@
 const Backbone = require('backbone');
 require('../commons');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
 const util = require('../util');
 
 util.setupPage('#compare-nav');
@@ -50,7 +50,7 @@ let RunsView = Backbone.View.extend({
         let that = this;
         $('.run-option').remove();
         this.collection.fetch({
-            data: $.param({study_accession: this.collection.study_id}),
+            data: $.param({study_accession: this.collection.study_accession}),
             success(collection) {
                 updateRunSelectionTxt(0, collection.length);
                 that.render();
@@ -63,8 +63,8 @@ let RunsView = Backbone.View.extend({
         let that = this;
         this.collection.each(function(run) {
             const model = run.toJSON();
-            const tmpl = '<option class=\'compare-option run-option\' value=\'' + model.sample_id +
-                '\'>' + model.run_id + '</option>';
+            const tmpl = '<option class=\'compare-option run-option\' value=\'' + model.sample_accession +
+                '\'>' + model.run_accession + '</option>';
             $(that.el).append($(tmpl));
         });
         return this;
@@ -86,7 +86,7 @@ new StudiesView({collection: studies});
 
 const studiesSelect = '#studies';
 $(studiesSelect).change(function() {
-    const collection = new api.RunsCollection({study_id: $(this).val()});
+    const collection = new api.RunsCollection({study_accession: $(this).val()});
     new RunsView({collection: collection});
 });
 

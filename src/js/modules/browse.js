@@ -1,7 +1,7 @@
 const _ = require('underscore');
 const util = require('../util');
 const commons = require('../commons');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
 const Pagination = require('../components/pagination').Pagination;
 const GenericTable = require('../components/genericTable');
 const Commons = require('../commons');
@@ -16,6 +16,8 @@ $('#pagination').append(commons.pagination);
 $('#pageSize').append(commons.pagesize);
 
 const pageFilters = util.getURLFilterParams();
+
+const BIOME_SELECTOR_DEPTH = 3;
 
 /**
  * Create basic request parameters for calls to studies / samples on EMG API
@@ -59,9 +61,9 @@ let StudiesView = util.GenericTableView.extend({
             return '<span class="biome_icon icon_xs ' + biome.icon + '" title="' + biome.name +
                 '"></span>';
         }).join('');
-        const accessionLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_id +
+        const accessionLink = '<a href=\'' + attr.study_url + '\'>' + attr.study_accession +
             '</a>';
-        const nameLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_name + '</a>';
+        const nameLink = '<a href=\'' + attr.study_url + '\'>' + attr.study_name + '</a>';
         return [biomes, accessionLink, nameLink, attr.samples_count, attr.last_update];
     },
 
@@ -159,8 +161,8 @@ let PublicationsView = util.GenericTableView.extend({
     params: {},
 
     getRowData(attr) {
-      const pubmedLink = '<a class=\'ext\' href=\'' + attr.pmc_url + '\'> '
-          + attr.pubmedID + '</a> ';
+        const pubmedLink = '<a class=\'ext\' href=\'' + attr.pmc_url + '\'> '
+            + attr.pubmedID + '</a> ';
         const studyLink = '<a href=\'' + attr.pubMgnifyURL + '#studies-section\'>'
             + attr.studiesCount + '</a>';
         return [
@@ -205,6 +207,23 @@ let PublicationsView = util.GenericTableView.extend({
     }
 });
 
+let BiomeTree = api.BiomeWithChildren.extend({
+    initialize(params) {
+        this.rootLineage = params['rootLineage'] || 'root';
+        this.baseDepth = (rootLineage.match(/:/g) || []).length;
+        this.relativeDepth = params['relativeDepth'];
+    },
+    fetchWithParams() {
+        return this.fetch({
+            data: $.param({
+                depth_gte: this.baseDepth + 1,
+                depth_lte: this.baseDepth + this.relativeDepth,
+                page_size: 100
+            })
+        });
+    }
+});
+
 /**
  * Maintain value of filter fields across tabs
  */
@@ -224,7 +243,7 @@ if (pageFilters.hasOwnProperty('lineage')) {
 } else {
     rootLineage = 'root';
 }
-let biomes = new api.BiomeWithChildren({rootLineage: rootLineage});
+let biomes = new BiomeTree({rootLineage: rootLineage, relativeDepth: BIOME_SELECTOR_DEPTH});
 
 new util.BiomeCollectionView({collection: biomes});
 
@@ -256,10 +275,10 @@ function initBiomeFilter() {
     const $clearBtn = $('.clear-filter');
     $clearBtn.click(function() {
         $('.table-filter').val('');
-        $biomeSelect.prop('selectedIndex', -1);
-        $biomeSelect.trigger('change');
-        biomes = new api.BiomeWithChildren({rootLineage: 'root'});
+        biomes = new BiomeTree({rootLineage: 'root', relativeDepth: BIOME_SELECTOR_DEPTH});
         new util.BiomeCollectionView({collection: biomes});
+        $biomeSelect.prop('selectedIndex', 0);
+        $biomeSelect.trigger('change');
     });
 }
 

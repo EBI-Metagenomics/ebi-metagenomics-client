@@ -6,7 +6,7 @@ util.setupPage('#overview');
 
 const StudiesViewWithEna = util.StudiesView.extend({
     getRowData(attr) {
-        const studyLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_id + '</a>';
+        const studyLink = '<a href=\'' + attr.study_url + '\'>' + attr.study_accession + '</a>';
         const enaLink = '<a class=\'ext\' href=\'' + attr.ena_url + '\'>(' + attr.study_accession +
             ')</a>';
         const biomes = _.map(attr.biomes, function(b) {

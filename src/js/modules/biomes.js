@@ -1,6 +1,6 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
 const Pagination = require('../components/pagination').Pagination;
 const Commons = require('../commons');
 const util = require('../util');
@@ -90,10 +90,10 @@ let BiomesView = Backbone.View.extend({
             const biomeName = attr.name[0];
             const biomes = '<span class="biome_icon icon_xs ' + attr.icon + '" title="' +
                 biomeName + '"></span>';
-            const name = '<a href=\'' + attr.biome_studies_link + '\'>' + biomeName +
+            const name = '<a href=\'' + attr.biome_studies_url + '\'>' + biomeName +
                 '</a>';
             const lineage = apiUtil.formatLineage(attr.lineage);
-            const studiesLink = '<a href=\'' + attr.biome_studies_link + '\'>' +
+            const studiesLink = '<a href=\'' + attr.biome_studies_url + '\'>' +
                 attr.samples_count + '</a>';
             return [biomes, name + '<br>' + lineage, studiesLink];
         });

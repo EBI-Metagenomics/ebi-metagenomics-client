@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const Commons = require('../commons');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
 const util = require('../util');
 const DetailList = require('../components/detailList');
 const GenericTable = require('../components/genericTable');
@@ -45,9 +45,9 @@ let RunView = Backbone.View.extend({
     render(attr) {
         this.$el.html(this.template(this.model.toJSON()));
         let description = {
-            'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_id + '</a>',
-            'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_id + '</a>',
-            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.run_id +
+            'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_accession + '</a>',
+            'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession + '</a>',
+            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.run_accession +
             '</a>'
         };
         $('#overview').append(new DetailList('Description', description));

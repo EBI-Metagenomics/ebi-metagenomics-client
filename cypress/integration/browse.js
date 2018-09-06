@@ -32,7 +32,7 @@ const studiesTableColumns = {
         sortable: false
     },
     samples_count: {
-        data: ['258', '8'],
+        data: ['259', '8'],
         type: datatype.NUM,
         sortable: false
     },
@@ -102,7 +102,7 @@ describe('Browse page', function() {
                     '',
                     'MGYS00002072',
                     'Longitudinal study of the diabetic skin and wound microbiome',
-                    '258',
+                    '25',
                     '27-Nov-2017'
                 ]
             ]);
@@ -116,7 +116,7 @@ describe('Browse page', function() {
                         '',
                         'MGYS00002072',
                         'Longitudinal study of the diabetic skin and wound microbiome',
-                        '258',
+                        '259',
                         '27-Nov-2017']
                 }, {
                     index: 3,
@@ -157,7 +157,7 @@ describe('Browse page', function() {
                         '',
                         'MGYS00002072',
                         'Longitudinal study of the diabetic skin and wound microbiome',
-                        '258',
+                        '259',
                         '27-Nov-2017'],
                     pageNum: 1
                 }], 5);
@@ -181,7 +181,7 @@ describe('Browse page', function() {
             studiesTable.getClearButton().click();
             cy.get('span.biome_icon.air_b').should('not.exist');
             studiesTable.waitForTableLoad(studiesTableDefaultSize);
-            cy.get('span.biome_icon').first().should('have.class', 'skin_b');
+            cy.get('span.biome_icon').first().should('have.class', 'soil_b');
         });
 
         it('Download link should change with changes in filtering or ordering', function() {
@@ -354,7 +354,7 @@ describe('Browse page', function() {
             samplesTable.getClearButton().click();
             cy.get('span.biome_icon.air_b').should('not.exist');
             samplesTable.waitForTableLoad(samplesTableDefaultSize);
-            cy.get('span.biome_icon').first().should('have.class', 'skin_b');
+            cy.get('span.biome_icon').first().should('have.class', 'soil_b');
         });
 
         it('Download link should change with changes in filtering or ordering', function() {
