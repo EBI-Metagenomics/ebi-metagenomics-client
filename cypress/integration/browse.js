@@ -124,7 +124,7 @@ describe('Browse page', function() {
                         'MGYS00001020',
                         'Forest Soil Targeted Locus (Loci)',
                         '23',
-                        '6-Jun-2016'],
+                        '6-Jun-2016']
                 }, {
                     index: 'Next',
                     data: [
@@ -146,7 +146,12 @@ describe('Browse page', function() {
                     pageNum: 3
                 }, {
                     index: 'Last',
-                    data: ['', 'MGYS00000283', 'MetaSoil', '13', '20-Jan-2016'],
+                    data: [
+                        '',
+                        'MGYS00000282',
+                        'Antarctica Aquatic Microbial Metagenome',
+                        '18',
+                        '20-Jan-2016'],
                     pageNum: 5,
                     pageSize: 23
                 }, {
