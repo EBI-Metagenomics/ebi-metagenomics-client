@@ -186,7 +186,7 @@ export const BiomeCollectionView = Backbone.View.extend({
     selector: '.biome-select',
     initialize() {
         let that = this;
-        this.collection.fetchWithParams().then(() => {
+        this.fetchOp = this.collection.fetchWithParams().done(() => {
             that.clearSelectOptions();
             that.addOptionsToSelect(that.collection.models, that.collection.rootLineage);
         });

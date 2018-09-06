@@ -210,7 +210,7 @@ let PublicationsView = util.GenericTableView.extend({
 let BiomeTree = api.BiomeWithChildren.extend({
     initialize(params) {
         this.rootLineage = params['rootLineage'] || 'root';
-        this.baseDepth = (rootLineage.match(/:/g) || []).length;
+        this.baseDepth = (this.rootLineage.match(/:/g) || []).length;
         this.relativeDepth = params['relativeDepth'];
     },
     fetchWithParams() {
@@ -276,9 +276,11 @@ function initBiomeFilter() {
     $clearBtn.click(function() {
         $('.table-filter').val('');
         biomes = new BiomeTree({rootLineage: 'root', relativeDepth: BIOME_SELECTOR_DEPTH});
-        new util.BiomeCollectionView({collection: biomes});
-        $biomeSelect.prop('selectedIndex', 0);
-        $biomeSelect.trigger('change');
+        new util.BiomeCollectionView({collection: biomes}).fetchOp.done(() => {
+            $biomeSelect.prop('selectedIndex', 0);
+            $biomeSelect.trigger('change');
+        });
+
     });
 }
 
