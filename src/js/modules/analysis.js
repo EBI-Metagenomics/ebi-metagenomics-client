@@ -41,8 +41,7 @@ let goTerm = null;
  */
 function loadReadLengthDisp(analysisID, statsData) {
     const seqLengthData = new api.QcChartData({id: analysisID, type: 'seq-length'});
-    seqLengthData.fetch({
-        dataType: 'text',
+    seqLengthData.fetchData({
         success(ignored, response) {
             try {
                 SeqLengthChart.drawSequenceLengthHistogram('readsLengthHist', response, false,
@@ -63,8 +62,7 @@ function loadReadLengthDisp(analysisID, statsData) {
  */
 function loadGCDistributionDisp(analysisID, statsData) {
     const gcDistributionData = new api.QcChartData({id: analysisID, type: 'gc-distribution'});
-    gcDistributionData.fetch({
-        dataType: 'text',
+    gcDistributionData.fetchData({
         success(ignored, response) {
             try {
                 GCDispChart.drawSequenceGCDistribution('readsGCHist', response, false, statsData,
@@ -84,8 +82,7 @@ function loadGCDistributionDisp(analysisID, statsData) {
 function loadNucleotideDisp(analysisID) {
     const nucleotideDistData = new api.QcChartData(
         {id: analysisID, type: 'nucleotide-distribution'});
-    nucleotideDistData.fetch({
-        dataType: 'text',
+    nucleotideDistData.fetchData({
         success(ignored, response) {
             try {
                 NucleotideChart.drawNucleotidePositionHistogram('nucleotide', response, false,
