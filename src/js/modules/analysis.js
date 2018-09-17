@@ -147,11 +147,11 @@ function loadTaxonomy(analysisID, subunitType, pipelineVersion) {
             {sortBy: 'a', name: 'Unique OTUs'},
             {sortBy: 'a', name: '%'}
         ];
-        const total = _.reduce(phylumChartContainer.data, function(m, d) {
+        const total = _.reduce(phylumChartContainer.clusteredData, function(m, d) {
             return m + d.y;
         }, 0);
         let i = 0;
-        const data = _.map(phylumChartContainer.data, function(d) {
+        const data = _.map(phylumChartContainer.clusteredData, function(d) {
             const colorDiv = getColourSquareIcon(i);
             return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
         });
