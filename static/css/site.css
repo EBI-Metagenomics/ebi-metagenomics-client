@@ -1060,3 +1060,7 @@ ul.training > li:last-child:before {
 .clear-filter {
     margin-top: 1.5em;
 }
+
+.hidden {
+    display: none;
+}
