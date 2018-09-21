@@ -159,7 +159,7 @@ let RequestPublicFormView = Backbone.View.extend({
                 const subject = (priv ? 'Public' : 'Private') + ' analysis request: ' + studyAcc;
                 let body = 'Study accession: ' + studyAcc + ';' +
                     (priv ? 'Private' : 'Public') + ' analysis.;' +
-                    'Requester name: ' + attr['first-name'] + ' ' + attr['surname'] + '.;' +
+                    'Requester name: ' + attr['firstName'] + ' ' + attr['surname'] + '.;' +
                     'Email: ' + email + '.;' +
                     'Additional notes: ' + comments + '.;';
                 const request = util.sendMail(email, subject, body);
