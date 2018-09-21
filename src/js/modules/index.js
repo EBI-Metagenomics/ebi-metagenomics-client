@@ -136,9 +136,13 @@ let RequestPublicFormView = Backbone.View.extend({
     },
     submitHandler(e) {
         e.preventDefault();
-        this.sendMail(false);
+        $(e.currentTarget).prop('disabled', true);
+        this.sendMail(false).always(() => {
+            $(e.currentTarget).prop('disabled', false);
+        });
     },
     sendMail(priv) {
+        const deferred = $.Deferred();
         const blankStudyAcc = this.$el.find('input[name=study-accession]').val().length === 0;
         if (this.$el.find('[data-invalid]:visible').length !== 0 || blankStudyAcc) {
             if (blankStudyAcc) {
@@ -147,7 +151,7 @@ let RequestPublicFormView = Backbone.View.extend({
                     .addClass('is-invalid-input');
             }
             console.error('Did not submit, errors in form.');
-            return false;
+            deferred.reject();
         } else {
             const that = this;
             const userData = new authApi.UserDetails();
@@ -173,11 +177,16 @@ let RequestPublicFormView = Backbone.View.extend({
                     $(that.$el).find('.confirmation-text').html(txt);
                     if (success) {
                         $(that.$el).find('input[type=text], input[type=email], textarea').val('');
+                        deferred.resolve();
+                    } else {
+                        deferred.reject();
                     }
                 });
+            }).fail(() => {
+                deferred.reject();
             });
-            return true;
         }
+        return deferred.promise();
     }
 });
 
@@ -186,8 +195,11 @@ let RequestPrivateFormView = RequestPublicFormView.extend({
     submitHandler(e) {
         e.preventDefault();
         const dataToSubmit = $('#dataNotSubmitted').is(':checked');
-        if (this.sendMail(true) && dataToSubmit) {
-            window.location.href = subfolder + '/submit';
+        const mailReq = this.sendMail(true);
+        if (dataToSubmit) {
+            mailReq.done(() => {
+                window.location.href = subfolder + '/submit';
+            });
         }
     }
 });
