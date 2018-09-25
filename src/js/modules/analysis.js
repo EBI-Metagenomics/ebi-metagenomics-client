@@ -104,6 +104,11 @@ function loadTaxonomy(analysisID, subunitType) {
             let index = getSeriesIndex($(this).index(), numSeries);
             phylumPie.chart.series[0].data[index].setState();
         });
+        phylumPieTable.$tbody.find('tr').click(function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            const series = phylumPie.chart.series[0].data[index];
+            setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
+        });
     });
 
     // Load column charts
@@ -116,6 +121,7 @@ function loadTaxonomy(analysisID, subunitType) {
     );
 
     phylumColumn.loaded.done(() => {
+
         const headers = [
             {sortBy: 'a', name: ''},
             {sortBy: 'a', name: 'Phylum'},
@@ -142,11 +148,18 @@ function loadTaxonomy(analysisID, subunitType) {
         const numSeries = phylumColumn.chart.series[0].data.length;
         phylumColumnTable.$tbody.find('tr').hover(function() {
             let index = getSeriesIndex($(this).index(), numSeries);
-            phylumPie.chart.series[0].data[index].setState('hover');
+            phylumColumn.chart.series[0].data[index].setState('hover');
         }, function() {
             let index = getSeriesIndex($(this).index(), numSeries);
-            phylumPie.chart.series[0].data[index].setState();
+            phylumColumn.chart.series[0].data[index].setState();
         });
+        phylumColumnTable.$tbody.find('tr').click(function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            const series = phylumColumn.chart.series[0].data[index];
+            phylumColumn.chart.series[0].data[index].visible = false;
+            setTableRowAndChartHiding(this, series, index, numSeries, false);
+        });
+
     });
 
     // Load stacked column charts
@@ -155,6 +168,7 @@ function loadTaxonomy(analysisID, subunitType) {
         {title: 'Phylum composition', seriesName: 'reads'});
 
     stackedColumn.loaded.done(() => {
+
         const headers = [
             {sortBy: 'a', name: ''},
             {sortBy: 'a', name: 'Phylum'},
@@ -190,7 +204,6 @@ function loadTaxonomy(analysisID, subunitType) {
     return $.when(domainPie.loaded,
         phylumPie.loaded, domainColumn.loaded,
         phylumColumn.loaded, stackedColumn.loaded).promise();
-    // return new TaxonomyGraphView({model: taxonomy}).init(pipelineVersion);
 }
 
 /**
@@ -209,6 +222,17 @@ function displayTaxonomyGraphError() {
     const error = $('<h4>No taxonomy annotation has been associated with this analysis.</h4>');
     console.debug('Failed to load taxonomy annotation associated with this analysis.');
     $('#taxonomic').empty().append(error);
+}
+
+/**
+ * Load and display charts for selected view
+ * @param {string} analysisID ENA analysis primary accession
+ * @param {string} pipelineVersion
+ * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
+ */
+function loadTaxonomicAnalysis(analysisID, pipelineVersion, experimentType) {
+    let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
+    loadTaxonomyWithFallback(analysisID, type, pipelineVersion, experimentType);
 }
 
 /**
@@ -239,12 +263,45 @@ function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, expe
 }
 
 /**
- * Load and displaycharts for selected view
- * @param {string} analysisID ENA analysis primary accession
- * @param {string} pipelineVersion
- * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
+ * Load all charts on QC tab
+ * @param {string} analysisID accession of analysis
+ * @param {string} pipelineVersion version of pipeline used to conduct analysis
  */
-function loadAnalysisData(analysisID, pipelineVersion, experimentType) {
+function loadQCAnalysis(analysisID, pipelineVersion) {
+    const seqFeatChart = new charts.SeqFeatSumChart('SeqFeat-chart',
+        {accession: analysisID});
+    seqFeatChart.loaded.fail(() => {
+        $('#SeqFeat-chart')
+            .append('<h4>Could not load sequence feature summary.</h4>');
+    });
+
+    const qcStepChart = new charts.QcChart('QC-step-chart',
+        {accession: analysisID});
+    qcStepChart.loaded.fail(() => {
+        $('#QC-step-chart')
+            .append('<h4>Could not load qc summary chart.</h4>');
+    });
+    if (parseFloat(pipelineVersion) > 2) {
+        const nucleotideChart = loadNucleotideDisp(analysisID);
+        nucleotideChart.loaded.fail(() => {
+            console.debug('Failed to load nucleotide hist.');
+            $('#nucleotide-section').hide();
+        }).done(() => {
+            $('#nucleotide-section').show();
+        });
+
+        new charts.GcContentChart('readsGCBarChart', {accession: analysisID});
+        new charts.GcDistributionChart('readsGCHist', {accession: analysisID});
+        new charts.ReadsLengthHist('readsLengthHist', {accession: analysisID});
+        new charts.SeqLengthChart('readsLengthBarChart', {accession: analysisID});
+    }
+}
+
+/**
+ * Load all charts on functional tab
+ * @param {string} analysisID accession of analysis
+ */
+function loadFunctionalAnalysis(analysisID) {
     const interproMatchPie = new charts.InterproMatchPie('InterProPie-chart',
         {accession: analysisID});
 
@@ -294,10 +351,6 @@ function loadAnalysisData(analysisID, pipelineVersion, experimentType) {
             setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
         });
     });
-
-    let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
-    loadTaxonomyWithFallback(analysisID, type, pipelineVersion, experimentType);
-
     new charts.GoTermBarChart('biological-process-bar-chart',
         {accession: analysisID, lineage: 'biological_process'},
         {title: 'Biological process', color: Commons.TAXONOMY_COLOURS[0]});
@@ -406,37 +459,13 @@ let AnalysisView = Backbone.View.extend({
                     }
                     util.attachExpandButtonCallback();
 
-                    loadAnalysisData(analysisID, attr['pipeline_version'], attr['experiment_type']);
+                    loadQCAnalysis(analysisID, attr['pipeline_version']);
+                    loadTaxonomicAnalysis(analysisID, attr['pipeline_version'],
+                        attr['experiment_type']);
                     loadDownloads(analysisID, attr['pipeline_version']);
-                    const seqFeatChart = new charts.SeqFeatSumChart('SeqFeat-chart',
-                        {accession: analysisID});
-                    seqFeatChart.loaded.fail(() => {
-                        $('#SeqFeat-chart')
-                            .append('<h4>Could not load sequence feature summary.</h4>');
-                    });
-
-                    const qcStepChart = new charts.QcChart('QC-step-chart',
-                        {accession: analysisID});
-                    qcStepChart.loaded.fail(() => {
-                        $('#QC-step-chart')
-                            .append('<h4>Could not load qc summary chart.</h4>');
-                    });
-                    if (parseFloat(attr['pipeline_version']) > 2) {
-                        const nucleotideChart = loadNucleotideDisp(analysisID);
-                        nucleotideChart.loaded.fail(() => {
-                            console.error('Failed to load nucleotide hist.');
-                            $('#nucleotide-section').hide();
-                        }).done(() => {
-                            $('#nucleotide-section').show();
-                        });
-
-                        new charts.GcContentChart('readsGCBarChart', {accession: analysisID});
-                        new charts.GcDistributionChart('readsGCHist', {accession: analysisID});
-                        new charts.ReadsLengthHist('readsLengthHist', {accession: analysisID});
-                        new charts.SeqLengthChart('readsLengthBarChart', {accession: analysisID});
-                    }
 
                     if (attr.experiment_type !== 'amplicon') {
+                        loadFunctionalAnalysis(analysisID);
                         enableTab('functional');
                     } else {
                         removeTab('functional');
