@@ -32,12 +32,56 @@ function loadNucleotideDisp(analysisID) {
 }
 
 /**
- *
- * @param {string} analysisID ENA analysis primary accession
+ * Converts series index to capped index, used to handle events
+ * @param {number} index
+ * @param {number} numSeries
+ * @return {number}
  */
-function loadDownloads(analysisID) {
-    let downloads = new api.AnalysisDownloads({id: analysisID});
-    new DownloadView({model: downloads});
+function getSeriesIndex(index, numSeries) {
+    if (index >= numSeries - 1) {
+        index = numSeries - 1;
+    }
+    return index;
+}
+
+/**
+ * Create a display of the series color
+ * @param {number} i index of series color
+ * @return {string} display element
+ */
+function getColourSquareIcon(i) {
+    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
+    return '<div class=\'puce-square-legend\' style=\'background-color: ' +
+        Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
+}
+
+/**
+ * Enable toggling of series visibility, sync'd across table of series and chart
+ * @param {jQuery.element} elem table row
+ * @param {HighCharts.series} series in chart
+ * @param {integer} index index of serie in chart
+ * @param {integer} numSeries total number of series
+ * @param {boolean} defaultVisibility true if series should be visible by default
+ */
+function setTableRowAndChartHiding(elem, series, index, numSeries, defaultVisibility) {
+    series.setVisible(defaultVisibility);
+    if (index === numSeries - 1) {
+        ($(elem).parent().children().slice(numSeries - 1)).toggleClass(
+            'disabled-clickable');
+    } else {
+        $(elem).toggleClass('disabled-clickable');
+    }
+}
+
+/**
+ * Generate interpro link
+ * @param {string} text to display in link tag
+ * @param {string} id of interpro result
+ * @return {string}
+ */
+function createInterProLink(text, id) {
+    const url = INTERPRO_URL + 'entry/' + id;
+    return '<a href=\'' + url + '\'>' + text + '</a>';
 }
 
 /**
@@ -225,17 +269,6 @@ function displayTaxonomyGraphError() {
 }
 
 /**
- * Load and display charts for selected view
- * @param {string} analysisID ENA analysis primary accession
- * @param {string} pipelineVersion
- * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
- */
-function loadTaxonomicAnalysis(analysisID, pipelineVersion, experimentType) {
-    let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
-    loadTaxonomyWithFallback(analysisID, type, pipelineVersion, experimentType);
-}
-
-/**
  * Attempt to load taxonomy, and fallback to /lsu if /ssu does not exist
  * @param {string} analysisID accession of analysis
  * @param {string} subunitType of analysis
@@ -260,6 +293,17 @@ function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, expe
     if (['amplicon', 'metabarcoding'].indexOf(experimentType) > -1 && pipelineVersion >= 4.0) {
         disableSubUnitRadio(subunitType);
     }
+}
+
+/**
+ * Load and display charts for selected view
+ * @param {string} analysisID ENA analysis primary accession
+ * @param {string} pipelineVersion
+ * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
+ */
+function loadTaxonomicAnalysis(analysisID, pipelineVersion, experimentType) {
+    let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
+    loadTaxonomyWithFallback(analysisID, type, pipelineVersion, experimentType);
 }
 
 /**
@@ -372,12 +416,37 @@ function loadFunctionalAnalysis(analysisID) {
         {title: 'Cellular component', color: Commons.TAXONOMY_COLOURS[2]});
 }
 
+let DownloadView = Backbone.View.extend({
+    model: api.RunDownloads,
+    template: _.template($('#downloadsTmpl').html()),
+    el: '#download-list',
+    initialize() {
+        const that = this;
+        this.model.fetch({
+            data: $.param({page_size: 250}),
+            success(response) {
+                setAbundanceTab(response.attributes.downloadGroups['Statistics']);
+                that.$el.html(that.template({groups: that.model.attributes.downloadGroups}));
+            }
+        });
+    }
+});
+
+/**
+ * Load download tab view
+ * @param {string} analysisID ENA analysis primary accession
+ */
+function loadDownloads(analysisID) {
+    let downloads = new api.AnalysisDownloads({id: analysisID});
+    new DownloadView({model: downloads});
+}
+
 /**
  * Callback for taxonomy size selection in taxonomic analysis tab
  * @param {string} srcElem jQuery selector string of event source element
  * @param {number} pipelineVersion
  */
-function onTaxonomySelect(srcElem, pipelineVersion) {
+function onTaxonomySelect(srcElem) {
     const type = $(srcElem).val();
     loadTaxonomy(analysisID, type);
 }
@@ -483,66 +552,13 @@ let AnalysisView = Backbone.View.extend({
     render(pipelineVersion, callback) {
         this.$el.html(this.template(this.model.toJSON()));
         $('.rna-select-button').click(function() {
-            onTaxonomySelect(this, pipelineVersion);
+            onTaxonomySelect(this);
         });
         util.attachTabHandlers();
         callback();
         return this.$el;
     }
 });
-
-/**
- * Converts series index to capped index, used to handle events
- * @param {number} index
- * @param {number} numSeries
- * @return {number}
- */
-function getSeriesIndex(index, numSeries) {
-    if (index >= numSeries - 1) {
-        index = numSeries - 1;
-    }
-    return index;
-}
-
-/**
- * Create a display of the series color
- * @param {number} i index of series color
- * @return {string} display element
- */
-function getColourSquareIcon(i) {
-    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
-    return '<div class=\'puce-square-legend\' style=\'background-color: ' +
-        Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
-}
-
-/**
- * Enable toggling of series visibility, sync'd across table of series and chart
- * @param {jQuery.element} elem table row
- * @param {HighCharts.series} series in chart
- * @param {integer} index index of serie in chart
- * @param {integer} numSeries total number of series
- * @param {boolean} defaultVisibility true if series should be visible by default
- */
-function setTableRowAndChartHiding(elem, series, index, numSeries, defaultVisibility) {
-    series.setVisible(defaultVisibility);
-    if (index === numSeries - 1) {
-        ($(elem).parent().children().slice(numSeries - 1)).toggleClass(
-            'disabled-clickable');
-    } else {
-        $(elem).toggleClass('disabled-clickable');
-    }
-}
-
-/**
- * Generate interpro link
- * @param {string} text to display in link tag
- * @param {string} id of interpro result
- * @return {string}
- */
-function createInterProLink(text, id) {
-    const url = INTERPRO_URL + 'entry/' + id;
-    return '<a href=\'' + url + '\'>' + text + '</a>';
-}
 
 /**
  * Disable tab by id
@@ -586,22 +602,6 @@ function setAbundanceTab(statisticsData) {
         util.changeTab($('#overview'));
     }
 }
-
-let DownloadView = Backbone.View.extend({
-    model: api.RunDownloads,
-    template: _.template($('#downloadsTmpl').html()),
-    el: '#download-list',
-    initialize() {
-        const that = this;
-        this.model.fetch({
-            data: $.param({page_size: 250}),
-            success(response) {
-                setAbundanceTab(response.attributes.downloadGroups['Statistics']);
-                that.$el.html(that.template({groups: that.model.attributes.downloadGroups}));
-            }
-        });
-    }
-});
 
 let analysis = new api.Analysis({id: analysisID});
 new AnalysisView({model: analysis});
