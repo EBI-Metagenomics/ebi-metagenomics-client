@@ -1,6 +1,6 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
 const util = require('../util');
 const DetailList = require('../components/detailList');
 
@@ -51,7 +51,7 @@ const PublicationStudiesView = util.StudiesView.extend({
         {sortBy: null, name: 'Last update'}
     ],
     getRowData(attr) {
-        const studyLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_id + '</a>';
+        const studyLink = '<a href=\'' + attr.study_url + '\'>' + attr.study_accession + '</a>';
         const biomes = _.map(attr.biomes, function(b) {
             return '<span class=\'biome_icon icon_xs ' + b.icon + '\' title=\'' + b.name +
                 '\'></span>';

@@ -80,11 +80,13 @@
                         <div id='readsGCBarChart' class="row columns"></div>
                     </div>
                 </div>
-                <div class="row columns">
-                    <p>The graph below show the relative abundance of nucletotides (A, C, G, T, or ambiguous base "N")
-                        at each position starting from the beginning of each read up to the first 500 base pairs.</p>
-                </div>
-                <div id='nucleotide' class="row columns">
+                <div id="nucleotide-section" class="hidden">
+                    <div class="row columns">
+                        <p>The graph below show the relative abundance of nucletotides (A, C, G, T, or ambiguous base "N")
+                            at each position starting from the beginning of each read up to the first 500 base pairs.</p>
+                    </div>
+                    <div id='nucleotide' class="row columns">
+                    </div>
                 </div>
                 <% } %>
             </div>

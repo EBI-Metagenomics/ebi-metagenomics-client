@@ -19,25 +19,24 @@ const studiesTableColumns = {
         sortable: false
     },
     accession: {
-        data: ['MGYS00002072', 'MGYS00001587'],
+        data: ['MGYS00002072', 'MGYS00001625'],
         type: datatype.STR,
         sortable: false // TODO fix test
     },
     study_name: {
         data: [
             'Longitudinal study of the diabetic skin and wound microbiome',
-            'Changeability of bacterial community composition caused by seawater exposure' +
-            ' to crude oil at low temperature'],
+            'Fungi associated with Rhamnus cathartica in Southwestern Ontario'],
         type: datatype.STR,
         sortable: false
     },
     samples_count: {
-        data: ['258', '8'],
+        data: ['259', '10'],
         type: datatype.NUM,
         sortable: false
     },
     last_update: {
-        data: ['27-Nov-2017', '16-Mar-2017'],
+        data: ['27-Nov-2017', '22-Mar-2017'],
         type: datatype.DATE,
         sortable: false
     }
@@ -89,7 +88,7 @@ describe('Browse page', function() {
         });
 
         it('Should contain correct number of studies', function() {
-            studiesTable.checkLoadedCorrectly(1, studiesTableDefaultSize, 122, studiesTableColumns);
+            studiesTable.checkLoadedCorrectly(1, studiesTableDefaultSize, 123, studiesTableColumns);
         });
 
         it('Should respond to ordering', function() {
@@ -102,7 +101,7 @@ describe('Browse page', function() {
                     '',
                     'MGYS00002072',
                     'Longitudinal study of the diabetic skin and wound microbiome',
-                    '258',
+                    '25',
                     '27-Nov-2017'
                 ]
             ]);
@@ -116,48 +115,52 @@ describe('Browse page', function() {
                         '',
                         'MGYS00002072',
                         'Longitudinal study of the diabetic skin and wound microbiome',
-                        '258',
+                        '259',
                         '27-Nov-2017']
                 }, {
                     index: 3,
                     data: [
                         '',
-                        'MGYS00001019',
-                        'Metacommunity analysis of two protozoan ' +
-                        'taxa (Amoebozoa) in grassland soils',
-                        '1',
+                        'MGYS00001020',
+                        'Forest Soil Targeted Locus (Loci)',
+                        '23',
                         '6-Jun-2016']
                 }, {
                     index: 'Next',
                     data: [
                         '',
-                        'MGYS00000604',
-                        'Gene-Environment Interactions at the Skin Surface',
-                        '2560',
-                        '3-Feb-2016'], // 4th page
+                        'MGYS00000605',
+                        'Skin microbiome in human volunteers inoculated ' +
+                        'with H. ducreyi Raw sequence reads',
+                        '191',
+                        '4-Feb-2016'],
                     pageNum: 4
                 }, {
                     index: 'Previous',
                     data: [
                         '',
-                        'MGYS00001019',
-                        'Metacommunity analysis of two protozoan ' +
-                        'taxa (Amoebozoa) in grassland soils',
-                        '1',
+                        'MGYS00001020',
+                        'Forest Soil Targeted Locus (Loci)',
+                        '23',
                         '6-Jun-2016'],
                     pageNum: 3
                 }, {
                     index: 'Last',
-                    data: ['', 'MGYS00000283', 'MetaSoil', '13', '20-Jan-2016'],
+                    data: [
+                        '',
+                        'MGYS00000282',
+                        'Antarctica Aquatic Microbial Metagenome',
+                        '18',
+                        '20-Jan-2016'],
                     pageNum: 5,
-                    pageSize: 22
+                    pageSize: 23
                 }, {
                     index: 'First',
                     data: [
                         '',
                         'MGYS00002072',
                         'Longitudinal study of the diabetic skin and wound microbiome',
-                        '258',
+                        '259',
                         '27-Nov-2017'],
                     pageNum: 1
                 }], 5);
@@ -181,7 +184,7 @@ describe('Browse page', function() {
             studiesTable.getClearButton().click();
             cy.get('span.biome_icon.air_b').should('not.exist');
             studiesTable.waitForTableLoad(studiesTableDefaultSize);
-            cy.get('span.biome_icon').first().should('have.class', 'skin_b');
+            cy.get('span.biome_icon').first().should('have.class', 'soil_b');
         });
 
         it('Download link should change with changes in filtering or ordering', function() {
@@ -354,7 +357,7 @@ describe('Browse page', function() {
             samplesTable.getClearButton().click();
             cy.get('span.biome_icon.air_b').should('not.exist');
             samplesTable.waitForTableLoad(samplesTableDefaultSize);
-            cy.get('span.biome_icon').first().should('have.class', 'skin_b');
+            cy.get('span.biome_icon').first().should('have.class', 'soil_b');
         });
 
         it('Download link should change with changes in filtering or ordering', function() {

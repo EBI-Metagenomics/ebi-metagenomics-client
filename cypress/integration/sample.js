@@ -153,7 +153,7 @@ describe('Sample page', function() {
 
         it('Studies table download link should be valid', function() {
             const url = Config.API_URL + 'samples/' + sampleId
-                + '/studies?ordering=&sample_accession=' + sampleId + '&format=csv';
+                + '/studies?ordering=&format=csv';
             table.testDownloadLink(url);
         });
     });
@@ -164,10 +164,6 @@ describe('Sample page', function() {
             waitForPageLoad(sampleId);
             table = new GenericTableHandler('#runs-section', 2);
         });
-
-        // it('Runs table should contain correct number of runs', function() {
-        //     table.checkLoadedCorrectly(1, 2, 2);
-        // });
 
         it('Runs table should respond to ordering', function() {
             table.testSorting(2, runTableColumns);

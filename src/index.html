@@ -116,7 +116,7 @@
                             <h3>Or by selected biomes</h3>
                             <div id="top10biomes" class="row columns">
                                 <script id="biomeTmpl" type="text/template">
-                                    <a href="<%= biome_studies_link %>">
+                                    <a href="<%= biome_studies_url %>">
                                         <div>
                                             <!--<img class="spacer" alt="icon"-->
                                             <!--src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/backgrounds/bgd_transparent_1x1.png">-->
@@ -171,12 +171,12 @@
                                             <% _.each(biomes, function(biome){ %>
                                             <span class="biome_icon icon_xs <%= biome.icon %>"></span>
                                             <% }); %>
-                                            <a href="<%= study_link %>"><%= study_name %></a>
+                                            <a href="<%= study_url %>"><%= study_name %></a>
                                         </p>
                                         <%= abstract %>
                                         <p>
-                                            <a href="<%= study_link %>">View more</a> - <a
-                                                href="<%= samples_link %>"><%=
+                                            <a href="<%= study_url %>">View more</a> - <a
+                                                href="<%= samples_url %>"><%=
                                             samples_count
                                             %>
                                             samples</a>

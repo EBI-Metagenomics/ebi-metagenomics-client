@@ -2,19 +2,11 @@ const Backbone = require('backbone');
 const _ = require('underscore');
 const INTERPRO_URL = process.env.INTERPRO_URL;
 const Commons = require('../commons');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
+const charts = require('mgnify').charts;
 const util = require('../util');
-const TaxonomyPieChart = require('../components/charts/taxonomy/taxonomyPie');
-const TaxonomyColumnChart = require('../components/charts/taxonomy/taxonomyColumn');
-const TaxonomyStackedColumnChart = require('../components/charts/taxonomy/taxonomyStackedColumn');
 const ClientSideTable = require('../components/clientSideTable');
 
-const QCChart = require('../components/charts/qc/qcChart');
-const SeqLengthChart = require('../components/charts/qc/seqLengthHist');
-const GCDispChart = require('../components/charts/qc/readsGCDisp');
-const NucleotideChart = require('../components/charts/qc/nucleotideHist');
-const SeqFeatChart = require('../components/charts/sequFeatSumChart');
-const GoTermChart = require('../components/charts/goTermChart');
 const DetailList = require('../components/detailList');
 
 require('tablesorter');
@@ -30,71 +22,13 @@ window.Foundation.addToJquery($);
 let analysisID = util.getURLParameter();
 util.specifyPageTitle('Analysis', analysisID);
 
-let interproData = null;
-let taxonomy = null;
-let goTerm = null;
-
-/**
- * Fetch data and render read length charts in QC tab
- * @param {string} analysisID Accession of analysis
- * @param {object} statsData Stats data associated with analysis
- */
-function loadReadLengthDisp(analysisID, statsData) {
-    const seqLengthData = new api.QcChartData({id: analysisID, type: 'seq-length'});
-    seqLengthData.fetch({
-        dataType: 'text',
-        success(ignored, response) {
-            try {
-                SeqLengthChart.drawSequenceLengthHistogram('readsLengthHist', response, false,
-                    statsData,
-                    seqLengthData.url());
-                SeqLengthChart.drawSequencesLength('readsLengthBarChart', statsData);
-            } catch (e) {
-                console.log('Could not load ReadLengthDisp data');
-            }
-        }
-    });
-}
-
-/**
- * Fetch data and render GC length charts in QC tab
- * @param {string} analysisID Accession of analysis
- * @param {object} statsData Stats data associated with analysis
- */
-function loadGCDistributionDisp(analysisID, statsData) {
-    const gcDistributionData = new api.QcChartData({id: analysisID, type: 'gc-distribution'});
-    gcDistributionData.fetch({
-        dataType: 'text',
-        success(ignored, response) {
-            try {
-                GCDispChart.drawSequenceGCDistribution('readsGCHist', response, false, statsData,
-                    gcDistributionData.url());
-                GCDispChart.drawGCContent('readsGCBarChart', statsData);
-            } catch (e) {
-                console.log('Could not load ReadsGCHist data');
-            }
-        }
-    });
-}
-
 /**
  * Fetch data and render nucleotide position chart in QC tab
  * @param {string} analysisID Accession of analysis
+ * @return {object}
  */
 function loadNucleotideDisp(analysisID) {
-    const nucleotideDistData = new api.QcChartData(
-        {id: analysisID, type: 'nucleotide-distribution'});
-    nucleotideDistData.fetch({
-        dataType: 'text',
-        success(ignored, response) {
-            try {
-                NucleotideChart.drawNucleotidePositionHistogram('nucleotide', response, false,
-                    nucleotideDistData.url());
-            } catch (e) {
-                console.log('Could not load nucleotide position chart.');
-            }
-        }
-    });
+    return new charts.NucleotideHist('nucleotide', {accession: analysisID});
 }
 
 /**
@@ -123,13 +57,153 @@ function loadKronaChart(analysisID, type) {
  * Load taxonomy data and create graphs
  * @param {string} analysisID ENA analysis primary accession
  * @param {string} subunitType of analysis (see API documentation for endpoint)
- * @param {float} pipelineVersion
  * @return {jQuery.Promise} taxonomy backbone model
  */
-function loadTaxonomy(analysisID, subunitType, pipelineVersion) {
-    taxonomy = new api.Taxonomy({id: analysisID, type: subunitType});
+function loadTaxonomy(analysisID, subunitType) {
     loadKronaChart(analysisID, subunitType);
-    return new TaxonomyGraphView({model: taxonomy}).init(pipelineVersion);
+
+    // Load pie charts
+    const domainPie = new charts.TaxonomyPie('domain-composition-pie',
+        {accession: analysisID, type: subunitType},
+        {title: 'Domain composition', seriesName: 'reads', subtitle: false}
+    );
+    const phylumPie = new charts.TaxonomyPie('phylum-composition-pie',
+        {accession: analysisID, type: subunitType, groupingDepth: 2},
+        {title: 'Phylum composition', seriesName: 'reads', legend: true}
+    );
+
+    phylumPie.loaded.done(() => {
+        const headers = [
+            {sortBy: 'a', name: ''},
+            {sortBy: 'a', name: 'Phylum'},
+            {sortBy: 'a', name: 'Domain'},
+            {sortBy: 'a', name: 'Unique OTUs'},
+            {sortBy: 'a', name: '%'}
+        ];
+        const total = _.reduce(phylumPie.clusteredData, function(m, d) {
+            return m + d.y;
+        }, 0);
+        let i = 0;
+        const data = _.map(phylumPie.clusteredData, function(d) {
+            const colorDiv = getColourSquareIcon(i);
+            return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
+        });
+        const options = {
+            title: '',
+            headers: headers,
+            initPageSize: DEFAULT_PAGE_SIZE
+        };
+        const phylumPieTable = new ClientSideTable($('#pie').find('.phylum-table'), options);
+        phylumPieTable.update(data, false, 1);
+
+        const numSeries = phylumPie.chart.series[0].data.length;
+        phylumPieTable.$tbody.find('tr').hover(function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            phylumPie.chart.series[0].data[index].setState('hover');
+        }, function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            phylumPie.chart.series[0].data[index].setState();
+        });
+        phylumPieTable.$tbody.find('tr').click(function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            const series = phylumPie.chart.series[0].data[index];
+            setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
+        });
+    });
+
+    // Load column charts
+    const domainColumn = new charts.TaxonomyColumn('domain-composition-column',
+        {accession: analysisID, type: subunitType},
+        {title: 'Domain composition', seriesName: 'reads', subtitle: false});
+    const phylumColumn = new charts.TaxonomyColumn('phylum-composition-column',
+        {accession: analysisID, type: subunitType, groupingDepth: 2},
+        {title: 'Phylum composition', seriesName: 'reads'}
+    );
+
+    phylumColumn.loaded.done(() => {
+
+        const headers = [
+            {sortBy: 'a', name: ''},
+            {sortBy: 'a', name: 'Phylum'},
+            {sortBy: 'a', name: 'Domain'},
+            {sortBy: 'a', name: 'Unique OTUs'},
+            {sortBy: 'a', name: '%'}
+        ];
+        const total = _.reduce(phylumColumn.clusteredData, function(m, d) {
+            return m + d.y;
+        }, 0);
+        let i = 0;
+        const data = _.map(phylumColumn.clusteredData, function(d) {
+            const colorDiv = getColourSquareIcon(i);
+            return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
+        });
+        const options = {
+            title: '',
+            headers: headers,
+            initPageSize: DEFAULT_PAGE_SIZE
+        };
+        const phylumColumnTable = new ClientSideTable($('#column').find('.phylum-table'), options);
+        phylumColumnTable.update(data, false, 1);
+
+        const numSeries = phylumColumn.chart.series[0].data.length;
+        phylumColumnTable.$tbody.find('tr').hover(function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            phylumColumn.chart.series[0].data[index].setState('hover');
+        }, function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            phylumColumn.chart.series[0].data[index].setState();
+        });
+        phylumColumnTable.$tbody.find('tr').click(function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            const series = phylumColumn.chart.series[0].data[index];
+            phylumColumn.chart.series[0].data[index].visible = false;
+            setTableRowAndChartHiding(this, series, index, numSeries, false);
+        });
+
+    });
+
+    // Load stacked column charts
+    const stackedColumn = new charts.TaxonomyColumnStacked('phylum-composition-stacked-column',
+        {accession: analysisID, type: subunitType},
+        {title: 'Phylum composition', seriesName: 'reads'});
+
+    stackedColumn.loaded.done(() => {
+
+        const headers = [
+            {sortBy: 'a', name: ''},
+            {sortBy: 'a', name: 'Phylum'},
+            {sortBy: 'a', name: 'Domain'},
+            {sortBy: 'a', name: 'Unique OTUs'},
+            {sortBy: 'a', name: '%'}
+        ];
+        const total = _.reduce(phylumColumn.clusteredData, function(m, d) {
+            return m + d.y;
+        }, 0);
+        let i = 0;
+        const data = _.map(phylumColumn.clusteredData, function(d) {
+            const colorDiv = getColourSquareIcon(i);
+            return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
+        });
+        const options = {
+            title: '',
+            headers: headers,
+            initPageSize: DEFAULT_PAGE_SIZE
+        };
+        const numSeries = stackedColumn.chart.series[0].data.length;
+        const phylumStackedColumnTable = new ClientSideTable(
+            $('#stacked-column').find('.phylum-table'), options);
+        phylumStackedColumnTable.update(data, false, 1);
+        phylumStackedColumnTable.$tbody.find('tr').hover(function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            stackedColumn.chart.series[index].data[0].setState('hover');
+        }, function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            stackedColumn.chart.series[index].data[0].setState();
+        });
+    });
+    return $.when(domainPie.loaded,
+        phylumPie.loaded, domainColumn.loaded,
+        phylumColumn.loaded, stackedColumn.loaded).promise();
 }
 
 /**
@@ -151,6 +225,17 @@ function displayTaxonomyGraphError() {
 }
 
 /**
+ * Load and display charts for selected view
+ * @param {string} analysisID ENA analysis primary accession
+ * @param {string} pipelineVersion
+ * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
+ */
+function loadTaxonomicAnalysis(analysisID, pipelineVersion, experimentType) {
+    let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
+    loadTaxonomyWithFallback(analysisID, type, pipelineVersion, experimentType);
+}
+
+/**
  * Attempt to load taxonomy, and fallback to /lsu if /ssu does not exist
  * @param {string} analysisID accession of analysis
  * @param {string} subunitType of analysis
@@ -158,10 +243,10 @@ function displayTaxonomyGraphError() {
  * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
  */
 function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, experimentType) {
-    loadTaxonomy(analysisID, subunitType, pipelineVersion).then((model) => {
-        if (model.length === 0 && subunitType === '/ssu') {
+    loadTaxonomy(analysisID, subunitType).fail((model) => {
+        if (subunitType === '/ssu') {
             subunitType = '/lsu';
-            loadTaxonomy(analysisID, subunitType, pipelineVersion).then((model) => {
+            loadTaxonomy(analysisID, subunitType).fail((model) => {
                 if (model.length === 0) {
                     displayTaxonomyGraphError();
                 }
@@ -171,27 +256,120 @@ function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, expe
                 displayTaxonomyGraphError();
             }
         }
-        if (['amplicon', 'metabarcoding'].indexOf(experimentType) > -1 && pipelineVersion >= 4.0) {
-            disableSubUnitRadio(subunitType);
-        }
     });
+    if (['amplicon', 'metabarcoding'].indexOf(experimentType) > -1 && pipelineVersion >= 4.0) {
+        disableSubUnitRadio(subunitType);
+    }
 }
 
 /**
- * Load and displaycharts for selected view
- * @param {string} analysisID ENA analysis primary accession
- * @param {string} pipelineVersion
- * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
+ * Load all charts on QC tab
+ * @param {string} analysisID accession of analysis
+ * @param {string} pipelineVersion version of pipeline used to conduct analysis
  */
-function loadAnalysisData(analysisID, pipelineVersion, experimentType) {
-    interproData = new api.InterproIden({id: analysisID});
-    new InterProSummary({model: interproData});
+function loadQCAnalysis(analysisID, pipelineVersion) {
+    const seqFeatChart = new charts.SeqFeatSumChart('SeqFeat-chart',
+        {accession: analysisID});
+    seqFeatChart.loaded.fail(() => {
+        $('#SeqFeat-chart')
+            .append('<h4>Could not load sequence feature summary.</h4>');
+    });
 
-    let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
-    loadTaxonomyWithFallback(analysisID, type, pipelineVersion, experimentType);
+    const qcStepChart = new charts.QcChart('QC-step-chart',
+        {accession: analysisID});
+    qcStepChart.loaded.fail(() => {
+        $('#QC-step-chart')
+            .append('<h4>Could not load qc summary chart.</h4>');
+    });
+    if (parseFloat(pipelineVersion) > 2) {
+        const nucleotideChart = loadNucleotideDisp(analysisID);
+        nucleotideChart.loaded.fail(() => {
+            console.debug('Failed to load nucleotide hist.');
+            $('#nucleotide-section').hide();
+        }).done(() => {
+            $('#nucleotide-section').show();
+        });
 
-    goTerm = new api.GoSlim({id: analysisID});
-    new GoTermCharts({model: goTerm});
+        new charts.GcContentChart('readsGCBarChart', {accession: analysisID});
+        new charts.GcDistributionChart('readsGCHist', {accession: analysisID});
+        new charts.ReadsLengthHist('readsLengthHist', {accession: analysisID});
+        new charts.SeqLengthChart('readsLengthBarChart', {accession: analysisID});
+    }
+}
+
+/**
+ * Load all charts on functional tab
+ * @param {string} analysisID accession of analysis
+ */
+function loadFunctionalAnalysis(analysisID) {
+    const interproMatchPie = new charts.InterproMatchPie('InterProPie-chart',
+        {accession: analysisID});
+
+    interproMatchPie.loaded.done(() => {
+        let i = 0;
+        const totalCount = interproMatchPie.raw_data.reduce(function(v, e) {
+            return v + e['attributes']['count'];
+        }, 0);
+        const tableData = interproMatchPie.raw_data.map(function(d) {
+            d = d.attributes;
+            const colorDiv = getColourSquareIcon(i);
+            const interProLink = createInterProLink(d.description, d.accession);
+            return [
+                ++i,
+                colorDiv + interProLink,
+                d.accession,
+                d.count,
+                (d.count * 100 / totalCount).toFixed(2)];
+        });
+        const headers = [
+            {sortBy: 'a', name: ''},
+            {sortBy: 'a', name: 'Entry name'},
+            {sortBy: 'a', name: 'ID'},
+            {sortBy: 'a', name: 'pCDS matched'},
+            {sortBy: 'a', name: '%'}
+        ];
+        const options = {
+            title: '',
+            headers: headers,
+            initPageSize: DEFAULT_PAGE_SIZE
+        };
+        const interproTable = new ClientSideTable($('#InterPro-table'), options);
+        interproTable.update(tableData, false, 1, tableData.length);
+
+        const numSeries = interproMatchPie.chart.series[0].data.length;
+        interproTable.$tbody.find('tr').hover(function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            interproMatchPie.chart.series[0].data[index].setState('hover');
+        }, function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            interproMatchPie.chart.series[0].data[index].setState();
+        });
+
+        interproTable.$tbody.find('tr').click(function() {
+            let index = getSeriesIndex($(this).index(), numSeries);
+            const series = interproMatchPie.chart.series[0].data[index];
+            setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
+        });
+    });
+    new charts.GoTermBarChart('biological-process-bar-chart',
+        {accession: analysisID, lineage: 'biological_process'},
+        {title: 'Biological process', color: Commons.TAXONOMY_COLOURS[0]});
+    new charts.GoTermBarChart('molecular-function-bar-chart',
+        {accession: analysisID, lineage: 'molecular_function'},
+        {title: 'Molecular function', color: Commons.TAXONOMY_COLOURS[1]});
+    new charts.GoTermBarChart('cellular-component-bar-chart',
+        {accession: analysisID, lineage: 'cellular_component'},
+        {title: 'Cellular component', color: Commons.TAXONOMY_COLOURS[2]});
+
+    new charts.GoTermPieChart('biological-process-pie-chart',
+        {accession: analysisID, lineage: 'biological_process'},
+        {title: 'Biological process', color: Commons.TAXONOMY_COLOURS[0]});
+    new charts.GoTermPieChart('molecular-function-pie-chart',
+        {accession: analysisID, lineage: 'molecular_function'},
+        {title: 'Molecular function', color: Commons.TAXONOMY_COLOURS[1]});
+    new charts.GoTermPieChart('cellular-component-pie-chart',
+        {accession: analysisID, lineage: 'cellular_component'},
+        {title: 'Cellular component', color: Commons.TAXONOMY_COLOURS[2]});
 }
 
 /**
@@ -201,7 +379,7 @@ function loadAnalysisData(analysisID, pipelineVersion, experimentType) {
  */
 function onTaxonomySelect(srcElem, pipelineVersion) {
     const type = $(srcElem).val();
-    loadTaxonomy(analysisID, type, pipelineVersion);
+    loadTaxonomy(analysisID, type);
 }
 
 /**
@@ -281,35 +459,13 @@ let AnalysisView = Backbone.View.extend({
                     }
                     util.attachExpandButtonCallback();
 
-                    loadAnalysisData(analysisID, attr['pipeline_version'], attr['experiment_type']);
+                    loadQCAnalysis(analysisID, attr['pipeline_version']);
+                    loadTaxonomicAnalysis(analysisID, attr['pipeline_version'],
+                        attr['experiment_type']);
                     loadDownloads(analysisID, attr['pipeline_version']);
 
-                    new SeqFeatChart('SeqFeat-chart', 'Sequence feature summary',
-                        attr['analysis_summary']);
-
-                    const statsData = new api.QcChartStats({id: analysisID});
-                    statsData.fetch({
-                        dataType: 'text',
-                        success(model) {
-                            if (Object.keys(attr['analysis_summary']).length > 0) {
-                                new QCChart('QC-step-chart', attr['analysis_summary'],
-                                    model.attributes['sequence_count']);
-                            } else {
-                                const error = $('<h4>Could not load quality control analysis</h4>');
-                                console.debug('Failed to load QC analysis.');
-                                $('#qc').empty().append(error);
-                            }
-                            if (model.attributes.hasOwnProperty('sequence_count')) {
-                                if (attr['pipeline_version'] > 2) {
-                                    loadReadLengthDisp(analysisID, model.attributes);
-                                    loadGCDistributionDisp(analysisID, model.attributes);
-                                    loadNucleotideDisp(analysisID);
-                                }
-                            }
-                        }
-                    });
-
                     if (attr.experiment_type !== 'amplicon') {
+                        loadFunctionalAnalysis(analysisID);
                         enableTab('functional');
                     } else {
                         removeTab('functional');
@@ -334,99 +490,6 @@ let AnalysisView = Backbone.View.extend({
         return this.$el;
     }
 });
-
-/**
- * Cluster data by depth
- * @param {[*]} data
- * @param {number} depth
- * @return {[*]}≈
- */
-function clusterData(data, depth) {
-    let clusteredData = {};
-    _.each(data, function(d) {
-        const attr = d.attributes;
-        let lineage = attr.lineage.split(':');
-        // Remove empty strings
-        let category;
-        if (lineage.length < depth) {
-            category = lineage[lineage.length - 1];
-        } else {
-            category = lineage[depth];
-        }
-
-        if (depth > 0 &&
-            ['', 'Bacteria', 'Eukaryota', 'other_sequences', undefined].indexOf(category) > -1) {
-            if (lineage[0] === 'Bacteria') {
-                category = 'Unassigned Bacteria';
-            } else {
-                category = 'Unassigned';
-            }
-        }
-
-        let val = attr.count;
-        if (clusteredData.hasOwnProperty(category)) {
-            clusteredData[category]['v'] += val;
-        } else {
-            clusteredData[category] = {
-                v: val,
-                l: lineage
-            };
-        }
-    });
-    clusteredData = _.map(clusteredData, function(values, k) {
-        return {
-            name: k,
-            y: values.v,
-            lineage: values.l
-        };
-    });
-    return clusteredData;
-}
-
-/**
- * Cluster and compact groups other than top 10 largest into an 'other' category
- * @param {[*]}data
- * @param {number} depth
- * @return {Array.<*>} array data summed by parameter depth
- */
-function groupTaxonomyData(data, depth) {
-    // _.each(clusteredData, function (o, i) {
-    //     if (o.name === "undefined") {
-    //         o.name = "Unassigned";
-    //         o.lineage = ["Unassigned"];
-    //     }
-    // });
-    return _.sortBy(clusterData(data, depth), function(o) {
-        return o.y;
-    }).reverse();
-}
-
-/**
- * Group all data after index n into single category
- * @param {[*]} clusteredData
- * @param {number} n index after which to group data
- * @return {[*]} grouped data
- */
-function groupAfterN(clusteredData, n) {
-    if (clusteredData.length > n) {
-        const top10 = clusteredData.slice(0, n);
-        const others = {
-            name: 'Other',
-            lineage: [],
-            y: 0
-        };
-        _.each(clusteredData.slice(n, clusteredData.length), function(d) {
-            others.y += d.y;
-            if (others.lineage.indexOf(d.lineage[0]) === -1) {
-                others.lineage.push(d.lineage[0]);
-            }
-        });
-        others.lineage = others.lineage.join(', ');
-        top10.push(others);
-        clusteredData = top10;
-    }
-    return clusteredData;
-}
 
 /**
  * Converts series index to capped index, used to handle events
@@ -455,7 +518,7 @@ function getColourSquareIcon(i) {
 /**
  * Enable toggling of series visibility, sync'd across table of series and chart
  * @param {jQuery.element} elem table row
- * @param {HighCharts.serie} series in chart
+ * @param {HighCharts.series} series in chart
  * @param {integer} index index of serie in chart
  * @param {integer} numSeries total number of series
  * @param {boolean} defaultVisibility true if series should be visible by default
@@ -470,127 +533,6 @@ function setTableRowAndChartHiding(elem, series, index, numSeries, defaultVisibi
     }
 }
 
-Array.prototype.sum = function(prop) {
-    var total = 0;
-    for (var i = 0, _len = this.length; i < _len; i++) {
-        total += this[i][prop];
-    }
-    return total;
-};
-
-let TaxonomyGraphView = Backbone.View.extend({
-    model: api.Taxonomy,
-    init(pipelineVersion) {
-        return this.model.fetch().done(function(model) {
-            if (model.length === 0) {
-                console.debug('Could not load taxonomy graph view.');
-                return;
-            }
-
-            const clusteredData = groupTaxonomyData(model, 0);
-            const phylumDepth = parseFloat(pipelineVersion) >= 4 ? 2 : 1;
-            const phylumData = groupTaxonomyData(model, phylumDepth);
-            // Pie tab
-            new TaxonomyPieChart('domain-composition-pie', 'Domain composition', clusteredData,
-                false, {
-                    seriesName: 'reads'
-                });
-            const phylumPieChart = new TaxonomyPieChart(
-                'phylum-composition-pie', 'Phylum composition', groupAfterN(phylumData, 10), true,
-                {
-                    subtitle: {text: 'Total: ' + phylumData.sum('y') + ' reads'},
-                    seriesName: 'reads'
-                });
-
-            const headers = [
-                {sortBy: 'a', name: ''},
-                {sortBy: 'a', name: 'Phylum'},
-                {sortBy: 'a', name: 'Domain'},
-                {sortBy: 'a', name: 'Unique OTUs'},
-                {sortBy: 'a', name: '%'}
-            ];
-            const total = _.reduce(phylumData, function(m, d) {
-                return m + d.y;
-            }, 0);
-            let i = 0;
-            const data = _.map(phylumData, function(d) {
-                const colorDiv = getColourSquareIcon(i);
-                return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
-            });
-            const options = {
-                title: '',
-                headers: headers,
-                initPageSize: DEFAULT_PAGE_SIZE
-            };
-            const phylumPieTable = new ClientSideTable($('#pie').find('.phylum-table'), options);
-            phylumPieTable.update(data, false, 1);
-
-            const numSeries = phylumPieChart.series[0].data.length;
-            phylumPieTable.$tbody.find('tr').hover(function() {
-                let index = getSeriesIndex($(this).index(), numSeries);
-                phylumPieChart.series[0].data[index].setState('hover');
-            }, function() {
-                let index = getSeriesIndex($(this).index(), numSeries);
-                phylumPieChart.series[0].data[index].setState();
-            });
-
-            phylumPieTable.$tbody.find('tr').click(function() {
-                let index = getSeriesIndex($(this).index(), numSeries);
-                const series = phylumPieChart.series[0].data[index];
-                setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
-            });
-
-            new TaxonomyColumnChart('domain-composition-column', 'Domain composition',
-                clusteredData, false);
-            const phylumColumnChart = new TaxonomyColumnChart('phylum-composition-column',
-                'Phylum composition', phylumData, false,
-                {subtitle: {text: 'Total: ' + phylumData.sum('y') + ' reads'}});
-
-            const phylumColumnTable = new ClientSideTable($('#column').find('.phylum-table'),
-                options);
-            phylumColumnTable.update(data, false, 1);
-            phylumColumnTable.$tbody.find('tr').hover(function() {
-                let index = getSeriesIndex($(this).index(), numSeries);
-                phylumColumnChart.series[0].data[index].setState('hover');
-            }, function() {
-                let index = getSeriesIndex($(this).index(), numSeries);
-                phylumColumnChart.series[0].data[index].setState();
-            });
-
-            phylumColumnTable.$tbody.find('tr').click(function() {
-                let index = getSeriesIndex($(this).index(), numSeries);
-                const series = phylumColumnChart.series[0].data[index];
-                phylumColumnChart.series[0].data[index].visible = false;
-                setTableRowAndChartHiding(this, series, index, numSeries, false);
-            });
-
-            const numSeriesPhylumColumn = phylumColumnChart.series[0].data.length;
-            phylumColumnTable.$tbody.find('tr').hover(function() {
-                let index = getSeriesIndex($(this).index(), numSeriesPhylumColumn);
-                phylumColumnChart.series[0].data[index].setState('hover');
-            }, function() {
-                let index = getSeriesIndex($(this).index(), numSeriesPhylumColumn);
-                phylumColumnChart.series[0].data[index].setState();
-            });
-
-            // Column tab
-            const phylumStackedColumnChart = new TaxonomyStackedColumnChart(
-                'phylum-composition-stacked-column', 'Phylum composition', phylumData, false,
-                {subtitle: {text: 'Total: ' + phylumData.sum('y') + ' reads'}});
-            const phylumStackedColumnTable = new ClientSideTable(
-                $('#stacked-column').find('.phylum-table'), options);
-            phylumStackedColumnTable.update(data, false, 1);
-            phylumStackedColumnTable.$tbody.find('tr').hover(function() {
-                let index = getSeriesIndex($(this).index(), numSeries);
-                phylumStackedColumnChart.series[index].data[0].setState('hover');
-            }, function() {
-                let index = getSeriesIndex($(this).index(), numSeries);
-                phylumStackedColumnChart.series[index].data[0].setState();
-            });
-        });
-    }
-});
-
 /**
  * Generate interpro link
  * @param {string} text to display in link tag
@@ -601,100 +543,6 @@ function createInterProLink(text, id) {
     const url = INTERPRO_URL + 'entry/' + id;
     return '<a href=\'' + url + '\'>' + text + '</a>';
 }
-
-let InterProSummary = Backbone.View.extend({
-    model: api.InterproIden,
-    initialize() {
-        this.model.fetch()
-            .done(function(data) {
-                let top10AndOthers = [];
-
-                data.forEach(function(d) {
-                    d = d.attributes;
-                    top10AndOthers.push({
-                        name: d.description,
-                        y: d.count
-                    });
-                });
-
-                let sumOthers = 0;
-                _.each(data.slice(10), function(d) {
-                    sumOthers += d.attributes.count;
-                });
-                const others = {
-                    name: 'Other',
-                    y: sumOthers
-                };
-                top10AndOthers = top10AndOthers.slice(0, 10);
-                top10AndOthers.push(others);
-
-                let totalCount = top10AndOthers.sum('y');
-
-                const chartOptions = {
-                    plotOptions: {
-                        pie: {
-                            dataLabels: {
-                                enabled: false
-                            }
-                        }
-                    },
-                    subtitle: {
-                        text: 'Total: ' + top10AndOthers.sum('y') + ' InterPro matches'
-                    },
-                    series: [
-                        {
-                            name: 'pCDS matched'
-                        }],
-                    seriesName: 'reads'
-                };
-                const taxonomyPieChart = new TaxonomyPieChart('InterProPie-chart',
-                    'InterPro matches summary', top10AndOthers, false, chartOptions);
-                const tableData = [];
-                let i = 0;
-                data.forEach(function(d) {
-                    d = d.attributes;
-                    const colorDiv = getColourSquareIcon(i);
-                    const interProLink = createInterProLink(d.description, d.accession);
-                    tableData.push([
-                        ++i,
-                        colorDiv + interProLink,
-                        d.accession,
-                        d.count,
-                        (d.count * 100 / totalCount).toFixed(2)]);
-                });
-
-                const headers = [
-                    {sortBy: 'a', name: ''},
-                    {sortBy: 'a', name: 'Entry name'},
-                    {sortBy: 'a', name: 'ID'},
-                    {sortBy: 'a', name: 'pCDS matched'},
-                    {sortBy: 'a', name: '%'}
-                ];
-                const options = {
-                    title: '',
-                    headers: headers,
-                    initPageSize: DEFAULT_PAGE_SIZE
-                };
-                const interproTable = new ClientSideTable($('#InterPro-table'), options);
-                interproTable.update(tableData, false, 1, data.length);
-
-                const numSeries = taxonomyPieChart.series[0].data.length;
-                interproTable.$tbody.find('tr').hover(function() {
-                    let index = getSeriesIndex($(this).index(), numSeries);
-                    taxonomyPieChart.series[0].data[index].setState('hover');
-                }, function() {
-                    let index = getSeriesIndex($(this).index(), numSeries);
-                    taxonomyPieChart.series[0].data[index].setState();
-                });
-
-                interproTable.$tbody.find('tr').click(function() {
-                    let index = getSeriesIndex($(this).index(), numSeries);
-                    const series = taxonomyPieChart.series[0].data[index];
-                    setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
-                });
-            });
-    }
-});
 
 /**
  * Disable tab by id
@@ -711,122 +559,6 @@ function removeTab(id) {
 function enableTab(id) {
     $('[href=\'#' + id + '\']').parent('li').removeClass('disabled');
 }
-
-/**
- *  Compact groups other than top 10 largest into an 'other' category
- * @param {[*]} data
- * @return {*} data grouped into top 10 categories, and all following summed into 'Other'
- */
-function groupGoTermData(data) {
-    data = _.sortBy(data, function(o) {
-        return o.attributes.count;
-    }).reverse();
-    let top10 = data.slice(0, 10).map(function(d) {
-        d = d.attributes;
-        return {
-            name: d.description,
-            y: d.count
-        };
-    });
-
-    if (data.length > 10) {
-        const others = {
-            name: 'Other',
-            y: 0
-        };
-        _.each(data.slice(10), function(d) {
-            others.y += d.attributes.count;
-        });
-        top10.push(others);
-        data = top10;
-    }
-    return data;
-}
-
-let GoTermCharts = Backbone.View.extend({
-    model: api.GoSlim,
-    initialize() {
-        this.model.fetch({
-            success(model) {
-                const data = model.attributes.data;
-                let bioProcessData = [];
-                let molecularFuncData = [];
-                let cellularComponentData = [];
-                let totalAnnotations = 0;
-                let totalMolecularFunctions = 0;
-                let totalCellComponent = 0;
-                data.forEach(function(d) {
-                    switch (d.attributes.lineage) {
-                        case 'biological_process':
-                            bioProcessData.push(d);
-                            totalAnnotations += d.attributes.count;
-                            break;
-                        case 'molecular_function':
-                            molecularFuncData.push(d);
-                            totalMolecularFunctions += d.attributes.count;
-                            break;
-                        case 'cellular_component':
-                            cellularComponentData.push(d);
-                            totalCellComponent += d.attributes.count;
-                            break;
-                        default:
-                            console.warn('Unknown lineage: ' + d.attributes.lineage);
-                    }
-                });
-                new GoTermChart('biological-process-bar-chart', 'Biological process',
-                    bioProcessData, Commons.TAXONOMY_COLOURS[0], {
-                        subtitle: {
-                            text: 'Total ' + totalAnnotations +
-                            ' annotations - Drag to zoom in/out'
-                        }
-                    });
-                new GoTermChart('molecular-function-bar-chart', 'Molecular function',
-                    molecularFuncData, Commons.TAXONOMY_COLOURS[1], {
-                        subtitle: {
-                            text: 'Total ' + totalMolecularFunctions +
-                            ' annotations - Drag to zoom in/out'
-                        }
-                    });
-                new GoTermChart('cellular-component-bar-chart', 'Cellular component',
-                    cellularComponentData, Commons.TAXONOMY_COLOURS[2], {
-                        subtitle: {
-                            text: 'Total ' + totalCellComponent +
-                            ' annotations - Drag to zoom in/out'
-                        }
-                    });
-
-                new TaxonomyPieChart('biological-process-pie-chart', 'Biological process',
-                    groupGoTermData(bioProcessData), true, {
-                        plotOptions: {pie: {dataLabels: {enabled: false}}},
-                        subtitle: {text: 'Total: ' + totalAnnotations + ' annotations'},
-                        seriesName: 'annotations'
-                    });
-                new TaxonomyPieChart('molecular-function-pie-chart', 'Molecular function',
-                    groupGoTermData(molecularFuncData), true, {
-                        plotOptions: {pie: {dataLabels: {enabled: false}}},
-                        subtitle: {text: 'Total: ' + totalMolecularFunctions + ' annotations'},
-                        seriesName: 'annotations'
-                    });
-                new TaxonomyPieChart('cellular-component-pie-chart', 'Cellular component',
-                    groupGoTermData(cellularComponentData), true,
-                    {
-                        plotOptions: {pie: {dataLabels: {enabled: false}}},
-                        subtitle: {text: 'Total: ' + totalCellComponent + ' annotations'},
-                        seriesName: 'annotations'
-                    });
-
-                $('#go-bar-btn').click(function() {
-                    $('#go-slim-pie-charts').hide();
-                    $('#go-slim-bar-charts').show();
-                });
-                $('#go-pie-btn').click(function() {
-                    $('#go-slim-pie-charts').show();
-                    $('#go-slim-bar-charts').hide();
-                });
-            }
-        });
-    }
-});
 
 /**
  * Display abundance tab if data exists to populate it

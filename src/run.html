@@ -23,17 +23,17 @@
         <nav aria-label="You are here:" role="navigation">
             <ul class="breadcrumbs columns">
                 <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
-                <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/studies/<%= study_id %>">Study <%= study_id %></a></li>
-                <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/samples/<%= sample_id %>">Sample <%= sample_id %></a></li>
+                <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/studies/<%= study_accession %>">Study <%= study_accession %></a></li>
+                <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/samples/<%= sample_accession %>">Sample <%= sample_accession %></a></li>
                 <li>
-                    <span class="show-for-sr">Current: </span> <%= (experiment_type==='assembly' ? 'Assembly' : 'Run') %> <%= run_id %>
+                    <span class="show-for-sr">Current: </span> <%= (experiment_type==='assembly' ? 'Assembly' : 'Run') %> <%= run_accession %>
                 </li>
             </ul>
         </nav>
         <% if (experiment_type==='assembly'){ %>
-        <h2>Assembly <%= run_id %></h2>
+        <h2>Assembly <%= run_accession %></h2>
         <% } else { %>
-        <h2>Run <%= run_id %></h2>
+        <h2>Run <%= run_accession %></h2>
         <% } %>
         <section id="overview">
 

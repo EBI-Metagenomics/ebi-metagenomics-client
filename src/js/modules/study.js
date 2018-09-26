@@ -1,6 +1,6 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
 const Map = require('../components/map');
 const util = require('../util');
 
@@ -84,7 +84,7 @@ function initPage() {
 
     let analyses = new api.StudyAnalyses({id: studyId});
     let downloads = new api.StudyDownloads({id: studyId});
-    let coordinates = new api.StudyGeoCoordinates({study_accession: studyId});
+    let coordinates = new api.StudyGeoCoordinates({id: studyId});
 
     studyView.fetchAndRender().done(() => {
         new util.AnalysesView({collection: analyses});
