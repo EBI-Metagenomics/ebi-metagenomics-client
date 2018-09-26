@@ -256,10 +256,10 @@ function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, expe
                 displayTaxonomyGraphError();
             }
         }
-        if (['amplicon', 'metabarcoding'].indexOf(experimentType) > -1 && pipelineVersion >= 4.0) {
-            disableSubUnitRadio(subunitType);
-        }
     });
+    if (['amplicon', 'metabarcoding'].indexOf(experimentType) > -1 && pipelineVersion >= 4.0) {
+        disableSubUnitRadio(subunitType);
+    }
 }
 
 /**
