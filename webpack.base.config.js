@@ -45,6 +45,8 @@ module.exports = {
             'src/js/modules/sample.js',
         run:
             'src/js/modules/run.js',
+        assembly:
+            'src/js/modules/assembly.js',
         analysis:
             'src/js/modules/analysis.js',
         compare:
@@ -53,7 +55,8 @@ module.exports = {
             'src/js/modules/about.js',
         help:
             'src/js/modules/help.js',
-        biomes: 'src/js/modules/biomes.js',
+        biomes:
+            'src/js/modules/biomes.js',
         pipelines:
             'src/js/modules/pipelines.js',
         pipeline:
@@ -179,6 +182,15 @@ module.exports = {
             filename: 'run.html',
             template: 'handlebars-loader!./src/run.html',
             chunks: ['run', 'commons'],
+            minify: minifyOptions,
+            templateData: templateFixtures
+        }),
+        new HtmlWebpackPlugin({
+            title: 'Assembly page',
+            inject: true,
+            filename: 'assembly.html',
+            template: 'handlebars-loader!./src/assembly.html',
+            chunks: ['assembly', 'commons'],
             minify: minifyOptions,
             templateData: templateFixtures
         }),

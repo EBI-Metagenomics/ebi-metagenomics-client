@@ -92,6 +92,7 @@ function initPage() {
     let studies = new api.SampleStudiesCollection({sample_accession: sampleId});
 
     let runs = new api.RunsCollection({sample_accession: sampleId});
+    let assemblies = new api.AssembliesCollection({sample_accession: sampleId});
 
     $.when(
         sampleView.fetchAndRender()
@@ -104,6 +105,7 @@ function initPage() {
             sectionTitle: 'Associated studies'
         });
         new util.RunsView({collection: runs});
+        new util.AssembliesView({collection: assemblies});
         util.attachExpandButtonCallback();
     });
 }

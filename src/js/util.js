@@ -422,7 +422,7 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline versions'}
         ];
         let tableOptions = {
-            title: 'Associated runs & assemblies',
+            title: 'Associated runs',
             headers: columns,
             initialOrdering: 'accession',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
@@ -439,9 +439,6 @@ export let RunsView = GenericTableView.extend({
     },
 
     getRowData(attr) {
-        if (attr['experiment_type'] === 'assembly') {
-            attr['analysis_url'] = attr['analysis_url'].replace('runs', 'assemblies');
-        }
         const runLink = '<a href=\'' + attr.analysis_url + '\'>' + attr.run_accession + '</a>';
         return [
             runLink,
@@ -449,6 +446,48 @@ export let RunsView = GenericTableView.extend({
             attr['instrument_model'],
             attr['instrument_platform'],
             attr['pipeline_versions'].join(', ')];
+    }
+});
+
+export let AssembliesView = GenericTableView.extend({
+    tableObj: null,
+    pagination: null,
+
+    initialize() {
+        const that = this;
+        const columns = [
+            {sortBy: 'accession', name: 'Assembly ID'},
+            {sortBy: null, name: 'Experiment type'},
+            {sortBy: null, name: 'WGS ID'},
+            {sortBy: null, name: 'Legacy ID'},
+            {sortBy: null, name: 'Pipeline versions'}
+        ];
+        let tableOptions = {
+            title: 'Associated assemblies',
+            headers: columns,
+            initialOrdering: 'accession',
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: false,
+            textFilter: true,
+            tableClass: 'assemblies-table',
+            callback: function(page, pageSize, order, search) {
+                that.update({page: page, page_size: pageSize, ordering: order, search: search});
+            }
+        };
+        this.tableObj = new GenericTable($('#assemblies-section'), tableOptions);
+        this.update(
+            {page: 1, page_size: Commons.DEFAULT_PAGE_SIZE, ordering: 'accession', search: null});
+    },
+
+    getRowData(attr) {
+        const assemblyLink = '<a href=\'' + attr.analysis_url + '\'>' + attr.assembly_id + '</a>';
+        return [
+            assemblyLink,
+            attr['experiment_type'],
+            attr['wgs_id'],
+            attr['legacy_id'],
+            attr['pipeline_versions'].join(', ')
+        ];
     }
 });
 
