@@ -187,7 +187,7 @@ $searchForm.on('reset', function() {
  * @return {string}
  */
 function getQueryText() {
-    return $searchForm.find('#local-searchbox').val();
+    return $searchForm.find('#navbar-query').val();
 }
 
 /**
