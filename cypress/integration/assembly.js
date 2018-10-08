@@ -98,7 +98,6 @@ describe('Assembly page', function() {
     });
     context('Breadcrumbs', function() {
         it('Should display sample id in breadcrumbs with single sample', function() {
-            cy.log('AAA');
             openPage(origPage);
             cy.get('.breadcrumbs').contains('SRS1743794');
         });
