@@ -109,4 +109,18 @@ describe('Assembly page', function() {
                 cy.contains('Multiple samples');
             });
     });
+    context('External links', function() {
+        it('Should generate link to ena if page exists', function() {
+            openPage(origPage);
+            cy.get('a[href=\'https://www.ebi.ac.uk/ena/data/view/GCA_900217105\']')
+                .should('be.visible');
+        });
+        it('Should generate non-link text if page does not exist', function() {
+            cy.server();
+            cy.route('GET', '**/assemblies/' + accession, 'fixture:assemblyNoEnaLink');
+            openPage(origPage);
+            cy.get('a[href=\'https://www.ebi.ac.uk/ena/data/view/GCA_900217105\']')
+                .should('not.exist');
+        });
+    });
 });

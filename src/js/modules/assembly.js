@@ -27,8 +27,9 @@ let AssemblyView = Backbone.View.extend({
             data: {},
             success(data) {
                 const attr = data.attributes;
-                that.render(attr);
-                deferred.resolve();
+                that.render(attr).then(() => {
+                    deferred.resolve();
+                });
             },
             error(ignored, response) {
                 util.displayError(response.status, 'Could not retrieve ' +
@@ -47,13 +48,29 @@ let AssemblyView = Backbone.View.extend({
             return '<a href=\'' + r.url + '\'>' + r.id + '</a>';
         }).join(', ');
 
-        let description = {
-            'Sample': samples,
-            'Runs': runs,
-            'ENA accession': attr.assembly_id
-        };
-        $('#overview').append(new DetailList('Description', description));
-        return this.$el;
+        let enaURL = 'https://www.ebi.ac.uk/ena/portal/api/search?' +
+            'result=assembly&' +
+            'format=json&' +
+            'query=accession%3D' + attr.legacy_id;
+        let enaAccess = attr.assembly_id;
+
+        return $.ajax({
+            format: 'json',
+            url: enaURL
+        }).done((data) => {
+            if (data.length !== 0) {
+                enaAccess = '<a href=\'https://www.ebi.ac.uk/ena/data/view/' + attr.legacy_id +
+                    '\'>' + attr.assembly_id + '</a>';
+            }
+        }).then(() => {
+            let description = {
+                'Sample': samples,
+                'Runs': runs,
+                // TODO url must be checked using gca
+                'ENA accession': enaAccess
+            };
+            $('#overview').append(new DetailList('Description', description));
+        });
     }
 });
 
