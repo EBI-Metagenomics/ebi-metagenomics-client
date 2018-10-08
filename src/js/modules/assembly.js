@@ -50,8 +50,7 @@ let AssemblyView = Backbone.View.extend({
         let description = {
             'Sample': samples,
             'Runs': runs,
-            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.assembly_id +
-            '</a>'
+            'ENA accession': attr.assembly_id
         };
         $('#overview').append(new DetailList('Description', description));
         return this.$el;
@@ -119,6 +118,9 @@ let assembly = new api.Assembly({id: accession});
 let assemblyView = new AssemblyView({model: assembly});
 
 let assemblyAnalyses = new api.AssemblyAnalyses({id: accession});
-assemblyView.init().then(() => {
-    new AssemblyAnalysesView({collection: assemblyAnalyses});
+assemblyView.init()
+    .then(() => {
+        return new AssemblyAnalysesView({collection: assemblyAnalyses});
+    }).then(() => {
+    util.attachExpandButtonCallback();
 });

@@ -1,7 +1,7 @@
 import {openPage, isValidLink, datatype, waitForPageLoad} from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
-const accession = 'GCA_900217105';
+const accession = 'ERZ477708';
 const origPage = 'assemblies/' + accession;
 const descriptionSection = '#overview div.row.box';
 const assemblySection = '#assemblies div:not(\'row\')';
@@ -48,33 +48,28 @@ describe('Assembly page', function() {
             cy.contains('Description').should('be.visible');
             cy.get(descriptionSection).then(($el) => {
                 const text = $el.text();
-                expect(text).to.contain('Study:\n            MGYS00002062');
                 expect(text).to.contain('Sample:\n            SRS1743794');
                 expect(text).to.contain('ENA accession:\n            ' + accession);
             });
         });
-        it('Table of assemblies should load correctly', function() {
-            assembliesTable = new GenericTableHandler('#assemblies', 1);
+        it('Table of analyses should load correctly', function() {
+            assembliesTable = new GenericTableHandler('#analyses', 1);
             const rowData = Cypress._.map(assemblyTableColumns, function(a) {
                 return a['data'][0];
             });
             cy.log(rowData);
             assembliesTable.checkRowData(0, rowData);
         });
-        it('Analyses table should be hidden', function() {
-            cy.get('#analyses').should('be.hidden');
-        });
     });
     context('Click actions', function() {
         before(function() {
             cy.server();
             cy.route('GET',
-                '**/GCA_900217105/analyses**')
+                '**/' + accession + '/analyses**')
                 .as('analyses');
             openPage(origPage);
             cy.wait('@analyses');
-            cy.wait('@analyses');
-            waitForPageLoad('Assembly GCA_900217105');
+            waitForPageLoad('Assembly ' + accession);
         });
         it('Description section should be hideable', function() {
             cy.get(descriptionSection).should('be.visible');
@@ -83,26 +78,15 @@ describe('Assembly page', function() {
             cy.contains('Description').click();
             cy.get(descriptionSection).should('be.visible');
         });
-        it('Assemblies section should be hideable', function() {
-            cy.get(assemblySection).should('be.visible');
-            cy.contains('Assemblies').click();
-            cy.get(assemblySection).should('be.hidden', {timeout: 400000});
-            cy.contains('Assemblies').click();
-            cy.get(assemblySection).should('be.visible');
-        });
         it('Description links should be valid', function() {
             cy.get(descriptionSection + ' a').each(($el) => {
                 isValidLink($el);
             });
         });
-        it('Assemblies table links should be valid', function() {
-            cy.get('table.assemblies-table a').each(($el) => {
+        it('Analyses table links should be valid', function() {
+            cy.get('table.analyses-table a').each(($el) => {
                 isValidLink($el);
             });
-        });
-        it('Table ordering should function', function() {
-            assembliesTable = new GenericTableHandler('#assemblies', 1);
-            assembliesTable.testSorting(1, assemblyTableColumns);
         });
     });
     context('Error handling', function() {
@@ -111,5 +95,19 @@ describe('Assembly page', function() {
             openPage('assemblies/' + runId);
             cy.contains('Could not retrieve assembly: ' + runId);
         });
+    });
+    context('Breadcrumbs', function() {
+        it('Should display sample id in breadcrumbs with single sample', function() {
+            cy.log('AAA');
+            openPage(origPage);
+            cy.get('.breadcrumbs').contains('SRS1743794');
+        });
+        it('Should display non-hyperlink sample breadcrumbs if assembly contains > 1 sample',
+            function() {
+                cy.server();
+                cy.route('GET', '**/assemblies/' + accession, 'fixture:assemblyMultipleSamples');
+                openPage(origPage);
+                cy.contains('Multiple samples');
+            });
     });
 });

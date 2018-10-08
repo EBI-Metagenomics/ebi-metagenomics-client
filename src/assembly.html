@@ -23,7 +23,11 @@
         <nav aria-label="You are here:" role="navigation">
             <ul class="breadcrumbs columns">
                 <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
-                <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/samples/<%= samples[0] %>">Sample <%= samples[0] %></a></li>
+                <% if (samples.length === 1) { %>
+                <li><a href="<%= samples[0].url %>">Sample <%= samples[0].id %></a></li>
+                <% } else { %>
+                <li>Multiple samples</li>
+                <% } %>
                 <li>
                     <span class="show-for-sr">Current: </span>Assembly <%= assembly_id %>
                 </li>
@@ -37,9 +41,6 @@
             <h4>Analysis pipeline version
             </h4>
         </section>
-        <section id="assemblies">
-        </section>
-
     </div>
 </script>
 
