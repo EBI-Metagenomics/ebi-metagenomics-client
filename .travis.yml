@@ -28,7 +28,7 @@ before_install:
   - python3 -V
   - pip3 -V
   - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@52fe822#egg=emgcli"
 
   # EMG API CONFIG MODIFICATION
   # Add slack notification to config
