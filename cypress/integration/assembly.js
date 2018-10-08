@@ -4,11 +4,10 @@ import GenericTableHandler from '../util/genericTable';
 const accession = 'ERZ477708';
 const origPage = 'assemblies/' + accession;
 const descriptionSection = '#overview div.row.box';
-const assemblySection = '#assemblies div:not(\'row\')';
 
 const assemblyTableColumns = {
     analysisAccession: {
-        data: ['MGYA00140023'],
+        data: ['MGYA00084036'],
         type: datatype.STR,
         sortable: false
     },
@@ -18,17 +17,17 @@ const assemblyTableColumns = {
         sortable: false
     },
     instrument_model: {
-        data: ['Illumina MiSeq'],
+        data: [''],
         type: datatype.NUM,
         sortable: false
     },
     instrument_platform: {
-        data: ['ILLUMINA'],
+        data: [''],
         type: datatype.STR,
         sortable: false
     },
     pipeline: {
-        data: ['4.0'],
+        data: ['3.0'],
         type: datatype.NUM,
         sortable: true
     }
