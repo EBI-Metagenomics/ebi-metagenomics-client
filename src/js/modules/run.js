@@ -148,8 +148,7 @@ let RunAssemblyView = util.GenericTableView.extend({
             }
         };
         this.tableObj = new GenericTable($assembliesSection, tableOptions);
-        const up = this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
-        up.always((data) => {
+        this.update({page_size: Commons.DEFAULT_PAGE_SIZE}).always((data) => {
             if (data.models.length === 0) {
                 $assembliesSection.hide();
             }

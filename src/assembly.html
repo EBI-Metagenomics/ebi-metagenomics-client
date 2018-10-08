@@ -23,8 +23,7 @@
         <nav aria-label="You are here:" role="navigation">
             <ul class="breadcrumbs columns">
                 <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
-                <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/studies/<%= study_id %>">Study <%= study_id %></a></li>
-                <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/samples/<%= sample_id %>">Sample <%= sample_id %></a></li>
+                <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/samples/<%= samples[0] %>">Sample <%= samples[0] %></a></li>
                 <li>
                     <span class="show-for-sr">Current: </span>Assembly <%= assembly_id %>
                 </li>

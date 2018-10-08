@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const Commons = require('../commons');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
 const util = require('../util');
 const DetailList = require('../components/detailList');
 const GenericTable = require('../components/genericTable');
@@ -13,7 +13,6 @@ util.setupPage('#browse-nav');
 window.Foundation.addToJquery($);
 
 let accession = util.getURLParameter();
-let isRun = ['ERZ', 'GCA'].indexOf(accession.slice(0, 3)) > -1;
 let objType = 'Assembly';
 util.specifyPageTitle(objType, accession);
 
@@ -32,8 +31,8 @@ let AssemblyView = Backbone.View.extend({
                 deferred.resolve();
             },
             error(ignored, response) {
-                util.displayError(response.status, 'Could not retrieve ' + 
-                'assembly: ' + accession);
+                util.displayError(response.status, 'Could not retrieve ' +
+                    'assembly: ' + accession);
                 deferred.reject();
             }
         });
@@ -41,9 +40,16 @@ let AssemblyView = Backbone.View.extend({
     },
     render(attr) {
         this.$el.html(this.template(this.model.toJSON()));
+        let samples = attr.samples.map((s) => {
+            return '<a href=\'' + s.url + '\'>' + s.id + '</a>';
+        }).join(', ');
+        let runs = attr.runs.map((r) => {
+            return '<a href=\'' + r.url + '\'>' + r.id + '</a>';
+        }).join(', ');
+
         let description = {
-            'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_id + '</a>',
-            'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_id + '</a>',
+            'Sample': samples,
+            'Runs': runs,
             'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.assembly_id +
             '</a>'
         };
@@ -55,8 +61,8 @@ let AssemblyView = Backbone.View.extend({
 const columns = [
     {sortBy: null, name: 'Analysis accession'},
     {sortBy: null, name: 'Experiment type'},
-    {sortBy: null, name: 'WGS ID'},
-    {sortBy: null, name: 'Legacy ID'},
+    {sortBy: null, name: 'Instrument model'},
+    {sortBy: null, name: 'Instrument platform'},
     {sortBy: 'pipeline', name: 'Pipeline version'}
 ];
 
@@ -75,8 +81,8 @@ let AssemblyAnalysesView = util.GenericTableView.extend({
         return [
             accessionLink,
             attr['experiment_type'],
-            attr['wgs_accession'],
-            attr['legacy_accession'],
+            attr['instrument_model'],
+            attr['instrument_platform'],
             pipelineLink];
     },
 
@@ -101,25 +107,18 @@ let AssemblyAnalysesView = util.GenericTableView.extend({
             }
         };
         this.tableObj = new GenericTable($analysesSection, tableOptions);
-        const up = this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
-        up.always((data) => {
+        this.update({page_size: Commons.DEFAULT_PAGE_SIZE}).always((data) => {
             if (data.models.length === 0) {
                 $analysesSection.hide();
             }
         });
     }
-
 });
-
 
 let assembly = new api.Assembly({id: accession});
 let assemblyView = new AssemblyView({model: assembly});
 
-let assemblyAnalyses = new api.AssemblyAnalysesView({id: accession});
-
-$.when(
-    assemblyView.fetchAndRender()
-).done(function() {
-    new util.AssemblyAnalysesView({collection: assemblyAnalyses});
-    util.attachExpandButtonCallback();
+let assemblyAnalyses = new api.AssemblyAnalyses({id: accession});
+assemblyView.init().then(() => {
+    new AssemblyAnalysesView({collection: assemblyAnalyses});
 });
