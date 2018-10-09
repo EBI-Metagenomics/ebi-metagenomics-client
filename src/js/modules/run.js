@@ -136,6 +136,11 @@ let RunAnalysesView = util.GenericTableView.extend({
 
 });
 
+const assembliesColumns = [
+    {sortBy: null, name: 'Analysis accession'},
+    {sortBy: 'pipeline', name: 'Pipeline version'}
+];
+
 let RunAssemblyView = util.GenericTableView.extend({
     tableObj: null,
     pagination: null,
@@ -143,21 +148,18 @@ let RunAssemblyView = util.GenericTableView.extend({
 
     getRowData(attr) {
         const accessionLink = '<a href=\'' + attr.analysis_url + '\'>' +
-            attr.analysis_accession +
+            attr.assembly_id +
             '</a>';
         return [
             accessionLink,
-            attr['experiment_type'],
-            attr['instrument_model'],
-            attr['instrument_platform'],
-            attr['pipeline_version']];
+            attr['pipeline_versions'].join(', ')];
     },
     initialize() {
         const that = this;
         const $assembliesSection = $('#assemblies');
         let tableOptions = {
             title: 'Assemblies',
-            headers: columns,
+            headers: assembliesColumns,
             initialOrdering: '-pipeline',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: false,
@@ -173,8 +175,7 @@ let RunAssemblyView = util.GenericTableView.extend({
             }
         };
         this.tableObj = new GenericTable($assembliesSection, tableOptions);
-        const up = this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
-        up.always((data) => {
+        this.update({page_size: Commons.DEFAULT_PAGE_SIZE}).always((data) => {
             if (data.models.length === 0) {
                 $assembliesSection.hide();
             }

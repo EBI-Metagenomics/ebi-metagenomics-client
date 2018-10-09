@@ -34,6 +34,21 @@ const analysesTableColumns = {
     }
 };
 
+const assemliesTableColumns = {
+    // Duplicate values as single row of data is checked as first and last row
+    assemblyAccession: {
+        data: ['ERZ477708', 'ERZ477708'],
+        type: datatype.STR,
+        sortable: false
+    },
+
+    pipeline: {
+        data: ['3.0', '3.0'],
+        type: datatype.NUM,
+        sortable: true
+    }
+};
+
 let analysesTable;
 
 describe('Run page', function() {
@@ -61,6 +76,18 @@ describe('Run page', function() {
             cy.get('#assemblies').should('be.hidden');
         });
     });
+    context('Assemblies table', function() {
+        before(function() {
+            openPage('runs/ERR1022515');
+        });
+        it('Should be visible', function() {
+            cy.get('.assemblies-table').should('be.visible');
+        });
+        it('Should have loaded correctly', function() {
+            const studiesTable = new GenericTableHandler('#assemblies', 1);
+            studiesTable.checkLoadedCorrectly(1, 1, 1, assemliesTableColumns);
+        });
+    });
     context('Click actions', function() {
         before(function() {
             cy.server();
@@ -68,7 +95,6 @@ describe('Run page', function() {
                 '**/ERR770966/analyses**')
                 .as('analyses');
             openPage(origPage);
-            cy.wait('@analyses');
             cy.wait('@analyses');
         });
         it('Description section should be hideable', function() {

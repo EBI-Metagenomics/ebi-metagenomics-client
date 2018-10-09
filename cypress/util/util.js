@@ -61,7 +61,7 @@ export let Util = {
         Util.fillLoginModalForm();
         Util.waitForPageLoad('My studies');
         Util.checkIsLoggedIn();
-        cy.get(Util.myDataBtn).should('be.visible').contains('Welcome, ' + Util.username);
+        cy.get(Util.myDataBtn).should('be.visible');
     },
     setupDefaultSearchPageRouting: function() {
         cy.server();

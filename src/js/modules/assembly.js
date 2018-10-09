@@ -13,7 +13,6 @@ util.setupPage('#browse-nav');
 window.Foundation.addToJquery($);
 
 let accession = util.getURLParameter();
-let isRun = ['ERZ', 'GCA'].indexOf(accession.slice(0, 3)) > -1;
 let objType = 'Assembly';
 util.specifyPageTitle(objType, accession);
 
@@ -28,12 +27,13 @@ let AssemblyView = Backbone.View.extend({
             data: {},
             success(data) {
                 const attr = data.attributes;
-                that.render(attr);
-                deferred.resolve();
+                that.render(attr).then(() => {
+                    deferred.resolve();
+                });
             },
             error(ignored, response) {
-                util.displayError(response.status, 'Could not retrieve ' + 
-                'assembly: ' + accession);
+                util.displayError(response.status, 'Could not retrieve ' +
+                    'assembly: ' + accession);
                 deferred.reject();
             }
         });
@@ -41,22 +41,44 @@ let AssemblyView = Backbone.View.extend({
     },
     render(attr) {
         this.$el.html(this.template(this.model.toJSON()));
-        let description = {
-            'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_id + '</a>',
-            'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_id + '</a>',
-            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.assembly_id +
-            '</a>'
-        };
-        $('#overview').append(new DetailList('Description', description));
-        return this.$el;
+        let samples = attr.samples.map((s) => {
+            return '<a href=\'' + s.url + '\'>' + s.id + '</a>';
+        }).join(', ');
+        let runs = attr.runs.map((r) => {
+            return '<a href=\'' + r.url + '\'>' + r.id + '</a>';
+        }).join(', ');
+
+        let enaURL = 'https://www.ebi.ac.uk/ena/portal/api/search?' +
+            'result=assembly&' +
+            'format=json&' +
+            'query=accession%3D' + attr.legacy_id;
+        let enaAccess = attr.assembly_id;
+
+        return $.ajax({
+            format: 'json',
+            url: enaURL
+        }).done((data) => {
+            if (data.length !== 0) {
+                enaAccess = '<a href=\'https://www.ebi.ac.uk/ena/data/view/' + attr.legacy_id +
+                    '\'>' + attr.assembly_id + '</a>';
+            }
+        }).then(() => {
+            let description = {
+                'Sample': samples,
+                'Runs': runs,
+                // TODO url must be checked using gca
+                'ENA accession': enaAccess
+            };
+            $('#overview').append(new DetailList('Description', description));
+        });
     }
 });
 
 const columns = [
     {sortBy: null, name: 'Analysis accession'},
     {sortBy: null, name: 'Experiment type'},
-    {sortBy: null, name: 'WGS ID'},
-    {sortBy: null, name: 'Legacy ID'},
+    {sortBy: null, name: 'Instrument model'},
+    {sortBy: null, name: 'Instrument platform'},
     {sortBy: 'pipeline', name: 'Pipeline version'}
 ];
 
@@ -75,8 +97,8 @@ let AssemblyAnalysesView = util.GenericTableView.extend({
         return [
             accessionLink,
             attr['experiment_type'],
-            attr['wgs_accession'],
-            attr['legacy_accession'],
+            attr['instrument_model'],
+            attr['instrument_platform'],
             pipelineLink];
     },
 
@@ -101,25 +123,21 @@ let AssemblyAnalysesView = util.GenericTableView.extend({
             }
         };
         this.tableObj = new GenericTable($analysesSection, tableOptions);
-        const up = this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
-        up.always((data) => {
+        this.update({page_size: Commons.DEFAULT_PAGE_SIZE}).always((data) => {
             if (data.models.length === 0) {
                 $analysesSection.hide();
             }
         });
     }
-
 });
-
 
 let assembly = new api.Assembly({id: accession});
 let assemblyView = new AssemblyView({model: assembly});
 
-let assemblyAnalyses = new api.AssemblyAnalysesView({id: accession});
-
-$.when(
-    assemblyView.fetchAndRender()
-).done(function() {
-    new util.AssemblyAnalysesView({collection: assemblyAnalyses});
+let assemblyAnalyses = new api.AssemblyAnalyses({id: accession});
+assemblyView.init()
+    .then(() => {
+        return new AssemblyAnalysesView({collection: assemblyAnalyses});
+    }).then(() => {
     util.attachExpandButtonCallback();
 });
