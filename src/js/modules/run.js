@@ -13,7 +13,6 @@ util.setupPage('#browse-nav');
 window.Foundation.addToJquery($);
 
 let accession = util.getURLParameter();
-let isRun = ['SRR', 'ERR', 'DRR'].indexOf(accession.slice(0, 3)) > -1;
 let objType = 'Run';
 
 util.specifyPageTitle(objType, accession);
@@ -33,7 +32,32 @@ let RunView = Backbone.View.extend({
                 deferred.resolve();
             },
             error(ignored, response) {
-              util.displayError(response.status, 'Could not retrieve run' + ': ' + accession);
+                if (document.referrer.indexOf('sequence-search') > -1) {
+                    util.displayError(response.status, 'Could not retrieve run' + ': ' + accession);
+                } else {
+                    let enaURL = 'https://www.ebi.ac.uk/ena/portal/api/search?' +
+                        'result=read_run&' +
+                        'format=json&' +
+                        'query=run_accession%3D' + accession;
+
+                    let text = 'Could not retrieve run' + ': ' + accession;
+
+                    return $.ajax({
+                        format: 'json',
+                        url: enaURL
+                    }).done((data) => {
+                        if (data.length !== 0) {
+                            text = '<h4>Could not retrieve ' + accession +
+                                ' from MGnify as analysis or upload of this run is ongoing. ' +
+                                'In the meantime, information relating to the run and its ' +
+                                'associated metadata can be found in ENA: ' +
+                                '<a href=\'https://www.ebi.ac.uk/ena/data/view/' + accession +
+                                '\'>' + accession + '</a></h4>';
+                        }
+                    }).then(() => {
+                        $('#main-content-area').html(text);
+                    });
+                }
                 deferred.reject();
             }
         });
@@ -44,7 +68,8 @@ let RunView = Backbone.View.extend({
         let description = {
             'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_accession + '</a>',
             'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession + '</a>',
-            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.run_accession +
+            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' +
+            attr.run_accession +
             '</a>'
         };
         $('#overview').append(new DetailList('Description', description));
