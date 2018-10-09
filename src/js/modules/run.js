@@ -33,7 +33,7 @@ let RunView = Backbone.View.extend({
                 deferred.resolve();
             },
             error(ignored, response) {
-              util.displayError(response.status, 'Could not retrieve run' + ': ' + accession);
+                util.displayError(response.status, 'Could not retrieve run' + ': ' + accession);
                 deferred.reject();
             }
         });
@@ -44,7 +44,8 @@ let RunView = Backbone.View.extend({
         let description = {
             'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_accession + '</a>',
             'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession + '</a>',
-            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.run_accession +
+            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' +
+            attr.run_accession +
             '</a>'
         };
         $('#overview').append(new DetailList('Description', description));
@@ -111,6 +112,11 @@ let RunAnalysesView = util.GenericTableView.extend({
 
 });
 
+const assembliesColumns = [
+    {sortBy: null, name: 'Analysis accession'},
+    {sortBy: 'pipeline', name: 'Pipeline version'}
+];
+
 let RunAssemblyView = util.GenericTableView.extend({
     tableObj: null,
     pagination: null,
@@ -118,21 +124,18 @@ let RunAssemblyView = util.GenericTableView.extend({
 
     getRowData(attr) {
         const accessionLink = '<a href=\'' + attr.analysis_url + '\'>' +
-            attr.analysis_accession +
+            attr.assembly_id +
             '</a>';
         return [
             accessionLink,
-            attr['experiment_type'],
-            attr['instrument_model'],
-            attr['instrument_platform'],
-            attr['pipeline_version']];
+            attr['pipeline_versions'].join(', ')];
     },
     initialize() {
         const that = this;
         const $assembliesSection = $('#assemblies');
         let tableOptions = {
             title: 'Assemblies',
-            headers: columns,
+            headers: assembliesColumns,
             initialOrdering: '-pipeline',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: false,
