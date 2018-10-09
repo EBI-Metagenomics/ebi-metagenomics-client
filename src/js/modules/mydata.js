@@ -6,7 +6,11 @@ util.setupPage('#overview');
 
 const StudiesViewWithEna = util.StudiesView.extend({
     getRowData(attr) {
-        const studyLink = '<a href=\'' + attr.study_url + '\'>' + attr.study_accession + '</a>';
+        let studyLink = '<a href=\'' + attr.study_url + '\'>' + attr.study_accession + '</a>';
+        if (!attr['is_public']) {
+            studyLink = '<span class="icon icon-functional icon-spacer" data-icon="L"></span>' +
+                studyLink;
+        }
         const enaLink = '<a class=\'ext\' href=\'' + attr.ena_url + '\'>(' +
             attr.study_secondary_accession + ')</a>';
         const biomes = _.map(attr.biomes, function(b) {

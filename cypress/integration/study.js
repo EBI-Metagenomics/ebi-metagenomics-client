@@ -81,8 +81,6 @@ describe('Study page', function() {
     context('Related studies', function() {
         const relatedStudiesList = '[data-cy=\'relatedStudies\']';
         it('Should display related study section', function() {
-            openPage('');
-            login();
             openPage('studies/MGYS00002011');
             waitForPageLoad('EMG produced TPA metagenomics assembly of the Microbial ' +
                 'Community of Mobilong Acid Sulfate Soil depth profile using Metagenomics ' +
@@ -94,8 +92,7 @@ describe('Study page', function() {
                 'depth profile using Metagenomics');
         });
         it('Should not display related study section if no related studies available', function() {
-            openPage(origPage);
-            login();
+            openPage('studies/MGYS00001962');
             cy.get(relatedStudiesList).should('not.exist');
         });
     });

@@ -715,7 +715,7 @@ export function setupPage(tab, loginRedirect) {
         if (!isLoggedIn) {
             loadLoginForm(loginRedirect);
         } else {
-            setNavLoginButton(isLoggedIn, userData['id']);
+            setNavLoginButton(isLoggedIn, typeof userData !== 'undefined' ? userData['id'] : '');
         }
     });
     checkAPIonline();
