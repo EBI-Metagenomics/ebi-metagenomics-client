@@ -69,7 +69,6 @@ describe('Run page', function() {
                 .as('analyses');
             openPage(origPage);
             cy.wait('@analyses');
-            cy.wait('@analyses');
         });
         it('Description section should be hideable', function() {
             cy.get(descriptionSection).should('be.visible');
