@@ -32,7 +32,7 @@ let RunView = Backbone.View.extend({
                 deferred.resolve();
             },
             error(ignored, response) {
-                if (document.referrer.indexOf('sequence-search') > -1) {
+                if (document.referrer.indexOf('sequence-search') === -1) {
                     util.displayError(response.status, 'Could not retrieve run' + ': ' + accession);
                 } else {
                     let enaURL = 'https://www.ebi.ac.uk/ena/portal/api/search?' +
@@ -46,7 +46,7 @@ let RunView = Backbone.View.extend({
                         format: 'json',
                         url: enaURL
                     }).done((data) => {
-                        if (data.length !== 0) {
+                        if (typeof data !== 'undefined' && data.length !== 0) {
                             text = '<h4>Could not retrieve ' + accession +
                                 ' from MGnify as analysis or upload of this run is ongoing. ' +
                                 'In the meantime, information relating to the run and its ' +
