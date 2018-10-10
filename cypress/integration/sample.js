@@ -77,27 +77,27 @@ const studyTableColumn = {
 
 const runTableColumns = {
     accession: {
-        data: ['SRR997122', 'SRR997098'],
+        data: ['ERR1760044'],
         type: datatype.STR,
         sortable: true
     },
     experiment_type: {
-        data: ['amplicon', 'amplicon'],
+        data: ['amplicon'],
         type: datatype.STR,
         sortable: false
     },
     instrument_model: {
-        data: ['', ''],
+        data: ['Illumina MiSeq'],
         type: datatype.STR,
         sortable: false
     },
     instrument_platform: {
-        data: ['', ''],
+        data: ['ILLUMINA'],
         type: datatype.STR,
         sortable: false
     },
     pipeline_version: {
-        data: ['2.0', '2.0'],
+        data: ['4.0'],
         type: datatype.STR,
         sortable: false
     }
@@ -162,11 +162,11 @@ describe('Sample page', function() {
         beforeEach(function() {
             openPage(origPage);
             waitForPageLoad(sampleId);
-            table = new GenericTableHandler('#runs-section', 2);
+            table = new GenericTableHandler('#runs-section', 1);
         });
 
         it('Runs table should respond to ordering', function() {
-            table.testSorting(2, runTableColumns);
+            table.testSorting(1, runTableColumns);
         });
 
         it('Runs table should respond to filtering', function() {
@@ -234,6 +234,96 @@ describe('Sample page', function() {
         });
     });
 
+    const assembliesTableColumns = {
+        accession: {
+            data: ['ERZ477585'],
+            type: datatype.STR,
+            sortable: true
+        },
+        experiment_type: {
+            data: ['assembly'],
+            type: datatype.STR,
+            sortable: false
+        },
+        wgs_id: {
+            data: ['OBIV01'],
+            type: datatype.STR,
+            sortable: false
+        },
+        legacy_id: {
+            data: ['GCA_900215965'],
+            type: datatype.STR,
+            sortable: false
+        },
+        pipeline_versions: {
+            data: ['4.0'],
+            type: datatype.STR,
+            sortable: false
+        }
+    };
+
+    context('Assemblies table', function() {
+        beforeEach(function() {
+            openPage(origPage);
+            waitForPageLoad(sampleId);
+            table = new GenericTableHandler('#assemblies-section', 1);
+        });
+
+        it('Assemblies table should respond to ordering', function() {
+            table.testSorting(1, runTableColumns);
+        });
+
+        it('Assemblies table should respond to filtering', function() {
+            table.testFiltering('ERZ', [
+                ['ERZ477585', 'assembly', 'OBIV01', 'GCA_900215965', '4.0']
+            ]);
+        });
+
+        it('Should be toggleable', function() {
+            table.testTableHiding();
+        });
+
+        // Redundant due to low number of runs per sample (2 rows in single page)
+        // it('Runs table should respond to pagination', function () {
+        //     table.testPagination(2, [{
+        //         index: 1,
+        //         data: ['SRR997122', 'amplicon', '', '', '2.0'],
+        //     }, {
+        //         index: 3,
+        //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
+        //     }, {
+        //         index: 'Next',
+        //         data: ['SRR997047', 'amplicon', '', '', '2.0'],
+        //         pageNum: 4
+        //     }, {
+        //         index: 'Previous',
+        //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
+        //         pageNum: 3
+        //     }, {
+        //         index: 'Last',
+        //         data: ['ERR010497', 'metatranscriptomic', '', '', '1.0'],
+        //         pageNum: 506,
+        //         pageSize: 18
+        //     }, {
+        //         index: 'First',
+        //         data: ['SRR997122', 'amplicon', '', '', '2.0'],
+        //         pageNum: 1
+        //     }]);
+        // });
+
+        // it('Runs table should respond to page size change', function () {
+        // TODO use sample with > 25 runs to test
+        //     table.testPageSizeChange(runsTableDefaultSize, 50)
+        // });
+
+        it('Runs table download link should be valid', function() {
+            table.testDownloadLink(
+                Config.API_URL + 'runs?ordering=accession&sample_accession=' + sampleId +
+                '&format=csv'
+            );
+        });
+    });
+
     context('Metadata display', function() {
         it('Info message should be displayed if no metadata available for display', function() {
             const projectId = 'ERS1474797';
@@ -244,7 +334,7 @@ describe('Sample page', function() {
             cy.get('#sample-metadata').contains('No metadata to be displayed.');
         });
 
-        it('Should dispaly metadata fields correctly', function() {
+        it('Should display metadata fields correctly', function() {
             const projectId = 'ERS949427';
             const origPage = 'samples/' + projectId;
             openPage(origPage);
