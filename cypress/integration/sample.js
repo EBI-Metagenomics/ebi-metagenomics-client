@@ -173,7 +173,7 @@ describe('Sample page', function() {
 
         it('Runs table should respond to filtering', function() {
             table.testFiltering('SRR1138702', [
-                ['SRR1138702','metatranscriptomic','Illumina HiSeq 2000','ILLUMINA','2.0']
+                ['SRR1138702', 'metatranscriptomic', 'Illumina HiSeq 2000', 'ILLUMINA', '2.0']
             ]);
         });
 
@@ -216,7 +216,7 @@ describe('Sample page', function() {
 
         it('Runs table download link should be valid', function() {
             table.testDownloadLink(
-                Config.API_URL + 'runs?ordering=accession&sample_accession=' + sampleId +
+                Config.API_URL + 'runs?ordering=accession&sample_accession=' + studyIdAnalysis +
                 '&format=csv'
             );
         });
@@ -224,10 +224,10 @@ describe('Sample page', function() {
 
     context('Runs table with >1 analysis per run', function() {
         beforeEach(function() {
-            const projectId = 'ERS853149';
-            const origPage = 'samples/' + projectId;
+            const sampleID = 'ERS853149';
+            const origPage = 'samples/' + sampleID;
             openPage(origPage);
-            waitForPageLoad(projectId);
+            waitForPageLoad(sampleID);
             table = new GenericTableHandler('#runs-section', 1);
         });
 
@@ -265,8 +265,9 @@ describe('Sample page', function() {
     };
 
     context('Assemblies table', function() {
+        const sampleId = 'SRS429585';
         beforeEach(function() {
-            openPage(origPage);
+            openPage('samples/' + sampleId);
             waitForPageLoad(sampleId);
             table = new GenericTableHandler('#assemblies-section', 3);
         });
@@ -276,8 +277,8 @@ describe('Sample page', function() {
         });
 
         it('Assemblies table should respond to filtering', function() {
-            table.testFiltering('ERZ', [
-                ['ERZ477585', 'assembly', 'OBIV01', 'GCA_900215965', '4.0']
+            table.testFiltering('ERZ477905', [
+                ['ERZ477905', 'assembly', 'ODAI01', 'GCA_900230535', '4.0']
             ]);
         });
 
