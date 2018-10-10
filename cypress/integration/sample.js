@@ -319,9 +319,9 @@ describe('Sample page', function() {
         //     table.testPageSizeChange(runsTableDefaultSize, 50)
         // });
 
-        it('Runs table download link should be valid', function() {
+        it('Assemblies table download link should be valid', function() {
             table.testDownloadLink(
-                Config.API_URL + 'runs?ordering=accession&sample_accession=' + sampleId +
+                Config.API_URL + 'assemblies?ordering=accession&sample_accession=' + sampleId +
                 '&format=csv'
             );
         });
