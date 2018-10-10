@@ -47,7 +47,11 @@ const pagesBreadcrumbs = {
     // 'login': [''],
     'pipelines/4.0': ['', 'pipelines'],
     'pipelines': [''],
-    'analyses/MGYA00141547': ['', 'studies/MGYS00000553', 'samples/ERS853149', 'assemblies/ERR1022502'],
+    'analyses/MGYA00141547': [
+        '',
+        'studies/MGYS00000553',
+        'samples/ERS853149',
+        'assemblies/ERR1022502'],
     'analyses/MGYA00011921': ['', 'studies/MGYS00000562', 'samples/SRS429585', 'runs/SRR1138702'],
     'samples/ERS1474828': ['', 'browse#samples'],
     'browse': [''],
