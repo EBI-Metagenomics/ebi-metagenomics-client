@@ -1,6 +1,6 @@
 import {openPage, isValidLink} from '../util/util';
 
-const origPage = 'help?origin=phmmer';
+const origPage = 'help';
 
 describe('Help page', function() {
     context('Refer from phmmer search', function() {
@@ -9,7 +9,7 @@ describe('Help page', function() {
                 win.history.pushState(
                     'https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer',
                     'hmmer-search');
-                openPage(origPage);
+                openPage(origPage + '?origin=phmmer');
                 cy.get('#seq-search').should('have.class', 'highlight');
             });
         });
