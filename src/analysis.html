@@ -25,7 +25,11 @@
                 <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
                 <li><a href="<%= study_url %>">Study <%= study_accession %></a></li>
                 <li><a href="<%= sample_url %>">Sample <%= sample_accession %></a></li>
-                <li><a href="<%= run_url %>"><%= (experiment_type==='assembly' ? 'Assembly' : 'Run') %> <%= run_accession %></a></li>
+                <% if (typeof assembly_url !== 'undefined') { %>
+                <li><a href="<%= assembly_url %>">Assembly <%= assembly_accession %> </a></li>
+                <% } else { %>
+                <li><a href="<%= run_url %>">Run <%= run_accession %> </a></li>
+                <% } %>
                 <li>
                     <span class="show-for-sr">Current: </span>Analysis <%= analysis_accession %>
                 </li>
