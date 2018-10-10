@@ -6,7 +6,13 @@ emg:
       USER: 'travis'
       HOST: localhost
       PORT: 3306
-    ena:
+    ena_pro:
+      ENGINE: 'django.db.backends.mysql'
+      NAME: 'ena'
+      USER: 'travis'
+      HOST: localhost
+      PORT: 3306
+    era_pro:
       ENGINE: 'django.db.backends.mysql'
       NAME: 'ena'
       USER: 'travis'

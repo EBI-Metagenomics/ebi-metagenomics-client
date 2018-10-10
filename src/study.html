@@ -27,11 +27,11 @@
                     <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies">Browse studies</a>
                     </li>
                     <li>
-                        <span class="show-for-sr">Current: </span> Study <%= study_id %>
+                        <span class="show-for-sr">Current: </span> Study <%= study_accession %>
                     </li>
                 </ul>
             </nav>
-            <h3>Study <%= study_id %></h3>
+            <h3>Study <%= study_accession %></h3>
             <h2><%= study_name %></h2>
             <ul class="tabs" data-tabs id="study-tabs">
                 <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
@@ -74,7 +74,7 @@
                                 <div class="row columns">
                                     <ul data-cy="relatedStudies">
                                         <% _.each(related_studies, function(study) { %>
-                                        <li><a href="<%= study.study_link %>"><%= study.id %></a></li>
+                                        <li><a href="<%= study.study_url %>"><%= study.id %></a></li>
                                         <% }); %>
                                     </ul>
                                 </div>
@@ -85,7 +85,7 @@
                                 <div class="row columns">
                                     <ul id="ebi_ena_links">
                                         <li><a class="ext" href="<%= ena_url %>">
-                                            ENA website (<%= study_accession%>)
+                                            ENA website (<%= study_secondary_accession%>)
                                         </a></li>
                                     </ul>
                                 </div>

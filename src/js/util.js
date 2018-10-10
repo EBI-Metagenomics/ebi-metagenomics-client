@@ -1,7 +1,7 @@
 const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
 const authApi = require('./components/authApi');
 const Commons = require('./commons');
 const GenericTable = require('./components/genericTable');
@@ -186,9 +186,9 @@ export const BiomeCollectionView = Backbone.View.extend({
     selector: '.biome-select',
     initialize() {
         let that = this;
-        this.collection.fetchWithRoot().then((data) => {
+        this.fetchOp = this.collection.fetchWithParams().done(() => {
             that.clearSelectOptions();
-            that.addOptionsToSelect(data.models, that.collection.rootLineage);
+            that.addOptionsToSelect(that.collection.models, that.collection.rootLineage);
         });
     },
     clearSelectOptions() {
@@ -393,7 +393,7 @@ export let StudiesView = GenericTableView.extend({
     },
 
     getRowData(attr) {
-        const studyLink = '<a href=\'' + attr.study_link + '\'>' + attr.study_id + '</a>';
+        const studyLink = '<a href=\'' + attr.study_url + '\'>' + attr.study_accession + '</a>';
         const biomes = _.map(attr.biomes, function(b) {
             return '<span class=\'biome_icon icon_xs ' + b.icon + '\' title=\'' + b.name +
                 '\'></span>';
@@ -422,7 +422,7 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline versions'}
         ];
         let tableOptions = {
-            title: 'Associated runs & assemblies',
+            title: 'Associated runs',
             headers: columns,
             initialOrdering: 'accession',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
@@ -439,16 +439,55 @@ export let RunsView = GenericTableView.extend({
     },
 
     getRowData(attr) {
-        if (attr['experiment_type'] === 'assembly') {
-            attr['analysis_url'] = attr['analysis_url'].replace('runs', 'assemblies');
-        }
-        const runLink = '<a href=\'' + attr.analysis_url + '\'>' + attr.run_id + '</a>';
+        const runLink = '<a href=\'' + attr.analysis_url + '\'>' + attr.run_accession + '</a>';
         return [
             runLink,
             attr['experiment_type'],
             attr['instrument_model'],
             attr['instrument_platform'],
             attr['pipeline_versions'].join(', ')];
+    }
+});
+
+export let AssembliesView = GenericTableView.extend({
+    tableObj: null,
+    pagination: null,
+
+    initialize() {
+        const that = this;
+        const columns = [
+            {sortBy: 'accession', name: 'Assembly ID'},
+            {sortBy: null, name: 'Experiment type'},
+            {sortBy: null, name: 'WGS ID'},
+            {sortBy: null, name: 'Legacy ID'},
+            {sortBy: null, name: 'Pipeline versions'}
+        ];
+        let tableOptions = {
+            title: 'Associated assemblies',
+            headers: columns,
+            initialOrdering: 'accession',
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: false,
+            textFilter: true,
+            tableClass: 'assemblies-table',
+            callback: function(page, pageSize, order, search) {
+                that.update({page: page, page_size: pageSize, ordering: order, search: search});
+            }
+        };
+        this.tableObj = new GenericTable($('#assemblies-section'), tableOptions);
+        this.update(
+            {page: 1, page_size: Commons.DEFAULT_PAGE_SIZE, ordering: 'accession', search: null});
+    },
+
+    getRowData(attr) {
+        const assemblyLink = '<a href=\'' + attr.analysis_url + '\'>' + attr.assembly_id + '</a>';
+        return [
+            assemblyLink,
+            attr['experiment_type'],
+            attr['wgs_id'],
+            attr['legacy_id'],
+            attr['pipeline_versions'].join(', ')
+        ];
     }
 });
 
@@ -676,7 +715,7 @@ export function setupPage(tab, loginRedirect) {
         if (!isLoggedIn) {
             loadLoginForm(loginRedirect);
         } else {
-            setNavLoginButton(isLoggedIn, userData['id']);
+            setNavLoginButton(isLoggedIn, typeof userData !== 'undefined' ? userData['id'] : '');
         }
     });
     checkAPIonline();

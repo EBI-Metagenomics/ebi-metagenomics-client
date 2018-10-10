@@ -1,7 +1,6 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const api = require('mgnify').api;
-const API_URL = process.env.API_URL;
+const api = require('mgnify').api(process.env.API_URL);
 const Map = require('../components/map');
 const DetailList = require('../components/detailList');
 const util = require('../util');
@@ -89,10 +88,10 @@ function initPage() {
     let sample = new api.Sample({id: sampleId});
     let sampleView = new SampleView({model: sample});
 
-    let studies = new api.StudiesCollection({sample_accession: sampleId}, API_URL + 'samples/' +
-        sampleId + '/studies');
+    let studies = new api.SampleStudiesCollection({sample_accession: sampleId});
 
     let runs = new api.RunsCollection({sample_accession: sampleId});
+    let assemblies = new api.AssembliesCollection({sample_accession: sampleId});
 
     $.when(
         sampleView.fetchAndRender()
@@ -105,6 +104,7 @@ function initPage() {
             sectionTitle: 'Associated studies'
         });
         new util.RunsView({collection: runs});
+        new util.AssembliesView({collection: assemblies});
         util.attachExpandButtonCallback();
     });
 }

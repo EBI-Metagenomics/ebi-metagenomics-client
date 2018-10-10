@@ -1,7 +1,7 @@
 const d3 = require('d3');
 const _ = require('underscore');
 const template = require('../../partials/map_tooltip.handlebars');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
 const subfolder = require('../util').subfolder;
 let MarkerClusterer = require('node-js-marker-clusterer');
 

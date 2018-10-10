@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const Commons = require('../commons');
-const api = require('mgnify').api;
+const api = require('mgnify').api(process.env.API_URL);
 const util = require('../util');
 const DetailList = require('../components/detailList');
 const GenericTable = require('../components/genericTable');
@@ -13,11 +13,8 @@ util.setupPage('#browse-nav');
 window.Foundation.addToJquery($);
 
 let accession = util.getURLParameter();
-let isRun = ['SRR', 'ERR', 'DRR'].indexOf(accession.slice(0, 3)) > -1;
-let objType = 'Assembly';
-if (isRun) {
-    objType = 'Run';
-}
+let objType = 'Run';
+
 util.specifyPageTitle(objType, accession);
 
 let RunView = Backbone.View.extend({
@@ -35,8 +32,32 @@ let RunView = Backbone.View.extend({
                 deferred.resolve();
             },
             error(ignored, response) {
-                util.displayError(response.status, 'Could not retrieve ' +
-                    (isRun ? 'run' : 'assembly') + ': ' + accession);
+                if (document.referrer.indexOf('sequence-search') === -1) {
+                    util.displayError(response.status, 'Could not retrieve run' + ': ' + accession);
+                } else {
+                    let enaURL = 'https://www.ebi.ac.uk/ena/portal/api/search?' +
+                        'result=read_run&' +
+                        'format=json&' +
+                        'query=run_accession%3D' + accession;
+
+                    let text = 'Could not retrieve run' + ': ' + accession;
+
+                    return $.ajax({
+                        format: 'json',
+                        url: enaURL
+                    }).done((data) => {
+                        if (typeof data !== 'undefined' && data.length !== 0) {
+                            text = '<h4>Could not retrieve ' + accession +
+                                ' from MGnify as analysis or upload of this run is ongoing. ' +
+                                'In the meantime, information relating to the run and its ' +
+                                'associated metadata can be found in ENA: ' +
+                                '<a href=\'https://www.ebi.ac.uk/ena/data/view/' + accession +
+                                '\'>' + accession + '</a></h4>';
+                        }
+                    }).then(() => {
+                        $('#main-content-area').html(text);
+                    });
+                }
                 deferred.reject();
             }
         });
@@ -45,9 +66,10 @@ let RunView = Backbone.View.extend({
     render(attr) {
         this.$el.html(this.template(this.model.toJSON()));
         let description = {
-            'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_id + '</a>',
-            'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_id + '</a>',
-            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' + attr.run_id +
+            'Study': '<a href=\'' + attr.study_url + '\'>' + attr.study_accession + '</a>',
+            'Sample': '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession + '</a>',
+            'ENA accession': '<a class=\'ext\' href=\'' + attr.ena_url + '\'>' +
+            attr.run_accession +
             '</a>'
         };
         $('#overview').append(new DetailList('Description', description));
@@ -114,6 +136,11 @@ let RunAnalysesView = util.GenericTableView.extend({
 
 });
 
+const assembliesColumns = [
+    {sortBy: null, name: 'Analysis accession'},
+    {sortBy: 'pipeline', name: 'Pipeline version'}
+];
+
 let RunAssemblyView = util.GenericTableView.extend({
     tableObj: null,
     pagination: null,
@@ -121,21 +148,18 @@ let RunAssemblyView = util.GenericTableView.extend({
 
     getRowData(attr) {
         const accessionLink = '<a href=\'' + attr.analysis_url + '\'>' +
-            attr.analysis_accession +
+            attr.assembly_id +
             '</a>';
         return [
             accessionLink,
-            attr['experiment_type'],
-            attr['instrument_model'],
-            attr['instrument_platform'],
-            attr['pipeline_version']];
+            attr['pipeline_versions'].join(', ')];
     },
     initialize() {
         const that = this;
         const $assembliesSection = $('#assemblies');
         let tableOptions = {
             title: 'Assemblies',
-            headers: columns,
+            headers: assembliesColumns,
             initialOrdering: '-pipeline',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: false,
@@ -151,8 +175,7 @@ let RunAssemblyView = util.GenericTableView.extend({
             }
         };
         this.tableObj = new GenericTable($assembliesSection, tableOptions);
-        const up = this.update({page_size: Commons.DEFAULT_PAGE_SIZE});
-        up.always((data) => {
+        this.update({page_size: Commons.DEFAULT_PAGE_SIZE}).always((data) => {
             if (data.models.length === 0) {
                 $assembliesSection.hide();
             }
