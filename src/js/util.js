@@ -502,7 +502,7 @@ export const AnalysesView = GenericTableView.extend({
             {sortBy: null, name: 'Biome'},
             {sortBy: null, name: 'Sample accession'},
             {sortBy: null, name: 'Sample description'},
-            {sortBy: null, name: 'Run accession'},
+            {sortBy: null, name: 'Run / Assembly accession'},
             {sortBy: null, name: 'Pipeline version'},
             {sortBy: null, name: 'Analysis accession'}
         ];
@@ -561,8 +561,15 @@ export const AnalysesView = GenericTableView.extend({
                 + m.attributes.biome.name + '"></span>';
             const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
                 '</a>';
-            const runLink = '<a href=\'' + attr.run_url + '\'>' + attr.run_accession +
-                '</a>';
+            let runAssemblyLink;
+            if (typeof attr.run_accession === 'undefined') {
+                runAssemblyLink = '<a href=\'' + attr.assembly_url + '\'>' +
+                    attr.assembly_accession +
+                    '</a>';
+            } else {
+                runAssemblyLink = '<a href=\'' + attr.run_url + '\'>' + attr.run_accession +
+                    '</a>';
+            }
             const analysisLink = '<a href=\'' + attr.analysis_url + '\'>' +
                 attr.analysis_accession +
                 '</a>';
@@ -571,7 +578,7 @@ export const AnalysesView = GenericTableView.extend({
                 '</a>';
             return [
                 biome, sampleLink, attr['sample_desc'],
-                runLink, pipelineLink, analysisLink];
+                runAssemblyLink, pipelineLink, analysisLink];
         });
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }

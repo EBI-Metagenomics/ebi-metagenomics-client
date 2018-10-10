@@ -1,29 +1,19 @@
 import {openPage, isValidLink} from '../util/util';
 
-const origPage = 'help';
+const origPage = 'help?origin=phmmer';
 
 describe('Help page', function() {
-    // context('Refer from phmmer search', function() {
-    //     beforeEach(function() {
-    //         cy.window().then((win) => {
-    //             win.history.pushState(
-    //                 'https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer',
-    //                 'hmmer-search');
-    //         });
-    //         openPage(origPage).then(() => {
-    //             cy.document()['referrer'] = 'https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer';
-    //             cy.document(
-    //                 {referrer: 'sequence-search/search/phmmer'});
-    //         });
-    //
-    //     });
-    //     it('Should highlight phmmer section', function() {
-    //         cy.document().then((doc) => {
-    //             cy.log(doc['referrer']);
-    //         });
-    //         cy.get('#seq-search').should('have.class', 'highlight');
-    //     });
-    // });
+    context('Refer from phmmer search', function() {
+        it('Should highlight phmmer section', function() {
+            cy.window().then((win) => {
+                win.history.pushState(
+                    'https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer',
+                    'hmmer-search');
+                openPage(origPage);
+                cy.get('#seq-search').should('have.class', 'highlight');
+            });
+        });
+    });
     context('General', function() {
         before(function() {
             openPage(origPage);
