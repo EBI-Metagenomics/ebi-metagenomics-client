@@ -2,8 +2,10 @@ import {openPage, datatype, urlExists, login} from '../util/util';
 import Config from '../util/config';
 import GenericTableHandler from '../util/genericTable';
 
-const sampleId = 'ERS434640';
+const sampleId = 'ERS434640'; // accession with multiple associated studies
 const origPage = 'samples/' + sampleId;
+
+const studyIdAnalysis = 'SRS429585'; // accession with multiple analyses / assemblies
 
 const studiesTableDefaultSize = 2;
 
@@ -77,27 +79,27 @@ const studyTableColumn = {
 
 const runTableColumns = {
     accession: {
-        data: ['ERR1760044'],
+        data: ['SRR873610', 'SRR873464'],
         type: datatype.STR,
         sortable: true
     },
     experiment_type: {
-        data: ['amplicon'],
+        data: ['metagenomic', 'metatranscriptomic'],
         type: datatype.STR,
         sortable: false
     },
     instrument_model: {
-        data: ['Illumina MiSeq'],
+        data: ['Illumina MiSeq 2000', 'Illumina MiSeq 2000'],
         type: datatype.STR,
         sortable: false
     },
     instrument_platform: {
-        data: ['ILLUMINA'],
+        data: ['ILLUMINA', 'ILLUMINA'],
         type: datatype.STR,
         sortable: false
     },
     pipeline_version: {
-        data: ['4.0'],
+        data: ['2.0', '2.0'],
         type: datatype.STR,
         sortable: false
     }
@@ -160,18 +162,18 @@ describe('Sample page', function() {
 
     context('Runs table', function() {
         beforeEach(function() {
-            openPage(origPage);
-            waitForPageLoad(sampleId);
-            table = new GenericTableHandler('#runs-section', 1);
+            openPage('samples/' + studyIdAnalysis);
+            waitForPageLoad(studyIdAnalysis);
+            table = new GenericTableHandler('#runs-section', 20);
         });
 
         it('Runs table should respond to ordering', function() {
-            table.testSorting(1, runTableColumns);
+            table.testSorting(20, runTableColumns);
         });
 
         it('Runs table should respond to filtering', function() {
-            table.testFiltering('GCA', [
-                ['GCA_900215965', 'assembly', 'Illumina MiSeq', 'ILLUMINA', '4.0']
+            table.testFiltering('SRR1138702', [
+                ['SRR1138702','metatranscriptomic','Illumina HiSeq 2000','ILLUMINA','2.0']
             ]);
         });
 
@@ -236,27 +238,27 @@ describe('Sample page', function() {
 
     const assembliesTableColumns = {
         accession: {
-            data: ['ERZ477585'],
+            data: ['ERZ477903', 'ERZ477905'],
             type: datatype.STR,
             sortable: true
         },
         experiment_type: {
-            data: ['assembly'],
+            data: ['assembly', 'assembly'],
             type: datatype.STR,
             sortable: false
         },
         wgs_id: {
-            data: ['OBIV01'],
+            data: ['ODAJ01', 'ODAI01'],
             type: datatype.STR,
             sortable: false
         },
         legacy_id: {
-            data: ['GCA_900215965'],
+            data: ['GCA_900230525', 'GCA_900230525'],
             type: datatype.STR,
             sortable: false
         },
         pipeline_versions: {
-            data: ['4.0'],
+            data: ['4.0', '4.0'],
             type: datatype.STR,
             sortable: false
         }
@@ -266,11 +268,11 @@ describe('Sample page', function() {
         beforeEach(function() {
             openPage(origPage);
             waitForPageLoad(sampleId);
-            table = new GenericTableHandler('#assemblies-section', 1);
+            table = new GenericTableHandler('#assemblies-section', 3);
         });
 
         it('Assemblies table should respond to ordering', function() {
-            table.testSorting(1, runTableColumns);
+            table.testSorting(3, assembliesTableColumns);
         });
 
         it('Assemblies table should respond to filtering', function() {
