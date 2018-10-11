@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `EXPERIMENT_TYPE`
+-- Dumping data for table EXPERIMENT_TYPE
 --
 
-LOCK TABLES `EXPERIMENT_TYPE` WRITE;
-/*!40000 ALTER TABLE `EXPERIMENT_TYPE` DISABLE KEYS */;
-INSERT INTO `EXPERIMENT_TYPE` VALUES (1,'metatranscriptomic'),(2,'metagenomic'),(3,'amplicon'),(4,'assembly'),(5,'metabarcoding'),(6,'unknown');
-/*!40000 ALTER TABLE `EXPERIMENT_TYPE` ENABLE KEYS */;
+LOCK TABLES EXPERIMENT_TYPE WRITE;
+/*!40000 ALTER TABLE EXPERIMENT_TYPE DISABLE KEYS */;
+INSERT INTO EXPERIMENT_TYPE VALUES (1,'metatranscriptomic'),(2,'metagenomic'),(3,'amplicon'),(4,'assembly'),(5,'metabarcoding'),(6,'unknown');
+/*!40000 ALTER TABLE EXPERIMENT_TYPE ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

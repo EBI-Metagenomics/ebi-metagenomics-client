@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `SUMMARY_VARIABLE_NAMES`
+-- Dumping data for table SUMMARY_VARIABLE_NAMES
 --
 
-LOCK TABLES `SUMMARY_VARIABLE_NAMES` WRITE;
-/*!40000 ALTER TABLE `SUMMARY_VARIABLE_NAMES` DISABLE KEYS */;
-INSERT INTO `SUMMARY_VARIABLE_NAMES` VALUES (11,'Nucleotide sequences after clustering',NULL),(2,'Nucleotide sequences after format-specific filtering',NULL),(3,'Nucleotide sequences after length filtering',NULL),(12,'Nucleotide sequences after repeat masking and filtering',NULL),(4,'Nucleotide sequences after undetermined bases filtering',NULL),(7,'Nucleotide sequences with InterProScan match',NULL),(5,'Nucleotide sequences with predicted CDS',NULL),(6,'Nucleotide sequences with predicted RNA',NULL),(13,'Nucleotide sequences with predicted rRNA',NULL),(8,'Predicted CDS',NULL),(9,'Predicted CDS with InterProScan match',NULL),(1,'Submitted nucleotide sequences',NULL),(10,'Total InterProScan matches',NULL);
-/*!40000 ALTER TABLE `SUMMARY_VARIABLE_NAMES` ENABLE KEYS */;
+LOCK TABLES SUMMARY_VARIABLE_NAMES WRITE;
+/*!40000 ALTER TABLE SUMMARY_VARIABLE_NAMES DISABLE KEYS */;
+INSERT INTO SUMMARY_VARIABLE_NAMES VALUES (11,'Nucleotide sequences after clustering',NULL),(2,'Nucleotide sequences after format-specific filtering',NULL),(3,'Nucleotide sequences after length filtering',NULL),(12,'Nucleotide sequences after repeat masking and filtering',NULL),(4,'Nucleotide sequences after undetermined bases filtering',NULL),(7,'Nucleotide sequences with InterProScan match',NULL),(5,'Nucleotide sequences with predicted CDS',NULL),(6,'Nucleotide sequences with predicted RNA',NULL),(13,'Nucleotide sequences with predicted rRNA',NULL),(8,'Predicted CDS',NULL),(9,'Predicted CDS with InterProScan match',NULL),(1,'Submitted nucleotide sequences',NULL),(10,'Total InterProScan matches',NULL);
+/*!40000 ALTER TABLE SUMMARY_VARIABLE_NAMES ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

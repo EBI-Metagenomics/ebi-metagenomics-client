@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `ANALYSIS_STATUS`
+-- Dumping data for table ANALYSIS_STATUS
 --
 
-LOCK TABLES `ANALYSIS_STATUS` WRITE;
-/*!40000 ALTER TABLE `ANALYSIS_STATUS` DISABLE KEYS */;
-INSERT INTO `ANALYSIS_STATUS` VALUES (1,'scheduled'),(2,'running'),(3,'completed'),(4,'failed'),(5,'suppressed'),(6,'QC not passed'),(7,'Unable to process'),(8,'unknown');
-/*!40000 ALTER TABLE `ANALYSIS_STATUS` ENABLE KEYS */;
+LOCK TABLES ANALYSIS_STATUS WRITE;
+/*!40000 ALTER TABLE ANALYSIS_STATUS DISABLE KEYS */;
+INSERT INTO ANALYSIS_STATUS VALUES (1,'scheduled'),(2,'running'),(3,'completed'),(4,'failed'),(5,'suppressed'),(6,'QC not passed'),(7,'Unable to process'),(8,'unknown');
+/*!40000 ALTER TABLE ANALYSIS_STATUS ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
