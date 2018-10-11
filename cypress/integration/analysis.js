@@ -272,9 +272,8 @@ describe('Analysis page', function() {
             cy.get('#stacked-column').should('be.visible');
         });
         it('Should load krona chart correctly', function() {
-            changeTab('krona');
             cy.get('.krona_chart').then(($krona) => {
-                expect($krona.contents().find('body')).to.be.visible;
+                expect(Cypress.$($krona.contents().find('body'))).to.be.visible;
             });
         });
         it('Should load taxonomy pie charts', function() {
@@ -479,14 +478,24 @@ describe('Analysis page', function() {
                     data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12']
                 }, {
                     index: 2,
-                    data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06']
+                    data: [
+                        '26',
+                        'ATPase, V0 complex,  c/d subunit',
+                        'IPR002843',
+                        '1507',
+                        '0.06']
                 }, {
                     index: 'Previous',
                     data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12'],
                     pageNum: 1
                 }, {
                     index: 'Next',
-                    data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06'],
+                    data: [
+                        '26',
+                        'ATPase, V0 complex,  c/d subunit',
+                        'IPR002843',
+                        '1507',
+                        '0.06'],
                     pageNum: 2
                 }, {
                     index: 'First',
@@ -494,7 +503,12 @@ describe('Analysis page', function() {
                     pageNum: 1
                 }, {
                     index: 'Last',
-                    data: ['26', 'ATPase, V0 complex,  c/d subunit', 'IPR002843', '1507', '0.06'],
+                    data: [
+                        '26',
+                        'ATPase, V0 complex,  c/d subunit',
+                        'IPR002843',
+                        '1507',
+                        '0.06'],
                     pageNum: 2,
                     pageSize: 25
                 }]);

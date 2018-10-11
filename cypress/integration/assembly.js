@@ -7,7 +7,7 @@ const descriptionSection = '#overview div.row.box';
 
 const assemblyTableColumns = {
     analysisAccession: {
-        data: ['MGYA00084036'],
+        data: ['MGYA0014002'],
         type: datatype.STR,
         sortable: false
     },
@@ -17,17 +17,17 @@ const assemblyTableColumns = {
         sortable: false
     },
     instrument_model: {
-        data: [''],
+        data: ['Illumina MiSeq'],
         type: datatype.NUM,
         sortable: false
     },
     instrument_platform: {
-        data: [''],
+        data: ['ILLUMINA'],
         type: datatype.STR,
         sortable: false
     },
     pipeline: {
-        data: ['3.0'],
+        data: ['4.0'],
         type: datatype.NUM,
         sortable: true
     }

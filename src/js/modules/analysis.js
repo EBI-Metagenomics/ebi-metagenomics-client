@@ -466,8 +466,8 @@ function constructDescriptionTable(attr) {
 
     if (attr['experiment_type'] === 'assembly') {
         attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
-        description['Assembly'] = '<a href=\'' + attr['run_url'] + '\'>' +
-            attr['run_accession'] + '</a>';
+        description['Assembly'] = '<a href=\'' + attr['assembly_url'] + '\'>' +
+            attr['assembly_accession'] + '</a>';
     } else {
         description['Run'] = '<a href=\'' + attr['run_url'] + '\'>' +
             attr['run_accession'] + '</a>';

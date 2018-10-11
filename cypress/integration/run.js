@@ -37,13 +37,13 @@ const analysesTableColumns = {
 const assemliesTableColumns = {
     // Duplicate values as single row of data is checked as first and last row
     assemblyAccession: {
-        data: ['ERZ477708', 'ERZ477708'],
+        data: ['ERZ477586'],
         type: datatype.STR,
         sortable: false
     },
 
     pipeline: {
-        data: ['3.0', '3.0'],
+        data: ['4.0'],
         type: datatype.NUM,
         sortable: true
     }
@@ -78,7 +78,7 @@ describe('Run page', function() {
     });
     context('Assemblies table', function() {
         before(function() {
-            openPage('runs/ERR1022515');
+            openPage('runs/ERR476942');
         });
         it('Should be visible', function() {
             cy.get('.assemblies-table').should('be.visible');

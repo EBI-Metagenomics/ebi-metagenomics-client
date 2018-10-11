@@ -30,7 +30,9 @@ class GenericTableHandler {
             }
         }
         this.checkRowData(0, firstRowData);
-        this.checkRowData(pageSize - 1, lastRowData);
+        if (pageSize > 1) {
+            this.checkRowData(pageSize - 1, lastRowData);
+        }
     }
 
     testSorting(pageSize, tests) {

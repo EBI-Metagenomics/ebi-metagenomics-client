@@ -7,7 +7,8 @@ $('#doc-link-2').prop('href', readTheDocsUrl);
 util.setupPage('#help-nav');
 
 const prevPage = document.referrer;
-if (prevPage.indexOf('sequence-search/search/phmmer') > -1) {
+if (prevPage.indexOf('sequence-search/search/phmmer') > -1 ||
+    window.location.href.indexOf('?origin=phmmer') > -1) {
     $(function() {
         const $seqSearch = $('#seq-search');
         $seqSearch.addClass('highlight');

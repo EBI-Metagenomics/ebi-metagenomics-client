@@ -2,8 +2,10 @@ import {openPage, datatype, urlExists, login} from '../util/util';
 import Config from '../util/config';
 import GenericTableHandler from '../util/genericTable';
 
-const sampleId = 'ERS434640';
+const sampleId = 'ERS434640'; // accession with multiple associated studies
 const origPage = 'samples/' + sampleId;
+
+const studyIdAnalysis = 'SRS429585'; // accession with multiple analyses / assemblies
 
 const studiesTableDefaultSize = 2;
 
@@ -77,22 +79,22 @@ const studyTableColumn = {
 
 const runTableColumns = {
     accession: {
-        data: ['SRR997122', 'SRR997098'],
+        data: ['SRR873610', 'SRR873464'],
         type: datatype.STR,
         sortable: true
     },
     experiment_type: {
-        data: ['amplicon', 'amplicon'],
+        data: ['metagenomic', 'metatranscriptomic'],
         type: datatype.STR,
         sortable: false
     },
     instrument_model: {
-        data: ['', ''],
+        data: ['Illumina MiSeq 2000', 'Illumina MiSeq 2000'],
         type: datatype.STR,
         sortable: false
     },
     instrument_platform: {
-        data: ['', ''],
+        data: ['ILLUMINA', 'ILLUMINA'],
         type: datatype.STR,
         sortable: false
     },
@@ -160,18 +162,18 @@ describe('Sample page', function() {
 
     context('Runs table', function() {
         beforeEach(function() {
-            openPage(origPage);
-            waitForPageLoad(sampleId);
-            table = new GenericTableHandler('#runs-section', 2);
+            openPage('samples/' + studyIdAnalysis);
+            waitForPageLoad(studyIdAnalysis);
+            table = new GenericTableHandler('#runs-section', 20);
         });
 
         it('Runs table should respond to ordering', function() {
-            table.testSorting(2, runTableColumns);
+            table.testSorting(20, runTableColumns);
         });
 
         it('Runs table should respond to filtering', function() {
-            table.testFiltering('GCA', [
-                ['GCA_900215965', 'assembly', 'Illumina MiSeq', 'ILLUMINA', '4.0']
+            table.testFiltering('SRR1138702', [
+                ['SRR1138702', 'metatranscriptomic', 'Illumina HiSeq 2000', 'ILLUMINA', '2.0']
             ]);
         });
 
@@ -214,7 +216,7 @@ describe('Sample page', function() {
 
         it('Runs table download link should be valid', function() {
             table.testDownloadLink(
-                Config.API_URL + 'runs?ordering=accession&sample_accession=' + sampleId +
+                Config.API_URL + 'runs?ordering=accession&sample_accession=' + studyIdAnalysis +
                 '&format=csv'
             );
         });
@@ -222,15 +224,106 @@ describe('Sample page', function() {
 
     context('Runs table with >1 analysis per run', function() {
         beforeEach(function() {
-            const projectId = 'ERS853149';
-            const origPage = 'samples/' + projectId;
+            const sampleID = 'ERS853149';
+            const origPage = 'samples/' + sampleID;
             openPage(origPage);
-            waitForPageLoad(projectId);
+            waitForPageLoad(sampleID);
             table = new GenericTableHandler('#runs-section', 1);
         });
 
         it('Runs table should display both pipeline versions for a run', function() {
             table.checkRowData(0, ['ERR1022502', 'metatranscriptomic', '', '', '2.0, 4.0']);
+        });
+    });
+
+    const assembliesTableColumns = {
+        accession: {
+            data: ['ERZ477903', 'ERZ477905'],
+            type: datatype.STR,
+            sortable: true
+        },
+        experiment_type: {
+            data: ['assembly', 'assembly'],
+            type: datatype.STR,
+            sortable: false
+        },
+        wgs_id: {
+            data: ['ODAJ01', 'ODAI01'],
+            type: datatype.STR,
+            sortable: false
+        },
+        legacy_id: {
+            data: ['GCA_900230525', 'GCA_900230525'],
+            type: datatype.STR,
+            sortable: false
+        },
+        pipeline_versions: {
+            data: ['4.0', '4.0'],
+            type: datatype.STR,
+            sortable: false
+        }
+    };
+
+    context('Assemblies table', function() {
+        const sampleId = 'SRS429585';
+        beforeEach(function() {
+            openPage('samples/' + sampleId);
+            waitForPageLoad(sampleId);
+            table = new GenericTableHandler('#assemblies-section', 3);
+        });
+
+        it('Assemblies table should respond to ordering', function() {
+            table.testSorting(3, assembliesTableColumns);
+        });
+
+        it('Assemblies table should respond to filtering', function() {
+            table.testFiltering('ERZ477905', [
+                ['ERZ477905', 'assembly', 'ODAI01', 'GCA_900230535', '4.0']
+            ]);
+        });
+
+        it('Should be toggleable', function() {
+            table.testTableHiding();
+        });
+
+        // Redundant due to low number of runs per sample (2 rows in single page)
+        // it('Runs table should respond to pagination', function () {
+        //     table.testPagination(2, [{
+        //         index: 1,
+        //         data: ['SRR997122', 'amplicon', '', '', '2.0'],
+        //     }, {
+        //         index: 3,
+        //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
+        //     }, {
+        //         index: 'Next',
+        //         data: ['SRR997047', 'amplicon', '', '', '2.0'],
+        //         pageNum: 4
+        //     }, {
+        //         index: 'Previous',
+        //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
+        //         pageNum: 3
+        //     }, {
+        //         index: 'Last',
+        //         data: ['ERR010497', 'metatranscriptomic', '', '', '1.0'],
+        //         pageNum: 506,
+        //         pageSize: 18
+        //     }, {
+        //         index: 'First',
+        //         data: ['SRR997122', 'amplicon', '', '', '2.0'],
+        //         pageNum: 1
+        //     }]);
+        // });
+
+        // it('Runs table should respond to page size change', function () {
+        // TODO use sample with > 25 runs to test
+        //     table.testPageSizeChange(runsTableDefaultSize, 50)
+        // });
+
+        it('Assemblies table download link should be valid', function() {
+            table.testDownloadLink(
+                Config.API_URL + 'assemblies?ordering=accession&sample_accession=' + sampleId +
+                '&format=csv'
+            );
         });
     });
 
@@ -244,7 +337,7 @@ describe('Sample page', function() {
             cy.get('#sample-metadata').contains('No metadata to be displayed.');
         });
 
-        it('Should dispaly metadata fields correctly', function() {
+        it('Should display metadata fields correctly', function() {
             const projectId = 'ERS949427';
             const origPage = 'samples/' + projectId;
             openPage(origPage);
