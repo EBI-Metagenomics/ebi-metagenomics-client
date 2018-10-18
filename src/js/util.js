@@ -786,7 +786,8 @@ export function sendMail(fromEmail, subject, body) {
             console.log('Sent email successfully.');
             deferred.resolve(true);
         },
-        error() {
+        error(e) {
+            console.error(e);
             console.error('Failed to send email.');
             deferred.resolve(false);
         }
