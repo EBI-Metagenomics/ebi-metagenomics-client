@@ -591,7 +591,7 @@ export const AnalysesView = GenericTableView.extend({
 export function getLoginStatus() {
     const deferred = new $.Deferred();
 
-    $.get(api.API_URL + 'utils/myaccounts').done((data, state, xhr) => {
+    $.get({url: api.API_URL + 'utils/myaccounts', dataType: 'json'}).done((data, state, xhr) => {
         try {
             deferred.resolve(String(xhr.status)[0] === '2', data['data'][0]);
         } catch (e) {
