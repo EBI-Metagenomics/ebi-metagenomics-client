@@ -20,7 +20,8 @@ module.exports = class GenericTable {
     constructor($container, options) {
         // constructor($container, title, headers, initialOrdering, initPageSize, isHeader,
         // filter, tableClass, callback) {
-        $container.empty();
+        this.$container = $container;
+        this.$container.empty();
         let title = options['title'];
         let headers = options['headers'];
         let initialOrdering = options['initialOrdering'];
@@ -60,7 +61,7 @@ module.exports = class GenericTable {
             this.attachPageSizeCallback(callback);
         }
         this.order = null;
-        $container.append($sectionContent);
+        this.$container.append($sectionContent);
     }
 
     /**
@@ -283,6 +284,15 @@ module.exports = class GenericTable {
      */
     setDownloadURL(url) {
         this.$downloadLink.attr('href', url);
+    }
+
+    /**
+     * Hide container of table
+     */
+    hide() {
+        this.$container.hide();
+        // Hide any <hr> before table, if it exists
+        this.$container.parent().parent().prev('hr').hide();
     }
 };
 
