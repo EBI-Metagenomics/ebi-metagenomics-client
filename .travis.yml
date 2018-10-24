@@ -98,7 +98,7 @@ install:
   - sudo mv dist/* /usr/share/nginx/html/
 
 script:
-  - npm run test:parallel -- --record --key $CYPRESS_RECORD_KEY
+  - npm run test -- --record --key $CYPRESS_RECORD_KEY
 
 after_script:
   - npm run coverage
