@@ -31,7 +31,6 @@ module.exports = class GenericTable {
         let textFilter = options['textFilter'];
         let biomeFilter = options['biomeFilter'];
         let callback = options['callback'];
-
         this.headers = headers;
         let params = {
             sectionTitle: title,
@@ -62,6 +61,8 @@ module.exports = class GenericTable {
         }
         this.order = null;
         this.$container.append($sectionContent);
+
+        this.hideIfEmpty = options.hasOwnProperty('hideIfEmpty') ? options['hideIfEmpty'] : true;
     }
 
     /**

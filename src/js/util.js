@@ -352,7 +352,7 @@ export let GenericTableView = Backbone.View.extend({
         });
         // Filter empty rows from table
         tableData = tableData.filter(Boolean);
-        if (tableData.length === 0) {
+        if (tableData.length === 0 && this.tableObj.hideIfEmpty) {
             this.tableObj.hide();
         }
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
