@@ -89,6 +89,7 @@ let StudiesView = util.GenericTableView.extend({
             textFilter: true,
             biomeFilter: true,
             tableClass: 'browse-studies-table',
+            hideIfEmpty: false,
             callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
@@ -139,6 +140,7 @@ let SamplesView = util.GenericTableView.extend({
             textFilter: true,
             biomeFilter: true,
             tableClass: 'samples-table',
+            hideIfEmpty: false,
             callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
@@ -192,6 +194,7 @@ let PublicationsView = util.GenericTableView.extend({
             textFilter: true,
             biomeFilter: false,
             tableClass: 'publications-table',
+            hideIfEmpty: false,
             callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,

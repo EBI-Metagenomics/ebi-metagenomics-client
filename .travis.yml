@@ -17,10 +17,6 @@ addons:
 env:
   global:
     - API_URL=http://localhost:9000/metagenomics/api/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
-  matrix:
-    - WORKER=1
-    - WORKER=2
-    - WORKER=3
 
 before_install:
   - pip3 install --user --upgrade pip setuptools
@@ -98,7 +94,7 @@ install:
   - sudo mv dist/* /usr/share/nginx/html/
 
 script:
-  - npm run test:parallel -- --record --key $CYPRESS_RECORD_KEY
+  - npm run test -- --record --key $CYPRESS_RECORD_KEY
 
 after_script:
   - npm run coverage

@@ -272,8 +272,8 @@ describe('Analysis page', function() {
             cy.get('#stacked-column').should('be.visible');
         });
         it('Should load krona chart correctly', function() {
-            cy.get('.krona_chart').then(($krona) => {
-                expect(Cypress.$($krona.contents().find('body'))).to.be.visible;
+            cy.request(Cypress.$('.krona_chart').attr('data')).then((resp) => {
+                expect(resp['status']).to.eq(200);
             });
         });
         it('Should load taxonomy pie charts', function() {

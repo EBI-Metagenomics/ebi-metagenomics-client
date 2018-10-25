@@ -346,10 +346,15 @@ export let GenericTableView = Backbone.View.extend({
 
     renderData(page, pageSize, resultCount, requestURL) {
         const that = this;
-        const tableData = _.map(this.collection.models, function(m) {
+        let tableData = _.map(this.collection.models, function(m) {
             const attr = m.attributes;
             return that.getRowData(attr);
         });
+        // Filter empty rows from table
+        tableData = tableData.filter(Boolean);
+        if (tableData.length === 0 && this.tableObj.hideIfEmpty) {
+            this.tableObj.hide();
+        }
         this.tableObj.update(tableData, true, page, pageSize, resultCount, requestURL);
     }
 });
@@ -422,7 +427,7 @@ export let RunsView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline versions'}
         ];
         let tableOptions = {
-            title: 'Associated runs',
+            title: 'Analysed associated runs',
             headers: columns,
             initialOrdering: 'accession',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
@@ -440,6 +445,7 @@ export let RunsView = GenericTableView.extend({
 
     getRowData(attr) {
         const runLink = '<a href=\'' + attr.analysis_url + '\'>' + attr.run_accession + '</a>';
+        if (attr.pipeline_versions.length === 0) return null;
         return [
             runLink,
             attr['experiment_type'],
@@ -463,7 +469,7 @@ export let AssembliesView = GenericTableView.extend({
             {sortBy: null, name: 'Pipeline versions'}
         ];
         let tableOptions = {
-            title: 'Associated assemblies',
+            title: 'Analysed associated assemblies',
             headers: columns,
             initialOrdering: 'accession',
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
@@ -591,7 +597,7 @@ export const AnalysesView = GenericTableView.extend({
 export function getLoginStatus() {
     const deferred = new $.Deferred();
 
-    $.get(api.API_URL + 'utils/myaccounts').done((data, state, xhr) => {
+    $.get({url: api.API_URL + 'utils/myaccounts', dataType: 'json'}).done((data, state, xhr) => {
         try {
             deferred.resolve(String(xhr.status)[0] === '2', data['data'][0]);
         } catch (e) {
@@ -786,7 +792,8 @@ export function sendMail(fromEmail, subject, body) {
             console.log('Sent email successfully.');
             deferred.resolve(true);
         },
-        error() {
+        error(e) {
+            console.error(e);
             console.error('Failed to send email.');
             deferred.resolve(false);
         }
