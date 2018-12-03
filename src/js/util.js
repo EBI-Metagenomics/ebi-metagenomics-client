@@ -646,10 +646,21 @@ export function loadLoginForm(next) {
         next = subfolder + '/mydata';
     }
     authApi.getLoginForm().then(function(data) {
+        const loginDivID = '#webin-login-error';
         const $div = $(data);
         const $form = $div.find('form');
         $form.submit(function(e) {
             e.preventDefault();
+            $(loginDivID).remove();
+            const $username = $form.find('[name=\'username\']');
+            if ($username.val().indexOf('@')>-1) {
+                console.error('Email is not a valid webin-id, please use your Webin-###');
+                $username.after(
+                    '<p id=\'' + loginDivID + '\' class=\'error\'>' +
+                    'Email is not a valid webin username, please use your Webin-###.' +
+                    '</p>');
+                return;
+            }
             $.ajax({
                 type: 'post',
                 url: $form.attr('action'),

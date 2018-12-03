@@ -30,12 +30,14 @@ module.exports = function CheckboxTree() {
             if (e.originalEvent.isTrusted) {
                 propagateToFacets($(this).attr('name'), $(this).val(), $(this).is(':checked'));
             }
-            setRmvButton($btnContainer, $(this));
+
             callback();
         });
+        $checkbox.change(function(e) {
+            setRmvButton($btnContainer, $(this));
+        });
 
-        const $label = $('<label>' + node.label + ' (' + node.count +
-            ')</label>');
+        const $label = $('<label>' + node.label + ' (' + node.count + ')</label>');
         return $().add($checkbox).add($label);
     };
 
@@ -44,12 +46,12 @@ module.exports = function CheckboxTree() {
         $button.click(function(e) {
             e.preventDefault();
             const $group = $(this).siblings('.facet-child-group');
-
-            $group.toggle();
-            if ($group.is(':visible')) {
-                $(this).text('\u25BC');
-            } else {
+            if ($(this).text() === '\u25BC') {
                 $(this).text('\u25B6');
+                $group.hide();
+            } else {
+                $(this).text('\u25BC');
+                $group.show();
             }
         });
         return $button;
@@ -146,10 +148,6 @@ module.exports = function CheckboxTree() {
             }
         });
     }
-
-    // const getFacetCheckboxes = function ($elem) {
-    //     return $elem.closest('.facet-group').find('input');
-    // };
 
     const setChildrenCheckboxes = function($elem) {
         const $children = getChildrenCheckboxes($elem);
