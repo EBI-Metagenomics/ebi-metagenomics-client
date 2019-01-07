@@ -160,7 +160,7 @@ let RequestPublicFormView = Backbone.View.extend({
                 const email = attr['email'];
                 const studyAcc = this.$el.find('input[name=study-accession]').val();
                 const comments = this.$el.find('input[name=reason]').val();
-                const subject = (priv ? 'Public' : 'Private') + ' analysis request: ' + studyAcc;
+                const subject = (priv ? 'Private' : 'Public') + ' analysis request: ' + studyAcc;
                 let body = 'Study accession: ' + studyAcc + ';' +
                     (priv ? 'Private' : 'Public') + ' analysis.;' +
                     'Requester name: ' + attr['firstName'] + ' ' + attr['surname'] + '.;' +
