@@ -23,7 +23,7 @@ before_install:
   - pip3 install --user --upgrade pip six==1.11.0
   - python3 -V
   - pip3 -V
-  - pip3 install --user "git+git://github.com/ola-t/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
+  - pip3 install --user "git+git://github.com/EBI-metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
   - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
 
   # EMG API CONFIG MODIFICATION
