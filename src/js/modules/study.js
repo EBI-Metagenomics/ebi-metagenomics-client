@@ -57,6 +57,25 @@ let MapData = Backbone.View.extend({
             error() {
             }
         });
+    },
+    fetchAll() {
+        const that = this;
+        this.model.fetch({
+            success(response, meta) {
+                let data = _.map(response.models, function (model) {
+                    return model.attributes;
+                });
+                that.data = that.data.concat(data);
+                if (meta.links.next !== null) {
+                    that.model.url = meta.links.next;
+                    that.fetchAll();
+                } else {
+                    new Map('map', that.data, true);
+                }
+            },
+            error(a, b, c) {
+            }
+        });
     }
 });
 
