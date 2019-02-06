@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists, waitForPageLoad, login, changeTab} from '../util/util';
+import {openPage, datatype, urlExists, waitForPageLoad, changeTab} from '../util/util';
 import Config from '../util/config';
 import GenericTableHandler from '../util/genericTable';
 

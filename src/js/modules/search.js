@@ -25,6 +25,10 @@ const DEFAULT_QUERIES = [
 
 const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)]/;
 
+let ProjectsView;
+let SamplesView;
+let AnalysesView;
+
 /**
  *  Retrieve query object from cookie
  * @return {*}
@@ -833,7 +837,7 @@ const Projects = Search.extend({
 /**
  * View for projects search results
  */
-const ProjectsView = ResultsView.extend({
+ProjectsView = ResultsView.extend({
     facetName: 'projects',
     el: '#projectsResults',
     formEl: 'projectsFilters',
@@ -968,7 +972,7 @@ const ComplexResultsView = ResultsView.extend({
 /**
  * Parametrised subclass of results view w/ sliders
  */
-const SamplesView = ComplexResultsView.extend({
+SamplesView = ComplexResultsView.extend({
     facetName: 'samples',
     el: '#samplesResults',
     formEl: 'samplesFilters',
@@ -990,7 +994,7 @@ const SamplesView = ComplexResultsView.extend({
 /**
  * Parametrised subclass of results view w/ sliders
  */
-const AnalysesView = ComplexResultsView.extend({
+AnalysesView = ComplexResultsView.extend({
     facetName: 'analyses',
     el: '#analysesResults',
     formEl: 'analysesFilters',

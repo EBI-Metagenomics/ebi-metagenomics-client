@@ -33,4 +33,4 @@ emg:
     token: '{SLACK_TOKEN}'
     channel: 'metagenomics-test'
     username: 'travis-tests'
-    fail_silently: false
+    fail_silently: true
