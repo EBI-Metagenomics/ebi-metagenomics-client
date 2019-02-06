@@ -23,6 +23,7 @@ require('../../static/images/nucleic_acids_research_D1_cover.gif');
 require('../../static/images/funding/BBSRC.png');
 require('../../static/images/funding/embl_logo.png');
 require('../../static/images/funding/excelerate_whitebackground.png');
+require('../../static/images/funding/holofood.png');
 require('../../static/images/funding/innovate-uk-logo.png');
 require('../../static/images/ico_graph_krona_on.svg');
 require('../../static/images/ico_graph_pie_on.svg');
