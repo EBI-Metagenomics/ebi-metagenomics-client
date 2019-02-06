@@ -173,7 +173,8 @@ describe('Analysis page', function() {
                 'Reads after sampling: 1 997 827');
         });
         it('Reads length hist should be present', function() {
-            const series = '#readsLengthHist .highcharts-series-group .highcharts-markers .highcharts-point';
+            const series = '#readsLengthHist .highcharts-series-group .highcharts-markers ' +
+                '.highcharts-point';
             cy.get(series).should('be.visible');
         });
         it('Reads length bar chart should be present', function() {

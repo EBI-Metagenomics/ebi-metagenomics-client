@@ -33,7 +33,7 @@ module.exports = function CheckboxTree() {
 
             callback();
         });
-        $checkbox.change(function(e) {
+        $checkbox.change(function() {
             setRmvButton($btnContainer, $(this));
         });
 

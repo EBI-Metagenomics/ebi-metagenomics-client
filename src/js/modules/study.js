@@ -62,7 +62,7 @@ let MapData = Backbone.View.extend({
         const that = this;
         this.model.fetch({
             success(response, meta) {
-                let data = _.map(response.models, function (model) {
+                let data = _.map(response.models, function(model) {
                     return model.attributes;
                 });
                 that.data = that.data.concat(data);
@@ -72,8 +72,6 @@ let MapData = Backbone.View.extend({
                 } else {
                     new Map('map', that.data, true);
                 }
-            },
-            error(a, b, c) {
             }
         });
     }
