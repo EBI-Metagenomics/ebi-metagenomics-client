@@ -19,6 +19,8 @@ window.Foundation.addToJquery($);
 
 require('static/js/blog');
 util.setupPage('#overview-nav');
+util.attachExpandButtonCallback();
+
 
 // Shorthand for $( document ).ready()
 $(function() {
