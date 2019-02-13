@@ -49,7 +49,7 @@ let AssemblyView = Backbone.View.extend({
         }).join(', ');
 
         let enaURL = 'https://www.ebi.ac.uk/ena/portal/api/search?' +
-            'result=assembly&' +
+            'result=analysis&' +
             'format=json&' +
             'query=accession%3D' + attr.assembly_id;
         let enaAccess = attr.assembly_id;
