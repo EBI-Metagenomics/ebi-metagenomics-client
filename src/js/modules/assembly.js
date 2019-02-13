@@ -51,7 +51,7 @@ let AssemblyView = Backbone.View.extend({
         let enaURL = 'https://www.ebi.ac.uk/ena/portal/api/search?' +
             'result=assembly&' +
             'format=json&' +
-            'query=accession%3D' + attr.legacy_id;
+            'query=accession%3D' + attr.assembly_id;
         let enaAccess = attr.assembly_id;
 
         return $.ajax({
@@ -59,7 +59,7 @@ let AssemblyView = Backbone.View.extend({
             url: enaURL
         }).done((data) => {
             if (data.length !== 0) {
-                enaAccess = '<a href=\'https://www.ebi.ac.uk/ena/data/view/' + attr.legacy_id +
+                enaAccess = '<a href=\'https://www.ebi.ac.uk/ena/data/view/' + attr.assembly_id +
                     '\'>' + attr.assembly_id + '</a>';
             }
         }).then(() => {
