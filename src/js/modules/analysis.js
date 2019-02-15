@@ -462,7 +462,6 @@ function constructDescriptionTable(attr) {
     };
 
     if (attr['experiment_type'] === 'assembly') {
-        attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
         description['Assembly'] = '<a href=\'' + attr['assembly_url'] + '\'>' +
             attr['assembly_accession'] + '</a>';
     } else {
@@ -510,9 +509,14 @@ let AnalysisView = Backbone.View.extend({
                 const attr = data.attributes;
                 attr['displaySsuButtons'] = attr.pipeline_version >= 4.0;
                 if (attr['experiment_type'] === 'assembly') {
-                    attr['run_url'] = attr['run_url'].replace('runs', 'assemblies');
+                    attr['other_analyses'] = attr['assembly_url'];
+                } else {
+                    attr['other_analyses'] = attr['run_url'];
                 }
                 that.render(attr.pipeline_version, function() {
+                    if (attr.experiment_type === 'assembly') {
+                        $('#assembly-text-warning').removeClass('hidden');
+                    }
                     $('#analysisSelect').val(attr['pipeline_version']);
 
                     let description = constructDescriptionTable(attr);
@@ -539,6 +543,7 @@ let AnalysisView = Backbone.View.extend({
                             util.changeTab($('#overview'));
                         }
                     }
+
                 });
             },
             error(ignored, response) {
