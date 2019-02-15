@@ -111,7 +111,7 @@ describe('Assembly page', function() {
     context('External links', function() {
         it('Should generate link to ena if page exists', function() {
             openPage(origPage);
-            cy.get('a[href=\'https://www.ebi.ac.uk/ena/data/view/GCA_900217105\']')
+            cy.get('a[href=\'https://www.ebi.ac.uk/ena/data/view/ERZ477708\']')
                 .should('be.visible');
         });
         it('Should generate non-link text if page does not exist', function() {

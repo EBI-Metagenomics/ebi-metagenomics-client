@@ -59,7 +59,7 @@ let AssemblyView = Backbone.View.extend({
             url: enaURL
         }).done((data) => {
             if (data.length !== 0) {
-                enaAccess = '<a href=\'https://www.ebi.ac.uk/ena/data/view/' + attr.legacy_id +
+                enaAccess = '<a href=\'https://www.ebi.ac.uk/ena/data/view/' + attr.assembly_id +
                     '\'>' + attr.assembly_id + '</a>';
             }
         }).then(() => {
