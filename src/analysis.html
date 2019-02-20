@@ -285,8 +285,7 @@
 <script id="downloadsTmpl" type="text/template">
     <div class="row columns">
         <div class="row columns">
-            <p>Here you can download the full set of analysis results files. For the original raw sequence <%= experiment_type === 'assembly' ? 'contigs': 'reads' %>, follow
-                the link to ENA. Multi-part files should be concatenated after unzipping.</p>
+            <p>Here you can download the full set of analysis results files. Multi-part files should be concatenated after unzipping.</p>
         </div>
         <% _.each(groups, function(group, name){ %>
         <h3> <%= name %></h3>
