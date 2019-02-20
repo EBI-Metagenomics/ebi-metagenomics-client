@@ -91,7 +91,7 @@ describe('Analysis page', function() {
         it('Should resolve hash links correctly (download)', function() {
             openPage('analyses/MGYA00136035#download');
             waitForPageLoad('Analysis MGYA00136035');
-            cy.contains('Here you may download').should('be.visible');
+            cy.contains('Here you can download').should('be.visible');
         });
     });
     context('Download tab', function() {
