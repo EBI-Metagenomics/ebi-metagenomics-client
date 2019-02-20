@@ -423,7 +423,11 @@ let DownloadView = Backbone.View.extend({
             data: $.param({page_size: 250}),
             success(response) {
                 setAbundanceTab(response.attributes.downloadGroups['Statistics']);
-                that.$el.html(that.template({groups: that.model.attributes.downloadGroups}));
+                that.$el.html(that.template({
+                        groups: that.model.attributes.downloadGroups,
+                        experiment_type: that.experiment_type
+                    }
+                ));
             }
         });
     }
@@ -433,8 +437,8 @@ let DownloadView = Backbone.View.extend({
  * Load download tab view
  * @param {string} analysisID ENA analysis primary accession
  */
-function loadDownloads(analysisID) {
-    let downloads = new api.AnalysisDownloads({id: analysisID});
+function loadDownloads(analysisID, experimentType) {
+    let downloads = new api.AnalysisDownloads({id: analysisID, experiment_type: experimentType});
     new DownloadView({model: downloads});
 }
 
@@ -532,7 +536,7 @@ let AnalysisView = Backbone.View.extend({
                     loadQCAnalysis(analysisID, attr['pipeline_version']);
                     loadTaxonomicAnalysis(analysisID, attr['pipeline_version'],
                         attr['experiment_type']);
-                    loadDownloads(analysisID, attr['pipeline_version']);
+                    loadDownloads(analysisID, attr['experiment_type']);
 
                     if (attr.experiment_type !== 'amplicon') {
                         loadFunctionalAnalysis(analysisID);
