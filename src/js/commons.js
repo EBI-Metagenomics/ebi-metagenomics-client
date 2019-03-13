@@ -31,6 +31,7 @@ require('../../static/images/ico_graph_barh_on.svg');
 require('../../static/images/ico_graph_col_on.svg');
 
 require('../../static/images/twitter_card/card_image.jpg');
+require('../../static/images/twitter_card/card_image_no_ebi_logo.jpg');
 
 require('../../static/images/graphic_submission_00.gif');
 require('../../static/images/ajax-loader.gif');
