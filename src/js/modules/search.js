@@ -936,7 +936,7 @@ const Analyses = Search.extend({
  */
 const ComplexResultsView = ResultsView.extend({
     params: {},
-    pagination: new Pagination(),
+    pagination: null,
 
     setDefaultParams() {
         this.params = $.extend(true, {}, Search.prototype.params);
@@ -946,6 +946,7 @@ const ComplexResultsView = ResultsView.extend({
 
     initialize() {
         // TODO fetch params from session storage
+        this.pagination = new Pagination();
         this.pagination.setPaginationElem(this.paginationElem);
         const cookieParams = loadSearchParams(this.facetName);
         genInitParams(this, cookieParams);

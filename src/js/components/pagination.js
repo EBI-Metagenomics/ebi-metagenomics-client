@@ -18,7 +18,7 @@ export const Pagination = function() {
      * @param {string} selector
      */
     function setPaginationElem(selector) {
-        pagination = selector;
+        this.pagination = selector;
     }
 
     /**
@@ -34,7 +34,7 @@ export const Pagination = function() {
         opts.totalPages = Math.max(1, parseInt(totalPages));
         setPageDisplay(initPage, totalPages, totalResults);
         $(pageSize).val(initPageSize);
-        $(pagination).twbsPagination(opts).on('page', function(evt, page) {
+        $(this.pagination).twbsPagination(opts).on('page', function(evt, page) {
             callback(page);
         });
     }
@@ -68,8 +68,8 @@ export const Pagination = function() {
         setPageDisplay(p.page, totPages, p.count);
         opts.startPage = p.page;
         opts.totalPages = totPages;
-        $(pagination).twbsPagination('destroy');
-        $(pagination).twbsPagination($.extend({}, opts, {
+        $(this.pagination).twbsPagination('destroy');
+        $(this.pagination).twbsPagination($.extend({}, opts, {
             startPage: p.PAGE,
             totalPages: totPages
         })).on('page', function(evt, page) {
