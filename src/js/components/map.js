@@ -3,25 +3,16 @@ const _ = require('underscore');
 const template = require('../../partials/map_tooltip.handlebars');
 const api = require('mgnify').api(process.env.API_URL);
 const subfolder = require('../util').subfolder;
-let MarkerClusterer = require('node-js-marker-clusterer');
-
-MarkerClusterer.prototype.calculator_ = function(markers, numStyles) {
-    let index = 0;
-    let count = markers.reduce((s, f) => {
-        return s + f.emg_sample_count;
-    }, 0);
-    let dv = count;
-    while (dv !== 0) {
-        dv = parseInt(dv / 10, 10);
-        index++;
-    }
-
-    index = Math.min(index, numStyles);
-    return {
-        text: count,
-        index: index
-    };
-};
+// let MarkerClusterer = require('node-js-marker-clusterer');
+const ol = require('ol');
+const source = require('ol/source');
+const layer = require('ol/layer');
+const geom = require('ol/geom');
+const proj = require('ol/proj');
+const extent = require('ol/extent');
+const styleLib = require('ol/style');
+const controlLib = require('ol/control');
+const styleCss = require('ol/ol.css');
 
 /**
  * Return sample coordinates from sample obj
@@ -143,120 +134,205 @@ module.exports = class MapHandler {
      * @param {string} studyAccession
      */
     constructor(elementId, samples, enableTooltips, studyAccession) {
-        let map = new google.maps.Map(document.getElementById(elementId), {
-            streetViewControl: false,
-            zoom: 1,
-            center: new google.maps.LatLng(0.0, 0.0)
-        });
-
-        // // Do not display markers with invalid Lat/Long values
-        const that = this;
-        let markers = samples.reduce(function(result, sample) {
-            const lat = sample.latitude;
-            const lng = sample.longitude;
-            if ((lat !== null) && (lng !== null)) {
-                result.push(that.placeMarker(map, sample, enableTooltips, studyAccession));
-            }
-            return result;
-        }, []);
-
-        // transform icon into symbol - from
-        // http://stackoverflow.com/questions/33353250/google-maps-api-markerclusterer-plus-set-icon
-        let Symbol = function(id, width, height, fill, strokewidth, strokecolor) {
-            return ('data:image/svg+xml;base64,' +
-                window.btoa('<svg xmlns="http://www.w3.org/2000/svg" height="' + height +
-                    '" viewBox="0 0 512 512" width="' + width + '" ><g><path stroke-width="' +
-                    strokewidth + '" stroke="' + strokecolor + '" fill="' + fill + '" d="' +
-                    ' M 100, 100m -75, 0a 75,75 0 1,0 150,0a 75,75 0 1,0 -150,0' +
-                    '" /></g></svg>'));
-        };
-
-        $.when(...markers).then((...markerObjs) => {
-            let mcOptions = {
-                gridSize: 40, maxZoom: 15,
-                styles: [
-                    {
-                        textColor: 'white',
-                        width: 40,
-                        height: 40,
-                        url: Symbol('luc', 100, 100, '#1a5286', 16, 'white')
-                    },
-                    {
-                        textColor: 'white',
-                        textSize: '18',
-                        width: 78,
-                        height: 78,
-                        url: Symbol('luc', 200, 200, '#1a5286', 5, 'white')
-                    }
-                ]
-            };
-            new MarkerClusterer(map, markerObjs, mcOptions);
-        });
-
-        const $map = $('#' + elementId);
-        if (markers.length === 0) {
-            const $parentDiv = $map.parent();
-            $map.addClass('disabled');
-
-            $parentDiv.hover(function() {
-                    $map.siblings('.no-coords-span').css('display', 'block');
-                }, function() {
-                    $map.siblings('.no-coords-span').css('display', 'none');
+        let minLat = 180;
+        let maxLat = -180;
+        let minLng = 180;
+        let maxLng = -180;
+        let features = [];
+        for (let i = 0; i < samples.length; i++) {
+            const sample = samples[i];
+            const coords = [sample['latitude'], sample['longitude']];
+            if (coords[0] !== null && coords[1] !== null) {
+                if (coords[0] < minLat) {
+                    minLat = coords[0];
+                } else if (coords[0] > maxLat) {
+                    maxLat = coords[0];
                 }
-            );
+                if (coords[1] < minLng) {
+                    minLng = coords[1];
+                } else if (coords[1] > maxLng) {
+                    maxLng = coords[1];
+                }
+                features.push(new ol.Feature(new geom.Point(coords)));
+            }
         }
+
+        let featureSrc = new source.Vector({
+            features: features
+        });
+
+        let clusterSource = new source.Cluster({
+            distance: 50,
+            source: featureSrc
+        });
+
+        let styleCache = {};
+        let clusters = new layer.Vector({
+            source: clusterSource,
+            style: function(feature) {
+                let size = feature.get('features').length;
+                let style = styleCache[size];
+                if (!style) {
+                    style = new styleLib.Style({
+                        image: new styleLib.Circle({
+                            radius: 10,
+                            stroke: new styleLib.Stroke({
+                                color: '#fff'
+                            }),
+                            fill: new styleLib.Fill({
+                                color: '#3399CC'
+                            })
+                        }),
+                        text: new styleLib.Text({
+                            text: size.toString(),
+                            fill: new styleLib.Fill({
+                                color: '#fff'
+                            })
+                        })
+                    });
+                    styleCache[size] = style;
+                }
+                return style;
+            }
+        });
+
+        let raster = new layer.Tile({
+            source: new source.OSM()
+        });
+        let ext = extent.boundingExtent([[minLat, minLng], [maxLat, maxLng]]);
+        ext = proj.transformExtent(ext, proj.get('EPSG:4326'), proj.get('EPSG:4326'));
+
+        let map = new ol.Map({
+            target: elementId,
+            controls: controlLib.defaults().extend([
+                new controlLib.ZoomToExtent({
+                    extent: ext
+                })
+            ]),
+            layers: [raster, clusters],
+            view: new ol.View({
+                center: [0, 0],
+                zoom: 2
+            })
+        });
+
+        map.getView().fit(ext, map.getSize());
+
+        return;
+        // new layer.let map = new google.maps.Map(document.getElementById(elementId), {
+        //     streetViewControl: false,
+        //     zoom: 1,
+        //     center: new google.maps.LatLng(0.0, 0.0)
+        // });
+        //
+        // // Do not display markers with invalid Lat/Long values
+        // const that = this;
+        // let markers = samples.reduce(function(result, sample) {
+        //     const lat = sample.latitude;
+        //     const lng = sample.longitude;
+        //     if ((lat !== null) && (lng !== null)) {
+        //         result.push(that.placeMarker(map, sample, enableTooltips, studyAccession));
+        //     }
+        //     return result;
+        // }, []);
+        //
+        // // transform icon into symbol - from
+        // // http://stackoverflow.com/questions/33353250/google-maps-api-markerclusterer-plus-set-icon
+        // let Symbol = function(id, width, height, fill, strokewidth, strokecolor) {
+        //     return ('data:image/svg+xml;base64,' +
+        //         window.btoa('<svg xmlns="http://www.w3.org/2000/svg" height="' + height +
+        //             '" viewBox="0 0 512 512" width="' + width + '" ><g><path stroke-width="' +
+        //             strokewidth + '" stroke="' + strokecolor + '" fill="' + fill + '" d="' +
+        //             ' M 100, 100m -75, 0a 75,75 0 1,0 150,0a 75,75 0 1,0 -150,0' +
+        //             '" /></g></svg>'));
+        // };
+        //
+        // $.when(...markers).then((...markerObjs) => {
+        //     let mcOptions = {
+        //         gridSize: 40, maxZoom: 15,
+        //         styles: [
+        //             {
+        //                 textColor: 'white',
+        //                 width: 40,
+        //                 height: 40,
+        //                 url: Symbol('luc', 100, 100, '#1a5286', 16, 'white')
+        //             },
+        //             {
+        //                 textColor: 'white',
+        //                 textSize: '18',
+        //                 width: 78,
+        //                 height: 78,
+        //                 url: Symbol('luc', 200, 200, '#1a5286', 5, 'white')
+        //             }
+        //         ]
+        //     };
+        //     new MarkerClusterer(map, markerObjs, mcOptions);
+        // });
+
+        // const $map = $('#' + elementId);
+        // if (markers.length === 0) {
+        //     const $parentDiv = $map.parent();
+        //     $map.addClass('disabled');
+        //
+        //     $parentDiv.hover(function() {
+        //             $map.siblings('.no-coords-span').css('display', 'block');
+        //         }, function() {
+        //             $map.siblings('.no-coords-span').css('display', 'none');
+        //         }
+        //     );
+        // }
         window.map = map;
         return map;
     }
 
-    /**
-     * Places a marker on the map
-     * @param {object} map
-     * @param {object} coords
-     * @param {boolean} enableTooltips if true add tooltips to markers
-     * @param {string} studyAccession
-     * @return {jQuery.Deferred} promise of marker object
-     */
-    placeMarker(map, coords, enableTooltips, studyAccession) {
-        const formattedCoords = getSamplePosition(coords);
-        return generateIcon(formattedCoords.count, function(src) {
-                let pos = new google.maps.LatLng(formattedCoords.lat, formattedCoords.lng);
-
-                const marker = new google.maps.Marker({
-                    position: pos,
-                    map: map,
-                    icon: src
-                });
-                marker.emg_sample_count = formattedCoords.count;
-                if (enableTooltips) {
-                    let infowindow = new google.maps.InfoWindow({
-                        content: template(formattedCoords)
-                    });
-                    marker.addListener('click', function() {
-                        infowindow.open(map, marker);
-                        const samplesParams = $.param({
-                            latitude_gte: formattedCoords.lat,
-                            latitude_lte: formattedCoords.lat,
-                            longitude_gte: formattedCoords.lng,
-                            longitude_lte: formattedCoords.lng,
-                            study_accession: studyAccession,
-                            page_size: 500
-                        });
-                        const samples = new api.SamplesCollection();
-                        const $list = $('#' + formattedCoords['uuid-samples']);
-                        samples.fetch({
-                            data: samplesParams
-                        }).then((response) => {
-                            $list.empty();
-                            _.each(response.data, function(d) {
-                                addSampleToList($list, api.Sample.prototype.parse(d));
-                            });
-                            $('#' + formattedCoords['uuid-loading-icon']).fadeOut();
-                        });
-                    });
-                }
-                return marker;
-            }
-        );
-    }
+    // /**
+    //  * Places a marker on the map
+    //  * @param {object} map
+    //  * @param {object} coords
+    //  * @param {boolean} enableTooltips if true add tooltips to markers
+    //  * @param {string} studyAccession
+    //  * @return {jQuery.Deferred} promise of marker object
+    //  */
+    // placeMarker(map, coords, enableTooltips, studyAccession) {
+    //     const formattedCoords = getSamplePosition(coords);
+    //     return generateIcon(formattedCoords.count, function(src) {
+    //             let pos = new google.maps.LatLng(formattedCoords.lat, formattedCoords.lng);
+    //
+    //             const marker = new google.maps.Marker({
+    //                 position: pos,
+    //                 map: map,
+    //                 icon: src
+    //             });
+    //             marker.emg_sample_count = formattedCoords.count;
+    //             if (enableTooltips) {
+    //                 let infowindow = new google.maps.InfoWindow({
+    //                     content: template(formattedCoords)
+    //                 });
+    //                 marker.addListener('click', function() {
+    //                     infowindow.open(map, marker);
+    //                     const samplesParams = $.param({
+    //                         latitude_gte: formattedCoords.lat,
+    //                         latitude_lte: formattedCoords.lat,
+    //                         longitude_gte: formattedCoords.lng,
+    //                         longitude_lte: formattedCoords.lng,
+    //                         study_accession: studyAccession,
+    //                         page_size: 500
+    //                     });
+    //                     const samples = new api.SamplesCollection();
+    //                     const $list = $('#' + formattedCoords['uuid-samples']);
+    //                     samples.fetch({
+    //                         data: samplesParams
+    //                     }).then((response) => {
+    //                         $list.empty();
+    //                         _.each(response.data, function(d) {
+    //                             addSampleToList($list, api.Sample.prototype.parse(d));
+    //                         });
+    //                         $('#' + formattedCoords['uuid-loading-icon']).fadeOut();
+    //                     });
+    //                 });
+    //             }
+    //             return marker;
+    //         }
+    //     );
+    // }
 };
