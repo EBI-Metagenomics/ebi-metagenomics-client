@@ -166,13 +166,13 @@ describe('Search page', function() {
         });
 
         // it('Pagination - double page change', function() {
-        //     // cy.route('**metagenomics_projects?**start=0**', 'fixture:projectsInitQuery')
-        //     //     .as('fetchPage1');
-        //     // cy.route('**metagenomics_projects?**start=25**', 'fixture:projectsInitQueryPage2')
-        //     //     .as('fetchPage2');
+        //     cy.route('**metagenomics_projects?**start=0**', 'fixture:projectsInitQuery')
+        //         .as('fetchPage1');
+        //     cy.route('**metagenomics_projects?**start=25**', 'fixture:projectsInitQueryPage2')
+        //         .as('fetchPage2');
         //     loadPage(origPage + '#projects');
         //     const firstPageFirstRowData = [
-        //         'PRJNA46321','MGYS00000277','Fecal',
+        //         'PRJNA46321', 'MGYS00000277', 'Fecal',
         //         '',
         //         '',
         //         '',
@@ -185,7 +185,7 @@ describe('Search page', function() {
         //     cy.get('#projects-pagination > ul > li.page-item.next a').click({force: true});
         //     cy.wait('@fetchPage2');
         //     studyTable.checkRowData(0,
-        //         ['PRJEB9856','MGYS00001760','Cecum','','','','COPENHAGEN UNIVERSITY']);
+        //         ['PRJEB9856', 'MGYS00001760', 'Cecum', '', '', '', 'COPENHAGEN UNIVERSITY']);
         //
         //     cy.get('#projects-pagination > ul > li.page-item.first a').click({force: true});
         //     cy.wait('@fetchPage1');

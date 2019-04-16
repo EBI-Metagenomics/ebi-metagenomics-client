@@ -65,6 +65,14 @@ export let Util = {
     },
     setupDefaultSearchPageRouting: function() {
         cy.server();
+
+        cy.route({
+            'method': 'HEAD',
+            'url': 'http://localhost:8000/v1/',
+            'status': 200,
+            'response': {}
+        });
+
         // Basic page load
         cy.route('GET',
             '**/ebisearch/ws/rest/metagenomics_projects?format=json&size=25&start=0&**' +
