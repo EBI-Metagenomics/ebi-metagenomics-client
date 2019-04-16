@@ -37,15 +37,15 @@ let StudyView = Backbone.View.extend({
 });
 
 let MapData = Backbone.View.extend({
-    model: api.StudyGeoCoordinates,
-    initialize() {
+    initialize(params) {
         this.data = [];
+        this.collection = params['collection'];
+        this.study_accession = params['study_accession'];
         const that = this;
-        this.model.fetch({
+        this.collection.fetch({
+            data: $.param({study_accession: that.study_accession}),
             success(response, meta) {
-                let data = _.map(response.attributes.data, function(model) {
-                    return model.attributes;
-                });
+                let data = response.models;
                 that.data = that.data.concat(data);
                 if (meta.links.next !== null) {
                     that.url = meta.links.next;
@@ -60,14 +60,13 @@ let MapData = Backbone.View.extend({
     },
     fetchAll() {
         const that = this;
-        this.model.fetch({
+        this.collection.fetch({
+            data: $.param({study_accession: that.study_accession}),
             success(response, meta) {
-                let data = _.map(response.models, function(model) {
-                    return model.attributes;
-                });
+                let data = response.models;
                 that.data = that.data.concat(data);
                 if (meta.links.next !== null) {
-                    that.model.url = meta.links.next;
+                    that.collection.url = meta.links.next;
                     that.fetchAll();
                 } else {
                     new Map('map', that.data, true);
@@ -93,7 +92,7 @@ let DownloadsView = Backbone.View.extend({
 });
 
 /**
- * Method to initialise page load from googleMaps loading callback
+ * Method to initialise page load
  */
 function initPage() {
     let study = new api.Study({id: studyId});
@@ -101,15 +100,14 @@ function initPage() {
 
     let analyses = new api.StudyAnalyses({id: studyId});
     let downloads = new api.StudyDownloads({id: studyId});
-    let coordinates = new api.StudyGeoCoordinates({id: studyId});
+    let samples = new api.SamplesCollection();
 
     studyView.fetchAndRender().done(() => {
         new util.AnalysesView({collection: analyses});
-        new MapData({model: coordinates});
+        new MapData({collection: samples, study_accession: studyId});
         new DownloadsView({model: downloads});
         util.attachExpandButtonCallback();
     });
 }
 
-window.initPage = initPage;
-
+initPage();
