@@ -286,19 +286,18 @@ describe('Analysis page', function() {
                 expect(Cypress.$($label).text()).to.contain('Bacteria: 98.73 %');
             });
             cy.get('#phylum-composition-pie svg text:nth-child(1):first').then(($label) => {
-                expect(Cypress.$($label).text()).to.contain('Unassigned Bacteria: 98.73 %');
+                expect(Cypress.$($label).text()).to.contain('Proteobacteria: 67.54 %');
             });
         });
-        // Not enough data to test pagination
-        // it('Taxonomy pie chart table pagination', function() {
-        //     changeTab('pie');
-        //     taxonomyTable = new ClientSideTableHandler('#pie .phylum-table', 4, false);
-        //     taxonomyTable.testPagination(25, taxonomyTablePagination);
-        // });
+        it('Taxonomy pie chart table pagination', function() {
+            changeTab('pie');
+            taxonomyTable = new ClientSideTableHandler('#pie .phylum-table', 25, false);
+            taxonomyTable.testPagination(25, taxonomyTablePagination);
+        });
         it('Taxonomy pie chart table ordering', function() {
             changeTab('pie');
-            taxonomyTable = new ClientSideTableHandler('#pie .phylum-table', 4, false);
-            taxonomyTable.testSorting(4, taxonomyTableColumns);
+            taxonomyTable = new ClientSideTableHandler('#pie .phylum-table', 25, false);
+            taxonomyTable.testSorting(25, taxonomyTableColumns);
         });
         it('Should load taxonomy bar charts', function() {
             changeTab('column');
@@ -307,18 +306,17 @@ describe('Analysis page', function() {
             // Check elements in both charts
             cy.get('#domain-composition-column svg .highcharts-point').should('have.length', 3);
             cy.get('#phylum-composition-column svg .highcharts-point')
-                .should('have.length', 4);
+                .should('have.length', 25);
         });
-        // Not enough data to test pagination
-        // it('Taxonomy column chart table pagination', function() {
-        //     changeTab('column');
-        //     taxonomyTable = new ClientSideTableHandler('#column .phylum-table', 25, false);
-        //     taxonomyTable.testPagination(4, taxonomyTablePagination);
-        // });
+        it('Taxonomy column chart table pagination', function() {
+            changeTab('column');
+            taxonomyTable = new ClientSideTableHandler('#column .phylum-table', 25, false);
+            taxonomyTable.testPagination(25, taxonomyTablePagination);
+        });
         it('Taxonomy column chart table ordering', function() {
             changeTab('column');
-            taxonomyTable = new ClientSideTableHandler('#column .phylum-table', 4, false);
-            taxonomyTable.testSorting(4, taxonomyTableColumns);
+            taxonomyTable = new ClientSideTableHandler('#column .phylum-table', 25, false);
+            taxonomyTable.testSorting(25, taxonomyTableColumns);
         });
         it('Should load taxonomy stacked bar charts', function() {
             changeTab('stacked-column');
@@ -330,18 +328,17 @@ describe('Analysis page', function() {
                     expect(Cypress.$($label).text()).to.contain('29 061');
                 });
         });
-        // Not enough data to test pagination
-        // it('Taxonomy stacked-column chart table pagination', function() {
-        //     changeTab('stacked-column');
-        //     taxonomyTable = new ClientSideTableHandler('#stacked-column .phylum-table', 4,
-        //         false);
-        //     taxonomyTable.testPagination(4, taxonomyTablePagination);
-        // });
+        it('Taxonomy stacked-column chart table pagination', function() {
+            changeTab('stacked-column');
+            taxonomyTable = new ClientSideTableHandler('#stacked-column .phylum-table', 25,
+                false);
+            taxonomyTable.testPagination(25, taxonomyTablePagination);
+        });
         it('Taxonomy stacked-column chart table ordering', function() {
             changeTab('stacked-column');
-            taxonomyTable = new ClientSideTableHandler('#stacked-column .phylum-table', 4,
+            taxonomyTable = new ClientSideTableHandler('#stacked-column .phylum-table', 25,
                 false);
-            taxonomyTable.testSorting(4, taxonomyTableColumns);
+            taxonomyTable.testSorting(25, taxonomyTableColumns);
         });
     });
 
