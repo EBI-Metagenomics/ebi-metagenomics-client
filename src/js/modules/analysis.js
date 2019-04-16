@@ -209,7 +209,7 @@ function loadTaxonomy(analysisID, subunitType) {
         {accession: analysisID, type: subunitType},
         {title: 'Phylum composition', seriesName: 'reads'});
 
-    phylumColumn.loaded.done(() => {
+    stackedColumn.loaded.done(() => {
         const headers = [
             {sortBy: 'a', name: ''},
             {sortBy: 'a', name: 'Phylum'},
@@ -231,11 +231,9 @@ function loadTaxonomy(analysisID, subunitType) {
             initPageSize: DEFAULT_PAGE_SIZE
         };
         const numSeries = stackedColumn.chart.series[0].data.length;
-        console.log($('#stacked-column').find('.phylum-table'));
         const phylumStackedColumnTable = new ClientSideTable(
             $('#stacked-column').find('.phylum-table'), options);
         phylumStackedColumnTable.update(data, false, 1);
-        console.log(data);
         phylumStackedColumnTable.$tbody.find('tr').hover(function() {
             let index = getSeriesIndex($(this).index(), numSeries);
             stackedColumn.chart.series[index].data[0].setState('hover');
