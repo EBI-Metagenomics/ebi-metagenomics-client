@@ -66,7 +66,7 @@ const PublicationStudiesView = util.StudiesView.extend({
 });
 
 /**
- * Method to initialise page load from googleMaps loading callback
+ * Method to initialise page load
  */
 function initPage() {
     let study = new api.Publication({id: publicationID});
@@ -85,5 +85,5 @@ function initPage() {
     });
 }
 
-window.initPage = initPage;
+initPage();
 

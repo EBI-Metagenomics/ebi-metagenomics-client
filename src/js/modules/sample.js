@@ -70,7 +70,7 @@ let SampleView = Backbone.View.extend({
                 } else {
                     $('#sample-metadata').html('No metadata to be displayed.');
                 }
-                new Map('map', [that.model.attributes], false);
+                new Map('map', [that.model], false);
                 deferred.resolve(true);
             },
             error(ignored, response) {
@@ -82,7 +82,7 @@ let SampleView = Backbone.View.extend({
 });
 
 /**
- * Method to initialise page load from googleMaps loading callback
+ * Initialise page load
  */
 function initPage() {
     let sample = new api.Sample({id: sampleId});
@@ -109,4 +109,4 @@ function initPage() {
     });
 }
 
-window.initPage = initPage;
+initPage();

@@ -112,7 +112,7 @@ function loadTaxonomy(analysisID, subunitType) {
         {title: 'Domain composition', seriesName: 'reads', subtitle: false}
     );
     const phylumPie = new charts.TaxonomyPie('phylum-composition-pie',
-        {accession: analysisID, type: subunitType, groupingDepth: 1},
+        {accession: analysisID, type: subunitType, groupingDepth: 2},
         {title: 'Phylum composition', seriesName: 'reads', legend: true}
     );
 
@@ -160,7 +160,7 @@ function loadTaxonomy(analysisID, subunitType) {
         {accession: analysisID, type: subunitType},
         {title: 'Domain composition', seriesName: 'reads', subtitle: false});
     const phylumColumn = new charts.TaxonomyColumn('phylum-composition-column',
-        {accession: analysisID, type: subunitType, groupingDepth: 1},
+        {accession: analysisID, type: subunitType, groupingDepth: 2},
         {title: 'Phylum composition', seriesName: 'reads'}
     );
 

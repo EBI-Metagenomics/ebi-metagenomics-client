@@ -31,7 +31,7 @@ module.exports = function Slider() {
             } else {
                 setRmvButton($btnContainer, $switch, $slider, label, name);
             }
-            if (e.originalEvent.isTrusted) {
+            if (e.originalEvent && e.originalEvent.isTrusted) {
                 _.each(allFormIds, function(formId) {
                     const $facetButton = $(formId)
                         .find('.switch-input[data-facet-name=\'' + label + '\']');
