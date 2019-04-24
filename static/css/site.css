@@ -1064,3 +1064,7 @@ ul.training > li:last-child:before {
 .hidden {
     display: none;
 }
+
+.analyses-table th:nth-child(3), td:nth-child(3) {
+    max-width: 44em;
+}
