@@ -1,77 +1,78 @@
-'use strict';{//-----------------------------------------------------------------------------
-    //
-    // PURPOSE
-    //
-    // Krona is a flexible tool for exploring the relative proportions of
-    // hierarchical data, such as metagenomic classifications, using a
-    // radial, space-filling display. It is implemented using HTML5 and
-    // JavaScript, allowing charts to be explored locally or served over the
-    // Internet, requiring only a current version of any major web
-    // browser. Krona charts can be created using an Excel template or from
-    // common bioinformatic formats using the provided conversion scripts.
-    //
-    //
-    // COPYRIGHT LICENSE
-    //
-    // Copyright (c) 2011, Battelle National Biodefense Institute (BNBI);
-    // all rights reserved. Authored by: Brian Ondov, Nicholas Bergman, and
-    // Adam Phillippy
-    //
-    // This Software was prepared for the Department of Homeland Security
-    // (DHS) by the Battelle National Biodefense Institute, LLC (BNBI) as
-    // part of contract HSHQDC-07-C-00020 to manage and operate the National
-    // Biodefense Analysis and Countermeasures Center (NBACC), a Federally
-    // Funded Research and Development Center.
-    //
-    // Redistribution and use in source and binary forms, with or without
-    // modification, are permitted provided that the following conditions are
-    // met:
-    //
-    // * Redistributions of source code must retain the above copyright
-    //   notice, this list of conditions and the following disclaimer.
-    //
-    // * Redistributions in binary form must reproduce the above copyright
-    //   notice, this list of conditions and the following disclaimer in the
-    //   documentation and/or other materials provided with the distribution.
-    //
-    // * Neither the name of the Battelle National Biodefense Institute nor
-    //   the names of its contributors may be used to endorse or promote
-    //   products derived from this software without specific prior written
-    //   permission.
-    //
-    // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-    // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-    // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-    // HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-    // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-    // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-    // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-    // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-    // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-    //
-    //
-    // TRADEMARK LICENSE
-    //
-    // KRONA(TM) is a trademark of the Department of Homeland Security, and use
-    // of the trademark is subject to the following conditions:
-    //
-    // * Distribution of the unchanged, official code/software using the
-    //   KRONA(TM) mark is hereby permitted by the Department of Homeland
-    //   Security, provided that the software is distributed without charge
-    //   and modification.
-    //
-    // * Distribution of altered source code/software using the KRONA(TM) mark
-    //   is not permitted unless written permission has been granted by the
-    //   Department of Homeland Security.
-    //
-    //
-    // FOR MORE INFORMATION VISIT
-    //
-    // http://krona.sourceforge.net
-    //
-    //-----------------------------------------------------------------------------
+'use strict';
+{//-----------------------------------------------------------------------------
+//
+// PURPOSE
+//
+// Krona is a flexible tool for exploring the relative proportions of
+// hierarchical data, such as metagenomic classifications, using a
+// radial, space-filling display. It is implemented using HTML5 and
+// JavaScript, allowing charts to be explored locally or served over the
+// Internet, requiring only a current version of any major web
+// browser. Krona charts can be created using an Excel template or from
+// common bioinformatic formats using the provided conversion scripts.
+//
+//
+// COPYRIGHT LICENSE
+//
+// Copyright (c) 2011, Battelle National Biodefense Institute (BNBI);
+// all rights reserved. Authored by: Brian Ondov, Nicholas Bergman, and
+// Adam Phillippy
+//
+// This Software was prepared for the Department of Homeland Security
+// (DHS) by the Battelle National Biodefense Institute, LLC (BNBI) as
+// part of contract HSHQDC-07-C-00020 to manage and operate the National
+// Biodefense Analysis and Countermeasures Center (NBACC), a Federally
+// Funded Research and Development Center.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+// * Redistributions of source code must retain the above copyright
+//   notice, this list of conditions and the following disclaimer.
+//
+// * Redistributions in binary form must reproduce the above copyright
+//   notice, this list of conditions and the following disclaimer in the
+//   documentation and/or other materials provided with the distribution.
+//
+// * Neither the name of the Battelle National Biodefense Institute nor
+//   the names of its contributors may be used to endorse or promote
+//   products derived from this software without specific prior written
+//   permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//
+// TRADEMARK LICENSE
+//
+// KRONA(TM) is a trademark of the Department of Homeland Security, and use
+// of the trademark is subject to the following conditions:
+//
+// * Distribution of the unchanged, official code/software using the
+//   KRONA(TM) mark is hereby permitted by the Department of Homeland
+//   Security, provided that the software is distributed without charge
+//   and modification.
+//
+// * Distribution of altered source code/software using the KRONA(TM) mark
+//   is not permitted unless written permission has been granted by the
+//   Department of Homeland Security.
+//
+//
+// FOR MORE INFORMATION VISIT
+//
+// https://github.com/marbl/Krona/wiki/
+//
+//-----------------------------------------------------------------------------
 }
 
 var canvas;
@@ -187,7 +188,7 @@ var keyMinAngle;
 var minRingWidthFactor = 5; // will be multiplied by font size
 var maxPossibleDepth; // the theoretical max that can be displayed
 var maxDisplayDepth; // the actual depth that will be displayed
-var headerHeight = 0; //document.getElementById('options').clientHeight;
+var headerHeight = 0;//document.getElementById('options').clientHeight;
 var historySpacingFactor = 1.6; // will be multiplied by font size
 var historyAlphaDelta = .25;
 
@@ -202,8 +203,8 @@ var highlightLineWidth = 1.5;
 var labelBoxBuffer = 6;
 var labelBoxRounding = 15;
 var labelWidthFudge = 1.05; // The width of unshortened labels are set slightly
-// longer than the name width so the animation
-// finishes faster.
+                            // longer than the name width so the animation
+                            // finishes faster.
 var fontNormal;
 var fontBold;
 var fontFamily = 'sans-serif';
@@ -235,6 +236,8 @@ var nLabelOffsets = 3; // the number of offsets to use
 
 var mouseX = -1;
 var mouseY = -1;
+var mouseXRel = -1;
+var mouseYRel = -1;
 
 // tweening
 //
@@ -290,83 +293,83 @@ var hiddenPattern;
 var loadingImage;
 var logoImage;
 
-function resize()
-{
+function backingScale() {
+    if ('devicePixelRatio' in window) {
+        if (window.devicePixelRatio > 1) {
+            return window.devicePixelRatio;
+        }
+    }
+
+    return 1;
+}
+
+function resize() {
     imageWidth = window.innerWidth;
     imageHeight = window.innerHeight;
 
-    if (!snapshotMode)
-    {
-        context.canvas.width = imageWidth;
-        context.canvas.height = imageHeight;
+    if (!snapshotMode) {
+        context.canvas.width = imageWidth * backingScale();
+        context.canvas.height = imageHeight * backingScale();
+        context.canvas.style.width = imageWidth + 'px';
+        context.canvas.style.height = imageHeight + 'px';
+        context.scale(backingScale(), backingScale());
     }
 
-    if (datasetDropDown)
-    {
+    if (datasetDropDown) {
         var ratio =
-        (datasetDropDown.offsetTop + datasetDropDown.clientHeight) * 2 /
-        imageHeight;
+            (datasetDropDown.offsetTop + datasetDropDown.clientHeight) * 2 /
+            imageHeight;
 
-        if (ratio > 1)
-        {
+        if (ratio > 1) {
             ratio = 1;
         }
 
         ratio = Math.sqrt(ratio);
 
         datasetSelectWidth =
-        (datasetDropDown.offsetLeft + datasetDropDown.clientWidth) * ratio;
+            (datasetDropDown.offsetLeft + datasetDropDown.clientWidth) * ratio;
     }
     var leftMargin = datasets > 1 ? datasetSelectWidth + 30 : 0;
-    var minDimension = imageWidth - mapWidth - leftMargin > imageHeight ?
-    imageHeight :
-    imageWidth - mapWidth - leftMargin;
+    var minDimension = imageWidth - mapWidth - leftMargin > imageHeight ? imageHeight : imageWidth -
+        mapWidth - leftMargin;
 
     maxMapRadius = minDimension * .03;
     buffer = minDimension * bufferFactor;
     margin = minDimension * .015;
-    centerX = (imageWidth - mapWidth - leftMargin) / 2 + leftMargin + 30;
+    centerX = (imageWidth - mapWidth - leftMargin) / 2 + leftMargin;
     centerY = imageHeight / 2;
-    gRadius = minDimension / 2 - buffer - 30; /*change the default width of the chart*/
+    gRadius = minDimension / 2 - buffer;
     //context.font = '11px sans-serif';
 }
 
-function handleResize()
-{
+function handleResize() {
     updateViewNeeded = true;
 }
 
-function Attribute()
-{
+function Attribute() {
 }
 
-function Tween(start, end)
-{
+function Tween(start, end) {
     this.start = start;
     this.end = end;
     this.current = this.start;
 
-    this.current = function ()
-    {
-        if (progress == 1 || this.start == this.end)
-        {
+    this.current = function() {
+        if (progress == 1 || this.start == this.end) {
             return this.end;
-        } else
-
-        {
+        }
+        else {
             return this.start + tweenFactor * (this.end - this.start);
         }
     };
 
-    this.setTarget = function (target)
-    {
+    this.setTarget = function(target) {
         this.start = this.current();
         this.end = target;
     };
 }
 
-function Node()
-{
+function Node() {
     this.id = currentNodeID;
     currentNodeID++;
     nodes[this.id] = this;
@@ -394,15 +397,12 @@ function Node()
 
     this.attributes = new Array(attributes.length);
 
-    this.addChild = function (child)
-    {
+    this.addChild = function(child) {
         this.children.push(child);
     };
 
-    this.addLabelNode = function (depth, labelOffset)
-    {
-        if (labelHeadNodes[depth][labelOffset] == 0)
-        {
+    this.addLabelNode = function(depth, labelOffset) {
+        if (labelHeadNodes[depth][labelOffset] == 0) {
             // this will become the head node for this list
 
             labelHeadNodes[depth][labelOffset] = this;
@@ -417,56 +417,47 @@ function Node()
         head.labelPrev = this;
     };
 
-    this.canDisplayDepth = function ()
-    {
+    this.canDisplayDepth = function() {
         // whether this node is at a depth that can be displayed, according
         // to the max absolute depth
 
         return this.depth <= maxAbsoluteDepth;
     };
 
-    this.canDisplayHistory = function ()
-    {
+    this.canDisplayHistory = function() {
         var radiusInner;
 
-        if (compress)
-        {
+        if (compress) {
             radiusInner = compressedRadii[0];
-        } else
-
-        {
+        }
+        else {
             radiusInner = nodeRadius;
         }
 
         return (
             -this.labelRadius.end * gRadius +
             historySpacingFactor * fontSize / 2 <
-            radiusInner * gRadius);
-
+            radiusInner * gRadius
+        );
     };
 
-    this.canDisplayLabelCurrent = function ()
-    {
+    this.canDisplayLabelCurrent = function() {
         return (
-            (this.angleEnd.current() - this.angleStart.current()) * (
-            this.radiusInner.current() * gRadius + gRadius) >=
+            (this.angleEnd.current() - this.angleStart.current()) *
+            (this.radiusInner.current() * gRadius + gRadius) >=
             minWidth());
     };
 
-    this.checkHighlight = function ()
-    {
-        if (this.children.length == 0 && this == focusNode)
-        {
+    this.checkHighlight = function() {
+        if (this.children.length == 0 && this == focusNode) {
             //return false;
         }
 
-        if (this.hide)
-        {
+        if (this.hide) {
             return false;
         }
 
-        if (this.radiusInner.end == 1)
-        {
+        if (this.radiusInner.end == 1) {
             // compressed to the outside; don't check
 
             return false;
@@ -478,48 +469,103 @@ function Node()
         var angleEndCurrent = this.angleEnd.current() + rotationOffset;
         var radiusInner = this.radiusInner.current() * gRadius;
 
-        for (var i = 0; i < this.children.length; i++)
-        {
+        for (var i = 0; i < this.children.length; i++) {
             highlighted = this.children[i].checkHighlight();
 
-            if (highlighted)
-            {
+            if (highlighted) {
                 return true;
             }
         }
 
-        if (this != selectedNode && !this.getCollapse())
-        {
+        if (this.radial) {
+            var angleText = (angleStartCurrent + angleEndCurrent) / 2;
+            var radiusText = (gRadius + radiusInner) / 2;
+
+            context.rotate(angleText);
+            context.beginPath();
+            context.moveTo(radiusText, -fontSize);
+            context.lineTo(radiusText, fontSize);
+            context.lineTo(radiusText + centerX, fontSize);
+            context.lineTo(radiusText + centerX, -fontSize);
+            context.closePath();
+            context.rotate(-angleText);
+
+            if (context.isPointInPath(mouseXRel, mouseYRel)) {
+                var label = String(this.getPercentage()) + '%' + '   ' + this.name;
+
+                if (this.searchResultChildren()) {
+                    label += searchResultString(this.searchResultChildren());
+                }
+
+                if
+                (
+                    Math.sqrt((mouseXRel) * (mouseXRel) + (mouseYRel) * (mouseYRel)) /
+                    backingScale() <
+                    radiusText + measureText(label)
+                ) {
+                    highlighted = true;
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < this.hiddenLabels.length; i++) {
+                var hiddenLabel = this.hiddenLabels[i];
+
+                context.rotate(hiddenLabel.angle);
+                context.beginPath();
+                context.moveTo(gRadius, -fontSize);
+                context.lineTo(gRadius, fontSize);
+                context.lineTo(gRadius + centerX, fontSize);
+                context.lineTo(gRadius + centerX, -fontSize);
+                context.closePath();
+                context.rotate(-hiddenLabel.angle);
+
+                if (context.isPointInPath(mouseXRel, mouseYRel)) {
+                    var label = String(hiddenLabel.value) + ' more';
+
+                    if (hiddenLabel.search) {
+                        label += searchResultString(hiddenLabel.search);
+                    }
+
+                    if
+                    (
+                        Math.sqrt((mouseXRel) * (mouseXRel) + (mouseYRel) * (mouseYRel)) /
+                        backingScale() <
+                        gRadius + fontSize + measureText(label)
+                    ) {
+                        highlighted = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!highlighted && this != selectedNode && !this.getCollapse()) {
             context.beginPath();
             context.arc(0, 0, radiusInner, angleStartCurrent, angleEndCurrent, false);
             context.arc(0, 0, gRadius, angleEndCurrent, angleStartCurrent, true);
             context.closePath();
 
-            if (context.isPointInPath(mouseX - centerX, mouseY - centerY))
-            {
+            if (context.isPointInPath(mouseXRel, mouseYRel)) {
                 highlighted = true;
             }
 
-            if (
-
-            !highlighted &&
-            (angleEndCurrent - angleStartCurrent) * (
-            radiusInner + gRadius) <
-            minWidth() &&
-            this.getDepth() == selectedNode.getDepth() + 1)
-
-            {
-                if (showKeys && this.checkHighlightKey())
-                {
+            if
+            (
+                !highlighted &&
+                (angleEndCurrent - angleStartCurrent) *
+                (radiusInner + gRadius) <
+                minWidth() &&
+                this.getDepth() == selectedNode.getDepth() + 1
+            ) {
+                if (showKeys && this.checkHighlightKey()) {
                     highlighted = true;
                 }
             }
         }
 
-        if (highlighted)
-        {
-            if (this != highlightedNode)
-            {
+        if (highlighted) {
+            if (this != highlightedNode) {
                 //	document.body.style.cursor='pointer';
             }
 
@@ -529,10 +575,8 @@ function Node()
         return highlighted;
     };
 
-    this.checkHighlightCenter = function ()
-    {
-        if (!this.canDisplayHistory())
-        {
+    this.checkHighlightCenter = function() {
+        if (!this.canDisplayHistory()) {
             return;
         }
 
@@ -542,33 +586,29 @@ function Node()
 
         var width = this.nameWidth;
 
-        if (this.searchResultChildren())
-        {
+        if (this.searchResultChildren()) {
             var results = searchResultString(this.searchResultChildren());
             var dim = context.measureText(results);
             width += dim.width;
         }
 
-        if (
-
-        mouseX > cx - width / 2 &&
-        mouseX < cx + width / 2 &&
-        mouseY > cy - historySpacingFactor * fontSize / 2 &&
-        mouseY < cy + historySpacingFactor * fontSize / 2)
-
-        {
+        if
+        (
+            mouseX > cx - width / 2 &&
+            mouseX < cx + width / 2 &&
+            mouseY > cy - historySpacingFactor * fontSize / 2 &&
+            mouseY < cy + historySpacingFactor * fontSize / 2
+        ) {
             highlightedNode = this;
             return;
         }
 
-        if (this.getParent())
-        {
+        if (this.getParent()) {
             this.getParent().checkHighlightCenter();
         }
     };
 
-    this.checkHighlightKey = function ()
-    {
+    this.checkHighlightKey = function() {
         var offset = keyOffset();
 
         var xMin = imageWidth - keySize - margin - this.keyNameWidth - keyBuffer;
@@ -585,62 +625,56 @@ function Node()
             mouseY < yMax);
     };
 
-    this.checkHighlightMap = function ()
-    {
-        if (this.parent)
-        {
+    this.checkHighlightMap = function() {
+        if (this.parent) {
             this.parent.checkHighlightMap();
         }
 
-        if (this.getCollapse() || this == focusNode)
-        {
+        if (this.getCollapse() || this == focusNode) {
             return;
         }
 
         var box = this.getMapPosition();
 
-        if (
-
-        mouseX > box.x - mapRadius &&
-        mouseX < box.x + mapRadius &&
-        mouseY > box.y - mapRadius &&
-        mouseY < box.y + mapRadius)
-
-        {
+        if
+        (
+            mouseX > box.x - mapRadius &&
+            mouseX < box.x + mapRadius &&
+            mouseY > box.y - mapRadius &&
+            mouseY < box.y + mapRadius
+        ) {
             highlightedNode = this;
         }
     };
 
     /*	this.collapse = function()
-       {
-       for (var i = 0; i < this.children.length; i++ )
-       {
-       this.children[i] = this.children[i].collapse();
-       }
-       if
-       (
-       this.children.length == 1 &&
-       this.children[0].magnitude == this.magnitude
-       )
-       {
-       this.children[0].parent = this.parent;
-       this.children[0].getDepth() = this.parent.getDepth() + 1;
-       return this.children[0];
-       }
-       else
-       {
-       return this;
-       }
-       }
-       */
+	{
+		for (var i = 0; i < this.children.length; i++ )
+		{
+			this.children[i] = this.children[i].collapse();
+		}
 
-    this.draw = function (labelMode, selected, searchHighlighted)
-    {
+		if
+		(
+			this.children.length == 1 &&
+			this.children[0].magnitude == this.magnitude
+		)
+		{
+			this.children[0].parent = this.parent;
+			this.children[0].getDepth() = this.parent.getDepth() + 1;
+			return this.children[0];
+		}
+		else
+		{
+			return this;
+		}
+	}
+*/
+    this.draw = function(labelMode, selected, searchHighlighted) {
         var depth = this.getDepth() - selectedNode.getDepth() + 1;
-        //		var hidden = false;
+//		var hidden = false;
 
-        if (selectedNode == this)
-        {
+        if (selectedNode == this) {
             selected = true;
         }
 
@@ -651,96 +685,94 @@ function Node()
         var hiddenSearchResults = false;
 
         /*		if ( ! this.hide )
-                                         {
-                                         for ( var i = 0; i < this.children.length; i++ )
-                                         {
-                                         if ( this.children[i].hide && this.children[i].searchResults )
-                                         {
-                                         hiddenSearchResults = true;
-                                         }
-                                         }
-                                         }
-                                         */
+		{
+			for ( var i = 0; i < this.children.length; i++ )
+			{
+				if ( this.children[i].hide && this.children[i].searchResults )
+				{
+					hiddenSearchResults = true;
+				}
+			}
+		}
+*/
         var drawChildren =
-        (!this.hide || !this.hidePrev && progress < 1) && (
-        !this.hideAlone || !this.hideAlonePrev && progress < 1);
+            ( !this.hide || !this.hidePrev && progress < 1 ) &&
+            ( !this.hideAlone || !this.hideAlonePrev && progress < 1 );
 
-        //		if ( this.alphaWedge.current() > 0 || this.alphaLabel.current() > 0 )
+//		if ( this.alphaWedge.current() > 0 || this.alphaLabel.current() > 0 )
         {
-            var lastChildAngleEnd;
+            var lastChildAngleEnd = angleStartCurrent;
 
-            if (this.hasChildren()) //canDisplayChildren )
-                {
-                    lastChildAngleEnd =
-                    this.children[this.children.length - 1].angleEnd.current() +
-                    rotationOffset;
-                }
-
-            if (labelMode)
+            if (this.hasChildren())//canDisplayChildren )
             {
+                lastChildAngleEnd =
+                    this.children[this.children.length - 1].angleEnd.current()
+                    + rotationOffset;
+            }
+
+            if (labelMode) {
                 var drawRadial =
-                !(
-                this.parent &&
-                this.parent != selectedNode &&
-                angleEndCurrent == this.parent.angleEnd.current() + rotationOffset);
+                    !(
+                        this.parent &&
+                        this.parent != selectedNode &&
+                        angleEndCurrent == this.parent.angleEnd.current() + rotationOffset
+                    );
 
-
-                if (angleStartCurrent != angleEndCurrent)
+                //if ( angleStartCurrent != angleEndCurrent )
                 {
-                    this.drawLines(angleStartCurrent, angleEndCurrent, radiusInner, drawRadial, selected);
+                    this.drawLines(angleStartCurrent, angleEndCurrent, radiusInner, drawRadial,
+                        selected);
                 }
 
                 var alphaOtherCurrent = this.alphaOther.current();
                 var childRadiusInner;
 
-                if (this == selectedNode || alphaOtherCurrent)
-                {
+                if (this == selectedNode || alphaOtherCurrent) {
                     childRadiusInner =
-                    this.children[this.children.length - 1].radiusInner.current() * gRadius;
+                        this.children.length ? this.children[this.children.length -
+                        1].radiusInner.current() * gRadius
+                            : radiusInner;
                 }
 
-                if (this == selectedNode)
-                {
+                if (this == selectedNode) {
                     this.drawReferenceRings(childRadiusInner);
                 }
 
-                if (
-
-                selected &&
-                !searchHighlighted &&
-                this != selectedNode && (
-
-                this.isSearchResult ||
-                this.hideAlone && this.searchResultChildren() ||
-                false
-                //						this.hide &&
-                //						this.containsSearchResult
-                ))
-
-                {
+                if
+                (
+                    selected &&
+                    !searchHighlighted &&
+                    this != selectedNode &&
+                    (
+                        this.isSearchResult ||
+                        this.hideAlone && this.searchResultChildren() ||
+                        false
+//						this.hide &&
+//						this.containsSearchResult
+                    )
+                ) {
                     context.globalAlpha = this.alphaWedge.current();
 
-                    drawWedge(
+                    drawWedge
+                    (
+                        angleStartCurrent,
+                        angleEndCurrent,
+                        radiusInner,
+                        gRadius,
+                        highlightFill,
+                        0,
+                        true
+                    );
 
-                    angleStartCurrent,
-                    angleEndCurrent,
-                    radiusInner,
-                    gRadius,
-                    highlightFill,
-                    0,
-                    true);
-
-
-                    if (
-
-                    this.keyed &&
-                    !showKeys &&
-                    this.searchResults &&
-                    !searchHighlighted &&
-                    this != highlightedNode &&
-                    this != focusNode)
-
-                    {
+                    if
+                    (
+                        this.keyed &&
+                        !showKeys &&
+                        this.searchResults &&
+                        !searchHighlighted &&
+                        this != highlightedNode &&
+                        this != focusNode
+                    ) {
                         var angle = (angleEndCurrent + angleStartCurrent) / 2;
                         this.drawLabel(angle, true, false, true, true);
                     }
@@ -749,96 +781,88 @@ function Node()
                     searchHighlighted = true;
                 }
 
-                if (
-
-                this == selectedNode ||
-                //					true
-                //(canDisplayLabelCurrent) &&
-                this != highlightedNode &&
-                this != focusNode)
-
-                {
-                    if (this.radial != this.radialPrev && this.alphaLabel.end == 1)
-                    {
+                if
+                (
+                    this == selectedNode ||
+//					true
+                    //(canDisplayLabelCurrent) &&
+                    this != highlightedNode &&
+                    this != focusNode
+                ) {
+                    if (this.radial != this.radialPrev && this.alphaLabel.end == 1) {
                         context.globalAlpha = tweenFactor;
-                    } else
-
-                    {
+                    }
+                    else {
                         context.globalAlpha = this.alphaLabel.current();
                     }
 
-                    this.drawLabel(
+                    this.drawLabel
+                    (
+                        (angleStartCurrent + angleEndCurrent) / 2,
+                        this.hideAlone && this.searchResultChildren() ||
+                        (this.isSearchResult || hiddenSearchResults) && selected,
+                        this == selectedNode && !this.radial,
+                        selected,
+                        this.radial
+                    );
 
-                    (angleStartCurrent + angleEndCurrent) / 2,
-                    this.hideAlone && this.searchResultChildren() ||
-                    (this.isSearchResult || hiddenSearchResults) && selected,
-                    this == selectedNode && !this.radial,
-                    selected,
-                    this.radial);
-
-
-                    if (this.radial != this.radialPrev && this.alphaLabel.start == 1 && progress < 1)
-                    {
+                    if (this.radial != this.radialPrev && this.alphaLabel.start == 1 &&
+                        progress < 1) {
                         context.globalAlpha = 1 - tweenFactor;
 
-                        this.drawLabel(
-
-                        (angleStartCurrent + angleEndCurrent) / 2,
-                        (this.isSearchResult || hiddenSearchResults) && selected,
-                        this == selectedNodeLast && !this.radialPrev,
-                        selected,
-                        this.radialPrev);
-
+                        this.drawLabel
+                        (
+                            (angleStartCurrent + angleEndCurrent) / 2,
+                            (this.isSearchResult || hiddenSearchResults) && selected,
+                            this == selectedNodeLast && !this.radialPrev,
+                            selected,
+                            this.radialPrev
+                        );
                     }
                 }
 
-                if (
-
-                alphaOtherCurrent &&
-                lastChildAngleEnd != null)
-
-                {
-                    if (
-
-                    (angleEndCurrent - lastChildAngleEnd) * (
-                    childRadiusInner + gRadius) >=
-                    minWidth())
-
-                    {
+                if
+                (
+                    alphaOtherCurrent &&
+                    lastChildAngleEnd != null
+                ) {
+                    if
+                    (
+                        (angleEndCurrent - lastChildAngleEnd) *
+                        (childRadiusInner + gRadius) >=
+                        minWidth()
+                    ) {
                         //context.font = fontNormal;
                         context.globalAlpha = this.alphaOther.current();
 
-                        drawTextPolar(
-
-                        this.getUnclassifiedText(),
-                        this.getUnclassifiedPercentage(),
-                        (lastChildAngleEnd + angleEndCurrent) / 2,
-                        (childRadiusInner + gRadius) / 2,
-                        true,
-                        false,
-                        false,
-                        0,
-                        0);
-
+                        drawTextPolar
+                        (
+                            this.getUnclassifiedText(),
+                            this.getUnclassifiedPercentage(),
+                            (lastChildAngleEnd + angleEndCurrent) / 2,
+                            (childRadiusInner + gRadius) / 2,
+                            true,
+                            false,
+                            false,
+                            0,
+                            0
+                        );
                     }
                 }
 
-                if (this == selectedNode && this.keyUnclassified && showKeys)
-                {
-                    this.drawKey(
-
-                    (lastChildAngleEnd + angleEndCurrent) / 2,
-                    false,
-                    false);
-
+                if (this == selectedNode && this.keyUnclassified && showKeys) {
+                    this.drawKey
+                    (
+                        (lastChildAngleEnd + angleEndCurrent) / 2,
+                        false,
+                        false
+                    );
                 }
-            } else
-
-            {
+            }
+            else {
                 var alphaWedgeCurrent = this.alphaWedge.current();
 
-                if (alphaWedgeCurrent || this.alphaOther.current())
-                {
+                if (alphaWedgeCurrent || this.alphaOther.current()) {
                     var currentR = this.r.current();
                     var currentG = this.g.current();
                     var currentB = this.b.current();
@@ -848,159 +872,148 @@ function Node()
                     var radiusOuter;
                     var lastChildAngle;
                     var truncateWedge =
+                        (
+                            (this.hasChildren() || this == selectedNode ) &&
+                            !this.keyed &&
+                            (compress || depth < maxDisplayDepth) &&
+                            drawChildren
+                        );
 
-                    this.hasChildren() &&
-                    !this.keyed && (
-                    compress || depth < maxDisplayDepth) &&
-                    drawChildren;
-
-
-                    if (truncateWedge)
-                    {
-                        radiusOuter = this.children[0].radiusInner.current() * gRadius;
-                    } else
-
-                    {
+                    if (truncateWedge) {
+                        radiusOuter = this.children.length
+                            ? this.children[0].radiusInner.current() * gRadius
+                            : radiusInner;
+                    }
+                    else {
                         radiusOuter = gRadius;
                     }
                     /*
-                      if ( this.hasChildren() )
-                      {
-                      radiusOuter = this.children[0].getUncollapsed().radiusInner.current() * gRadius + 1;
-                      }
-                      else
-                      { // TEMP
-                      radiusOuter = radiusInner + nodeRadius * gRadius;
-                      if ( radiusOuter > gRadius )
-                      {
-                      radiusOuter = gRadius;
-                      }
-                      }
-                      */
+					if ( this.hasChildren() )
+					{
+						radiusOuter = this.children[0].getUncollapsed().radiusInner.current() * gRadius + 1;
+					}
+					else
+					{ // TEMP
+						radiusOuter = radiusInner + nodeRadius * gRadius;
 
+						if ( radiusOuter > gRadius )
+						{
+							radiusOuter = gRadius;
+						}
+					}
+					*/
                     context.globalAlpha = alphaWedgeCurrent;
 
-                    if (radiusInner != radiusOuter)
-                    {
-                        drawWedge(
+                    if (radiusInner != radiusOuter || truncateWedge) {
+                        drawWedge
+                        (
+                            angleStartCurrent,
+                            angleEndCurrent,
+                            radiusInner,
+                            radiusOuter,//this.radiusOuter.current() * gRadius,
+                            //'rgba(0, 200, 0, .1)',
+                            fill,
+                            this.alphaPattern.current()
+                        );
 
-                        angleStartCurrent,
-                        angleEndCurrent,
-                        radiusInner,
-                        radiusOuter, //this.radiusOuter.current() * gRadius,
-                        //'rgba(0, 200, 0, .1)',
-                        fill,
-                        this.alphaPattern.current());
-
-
-                        if (truncateWedge)
-                        {
+                        if (truncateWedge) {
                             // fill in the extra space if the sum of our childrens'
                             // magnitudes is less than ours
 
-                            if (lastChildAngleEnd < angleEndCurrent) //&& false) // TEMP
-                                {
-                                    if (radiusOuter > 1)
-                                    {
-                                        // overlap slightly to hide the seam
+                            if (lastChildAngleEnd < angleEndCurrent)//&& false) // TEMP
+                            {
+                                if (radiusOuter > 1) {
+                                    // overlap slightly to hide the seam
 
-                                        //								radiusOuter -= 1;
-                                    }
+                                    //								radiusOuter -= 1;
+                                }
 
-                                    if (alphaWedgeCurrent < 1)
-                                    {
-                                        context.globalAlpha = this.alphaOther.current();
-                                        drawWedge(
-
+                                if (alphaWedgeCurrent < 1) {
+                                    context.globalAlpha = this.alphaOther.current();
+                                    drawWedge
+                                    (
                                         lastChildAngleEnd,
                                         angleEndCurrent,
                                         radiusOuter,
                                         gRadius,
                                         colorUnclassified,
-                                        0);
+                                        0
+                                    );
+                                    context.globalAlpha = alphaWedgeCurrent;
+                                }
 
-                                        context.globalAlpha = alphaWedgeCurrent;
-                                    }
-
-                                    drawWedge(
-
+                                drawWedge
+                                (
                                     lastChildAngleEnd,
                                     angleEndCurrent,
                                     radiusOuter,
-                                    gRadius, //this.radiusOuter.current() * gRadius,
+                                    gRadius,//this.radiusOuter.current() * gRadius,
                                     //'rgba(200, 0, 0, .1)',
                                     fill,
-                                    this.alphaPattern.current());
-
-                                }
+                                    this.alphaPattern.current()
+                                );
+                            }
                         }
 
-                        if (radiusOuter < gRadius)
-                        {
+                        if (radiusOuter < gRadius) {
                             // patch up the seam
                             //
                             context.beginPath();
-                            context.arc(0, 0, radiusOuter, angleStartCurrent /*lastChildAngleEnd*/, angleEndCurrent, false);
+                            context.arc(0, 0, radiusOuter, angleStartCurrent/*lastChildAngleEnd*/,
+                                angleEndCurrent, false);
                             context.strokeStyle = fill;
                             context.lineWidth = 1;
                             context.stroke();
                         }
                     }
 
-                    if (this.keyed && selected && showKeys) //&& progress == 1 )
-                        {
-                            this.drawKey(
-
+                    if (this.keyed && selected && showKeys)//&& progress == 1 )
+                    {
+                        this.drawKey
+                        (
                             (angleStartCurrent + angleEndCurrent) / 2,
-
-                            this == highlightedNode ||
-                            this == focusNode ||
-                            this.searchResults,
-
-                            this == highlightedNode || this == focusNode);
-
-                        }
+                            (
+                                this == highlightedNode ||
+                                this == focusNode ||
+                                this.searchResults
+                            ),
+                            this == highlightedNode || this == focusNode
+                        );
+                    }
                 }
             }
         }
 
-        if (drawChildren)
-        {
+        this.hiddenLabels = Array();
+
+        if (drawChildren) {
             // draw children
             //
-            for (var i = 0; i < this.children.length; i++)
-            {
-                if (this.drawHiddenChildren(i, selected, labelMode, searchHighlighted))
-                {
+            for (var i = 0; i < this.children.length; i++) {
+                if (this.drawHiddenChildren(i, selected, labelMode, searchHighlighted)) {
                     i = this.children[i].hiddenEnd;
-                } else
-
-                {
+                }
+                else {
                     this.children[i].draw(labelMode, selected, searchHighlighted);
                 }
             }
         }
     };
 
-    this.drawHiddenChildren = function (
-
-    firstHiddenChild,
-    selected,
-    labelMode,
-    searchHighlighted)
-
-    {
+    this.drawHiddenChildren = function
+        (
+            firstHiddenChild,
+            selected,
+            labelMode,
+            searchHighlighted) {
         var firstChild = this.children[firstHiddenChild];
 
-        if (firstChild.hiddenEnd == null || firstChild.radiusInner.current() == 1)
-        {
+        if (firstChild.hiddenEnd == null || firstChild.radiusInner.current() == 1) {
             return false;
         }
 
-        for (var i = firstHiddenChild; i < firstChild.hiddenEnd; i++)
-        {
-            if (!this.children[i].hide || !this.children[i].hidePrev && progress < 1)
-            {
+        for (var i = firstHiddenChild; i < firstChild.hiddenEnd; i++) {
+            if (!this.children[i].hide || !this.children[i].hidePrev && progress < 1) {
                 return false;
             }
         }
@@ -1011,229 +1024,216 @@ function Node()
         var radiusInner = gRadius * firstChild.radiusInner.current();
         var hiddenChildren = firstChild.hiddenEnd - firstHiddenChild + 1;
 
-        if (labelMode)
-        {
+        if (labelMode) {
             var hiddenSearchResults = 0;
 
-            for (var i = firstHiddenChild; i <= firstChild.hiddenEnd; i++)
-            {
+            for (var i = firstHiddenChild; i <= firstChild.hiddenEnd; i++) {
                 hiddenSearchResults += this.children[i].searchResults;
 
-                if (this.children[i].magnitude == 0)
-                {
+                if (this.children[i].magnitude == 0) {
                     hiddenChildren--;
                 }
             }
 
-            if (
-
-            selected &&
-            (angleEnd - angleStart) * (
-            gRadius + gRadius) >=
-            minWidth() ||
-            this == highlightedNode &&
-            hiddenChildren ||
-            hiddenSearchResults)
-
-            {
+            if
+            (
+                selected &&
+                (angleEnd - angleStart) *
+                (gRadius + gRadius) >=
+                minWidth() ||
+                this == highlightedNode &&
+                hiddenChildren ||
+                hiddenSearchResults
+            ) {
                 context.globalAlpha = this.alphaWedge.current();
 
-                this.drawHiddenLabel(
-
-                angleStart,
-                angleEnd,
-                hiddenChildren,
-                hiddenSearchResults);
-
+                this.drawHiddenLabel
+                (
+                    angleStart,
+                    angleEnd,
+                    hiddenChildren,
+                    hiddenSearchResults
+                );
             }
         }
 
         var drawWedges = true;
 
-        for (var i = firstHiddenChild; i <= firstChild.hiddenEnd; i++)
-        {
+        for (var i = firstHiddenChild; i <= firstChild.hiddenEnd; i++) {
             // all hidden children must be completely hidden to draw together
 
-            if (this.children[i].alphaPattern.current() != this.children[i].alphaWedge.current())
-            {
+            if (this.children[i].alphaPattern.current() != this.children[i].alphaWedge.current()) {
                 drawWedges = false;
                 break;
             }
         }
 
-        if (labelMode)
-        {
-            if (drawWedges)
-            {
-                var drawRadial = angleEnd < this.angleEnd.current() + rotationOffset;
+        if (labelMode) {
+            if (drawWedges) {
+                var drawRadial = (angleEnd < this.angleEnd.current() + rotationOffset);
                 this.drawLines(angleStart, angleEnd, radiusInner, drawRadial);
             }
 
-            if (hiddenSearchResults && !searchHighlighted)
-            {
-                drawWedge(
+            if (hiddenSearchResults && !searchHighlighted) {
+                drawWedge
+                (
+                    angleStart,
+                    angleEnd,
+                    radiusInner,
+                    gRadius,//this.radiusOuter.current() * gRadius,
+                    highlightFill,
+                    0,
+                    true
+                );
+            }
+        }
+        else if (drawWedges) {
+            context.globalAlpha = this.alphaWedge.current();
 
+            var fill = rgbText
+            (
+                firstChild.r.current(),
+                firstChild.g.current(),
+                firstChild.b.current()
+            );
+
+            drawWedge
+            (
                 angleStart,
                 angleEnd,
                 radiusInner,
-                gRadius, //this.radiusOuter.current() * gRadius,
-                highlightFill,
-                0,
-                true);
-
-            }
-        } else
-        if (drawWedges)
-        {
-            context.globalAlpha = this.alphaWedge.current();
-
-            var fill = rgbText(
-
-            firstChild.r.current(),
-            firstChild.g.current(),
-            firstChild.b.current());
-
-
-            drawWedge(
-
-            angleStart,
-            angleEnd,
-            radiusInner,
-            gRadius, //this.radiusOuter.current() * gRadius,
-            fill,
-            context.globalAlpha,
-            false);
-
+                gRadius,//this.radiusOuter.current() * gRadius,
+                fill,
+                context.globalAlpha,
+                false
+            );
         }
 
         return drawWedges;
     };
 
-    this.drawHiddenLabel = function (angleStart, angleEnd, value, hiddenSearchResults)
-    {
+    this.drawHiddenLabel = function(angleStart, angleEnd, value, hiddenSearchResults) {
         var textAngle = (angleStart + angleEnd) / 2;
-        var labelRadius = gRadius + fontSize; //(radiusInner + radius) / 2;
+        var labelRadius = gRadius + fontSize;//(radiusInner + radius) / 2;
+
+        var hiddenLabel = Array();
+
+        hiddenLabel.value = value;
+        hiddenLabel.angle = textAngle;
+        hiddenLabel.search = hiddenSearchResults;
+
+        this.hiddenLabels.push(hiddenLabel);
 
         drawTick(gRadius - fontSize * .75, fontSize * 1.5, textAngle);
-        drawTextPolar(
-
-        value.toString() + ' more',
-        0, // inner text
-        textAngle,
-        labelRadius,
-        true, // radial
-        hiddenSearchResults, // bubble
-        this == highlightedNode || this == focusNode, // bold
-        false,
-        hiddenSearchResults);
-
+        drawTextPolar
+        (
+            value.toString() + ' more',
+            0, // inner text
+            textAngle,
+            labelRadius,
+            true, // radial
+            hiddenSearchResults, // bubble
+            this == highlightedNode || this == focusNode, // bold
+            false,
+            hiddenSearchResults
+        );
     };
 
-    this.drawHighlight = function (bold)
-    {
+    this.drawHighlight = function(bold) {
         var angleStartCurrent = this.angleStart.current() + rotationOffset;
         var angleEndCurrent = this.angleEnd.current() + rotationOffset;
         var radiusInner = this.radiusInner.current() * gRadius;
 
         //this.setHighlightStyle();
 
-        if (this == focusNode && this == highlightedNode && this.hasChildren())
-        {
-            //			context.fillStyle = "rgba(255, 255, 255, .3)";
-            arrow(
-
-            angleStartCurrent,
-            angleEndCurrent,
-            radiusInner);
-
-        } else
-
-        {
-            drawWedge(
-
-            angleStartCurrent,
-            angleEndCurrent,
-            radiusInner,
-            gRadius,
-            highlightFill,
-            0,
-            true);
-
+        if (this == focusNode && this == highlightedNode && this.hasChildren()) {
+//			context.fillStyle = "rgba(255, 255, 255, .3)";
+            arrow
+            (
+                angleStartCurrent,
+                angleEndCurrent,
+                radiusInner
+            );
+        }
+        else {
+            drawWedge
+            (
+                angleStartCurrent,
+                angleEndCurrent,
+                radiusInner,
+                gRadius,
+                highlightFill,
+                0,
+                true
+            );
         }
 
         // check if hidden children should be highlighted
         //
-        for (var i = 0; i < this.children.length; i++)
-        {
-            if (
-
-            this.children[i].getDepth() - selectedNode.getDepth() + 1 <=
-            maxDisplayDepth &&
-            this.children[i].hiddenEnd != null)
-
-            {
+        for (var i = 0; i < this.children.length; i++) {
+            if
+            (
+                this.children[i].getDepth() - selectedNode.getDepth() + 1 <=
+                maxDisplayDepth &&
+                this.children[i].hiddenEnd != null
+            ) {
                 var firstChild = this.children[i];
                 var lastChild = this.children[firstChild.hiddenEnd];
                 var hiddenAngleStart = firstChild.angleStart.current() + rotationOffset;
                 var hiddenAngleEnd = lastChild.angleEnd.current() + rotationOffset;
                 var hiddenRadiusInner = gRadius * firstChild.radiusInner.current();
 
-                drawWedge(
-
-                hiddenAngleStart,
-                hiddenAngleEnd,
-                hiddenRadiusInner,
-                gRadius,
-                'rgba(255, 255, 255, .3)',
-                0,
-                true);
-
-
-                if (false && !this.searchResults)
-                {
-                    this.drawHiddenLabel(
-
+                drawWedge
+                (
                     hiddenAngleStart,
                     hiddenAngleEnd,
-                    firstChild.hiddenEnd - i + 1);
+                    hiddenRadiusInner,
+                    gRadius,
+                    'rgba(255, 255, 255, .3)',
+                    0,
+                    true
+                );
 
+                if (false && !this.searchResults) {
+                    this.drawHiddenLabel
+                    (
+                        hiddenAngleStart,
+                        hiddenAngleEnd,
+                        firstChild.hiddenEnd - i + 1
+                    );
                 }
 
                 i = firstChild.hiddenEnd;
             }
         }
 
-        //			context.strokeStyle = 'black';
+//			context.strokeStyle = 'black';
         context.fillStyle = 'black';
 
-        var highlight = !(progress < 1 && zoomOut && this == selectedNodeLast);
+        var highlight = !( progress < 1 && zoomOut && this == selectedNodeLast );
 
         var angle = (angleEndCurrent + angleStartCurrent) / 2;
 
-        if (!(this.keyed && showKeys))
-        {
+        if (!(this.keyed && showKeys)) {
             this.drawLabel(angle, true, bold, true, this.radial);
         }
     };
 
-    this.drawHighlightCenter = function ()
-    {
-        if (!this.canDisplayHistory())
-        {
+    this.drawHighlightCenter = function() {
+        if (!this.canDisplayHistory()) {
             return;
         }
 
         context.lineWidth = highlightLineWidth;
         context.strokeStyle = 'black';
-        context.fillStyle = "rgba(255, 255, 255, .6)";
+        context.fillStyle = 'rgba(255, 255, 255, .6)';
 
         context.fillStyle = 'black';
         this.drawLabel(3 * Math.PI / 2, true, true, false);
         context.font = fontNormal;
     };
 
-    this.drawKey = function (angle, highlight, bold)
-    {
+    this.drawKey = function(angle, highlight, bold) {
         var offset = keyOffset();
         var color;
         var colorText = this.magnitude == 0 ? 'gray' : 'black';
@@ -1244,31 +1244,26 @@ function Node()
         var label;
         var keyNameWidth;
 
-        if (this == selectedNode)
-        {
+        if (this == selectedNode) {
             color = colorUnclassified;
             label =
-            this.getUnclassifiedText() +
-            '   ' +
-            this.getUnclassifiedPercentage();
+                this.getUnclassifiedText() +
+                '   ' +
+                this.getUnclassifiedPercentage();
             keyNameWidth = measureText(label, false);
-        } else
-
-        {
+        }
+        else {
             label = this.keyLabel;
             color = rgbText(this.r.end, this.g.end, this.b.end);
 
-            if (highlight)
-            {
-                if (this.searchResultChildren())
-                {
+            if (highlight) {
+                if (this.searchResultChildren()) {
                     label = label + searchResultString(this.searchResultChildren());
                 }
 
                 keyNameWidth = measureText(label, bold);
-            } else
-
-            {
+            }
+            else {
                 keyNameWidth = this.keyNameWidth;
             }
         }
@@ -1276,12 +1271,10 @@ function Node()
         var textLeft = boxLeft - keyBuffer - keyNameWidth - fontSize / 2;
         var labelLeft = textLeft;
 
-        if (labelLeft > keyMinTextLeft - fontSize / 2)
-        {
+        if (labelLeft > keyMinTextLeft - fontSize / 2) {
             keyMinTextLeft -= fontSize / 2;
 
-            if (keyMinTextLeft < centerX - gRadius + fontSize / 2)
-            {
+            if (keyMinTextLeft < centerX - gRadius + fontSize / 2) {
                 keyMinTextLeft = centerX - gRadius + fontSize / 2;
             }
 
@@ -1295,18 +1288,15 @@ function Node()
         var keyAngle = Math.atan((textY - centerY) / (labelLeft - centerX));
         var arcAngle;
 
-        if (keyAngle < 0)
-        {
+        if (keyAngle < 0) {
             keyAngle += Math.PI;
         }
 
-        if (keyMinAngle == 0 || angle < keyMinAngle)
-        {
+        if (keyMinAngle == 0 || angle < keyMinAngle) {
             keyMinAngle = angle;
         }
 
-        if (angle > Math.PI && keyMinAngle > Math.PI)
-        {
+        if (angle > Math.PI && keyMinAngle > Math.PI) {
             // allow lines to come underneath the chart
 
             angle -= Math.PI * 2;
@@ -1315,182 +1305,165 @@ function Node()
         lineX.push(Math.cos(angle) * gRadius);
         lineY.push(Math.sin(angle) * gRadius);
 
-        if (angle < keyAngle && textY > centerY + Math.sin(angle) * (gRadius + buffer * (currentKey - 1) / (keys + 1) / 2 + buffer / 2))
-        {
+        if (angle < keyAngle && textY > centerY +
+            Math.sin(angle) * (gRadius + buffer * (currentKey - 1) / (keys + 1) / 2 + buffer / 2)) {
             bendRadius = gRadius + buffer - buffer * currentKey / (keys + 1) / 2;
-        } else
-
-        {
+        }
+        else {
             bendRadius = gRadius + buffer * currentKey / (keys + 1) / 2 + buffer / 2;
         }
 
         var outside =
-        Math.sqrt(
+            Math.sqrt
+            (
+                Math.pow(labelLeft - centerX, 2) +
+                Math.pow(textY - centerY, 2)
+            ) > bendRadius;
 
-        Math.pow(labelLeft - centerX, 2) +
-        Math.pow(textY - centerY, 2)) >
-        bendRadius;
-
-        if (!outside)
-        {
+        if (!outside) {
             arcAngle = Math.asin((textY - centerY) / bendRadius);
 
-            keyMinTextLeft = min(keyMinTextLeft, centerX + bendRadius * Math.cos(arcAngle) - fontSize / 2);
+            keyMinTextLeft = min(keyMinTextLeft, centerX + bendRadius * Math.cos(arcAngle) -
+                fontSize / 2);
 
-            if (labelLeft < textLeft && textLeft > centerX + bendRadius * Math.cos(arcAngle))
-            {
+            if (labelLeft < textLeft && textLeft > centerX + bendRadius * Math.cos(arcAngle)) {
                 lineX.push(textLeft - centerX);
                 lineY.push(textY - centerY);
             }
-        } else
-
-        {
+        }
+        else {
             keyMinTextLeft = min(keyMinTextLeft, labelLeft - fontSize / 2);
 
-            if (angle < keyAngle)
-            {
+            if (angle < keyAngle) {
                 // flip everything over y = x
                 //
-                arcAngle = Math.PI / 2 - keyLineAngle(
+                arcAngle = Math.PI / 2 - keyLineAngle
+                (
+                    Math.PI / 2 - angle,
+                    Math.PI / 2 - keyAngle,
+                    bendRadius,
+                    textY - centerY,
+                    labelLeft - centerX,
+                    lineY,
+                    lineX
+                );
 
-                Math.PI / 2 - angle,
-                Math.PI / 2 - keyAngle,
-                bendRadius,
-                textY - centerY,
-                labelLeft - centerX,
-                lineY,
-                lineX);
-
-
-            } else
-
-            {
-                arcAngle = keyLineAngle(
-
-                angle,
-                keyAngle,
-                bendRadius,
-                labelLeft - centerX,
-                textY - centerY,
-                lineX,
-                lineY);
-
+            }
+            else {
+                arcAngle = keyLineAngle
+                (
+                    angle,
+                    keyAngle,
+                    bendRadius,
+                    labelLeft - centerX,
+                    textY - centerY,
+                    lineX,
+                    lineY
+                );
             }
         }
 
         if (labelLeft > centerX + bendRadius * Math.cos(arcAngle) ||
-        textY > centerY + bendRadius * Math.sin(arcAngle) + .01)
-            //		if ( outside ||  )
-            {
-                lineX.push(labelLeft - centerX);
-                lineY.push(textY - centerY);
+            textY > centerY + bendRadius * Math.sin(arcAngle) + .01)
+//		if ( outside ||  )
+        {
+            lineX.push(labelLeft - centerX);
+            lineY.push(textY - centerY);
 
-                if (textLeft != labelLeft)
-                {
-                    lineX.push(textLeft - centerX);
-                    lineY.push(textY - centerY);
-                }
+            if (textLeft != labelLeft) {
+                lineX.push(textLeft - centerX);
+                lineY.push(textY - centerY);
             }
+        }
 
         context.globalAlpha = this.alphaWedge.current();
 
-        if (snapshotMode)
-        {
+        if (snapshotMode) {
             var labelSVG;
 
-            if (this == selectedNode)
-            {
+            if (this == selectedNode) {
                 labelSVG =
-                this.getUnclassifiedText() +
-                spacer() +
-                this.getUnclassifiedPercentage();
-            } else
-
-            {
+                    this.getUnclassifiedText() +
+                    spacer() +
+                    this.getUnclassifiedPercentage();
+            }
+            else {
                 labelSVG = this.name + spacer() + this.getPercentage() + '%';
             }
 
             svg +=
-            '<rect fill="' + color + '" ' +
-            'x="' + boxLeft + '" y="' + offset +
-            '" width="' + keySize + '" height="' + keySize + '"/>';
-
-            if (patternAlpha)
-            {
-                svg +=
-                '<rect fill="url(#hiddenPattern)" style="stroke:none" ' +
+                '<rect fill="' + color + '" ' +
                 'x="' + boxLeft + '" y="' + offset +
                 '" width="' + keySize + '" height="' + keySize + '"/>';
+
+            if (patternAlpha) {
+                svg +=
+                    '<rect fill="url(#hiddenPattern)" style="stroke:none" ' +
+                    'x="' + boxLeft + '" y="' + offset +
+                    '" width="' + keySize + '" height="' + keySize + '"/>';
             }
 
             svg +=
-            '<path class="line' + (
-            highlight ? ' highlight' : '') +
-            '" d="M ' + (lineX[0] + centerX) + ',' + (
-            lineY[0] + centerY);
+                '<path class="line' +
+                (highlight ? ' highlight' : '') +
+                '" d="M ' + (lineX[0] + centerX) + ',' +
+                (lineY[0] + centerY);
 
-            if (angle != arcAngle)
-            {
+            if (angle != arcAngle) {
                 svg +=
-                ' L ' + (centerX + bendRadius * Math.cos(angle)) + ',' + (
-                centerY + bendRadius * Math.sin(angle)) +
-                ' A ' + bendRadius + ',' + bendRadius + ' 0 ' +
-                '0,' + (angle > arcAngle ? '0' : '1') + ' ' + (
-                centerX + bendRadius * Math.cos(arcAngle)) + ',' + (
-                centerY + bendRadius * Math.sin(arcAngle));
+                    ' L ' + (centerX + bendRadius * Math.cos(angle)) + ',' +
+                    (centerY + bendRadius * Math.sin(angle)) +
+                    ' A ' + bendRadius + ',' + bendRadius + ' 0 ' +
+                    '0,' + (angle > arcAngle ? '0' : '1') + ' ' +
+                    (centerX + bendRadius * Math.cos(arcAngle)) + ',' +
+                    (centerY + bendRadius * Math.sin(arcAngle));
             }
 
-            for (var i = 1; i < lineX.length; i++)
-            {
+            for (var i = 1; i < lineX.length; i++) {
                 svg +=
-                ' L ' + (centerX + lineX[i]) + ',' + (
-                centerY + lineY[i]);
+                    ' L ' + (centerX + lineX[i]) + ',' +
+                    (centerY + lineY[i]);
             }
 
             svg += '"/>';
 
-            if (highlight)
-            {
-                if (this.searchResultChildren())
-                {
+            if (highlight) {
+                if (this.searchResultChildren()) {
                     labelSVG = labelSVG + searchResultString(this.searchResultChildren());
                 }
 
-                drawBubbleSVG(
+                drawBubbleSVG
+                (
+                    boxLeft - keyBuffer - keyNameWidth - fontSize / 2,
+                    textY - fontSize,
+                    keyNameWidth + fontSize,
+                    fontSize * 2,
+                    fontSize,
+                    0
+                );
 
-                boxLeft - keyBuffer - keyNameWidth - fontSize / 2,
-                textY - fontSize,
-                keyNameWidth + fontSize,
-                fontSize * 2,
-                fontSize,
-                0);
-
-
-                if (this.isSearchResult)
-                {
-                    drawSearchHighlights(
-
-                    label,
-                    boxLeft - keyBuffer - keyNameWidth,
-                    textY,
-                    0);
-
+                if (this.isSearchResult) {
+                    drawSearchHighlights
+                    (
+                        label,
+                        boxLeft - keyBuffer - keyNameWidth,
+                        textY,
+                        0
+                    );
                 }
             }
 
             svg += svgText(labelSVG, boxLeft - keyBuffer, textY, 'end', bold, colorText);
-        } else
-
-        {
+        }
+        else {
             context.fillStyle = color;
             context.translate(-centerX, -centerY);
             context.strokeStyle = 'black';
-            context.globalAlpha = 1; //this.alphaWedge.current();
+            context.globalAlpha = 1;//this.alphaWedge.current();
 
             context.fillRect(boxLeft, offset, keySize, keySize);
 
-            if (patternAlpha)
-            {
+            if (patternAlpha) {
                 context.globalAlpha = patternAlpha;
                 context.fillStyle = hiddenPattern;
 
@@ -1510,59 +1483,53 @@ function Node()
                 context.restore(); // remove clipping region
             }
 
-            if (highlight)
-            {
+            if (highlight) {
                 this.setHighlightStyle();
                 context.fillRect(boxLeft, offset, keySize, keySize);
-            } else
-
-            {
+            }
+            else {
                 context.lineWidth = thinLineWidth;
             }
 
             context.strokeRect(boxLeft, offset, keySize, keySize);
 
-            if (lineX.length)
-            {
+            if (lineX.length) {
                 context.beginPath();
                 context.moveTo(lineX[0] + centerX, lineY[0] + centerY);
 
                 context.arc(centerX, centerY, bendRadius, angle, arcAngle, angle > arcAngle);
 
-                for (var i = 1; i < lineX.length; i++)
-                {
+                for (var i = 1; i < lineX.length; i++) {
                     context.lineTo(lineX[i] + centerX, lineY[i] + centerY);
                 }
 
-                context.globalAlpha = this == selectedNode ?
-                this.children[0].alphaWedge.current() :
-                this.alphaWedge.current();
+                context.globalAlpha = this == selectedNode
+                    ? this.children[0].alphaWedge.current()
+                    : this.alphaWedge.current();
                 context.lineWidth = highlight ? highlightLineWidth : thinLineWidth;
                 context.stroke();
                 context.globalAlpha = 1;
             }
 
-            if (highlight)
-            {
-                drawBubbleCanvas(
+            if (highlight) {
+                drawBubbleCanvas
+                (
+                    boxLeft - keyBuffer - keyNameWidth - fontSize / 2,
+                    textY - fontSize,
+                    keyNameWidth + fontSize,
+                    fontSize * 2,
+                    fontSize,
+                    0
+                );
 
-                boxLeft - keyBuffer - keyNameWidth - fontSize / 2,
-                textY - fontSize,
-                keyNameWidth + fontSize,
-                fontSize * 2,
-                fontSize,
-                0);
-
-
-                if (this.isSearchResult)
-                {
-                    drawSearchHighlights(
-
-                    label,
-                    boxLeft - keyBuffer - keyNameWidth,
-                    textY,
-                    0);
-
+                if (this.isSearchResult) {
+                    drawSearchHighlights
+                    (
+                        label,
+                        boxLeft - keyBuffer - keyNameWidth,
+                        textY,
+                        0
+                    );
                 }
             }
 
@@ -1574,10 +1541,8 @@ function Node()
         currentKey++;
     };
 
-    this.drawLabel = function (angle, bubble, bold, selected, radial)
-    {
-        if (context.globalAlpha == 0)
-        {
+    this.drawLabel = function(angle, bubble, bold, selected, radial) {
+        if (context.globalAlpha == 0) {
             return;
         }
 
@@ -1585,104 +1550,88 @@ function Node()
         var label;
         var radius;
 
-        if (radial)
-        {
+        if (radial) {
             radius = (this.radiusInner.current() + 1) * gRadius / 2;
-        } else
-
-        {
+        }
+        else {
             radius = this.labelRadius.current() * gRadius;
         }
 
-        if (radial && (selected || bubble))
-        {
+        if (radial && (selected || bubble )) {
             var percentage = this.getPercentage();
             innerText = percentage + '%';
         }
 
-        if (
-
-        !radial &&
-        this != selectedNode &&
-        !bubble && (
-        !zoomOut || this != selectedNodeLast))
-
-        {
+        if
+        (
+            !radial &&
+            this != selectedNode &&
+            !bubble &&
+            ( !zoomOut || this != selectedNodeLast)
+        ) {
             label = this.shortenLabel();
-        } else
-
-        {
+        }
+        else {
             label = this.name;
         }
 
-        var flipped = drawTextPolar(
-
-        label,
-        innerText,
-        angle,
-        radius,
-        radial,
-        bubble,
-        bold,
-        //			this.isSearchResult && this.shouldAddSearchResultsString() && (!selected || this == selectedNode || highlight),
-        this.isSearchResult && (!selected || this == selectedNode || bubble),
-        this.hideAlone || !selected || this == selectedNode ? this.searchResultChildren() : 0);
-
+        var flipped = drawTextPolar
+        (
+            label,
+            innerText,
+            angle,
+            radius,
+            radial,
+            bubble,
+            bold,
+//			this.isSearchResult && this.shouldAddSearchResultsString() && (!selected || this == selectedNode || highlight),
+            this.isSearchResult && (!selected || this == selectedNode || bubble),
+            (this.hideAlone || !selected || this == selectedNode ) ? this.searchResultChildren() : 0
+        );
 
         var depth = this.getDepth() - selectedNode.getDepth() + 1;
 
-        if (
-
-        !radial &&
-        !bubble &&
-        this != selectedNode &&
-        this.angleEnd.end != this.angleStart.end &&
-        nLabelOffsets[depth - 2] > 2 &&
-        this.labelWidth.current() > (this.angleEnd.end - this.angleStart.end) * Math.abs(radius) &&
-        !(zoomOut && this == selectedNodeLast) &&
-        this.labelRadius.end > 0)
-
-        {
+        if
+        (
+            !radial &&
+            !bubble &&
+            this != selectedNode &&
+            this.angleEnd.end != this.angleStart.end &&
+            nLabelOffsets[depth - 2] > 2 &&
+            this.labelWidth.current() >
+            (this.angleEnd.end - this.angleStart.end) * Math.abs(radius) &&
+            !( zoomOut && this == selectedNodeLast ) &&
+            this.labelRadius.end > 0
+        ) {
             // name extends beyond wedge; draw tick mark towards the central
             // radius for easier identification
 
-            var radiusCenter = compress ?
-            (compressedRadii[depth - 1] + compressedRadii[depth - 2]) / 2 :
-            (depth - .5) * nodeRadius;
+            var radiusCenter = compress ? (compressedRadii[depth - 1] +
+                compressedRadii[depth - 2]) / 2 : (depth - .5) * nodeRadius;
 
-            if (this.labelRadius.end > radiusCenter)
-            {
-                if (flipped)
-                {
+            if (this.labelRadius.end > radiusCenter) {
+                if (flipped) {
                     drawTick(radius - tickLength * 1.4, tickLength, angle);
-                } else
-
-                {
+                }
+                else {
                     drawTick(radius - tickLength * 1.7, tickLength, angle);
                 }
-            } else
-
-            {
-                if (flipped)
-                {
+            }
+            else {
+                if (flipped) {
                     drawTick(radius + tickLength * .7, tickLength, angle);
-                } else
-
-                {
+                }
+                else {
                     drawTick(radius + tickLength * .4, tickLength, angle);
                 }
             }
         }
     };
 
-    this.drawLines = function (angleStart, angleEnd, radiusInner, drawRadial, selected)
-    {
-        if (snapshotMode)
-        {
-            if (this != selectedNode)
-            {
-                if (angleEnd == angleStart + Math.PI * 2)
-                {
+    this.drawLines = function(angleStart, angleEnd, radiusInner, drawRadial, selected) {
+        if (snapshotMode) {
+            if (this != selectedNode) {
+                if (angleEnd == angleStart + Math.PI * 2) {
                     // fudge to prevent overlap, which causes arc ambiguity
                     //
                     angleEnd -= .1 / gRadius;
@@ -1702,26 +1651,24 @@ function Node()
                 var x4 = centerX + radiusInner * Math.cos(angleEnd);
                 var y4 = centerY + radiusInner * Math.sin(angleEnd);
 
-                if (this.alphaArc.end)
-                {
+                if (this.alphaArc.end) {
                     var dArray =
-                    [
-                    " M ", x4, ",", y4,
-                    " A ", radiusInner, ",", radiusInner, " 0 ", longArc,
-                    " 0 ", x1, ",", y1];
-
+                        [
+                            ' M ', x4, ',', y4,
+                            ' A ', radiusInner, ',', radiusInner, ' 0 ', longArc,
+                            ' 0 ', x1, ',', y1
+                        ];
 
                     svg += '<path class="line" d="' + dArray.join('') + '"/>';
                 }
 
-                if (drawRadial && this.alphaLine.end)
-                {
-                    svg += '<line x1="' + x3 + '" y1="' + y3 + '" x2="' + x4 + '" y2="' + y4 + '"/>';
+                if (drawRadial && this.alphaLine.end) {
+                    svg += '<line x1="' + x3 + '" y1="' + y3 + '" x2="' + x4 + '" y2="' + y4 +
+                        '"/>';
                 }
             }
-        } else
-
-        {
+        }
+        else {
             context.lineWidth = thinLineWidth;
             context.strokeStyle = 'black';
             context.beginPath();
@@ -1729,8 +1676,7 @@ function Node()
             context.globalAlpha = this.alphaArc.current();
             context.stroke();
 
-            if (drawRadial)
-            {
+            if (drawRadial) {
                 var x1 = radiusInner * Math.cos(angleEnd);
                 var y1 = radiusInner * Math.sin(angleEnd);
                 var x2 = gRadius * Math.cos(angleEnd);
@@ -1740,7 +1686,7 @@ function Node()
                 context.moveTo(x1, y1);
                 context.lineTo(x2, y2);
 
-                //				if ( this.getCollapse() )//( selected && this != selectedNode )
+//				if ( this.getCollapse() )//( selected && this != selectedNode )
                 {
                     context.globalAlpha = this.alphaLine.current();
                 }
@@ -1750,25 +1696,22 @@ function Node()
         }
     };
 
-    this.drawMap = function (child)
-    {
-        if (this.parent)
-        {
+    this.drawMap = function(child) {
+        if (this.parent) {
             this.parent.drawMap(child);
         }
 
-        if (this.getCollapse() && this != child || this == focusNode)
-        {
+        if (this.getCollapse() && this != child || this == focusNode) {
             return;
         }
 
         var angleStart =
-        (child.baseMagnitude - this.baseMagnitude) / this.magnitude * Math.PI * 2 +
-        rotationOffset;
+            (child.baseMagnitude - this.baseMagnitude) / this.magnitude * Math.PI * 2 +
+            rotationOffset;
         var angleEnd =
-        (child.baseMagnitude - this.baseMagnitude + child.magnitude) /
-        this.magnitude * Math.PI * 2 +
-        rotationOffset;
+            (child.baseMagnitude - this.baseMagnitude + child.magnitude) /
+            this.magnitude * Math.PI * 2 +
+            rotationOffset;
 
         var box = this.getMapPosition();
 
@@ -1782,30 +1725,25 @@ function Node()
 
         var highlight = this == selectedNode || this == highlightedNode;
 
-        if (highlight)
-        {
+        if (highlight) {
             context.font = fontBold;
-        } else
-
-        {
+        }
+        else {
             context.font = fontNormal;
         }
 
         context.fillText(percentage + '% of', textX, box.y - mapRadius / 3);
         context.fillText(this.name, textX, box.y + mapRadius / 3);
 
-        if (highlight)
-        {
+        if (highlight) {
             context.font = fontNormal;
         }
 
-        if (this == highlightedNode && this != selectedNode)
-        {
+        if (this == highlightedNode && this != selectedNode) {
             context.fillStyle = 'rgb(245, 245, 245)';
-            //			context.fillStyle = 'rgb(200, 200, 200)';
-        } else
-
-        {
+//			context.fillStyle = 'rgb(200, 200, 200)';
+        }
+        else {
             context.fillStyle = 'rgb(255, 255, 255)';
         }
 
@@ -1814,20 +1752,16 @@ function Node()
         context.closePath();
         context.fill();
 
-        if (this == selectedNode)
-        {
+        if (this == selectedNode) {
             context.lineWidth = 1;
             context.fillStyle = 'rgb(100, 100, 100)';
-        } else
-
-        {
-            if (this == highlightedNode)
-            {
+        }
+        else {
+            if (this == highlightedNode) {
                 context.lineWidth = .2;
                 context.fillStyle = 'rgb(190, 190, 190)';
-            } else
-
-            {
+            }
+            else {
                 context.lineWidth = .2;
                 context.fillStyle = 'rgb(200, 200, 200)';
             }
@@ -1835,43 +1769,36 @@ function Node()
 
         var maxDepth = this.getMaxDepth();
 
-        if (!compress && maxDepth > maxPossibleDepth + this.getDepth() - 1)
-        {
+        if (!compress && maxDepth > maxPossibleDepth + this.getDepth() - 1) {
             maxDepth = maxPossibleDepth + this.getDepth() - 1;
         }
 
-        if (this.getDepth() < selectedNode.getDepth())
-        {
-            if (child.getDepth() - 1 >= maxDepth)
-            {
+        if (this.getDepth() < selectedNode.getDepth()) {
+            if (child.getDepth() - 1 >= maxDepth) {
                 maxDepth = child.getDepth();
             }
         }
 
         var radiusInner;
 
-        if (compress)
-        {
+        if (compress) {
             radiusInner = 0;
-            //				Math.atan(child.getDepth() - this.getDepth()) /
-            //				Math.PI * 2 * .9;
-        } else
-
-        {
+//				Math.atan(child.getDepth() - this.getDepth()) /
+//				Math.PI * 2 * .9;
+        }
+        else {
             radiusInner =
-            (child.getDepth() - this.getDepth()) / (
-            maxDepth - this.getDepth() + 1);
+                (child.getDepth() - this.getDepth()) /
+                (maxDepth - this.getDepth() + 1);
         }
 
         context.stroke();
         context.beginPath();
 
-        if (radiusInner == 0)
-        {
+        if (radiusInner == 0) {
             context.moveTo(box.x, box.y);
-        } else
-
-        {
+        }
+        else {
             context.arc(box.x, box.y, mapRadius * radiusInner, angleEnd, angleStart, true);
         }
 
@@ -1879,8 +1806,7 @@ function Node()
         context.closePath();
         context.fill();
 
-        if (this == highlightedNode && this != selectedNode)
-        {
+        if (this == highlightedNode && this != selectedNode) {
             context.lineWidth = 1;
             context.stroke();
         }
@@ -1888,20 +1814,17 @@ function Node()
         context.restore();
     };
 
-    this.drawReferenceRings = function (childRadiusInner)
-    {
-        if (snapshotMode)
-        {
+    this.drawReferenceRings = function(childRadiusInner) {
+        if (snapshotMode) {
             svg +=
-            '<circle cx="' + centerX + '" cy="' + centerY +
-            '" r="' + childRadiusInner + '"/>';
+                '<circle cx="' + centerX + '" cy="' + centerY +
+                '" r="' + childRadiusInner + '"/>';
             svg +=
-            '<circle cx="' + centerX + '" cy="' + centerY +
-            '" r="' + gRadius + '"/>';
-        } else
-
-        {
-            context.globalAlpha = 1 - this.alphaLine.current(); //this.getUncollapsed().alphaLine.current();
+                '<circle cx="' + centerX + '" cy="' + centerY +
+                '" r="' + gRadius + '"/>';
+        }
+        else {
+            context.globalAlpha = 1 - this.alphaLine.current();//this.getUncollapsed().alphaLine.current();
             context.beginPath();
             context.arc(0, 0, childRadiusInner, 0, Math.PI * 2, false);
             context.stroke();
@@ -1911,86 +1834,71 @@ function Node()
         }
     };
 
-    this.getCollapse = function ()
-    {
+    this.getCollapse = function() {
         return (
             collapse &&
             this.collapse &&
-            this.depth != maxAbsoluteDepth);
-
+            this.depth != maxAbsoluteDepth
+        );
     };
 
-    this.getDepth = function ()
-    {
-        if (collapse)
-        {
+    this.getDepth = function() {
+        if (collapse) {
             return this.depthCollapsed;
-        } else
-
-        {
+        }
+        else {
             return this.depth;
         }
     };
 
-    this.getMagnitude = function ()
-    {
+    this.getMagnitude = function() {
         return this.attributes[magnitudeIndex][currentDataset];
     };
 
-    this.getMapPosition = function ()
-    {
+    this.getMapPosition = function() {
         return {
-            x: details.offsetLeft + details.clientWidth - mapRadius,
-            y: (focusNode.getDepth() - this.getDepth()) * (
-            mapBuffer + mapRadius * 2) - mapRadius +
-            details.clientHeight + details.offsetTop };
-
+            x: (details.offsetLeft + details.clientWidth - mapRadius),
+            y: ((focusNode.getDepth() - this.getDepth()) *
+                (mapBuffer + mapRadius * 2) - mapRadius) +
+            details.clientHeight + details.offsetTop
+        };
     };
 
-    this.getMaxDepth = function (limit)
-    {
+    this.getMaxDepth = function(limit) {
         var max;
 
-        if (collapse)
-        {
+        if (collapse) {
             return this.maxDepthCollapsed;
-        } else
-
-        {
-            if (this.maxDepth > maxAbsoluteDepth)
-            {
+        }
+        else {
+            if (this.maxDepth > maxAbsoluteDepth) {
                 return maxAbsoluteDepth;
-            } else
-
-            {
+            }
+            else {
                 return this.maxDepth;
             }
         }
     };
 
-    this.getData = function (index, summary)
-    {
+    this.getData = function(index, summary) {
         var files = new Array();
 
-        if (
-
-        this.attributes[index] != null &&
-        this.attributes[index][currentDataset] != null &&
-        this.attributes[index][currentDataset] != '')
-
-        {
-            files.push(
-
-            document.location +
-            '.files/' +
-            this.attributes[index][currentDataset]);
-
+        if
+        (
+            this.attributes[index] != null &&
+            this.attributes[index][currentDataset] != null &&
+            this.attributes[index][currentDataset] != ''
+        ) {
+            files.push
+            (
+                document.location +
+                '.files/' +
+                this.attributes[index][currentDataset]
+            );
         }
 
-        if (summary)
-        {
-            for (var i = 0; i < this.children.length; i++)
-            {
+        if (summary) {
+            for (var i = 0; i < this.children.length; i++) {
                 files = files.concat(this.children[i].getData(index, true));
             }
         }
@@ -1998,27 +1906,22 @@ function Node()
         return files;
     };
 
-    this.getList = function (index, summary)
-    {
+    this.getList = function(index, summary) {
         var list;
 
-        if (
-
-        this.attributes[index] != null &&
-        this.attributes[index][currentDataset] != null)
-
-        {
+        if
+        (
+            this.attributes[index] != null &&
+            this.attributes[index][currentDataset] != null
+        ) {
             list = this.attributes[index][currentDataset];
-        } else
-
-        {
+        }
+        else {
             list = new Array();
         }
 
-        if (summary)
-        {
-            for (var i = 0; i < this.children.length; i++)
-            {
+        if (summary) {
+            for (var i = 0; i < this.children.length; i++) {
                 list = list.concat(this.children[i].getList(index, true));
             }
         }
@@ -2026,131 +1929,113 @@ function Node()
         return list;
     };
 
-    this.getParent = function ()
-    {
+    this.getParent = function() {
         // returns parent, accounting for collapsing or 0 if doesn't exist
 
         var parent = this.parent;
 
-        while (parent != 0 && parent.getCollapse())
-        {
+        while (parent != 0 && parent.getCollapse()) {
             parent = parent.parent;
         }
 
         return parent;
     };
 
-    this.getPercentage = function ()
-    {
+    this.getPercentage = function() {
         return getPercentage(this.magnitude / selectedNode.magnitude);
     };
 
-    this.getUnclassifiedPercentage = function ()
-    {
-        var lastChild = this.children[this.children.length - 1];
+    this.getUnclassifiedPercentage = function() {
+        if (this.children.length) {
+            var lastChild = this.children[this.children.length - 1];
 
-        return getPercentage(
-
-        (
-        this.baseMagnitude +
-        this.magnitude -
-        lastChild.magnitude -
-        lastChild.baseMagnitude) /
-        this.magnitude) +
-        '%';
+            return getPercentage
+            (
+                (
+                    this.baseMagnitude +
+                    this.magnitude -
+                    lastChild.magnitude -
+                    lastChild.baseMagnitude
+                ) / this.magnitude
+            ) + '%';
+        }
+        else {
+            return '100%';
+        }
     };
 
-    this.getUnclassifiedText = function ()
-    {
-        return '[unassigned ' + this.name + ']';
+    this.getUnclassifiedText = function() {
+        return '[other ' + this.name + ']';
     };
 
-    this.getUncollapsed = function ()
-    {
+    this.getUncollapsed = function() {
         // recurse through collapsed children until uncollapsed node is found
 
-        if (this.getCollapse())
-        {
+        if (this.getCollapse()) {
             return this.children[0].getUncollapsed();
-        } else
-
-        {
+        }
+        else {
             return this;
         }
     };
 
-    this.hasChildren = function ()
-    {
+    this.hasChildren = function() {
         return this.children.length && this.depth < maxAbsoluteDepth && this.magnitude;
     };
 
-    this.hasParent = function (parent)
-    {
-        if (this.parent)
-        {
-            if (this.parent == parent)
-            {
+    this.hasParent = function(parent) {
+        if (this.parent) {
+            if (this.parent == parent) {
                 return true;
-            } else
-
-            {
+            }
+            else {
                 return this.parent.hasParent(parent);
             }
-        } else
-
-        {
+        }
+        else {
             return false;
         }
     };
 
-    this.maxVisibleDepth = function (maxDepth)
-    {
+    this.maxVisibleDepth = function(maxDepth) {
         var childInnerRadius;
         var depth = this.getDepth() - selectedNode.getDepth() + 1;
         var currentMaxDepth = depth;
 
-        if (this.hasChildren() && depth < maxDepth)
-        {
+        if (this.hasChildren() && depth < maxDepth) {
             var lastChild = this.children[this.children.length - 1];
 
-            if (this.name == 'Pseudomonadaceae')
-            {
+            if (this.name == 'Pseudomonadaceae') {
                 var x = 3;
             }
 
-            if (
-
-            lastChild.baseMagnitude + lastChild.magnitude <
-            this.baseMagnitude + this.magnitude)
-
-            {
+            if
+            (
+                lastChild.baseMagnitude + lastChild.magnitude <
+                this.baseMagnitude + this.magnitude
+            ) {
                 currentMaxDepth++;
             }
 
-            if (compress)
-            {
+            if (compress) {
                 childInnerRadius = compressedRadii[depth - 1];
-            } else
-
-            {
-                childInnerRadius = depth / maxDepth;
+            }
+            else {
+                childInnerRadius = (depth) / maxDepth;
             }
 
-            for (var i = 0; i < this.children.length; i++)
-            {
-                if (
-                //true ||
+            for (var i = 0; i < this.children.length; i++) {
+                if
+                (//true ||
                 this.children[i].magnitude *
-                angleFactor * (
-                childInnerRadius + 1) *
+                angleFactor *
+                (childInnerRadius + 1) *
                 gRadius >=
-                minWidth())
-
-                {
+                minWidth()
+                ) {
                     var childMaxDepth = this.children[i].maxVisibleDepth(maxDepth);
 
-                    if (childMaxDepth > currentMaxDepth)
-                    {
+                    if (childMaxDepth > currentMaxDepth) {
                         currentMaxDepth = childMaxDepth;
                     }
                 }
@@ -2160,127 +2045,106 @@ function Node()
         return currentMaxDepth;
     };
 
-    this.resetLabelWidth = function ()
-    {
+    this.resetLabelWidth = function() {
         var nameWidthOld = this.nameWidth;
 
-        if (!this.radial) //&& fontSize != fontSizeLast )
-            {
-                var dim = context.measureText(this.name);
-                this.nameWidth = dim.width;
-            }
-
-        if (fontSize != fontSizeLast && this.labelWidth.end == nameWidthOld * labelWidthFudge)
+        if (true || !this.radial)//&& fontSize != fontSizeLast )
         {
+            var dim = context.measureText(this.name);
+            this.nameWidth = dim.width;
+        }
+
+        if (fontSize != fontSizeLast && this.labelWidth.end == nameWidthOld * labelWidthFudge) {
             // font size changed; adjust start of tween to match
 
             this.labelWidth.start = this.nameWidth * labelWidthFudge;
-        } else
-
-        {
+        }
+        else {
             this.labelWidth.start = this.labelWidth.current();
         }
 
         this.labelWidth.end = this.nameWidth * labelWidthFudge;
     };
 
-    this.restrictLabelWidth = function (width)
-    {
-        if (width < this.labelWidth.end)
-        {
+    this.restrictLabelWidth = function(width) {
+        if (width < this.labelWidth.end) {
             this.labelWidth.end = width;
         }
     };
 
-    this.search = function ()
-    {
+    this.search = function() {
         this.isSearchResult = false;
         this.searchResults = 0;
 
-        if (
-
-        !this.getCollapse() &&
-        search.value != '' &&
-        this.name.toLowerCase().indexOf(search.value.toLowerCase()) != -1)
-
-        {
+        if
+        (
+            !this.getCollapse() &&
+            search.value != '' &&
+            this.name.toLowerCase().indexOf(search.value.toLowerCase()) != -1
+        ) {
             this.isSearchResult = true;
             this.searchResults = 1;
             nSearchResults++;
         }
 
-        for (var i = 0; i < this.children.length; i++)
-        {
+        for (var i = 0; i < this.children.length; i++) {
             this.searchResults += this.children[i].search();
         }
 
         return this.searchResults;
     };
 
-    this.searchResultChildren = function ()
-    {
-        if (this.isSearchResult)
-        {
+    this.searchResultChildren = function() {
+        if (this.isSearchResult) {
             return this.searchResults - 1;
-        } else
-
-        {
+        }
+        else {
             return this.searchResults;
         }
     };
 
-    this.setDepth = function (depth, depthCollapsed)
-    {
+    this.setDepth = function(depth, depthCollapsed) {
         this.depth = depth;
         this.depthCollapsed = depthCollapsed;
 
-        if (
-
-        this.children.length == 1 &&
-        //			this.magnitude > 0 &&
-        this.children[0].magnitude == this.magnitude && (
-        head.children.length > 1 || this.children[0].children.length))
-
-        {
+        if
+        (
+            this.children.length == 1 &&
+//			this.magnitude > 0 &&
+            this.children[0].magnitude == this.magnitude &&
+            ( head.children.length > 1 || this.children[0].children.length )
+        ) {
             this.collapse = true;
-        } else
-
-        {
+        }
+        else {
             this.collapse = false;
             depthCollapsed++;
         }
 
-        for (var i = 0; i < this.children.length; i++)
-        {
+        for (var i = 0; i < this.children.length; i++) {
             this.children[i].setDepth(depth + 1, depthCollapsed);
         }
     };
 
-    this.setHighlightStyle = function ()
-    {
+    this.setHighlightStyle = function() {
         context.lineWidth = highlightLineWidth;
 
-        if (this.hasChildren() || this != focusNode || this != highlightedNode)
-        {
+        if (this.hasChildren() || this != focusNode || this != highlightedNode) {
             context.strokeStyle = 'black';
-            context.fillStyle = "rgba(255, 255, 255, .3)";
-        } else
-
-        {
+            context.fillStyle = 'rgba(255, 255, 255, .3)';
+        }
+        else {
             context.strokeStyle = 'rgb(90,90,90)';
-            context.fillStyle = "rgba(155, 155, 155, .3)";
+            context.fillStyle = 'rgba(155, 155, 155, .3)';
         }
     };
 
-    this.setLabelWidth = function (node)
-    {
-        if (!shorten || this.radial)
-        {
+    this.setLabelWidth = function(node) {
+        if (!shorten || this.radial) {
             return; // don't need to set width
         }
 
-        if (node.hide)
-        {
+        if (node.hide) {
             alert('wtf');
             return;
         }
@@ -2288,85 +2152,71 @@ function Node()
         var angle = (this.angleStart.end + this.angleEnd.end) / 2;
         var a; // angle difference
 
-        if (node == selectedNode)
-        {
+        if (node == selectedNode) {
             a = Math.abs(angle - node.angleOther);
-        } else
-
-        {
+        }
+        else {
             a = Math.abs(angle - (node.angleStart.end + node.angleEnd.end) / 2);
         }
 
-        if (a == 0)
-        {
+        if (a == 0) {
             return;
         }
 
-        if (a > Math.PI)
-        {
+        if (a > Math.PI) {
             a = 2 * Math.PI - a;
         }
 
-        if (node.radial || node == selectedNode)
-        {
+        if (node.radial || node == selectedNode) {
             var nodeLabelRadius;
 
-            if (node == selectedNode)
-            {
+            if (node == selectedNode) {
                 // radial 'other' label
 
                 nodeLabelRadius = (node.children[0].radiusInner.end + 1) / 2;
-            } else
-
-            {
+            }
+            else {
                 nodeLabelRadius = (node.radiusInner.end + 1) / 2;
             }
 
-            if (a < Math.PI / 2)
-            {
+            if (a < Math.PI / 2) {
                 var r = this.labelRadius.end * gRadius + .5 * fontSize;
                 var hypotenuse = r / Math.cos(a);
                 var opposite = r * Math.tan(a);
                 var fontRadius = .8 * fontSize;
 
-                if (
-
-                nodeLabelRadius * gRadius < hypotenuse &&
-                this.labelWidth.end / 2 + fontRadius > opposite)
-
-                {
+                if
+                (
+                    nodeLabelRadius * gRadius < hypotenuse &&
+                    this.labelWidth.end / 2 + fontRadius > opposite
+                ) {
                     this.labelWidth.end = 2 * (opposite - fontRadius);
                 }
             }
-        } else
-        if (
-
-        this.labelRadius.end == node.labelRadius.end &&
-        a < Math.PI / 4)
-
-        {
+        }
+        else if
+        (
+            this.labelRadius.end == node.labelRadius.end &&
+            a < Math.PI / 4
+        ) {
             // same radius with small angle; use circumferential approximation
 
             var dist = a * this.labelRadius.end * gRadius - fontSize * (1 - a * 4 / Math.PI) * 1.3;
 
-            if (this.labelWidth.end < dist)
-            {
+            if (this.labelWidth.end < dist) {
                 node.restrictLabelWidth((dist - this.labelWidth.end / 2) * 2);
-            } else
-            if (node.labelWidth.end < dist)
-            {
+            }
+            else if (node.labelWidth.end < dist) {
                 this.restrictLabelWidth((dist - node.labelWidth.end / 2) * 2);
-            } else
-
-            {
+            }
+            else {
                 // both labels reach halfway point; restrict both
 
                 this.labelWidth.end = dist;
                 node.labelWidth.end = dist;
             }
-        } else
-
-        {
+        }
+        else {
             var r1 = this.labelRadius.end * gRadius;
             var r2 = node.labelRadius.end * gRadius;
 
@@ -2375,18 +2225,15 @@ function Node()
             //
             var fontFudge = .35 * fontSize;
             //
-            if (this.labelRadius.end < node.labelRadius.end)
-            {
+            if (this.labelRadius.end < node.labelRadius.end) {
                 r1 += fontFudge;
                 r2 -= fontFudge;
-            } else
-            if (this.labelRadius.end > node.labelRadius.end)
-            {
+            }
+            else if (this.labelRadius.end > node.labelRadius.end) {
                 r1 -= fontFudge;
                 r2 += fontFudge;
-            } else
-
-            {
+            }
+            else {
                 r1 -= fontFudge;
                 r2 -= fontFudge;
             }
@@ -2413,58 +2260,54 @@ function Node()
             l1 = Math.abs(l1) - .4 * fontSize;
             l2 = Math.abs(l2) - .4 * fontSize;
             /*
-                                               // amount to shorten the distances because of the height of the font
-                                               //
-                                               var l3 = 0;
-                                               var fontRadius = fontSize * .55;
-                                               //
-                                               if ( l1 < 0 || l2 < 0 )
-                                               {
-                                               var l4 = fontRadius / Math.tan(a);
-                                               l1 = Math.abs(l1);
-                                               l2 = Math.abs(l2);
-                                               l1 -= l4;
-                                               l2 -= l4;
-                                               }
-                                               else
-                                               {
-                                               var c = Math.PI - a;
-                                               l3 = fontRadius * Math.tan(c / 2);
-                                               }
-                                               */
+			// amount to shorten the distances because of the height of the font
+			//
+			var l3 = 0;
+			var fontRadius = fontSize * .55;
+			//
+			if ( l1 < 0 || l2 < 0 )
+			{
+				var l4 = fontRadius / Math.tan(a);
+			l1 = Math.abs(l1);
+			l2 = Math.abs(l2);
 
+				l1 -= l4;
+				l2 -= l4;
+			}
+			else
+			{
+				var c = Math.PI - a;
 
-            if (this.labelWidth.end / 2 > l1 && node.labelWidth.end / 2 > l2)
-            {
+				l3 = fontRadius * Math.tan(c / 2);
+			}
+*/
+            if (this.labelWidth.end / 2 > l1 && node.labelWidth.end / 2 > l2) {
                 // shorten the farthest one from the intersection
 
-                if (l1 > l2)
-                {
-                    this.restrictLabelWidth(2 * l1); // - l3 - fontRadius));
-                } else
-
-                {
-                    node.restrictLabelWidth(2 * l2); // - l3 - fontRadius));
+                if (l1 > l2) {
+                    this.restrictLabelWidth(2 * (l1));// - l3 - fontRadius));
                 }
-            } /*
-              else if ( this.labelWidth.end / 2 > l1 + l3 && node.labelWidth.end / 2 > l2 - l3 )
-              {
-              node.restrictLabelWidth(2 * (l2 - l3));
-              }
-              else if ( this.labelWidth.end / 2 > l1 - l3 && node.labelWidth.end / 2 > l2 + l3 )
-              {
-              this.restrictLabelWidth(2 * (l1 - l3));
-              }*/
+                else {
+                    node.restrictLabelWidth(2 * (l2));// - l3 - fontRadius));
+                }
+            }
+            /*
+                        else if ( this.labelWidth.end / 2 > l1 + l3 && node.labelWidth.end / 2 > l2 - l3 )
+                        {
+                            node.restrictLabelWidth(2 * (l2 - l3));
+                        }
+                        else if ( this.labelWidth.end / 2 > l1 - l3 && node.labelWidth.end / 2 > l2 + l3 )
+                        {
+                            this.restrictLabelWidth(2 * (l1 - l3));
+                        }*/
         }
     };
 
-    this.setMagnitudes = function (baseMagnitude)
-    {
+    this.setMagnitudes = function(baseMagnitude) {
         this.magnitude = this.getMagnitude();
         this.baseMagnitude = baseMagnitude;
 
-        for (var i = 0; i < this.children.length; i++)
-        {
+        for (var i = 0; i < this.children.length; i++) {
             this.children[i].setMagnitudes(baseMagnitude);
             baseMagnitude += this.children[i].magnitude;
         }
@@ -2472,194 +2315,161 @@ function Node()
         this.maxChildMagnitude = baseMagnitude;
     };
 
-    this.setMaxDepths = function ()
-    {
+    this.setMaxDepths = function() {
         this.maxDepth = this.depth;
         this.maxDepthCollapsed = this.depthCollapsed;
 
-        for (i in this.children)
-        {
+        for (i in this.children) {
             var child = this.children[i];
 
             child.setMaxDepths();
 
-            if (child.maxDepth > this.maxDepth)
-            {
+            if (child.maxDepth > this.maxDepth) {
                 this.maxDepth = child.maxDepth;
             }
 
-            if (
-
-            child.maxDepthCollapsed > this.maxDepthCollapsed && (
-            child.depth <= maxAbsoluteDepth || maxAbsoluteDepth == 0))
-
-            {
+            if
+            (
+                child.maxDepthCollapsed > this.maxDepthCollapsed &&
+                (child.depth <= maxAbsoluteDepth || maxAbsoluteDepth == 0)
+            ) {
                 this.maxDepthCollapsed = child.maxDepthCollapsed;
             }
         }
     };
 
-    this.setTargetLabelRadius = function ()
-    {
+    this.setTargetLabelRadius = function() {
         var depth = this.getDepth() - selectedNode.getDepth() + 1;
         var index = depth - 2;
         var labelOffset = labelOffsets[index];
 
-        if (this.radial)
-        {
+        if (this.radial) {
             //this.labelRadius.setTarget((this.radiusInner.end + 1) / 2);
             var max =
-            depth == maxDisplayDepth ?
-            1 :
-            compressedRadii[index + 1];
+                depth == maxDisplayDepth ? 1 : compressedRadii[index + 1];
 
             this.labelRadius.setTarget((compressedRadii[index] + max) / 2);
-        } else
-
-        {
+        }
+        else {
             var radiusCenter;
             var width;
 
-            if (compress)
-            {
-                if (nLabelOffsets[index] > 1)
-                {
-                    this.labelRadius.setTarget(
-
-                    lerp(
-
-                    labelOffset + .75,
-                    0,
-                    nLabelOffsets[index] + .5,
-                    compressedRadii[index],
-                    compressedRadii[index + 1]));
-
-
-                } else
-
-                {
-                    this.labelRadius.setTarget((compressedRadii[index] + compressedRadii[index + 1]) / 2);
+            if (compress) {
+                if (nLabelOffsets[index] > 1) {
+                    this.labelRadius.setTarget
+                    (
+                        lerp
+                        (
+                            labelOffset + .75,
+                            0,
+                            nLabelOffsets[index] + .5,
+                            compressedRadii[index],
+                            compressedRadii[index + 1]
+                        )
+                    );
                 }
-            } else
-
-            {
+                else {
+                    this.labelRadius.setTarget((compressedRadii[index] +
+                        compressedRadii[index + 1]) / 2);
+                }
+            }
+            else {
                 radiusCenter =
-                nodeRadius * (depth - 1) +
-                nodeRadius / 2;
+                    nodeRadius * (depth - 1) +
+                    nodeRadius / 2;
                 width = nodeRadius;
 
-                this.labelRadius.setTarget(
-
-                radiusCenter + width * ((labelOffset + 1) / (nLabelOffsets[index] + 1) - .5));
-
+                this.labelRadius.setTarget
+                (
+                    radiusCenter + width * ((labelOffset + 1) / (nLabelOffsets[index] + 1) - .5)
+                );
             }
         }
 
-        if (!this.hide && !this.keyed && nLabelOffsets[index])
-        {
+        if (!this.hide && !this.keyed && nLabelOffsets[index]) {
             // check last and first labels in each track for overlap
 
-            for (var i = 0; i < maxDisplayDepth - 1; i++)
-            {
-                for (var j = 0; j <= nLabelOffsets[i]; j++)
-                {
+            for (var i = 0; i < maxDisplayDepth - 1; i++) {
+                for (var j = 0; j <= nLabelOffsets[i]; j++) {
                     var last = labelLastNodes[i][j];
                     var first = labelFirstNodes[i][j];
 
-                    if (last)
-                    {
-                        if (j == nLabelOffsets[i])
-                        {
+                    if (last) {
+                        if (j == nLabelOffsets[i]) {
                             // last is radial
                             this.setLabelWidth(last);
-                        } else
-
-                        {
+                        }
+                        else {
                             last.setLabelWidth(this);
                         }
                     }
 
-                    if (first)
-                    {
-                        if (j == nLabelOffsets[i])
-                        {
+                    if (first) {
+                        if (j == nLabelOffsets[i]) {
                             this.setLabelWidth(first);
-                        } else
-
-                        {
+                        }
+                        else {
                             first.setLabelWidth(this);
                         }
                     }
                 }
             }
 
-            if (selectedNode.canDisplayLabelOther)
-            {
+            if (selectedNode.canDisplayLabelOther) {
                 this.setLabelWidth(selectedNode); // in case there is an 'other' label
             }
 
-            if (this.radial)
-            {
+            if (this.radial) {
                 // use the last 'track' of this depth for radial
 
                 labelLastNodes[index][nLabelOffsets[index]] = this;
 
-                if (labelFirstNodes[index][nLabelOffsets[index]] == 0)
-                {
+                if (labelFirstNodes[index][nLabelOffsets[index]] == 0) {
                     labelFirstNodes[index][nLabelOffsets[index]] = this;
                 }
-            } else
-
-            {
+            }
+            else {
                 labelLastNodes[index][labelOffset] = this;
 
                 // update offset
 
                 labelOffsets[index] += 1;
 
-                if (labelOffsets[index] > nLabelOffsets[index])
-                {
+                if (labelOffsets[index] > nLabelOffsets[index]) {
                     labelOffsets[index] -= nLabelOffsets[index];
 
-                    if (!(nLabelOffsets[index] & 1))
-                    {
+                    if (!(nLabelOffsets[index] & 1)) {
                         labelOffsets[index]--;
                     }
-                } else
-                if (labelOffsets[index] == nLabelOffsets[index])
-                {
+                }
+                else if (labelOffsets[index] == nLabelOffsets[index]) {
                     labelOffsets[index] -= nLabelOffsets[index];
 
-                    if (false && !(nLabelOffsets[index] & 1))
-                    {
+                    if (false && !(nLabelOffsets[index] & 1)) {
                         labelOffsets[index]++;
                     }
                 }
 
-                if (labelFirstNodes[index][labelOffset] == 0)
-                {
+                if (labelFirstNodes[index][labelOffset] == 0) {
                     labelFirstNodes[index][labelOffset] = this;
                 }
             }
-        } else
-        if (this.hide)
-        {
+        }
+        else if (this.hide) {
             this.labelWidth.end = 0;
         }
     };
 
-    this.setTargets = function ()
-    {
-        if (this == selectedNode)
-        {
-            this.setTargetsSelected(
-
-            0,
-            1,
-            lightnessBase,
-            false,
-            false);
-
+    this.setTargets = function() {
+        if (this == selectedNode) {
+            this.setTargetsSelected
+            (
+                0,
+                1,
+                lightnessBase,
+                false,
+                false
+            );
             return;
         }
 
@@ -2667,18 +2477,16 @@ function Node()
 
         var parentOfSelected = selectedNode.hasParent(this);
         /*		(
-                                                             //			! this.getCollapse() &&
-                                                             this.baseMagnitude <= selectedNode.baseMagnitude &&
-                                                             this.baseMagnitude + this.magnitude >=
-                                                             selectedNode.baseMagnitude + selectedNode.magnitude
-                                                             );
-                                                             */
-        if (parentOfSelected)
-        {
+//			! this.getCollapse() &&
+			this.baseMagnitude <= selectedNode.baseMagnitude &&
+			this.baseMagnitude + this.magnitude >=
+			selectedNode.baseMagnitude + selectedNode.magnitude
+		);
+*/
+        if (parentOfSelected) {
             this.resetLabelWidth();
-        } else
-
-        {
+        }
+        else {
             //context.font = fontNormal;
             var dim = context.measureText(this.name);
             this.nameWidth = dim.width;
@@ -2688,103 +2496,87 @@ function Node()
 
         // set angles
         //
-        if (this.baseMagnitude <= selectedNode.baseMagnitude)
-        {
+        if (this.baseMagnitude <= selectedNode.baseMagnitude) {
             this.angleStart.setTarget(0);
-        } else
-
-        {
+        }
+        else {
             this.angleStart.setTarget(Math.PI * 2);
         }
         //
-        if (
-
-        parentOfSelected ||
-        this.baseMagnitude + this.magnitude >=
-        selectedNode.baseMagnitude + selectedNode.magnitude)
-
-        {
+        if
+        (
+            parentOfSelected ||
+            this.baseMagnitude + this.magnitude >=
+            selectedNode.baseMagnitude + selectedNode.magnitude
+        ) {
             this.angleEnd.setTarget(Math.PI * 2);
-        } else
-
-        {
+        }
+        else {
             this.angleEnd.setTarget(0);
         }
 
         // children
         //
-        for (var i = 0; i < this.children.length; i++)
-        {
+        for (var i = 0; i < this.children.length; i++) {
             this.children[i].setTargets();
         }
 
-        if (this.getDepth() <= selectedNode.getDepth())
-        {
+        if (this.getDepth() <= selectedNode.getDepth()) {
             // collapse in
 
             this.radiusInner.setTarget(0);
 
-            if (parentOfSelected)
-            {
-                this.labelRadius.setTarget(
-
-                depthRelative *
-                historySpacingFactor * fontSize / gRadius);
-
+            if (parentOfSelected) {
+                this.labelRadius.setTarget
+                (
+                    (depthRelative) *
+                    historySpacingFactor * fontSize / gRadius
+                );
                 //this.scale.setTarget(1 - (selectedNode.getDepth() - this.getDepth()) / 18); // TEMP
-            } else
-
-            {
+            }
+            else {
                 this.labelRadius.setTarget(0);
                 //this.scale.setTarget(1); // TEMP
             }
-        } else
-        if (depthRelative + 1 > maxDisplayDepth)
-        {
+        }
+        else if (depthRelative + 1 > maxDisplayDepth) {
             // collapse out
 
             this.radiusInner.setTarget(1);
             this.labelRadius.setTarget(1);
             //this.scale.setTarget(1); // TEMP
-        } else
-
-        {
+        }
+        else {
             // don't collapse
 
-            if (compress)
-            {
+            if (compress) {
                 this.radiusInner.setTarget(compressedRadii[depthRelative - 1]);
-            } else
-
-            {
-                this.radiusInner.setTarget(nodeRadius * depthRelative);
+            }
+            else {
+                this.radiusInner.setTarget(nodeRadius * (depthRelative));
             }
 
             //this.scale.setTarget(1); // TEMP
 
-            if (this == selectedNode)
-            {
+            if (this == selectedNode) {
                 this.labelRadius.setTarget(0);
-            } else
-
-            {
-                if (compress)
-                {
-                    this.labelRadius.setTarget(
-
-                    (compressedRadii[depthRelative - 1] + compressedRadii[depthRelative]) / 2);
-
-                } else
-
-                {
-                    this.labelRadius.setTarget(nodeRadius * depthRelative + nodeRadius / 2);
+            }
+            else {
+                if (compress) {
+                    this.labelRadius.setTarget
+                    (
+                        (compressedRadii[depthRelative - 1] + compressedRadii[depthRelative]) / 2
+                    );
+                }
+                else {
+                    this.labelRadius.setTarget(nodeRadius * (depthRelative) + nodeRadius / 2);
                 }
             }
         }
 
-        //		this.r.start = this.r.end;
-        //		this.g.start = this.g.end;
-        //		this.b.start = this.b.end;
+//		this.r.start = this.r.end;
+//		this.g.start = this.g.end;
+//		this.b.start = this.b.end;
 
         this.r.setTarget(255);
         this.g.setTarget(255);
@@ -2796,118 +2588,114 @@ function Node()
         this.alphaPattern.setTarget(0);
         this.alphaOther.setTarget(0);
 
-        if (parentOfSelected && !this.getCollapse())
-        {
+        if (parentOfSelected && !this.getCollapse()) {
             var alpha =
+                (
+                    1 -
+                    (selectedNode.getDepth() - this.getDepth()) /
+                    (Math.floor((compress ? compressedRadii[0] : nodeRadius) * gRadius /
+                        (historySpacingFactor * fontSize) - .5) + 1)
+                );
 
-            1 -
-            (selectedNode.getDepth() - this.getDepth()) / (
-            Math.floor((compress ? compressedRadii[0] : nodeRadius) * gRadius / (historySpacingFactor * fontSize) - .5) + 1);
-
-
-            if (alpha < 0)
-            {
+            if (alpha < 0) {
                 alpha = 0;
             }
 
             this.alphaLabel.setTarget(alpha);
             this.radial = false;
-        } else
-
-        {
+        }
+        else {
             this.alphaLabel.setTarget(0);
         }
 
         this.hideAlonePrev = this.hideAlone;
         this.hidePrev = this.hide;
 
-        if (parentOfSelected)
-        {
+        if (parentOfSelected) {
             this.hideAlone = false;
             this.hide = false;
         }
 
-        if (this.getParent() == selectedNode.getParent())
-        {
+        if (this.getParent() == selectedNode.getParent()) {
             this.hiddenEnd = null;
         }
 
         this.radialPrev = this.radial;
     };
 
-    this.setTargetsSelected = function (hueMin, hueMax, lightness, hide, nextSiblingHidden)
-    {
+    this.setTargetsSelected = function(hueMin, hueMax, lightness, hide, nextSiblingHidden) {
         var collapse = this.getCollapse();
         var depth = this.getDepth() - selectedNode.getDepth() + 1;
         var canDisplayChildLabels = false;
         var lastChild;
 
-        if (this.hasChildren()) //&& ! hide )
-            {
-                lastChild = this.children[this.children.length - 1];
-                this.hideAlone = true;
-            } else
-
+        if (this.hasChildren())//&& ! hide )
         {
+            lastChild = this.children[this.children.length - 1];
+            this.hideAlone = true;
+        }
+        else {
             this.hideAlone = false;
         }
 
         // set child wedges
         //
-        for (var i = 0; i < this.children.length; i++)
-        {
+        for (var i = 0; i < this.children.length; i++) {
             this.children[i].setTargetWedge();
 
-            if (
-
-            !this.children[i].hide && (
-            collapse || depth < maxDisplayDepth) &&
-            this.depth < maxAbsoluteDepth)
-
-            {
+            if
+            (
+                !this.children[i].hide &&
+                ( collapse || depth < maxDisplayDepth ) &&
+                this.depth < maxAbsoluteDepth
+            ) {
                 canDisplayChildLabels = true;
                 this.hideAlone = false;
             }
         }
 
-        if (this == selectedNode || lastChild && lastChild.angleEnd.end < this.angleEnd.end - .01)
-        {
+        if (this == selectedNode || lastChild && lastChild.angleEnd.end < this.angleEnd.end - .01) {
             this.hideAlone = false;
         }
 
-        if (this.hideAlonePrev == undefined)
-        {
+        if (this.hideAlonePrev == undefined) {
             this.hideAlonePrev = this.hideAlone;
         }
 
-        if (this == selectedNode)
-        {
+        if (this == selectedNode) {
             var otherArc =
-            angleFactor * (
-
-            this.baseMagnitude + this.magnitude -
-            lastChild.baseMagnitude - lastChild.magnitude);
-
+                this.children.length ? angleFactor *
+                    (
+                        this.baseMagnitude + this.magnitude -
+                        lastChild.baseMagnitude - lastChild.magnitude
+                    )
+                    : this.baseMagnitude + this.magnitude;
             this.canDisplayLabelOther =
-            otherArc * (
-            this.children[0].radiusInner.end + 1) * gRadius >=
-            minWidth();
+                this.children.length ? otherArc *
+                    (this.children[0].radiusInner.end + 1) * gRadius >=
+                    minWidth()
+                    : true;
 
             this.keyUnclassified = false;
 
-            if (this.canDisplayLabelOther)
-            {
+            if (this.canDisplayLabelOther) {
                 this.angleOther = Math.PI * 2 - otherArc / 2;
-            } else
-            if (otherArc > 0.0000000001)
-            {
+            }
+            else if (otherArc > 0.0000000001) {
                 this.keyUnclassified = true;
                 keys++;
             }
 
             this.angleStart.setTarget(0);
             this.angleEnd.setTarget(Math.PI * 2);
-            this.radiusInner.setTarget(0);
+
+            if (this.children.length) {
+                this.radiusInner.setTarget(0);
+            }
+            else {
+                this.radiusInner.setTarget(compressedRadii[0]);
+            }
+
             this.hidePrev = this.hide;
             this.hide = false;
             this.hideAlonePrev = this.hideAlone;
@@ -2915,37 +2703,30 @@ function Node()
             this.keyed = false;
         }
 
-        if (hueMax - hueMin > 1 / 12)
-        {
+        if (hueMax - hueMin > 1 / 12) {
             hueMax = hueMin + 1 / 12;
         }
 
         // set lightness
         //
-        if (!(hide || this.hideAlone))
-        {
-            if (useHue())
-            {
+        if (!( hide || this.hideAlone )) {
+            if (useHue()) {
                 lightness = (lightnessBase + lightnessMax) / 2;
-            } else
-
-            {
+            }
+            else {
                 lightness = lightnessBase + (depth - 1) * lightnessFactor;
 
-                if (lightness > lightnessMax)
-                {
+                if (lightness > lightnessMax) {
                     lightness = lightnessMax;
                 }
             }
         }
 
-        if (hide)
-        {
+        if (hide) {
             this.hide = true;
         }
 
-        if (this.hidePrev == undefined)
-        {
+        if (this.hidePrev == undefined) {
             this.hidePrev = this.hide;
         }
 
@@ -2954,33 +2735,29 @@ function Node()
         var hiddenHueDenom = 0;
         var i = 0;
 
-        if (!this.hide)
-        {
+        if (!this.hide) {
             this.hiddenEnd = null;
         }
 
-        while (true)
-        {
-            if (!this.hideAlone && !hide && (i == this.children.length || !this.children[i].hide))
-            {
+        while (true) {
+            if (!this.hideAlone && !hide &&
+                ( i == this.children.length || !this.children[i].hide )) {
                 // reached a non-hidden child or the end; set targets for
                 // previous group of hidden children (if any) using their
                 // average hue
 
-                if (hiddenStart != -1)
-                {
+                if (hiddenStart != -1) {
                     var hiddenHue = hiddenHueDenom ? hiddenHueNumer / hiddenHueDenom : hueMin;
 
-                    for (var j = hiddenStart; j < i; j++)
-                    {
-                        this.children[j].setTargetsSelected(
-
-                        hiddenHue,
-                        null,
-                        lightness,
-                        false,
-                        j < i - 1);
-
+                    for (var j = hiddenStart; j < i; j++) {
+                        this.children[j].setTargetsSelected
+                        (
+                            hiddenHue,
+                            null,
+                            lightness,
+                            false,
+                            j < i - 1
+                        );
 
                         this.children[j].hiddenEnd = null;
                     }
@@ -2989,8 +2766,7 @@ function Node()
                 }
             }
 
-            if (i == this.children.length)
-            {
+            if (i == this.children.length) {
                 break;
             }
 
@@ -2998,103 +2774,91 @@ function Node()
             var childHueMin;
             var childHueMax;
 
-            if (this.magnitude > 0 && !this.hide && !this.hideAlone)
-            {
-                if (useHue())
-                {
+            if (this.magnitude > 0 && !this.hide && !this.hideAlone) {
+                if (useHue()) {
                     childHueMin = child.hues[currentDataset];
-                } else
-                if (this == selectedNode)
-                {
+                }
+                else if (this == selectedNode) {
                     var min = 0.0;
                     var max = 1.0;
 
-                    if (this.children.length > 6)
-                    {
-                        childHueMin = lerp((1 - Math.pow(1 - i / this.children.length, 1.4)) * .95, 0, 1, min, max);
-                        childHueMax = lerp((1 - Math.pow(1 - (i + .55) / this.children.length, 1.4)) * .95, 0, 1, min, max);
-                    } else
-
-                    {
+                    if (this.children.length > 6) {
+                        childHueMin = lerp((1 - Math.pow(1 - i / this.children.length, 1.4)) * .95,
+                            0, 1, min, max);
+                        childHueMax = lerp((1 -
+                            Math.pow(1 - (i + .55) / this.children.length, 1.4)) * .95, 0, 1, min,
+                            max);
+                    }
+                    else {
                         childHueMin = lerp(i / this.children.length, 0, 1, min, max);
                         childHueMax = lerp((i + .55) / this.children.length, 0, 1, min, max);
                     }
-                } else
-
-                {
-                    childHueMin = lerp(
-
-                    child.baseMagnitude,
-                    this.baseMagnitude,
-                    this.baseMagnitude + this.magnitude,
-                    hueMin,
-                    hueMax);
-
-                    childHueMax = lerp(
-
-                    child.baseMagnitude + child.magnitude * .99,
-                    this.baseMagnitude,
-                    this.baseMagnitude + this.magnitude,
-                    hueMin,
-                    hueMax);
-
                 }
-            } else
-
-            {
+                else {
+                    childHueMin = lerp
+                    (
+                        child.baseMagnitude,
+                        this.baseMagnitude,
+                        this.baseMagnitude + this.magnitude,
+                        hueMin,
+                        hueMax
+                    );
+                    childHueMax = lerp
+                    (
+                        child.baseMagnitude + child.magnitude * .99,
+                        this.baseMagnitude,
+                        this.baseMagnitude + this.magnitude,
+                        hueMin,
+                        hueMax
+                    );
+                }
+            }
+            else {
                 childHueMin = hueMin;
                 childHueMax = hueMax;
             }
 
-            if (!this.hideAlone && !hide && !this.hide && child.hide)
-            {
-                if (hiddenStart == -1)
-                {
+            if (!this.hideAlone && !hide && !this.hide && child.hide) {
+                if (hiddenStart == -1) {
                     hiddenStart = i;
                 }
 
-                if (useHue())
-                {
+                if (useHue()) {
                     hiddenHueNumer += childHueMin * child.magnitude;
                     hiddenHueDenom += child.magnitude;
-                } else
-
-                {
+                }
+                else {
                     hiddenHueNumer += childHueMin;
                     hiddenHueDenom++;
                 }
-            } else
-
-            {
+            }
+            else {
                 hiddenStart = -1;
 
-                this.children[i].setTargetsSelected(
-
-                childHueMin,
-                childHueMax,
-                lightness,
-                hide || this.keyed || this.hideAlone || this.hide && !collapse,
-                false);
-
+                this.children[i].setTargetsSelected
+                (
+                    childHueMin,
+                    childHueMax,
+                    lightness,
+                    hide || this.keyed || this.hideAlone || this.hide && !collapse,
+                    false
+                );
             }
 
             i++;
         }
 
-        if (this.hue && this.magnitude)
-        {
+        if (this.hue && this.magnitude) {
             this.hue.setTarget(this.hues[currentDataset]);
 
-            if (this.attributes[magnitudeIndex][lastDataset] == 0)
-            {
+            if (this.attributes[magnitudeIndex][lastDataset] == 0) {
                 this.hue.start = this.hue.end;
             }
         }
 
         this.radialPrev = this.radial;
 
-        if (this == selectedNode)
-        {
+        if (this == selectedNode) {
             this.resetLabelWidth();
             this.labelWidth.setTarget(this.nameWidth * labelWidthFudge);
             this.alphaWedge.setTarget(0);
@@ -3108,15 +2872,14 @@ function Node()
             this.b.setTarget(255);
             this.radial = false;
             this.labelRadius.setTarget(0);
-        } else
-
-        {
-            var rgb = hslToRgb(
-
-            hueMin,
-            saturation,
-            lightness);
-
+        }
+        else {
+            var rgb = hslToRgb
+            (
+                hueMin,
+                saturation,
+                lightness
+            );
 
             this.r.setTarget(rgb.r);
             this.g.setTarget(rgb.g);
@@ -3125,80 +2888,68 @@ function Node()
 
             this.alphaWedge.setTarget(1);
 
-            if (this.hide || this.hideAlone)
-            {
+            if (this.hide || this.hideAlone) {
                 this.alphaPattern.setTarget(1);
-            } else
-
-            {
+            }
+            else {
                 this.alphaPattern.setTarget(0);
             }
 
             // set radial
             //
-            if (!(hide || this.hide)) //&& ! this.keyed )
-                {
-                    if (this.hideAlone)
-                    {
-                        this.radial = true;
-                    } else
-                    if (false && canDisplayChildLabels)
-                    {
-                        this.radial = false;
-                    } else
+            if (!( hide || this.hide ))//&& ! this.keyed )
+            {
+                if (this.hideAlone) {
+                    this.radial = true;
+                }
+                else if (false && canDisplayChildLabels) {
+                    this.radial = false;
+                }
+                else {
+                    this.radial = true;
 
-                    {
-                        this.radial = true;
+                    if (this.hasChildren() && depth < maxDisplayDepth) {
+                        var lastChild = this.children[this.children.length - 1];
 
-                        if (this.hasChildren() && depth < maxDisplayDepth)
-                        {
-                            var lastChild = this.children[this.children.length - 1];
-
-                            if (
-
+                        if
+                        (
                             lastChild.angleEnd.end == this.angleEnd.end ||
                             (
-                            (this.angleStart.end + this.angleEnd.end) / 2 -
-                            lastChild.angleEnd.end) * (
-                            this.radiusInner.end + 1) * gRadius * 2 <
-                            minWidth())
-
-                            {
-                                this.radial = false;
-                            }
+                                (this.angleStart.end + this.angleEnd.end) / 2 -
+                                lastChild.angleEnd.end
+                            ) * (this.radiusInner.end + 1) * gRadius * 2 <
+                            minWidth()
+                        ) {
+                            this.radial = false;
                         }
                     }
                 }
+            }
 
             // set alphaLabel
             //
-            if (
-
-            collapse ||
-            hide ||
-            this.hide ||
-            this.keyed ||
-            depth > maxDisplayDepth ||
-            !this.canDisplayDepth())
-
-            {
+            if
+            (
+                collapse ||
+                hide ||
+                this.hide ||
+                this.keyed ||
+                depth > maxDisplayDepth ||
+                !this.canDisplayDepth()
+            ) {
                 this.alphaLabel.setTarget(0);
-            } else
-
-            {
-                if (
-
-                this.radial || nLabelOffsets[depth - 2])
-
-                {
+            }
+            else {
+                if
+                (
+                    (this.radial || nLabelOffsets[depth - 2])
+                ) {
                     this.alphaLabel.setTarget(1);
-                } else
-
-                {
+                }
+                else {
                     this.alphaLabel.setTarget(0);
 
-                    if (this.radialPrev)
-                    {
+                    if (this.radialPrev) {
                         this.alphaLabel.start = 0;
                     }
                 }
@@ -3206,35 +2957,31 @@ function Node()
 
             // set alphaArc
             //
-            if (
-
-            collapse ||
-            hide ||
-            depth > maxDisplayDepth ||
-            !this.canDisplayDepth())
-
-            {
+            if
+            (
+                collapse ||
+                hide ||
+                depth > maxDisplayDepth ||
+                !this.canDisplayDepth()
+            ) {
                 this.alphaArc.setTarget(0);
-            } else
-
-            {
+            }
+            else {
                 this.alphaArc.setTarget(1);
             }
 
             // set alphaLine
             //
-            if (
-
-            hide ||
-            this.hide && nextSiblingHidden ||
-            depth > maxDisplayDepth ||
-            !this.canDisplayDepth())
-
-            {
+            if
+            (
+                hide ||
+                this.hide && nextSiblingHidden ||
+                depth > maxDisplayDepth ||
+                !this.canDisplayDepth()
+            ) {
                 this.alphaLine.setTarget(0);
-            } else
-
-            {
+            }
+            else {
                 this.alphaLine.setTarget(1);
             }
 
@@ -3245,26 +2992,21 @@ function Node()
 
             // set labelRadius target
             //
-            if (collapse)
-            {
+            if (collapse) {
                 this.labelRadius.setTarget(this.radiusInner.end);
-            } else
-
-            {
-                if (depth > maxDisplayDepth || !this.canDisplayDepth())
-                {
+            }
+            else {
+                if (depth > maxDisplayDepth || !this.canDisplayDepth()) {
                     this.labelRadius.setTarget(1);
-                } else
-
-                {
+                }
+                else {
                     this.setTargetLabelRadius();
                 }
             }
         }
     };
 
-    this.setTargetWedge = function ()
-    {
+    this.setTargetWedge = function() {
         var depth = this.getDepth() - selectedNode.getDepth() + 1;
 
         // set angles
@@ -3276,43 +3018,35 @@ function Node()
 
         // set radiusInner
         //
-        if (depth > maxDisplayDepth || !this.canDisplayDepth())
-        {
+        if (depth > maxDisplayDepth || !this.canDisplayDepth()) {
             this.radiusInner.setTarget(1);
-        } else
-
-        {
-            if (compress)
-            {
+        }
+        else {
+            if (compress) {
                 this.radiusInner.setTarget(compressedRadii[depth - 2]);
-            } else
-
-            {
+            }
+            else {
                 this.radiusInner.setTarget(nodeRadius * (depth - 1));
             }
         }
 
-        if (this.hide != undefined)
-        {
+        if (this.hide != undefined) {
             this.hidePrev = this.hide;
         }
 
-        if (this.hideAlone != undefined)
-        {
+        if (this.hideAlone != undefined) {
             this.hideAlonePrev = this.hideAlone;
         }
 
         // set hide
         //
-        if (
-
-        (this.angleEnd.end - this.angleStart.end) * (
-        this.radiusInner.end * gRadius + gRadius) <
-        minWidth())
-
-        {
-            if (depth == 2 && !this.getCollapse() && this.depth <= maxAbsoluteDepth)
-            {
+        if
+        (
+            (this.angleEnd.end - this.angleStart.end) *
+            (this.radiusInner.end * gRadius + gRadius) <
+            minWidth()
+        ) {
+            if (depth == 2 && !this.getCollapse() && this.depth <= maxAbsoluteDepth) {
                 this.keyed = true;
                 keys++;
                 this.hide = false;
@@ -3321,35 +3055,30 @@ function Node()
                 this.keyLabel = this.name + '   ' + percentage + '%';
                 var dim = context.measureText(this.keyLabel);
                 this.keyNameWidth = dim.width;
-            } else
-
-            {
+            }
+            else {
                 this.keyed = false;
                 this.hide = depth > 2;
             }
-        } else
-
-        {
+        }
+        else {
             this.keyed = false;
             this.hide = false;
         }
     };
 
-    this.shortenLabel = function ()
-    {
+    this.shortenLabel = function() {
         var label = this.name;
 
         var labelWidth = this.nameWidth;
         var maxWidth = this.labelWidth.current();
         var minEndLength = 0;
 
-        if (labelWidth > maxWidth && label.length > minEndLength * 2)
-        {
+        if (labelWidth > maxWidth && label.length > minEndLength * 2) {
             var endLength =
-            Math.floor((label.length - 1) * maxWidth / labelWidth / 2);
+                Math.floor((label.length - 1) * maxWidth / labelWidth / 2);
 
-            if (endLength < minEndLength)
-            {
+            if (endLength < minEndLength) {
                 endLength = minEndLength;
             }
 
@@ -3357,31 +3086,28 @@ function Node()
                 label.substring(0, endLength) +
                 '...' +
                 label.substring(label.length - endLength));
-        } else
-
-        {
+        }
+        else {
             return label;
         }
     };
 
     /*	this.shouldAddSearchResultsString = function()
-       {
-       if ( this.isSearchResult )
-       {
-       return this.searchResults > 1;
-       }
-       else
-       {
-       return this.searchResults > 0;
-       }
-       }
-       */
-    this.sort = function ()
-    {
-        this.children.sort(function (a, b) {return b.getMagnitude() - a.getMagnitude();});
+	{
+		if ( this.isSearchResult )
+		{
+			return this.searchResults > 1;
+		}
+		else
+		{
+			return this.searchResults > 0;
+		}
+	}
+*/
+    this.sort = function() {
+        this.children.sort(function(a, b) {return b.getMagnitude() - a.getMagnitude();});
 
-        for (var i = 0; i < this.children.length; i++)
-        {
+        for (var i = 0; i < this.children.length; i++) {
             this.children[i].sort();
         }
     };
@@ -3389,32 +3115,29 @@ function Node()
 
 var options;
 
-function addOptionElement(position, innerHTML, title)
-{
-    var div = document.createElement("div");
-    //	div.style.position = 'absolute';
-    //	div.style.top = position + 'px';
+function addOptionElement(position, innerHTML, title) {
+    var div = document.createElement('div');
+//	div.style.position = 'absolute';
+//	div.style.top = position + 'px';
     div.innerHTML = innerHTML;
-    //	div.style.display = 'block';
+//	div.style.display = 'block';
     div.style.padding = '2px';
 
-    if (title)
-    {
+    if (title) {
         div.title = title;
     }
 
     options.appendChild(div);
-    var height = 0; //div.clientHeight;
+    var height = 0;//div.clientHeight;
     return position + height;
 }
 
-function addOptionElements(hueName, hueDefault)
-{
+function addOptionElements(hueName, hueDefault) {
     options = document.createElement('div');
     options.style.position = 'absolute';
     options.style.top = '0px';
-    options.addEventListener('mousedown', function (e) {mouseClick(e);}, false);
-    //	options.onmouseup = function(e) {mouseUp(e)}
+    options.addEventListener('mousedown', function(e) {mouseClick(e);}, false);
+//	options.onmouseup = function(e) {mouseUp(e)}
     document.body.appendChild(options);
 
     document.body.style.font = '11px sans-serif';
@@ -3426,7 +3149,7 @@ function addOptionElements(hueName, hueDefault)
     details.style.right = '2%';
     details.style.textAlign = 'right';
     document.body.insertBefore(details, canvas);
-    //		<div id="details" style="position:absolute;top:1%;right:2%;text-align:right;">
+//		<div id="details" style="position:absolute;top:1%;right:2%;text-align:right;">
 
     details.innerHTML = '\
 <span id="detailsName" style="font-weight:bold"></span>&nbsp;\
@@ -3445,44 +3168,42 @@ value="&harr;" title="Expand this wedge to become the new focus of the chart"/><
 
     var logoElement = document.getElementById('logo');
 
-    if (logoElement)
-    {
+    if (logoElement) {
         logoImage = logoElement.src;
-    } else
-
-    {
-        logoImage = 'http://krona.sourceforge.net/img/logo.png';
+    }
+    else {
+        logoImage = 'http://marbl.github.io/Krona/img/logo-med.png';
     }
 
-    //	document.getElementById('options').style.fontSize = '9pt';
-    position = addOptionElement(
-
-    position,
-    '<span style="display:none;"><a style="margin:2px" target="_blank" href="http://krona.sourceforge.net"><div style="display:inline-block;vertical-align:middle;background-color:#EEEEEE;border:1px solid gray;padding:2px;font-size:18px"><img style="vertical-align:middle;" src="' + logoImage + '"/><span style="vertical-align:middle;color:#555555">Krona</span></div></a></span><input type="button" id="back" value="&larr;" title="Go back (Shortcut: &larr;)"/>\
+//	document.getElementById('options').style.fontSize = '9pt';
+    position = addOptionElement
+    (
+        position,
+        '<a style="margin:2px" target="_blank" href="https://github.com/marbl/Krona/wiki"><img style="vertical-align:middle;width:108px;height:30px;" src="' +
+        logoImage + '" alt="Logo of Krona"/></a><input type="button" id="back" value="&larr;" title="Go back (Shortcut: &larr;)"/>\
 <input type="button" id="forward" value="&rarr;" title="Go forward (Shortcut: &rarr;)"/> \
 &nbsp;Search: <input type="text" id="search"/>\
 <input id="searchClear" type="button" value="x" onclick="clearSearch()"/> \
-<span id="searchResults"></span>');
+<span id="searchResults"></span>'
+    );
 
-
-    if (datasets > 1)
-    {
+    if (datasets > 1) {
         var size = datasets < datasetSelectSize ? datasets : datasetSelectSize;
 
         var select =
-        '<table style="border-collapse:collapse;padding:0px"><tr><td style="padding:0px">' +
-        '<select id="datasets" style="min-width:100px" size="' + size + '" onchange="onDatasetChange()">';
+            '<table style="border-collapse:collapse;padding:0px"><tr><td style="padding:0px">' +
+            '<select id="datasets" style="min-width:100px" size="' + size +
+            '" onchange="onDatasetChange()">';
 
-        for (var i = 0; i < datasetNames.length; i++)
-        {
+        for (var i = 0; i < datasetNames.length; i++) {
             select += '<option>' + datasetNames[i] + '</option>';
         }
 
         select +=
-        '</select></td><td style="vertical-align:top;padding:1px;">' +
-        '<input style="display:block" title="Previous dataset (Shortcut: &uarr;)" id="prevDataset" type="button" value="&uarr;" onclick="prevDataset()" disabled="true"/>' +
-        '<input title="Next dataset (Shortcut: &darr;)" id="nextDataset" type="button" value="&darr;" onclick="nextDataset()"/><br/></td>' +
-        '<td style="padding-top:1px;vertical-align:top"><input title="Switch to the last dataset that was viewed (Shortcut: TAB)" id="lastDataset" type="button" style="font:11px Times new roman" value="last" onclick="selectLastDataset()"/></td></tr></table>';
+            '</select></td><td style="vertical-align:top;padding:1px;">' +
+            '<input style="display:block" title="Previous dataset (Shortcut: &uarr;)" id="prevDataset" type="button" value="&uarr;" onclick="prevDataset()" disabled="true"/>' +
+            '<input title="Next dataset (Shortcut: &darr;)" id="nextDataset" type="button" value="&darr;" onclick="nextDataset()"/><br/></td>' +
+            '<td style="padding-top:1px;vertical-align:top"><input title="Switch to the last dataset that was viewed (Shortcut: TAB)" id="lastDataset" type="button" style="font:11px Times new roman" value="last" onclick="selectLastDataset()"/></td></tr></table>';
 
         position = addOptionElement(position + 5, select);
 
@@ -3494,42 +3215,41 @@ value="&harr;" title="Expand this wedge to become the new focus of the chart"/><
         position += datasetDropDown.clientHeight;
     }
 
-    position = addOptionElement(
-
-    position + 5,
-    '<input type="button" id="maxAbsoluteDepthDecrease" value="-"/>\
+    position = addOptionElement
+    (
+        position + 5,
+        '<input type="button" id="maxAbsoluteDepthDecrease" value="-"/>\
 <span id="maxAbsoluteDepth"></span>\
 &nbsp;<input type="button" id="maxAbsoluteDepthIncrease" value="+"/> Max depth',
-    'Maximum depth to display, counted from the top level \
-and including collapsed wedges.');
+        'Maximum depth to display, counted from the top level \
+and including collapsed wedges.'
+    );
 
-
-    position = addOptionElement(
-
-    position,
-    '<input type="button" id="fontSizeDecrease" value="-"/>\
+    position = addOptionElement
+    (
+        position,
+        '<input type="button" id="fontSizeDecrease" value="-"/>\
 <span id="fontSize"></span>\
-&nbsp;<input type="button" id="fontSizeIncrease" value="+"/> Font size');
+&nbsp;<input type="button" id="fontSizeIncrease" value="+"/> Font size'
+    );
 
+    position = addOptionElement
+    (
+        position,
+        '<input type="button" id="radiusDecrease" value="-"/>\
+<input type="button" id="radiusIncrease" value="+"/> Chart size'
+    );
 
-    position = addOptionElement(
-
-    position,
-    '<input type="button" id="radiusDecrease" value="-"/>\
-<input type="button" id="radiusIncrease" value="+"/> Chart size');
-
-
-    if (hueName)
-    {
+    if (hueName) {
         hueDisplayName = attributes[attributeIndex(hueName)].displayName;
 
-        position = addOptionElement(
-
-        position + 5,
-        '<input type="checkbox" id="useHue" style="float:left" ' +
-        '/><div>Color by<br/>' + hueDisplayName +
-        '</div>');
-
+        position = addOptionElement
+        (
+            position + 5,
+            '<input type="checkbox" id="useHue" style="float:left" ' +
+            '/><div>Color by<br/>' + hueDisplayName +
+            '</div>'
+        );
 
         useHueCheckBox = document.getElementById('useHue');
         useHueCheckBox.checked = hueDefault;
@@ -3537,64 +3257,60 @@ and including collapsed wedges.');
         useHueCheckBox.onmousedown = suppressEvent;
     }
     /*
-      position = addOptionElement
-      (
-      position + 5,
-      '&nbsp;<input type="checkbox" id="shorten" checked="checked" />Shorten labels</div>',
-      'Prevent labels from overlapping by shortening them'
-      );
-      position = addOptionElement
-      (
-      position,
-      '&nbsp;<input type="checkbox" id="compress" checked="checked" />Compress',
-      'Compress wedges if needed to show the entire depth'
-      );
-      */
+	position = addOptionElement
+	(
+		position + 5,
+		'&nbsp;<input type="checkbox" id="shorten" checked="checked" />Shorten labels</div>',
+		'Prevent labels from overlapping by shortening them'
+	);
 
-    position = addOptionElement(
+	position = addOptionElement
+	(
+		position,
+		'&nbsp;<input type="checkbox" id="compress" checked="checked" />Compress',
+		'Compress wedges if needed to show the entire depth'
+	);
+	*/
+    position = addOptionElement
+    (
+        position,
+        '<input type="checkbox" id="collapse" checked="checked" />Collapse',
+        'Collapse wedges that are redundant (entirely composed of another wedge)'
+    );
 
-    position,
-    '<input type="checkbox" id="collapse" checked="checked" />Collapse',
-    'Collapse wedges that are redundant (entirely composed of another wedge)');
+    position = addOptionElement
+    (
+        position + 5,
+        '<input type="button" id="snapshot" value="Snapshot"/>',
+        'Render the current view as SVG (Scalable Vector Graphics), a publication-\
+quality format that can be printed and saved (see Help for browser compatibility)'
+    );
 
-
-    position = addOptionElement(
-
-    position + 5,
-    '<input type="button" id="snapshot" value="Snapshot"/>',
-    'Render the current view as SVG (Scalable Vector Graphics), a publication-\
-quality format that can be printed and saved (see Help for browser compatibility)');
-
-
-    position = addOptionElement(
-
-    position + 5,
-    '<input type="button" id="linkButton" value="Link"/>\
+    position = addOptionElement
+    (
+        position + 5,
+        '<input type="button" id="linkButton" value="Link"/>\
 <input type="text" size="30" id="linkText"/>',
-    'Show a link to this view that can be copied for bookmarking or sharing');
+        'Show a link to this view that can be copied for bookmarking or sharing'
+    );
 
-    //  TO DO - replace krona?taxonomy=true URL with pipeline version e.g. 1.0?taxonomy=true
-    /*<input type="button" id="Full_screen" title="Open full screen" value="Full screen"\
-     	onclick="window.open(\'krona?taxonomy=true\', \'Full screen\')"/>\ */
-    position = addOptionElement(
-
-    position,
-    '<input type="button" id="help"  title="help" value="?"\
-	onclick="window.open(\'https://sourceforge.net/p/krona/wiki/Browsing%20Krona%20charts/\', \'help\')"/>\
-   ');
-
+    position = addOptionElement
+    (
+        position + 5,
+        '<input type="button" id="help" value="?"\
+onclick="window.open(\'https://github.com/marbl/Krona/wiki/Browsing%20Krona%20charts\', \'help\')"/>',
+        'Help'
+    );
 }
 
-function arrow(angleStart, angleEnd, radiusInner)
-{
-    if (context.globalAlpha == 0)
-    {
+function arrow(angleStart, angleEnd, radiusInner) {
+    if (context.globalAlpha == 0) {
         return;
     }
 
     var angleCenter = (angleStart + angleEnd) / 2;
-    var radiusArrowInner = radiusInner - gRadius / 10; //nodeRadius * gRadius;
-    var radiusArrowOuter = gRadius * 1.1; //(1 + nodeRadius);
+    var radiusArrowInner = radiusInner - gRadius / 10;//nodeRadius * gRadius;
+    var radiusArrowOuter = gRadius * 1.1;//(1 + nodeRadius);
     var radiusArrowCenter = (radiusArrowInner + radiusArrowOuter) / 2;
     var pointLength = (radiusArrowOuter - radiusArrowInner) / 5;
 
@@ -3609,21 +3325,21 @@ function arrow(angleStart, angleEnd, radiusInner)
     //
     context.beginPath();
     context.arc(0, 0, radiusInner, angleCenter, angleEnd, false);
-    context.lineTo(
-
-    radiusArrowInner * Math.cos(angleEnd),
-    radiusArrowInner * Math.sin(angleEnd));
-
-    context.lineTo(
-
-    radiusArrowCenter * Math.cos(angleEnd) - pointLength * Math.sin(angleEnd),
-    radiusArrowCenter * Math.sin(angleEnd) + pointLength * Math.cos(angleEnd));
-
-    context.lineTo(
-
-    radiusArrowOuter * Math.cos(angleEnd),
-    radiusArrowOuter * Math.sin(angleEnd));
-
+    context.lineTo
+    (
+        radiusArrowInner * Math.cos(angleEnd),
+        radiusArrowInner * Math.sin(angleEnd)
+    );
+    context.lineTo
+    (
+        radiusArrowCenter * Math.cos(angleEnd) - pointLength * Math.sin(angleEnd),
+        radiusArrowCenter * Math.sin(angleEnd) + pointLength * Math.cos(angleEnd)
+    );
+    context.lineTo
+    (
+        radiusArrowOuter * Math.cos(angleEnd),
+        radiusArrowOuter * Math.sin(angleEnd)
+    );
     context.arc(0, 0, gRadius, angleEnd, angleCenter, true);
     context.closePath();
     context.moveTo(-imageWidth, -imageHeight);
@@ -3638,21 +3354,21 @@ function arrow(angleStart, angleEnd, radiusInner)
     //
     context.beginPath();
     context.arc(0, 0, radiusInner, angleCenter, angleStart, true);
-    context.lineTo(
-
-    radiusArrowInner * Math.cos(angleStart),
-    radiusArrowInner * Math.sin(angleStart));
-
-    context.lineTo(
-
-    radiusArrowCenter * Math.cos(angleStart) + pointLength * Math.sin(angleStart),
-    radiusArrowCenter * Math.sin(angleStart) - pointLength * Math.cos(angleStart));
-
-    context.lineTo(
-
-    radiusArrowOuter * Math.cos(angleStart),
-    radiusArrowOuter * Math.sin(angleStart));
-
+    context.lineTo
+    (
+        radiusArrowInner * Math.cos(angleStart),
+        radiusArrowInner * Math.sin(angleStart)
+    );
+    context.lineTo
+    (
+        radiusArrowCenter * Math.cos(angleStart) + pointLength * Math.sin(angleStart),
+        radiusArrowCenter * Math.sin(angleStart) - pointLength * Math.cos(angleStart)
+    );
+    context.lineTo
+    (
+        radiusArrowOuter * Math.cos(angleStart),
+        radiusArrowOuter * Math.sin(angleStart)
+    );
     context.arc(0, 0, gRadius, angleStart, angleCenter, false);
     context.fill();
     context.stroke();
@@ -3663,32 +3379,29 @@ function arrow(angleStart, angleEnd, radiusInner)
     context.restore();
     context.beginPath();
     context.arc(0, 0, radiusInner, angleCenter - 2 / (2 * Math.PI * radiusInner), angleEnd, false);
-    context.lineTo(
-
-    radiusArrowInner * Math.cos(angleEnd),
-    radiusArrowInner * Math.sin(angleEnd));
-
-    context.lineTo(
-
-    radiusArrowCenter * Math.cos(angleEnd) - pointLength * Math.sin(angleEnd),
-    radiusArrowCenter * Math.sin(angleEnd) + pointLength * Math.cos(angleEnd));
-
-    context.lineTo(
-
-    radiusArrowOuter * Math.cos(angleEnd),
-    radiusArrowOuter * Math.sin(angleEnd));
-
+    context.lineTo
+    (
+        radiusArrowInner * Math.cos(angleEnd),
+        radiusArrowInner * Math.sin(angleEnd)
+    );
+    context.lineTo
+    (
+        radiusArrowCenter * Math.cos(angleEnd) - pointLength * Math.sin(angleEnd),
+        radiusArrowCenter * Math.sin(angleEnd) + pointLength * Math.cos(angleEnd)
+    );
+    context.lineTo
+    (
+        radiusArrowOuter * Math.cos(angleEnd),
+        radiusArrowOuter * Math.sin(angleEnd)
+    );
     context.arc(0, 0, gRadius, angleEnd, angleCenter - 2 / (2 * Math.PI * gRadius), true);
     context.fill();
     context.stroke();
 }
 
-function attributeIndex(aname)
-{
-    for (var i = 0; i < attributes.length; i++)
-    {
-        if (aname == attributes[i].name)
-        {
+function attributeIndex(aname) {
+    for (var i = 0; i < attributes.length; i++) {
+        if (aname == attributes[i].name) {
             return i;
         }
     }
@@ -3696,123 +3409,106 @@ function attributeIndex(aname)
     return null;
 }
 
-function checkHighlight()
-{
+function checkHighlight() {
     var lastHighlightedNode = highlightedNode;
     var lastHighlightingHidden = highlightingHidden;
 
     highlightedNode = selectedNode;
     resetKeyOffset();
 
-    if (progress == 1)
-    {
+    if (progress == 1) {
         selectedNode.checkHighlight();
-        if (selectedNode.getParent())
-        {
+        if (selectedNode.getParent()) {
             selectedNode.getParent().checkHighlightCenter();
         }
 
         focusNode.checkHighlightMap();
     }
 
-    if (highlightedNode != selectedNode)
-    {
-        if (highlightedNode == focusNode)
-        {
-            //			canvas.style.display='none';
-            //			window.resizeBy(1,0);
-            //			canvas.style.cursor='ew-resize';
-            //			window.resizeBy(-1,0);
-            //			canvas.style.display='inline';
-        } else
-
-            {
-                //			canvas.style.cursor='pointer';
-            }
-    } else
-
-        {
-            //		canvas.style.cursor='auto';
+    if (highlightedNode != selectedNode) {
+        if (highlightedNode == focusNode) {
+//			canvas.style.display='none';
+//			window.resizeBy(1,0);
+//			canvas.style.cursor='ew-resize';
+//			window.resizeBy(-1,0);
+//			canvas.style.display='inline';
         }
+        else {
+//			canvas.style.cursor='pointer';
+        }
+    }
+    else {
+//		canvas.style.cursor='auto';
+    }
 
-    if (
-
+    if
     (
-    true ||
-    highlightedNode != lastHighlightedNode ||
-    highlightingHidden != highlightingHiddenLast) &&
-
-    progress == 1)
-
-    {
+        (
+            true ||
+            highlightedNode != lastHighlightedNode ||
+            highlightingHidden != highlightingHiddenLast
+        ) &&
+        progress == 1
+    ) {
         draw(); // TODO: handle in update()
     }
 }
 
-function checkSelectedCollapse()
-{
+function checkSelectedCollapse() {
     var newNode = selectedNode;
 
-    while (newNode.getCollapse())
-    {
+    while (newNode.getCollapse()) {
         newNode = newNode.children[0];
     }
 
-    if (newNode.children.length == 0)
-    {
+    if (newNode.children.length == 0 && newNode.getParent()) {
         newNode = newNode.getParent();
     }
 
-    if (newNode != selectedNode)
-    {
+    if (newNode != selectedNode) {
         selectNode(newNode);
     }
 }
 
-function clearSearch()
-{
-    if (search.value != '')
-    {
+function clearSearch() {
+    if (search.value != '') {
         search.value = '';
         onSearchChange();
     }
 }
 
-function createSVG()
-{
-    svgNS = "http://www.w3.org/2000/svg";
+function createSVG() {
+    svgNS = 'http://www.w3.org/2000/svg';
     var SVG = {};
-    SVG.xlinkns = "http://www.w3.org/1999/xlink";
+    SVG.xlinkns = 'http://www.w3.org/1999/xlink';
 
-    var newSVG = document.createElementNS(svgNS, "svg:svg");
+    var newSVG = document.createElementNS(svgNS, 'svg:svg');
 
-    newSVG.setAttribute("id", "canvas");
+    newSVG.setAttribute('id', 'canvas');
     // How big is the canvas in pixels
-    newSVG.setAttribute("width", '100%');
-    newSVG.setAttribute("height", '100%');
+    newSVG.setAttribute('width', '100%');
+    newSVG.setAttribute('height', '100%');
     // Set the coordinates used by drawings in the canvas
-    //	newSVG.setAttribute("viewBox", "0 0 " + imageWidth + " " + imageHeight);
+//	newSVG.setAttribute("viewBox", "0 0 " + imageWidth + " " + imageHeight);
     // Define the XLink namespace that SVG uses
-    newSVG.setAttributeNS(
-
-    "http://www.w3.org/2000/xmlns/",
-    "xmlns:xlink",
-    SVG.xlinkns);
-
+    newSVG.setAttributeNS
+    (
+        'http://www.w3.org/2000/xmlns/',
+        'xmlns:xlink',
+        SVG.xlinkns
+    );
 
     return newSVG;
 }
 
-function degrees(radians)
-{
+function degrees(radians) {
     return radians * 180 / Math.PI;
 }
 
-function draw()
-{
+function draw() {
     tweenFrames++;
     //resize();
-    //	context.fillRect(0, 0, imageWidth, imageHeight);
+//	context.fillRect(0, 0, imageWidth, imageHeight);
     context.clearRect(0, 0, imageWidth, imageHeight);
 
     context.font = fontNormal;
@@ -3828,64 +3524,59 @@ function draw()
 
     var pathRoot = selectedNode;
 
-    if (focusNode != 0 && focusNode != selectedNode)
-    {
+    if (focusNode != 0 && focusNode != selectedNode) {
         context.globalAlpha = 1;
         focusNode.drawHighlight(true);
         pathRoot = focusNode;
     }
 
-    if (
-
-    highlightedNode &&
-    highlightedNode.getDepth() >= selectedNode.getDepth() &&
-    highlightedNode != focusNode)
-
-    {
-        if (
-
-        progress == 1 &&
-        highlightedNode != selectedNode && (
-
-        highlightedNode != focusNode ||
-        focusNode.children.length > 0))
-
-
-        {
+    if
+    (
+        highlightedNode &&
+        highlightedNode.getDepth() >= selectedNode.getDepth() &&
+        highlightedNode != focusNode
+    ) {
+        if
+        (
+            progress == 1 &&
+            highlightedNode != selectedNode &&
+            (
+                highlightedNode != focusNode ||
+                focusNode.children.length > 0
+            )
+        ) {
             context.globalAlpha = 1;
             highlightedNode.drawHighlight(true);
         }
 
         //pathRoot = highlightedNode;
-    } else
-    if (
-
-    progress == 1 &&
-    highlightedNode.getDepth() < selectedNode.getDepth())
-
-    {
+    }
+    else if
+    (
+        progress == 1 &&
+        highlightedNode.getDepth() < selectedNode.getDepth()
+    ) {
         context.globalAlpha = 1;
         highlightedNode.drawHighlightCenter();
     }
 
     if (quickLook && false) // TEMP
+    {
+        context.globalAlpha = 1 - progress / 2;
+        selectedNode.drawHighlight(true);
+    }
+    else if (progress < 1)//&& zoomOut() )
+    {
+        if (!zoomOut)//() )
         {
-            context.globalAlpha = 1 - progress / 2;
+            context.globalAlpha = selectedNode.alphaLine.current();
             selectedNode.drawHighlight(true);
-        } else
-    if (progress < 1) //&& zoomOut() )
-        {
-            if (!zoomOut) //() )
-                {
-                    context.globalAlpha = selectedNode.alphaLine.current();
-                    selectedNode.drawHighlight(true);
-                } else
-            if (selectedNodeLast)
-            {
-                context.globalAlpha = 1 - 4 * Math.pow(progress - .5, 2);
-                selectedNodeLast.drawHighlight(false);
-            }
         }
+        else if (selectedNodeLast) {
+            context.globalAlpha = 1 - 4 * Math.pow(progress - .5, 2);
+            selectedNodeLast.drawHighlight(false);
+        }
+    }
 
     drawDatasetName();
 
@@ -3895,11 +3586,10 @@ function draw()
     context.globalAlpha = 1;
 
     mapRadius =
-    (imageHeight / 2 - details.clientHeight - details.offsetTop) / (
-    pathRoot.getDepth() - 1) * 3 / 4 / 2;
+        (imageHeight / 2 - details.clientHeight - details.offsetTop) /
+        (pathRoot.getDepth() - 1) * 3 / 4 / 2;
 
-    if (mapRadius > maxMapRadius)
-    {
+    if (mapRadius > maxMapRadius) {
         mapRadius = maxMapRadius;
     }
 
@@ -3908,51 +3598,42 @@ function draw()
     //context.font = fontNormal;
     pathRoot.drawMap(pathRoot);
 
-    if (hueDisplayName && useHue())
-    {
+    if (hueDisplayName && useHue()) {
         drawLegend();
     }
 }
 
-function drawBubble(angle, radius, width, radial, flip)
-{
+function drawBubble(angle, radius, width, radial, flip) {
     var height = fontSize * 2;
     var x;
     var y;
 
     width = width + fontSize;
 
-    if (radial)
-    {
+    if (radial) {
         y = -fontSize;
 
-        if (flip)
-        {
+        if (flip) {
             x = radius - width + fontSize / 2;
-        } else
-
-        {
+        }
+        else {
             x = radius - fontSize / 2;
         }
-    } else
-
-    {
+    }
+    else {
         x = -width / 2;
         y = -radius - fontSize;
     }
 
-    if (snapshotMode)
-    {
+    if (snapshotMode) {
         drawBubbleSVG(x + centerX, y + centerY, width, height, fontSize, angle);
-    } else
-
-    {
+    }
+    else {
         drawBubbleCanvas(x, y, width, height, fontSize, angle);
     }
 }
 
-function drawBubbleCanvas(x, y, width, height, radius, rotation)
-{
+function drawBubbleCanvas(x, y, width, height, radius, rotation) {
     context.strokeStyle = 'black';
     context.lineWidth = highlightLineWidth;
     context.fillStyle = 'rgba(255, 255, 255, .75)';
@@ -3963,31 +3644,27 @@ function drawBubbleCanvas(x, y, width, height, radius, rotation)
     context.rotate(-rotation);
 }
 
-function drawBubbleSVG(x, y, width, height, radius, rotation)
-{
+function drawBubbleSVG(x, y, width, height, radius, rotation) {
     svg +=
-    '<rect x="' + x + '" y="' + y +
-    '" width="' + width +
-    '" height="' + height +
-    '" rx="' + radius +
-    '" ry="' + radius +
-    '" fill="rgba(255, 255, 255, .75)' +
-    '" class="highlight" ' +
-    'transform="rotate(' +
-    degrees(rotation) + ',' + centerX + ',' + centerY +
-    ')"/>';
+        '<rect x="' + x + '" y="' + y +
+        '" width="' + width +
+        '" height="' + height +
+        '" rx="' + radius +
+        '" ry="' + radius +
+        '" fill="rgba(255, 255, 255, .75)' +
+        '" class="highlight" ' +
+        'transform="rotate(' +
+        degrees(rotation) + ',' + centerX + ',' + centerY +
+        ')"/>';
 }
 
-function drawDatasetName()
-{
+function drawDatasetName() {
     var alpha = datasetAlpha.current();
 
-    if (alpha > 0)
-    {
+    if (alpha > 0) {
         var radius = gRadius * compressedRadii[0] / -2;
 
-        if (alpha > 1)
-        {
+        if (alpha > 1) {
             alpha = 1;
         }
 
@@ -3998,24 +3675,21 @@ function drawDatasetName()
     }
 }
 
-function drawHistory()
-{
+function drawHistory() {
     var alpha = 1;
     context.textAlign = 'center';
 
-    for (var i = 0; i < nodeHistoryPosition && alpha > 0; i++)
-    {
+    for (var i = 0; i < nodeHistoryPosition && alpha > 0; i++) {
 
         context.globalAlpha = alpha - historyAlphaDelta * tweenFactor;
-        context.fillText(
+        context.fillText
+        (
+            nodeHistory[nodeHistoryPosition - i - 1].name,
+            0,
+            (i + tweenFactor) * historySpacingFactor * fontSize - 1
+        );
 
-        nodeHistory[nodeHistoryPosition - i - 1].name,
-        0,
-        (i + tweenFactor) * historySpacingFactor * fontSize - 1);
-
-
-        if (alpha > 0)
-        {
+        if (alpha > 0) {
             alpha -= historyAlphaDelta;
         }
     }
@@ -4023,8 +3697,7 @@ function drawHistory()
     context.globalAlpha = 1;
 }
 
-function drawLegend()
-{
+function drawLegend() {
     var left = imageWidth * .01;
     var width = imageHeight * .0265;
     var height = imageHeight * .15;
@@ -4034,25 +3707,23 @@ function drawLegend()
     context.fillStyle = 'black';
     context.textAlign = 'start';
     context.font = fontNormal;
-    //	context.fillText(valueStartText, textLeft, top + height);
-    //	context.fillText(valueEndText, textLeft, top);
+//	context.fillText(valueStartText, textLeft, top + height);
+//	context.fillText(valueEndText, textLeft, top);
     context.fillText(hueDisplayName, left, imageHeight - fontSize * 1.5);
 
     var gradient = context.createLinearGradient(0, top + height, 0, top);
 
-    for (var i = 0; i < hueStopPositions.length; i++)
-    {
+    for (var i = 0; i < hueStopPositions.length; i++) {
         gradient.addColorStop(hueStopPositions[i], hueStopHsl[i]);
 
         var textY = top + (1 - hueStopPositions[i]) * height;
 
-        if (
-
-        i == 0 ||
-        i == hueStopPositions.length - 1 ||
-        textY > top + fontSize && textY < top + height - fontSize)
-
-        {
+        if
+        (
+            i == 0 ||
+            i == hueStopPositions.length - 1 ||
+            textY > top + fontSize && textY < top + height - fontSize
+        ) {
             context.fillText(hueStopText[i], textLeft, textY);
         }
     }
@@ -4063,8 +3734,7 @@ function drawLegend()
     context.strokeRect(left, top, width, height);
 }
 
-function drawLegendSVG()
-{
+function drawLegendSVG() {
     var left = imageWidth * .01;
     var width = imageHeight * .0265;
     var height = imageHeight * .15;
@@ -4077,21 +3747,19 @@ function drawLegendSVG()
 
     var svgtest = '<linearGradient id="gradient" x1="0%" y1="100%" x2="0%" y2="0%">';
 
-    for (var i = 0; i < hueStopPositions.length; i++)
-    {
+    for (var i = 0; i < hueStopPositions.length; i++) {
         svgtest +=
-        '<stop offset="' + round(hueStopPositions[i] * 100) +
-        '%" style="stop-color:' + hueStopHsl[i] + '"/>';
+            '<stop offset="' + round(hueStopPositions[i] * 100) +
+            '%" style="stop-color:' + hueStopHsl[i] + '"/>';
 
         var textY = top + (1 - hueStopPositions[i]) * height;
 
-        if (
-
-        i == 0 ||
-        i == hueStopPositions.length - 1 ||
-        textY > top + fontSize && textY < top + height - fontSize)
-
-        {
+        if
+        (
+            i == 0 ||
+            i == hueStopPositions.length - 1 ||
+            textY > top + fontSize && textY < top + height - fontSize
+        ) {
             text += svgText(hueStopText[i], textLeft, textY);
         }
     }
@@ -4100,25 +3768,22 @@ function drawLegendSVG()
     //alert(svgtest);
     svg += svgtest;
     svg +=
-    '<rect style="fill:url(#gradient)" x="' + left + '" y="' + top +
-    '" width="' + width + '" height="' + height + '"/>';
+        '<rect style="fill:url(#gradient)" x="' + left + '" y="' + top +
+        '" width="' + width + '" height="' + height + '"/>';
 
     svg += text;
 }
 
-function drawSearchHighlights(label, bubbleX, bubbleY, rotation, center)
-{
+function drawSearchHighlights(label, bubbleX, bubbleY, rotation, center) {
     var index = -1;
     var labelLength = label.length;
 
     bubbleX -= fontSize / 4;
 
-    do
-    {
+    do {
         index = label.toLowerCase().indexOf(search.value.toLowerCase(), index + 1);
 
-        if (index != -1 && index < labelLength)
-        {
+        if (index != -1 && index < labelLength) {
             var dim = context.measureText(label.substr(0, index));
             var x = bubbleX + dim.width;
 
@@ -4129,27 +3794,24 @@ function drawSearchHighlights(label, bubbleX, bubbleY, rotation, center)
             var height = fontSize * 3 / 2;
             var radius = fontSize / 2;
 
-            if (snapshotMode)
-            {
-                if (center)
-                {
+            if (snapshotMode) {
+                if (center) {
                     x += centerX;
                     y += centerY;
                 }
 
                 svg +=
-                '<rect x="' + x + '" y="' + y +
-                '" width="' + width +
-                '" height="' + height +
-                '" rx="' + radius +
-                '" ry="' + radius +
-                '" class="searchHighlight' +
-                '" transform="rotate(' +
-                degrees(rotation) + ',' + centerX + ',' + centerY +
-                ')"/>';
-            } else
-
-            {
+                    '<rect x="' + x + '" y="' + y +
+                    '" width="' + width +
+                    '" height="' + height +
+                    '" rx="' + radius +
+                    '" ry="' + radius +
+                    '" class="searchHighlight' +
+                    '" transform="rotate(' +
+                    degrees(rotation) + ',' + centerX + ',' + centerY +
+                    ')"/>';
+            }
+            else {
                 context.fillStyle = 'rgb(255, 255, 100)';
                 context.rotate(rotation);
                 roundedRectangle(x, y, width, height, radius);
@@ -4157,27 +3819,24 @@ function drawSearchHighlights(label, bubbleX, bubbleY, rotation, center)
                 context.rotate(-rotation);
             }
         }
-    } while (
-    index != -1 && index < labelLength);
+    }
+    while (index != -1 && index < labelLength);
 }
 
-function drawText(text, x, y, angle, anchor, bold, color)
-{
-    if (color == undefined)
-    {
+function drawText(text, x, y, angle, anchor, bold, color) {
+    if (color == undefined) {
         color = 'black';
     }
 
-    if (snapshotMode)
-    {
+    if (snapshotMode) {
         svg +=
-        '<text x="' + (centerX + x) + '" y="' + (centerY + y) +
-        '" text-anchor="' + anchor + '" style="font-color:' + color + ';font-weight:' + (bold ? 'bold' : 'normal') +
-        '" transform="rotate(' + degrees(angle) + ',' + centerX + ',' + centerY + ')">' +
-        text + '</text>';
-    } else
-
-    {
+            '<text x="' + (centerX + x) + '" y="' + (centerY + y) +
+            '" text-anchor="' + anchor + '" style="font-color:' + color + ';font-weight:' +
+            (bold ? 'bold' : 'normal') +
+            '" transform="rotate(' + degrees(angle) + ',' + centerX + ',' + centerY + ')">' +
+            text + '</text>';
+    }
+    else {
         context.fillStyle = color;
         context.textAlign = anchor;
         context.font = bold ? fontBold : fontNormal;
@@ -4187,19 +3846,17 @@ function drawText(text, x, y, angle, anchor, bold, color)
     }
 }
 
-function drawTextPolar(
-
-text,
-innerText,
-angle,
-radius,
-radial,
-bubble,
-bold,
-searchResult,
-searchResults)
-
-{
+function drawTextPolar
+(
+    text,
+    innerText,
+    angle,
+    radius,
+    radial,
+    bubble,
+    bold,
+    searchResult,
+    searchResults) {
     var anchor;
     var textX;
     var textY;
@@ -4207,52 +3864,43 @@ searchResults)
     var totalText = text;
     var flip;
 
-    if (snapshotMode)
-    {
+    if (snapshotMode) {
         spacer = '&#160;&#160;&#160;';
-    } else
-
-    {
+    }
+    else {
         spacer = '   ';
     }
 
-    if (radial)
-    {
+    if (radial) {
         flip = angle < 3 * Math.PI / 2;
 
-        if (flip)
-        {
+        if (flip) {
             angle -= Math.PI;
             radius = -radius;
             anchor = 'end';
 
-            if (innerText)
-            {
+            if (innerText) {
                 totalText = text + spacer + innerText;
             }
-        } else
-
-        {
+        }
+        else {
             anchor = 'start';
 
-            if (innerText)
-            {
+            if (innerText) {
                 totalText = innerText + spacer + text;
             }
         }
 
         textX = radius;
         textY = 0;
-    } else
-
-    {
+    }
+    else {
         flip = angle < Math.PI || angle > 2 * Math.PI;
         var label;
 
         anchor = snapshotMode ? 'middle' : 'center';
 
-        if (flip)
-        {
+        if (flip) {
             angle -= Math.PI;
             radius = -radius;
         }
@@ -4262,24 +3910,19 @@ searchResults)
         textY = -radius;
     }
 
-    if (bubble)
-    {
+    if (bubble) {
         var textActual = totalText;
 
-        if (innerText && snapshotMode)
-        {
-            if (flip)
-            {
+        if (innerText && snapshotMode) {
+            if (flip) {
                 textActual = text + '   ' + innerText;
-            } else
-
-            {
+            }
+            else {
                 textActual = innerText + '   ' + text;
             }
         }
 
-        if (searchResults)
-        {
+        if (searchResults) {
             textActual = textActual + searchResultString(searchResults);
         }
 
@@ -4287,33 +3930,29 @@ searchResults)
 
         var x = textX;
 
-        if (anchor == 'end')
-        {
+        if (anchor == 'end') {
             x -= textWidth;
-        } else
-        if (anchor != 'start')
-        {
+        }
+        else if (anchor != 'start') {
             // centered
             x -= textWidth / 2;
         }
 
         drawBubble(angle, radius, textWidth, radial, flip);
 
-        if (searchResult)
-        {
-            drawSearchHighlights(
-
-            textActual,
-            x,
-            textY,
-            angle,
-            true);
-
+        if (searchResult) {
+            drawSearchHighlights
+            (
+                textActual,
+                x,
+                textY,
+                angle,
+                true
+            );
         }
     }
 
-    if (searchResults)
-    {
+    if (searchResults) {
         totalText = totalText + searchResultString(searchResults);
     }
 
@@ -4322,21 +3961,18 @@ searchResults)
     return flip;
 }
 
-function drawTick(start, length, angle)
-{
-    if (snapshotMode)
-    {
+function drawTick(start, length, angle) {
+    if (snapshotMode) {
         svg +=
-        '<line x1="' + (centerX + start) +
-        '" y1="' + centerY +
-        '" x2="' + (centerX + start + length) +
-        '" y2="' + centerY +
-        '" class="tick" transform="rotate(' +
-        degrees(angle) + ',' + centerX + ',' + centerY +
-        ')"/>';
-    } else
-
-    {
+            '<line x1="' + (centerX + start) +
+            '" y1="' + centerY +
+            '" x2="' + (centerX + start + length) +
+            '" y2="' + centerY +
+            '" class="tick" transform="rotate(' +
+            degrees(angle) + ',' + centerX + ',' + centerY +
+            ')"/>';
+    }
+    else {
         context.rotate(angle);
         context.beginPath();
         context.moveTo(start, 0);
@@ -4347,26 +3983,21 @@ function drawTick(start, length, angle)
     }
 }
 
-function drawWedge(
-
-angleStart,
-angleEnd,
-radiusInner,
-radiusOuter,
-color,
-patternAlpha,
-highlight)
-
-{
-    if (context.globalAlpha == 0)
-    {
+function drawWedge
+(
+    angleStart,
+    angleEnd,
+    radiusInner,
+    radiusOuter,
+    color,
+    patternAlpha,
+    highlight) {
+    if (context.globalAlpha == 0) {
         return;
     }
 
-    if (snapshotMode)
-    {
-        if (angleEnd == angleStart + Math.PI * 2)
-        {
+    if (snapshotMode) {
+        if (angleEnd == angleStart + Math.PI * 2) {
             // fudge to prevent overlap, which causes arc ambiguity
             //
             angleEnd -= .1 / gRadius;
@@ -4387,28 +4018,26 @@ highlight)
         var y4 = centerY + radiusInner * Math.sin(angleEnd);
 
         var dArray =
-        [
-        " M ", x1, ",", y1,
-        " L ", x2, ",", y2,
-        " A ", gRadius, ",", gRadius, " 0 ", longArc, ",1 ", x3, ",", y3,
-        " L ", x4, ",", y4,
-        " A ", radiusInner, ",", radiusInner, " 0 ", longArc, " 0 ", x1, ",", y1,
-        " Z "];
-
+            [
+                ' M ', x1, ',', y1,
+                ' L ', x2, ',', y2,
+                ' A ', gRadius, ',', gRadius, ' 0 ', longArc, ',1 ', x3, ',', y3,
+                ' L ', x4, ',', y4,
+                ' A ', radiusInner, ',', radiusInner, ' 0 ', longArc, ' 0 ', x1, ',', y1,
+                ' Z '
+            ];
 
         svg +=
-        '<path class="' + (highlight ? 'highlight' : 'wedge') + '" fill="' + color +
-        '" d="' + dArray.join('') + '"/>';
+            '<path class="' + (highlight ? 'highlight' : 'wedge') + '" fill="' + color +
+            '" d="' + dArray.join('') + '"/>';
 
-        if (patternAlpha > 0)
-        {
+        if (patternAlpha > 0) {
             svg +=
-            '<path class="wedge" fill="url(#hiddenPattern)" d="' +
-            dArray.join('') + '"/>';
+                '<path class="wedge" fill="url(#hiddenPattern)" d="' +
+                dArray.join('') + '"/>';
         }
-    } else
-
-    {
+    }
+    else {
         // fudge to prevent seams during animation
         //
         angleEnd += 1 / gRadius;
@@ -4420,8 +4049,7 @@ highlight)
         context.closePath();
         context.fill();
 
-        if (patternAlpha > 0)
-        {
+        if (patternAlpha > 0) {
             context.save();
             context.clip();
             context.globalAlpha = patternAlpha;
@@ -4430,8 +4058,7 @@ highlight)
             context.restore();
         }
 
-        if (highlight)
-        {
+        if (highlight) {
             context.lineWidth = highlight ? highlightLineWidth : thinLineWidth;
             context.strokeStyle = 'black';
             context.stroke();
@@ -4439,71 +4066,61 @@ highlight)
     }
 }
 
-function expand(node)
-{
+function expand(node) {
     selectNode(node);
     updateView();
 }
 
-function focusLost()
-{
+function focusLost() {
     mouseX = -1;
     mouseY = -1;
     checkHighlight();
     document.body.style.cursor = 'auto';
 }
 
-function fontSizeDecrease()
-{
-    if (fontSize > 1)
-    {
+function fontSizeDecrease() {
+    if (fontSize > 1) {
         fontSize--;
         updateViewNeeded = true;
     }
 }
 
-function fontSizeIncrease()
-{
+function fontSizeIncrease() {
     fontSize++;
     updateViewNeeded = true;
 }
 
-function getGetString(name, value, bool)
-{
+function getGetString(name, value, bool) {
     return name + '=' + (bool ? value ? 'true' : 'false' : value);
 }
 
-function hideLink()
-{
+function hideLink() {
     hide(linkText);
     show(linkButton);
 }
 
-function show(object)
-{
+function show(object) {
     object.style.display = 'inline';
 }
 
-function hide(object)
-{
+function hide(object) {
     object.style.display = 'none';
 }
 
-function showLink()
-{
+function showLink() {
     var urlHalves = String(document.location).split('?');
     var newGetVariables = new Array();
 
-    newGetVariables.push(
-
-    getGetString('dataset', currentDataset, false),
-    getGetString('node', selectedNode.id, false),
-    getGetString('collapse', collapse, true),
-    getGetString('color', useHue(), true),
-    getGetString('depth', maxAbsoluteDepth - 1, false),
-    getGetString('font', fontSize, false),
-    getGetString('key', showKeys, true));
-
+    newGetVariables.push
+    (
+        getGetString('dataset', currentDataset, false),
+        getGetString('node', selectedNode.id, false),
+        getGetString('collapse', collapse, true),
+        getGetString('color', useHue(), true),
+        getGetString('depth', maxAbsoluteDepth - 1, false),
+        getGetString('font', fontSize, false),
+        getGetString('key', showKeys, true)
+    );
 
     hide(linkButton);
     show(linkText);
@@ -4512,81 +4129,68 @@ function showLink()
     linkText.focus();
     linkText.select();
     //linkText.disabled = true;
-    //	document.location = urlHalves[0] + '?' + getVariables.join('&');
+//	document.location = urlHalves[0] + '?' + getVariables.join('&');
 }
 
-function getFirstChild(element)
-{
+function getFirstChild(element) {
     element = element.firstChild;
 
-    if (element && element.nodeType != 1)
-    {
+    if (element && element.nodeType != 1) {
         element = getNextSibling(element);
     }
 
     return element;
 }
 
-function getNextSibling(element)
-{
-    do
-    {
+function getNextSibling(element) {
+    do {
         element = element.nextSibling;
-    } while (
-    element && element.nodeType != 1);
+    }
+    while (element && element.nodeType != 1);
 
     return element;
 }
 
-function getPercentage(fraction)
-{
+function getPercentage(fraction) {
     return round(fraction * 100);
 }
 
-function hslText(hue)
-{
-    if (1 || snapshotMode)
-    {
+function hslText(hue) {
+    if (1 || snapshotMode) {
         // Safari doesn't seem to allow hsl() in SVG
 
         var rgb = hslToRgb(hue, saturation, (lightnessBase + lightnessMax) / 2);
 
         return rgbText(rgb.r, rgb.g, rgb.b);
-    } else
-
-    {
+    }
+    else {
         var hslArray =
-        [
-        'hsl(',
-        Math.floor(hue * 360),
-        ',',
-        Math.floor(saturation * 100),
-        '%,',
-        Math.floor((lightnessBase + lightnessMax) * 50),
-        '%)'];
-
+            [
+                'hsl(',
+                Math.floor(hue * 360),
+                ',',
+                Math.floor(saturation * 100),
+                '%,',
+                Math.floor((lightnessBase + lightnessMax) * 50),
+                '%)'
+            ];
 
         return hslArray.join('');
     }
 }
 
-function hslToRgb(h, s, l)
-{
+function hslToRgb(h, s, l) {
     var m1, m2;
     var r, g, b;
 
-    if (s == 0)
-    {
-        r = g = b = Math.floor(l * 255);
-    } else
-
-    {
-        if (l <= 0.5)
-        {
+    if (s == 0) {
+        r = g = b = Math.floor((l * 255));
+    }
+    else {
+        if (l <= 0.5) {
             m2 = l * (s + 1);
-        } else
-
-        {
+        }
+        else {
             m2 = l + s - l * s;
         }
 
@@ -4597,37 +4201,33 @@ function hslToRgb(h, s, l)
         b = Math.floor(hueToRgb(m1, m2, h - 1 / 3));
     }
 
-    return { r: r, g: g, b: b };
+    return {r: r, g: g, b: b};
 }
 
-function hueToRgb(m1, m2, hue)
-{
+function hueToRgb(m1, m2, hue) {
     var v;
 
-    while (hue < 0)
-    {
+    while (hue < 0) {
         hue += 1;
     }
 
-    while (hue > 1)
-    {
+    while (hue > 1) {
         hue -= 1;
     }
 
     if (6 * hue < 1)
-    v = m1 + (m2 - m1) * hue * 6;else
-    if (2 * hue < 1)
-    v = m2;else
-    if (3 * hue < 2)
-    v = m1 + (m2 - m1) * (2 / 3 - hue) * 6;else
-
-    v = m1;
+        v = m1 + (m2 - m1) * hue * 6;
+    else if (2 * hue < 1)
+        v = m2;
+    else if (3 * hue < 2)
+        v = m1 + (m2 - m1) * (2 / 3 - hue) * 6;
+    else
+        v = m1;
 
     return 255 * v;
 }
 
-function interpolateHue(hueStart, hueEnd, valueStart, valueEnd)
-{
+function interpolateHue(hueStart, hueEnd, valueStart, valueEnd) {
     // since the gradient will be RGB based, we need to add stops to hit all the
     // colors in the hue spectrum
 
@@ -4639,30 +4239,26 @@ function interpolateHue(hueStart, hueEnd, valueStart, valueEnd)
     hueStopHsl.push(hslText(hueStart));
     hueStopText.push(round(valueStart));
 
-    for (
-
-    var i = hueStart > hueEnd ? 5 / 6 : 1 / 6;
-    hueStart > hueEnd ? i > 0 : i < 1;
-    i += (hueStart > hueEnd ? -1 : 1) / 6)
-
-    {
-        if (
-
-        hueStart > hueEnd ?
-        i > hueEnd && i < hueStart :
-        i > hueStart && i < hueEnd)
-
-        {
+    for
+    (
+        var i = (hueStart > hueEnd ? 5 / 6 : 1 / 6);
+        (hueStart > hueEnd ? i > 0 : i < 1);
+        i += (hueStart > hueEnd ? -1 : 1) / 6
+    ) {
+        if
+        (
+            hueStart > hueEnd ? i > hueEnd && i < hueStart : i > hueStart && i < hueEnd
+        ) {
             hueStopPositions.push(lerp(i, hueStart, hueEnd, 0, 1));
             hueStopHsl.push(hslText(i));
-            hueStopText.push(round(lerp(
-
-            i,
-            hueStart,
-            hueEnd,
-            valueStart,
-            valueEnd)));
-
+            hueStopText.push(round(lerp
+            (
+                i,
+                hueStart,
+                hueEnd,
+                valueStart,
+                valueEnd
+            )));
         }
     }
 
@@ -4671,92 +4267,80 @@ function interpolateHue(hueStart, hueEnd, valueStart, valueEnd)
     hueStopText.push(round(valueEnd));
 }
 
-function keyLineAngle(angle, keyAngle, bendRadius, keyX, keyY, pointsX, pointsY)
-{
-    if (angle < Math.PI / 2 && keyY < bendRadius * Math.sin(angle) ||
-    angle > Math.PI / 2 && keyY < bendRadius)
-    {
+function keyLineAngle(angle, keyAngle, bendRadius, keyX, keyY, pointsX, pointsY) {
+    if (angle < Math.PI / 2 && keyY < bendRadius * Math.sin(angle)
+        || angle > Math.PI / 2 && keyY < bendRadius) {
         return Math.asin(keyY / bendRadius);
-    } else
-
-    {
+    }
+    else {
         // find the angle of the normal to a tangent line that goes to
         // the label
 
-        var textDist = Math.sqrt(
-
-        Math.pow(keyX, 2) +
-        Math.pow(keyY, 2));
-
+        var textDist = Math.sqrt
+        (
+            Math.pow(keyX, 2) +
+            Math.pow(keyY, 2)
+        );
 
         var tanAngle = Math.acos(bendRadius / textDist) + keyAngle;
 
-        if (angle < tanAngle || angle < Math.PI / 2) //|| labelLeft < centerX )
-            {
-                // angle doesn't reach far enough for tangent; collapse and
-                // connect directly to label
-
-                if (keyY / Math.tan(angle) > 0)
-                {
-                    pointsX.push(keyY / Math.tan(angle));
-                    pointsY.push(keyY);
-                } else
-
-                {
-                    pointsX.push(bendRadius * Math.cos(angle));
-                    pointsY.push(bendRadius * Math.sin(angle));
-                }
-
-                return angle;
-            } else
-
+        if (angle < tanAngle || angle < Math.PI / 2)//|| labelLeft < centerX )
         {
+            // angle doesn't reach far enough for tangent; collapse and
+            // connect directly to label
+
+            if (keyY / Math.tan(angle) > 0) {
+                pointsX.push(keyY / Math.tan(angle));
+                pointsY.push(keyY);
+            }
+            else {
+                pointsX.push(bendRadius * Math.cos(angle));
+                pointsY.push(bendRadius * Math.sin(angle));
+            }
+
+            return angle;
+        }
+        else {
             return tanAngle;
         }
     }
 }
 
-function keyOffset()
-{
+function keyOffset() {
     return imageHeight - (keys - currentKey + 1) * (keySize + keyBuffer) + keyBuffer - margin;
 }
 
-function lerp(value, fromStart, fromEnd, toStart, toEnd)
-{
-    return (value - fromStart) * (
-    toEnd - toStart) / (
-    fromEnd - fromStart) +
-    toStart;
+function lerp(value, fromStart, fromEnd, toStart, toEnd) {
+    return (value - fromStart) *
+        (toEnd - toStart) /
+        (fromEnd - fromStart) +
+        toStart;
 }
 
-function createCanvas()
-{
+function createCanvas() {
     canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
     context = canvas.getContext('2d');
 }
 
-function load()
-{
-    document.body.style.overflow = "hidden";
+function load() {
+    document.body.style.overflow = 'hidden';
     document.body.style.margin = 0;
 
     createCanvas();
 
-    if (context == undefined)
-    {
+    if (context == undefined) {
         document.body.innerHTML = '\
 <br/>This browser does not support HTML5 (see \
-<a href="http://sourceforge.net/p/krona/wiki/Browser%20support/">Browser support</a>).\
+<a href="https://github.com/marbl/Krona/wiki/Browser%20support">Browser support</a>).\
 	';
         return;
     }
 
-    if (typeof context.fillText != 'function')
-    {
+    if (typeof context.fillText != 'function') {
         document.body.innerHTML = '\
 <br/>This browser does not support HTML5 canvas text (see \
-<a href="http://sourceforge.net/p/krona/wiki/Browser%20support/">Browser support</a>).\
+<a href="https://github.com/marbl/Krona/wiki/Browser%20support">Browser support</a>).\
 	';
         return;
     }
@@ -4773,102 +4357,88 @@ function load()
     var valueStart;
     var valueEnd;
 
-    if (kronaElement.getAttribute('collapse') != undefined)
-    {
+    if (kronaElement.getAttribute('collapse') != undefined) {
         collapse = kronaElement.getAttribute('collapse') == 'true';
     }
 
-    if (kronaElement.getAttribute('key') != undefined)
-    {
+    if (kronaElement.getAttribute('key') != undefined) {
         showKeys = kronaElement.getAttribute('key') == 'true';
     }
 
-    for (
-
-    var element = getFirstChild(kronaElement);
-    element;
-    element = getNextSibling(element))
-
-    {
+    for
+    (
+        var element = getFirstChild(kronaElement);
+        element;
+        element = getNextSibling(element)
+    ) {
         switch (element.tagName.toLowerCase()) {
-
             case 'attributes':
                 magnitudeName = element.getAttribute('magnitude');
                 //
-                for (
-
-                var attributeElement = getFirstChild(element);
-                attributeElement;
-                attributeElement = getNextSibling(attributeElement))
-
-                {
+                for
+                (
+                    var attributeElement = getFirstChild(element);
+                    attributeElement;
+                    attributeElement = getNextSibling(attributeElement)
+                ) {
                     var tag = attributeElement.tagName.toLowerCase();
 
-                    if (tag == 'attribute')
-                    {
+                    if (tag == 'attribute') {
                         var attribute = new Attribute();
-                        attribute.name = attributeElement.firstChild.nodeValue;
+                        attribute.name = attributeElement.firstChild.nodeValue.toLowerCase();
                         attribute.displayName = attributeElement.getAttribute('display');
 
-                        if (attributeElement.getAttribute('hrefBase'))
-                        {
+                        if (attributeElement.getAttribute('hrefBase')) {
                             attribute.hrefBase = attributeElement.getAttribute('hrefBase');
                         }
 
-                        if (attributeElement.getAttribute('target'))
-                        {
+                        if (attributeElement.getAttribute('target')) {
                             attribute.target = attributeElement.getAttribute('target');
                         }
 
-                        if (attribute.name == magnitudeName)
-                        {
+                        if (attribute.name == magnitudeName) {
                             magnitudeIndex = attributes.length;
                         }
 
-                        if (attributeElement.getAttribute('listAll'))
-                        {
-                            attribute.listAll = attributeElement.getAttribute('listAll').toLowerCase();
-                        } else
-                        if (attributeElement.getAttribute('listNode'))
-                        {
-                            attribute.listNode = attributeElement.getAttribute('listNode').toLowerCase();
-                        } else
-                        if (attributeElement.getAttribute('dataAll'))
-                        {
-                            attribute.dataAll = attributeElement.getAttribute('dataAll').toLowerCase();
-                        } else
-                        if (attributeElement.getAttribute('dataNode'))
-                        {
-                            attribute.dataNode = attributeElement.getAttribute('dataNode').toLowerCase();
+                        if (attributeElement.getAttribute('listAll')) {
+                            attribute.listAll = attributeElement.getAttribute('listAll')
+                                .toLowerCase();
+                        }
+                        else if (attributeElement.getAttribute('listNode')) {
+                            attribute.listNode = attributeElement.getAttribute('listNode')
+                                .toLowerCase();
+                        }
+                        else if (attributeElement.getAttribute('dataAll')) {
+                            attribute.dataAll = attributeElement.getAttribute('dataAll')
+                                .toLowerCase();
+                        }
+                        else if (attributeElement.getAttribute('dataNode')) {
+                            attribute.dataNode = attributeElement.getAttribute('dataNode')
+                                .toLowerCase();
                         }
 
-                        if (attributeElement.getAttribute('postUrl'))
-                        {
+                        if (attributeElement.getAttribute('postUrl')) {
                             attribute.postUrl = attributeElement.getAttribute('postUrl');
                         }
 
-                        if (attributeElement.getAttribute('postVar'))
-                        {
+                        if (attributeElement.getAttribute('postVar')) {
                             attribute.postVar = attributeElement.getAttribute('postVar');
                         }
 
-                        if (attributeElement.getAttribute('mono'))
-                        {
+                        if (attributeElement.getAttribute('mono')) {
                             attribute.mono = true;
                         }
 
                         attributes.push(attribute);
-                    } else
-                    if (tag == 'list')
-                    {
+                    }
+                    else if (tag == 'list') {
                         var attribute = new Attribute();
 
                         attribute.name = attributeElement.firstChild.nodeValue;
                         attribute.list = true;
                         attributes.push(attribute);
-                    } else
-                    if (tag == 'data')
-                    {
+                    }
+                    else if (tag == 'data') {
                         var attribute = new Attribute();
 
                         attribute.name = attributeElement.firstChild.nodeValue;
@@ -4878,8 +4448,8 @@ function load()
                         var enableScript = document.createElement('script');
                         var date = new Date();
                         enableScript.src =
-                        attributeElement.getAttribute('enable') + '?' +
-                        date.getTime();
+                            attributeElement.getAttribute('enable') + '?' +
+                            date.getTime();
                         document.body.appendChild(enableScript);
                     }
                 }
@@ -4894,8 +4464,7 @@ function load()
                 //
                 interpolateHue(hueStart, hueEnd, valueStart, valueEnd);
                 //
-                if (element.getAttribute('default') == 'true')
-                {
+                if (element.getAttribute('default') == 'true') {
                     hueDefault = true;
                 }
                 break;
@@ -4903,26 +4472,25 @@ function load()
             case 'datasets':
                 datasetNames = new Array();
                 //
-                for (j = getFirstChild(element); j; j = getNextSibling(j))
-                {
+                for (j = getFirstChild(element); j; j = getNextSibling(j)) {
                     datasetNames.push(j.firstChild.nodeValue);
                 }
                 datasets = datasetNames.length;
                 break;
 
             case 'node':
-                head = loadTreeDOM(
-
-                element,
-                magnitudeName,
-                hueName,
-                hueStart,
-                hueEnd,
-                valueStart,
-                valueEnd);
-
-                break;}
-
+                head = loadTreeDOM
+                (
+                    element,
+                    magnitudeName,
+                    hueName,
+                    hueStart,
+                    hueEnd,
+                    valueStart,
+                    valueEnd
+                );
+                break;
+        }
     }
 
     // get GET options
@@ -4932,16 +4500,13 @@ function load()
     var maxDepthDefault;
     var nodeDefault = 0;
     //
-    if (urlHalves[1])
-    {
+    if (urlHalves[1]) {
         var vars = urlHalves[1].split('&');
 
-        for (i = 0; i < vars.length; i++)
-        {
+        for (i = 0; i < vars.length; i++) {
             var pair = vars[i].split('=');
 
             switch (pair[0]) {
-
                 case 'collapse':
                     collapse = pair[1] == 'true';
                     break;
@@ -4972,8 +4537,8 @@ function load()
 
                 default:
                     getVariables.push(pair[0] + '=' + pair[1]);
-                    break;}
-
+                    break;
+            }
         }
     }
 
@@ -4984,12 +4549,10 @@ function load()
     maxAbsoluteDepth = 0;
     selectDataset(datasetDefault);
 
-    if (maxDepthDefault && maxDepthDefault < head.maxDepth)
-    {
+    if (maxDepthDefault && maxDepthDefault < head.maxDepth) {
         maxAbsoluteDepth = maxDepthDefault;
-    } else
-
-    {
+    }
+    else {
         maxAbsoluteDepth = head.maxDepth;
     }
 
@@ -5002,46 +4565,40 @@ function load()
     updateViewNeeded = true;
 }
 
-function loadTreeDOM(
-
-domNode,
-magnitudeName,
-hueName,
-hueStart,
-hueEnd,
-valueStart,
-valueEnd)
-
-{
+function loadTreeDOM
+(
+    domNode,
+    magnitudeName,
+    hueName,
+    hueStart,
+    hueEnd,
+    valueStart,
+    valueEnd) {
     var newNode = new Node();
 
     newNode.name = domNode.getAttribute('name');
 
-    if (domNode.getAttribute('href'))
-    {
+    if (domNode.getAttribute('href')) {
         newNode.href = domNode.getAttribute('href');
     }
 
-    if (hueName)
-    {
+    if (hueName) {
         newNode.hues = new Array();
     }
 
-    for (var i = getFirstChild(domNode); i; i = getNextSibling(i))
-    {
+    for (var i = getFirstChild(domNode); i; i = getNextSibling(i)) {
         switch (i.tagName.toLowerCase()) {
-
             case 'node':
-                var newChild = loadTreeDOM(
-
-                i,
-                magnitudeName,
-                hueName,
-                hueStart,
-                hueEnd,
-                valueStart,
-                valueEnd);
-
+                var newChild = loadTreeDOM
+                (
+                    i,
+                    magnitudeName,
+                    hueName,
+                    hueStart,
+                    hueEnd,
+                    valueStart,
+                    valueEnd
+                );
                 newChild.parent = newNode;
                 newNode.children.push(newChild);
                 break;
@@ -5052,66 +4609,57 @@ valueEnd)
                 //
                 newNode.attributes[index] = new Array();
                 //
-                for (var j = getFirstChild(i); j; j = getNextSibling(j))
-                {
-                    if (attributes[index] == undefined)
-                    {
+                for (var j = getFirstChild(i); j; j = getNextSibling(j)) {
+                    if (attributes[index] == undefined) {
                         var x = 5;
                     }
-                    if (attributes[index].list)
-                    {
+                    if (attributes[index].list) {
                         newNode.attributes[index].push(new Array());
 
-                        for (var k = getFirstChild(j); k; k = getNextSibling(k))
-                        {
-                            newNode.attributes[index][newNode.attributes[index].length - 1].push(k.firstChild.nodeValue);
+                        for (var k = getFirstChild(j); k; k = getNextSibling(k)) {
+                            newNode.attributes[index][newNode.attributes[index].length - 1].push(
+                                k.firstChild.nodeValue);
                         }
-                    } else
-
-                    {
+                    }
+                    else {
                         var value = j.firstChild ? j.firstChild.nodeValue : '';
 
-                        if (j.getAttribute('href'))
-                        {
+                        if (j.getAttribute('href')) {
                             var target;
 
-                            if (attributes[index].target)
-                            {
+                            if (attributes[index].target) {
                                 target = ' target="' + attributes[index].target + '"';
                             }
 
-                            value = '<a href="' + attributes[index].hrefBase + j.getAttribute('href') + '"' + target + '>' + value + '</a>';
+                            value = '<a href="' + attributes[index].hrefBase +
+                                j.getAttribute('href') + '"' + target + '>' + value + '</a>';
                         }
 
                         newNode.attributes[index].push(value);
                     }
                 }
                 //
-                if (attributeName == magnitudeName || attributeName == hueName)
-                {
-                    for (j = 0; j < datasets; j++)
-                    {
-                        var value = newNode.attributes[index][j] == undefined ? 0 : Number(newNode.attributes[index][j]);
+                if (attributeName == magnitudeName || attributeName == hueName) {
+                    for (j = 0; j < datasets; j++) {
+                        var value = newNode.attributes[index][j] == undefined ? 0 : Number(
+                            newNode.attributes[index][j]);
 
                         newNode.attributes[index][j] = value;
 
-                        if (attributeName == hueName)
-                        {
-                            var hue = lerp(
+                        if (attributeName == hueName) {
+                            var hue = lerp
+                            (
+                                value,
+                                valueStart,
+                                valueEnd,
+                                hueStart,
+                                hueEnd
+                            );
 
-                            value,
-                            valueStart,
-                            valueEnd,
-                            hueStart,
-                            hueEnd);
-
-
-                            if (hue < hueStart == hueStart < hueEnd)
-                            {
+                            if (hue < hueStart == hueStart < hueEnd) {
                                 hue = hueStart;
-                            } else
-                            if (hue > hueEnd == hueStart < hueEnd)
-                            {
+                            }
+                            else if (hue > hueEnd == hueStart < hueEnd) {
                                 hue = hueEnd;
                             }
 
@@ -5119,95 +4667,83 @@ valueEnd)
                         }
                     }
 
-                    if (attributeName == hueName)
-                    {
+                    if (attributeName == hueName) {
                         newNode.hue = new Tween(newNode.hues[0], newNode.hues[0]);
                     }
                 }
-                break;}
-
+                break;
+        }
     }
 
     return newNode;
 }
 
-function maxAbsoluteDepthDecrease()
-{
-    if (maxAbsoluteDepth > 2)
-    {
+function maxAbsoluteDepthDecrease() {
+    if (maxAbsoluteDepth > 2) {
         maxAbsoluteDepth--;
         head.setMaxDepths();
         handleResize();
     }
 }
 
-function maxAbsoluteDepthIncrease()
-{
-    if (maxAbsoluteDepth < head.maxDepth)
-    {
+function maxAbsoluteDepthIncrease() {
+    if (maxAbsoluteDepth < head.maxDepth) {
         maxAbsoluteDepth++;
         head.setMaxDepths();
         handleResize();
     }
 }
 
-function measureText(text, bold)
-{
+function measureText(text, bold) {
     context.font = bold ? fontBold : fontNormal;
     var dim = context.measureText(text);
     return dim.width;
 }
 
-function min(a, b)
-{
+function min(a, b) {
     return a < b ? a : b;
 }
 
-function minWidth()
-{
+function minWidth() {
     // Min wedge width (at center) for displaying a node (or for displaying a
     // label if it's at the highest level being viewed, multiplied by 2 to make
     // further calculations simpler
 
-    return fontSize * 2.3;
+    return (fontSize * 2.3);
 }
 
-function mouseMove(e)
-{
+function mouseMove(e) {
     mouseX = e.pageX;
     mouseY = e.pageY - headerHeight;
+    mouseXRel = (mouseX - centerX) * backingScale();
+    mouseYRel = (mouseY - centerY) * backingScale();
 
-    if (head && !quickLook)
-    {
+    if (head && !quickLook) {
         checkHighlight();
     }
 }
 
-function mouseClick(e)
-{
-    if (highlightedNode == focusNode && focusNode != selectedNode || selectedNode.hasParent(highlightedNode))
-    {
-        if (highlightedNode.hasChildren())
-        {
+function mouseClick(e) {
+    if (highlightedNode == focusNode && focusNode != selectedNode ||
+        selectedNode.hasParent(highlightedNode)) {
+        if (highlightedNode.hasChildren()) {
             expand(highlightedNode);
         }
-    } else
-    if (progress == 1) //( highlightedNode != selectedNode )
-        {
-            setFocus(highlightedNode);
-            //		document.body.style.cursor='ew-resize';
-            draw();
-            checkHighlight();
-            var date = new Date();
-            mouseDownTime = date.getTime();
-            mouseDown = true;
-        }
+    }
+    else if (progress == 1)//( highlightedNode != selectedNode )
+    {
+        setFocus(highlightedNode);
+//		document.body.style.cursor='ew-resize';
+        draw();
+        checkHighlight();
+        var date = new Date();
+        mouseDownTime = date.getTime();
+        mouseDown = true;
+    }
 }
 
-function mouseUp(e)
-{
-    if (quickLook)
-    {
+function mouseUp(e) {
+    if (quickLook) {
         navigateBack();
         quickLook = false;
     }
@@ -5215,15 +4751,12 @@ function mouseUp(e)
     mouseDown = false;
 }
 
-function navigateBack()
-{
-    if (nodeHistoryPosition > 0)
-    {
+function navigateBack() {
+    if (nodeHistoryPosition > 0) {
         nodeHistory[nodeHistoryPosition] = selectedNode;
         nodeHistoryPosition--;
 
-        if (nodeHistory[nodeHistoryPosition].collapse)
-        {
+        if (nodeHistory[nodeHistoryPosition].collapse) {
             collapseCheckBox.checked = collapse = false;
         }
 
@@ -5233,29 +4766,23 @@ function navigateBack()
     }
 }
 
-function navigateUp()
-{
-    if (selectedNode.getParent())
-    {
+function navigateUp() {
+    if (selectedNode.getParent()) {
         selectNode(selectedNode.getParent());
         updateView();
     }
 }
 
-function navigateForward()
-{
-    if (nodeHistoryPosition < nodeHistory.length - 1)
-    {
+function navigateForward() {
+    if (nodeHistoryPosition < nodeHistory.length - 1) {
         nodeHistoryPosition++;
         var newNode = nodeHistory[nodeHistoryPosition];
 
-        if (newNode.collapse)
-        {
+        if (newNode.collapse) {
             collapseCheckBox.checked = collapse = false;
         }
 
-        if (nodeHistoryPosition == nodeHistory.length - 1)
-        {
+        if (nodeHistoryPosition == nodeHistory.length - 1) {
             // this will ensure the forward button is disabled
 
             nodeHistory.length = nodeHistoryPosition;
@@ -5267,104 +4794,87 @@ function navigateForward()
     }
 }
 
-function nextDataset()
-{
+function nextDataset() {
     var newDataset = currentDataset;
 
-    do
-    {
-        if (newDataset == datasets - 1)
-        {
+    do {
+        if (newDataset == datasets - 1) {
             newDataset = 0;
-        } else
-
-        {
+        }
+        else {
             newDataset++;
         }
-    } while (
-    datasetDropDown.options[newDataset].disabled);
+    }
+    while (datasetDropDown.options[newDataset].disabled);
 
     selectDataset(newDataset);
 }
 
-function onDatasetChange()
-{
+function onDatasetChange() {
     selectDataset(datasetDropDown.selectedIndex);
 }
 
-function onKeyDown(event)
-{
-    if (
-
-    event.keyCode == 37 &&
-    document.activeElement.id != 'search' &&
-    document.activeElement.id != 'linkText')
-
-    {
+function onKeyDown(event) {
+    if
+    (
+        event.keyCode == 37 &&
+        document.activeElement.id != 'search' &&
+        document.activeElement.id != 'linkText'
+    ) {
         navigateBack();
         event.preventDefault();
-    } else
-    if (
-
-    event.keyCode == 39 &&
-    document.activeElement.id != 'search' &&
-    document.activeElement.id != 'linkText')
-
-    {
+    }
+    else if
+    (
+        event.keyCode == 39 &&
+        document.activeElement.id != 'search' &&
+        document.activeElement.id != 'linkText'
+    ) {
         navigateForward();
         event.preventDefault();
-    } else
-    if (event.keyCode == 38 && datasets > 1)
-    {
+    }
+    else if (event.keyCode == 38 && datasets > 1) {
         prevDataset();
 
         //if ( document.activeElement.id == 'datasets' )
         {
             event.preventDefault();
         }
-    } else
-    if (event.keyCode == 40 && datasets > 1)
-    {
+    }
+    else if (event.keyCode == 40 && datasets > 1) {
         nextDataset();
 
         //if ( document.activeElement.id == 'datasets' )
         {
             event.preventDefault();
         }
-    } else
-    if (event.keyCode == 9 && datasets > 1)
-    {
+    }
+    else if (event.keyCode == 9 && datasets > 1) {
         selectLastDataset();
         event.preventDefault();
-    } else
-    if (event.keyCode == 83)
-    {
+    }
+    else if (event.keyCode == 83) {
         progress += .2;
-    } else
-    if (event.keyCode == 66)
-    {
+    }
+    else if (event.keyCode == 66) {
         progress -= .2;
-    } else
-    if (event.keyCode == 70)
-    {
+    }
+    else if (event.keyCode == 70) {
         progress = 1;
     }
 }
 
-function onKeyPress(event)
-{
-    if (event.keyCode == 38 && datasets > 1)
-    {
-        //		prevDataset();
+function onKeyPress(event) {
+    if (event.keyCode == 38 && datasets > 1) {
+//		prevDataset();
 
         //if ( document.activeElement.id == 'datasets' )
         {
             event.preventDefault();
         }
-    } else
-    if (event.keyCode == 40 && datasets > 1)
-    {
-        //		nextDataset();
+    }
+    else if (event.keyCode == 40 && datasets > 1) {
+//		nextDataset();
 
         //if ( document.activeElement.id == 'datasets' )
         {
@@ -5373,25 +4883,21 @@ function onKeyPress(event)
     }
 }
 
-function onKeyUp(event)
-{
-    if (event.keyCode == 27 && document.activeElement.id == 'search')
-    {
+function onKeyUp(event) {
+    if (event.keyCode == 27 && document.activeElement.id == 'search') {
         search.value = '';
         onSearchChange();
-    } else
-    if (event.keyCode == 38 && datasets > 1)
-    {
-        //		prevDataset();
+    }
+    else if (event.keyCode == 38 && datasets > 1) {
+//		prevDataset();
 
         //if ( document.activeElement.id == 'datasets' )
         {
             event.preventDefault();
         }
-    } else
-    if (event.keyCode == 40 && datasets > 1)
-    {
-        //		nextDataset();
+    }
+    else if (event.keyCode == 40 && datasets > 1) {
+//		nextDataset();
 
         //if ( document.activeElement.id == 'datasets' )
         {
@@ -5400,17 +4906,14 @@ function onKeyUp(event)
     }
 }
 
-function onSearchChange()
-{
+function onSearchChange() {
     nSearchResults = 0;
     head.search();
 
-    if (search.value == '')
-    {
+    if (search.value == '') {
         searchResults.innerHTML = '';
-    } else
-
-    {
+    }
+    else {
         searchResults.innerHTML = nSearchResults + ' results';
     }
 
@@ -5418,8 +4921,7 @@ function onSearchChange()
     draw();
 }
 
-function post(url, variable, value, postWindow)
-{
+function post(url, variable, value, postWindow) {
     var form = document.createElement('form');
     var input = document.createElement('input');
     var inputDataset = document.createElement('input');
@@ -5427,11 +4929,10 @@ function post(url, variable, value, postWindow)
     form.appendChild(input);
     form.appendChild(inputDataset);
 
-    form.method = "POST";
+    form.method = 'POST';
     form.action = url;
 
-    if (postWindow == undefined)
-    {
+    if (postWindow == undefined) {
         form.target = '_blank';
         postWindow = window;
     }
@@ -5448,88 +4949,72 @@ function post(url, variable, value, postWindow)
     form.submit();
 }
 
-function prevDataset()
-{
+function prevDataset() {
     var newDataset = currentDataset;
 
-    do
-    {
-        if (newDataset == 0)
-        {
+    do {
+        if (newDataset == 0) {
             newDataset = datasets - 1;
-        } else
-
-        {
+        }
+        else {
             newDataset--;
         }
-    } while (
-    datasetDropDown.options[newDataset].disabled);
+    }
+    while (datasetDropDown.options[newDataset].disabled);
 
     selectDataset(newDataset);
 }
 
-function radiusDecrease()
-{
-    if (bufferFactor < .309)
-    {
+function radiusDecrease() {
+    if (bufferFactor < .309) {
         bufferFactor += .03;
         updateViewNeeded = true;
     }
 }
 
-function radiusIncrease()
-{
-    if (bufferFactor > .041)
-    {
+function radiusIncrease() {
+    if (bufferFactor > .041) {
         bufferFactor -= .03;
         updateViewNeeded = true;
     }
 }
 
-function resetKeyOffset()
-{
+function resetKeyOffset() {
     currentKey = 1;
     keyMinTextLeft = centerX + gRadius + buffer - buffer / (keys + 1) / 2 + fontSize / 2;
     keyMinAngle = 0;
 }
 
-function rgbText(r, g, b)
-{
+function rgbText(r, g, b) {
     var rgbArray =
-    [
-    "rgb(",
-    Math.floor(r),
-    ",",
-    Math.floor(g),
-    ",",
-    Math.floor(b),
-    ")"];
-
+        [
+            'rgb(',
+            Math.floor(r),
+            ',',
+            Math.floor(g),
+            ',',
+            Math.floor(b),
+            ')'
+        ];
 
     return rgbArray.join('');
 }
 
-function round(number)
-{
-    if (number >= 1 || number <= -1)
-    {
+function round(number) {
+    if (number >= 1 || number <= -1) {
         return number.toFixed(0);
-    } else
-
-    {
+    }
+    else {
         return number.toPrecision(1);
     }
 }
 
-function roundedRectangle(x, y, width, height, radius)
-{
-    if (radius * 2 > width)
-    {
+function roundedRectangle(x, y, width, height, radius) {
+    if (radius * 2 > width) {
         radius = width / 2;
     }
 
-    if (radius * 2 > height)
-    {
+    if (radius * 2 > height) {
         radius = height / 2;
     }
 
@@ -5544,17 +5029,14 @@ function roundedRectangle(x, y, width, height, radius)
     context.lineTo(x, y + radius);
 }
 
-function passClick(e)
-{
+function passClick(e) {
     mouseClick(e);
 }
 
-function searchResultString(results)
-{
+function searchResultString(results) {
     var searchResults = this.searchResults;
 
-    if (this.isSearchResult)
-    {
+    if (this.isSearchResult) {
         // don't count ourselves
         searchResults--;
     }
@@ -5562,10 +5044,9 @@ function searchResultString(results)
     return ' - ' + results + (results > 1 ? ' results' : ' result');
 }
 
-function setCallBacks()
-{
-    canvas.onselectstart = function () {return false;}; // prevent unwanted highlighting
-    options.onselectstart = function () {return false;}; // prevent unwanted highlighting
+function setCallBacks() {
+    canvas.onselectstart = function() {return false;}; // prevent unwanted highlighting
+    options.onselectstart = function() {return false;}; // prevent unwanted highlighting
     document.onmousemove = mouseMove;
     window.onblur = focusLost;
     window.onmouseout = focusLost;
@@ -5627,8 +5108,7 @@ function setCallBacks()
     helpButton.onmousedown = suppressEvent;
     var searchClear = document.getElementById('searchClear');
     searchClear.onmousedown = suppressEvent;
-    if (datasets > 1)
-    {
+    if (datasets > 1) {
         datasetDropDown.onmousedown = suppressEvent;
         var prevDatasetButton = document.getElementById('prevDataset');
         prevDatasetButton.onmousedown = suppressEvent;
@@ -5639,33 +5119,21 @@ function setCallBacks()
     }
 
     image = document.getElementById('hiddenImage');
-
-    if (image.complete)
-    {
+    image.onload = function() {
         hiddenPattern = context.createPattern(image, 'repeat');
-    } else
-
-    {
-        image.onload = function ()
-        {
-            hiddenPattern = context.createPattern(image, 'repeat');
-        };
-    }
+    };
 
     var loadingImageElement = document.getElementById('loadingImage');
 
-    if (loadingImageElement)
-    {
+    if (loadingImageElement) {
         loadingImage = loadingImageElement.src;
     }
 }
 
-function selectDataset(newDataset)
-{
+function selectDataset(newDataset) {
     lastDataset = currentDataset;
     currentDataset = newDataset;
-    if (datasets > 1)
-    {
+    if (datasets > 1) {
         datasetDropDown.selectedIndex = currentDataset;
         updateDatasetButtons();
         datasetAlpha.start = 1.5;
@@ -5677,22 +5145,18 @@ function selectDataset(newDataset)
     handleResize();
 }
 
-function selectLastDataset()
-{
+function selectLastDataset() {
     selectDataset(lastDataset);
     handleResize();
 }
 
-function selectNode(newNode)
-{
-    if (selectedNode != newNode)
-    {
+function selectNode(newNode) {
+    if (selectedNode != newNode) {
         // truncate history at current location to create a new branch
         //
         nodeHistory.length = nodeHistoryPosition;
 
-        if (selectedNode != 0)
-        {
+        if (selectedNode != 0) {
             nodeHistory.push(selectedNode);
             nodeHistoryPosition++;
         }
@@ -5704,75 +5168,66 @@ function selectNode(newNode)
     updateDatasetButtons();
 }
 
-function setFocus(node)
-{
-    if (node == focusNode)
-    {
-        //		return;
+function setFocus(node) {
+    if (node == focusNode) {
+//		return;
     }
 
     focusNode = node;
 
-    if (node.href)
-    {
+    if (node.href) {
         detailsName.innerHTML =
-        '<a target="_blank" href="' + node.href + '">' + node.name + '</a>';
-    } else
-
-    {
+            '<a target="_blank" href="' + node.href + '">' + node.name + '</a>';
+    }
+    else {
         detailsName.innerHTML = node.name;
     }
 
     var table = '<table>';
+    //TODO: use CSS margins instead of an additional column
+    table += '<tr><td></td><td></td></tr>';
 
-    table += '<tr><td></td></tr>';
-
-    for (var i = 0; i < node.attributes.length; i++)
-    {
-        if (attributes[i].displayName && node.attributes[i] != undefined)
-        {
+    for (var i = 0; i < node.attributes.length; i++) {
+        if (attributes[i].displayName && node.attributes[i] != undefined) {
             var index = node.attributes[i].length == 1 && attributes[i].mono ? 0 : currentDataset;
 
-            if (typeof node.attributes[i][currentDataset] == 'number' || node.attributes[i][index] != undefined && node.attributes[i][currentDataset] != '')
-            {
+            if (typeof node.attributes[i][currentDataset] == 'number' ||
+                node.attributes[i][index] != undefined &&
+                node.attributes[i][currentDataset] != '') {
                 var value = node.attributes[i][index];
 
-                if (attributes[i].listNode != undefined)
-                {
+                if (attributes[i].listNode != undefined) {
                     value =
-                    '<a href="" onclick="showList(' +
-                    attributeIndex(attributes[i].listNode) + ',' + i +
-                    ',false);return false;" title="Show list">' +
-                    value + '</a>';
-                } else
-                if (attributes[i].listAll != undefined)
-                {
+                        '<a href="" onclick="showList(' +
+                        attributeIndex(attributes[i].listNode) + ',' + i +
+                        ',false);return false;" title="Show list">' +
+                        value + '</a>';
+                }
+                else if (attributes[i].listAll != undefined) {
                     value =
-                    '<a href="" onclick="showList(' +
-                    attributeIndex(attributes[i].listAll) + ',' + i +
-                    ',true);return false;" title="Show list">' +
-                    value + '</a>';
-                } else
-                if (attributes[i].dataNode != undefined && dataEnabled)
-                {
+                        '<a href="" onclick="showList(' +
+                        attributeIndex(attributes[i].listAll) + ',' + i +
+                        ',true);return false;" title="Show list">' +
+                        value + '</a>';
+                }
+                else if (attributes[i].dataNode != undefined && dataEnabled) {
                     value =
-                    '<a href="" onclick="showData(' +
-                    attributeIndex(attributes[i].dataNode) + ',' + i +
-                    ',false);return false;" title="Show data">' +
-                    value + '</a>';
-                } else
-                if (attributes[i].dataAll != undefined && dataEnabled)
-                {
+                        '<a href="" onclick="showData(' +
+                        attributeIndex(attributes[i].dataNode) + ',' + i +
+                        ',false);return false;" title="Show data">' +
+                        value + '</a>';
+                }
+                else if (attributes[i].dataAll != undefined && dataEnabled) {
                     value =
-                    '<a href="" onclick="showData(' +
-                    attributeIndex(attributes[i].dataAll) + ',' + i +
-                    ',true);return false;" title="Show data">' +
-                    value + '</a>';
+                        '<a href="" onclick="showData(' +
+                        attributeIndex(attributes[i].dataAll) + ',' + i +
+                        ',true);return false;" title="Show data">' +
+                        value + '</a>';
                 }
 
                 table +=
-                '<tr><td><strong>' + attributes[i].displayName + ':</strong></td><td>' +
-                value + '</td></tr>';
+                    '<tr><td><strong>' + attributes[i].displayName + ':</strong></td><td>' +
+                    value + '</td></tr>';
             }
         }
     }
@@ -5783,14 +5238,11 @@ function setFocus(node)
     detailsExpand.disabled = !focusNode.hasChildren() || focusNode == selectedNode;
 }
 
-function setSelectedNode(newNode)
-{
-    if (selectedNode && selectedNode.hasParent(newNode))
-    {
+function setSelectedNode(newNode) {
+    if (selectedNode && selectedNode.hasParent(newNode)) {
         zoomOut = true;
-    } else
-
-    {
+    }
+    else {
         zoomOut = false;
     }
 
@@ -5803,14 +5255,10 @@ function setSelectedNode(newNode)
     }
 }
 
-function waitForData(dataWindow, target, title, time, postUrl, postVar)
-{
-    if (nodeData.length == target)
-    {
-        if (postUrl != undefined)
-        {
-            for (var i = 0; i < nodeData.length; i++)
-            {
+function waitForData(dataWindow, target, title, time, postUrl, postVar) {
+    if (nodeData.length == target) {
+        if (postUrl != undefined) {
+            for (var i = 0; i < nodeData.length; i++) {
                 nodeData[i] = nodeData[i].replace(/\n/g, ',');
             }
 
@@ -5821,9 +5269,8 @@ function waitForData(dataWindow, target, title, time, postUrl, postVar)
             document.body.removeChild(document.getElementById('data'));
 
             post(postUrl, postVar, postString, dataWindow);
-        } else
-
-        {
+        }
+        else {
             //dataWindow.document.body.removeChild(dataWindow.document.getElementById('loading'));
             //document.body.removeChild(document.getElementById('data'));
 
@@ -5833,52 +5280,46 @@ function waitForData(dataWindow, target, title, time, postUrl, postVar)
         }
 
         dataWindow.document.title = title; // replace after document.write()
-    } else
-
-    {
+    }
+    else {
         var date = new Date();
 
-        if (date.getTime() - time > 10000)
-        {
+        if (date.getTime() - time > 10000) {
             dataWindow.document.body.removeChild(dataWindow.document.getElementById('loading'));
             document.body.removeChild(document.getElementById('data'));
             dataWindow.document.body.innerHTML =
-            'Timed out loading supplemental files for:<br/>' + document.location;
-        } else
-
-        {
-            setTimeout(function () {waitForData(dataWindow, target, title, time, postUrl, postVar);}, 100);
+                'Timed out loading supplemental files for:<br/>' + document.location;
+        }
+        else {
+            setTimeout(function() {waitForData(dataWindow, target, title, time, postUrl, postVar);},
+                100);
         }
     }
 }
 
-function data(newData)
-{
+function data(newData) {
     nodeData.push(newData);
 }
 
-function enableData()
-{
+function enableData() {
     dataEnabled = true;
 }
 
-function showData(indexData, indexAttribute, summary)
-{
+function showData(indexData, indexAttribute, summary) {
     var dataWindow = window.open('', '_blank');
     var title = 'Krona - ' + attributes[indexAttribute].displayName + ' - ' + focusNode.name;
     dataWindow.document.title = title;
 
     nodeData = new Array();
 
-    if (dataWindow && dataWindow.document && dataWindow.document.body != null)
-    {
+    if (dataWindow && dataWindow.document && dataWindow.document.body != null) {
         //var loadImage = document.createElement('img');
         //loadImage.src = "file://localhost/Users/ondovb/Krona/KronaTools/img/loading.gif";
         //loadImage.id = "loading";
         //loadImage.alt = "Loading...";
         //dataWindow.document.body.appendChild(loadImage);
         dataWindow.document.body.innerHTML =
-        '<img id="loading" src="' + loadingImage + '" alt="Loading..."></img>';
+            '<img id="loading" src="' + loadingImage + '" alt="Loading..."></img>';
     }
 
     var scripts = document.createElement('div');
@@ -5890,49 +5331,46 @@ function showData(indexData, indexAttribute, summary)
     var date = new Date();
     var time = date.getTime();
 
-    for (var i = 0; i < files.length; i++)
-    {
+    for (var i = 0; i < files.length; i++) {
         var script = document.createElement('script');
         script.src = files[i] + '?' + time;
         scripts.appendChild(script);
     }
 
-    waitForData(dataWindow, files.length, title, time, attributes[indexAttribute].postUrl, attributes[indexAttribute].postVar);
+    waitForData(dataWindow, files.length, title, time, attributes[indexAttribute].postUrl,
+        attributes[indexAttribute].postVar);
 
     return false;
 }
 
-function showList(indexList, indexAttribute, summary)
-{
+function showList(indexList, indexAttribute, summary) {
     var list = focusNode.getList(indexList, summary);
 
-    if (attributes[indexAttribute].postUrl != undefined)
-    {
-        post(attributes[indexAttribute].postUrl, attributes[indexAttribute].postVar, list.join(','));
-    } else
-
-    {
+    if (attributes[indexAttribute].postUrl != undefined) {
+        post(attributes[indexAttribute].postUrl, attributes[indexAttribute].postVar,
+            list.join(','));
+    }
+    else {
         var dataWindow = window.open('', '_blank');
 
         if (true || navigator.appName == 'Microsoft Internet Explorer') // :(
-            {
-                dataWindow.document.open();
-                dataWindow.document.write('<pre>' + list.join('\n') + '</pre>');
-                dataWindow.document.close();
-            } else
-
         {
+            dataWindow.document.open();
+            dataWindow.document.write('<pre>' + list.join('\n') + '</pre>');
+            dataWindow.document.close();
+        }
+        else {
             var pre = document.createElement('pre');
             dataWindow.document.body.appendChild(pre);
             pre.innerHTML = list;
         }
 
-        dataWindow.document.title = 'Krona - ' + attributes[indexAttribute].displayName + ' - ' + focusNode.name;
+        dataWindow.document.title = 'Krona - ' + attributes[indexAttribute].displayName + ' - ' +
+            focusNode.name;
     }
 }
 
-function snapshot()
-{
+function snapshot() {
     svg = svgHeader();
 
     resetKeyOffset();
@@ -5942,14 +5380,12 @@ function snapshot()
     selectedNode.draw(false, true);
     selectedNode.draw(true, true);
 
-    if (focusNode != 0 && focusNode != selectedNode)
-    {
+    if (focusNode != 0 && focusNode != selectedNode) {
         context.globalAlpha = 1;
         focusNode.drawHighlight(true);
     }
 
-    if (hueDisplayName && useHue())
-    {
+    if (hueDisplayName && useHue()) {
         drawLegendSVG();
     }
 
@@ -5957,57 +5393,36 @@ function snapshot()
 
     svg += svgFooter();
 
-    snapshotWindow = window.open(
-
-    'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg),
-    '_blank');
-
-    /*	var data = window.open('data:text/plain;charset=utf-8,hello', '_blank');
-               var data = window.open('', '_blank');
-               data.document.open('text/plain');
-               data.document.write('hello');
-               data.document.close();
-               var button = document.createElement('input');
-               button.type = 'button';
-               button.value = 'save';
-               button.onclick = save;
-               data.document.body.appendChild(button);
-               //	snapshotWindow.document.write(svg);
-               //	snapshotWindow.document.close();
-               */
+    var snapshotWindow = window.open('', '_blank', '', 'replace=false');
+    snapshotWindow.document.write('<html><body><a href="data:image/svg+xml,' +
+        encodeURIComponent(svg) + '" download="snapshot.svg">Download Snapshot</a></html></body>');
+    snapshotWindow.document.write(svg);
 }
 
-function save()
-{
+function save() {
     alert(document.body.innerHTML);
 }
 
-function spacer()
-{
-    if (snapshotMode)
-    {
+function spacer() {
+    if (snapshotMode) {
         return '&#160;&#160;&#160;';
-    } else
-
-    {
+    }
+    else {
         return '   ';
     }
 }
 
-function suppressEvent(e)
-{
+function suppressEvent(e) {
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
 }
 
-function svgFooter()
-{
+function svgFooter() {
     return '</svg>';
 }
 
-function svgHeader()
-{
-    var patternWidth = fontSize * .6; //radius / 50;
+function svgHeader() {
+    var patternWidth = fontSize * .6;//radius / 50;
 
     return '\
 <?xml version="1.0" standalone="no"?>\
@@ -6015,9 +5430,9 @@ function svgHeader()
 	"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\
 <svg width="' + imageWidth + '" height="' + imageHeight + '" version="1.1"\
 	xmlns="http://www.w3.org/2000/svg">\
-<title>Krona (snapshot) - ' + (
-    datasets > 1 ? datasetNames[currentDataset] + ' - ' : '') + selectedNode.name +
-    '</title>\
+<title>Krona (snapshot) - ' +
+        (datasets > 1 ? datasetNames[currentDataset] + ' - ' : '') + selectedNode.name +
+        '</title>\
 <defs>\
 	<style type="text/css">\
 	text {font-size: ' + fontSize + 'px; font-family: ' + fontFamily + '; dominant-baseline:central}\
@@ -6036,90 +5451,75 @@ function svgHeader()
 x="0" y="0" width="' + patternWidth + '" height="' + patternWidth + '">\
 <line class="pattern" x1="0" y1="0" x2="' + patternWidth / 2 + '" y2="' + patternWidth / 2 + '"/>\
 <line class="pattern" x1="' + patternWidth / 2 + '" y1="' + patternWidth +
-    '" x2="' + patternWidth + '" y2="' + patternWidth / 2 + '"/>\
+        '" x2="' + patternWidth + '" y2="' + patternWidth / 2 + '"/>\
 </pattern>\
 </defs>\
 ';
 }
 
-function svgText(text, x, y, anchor, bold, color)
-{
-    if (typeof anchor == 'undefined')
-    {
+function svgText(text, x, y, anchor, bold, color) {
+    if (typeof(anchor) == 'undefined') {
         anchor = 'start';
     }
 
-    if (color == undefined)
-    {
+    if (color == undefined) {
         color = 'black';
     }
 
     return '<text x="' + x + '" y="' + y +
-    '" style="font-color:' + color + ';font-weight:' + (bold ? 'bold' : 'normal') +
-    '" text-anchor="' + anchor + '">' + text + '</text>';
+        '" style="font-color:' + color + ';font-weight:' + (bold ? 'bold' : 'normal') +
+        '" text-anchor="' + anchor + '">' + text + '</text>';
 }
 
-function toggleKeys()
-{
-    if (showKeys)
-    {
+function toggleKeys() {
+    if (showKeys) {
         keyControl.value = '…';
         showKeys = false;
-    } else
-
-    {
+    }
+    else {
         keyControl.value = 'x';
         showKeys = true;
     }
 
     updateKeyControl();
 
-    if (progress == 1)
-    {
+    if (progress == 1) {
         draw();
     }
 }
 
-function update()
-{
-    if (!head)
-    {
+function update() {
+    if (!head) {
         return;
     }
 
-    if (mouseDown && focusNode != selectedNode)
-    {
+    if (mouseDown && focusNode != selectedNode) {
         var date = new Date();
 
-        if (date.getTime() - mouseDownTime > quickLookHoldLength)
-        {
-            if (focusNode.hasChildren())
-            {
+        if (date.getTime() - mouseDownTime > quickLookHoldLength) {
+            if (focusNode.hasChildren()) {
                 expand(focusNode);
                 quickLook = true;
             }
         }
     }
 
-    if (updateViewNeeded)
-    {
+    if (updateViewNeeded) {
         resize();
         mouseX = -1;
         mouseY = -1;
 
         collapse = collapseCheckBox.checked;
-        compress = true; //compressCheckBox.checked;
-        shorten = true; //shortenCheckBox.checked;
+        compress = true;//compressCheckBox.checked;
+        shorten = true;//shortenCheckBox.checked;
 
         checkSelectedCollapse();
         updateMaxAbsoluteDepth();
 
-        if (focusNode.getCollapse() || focusNode.depth > maxAbsoluteDepth)
-        {
+        if (focusNode.getCollapse() || focusNode.depth > maxAbsoluteDepth) {
             setFocus(selectedNode);
-        } else
-
-        {
+        }
+        else {
             setFocus(focusNode);
         }
 
@@ -6130,34 +5530,28 @@ function update()
 
     var date = new Date();
     progress = (date.getTime() - tweenStartTime) / tweenLength;
-    //	progress += .01;
+//	progress += .01;
 
-    if (progress >= 1)
-    {
+    if (progress >= 1) {
         progress = 1;
     }
 
-    if (progress != progressLast)
-    {
-        tweenFactor = // progress;
-        (1 / (1 + Math.exp(-tweenCurvature * (progress - .5))) - .5) / (
-        tweenMax - .5) / 2 + .5;
+    if (progress != progressLast) {
+        tweenFactor =// progress;
+            (1 / (1 + Math.exp(-tweenCurvature * (progress - .5))) - .5) /
+            (tweenMax - .5) / 2 + .5;
 
-        if (progress == 1)
-        {
+        if (progress == 1) {
             snapshotButton.disabled = false;
             zoomOut = false;
 
             //updateKeyControl();
 
-            if (!quickLook)
-            {
+            if (!quickLook) {
                 //checkHighlight();
             }
 
-
-            if (fpsDisplay)
-            {
+            if (fpsDisplay) {
                 fpsDisplay.innerHTML = 'fps: ' + Math.round(tweenFrames * 1000 / tweenLength);
             }
         }
@@ -6168,31 +5562,26 @@ function update()
     progressLast = progress;
 }
 
-function updateDatasetButtons()
-{
-    if (datasets == 1)
-    {
+function updateDatasetButtons() {
+    if (datasets == 1) {
         return;
     }
 
     var node = selectedNode ? selectedNode : head;
 
     datasetButtonLast.disabled =
-    node.attributes[magnitudeIndex][lastDataset] == 0;
+        node.attributes[magnitudeIndex][lastDataset] == 0;
 
     datasetButtonPrev.disabled = true;
     datasetButtonNext.disabled = true;
 
-    for (var i = 0; i < datasets; i++)
-    {
+    for (var i = 0; i < datasets; i++) {
         var disable = node.attributes[magnitudeIndex][i] == 0;
 
         datasetDropDown.options[i].disabled = disable;
 
-        if (!disable)
-        {
-            if (i != currentDataset)
-            {
+        if (!disable) {
+            if (i != currentDataset) {
                 datasetButtonPrev.disabled = false;
                 datasetButtonNext.disabled = false;
             }
@@ -6200,12 +5589,9 @@ function updateDatasetButtons()
     }
 }
 
-function updateDatasetWidths()
-{
-    if (datasets > 1)
-    {
-        for (var i = 0; i < datasets; i++)
-        {
+function updateDatasetWidths() {
+    if (datasets > 1) {
+        for (var i = 0; i < datasets; i++) {
             context.font = fontBold;
             var dim = context.measureText(datasetNames[i]);
             datasetWidths[i] = dim.width;
@@ -6213,51 +5599,44 @@ function updateDatasetWidths()
     }
 }
 
-function updateKeyControl()
-{
-    if (keys == 0) //|| progress != 1 )
-        {
-            keyControl.style.visibility = 'hidden';
-        } else
-
+function updateKeyControl() {
+    if (keys == 0)//|| progress != 1 )
     {
+        keyControl.style.visibility = 'hidden';
+    }
+    else {
         keyControl.style.visibility = 'visible';
         keyControl.style.right = margin + 'px';
 
-        if (showKeys)
-        {
+        if (showKeys) {
             keyControl.style.top =
-            imageHeight - (
-
-            keys * (keySize + keyBuffer) -
-            keyBuffer +
-            margin +
-            keyControl.clientHeight * 1.5) +
-            'px';
-        } else
-
-        {
+                imageHeight -
+                (
+                    keys * (keySize + keyBuffer) -
+                    keyBuffer +
+                    margin +
+                    keyControl.clientHeight * 1.5
+                ) + 'px';
+        }
+        else {
             keyControl.style.top =
-            imageHeight - margin - keyControl.clientHeight + 'px';
+                (imageHeight - margin - keyControl.clientHeight) + 'px';
         }
     }
 }
 
-function updateView()
-{
-    if (selectedNode.depth > maxAbsoluteDepth - 1)
-    {
+function updateView() {
+    if (selectedNode.depth > maxAbsoluteDepth - 1) {
         maxAbsoluteDepth = selectedNode.depth + 1;
     }
 
     highlightedNode = selectedNode;
 
-    angleFactor = 2 * Math.PI / selectedNode.magnitude;
+    angleFactor = 2 * Math.PI / (selectedNode.magnitude);
 
     maxPossibleDepth = Math.floor(gRadius / (fontSize * minRingWidthFactor));
 
-    if (maxPossibleDepth < 4)
-    {
+    if (maxPossibleDepth < 4) {
         maxPossibleDepth = 4;
     }
 
@@ -6265,18 +5644,15 @@ function updateView()
     var minRadiusFirst = fontSize * 6 / gRadius;
     var minRadiusOuter = fontSize * 5 / gRadius;
 
-    if (.25 < minRadiusInner)
-    {
+    if (.25 < minRadiusInner) {
         minRadiusInner = .25;
     }
 
-    if (.15 < minRadiusFirst)
-    {
+    if (.15 < minRadiusFirst) {
         minRadiusFirst = .15;
     }
 
-    if (.15 < minRadiusOuter)
-    {
+    if (.15 < minRadiusOuter) {
         minRadiusOuter = .15;
     }
 
@@ -6287,76 +5663,66 @@ function updateView()
     var maxDepth;
     var newMaxDepth = selectedNode.getMaxDepth() - selectedNode.getDepth() + 1;
     //
-    do
-    {
+    do {
         maxDepth = newMaxDepth;
 
-        if (!compress && maxDepth > maxPossibleDepth)
-        {
+        if (!compress && maxDepth > maxPossibleDepth) {
             maxDepth = maxPossibleDepth;
         }
 
-        if (compress)
-        {
+        if (compress) {
             compressedRadii = new Array(maxDepth);
 
             compressedRadii[0] = minRadiusInner;
 
             var offset = 0;
 
-            while (
-
-            lerp(
-
-            Math.atan(offset + 2),
-            Math.atan(offset + 1),
-            Math.atan(maxDepth + offset - 1),
-            minRadiusInner,
-            1 - minRadiusOuter) -
-            minRadiusInner > minRadiusFirst &&
-            offset < 10)
-
-            {
+            while
+                (
+                lerp
+                (
+                    Math.atan(offset + 2),
+                    Math.atan(offset + 1),
+                    Math.atan(maxDepth + offset - 1),
+                    minRadiusInner,
+                    1 - minRadiusOuter
+                ) - minRadiusInner > minRadiusFirst &&
+                offset < 10
+                ) {
                 offset++;
             }
 
             offset--;
 
-            for (var i = 1; i < maxDepth; i++)
-            {
-                compressedRadii[i] = lerp(
-
-                Math.atan(i + offset),
-                Math.atan(offset),
-                Math.atan(maxDepth + offset - 1),
-                minRadiusInner,
-                1 - minRadiusOuter);
-
+            for (var i = 1; i < maxDepth; i++) {
+                compressedRadii[i] = lerp
+                (
+                    Math.atan(i + offset),
+                    Math.atan(offset),
+                    Math.atan(maxDepth + offset - 1),
+                    minRadiusInner,
+                    1 - minRadiusOuter
+                );
             }
-        } else
-
-        {
+        }
+        else {
             nodeRadius = 1 / maxDepth;
         }
 
         newMaxDepth = selectedNode.maxVisibleDepth(maxDepth);
 
-        if (compress)
-        {
-            if (newMaxDepth <= maxPossibleDepth)
-            {
-                //				compress
+        if (compress) {
+            if (newMaxDepth <= maxPossibleDepth) {
+//				compress
             }
-        } else
-
-        {
-            if (newMaxDepth > maxPossibleDepth)
-            {
+        }
+        else {
+            if (newMaxDepth > maxPossibleDepth) {
                 newMaxDepth = maxPossibleDepth;
             }
         }
-    } while (
-    newMaxDepth < maxDepth);
+    }
+    while (newMaxDepth < maxDepth);
 
     maxDisplayDepth = maxDepth;
 
@@ -6368,47 +5734,40 @@ function updateView()
     labelLastNodes = new Array(maxDisplayDepth - 1);
     labelFirstNodes = new Array(maxDisplayDepth - 1);
 
-    for (var i = 0; i < maxDisplayDepth - 1; i++)
-    {
-        if (compress)
-        {
-            if (i == maxDisplayDepth - 1)
-            {
+    for (var i = 0; i < maxDisplayDepth - 1; i++) {
+        if (compress) {
+            if (i == maxDisplayDepth - 1) {
                 nLabelOffsets[i] = 0;
-            } else
-
-            {
+            }
+            else {
                 var width =
-                (compressedRadii[i + 1] - compressedRadii[i]) *
-                gRadius;
+                    (compressedRadii[i + 1] - compressedRadii[i]) *
+                    gRadius;
 
                 nLabelOffsets[i] = Math.floor(width / fontSize / 1.2);
 
-                if (nLabelOffsets[i] > 2)
-                {
-                    nLabelOffsets[i] = min(
-
-                    Math.floor(width / fontSize / 1.75),
-                    5);
-
+                if (nLabelOffsets[i] > 2) {
+                    nLabelOffsets[i] = min
+                    (
+                        Math.floor(width / fontSize / 1.75),
+                        5
+                    );
                 }
             }
-        } else
-
-        {
-            nLabelOffsets[i] = Math.max(
-
-            Math.floor(Math.sqrt(nodeRadius * gRadius / fontSize) * 1.5),
-            3);
-
+        }
+        else {
+            nLabelOffsets[i] = Math.max
+            (
+                Math.floor(Math.sqrt((nodeRadius * gRadius / fontSize)) * 1.5),
+                3
+            );
         }
 
         labelOffsets[i] = Math.floor((nLabelOffsets[i] - 1) / 2);
         labelLastNodes[i] = new Array(nLabelOffsets[i] + 1);
         labelFirstNodes[i] = new Array(nLabelOffsets[i] + 1);
 
-        for (var j = 0; j <= nLabelOffsets[i]; j++)
-        {
+        for (var j = 0; j <= nLabelOffsets[i]; j++) {
             // these arrays will allow nodes with neighboring labels to link to
             // each other to determine max label length
 
@@ -6425,10 +5784,9 @@ function updateView()
 
     head.setTargets(0);
 
-    keySize = (imageHeight - margin * 3) * 1 / 2 / keys * 3 / 4;
+    keySize = ((imageHeight - margin * 3) * 1 / 2) / keys * 3 / 4;
 
-    if (keySize > fontSize * maxKeySizeFactor)
-    {
+    if (keySize > fontSize * maxKeySizeFactor) {
         keySize = fontSize * maxKeySizeFactor;
     }
 
@@ -6436,12 +5794,10 @@ function updateView()
 
     fontSizeLast = fontSize;
 
-    if (datasetChanged)
-    {
+    if (datasetChanged) {
         datasetChanged = false;
-    } else
-
-    {
+    }
+    else {
         datasetAlpha.start = 0;
     }
 
@@ -6459,41 +5815,36 @@ function updateView()
 
     maxAbsoluteDepthText.innerHTML = maxAbsoluteDepth - 1;
 
-    maxAbsoluteDepthButtonDecrease.disabled = maxAbsoluteDepth == 2;
-    maxAbsoluteDepthButtonIncrease.disabled = maxAbsoluteDepth == head.maxDepth;
+    maxAbsoluteDepthButtonDecrease.disabled = (maxAbsoluteDepth == 2);
+    maxAbsoluteDepthButtonIncrease.disabled = (maxAbsoluteDepth == head.maxDepth);
 
-    if (collapse != collapseLast && search.value != '')
-    {
+    if (collapse != collapseLast && search.value != '') {
         onSearchChange();
         collapseLast = collapse;
     }
 }
 
-function updateMaxAbsoluteDepth()
-{
-    while (selectedNode.depth > maxAbsoluteDepth - 1)
-    {
+function updateMaxAbsoluteDepth() {
+    while (maxAbsoluteDepth > 1 && selectedNode.depth > maxAbsoluteDepth - 1) {
         selectedNode = selectedNode.getParent();
     }
 }
 
-function updateNavigationButtons()
-{
-    backButton.disabled = nodeHistoryPosition == 0;
-    //	upButton.disabled = (selectedNode.getParent() == 0);
-    forwardButton.disabled = nodeHistoryPosition == nodeHistory.length;
+function updateNavigationButtons() {
+    backButton.disabled = (nodeHistoryPosition == 0);
+//	upButton.disabled = (selectedNode.getParent() == 0);
+    forwardButton.disabled = (nodeHistoryPosition == nodeHistory.length);
 }
 
-function useHue()
-{
+function useHue() {
     return useHueCheckBox && useHueCheckBox.checked;
 }
-/*
-  function zoomOut()
-  {
-  	return (
-  		selectedNodeLast != 0 &&
-  		selectedNodeLast.getDepth() < selectedNode.getDepth());
-  }
-  */
 
+/*
+function zoomOut()
+{
+	return (
+		selectedNodeLast != 0 &&
+		selectedNodeLast.getDepth() < selectedNode.getDepth());
+}
+*/
