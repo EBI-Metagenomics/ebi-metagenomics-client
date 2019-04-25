@@ -271,11 +271,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.44013998"
-     inkscape:cx="311.7995"
-     inkscape:cy="301.56012"
+     inkscape:zoom="7.9853968"
+     inkscape:cx="409.94736"
+     inkscape:cy="271.50453"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="text5144"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -939,29 +939,25 @@
            id="path4915"
            inkscape:connector-curvature="0"
            sodipodi:nodetypes="csssc" />
-        <text
-           sodipodi:linespacing="125%"
-           id="text5148"
-           y="688.12573"
-           x="235.18896"
+        <g
            style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           xml:space="preserve"><tspan
+           id="text5148">
+          <path
+             d="m 272.22021,655.78198 q -2.89062,-2.96875 -7.03125,-2.96875 -4.14062,0 -7.10937,2.96875 -2.89063,2.89063 -2.89063,7.03125 l 0,5 -18.75,0 q -0.54687,0 -0.9375,0.39063 -0.3125,0.3125 -0.3125,0.85937 l 0,17.5 q 0,0.54688 0.3125,0.9375 0.39063,0.3125 0.9375,0.3125 l 22.5,0 q 0.54688,0 0.85938,-0.3125 0.39062,-0.39062 0.39062,-0.9375 l 0,-17.5 q 0,-0.54687 -0.39062,-0.85937 -0.3125,-0.39063 -0.85938,-0.39063 l -1.25,0 0,-5 q 0,-3.125 2.1875,-5.3125 2.1875,-2.1875 5.3125,-2.1875 3.125,0 5.3125,2.1875 2.1875,2.1875 2.1875,5.3125 l 0,5 2.5,0 0,-5 q 0,-4.14062 -2.96875,-7.03125 z m -22.5,21.40625 0.46875,5.625 -5,0 0.46875,-5.625 q -1.71875,-1.09375 -1.71875,-3.125 0,-1.5625 1.09375,-2.65625 1.09375,-1.09375 2.65625,-1.09375 1.5625,0 2.65625,1.09375 1.09375,1.09375 1.09375,2.65625 0,2.03125 -1.71875,3.125 z"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:EBI-Functional;-inkscape-font-specification:EBI-Functional;fill:#ffffff"
-             y="688.12573"
-             x="235.18896"
-             id="tspan5150"
-             sodipodi:role="line">U</tspan></text>
+             id="path4394" />
+        </g>
       </g>
       <text
          sodipodi:linespacing="125%"
          id="text5152"
-         y="652.13025"
-         x="90.76947"
+         y="624.86621"
+         x="72.593437"
          style="font-style:normal;font-weight:normal;font-size:35px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          xml:space="preserve"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25px;font-family:Calibri;-inkscape-font-specification:Calibri"
-           y="652.13025"
-           x="90.76947"
+           y="624.86621"
+           x="72.593437"
            id="tspan5154"
            sodipodi:role="line">PUBLIC DATA</tspan></text>
       <g
@@ -972,30 +968,26 @@
            id="path5173"
            d="m 471.0305,701.32896 c 19.72157,-11.38625 44.54797,14.63308 62.90252,5.20495 16.39388,-8.421 22.85717,-28.53746 14.43616,-44.93134 -8.42101,-16.39388 -28.53744,-22.85716 -44.93132,-14.43615 -18.71352,9.61254 -12.22418,42.50977 -32.40736,54.16254 z"
            style="fill:#0e2c45;fill-opacity:1;stroke:#000000;stroke-width:1.65999997;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-        <text
-           xml:space="preserve"
+        <g
            style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           x="498.1489"
-           y="690.99884"
-           id="text5144"
-           sodipodi:linespacing="125%"><tspan
-             sodipodi:role="line"
-             id="tspan5146"
-             x="498.1489"
-             y="690.99884"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:EBI-Functional;-inkscape-font-specification:EBI-Functional;fill:#ffffff">L</tspan></text>
+           id="text5144">
+          <path
+             d="m 530.0239,670.84259 -1.25,0 0,-5 q 0,-4.14062 -2.96875,-7.03125 -2.89063,-2.96875 -7.03125,-2.96875 -4.14063,0 -7.10938,2.96875 -2.89062,2.89063 -2.89062,7.03125 l 0,5 -1.25,0 q -0.54688,0 -0.9375,0.39063 -0.3125,0.3125 -0.3125,0.85937 l 0,17.5 q 0,0.54688 0.3125,0.9375 0.39062,0.3125 0.9375,0.3125 l 22.5,0 q 0.54687,0 0.85937,-0.3125 0.39063,-0.39062 0.39063,-0.9375 l 0,-17.5 q 0,-0.54687 -0.39063,-0.85937 -0.3125,-0.39063 -0.85937,-0.39063 z m -9.21875,9.375 0.46875,5.625 -5,0 0.46875,-5.625 q -1.71875,-1.09375 -1.71875,-3.125 0,-1.5625 1.09375,-2.65625 1.09375,-1.09375 2.65625,-1.09375 1.5625,0 2.65625,1.09375 1.09375,1.09375 1.09375,2.65625 0,2.03125 -1.71875,3.125 z m -9.53125,-9.375 0,-5 q 0,-3.125 2.1875,-5.3125 2.1875,-2.1875 5.3125,-2.1875 3.125,0 5.3125,2.1875 2.1875,2.1875 2.1875,5.3125 l 0,5 -15,0 z"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:EBI-Functional;-inkscape-font-specification:EBI-Functional;fill:#ffffff"
+             id="path4397" />
+        </g>
       </g>
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:35px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         x="550.47919"
-         y="652.28894"
+         x="557.29523"
+         y="645.4729"
          id="text5156"
          sodipodi:linespacing="125%"><tspan
            id="tspan5160"
            sodipodi:role="line"
-           x="550.47919"
-           y="652.28894"
+           x="557.29523"
+           y="645.4729"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25px;font-family:Calibri;-inkscape-font-specification:Calibri">PRIVATE DATA</tspan></text>
       <g
          transform="translate(73.043267,2.0721494)"
