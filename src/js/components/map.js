@@ -8,6 +8,7 @@ const proj = require('ol/proj');
 const extent = require('ol/extent');
 const styleLib = require('ol/style');
 const controlLib = require('ol/control');
+const overlayLib = require('ol/Overlay');
 const styleCss = require('ol/ol.css');
 
 module.exports = class MapHandler {

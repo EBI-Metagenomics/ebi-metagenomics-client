@@ -811,3 +811,14 @@ export function sendMail(fromEmail, subject, body) {
     });
     return deferred.promise();
 }
+
+ /**
+ * Create a display of the series color
+ * @param {number} i index of series color
+ * @return {string} display element
+ */
+export function getColourSquareIcon(i) {
+    const taxColor = Math.min(Commons.TAXONOMY_COLOURS.length - 1, i);
+    return '<div class=\'puce-square-legend\' style=\'background-color: ' +
+        Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
+}

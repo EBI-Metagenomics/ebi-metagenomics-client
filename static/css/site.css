@@ -2,7 +2,7 @@
     display: block;
 }
 
-.studies-table, .browse-studies-table, .samples-table {
+.studies-table, .browse-studies-table, .samples-table, .genomes-table{
     overflow: hidden;
     /*white-space: nowrap;*/
     table-layout: fixed;

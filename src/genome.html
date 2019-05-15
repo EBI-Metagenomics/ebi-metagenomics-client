@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head id="head">
+    <title>MGnify &lt; EMBL-EBI</title>
+    <script>
+        var regex = /([A-z0-9,%+.]+)(?:$|[?])/g;
+        document.title = 'Genome '+regex.exec(window.location.pathname)[1];
+    </script>
+    {{> partials/head this}}
+    <meta property="og:title" content="MGnify genome page > EMBL-EBI">
+    <meta property="twitter:title" content="MGnify genome page > EMBL-EBI">
+
+    <meta name="og:description" content="View this genome.">
+    <meta name="twitter:description" content="View this genome.">
+</head>
+
+<body class="level2"><!-- add any of your classes or IDs -->
+<div id="header-container">{{> partials/header this}}</div>
+
+<!-- Suggested layout containers / #content -->
+<div id="content">
+    <div id="main-content-area" class="row columns small-12 medium-12 large-12" role="main">
+        <script id="genomeTmpl" type="text/template">
+            <nav aria-label="You are here:" role="navigation">
+                <ul class="breadcrumbs columns">
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#studies">Browse studies</a>
+                    </li>
+                    <li>
+                        <span class="show-for-sr">Current: </span> Genome <%= accession %>
+                    </li>
+                </ul>
+            </nav>
+            <h3>Genome <%= accession %></h3>
+            <ul class="tabs" data-tabs id="genome-tabs">
+                <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
+                <li class="tabs-title"><a href="#kegg-analysis">Kegg analysis</a></li>
+                <li class="tabs-title"><a href="#ipr-analysis">InterPro analysis</a></li>
+                <li class="tabs-title"><a href="#downloads">Downloads</a></li>
+            </ul>
+            <div class="tabs-content" data-tab-content="genome-tabs">
+                <div class="tabs-panel active" id="overview">
+                    <section id="genome-details">
+                    </section>
+                </div>
+                <div class="tabs-panel" id="kegg-analysis">
+                    <div id="kegg-column"></div>
+                    <div class="kegg-column-table"></div>
+                </div>
+                <div class="tabs-panel" id="ipr-analysis">
+                    <div id="ipr-column"></div>
+                    <div class="ipr-column-table"></div>
+                </div>
+                <div class="tabs-panel" id="downloads">
+                    <div id="downloads-section">
+                    </div>
+                </div>
+            </div>
+        </script>
+    </div>
+
+    <script id="downloadsTmpl" type="text/template">
+        <% for (let [groupName, groups] of Object.entries(genomeFiles)){ %>
+        <div class="row columns">
+            <h3><%= groupName %></h3>
+            <% for (let [ignored, download] of Object.entries(groups)){ %>
+            <p><a href="<%= download.attributes.links[0] %>"><%= download.attributes.description.label %></a></p>
+            <% } %>
+        </div>
+        <br>
+        <% } %>
+    </script>
+</div>
+
+<div id="footer">
+    {{>partials/elixir}}
+    {{>partials/footer}}
+</div>
+
+</body>
+
+
+</html>

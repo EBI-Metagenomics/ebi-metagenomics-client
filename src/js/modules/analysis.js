@@ -44,16 +44,6 @@ function getSeriesIndex(index, numSeries) {
     return index;
 }
 
-/**
- * Create a display of the series color
- * @param {number} i index of series color
- * @return {string} display element
- */
-function getColourSquareIcon(i) {
-    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
-    return '<div class=\'puce-square-legend\' style=\'background-color: ' +
-        Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
-}
 
 /**
  * Enable toggling of series visibility, sync'd across table of series and chart

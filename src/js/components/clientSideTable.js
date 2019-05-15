@@ -1,4 +1,6 @@
 const _ = require('underscore');
+require('tablesorter');
+
 const GenericTable = require('./genericTable');
 require('../../../static/js/jquery.TableCSVExport');
 
