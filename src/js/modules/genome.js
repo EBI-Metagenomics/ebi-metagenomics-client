@@ -9,7 +9,6 @@ const ClientSideTable = require('../components/clientSideTable');
 
 const DEFAULT_PAGE_SIZE = 25;
 
-
 require('../../../static/js/jquery.liveFilter.js');
 
 util.setupPage('#genome-nav');
@@ -39,9 +38,11 @@ let GenomeView = Backbone.View.extend({
                     'rRNA 23s': attr.rna_23s,
                     'tRNas': attr.trna_s,
                     'GC content': attr.gc_content,
-                    'InterPro coverage': attr.ipr_prop,
-                    'N50 (min contig length for 50% genome coverage)': attr.n_50
+                    'InterPro coverage': attr.ipr_prop
                 };
+                const n50Tooltip = util.wrapTextTooltip('N50',
+                    '(min contig length for 50% genome coverage)');
+                description[n50Tooltip] = attr.n_50;
                 that.$el.html(that.template(that.model.toJSON()));
                 $('#genome-details').append(new DetailList('Description', description));
                 util.attachTabHandlers();
@@ -82,7 +83,7 @@ function loadKegg() {
     });
 }
 
-function loadIPR(){
+function loadIPR() {
     const iprColumn = new charts.GenomeIprColumnChart('ipr-column',
         {accession: genomeId});
     iprColumn.loaded.done(() => {
@@ -95,7 +96,7 @@ function loadIPR(){
         const data = iprColumn.data.map((e) => {
             const interProLink = '<a href=\'' + e.ipr_url + '\'>' +
                 e.ipr_accession + '</a>';
-            return [util.getColourSquareIcon(i++),interProLink, e.count];
+            return [util.getColourSquareIcon(i++), interProLink, e.count];
         });
         const options = {
             title: '',

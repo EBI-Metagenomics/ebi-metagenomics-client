@@ -653,7 +653,7 @@ export function loadLoginForm(next) {
             e.preventDefault();
             $(loginDivID).remove();
             const $username = $form.find('[name=\'username\']');
-            if ($username.val().indexOf('@')>-1) {
+            if ($username.val().indexOf('@') > -1) {
                 console.error('Email is not a valid webin-id, please use your Webin-###');
                 $username.after(
                     '<p id=\'' + loginDivID + '\' class=\'error\'>' +
@@ -812,7 +812,7 @@ export function sendMail(fromEmail, subject, body) {
     return deferred.promise();
 }
 
- /**
+/**
  * Create a display of the series color
  * @param {number} i index of series color
  * @return {string} display element
@@ -821,4 +821,16 @@ export function getColourSquareIcon(i) {
     const taxColor = Math.min(Commons.TAXONOMY_COLOURS.length - 1, i);
     return '<div class=\'puce-square-legend\' style=\'background-color: ' +
         Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
+}
+
+/**
+ * Create a tooltip wrapping a string
+ * @param {string} text
+ * @param {string} tooltipText
+ * @return {string}
+ */
+export function wrapTextTooltip(text, tooltipText) {
+    return `<span data-tooltip tabindex="1" title="${tooltipText}">${text}` +
+        `<i class="icon icon-common" data-icon="&#x3f;" data-cy="public-help-tooltip"></i>` +
+        '</span>';
 }
