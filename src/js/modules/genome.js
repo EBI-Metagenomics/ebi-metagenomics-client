@@ -28,19 +28,19 @@ let GenomeView = Backbone.View.extend({
                 const attr = that.model.attributes;
                 let description = {
                     'Type': attr.type,
-                    'Length': attr.length,
+                    'Length (bp)': attr.length,
                     'Contamination': attr.contamination,
                     'Completeness': attr.completeness,
                     'Number of contigs': attr.num_contigs,
                     'Number of genomes': attr.num_genomes,
-                    'Pangenome size': attr.pangenome_size,
-                    'RNA 5s': attr.rna_5s,
-                    'RNA 16s': attr.rna_16s,
-                    'RNA 23s': attr.rna_23s,
-                    'TRNas': attr.trna_s,
+                    'Number of proteins': attr.pangenome_size,
+                    'rRNA 5s': attr.rna_5s,
+                    'rRNA 16s': attr.rna_16s,
+                    'rRNA 23s': attr.rna_23s,
+                    'tRNas': attr.trna_s,
                     'GC content': attr.gc_content,
-                    'InterPro property': attr.ipr_prop,
-                    'N50': attr.n_50
+                    'InterPro coverage': attr.ipr_prop,
+                    'N50 (min contig length for 50% genome coverage)': attr.n_50
                 };
                 that.$el.html(that.template(that.model.toJSON()));
                 $('#genome-details').append(new DetailList('Description', description));
