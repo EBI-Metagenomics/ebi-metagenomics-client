@@ -34,14 +34,20 @@
             <h3>Genome <%= accession %></h3>
             <ul class="tabs" data-tabs id="genome-tabs">
                 <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
+                <li class="tabs-title"><a href="#cog-analysis">Cog analysis</a></li>
                 <li class="tabs-title"><a href="#kegg-analysis">Kegg analysis</a></li>
                 <li class="tabs-title"><a href="#ipr-analysis">InterPro analysis</a></li>
+                <li class="tabs-title"><a href="#eggnog-analysis">Eggnog analysis</a></li>
                 <li class="tabs-title"><a href="#downloads">Downloads</a></li>
             </ul>
             <div class="tabs-content" data-tab-content="genome-tabs">
                 <div class="tabs-panel active" id="overview">
                     <section id="genome-details">
                     </section>
+                </div>
+                <div class="tabs-panel" id="cog-analysis">
+                    <div id="cog-column"></div>
+                    <div class="cog-column-table"></div>
                 </div>
                 <div class="tabs-panel" id="kegg-analysis">
                     <div id="kegg-column"></div>
@@ -50,6 +56,10 @@
                 <div class="tabs-panel" id="ipr-analysis">
                     <div id="ipr-column"></div>
                     <div class="ipr-column-table"></div>
+                </div>
+                <div class="tabs-panel" id="eggnog-analysis">
+                    <div id="eggnog-column"></div>
+                    <div class="eggnog-column-table"></div>
                 </div>
                 <div class="tabs-panel" id="downloads">
                     <div id="downloads-section">

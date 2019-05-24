@@ -55,8 +55,33 @@ let GenomeView = Backbone.View.extend({
 });
 
 function loadGenomeCharts() {
+    loadCog();
     loadKegg();
     loadIPR();
+    loadEggNog();
+}
+
+function loadCog(){
+    const cogColumn = new charts.GenomeCogColumnChart('cog-column',
+        {accession: genomeId});
+    cogColumn.loaded.done(() => {
+        const headers = [
+            {sortBy: false, name: ''},
+            {sortBy: 'a', name: 'Cog ID'},
+            {sortBy: 'a', name: 'Count'}
+        ];
+        let i = 0;
+        const data = cogColumn.data.map((e) => {
+            return [util.getColourSquareIcon(i++), e.name, e.count];
+        });
+        const options = {
+            title: '',
+            headers: headers,
+            initPageSize: DEFAULT_PAGE_SIZE
+        };
+        const cogColumnTable = new ClientSideTable($('.cog-column-table'), options);
+        cogColumnTable.update(data, false, 1);
+    });
 }
 
 function loadKegg() {
@@ -107,6 +132,32 @@ function loadIPR() {
         iprColumnTable.update(data, false, 1);
     });
 }
+
+function loadEggNog() {
+    const eggNogColumn = new charts.GenomeEggNogColumnChart('eggnog-column',
+        {accession: genomeId});
+    eggNogColumn.loaded.done(() => {
+        const headers = [
+            {sortBy: false, name: ''},
+            {sortBy: 'a', name: 'Host'},
+            {sortBy: 'a', name: 'Organism'},
+            {sortBy: 'a', name: 'Description'},
+            {sortBy: 'a', name: 'Count'}
+        ];
+        let i = 0;
+        const data = eggNogColumn.data.map((e) => {
+            return [util.getColourSquareIcon(i++), e.host, e.organism, e.description, e.count];
+        });
+        const options = {
+            title: '',
+            headers: headers,
+            initPageSize: DEFAULT_PAGE_SIZE
+        };
+        const iprColumnTable = new ClientSideTable($('.eggnog-column-table'), options);
+        iprColumnTable.update(data, false, 1);
+    });
+}
+
 
 let DownloadsView = Backbone.View.extend({
     model: api.GenomeDownloads,
