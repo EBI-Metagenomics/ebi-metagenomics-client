@@ -10,7 +10,6 @@ const styleLib = require('ol/style');
 const controlLib = require('ol/control');
 const styleCss = require('ol/ol.css');
 
-
 module.exports = class MapHandler {
     /**
      * Create a new instance of a google map in the element with id
@@ -18,8 +17,8 @@ module.exports = class MapHandler {
      * @param {[object]} samples if true add tooltips to markers
      */
     constructor(elementId, samples) {
-        let minLat = 180;
-        let maxLat = -180;
+        let minLat = -90;
+        let maxLat = 90;
         let minLng = 180;
         let maxLng = -180;
         let features = [];
@@ -27,7 +26,6 @@ module.exports = class MapHandler {
             const attr = samples[i]['attributes'];
             let coords = [attr['longitude'], attr['latitude']];
             let url = attr['sample_url'];
-            coords = proj.fromLonLat(coords);
             if (coords[0] !== null && coords[1] !== null) {
                 if (coords[0] < minLng) {
                     minLng = coords[0];
@@ -39,11 +37,23 @@ module.exports = class MapHandler {
                 } else if (coords[1] > maxLat) {
                     maxLat = coords[1];
                 }
+                coords = proj.fromLonLat(coords);
                 const feature = new ol.Feature(new geom.Point(coords));
-                feature.link = '<a href=\''+url+'\'>'+attr['sample_accession']+'</a>';
+                feature.link = '<a href=\'' + url + '\'>' + attr['sample_accession'] + '</a>';
                 features.push(feature);
             }
         }
+
+        if (features.length === 0) {
+            const bound1 = proj.fromLonLat([-90, -45]);
+            const bound2 = proj.fromLonLat([90, 45]);
+            minLng = bound1[0];
+            minLat = bound1[1];
+            maxLat = bound2[0];
+            maxLng = bound2[1];
+            $('#' + elementId).parent().append('<p class=\'centered\'>No known geocoordinates.</p>');
+        }
+        console.log(minLat, maxLat, minLng, maxLng);
 
         let featureSrc = new source.Vector({
             features: features
