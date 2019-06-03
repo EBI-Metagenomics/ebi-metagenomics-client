@@ -28,17 +28,17 @@ let GenomeView = Backbone.View.extend({
                 let description = {
                     'Type': attr.type,
                     'Length (bp)': attr.length,
-                    'Contamination': attr.contamination,
-                    'Completeness': attr.completeness,
+                    'Contamination': attr.contamination + '%',
+                    'Completeness': attr.completeness + '%',
                     'Number of contigs': attr.num_contigs,
                     'Number of genomes in species': attr.num_genomes,
                     'Number of proteins': attr.pangenome_size,
-                    'rRNA 5s': attr.rna_5s,
-                    'rRNA 16s': attr.rna_16s,
-                    'rRNA 23s': attr.rna_23s,
-                    'tRNas': attr.trna_s,
-                    'GC content': attr.gc_content,
-                    'InterPro coverage': attr.ipr_prop
+                    'rRNA 5s total gene length coverage': attr.rna_5s + '%',
+                    'rRNA 16s total gene length coverage': attr.rna_16s + '%',
+                    'rRNA 23s total gene length coverage': attr.rna_23s + '%',
+                    'tRNAs': attr.trna_s,
+                    'GC content': attr.gc_content + '%',
+                    'InterPro coverage': attr.ipr_prop + '%'
                 };
                 const n50Tooltip = util.wrapTextTooltip('N50',
                     '(min contig length for 50% genome coverage)');
@@ -67,12 +67,13 @@ function loadCog(){
     cogColumn.loaded.done(() => {
         const headers = [
             {sortBy: false, name: ''},
-            {sortBy: 'a', name: 'Cog ID'},
+            {sortBy: 'a', name: 'COG ID'},
+            {sortBy: 'a', name: 'Description'},
             {sortBy: 'a', name: 'Count'}
         ];
         let i = 0;
         const data = cogColumn.data.map((e) => {
-            return [util.getColourSquareIcon(i++), e.name, e.count];
+            return [util.getColourSquareIcon(i++), e.name, e.description, e.count];
         });
         const options = {
             title: '',

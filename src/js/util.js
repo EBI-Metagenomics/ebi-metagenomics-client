@@ -831,6 +831,6 @@ export function getColourSquareIcon(i) {
  */
 export function wrapTextTooltip(text, tooltipText) {
     return `<span data-tooltip tabindex="1" title="${tooltipText}">${text} ` +
-        `<i class="icon icon-common" data-icon="&#x3f;" data-cy="public-help-tooltip"></i>` +
+        `<i class='icon icon-generic' data-icon="?" data-cy="public-help-tooltip"></i>` +
         '</span>';
 }
