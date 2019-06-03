@@ -31,7 +31,7 @@ let GenomeView = Backbone.View.extend({
                     'Contamination': attr.contamination,
                     'Completeness': attr.completeness,
                     'Number of contigs': attr.num_contigs,
-                    'Number of genomes': attr.num_genomes,
+                    'Number of genomes in species': attr.num_genomes,
                     'Number of proteins': attr.pangenome_size,
                     'rRNA 5s': attr.rna_5s,
                     'rRNA 16s': attr.rna_16s,
