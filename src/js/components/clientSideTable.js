@@ -17,6 +17,12 @@ module.exports = class ClientSideTable extends GenericTable {
             const str = $(this).val();
             that.filterTable(str);
         });
+        console.log(options);
+        if (options.filename) {
+            this.filename = options.filename;
+        } else {
+            this.filename = 'download.csv';
+        }
         this.initHeaders();
         this.attachDownloadHandler();
     }
@@ -173,7 +179,8 @@ module.exports = class ClientSideTable extends GenericTable {
         this.$downloadLink.click(() => {
             $(that.$table).TableCSVExport({
                 showHiddenRows: true,
-                delivery: 'download'
+                delivery: 'download',
+                filename: this.filename
             });
         });
     }

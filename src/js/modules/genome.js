@@ -7,14 +7,36 @@ const util = require('../util');
 const DetailList = require('../components/detailList');
 const ClientSideTable = require('../components/clientSideTable');
 
-const DEFAULT_PAGE_SIZE = 25;
+const igv = require('igv').default;
+console.log(igv);
 
+const DEFAULT_PAGE_SIZE = 25;
 require('../../../static/js/jquery.liveFilter.js');
 
 util.setupPage('#genome-nav');
 
 let genomeId = util.getURLParameter();
 util.specifyPageTitle('Genome', genomeId);
+
+// function loadGenoverse(containerId, url) {
+//     let options =
+//         {
+//             showNavigation: true,
+//             showRuler: true,
+//             genome: {fastaUrl: 'http://127.0.0.1:8000/v1/genomes/GUT_GENOME000001/downloads/genome_seq.fa'},
+//             fastaUrl: 'http://127.0.0.1:8000/v1/genomes/GUT_GENOME000001/downloads/genome_seq.fa',
+//             tracks: [
+//                 {
+//                     url: url,
+//                     indexed: false,
+//                     isLog: true,
+//                     name: 'MyGenome'
+//                 }
+//             ]
+//         };
+//
+//     igv.createBrowser(containerId, options);
+// }
 
 let GenomeView = Backbone.View.extend({
     model: api.Genome,
@@ -61,7 +83,7 @@ function loadGenomeCharts() {
     loadEggNog();
 }
 
-function loadCog(){
+function loadCog() {
     const cogColumn = new charts.GenomeCogColumnChart('cog-column',
         {accession: genomeId});
     cogColumn.loaded.done(() => {
@@ -78,7 +100,8 @@ function loadCog(){
         const options = {
             title: '',
             headers: headers,
-            initPageSize: DEFAULT_PAGE_SIZE
+            initPageSize: DEFAULT_PAGE_SIZE,
+            filename: genomeId + '_COG.csv'
         };
         const cogColumnTable = new ClientSideTable($('.cog-column-table'), options);
         cogColumnTable.update(data, false, 1);
@@ -102,7 +125,8 @@ function loadKegg() {
         const options = {
             title: '',
             headers: headers,
-            initPageSize: DEFAULT_PAGE_SIZE
+            initPageSize: DEFAULT_PAGE_SIZE,
+            filename: genomeId + '_KEGG.csv'
         };
         const keggColumnTable = new ClientSideTable($('.kegg-column-table'), options);
         keggColumnTable.update(data, false, 1);
@@ -127,7 +151,8 @@ function loadIPR() {
         const options = {
             title: '',
             headers: headers,
-            initPageSize: DEFAULT_PAGE_SIZE
+            initPageSize: DEFAULT_PAGE_SIZE,
+            filename: genomeId + '_IPR.csv'
         };
         const iprColumnTable = new ClientSideTable($('.ipr-column-table'), options);
         iprColumnTable.update(data, false, 1);
@@ -152,13 +177,13 @@ function loadEggNog() {
         const options = {
             title: '',
             headers: headers,
-            initPageSize: DEFAULT_PAGE_SIZE
+            initPageSize: DEFAULT_PAGE_SIZE,
+            filename: genomeId + '_eggNOG.csv'
         };
         const iprColumnTable = new ClientSideTable($('.eggnog-column-table'), options);
         iprColumnTable.update(data, false, 1);
     });
 }
-
 
 let DownloadsView = Backbone.View.extend({
     model: api.GenomeDownloads,
@@ -168,7 +193,9 @@ let DownloadsView = Backbone.View.extend({
         const that = this;
         this.model.fetch({
             success() {
-                that.$el.html(that.template(that.model.toJSON()));
+                const data = that.model.toJSON();
+                that.$el.html(that.template(data));
+                // loadGenoverse('#genoverse-container', 'http://127.0.0.1:8000/v1/genomes/GUT_GENOME000001/downloads/genome.gff');
             }
         });
     }
@@ -181,13 +208,10 @@ function initPage() {
     let genome = new api.Genome({id: genomeId});
     let genomeView = new GenomeView({model: genome});
 
-    // let analyses = new api.StudyAnalyses({id: genomeId});
     let downloads = new api.GenomeDownloads({id: genomeId});
 
     genomeView.fetchAndRender().done(() => {
         loadGenomeCharts();
-        // new util.AnalysesView({collection: analyses});
-        // new MapData({collection: samples, study_accession: studyId});
         new DownloadsView({model: downloads});
         util.attachExpandButtonCallback();
     });

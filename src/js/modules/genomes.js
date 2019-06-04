@@ -17,8 +17,6 @@ $('#pageSize').append(commons.pagesize);
 
 const pageFilters = util.getURLFilterParams();
 
-const BIOME_SELECTOR_DEPTH = 3;
-
 /**
  * Create basic request parameters for calls to studies / samples on EMG API
  * @return {object}
@@ -56,7 +54,6 @@ let GenomesView = util.GenericTableView.extend({
     pagination: null,
     params: {},
     getRowData(attr) {
-        console.log(attr);
         const genomeUrl = '<a href=\'' + attr.genome_url + '\'>' + attr.accession +
             '</a>';
         return [

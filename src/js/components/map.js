@@ -54,7 +54,6 @@ module.exports = class MapHandler {
             maxLng = bound2[1];
             $('#' + elementId).parent().append('<p class=\'centered\'>No known geocoordinates.</p>');
         }
-        console.log(minLat, maxLat, minLng, maxLng);
 
         let featureSrc = new source.Vector({
             features: features
