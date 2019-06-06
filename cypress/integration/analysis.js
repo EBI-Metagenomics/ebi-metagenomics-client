@@ -306,7 +306,7 @@ describe('Analysis page', function() {
             // Check elements in both charts
             cy.get('#domain-composition-column svg .highcharts-point').should('have.length', 3);
             cy.get('#phylum-composition-column svg .highcharts-point')
-                .should('have.length', 34);
+                .should('have.length', 10);
         });
         it('Taxonomy column chart table pagination', function() {
             changeTab('column');
