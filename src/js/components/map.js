@@ -99,24 +99,17 @@ module.exports = class MapHandler {
                 url: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en'
             })
         });
-        let ext = extent.boundingExtent([[minLng, minLat], [maxLng, maxLat]]);
-        ext = proj.transformExtent(ext, proj.get('EPSG:3857'), proj.get('EPSG:3857'));
 
         let map = new ol.Map({
             target: elementId,
-            controls: controlLib.defaults().extend([
-                new controlLib.ZoomToExtent({
-                    extent: ext
-                })
-            ]),
+            controls: controlLib.defaults(),
             layers: [raster, clusters],
             view: new ol.View({
                 center: [0, 0],
-                zoom: 2
+                zoom: 1
             })
         });
 
-        map.getView().fit(ext, map.getSize());
 
         window.map = map;
         return map;

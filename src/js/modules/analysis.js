@@ -161,7 +161,7 @@ function loadTaxonomy(analysisID, subunitType) {
         {title: 'Domain composition', seriesName: 'reads', subtitle: false});
     const phylumColumn = new charts.TaxonomyColumn('phylum-composition-column',
         {accession: analysisID, type: subunitType, groupingDepth: 2},
-        {title: 'Phylum composition', seriesName: 'reads'}
+        {title: 'Phylum composition (top 10)', seriesName: 'reads', numColumns: 10}
     );
 
     phylumColumn.loaded.done(() => {
