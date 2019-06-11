@@ -217,11 +217,11 @@ function loadTaxonomy(analysisID, subunitType) {
             {sortBy: 'a', name: 'Unique OTUs'},
             {sortBy: 'a', name: '%'}
         ];
-        const total = _.reduce(phylumColumn.clusteredData, function(m, d) {
+        const total = _.reduce(stackedColumn.clusteredData, function(m, d) {
             return m + d.y;
         }, 0);
         let i = 0;
-        const data = _.map(phylumColumn.clusteredData, function(d) {
+        const data = _.map(stackedColumn.clusteredData, function(d) {
             const colorDiv = getColourSquareIcon(i);
             return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
         });
@@ -242,7 +242,7 @@ function loadTaxonomy(analysisID, subunitType) {
             stackedColumn.chart.series[index].data[0].setState();
         });
     });
-    return $.when(domainPie.loaded,
+    return $.when(domainPie.dataReady,
         phylumPie.loaded, domainColumn.loaded,
         phylumColumn.loaded, stackedColumn.loaded).promise();
 }
