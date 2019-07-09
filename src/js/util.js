@@ -30,8 +30,9 @@ export function setCurrentTab(id) {
  * @return {string}
  */
 export function getURLParameter() {
-    let regex = /([A-z0-9,%+.]+)(?:$|[?])/g;
-    return regex.exec(window.location.pathname)[1];
+    let base = window.location.pathname.split('/').slice(-1);
+    let regex = /(.+)(?:$|[?])/g;
+    return regex.exec(base)[1];
 }
 
 /**
@@ -319,6 +320,8 @@ export function updateTable(view, params) {
         params['sample_accession'] = collectionParams.sample_accession;
     } else if (Object.prototype.hasOwnProperty.call(collectionParams, 'run_accession')) {
         params['run_accession'] = collectionParams.run_accession;
+    } else if (Object.prototype.hasOwnProperty.call(collectionParams, 'release_version')) {
+        params['release_version'] = collectionParams.release_version;
     }
 
     const that = view;
@@ -833,4 +836,23 @@ export function wrapTextTooltip(text, tooltipText) {
     return `<span data-tooltip tabindex="1" title="${tooltipText}">${text} ` +
         `<i class='icon icon-generic' data-icon="?" data-cy="public-help-tooltip"></i>` +
         '</span>';
+}
+
+/**
+ * Retrieve a non-blank taxonomic identity from the species level or upwards
+ * @param {string} fullLineage
+ * @return {string}
+ */
+export function getSimpleTaxLineage(fullLineage) {
+    const l = fullLineage.split(';');
+    let head = l.pop();
+    // Remove all until species
+    while (head.indexOf('s__') === -1) {
+        head = l.pop();
+    }
+    // Find first non-null
+    while (head.length <= 3) {
+        head = l.pop();
+    }
+    return head;
 }

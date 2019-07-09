@@ -17,7 +17,6 @@ module.exports = class ClientSideTable extends GenericTable {
             const str = $(this).val();
             that.filterTable(str);
         });
-        console.log(options);
         if (options.filename) {
             this.filename = options.filename;
         } else {

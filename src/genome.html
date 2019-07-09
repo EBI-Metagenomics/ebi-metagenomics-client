@@ -4,7 +4,7 @@
     <title>MGnify &lt; EMBL-EBI</title>
     <script>
         var regex = /([A-z0-9,%+.]+)(?:$|[?])/g;
-        document.title = 'Genome '+regex.exec(window.location.pathname)[1];
+        document.title = 'Genome ' + regex.exec(window.location.pathname)[1];
     </script>
     {{> partials/head this}}
     <meta property="og:title" content="MGnify genome page > EMBL-EBI">
@@ -31,38 +31,38 @@
                     </li>
                 </ul>
             </nav>
-            <h3>Genome <%= accession %></h3>
-            <ul class="tabs" data-tabs id="genome-tabs">
-                <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
-                <li class="tabs-title"><a href="#cog-analysis">COG analysis</a></li>
-                <li class="tabs-title"><a href="#kegg-analysis">KEGG analysis</a></li>
-                <li class="tabs-title"><a href="#ipr-analysis">InterPro analysis</a></li>
-                <li class="tabs-title"><a href="#eggnog-analysis">EggNOG analysis</a></li>
-                <li class="tabs-title"><a href="#downloads">Downloads</a></li>
-            </ul>
-            <div class="tabs-content" data-tab-content="genome-tabs">
-                <div class="tabs-panel active" id="overview">
-                    <section id="genome-details">
-                    </section>
-                </div>
-                <div class="tabs-panel" id="cog-analysis">
-                    <div id="cog-column"></div>
-                    <div class="cog-column-table"></div>
-                </div>
-                <div class="tabs-panel" id="kegg-analysis">
-                    <div id="kegg-column"></div>
-                    <div class="kegg-column-table"></div>
-                </div>
-                <div class="tabs-panel" id="ipr-analysis">
-                    <div id="ipr-column"></div>
-                    <div class="ipr-column-table"></div>
-                </div>
-                <div class="tabs-panel" id="eggnog-analysis">
-                    <div id="eggnog-column"></div>
-                    <div class="eggnog-column-table"></div>
-                </div>
-                <div class="tabs-panel" id="downloads">
-                    <div id="downloads-section">
+            <div class="row columns">
+                <span class="biome_icon icon_m <%= biome.icon %>" title="<%= biome.name %>"></span>
+                <h2>Genome <%= accession %></h2>
+            </div>
+            <div class="row columns">
+                <ul class="tabs" data-tabs id="genome-tabs">
+                    <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
+                    <li class="tabs-title"><a href="#cog-analysis">COG analysis</a></li>
+                    <li class="tabs-title"><a href="#kegg-class-analysis">KEGG class analysis</a></li>
+                    <li class="tabs-title"><a href="#kegg-module-analysis">KEGG module analysis</a></li>
+                    <li class="tabs-title"><a href="#downloads">Downloads</a></li>
+                </ul>
+                <div class="tabs-content" data-tab-content="genome-tabs">
+                    <div class="tabs-panel active" id="overview">
+                        <section id="genome-details">
+                        </section>
+                    </div>
+                    <div class="tabs-panel" id="cog-analysis">
+                        <div id="cog-column"></div>
+                        <div class="cog-column-table"></div>
+                    </div>
+                    <div class="tabs-panel" id="kegg-class-analysis">
+                        <div id="kegg-class-column"></div>
+                        <div class="kegg-class-column-table"></div>
+                    </div>
+                    <div class="tabs-panel" id="kegg-module-analysis">
+                        <div id="kegg-module-column"></div>
+                        <div class="kegg-module-column-table"></div>
+                    </div>
+                    <div class="tabs-panel" id="downloads">
+                        <div id="downloads-section">
+                        </div>
                     </div>
                 </div>
             </div>

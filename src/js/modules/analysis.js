@@ -119,7 +119,7 @@ function loadTaxonomy(analysisID, subunitType) {
         }, 0);
         let i = 0;
         const data = _.map(phylumPie.clusteredData, function(d) {
-            const colorDiv = getColourSquareIcon(i);
+            const colorDiv = util.getColourSquareIcon(i);
             return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
         });
         const options = {

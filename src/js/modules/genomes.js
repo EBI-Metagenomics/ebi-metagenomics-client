@@ -6,78 +6,96 @@ const Pagination = require('../components/pagination').Pagination;
 const GenericTable = require('../components/genericTable');
 const Commons = require('../commons');
 const pagination = new Pagination();
+const Backbone = require('backbone');
+const PhyloTree = require('../components/phylo_tree');
+
 window.Foundation.addToJquery($);
 
 util.attachTabHandlers();
 
-util.setupPage('#browse-nav');
+util.setupPage('#genome-nav');
 
 $('#pagination').append(commons.pagination);
 $('#pageSize').append(commons.pagesize);
 
 const pageFilters = util.getURLFilterParams();
 
-/**
- * Create basic request parameters for calls to studies / samples on EMG API
- * @return {object}
- */
-function createInitParams() {
-    let params = {};
-    params.page = pagination.currentPage;
-
-    const biome = pageFilters['lineage'];
-    if (biome) {
-        params.lineage = biome;
-    } else {
-        params.lineage = 'root';
-    }
-
-    const ordering = pageFilters['ordering'];
-    if (ordering) {
-        params.ordering = ordering;
-    } else {
-        params.ordering = '-last_update';
-    }
-
-    const search = pageFilters['search'];
-    if (search) {
-        params.search = search;
-        $('#search').val(search);
-    }
-    params.page_size = pageFilters['pagesize'] || Commons.DEFAULT_PAGE_SIZE;
-    params.page = parseInt(pageFilters['page']) || 1;
-    return params;
-}
-
 let GenomesView = util.GenericTableView.extend({
     tableObj: null,
     pagination: null,
     params: {},
+    version: null,
+    genome_set: null,
     getRowData(attr) {
+        const biome = attr.biome;
+        const biomeIcon = '<span class="biome_icon icon_xs ' + biome.icon + '" title="' +
+            biome.name +
+            '"></span>';
         const genomeUrl = '<a href=\'' + attr.genome_url + '\'>' + attr.accession +
             '</a>';
         return [
+            biomeIcon,
             genomeUrl, attr.length,
             attr.num_contigs, attr.completeness,
-            attr.contamination, attr.type, attr.last_updated
+            attr.contamination, attr.type,
+            util.getSimpleTaxLineage(attr.taxon_lineage), attr.last_updated
         ];
     },
-    initialize() {
+    /**
+     * Create basic request parameters for calls to studies / samples on EMG API
+     * @return {object}
+     */
+    createInitParams() {
+        let params = {};
+        params.page = pagination.currentPage;
+
+        if (this.version && this.version !== 'all') {
+            params.release__version = this.version;
+        }
+        if (this.genome_set && this.genome_set !== 'all') {
+            params.genome_set__name = this.genome_set;
+        }
+        const biome = pageFilters['lineage'];
+        if (biome) {
+            params.lineage = biome;
+        } else {
+            params.lineage = 'root';
+        }
+
+        const ordering = pageFilters['ordering'];
+        if (ordering) {
+            params.ordering = ordering;
+        } else {
+            params.ordering = '-last_update';
+        }
+
+        const search = pageFilters['search'];
+        if (search) {
+            params.search = search;
+            $('#search').val(search);
+        }
+        params.page_size = pageFilters['pagesize'] || Commons.DEFAULT_PAGE_SIZE;
+        params.page = parseInt(pageFilters['page']) || 1;
+        return params;
+    },
+    init() {
         const that = this;
         const columns = [
+            {sortBy: null, name: 'Biome'},
             {sortBy: 'accession', name: 'Accession'},
             {sortBy: 'length', name: 'Length'},
             {sortBy: 'num_contigs', name: 'Number of contigs'},
             {sortBy: 'completeness', name: 'Completeness'},
             {sortBy: 'contamination', name: 'Contamination'},
             {sortBy: null, name: 'Genome type'},
+            {sortBy: null, name: 'Taxonomy'},
             {sortBy: 'last_update', name: 'Last updated'}
         ];
-        let params = createInitParams();
+        let params = this.createInitParams();
 
         const $studiesSection = $('#genomes-section');
         let tableOptions = {
-            title: 'Genomes list',
+            title: 'Browse genomes',
             headers: columns,
             initialOrdering: params.ordering,
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
@@ -87,12 +105,12 @@ let GenomesView = util.GenericTableView.extend({
             tableClass: 'browse-genomes-table',
             hideIfEmpty: false,
             callback: function(page, pageSize, order, search) {
-                that.update({
-                    page: page,
-                    page_size: pageSize,
-                    ordering: order || that.tableObj.getCurrentOrder(),
-                    search: search
-                });
+                const params = that.createInitParams();
+                params['page'] = page;
+                params['page_size'] = pageSize;
+                params['ordering'] = order || that.tableObj.getCurrentOrder();
+                params['search'] = search;
+                that.update(params);
             }
         };
         this.tableObj = new GenericTable($studiesSection, tableOptions);
@@ -101,6 +119,76 @@ let GenomesView = util.GenericTableView.extend({
     }
 });
 
+function filterGenomesCallback(e) {
+    const releaseVersion = $('#select-release').val();
+    const set = $('#select-genomeset').val();
+
+    const params = genomesView.createInitParams();
+    genomesView.version = releaseVersion;
+    if (releaseVersion !== 'all') {
+        params['release__version'] = releaseVersion;
+    } else {
+        delete params['release__version'];
+    }
+
+    genomesView.genome_set = set;
+    if (set !== 'all') {
+        params['genome_set__name'] = set;
+    } else {
+        delete params['genome_set__name'];
+    }
+    const filterSearch = genomesView.tableObj.$filterInput.val();
+    if (filterSearch) {
+        params['search'] = filterSearch;
+    }
+    genomesView.update(params);
+}
+
+let ReleasesView = Backbone.View.extend({
+    template: _.template($('#releasesTmpl').html()),
+    el: '#releases',
+    init() {
+        const that = this;
+        return this.collection.fetch().done(() => {
+            const options = this.collection.toJSON();
+            that.release_version = options[0]['version'];
+            options.push({'version': 'all'});
+            this.$el.html(this.template({'data': options}));
+            this.$el.find('#select-release').change(filterGenomesCallback);
+        });
+    }
+});
+
+let GenomeSetView = Backbone.View.extend({
+    template: _.template($('#genomeSetTmpl').html()),
+    el: '#genomeSets',
+    initialize() {
+        this.collection.fetch().done(() => {
+            const options = this.collection.toJSON();
+            options.unshift({'name': 'all'});
+            this.$el.html(this.template({'data': options}));
+            this.$el.find('#select-genomeset').change(filterGenomesCallback);
+        });
+    }
+});
+
+let genomeSets = new api.GenomeSets();
+let genomeSetView = new GenomeSetView({collection: genomeSets});
+
+let releases = new api.Releases();
+let releasesView = new ReleasesView({collection: releases});
+
 let genomes = new api.GenomesCollection();
-let genomesView = new GenomesView({collection: genomes});
+
+let genomesView = null;
+releasesView.init().done(() => {
+    genomesView = new GenomesView({collection: genomes});
+    genomesView.version = $('#select-release').val();
+
+    let phyloTree = new PhyloTree('phylo-tree', 'http://127.0.0.1:8080/tree/tree.json');
+    $.when(genomesView.init()).done(() => {
+        util.attachExpandButtonCallback();
+    });
+});
+
 

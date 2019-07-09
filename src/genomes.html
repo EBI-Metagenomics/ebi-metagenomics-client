@@ -26,10 +26,55 @@
                     </li>
                 </ul>
             </nav>
+            <h2>Lorem ipsum ....</h2>
+            <a class="expand-button min" for="#extra_description">Learn more</a>
+            <p id="extra_description">
+                Lorem impsum redendum
+            </p>
             <div class="row">
-                <section id="genomes-section" class="table-container"></section>
+                <div class="columns large-6 medium-6 small-12" id="releases">
+                    <script id="releasesTmpl" type="text/template">
+                        <label for="releases">Select release version:
+                            <select id='select-release' title="releases">
+                                <% for (let release of data){ %>
+                                <option value="<%= release.version %>"><%= release.version %></option>
+                                <% } %>
+                            </select>
+                        </label>
+                    </script>
+                </div>
+                <div class="columns large-6 medium-6 small-12" id="genomeSets">
+                    <script id="genomeSetTmpl" type="text/template">
+                        <label for="genomesets">Select release version:
+                            <select id='select-genomeset' title="genomeSets">
+                                <% for (let genomeset of data){ %>
+                                <option value="<%= genomeset.name %>"><%= genomeset.name %></option>
+                                <% } %>
+                            </select>
+                        </label>
+                    </script>
+                </div>
             </div>
-        </div>
+            <div class="row">
+                <ul class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500" data-tabs
+                    id="data-tabs">
+                    <li class="tabs-title is-active"><a href="#genome-list-tab" aria-selected="true">Genome list</a></li>
+                    <li class="tabs-title"><a href="#phylo-tab">Phylogenetic tree</a></li>
+                </ul>
+                <div class="tabs-content" data-tab-content="data-tabs">
+                    <div class="tabs-panel active" id="genome-list-tab">
+                        <section id="genomes-section" class="table-container"></section>
+                    </div>
+                    <div class="tabs-panel" id="phylo-tab">
+                        <section id="phylo-section" class="table-container">
+                            <h2>Phylogenetic tree</h2>
+                            <div id="phylo-tree"></div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            </div>
     </section>
 </div>
 

@@ -7,9 +7,6 @@ const util = require('../util');
 const DetailList = require('../components/detailList');
 const ClientSideTable = require('../components/clientSideTable');
 
-const igv = require('igv').default;
-console.log(igv);
-
 const DEFAULT_PAGE_SIZE = 25;
 require('../../../static/js/jquery.liveFilter.js');
 
@@ -17,26 +14,6 @@ util.setupPage('#genome-nav');
 
 let genomeId = util.getURLParameter();
 util.specifyPageTitle('Genome', genomeId);
-
-// function loadGenoverse(containerId, url) {
-//     let options =
-//         {
-//             showNavigation: true,
-//             showRuler: true,
-//             genome: {fastaUrl: 'http://127.0.0.1:8000/v1/genomes/GUT_GENOME000001/downloads/genome_seq.fa'},
-//             fastaUrl: 'http://127.0.0.1:8000/v1/genomes/GUT_GENOME000001/downloads/genome_seq.fa',
-//             tracks: [
-//                 {
-//                     url: url,
-//                     indexed: false,
-//                     isLog: true,
-//                     name: 'MyGenome'
-//                 }
-//             ]
-//         };
-//
-//     igv.createBrowser(containerId, options);
-// }
 
 let GenomeView = Backbone.View.extend({
     model: api.Genome,
@@ -53,18 +30,52 @@ let GenomeView = Backbone.View.extend({
                     'Contamination': attr.contamination + '%',
                     'Completeness': attr.completeness + '%',
                     'Number of contigs': attr.num_contigs,
-                    'Number of genomes in species': attr.num_genomes,
+                    'Total number of genomes in species': attr.num_genomes_total,
+                    'Non-redundant number of genomes in species': attr.num_genomes_nr,
                     'Number of proteins': attr.pangenome_size,
                     'rRNA 5s total gene length coverage': attr.rna_5s + '%',
                     'rRNA 16s total gene length coverage': attr.rna_16s + '%',
                     'rRNA 23s total gene length coverage': attr.rna_23s + '%',
                     'tRNAs': attr.trna_s,
                     'GC content': attr.gc_content + '%',
-                    'InterPro coverage': attr.ipr_prop + '%'
+                    'InterPro coverage': attr.ipr_cov + '%',
+                    'EggNog coverage': attr.eggnog_cov + '%',
+                    'Taxonomic lineage': attr.taxon_lineage,
+                    'Pangenome size': attr.pangenome_size,
+                    'Pangenome core size': attr.pangenome_core_size,
+                    'Pangenome accessory size': attr.pangenome_accessory_size,
+                    'Pangenome eggnog coverage': attr.pangenome_eggnog_cov + '%',
+                    'Pangenome InterPro coverage': attr.pangenome_ipr_cov + '%',
+                    'Geographic origin': attr.geographic_origin,
+                    'Geographic range': attr.geographic_range.join(', ')
                 };
                 const n50Tooltip = util.wrapTextTooltip('N50',
                     '(min contig length for 50% genome coverage)');
                 description[n50Tooltip] = attr.n_50;
+                if (attr.ena_genome_accession) {
+                    description['ENA genome accession'] = util.createLinkTag(attr.ena_genome_url, attr.ena_genome_accession);
+                }
+                if (attr.ena_sample_accession) {
+                    description['ENA sample accession'] = util.createLinkTag(attr.ena_sample_url, attr.ena_sample_accession);
+                }
+                if (attr.ena_study_accession) {
+                    description['ENA study accession'] = util.createLinkTag(attr.ena_study_url, attr.ena_study_accession);
+                }
+                if (attr.img_genome_accession) {
+                    description['IMG genome accession'] = util.createLinkTag(attr.img_genome_url, attr.img_genome_accession);
+                }
+                if (attr.ncbi_genome_accession) {
+                    description['NCBI genome accession'] = util.createLinkTag(attr.ncbi_genome_url, attr.ncbi_genome_accession);
+                }
+                if (attr.ncbi_sample_accession) {
+                    description['NCBI sample accession'] = util.createLinkTag(attr.ncbi_sample_url, attr.ncbi_sample_accession);
+                }
+                if (attr.ncbi_study_accession) {
+                    description['NCBI study accession'] = util.createLinkTag(attr.ncbi_study_url, attr.ncbi_study_accession);
+                }
+                if (attr.patric_genome_accession) {
+                    description['Patric genome accession'] = util.createLinkTag(attr.patric_genome_url, attr.patric_genome_accession);
+                }
                 that.$el.html(that.template(that.model.toJSON()));
                 $('#genome-details').append(new DetailList('Description', description));
                 util.attachTabHandlers();
@@ -78,9 +89,8 @@ let GenomeView = Backbone.View.extend({
 
 function loadGenomeCharts() {
     loadCog();
-    loadKegg();
-    loadIPR();
-    loadEggNog();
+    loadKeggClass();
+    loadKeggModule();
 }
 
 function loadCog() {
@@ -88,14 +98,13 @@ function loadCog() {
         {accession: genomeId});
     cogColumn.loaded.done(() => {
         const headers = [
-            {sortBy: false, name: ''},
             {sortBy: 'a', name: 'COG ID'},
             {sortBy: 'a', name: 'Description'},
-            {sortBy: 'a', name: 'Count'}
+            {sortBy: 'a', name: 'Genome count'},
+            {sortBy: 'a', name: 'Pangenome count'}
         ];
-        let i = 0;
         const data = cogColumn.data.map((e) => {
-            return [util.getColourSquareIcon(i++), e.name, e.description, e.count];
+            return [e.name, e.description, e['genome-count'], e['pangenome-count']];
         });
         const options = {
             title: '',
@@ -108,19 +117,18 @@ function loadCog() {
     });
 }
 
-function loadKegg() {
-    const keggColumn = new charts.GenomeKeggColumnChart('kegg-column',
+function loadKeggClass() {
+    const keggColumn = new charts.GenomeKeggClassColumnChart('kegg-class-column',
         {accession: genomeId});
     keggColumn.loaded.done(() => {
         const headers = [
-            {sortBy: false, name: ''},
-            {sortBy: 'a', name: 'Brite ID'},
+            {sortBy: 'a', name: 'Class ID'},
             {sortBy: 'a', name: 'Description'},
-            {sortBy: 'a', name: 'Count'}
+            {sortBy: 'a', name: 'Genome count'},
+            {sortBy: 'a', name: 'Pangenome count'}
         ];
-        let i = 0;
         const data = keggColumn.data.map((e) => {
-            return [util.getColourSquareIcon(i++), e.brite_id, e.name, e.count];
+            return [e['class-id'], e.name, e['genome-count'], e['pangenome-count']];
         });
         const options = {
             title: '',
@@ -128,60 +136,33 @@ function loadKegg() {
             initPageSize: DEFAULT_PAGE_SIZE,
             filename: genomeId + '_KEGG.csv'
         };
-        const keggColumnTable = new ClientSideTable($('.kegg-column-table'), options);
+        const keggColumnTable = new ClientSideTable($('.kegg-class-column-table'), options);
         keggColumnTable.update(data, false, 1);
     });
 }
 
-function loadIPR() {
-    const iprColumn = new charts.GenomeIprColumnChart('ipr-column',
+function loadKeggModule() {
+    const keggColumn = new charts.GenomeKeggModuleColumnChart('kegg-module-column',
         {accession: genomeId});
-    iprColumn.loaded.done(() => {
+    keggColumn.loaded.done(() => {
         const headers = [
-            {sortBy: false, name: ''},
-            {sortBy: 'a', name: 'Accession'},
-            {sortBy: 'a', name: 'Count'}
-        ];
-        let i = 0;
-        const data = iprColumn.data.map((e) => {
-            const interProLink = '<a href=\'' + e.ipr_url + '\'>' +
-                e.ipr_accession + '</a>';
-            return [util.getColourSquareIcon(i++), interProLink, e.count];
-        });
-        const options = {
-            title: '',
-            headers: headers,
-            initPageSize: DEFAULT_PAGE_SIZE,
-            filename: genomeId + '_IPR.csv'
-        };
-        const iprColumnTable = new ClientSideTable($('.ipr-column-table'), options);
-        iprColumnTable.update(data, false, 1);
-    });
-}
-
-function loadEggNog() {
-    const eggNogColumn = new charts.GenomeEggNogColumnChart('eggnog-column',
-        {accession: genomeId});
-    eggNogColumn.loaded.done(() => {
-        const headers = [
-            {sortBy: false, name: ''},
-            {sortBy: 'a', name: 'Host'},
-            {sortBy: 'a', name: 'Organism'},
+            {sortBy: 'a', name: 'Module ID'},
             {sortBy: 'a', name: 'Description'},
-            {sortBy: 'a', name: 'Count'}
+            {sortBy: 'a', name: 'Genome count'},
+            {sortBy: 'a', name: 'Pangenome count'}
         ];
         let i = 0;
-        const data = eggNogColumn.data.map((e) => {
-            return [util.getColourSquareIcon(i++), e.host, e.organism, e.description, e.count];
+        const data = keggColumn.data.map((e) => {
+            return [e.name, e.description, e['genome-count'], e['pangenome-count']];
         });
         const options = {
             title: '',
             headers: headers,
             initPageSize: DEFAULT_PAGE_SIZE,
-            filename: genomeId + '_eggNOG.csv'
+            filename: genomeId + '_KEGG.csv'
         };
-        const iprColumnTable = new ClientSideTable($('.eggnog-column-table'), options);
-        iprColumnTable.update(data, false, 1);
+        const keggColumnTable = new ClientSideTable($('.kegg-module-column-table'), options);
+        keggColumnTable.update(data, false, 1);
     });
 }
 
@@ -195,7 +176,6 @@ let DownloadsView = Backbone.View.extend({
             success() {
                 const data = that.model.toJSON();
                 that.$el.html(that.template(data));
-                // loadGenoverse('#genoverse-container', 'http://127.0.0.1:8000/v1/genomes/GUT_GENOME000001/downloads/genome.gff');
             }
         });
     }
