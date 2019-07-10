@@ -39,6 +39,7 @@ function collapse(d) {
 module.exports = class PhyloTree {
     constructor(containerID, url) {
         const resetBtn = getResetButton();
+        $('#' + containerID).empty();
         $('#' + containerID).append(resetBtn);
         let svg = d3.select('#' + containerID).append('svg').attr('width', width) // + margin.left + margin.right)
             .append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');

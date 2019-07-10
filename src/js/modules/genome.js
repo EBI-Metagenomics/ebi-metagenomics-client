@@ -6,6 +6,7 @@ const charts = require('mgnify').charts;
 const util = require('../util');
 const DetailList = require('../components/detailList');
 const ClientSideTable = require('../components/clientSideTable');
+const GenomeBrowser = require('../components/genome_browser');
 
 const DEFAULT_PAGE_SIZE = 25;
 require('../../../static/js/jquery.liveFilter.js');
@@ -53,28 +54,36 @@ let GenomeView = Backbone.View.extend({
                     '(min contig length for 50% genome coverage)');
                 description[n50Tooltip] = attr.n_50;
                 if (attr.ena_genome_accession) {
-                    description['ENA genome accession'] = util.createLinkTag(attr.ena_genome_url, attr.ena_genome_accession);
+                    description['ENA genome accession'] = util.createLinkTag(attr.ena_genome_url,
+                        attr.ena_genome_accession);
                 }
                 if (attr.ena_sample_accession) {
-                    description['ENA sample accession'] = util.createLinkTag(attr.ena_sample_url, attr.ena_sample_accession);
+                    description['ENA sample accession'] = util.createLinkTag(attr.ena_sample_url,
+                        attr.ena_sample_accession);
                 }
                 if (attr.ena_study_accession) {
-                    description['ENA study accession'] = util.createLinkTag(attr.ena_study_url, attr.ena_study_accession);
+                    description['ENA study accession'] = util.createLinkTag(attr.ena_study_url,
+                        attr.ena_study_accession);
                 }
                 if (attr.img_genome_accession) {
-                    description['IMG genome accession'] = util.createLinkTag(attr.img_genome_url, attr.img_genome_accession);
+                    description['IMG genome accession'] = util.createLinkTag(attr.img_genome_url,
+                        attr.img_genome_accession);
                 }
                 if (attr.ncbi_genome_accession) {
-                    description['NCBI genome accession'] = util.createLinkTag(attr.ncbi_genome_url, attr.ncbi_genome_accession);
+                    description['NCBI genome accession'] = util.createLinkTag(attr.ncbi_genome_url,
+                        attr.ncbi_genome_accession);
                 }
                 if (attr.ncbi_sample_accession) {
-                    description['NCBI sample accession'] = util.createLinkTag(attr.ncbi_sample_url, attr.ncbi_sample_accession);
+                    description['NCBI sample accession'] = util.createLinkTag(attr.ncbi_sample_url,
+                        attr.ncbi_sample_accession);
                 }
                 if (attr.ncbi_study_accession) {
-                    description['NCBI study accession'] = util.createLinkTag(attr.ncbi_study_url, attr.ncbi_study_accession);
+                    description['NCBI study accession'] = util.createLinkTag(attr.ncbi_study_url,
+                        attr.ncbi_study_accession);
                 }
                 if (attr.patric_genome_accession) {
-                    description['Patric genome accession'] = util.createLinkTag(attr.patric_genome_url, attr.patric_genome_accession);
+                    description['Patric genome accession'] = util.createLinkTag(
+                        attr.patric_genome_url, attr.patric_genome_accession);
                 }
                 that.$el.html(that.template(that.model.toJSON()));
                 $('#genome-details').append(new DetailList('Description', description));
@@ -194,6 +203,13 @@ function initPage() {
         loadGenomeCharts();
         new DownloadsView({model: downloads});
         util.attachExpandButtonCallback();
+        const config = {
+            'name': 'MGYG-HGUT-01621',
+            'fasta_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.fna',
+            'fasta_index_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.fna.fai',
+            'gff_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.gff'
+        };
+        new GenomeBrowser('genome-browser-container', config);
     });
 }
 

@@ -126,6 +126,7 @@ function filterGenomesCallback(e) {
     const params = genomesView.createInitParams();
     genomesView.version = releaseVersion;
     if (releaseVersion !== 'all') {
+        genPhyloTree(releaseVersion);
         params['release__version'] = releaseVersion;
     } else {
         delete params['release__version'];
@@ -172,6 +173,24 @@ let GenomeSetView = Backbone.View.extend({
     }
 });
 
+function getPhyloTreeURL(files) {
+    let url = null;
+    for (let f of files) {
+        if (f.attributes.alias === 'phylo_tree.json') {
+            url = f.attributes.links[0];
+            break;
+        }
+    }
+    return url;
+}
+
+function genPhyloTree(releaseVersion) {
+    new api.ReleaseDownloads({id: releaseVersion}).fetch().done((data) => {
+        const url = getPhyloTreeURL(data.data);
+        new PhyloTree('phylo-tree', url);
+    });
+}
+
 let genomeSets = new api.GenomeSets();
 let genomeSetView = new GenomeSetView({collection: genomeSets});
 
@@ -183,12 +202,10 @@ let genomes = new api.GenomesCollection();
 let genomesView = null;
 releasesView.init().done(() => {
     genomesView = new GenomesView({collection: genomes});
-    genomesView.version = $('#select-release').val();
-
-    let phyloTree = new PhyloTree('phylo-tree', 'http://127.0.0.1:8080/tree/tree.json');
+    const releaseVersion = $('#select-release').val();
+    genomesView.version = releaseVersion;
+    genPhyloTree(releaseVersion);
     $.when(genomesView.init()).done(() => {
         util.attachExpandButtonCallback();
     });
 });
-
-

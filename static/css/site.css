@@ -2,7 +2,7 @@
     display: block;
 }
 
-.studies-table, .browse-studies-table, .samples-table, .genomes-table{
+.studies-table, .browse-studies-table, .samples-table, .genomes-table {
     overflow: hidden;
     /*white-space: nowrap;*/
     table-layout: fixed;
@@ -530,7 +530,6 @@ select.table-tools {
     height: 30px;
 }
 
-
 /*Submit page*/
 #submissionModal {
     width: 26em;
@@ -868,10 +867,7 @@ ul.training > li:last-child:before {
     max-width: 44em;
 }
 
-
 /*Phylo tree*/
-
-
 
 .legend-tree .legend-title {
     text-align: left;
@@ -879,6 +875,7 @@ ul.training > li:last-child:before {
     font-weight: bold;
     font-size: 90%;
 }
+
 .legend-tree .legend-scale ul {
     margin: 0;
     margin-bottom: 5px;
@@ -886,6 +883,7 @@ ul.training > li:last-child:before {
     float: left;
     list-style: none;
 }
+
 .legend-tree .legend-scale ul li {
     font-size: 80%;
     list-style: none;
@@ -893,6 +891,7 @@ ul.training > li:last-child:before {
     line-height: 18px;
     margin-bottom: 2px;
 }
+
 .legend-tree ul.legend-labels li span {
     display: block;
     float: left;
@@ -903,16 +902,16 @@ ul.training > li:last-child:before {
     border: 1px solid #999;
     opacity: .6;
 }
+
 .legend-tree .legend-source {
     font-size: 70%;
     color: #999;
     clear: both;
 }
+
 .legend-tree a {
     color: #777;
 }
-
-
 
 path.link {
     fill: none;
@@ -940,12 +939,28 @@ path.link {
     stroke: #000000;
     stroke-width: 1.5px;
 }
+
 .link {
     fill: none;
     stroke: #9ecae1;
     stroke-width: 1.5px;
 }
 
-.entry{
+.entry {
     fill: red;
+}
+
+/*.igv-navbar {*/
+    /*height: 46px !important;*/
+    /*border-style: solid !important;*/
+    /*border-radius: 3px !important;*/
+    /*border-width: thin !important;*/
+    /*border-color: #bfbfbf !important;*/
+    /*background-color: #f3f3f3 !important;*/
+    /*padding: 10px !important;*/
+/*}*/
+
+.igv-navbar select, .igv-navbar input {
+    margin: unset;
+    padding: unset;
 }
