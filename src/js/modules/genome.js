@@ -37,7 +37,7 @@ let GenomeView = Backbone.View.extend({
                     'rRNA 5s total gene length coverage': attr.rna_5s + '%',
                     'rRNA 16s total gene length coverage': attr.rna_16s + '%',
                     'rRNA 23s total gene length coverage': attr.rna_23s + '%',
-                    'tRNAs': attr.trna_s,
+                    'tRNAs': attr.trnas,
                     'GC content': attr.gc_content + '%',
                     'InterPro coverage': attr.ipr_cov + '%',
                     'EggNog coverage': attr.eggnog_cov + '%',
