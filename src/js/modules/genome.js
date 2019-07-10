@@ -2,7 +2,7 @@ const Backbone = require('backbone');
 const _ = require('underscore');
 const api = require('mgnify').api(process.env.API_URL);
 const charts = require('mgnify').charts;
-
+require('../../../static/images/ajax-loader.gif');
 const util = require('../util');
 const DetailList = require('../components/detailList');
 const ClientSideTable = require('../components/clientSideTable');
@@ -190,6 +190,21 @@ let DownloadsView = Backbone.View.extend({
     }
 });
 
+let genomeBrowserLoaded = false;
+
+function loadGenomeBrowser() {
+    if (!genomeBrowserLoaded) {
+        const config = {
+            'name': 'MGYG-HGUT-01621',
+            'fasta_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.fna',
+            'fasta_index_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.fna.fai',
+            'gff_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.gff'
+        };
+        new GenomeBrowser('genome-browser-container', config);
+        genomeBrowserLoaded = true;
+    }
+}
+
 /**
  * Method to initialise page load
  */
@@ -203,13 +218,13 @@ function initPage() {
         loadGenomeCharts();
         new DownloadsView({model: downloads});
         util.attachExpandButtonCallback();
-        const config = {
-            'name': 'MGYG-HGUT-01621',
-            'fasta_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.fna',
-            'fasta_index_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.fna.fai',
-            'gff_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.gff'
-        };
-        new GenomeBrowser('genome-browser-container', config);
+
+        // Genome browser loading is delayed UNLESS div is visible
+        // This mitigates bug in IGV which created a blank canvas when the div is not visible on load
+        $('a[href="#genome-browser"]').click(loadGenomeBrowser);
+        if (window.location.hash === '#genome-browser') {
+            loadGenomeBrowser();
+        }
     });
 }
 

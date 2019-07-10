@@ -3,6 +3,7 @@ const igv = require('../../../static/js/igv.min.js');
 module.exports = class GenomeBrowser {
     constructor(containerId, config) {
         let igvDiv = document.getElementById(containerId);
+        igvDiv.innerHTML = "";
         let options =
             {
                 reference: {
