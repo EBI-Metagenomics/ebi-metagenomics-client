@@ -964,3 +964,31 @@ path.link {
     margin: unset;
     padding: unset;
 }
+
+.genome-browser-container{
+    width: 100%;
+    max-height: 20em;
+}
+
+.genome-browser-legend {
+    width: 100%;
+    height:10em;
+    overflow-x: scroll;
+}
+
+.legend-entry{
+    float: left;
+    clear:both;
+    padding-bottom:0.5em;
+}
+.legend-color {
+    height: 1em;
+    width: 1em;
+    margin-right: 0.5em;
+    float: left;
+    clear: left;
+}
+
+.legend-label {
+    float:left
+}
