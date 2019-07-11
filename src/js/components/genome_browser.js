@@ -30,7 +30,6 @@ module.exports = class GenomeBrowser {
 
                 const keys = Object.keys(legendData).sort();
                 for (var key of keys){
-                    console.log(key);
                     if (legendData.hasOwnProperty(key)){
                         const $entry = getLegendElem(key, legendData[key]);
                         $legend.append($entry);
@@ -67,10 +66,9 @@ module.exports = class GenomeBrowser {
                     'eggNOG'
                 ]
             };
-
         window.igv_config = options;
         igv.createBrowser(igvDiv, options).then(function(browser) {
-            console.log('Created IGV browser');
+            console.debug('Created IGV browser');
         });
     }
 };
