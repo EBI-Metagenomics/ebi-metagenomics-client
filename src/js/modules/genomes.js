@@ -173,20 +173,9 @@ let GenomeSetView = Backbone.View.extend({
     }
 });
 
-function getPhyloTreeURL(files) {
-    let url = null;
-    for (let f of files) {
-        if (f.attributes.alias === 'phylo_tree.json') {
-            url = f.attributes.links[0];
-            break;
-        }
-    }
-    return url;
-}
-
 function genPhyloTree(releaseVersion) {
     new api.ReleaseDownloads({id: releaseVersion}).fetch().done((data) => {
-        const url = getPhyloTreeURL(data.data);
+        const url = util.findFileUrl(data.data, 'phylo_tree.json');
         new PhyloTree('phylo-tree', url);
     });
 }

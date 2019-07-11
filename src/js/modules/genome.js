@@ -19,74 +19,116 @@ util.specifyPageTitle('Genome', genomeId);
 let GenomeView = Backbone.View.extend({
     model: api.Genome,
     template: _.template($('#genomeTmpl').html()),
-    el: '#main-content-area',
+    el: '#content-header',
     fetchAndRender() {
         const that = this;
         return this.model.fetch({
             success() {
                 const attr = that.model.attributes;
-                let description = {
+                let genomeStats = {
                     'Type': attr.type,
                     'Length (bp)': attr.length,
                     'Contamination': attr.contamination + '%',
                     'Completeness': attr.completeness + '%',
-                    'Number of contigs': attr.num_contigs,
-                    'Total number of genomes in species': attr.num_genomes_total,
-                    'Non-redundant number of genomes in species': attr.num_genomes_nr,
-                    'Number of proteins': attr.pangenome_size,
+                    'Number of contigs': attr.num_contigs
+                };
+                if (attr.num_genomes_total) {
+                    genomeStats['Total number of genomes in species'] = attr.num_genomes_total;
+                }
+                if (attr.num_genomes_nr) {
+                    genomeStats['Non-redundant number of genomes in species'] = attr.num_genomes_nr;
+                }
+                if (attr.pan)
+                genomeStats['Number of proteins'] = attr.num_proteins;
+                genomeStats['GC content'] = attr.gc_content + '%';
+                genomeStats['Taxonomic lineage'] = attr.taxon_lineage;
+
+                const n50Tooltip = util.wrapTextTooltip('N50',
+                    '(min contig length for 50% genome coverage)');
+                genomeStats[n50Tooltip] = attr.n_50;
+
+                let genomeAnnotationStats = {
+                    'InterPro coverage': attr.ipr_cov + '%',
+                    'EggNog coverage': attr.eggnog_cov + '%'
+                };
+                let pangenomeStats = {};
+                if (attr.pangenome_size) {
+                    pangenomeStats['Pangenome size'] = attr.pangenome_size;
+                }
+                if (attr.pangenome_core_size) {
+                    pangenomeStats['Pangenome core size'] = attr.pangenome_core_size;
+                }
+                if (attr.pangenome_accessory_size) {
+                    pangenomeStats['Pangenome accessory size'] = attr.pangenome_accessory_size;
+                }
+                if (attr.pangenome_ipr_cov) {
+                    pangenomeStats['Pangenome InterPro coverage'] = attr.pangenome_ipr_cov + '%';
+                }
+                if (attr.pangenome_eggnog_cov) {
+                    pangenomeStats['Pangenome EggNOG coverage'] = attr.pangenome_eggnog_cov + '%';
+                }
+
+                let rnaStats = {
                     'rRNA 5s total gene length coverage': attr.rna_5s + '%',
                     'rRNA 16s total gene length coverage': attr.rna_16s + '%',
                     'rRNA 23s total gene length coverage': attr.rna_23s + '%',
-                    'tRNAs': attr.trnas,
-                    'GC content': attr.gc_content + '%',
-                    'InterPro coverage': attr.ipr_cov + '%',
-                    'EggNog coverage': attr.eggnog_cov + '%',
-                    'Taxonomic lineage': attr.taxon_lineage,
-                    'Pangenome size': attr.pangenome_size,
-                    'Pangenome core size': attr.pangenome_core_size,
-                    'Pangenome accessory size': attr.pangenome_accessory_size,
-                    'Pangenome eggnog coverage': attr.pangenome_eggnog_cov + '%',
-                    'Pangenome InterPro coverage': attr.pangenome_ipr_cov + '%',
-                    'Geographic origin': attr.geographic_origin,
-                    'Geographic range': attr.geographic_range.join(', ')
+                    'tRNAs': attr.trnas
                 };
-                const n50Tooltip = util.wrapTextTooltip('N50',
-                    '(min contig length for 50% genome coverage)');
-                description[n50Tooltip] = attr.n_50;
+
+                let geoStats = {};
+                if (attr.geographic_origin) {
+                    geoStats['Origin of representative genome'] = attr.geographic_origin;
+                }
+                if (attr.geographic_range) {
+                    geoStats['Geographic range of pangenome'] = attr.geographic_range.join(', ');
+                }
+
+                let extLinks = {};
                 if (attr.ena_genome_accession) {
-                    description['ENA genome accession'] = util.createLinkTag(attr.ena_genome_url,
-                        attr.ena_genome_accession);
+                    let url = util.createLinkTag(attr.ena_genome_url, attr.ena_genome_accession);
+                    extLinks['ENA genome accession'] = url;
                 }
                 if (attr.ena_sample_accession) {
-                    description['ENA sample accession'] = util.createLinkTag(attr.ena_sample_url,
-                        attr.ena_sample_accession);
+                    let url = util.createLinkTag(attr.ena_sample_url, attr.ena_sample_accession);
+                    extLinks['ENA sample accession'] = url;
                 }
                 if (attr.ena_study_accession) {
-                    description['ENA study accession'] = util.createLinkTag(attr.ena_study_url,
-                        attr.ena_study_accession);
+                    let url = util.createLinkTag(attr.ena_study_url, attr.ena_study_accession);
+                    extLinks['ENA study accession'] = url;
                 }
                 if (attr.img_genome_accession) {
-                    description['IMG genome accession'] = util.createLinkTag(attr.img_genome_url,
-                        attr.img_genome_accession);
+                    let url = util.createLinkTag(attr.img_genome_url, attr.img_genome_accession);
+                    extLinks['IMG genome accession'] = url;
                 }
                 if (attr.ncbi_genome_accession) {
-                    description['NCBI genome accession'] = util.createLinkTag(attr.ncbi_genome_url,
-                        attr.ncbi_genome_accession);
+                    let url = util.createLinkTag(attr.ncbi_genome_url, attr.ncbi_genome_accession);
+                    extLinks['NCBI genome accession'] = url;
                 }
                 if (attr.ncbi_sample_accession) {
-                    description['NCBI sample accession'] = util.createLinkTag(attr.ncbi_sample_url,
-                        attr.ncbi_sample_accession);
+                    let url = util.createLinkTag(attr.ncbi_sample_url, attr.ncbi_sample_accession);
+                    extLinks['NCBI sample accession'] = url;
                 }
                 if (attr.ncbi_study_accession) {
-                    description['NCBI study accession'] = util.createLinkTag(attr.ncbi_study_url,
-                        attr.ncbi_study_accession);
+                    let url = util.createLinkTag(attr.ncbi_study_url, attr.ncbi_study_accession);
+                    extLinks['NCBI study accession'] = url;
                 }
                 if (attr.patric_genome_accession) {
-                    description['Patric genome accession'] = util.createLinkTag(
-                        attr.patric_genome_url, attr.patric_genome_accession);
+                    let url = util.createLinkTag(attr.patric_genome_url,
+                        attr.patric_genome_accession);
+                    extLinks['Patric genome accession'] = url;
                 }
                 that.$el.html(that.template(that.model.toJSON()));
-                $('#genome-details').append(new DetailList('Description', description));
+                const $genomeDets = $('#genome-details');
+                $genomeDets.append(new DetailList('Genome statistics', genomeStats));
+                $genomeDets.append(new DetailList('Genome annotations', genomeAnnotationStats));
+                if (Object.keys(pangenomeStats) > 0) {
+                    $genomeDets.append(new DetailList('Pangenome statistics', pangenomeStats));
+                }
+                $genomeDets.append(new DetailList('Genome RNA coverage', rnaStats));
+                if (Object.keys(geoStats) > 0) {
+                    $genomeDets.append(new DetailList('Geographic metadata', geoStats));
+                }
+                $genomeDets.append(new DetailList('External links', extLinks));
                 util.attachTabHandlers();
             },
             error(ignored, response) {
@@ -179,9 +221,9 @@ let DownloadsView = Backbone.View.extend({
     model: api.GenomeDownloads,
     template: _.template($('#downloadsTmpl').html()),
     el: '#downloads-section',
-    initialize() {
+    init() {
         const that = this;
-        this.model.fetch({
+        return this.model.fetch({
             success() {
                 const data = that.model.toJSON();
                 that.$el.html(that.template(data));
@@ -192,13 +234,14 @@ let DownloadsView = Backbone.View.extend({
 
 let genomeBrowserLoaded = false;
 
-function loadGenomeBrowser() {
+function loadGenomeBrowser(downloadsModel) {
+    const files = downloadsModel.attributes.genomeFiles['Genome analysis'];
     if (!genomeBrowserLoaded) {
         const config = {
-            'name': 'MGYG-HGUT-01621',
-            'fasta_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.fna',
-            'fasta_index_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.fna.fai',
-            'gff_url': 'https://wwwdev.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01621/downloads/MGYG-HGUT-01621.gff'
+            'name': genomeId,
+            'fasta_url': util.findFileUrl(files, genomeId + '.fna'),
+            'fasta_index_url': util.findFileUrl(files, genomeId + '.fna.fai'),
+            'gff_url': util.findFileUrl(files, genomeId + '.gff')
         };
         new GenomeBrowser('genome-browser-container', config);
         genomeBrowserLoaded = true;
@@ -213,18 +256,21 @@ function initPage() {
     let genomeView = new GenomeView({model: genome});
 
     let downloads = new api.GenomeDownloads({id: genomeId});
-
+    let downloadsView = new DownloadsView({model: downloads});
     genomeView.fetchAndRender().done(() => {
-        loadGenomeCharts();
-        new DownloadsView({model: downloads});
         util.attachExpandButtonCallback();
+    });
+    loadGenomeCharts();
 
+    downloadsView.init().done(() => {
         // Genome browser loading is delayed UNLESS div is visible
         // This mitigates bug in IGV which created a blank canvas when the div is not visible on load
-        $('a[href="#genome-browser"]').click(loadGenomeBrowser);
-        if (window.location.hash === '#genome-browser') {
-            loadGenomeBrowser();
-        }
+        $('a[href="#genome-browser"]').click(() => {
+            loadGenomeBrowser(downloadsView.model);
+            if (window.location.hash === '#genome-browser') {
+                loadGenomeBrowser(downloadsView.model);
+            }
+        });
     });
 }
 

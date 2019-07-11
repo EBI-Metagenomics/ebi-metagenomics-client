@@ -856,3 +856,20 @@ export function getSimpleTaxLineage(fullLineage) {
     }
     return head;
 }
+
+/**
+ * Find a file in the list with an alias matching the alias, and return it's url
+ * @param [{object}] files list of files
+ * @param {string} alias of wanted file
+ * @return {string} url
+ */
+export function findFileUrl(files, alias){
+    let url = null;
+    for (let f of files) {
+        if (f.attributes.alias === alias) {
+            url = f.attributes.links[0];
+            break;
+        }
+    }
+    return url;
+}

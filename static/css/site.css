@@ -708,6 +708,7 @@ a.ext:hover, a.ext:active, a.ext:focus {
 }
 
 .detailList-value {
+    word-wrap: break-word;
     float: right;
     clear: right;
 }
@@ -978,8 +979,9 @@ path.link {
 
 .legend-entry{
     float: left;
-    clear:both;
+    clear:right;
     padding-bottom:0.5em;
+    padding-right: 1em;
 }
 .legend-color {
     height: 1em;
