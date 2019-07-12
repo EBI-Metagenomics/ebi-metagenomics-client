@@ -45,7 +45,7 @@
                 <li class="tabs-title"><a href="#genome-browser">Browse genome</a></li>
                 <li class="tabs-title"><a href="#cog-analysis">COG analysis</a></li>
                 <li class="tabs-title"><a href="#kegg-class-analysis">KEGG class analysis</a></li>
-                <!--<li class="tabs-title"><a href="#kegg-module-analysis">KEGG module analysis</a></li>-->
+                <li class="tabs-title"><a href="#kegg-module-analysis">KEGG module analysis</a></li>
                 <li class="tabs-title"><a href="#downloads">Downloads</a></li>
             </ul>
             <div class="tabs-content" data-tab-content="genome-tabs">
@@ -67,10 +67,10 @@
                     <div id="kegg-class-column"></div>
                     <div class="kegg-class-column-table"></div>
                 </div>
-                <!--<div class="tabs-panel" id="kegg-module-analysis">-->
-                <!--<div id="kegg-module-column"></div>-->
-                <!--<div class="kegg-module-column-table"></div>-->
-                <!--</div>-->
+                <div class="tabs-panel" id="kegg-module-analysis">
+                    <div id="kegg-module-column"></div>
+                    <div class="kegg-module-column-table"></div>
+                </div>
                 <div class="tabs-panel" id="downloads">
                     <div id="downloads-section">
                     </div>
@@ -81,14 +81,18 @@
     </div>
 
     <script id="downloadsTmpl" type="text/template">
-        <% for (let [groupName, groups] of Object.entries(genomeFiles)){ %>
-        <div class="row columns">
-            <h3><%= groupName %></h3>
-            <% for (let [ignored, download] of Object.entries(groups)){ %>
-            <p><a href="<%= download.attributes.links[0] %>"><%= download.attributes.description.label %></a></p>
+        <% for (let groupName of ['Genome analysis', 'Pan-Genome analysis']) { %>
+            <% if (groupName in genomeFiles){ %>
+                <div class="row columns">
+                    <h3><%= groupName %></h3>
+                    <% for (let download of genomeFiles[groupName]){ %>
+                    <p><a href="<%= download.attributes.links[0] %>">
+                        <%= download.attributes.description.label %> (<%= download.attributes['file-format'].name %>)
+                    </a></p>
+                    <% } %>
+                </div>
             <% } %>
-        </div>
-        <br>
+            <br>
         <% } %>
     </script>
 </div>
