@@ -49,3 +49,5 @@ npm run watch
 OR with server:
 npm run server:watch
 ```
+
+If you are working with the [webkit](https://github.com/EBI-Metagenomics/ebi-metagenomics-webkit) as well you can use [npm link](https://docs.npmjs.com/cli/link) to build a symbolic link in the node_modules folder.

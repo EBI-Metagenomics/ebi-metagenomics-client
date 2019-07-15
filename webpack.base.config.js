@@ -37,6 +37,8 @@ module.exports = {
             'src/js/modules/healthcheck.js',
         submit:
             'src/js/modules/submit.js',
+        superstudy:
+            'src/js/modules/superstudy.js',
         study:
             'src/js/modules/study.js',
         browse:
@@ -218,6 +220,15 @@ module.exports = {
             filename: 'search.html',
             template: 'handlebars-loader!./src/search.html',
             chunks: ['search', 'commons'],
+            minify: minifyOptions,
+            templateData: templateFixtures
+        }),
+        new HtmlWebpackPlugin({
+            title: 'Super Study page',
+            inject: true,
+            filename: 'superstudy.html',
+            template: 'handlebars-loader!./src/superstudy.html',
+            chunks: ['superstudy', 'commons'],
             minify: minifyOptions,
             templateData: templateFixtures
         }),

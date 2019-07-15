@@ -376,11 +376,14 @@ export let StudiesView = GenericTableView.extend({
 
     initialize(options) {
         const that = this;
+        const initPageSize = options.initPageSize || DEFAULT_PAGE_SIZE;
+        const domSelector = options.domSelector || '#studies-section';
+        this.truncateAbstract = options.truncateAbstract || false;
         let tableOptions = {
             title: options.sectionTitle,
             headers: this.columns,
             initialOrdering: null,
-            initPageSize: DEFAULT_PAGE_SIZE,
+            initPageSize: initPageSize,
             isHeader: options.isPageHeader,
             textFilter: options.filter,
             tableClass: options.tableClass,
@@ -393,8 +396,8 @@ export let StudiesView = GenericTableView.extend({
                 });
             }
         };
-        this.tableObj = new GenericTable($('#studies-section'), tableOptions);
-        this.update({page: 1, page_size: DEFAULT_PAGE_SIZE, ordering: null, search: null});
+        this.tableObj = new GenericTable($(domSelector), tableOptions);
+        this.update({page: 1, page_size: initPageSize, ordering: null, search: null});
     },
 
     getRowData(attr) {
@@ -403,11 +406,15 @@ export let StudiesView = GenericTableView.extend({
             return '<span class=\'biome_icon icon_xs ' + b.icon + '\' title=\'' + b.name +
                 '\'></span>';
         });
+        let abstract = attr['abstract'];
+        if (this.truncateAbstract) {
+            abstract = truncateString(abstract, 250);
+        }
         return [
             biomes.join(' '),
             studyLink,
             attr['study_name'],
-            attr['abstract'],
+            abstract,
             attr['samples_count'],
             attr['last_update']];
     }
