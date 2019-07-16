@@ -121,11 +121,11 @@ let GenomeView = Backbone.View.extend({
                 const $genomeDets = $('#genome-details');
                 $genomeDets.append(new DetailList('Genome statistics', genomeStats));
                 $genomeDets.append(new DetailList('Genome annotations', genomeAnnotationStats));
-                if (Object.keys(pangenomeStats) > 0) {
+                if (Object.keys(pangenomeStats).length > 0) {
                     $genomeDets.append(new DetailList('Pangenome statistics', pangenomeStats));
                 }
                 $genomeDets.append(new DetailList('Genome RNA coverage', rnaStats));
-                if (Object.keys(geoStats) > 0) {
+                if (Object.keys(geoStats).length > 0) {
                     $genomeDets.append(new DetailList('Geographic metadata', geoStats));
                 }
                 $genomeDets.append(new DetailList('External links', extLinks));
