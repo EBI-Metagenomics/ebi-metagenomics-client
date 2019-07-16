@@ -84,10 +84,10 @@ let GenomesView = util.GenericTableView.extend({
             {sortBy: null, name: 'Biome'},
             {sortBy: 'accession', name: 'Accession'},
             {sortBy: 'length', name: 'Length'},
-            {sortBy: 'num_contigs', name: 'Number of contigs'},
+            {sortBy: 'num_contigs', name: 'Num. of contigs'},
             {sortBy: 'completeness', name: 'Completeness'},
             {sortBy: 'contamination', name: 'Contamination'},
-            {sortBy: null, name: 'Genome type'},
+            {sortBy: null, name: 'Type'},
             {sortBy: null, name: 'Taxonomy'},
             {sortBy: 'last_update', name: 'Last updated'}
         ];

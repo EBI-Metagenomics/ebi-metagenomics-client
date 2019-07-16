@@ -32,7 +32,7 @@
                 We provide below easy access and visualization of 4,644 species-level prokaryotic genomes.
                 These species clusters represent a total of 286,997 metagenome-assembled and isolate genomes
                 from the human gut microbiome. Species phylogeny and taxonomic annotations were generated with
-                the Genome Taxonomy Database (GTDB). Each genome and its functional annotations can be
+                the Genome Taxonomy Database (<a href="https://gtdb.ecogenomic.org/">GTDB</a>). Each genome and its functional annotations can be
                 explored interactively in the genome browser. Assemblies, annotations and pan-genome
                 results are also available as a separate download.
             </p>
@@ -50,7 +50,7 @@
                 </div>
                 <div class="columns large-6 medium-6 small-12" id="genomeSets">
                     <script id="genomeSetTmpl" type="text/template">
-                        <label for="genomesets">Select release version:
+                        <label for="genomesets">Select by set:
                             <select id='select-genomeset' title="genomeSets">
                                 <% for (let genomeset of data){ %>
                                 <option value="<%= genomeset.name %>"><%= genomeset.name %></option>
@@ -63,8 +63,10 @@
             <div class="row">
                 <ul class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500" data-tabs
                     id="data-tabs">
-                    <li class="tabs-title is-active"><a href="#genome-list-tab" aria-selected="true">Genome list</a></li>
+                    <li class="tabs-title is-active"><a href="#genome-list-tab" aria-selected="true">Genome list</a>
+                    </li>
                     <li class="tabs-title"><a href="#phylo-tab">Phylogenetic tree</a></li>
+                    <li class="tabs-title"><a href="#protein-catalog-tab">Protein catalog</a></li>
                 </ul>
                 <div class="tabs-content" data-tab-content="data-tabs">
                     <div class="tabs-panel active" id="genome-list-tab">
@@ -76,10 +78,30 @@
                             <div id="phylo-tree"></div>
                         </section>
                     </div>
+                    <div class="tabs-panel" id="protein-catalog-tab">
+                        <section id="protein-catalog-section">
+                            <h2>The Unified Gastrointestinal Protein catalogue</h2>
+                            <p>
+                                The Unified Gastrointestinal Protein (UGP) catalogue was generated with all coding
+                                sequences of the 286,997 human gut genomes.
+                            </p>
+                            <p>
+                                A total of 625 million protein sequences were clustered with MMseqs2 linclust into:
+                            </p>
+                            <ul>
+                                <li>170,658,203 representative sequences at 100% amino acid identity (UGP-100).</li>
+                                <li>20,240,320 representative sequences at 95% amino acid identity (UGP-95).</li>
+                                <li>13,910,025 representative sequences at 90% amino acid identity (UGP-90).</li>
+                                <li>4,736,012 representative sequences at 50% amino acid identity (UGP-50).</li>
+                            </ul>
+                            <p>All these files and their functional annotations can be downloaded from our public FTP website:
+                                <a href="http://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/">ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/</a></p>
+                        </section>
+                    </div>
                 </div>
             </div>
 
-            </div>
+        </div>
     </section>
 </div>
 

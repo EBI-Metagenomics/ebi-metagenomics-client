@@ -994,3 +994,7 @@ path.link {
 .legend-label {
     float:left
 }
+
+.browse-genomes-table th:nth-child(8) {
+    width: 14em;
+}
