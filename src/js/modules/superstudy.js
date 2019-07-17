@@ -39,12 +39,23 @@ function initPage() {
     let relatedStudies = new api.SuperStudyRelatedStudiesCollection({super_study_id: superStudyId});
 
     superStudyView.fetchAndRender().done(() => {
-        new util.StudiesView({collection: studies, initPageSize: 10,
-                             domSelector: '#flagship-studies-section',
-                             truncateAbstract: true});
-        new util.StudiesView({collection: relatedStudies, initPageSize: 10,
-                              domSelector: '#related-studies-section',
-                              truncateAbstract: true});
+        // Set the document title.
+        document.title = superStudyView.model.attributes.superstudy_title;
+
+        new util.StudiesView({
+            collection: studies,
+            initPageSize: 10,
+            domSelector: '#flagship-studies-section',
+            truncateAbstract: true,
+            sectionTitle: 'Flagship Projects'
+        });
+        new util.StudiesView({
+            collection: relatedStudies,
+            initPageSize: 10,
+            domSelector: '#related-studies-section',
+            truncateAbstract: true,
+            sectionTitle: 'Related Projects'
+        });
         util.attachExpandButtonCallback();
     });
 }

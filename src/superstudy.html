@@ -2,10 +2,6 @@
 <html lang="en">
 <head id="head">
     <title>MGnify &lt; EMBL-EBI</title>
-    <script>
-        var regex = /([A-z0-9,%+.]+)(?:$|[?])/g;
-        document.title = 'Super Study ' + regex.exec(window.location.pathname)[1];
-    </script>
     {{> partials/head this}}
     <meta property="og:title" content="MGnify super study page > EMBL-EBI">
     <meta property="twitter:title" content="MGnify super study page > EMBL-EBI">
@@ -34,34 +30,24 @@
                 </nav>
             </div>
             <div class="row columns">
-                <h3>Super Study <%= superstudy_id %></h3>
+                <h3>Super Study</h3>
                 <h2><%= superstudy_title %></h2>
                 <div class="row">
                     <div class="columns small-8 medium-10 large-10">
-                        <p>
+                        <p data-cy="superStudyDescription">
                             <%= superstudy_description %>
                         </p>
                     </div>
-                    <div class="columns small-4 medium-2 large-2 text-center">
+                    <div data-cy="superStudyLogo" class="columns small-4 medium-2 large-2 text-center">
                         <img src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/funding/holofood.png" alt="HoloFood" style="height: 6em;">
                     </div>
                 </div>
             </div>
             <div class="row columns">
-                <h4>
-                    <a class="expand-button min" for="#flagship-studies">Flagship Projects</a>
-                </h4>
-                <div id="flagship-studies" class="row columns">
-                    <section id="flagship-studies-section" class="table-container"></section>
-                </div>
+                <section id="flagship-studies-section" class="table-container"></section>
             </div>
-            <div class="row columns no-pad-right no-pad-left">
-                <h4>
-                    <a class="expand-button min" for="#related-studies">Related Projects</a>
-                </h4>        
-                <div id="related-studies" class="row columns">
-                    <section id="related-studies-section" class="table-containter"></section>
-                </div>
+            <div class="row columns">
+                <section id="related-studies-section" class="table-containter"></section>
             </div>
         </script>
     </div>

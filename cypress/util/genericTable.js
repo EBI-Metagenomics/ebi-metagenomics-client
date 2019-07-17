@@ -2,12 +2,18 @@ import {datatype} from './util';
 import config from './config';
 
 class GenericTableHandler {
-    constructor(parentId, defaultPageSize, hasLoadingGif) {
+    constructor(parentId, defaultPageSize, hasLoadingGif, expectedElements) {
         this.parentId = parentId;
         this.defaultPageSize = defaultPageSize;
         this.hasLoadingGif = (typeof hasLoadingGif !== 'undefined') ? hasLoadingGif : true;
+        if (expectedElements) {
+            this.elementsInTable = (expectedElements > defaultPageSize) ?
+                                   defaultPageSize : expectedElements;
+        } else {
+            this.elementsInTable = defaultPageSize;
+        }
         this.waitForLoadingIconHidden();
-        this.waitForTableLoad(defaultPageSize);
+        this.waitForTableLoad(this.elementsInTable);
     }
 
     setPageSize(pageSize) {
@@ -17,7 +23,7 @@ class GenericTableHandler {
     }
 
     checkLoadedCorrectly(currentPage, pageSize, expectedResults, columnOrdering) {
-        this.waitForTableLoad(pageSize);
+        this.waitForTableLoad(this.elementsInTable);
         this.getPageInfoSpan('#totalResults').should('contain', expectedResults);
         this.getPageInfoSpan('#maxPage').should('contain', Math.ceil(expectedResults / pageSize));
         this.getPageInfoSpan('#currentPage').should('contain', currentPage);
@@ -30,8 +36,8 @@ class GenericTableHandler {
             }
         }
         this.checkRowData(0, firstRowData);
-        if (pageSize > 1) {
-            this.checkRowData(pageSize - 1, lastRowData);
+        if (this.elementsInTable > 1) {
+            this.checkRowData(this.elementsInTable - 1, lastRowData);
         }
     }
 
@@ -114,7 +120,7 @@ class GenericTableHandler {
         }
         // Clear filter and check table is reset
         this.getFilterInput().clear();
-        this.waitForTableLoad(this.defaultPageSize);
+        this.waitForTableLoad(this.elementsInTable);
     }
 
     testPagination(pageSize, testData) {
