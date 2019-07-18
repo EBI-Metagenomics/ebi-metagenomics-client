@@ -17,11 +17,17 @@ let diagonal = d3.linkHorizontal().x(function(d) {
 });
 
 function color(d) {
+    let color;
     if (!d._children && !d.children) {
-        return '#D70500';
+        if (d.data.type === 'MAG') {
+            color = '#D70500';
+        } else {
+            color = '#D79100';
+        }
     } else {
-        return '#007C82';
+        color = '#007C82';
     }
+    return color;
 }
 
 function getResetButton() {
@@ -88,8 +94,8 @@ module.exports = class PhyloTree {
 
             nodeEnter.append('text').attr('dy', 3.5).attr('dx', 5.5).text(function(d) {
                 d = d.data;
-                if (d.type == 'root' || d.type == 'genome') {
-                    return d.name;
+                if (['root', 'Isolate', 'MAG'].indexOf(d.type) > -1) {
+                    return d.name + ' (' + d.type + ')';
                 } else {
                     return d.name + ' (' + d.countgen + ')';
                 }
