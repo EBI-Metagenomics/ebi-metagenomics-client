@@ -163,7 +163,7 @@ let RequestPublicFormView = Backbone.View.extend({
                 const studyAcc = this.$el.find('input[name=study-accession]').val();
                 const analysisType = this.$el.find('input[name=analysis-type]:checked').val();
                 const comments = this.$el.find('input[name=reason]').val();
-                const subject = (priv ? 'Private' : 'Public') + ' analysis request: ' + studyAcc;
+                const subject = (priv ? 'Private ' : 'Public ') + analysisType + ' request: ' + studyAcc;
                 const webin = util.getUsername();
                 let body = 'Study accession: ' + studyAcc + ';' +
                     (priv ? 'Private' : 'Public') + ' analysis.;' +
