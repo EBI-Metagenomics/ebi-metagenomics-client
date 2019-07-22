@@ -1,14 +1,13 @@
 import {openPage, datatype, waitForPageLoad} from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
-const superStudyId = '1';
-const origPage = 'super-studies/' + superStudyId;
-
-const pageTitle = 'Human microbiome';
-
 let table;
 
 describe('Super Study page', function() {
+    const superStudyId = '1';
+    const origPage = 'super-studies/' + superStudyId;
+    const pageTitle = 'Human microbiome';
+
     context('Landing', function() {
         beforeEach(function() {
             openPage(origPage);
@@ -23,7 +22,9 @@ describe('Super Study page', function() {
                 .should('contain', 'Human microbiome');
             cy.get('[data-cy=\'superStudyDescription\']').should((el) => {
                 expect(el.text().trim().length).to.equal(626);
-            });
+            })
+            .parent()
+            .should('have.class', 'columns small-8 medium-10 large-10');
             cy.get('[data-cy=\'superStudyLogo\']').should('be.visible');
         });
     });
@@ -171,6 +172,28 @@ describe('Super Study page', function() {
                 .first()
                 .should('have.prop', 'href')
                 .and('include', '/studies/MGYS00001729');
+        });
+    });
+
+    context('Landing no image', function() {
+        beforeEach(function() {
+            openPage('super-studies/2');
+            waitForPageLoad('Cow gut microbime');
+            cy.contains('Cow gut microbime')
+                .should('be.visible');
+        });
+
+        it('Verify elements are present', function() {
+            cy.get('h3').should('contain', 'Super Study');
+            cy.get('h2')
+                .should('contain', 'Cow gut microbime');
+            cy.get('[data-cy=\'superStudyDescription\']')
+              .should((el) => {
+                expect(el.text().trim().length).to.equal(302);
+             })
+             .parent()
+             .should('have.class', 'columns small-8 medium-12 large-12');
+            cy.get('[data-cy=\'superStudyLogo\']').should('not.exist');
         });
     });
 
