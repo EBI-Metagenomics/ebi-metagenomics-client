@@ -19,8 +19,7 @@ env:
     - API_URL=http://localhost:9000/metagenomics/api/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
 
 before_install:
-  - pip3 install --user --upgrade pip setuptools
-  - pip3 install --user --upgrade pip six==1.11.0
+  - pip3 install --user --upgrade pip six==1.11.0 setuptools
   - python3 -V
   - pip3 -V
   - pip3 install --user "git+git://github.com/EBI-metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
