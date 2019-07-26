@@ -29,40 +29,41 @@ const minifyOptions = process.argv.mode === 'development' ? false : {
 
 module.exports = {
     entry: {
-        mydata: 'src/js/modules/mydata.js',
-        index: 'src/js/modules/index.js',
-        search:
-            'src/js/modules/search.js',
-        healthcheck:
-            'src/js/modules/healthcheck.js',
-        submit:
-            'src/js/modules/submit.js',
-        study:
-            'src/js/modules/study.js',
-        browse:
-            'src/js/modules/browse.js',
-        sample:
-            'src/js/modules/sample.js',
-        run:
-            'src/js/modules/run.js',
-        assembly:
-            'src/js/modules/assembly.js',
-        analysis:
-            'src/js/modules/analysis.js',
-        compare:
-            'src/js/modules/compare.js',
-        about:
-            'src/js/modules/about.js',
-        help:
-            'src/js/modules/help.js',
-        biomes:
-            'src/js/modules/biomes.js',
-        pipelines:
-            'src/js/modules/pipelines.js',
-        pipeline:
-            'src/js/modules/pipeline.js',
-        publication:
-            'src/js/modules/publication.js'
+        // mydata: 'src/js/modules/mydata.js',
+        // index: 'src/js/modules/index.js',
+        // search:
+        //     'src/js/modules/search.js',
+        // healthcheck:
+        //     'src/js/modules/healthcheck.js',
+        // submit:
+        //     'src/js/modules/submit.js',
+        // study:
+        //     'src/js/modules/study.js',
+        // browse:
+        //     'src/js/modules/browse.js',
+        // sample:
+        //     'src/js/modules/sample.js',
+        // run:
+        //     'src/js/modules/run.js',
+        // assembly:
+        //     'src/js/modules/assembly.js',
+        // analysis:
+        //     'src/js/modules/analysis.js',
+        // compare:
+        //     'src/js/modules/compare.js',
+        // about:
+        //     'src/js/modules/about.js',
+        // help:
+        //     'src/js/modules/help.js',
+        // biomes:
+        //     'src/js/modules/biomes.js',
+        // pipelines:
+        //     'src/js/modules/pipelines.js',
+        // pipeline:
+        //     'src/js/modules/pipeline.js',
+        // publication:
+        //     'src/js/modules/publication.js'
+        contigs: 'src/js/modules/contigs.js'
     },
     plugins: [
         // new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)(),
@@ -86,165 +87,174 @@ module.exports = {
             {from: 'static/js', to: '../static/js'},
             {from: 'static/krona', to: ''}
         ]),
+        // new HtmlWebpackPlugin({
+        //     title: 'My data page',
+        //     inject: true,
+        //     filename: 'mydata.html',
+        //     template: 'handlebars-loader!./src/mydata.html',
+        //     chunks: ['mydata', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'About page',
+        //     inject: true,
+        //     filename: 'about.html',
+        //     template: 'handlebars-loader!./src/about.html',
+        //     chunks: ['about', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Biomes page',
+        //     inject: true,
+        //     filename: 'biomes.html',
+        //     template: 'handlebars-loader!./src/biomes.html',
+        //     chunks: ['biomes', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Browse page',
+        //     inject: true,
+        //     filename: 'browse.html',
+        //     template: 'handlebars-loader!./src/browse.html',
+        //     chunks: ['browse', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Compare page',
+        //     inject: true,
+        //     filename: 'compare.html',
+        //     template: 'handlebars-loader!./src/compare.html',
+        //     chunks: ['compare', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Healthcheck page',
+        //     inject: true,
+        //     filename: 'healthcheck.html',
+        //     template: 'handlebars-loader!./src/healthcheck.html',
+        //     chunks: ['healthcheck', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Help page',
+        //     inject: true,
+        //     filename: 'help.html',
+        //     template: 'handlebars-loader!./src/help.html',
+        //     chunks: ['help', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Index page',
+        //     inject: true,
+        //     filename: 'index.html',
+        //     template: 'handlebars-loader!./src/index.html',
+        //     chunks: ['index', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Pipeline page',
+        //     inject: true,
+        //     filename: 'pipeline.html',
+        //     template: 'handlebars-loader!./src/pipeline.html',
+        //     chunks: ['pipeline', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Pipelines page',
+        //     inject: true,
+        //     filename: 'pipelines.html',
+        //     template: 'handlebars-loader!./src/pipelines.html',
+        //     chunks: ['pipelines', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Run page',
+        //     inject: true,
+        //     filename: 'run.html',
+        //     template: 'handlebars-loader!./src/run.html',
+        //     chunks: ['run', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Assembly page',
+        //     inject: true,
+        //     filename: 'assembly.html',
+        //     template: 'handlebars-loader!./src/assembly.html',
+        //     chunks: ['assembly', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Analysis page',
+        //     inject: true,
+        //     filename: 'analysis.html',
+        //     template: 'handlebars-loader!./src/analysis.html',
+        //     chunks: ['analysis', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Sample page',
+        //     inject: true,
+        //     filename: 'sample.html',
+        //     template: 'handlebars-loader!./src/sample.html',
+        //     chunks: ['sample', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Search page',
+        //     inject: true,
+        //     filename: 'search.html',
+        //     template: 'handlebars-loader!./src/search.html',
+        //     chunks: ['search', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Study page',
+        //     inject: true,
+        //     filename: 'study.html',
+        //     template: 'handlebars-loader!./src/study.html',
+        //     chunks: ['study', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Publication page',
+        //     inject: true,
+        //     filename: 'publication.html',
+        //     template: 'handlebars-loader!./src/publication.html',
+        //     chunks: ['publication', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Submit page',
+        //     inject: true,
+        //     filename: 'submit.html',
+        //     template: 'handlebars-loader!./src/submit.html',
+        //     chunks: ['submit', 'commons'],
+        //     minify: minifyOptions,
+        //     templateData: templateFixtures
+        // }),
         new HtmlWebpackPlugin({
-            title: 'My data page',
+            title: 'Contigs test page',
             inject: true,
-            filename: 'mydata.html',
-            template: 'handlebars-loader!./src/mydata.html',
-            chunks: ['mydata', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'About page',
-            inject: true,
-            filename: 'about.html',
-            template: 'handlebars-loader!./src/about.html',
-            chunks: ['about', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Biomes page',
-            inject: true,
-            filename: 'biomes.html',
-            template: 'handlebars-loader!./src/biomes.html',
-            chunks: ['biomes', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Browse page',
-            inject: true,
-            filename: 'browse.html',
-            template: 'handlebars-loader!./src/browse.html',
-            chunks: ['browse', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Compare page',
-            inject: true,
-            filename: 'compare.html',
-            template: 'handlebars-loader!./src/compare.html',
-            chunks: ['compare', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Healthcheck page',
-            inject: true,
-            filename: 'healthcheck.html',
-            template: 'handlebars-loader!./src/healthcheck.html',
-            chunks: ['healthcheck', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Help page',
-            inject: true,
-            filename: 'help.html',
-            template: 'handlebars-loader!./src/help.html',
-            chunks: ['help', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Index page',
-            inject: true,
-            filename: 'index.html',
-            template: 'handlebars-loader!./src/index.html',
-            chunks: ['index', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Pipeline page',
-            inject: true,
-            filename: 'pipeline.html',
-            template: 'handlebars-loader!./src/pipeline.html',
-            chunks: ['pipeline', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Pipelines page',
-            inject: true,
-            filename: 'pipelines.html',
-            template: 'handlebars-loader!./src/pipelines.html',
-            chunks: ['pipelines', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Run page',
-            inject: true,
-            filename: 'run.html',
-            template: 'handlebars-loader!./src/run.html',
-            chunks: ['run', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Assembly page',
-            inject: true,
-            filename: 'assembly.html',
-            template: 'handlebars-loader!./src/assembly.html',
-            chunks: ['assembly', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Analysis page',
-            inject: true,
-            filename: 'analysis.html',
-            template: 'handlebars-loader!./src/analysis.html',
-            chunks: ['analysis', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Sample page',
-            inject: true,
-            filename: 'sample.html',
-            template: 'handlebars-loader!./src/sample.html',
-            chunks: ['sample', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Search page',
-            inject: true,
-            filename: 'search.html',
-            template: 'handlebars-loader!./src/search.html',
-            chunks: ['search', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Study page',
-            inject: true,
-            filename: 'study.html',
-            template: 'handlebars-loader!./src/study.html',
-            chunks: ['study', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Publication page',
-            inject: true,
-            filename: 'publication.html',
-            template: 'handlebars-loader!./src/publication.html',
-            chunks: ['publication', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Submit page',
-            inject: true,
-            filename: 'submit.html',
-            template: 'handlebars-loader!./src/submit.html',
-            chunks: ['submit', 'commons'],
+            filename: 'contigs.html',
+            template: 'handlebars-loader!./src/contigs.html',
+            chunks: ['contigs', 'commons'],
             minify: minifyOptions,
             templateData: templateFixtures
         }),
