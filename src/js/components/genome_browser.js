@@ -26,15 +26,15 @@ function initLegendTable($container) {
     return new ClientSideTable($container, options);
 }
 
-const cogs = new api.CogCategories();
-cogs.url = 'http://127.0.0.1:8000/v1/cogs';
-const keggModules = new api.KeggModules();
-keggModules.url = 'http://127.0.0.1:8000/v1/kegg-modules';
-const keggClasses = new api.KeggClasses();
-keggClasses.url = 'http://127.0.0.1:8000/v1/kegg-classes';
+// const cogs = new api.CogCategories();
+// cogs.url = 'http://127.0.0.1:8000/v1/cogs';
+// const keggModules = new api.KeggModules();
+// keggModules.url = 'http://127.0.0.1:8000/v1/kegg-modules';
+// const keggClasses = new api.KeggClasses();
+// keggClasses.url = 'http://127.0.0.1:8000/v1/kegg-classes';
 
-const refLoaded = $.when(cogs.fetch(), keggModules.fetch(), keggClasses.fetch());
-window.refLoaded = refLoaded;
+// const refLoaded = $.when(cogs.fetch(), keggModules.fetch(), keggClasses.fetch());
+// window.refLoaded = refLoaded;
 module.exports = class GenomeBrowser {
     constructor(containerId, config) {
         const $container = $('#' + containerId);
