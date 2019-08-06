@@ -6,7 +6,7 @@ window.Foundation.addToJquery($);
 
 export const pagination = require('../partials/pagination.handlebars');
 export const pagesize = require('../partials/pagesize.handlebars');
-export const genericTable = require('../partials/generic_table.handlebars');
+export const genericTable = require('../partials/genericTable.handlebars');
 export const detailList = require('../partials/detailList.handlebars');
 export const biomeFilter = require('../partials/biome_filter.handlebars');
 export const errorTmpl = require('../partials/errorTemplate.handlebars');
