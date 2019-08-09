@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head id="head">
     <title>MGnify &lt; EMBL-EBI</title>
     <script>
@@ -14,16 +15,17 @@
     <meta name="twitter:description" content="View this genome.">
 </head>
 
-<body class="level2"><!-- add any of your classes or IDs -->
-<div id="header-container">{{> partials/header this}}</div>
+<body class="level2">
+    <!-- add any of your classes or IDs -->
+    <div id="header-container">{{> partials/header this}}</div>
 
-<!-- Suggested layout containers / #content -->
-<div id="content">
-    <div id="main-content-area" class="row columns small-12 medium-12 large-12" role="main">
-        <div id="content-header">
+    <!-- Suggested layout containers / #content -->
+    <div id="content">
+        <div id="main-content-area" class="row columns small-12 medium-12 large-12" role="main">
+            <div id="content-header">
 
-        </div>
-        <script id="genomeTmpl" type="text/template">
+            </div>
+            <script id="genomeTmpl" type="text/template">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
                     <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
@@ -39,68 +41,104 @@
                 <h2>Genome <%= accession %></h2>
             </div>
         </script>
-        <div class="row columns">
-            <ul class="tabs" data-tabs id="genome-tabs">
-                <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
-                <li class="tabs-title"><a href="#genome-browser">Browse genome</a></li>
-                <li class="tabs-title"><a href="#cog-analysis">COG analysis</a></li>
-                <li class="tabs-title"><a href="#kegg-class-analysis">KEGG class analysis</a></li>
-                <li class="tabs-title"><a href="#kegg-module-analysis">KEGG module analysis</a></li>
-                <li class="tabs-title"><a href="#downloads">Downloads</a></li>
-            </ul>
-            <div class="tabs-content" data-tab-content="genome-tabs">
-                <div class="tabs-panel active" id="overview">
-                    <section id="genome-details">
-                    </section>
-                </div>
-                <div class="tabs-panel" id="genome-browser">
-                    <div id="genome-browser-container">
-                        <img class="loading-gif-large"
-                             src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+            <div class="row columns">
+                <ul class="tabs" data-tabs id="genome-tabs">
+                    <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
+                    <li class="tabs-title"><a href="#genome-browser">Browse genome</a></li>
+                    <li class="tabs-title"><a href="#cog-analysis">COG analysis</a></li>
+                    <li class="tabs-title"><a href="#kegg-class-analysis">KEGG class analysis</a></li>
+                    <li class="tabs-title"><a href="#kegg-module-analysis">KEGG module analysis</a></li>
+                    <li class="tabs-title"><a href="#downloads">Downloads</a></li>
+                </ul>
+                <div class="tabs-content" data-tab-content="genome-tabs">
+                    <div class="tabs-panel active" id="overview">
+                        <section id="genome-details">
+                        </section>
                     </div>
-                </div>
-                <div class="tabs-panel" id="cog-analysis">
-                    <div id="cog-column"></div>
-                    <div class="cog-column-table"></div>
-                </div>
-                <div class="tabs-panel" id="kegg-class-analysis">
-                    <div id="kegg-class-column"></div>
-                    <div class="kegg-class-column-table"></div>
-                </div>
-                <div class="tabs-panel" id="kegg-module-analysis">
-                    <div id="kegg-module-column"></div>
-                    <div class="kegg-module-column-table"></div>
-                </div>
-                <div class="tabs-panel" id="downloads">
-                    <div id="downloads-section">
+                    <div class="tabs-panel" id="genome-browser">
+                        <div id="genome-browser-container">
+                            <img class="loading-gif-large"
+                                src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+                        </div>
+                    </div>
+                    <div class="tabs-panel" id="cog-analysis">
+                        <div id="cog-column"></div>
+                        <div class="cog-column-table"></div>
+                    </div>
+                    <div class="tabs-panel" id="kegg-class-analysis">
+                        <div id="kegg-class-column"></div>
+                        <div class="kegg-class-column-table"></div>
+                    </div>
+                    <div class="tabs-panel" id="kegg-module-analysis">
+                        <div id="kegg-module-column"></div>
+                        <div class="kegg-module-column-table"></div>
+                    </div>
+                    <div class="tabs-panel" id="downloads">
+                        <div id="downloads-section">
+                        </div>
                     </div>
                 </div>
             </div>
+            <p>A full copy of the raw analysis data is available in the downloads tab.</p>
         </div>
-        <p>A full copy of the raw analysis data is available in the downloads tab.</p>
-    </div>
 
-    <script id="downloadsTmpl" type="text/template">
+        <script id="downloadsTmpl" type="text/template">
         <% for (let groupName of ['Genome analysis', 'Pan-Genome analysis']) { %>
             <% if (groupName in genomeFiles){ %>
                 <div class="row columns">
                     <h3><%= groupName %></h3>
-                    <% for (let download of genomeFiles[groupName]){ %>
-                    <p><a href="<%= download.attributes.links[0] %>">
-                        <%= download.attributes.description.label %> (<%= download.attributes['file-format'].name %>)
-                    </a></p>
-                    <% } %>
+                    
+                        <div class="row columns">
+                            <table class="runs-download-table">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Compression</th>
+                                    <th>Format</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% for (let entry of genomeFiles[groupName]) { %>
+                                    <tr>
+                                    <td><%= entry.attributes.description.label %></td>
+                                    <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].compExtension
+                                        :
+                                        '-' %>
+                                    </td>
+                                    <td><%= entry.attributes['file-format'].name %></td>
+                                    <td><% if (entry.attributes.links.length===1){ %>
+                                        <div class="download-part">
+                                            <a href="<%= entry.attributes.links[0] %>"><span class="icon  icon-functional"
+                                                                                            data-icon="="></span>
+                                            </a>
+                                        </div>
+                                        <% } else { %>
+                                            <% _.each(entry.attributes.links, function(link, i){ %>
+                                            <div class="download-part">
+                                                <a href="<%= link %>">Part <%= (i+1) %><span class="icon  icon-functional"
+                                                                                            data-icon="="></span>
+                                                </a>
+                                            </div>
+                                            <% }) %>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                                <% } %>
+                                </tbody>
+                            </table>
+                    </div>
                 </div>
             <% } %>
             <br>
         <% } %>
-    </script>
-</div>
+        </script>
+    </div>
 
-<div id="footer">
-    {{>partials/elixir}}
-    {{>partials/footer}}
-</div>
+    <div id="footer">
+        {{>partials/elixir}}
+        {{>partials/footer}}
+    </div>
 
 </body>
 

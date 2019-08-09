@@ -1,15 +1,15 @@
+const api = require('mgnify').api(process.env.API_URL);
 const Backbone = require('backbone');
 const _ = require('underscore');
-const api = require('mgnify').api(process.env.API_URL);
 const charts = require('mgnify').charts;
-require('../../../static/images/ajax-loader.gif');
 const util = require('../util');
 const DetailList = require('../components/detailList');
 const ClientSideTable = require('../components/clientSideTable');
 const GenomeBrowser = require('../components/genome_browser');
+require('../../../static/images/ajax-loader.gif');
+require('../../../static/js/jquery.liveFilter.js'); // FIXME: install using NPM
 
 const DEFAULT_PAGE_SIZE = 25;
-require('../../../static/js/jquery.liveFilter.js');
 
 util.setupPage('#genome-nav');
 
@@ -38,13 +38,16 @@ let GenomeView = Backbone.View.extend({
                 if (attr.num_genomes_nr) {
                     genomeStats['Non-redundant number of genomes in species'] = attr.num_genomes_nr;
                 }
-                if (attr.pan)
+
+                // TODO and this `if (attr.pan)`?
+
                 genomeStats['Number of proteins'] = attr.num_proteins;
                 genomeStats['GC content'] = attr.gc_content + '%';
                 genomeStats['Taxonomic lineage'] = attr.taxon_lineage;
 
                 const n50Tooltip = util.wrapTextTooltip('N50',
                     '(min contig length for 50% genome coverage)');
+                // eslint-disable-next-line security/detect-object-injection
                 genomeStats[n50Tooltip] = attr.n_50;
 
                 let genomeAnnotationStats = {
@@ -72,7 +75,8 @@ let GenomeView = Backbone.View.extend({
                     'rRNA 5s total gene length coverage': attr.rna_5s + '%',
                     'rRNA 16s total gene length coverage': attr.rna_16s + '%',
                     'rRNA 23s total gene length coverage': attr.rna_23s + '%',
-                    'tRNAs': attr.trnas
+                    'tRNAs': attr.trnas,
+                    'ncRNA': attr.nc_rnas
                 };
 
                 let geoStats = {};
@@ -118,6 +122,7 @@ let GenomeView = Backbone.View.extend({
                     extLinks['Patric genome accession'] = url;
                 }
                 that.$el.html(that.template(that.model.toJSON()));
+
                 const $genomeDets = $('#genome-details');
                 $genomeDets.append(new DetailList('Genome statistics', genomeStats));
                 $genomeDets.append(new DetailList('Genome annotations', genomeAnnotationStats));
@@ -138,12 +143,9 @@ let GenomeView = Backbone.View.extend({
     }
 });
 
-function loadGenomeCharts() {
-    loadCog();
-    loadKeggClass();
-    loadKeggModule();
-}
-
+/**
+ * Load the COGs
+ */
 function loadCog() {
     const cogColumn = new charts.GenomeCogColumnChart('cog-column',
         {accession: genomeId});
@@ -168,6 +170,9 @@ function loadCog() {
     });
 }
 
+/**
+ * Load the KEGG Classes
+ */
 function loadKeggClass() {
     const keggColumn = new charts.GenomeKeggClassColumnChart('kegg-class-column',
         {accession: genomeId});
@@ -192,6 +197,9 @@ function loadKeggClass() {
     });
 }
 
+/**
+ * Load the KEGG Module
+ */
 function loadKeggModule() {
     const keggColumn = new charts.GenomeKeggModuleColumnChart('kegg-module-column',
         {accession: genomeId});
@@ -202,7 +210,6 @@ function loadKeggModule() {
             {sortBy: 'a', name: 'Genome count'},
             {sortBy: 'a', name: 'Pangenome count'}
         ];
-        let i = 0;
         const data = keggColumn.data.map((e) => {
             return [e.name, e.description, e['genome-count'], e['pangenome-count']];
         });
@@ -234,6 +241,10 @@ let DownloadsView = Backbone.View.extend({
 
 let genomeBrowserLoaded = false;
 
+/**
+ * Load the genome browser
+ * @param {DownloadsView} downloadsModel The model
+ */
 function loadGenomeBrowser(downloadsModel) {
     const files = downloadsModel.attributes.genomeFiles['Genome analysis'];
     if (!genomeBrowserLoaded) {
@@ -260,11 +271,16 @@ function initPage() {
     genomeView.fetchAndRender().done(() => {
         util.attachExpandButtonCallback();
     });
-    loadGenomeCharts();
+
+    // Charts
+    loadCog();
+    loadKeggClass();
+    loadKeggModule();
 
     downloadsView.init().done(() => {
         // Genome browser loading is delayed UNLESS div is visible
-        // This mitigates bug in IGV which created a blank canvas when the div is not visible on load
+        // This mitigates bug in IGV which created a blank canvas
+        // when the div is not visible on load
         $('a[href="#genome-browser"]').click(() => {
             loadGenomeBrowser(downloadsView.model);
             if (window.location.hash === '#genome-browser') {

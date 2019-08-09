@@ -859,11 +859,11 @@ export function getSimpleTaxLineage(fullLineage) {
 
 /**
  * Find a file in the list with an alias matching the alias, and return it's url
- * @param [{object}] files list of files
+ * @param {[object]} files list of files
  * @param {string} alias of wanted file
  * @return {string} url
  */
-export function findFileUrl(files, alias){
+export function findFileUrl(files, alias) {
     let url = null;
     for (let f of files) {
         if (f.attributes.alias === alias) {
