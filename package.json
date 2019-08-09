@@ -29,7 +29,7 @@
     "foundation-sites": "^6.4.3",
     "handlebars": "^4.1.2",
     "i": "^0.3.5",
-    "igv": "https://github.com/EBI-Metagenomics/igv.js/archive/v2.2.9+ebi1.3.tar.gz",
+    "igv": "https://github.com/EBI-Metagenomics/igv.js/archive/v2.2.9+ebi1.4.tar.gz",
     "imports-loader": "^0.7.1",
     "install": "^0.10.1",
     "jquery": "^3.3.1",
