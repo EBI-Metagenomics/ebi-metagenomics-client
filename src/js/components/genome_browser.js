@@ -1,3 +1,4 @@
+const $ = require('jquery');
 const igv = require('igv').default;
 require('style-loader!../../../static/css/genome-browser.css');
 
@@ -51,7 +52,8 @@ module.exports = class GenomeBrowser {
         };
 
         igv.createBrowser(document.getElementById(browserDivId), options).then((browser) => {
-            console.debug('Created IGV browser'); // TODO remove this.
+            $('.loading-gif-large').hide();
+            // TODO: use the assembly viewer table.
         });
     }
 };

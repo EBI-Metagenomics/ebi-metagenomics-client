@@ -119,9 +119,13 @@ export function attachTabHandlers() {
     }
 
     // Linking click actions
-    $('li.tabs-title > a').on('click', function() {
-        changeTab($($(this).attr('href')));
-        window.location.hash = $(this).attr('href');
+    $('li.tabs-title > a').on('click', function(e) {
+        e.preventDefault();
+        const $anchor = $(this);
+        changeTab($($anchor.attr('href')));
+        const yOffset = window.pageYOffset || ($anchor.offset().top - 472);
+        window.location.hash = $anchor.attr('href');
+        window.scrollTo(0, yOffset);
     });
 }
 
