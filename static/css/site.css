@@ -8,10 +8,6 @@
     table-layout: fixed;
 }
 
-.browse-studies-table tr, .samples-table tr {
-
-}
-
 .browse-studies-table th:first-child {
     width: 5%;
 }
@@ -93,6 +89,25 @@
     width: 5em;
 }
 
+/* FIXME: MERGE Tables styles */
+
+.genome-downloads-table {
+    table-layout: fixed;
+    text-align: center;
+}
+
+.genome-downloads-table th:first-child {
+    width: 40em;
+}
+
+.genome-downloads-table th:nth-child(2) {
+    width: 8em;
+}
+
+.genome-downloads-table th:nth-child(3) {
+    width: 5em;
+}
+
 td, th {
     word-wrap: break-word;
 }
@@ -101,10 +116,6 @@ td, th {
 th.biome {
     width: 6%
 }
-
-/*th.name {*/
-/*width: 50%*/
-/*}*/
 
 th.samples {
     width: 7%

@@ -89,7 +89,7 @@
                     <h3><%= groupName %></h3>
                     
                         <div class="row columns">
-                            <table class="runs-download-table">
+                            <table class="genome-downloads-table">
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -101,7 +101,7 @@
                                 <tbody>
                                 <% for (let entry of genomeFiles[groupName]) { %>
                                     <tr>
-                                    <td><%= entry.attributes.description.label %></td>
+                                    <td><%= entry.attributes.description.description %></td>
                                     <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].compExtension
                                         :
                                         '-' %>

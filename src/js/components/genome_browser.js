@@ -32,7 +32,7 @@ module.exports = class GenomeBrowser {
                 {
                     name: config['name'],
                     url: config['gff_url'],
-                    format: 'gff',
+                    format: 'gff3',
                     displayMode: 'EXPANDED'
                 }
             ],
