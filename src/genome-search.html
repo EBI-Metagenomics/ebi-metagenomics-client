@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head id="head">
+    <title>Search UFGG</title>
+    {{> partials/head this}}
+    <meta property="og:title" content="MGnify search genomes page > EMBL-EBI">
+    <meta property="twitter:title" content="MGnify search genomes page > EMBL-EBI">
+
+    <meta name="og:description" content="Search DNA fragments in the Unified Human Gastrointestinal Genome catalogue (UHGG).">
+    <meta name="twitter:description" content="Search DNA fragments in the Unified Human Gastrointestinal Genome catalogue (UHGG).">
+</head>
+
+<body class="level2">
+    <!-- add any of your classes or IDs -->
+    <div id="header-container">{{> partials/header this}}</div>
+
+    <!-- Suggested layout containers / #content -->
+    <div id="content">
+        <div id="main-content-area" class="row" role="main">
+            <nav aria-label="You are here:" role="navigation">
+                <ul class="breadcrumbs columns">
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/genome-search">Search</a></li>
+                    <li>
+                        <span class="show-for-sr">Current: </span> Genome Search
+                    </li>
+                </ul>
+            </nav>
+            <div id="genome-search" class="columns small-12 medium-12 large-12">
+                <section>
+                    <h2>Search DNA fragments in the Unified Human Gastrointestinal Genome catalogue (UHGG)</h2>
+                    <p>
+                        This is a BIGSI-based search engine designed to query short sequence fragments (50-5,000 bp in length) against 4,644 representatives genomes from the human gut microbiome. The minimum threshold of k-mer proportions to report hits can be defined below (default: 0.4).
+                    </p>
+                </section>
+                <section>
+                    <div class="row columns text-center">
+                        <p class="paste-sequence">
+                            Paste a sequence
+                        </p>
+                        <div id="message-containter"></div>
+                    </div>
+                    <!-- Search form -->
+                    <section>
+                        <form id="search-form">
+                            <div>
+                                <label for="search" id="example-seq" style="cursor: pointer">Paste in your sequence or
+                                    use the
+                                    <a href="#" id="example">example</a>
+                                </label>
+
+                                <label for="fasta" style="cursor: pointer">Or upload a fasta file
+                                    <input type="file" name="fasta" id="fasta-file"
+                                        accept=".fasta, .fna, .ffn, .frn, .txt">
+                                </label>
+                            </div>
+                            <div class="row columns">
+                                <textarea id="sequence" class="sequence" title="DNA Sequence"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="row columns">
+                                    <div class="columns medium-3 small-3 large-3">
+                                        <label for="threshold">k-mer % threshold (between 0.1 and 1.0)</label>
+                                        <input id="threshold" name="threshold" type="number" min="0.1" max="1.0"
+                                            value="0.4" step="0.1">
+                                    </div>
+                                </div>
+                                <div class="columns text-center">
+                                    <button id="search-button" type="submit"
+                                        class="button black-background">Search</button>
+                                    <button id="clear-button" type="button" class="button secondary">Clear</button>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+                    <!-- Search results -->
+                    <section>
+                        <div id="results-section" class="hidden">
+                            <div class="row">
+                                <img class="genome-search-loading loading-gif"
+                                    src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+                                <div id="results-table" class="columns">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="footer">
+        {{>partials/elixir}}
+        {{>partials/footer}}
+    </div>
+</body>
+
+
+</html>

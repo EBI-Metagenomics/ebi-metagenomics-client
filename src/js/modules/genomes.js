@@ -7,7 +7,7 @@ const GenericTable = require('../components/genericTable');
 const Commons = require('../commons');
 const pagination = new Pagination();
 const Backbone = require('backbone');
-const PhyloTree = require('../components/phylo_tree');
+const PhyloTree = require('../components/phyloTree');
 
 window.Foundation.addToJquery($);
 

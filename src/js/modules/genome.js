@@ -5,7 +5,7 @@ const charts = require('mgnify').charts;
 const util = require('../util');
 const DetailList = require('../components/detailList');
 const ClientSideTable = require('../components/clientSideTable');
-const GenomeBrowser = require('../components/genome_browser');
+const GenomeBrowser = require('../components/genomeBrowser');
 require('../../../static/images/ajax-loader.gif');
 require('../../../static/js/jquery.liveFilter.js'); // FIXME: install using NPM
 

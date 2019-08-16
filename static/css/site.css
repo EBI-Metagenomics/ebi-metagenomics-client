@@ -1009,3 +1009,16 @@ path.link {
 .browse-genomes-table th:nth-child(8) {
     width: 14em;
 }
+
+/* Genome serach */
+.sequence {
+    height: 150px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.paste-sequence {
+    color: grey;
+    font-weight: 700;
+    font-size: 16px;
+}
