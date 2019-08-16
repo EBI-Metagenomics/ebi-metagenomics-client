@@ -8,6 +8,7 @@ const Commons = require('../commons');
 const pagination = new Pagination();
 const Backbone = require('backbone');
 const PhyloTree = require('../components/phyloTree');
+const GenomesSearchView = require('../components/genomeSearch');
 
 window.Foundation.addToJquery($);
 
@@ -119,6 +120,10 @@ let GenomesView = util.GenericTableView.extend({
     }
 });
 
+/**
+ * Filter genomes cb
+ * @param {Event} e the event
+ */
 function filterGenomesCallback(e) {
     const releaseVersion = $('#select-release').val();
     const set = $('#select-genomeset').val();
@@ -173,6 +178,10 @@ let GenomeSetView = Backbone.View.extend({
     }
 });
 
+/**
+ * Generate the phylogenetic tree
+ * @param {string} releaseVersion Release version
+ */
 function genPhyloTree(releaseVersion) {
     new api.ReleaseDownloads({id: releaseVersion}).fetch().done((data) => {
         const url = util.findFileUrl(data.data, 'phylo_tree.json');
@@ -181,7 +190,7 @@ function genPhyloTree(releaseVersion) {
 }
 
 let genomeSets = new api.GenomeSets();
-let genomeSetView = new GenomeSetView({collection: genomeSets});
+new GenomeSetView({collection: genomeSets});
 
 let releases = new api.Releases();
 let releasesView = new ReleasesView({collection: releases});
@@ -197,4 +206,9 @@ releasesView.init().done(() => {
     $.when(genomesView.init()).done(() => {
         util.attachExpandButtonCallback();
     });
+});
+
+
+new GenomesSearchView({
+    api_url: api.API_URL + 'genome-search'
 });

@@ -66,9 +66,7 @@ module.exports = {
         genomes:
             'src/js/modules/genomes.js',
         genome:
-            'src/js/modules/genome.js',
-        genomeSearch:
-            'src/js/modules/genomeSearch.js'
+            'src/js/modules/genome.js'
     },
     plugins: [
         // new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)(),
@@ -269,15 +267,6 @@ module.exports = {
             filename: 'genome.html',
             template: 'handlebars-loader!./src/genome.html',
             chunks: ['genome', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Search Genome page',
-            inject: true,
-            filename: 'genome-search.html',
-            template: 'handlebars-loader!./src/genome-search.html',
-            chunks: ['genomeSearch', 'commons'],
             minify: minifyOptions,
             templateData: templateFixtures
         }),

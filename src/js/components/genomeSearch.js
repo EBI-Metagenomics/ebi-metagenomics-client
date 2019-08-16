@@ -2,20 +2,16 @@
  * BIGSI genome search
  */
 require('../commons');
-const api = require('mgnify').api(process.env.API_URL);
-const util = require('../util');
 const Backbone = require('backbone');
-const ClientSideTable = require('../components/clientSideTable');
+const ClientSideTable = require('./clientSideTable');
 
 const DEFAULT_PAGE_SIZE = 25;
-
-util.setupPage('#genome-search-nav');
 
 /**
  * Genome Search View.
  * This view contains the Form and the Results table.
  */
-const GenomeSearchView = Backbone.View.extend({
+module.exports = Backbone.View.extend({
 
     el: '#genome-search',
 
@@ -148,7 +144,7 @@ const GenomeSearchView = Backbone.View.extend({
             const data = response.results.map((d) => {
                 const accession = d.bigsi['sample_name'];
                 return [
-                    '<a href="/metagenomics/genome/' + accession + '">' + accession + '</a>',
+                    '<a href="/metagenomics/genomes/' + accession + '">' + accession + '</a>',
                     // bigsi
                     d.bigsi['percent_kmers_found'],
                     d.bigsi['num_kmers'],
@@ -277,8 +273,4 @@ const GenomeSearchView = Backbone.View.extend({
         }
         return '';
     }
-});
-
-new GenomeSearchView({
-    api_url: api.API_URL + 'genome-search'
 });
