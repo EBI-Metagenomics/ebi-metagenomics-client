@@ -23,7 +23,8 @@ before_install:
   - python3 -V
   - pip3 -V
   - pip3 install --user "git+git://github.com/EBI-metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+  # FIXME: undo after the genomes release
+  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@genomes#egg=emgcli"
 
   # EMG API CONFIG MODIFICATION
   # Add slack notification to config
@@ -36,6 +37,7 @@ before_install:
   # Create EMG and ENA user schemas
   - mysql -e 'CREATE DATABASE emg;'
   - mysql -e 'CREATE DATABASE ena;'
+  - mysql -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES'"
 
   ## EMG SCHEMA
   # Create tables from django model
