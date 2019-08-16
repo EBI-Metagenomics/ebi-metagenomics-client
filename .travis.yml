@@ -14,6 +14,7 @@ addons:
     packages:
       - nginx
       - python3-pip
+      - libgconf-2-4
 env:
   global:
     - API_URL=http://localhost:9000/metagenomics/api/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
