@@ -1068,3 +1068,47 @@ ul.training > li:last-child:before {
 .analyses-table th:nth-child(3), td:nth-child(3) {
     max-width: 44em;
 }
+
+/* Hide the name of the contig/genome */
+.igv-current-genome {
+    display: none;
+}
+
+.igv-nav-bar-toggle-button-container .igv-colour-selector {
+	height: 1.5em;
+	font-size: .8rem;
+	margin: auto 0 auto 5px;
+    width: 100px;
+    padding: 0;
+}
+
+.igv-popover-track-popup-content {
+    overflow: scroll !important;
+}
+
+.igv-popover {
+    max-width: 600px;
+}
+
+.sub-legend caption,
+.sub-legend tr {
+    padding: 0;
+	margin: .5rem .625rem .625rem;
+}
+
+.legend-col {
+	margin: 10px;
+}
+
+.legend-entry {
+	float: left;
+	clear: right;
+	padding-bottom: .5em;
+	padding-right: 1em;
+	line-height: 1;
+	min-width: 55px;
+}
+
+.igv-locus-size-group .igv-search-container input {
+    margin: 0 8px 0 0;
+}

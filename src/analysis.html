@@ -18,7 +18,36 @@
     </div>
 </div>
 
-<script id="runTmpl" type="text/template">
+<!-- IGV Popup template -->
+<script id="igv-popup-template" type="text/template">
+    <table class="stack hover">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Value
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <% _.each(attributes, (attr) => { %>
+                <tr>
+                    <td>
+                        <%= attr.name %>
+                    </td>
+                    <td>
+                        <a href="http://www.ebi.ac.uk"><%= attr.value %></a>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</script>
+
+<script id="analysisTmpl" type="text/template">
+    <!-- Main view. This is controlled by the AnalysisView -->
     <div class="column small-12 medium-12 large-12">
         <nav aria-label="You are here:" role="navigation">
             <ul class="breadcrumbs columns">
@@ -51,6 +80,7 @@
             <li class="tabs-title"><a href="#functional">Functional analysis</a></li>
             <li class="tabs-title"><a href="#abundance">Abundance and comparison</a></li>
             <li class="tabs-title"><a href="#download">Download</a></li>
+            <li class="tabs-title"><a href="#contigs-viewer">Contigs Viewer</a></li>
         </ul>
         <div class="tabs-content" data-tab-content="run-tabs">
             <div class="tabs-panel active" id="overview">
@@ -278,6 +308,71 @@
                     <img id="abundance-chart" class='abundance-chart' src="">
                 </div>
             </div>
+            <!-- Contigs viewer -->
+            <% if (displayContigsViewer) { %>
+            <div class="tabs-panel" id="contigs-viewer">
+                <section class="row">
+                    <div class="columns">
+                        <h4>
+                            <a href="#genome-browser" class="" for="genome-browser">Contig Browser</a>
+                            <img id="gb-loading" class="loading-gif-medium" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+                        </h4>
+                    </div>
+                    <div id="genome-browser" class="columns" style="min-height: 250px; position: relative;">
+                    </div>
+                </section>
+                <section id="contigs-containter" class="row">
+                    <div class="columns">
+                        <h4>
+                            <a href="#contigs-table" class="" for="contigs-table">Assembly contigs</a>
+                            <img id="table-loading" class="loading-gif-medium" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+                        </h4>
+                    </div>
+                    <div class="columns small-3 medium-3 large-3">
+                        <div class="row columns">
+                            <h5>Contig length (pb)</h5>
+                            <div class="row columns slider-group">
+                                <div class="slider"></div>
+                                <div class="row">
+                                    <div class="columns small-6">
+                                        <input id="min-length" class="left slider-input" type="number" value="5000">
+                                    </div>
+                                    <div class="columns small-6">
+                                        <input id="max-length" class="right slider-input" type="number" value="10000">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row columns">
+                            <h5>
+                                COG Category
+                            </h5>
+                            <input type="text" id="cog-filter" name="cog-filter" value="" placeholder="C">
+                        </div>
+                        <div class="row columns">
+                            <h5>
+                                KEGG ortholog
+                            </h5>
+                            <input type="text" id="kegg-filter" name="kegg-filter" value="" placeholder="K00161">
+                        </div>
+                        <div class="row columns">
+                            <h5>
+                                Taxonomy
+                            </h5>
+                            <input type="text" id="taxonomy-filter" name="taxonomy-filter" value="" placeholder="Bacteroidaceae">
+                        </div>
+                        <div class="row columns">
+                            <button id="filter" value="filter" class="button">Filter</button>
+                        </div>                            
+                    </div>
+                    <div class="columns small-9 medium-9 large-9">
+                        <div id="contigs-table">
+                            <!-- Table containter -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <% } %>
         </div>
     </div>
 </script>

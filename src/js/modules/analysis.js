@@ -1,26 +1,237 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const INTERPRO_URL = process.env.INTERPRO_URL;
 const Commons = require('../commons');
 const api = require('mgnify').api(process.env.API_URL);
 const charts = require('mgnify').charts;
 const util = require('../util');
 const ClientSideTable = require('../components/clientSideTable');
-
 const DetailList = require('../components/detailList');
+const igv = require('igv').default;
 
 require('tablesorter');
+require('webpack-jquery-ui/slider');
+require('webpack-jquery-ui/css');
 
+const INTERPRO_URL = process.env.INTERPRO_URL;
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
-
 const DEFAULT_PAGE_SIZE = 25;
 
 util.setupPage('#browse-nav');
-
 window.Foundation.addToJquery($);
 
-let analysisID = util.getURLParameter();
+const analysisID = util.getURLParameter(); // MGYA00141542
 util.specifyPageTitle('Analysis', analysisID);
+
+
+/* Assembly Viewer */
+let AnalysesContig = Backbone.Model.extend({
+    parse(data) {
+        return {
+            display_name: data.attributes['display-name'],
+            contig_name: data.attributes['contig-name'],
+            length: data.attributes.length,
+            coverage: data.attributes.coverage
+        };
+    }
+});
+
+let ContigCollection = Backbone.Collection.extend({
+    model: AnalysesContig,
+    initialize(options) {
+        this.accession = options.accession;
+    },
+    url() {
+        return process.env.API_URL + 'analyses/' + this.accession + '/contigs';
+    },
+    parse(response) {
+        return response.data;
+    }
+});
+
+let ContigsView = Backbone.View.extend({
+
+    el: $('#contigs-containter'),
+
+    events: {
+        'click .contig-browser': 'contigViewer',
+        'click #filter': 'render'
+    },
+
+    initialize() {
+        const that = this;
+        this.$igvDiv = $('#genome-browser');
+        this.$gbLoading = $('#gb-loading');
+        this.$tblLoading = $('#table-loading');
+        this.$popoverTemplate = _.template($('#igv-popup-template').html());
+        /* Slider */
+        this.$maxLen = $('#max-length');
+        this.$minLen = $('#min-length');
+        this.$lenSlider = this.$el.find('.slider').slider({
+            range: true,
+            min: 1000,
+            max: 100000,
+            values: [10000, 100000],
+            change: (event, ui) => {
+                that.$maxLen.val(ui.values[1]);
+                that.$minLen.val(ui.values[0]);
+            }
+        });
+        /* Features filters */
+        this.$cog = $('#cog-filter');
+        this.$kegg = $('#kegg-filter');
+        this.$taxonomtFilter = $('#taxonomy-filter');
+
+        const tableOptions = {
+            tableContainer: 'contigs-table',
+            headers: [
+                {sortBy: 'a', name: 'Name'},
+                {sortBy: 'a', name: 'Length (pb)'},
+                {sortBy: 'a', name: 'Coverage'}
+            ],
+            initPageSize: DEFAULT_PAGE_SIZE,
+            textFilter: true
+        };
+        this.$contigsTable = new ClientSideTable($('#contigs-table'), tableOptions);
+    },
+
+    /**
+     * Refresh the table data.
+     * @return {Deferred} Deferred promise
+     */
+    refreshTable() {
+        const that = this;
+        const deferred = $.Deferred();
+        this.collection.fetch({
+            data: {
+                gt: this.$minLen.val(),
+                lt: this.$maxLen.val(),
+                cog: this.$cog.val(),
+                kegg: this.$kegg.val(),
+                taxonomy: this.$taxonomtFilter.val()
+            },
+            success() {
+                const data = _.reduce(that.collection.models, (arr, model) => {
+                    arr.push([
+                        '<a href="#" class="contig-browser" data-name="' +
+                            model.attributes.contig_name +
+                        '">' +
+                            model.attributes.display_name +
+                        '</a>',
+                        model.attributes.length,
+                        model.attributes.coverage
+                    ]);
+                    return arr;
+                }, []);
+                deferred.resolve(data);
+            },
+            error(error) {
+                // TODO HANDLE error
+                console.log(error);
+                deferred.reject();
+            }
+        });
+        return deferred.promise();
+    },
+    /**
+     * Render
+     * @param {bool} viewFirst Load the first contig of the table
+     */
+    render(viewFirst) {
+        const that = this;
+        this.$tblLoading.show();
+        that.refreshTable().then((data) => {
+            that.$contigsTable.update(data, true, 1);
+            if (viewFirst) {
+                $('.contig-browser').first().trigger('click');
+            }
+        }).catch((err) => {
+            // TODO HANDLE error
+            console.log('Error loading the contigs:' + err);
+        }).always(() => {
+            this.$tblLoading.hide();
+        });
+    },
+
+    /**
+     * View a contig using IGV.
+     * @param {Event} e the event
+     */
+    contigViewer(e) {
+        e.preventDefault();
+        const that = this;
+
+        const contigName = $(e.target).data('name');
+        const displayName = $(e.target).val();
+        let options = {
+            showChromosomeWidget: false,
+            showTrackLabelButton: false,
+            showTrackLabels: false,
+            showCenterGuide: false,
+            reference: {
+                indexed: false,
+                fastaURL: process.env.API_URL + 'analyses/' + this.collection.accession + 
+                          '/contigs/' + contigName
+            },
+            tracks: [{
+                name: displayName,
+                type: 'annotation',
+                format: 'gff3',
+                url: process.env.API_URL + 'analyses/' + this.collection.accession +
+                     '/annotations/' + contigName,
+                displayMode: 'EXPANDED',
+                nameField: 'gene'
+            }],
+            ebi: {
+                colorAttributes: [
+                    'Colour', /* Label */
+                    'COG',
+                    'product',
+                    'Pfam',
+                    'KEGG',
+                    'InterPro',
+                    'eggNOG'
+                ],
+                showLegendButton: true
+            }
+        };
+
+        this.$gbLoading.show();
+
+        if (this.igvBrowser) {
+            igv.removeBrowser(this.igvBrowser);
+        }
+
+        igv.createBrowser(this.$igvDiv, options).then((browser) => {
+            // Customize the track Pop Over
+            browser.on('trackclick', (ignored, data) => {
+                if (!data || !data.length) {
+                    return false;
+                }
+
+                let attributes = _.where(data, (d) => {
+                    return d.name;
+                });
+
+                if (attributes.length === 0) {
+                    return false;
+                }
+
+                // By returning a string from the trackclick handler
+                // we're asking IGV to use our custom HTML in its pop-over.
+                const markup = this.$popoverTemplate({attributes: attributes});
+                return markup;
+            });
+            this.igvBrowser = browser;
+            this.$gbLoading.hide();
+        }).catch((error) => {
+            // TODO: Handle
+            console.error(error);
+            that.igvBrowser = undefined;
+            that.$gbLoading.hide();
+            // FIXME: clean the browser
+        });
+    }
+});
 
 /**
  * Fetch data and render nucleotide position chart in QC tab
@@ -436,6 +647,7 @@ let DownloadView = Backbone.View.extend({
 /**
  * Load download tab view
  * @param {string} analysisID ENA analysis primary accession
+ * @param {string} experimentType Experiment Type [Assembly, Amplicon, Metabarcoding]
  */
 function loadDownloads(analysisID, experimentType) {
     let downloads = new api.AnalysisDownloads({id: analysisID, experiment_type: experimentType});
@@ -501,9 +713,14 @@ function constructDataAnalysisTable(attr) {
     return dataAnalysis;
 }
 
+/**
+ * Main view for the Analysis.
+ * This view managed the tabs and the general
+ * analysis data.
+ */
 let AnalysisView = Backbone.View.extend({
     model: api.Analysis,
-    template: _.template($('#runTmpl').html()),
+    template: _.template($('#analysisTmpl').html()),
     el: '#main-content-area',
     initialize() {
         const that = this;
@@ -511,17 +728,23 @@ let AnalysisView = Backbone.View.extend({
             data: {},
             success(data) {
                 const attr = data.attributes;
-                attr['displaySsuButtons'] = attr.pipeline_version >= 4.0;
-                if (attr['experiment_type'] === 'assembly') {
-                    attr['other_analyses'] = attr['assembly_url'];
+                /* Display rules */
+                attr.displaySsuButtons = attr.pipeline_version >= 4.0;
+                // attr.displayContigsViewer = attr.experiment_type === 'assembly' &&
+                //                              attr.annotationAvailable;
+                attr.displayContigsViewer = true;
+                if (attr.experiment_type === 'assembly') {
+                    attr.other_analyses = attr.assembly_url;
                 } else {
-                    attr['other_analyses'] = attr['run_url'];
+                    attr.other_analyses = attr.run_url;
                 }
+
                 that.render(attr.pipeline_version, function() {
                     if (attr.experiment_type === 'assembly') {
                         $('#assembly-text-warning').removeClass('hidden');
+                        // Check if the viewer tab should be enabled.
                     }
-                    $('#analysisSelect').val(attr['pipeline_version']);
+                    $('#analysisSelect').val(attr.pipeline_version);
 
                     let description = constructDescriptionTable(attr);
                     let dataAnalysis = constructDataAnalysisTable(attr);
@@ -533,10 +756,10 @@ let AnalysisView = Backbone.View.extend({
                     }
                     util.attachExpandButtonCallback();
 
-                    loadQCAnalysis(analysisID, attr['pipeline_version']);
-                    loadTaxonomicAnalysis(analysisID, attr['pipeline_version'],
-                        attr['experiment_type']);
-                    loadDownloads(analysisID, attr['experiment_type']);
+                    loadQCAnalysis(analysisID, attr.pipeline_version);
+                    loadTaxonomicAnalysis(analysisID, attr.pipeline_version,
+                                          attr.experiment_type);
+                    loadDownloads(analysisID, attr.experiment_type);
 
                     if (attr.experiment_type !== 'amplicon') {
                         loadFunctionalAnalysis(analysisID);
@@ -547,7 +770,13 @@ let AnalysisView = Backbone.View.extend({
                             util.changeTab($('#overview'));
                         }
                     }
-
+                    if (attr.displayContigsViewer) {
+                        that.contigsViewer = new ContigsView({
+                            el: $('#contigs-containter'),
+                            collection: new ContigCollection({accession: analysisID})
+                        });
+                        that.loadAssemblyViewer();
+                    }
                 });
             },
             error(ignored, response) {
@@ -563,7 +792,14 @@ let AnalysisView = Backbone.View.extend({
         util.attachTabHandlers();
         callback();
         return this.$el;
+    },
+    /**
+     * Load the Assembly Viewer in the corresponding tab
+     */
+    loadAssemblyViewer() {
+        this.contigsViewer.render(true);
     }
+    // FIXME: move the tabs management to this view.
 });
 
 /**
@@ -611,5 +847,3 @@ function setAbundanceTab(statisticsData) {
 
 let analysis = new api.Analysis({id: analysisID});
 new AnalysisView({model: analysis});
-
-
