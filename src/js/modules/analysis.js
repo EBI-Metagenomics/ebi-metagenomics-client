@@ -5,10 +5,9 @@ const Commons = require('../commons');
 const api = require('mgnify').api(process.env.API_URL);
 const charts = require('mgnify').charts;
 const util = require('../util');
+
 const ClientSideTable = require('../components/clientSideTable');
-
 const DetailList = require('../components/detailList');
-
 require('tablesorter');
 
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
@@ -87,7 +86,8 @@ function createInterProLink(text, id) {
 /**
  * Load krona chart for current view
  * @param {string} analysisID ENA primary accession for analysis
- * @param {string} type subunit type (for pipeline version 4.0 and above) ("ssu" or "lsu")
+ * @param {string} type subunit type (for pipeline version 4.0 and above) 
+ *                      ("ssu", "lsu", "itsu" or "itso")
  */
 function loadKronaChart(analysisID, type) {
     const kronaUrl = api.getKronaURL(analysisID, type);
@@ -100,19 +100,19 @@ function loadKronaChart(analysisID, type) {
 /**
  * Load taxonomy data and create graphs
  * @param {string} analysisID ENA analysis primary accession
- * @param {string} subunitType of analysis (see API documentation for endpoint)
+ * @param {string} category of analysis (see API documentation for endpoint)
  * @return {jQuery.Promise} taxonomy backbone model
  */
-function loadTaxonomy(analysisID, subunitType) {
-    loadKronaChart(analysisID, subunitType);
+function loadTaxonomy(analysisID, category) {
+    loadKronaChart(analysisID, category);
 
     // Load pie charts
     const domainPie = new charts.TaxonomyPie('domain-composition-pie',
-        {accession: analysisID, type: subunitType},
+        {accession: analysisID, type: category},
         {title: 'Domain composition', seriesName: 'reads', subtitle: false}
     );
     const phylumPie = new charts.TaxonomyPie('phylum-composition-pie',
-        {accession: analysisID, type: subunitType, groupingDepth: 2},
+        {accession: analysisID, type: category, groupingDepth: 2},
         {title: 'Phylum composition', seriesName: 'reads', legend: true}
     );
 
@@ -157,10 +157,10 @@ function loadTaxonomy(analysisID, subunitType) {
 
     // Load column charts
     const domainColumn = new charts.TaxonomyColumn('domain-composition-column',
-        {accession: analysisID, type: subunitType},
+        {accession: analysisID, type: category},
         {title: 'Domain composition', seriesName: 'reads', subtitle: false});
     const phylumColumn = new charts.TaxonomyColumn('phylum-composition-column',
-        {accession: analysisID, type: subunitType, groupingDepth: 2},
+        {accession: analysisID, type: category, groupingDepth: 2},
         {title: 'Phylum composition (top 10)', seriesName: 'reads', numColumns: 10}
     );
 
@@ -206,7 +206,7 @@ function loadTaxonomy(analysisID, subunitType) {
 
     // Load stacked column charts
     const stackedColumn = new charts.TaxonomyColumnStacked('phylum-composition-stacked-column',
-        {accession: analysisID, type: subunitType},
+        {accession: analysisID, type: category},
         {title: 'Phylum composition', seriesName: 'reads'});
 
     stackedColumn.loaded.done(() => {
@@ -248,12 +248,12 @@ function loadTaxonomy(analysisID, subunitType) {
 }
 
 /**
- * Disable a subunit button and check the selected type
+ * Disable a taxonomy selector button and check the one selected
  * @param {string} enableType /ssu or /lsu
  */
-function disableSubUnitRadio(enableType) {
-    $('.rna-select-button[value!=\'' + enableType + '\']').attr('disabled', true);
-    $('.rna-select-button[value=\'' + enableType + '\']').attr('checked', true);
+function disableTaxonomyRadio(enableType) {
+    $('.tax-select-button[value!=\'' + enableType + '\']').attr('checked', false);
+    $('.tax-select-button[value=\'' + enableType + '\']').attr('checked', true);
 }
 
 /**
@@ -266,17 +266,18 @@ function displayTaxonomyGraphError() {
 }
 
 /**
- * Attempt to load taxonomy, and fallback to /lsu if /ssu does not exist
+ * Attempt to load taxonomy, and fallback to /lsu if /ssu does not exist.
+ * If ITS is present then this will load the itsonedb|itsunite.
  * @param {string} analysisID accession of analysis
- * @param {string} subunitType of analysis
+ * @param {string} category of analysis (ssu, lsu, itsonedb, itsunite)
  * @param {float} pipelineVersion
  * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
  */
-function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, experimentType) {
-    loadTaxonomy(analysisID, subunitType).fail((model) => {
-        if (subunitType === '/ssu') {
-            subunitType = '/lsu';
-            loadTaxonomy(analysisID, subunitType).fail((model) => {
+function loadTaxonomyWithFallback(analysisID, category, pipelineVersion, experimentType) {
+    loadTaxonomy(analysisID, category).fail((model) => {
+        if (category === '/ssu') {
+            category = '/lsu';
+            loadTaxonomy(analysisID, category).fail((model) => {
                 if (model.length === 0) {
                     displayTaxonomyGraphError();
                 }
@@ -288,7 +289,7 @@ function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, expe
         }
     });
     if (['amplicon', 'metabarcoding'].indexOf(experimentType) > -1 && pipelineVersion >= 4.0) {
-        disableSubUnitRadio(subunitType);
+        disableTaxonomyRadio(category);
     }
 }
 
@@ -448,8 +449,8 @@ function loadDownloads(analysisID, experimentType) {
  * @param {number} pipelineVersion
  */
 function onTaxonomySelect(srcElem) {
-    const type = $(srcElem).val();
-    loadTaxonomy(analysisID, type);
+    const $element = $(srcElem);
+    loadTaxonomy(analysisID, $element.val());
 }
 
 /**
@@ -501,6 +502,9 @@ function constructDataAnalysisTable(attr) {
     return dataAnalysis;
 }
 
+/**
+ * Main view
+ */
 let AnalysisView = Backbone.View.extend({
     model: api.Analysis,
     template: _.template($('#runTmpl').html()),
@@ -512,6 +516,7 @@ let AnalysisView = Backbone.View.extend({
             success(data) {
                 const attr = data.attributes;
                 attr['displaySsuButtons'] = attr.pipeline_version >= 4.0;
+                attr['displayITSButtons'] = attr.pipeline_version >= 5.0;
                 if (attr['experiment_type'] === 'assembly') {
                     attr['other_analyses'] = attr['assembly_url'];
                 } else {
@@ -547,7 +552,6 @@ let AnalysisView = Backbone.View.extend({
                             util.changeTab($('#overview'));
                         }
                     }
-
                 });
             },
             error(ignored, response) {
@@ -557,7 +561,7 @@ let AnalysisView = Backbone.View.extend({
     },
     render(pipelineVersion, callback) {
         this.$el.html(this.template(this.model.toJSON()));
-        $('.rna-select-button').click(function() {
+        $('.tax-select-button').click(function() {
             onTaxonomySelect(this);
         });
         util.attachTabHandlers();

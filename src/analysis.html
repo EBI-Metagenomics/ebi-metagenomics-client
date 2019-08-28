@@ -97,15 +97,36 @@
                 <% } %>
             </div>
             <div class="tabs-panel" id="taxonomic">
-                <% if (displaySsuButtons){ %>
-                <div id="ssu-lsu-btns" class="row columns">
-                    <fieldset class="rna-select-fieldset">
-                        <legend>Select analysis</legend>
-                        <label for="smallrRNA"><input type="radio" class="rna-select-button" name="rRNA-type" value="/ssu" data-cy='ssu-btn' id="smallrRNA" checked>small subunit rRNA</label>
-                        <label for="largerRNA"><input type="radio" class="rna-select-button" name="rRNA-type" value="/lsu" data-cy='lsu-btn' id="largerRNA">large subunit rRNA</label>
-                    </fieldset>
+                <div class="row">
+                    <% if (displaySsuButtons){ %>
+                    <div id="ssu-lsu-btns" class="columns small-10 medium-3 large-3">
+                        <fieldset class="taxonomy-select-fieldset">
+                            <legend>rRNA</legend>
+                            <label for="smallrRNA">
+                                <input type="radio" class="tax-select-button rna-taxonomy" value="/ssu" data-cy='ssu-btn' id="smallrRNA" checked name="tax-results">small subunit rRNA
+                            </label>
+                            <label for="largerRNA">
+                                <input type="radio" class="tax-select-button rna-taxonomy" value="/lsu" data-cy='lsu-btn' id="largerRNA" name="tax-results">large subunit rRNA
+                            </label>
+                        </fieldset>
+                    </div>
+                    <% } %>
+                    <% if (displayITSButtons) { %>
+                    <div id="its-btns" class="columns small-5 medium-3 large-3 float-left">
+                        <fieldset class="taxonomy-select-fieldset">
+                            <legend>ITS</legend>
+                            <label for="ITSoneDB">
+                                <input id="ITSoneDB" type="radio" class="tax-select-button its-taxonomy" value="/itsonedb" data-cy='itsonedb-btn' name="tax-results">
+                                ITS with ITSOneDB
+                            </label>
+                            <label for="UNITE">
+                                <input id="UNITE" type="radio" class="tax-select-button its-taxonomy" value="/itsunite" data-cy='itsunite-btn' name="tax-results">
+                                ITS1/2 with Unite
+                            </label>
+                        </fieldset>
+                    </div>
+                    <% } %>
                 </div>
-                <% } %>
                 <div class="row columns">
                     These are the results from the taxonomic analysis steps of our pipeline. You can switch between
                     different views of the data using the menu of icons below (pie, bar, stacked and interactive
