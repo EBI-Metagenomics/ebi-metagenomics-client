@@ -614,10 +614,11 @@ export function getLoginStatus() {
  * Replace page with error message
  * @param {string} errorcode HTTP error code
  * @param {string} errormsg
+ * @param {string} containterId the containter element id
  */
-export function displayError(errorcode, errormsg) {
+export function displayError(errorcode, errormsg, containterId) {
     const tmpl = Commons.errorTmpl({errorcode, errormsg});
-    $('#main-content-area').html(tmpl);
+    $(containterId || '#main-content-area').html(tmpl);
 }
 
 /**
