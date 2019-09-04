@@ -169,7 +169,7 @@ module.exports = class GenericTable {
             }
             const $td = $('<td>' + d + '</td>');
             const sortByClass = that.headers[i]['sortBy'];
-            if (sortByClass !== null && sortByClass.length > 0) {
+            if (sortByClass && sortByClass !== null && sortByClass.length > 0) {
                 $td.addClass(sortByClass);
             }
             i += 1;

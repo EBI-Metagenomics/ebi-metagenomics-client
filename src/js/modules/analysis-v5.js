@@ -8,6 +8,7 @@ const util = require('../util');
 
 const ClientSideTable = require('../components/clientSideTable');
 const DetailList = require('../components/detailList');
+const AnnotationTableView = require('../components/annotationTable');
 require('tablesorter');
 
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
@@ -137,7 +138,7 @@ const AnalysisView = TabsManager.extend({
                     that.removeTab('abundance');
                 }
 
-                if (attr.experiment_type !== 'amplicon') {
+                if (attr.experiment_type !== 'ampliconX') {
                     that.functionaTabView = new FunctionalTabView(analysisID);
                     that.enableTab('functional');
                 } else {
@@ -310,11 +311,13 @@ let FunctionalTabView = TabView.extend({
         this.interProTab = new InterProTabView(this.analysisID);
         this.goTermsTab = new GOTermsTabView(this.analysisID);
         this.keggTab = new KEGGTabView(this.analysisID);
+        this.pfamTab = new PfamTabView(this.analysisID);
 
         this.tabs = {
             '#interpro': this.interProTab,
             '#go': this.goTermsTab,
-            '#kegg': this.keggTab
+            '#kegg': this.keggTab,
+            '#pfam': this.pfamTab
         };
     }
 });
@@ -322,7 +325,9 @@ let FunctionalTabView = TabView.extend({
 // Tab manager capabilities
 FunctionalTabView = FunctionalTabView.extend(TabsManager.prototype);
 
-/* Functional sub tabs */
+// ------------------------- //
+// -- Functional sub tabs -- //
+// ------------------------- //
 const InterProTabView = TabView.extend({
     el: '#interpro',
     initialize(analysisID) {
@@ -408,7 +413,7 @@ const InterProTabView = TabView.extend({
     }
 });
 
-let GOTermsTabView = TabView.extend({
+const GOTermsTabView = TabView.extend({
     el: '#go',
     initialize(analysisID) {
         this.analysisID = analysisID;
@@ -471,31 +476,105 @@ let GOTermsTabView = TabView.extend({
 
 const KEGGTabView = TabView.extend({
     el: '#kegg',
-    model: '',
+    model: api.KeggModule,
     initialize(analysisID) {
         this.analysisID = analysisID;
+        this.model = new api.KeggModule({
+            id: analysisID
+        });
+    },
+    render() {
+        const KeggAnnotationTable = AnnotationTableView.extend({
+            buildRow(data) {
+                return [
+                    data['accession'],
+                    data['name'],
+                    data['description'],
+                    data['completeness'],
+                    data['matching-kos'].length,
+                    data['missing-kos'].length
+                ];
+            }
+        });
+        this.tableView = new KeggAnnotationTable({
+            el: '#kegg-table',
+            model: api.KeggModule,
+            analysisID: this.analysisID,
+            headers: [
+                {name: 'Class ID'},
+                {name: 'Name'},
+                {name: 'Description'},
+                {name: 'Completeness'},
+                {name: 'Matching KO'},
+                {name: 'Missing KO'}
+            ]
+        });
+        this.tableView.render();
+
+        this.chart = new charts.AnalysisKeggColumnChart('kegg-chart', {
+            accession: this.analysisID
+        });
+        return this;
+    }
+});
+
+const PfamTabView = TabView.extend({
+    el: '#pfam',
+    model: api.Pfam,
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+        this.model = new api.Pfam({
+            id: analysisID
+        });
     },
     render() {
         const that = this;
+
+        this.tableView = new AnnotationTableView({
+            el: '#pfam-table',
+            model: api.Pfam,
+            analysisID: this.analysisID
+        });
+
+        this.tableView.render();
+
         this.model.fetch({
-            success(response) {
-                const headers = [
-                    {sortBy: 'a', name: 'Class ID'},
-                    {sortBy: 'a', name: 'Description'},
-                    {sortBy: 'a', name: 'Completeness'},
-                    {name: 'Matching KO'},
-                    {name: 'Missing KO'}
-                ];
-                const options = {
-                    title: '',
-                    headers: headers,
-                    initPageSize: DEFAULT_PAGE_SIZE
+            data: {
+                page_size: 10 // Top 10.
+            },
+            success() {
+                const data = that.model.attributes.data.map((d) => {
+                    const attributes = d.attributes;
+                    return [
+                        attributes['accession'],
+                        attributes['description'],
+                        attributes['count']
+                    ];
+                });
+                const chartOptions = {
+                    title: 'Top 10 Pfam entries',
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of matches'
+                        }
+                    },
+                    xAxis: {
+                        categories: data.map((d) => d[0])
+                    },
+                    tooltip: {
+                        formatter() {
+                            return `${this.series.name}<br/> Count ${this.y}`;
+                        }
+                    },
+                    series: [{
+                        name: `Analysis ${that.analysisID} Pfam entries`,
+                        data: data.map((d) => d[2]),
+                        colors: Commons.TAXONOMY_COLOURS[1]
+                    }]
                 };
-                const interproTable = new ClientSideTable(that.$('#interpro-table'), options);
 
-                interproTable.update(tableData, false, 1, tableData.length);
-
-                return this;
+                this.chart = new charts.GenericColumnChart('pfam-chart', chartOptions);
             }, error(ignored, response) {
                 util.displayError(
                     response.status,
@@ -503,6 +582,7 @@ const KEGGTabView = TabView.extend({
                     that.el);
             }
         });
+        return this;
     }
 });
 

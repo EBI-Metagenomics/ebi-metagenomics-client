@@ -102,10 +102,6 @@ th.biome {
     width: 6%
 }
 
-/*th.name {*/
-/*width: 50%*/
-/*}*/
-
 th.samples {
     width: 7%
 }
@@ -1046,6 +1042,10 @@ ul.training > li:last-child:before {
 .rebranding-announcement {
     margin-top: 1em;
     text-align: center;
+}
+
+.taxonomy-tabs-content {
+    min-height: 500px;
 }
 
 .taxonomy-select-fieldset {
