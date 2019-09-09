@@ -74,4 +74,4 @@ export const TAXONOMY_COLOURS = [
 ];
 
 $(document).foundation();
-$(document).foundationExtendEBI();
+//$(document).foundationExtendEBI();

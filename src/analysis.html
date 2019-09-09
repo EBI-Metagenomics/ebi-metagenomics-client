@@ -61,21 +61,21 @@
         different views of the data using the menu of icons below (pie, bar, stacked and interactive
         krona charts). The data used to build these charts can be found under the "Download" tab.
     </div>
-    <ul id="taxonomy-tabs" class="tabs" data-tabs data-deep-link="true" data-update-history="true">
+    <ul id="taxonomy-tabs" class="tabs">
         <li class="tabs-title is-active" aria-selected="true">
-            <a class="chart-icon-cont" href="#krona">
+            <a class="chart-icon-cont" href="#taxonomic/krona">
                 <img class="chart-icon"
                      src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_krona_on.svg"/>
             </a>
         </li>
         <li class="tabs-title">
-            <a class="chart-icon-cont" href="#pie">
+            <a class="chart-icon-cont" href="#taxonomic/pie">
                 <img class="chart-icon"
                      src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_pie_on.svg"/>
             </a>
         </li>
         <li class="tabs-title">
-            <a class="chart-icon-cont" href="#column">
+            <a class="chart-icon-cont" href="#taxonomic/column">
                 <img class="chart-icon"
                      src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_barh_on.svg"/>
             </a>
@@ -145,7 +145,7 @@
     </div>
 </script>
 
-    <script id="qcTmpl" type="text/template">
+<script id="qcTmpl" type="text/template">
     <div class="row">
         <div class="center column small-12 medium-12 large-12">
             <p>The chart below shows the number of <%= experimentType === 'assembly' ? 'contigs': 'reads' %> which pass the quality control steps
@@ -185,7 +185,7 @@
     <% } %>
 </script>
 
-    <script id="functionalTmpl" type="text/template">
+<script id="functionalTmpl" type="text/template">
     <div class="row column">
         <p>These charts present the functional analysis of our pipeline, which focuses
             on matches to the <a
@@ -196,17 +196,24 @@
                     class="ext">GO</a> terms. These
             summarise the functional content of the sequences in the
             sample. The full set of results files may be found under the "Download" tab.</p>
-            TODO: text (KEGG, PFam...)
     </div>
 
-    <ul id="functional-analysis-tabs" class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500" data-tabs>
-        <li class="tabs-title"><a href="#interpro">InterPro</a></li>
-        <li class="tabs-title"><a href="#go">GO Terms</a></li>
-        <li class="tabs-title"><a href="#kegg">KEGG</a></li>
-        <li class="tabs-title"><a href="#pfam">Pfam</a></li>
+    <ul id="functional-analysis-tabs" class="tabs">
+        <li class="tabs-title">
+            <a data-tab-id="interpro" href="#functional/interpro">InterPro</a>
+        </li>
+        <li class="tabs-title">
+            <a data-tab-id="go" href="#functional/go">GO Terms</a>
+        </li>
+        <li class="tabs-title">
+            <a data-tab-id="pfam" href="#functional/pfam">Pfam</a>
+        </li>
+        <li class="tabs-title">
+            <a data-tab-id="ko" href="#functional/ko">KO</a>
+        </li>
     </ul>
     <div class="tabs-content" data-tabs-content="functional-analysis-tabs">
-        <div id="interpro" class="tabs-panel">
+        <div id="interpro" class="tabs-panel is-active">
             <!-- InterPro -->
             <div class="row column">
                 <div id="seqfeat-chart" class="run-qc-chart"></div>
@@ -230,7 +237,7 @@
                 <p>A summary of Gene Ontology (GO) terms derived from InterPro matches to your sample is provided in
                     the charts below.</p>
                 <p>Switch view:</p>
-                <ul id="go-tabs" data-tabs class="tabs">
+                <ul id="go-tabs" class="tabs">
                     <li id="go-bar-btn" class="tabs-title is-active">
                         <a class="chart-icon-cont" href="#go-slim-bar-charts" aria-selected="true">
                             <img class="chart-icon"
@@ -270,34 +277,70 @@
                 </div>
             </div>
         </div>
-        <div id="kegg" class="tabs-panel">
-            <!-- KEGG Modules -->
-            <div id="kegg-chart">
-            </div>
-            <div id="kegg-table">
-            </div>
-        </div>
         <div id="pfam" class="tabs-panel">
             <!-- Pfam -->
             <div id="pfam-chart"></div>
             <div id="pfam-table"></div>    
         </div>
+        <div id="ko" class="tabs-panel">
+            <!-- KEGG Ortholog -->
+            <div id="ko-chart"></div>
+            <div id="ko-table"></div>    
+        </div>
     </div>
 </script>
 
-    <script id="analysisTmpl" type="text/template">
+<script id="pathSystemsTmpl" type="text/template">
+    <div class="row column">
+        <p>
+            Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth
+        </p>
+    </div>
+
+    <ul id="path-systems-tabs" class="tabs">
+        <li class="tabs-title">
+            <a data-tab-id='kegg-modules' href="#kegg-modules">KEGG Module</a>
+        </li>
+        <li class="tabs-title">
+            <a data-tab-id='genome-properties' href="#genome-properties">Genome properties</a>
+        </li>
+    </ul>
+    <div class="tabs-content" data-tabs-content="path-systems-tabs">
+        <div id="kegg-modules" class="tabs-panel">
+            <!-- KEGG Modules -->
+            <div id="kegg-module-chart"></div>
+            <div id="kegg-module-table"></div>
+        </div>
+        <div id="genome-properties" class="tabs-panel">
+            <!-- Genomes Properties -->
+            <div id="genome-properties-chart"></div>
+            <div id="genome-properties-table"></div>    
+        </div>
+    </div>
+</script>
+
+
+<script id="analysisTmpl" type="text/template">
     <div class="column small-12 medium-12 large-12">
         <nav aria-label="You are here:" role="navigation">
             <ul class="breadcrumbs columns">
                 <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
                 <% if (typeof assembly_accession === 'undefined') { %>
-                 <li><a href="<%= study_url %>">Study <%= study_accession %></a></li>
+                    <li>
+                        <a href="<%= study_url %>">Study <%= study_accession %></a>
+                    </li>
                 <% } %>
-                <li><a href="<%= sample_url %>">Sample <%= sample_accession %></a></li>
+                    <li>
+                        <a href="<%= sample_url %>">Sample <%= sample_accession %></a>
+                    </li>
                 <% if (typeof assembly_accession !== 'undefined') { %>
-                <li><a href="<%= assembly_url %>">Assembly <%= assembly_accession %> </a></li>
+                    <li>
+                        <a href="<%= assembly_url %>">Assembly <%= assembly_accession %></a>
+                    </li>
                 <% } else { %>
-                <li><a href="<%= run_url %>">Run <%= run_accession %> </a></li>
+                    <li>
+                        <a href="<%= run_url %>">Run <%= run_accession %></a>
+                    </li>
                 <% } %>
                 <li>
                     <span class="show-for-sr">Current: </span>Analysis <%= analysis_accession %>
@@ -315,13 +358,28 @@
             </h4>
         </section>
 
-        <ul id="analysis-tabs" class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500" data-tabs>
-            <li class="tabs-title"><a href="#overview">Overview</a></li>
-            <li class="tabs-title"><a href="#qc">Quality control</a></li>
-            <li class="tabs-title"><a href="#taxonomic">Taxonomic analysis</a></li>
-            <li class="tabs-title"><a href="#functional">Functional analysis</a></li>
-            <li class="tabs-title"><a href="#abundance">Abundance and comparison</a></li>
-            <li class="tabs-title"><a href="#download">Download</a></li>
+        <ul id="analysis-tabs" class="tabs">
+            <li class="tabs-title">
+                <a data-tab-id="overview" href="#overview">Overview</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tab-id="qc" href="#qc">Quality control</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tab-id="taxonomic" href="#taxonomic">Taxonomic analysis</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tab-id="functional" href="#functional">Functional analysis</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tab-id="abundance" href="#abundance">Abundance and comparison</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tab-id="path-systems" href="#path-systems">Paths/Systems</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tab-id="download" href="#download">Download</a>
+            </li>
         </ul>
         <div class="tabs-content" data-tabs-content="analysis-tabs">
             <div class="tabs-panel" id="overview">
@@ -336,7 +394,6 @@
             <div class="tabs-panel" id="functional">
                 <!-- FunctionalViewTab -->
             </div>
-
             <div class="tabs-panel" id="download">
                 <!-- DownloadViewTab -->
             </div>
@@ -347,6 +404,9 @@
                 <div id="abundance-disp">
                     <img id="abundance-chart" class='abundance-chart' src="">
                 </div>
+            </div>
+            <div class="tabs-panel" id="path-systems">
+                <!-- PathSystemsTabView -->
             </div>
         </div>
     </div>

@@ -744,7 +744,7 @@ export function setupPage(tab, loginRedirect) {
         }
     });
     checkAPIonline();
-    setCurrentTab(tab);
+    // setCurrentTab(tab);
     return loginStatus;
 }
 

@@ -15,71 +15,167 @@ const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 
 const DEFAULT_PAGE_SIZE = 25;
 
-window.Foundation.addToJquery($);
-
 const analysisID = util.getURLParameter();
 
 util.setupPage('#browse-nav');
 util.specifyPageTitle('Analysis', analysisID);
 
-
-const TabsManager = Backbone.View.extend({
+/**
+ * Tabs Manager.
+ * Common methods to manage tabs.
+ */
+const TabsManagerMixin = {
     tabs: {},
+    router: undefined,
+    /**
+     * Boot and hook the Tabs properties and methods.
+     * @param {string} elementId DOM element id for the containter.
+     */
     hookTabs(elementId) {
-        this.$tabs = this.$(elementId);
-        this._tabs = new window.Foundation.Tabs(this.$tabs);
-        this.$tabs.on('change.zf.tabs', this.selectTab.bind(this));
+        this.$tabsTitleContainer = this.$(elementId);
+        this.$tabsTitleContainer.attr({
+            'role': 'tablist'
+        });
+        this.$tabTitles = this.$(elementId + ' .tabs-title');
+        _.each(this.$tabTitles, (title) => {
+            const $title = $(title);
+            const $link = $title.children(':first');
+            $title.attr({
+                'role': 'tab',
+                'aria-controls': $link.attr('href').slice(1), //TODO CHECK!
+                'aria-selected': false,
+                'tabindex': '-1'
+            });
+            $link.attr({
+                'role': 'presentation'
+            });
+        });
+
+        this.$tabTitles.on('click', this.selectTabHandler.bind(this));
+
+        const cont = this.$('[data-tabs-content="'+ elementId.slice(1) + '"]');
+        this.$tabsContainterEls = cont.children('.tabs-panel');
+        _.each(this.$tabsContainterEls, (el) => {
+            const $el = $(el);
+            $el.attr({
+                'role': 'tabpanel',
+                'aria-labelledby': $el.attr('id')
+            });
+        });
     },
     /**
-    * Switch to the selected tabId
+     * Add a tab with the corresponding tab isntance and route.
+     * Provide a routingHandler if you want to customize the callback.
+     * This is used for inner tabs at the moment:
+     * For example for FnTab view inner tabs:
+     *  FnTab inner tabs are url are #functional/interpro, interpro is the actual
+     *  tabId so for FnTab the routing handler the app has to:
+     *      - route to FnTab
+     *      - FnTab has to route to interpro
+     * so the routingHandler for FnTab would be:
+     * ```js
+     * routingHandler(tabId) {
+     *  // tabId is interpro
+     *  // this is Fn inner changeTab
+     *  this.changeTab(subTabId);
+     * }
+     * ```
+     * @param {string} tabId the tab id
+     * @param {TabView} tab the tab instance
+     * @param {string} route backbone-type route (for example "/tabs/:name")
+     * @param {function} routingHandler route navigate handler
+     */
+    registerTab({tabId, tab, route, routingHandler, baseRoute}) {
+        this.tabs = this.tabs || {};
+        this.tabs[tabId] = {
+            tab: tab,
+            route: route,
+            baseRoute: baseRoute
+        };
+
+        this.router.route(route, tabId, (args) => {
+            this.changeTab(tabId);
+            if (_.isFunction(routingHandler)) {
+                routingHandler.apply(tab, [args]); /* route parameters */
+            }
+        });
+    },
+    /**
+    * Switch to the selected tabId.
+    * This method will:
+    * - call the renderTab method on the selected tab
+    * - update the DOM elements with the is-active and other visual changes required
     * @param {string} tabId the tab Id selector
-    * @return {Object} view The view.
+    * @param {[string]} routes the routes
+    * @return {Object} view This view.
     */
     changeTab(tabId) {
-        const tab = this.tabs[tabId];
-        if (tab) {
-            tab.renderTab();
+        const tabData = this.tabs[tabId];
+        if (!tabData) {
+            // TODO: show error banner!
+            return this;
         }
+        const tab = tabData.tab;
+        tab.renderTab();
+        _.each(this.$tabsContainterEls, (el) => {
+            const $el = $(el);
+            const isActive = $el.attr('id') === tabId;
+            $el.attr('aria-hidden', !isActive);
+            $el.toggleClass('is-active', isActive);
+        });
+        _.each(this.$tabTitles, (el) => {
+            const $el = $(el).children(':first');
+            const isActive = $el.data('tab-id') === tabId;
+            $el.toggleClass('is-active', isActive);
+            $el.attr({
+                'aria-selected': isActive,
+                'tabindex': isActive ? '0' : '-1'
+            });
+        });
         return this;
     },
     /**
-     * Tab selection Handler
-     * @param {Event} _ click event
-     * @param {HTML} tab selected tab
+     * Tab selection Handler.
+     * This will trigger the router to change, that will
+     * then trigger the changeTab as a callback
+     * @param {Event} event click event
     */
-    selectTab(_, tab) {
-        const $tab = $(tab);
-        const tabId = $tab.children().first().attr('href');
-        this.changeTab(tabId);
-        // FIXME: Manage nested tabs.
-        // let $parentTab = getParentTab($tab);
-        // if ($parentTab.length > 0) {
-        //     changeTab($parentTab);
-        // }
+    selectTabHandler(event) {
+        event.preventDefault();
+        const $tabAnchor = $(event.currentTarget);
+        const tabId = $tabAnchor.children(':first').data('tab-id');
+
+        const tabData = this.tabs[tabId];
+
+        this.router.navigate(tabData.baseRoute || tabData.route, {trigger: true});
     },
     /**
      * Enable tab by id
      * @param {string} tabId of tab
      */
     enableTab(tabId) {
-        this.$('[href=\'#' + tabId + '\']').parent('li').removeClass('disabled');
+        this.$('[data-tab-id="' + tabId + '"]').parent('li').removeClass('disabled');
     },
-
     /**
      * Disable tab by id
      * @param {string} tabId of tab
      */
     removeTab(tabId) {
-        this.$('[href=\'#' + tabId + '\']').parent('li').remove();
+        this.$('[data-tab-id="' + tabId + '"]').parent('li').remove();
     }
-});
+};
 
 /**
- * Tab view general class.
+ * Tab mixin.
  * Provides the common view methods and properties.
  */
-const TabView = Backbone.View.extend({
+const TabMixin = {
+    route: undefined, // The route that should trigger this view
     rendered: false,
+    /**
+     * Cached render fn.
+     * @return {Object} This view
+     */
     renderTab() {
         if (!this.rendered) {
             this.render();
@@ -87,16 +183,20 @@ const TabView = Backbone.View.extend({
         }
         return this;
     }
-});
+};
+
 
 /**
  * Main view.
  * This view handles the tabs and the general data managment.
  */
-const AnalysisView = TabsManager.extend({
+const AnalysisView = Backbone.View.extend(TabsManagerMixin).extend({
     model: api.Analysis,
     template: _.template($('#analysisTmpl').html()),
     el: '#main-content-area',
+    initialize() {
+        this.router = new Backbone.Router();
+    },
     render() {
         const that = this;
         this.model.fetch({
@@ -138,34 +238,79 @@ const AnalysisView = TabsManager.extend({
                     that.removeTab('abundance');
                 }
 
-                if (attr.experiment_type !== 'ampliconX') {
-                    that.functionaTabView = new FunctionalTabView(analysisID);
+                if (attr.experiment_type !== 'Xamplicon') {
+                    that.functionaTabView = new FunctionalTabView(analysisID, that.router);
+                    that.registerTab({
+                        tabId: 'functional',
+                        tab: that.functionaTabView,
+                        route: 'functional(/:innerTabId)',
+                        baseRoute: 'functional',
+                        routingHandler: function(innerTabId) {
+                            this.changeTab(innerTabId);
+                        }
+                    });
                     that.enableTab('functional');
                 } else {
                     that.removeTab('functional');
                 }
 
-                that.tabs = {
-                    '#overview': that.overviewTabView,
-                    '#qc': that.qcTabView,
-                    '#taxonomic': that.taxonomyTabView,
-                    '#functional': that.functionaTabView,
-                    '#download': that.downloadTabView,
-                    '#abundance': that.abundanceTab
-                };
+                if (attr.experiment_type !== 'Xassembly') {
+                    that.pathSystemsTabView = new PathSystemsTabView(analysisID, that.router);
+                    that.registerTab({
+                        tabId: 'path-systems',
+                        tab: that.pathSystemsTabView,
+                        route: 'path-systems(/:innerTabId)',
+                        baseRoute: 'path-systems',
+                        routingHandler: function(innerTabId) {
+                            this.changeTab(innerTabId);
+                        }
+                    });
+                    that.enableTab('path-systems');
+                } else {
+                    that.removeTab('path-systems');
+                }
+                that.registerTab({
+                    tabId: 'overview',
+                    tab: that.overviewTabView,
+                    route: 'overview'
+                });
+                that.registerTab({
+                    tabId: 'qc',
+                    tab: that.qcTabView,
+                    route: 'qc'
+                });
+                that.registerTab({
+                    tabId: 'taxonomic',
+                    tab: that.taxonomyTabView,
+                    route: 'taxonomic'
+                });
+
+                that.registerTab({
+                    tabId: 'download',
+                    tab: that.downloadTabView,
+                    route: 'download'
+                });
+                that.registerTab({
+                    tabId: 'abundance',
+                    tab: that.abundanceTab,
+                    route: 'abundance'
+                });
 
                 // enable the selected tab
-                if (window.location.hash === '#functional' &&
+                let initial = (window.location.hash || '#overview');
+                if (initial === '#functional' &&
                     attr.experiment_type === 'amplicon') {
-                    that.$tabs.foundation('selectTab', that.$('#overview'));
-                } else if (window.location.hash === '#abundance' &&
-                    !that.abundanceTab.enable) {
-                    that.$tabs.foundation('selectTab', that.$('#overview'));
+                    that.changeTab('overview');
+                } else if (initial === '#abundance' &&
+                          !that.abundanceTab.enable) {
+                    that.changeTab('overview');
                 } else if (!window.location.hash) {
-                    that.$tabs.foundation('selectTab', that.$('#overview'));
+                    that.changeTab('overview');
                 } else {
-                    that.changeTab(window.location.hash);
+                    that.changeTab(initial);
                 }
+                Backbone.history.start({root: window.location.pathname});
+                // Backbone.history.start();
             },
             error(ignored, response) {
                 util.displayError(response.status, 'Could not retrieve analysis: ' + analysisID);
@@ -178,7 +323,7 @@ const AnalysisView = TabsManager.extend({
 /**
  * Overview Tab
  */
-const OverviewTabView = TabView.extend({
+const OverviewTabView = Backbone.View.extend(TabMixin).extend({
     el: '#overview',
     initialize(analysisData) {
         this.analysisData = analysisData;
@@ -244,7 +389,7 @@ const OverviewTabView = TabView.extend({
 /**
  * QC results tab
  */
-const QCTabView = TabView.extend({
+const QCTabView = Backbone.View.extend(TabMixin).extend({
     template: _.template($('#qcTmpl').html()),
     el: '#qc',
     initialize(analysisID, pipelineVersion, experimentType) {
@@ -294,11 +439,12 @@ const QCTabView = TabView.extend({
 /**
  * Functional results tab
  */
-let FunctionalTabView = TabView.extend({
+let FunctionalTabView = Backbone.View.extend({
     template: _.template($('#functionalTmpl').html()),
     el: '#functional',
-    initialize(analysisID) {
+    initialize(analysisID, router) {
         this.analysisID = analysisID;
+        this.router = router;
     },
     /**
      * Load all charts on functional tab
@@ -310,26 +456,53 @@ let FunctionalTabView = TabView.extend({
 
         this.interProTab = new InterProTabView(this.analysisID);
         this.goTermsTab = new GOTermsTabView(this.analysisID);
-        this.keggTab = new KEGGTabView(this.analysisID);
         this.pfamTab = new PfamTabView(this.analysisID);
+        this.koTab = new KOTabView(this.analysisID);
 
-        this.tabs = {
-            '#interpro': this.interProTab,
-            '#go': this.goTermsTab,
-            '#kegg': this.keggTab,
-            '#pfam': this.pfamTab
-        };
+        // this.tabs = {
+        //     '#interpro': this.interProTab,
+        //     '#go': this.goTermsTab,
+        //     '#pfam': this.pfamTab,
+        //     '#ko': this.koTab
+        // };
+
+        this.registerTab({
+            tabId: 'interpro',
+            tab: this.interProTab,
+            route: 'functional/interpro'
+        });
+
+        this.registerTab({
+            tabId: 'go',
+            tab: this.goTermsTab,
+            route: 'functional/go'
+        });
+
+        this.registerTab({
+            tabId: 'pfam',
+            tab: this.pfamTab,
+            route: 'functional/pfam'
+        });
+
+        this.registerTab({
+            tabId: 'ko',
+            tab: this.koTab,
+            route: 'functional/ko'
+        });
+
+        // this.$('#interpro').trigger('click');
     }
-});
-
-// Tab manager capabilities
-FunctionalTabView = FunctionalTabView.extend(TabsManager.prototype);
+})
+.extend(TabsManagerMixin)
+.extend(TabMixin);
 
 // ------------------------- //
 // -- Functional sub tabs -- //
 // ------------------------- //
-const InterProTabView = TabView.extend({
+
+const InterProTabView = Backbone.View.extend(TabMixin).extend({
     el: '#interpro',
+    tabLevel: 2,
     initialize(analysisID) {
         this.analysisID = analysisID;
     },
@@ -413,8 +586,9 @@ const InterProTabView = TabView.extend({
     }
 });
 
-const GOTermsTabView = TabView.extend({
+const GOTermsTabView = Backbone.View.extend(TabMixin).extend({
     el: '#go',
+    tabLevel: 2,
     initialize(analysisID) {
         this.analysisID = analysisID;
     },
@@ -474,52 +648,9 @@ const GOTermsTabView = TabView.extend({
     }
 });
 
-const KEGGTabView = TabView.extend({
-    el: '#kegg',
-    model: api.KeggModule,
-    initialize(analysisID) {
-        this.analysisID = analysisID;
-        this.model = new api.KeggModule({
-            id: analysisID
-        });
-    },
-    render() {
-        const KeggAnnotationTable = AnnotationTableView.extend({
-            buildRow(data) {
-                return [
-                    data['accession'],
-                    data['name'],
-                    data['description'],
-                    data['completeness'],
-                    data['matching-kos'].length,
-                    data['missing-kos'].length
-                ];
-            }
-        });
-        this.tableView = new KeggAnnotationTable({
-            el: '#kegg-table',
-            model: api.KeggModule,
-            analysisID: this.analysisID,
-            headers: [
-                {name: 'Class ID'},
-                {name: 'Name'},
-                {name: 'Description'},
-                {name: 'Completeness'},
-                {name: 'Matching KO'},
-                {name: 'Missing KO'}
-            ]
-        });
-        this.tableView.render();
-
-        this.chart = new charts.AnalysisKeggColumnChart('kegg-chart', {
-            accession: this.analysisID
-        });
-        return this;
-    }
-});
-
-const PfamTabView = TabView.extend({
+const PfamTabView = Backbone.View.extend(TabMixin).extend({
     el: '#pfam',
+    tabLevel: 2,
     model: api.Pfam,
     initialize(analysisID) {
         this.analysisID = analysisID;
@@ -586,10 +717,225 @@ const PfamTabView = TabView.extend({
     }
 });
 
+const KOTabView = Backbone.View.extend(TabMixin).extend({
+    el: '#ko',
+    tabLevel: 2,
+    model: api.KeggOrtholog,
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+        this.model = new api.KeggOrtholog({
+            id: analysisID
+        });
+    },
+    render() {
+        const that = this;
+
+        this.tableView = new AnnotationTableView({
+            el: '#ko-table',
+            model: api.KeggOrtholog,
+            analysisID: this.analysisID
+        });
+
+        this.tableView.render();
+
+        this.model.fetch({
+            data: {
+                page_size: 10 // Top 10.
+            },
+            success() {
+                const data = that.model.attributes.data.map((d) => {
+                    const attributes = d.attributes;
+                    return [
+                        attributes['accession'],
+                        attributes['description'],
+                        attributes['count']
+                    ];
+                });
+                const chartOptions = {
+                    title: 'Top 10 KO entries',
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of matches'
+                        }
+                    },
+                    xAxis: {
+                        categories: data.map((d) => d[0])
+                    },
+                    tooltip: {
+                        formatter() {
+                            return `${this.series.name}<br/> Count ${this.y}`;
+                        }
+                    },
+                    series: [{
+                        name: `Analysis ${that.analysisID} KO entries`,
+                        data: data.map((d) => d[2]),
+                        colors: Commons.TAXONOMY_COLOURS[1]
+                    }]
+                };
+
+                this.chart = new charts.GenericColumnChart('ko-chart', chartOptions);
+            }, error(ignored, response) {
+                util.displayError(
+                    response.status,
+                    'Could not retrieve KO analysis for: ' + analysisID,
+                    that.el);
+            }
+        });
+        return this;
+    }
+});
+
+// ------------------------- //
+// -- Path/Systems sub tabs //
+// -------------------------//
+
+let PathSystemsTabView = Backbone.View.extend({
+    template: _.template($('#pathSystemsTmpl').html()),
+    el: '#path-systems',
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+    },
+    /**
+     * Sub tabs
+     */
+    render() {
+        this.$el.html(this.template());
+        // hook the tabs
+        this.hookTabs('#path-systems-tabs');
+
+        this.keggTab = new KEGGModuleTabView(this.analysisID);
+        this.genomePropertiesTab = new GenomePropertiesTabView(this.analysisID);
+
+        this.tabs = {
+            '#kegg-modules': this.keggTab,
+            '#genome-properties': this.genomePropertiesTab
+        };
+
+        this.$('#kegg-modules').trigger('click');
+    }
+})
+.extend(TabMixin)
+.extend(TabsManagerMixin);
+
+const KEGGModuleTabView = Backbone.View.extend(TabMixin).extend({
+    el: '#kegg-module',
+    model: api.KeggModule,
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+        this.model = new api.KeggModule({
+            id: analysisID
+        });
+    },
+    render() {
+        const KeggAnnotationTable = AnnotationTableView.extend({
+            buildRow(data) {
+                return [
+                    data['accession'],
+                    data['name'],
+                    data['description'],
+                    data['completeness'],
+                    data['matching-kos'].length,
+                    data['missing-kos'].length
+                ];
+            }
+        });
+        this.tableView = new KeggAnnotationTable({
+            el: '#kegg-module-table',
+            model: api.KeggModule,
+            analysisID: this.analysisID,
+            headers: [
+                {name: 'Class ID'},
+                {name: 'Name'},
+                {name: 'Description'},
+                {name: 'Completeness'},
+                {name: 'Matching KO'},
+                {name: 'Missing KO'}
+            ]
+        });
+        this.tableView.render();
+
+        this.chart = new charts.AnalysisKeggColumnChart('kegg-module-chart', {
+            accession: this.analysisID
+        });
+        return this;
+    }
+})
+.extend(TabsManagerMixin)
+.extend(TabMixin);
+
+const GenomePropertiesTabView = Backbone.View.extend(TabMixin).extend({
+    el: '#genome-properties',
+    model: api.GenomeProperties,
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+        this.model = new api.GenomeProperties({
+            id: analysisID
+        });
+    },
+    render() {
+        const that = this;
+
+        this.tableView = new AnnotationTableView({
+            el: '#genome-properties-table',
+            model: api.GenomeProperties,
+            analysisID: this.analysisID
+        });
+
+        this.tableView.render();
+
+        this.model.fetch({
+            data: {
+                page_size: 10 // Top 10.
+            },
+            success() {
+                const data = that.model.attributes.data.map((d) => {
+                    const attributes = d.attributes;
+                    return [
+                        attributes['accession'],
+                        attributes['description'],
+                        attributes['count']
+                    ];
+                });
+                const chartOptions = {
+                    title: 'Top 10 Genomes properties',
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of matches'
+                        }
+                    },
+                    xAxis: {
+                        categories: data.map((d) => d[0])
+                    },
+                    tooltip: {
+                        formatter() {
+                            return `${this.series.name}<br/> Count ${this.y}`;
+                        }
+                    },
+                    series: [{
+                        name: `Analysis ${that.analysisID} Genome properties`,
+                        data: data.map((d) => d[2]),
+                        colors: Commons.TAXONOMY_COLOURS[1]
+                    }]
+                };
+
+                this.chart = new charts.GenericColumnChart('genome-properties-chart', chartOptions);
+            }, error(ignored, response) {
+                util.displayError(
+                    response.status,
+                    'Could not retrieve genome properties analysis for: ' + analysisID,
+                    that.el);
+            }
+        });
+        return this;
+    }
+});
+
 /**
  * Taxonomy results tab
  */
-const TaxonomyTabView = TabView.extend({
+const TaxonomyTabView = Backbone.View.extend(TabMixin).extend({
     template: _.template($('#taxonomicTabTmpl').html()),
     el: '#taxonomic',
     events: {
@@ -807,12 +1153,11 @@ const TaxonomyTabView = TabView.extend({
 /**
  * Download results tab
  */
-const DownloadTabView = TabView.extend({
+const DownloadTabView = Backbone.View.extend(TabMixin).extend({
     template: _.template($('#downloadsTmpl').html()),
     el: '#download',
     render() {
         const that = this;
-        // setAbundanceTab(response.attributes.downloadGroups['Statistics']);
         that.$el.html(that.template({
                 groups: that.model.attributes.downloadGroups,
                 experiment_type: that.experiment_type
@@ -824,7 +1169,7 @@ const DownloadTabView = TabView.extend({
 /**
  * Abundance results tab
  */
-const AbundanceTabView = TabView.extend({
+const AbundanceTabView = Backbone.View.extend(TabMixin).extend({
     el: '#abundance',
     /**
      * Abundance and comparision.
