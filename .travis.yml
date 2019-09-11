@@ -24,8 +24,7 @@ before_install:
   - python3 -V
   - pip3 -V
   - pip3 install --user "git+git://github.com/EBI-metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-  # FIXME: undo after the genomes release
-  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@genomes#egg=emgcli"
+  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
 
   # EMG API CONFIG MODIFICATION
   # Add slack notification to config
