@@ -104,8 +104,7 @@ after_script:
 
 cache:
   pip
-  directories:s
-    - ~/.npm
+  npm: true
+  directories:
     - ~/.cache
-    - node_modules
     - /home/travis/.cypress/Cypress
