@@ -2,6 +2,7 @@
  * BIGSI genome search
  */
 require('../commons');
+const util = require('../util');
 const Backbone = require('backbone');
 const ClientSideTable = require('./clientSideTable');
 
@@ -33,43 +34,41 @@ module.exports = Backbone.View.extend({
         this.MIN_LEN = settings.min_len || 50;
         this.API_URL = settings.api_url;
 
-        this.$form = $('#search-form', this.$el);
-        this.$fastaFile = $('#fasta-file', this.$el);
-        this.$sequence = $('#sequence', this.$el);
-        this.$threshold = $('#threshold', this.$el);
+        this.$form = this.$('#search-form');
+        this.$fastaFile = this.$('#fasta-file');
+        this.$sequence = this.$('#sequence');
+        this.$threshold = this.$('#threshold');
 
-        this.$searchButton = $('#search-button', this.$el);
-        this.$messageContainter = $('#message-containter', this.$el);
+        this.$searchButton = this.$('#search-button');
+        this.$messageContainter = this.$('#message-containter');
 
-        this.$resultsSection = $('#results-section', this.$el);
-        this.$loading = $('.genome-search-loading', this.$el);
+        this.$resultsSection = this.$('#results-section');
+        this.$loading = this.$('.genome-search-loading');
 
         if (!window.FileReader) {
-            // FileReader API not available
-            $('#fasta-file').hide();
+            this.$('#fasta-file').hide();
         }
 
         const options = {
             title: '',
             headers: [
-                // bigsi
-                {sortBy: 'a', name: 'Accession', class: 'nowrap'},
-                {sortBy: 'a', name: '% kmers found'},
-                {sortBy: 'a', name: 'No kmers'},
-                {sortBy: 'a', name: 'No kmers found'},
-                // mgnify
-                {sortBy: 'a', name: 'Completeness'},
-                {sortBy: 'a', name: 'Contamination'},
-                {sortBy: 'a', name: 'Taxon lineage', class: 'nowrap'},
+                {sortBy: 'a', name: 'Genome Accession', class: 'nowrap'},
+                {sortBy: 'a', name: 'Taxonomic assignment', class: 'nowrap'},
+                {sortBy: 'a', name: 'Genome length'},
+                {sortBy: 'a', name: 'Num. contigs'},
+                {sortBy: 'a', name: 'Genome completeness'},
+                {sortBy: 'a', name: 'Genome contamination'},
                 {sortBy: 'a', name: 'Geographic origin'},
-                {sortBy: 'a', name: 'No contigs'},
-                {sortBy: 'a', name: 'Length'}
+                {sortBy: 'a', name: 'Num. K-mers in query'},
+                {sortBy: 'a', name: 'Num. K-mers found in genome'},
+                {sortBy: 'a', name: '% K-mers found'}
             ],
             initPageSize: DEFAULT_PAGE_SIZE,
-            textFilter: true
+            textFilter: false
         };
 
-        this.$table = new ClientSideTable($('#results-table'), options);
+        this.tableView = new ClientSideTable(this.$('#results-table'), options);
+        this.$tableEl = this.tableView.$table;
     },
 
     /**
@@ -110,8 +109,17 @@ module.exports = Backbone.View.extend({
         event.preventDefault();
         this.$searchButton.prop('disabled', true);
 
-        const sequence = this.cleanSequence(this.$sequence.val());
+        const rawSequence = this.$sequence.val();
+        const sequence = this.cleanSequence(rawSequence);
         const threshold = parseFloat(this.$threshold.val());
+
+        if (this.countSequences(rawSequence) > 1) {
+            this.showMessage('Invalid sequence. Please submit only one fasta sequence.',
+                             this.MSG_TYPE.ERROR);
+            this.$searchButton.prop('disabled', false);
+            this.$loading.hide();
+            return;
+        }
 
         if (!this.validateSequence(sequence)) {
             this.showMessage('Invalid sequence. It has to be a valid DNA sequence longer than ' +
@@ -133,6 +141,9 @@ module.exports = Backbone.View.extend({
 
         that.$loading.show();
 
+        // clean the table
+        that.tableView.update([], true, 1);
+
         $.ajax({
             method: 'POST',
             url: that.API_URL,
@@ -145,21 +156,22 @@ module.exports = Backbone.View.extend({
                 const accession = d.bigsi['sample_name'];
                 return [
                     '<a href="/metagenomics/genomes/' + accession + '">' + accession + '</a>',
-                    // bigsi
-                    d.bigsi['percent_kmers_found'],
-                    d.bigsi['num_kmers'],
-                    d.bigsi['num_kmers_found'],
-                    // mgnify
+                    util.getSimpleTaxLineage(d.mgnify.attributes['taxon-lineage'], true),
+                    d.mgnify.attributes['length'],
+                    d.mgnify.attributes['num-contigs'],
                     d.mgnify.attributes['completeness'],
                     d.mgnify.attributes['contamination'],
-                    that.processLineage(d.mgnify.attributes['taxon-lineage']),
                     d.mgnify.attributes['geographic-origin'],
-                    d.mgnify.attributes['num-contigs'],
-                    d.mgnify.attributes['length']
+                    d.bigsi['num_kmers'],
+                    d.bigsi['num_kmers_found'],
+                    d.bigsi['percent_kmers_found']
                 ];
             });
 
-            that.$table.update(data, true, 1);
+            that.tableView.update(data, true, 1);
+            // Trigger tablesorter cache rebuild.
+            // TODO: build a new Client Side table widget.
+            that.$tableEl.trigger('update');
 
             that.$loading.hide();
             that.$resultsSection.removeClass('hidden');
@@ -172,6 +184,7 @@ module.exports = Backbone.View.extend({
         }).always(() => {
             that.$searchButton.prop('disabled', false);
             that.$loading.hide();
+            that.$messageContainter.html('');
         });
     },
 
@@ -203,11 +216,21 @@ module.exports = Backbone.View.extend({
      */
     reset() {
         this.$sequence.val('');
-        this.$table.update([], true, 1);
+        this.tableView.update([], true, 1);
         this.$resultsSection.addClass('hidden');
         this.$form.trigger('reset');
         this.$searchButton.prop('disabled', false);
         this.$loading.hide();
+    },
+
+    /**
+     * Count the number of > characters, if more than one
+     * then the user submited multiples sequences.
+     * @param {string} sequence fasta submited
+     * @return {int} number of > chars found
+     */
+    countSequences(sequence) {
+        return sequence && sequence.match((/>/g) || []).length;
     },
 
     /**
@@ -251,26 +274,5 @@ module.exports = Backbone.View.extend({
                 '</button>' +
               '</div>')
         );
-    },
-
-    /**
-     * Get the latest completed element of a lineage.
-     * For example for:
-     * 'd__Bacteria;p__Bacteroidota;c__Bacteroidia;
-     *  o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s__'
-     * this method will return 'g__Bacteroides'
-     * @param {string} lineage a genome lineage
-     * @return {string} the last element of the lineage
-     */
-    processLineage(lineage) {
-        let split = lineage.split(';');
-        for (let i = split.length - 1; i > 0; i--) {
-            // eslint-disable-next-line security/detect-object-injection
-            if (split[i].length > 3) {
-                // eslint-disable-next-line security/detect-object-injection
-                return split[i];
-            }
-        }
-        return '';
     }
 });

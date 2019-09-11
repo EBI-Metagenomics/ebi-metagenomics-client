@@ -962,16 +962,6 @@ path.link {
     fill: red;
 }
 
-/*.igv-navbar {*/
-    /*height: 46px !important;*/
-    /*border-style: solid !important;*/
-    /*border-radius: 3px !important;*/
-    /*border-width: thin !important;*/
-    /*border-color: #bfbfbf !important;*/
-    /*background-color: #f3f3f3 !important;*/
-    /*padding: 10px !important;*/
-/*}*/
-
 .igv-navbar select, .igv-navbar input {
     margin: unset;
     padding: unset;
@@ -984,11 +974,35 @@ path.link {
 
 .genome-browser-legend {
     width: 100%;
-    height:10em;
+    height: 10em;
     overflow-x: scroll;
 }
 
-.legend-entry{
+.igv-popover-mgnify-header {
+    font-size: 1.6em;
+    text-align: center;
+    margin: 5px;
+}
+
+.igv-popover-section-header {
+    text-align: left;
+    font-size: 1.3em;
+}
+
+.igv-content-div > .igv-popover {
+    min-width: 500px;
+}
+
+.igv-popover-table-list {
+    list-style-type: none;
+    margin: 0;
+}
+
+.igv-popover-table-td-name {
+    width: 25%;
+}
+
+.legend-entry {
     float: left;
     clear:right;
     padding-bottom:0.5em;
@@ -1020,5 +1034,5 @@ path.link {
 .paste-sequence {
     color: grey;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 1.2em;
 }

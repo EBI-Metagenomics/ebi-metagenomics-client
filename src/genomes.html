@@ -29,8 +29,7 @@
                     </ul>
                 </nav>
                 <h2>MGnify Genomes</h2>
-                <a class="expand-button max" for="#extra_description">Learn more</a>
-                <p id="extra_description" style="display:none;">
+                <p>
                     We provide below easy access and visualization of 4,644 species-level prokaryotic genomes.
                     These species clusters represent a total of 286,997 metagenome-assembled and isolate genomes
                     from the human gut microbiome. Species phylogeny and taxonomic annotations were generated with
@@ -80,6 +79,9 @@
                             <section id="phylo-section" class="table-container">
                                 <h2>Phylogenetic tree</h2>
                                 <div id="phylo-tree"></div>
+                                <div>
+                                    The tree viewer is a derivative of the <a href="https://gtdb.ecogenomic.org/tree">GTDB Tree viewer</a>, used under the GNU General Public License, version 3
+                                </div>
                             </section>
                         </div>
                         <div id="protein-catalog-tab" class="tabs-panel">
@@ -109,13 +111,14 @@
                         <div id="genome-search-tab" class="tabs-panel">
                             <section id="genome-search">
                                 <section>
-                                    <h2>Search DNA fragments in the Unified Human Gastrointestinal Genome catalogue
-                                        (UHGG)</h2>
+                                    <h2>
+                                        Search DNA fragments in the Unified Human Gastrointestinal Genome catalogue
+                                        (UHGG)
+                                    </h2>
                                     <p>
                                         This is a BIGSI-based search engine designed to query short sequence
                                         fragments (50-5,000 bp in length) against 4,644 representatives genomes from
-                                        the human gut microbiome. The minimum threshold of k-mer proportions to
-                                        report hits can be defined below (default: 0.4).
+                                        the human gut microbiome.
                                     </p>
                                 </section>
                                 <section>
@@ -145,12 +148,19 @@
                                                     title="DNA Sequence"></textarea>
                                             </div>
                                             <div class="row">
-                                                <div class="row columns">
-                                                    <div class="columns medium-3 small-3 large-3">
-                                                        <label for="threshold">k-mer % threshold (between 0.1 and
-                                                            1.0)</label>
-                                                        <input id="threshold" name="threshold" type="number" min="0.1"
-                                                            max="1.0" value="0.4" step="0.1">
+                                                <div class="columns">
+                                                    <div class="row">
+                                                        <div class="columns medium-6 small-6 large-6">
+                                                            <label for="threshold">
+                                                                The minimum threshold of K-mer proportions to report hits can be defined below (default: 0.4)
+                                                            </label>
+                                                        </div>            
+                                                    </div>
+                                                    <div class="row ">
+                                                        <div class="columns medium-2 small-2 large-2">
+                                                            <input id="threshold" name="threshold" type="number" min="0.1"
+                                                                max="1.0" value="0.4" step="0.1">
+                                                        </div>            
                                                     </div>
                                                 </div>
                                                 <div class="columns text-center">

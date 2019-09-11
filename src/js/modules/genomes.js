@@ -10,8 +10,6 @@ const Backbone = require('backbone');
 const PhyloTree = require('../components/phyloTree');
 const GenomesSearchView = require('../components/genomeSearch');
 
-window.Foundation.addToJquery($);
-
 util.attachTabHandlers();
 
 util.setupPage('#genome-nav');
@@ -39,7 +37,7 @@ let GenomesView = util.GenericTableView.extend({
             genomeUrl, attr.length,
             attr.num_contigs, attr.completeness,
             attr.contamination, attr.type,
-            util.getSimpleTaxLineage(attr.taxon_lineage), attr.last_updated
+            util.getSimpleTaxLineage(attr.taxon_lineage, true), attr.last_updated
         ];
     },
     /**
@@ -207,7 +205,6 @@ releasesView.init().done(() => {
         util.attachExpandButtonCallback();
     });
 });
-
 
 new GenomesSearchView({
     api_url: api.API_URL + 'genome-search'

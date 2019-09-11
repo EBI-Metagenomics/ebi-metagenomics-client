@@ -56,19 +56,19 @@ let GenomeView = Backbone.View.extend({
                 };
                 let pangenomeStats = {};
                 if (attr.pangenome_size) {
-                    pangenomeStats['Pangenome size'] = attr.pangenome_size;
+                    pangenomeStats['Pan-genome size'] = attr.pangenome_size;
                 }
                 if (attr.pangenome_core_size) {
-                    pangenomeStats['Pangenome core size'] = attr.pangenome_core_size;
+                    pangenomeStats['Pan-genome core size'] = attr.pangenome_core_size;
                 }
                 if (attr.pangenome_accessory_size) {
-                    pangenomeStats['Pangenome accessory size'] = attr.pangenome_accessory_size;
+                    pangenomeStats['Pan-genome accessory size'] = attr.pangenome_accessory_size;
                 }
                 if (attr.pangenome_ipr_cov) {
-                    pangenomeStats['Pangenome InterPro coverage'] = attr.pangenome_ipr_cov + '%';
+                    pangenomeStats['Pan-genome InterPro coverage'] = attr.pangenome_ipr_cov + '%';
                 }
                 if (attr.pangenome_eggnog_cov) {
-                    pangenomeStats['Pangenome EggNOG coverage'] = attr.pangenome_eggnog_cov + '%';
+                    pangenomeStats['Pan-genome EggNOG coverage'] = attr.pangenome_eggnog_cov + '%';
                 }
 
                 let rnaStats = {
@@ -127,7 +127,7 @@ let GenomeView = Backbone.View.extend({
                 $genomeDets.append(new DetailList('Genome statistics', genomeStats));
                 $genomeDets.append(new DetailList('Genome annotations', genomeAnnotationStats));
                 if (Object.keys(pangenomeStats).length > 0) {
-                    $genomeDets.append(new DetailList('Pangenome statistics', pangenomeStats));
+                    $genomeDets.append(new DetailList('Pan-genome statistics', pangenomeStats));
                 }
                 $genomeDets.append(new DetailList('Genome RNA coverage', rnaStats));
                 if (Object.keys(geoStats).length > 0) {
@@ -154,7 +154,7 @@ function loadCog() {
             {sortBy: 'a', name: 'COG ID'},
             {sortBy: 'a', name: 'Description'},
             {sortBy: 'a', name: 'Genome count'},
-            {sortBy: 'a', name: 'Pangenome count'}
+            {sortBy: 'a', name: 'Pan-genome count'}
         ];
         const data = cogColumn.data.map((e) => {
             return [e.name, e.description, e['genome-count'], e['pangenome-count']];
@@ -181,7 +181,7 @@ function loadKeggClass() {
             {sortBy: 'a', name: 'Class ID'},
             {sortBy: 'a', name: 'Description'},
             {sortBy: 'a', name: 'Genome count'},
-            {sortBy: 'a', name: 'Pangenome count'}
+            {sortBy: 'a', name: 'Pan-genome count'}
         ];
         const data = keggColumn.data.map((e) => {
             return [e['class-id'], e.name, e['genome-count'], e['pangenome-count']];
@@ -208,7 +208,7 @@ function loadKeggModule() {
             {sortBy: 'a', name: 'Module ID'},
             {sortBy: 'a', name: 'Description'},
             {sortBy: 'a', name: 'Genome count'},
-            {sortBy: 'a', name: 'Pangenome count'}
+            {sortBy: 'a', name: 'Pan-genome count'}
         ];
         const data = keggColumn.data.map((e) => {
             return [e.name, e.description, e['genome-count'], e['pangenome-count']];
@@ -276,17 +276,16 @@ function initPage() {
     loadCog();
     loadKeggClass();
     loadKeggModule();
-
     downloadsView.init().done(() => {
         // Genome browser loading is delayed UNLESS div is visible
         // This mitigates bug in IGV which created a blank canvas
         // when the div is not visible on load
         $('a[href="#genome-browser"]').click(() => {
             loadGenomeBrowser(downloadsView.model);
-            if (window.location.hash === '#genome-browser') {
-                loadGenomeBrowser(downloadsView.model);
-            }
         });
+        if (window.location.hash === '#genome-browser') {
+            loadGenomeBrowser(downloadsView.model);
+        }
     });
 }
 

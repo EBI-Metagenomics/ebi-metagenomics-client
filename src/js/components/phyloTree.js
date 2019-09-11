@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 const util = require('../util');
 const d3 = require('d3');
 
@@ -47,7 +48,8 @@ module.exports = class PhyloTree {
         const resetBtn = getResetButton();
         $('#' + containerID).empty();
         $('#' + containerID).append(resetBtn);
-        let svg = d3.select('#' + containerID).append('svg').attr('width', width) // + margin.left + margin.right)
+        let svg = d3.select('#' + containerID)
+                    .append('svg').attr('width', width) // + margin.left + margin.right)
             .append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
         function update(source) {
@@ -97,7 +99,7 @@ module.exports = class PhyloTree {
                 if (['root', 'Isolate', 'MAG'].indexOf(d.type) > -1) {
                     return d.name + ' (' + d.type + ')';
                 } else {
-                    return d.name + ' (' + d.countgen + ')';
+                    return d.name + ' (' + (d.countgen || d.coungen) + ')'; // TODO: fix coungen
                 }
             });
 
@@ -155,10 +157,10 @@ module.exports = class PhyloTree {
             });
         }
 
-// Toggle children on click.
+        // Toggle children on click.
         function click(d) {
             const name = d.data.name;
-            if (d.children == null && d._children == null && (name.substring(0, 3) == 'MGY' )) {
+            if (d.children == null && d._children == null && (name.substring(0, 3) == 'MGY')) {
                 window.open(util.subfolder + '/genomes/' + name);
             }
             if (d.children) {
