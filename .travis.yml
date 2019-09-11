@@ -103,8 +103,9 @@ after_script:
   - codecov
 
 cache:
-  pip
-  npm: true
   directories:
     - ~/.cache
-    - /home/travis/.cypress/Cypress
+    - ~/.cache/pip
+    - ~/.npm
+    - node_modules
+    - ~/.cypress/Cypress
