@@ -1,3 +1,4 @@
+const Backbone = require('backbone');
 const _ = require('underscore');
 const util = require('../util');
 const commons = require('../commons');
@@ -6,7 +7,6 @@ const Pagination = require('../components/pagination').Pagination;
 const GenericTable = require('../components/genericTable');
 const Commons = require('../commons');
 const pagination = new Pagination();
-const Backbone = require('backbone');
 const PhyloTree = require('../components/phyloTree');
 const GenomesSearchView = require('../components/genomeSearch');
 
@@ -163,19 +163,6 @@ let ReleasesView = Backbone.View.extend({
     }
 });
 
-let GenomeSetView = Backbone.View.extend({
-    template: _.template($('#genomeSetTmpl').html()),
-    el: '#genomeSets',
-    initialize() {
-        this.collection.fetch().done(() => {
-            const options = this.collection.toJSON();
-            options.unshift({'name': 'all'});
-            this.$el.html(this.template({'data': options}));
-            this.$el.find('#select-genomeset').change(filterGenomesCallback);
-        });
-    }
-});
-
 /**
  * Generate the phylogenetic tree
  * @param {string} releaseVersion Release version
@@ -186,9 +173,6 @@ function genPhyloTree(releaseVersion) {
         new PhyloTree('phylo-tree', url);
     });
 }
-
-let genomeSets = new api.GenomeSets();
-new GenomeSetView({collection: genomeSets});
 
 let releases = new api.Releases();
 let releasesView = new ReleasesView({collection: releases});

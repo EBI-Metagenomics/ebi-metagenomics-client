@@ -30,7 +30,7 @@ let GenomeView = Backbone.View.extend({
                     'Length (bp)': attr.length,
                     'Contamination': attr.contamination + '%',
                     'Completeness': attr.completeness + '%',
-                    'Number of contigs': attr.num_contigs
+                    'Num. of genomes': attr.num_contigs
                 };
                 if (attr.num_genomes_total) {
                     genomeStats['Total number of genomes in species'] = attr.num_genomes_total;
@@ -43,7 +43,11 @@ let GenomeView = Backbone.View.extend({
 
                 genomeStats['Number of proteins'] = attr.num_proteins;
                 genomeStats['GC content'] = attr.gc_content + '%';
-                genomeStats['Taxonomic lineage'] = attr.taxon_lineage;
+
+                const lineage = $.trim(util.cleanTaxLineage(attr.taxon_lineage, ' '))
+                                .split(' ')
+                                .join(' > ');
+                genomeStats['Taxonomic lineage'] = lineage;
 
                 const n50Tooltip = util.wrapTextTooltip('N50',
                     '(min contig length for 50% genome coverage)');
@@ -119,9 +123,13 @@ let GenomeView = Backbone.View.extend({
                 if (attr.patric_genome_accession) {
                     let url = util.createLinkTag(attr.patric_genome_url,
                         attr.patric_genome_accession);
-                    extLinks['Patric genome accession'] = url;
+                    extLinks['PATRIC genome accession'] = url;
                 }
-                that.$el.html(that.template(that.model.toJSON()));
+
+                that.$el.html(that.template(
+                        _.extend({lineage: lineage}, that.model.toJSON())
+                    )
+                );
 
                 const $genomeDets = $('#genome-details');
                 $genomeDets.append(new DetailList('Genome statistics', genomeStats));

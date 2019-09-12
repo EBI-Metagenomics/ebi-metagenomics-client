@@ -30,7 +30,7 @@
                 </nav>
                 <h2>MGnify Genomes</h2>
                 <p>
-                    We provide below easy access and visualization of 4,644 species-level prokaryotic genomes.
+                    We provide below easy access and visualization of 4,644 species-level prokaryotic genomes corresponding to the Unified Human Gastrointestinal Genome (UHGG) catalogue.
                     These species clusters represent a total of 286,997 metagenome-assembled and isolate genomes
                     from the human gut microbiome. Species phylogeny and taxonomic annotations were generated with
                     the Genome Taxonomy Database (<a href="https://gtdb.ecogenomic.org/">GTDB</a>). Each genome and its
@@ -38,30 +38,6 @@
                     explored interactively in the genome browser. Assemblies, annotations and pan-genome
                     results are also available as a separate download.
                 </p>
-                <div class="row">
-                    <div class="columns large-6 medium-6 small-12" id="releases">
-                        <script id="releasesTmpl" type="text/template">
-                        <label for="releases">Select release version:
-                            <select id='select-release' title="releases">
-                                <% for (let release of data){ %>
-                                <option value="<%= release.version %>"><%= release.version %></option>
-                                <% } %>
-                            </select>
-                        </label>
-                    </script>
-                    </div>
-                    <div class="columns large-6 medium-6 small-12" id="genomeSets">
-                        <script id="genomeSetTmpl" type="text/template">
-                        <label for="genomesets">Select by set:
-                            <select id='select-genomeset' title="genomeSets">
-                                <% for (let genomeset of data){ %>
-                                <option value="<%= genomeset.name %>"><%= genomeset.name %></option>
-                                <% } %>
-                            </select>
-                        </label>
-                    </script>
-                    </div>
-                </div>
                 <div class="row">
                     <ul class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500"
                         data-tabs id="data-tabs">
@@ -76,6 +52,32 @@
                             <section id="genomes-section" class="table-container"></section>
                         </div>
                         <div id="phylo-tab" class="tabs-panel">
+                            <div class="row">
+                                <div class="columns large-6 medium-6 small-12" id="releases">
+                                    <script id="releasesTmpl" type="text/template">
+                                        <label for="releases">Select release version:
+                                            <select id='select-release' title="releases">
+                                                <% for (let release of data){ %>
+                                                <option value="<%= release.version %>"><%= release.version %></option>
+                                                <% } %>
+                                            </select>
+                                        </label>
+                                    </script>
+                                </div>
+                            </div>
+                            <!-- TODO: activate when needed
+                            <div class="columns large-6 medium-6 small-12" id="genomeSets">
+                                <script id="genomeSetTmpl" type="text/template">
+                                    <label for="genomesets">Select by set:
+                                        <select id='select-genomeset' title="genomeSets">
+                                            <% for (let genomeset of data){ %>
+                                            <option value="<%= genomeset.name %>"><%= genomeset.name %></option>
+                                            <% } %>
+                                        </select>
+                                    </label>
+                                </script>
+                            </div>
+                            -->
                             <section id="phylo-section" class="table-container">
                                 <h2>Phylogenetic tree</h2>
                                 <div id="phylo-tree"></div>
@@ -112,11 +114,10 @@
                             <section id="genome-search">
                                 <section>
                                     <h2>
-                                        Search DNA fragments in the Unified Human Gastrointestinal Genome catalogue
-                                        (UHGG)
+                                        Search DNA fragments in the UHGG catalogue
                                     </h2>
                                     <p>
-                                        This is a BIGSI-based search engine designed to query short sequence
+                                        This is a <a href="https://www.nature.com/articles/s41587-018-0010-12">BIGSI-based</a> search engine designed to query short sequence
                                         fragments (50-5,000 bp in length) against 4,644 representatives genomes from
                                         the human gut microbiome.
                                     </p>

@@ -96,10 +96,11 @@ module.exports = class PhyloTree {
 
             nodeEnter.append('text').attr('dy', 3.5).attr('dx', 5.5).text(function(d) {
                 d = d.data;
+                const name = util.cleanTaxLineage(d.name);
                 if (['root', 'Isolate', 'MAG'].indexOf(d.type) > -1) {
-                    return d.name + ' (' + d.type + ')';
+                    return name + ' (' + d.type + ')';
                 } else {
-                    return d.name + ' (' + (d.countgen || d.coungen) + ')'; // TODO: fix coungen
+                    return name + ' (' + (d.countgen || d.coungen) + ')'; // TODO: fix coungen
                 }
             });
 

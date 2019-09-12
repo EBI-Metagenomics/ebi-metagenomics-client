@@ -36,9 +36,14 @@
                     </li>
                 </ul>
             </nav>
-            <div class="row columns">
+            <div class="row">
                 <span class="biome_icon icon_m <%= biome.icon %>" title="<%= biome.name %>"></span>
-                <h2>Genome <%= accession %></h2>
+                <h2>Genome <% print(accession) %></h2>
+                <p class="lead" style="margin-left: calc(60px + .5em);">
+                    <span>Type: <% print(type) %></span>
+                    <br/>
+                    <span>Taxonomic lineage: <% print(lineage) %></span>
+                <p>
             </div>
         </script>
             <div class="row columns">
@@ -79,7 +84,7 @@
                     </div>
                 </div>
             </div>
-            <p>A full copy of the raw analysis data is available in the downloads tab.</p>
+            <p>A full copy of the raw analysis data is available in the <a href="#downloads">downloads tab</a>.</p>
         </div>
 
         <script id="downloadsTmpl" type="text/template">

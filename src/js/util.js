@@ -860,9 +860,22 @@ export function getSimpleTaxLineage(fullLineage, removePrefix) {
         head = l.pop();
     }
     if (removePrefix && head) {
-        return head.replace(/[d|p|c|o|f|g|s]__/, '');
+        return cleanTaxLineage(head);
     }
     return head;
+}
+
+/**
+ * Remove the s__ prefixes from a lineage.
+ * @param {string} lineage string with the lineage `d__Bacteria;p__Proteobacteria;c__Gammapr...`
+ * @param {string} replace replace sting
+ * @return {string}
+ */
+export function cleanTaxLineage(lineage, replace) {
+    if (_.isUndefined(replace) || _.isNull(replace)) {
+        replace = '';
+    }
+    return lineage.replace(/;/g, '').replace(/[d|p|c|o|f|g|s]__/g, replace);
 }
 
 /**
