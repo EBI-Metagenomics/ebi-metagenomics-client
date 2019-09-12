@@ -38,7 +38,7 @@
     "js-cookie": "^2.1.4",
     "list.js": "^1.5.0",
     "livefilter": "^2.13.0",
-    "mgnify": "git+ssh://git@github.com/EBI-Metagenomics/ebi-metagenomics-webkit.git#develop",
+    "mgnify": "^1.2.2",
     "motion-ui": "^1.2.3",
     "node-js-marker-clusterer": "^1.0.0",
     "ol": "^5.3.2",

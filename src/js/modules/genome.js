@@ -84,7 +84,7 @@ let GenomeView = Backbone.View.extend({
                     geoStats['Origin of representative genome'] = attr.geographic_origin;
                 }
                 if (attr.geographic_range) {
-                    geoStats['Geographic range of pangenome'] = attr.geographic_range.join(', ');
+                    geoStats['Geographic range of pan-genome'] = attr.geographic_range.join(', ');
                 }
 
                 let extLinks = {};
