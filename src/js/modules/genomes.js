@@ -1,5 +1,3 @@
-const Backbone = require('backbone');
-const _ = require('underscore');
 const util = require('../util');
 const commons = require('../commons');
 const api = require('mgnify').api(process.env.API_URL);
@@ -18,6 +16,8 @@ $('#pagination').append(commons.pagination);
 $('#pageSize').append(commons.pagesize);
 
 const pageFilters = util.getURLFilterParams();
+
+const RELEASE_VERSION = '1.0';
 
 let GenomesView = util.GenericTableView.extend({
     tableObj: null,
@@ -118,50 +118,6 @@ let GenomesView = util.GenericTableView.extend({
     }
 });
 
-/**
- * Filter genomes cb
- * @param {Event} e the event
- */
-function filterGenomesCallback(e) {
-    const releaseVersion = $('#select-release').val();
-    const set = $('#select-genomeset').val();
-
-    const params = genomesView.createInitParams();
-    genomesView.version = releaseVersion;
-    if (releaseVersion !== 'all') {
-        genPhyloTree(releaseVersion);
-        params['release__version'] = releaseVersion;
-    } else {
-        delete params['release__version'];
-    }
-
-    genomesView.genome_set = set;
-    if (set !== 'all') {
-        params['genome_set__name'] = set;
-    } else {
-        delete params['genome_set__name'];
-    }
-    const filterSearch = genomesView.tableObj.$filterInput.val();
-    if (filterSearch) {
-        params['search'] = filterSearch;
-    }
-    genomesView.update(params);
-}
-
-let ReleasesView = Backbone.View.extend({
-    template: _.template($('#releasesTmpl').html()),
-    el: '#releases',
-    init() {
-        const that = this;
-        return this.collection.fetch().done(() => {
-            const options = this.collection.toJSON();
-            that.release_version = options[0]['version'];
-            options.push({'version': 'all'});
-            this.$el.html(this.template({'data': options}));
-            this.$el.find('#select-release').change(filterGenomesCallback);
-        });
-    }
-});
 
 /**
  * Generate the phylogenetic tree
@@ -174,20 +130,15 @@ function genPhyloTree(releaseVersion) {
     });
 }
 
-let releases = new api.Releases();
-let releasesView = new ReleasesView({collection: releases});
-
 let genomes = new api.GenomesCollection();
 
-let genomesView = null;
-releasesView.init().done(() => {
-    genomesView = new GenomesView({collection: genomes});
-    const releaseVersion = $('#select-release').val();
-    genomesView.version = releaseVersion;
-    genPhyloTree(releaseVersion);
-    $.when(genomesView.init()).done(() => {
-        util.attachExpandButtonCallback();
-    });
+let genomesView = new GenomesView({collection: genomes});
+genomesView.version = RELEASE_VERSION;
+
+genPhyloTree(RELEASE_VERSION);
+
+$.when(genomesView.init()).done(() => {
+    util.attachExpandButtonCallback();
 });
 
 new GenomesSearchView({

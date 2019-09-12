@@ -38,6 +38,9 @@
                     explored interactively in the genome browser. Assemblies, annotations and pan-genome
                     results are also available as a separate download.
                 </p>
+                <p>
+                    Version 1.0 released September 2019
+                </p>
                 <div class="row">
                     <ul class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500"
                         data-tabs id="data-tabs">
@@ -52,32 +55,6 @@
                             <section id="genomes-section" class="table-container"></section>
                         </div>
                         <div id="phylo-tab" class="tabs-panel">
-                            <div class="row">
-                                <div class="columns large-6 medium-6 small-12" id="releases">
-                                    <script id="releasesTmpl" type="text/template">
-                                        <label for="releases">Select release version:
-                                            <select id='select-release' title="releases">
-                                                <% for (let release of data){ %>
-                                                <option value="<%= release.version %>"><%= release.version %></option>
-                                                <% } %>
-                                            </select>
-                                        </label>
-                                    </script>
-                                </div>
-                            </div>
-                            <!-- TODO: activate when needed
-                            <div class="columns large-6 medium-6 small-12" id="genomeSets">
-                                <script id="genomeSetTmpl" type="text/template">
-                                    <label for="genomesets">Select by set:
-                                        <select id='select-genomeset' title="genomeSets">
-                                            <% for (let genomeset of data){ %>
-                                            <option value="<%= genomeset.name %>"><%= genomeset.name %></option>
-                                            <% } %>
-                                        </select>
-                                    </label>
-                                </script>
-                            </div>
-                            -->
                             <section id="phylo-section" class="table-container">
                                 <h2>Phylogenetic tree</h2>
                                 <div id="phylo-tree"></div>

@@ -198,6 +198,11 @@ table:not(.tablesorter) th.sort-both:after {
     float: left;
 }
 
+.subtitle {
+    font-size: 1rem;
+    margin-left: calc(60px + .5em); /* 60px is the biome img size */
+}
+
 .facet-remove-button {
     margin-right: 1em !important;
     float: left;

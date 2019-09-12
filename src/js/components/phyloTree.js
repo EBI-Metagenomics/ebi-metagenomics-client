@@ -96,11 +96,16 @@ module.exports = class PhyloTree {
 
             nodeEnter.append('text').attr('dy', 3.5).attr('dx', 5.5).text(function(d) {
                 d = d.data;
-                const name = util.cleanTaxLineage(d.name);
+                const name = util.cleanTaxLineage(d.name) || 'Unknown';
                 if (['root', 'Isolate', 'MAG'].indexOf(d.type) > -1) {
                     return name + ' (' + d.type + ')';
                 } else {
-                    return name + ' (' + (d.countgen || d.coungen) + ')'; // TODO: fix coungen
+                    const count = (d.countgen || d.coungen); // TODO: fix coungen
+                    if (count <= 1 && name.startsWith('MGYG-')) {
+                        return name;
+                    } else {
+                        return name + ' (' + count + ')';
+                    }
                 }
             });
 

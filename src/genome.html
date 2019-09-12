@@ -39,11 +39,11 @@
             <div class="row">
                 <span class="biome_icon icon_m <%= biome.icon %>" title="<%= biome.name %>"></span>
                 <h2>Genome <% print(accession) %></h2>
-                <p class="lead" style="margin-left: calc(60px + .5em);">
-                    <span>Type: <% print(type) %></span>
-                    <br/>
-                    <span>Taxonomic lineage: <% print(lineage) %></span>
-                <p>
+                <p class="subtitle">
+                    <span>Type: <% print(type) %><span>
+                    <br />
+                    <span>Taxonomic lineage: <% print(lineage) %></span>                    
+                </p>
             </div>
         </script>
             <div class="row columns">
@@ -61,6 +61,9 @@
                         </section>
                     </div>
                     <div class="tabs-panel" id="genome-browser">
+                        <p>
+                            In the genome viewer below, individual contigs from the species representative genome can be interactively explored by selecting them from the drop-down list. Proteins can also be coloured based on their functional annotations.
+                        </p>
                         <div id="genome-browser-container">
                             <img class="loading-gif-large"
                                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
@@ -84,7 +87,7 @@
                     </div>
                 </div>
             </div>
-            <p>A full copy of the raw analysis data is available in the <a href="#downloads">downloads tab</a>.</p>
+            <p>A full copy of the raw analysis data is available in the <a id="downloads-link-bottom" href="#downloads">downloads tab</a>.</p>
         </div>
 
         <script id="downloadsTmpl" type="text/template">

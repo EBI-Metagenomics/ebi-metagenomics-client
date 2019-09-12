@@ -295,6 +295,10 @@ function initPage() {
             loadGenomeBrowser(downloadsView.model);
         }
     });
+    // Hook the downloads link at the bottom
+    $('#downloads-link-bottom').click(() => {
+        $('a[href="#downloads"]').trigger('click');
+    });
 }
 
 initPage();

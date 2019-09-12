@@ -113,6 +113,19 @@ module.exports = class GenomeBrowser {
                     });
                 }
 
+                /**
+                 * Calculate the property lenght.
+                 * @return {int} the lenght or undefined
+                 */
+                function getProtLenght() {
+                    const start = parseInt(getAttribute('start'));
+                    const end = parseInt(getAttribute('end'));
+                    if (_.isNaN(start) || _.isNaN(end)) {
+                        return undefined;
+                    }
+                    return Math.ceil((end - start) / 3);
+                }
+
                 const functionalData = {
                     title: 'Functional annotation',
                     data: [{
@@ -149,6 +162,9 @@ module.exports = class GenomeBrowser {
                     }, {
                         name: 'Start / End',
                         value: getAttribute('start') + ' / ' + getAttribute('end')
+                    }, {
+                        name: 'Protein length',
+                        value: getProtLenght()
                     }]
                 };
 
