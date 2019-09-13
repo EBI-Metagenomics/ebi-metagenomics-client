@@ -15,30 +15,9 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table `SUPER_STUDY`
---
-
-DROP TABLE IF EXISTS `SUPER_STUDY`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `SUPER_STUDY` (
-  `STUDY_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `TITLE` varchar(100) DEFAULT NULL,
-  `DESCRIPTION` longtext NOT NULL,
-  PRIMARY KEY (`STUDY_ID`),
-  FULLTEXT KEY `super_study_title_ts_idx` (`TITLE`),
-  FULLTEXT KEY `super_study_description_ts_idx` (`DESCRIPTION`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `SUPER_STUDY`
---
-
 LOCK TABLES `SUPER_STUDY` WRITE;
 /*!40000 ALTER TABLE `SUPER_STUDY` DISABLE KEYS */;
-INSERT INTO `SUPER_STUDY` VALUES (1,'Human microbiome','Prime number emerged into consciousness extraordinary claims require extraordinary evidence inconspicuous motes of rock and gas billions upon billions something incredible is waiting to be known. Dream of the mind\'s eye Euclid great turbulent clouds the only home we\'ve ever known Drake Equation the only home we\'ve ever known. The only home we\'ve ever known hearts of the stars the carbon in our apple pies with pretty stories for which there\'s little good evidence invent the universe made in the interiors of collapsing stars and billions upon billions upon billions upon billions upon billions upon billions upon billions.'),(2,'Cow gut microbime','Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.');
+INSERT INTO `SUPER_STUDY` VALUES (1,'Human microbiome','Prime number emerged into consciousness extraordinary claims require extraordinary evidence inconspicuous motes of rock and gas billions upon billions something incredible is waiting to be known. Dream of the mind\'s eye Euclid great turbulent clouds the only home we\'ve ever known Drake Equation the only home we\'ve ever known. The only home we\'ve ever known hearts of the stars the carbon in our apple pies with pretty stories for which there\'s little good evidence invent the universe made in the interiors of collapsing stars and billions upon billions upon billions upon billions upon billions upon billions upon billions.','test_6sWQrNG.jpg'),(2,'Cow gut microbime','Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.','');
 /*!40000 ALTER TABLE `SUPER_STUDY` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -109,4 +88,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-15 17:52:00
+-- Dump completed on 2019-07-18 20:49:41
