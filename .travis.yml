@@ -83,10 +83,10 @@ before_install:
   - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
 
   # Install build dependencies
-  - npm install cypress
-  - npm install -g webpack
-  - npm install -g codecov
-  - npm install -g nyc
+  - npm install cypress@3.4.1
+  - npm install -g webpack@4.40.1
+  - npm install -g codecov@3.5.0
+  - npm install -g nyc@14.1.1
 
 install:
   # Install npm packages
@@ -105,7 +105,4 @@ after_script:
 cache:
   directories:
     - ~/.cache
-    - ~/.cache/pip
     - ~/.npm
-    - node_modules
-    - ~/.cypress/Cypress
