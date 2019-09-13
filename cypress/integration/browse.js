@@ -4,6 +4,7 @@ import Config from '../util/config';
 
 const origPage = 'browse';
 
+const superStudiesTableDefaultSize = 25;
 const studiesTableDefaultSize = 25;
 const samplesTableDefaultSize = 25;
 
@@ -11,6 +12,31 @@ function setSelectOption(table, selector, option, numResults) {
     cy.get(selector).select(option);
     table.waitForTableLoad(numResults);
 }
+
+const superStudiesTableColumns = {
+    title: {
+        data: [
+            'Human microbiome',
+            'Cow gut microbime'
+        ],
+        type: datatype.STR,
+        sortable: false
+    },
+    description: {
+        data: [
+            'Prime number emerged into consciousness extraordinary claims require extraordinary ' +
+            'evidence inconspicuous motes of rock and gas billions upon billions something ' +
+            'incredible is waiting to be known. Dream of the mind\'s eye Euclid great turbulent ' +
+            'clouds…',
+            'Leverage agile frameworks to provide a robust synopsis for high level overviews. ' +
+            'Iterative approaches to corporate strategy foster collaborative thinking to further ' +
+            'the overall value proposition. Organically grow the holistic world view ' +
+            'of disruptiv…'
+        ],
+        type: datatype.STR,
+        sortable: false
+    }
+};
 
 const studiesTableColumns = {
     biome_icon: {
@@ -72,6 +98,7 @@ const samplesTableColumns = {
     }
 };
 
+let superStudiesTable;
 let studiesTable;
 let samplesTable;
 describe('Browse page', function() {
@@ -79,6 +106,34 @@ describe('Browse page', function() {
         cy.server();
         cy.route(Config.API_URL + '**studies**').as('studiesCall');
         cy.route(Config.API_URL + '**samples**').as('samplesCall');
+    });
+    context('Super studies table', function() {
+        beforeEach(function() {
+            openPage(origPage + '#super-studies');
+            waitForPageLoad('Super Studies list');
+            superStudiesTable = new GenericTableHandler('#super-studies-section',
+                                                        superStudiesTableDefaultSize,
+                                                        true, 2);
+        });
+
+        it('Should contain correct number of studies', function() {
+            superStudiesTable.checkLoadedCorrectly(1, superStudiesTableDefaultSize,
+                                                   2, superStudiesTableColumns, true);
+        });
+
+        it('Should respond to filtering', function() {
+            superStudiesTable.testFiltering('Leverage', [
+                [
+                    'Cow gut microbime',
+                    'Leverage agile frameworks to provide a ' +
+                    'robust synopsis for high level overviews. ' +
+                    'Iterative approaches to corporate strategy ' +
+                    'foster collaborative thinking to further ' +
+                    'the overall value proposition. Organically ' +
+                    'grow the holistic world view of disruptiv…'
+                ]
+            ]);
+        });
     });
     context('Studies table', function() {
         beforeEach(function() {
