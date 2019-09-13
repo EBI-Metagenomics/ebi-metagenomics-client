@@ -30,8 +30,9 @@ export function setCurrentTab(id) {
  * @return {string}
  */
 export function getURLParameter() {
-    let regex = /([A-z0-9,%+.]+)(?:$|[?])/g;
-    return regex.exec(window.location.pathname)[1];
+    let base = window.location.pathname.split('/').slice(-1);
+    let regex = /(.+)(?:$|[?])/g;
+    return regex.exec(base)[1];
 }
 
 /**
@@ -118,9 +119,13 @@ export function attachTabHandlers() {
     }
 
     // Linking click actions
-    $('li.tabs-title > a').on('click', function() {
-        changeTab($($(this).attr('href')));
-        window.location.hash = $(this).attr('href');
+    $('li.tabs-title > a').on('click', function(e) {
+        e.preventDefault();
+        const $anchor = $(this);
+        changeTab($($anchor.attr('href')));
+        const yOffset = window.pageYOffset || ($anchor.offset().top - 472);
+        window.location.hash = $anchor.attr('href');
+        window.scrollTo(0, yOffset);
     });
 }
 
@@ -319,6 +324,8 @@ export function updateTable(view, params) {
         params['sample_accession'] = collectionParams.sample_accession;
     } else if (Object.prototype.hasOwnProperty.call(collectionParams, 'run_accession')) {
         params['run_accession'] = collectionParams.run_accession;
+    } else if (Object.prototype.hasOwnProperty.call(collectionParams, 'release_version')) {
+        params['release_version'] = collectionParams.release_version;
     }
 
     const that = view;
@@ -653,7 +660,7 @@ export function loadLoginForm(next) {
             e.preventDefault();
             $(loginDivID).remove();
             const $username = $form.find('[name=\'username\']');
-            if ($username.val().indexOf('@')>-1) {
+            if ($username.val().indexOf('@') > -1) {
                 console.error('Email is not a valid webin-id, please use your Webin-###');
                 $username.after(
                     '<p id=\'' + loginDivID + '\' class=\'error\'>' +
@@ -810,4 +817,80 @@ export function sendMail(fromEmail, subject, body) {
         }
     });
     return deferred.promise();
+}
+
+/**
+ * Create a display of the series color
+ * @param {number} i index of series color
+ * @return {string} display element
+ */
+export function getColourSquareIcon(i) {
+    const taxColor = Math.min(Commons.TAXONOMY_COLOURS.length - 1, i);
+    return '<div class=\'puce-square-legend\' style=\'background-color: ' +
+        Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
+}
+
+/**
+ * Create a tooltip wrapping a string
+ * @param {string} text
+ * @param {string} tooltipText
+ * @return {string}
+ */
+export function wrapTextTooltip(text, tooltipText) {
+    return `<span data-tooltip tabindex="1" title="${tooltipText}">${text} ` +
+        `<i class='icon icon-generic' data-icon="?" data-cy="public-help-tooltip"></i>` +
+        '</span>';
+}
+
+/**
+ * Retrieve a non-blank taxonomic identity from the species level or upwards
+ * @param {string} fullLineage
+ * @param {bool} removePrefix true if this should remove the 'd|p|c|o|f|g|s__' prefix
+ * @return {string}
+ */
+export function getSimpleTaxLineage(fullLineage, removePrefix) {
+    const l = fullLineage.split(';');
+    let head = l.pop();
+    // Remove all until species
+    while (head.indexOf('s__') === -1) {
+        head = l.pop();
+    }
+    // Find first non-null
+    while (head.length <= 3) {
+        head = l.pop();
+    }
+    if (removePrefix && head) {
+        return cleanTaxLineage(head);
+    }
+    return head;
+}
+
+/**
+ * Remove the s__ prefixes from a lineage.
+ * @param {string} lineage string with the lineage `d__Bacteria;p__Proteobacteria;c__Gammapr...`
+ * @param {string} replace replace sting
+ * @return {string}
+ */
+export function cleanTaxLineage(lineage, replace) {
+    if (_.isUndefined(replace) || _.isNull(replace)) {
+        replace = '';
+    }
+    return lineage.replace(/;/g, '').replace(/[d|p|c|o|f|g|s]__/g, replace);
+}
+
+/**
+ * Find a file in the list with an alias matching the alias, and return it's url
+ * @param {[object]} files list of files
+ * @param {string} alias of wanted file
+ * @return {string} url
+ */
+export function findFileUrl(files, alias) {
+    let url = null;
+    for (let f of files) {
+        if (f.attributes.alias === alias) {
+            url = f.attributes.links[0];
+            break;
+        }
+    }
+    return url;
 }

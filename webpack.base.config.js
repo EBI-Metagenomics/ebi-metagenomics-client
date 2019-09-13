@@ -62,7 +62,11 @@ module.exports = {
         pipeline:
             'src/js/modules/pipeline.js',
         publication:
-            'src/js/modules/publication.js'
+            'src/js/modules/publication.js',
+        genomes:
+            'src/js/modules/genomes.js',
+        genome:
+            'src/js/modules/genome.js'
     },
     plugins: [
         // new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)(),
@@ -245,6 +249,24 @@ module.exports = {
             filename: 'submit.html',
             template: 'handlebars-loader!./src/submit.html',
             chunks: ['submit', 'commons'],
+            minify: minifyOptions,
+            templateData: templateFixtures
+        }),
+        new HtmlWebpackPlugin({
+            title: 'Genomes page',
+            inject: true,
+            filename: 'genomes.html',
+            template: 'handlebars-loader!./src/genomes.html',
+            chunks: ['genomes', 'commons'],
+            minify: minifyOptions,
+            templateData: templateFixtures
+        }),
+        new HtmlWebpackPlugin({
+            title: 'Genome page',
+            inject: true,
+            filename: 'genome.html',
+            template: 'handlebars-loader!./src/genome.html',
+            chunks: ['genome', 'commons'],
             minify: minifyOptions,
             templateData: templateFixtures
         }),
