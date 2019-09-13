@@ -46,8 +46,8 @@
                         data-tabs id="data-tabs">
                         <li class="tabs-title is-active"><a href="#genome-list-tab" aria-selected="true">Genome list</a>
                         </li>
-                        <li class="tabs-title"><a href="#phylo-tab">Phylogenetic tree</a></li>
-                        <li class="tabs-title"><a href="#protein-catalog-tab">Protein catalog</a></li>
+                        <li class="tabs-title"><a href="#phylo-tab">Taxonomy tree</a></li>
+                        <li class="tabs-title"><a href="#protein-catalog-tab">Protein catalogue</a></li>
                         <li class="tabs-title"><a href="#genome-search-tab">Search</a></li>
                     </ul>
                     <div class="tabs-content" data-tab-content="data-tabs">
@@ -56,7 +56,7 @@
                         </div>
                         <div id="phylo-tab" class="tabs-panel">
                             <section id="phylo-section" class="table-container">
-                                <h2>Phylogenetic tree</h2>
+                                <h2>Taxonomy tree</h2>
                                 <div id="phylo-tree"></div>
                                 <div>
                                     The tree viewer is a derivative of the <a href="https://gtdb.ecogenomic.org/tree">GTDB Tree viewer</a>, used under the GNU General Public License, version 3
@@ -172,33 +172,9 @@
     </section>
     </div>
 
-
-    <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
-    <!-- <footer id="local-footer" class="local-footer" role="local-footer"> -->
-    <!-- <div class="row"> -->
-    <!-- <span class="reference">How to reference this page: ...</span> -->
-    <!-- </div> -->
-    <!-- </footer> -->
-    <!-- End optional local footer -->
-    <!-- </div> -->
-    <!-- End suggested layout containers / #content -->
-
-
     <div id="footer">
         {{>partials/elixir}}
         {{>partials/footer}}
     </div>
-
-    <!-- Google Analytics details... -->
-    <!-- Change UA-XXXXX-X to be your util's ID -->
-    <!--
-<script>
-  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
-  Modernizr.load({
-    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-  });
-</script>
--->
 </body>
-
 </html>
