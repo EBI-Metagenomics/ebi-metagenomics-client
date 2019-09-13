@@ -3,7 +3,7 @@ import GenericTableHandler from '../util/genericTable';
 
 const accession = 'ERZ477708';
 const origPage = 'assemblies/' + accession;
-const descriptionSection = '#overview div.row.box';
+const descriptionSection = '#overview div.row div.box';
 
 const assemblyTableColumns = {
     analysisAccession: {
@@ -46,9 +46,9 @@ describe('Assembly page', function() {
         it('Should display description section', function() {
             cy.contains('Description').should('be.visible');
             cy.get(descriptionSection).then(($el) => {
-                const text = $el.text();
-                expect(text).to.contain('Sample:\n            SRS1743794');
-                expect(text).to.contain('ENA accession:\n            ' + accession);
+                const text = $el.text().replace('');
+                expect(text).to.contain('Sample:\n                SRS1743794');
+                expect(text).to.contain('ENA accession:\n                ' + accession);
             });
         });
         it('Table of analyses should load correctly', function() {

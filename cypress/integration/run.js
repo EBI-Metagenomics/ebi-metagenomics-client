@@ -3,7 +3,7 @@ import GenericTableHandler from '../util/genericTable';
 
 const accession = 'ERR770966';
 const origPage = 'runs/' + accession;
-const descriptionSection = '#overview div.row.box';
+const descriptionSection = '#overview div.row div.box';
 const analysesSection = '#analyses div:not(\'row\')';
 
 const analysesTableColumns = {
