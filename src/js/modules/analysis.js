@@ -44,16 +44,6 @@ function getSeriesIndex(index, numSeries) {
     return index;
 }
 
-/**
- * Create a display of the series color
- * @param {number} i index of series color
- * @return {string} display element
- */
-function getColourSquareIcon(i) {
-    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
-    return '<div class=\'puce-square-legend\' style=\'background-color: ' +
-        Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
-}
 
 /**
  * Enable toggling of series visibility, sync'd across table of series and chart
@@ -129,7 +119,7 @@ function loadTaxonomy(analysisID, subunitType) {
         }, 0);
         let i = 0;
         const data = _.map(phylumPie.clusteredData, function(d) {
-            const colorDiv = getColourSquareIcon(i);
+            const colorDiv = util.getColourSquareIcon(i);
             return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
         });
         const options = {
@@ -177,7 +167,7 @@ function loadTaxonomy(analysisID, subunitType) {
         }, 0);
         let i = 0;
         const data = _.map(phylumColumn.clusteredData, function(d) {
-            const colorDiv = getColourSquareIcon(i);
+            const colorDiv = util.getColourSquareIcon(i);
             return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
         });
         const options = {
@@ -222,7 +212,7 @@ function loadTaxonomy(analysisID, subunitType) {
         }, 0);
         let i = 0;
         const data = _.map(stackedColumn.clusteredData, function(d) {
-            const colorDiv = getColourSquareIcon(i);
+            const colorDiv = util.getColourSquareIcon(i);
             return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
         });
         const options = {
@@ -353,7 +343,7 @@ function loadFunctionalAnalysis(analysisID) {
         }, 0);
         const tableData = interproMatchPie.raw_data.map(function(d) {
             d = d.attributes;
-            const colorDiv = getColourSquareIcon(i);
+            const colorDiv = util.getColourSquareIcon(i);
             const interProLink = createInterProLink(d.description, d.accession);
             return [
                 ++i,

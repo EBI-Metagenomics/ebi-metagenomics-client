@@ -63,15 +63,14 @@
     <div class="row columns small-12 medium-12 large-12">
         <table class="{{tableClass}}">
             <thead>
-            <tr>
-                {{#each headers}}
-                    {{#if this.sortBy}}
-                        <th data-sortby='{{this.sortBy}}' class="sort-both">{{this.name}}</th>
-                    {{else}}
-                        <th>{{this.name}}</th>
-                    {{/if}}
-                {{/each}}
-            </tr>
+                <tr>
+                    {{#each headers}}
+                        <th {{#if this.sortBy}} data-sortby='{{this.sortBy}}' {{/if}}
+                            class="{{this.class}} {{#if this.sortBy}} sort-both {{/if}}">
+                            {{this.name}}
+                        </th>
+                    {{/each}}
+                </tr>
             </thead>
             <tbody id="{{tbody_id}}">
             </tbody>

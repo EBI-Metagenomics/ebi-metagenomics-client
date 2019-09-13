@@ -1,9 +1,9 @@
 language: node_js
 node_js:
- - "8.11.4"
+  - 10
 
 python:
-  - "3.4"
+  - "3.6"
 
 services:
   - mysql
@@ -14,13 +14,13 @@ addons:
     packages:
       - nginx
       - python3-pip
+      - libgconf-2-4
 env:
   global:
     - API_URL=http://localhost:9000/metagenomics/api/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
 
 before_install:
-  - pip3 install --user --upgrade pip setuptools
-  - pip3 install --user --upgrade pip six==1.11.0
+  - pip3 install --user --upgrade pip six==1.11.0 setuptools
   - python3 -V
   - pip3 -V
   - pip3 install --user "git+git://github.com/EBI-metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
@@ -37,6 +37,7 @@ before_install:
   # Create EMG and ENA user schemas
   - mysql -e 'CREATE DATABASE emg;'
   - mysql -e 'CREATE DATABASE ena;'
+  - mysql -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES'"
 
   ## EMG SCHEMA
   # Create tables from django model
@@ -82,14 +83,14 @@ before_install:
   - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
 
   # Install build dependencies
-  - npm install cypress
-  - npm install -g webpack
-  - npm install -g codecov
-  - npm install -g nyc
+  - npm install cypress@3.4.1
+  - npm install -g webpack@4.40.1
+  - npm install -g codecov@3.5.0
+  - npm install -g nyc@14.1.1
 
 install:
   # Install npm packages
-  - npm install
+  - npm ci
   - npm run build
   - sudo mv dist/* /usr/share/nginx/html/
 
@@ -102,9 +103,6 @@ after_script:
   - codecov
 
 cache:
-  pip
-  directories:s
-    - ~/.npm
+  directories:
     - ~/.cache
-    - node_modules
-    - /home/travis/.cypress/Cypress
+    - ~/.npm
