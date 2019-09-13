@@ -63,9 +63,9 @@ describe('Run page', function() {
             cy.contains('Description').should('be.visible');
             cy.get(descriptionSection).then(($el) => {
                 const text = $el.text();
-                expect(text).to.contain('Study:\n            MGYS00000462');
-                expect(text).to.contain('Sample:\n            ERS667576');
-                expect(text).to.contain('ENA accession:\n            ' + accession);
+                expect(text).to.contain('Study:\n                MGYS00000462');
+                expect(text).to.contain('Sample:\n                ERS667576');
+                expect(text).to.contain('ENA accession:\n                ' + accession);
             });
         });
         it('Table of analyses should load correctly', function() {
