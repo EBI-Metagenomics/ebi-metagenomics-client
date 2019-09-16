@@ -37,6 +37,8 @@ module.exports = {
             'src/js/modules/healthcheck.js',
         submit:
             'src/js/modules/submit.js',
+        superstudy:
+            'src/js/modules/superstudy.js',
         study:
             'src/js/modules/study.js',
         browse:
@@ -62,7 +64,11 @@ module.exports = {
         pipeline:
             'src/js/modules/pipeline.js',
         publication:
-            'src/js/modules/publication.js'
+            'src/js/modules/publication.js',
+        genomes:
+            'src/js/modules/genomes.js',
+        genome:
+            'src/js/modules/genome.js'
     },
     plugins: [
         // new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)(),
@@ -222,6 +228,15 @@ module.exports = {
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
+            title: 'Super Study page',
+            inject: true,
+            filename: 'superstudy.html',
+            template: 'handlebars-loader!./src/superstudy.html',
+            chunks: ['superstudy', 'commons'],
+            minify: minifyOptions,
+            templateData: templateFixtures
+        }),
+        new HtmlWebpackPlugin({
             title: 'Study page',
             inject: true,
             filename: 'study.html',
@@ -245,6 +260,24 @@ module.exports = {
             filename: 'submit.html',
             template: 'handlebars-loader!./src/submit.html',
             chunks: ['submit', 'commons'],
+            minify: minifyOptions,
+            templateData: templateFixtures
+        }),
+        new HtmlWebpackPlugin({
+            title: 'Genomes page',
+            inject: true,
+            filename: 'genomes.html',
+            template: 'handlebars-loader!./src/genomes.html',
+            chunks: ['genomes', 'commons'],
+            minify: minifyOptions,
+            templateData: templateFixtures
+        }),
+        new HtmlWebpackPlugin({
+            title: 'Genome page',
+            inject: true,
+            filename: 'genome.html',
+            template: 'handlebars-loader!./src/genome.html',
+            chunks: ['genome', 'commons'],
             minify: minifyOptions,
             templateData: templateFixtures
         }),

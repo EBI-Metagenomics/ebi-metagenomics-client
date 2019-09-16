@@ -1,7 +1,7 @@
 const searchUrl = process.env.SEARCH_URL;
 
 const _ = require('underscore');
-const FilterBtnWidget = require('./rmv_filter_widget');
+const FilterBtnWidget = require('./rmvFilterWidget');
 const createRmvButton = new FilterBtnWidget().create;
 const removeFilterButton = new FilterBtnWidget().remove;
 

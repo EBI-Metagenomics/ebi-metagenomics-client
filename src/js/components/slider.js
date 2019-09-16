@@ -1,5 +1,5 @@
 const tmpl = require('../../partials/slider.handlebars');
-const FilterBtnWidget = require('./rmv_filter_widget');
+const FilterBtnWidget = require('./rmvFilterWidget');
 const createRmvButton = new FilterBtnWidget().create;
 let _ = require('underscore');
 

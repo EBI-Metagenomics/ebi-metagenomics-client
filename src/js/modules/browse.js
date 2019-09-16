@@ -20,25 +20,34 @@ const pageFilters = util.getURLFilterParams();
 const BIOME_SELECTOR_DEPTH = 3;
 
 /**
- * Create basic request parameters for calls to studies / samples on EMG API
+ * Create basic request parameters for calls to the EMG API
+ * @param {object} options Object containing the following properties:
+ * {boolean} biome if true use the lineage filter
+ * {ordering} ordering set to configure the default ordening
  * @return {object}
  */
-function createInitParams() {
+function createInitParams(options) {
+    options = options || {
+        ordering: '-last_update',
+        biome: true
+    };
     let params = {};
     params.page = pagination.currentPage;
 
-    const biome = pageFilters['lineage'];
-    if (biome) {
-        params.lineage = biome;
-    } else {
-        params.lineage = 'root';
+    if (options.biome) {
+        const biome = pageFilters['lineage'];
+        if (biome) {
+            params.lineage = biome;
+        } else {
+            params.lineage = 'root';
+        }
     }
 
     const ordering = pageFilters['ordering'];
     if (ordering) {
         params.ordering = ordering;
-    } else {
-        params.ordering = '-last_update';
+    } else if (options.ordering) {
+        params.ordering = options.ordering;
     }
 
     const search = pageFilters['search'];
@@ -102,6 +111,49 @@ let StudiesView = util.GenericTableView.extend({
         };
         this.tableObj = new GenericTable($studiesSection, tableOptions);
         this.tableObj.order = params.ordering;
+        this.update(params);
+    }
+});
+
+let SuperStudiesView = util.GenericTableView.extend({
+    tableObj: null,
+    pagination: null,
+    params: {},
+
+    getRowData(attr) {
+        const titleLink = '<a href=\'' + attr.superstudy_url + '\'>' +
+                          attr.superstudy_title + '</a>';
+        return [titleLink, util.truncateString(attr.superstudy_description, 250)];
+    },
+
+    initialize() {
+        const that = this;
+        const columns = [
+            {sortBy: 'superstudy_title', name: 'Title'},
+            {sortBy: 'superstudy_description', name: 'Description'}
+        ];
+
+        let params = createInitParams({biome: false, ordering: 'super_study_id'});
+
+        const $superStudiesSection = $('#super-studies-section');
+        let tableOptions = {
+            title: 'Super Studies list',
+            headers: columns,
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: true,
+            textFilter: true,
+            biomeFilter: false,
+            tableClass: 'browse-super-studies-table',
+            hideIfEmpty: false,
+            callback: function(page, pageSize, _, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    search: search
+                });
+            }
+        };
+        this.tableObj = new GenericTable($superStudiesSection, tableOptions);
         this.update(params);
     }
 });
@@ -181,7 +233,7 @@ let PublicationsView = util.GenericTableView.extend({
             {sortBy: 'studies_count', name: 'Studies'},
             {sortBy: 'published_year', name: 'Year of pub.'}
         ];
-        let params = createInitParams();
+        let params = createInitParams({biome: false, ordering: '-published_year'});
 
         const $samplesSection = $('#publications-section');
 
@@ -200,8 +252,7 @@ let PublicationsView = util.GenericTableView.extend({
                     page: page,
                     page_size: pageSize,
                     ordering: order || that.tableObj.getCurrentOrder(),
-                    search: search,
-                    lineage: $('.biome-select').val()
+                    search: search
                 });
             }
         };
@@ -250,6 +301,9 @@ let biomes = new BiomeTree({rootLineage: rootLineage, relativeDepth: BIOME_SELEC
 
 new util.BiomeCollectionView({collection: biomes});
 
+let superStudies = new api.SuperStudiesCollection();
+new SuperStudiesView({collection: superStudies});
+
 let studies = new api.StudiesCollection();
 let studiesView = new StudiesView({collection: studies});
 
@@ -283,7 +337,6 @@ function initBiomeFilter() {
             $biomeSelect.prop('selectedIndex', 0);
             $biomeSelect.trigger('change');
         });
-
     });
 }
 

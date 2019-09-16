@@ -1,9 +1,11 @@
 <div class="row columns">
     <h4><a class="expand-button min" for="#{{listContainer}}">{{title}}</a></h4>
-    <div id="{{listContainer}}" class="row box">
+    <div id="{{listContainer}}" class="box">
         {{#each properties as |value key|}}
-            <div class="column small-12 medium-4 large-2 detailList-key">{{{key}}}:</div>
-            <div class="column small-12 medium-8 large-10  detailList-value">{{{value}}}</div>
+            <div class="row">
+                <div class="column small-12 medium-4 large-4 detailList-key">{{{key}}}:</div>
+                <div class="column small-12 medium-8 large-8 detailList-value">{{{value}}}</div>
+            </div>
         {{/each}}
     </div>
 </div>

@@ -37,7 +37,7 @@ describe('Login process', function() {
 
         it('Should close on click (via close button)', function() {
             openModal();
-            cy.get(loginModal).find('a').contains('Cancel').click();
+            cy.get(loginModal).find('.form-actions-no-box a').contains('Cancel').click();
             cy.get(loginModal).should('be.hidden');
         });
 

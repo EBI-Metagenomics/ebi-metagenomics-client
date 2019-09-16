@@ -1,4 +1,6 @@
 const _ = require('underscore');
+require('tablesorter');
+
 const GenericTable = require('./genericTable');
 require('../../../static/js/jquery.TableCSVExport');
 
@@ -15,6 +17,11 @@ module.exports = class ClientSideTable extends GenericTable {
             const str = $(this).val();
             that.filterTable(str);
         });
+        if (options.filename) {
+            this.filename = options.filename;
+        } else {
+            this.filename = 'download.csv';
+        }
         this.initHeaders();
         this.attachDownloadHandler();
     }
@@ -171,7 +178,8 @@ module.exports = class ClientSideTable extends GenericTable {
         this.$downloadLink.click(() => {
             $(that.$table).TableCSVExport({
                 showHiddenRows: true,
-                delivery: 'download'
+                delivery: 'download',
+                filename: this.filename
             });
         });
     }

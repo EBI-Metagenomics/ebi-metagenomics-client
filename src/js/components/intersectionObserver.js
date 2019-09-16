@@ -1,4 +1,4 @@
-require('intersection-observer');
+require('intersectionObserver');
 
 const config = {
     // If the image gets within 50px in the Y axis, start the download.
