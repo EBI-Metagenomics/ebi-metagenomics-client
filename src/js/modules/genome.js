@@ -296,7 +296,8 @@ function initPage() {
         }
     });
     // Hook the downloads link at the bottom
-    $('#downloads-link-bottom').click(() => {
+    $('#downloads-link-bottom').click((event) => {
+        event.preventDefault();
         $('a[href="#downloads"]').trigger('click');
     });
 }
