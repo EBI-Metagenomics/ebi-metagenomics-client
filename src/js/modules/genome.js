@@ -298,7 +298,7 @@ function initPage() {
     // Hook the downloads link at the bottom
     $('#downloads-link-bottom').click((event) => {
         event.preventDefault();
-        $('a[href="#downloads"]').trigger('click');
+        $('.tabs-title > a[href="#downloads"]').trigger('click');
     });
 }
 
