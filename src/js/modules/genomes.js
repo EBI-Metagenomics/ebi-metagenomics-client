@@ -35,8 +35,10 @@ let GenomesView = util.GenericTableView.extend({
         return [
             biomeIcon,
             genomeUrl, attr.length,
-            attr.num_contigs, attr.completeness,
-            attr.contamination, attr.type,
+            attr.num_genomes_total || 1,
+            attr.completeness,
+            attr.contamination,
+            attr.type,
             util.getSimpleTaxLineage(attr.taxon_lineage, true), attr.last_updated
         ];
     },
@@ -83,7 +85,7 @@ let GenomesView = util.GenericTableView.extend({
             {sortBy: null, name: 'Biome'},
             {sortBy: 'accession', name: 'Accession'},
             {sortBy: 'length', name: 'Length'},
-            {sortBy: 'num_contigs', name: 'Num. of contigs'},
+            {sortBy: 'num_genomes_total', name: 'Num. of genomes'},
             {sortBy: 'completeness', name: 'Completeness'},
             {sortBy: 'contamination', name: 'Contamination'},
             {sortBy: null, name: 'Type'},
@@ -115,6 +117,12 @@ let GenomesView = util.GenericTableView.extend({
         this.tableObj = new GenericTable($studiesSection, tableOptions);
         this.tableObj.order = params.ordering;
         this.update(params);
+
+        // TODO: this has to be part of the generic table behaviuor.
+        const $clearBtn = $('.clear-filter');
+        $clearBtn.click(() => {
+            $('.table-filter').val('').trigger('keyup');
+        });
     }
 });
 
