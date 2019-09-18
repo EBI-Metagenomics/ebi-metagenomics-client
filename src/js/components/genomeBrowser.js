@@ -25,6 +25,7 @@ module.exports = class GenomeBrowser {
             showTrackLabelButton: false,
             showTrackLabels: false,
             showCenterGuide: false,
+            showAllChromosomes: true,
             reference: {
                 fastaURL: config['fasta_url'],
                 indexURL: config['fasta_index_url'],
