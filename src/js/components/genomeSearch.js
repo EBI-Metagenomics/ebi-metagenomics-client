@@ -123,8 +123,8 @@ module.exports = Backbone.View.extend({
 
         if (!this.validateSequence(sequence)) {
             this.showMessage('Invalid sequence. It has to be a valid DNA sequence longer than ' +
-                this.MIN_LEN + ' pb and shorter than ' +
-                this.MAX_LEN + ' pb', this.MSG_TYPE.ERROR);
+                this.MIN_LEN + ' bp and shorter than ' +
+                this.MAX_LEN + ' bp', this.MSG_TYPE.ERROR);
             this.$searchButton.prop('disabled', false);
             this.$loading.hide();
             return;

@@ -45,7 +45,9 @@ let GenomeView = Backbone.View.extend({
                 genomeStats['GC content'] = attr.gc_content + '%';
 
                 const lineage = $.trim(util.cleanTaxLineage(attr.taxon_lineage, '$'))
+                                .substring(1)
                                 .split('$')
+                                .filter((d) => d.length > 0)
                                 .join(' > ');
                 genomeStats['Taxonomic lineage'] = lineage;
 
@@ -121,7 +123,7 @@ let GenomeView = Backbone.View.extend({
                     extLinks['NCBI study accession'] = url;
                 }
                 if (attr.patric_genome_accession) {
-                    let url = util.createLinkTag(attr.patric_genome_url,
+                    let url = util.createLinkTag(attr.patric_url,
                         attr.patric_genome_accession);
                     extLinks['PATRIC genome accession'] = url;
                 }
