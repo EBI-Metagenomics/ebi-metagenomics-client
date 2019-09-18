@@ -30,7 +30,7 @@ let GenomeView = Backbone.View.extend({
                     'Length (bp)': attr.length,
                     'Contamination': attr.contamination + '%',
                     'Completeness': attr.completeness + '%',
-                    'Num. of genomes': attr.num_contigs
+                    'Num. of contigs': attr.num_contigs
                 };
                 if (attr.num_genomes_total) {
                     genomeStats['Total number of genomes in species'] = attr.num_genomes_total;
@@ -44,8 +44,8 @@ let GenomeView = Backbone.View.extend({
                 genomeStats['Number of proteins'] = attr.num_proteins;
                 genomeStats['GC content'] = attr.gc_content + '%';
 
-                const lineage = $.trim(util.cleanTaxLineage(attr.taxon_lineage, ' '))
-                                .split(' ')
+                const lineage = $.trim(util.cleanTaxLineage(attr.taxon_lineage, '$'))
+                                .split('$')
                                 .join(' > ');
                 genomeStats['Taxonomic lineage'] = lineage;
 
@@ -87,7 +87,7 @@ let GenomeView = Backbone.View.extend({
                 if (attr.geographic_origin) {
                     geoStats['Origin of representative genome'] = attr.geographic_origin;
                 }
-                if (attr.geographic_range) {
+                if (attr.geographic_range && attr.geographic_range.length) {
                     geoStats['Geographic range of pan-genome'] = attr.geographic_range.join(', ');
                 }
 
@@ -153,19 +153,30 @@ let GenomeView = Backbone.View.extend({
 
 /**
  * Load the COGs
+ * @param {Genome} genome Genome model
  */
-function loadCog() {
-    const cogColumn = new charts.GenomeCogColumnChart('cog-column',
-        {accession: genomeId});
+function loadCog(genome) {
+    const loadPangenomeData = genome.get('num_genomes_total') > 1;
+    const cogColumn = new charts.GenomeCogColumnChart(
+        'cog-column',
+        {accession: genomeId},
+        {includePangenome: loadPangenomeData}
+    );
     cogColumn.loaded.done(() => {
-        const headers = [
+        let headers = [
             {sortBy: 'a', name: 'COG ID'},
             {sortBy: 'a', name: 'Description'},
-            {sortBy: 'a', name: 'Genome count'},
-            {sortBy: 'a', name: 'Pan-genome count'}
+            {sortBy: 'a', name: 'Genome count'}
         ];
+        if (loadPangenomeData) {
+            headers.push({sortBy: 'a', name: 'Pan-genome count'});
+        }
         const data = cogColumn.data.map((e) => {
-            return [e.name, e.description, e['genome-count'], e['pangenome-count']];
+            let r = [e.name, e.description, e['genome-count']];
+            if (loadPangenomeData) {
+                r.push(e['pangenome-count']);
+            }
+            return r;
         });
         const options = {
             title: '',
@@ -180,19 +191,30 @@ function loadCog() {
 
 /**
  * Load the KEGG Classes
+ * @param {Genome} genome Genome model
  */
-function loadKeggClass() {
-    const keggColumn = new charts.GenomeKeggClassColumnChart('kegg-class-column',
-        {accession: genomeId});
+function loadKeggClass(genome) {
+    const loadPangenomeData = genome.get('num_genomes_total') > 1;
+    const keggColumn = new charts.GenomeKeggClassColumnChart(
+        'kegg-class-column',
+        {accession: genomeId},
+        {includePangenome: loadPangenomeData}
+    );
     keggColumn.loaded.done(() => {
-        const headers = [
+        let headers = [
             {sortBy: 'a', name: 'Class ID'},
             {sortBy: 'a', name: 'Description'},
-            {sortBy: 'a', name: 'Genome count'},
-            {sortBy: 'a', name: 'Pan-genome count'}
+            {sortBy: 'a', name: 'Genome count'}
         ];
+        if (loadPangenomeData) {
+            headers.push({sortBy: 'a', name: 'Pan-genome count'});
+        }
         const data = keggColumn.data.map((e) => {
-            return [e['class-id'], e.name, e['genome-count'], e['pangenome-count']];
+            let r = [e['class-id'], e.name, e['genome-count']];
+            if (loadPangenomeData) {
+                r.push(e['pangenome-count']);
+            }
+            return r;
         });
         const options = {
             title: '',
@@ -207,19 +229,30 @@ function loadKeggClass() {
 
 /**
  * Load the KEGG Module
+ * @param {Genome} genome Genome model
  */
-function loadKeggModule() {
-    const keggColumn = new charts.GenomeKeggModuleColumnChart('kegg-module-column',
-        {accession: genomeId});
+function loadKeggModule(genome) {
+    const loadPangenomeData = genome.get('num_genomes_total') > 1;
+    const keggColumn = new charts.GenomeKeggModuleColumnChart(
+        'kegg-module-column',
+        {accession: genomeId},
+        {includePangenome: loadPangenomeData}
+    );
     keggColumn.loaded.done(() => {
-        const headers = [
+        let headers = [
             {sortBy: 'a', name: 'Module ID'},
             {sortBy: 'a', name: 'Description'},
-            {sortBy: 'a', name: 'Genome count'},
-            {sortBy: 'a', name: 'Pan-genome count'}
+            {sortBy: 'a', name: 'Genome count'}
         ];
+        if (loadPangenomeData) {
+            headers.push({sortBy: 'a', name: 'Pan-genome count'});
+        }
         const data = keggColumn.data.map((e) => {
-            return [e.name, e.description, e['genome-count'], e['pangenome-count']];
+            let r = [e.name, e.description, e['genome-count']];
+            if (loadPangenomeData) {
+                r.push(e['pangenome-count']);
+            }
+            return r;
         });
         const options = {
             title: '',
@@ -278,12 +311,12 @@ function initPage() {
     let downloadsView = new DownloadsView({model: downloads});
     genomeView.fetchAndRender().done(() => {
         util.attachExpandButtonCallback();
+        // Charts //
+        loadCog(genome);
+        loadKeggClass(genome);
+        loadKeggModule(genome);
     });
 
-    // Charts
-    loadCog();
-    loadKeggClass();
-    loadKeggModule();
     downloadsView.init().done(() => {
         // Genome browser loading is delayed UNLESS div is visible
         // This mitigates bug in IGV which created a blank canvas
