@@ -1,0 +1,28 @@
+.igv-nav-bar-toggle-button-container .igv-colour-selector {
+	height: 1.5em;
+	font-size: .8rem;
+	margin: auto 0 auto 5px;
+	width: 100px;
+}
+
+.igv-locus-size-group .igv-search-container {
+    width: 200px !important;
+}
+
+.sub-legend caption,
+.sub-legend tr {
+	margin: .5rem .625rem .625rem;
+}
+
+.legend-col {
+	margin: 10px;
+}
+
+.legend-entry {
+	float: left;
+	clear: right;
+	padding-bottom: .5em;
+	padding-right: 1em;
+	line-height: 1;
+	min-width: 55px;
+}

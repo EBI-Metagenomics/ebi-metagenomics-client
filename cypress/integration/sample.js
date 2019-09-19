@@ -344,28 +344,28 @@ describe('Sample page', function() {
             waitForPageLoad(projectId);
             cy.get('#sample-metadata').then(($el) => {
                 const text = Cypress.$($el).text();
-                expect(text).to.contain('Collection date:\n            2014-11-17');
+                expect(text).to.contain('Collection date:\n                2014-11-17');
                 expect(text)
                     .to
-                    .contain('ENA checklist:\n            GSC MIxS plant associated (ERC000020)');
+                    .contain('ENA checklist:\n                GSC MIxS plant associated (ERC000020)');
                 expect(text)
                     .to
-                    .contain('Geographic location (region and locality):\n            Cologne');
-                expect(text).to.contain('Host common name:\n            Thale cress');
-                expect(text).to.contain('Host taxid:\n            3702');
-                expect(text).to.contain('Instrument model:\n            Illumina MiSeq');
-                expect(text).to.contain('Investigation type:\n            metagenome');
-                expect(text).to.contain('NCBI sample classification:\n            1297885');
-                expect(text).to.contain('Plant product:\n            clay');
-                expect(text)
-                    .to
-                    .contain(
-                        'Plant-associated environmental package:\n            plant-associated');
+                    .contain('Geographic location (region and locality):\n                Cologne');
+                expect(text).to.contain('Host common name:\n                Thale cress');
+                expect(text).to.contain('Host taxid:\n                3702');
+                expect(text).to.contain('Instrument model:\n                Illumina MiSeq');
+                expect(text).to.contain('Investigation type:\n                metagenome');
+                expect(text).to.contain('NCBI sample classification:\n                1297885');
+                expect(text).to.contain('Plant product:\n                clay');
                 expect(text)
                     .to
                     .contain(
-                        'Project name:\n            ena-STUDY-MPIPZ-29-10-2015-07:38:39:510-31');
-                expect(text).to.contain('Sequencing method:\n            MiSeq');
+                        'Plant-associated environmental package:\n                plant-associated');
+                expect(text)
+                    .to
+                    .contain(
+                        'Project name:\n                ena-STUDY-MPIPZ-29-10-2015-07:38:39:510-31');
+                expect(text).to.contain('Sequencing method:\n                MiSeq');
             });
         });
     });
