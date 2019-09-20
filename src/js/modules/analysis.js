@@ -1,25 +1,237 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
-const INTERPRO_URL = process.env.INTERPRO_URL;
 const Commons = require('../commons');
 const api = require('mgnify').api(process.env.API_URL);
 const charts = require('mgnify').charts;
 const util = require('../util');
-
 const ClientSideTable = require('../components/clientSideTable');
 const DetailList = require('../components/detailList');
+const igv = require('igv').default;
+
 require('tablesorter');
+require('webpack-jquery-ui/slider');
+require('webpack-jquery-ui/css');
 
+const INTERPRO_URL = process.env.INTERPRO_URL;
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
-
 const DEFAULT_PAGE_SIZE = 25;
 
 util.setupPage('#browse-nav');
-
 window.Foundation.addToJquery($);
 
-let analysisID = util.getURLParameter();
+const analysisID = util.getURLParameter(); // MGYA00141542
 util.specifyPageTitle('Analysis', analysisID);
+
+
+/* Assembly Viewer */
+let AnalysesContig = Backbone.Model.extend({
+    parse(data) {
+        return {
+            display_name: data.attributes['display-name'],
+            contig_name: data.attributes['contig-name'],
+            length: data.attributes.length,
+            coverage: data.attributes.coverage
+        };
+    }
+});
+
+let ContigCollection = Backbone.Collection.extend({
+    model: AnalysesContig,
+    initialize(options) {
+        this.accession = options.accession;
+    },
+    url() {
+        return process.env.API_URL + 'analyses/' + this.accession + '/contigs';
+    },
+    parse(response) {
+        return response.data;
+    }
+});
+
+let ContigsView = Backbone.View.extend({
+
+    el: $('#contigs-containter'),
+
+    events: {
+        'click .contig-browser': 'contigViewer',
+        'click #filter': 'render'
+    },
+
+    initialize() {
+        const that = this;
+        this.$igvDiv = $('#genome-browser');
+        this.$gbLoading = $('#gb-loading');
+        this.$tblLoading = $('#table-loading');
+        this.$popoverTemplate = _.template($('#igv-popup-template').html());
+        /* Slider */
+        this.$maxLen = $('#max-length');
+        this.$minLen = $('#min-length');
+        this.$lenSlider = this.$el.find('.slider').slider({
+            range: true,
+            min: 1000,
+            max: 100000,
+            values: [10000, 100000],
+            change: (event, ui) => {
+                that.$maxLen.val(ui.values[1]);
+                that.$minLen.val(ui.values[0]);
+            }
+        });
+        /* Features filters */
+        this.$cog = $('#cog-filter');
+        this.$kegg = $('#kegg-filter');
+        this.$taxonomtFilter = $('#taxonomy-filter');
+
+        const tableOptions = {
+            tableContainer: 'contigs-table',
+            headers: [
+                {sortBy: 'a', name: 'Name'},
+                {sortBy: 'a', name: 'Length (pb)'},
+                {sortBy: 'a', name: 'Coverage'}
+            ],
+            initPageSize: DEFAULT_PAGE_SIZE,
+            textFilter: true
+        };
+        this.$contigsTable = new ClientSideTable($('#contigs-table'), tableOptions);
+    },
+
+    /**
+     * Refresh the table data.
+     * @return {Deferred} Deferred promise
+     */
+    refreshTable() {
+        const that = this;
+        const deferred = $.Deferred();
+        this.collection.fetch({
+            data: {
+                gt: this.$minLen.val(),
+                lt: this.$maxLen.val(),
+                cog: this.$cog.val(),
+                kegg: this.$kegg.val(),
+                taxonomy: this.$taxonomtFilter.val()
+            },
+            success() {
+                const data = _.reduce(that.collection.models, (arr, model) => {
+                    arr.push([
+                        '<a href="#" class="contig-browser" data-name="' +
+                            model.attributes.contig_name +
+                        '">' +
+                            model.attributes.display_name +
+                        '</a>',
+                        model.attributes.length,
+                        model.attributes.coverage
+                    ]);
+                    return arr;
+                }, []);
+                deferred.resolve(data);
+            },
+            error(error) {
+                // TODO HANDLE error
+                console.log(error);
+                deferred.reject();
+            }
+        });
+        return deferred.promise();
+    },
+    /**
+     * Render
+     * @param {bool} viewFirst Load the first contig of the table
+     */
+    render(viewFirst) {
+        const that = this;
+        this.$tblLoading.show();
+        that.refreshTable().then((data) => {
+            that.$contigsTable.update(data, true, 1);
+            if (viewFirst) {
+                $('.contig-browser').first().trigger('click');
+            }
+        }).catch((err) => {
+            // TODO HANDLE error
+            console.log('Error loading the contigs:' + err);
+        }).always(() => {
+            this.$tblLoading.hide();
+        });
+    },
+
+    /**
+     * View a contig using IGV.
+     * @param {Event} e the event
+     */
+    contigViewer(e) {
+        e.preventDefault();
+        const that = this;
+
+        const contigName = $(e.target).data('name');
+        const displayName = $(e.target).val();
+        let options = {
+            showChromosomeWidget: false,
+            showTrackLabelButton: false,
+            showTrackLabels: false,
+            showCenterGuide: false,
+            reference: {
+                indexed: false,
+                fastaURL: process.env.API_URL + 'analyses/' + this.collection.accession + 
+                          '/contigs/' + contigName
+            },
+            tracks: [{
+                name: displayName,
+                type: 'annotation',
+                format: 'gff3',
+                url: process.env.API_URL + 'analyses/' + this.collection.accession +
+                     '/annotations/' + contigName,
+                displayMode: 'EXPANDED',
+                nameField: 'gene'
+            }],
+            ebi: {
+                colorAttributes: [
+                    'Colour', /* Label */
+                    'COG',
+                    'product',
+                    'Pfam',
+                    'KEGG',
+                    'InterPro',
+                    'eggNOG'
+                ],
+                showLegendButton: true
+            }
+        };
+
+        this.$gbLoading.show();
+
+        if (this.igvBrowser) {
+            igv.removeBrowser(this.igvBrowser);
+        }
+
+        igv.createBrowser(this.$igvDiv, options).then((browser) => {
+            // Customize the track Pop Over
+            browser.on('trackclick', (ignored, data) => {
+                if (!data || !data.length) {
+                    return false;
+                }
+
+                let attributes = _.where(data, (d) => {
+                    return d.name;
+                });
+
+                if (attributes.length === 0) {
+                    return false;
+                }
+
+                // By returning a string from the trackclick handler
+                // we're asking IGV to use our custom HTML in its pop-over.
+                const markup = this.$popoverTemplate({attributes: attributes});
+                return markup;
+            });
+            this.igvBrowser = browser;
+            this.$gbLoading.hide();
+        }).catch((error) => {
+            // TODO: Handle
+            console.error(error);
+            that.igvBrowser = undefined;
+            that.$gbLoading.hide();
+            // FIXME: clean the browser
+        });
+    }
+});
 
 /**
  * Fetch data and render nucleotide position chart in QC tab
@@ -43,6 +255,16 @@ function getSeriesIndex(index, numSeries) {
     return index;
 }
 
+/**
+ * Create a display of the series color
+ * @param {number} i index of series color
+ * @return {string} display element
+ */
+function getColourSquareIcon(i) {
+    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
+    return '<div class=\'puce-square-legend\' style=\'background-color: ' +
+        Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
+}
 
 /**
  * Enable toggling of series visibility, sync'd across table of series and chart
@@ -76,8 +298,7 @@ function createInterProLink(text, id) {
 /**
  * Load krona chart for current view
  * @param {string} analysisID ENA primary accession for analysis
- * @param {string} type subunit type (for pipeline version 4.0 and above) 
- *                      ("ssu", "lsu", "itsu" or "itso")
+ * @param {string} type subunit type (for pipeline version 4.0 and above) ("ssu" or "lsu")
  */
 function loadKronaChart(analysisID, type) {
     const kronaUrl = api.getKronaURL(analysisID, type);
@@ -90,19 +311,19 @@ function loadKronaChart(analysisID, type) {
 /**
  * Load taxonomy data and create graphs
  * @param {string} analysisID ENA analysis primary accession
- * @param {string} category of analysis (see API documentation for endpoint)
+ * @param {string} subunitType of analysis (see API documentation for endpoint)
  * @return {jQuery.Promise} taxonomy backbone model
  */
-function loadTaxonomy(analysisID, category) {
-    loadKronaChart(analysisID, category);
+function loadTaxonomy(analysisID, subunitType) {
+    loadKronaChart(analysisID, subunitType);
 
     // Load pie charts
     const domainPie = new charts.TaxonomyPie('domain-composition-pie',
-        {accession: analysisID, type: category},
+        {accession: analysisID, type: subunitType},
         {title: 'Domain composition', seriesName: 'reads', subtitle: false}
     );
     const phylumPie = new charts.TaxonomyPie('phylum-composition-pie',
-        {accession: analysisID, type: category, groupingDepth: 2},
+        {accession: analysisID, type: subunitType, groupingDepth: 2},
         {title: 'Phylum composition', seriesName: 'reads', legend: true}
     );
 
@@ -119,7 +340,7 @@ function loadTaxonomy(analysisID, category) {
         }, 0);
         let i = 0;
         const data = _.map(phylumPie.clusteredData, function(d) {
-            const colorDiv = util.getColourSquareIcon(i);
+            const colorDiv = getColourSquareIcon(i);
             return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
         });
         const options = {
@@ -147,10 +368,10 @@ function loadTaxonomy(analysisID, category) {
 
     // Load column charts
     const domainColumn = new charts.TaxonomyColumn('domain-composition-column',
-        {accession: analysisID, type: category},
+        {accession: analysisID, type: subunitType},
         {title: 'Domain composition', seriesName: 'reads', subtitle: false});
     const phylumColumn = new charts.TaxonomyColumn('phylum-composition-column',
-        {accession: analysisID, type: category, groupingDepth: 2},
+        {accession: analysisID, type: subunitType, groupingDepth: 2},
         {title: 'Phylum composition (top 10)', seriesName: 'reads', numColumns: 10}
     );
 
@@ -167,7 +388,7 @@ function loadTaxonomy(analysisID, category) {
         }, 0);
         let i = 0;
         const data = _.map(phylumColumn.clusteredData, function(d) {
-            const colorDiv = util.getColourSquareIcon(i);
+            const colorDiv = getColourSquareIcon(i);
             return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
         });
         const options = {
@@ -196,7 +417,7 @@ function loadTaxonomy(analysisID, category) {
 
     // Load stacked column charts
     const stackedColumn = new charts.TaxonomyColumnStacked('phylum-composition-stacked-column',
-        {accession: analysisID, type: category},
+        {accession: analysisID, type: subunitType},
         {title: 'Phylum composition', seriesName: 'reads'});
 
     stackedColumn.loaded.done(() => {
@@ -212,7 +433,7 @@ function loadTaxonomy(analysisID, category) {
         }, 0);
         let i = 0;
         const data = _.map(stackedColumn.clusteredData, function(d) {
-            const colorDiv = util.getColourSquareIcon(i);
+            const colorDiv = getColourSquareIcon(i);
             return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
         });
         const options = {
@@ -238,12 +459,12 @@ function loadTaxonomy(analysisID, category) {
 }
 
 /**
- * Disable a taxonomy selector button and check the one selected
+ * Disable a subunit button and check the selected type
  * @param {string} enableType /ssu or /lsu
  */
-function disableTaxonomyRadio(enableType) {
-    $('.tax-select-button[value!=\'' + enableType + '\']').attr('checked', false);
-    $('.tax-select-button[value=\'' + enableType + '\']').attr('checked', true);
+function disableSubUnitRadio(enableType) {
+    $('.rna-select-button[value!=\'' + enableType + '\']').attr('disabled', true);
+    $('.rna-select-button[value=\'' + enableType + '\']').attr('checked', true);
 }
 
 /**
@@ -256,18 +477,17 @@ function displayTaxonomyGraphError() {
 }
 
 /**
- * Attempt to load taxonomy, and fallback to /lsu if /ssu does not exist.
- * If ITS is present then this will load the itsonedb|itsunite.
+ * Attempt to load taxonomy, and fallback to /lsu if /ssu does not exist
  * @param {string} analysisID accession of analysis
- * @param {string} category of analysis (ssu, lsu, itsonedb, itsunite)
+ * @param {string} subunitType of analysis
  * @param {float} pipelineVersion
  * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
  */
-function loadTaxonomyWithFallback(analysisID, category, pipelineVersion, experimentType) {
-    loadTaxonomy(analysisID, category).fail((model) => {
-        if (category === '/ssu') {
-            category = '/lsu';
-            loadTaxonomy(analysisID, category).fail((model) => {
+function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, experimentType) {
+    loadTaxonomy(analysisID, subunitType).fail((model) => {
+        if (subunitType === '/ssu') {
+            subunitType = '/lsu';
+            loadTaxonomy(analysisID, subunitType).fail((model) => {
                 if (model.length === 0) {
                     displayTaxonomyGraphError();
                 }
@@ -279,7 +499,7 @@ function loadTaxonomyWithFallback(analysisID, category, pipelineVersion, experim
         }
     });
     if (['amplicon', 'metabarcoding'].indexOf(experimentType) > -1 && pipelineVersion >= 4.0) {
-        disableTaxonomyRadio(category);
+        disableSubUnitRadio(subunitType);
     }
 }
 
@@ -344,7 +564,7 @@ function loadFunctionalAnalysis(analysisID) {
         }, 0);
         const tableData = interproMatchPie.raw_data.map(function(d) {
             d = d.attributes;
-            const colorDiv = util.getColourSquareIcon(i);
+            const colorDiv = getColourSquareIcon(i);
             const interProLink = createInterProLink(d.description, d.accession);
             return [
                 ++i,
@@ -427,6 +647,7 @@ let DownloadView = Backbone.View.extend({
 /**
  * Load download tab view
  * @param {string} analysisID ENA analysis primary accession
+ * @param {string} experimentType Experiment Type [Assembly, Amplicon, Metabarcoding]
  */
 function loadDownloads(analysisID, experimentType) {
     let downloads = new api.AnalysisDownloads({id: analysisID, experiment_type: experimentType});
@@ -439,8 +660,8 @@ function loadDownloads(analysisID, experimentType) {
  * @param {number} pipelineVersion
  */
 function onTaxonomySelect(srcElem) {
-    const $element = $(srcElem);
-    loadTaxonomy(analysisID, $element.val());
+    const type = $(srcElem).val();
+    loadTaxonomy(analysisID, type);
 }
 
 /**
@@ -493,11 +714,13 @@ function constructDataAnalysisTable(attr) {
 }
 
 /**
- * Main view
+ * Main view for the Analysis.
+ * This view managed the tabs and the general
+ * analysis data.
  */
 let AnalysisView = Backbone.View.extend({
     model: api.Analysis,
-    template: _.template($('#runTmpl').html()),
+    template: _.template($('#analysisTmpl').html()),
     el: '#main-content-area',
     initialize() {
         const that = this;
@@ -505,18 +728,23 @@ let AnalysisView = Backbone.View.extend({
             data: {},
             success(data) {
                 const attr = data.attributes;
-                attr['displaySsuButtons'] = attr.pipeline_version >= 4.0;
-                attr['displayITSButtons'] = attr.pipeline_version >= 5.0;
-                if (attr['experiment_type'] === 'assembly') {
-                    attr['other_analyses'] = attr['assembly_url'];
+                /* Display rules */
+                attr.displaySsuButtons = attr.pipeline_version >= 4.0;
+                // attr.displayContigsViewer = attr.experiment_type === 'assembly' &&
+                //                              attr.annotationAvailable;
+                attr.displayContigsViewer = true;
+                if (attr.experiment_type === 'assembly') {
+                    attr.other_analyses = attr.assembly_url;
                 } else {
-                    attr['other_analyses'] = attr['run_url'];
+                    attr.other_analyses = attr.run_url;
                 }
+
                 that.render(attr.pipeline_version, function() {
                     if (attr.experiment_type === 'assembly') {
                         $('#assembly-text-warning').removeClass('hidden');
+                        // Check if the viewer tab should be enabled.
                     }
-                    $('#analysisSelect').val(attr['pipeline_version']);
+                    $('#analysisSelect').val(attr.pipeline_version);
 
                     let description = constructDescriptionTable(attr);
                     let dataAnalysis = constructDataAnalysisTable(attr);
@@ -528,10 +756,10 @@ let AnalysisView = Backbone.View.extend({
                     }
                     util.attachExpandButtonCallback();
 
-                    loadQCAnalysis(analysisID, attr['pipeline_version']);
-                    loadTaxonomicAnalysis(analysisID, attr['pipeline_version'],
-                        attr['experiment_type']);
-                    loadDownloads(analysisID, attr['experiment_type']);
+                    loadQCAnalysis(analysisID, attr.pipeline_version);
+                    loadTaxonomicAnalysis(analysisID, attr.pipeline_version,
+                                          attr.experiment_type);
+                    loadDownloads(analysisID, attr.experiment_type);
 
                     if (attr.experiment_type !== 'amplicon') {
                         loadFunctionalAnalysis(analysisID);
@@ -542,6 +770,13 @@ let AnalysisView = Backbone.View.extend({
                             util.changeTab($('#overview'));
                         }
                     }
+                    if (attr.displayContigsViewer) {
+                        that.contigsViewer = new ContigsView({
+                            el: $('#contigs-containter'),
+                            collection: new ContigCollection({accession: analysisID})
+                        });
+                        that.loadAssemblyViewer();
+                    }
                 });
             },
             error(ignored, response) {
@@ -551,13 +786,20 @@ let AnalysisView = Backbone.View.extend({
     },
     render(pipelineVersion, callback) {
         this.$el.html(this.template(this.model.toJSON()));
-        $('.tax-select-button').click(function() {
+        $('.rna-select-button').click(function() {
             onTaxonomySelect(this);
         });
         util.attachTabHandlers();
         callback();
         return this.$el;
+    },
+    /**
+     * Load the Assembly Viewer in the corresponding tab
+     */
+    loadAssemblyViewer() {
+        this.contigsViewer.render(true);
     }
+    // FIXME: move the tabs management to this view.
 });
 
 /**
@@ -605,5 +847,3 @@ function setAbundanceTab(statisticsData) {
 
 let analysis = new api.Analysis({id: analysisID});
 new AnalysisView({model: analysis});
-
-

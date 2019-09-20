@@ -889,7 +889,6 @@ ul.training > li:last-child:before {
 }
 
 /*Phylo tree*/
-
 .legend-tree .legend-title {
     text-align: left;
     margin-bottom: 5px;
@@ -1012,11 +1011,14 @@ path.link {
 }
 
 .legend-entry {
-    float: left;
-    clear:right;
-    padding-bottom:0.5em;
-    padding-right: 1em;
+	float: left;
+	clear: right;
+	padding-bottom: .5em;
+	padding-right: 1em;
+	line-height: 1;
+	min-width: 55px;
 }
+
 .legend-color {
     height: 1em;
     width: 1em;
@@ -1044,4 +1046,91 @@ path.link {
     color: grey;
     font-weight: 700;
     font-size: 1.2em;
+}
+
+/* Hide the name of the contig/genome */
+.igv-current-genome {
+    display: none;
+}
+
+.igv-nav-bar-toggle-button-container .igv-colour-selector {
+	height: 1.5em;
+	font-size: .8rem;
+	margin: auto 0 auto 5px;
+    width: 100px;
+    padding: 0;
+}
+
+.igv-popover-track-popup-content {
+    overflow: scroll !important;
+}
+
+.sub-legend caption,
+.sub-legend tr {
+    padding: 0;
+	margin: .5rem .625rem .625rem;
+}
+
+.legend-col {
+	margin: 10px;
+}
+
+.igv-locus-size-group .igv-search-container input {
+    margin: 0 8px 0 0;
+}
+
+/* Genome properties */
+.gp-node-level-1 {
+    margin-left: 10px;
+}
+
+.gp-node-level-2 {
+    margin-left: 15px;
+}
+
+.gp-node-level-3 {
+    margin-left: 20px;
+}
+
+.gp-node-level-4 {
+    margin-left: 25px;
+}
+
+.gp-node-level-5 {
+    margin-left: 30px;
+}
+
+.gp-node-level-6 {
+    margin-left: 35px;
+}
+
+.gp-node-level-7 {
+    margin-left: 40px;
+}
+
+.gp-node-level-8 {
+    margin-left: 45px;
+}
+
+.gp-collapsed {
+    height: 0;
+    overflow: hidden;
+}
+
+.gp-expander {
+    border: 0;
+    color: darkred;
+    margin: 0 3px;
+}
+
+.gp-expander:before {
+    content: '▸';
+}
+
+.gp-expander-expanded:before {
+    content: '▾';
+}
+
+.gp-entry-count {
+    margin-left: 10px;
 }

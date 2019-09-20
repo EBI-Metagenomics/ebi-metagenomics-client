@@ -156,6 +156,7 @@ module.exports = class GenericTable {
     addRow(data) {
         const that = this;
         if (this.headers.length !== data.length) {
+            // FIXME, handle
             console.error('Insufficient data inserted');
             console.error(this.headers);
             console.error(data);

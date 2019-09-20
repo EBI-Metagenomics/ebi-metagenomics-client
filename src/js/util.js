@@ -876,7 +876,7 @@ export function getSimpleTaxLineage(fullLineage, removePrefix) {
 /**
  * Remove the s__ prefixes from a lineage.
  * @param {string} lineage string with the lineage `d__Bacteria;p__Proteobacteria;c__Gammapr...`
- * @param {string} replace replace sting
+ * @param {string} replace replace string
  * @return {string}
  */
 export function cleanTaxLineage(lineage, replace) {

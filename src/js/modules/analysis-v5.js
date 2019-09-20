@@ -5,7 +5,9 @@ const Commons = require('../commons');
 const api = require('mgnify').api(process.env.API_URL);
 const charts = require('mgnify').charts;
 const util = require('../util');
+const genomePropertiesHierarchy = require('../../../static/data/genome-properties-hierarchy.json');
 
+const igv = require('igv').default;
 const ClientSideTable = require('../components/clientSideTable');
 const DetailList = require('../components/detailList');
 const AnnotationTableView = require('../components/annotationTable');
@@ -42,7 +44,7 @@ const TabsManagerMixin = {
             const $link = $title.children(':first');
             $title.attr({
                 'role': 'tab',
-                'aria-controls': $link.attr('href').slice(1), //TODO CHECK!
+                'aria-controls': $link.attr('href').slice(1), // TODO CHECK!
                 'aria-selected': false,
                 'tabindex': '-1'
             });
@@ -53,7 +55,7 @@ const TabsManagerMixin = {
 
         this.$tabTitles.on('click', this.selectTabHandler.bind(this));
 
-        const cont = this.$('[data-tabs-content="'+ elementId.slice(1) + '"]');
+        const cont = this.$('[data-tabs-content="' + elementId.slice(1) + '"]');
         this.$tabsContainterEls = cont.children('.tabs-panel');
         _.each(this.$tabsContainterEls, (el) => {
             const $el = $(el);
@@ -78,14 +80,14 @@ const TabsManagerMixin = {
      *  // tabId is interpro
      *  // this is Fn inner changeTab
      *  this.changeTab(subTabId);
-     * }
+     *}
      * ```
      * @param {string} tabId the tab id
      * @param {TabView} tab the tab instance
      * @param {string} route backbone-type route (for example "/tabs/:name")
      * @param {function} routingHandler route navigate handler
      */
-    registerTab({tabId, tab, route, routingHandler, baseRoute}) {
+    registerTab({ tabId, tab, route, routingHandler, baseRoute }) {
         this.tabs = this.tabs || {};
         this.tabs[tabId] = {
             tab: tab,
@@ -147,7 +149,7 @@ const TabsManagerMixin = {
 
         const tabData = this.tabs[tabId];
 
-        this.router.navigate(tabData.baseRoute || tabData.route, {trigger: true});
+        this.router.navigate(tabData.baseRoute || tabData.route, { trigger: true });
     },
     /**
      * Enable tab by id
@@ -238,37 +240,45 @@ const AnalysisView = Backbone.View.extend(TabsManagerMixin).extend({
                     that.removeTab('abundance');
                 }
 
-                if (attr.experiment_type !== 'Xamplicon') {
-                    that.functionaTabView = new FunctionalTabView(analysisID, that.router);
-                    that.registerTab({
-                        tabId: 'functional',
-                        tab: that.functionaTabView,
-                        route: 'functional(/:innerTabId)',
-                        baseRoute: 'functional',
-                        routingHandler: function(innerTabId) {
-                            this.changeTab(innerTabId);
-                        }
-                    });
-                    that.enableTab('functional');
-                } else {
-                    that.removeTab('functional');
-                }
+                // if (attr.experiment_type !== 'amplicon') {
+                that.functionaTabView = new FunctionalTabView(analysisID, that.router);
+                that.registerTab({
+                    tabId: 'functional',
+                    tab: that.functionaTabView,
+                    route: 'functional(/:innerTabId)',
+                    baseRoute: 'functional',
+                    routingHandler: function (innerTabId) {
+                        this.changeTab(innerTabId);
+                    }
+                });
+                that.enableTab('functional');
 
-                if (attr.experiment_type !== 'Xassembly') {
-                    that.pathSystemsTabView = new PathSystemsTabView(analysisID, that.router);
-                    that.registerTab({
-                        tabId: 'path-systems',
-                        tab: that.pathSystemsTabView,
-                        route: 'path-systems(/:innerTabId)',
-                        baseRoute: 'path-systems',
-                        routingHandler: function(innerTabId) {
-                            this.changeTab(innerTabId);
-                        }
-                    });
-                    that.enableTab('path-systems');
-                } else {
-                    that.removeTab('path-systems');
-                }
+                that.contigsViewer = new ContigsViewTab(analysisID);
+                that.registerTab({
+                    tabId: 'contigs-viewer',
+                    tab: that.contigsViewer,
+                    route: 'contigs-viewer'
+                });
+                that.enableTab('contigs-viewer');
+                //} else {
+                // that.removeTab('functional');
+                //}
+
+                // if (attr.experiment_type === 'assembly') {
+                that.pathSystemsTabView = new PathSystemsTabView(analysisID, that.router);
+                that.registerTab({
+                    tabId: 'path-systems',
+                    tab: that.pathSystemsTabView,
+                    route: 'path-systems(/:innerTabId)',
+                    baseRoute: 'path-systems',
+                    routingHandler: function (innerTabId) {
+                        this.changeTab(innerTabId);
+                    }
+                });
+                that.enableTab('path-systems');
+                //} else {
+                // that.removeTab('path-systems');
+                //}
                 that.registerTab({
                     tabId: 'overview',
                     tab: that.overviewTabView,
@@ -284,7 +294,6 @@ const AnalysisView = Backbone.View.extend(TabsManagerMixin).extend({
                     tab: that.taxonomyTabView,
                     route: 'taxonomic'
                 });
-
                 that.registerTab({
                     tabId: 'download',
                     tab: that.downloadTabView,
@@ -302,15 +311,14 @@ const AnalysisView = Backbone.View.extend(TabsManagerMixin).extend({
                     attr.experiment_type === 'amplicon') {
                     that.changeTab('overview');
                 } else if (initial === '#abundance' &&
-                          !that.abundanceTab.enable) {
+                    !that.abundanceTab.enable) {
                     that.changeTab('overview');
                 } else if (!window.location.hash) {
                     that.changeTab('overview');
                 } else {
                     that.changeTab(initial);
                 }
-                Backbone.history.start({root: window.location.pathname});
-                // Backbone.history.start();
+                Backbone.history.start({ root: window.location.pathname });
             },
             error(ignored, response) {
                 util.displayError(response.status, 'Could not retrieve analysis: ' + analysisID);
@@ -427,10 +435,10 @@ const QCTabView = Backbone.View.extend(TabMixin).extend({
         });
 
         // TODO: if a chart fails we are not notified
-        new charts.GcDistributionChart('reads-gc-hist', {accession: this.analysisID});
-        new charts.GcContentChart('reads-gc-barchart', {accession: this.analysisID});
-        new charts.ReadsLengthHist('reads-length-hist', {accession: this.analysisID});
-        new charts.SeqLengthChart('reads-length-barchart', {accession: this.analysisID});
+        new charts.GcDistributionChart('reads-gc-hist', { accession: this.analysisID });
+        new charts.GcContentChart('reads-gc-barchart', { accession: this.analysisID });
+        new charts.ReadsLengthHist('reads-length-hist', { accession: this.analysisID });
+        new charts.SeqLengthChart('reads-length-barchart', { accession: this.analysisID });
 
         return this;
     }
@@ -459,13 +467,6 @@ let FunctionalTabView = Backbone.View.extend({
         this.pfamTab = new PfamTabView(this.analysisID);
         this.koTab = new KOTabView(this.analysisID);
 
-        // this.tabs = {
-        //     '#interpro': this.interProTab,
-        //     '#go': this.goTermsTab,
-        //     '#pfam': this.pfamTab,
-        //     '#ko': this.koTab
-        // };
-
         this.registerTab({
             tabId: 'interpro',
             tab: this.interProTab,
@@ -493,8 +494,8 @@ let FunctionalTabView = Backbone.View.extend({
         // this.$('#interpro').trigger('click');
     }
 })
-.extend(TabsManagerMixin)
-.extend(TabMixin);
+    .extend(TabsManagerMixin)
+    .extend(TabMixin);
 
 // ------------------------- //
 // -- Functional sub tabs -- //
@@ -502,7 +503,6 @@ let FunctionalTabView = Backbone.View.extend({
 
 const InterProTabView = Backbone.View.extend(TabMixin).extend({
     el: '#interpro',
-    tabLevel: 2,
     initialize(analysisID) {
         this.analysisID = analysisID;
     },
@@ -530,11 +530,11 @@ const InterProTabView = Backbone.View.extend(TabMixin).extend({
                     (d.count * 100 / totalCount).toFixed(2)];
             });
             const headers = [
-                {sortBy: 'a', name: ''},
-                {sortBy: 'a', name: 'Entry name'},
-                {sortBy: 'a', name: 'ID'},
-                {sortBy: 'a', name: 'pCDS matched'},
-                {sortBy: 'a', name: '%'}
+                { sortBy: 'a', name: '' },
+                { sortBy: 'a', name: 'Entry name' },
+                { sortBy: 'a', name: 'ID' },
+                { sortBy: 'a', name: 'pCDS matched' },
+                { sortBy: 'a', name: '%' }
             ];
             const options = {
                 title: '',
@@ -588,7 +588,6 @@ const InterProTabView = Backbone.View.extend(TabMixin).extend({
 
 const GOTermsTabView = Backbone.View.extend(TabMixin).extend({
     el: '#go',
-    tabLevel: 2,
     initialize(analysisID) {
         this.analysisID = analysisID;
     },
@@ -602,7 +601,7 @@ const GOTermsTabView = Backbone.View.extend(TabMixin).extend({
         }, {
             title: 'Biological process',
             color:
-            Commons.TAXONOMY_COLOURS[0]
+                Commons.TAXONOMY_COLOURS[0]
         });
 
         new charts.GoTermBarChart('molecular-function-bar-chart', {
@@ -650,7 +649,6 @@ const GOTermsTabView = Backbone.View.extend(TabMixin).extend({
 
 const PfamTabView = Backbone.View.extend(TabMixin).extend({
     el: '#pfam',
-    tabLevel: 2,
     model: api.Pfam,
     initialize(analysisID) {
         this.analysisID = analysisID;
@@ -695,11 +693,11 @@ const PfamTabView = Backbone.View.extend(TabMixin).extend({
                     },
                     tooltip: {
                         formatter() {
-                            return `${this.series.name}<br/> Count ${this.y}`;
+                            return this.series.name + '<br/> Count ' + this.y;
                         }
                     },
                     series: [{
-                        name: `Analysis ${that.analysisID} Pfam entries`,
+                        name: 'Analysis ' + that.analysisID + ' Pfam entries',
                         data: data.map((d) => d[2]),
                         colors: Commons.TAXONOMY_COLOURS[1]
                     }]
@@ -719,7 +717,6 @@ const PfamTabView = Backbone.View.extend(TabMixin).extend({
 
 const KOTabView = Backbone.View.extend(TabMixin).extend({
     el: '#ko',
-    tabLevel: 2,
     model: api.KeggOrtholog,
     initialize(analysisID) {
         this.analysisID = analysisID;
@@ -764,11 +761,11 @@ const KOTabView = Backbone.View.extend(TabMixin).extend({
                     },
                     tooltip: {
                         formatter() {
-                            return `${this.series.name}<br/> Count ${this.y}`;
+                            return this.series.name + '<br/> Count ' + this.y;
                         }
                     },
                     series: [{
-                        name: `Analysis ${that.analysisID} KO entries`,
+                        name: 'Analysis ' + that.analysisID + ' KO entries',
                         data: data.map((d) => d[2]),
                         colors: Commons.TAXONOMY_COLOURS[1]
                     }]
@@ -793,8 +790,9 @@ const KOTabView = Backbone.View.extend(TabMixin).extend({
 let PathSystemsTabView = Backbone.View.extend({
     template: _.template($('#pathSystemsTmpl').html()),
     el: '#path-systems',
-    initialize(analysisID) {
+    initialize(analysisID, router) {
         this.analysisID = analysisID;
+        this.router = router;
     },
     /**
      * Sub tabs
@@ -807,16 +805,21 @@ let PathSystemsTabView = Backbone.View.extend({
         this.keggTab = new KEGGModuleTabView(this.analysisID);
         this.genomePropertiesTab = new GenomePropertiesTabView(this.analysisID);
 
-        this.tabs = {
-            '#kegg-modules': this.keggTab,
-            '#genome-properties': this.genomePropertiesTab
-        };
+        this.registerTab({
+            tabId: 'kegg-modules',
+            tab: this.keggTab,
+            route: 'path-systems/kegg-modules'
+        });
+
+        this.registerTab({
+            tabId: 'genome-properties',
+            tab: this.genomePropertiesTab,
+            route: 'path-systems/genome-properties'
+        });
 
         this.$('#kegg-modules').trigger('click');
     }
-})
-.extend(TabMixin)
-.extend(TabsManagerMixin);
+}).extend(TabMixin).extend(TabsManagerMixin);
 
 const KEGGModuleTabView = Backbone.View.extend(TabMixin).extend({
     el: '#kegg-module',
@@ -845,12 +848,12 @@ const KEGGModuleTabView = Backbone.View.extend(TabMixin).extend({
             model: api.KeggModule,
             analysisID: this.analysisID,
             headers: [
-                {name: 'Class ID'},
-                {name: 'Name'},
-                {name: 'Description'},
-                {name: 'Completeness'},
-                {name: 'Matching KO'},
-                {name: 'Missing KO'}
+                { name: 'Class ID' },
+                { name: 'Name' },
+                { name: 'Description' },
+                { name: 'Completeness' },
+                { name: 'Matching KO' },
+                { name: 'Missing KO' }
             ]
         });
         this.tableView.render();
@@ -860,9 +863,7 @@ const KEGGModuleTabView = Backbone.View.extend(TabMixin).extend({
         });
         return this;
     }
-})
-.extend(TabsManagerMixin)
-.extend(TabMixin);
+}).extend(TabsManagerMixin).extend(TabMixin);
 
 const GenomePropertiesTabView = Backbone.View.extend(TabMixin).extend({
     el: '#genome-properties',
@@ -873,54 +874,96 @@ const GenomePropertiesTabView = Backbone.View.extend(TabMixin).extend({
             id: analysisID
         });
     },
+    events: {
+        'click .gp-expander': 'collapseNode',
+        'click #gp-expand-all': 'expandAll',
+        'click #gp-collapse-all': 'collapseAll'
+    },
     render() {
         const that = this;
-
-        this.tableView = new AnnotationTableView({
-            el: '#genome-properties-table',
-            model: api.GenomeProperties,
-            analysisID: this.analysisID
-        });
-
-        this.tableView.render();
-
         this.model.fetch({
-            data: {
-                page_size: 10 // Top 10.
-            },
             success() {
-                const data = that.model.attributes.data.map((d) => {
-                    const attributes = d.attributes;
-                    return [
-                        attributes['accession'],
-                        attributes['description'],
-                        attributes['count']
-                    ];
+                const genomePropertiesCount = {};
+
+                _.each(that.model.attributes.data, (d) => {
+                    const id = d.attributes['accession'];
+                    const count = parseInt(d.attributes['count']);
+                    // eslint-disable-next-line security/detect-object-injection
+                    genomePropertiesCount[id] = count;
                 });
-                const chartOptions = {
-                    title: 'Top 10 Genomes properties',
-                    yAxis: {
-                        min: 0,
-                        title: {
-                            text: 'Number of matches'
+
+                /*
+                Each node {
+                    name: STRING,
+                    children: Array,
+                    id: STRING (GenPropXXXX)
+               }
+                */
+                const buildNodeHtml = (node, html, level) => {
+                    if (!node.aggregatedCount && !node.count) {
+                        return;
+                    }
+                    const linkUrl = 'https://www.ebi.ac.uk/interpro/genomeproperties/#' +
+                        node.id;
+                    const htmlNode = $('<div>' +
+                        util.createLinkTag(linkUrl, node.id) + ':' +
+                        util.createLinkTag(linkUrl, node.name) +
+                        '</div>');
+
+                    if (node.count === 0 || (node.aggregatedCount - node.count) === 0) {
+                        htmlNode.append('<span class="gp-entry-count">' +
+                            '<strong>' + node.aggregatedCount + '</strong>' +
+                            '</span>');
+                    } else {
+                        htmlNode.append('<span class="gp-entry-count">' +
+                            '<strong>' + node.aggregatedCount + '</strong>' +
+                            ' (' + node.count + ') ' +
+                            '</span>');
+                    }
+
+                    if (node.children && node.children.length) {
+                        htmlNode.prepend('<span class="gp-header">' +
+                            '<a class="gp-expander"></a>' +
+                            '</span>');
+                        const childContainer = $('<div></div>', {
+                            'class': 'children gp-node-level-' + level
+                        });
+                        if (level > 1) {
+                            childContainer.addClass('gp-collapsed');
                         }
-                    },
-                    xAxis: {
-                        categories: data.map((d) => d[0])
-                    },
-                    tooltip: {
-                        formatter() {
-                            return `${this.series.name}<br/> Count ${this.y}`;
-                        }
-                    },
-                    series: [{
-                        name: `Analysis ${that.analysisID} Genome properties`,
-                        data: data.map((d) => d[2]),
-                        colors: Commons.TAXONOMY_COLOURS[1]
-                    }]
+                        htmlNode.append(childContainer);
+                        // keep going down the tree
+                        _.each(node.children, (child) => {
+                            buildNodeHtml(child, childContainer, level + 1);
+                        });
+                    } else {
+                        htmlNode.prepend('<span class="gp-header">・</span>');
+                    }
+                    html.append(htmlNode);
                 };
 
-                this.chart = new charts.GenericColumnChart('genome-properties-chart', chartOptions);
+                /**
+                 * Annotate the nodes with the counts.
+                 * @param {Object} node a gp node
+                 * @return {int} the aggregated count for a sub-tree
+                 */
+                const annotate = (node) => {
+                    node.count = genomePropertiesCount[node.id] || 0;
+                    node.aggregatedCount = (node.aggregatedCount || 0) + node.count;
+                    if (node.children && node.children.length) {
+                        node.aggregatedCount += _.reduce(node.children, (mem, child) => {
+                            return mem + annotate(child);
+                        }, 0);
+                    }
+                    return node.aggregatedCount;
+                };
+
+                annotate(genomePropertiesHierarchy);
+
+                const htmlContainter = $('<div class="genome-properties"></div>');
+                buildNodeHtml(genomePropertiesHierarchy, htmlContainter, 1);
+                htmlContainter.find('.gp-expander:first').addClass('gp-expander-expanded');
+                that.$el.append(htmlContainter);
             }, error(ignored, response) {
                 util.displayError(
                     response.status,
@@ -928,7 +971,31 @@ const GenomePropertiesTabView = Backbone.View.extend(TabMixin).extend({
                     that.el);
             }
         });
-        return this;
+    },
+    /**
+     * Collapse the node children.
+     * @param {Event} event the click event
+     */
+    collapseNode(event) {
+        event.preventDefault();
+        const $target = this.$(event.currentTarget);
+        $target.toggleClass('gp-expander-expanded');
+        const $parentNode = $target.parent().parent();
+        $parentNode.find('.children:first').toggleClass('gp-collapsed');
+    },
+    /**
+     * Expand every node on the tree
+     */
+    expandAll() {
+        this.$('.gp-expander:not(:first)').addClass('gp-expander-expanded');
+        this.$('.children:not(:first)').removeClass('gp-collapsed');
+    },
+    /**
+     * Collapse every node on the tree
+     */
+    collapseAll() {
+        this.$('.gp-expander:not(:first)').removeClass('gp-expander-expanded');
+        this.$('.children:not(:first)').addClass('gp-collapsed');
     }
 });
 
@@ -948,17 +1015,18 @@ const TaxonomyTabView = Backbone.View.extend(TabMixin).extend({
             success() {
                 let attributes = that.model.attributes;
                 const processedData = {
-                    enableSSU: attributes.taxonomy_ssu_count > 0,
+                    enableSSU: attributes.taxonomy_ssu_count > 0 || attributes.taxonomy_count > 0,
                     enableLSU: attributes.taxonomy_lsu_count > 0,
                     enableITSoneDB: attributes.taxonomy_itsonedb_count > 0,
-                    enableITSUnite: attributes.taxonomy_itsunite_count > 0
+                    enableITSUnite: attributes.taxonomy_itsunite_count > 0,
+                    isV2: !attributes.taxonomy_ssu_count && attributes.taxonomy_count > 0
                 };
 
                 that.$el.html(that.template(processedData));
 
                 that._tabs = new window.Foundation.Tabs(that.$('#taxonomy-tabs'));
 
-                if (processedData.enableSSU) {
+                if (processedData.enableSSU || processedData.isV2) {
                     that.$('#smallrRNA').trigger('click');
                 } else if (processedData.enableLSU) {
                     that.$('#largerRNA').trigger('click');
@@ -992,27 +1060,27 @@ const TaxonomyTabView = Backbone.View.extend(TabMixin).extend({
 
         // Load pie charts
         const domainPie = new charts.TaxonomyPie('domain-composition-pie',
-            {accession: analysisID, type: category},
-            {title: 'Domain composition', seriesName: 'reads', subtitle: false}
+            { accession: analysisID, type: category },
+            { title: 'Domain composition', seriesName: 'reads', subtitle: false }
         );
         const phylumPie = new charts.TaxonomyPie('phylum-composition-pie',
-            {accession: analysisID, type: category, groupingDepth: 2},
-            {title: 'Phylum composition', seriesName: 'reads', legend: true}
+            { accession: analysisID, type: category, groupingDepth: 2 },
+            { title: 'Phylum composition', seriesName: 'reads', legend: true }
         );
 
         phylumPie.loaded.done(() => {
             const headers = [
-                {sortBy: 'a', name: ''},
-                {sortBy: 'a', name: 'Phylum'},
-                {sortBy: 'a', name: 'Domain'},
-                {sortBy: 'a', name: 'Unique OTUs'},
-                {sortBy: 'a', name: '%'}
+                { sortBy: 'a', name: '' },
+                { sortBy: 'a', name: 'Phylum' },
+                { sortBy: 'a', name: 'Domain' },
+                { sortBy: 'a', name: 'Unique OTUs' },
+                { sortBy: 'a', name: '%' }
             ];
-            const total = _.reduce(phylumPie.clusteredData, function(m, d) {
+            const total = _.reduce(phylumPie.clusteredData, function (m, d) {
                 return m + d.y;
             }, 0);
             let i = 0;
-            const data = _.map(phylumPie.clusteredData, function(d) {
+            const data = _.map(phylumPie.clusteredData, function (d) {
                 const colorDiv = getColourSquareIcon(i);
                 return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
             });
@@ -1025,14 +1093,14 @@ const TaxonomyTabView = Backbone.View.extend(TabMixin).extend({
             phylumPieTable.update(data, false, 1);
 
             const numSeries = phylumPie.chart.series[0].data.length;
-            phylumPieTable.$tbody.find('tr').hover(function() {
+            phylumPieTable.$tbody.find('tr').hover(function () {
                 let index = getSeriesIndex($(this).index(), numSeries);
                 phylumPie.chart.series[0].data[index].setState('hover');
-            }, function() {
+            }, function () {
                 let index = getSeriesIndex($(this).index(), numSeries);
                 phylumPie.chart.series[0].data[index].setState();
             });
-            phylumPieTable.$tbody.find('tr').click(function() {
+            phylumPieTable.$tbody.find('tr').click(function () {
                 let index = getSeriesIndex($(this).index(), numSeries);
                 const series = phylumPie.chart.series[0].data[index];
                 setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
@@ -1061,17 +1129,17 @@ const TaxonomyTabView = Backbone.View.extend(TabMixin).extend({
 
         phylumColumn.loaded.done(() => {
             const headers = [
-                {sortBy: 'a', name: ''},
-                {sortBy: 'a', name: 'Phylum'},
-                {sortBy: 'a', name: 'Domain'},
-                {sortBy: 'a', name: 'Unique OTUs'},
-                {sortBy: 'a', name: '%'}
+                { sortBy: 'a', name: '' },
+                { sortBy: 'a', name: 'Phylum' },
+                { sortBy: 'a', name: 'Domain' },
+                { sortBy: 'a', name: 'Unique OTUs' },
+                { sortBy: 'a', name: '%' }
             ];
-            const total = _.reduce(phylumColumn.clusteredData, function(m, d) {
+            const total = _.reduce(phylumColumn.clusteredData, function (m, d) {
                 return m + d.y;
             }, 0);
             let i = 0;
-            const data = _.map(phylumColumn.clusteredData, function(d) {
+            const data = _.map(phylumColumn.clusteredData, function (d) {
                 const colorDiv = getColourSquareIcon(i);
                 return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
             });
@@ -1106,22 +1174,22 @@ const TaxonomyTabView = Backbone.View.extend(TabMixin).extend({
 
         // Load stacked column charts
         const stackedColumn = new charts.TaxonomyColumnStacked('phylum-composition-stacked-column',
-            {accession: analysisID, type: category},
-            {title: 'Phylum composition', seriesName: 'reads'});
+            { accession: analysisID, type: category },
+            { title: 'Phylum composition', seriesName: 'reads' });
 
         stackedColumn.loaded.done(() => {
             const headers = [
-                {sortBy: 'a', name: ''},
-                {sortBy: 'a', name: 'Phylum'},
-                {sortBy: 'a', name: 'Domain'},
-                {sortBy: 'a', name: 'Unique OTUs'},
-                {sortBy: 'a', name: '%'}
+                { sortBy: 'a', name: '' },
+                { sortBy: 'a', name: 'Phylum' },
+                { sortBy: 'a', name: 'Domain' },
+                { sortBy: 'a', name: 'Unique OTUs' },
+                { sortBy: 'a', name: '%' }
             ];
-            const total = _.reduce(stackedColumn.clusteredData, function(m, d) {
+            const total = _.reduce(stackedColumn.clusteredData, function (m, d) {
                 return m + d.y;
             }, 0);
             let i = 0;
-            const data = _.map(stackedColumn.clusteredData, function(d) {
+            const data = _.map(stackedColumn.clusteredData, function (d) {
                 const colorDiv = getColourSquareIcon(i);
                 return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
             });
@@ -1159,9 +1227,9 @@ const DownloadTabView = Backbone.View.extend(TabMixin).extend({
     render() {
         const that = this;
         that.$el.html(that.template({
-                groups: that.model.attributes.downloadGroups,
-                experiment_type: that.experiment_type
-            }
+            groups: that.model.attributes.downloadGroups,
+            experiment_type: that.experiment_type
+        }
         ));
     }
 });
@@ -1207,6 +1275,319 @@ const AbundanceTabView = Backbone.View.extend(TabMixin).extend({
             }
         });
         return this;
+    }
+});
+
+// -- Contigs Viewer -- //
+let ContigsViewTab = Backbone.View.extend(TabMixin).extend({
+    template: _.template($('#contigsViewerTmpl').html()),
+    el: '#contigs-viewer',
+
+    events: {
+        'click .contig-browser': 'contigViewer',
+        'click #contigs-filter': 'reloadTable'
+    },
+    /**
+     * Contigs Viewer and browser.
+     * This tabls provides a contig browser and table for the analysis.
+     * @param {string} analysisID The analysis id
+     */
+    initialize(analysisID) {
+        const that = this;
+        that.analysisID = analysisID;
+        that.collection = new api.ContigCollection({ accession: analysisID });
+    },
+
+    /**
+     * Refresh the table data.
+     * @return {Deferred} Deferred promise
+     */
+    refreshTable() {
+        const that = this;
+        const deferred = $.Deferred();
+        this.collection.fetch({
+            data: {
+                gt: this.$minLen.val(),
+                lt: this.$maxLen.val(),
+                cog: this.$cog.val(),
+                kegg: this.$kegg.val(),
+                taxonomy: this.$taxonomtFilter.val()
+            },
+            success() {
+                const data = _.reduce(that.collection.models, (arr, model) => {
+                    arr.push([
+                        '<a href="#" class="contig-browser" data-name="' +
+                        model.attributes.contig_name +
+                        '">' +
+                        model.attributes.display_name +
+                        '</a>',
+                        model.attributes.length,
+                        model.attributes.coverage
+                    ]);
+                    return arr;
+                }, []);
+                deferred.resolve(data);
+            },
+            error(response) {
+                util.displayError(
+                    response.status,
+                    'Error while retrieving contigs data for: ' + that.analysisID,
+                    that.el);
+                deferred.reject();
+            }
+        });
+        return deferred.promise();
+    },
+    /**
+     * Render
+     * @param {bool} viewFirst Load the first contig of the table
+     */
+    render(viewFirst) {
+        const that = this;
+        that.$el.html(that.template());
+        /* DOM */
+        this.$igvDiv = this.$('#genome-browser');
+        this.$gbLoading = this.$('#gb-loading');
+        this.$tblLoading = this.$('#table-loading');
+        this.$popoverTemplate = _.template($('#igv-popup-template').html());
+        /* Slider */
+        this.$maxLen = this.$('#max-length');
+        this.$minLen = this.$('#min-length');
+        this.$lenSlider = this.$el.find('.slider').slider({
+            range: true,
+            min: 1000,
+            max: 100000,
+            values: [10000, 100000],
+            change: (event, ui) => {
+                that.$maxLen.val(ui.values[1]);
+                that.$minLen.val(ui.values[0]);
+            }
+        });
+        /* Features filters */
+        this.$cog = this.$('#cog-filter');
+        this.$kegg = this.$('#kegg-filter');
+        this.$taxonomtFilter = this.$('#taxonomy-filter');
+
+        const tableOptions = {
+            tableContainer: 'contigs-table',
+            headers: [
+                { sortBy: 'a', name: 'Name' },
+                { sortBy: 'a', name: 'Length (pb)' },
+                { sortBy: 'a', name: 'Coverage' }
+            ],
+            initPageSize: DEFAULT_PAGE_SIZE,
+            textFilter: true
+        };
+        this.$contigsTable = new ClientSideTable(this.$('#contigs-table'), tableOptions);
+        this.reloadTable(true);
+    },
+
+    /**
+     * Render a contig
+     * @param {Boolean} viewFirst load the first contig of the table
+     */
+    reloadTable(viewFirst) {
+        const that = this;
+        this.$tblLoading.show();
+        that.refreshTable().then((data) => {
+            that.$contigsTable.update(data, true, 1);
+            if (viewFirst) {
+                this.$('.contig-browser').first().trigger('click');
+            }
+        }).catch((response) => {
+            util.displayError(
+                response.status,
+                'Error loading the contigs: ' + that.analysisID,
+                that.el);
+        }).always(() => {
+            this.$tblLoading.hide();
+        });
+    },
+
+    /**
+     * View a contig using IGV.
+     * @param {Event} e the event
+     */
+    contigViewer(e) {
+        e.preventDefault();
+        const that = this;
+        const $el = $(e.target);
+
+        const contigName = $el.data('name');
+        const displayName = $el.val();
+        let options = {
+            showChromosomeWidget: false,
+            showTrackLabelButton: false,
+            showTrackLabels: false,
+            showCenterGuide: false,
+            reference: {
+                indexed: false,
+                fastaURL: process.env.API_URL + 'analyses/' + this.collection.accession +
+                    '/contigs/' + contigName
+            },
+            tracks: [{
+                name: displayName,
+                type: 'annotation',
+                format: 'gff3',
+                url: process.env.API_URL + 'analyses/' + this.collection.accession +
+                    '/annotations/' + contigName,
+                displayMode: 'EXPANDED',
+                nameField: 'gene'
+            }],
+            ebi: {
+                colorAttributes: [
+                    'Colour by', /* Label */
+                    'COG',
+                    'product',
+                    'Pfam',
+                    'KEGG',
+                    'InterPro',
+                    'eggNOG'
+                ],
+                showLegendButton: true
+            }
+        };
+
+        this.$gbLoading.show();
+
+        if (this.igvBrowser) {
+            igv.removeBrowser(this.igvBrowser);
+        }
+
+        igv.createBrowser(this.$igvDiv, options).then((browser) => {
+            // Customize the track Pop Over
+            browser.on('trackclick', (ignored, data) => {
+                // FIXME: merge this with the genomeBrowser component.
+                if (!data || !data.length) {
+                    return false;
+                }
+
+                let attributes = _.where(data, (d) => {
+                    return d.name;
+                });
+
+                if (attributes.length === 0) {
+                    return false;
+                }
+
+                attributes = _.reduce(attributes, (memo, el) => {
+                    memo[el.name.toLowerCase()] = el.value;
+                    return memo;
+                }, {});
+
+                /**
+                 * Get a key from the attributes
+                 * @param {*} key Dict Key
+                 * @param {*} def default value
+                 * @return {*} the value or default
+                 */
+                function getAttribute(key, def) {
+                    def = def || '';
+                    if (_.has(attributes, key)) {
+                        // eslint-disable-next-line security/detect-object-injection
+                        return attributes[key];
+                    } else {
+                        return def;
+                    }
+                }
+
+                // eslint-disable-next-line valid-jsdoc
+                /**
+                 * S
+                 * @param {*} key Key.
+                 * @return {*} The table with the data or an empty string
+                 */
+                function getAttrMultiValue(key, linkHref) {
+                    const val = getAttribute(key, '');
+                    if (val === '') {
+                        return '';
+                    }
+                    const data = val.split(',');
+                    return that.$igvPopoverEntryTpl({
+                        values: data.map((d) => {
+                            return {
+                                name: d,
+                                link: (linkHref) ? linkHref + d : ''
+                            };
+                        })
+                    });
+                }
+
+                /**
+                 * Calculate the property lenght.
+                 * @return {int} the lenght or undefined
+                 */
+                function getProtLenght() {
+                    const start = parseInt(getAttribute('start'));
+                    const end = parseInt(getAttribute('end'));
+                    if (_.isNaN(start) || _.isNaN(end)) {
+                        return undefined;
+                    }
+                    return Math.ceil((end - start) / 3);
+                }
+
+                const functionalData = {
+                    title: 'Functional annotation',
+                    data: [{
+                        name: 'E.C Number',
+                        value: getAttrMultiValue('ec_number', 'https://enzyme.expasy.org/EC/')
+                    }, {
+                        name: 'Pfam',
+                        value: getAttrMultiValue('pfam', 'https://pfam.xfam.org/family/')
+                    }, {
+                        name: 'KEGG',
+                        value: getAttrMultiValue(
+                            'kegg', 'https://www.genome.jp/dbget-bin/www_bget?')
+                    }, {
+                        name: 'eggNOG',
+                        value: getAttrMultiValue('eggnog')
+                    }, {
+                        name: 'COG',
+                        value: getAttrMultiValue('cog')
+                    }, {
+                        name: 'InterPro',
+                        value: getAttrMultiValue(
+                            'interpro', 'https://www.ebi.ac.uk/interpro/beta/entry/InterPro/')
+                    }]
+                };
+
+                const otherData = {
+                    title: 'Feature details',
+                    data: [{
+                        name: 'Type',
+                        value: getAttribute('type')
+                    }, {
+                        name: 'Inference',
+                        value: getAttribute('inference')
+                    }, {
+                        name: 'Start / End',
+                        value: getAttribute('start') + ' / ' + getAttribute('end')
+                    }, {
+                        name: 'Protein length',
+                        value: getProtLenght()
+                    }]
+                };
+
+                const markup = that.$igvPopoverTpl({
+                    name: getAttribute('id'),
+                    gene: getAttribute('gene'),
+                    product: getAttribute('product'),
+                    properties: [functionalData, otherData]
+                });
+
+                return markup;
+            });
+            this.igvBrowser = browser;
+            this.$gbLoading.hide();
+        }).catch((error) => {
+            // FIXME: clean the browser
+            util.displayError(
+                500,
+                'Error loading the contigs on the browser. Detail: ' + error,
+                that.el);
+            that.igvBrowser = undefined;
+            that.$gbLoading.hide();
+        });
     }
 });
 
@@ -1256,7 +1637,7 @@ function setTableRowAndChartHiding(elem, series, index, numSeries, defaultVisibi
 
 /* Entry point */
 const mainView = new AnalysisView({
-    model: new api.Analysis({id: analysisID, params: {include: 'downloads'}})
+    model: new api.Analysis({ id: analysisID, params: { include: 'downloads' } })
 });
 
 mainView.render();
