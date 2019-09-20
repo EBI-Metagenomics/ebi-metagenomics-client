@@ -28,7 +28,7 @@
                     <fieldset class="taxonomy-select-fieldset">
                         <legend>rRNA</legend>
 
-                        <input type="radio" <%= (!enableSSU) ? "disabled" : "" %> class="tax-select-button" value="<% (isV2) ? '/' : '/ssu'%>" data-cy='ssu-btn' id="smallrRNA" name="tax-results">
+                        <input type="radio" <%= (!enableSSU) ? "disabled" : "" %> class="tax-select-button" value="<%= (isV2) ? '/' : '/ssu'%>" data-cy='ssu-btn' id="smallrRNA" name="tax-results">
                         <label for="smallrRNA" <%= (!enableSSU) ? 'class="disabled"' : '' %>>small subunit rRNA</label>
 
                         <input type="radio" <%= (!enableLSU) ? "disabled" : "" %> class="tax-select-button" value="/lsu" data-cy='lsu-btn' id="largerRNA" name="tax-results">
@@ -467,68 +467,72 @@
     </script>
 
     <script id="contigsViewerTmpl" type="text/template">
-        <div class="tabs-panel">
-            <section class="row">
-                <div class="columns">
-                    <h4>
-                        <a href="#genome-browser" class="" for="genome-browser">Contig Browser</a>
-                        <img id="gb-loading" class="loading-gif-medium" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
-                    </h4>
-                </div>
-                <div id="genome-browser" class="columns" style="min-height: 250px; position: relative;">
-                </div>
-            </section>
-            <section id="contigs-containter" class="row">
-                <div class="columns">
-                    <h4>
-                        <a href="#contigs-table" class="" for="contigs-table">Assembly contigs</a>
-                        <img id="table-loading" class="loading-gif-medium" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
-                    </h4>
-                </div>
-                <div class="columns small-3 medium-3 large-3">
-                    <div class="row columns">
-                        <h5>Contig length (pb)</h5>
-                        <div class="row columns slider-group">
-                            <div class="slider"></div>
-                            <div class="row">
-                                <div class="columns small-6">
-                                    <input id="min-length" class="left slider-input" type="number" value="5000">
-                                </div>
-                                <div class="columns small-6">
-                                    <input id="max-length" class="right slider-input" type="number" value="10000">
-                                </div>
+        <section class="row">
+            <div class="columns">
+                <h4>
+                    <a href="#genome-browser" class="" for="genome-browser">Contig Browser</a>
+                    <img id="gb-loading" class="loading-gif-medium" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+                </h4>
+            </div>
+            <div id="genome-browser" class="columns" style="min-height: 250px; position: relative;">
+            </div>
+        </section>
+        <section id="contigs-containter" class="row">
+            <div class="columns">
+                <h4>
+                    <a href="#contigs-table" class="" for="contigs-table">Assembly contigs</a>
+                    <img id="table-loading" class="loading-gif-medium" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+                </h4>
+            </div>
+            <div class="columns small-3 medium-3 large-3">
+                <div class="row columns">
+                    <h5>Contig length (pb)</h5>
+                    <div class="row columns slider-group">
+                        <div class="slider"></div>
+                        <div class="row">
+                            <div class="columns small-6">
+                                <input id="min-length" class="left slider-input" type="number" value="5000">
+                            </div>
+                            <div class="columns small-6">
+                                <input id="max-length" class="right slider-input" type="number" value="10000">
                             </div>
                         </div>
                     </div>
-                    <div class="row columns">
-                        <h5>
-                            COG Category
-                        </h5>
-                        <input type="text" id="cog-filter" name="cog-filter" value="" placeholder="C">
-                    </div>
-                    <div class="row columns">
-                        <h5>
-                            KEGG ortholog
-                        </h5>
-                        <input type="text" id="kegg-filter" name="kegg-filter" value="" placeholder="K00161">
-                    </div>
-                    <div class="row columns">
-                        <h5>
-                            Taxonomy
-                        </h5>
-                        <input type="text" id="taxonomy-filter" name="taxonomy-filter" value="" placeholder="Bacteroidaceae">
-                    </div>
-                    <div class="row columns">
-                        <button id="contigs-filter" value="filter" class="button">Filter</button>
-                    </div>                            
                 </div>
-                <div class="columns small-9 medium-9 large-9">
-                    <div id="contigs-table">
-                        <!-- Table containter -->
-                    </div>
+                <div class="row columns">
+                    <h5>
+                        COG Category
+                    </h5>
+                    <input type="text" id="cog-filter" name="cog-filter" value="" placeholder="C">
                 </div>
-            </section>
-        </div>
+                <div class="row columns">
+                    <h5>
+                        KEGG ortholog
+                    </h5>
+                    <input type="text" id="kegg-filter" name="kegg-filter" value="" placeholder="K00161">
+                </div>
+                <div class="row columns">
+                    <h5>
+                        GOs
+                    </h5>
+                    <input type="text" id="gos-filter" name="gos-filter" value="" placeholder="GO:1901575">
+                </div>                
+                <div class="row columns">
+                    <h5>
+                        Taxonomy
+                    </h5>
+                    <input type="text" id="taxonomy-filter" name="taxonomy-filter" value="" placeholder="Bacteroidaceae">
+                </div>
+                <div class="row columns">
+                    <button id="contigs-filter" value="filter" class="button">Filter</button>
+                </div>                            
+            </div>
+            <div class="columns small-9 medium-9 large-9">
+                <div id="contigs-table">
+                    <!-- Table containter -->
+                </div>
+            </div>
+        </section>
     </script>
 
     <!-- IGV Popover templates -->

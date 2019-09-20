@@ -11,6 +11,8 @@ const igv = require('igv').default;
 const ClientSideTable = require('../components/clientSideTable');
 const DetailList = require('../components/detailList');
 const AnnotationTableView = require('../components/annotationTable');
+require('webpack-jquery-ui/slider');
+require('webpack-jquery-ui/css');
 require('tablesorter');
 
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
@@ -187,12 +189,15 @@ const TabMixin = {
     }
 };
 
+const TabView = Backbone.View.extend(TabMixin);
+const TabManagerView = Backbone.View.extend(TabsManagerMixin);
+const TabManagerTabView = Backbone.View.extend(TabsManagerMixin).extend(TabMixin);
 
 /**
  * Main view.
  * This view handles the tabs and the general data managment.
  */
-const AnalysisView = Backbone.View.extend(TabsManagerMixin).extend({
+const AnalysisView = TabManagerView.extend({
     model: api.Analysis,
     template: _.template($('#analysisTmpl').html()),
     el: '#main-content-area',
@@ -247,7 +252,7 @@ const AnalysisView = Backbone.View.extend(TabsManagerMixin).extend({
                     tab: that.functionaTabView,
                     route: 'functional(/:innerTabId)',
                     baseRoute: 'functional',
-                    routingHandler: function (innerTabId) {
+                    routingHandler: function(innerTabId) {
                         this.changeTab(innerTabId);
                     }
                 });
@@ -271,7 +276,7 @@ const AnalysisView = Backbone.View.extend(TabsManagerMixin).extend({
                     tab: that.pathSystemsTabView,
                     route: 'path-systems(/:innerTabId)',
                     baseRoute: 'path-systems',
-                    routingHandler: function (innerTabId) {
+                    routingHandler: function(innerTabId) {
                         this.changeTab(innerTabId);
                     }
                 });
@@ -331,7 +336,7 @@ const AnalysisView = Backbone.View.extend(TabsManagerMixin).extend({
 /**
  * Overview Tab
  */
-const OverviewTabView = Backbone.View.extend(TabMixin).extend({
+const OverviewTabView = TabView.extend({
     el: '#overview',
     initialize(analysisData) {
         this.analysisData = analysisData;
@@ -397,7 +402,7 @@ const OverviewTabView = Backbone.View.extend(TabMixin).extend({
 /**
  * QC results tab
  */
-const QCTabView = Backbone.View.extend(TabMixin).extend({
+const QCTabView = TabView.extend({
     template: _.template($('#qcTmpl').html()),
     el: '#qc',
     initialize(analysisID, pipelineVersion, experimentType) {
@@ -435,10 +440,10 @@ const QCTabView = Backbone.View.extend(TabMixin).extend({
         });
 
         // TODO: if a chart fails we are not notified
-        new charts.GcDistributionChart('reads-gc-hist', { accession: this.analysisID });
-        new charts.GcContentChart('reads-gc-barchart', { accession: this.analysisID });
-        new charts.ReadsLengthHist('reads-length-hist', { accession: this.analysisID });
-        new charts.SeqLengthChart('reads-length-barchart', { accession: this.analysisID });
+        new charts.GcDistributionChart('reads-gc-hist', {accession: this.analysisID});
+        new charts.GcContentChart('reads-gc-barchart', {accession: this.analysisID});
+        new charts.ReadsLengthHist('reads-length-hist', {accession: this.analysisID});
+        new charts.SeqLengthChart('reads-length-barchart', {accession: this.analysisID});
 
         return this;
     }
@@ -447,7 +452,7 @@ const QCTabView = Backbone.View.extend(TabMixin).extend({
 /**
  * Functional results tab
  */
-let FunctionalTabView = Backbone.View.extend({
+let FunctionalTabView = TabManagerTabView.extend({
     template: _.template($('#functionalTmpl').html()),
     el: '#functional',
     initialize(analysisID, router) {
@@ -491,17 +496,15 @@ let FunctionalTabView = Backbone.View.extend({
             route: 'functional/ko'
         });
 
-        // this.$('#interpro').trigger('click');
+        this.changeTab('interpro');
     }
-})
-    .extend(TabsManagerMixin)
-    .extend(TabMixin);
+});
 
 // ------------------------- //
 // -- Functional sub tabs -- //
 // ------------------------- //
 
-const InterProTabView = Backbone.View.extend(TabMixin).extend({
+const InterProTabView = TabView.extend({
     el: '#interpro',
     initialize(analysisID) {
         this.analysisID = analysisID;
@@ -586,7 +589,7 @@ const InterProTabView = Backbone.View.extend(TabMixin).extend({
     }
 });
 
-const GOTermsTabView = Backbone.View.extend(TabMixin).extend({
+const GOTermsTabView = TabView.extend({
     el: '#go',
     initialize(analysisID) {
         this.analysisID = analysisID;
@@ -647,7 +650,7 @@ const GOTermsTabView = Backbone.View.extend(TabMixin).extend({
     }
 });
 
-const PfamTabView = Backbone.View.extend(TabMixin).extend({
+const PfamTabView = TabView.extend({
     el: '#pfam',
     model: api.Pfam,
     initialize(analysisID) {
@@ -672,14 +675,12 @@ const PfamTabView = Backbone.View.extend(TabMixin).extend({
                 page_size: 10 // Top 10.
             },
             success() {
-                const data = that.model.attributes.data.map((d) => {
-                    const attributes = d.attributes;
-                    return [
-                        attributes['accession'],
-                        attributes['description'],
-                        attributes['count']
-                    ];
-                });
+                const rawData = that.model.attributes.data;
+                const data = rawData.map((d) => d.attributes['count']);
+                let categoriesDescriptions = rawData.reduce((memo, d) => {
+                    memo[d.attributes['accession']] = d.attributes['description'];
+                    return memo;
+                }, {});
                 const chartOptions = {
                     title: 'Top 10 Pfam entries',
                     yAxis: {
@@ -689,16 +690,21 @@ const PfamTabView = Backbone.View.extend(TabMixin).extend({
                         }
                     },
                     xAxis: {
-                        categories: data.map((d) => d[0])
+                        categories: rawData.map((d) => d.attributes['accession'])
                     },
                     tooltip: {
                         formatter() {
-                            return this.series.name + '<br/> Count ' + this.y;
+                            const description = categoriesDescriptions[this.key];
+                            let tooltip = this.series.name + '<br/>Count: ' + this.y;
+                            if (description) {
+                                tooltip += '<br />PFam entry: ' + description;
+                            }
+                            return tooltip;
                         }
                     },
                     series: [{
-                        name: 'Analysis ' + that.analysisID + ' Pfam entries',
-                        data: data.map((d) => d[2]),
+                        name: 'Analysis ' + that.analysisID,
+                        data: data,
                         colors: Commons.TAXONOMY_COLOURS[1]
                     }]
                 };
@@ -715,7 +721,7 @@ const PfamTabView = Backbone.View.extend(TabMixin).extend({
     }
 });
 
-const KOTabView = Backbone.View.extend(TabMixin).extend({
+const KOTabView = TabView.extend({
     el: '#ko',
     model: api.KeggOrtholog,
     initialize(analysisID) {
@@ -740,14 +746,12 @@ const KOTabView = Backbone.View.extend(TabMixin).extend({
                 page_size: 10 // Top 10.
             },
             success() {
-                const data = that.model.attributes.data.map((d) => {
-                    const attributes = d.attributes;
-                    return [
-                        attributes['accession'],
-                        attributes['description'],
-                        attributes['count']
-                    ];
-                });
+                const rawData = that.model.attributes.data;
+                const data = rawData.map((d) => d.attributes['count']);
+                let categoriesDescriptions = rawData.reduce((memo, d) => {
+                    memo[d.attributes['accession']] = d.attributes['description'];
+                    return memo;
+                }, {});
                 const chartOptions = {
                     title: 'Top 10 KO entries',
                     yAxis: {
@@ -757,16 +761,21 @@ const KOTabView = Backbone.View.extend(TabMixin).extend({
                         }
                     },
                     xAxis: {
-                        categories: data.map((d) => d[0])
+                        categories: rawData.map((d) => d.attributes['accession'])
                     },
                     tooltip: {
                         formatter() {
-                            return this.series.name + '<br/> Count ' + this.y;
+                            const description = categoriesDescriptions[this.key];
+                            let tooltip = this.series.name + '<br/>Count: ' + this.y;
+                            if (description) {
+                                tooltip += '<br />KEGG Class: ' + description;
+                            }
+                            return tooltip;
                         }
                     },
                     series: [{
-                        name: 'Analysis ' + that.analysisID + ' KO entries',
-                        data: data.map((d) => d[2]),
+                        name: 'Analysis ' + that.analysisID,
+                        data: data,
                         colors: Commons.TAXONOMY_COLOURS[1]
                     }]
                 };
@@ -787,7 +796,7 @@ const KOTabView = Backbone.View.extend(TabMixin).extend({
 // -- Path/Systems sub tabs //
 // -------------------------//
 
-let PathSystemsTabView = Backbone.View.extend({
+let PathSystemsTabView = TabManagerTabView.extend({
     template: _.template($('#pathSystemsTmpl').html()),
     el: '#path-systems',
     initialize(analysisID, router) {
@@ -817,11 +826,11 @@ let PathSystemsTabView = Backbone.View.extend({
             route: 'path-systems/genome-properties'
         });
 
-        this.$('#kegg-modules').trigger('click');
+        this.changeTab('kegg-modules');
     }
-}).extend(TabMixin).extend(TabsManagerMixin);
+});
 
-const KEGGModuleTabView = Backbone.View.extend(TabMixin).extend({
+const KEGGModuleTabView = TabView.extend({
     el: '#kegg-module',
     model: api.KeggModule,
     initialize(analysisID) {
@@ -863,9 +872,9 @@ const KEGGModuleTabView = Backbone.View.extend(TabMixin).extend({
         });
         return this;
     }
-}).extend(TabsManagerMixin).extend(TabMixin);
+});
 
-const GenomePropertiesTabView = Backbone.View.extend(TabMixin).extend({
+const GenomePropertiesTabView = TabView.extend({
     el: '#genome-properties',
     model: api.GenomeProperties,
     initialize(analysisID) {
@@ -1002,7 +1011,7 @@ const GenomePropertiesTabView = Backbone.View.extend(TabMixin).extend({
 /**
  * Taxonomy results tab
  */
-const TaxonomyTabView = Backbone.View.extend(TabMixin).extend({
+const TaxonomyTabView = TabView.extend({
     template: _.template($('#taxonomicTabTmpl').html()),
     el: '#taxonomic',
     events: {
@@ -1221,7 +1230,7 @@ const TaxonomyTabView = Backbone.View.extend(TabMixin).extend({
 /**
  * Download results tab
  */
-const DownloadTabView = Backbone.View.extend(TabMixin).extend({
+const DownloadTabView = TabView.extend({
     template: _.template($('#downloadsTmpl').html()),
     el: '#download',
     render() {
@@ -1237,7 +1246,7 @@ const DownloadTabView = Backbone.View.extend(TabMixin).extend({
 /**
  * Abundance results tab
  */
-const AbundanceTabView = Backbone.View.extend(TabMixin).extend({
+const AbundanceTabView = TabView.extend({
     el: '#abundance',
     /**
      * Abundance and comparision.
@@ -1279,7 +1288,7 @@ const AbundanceTabView = Backbone.View.extend(TabMixin).extend({
 });
 
 // -- Contigs Viewer -- //
-let ContigsViewTab = Backbone.View.extend(TabMixin).extend({
+let ContigsViewTab = TabView.extend({
     template: _.template($('#contigsViewerTmpl').html()),
     el: '#contigs-viewer',
 
@@ -1297,7 +1306,53 @@ let ContigsViewTab = Backbone.View.extend(TabMixin).extend({
         that.analysisID = analysisID;
         that.collection = new api.ContigCollection({ accession: analysisID });
     },
+    /**
+     * Render
+     * @param {bool} viewFirst Load the first contig of the table
+     */
+    render(viewFirst) {
+        const that = this;
+        that.$el.html(that.template());
+        /* DOM */
+        this.$igvDiv = this.$('#genome-browser');
+        this.$gbLoading = this.$('#gb-loading');
+        this.$tblLoading = this.$('#table-loading');
+        /* IGV Popup templates */
+        this.$igvPopoverTpl = _.template($('#igv-popover-template').html());
+        this.$igvPopoverEntryTpl = _.template($('#igv-popover-entry').html());
 
+        /* Slider */
+        this.$maxLen = this.$('#max-length');
+        this.$minLen = this.$('#min-length');
+        this.$lenSlider = this.$el.find('.slider').slider({
+            range: true,
+            min: 1000,
+            max: 100000,
+            values: [10000, 100000],
+            change: (event, ui) => {
+                that.$maxLen.val(ui.values[1]);
+                that.$minLen.val(ui.values[0]);
+            }
+        });
+        /* Features filters */
+        this.$cog = this.$('#cog-filter');
+        this.$kegg = this.$('#kegg-filter');
+        this.$taxonomtFilter = this.$('#taxonomy-filter');
+        this.$gosFilter = this.$('#gos-filter');
+
+        const tableOptions = {
+            tableContainer: 'contigs-table',
+            headers: [
+                { sortBy: 'a', name: 'Name' },
+                { sortBy: 'a', name: 'Length (pb)' },
+                { sortBy: 'a', name: 'Coverage' }
+            ],
+            initPageSize: DEFAULT_PAGE_SIZE,
+            textFilter: true
+        };
+        this.$contigsTable = new ClientSideTable(this.$('#contigs-table'), tableOptions);
+        this.reloadTable(true);
+    },
     /**
      * Refresh the table data.
      * @return {Deferred} Deferred promise
@@ -1311,7 +1366,8 @@ let ContigsViewTab = Backbone.View.extend(TabMixin).extend({
                 lt: this.$maxLen.val(),
                 cog: this.$cog.val(),
                 kegg: this.$kegg.val(),
-                taxonomy: this.$taxonomtFilter.val()
+                taxonomy: this.$taxonomtFilter.val(),
+                gos: this.$gosFilter.val()
             },
             success() {
                 const data = _.reduce(that.collection.models, (arr, model) => {
@@ -1339,50 +1395,6 @@ let ContigsViewTab = Backbone.View.extend(TabMixin).extend({
         return deferred.promise();
     },
     /**
-     * Render
-     * @param {bool} viewFirst Load the first contig of the table
-     */
-    render(viewFirst) {
-        const that = this;
-        that.$el.html(that.template());
-        /* DOM */
-        this.$igvDiv = this.$('#genome-browser');
-        this.$gbLoading = this.$('#gb-loading');
-        this.$tblLoading = this.$('#table-loading');
-        this.$popoverTemplate = _.template($('#igv-popup-template').html());
-        /* Slider */
-        this.$maxLen = this.$('#max-length');
-        this.$minLen = this.$('#min-length');
-        this.$lenSlider = this.$el.find('.slider').slider({
-            range: true,
-            min: 1000,
-            max: 100000,
-            values: [10000, 100000],
-            change: (event, ui) => {
-                that.$maxLen.val(ui.values[1]);
-                that.$minLen.val(ui.values[0]);
-            }
-        });
-        /* Features filters */
-        this.$cog = this.$('#cog-filter');
-        this.$kegg = this.$('#kegg-filter');
-        this.$taxonomtFilter = this.$('#taxonomy-filter');
-
-        const tableOptions = {
-            tableContainer: 'contigs-table',
-            headers: [
-                { sortBy: 'a', name: 'Name' },
-                { sortBy: 'a', name: 'Length (pb)' },
-                { sortBy: 'a', name: 'Coverage' }
-            ],
-            initPageSize: DEFAULT_PAGE_SIZE,
-            textFilter: true
-        };
-        this.$contigsTable = new ClientSideTable(this.$('#contigs-table'), tableOptions);
-        this.reloadTable(true);
-    },
-
-    /**
      * Render a contig
      * @param {Boolean} viewFirst load the first contig of the table
      */
@@ -1403,7 +1415,6 @@ let ContigsViewTab = Backbone.View.extend(TabMixin).extend({
             this.$tblLoading.hide();
         });
     },
-
     /**
      * View a contig using IGV.
      * @param {Event} e the event
