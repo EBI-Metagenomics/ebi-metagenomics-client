@@ -164,12 +164,12 @@
         <% if (pipelineVersion > 2) { %>
             <div class="row">
                 <div class="columns small-12 medium-6 large-6">
-                    <div id='reads-length-hist' class="row columns"></div>
-                    <div id='reads-length-barchart' class="row columns"></div>
+                    <div id="reads-length-hist" class="row columns"></div>
+                    <div id="reads-length-barchart" class="row columns"></div>
                 </div>
                 <div class="columns small-12 medium-6 large-6">
-                    <div id='reads-gc-hist' class="row columns"></div>
-                    <div id='reads-gc-barchart' class="row columns"></div>
+                    <div id="reads-gc-hist" class="row columns"></div>
+                    <div id="reads-gc-barchart" class="row columns"></div>
                 </div>
             </div>
             <div id="nucleotide-section" class="hidden">
@@ -203,12 +203,14 @@
             <li class="tabs-title">
                 <a data-tab-id="go" href="#functional/go">GO Terms</a>
             </li>
-            <li class="tabs-title">
-                <a data-tab-id="pfam" href="#functional/pfam">Pfam</a>
-            </li>
-            <li class="tabs-title">
-                <a data-tab-id="ko" href="#functional/ko">KO</a>
-            </li>
+            <% if (pipelineVersion === '5.0') { %>
+                <li class="tabs-title">
+                    <a data-tab-id="pfam" href="#functional/pfam">Pfam</a>
+                </li>
+                <li class="tabs-title">
+                    <a data-tab-id="ko" href="#functional/ko">KO</a>
+                </li>
+            <% } %>
         </ul>
         <div class="tabs-content" data-tabs-content="functional-analysis-tabs">
             <div id="interpro" class="tabs-panel is-active">
@@ -275,16 +277,18 @@
                     </div>
                 </div>
             </div>
-            <div id="pfam" class="tabs-panel">
-                <!-- Pfam -->
-                <div id="pfam-chart"></div>
-                <div id="pfam-table"></div>    
-            </div>
-            <div id="ko" class="tabs-panel">
-                <!-- KEGG Ortholog -->
-                <div id="ko-chart"></div>
-                <div id="ko-table"></div>    
-            </div>
+            <% if (pipelineVersion === '5.0') { %>            
+                <div id="pfam" class="tabs-panel">
+                    <!-- Pfam -->
+                    <div id="pfam-chart"></div>
+                    <div id="pfam-table"></div>    
+                </div>
+                <div id="ko" class="tabs-panel">
+                    <!-- KEGG Ortholog -->
+                    <div id="ko-chart"></div>
+                    <div id="ko-table"></div>    
+                </div>
+            <% } %>
         </div>
     </script>
 
@@ -311,6 +315,9 @@
             </div>
             <div id="genome-properties" class="tabs-panel">
                 <!-- Genomes Properties -->
+                <div class="loading">
+                    <img class="loading-gif-large"/>
+                </div>
                 <button id='gp-expand-all' class="button">Expand all</button> 
                 <button id='gp-collapse-all' class="button">Collapse all</button>
             </div>
@@ -420,7 +427,7 @@
             <div class="row columns">
                 <p>Here you can download the full set of analysis results files. Multi-part files should be concatenated after unzipping.</p>
             </div>
-            <% _.each(groups, function(group, name){ %>
+            <% _.each(groups, function(group, name) { %>
                 <h3><%= name %></h3>
                 <div class="row columns">
                     <table class="runs-download-table">

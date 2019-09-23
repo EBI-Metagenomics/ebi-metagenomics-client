@@ -50,7 +50,7 @@ module.exports = {
         assembly:
             'src/js/modules/assembly.js',
         analysis:
-            'src/js/modules/analysis-v5.js',
+            'src/js/modules/analysis.js',
         compare:
             'src/js/modules/compare.js',
         about:

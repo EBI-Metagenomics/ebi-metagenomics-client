@@ -1,71 +1,1344 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
+const INTERPRO_URL = process.env.INTERPRO_URL;
 const Commons = require('../commons');
 const api = require('mgnify').api(process.env.API_URL);
 const charts = require('mgnify').charts;
 const util = require('../util');
+const genomePropertiesHierarchy = require('../../../static/data/genome-properties-hierarchy.json');
+
+const igv = require('igv').default;
 const ClientSideTable = require('../components/clientSideTable');
 const DetailList = require('../components/detailList');
-const igv = require('igv').default;
-
-require('tablesorter');
+const AnnotationTableView = require('../components/annotationTable');
 require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
+require('tablesorter');
 
-const INTERPRO_URL = process.env.INTERPRO_URL;
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
+
 const DEFAULT_PAGE_SIZE = 25;
 
-util.setupPage('#browse-nav');
-window.Foundation.addToJquery($);
+const analysisID = util.getURLParameter();
 
-const analysisID = util.getURLParameter(); // MGYA00141542
+util.setupPage('#browse-nav');
 util.specifyPageTitle('Analysis', analysisID);
 
+/**
+ * Tabs Manager.
+ * Common methods to manage tabs.
+ */
+const TabsManagerMixin = {
+    tabs: {},
+    router: undefined,
+    /**
+     * Boot and hook the Tabs properties and methods.
+     * @param {string} elementId DOM element id for the containter.
+     */
+    hookTabs(elementId) {
+        this.$tabsTitleContainer = this.$(elementId);
+        this.$tabsTitleContainer.attr({
+            'role': 'tablist'
+        });
+        this.$tabTitles = this.$(elementId + ' .tabs-title');
+        _.each(this.$tabTitles, (title) => {
+            const $title = $(title);
+            const $link = $title.children(':first');
+            $title.attr({
+                'role': 'tab',
+                'aria-controls': $link.attr('href').slice(1), // TODO CHECK!
+                'aria-selected': false,
+                'tabindex': '-1'
+            });
+            $link.attr({
+                'role': 'presentation'
+            });
+        });
 
-/* Assembly Viewer */
-let AnalysesContig = Backbone.Model.extend({
-    parse(data) {
-        return {
-            display_name: data.attributes['display-name'],
-            contig_name: data.attributes['contig-name'],
-            length: data.attributes.length,
-            coverage: data.attributes.coverage
+        this.$tabTitles.on('click', this.selectTabHandler.bind(this));
+
+        const cont = this.$('[data-tabs-content="' + elementId.slice(1) + '"]');
+        this.$tabsContainterEls = cont.children('.tabs-panel');
+        _.each(this.$tabsContainterEls, (el) => {
+            const $el = $(el);
+            $el.attr({
+                'role': 'tabpanel',
+                'aria-labelledby': $el.attr('id')
+            });
+        });
+    },
+    /**
+     * Add a tab with the corresponding tab isntance and route.
+     * Provide a routingHandler if you want to customize the callback.
+     * This is used for inner tabs at the moment:
+     * For example for FnTab view inner tabs:
+     *  FnTab inner tabs are url are #functional/interpro, interpro is the actual
+     *  tabId so for FnTab the routing handler the app has to:
+     *      - route to FnTab
+     *      - FnTab has to route to interpro
+     * so the routingHandler for FnTab would be:
+     * ```js
+     * routingHandler(tabId) {
+     *  // tabId is interpro
+     *  // this is Fn inner changeTab
+     *  this.changeTab(subTabId);
+     *}
+     * ```
+     * @param {string} tabId the tab id
+     * @param {TabView} tab the tab instance
+     * @param {string} route backbone-type route (for example "/tabs/:name")
+     * @param {function} routingHandler route navigate handler
+     */
+    registerTab({tabId, tab, route, routingHandler, baseRoute}) {
+        this.tabs = this.tabs || {};
+        this.tabs[tabId] = {
+            tab: tab,
+            route: route,
+            baseRoute: baseRoute
         };
+
+        this.router.route(route, tabId, (args) => {
+            this.changeTab(tabId);
+            if (_.isFunction(routingHandler)) {
+                routingHandler.apply(tab, [args]); /* route parameters */
+            }
+        });
+    },
+    /**
+    * Switch to the selected tabId.
+    * This method will:
+    * - call the renderTab method on the selected tab
+    * - update the DOM elements with the is-active and other visual changes required
+    * @param {string} tabId the tab Id selector
+    * @param {[string]} routes the routes
+    * @return {Object} view This view.
+    */
+    changeTab(tabId) {
+        const tabData = this.tabs[tabId];
+        if (!tabData) {
+            // TODO: show error banner!
+            return this;
+        }
+        const tab = tabData.tab;
+        tab.renderTab();
+        _.each(this.$tabsContainterEls, (el) => {
+            const $el = $(el);
+            const isActive = $el.attr('id') === tabId;
+            $el.attr('aria-hidden', !isActive);
+            $el.toggleClass('is-active', isActive);
+        });
+        _.each(this.$tabTitles, (el) => {
+            const $el = $(el).children(':first');
+            const isActive = $el.data('tab-id') === tabId;
+            $el.toggleClass('is-active', isActive);
+            $el.attr({
+                'aria-selected': isActive,
+                'tabindex': isActive ? '0' : '-1'
+            });
+        });
+        return this;
+    },
+    /**
+     * Tab selection Handler.
+     * This will trigger the router to change, that will
+     * then trigger the changeTab as a callback
+     * @param {Event} event click event
+    */
+    selectTabHandler(event) {
+        event.preventDefault();
+        const $tabAnchor = $(event.currentTarget);
+        const tabId = $tabAnchor.children(':first').data('tab-id');
+
+        const tabData = this.tabs[tabId];
+
+        this.router.navigate(tabData.baseRoute || tabData.route, {trigger: true});
+    },
+    /**
+     * Enable tab by id
+     * @param {string} tabId of tab
+     */
+    enableTab(tabId) {
+        this.$('[data-tab-id="' + tabId + '"]').parent('li').removeClass('disabled');
+    },
+    /**
+     * Disable tab by id
+     * @param {string} tabId of tab
+     */
+    removeTab(tabId) {
+        this.$('[data-tab-id="' + tabId + '"]').parent('li').remove();
+    }
+};
+
+/**
+ * Tab mixin.
+ * Provides the common view methods and properties.
+ */
+const TabMixin = {
+    route: undefined, // The route that should trigger this view
+    rendered: false,
+    /**
+     * Cached render fn.
+     * @return {Object} This view
+     */
+    renderTab() {
+        if (!this.rendered) {
+            this.render();
+            this.rendered = true;
+        }
+        return this;
+    }
+};
+
+const TabView = Backbone.View.extend(TabMixin);
+const TabManagerView = Backbone.View.extend(TabsManagerMixin);
+const TabManagerTabView = Backbone.View.extend(TabsManagerMixin).extend(TabMixin);
+
+/**
+ * Main view.
+ * This view handles the tabs and the general data managment.
+ */
+const AnalysisView = TabManagerView.extend({
+    model: api.Analysis,
+    template: _.template($('#analysisTmpl').html()),
+    el: '#main-content-area',
+    initialize() {
+        this.router = new Backbone.Router();
+    },
+    render() {
+        const that = this;
+        this.model.fetch({
+            data: {},
+            success() {
+                that.$el.html(that.template(that.model.toJSON()));
+
+                that.hookTabs('#analysis-tabs');
+
+                const attr = that.model.attributes;
+
+                if (attr.experiment_type === 'assembly') {
+                    $('#assembly-text-warning').removeClass('hidden');
+                }
+
+                // TODO: REMOVE $('#analysisSelect').val(attr['pipeline_version']);
+                util.attachExpandButtonCallback();
+
+                // ## Tabs ## //
+                // -- Common tabs --//
+                that.registerTab({
+                    tabId: 'overview',
+                    tab: new OverviewTabView(attr),
+                    route: 'overview' // => default route
+                });
+
+                that.registerTab({
+                    tabId: 'qc',
+                    tab: new QCTabView(
+                        analysisID,
+                        attr.pipeline_version,
+                        attr.experiment_type
+                    ),
+                    route: 'qc'
+                });
+
+                that.registerTab({
+                    tabId: 'taxonomic',
+                    tab: new TaxonomyTabView({
+                        model: new api.TaxonomyOverview(analysisID)
+                    }),
+                    route: 'taxonomic'
+                });
+
+                const downloadModel = new api.AnalysisDownloads();
+                downloadModel.load(attr.included);
+
+                that.registerTab({
+                    tabId: 'download',
+                    tab: new DownloadTabView({
+                        model: downloadModel,
+                        experiment_type: that.experimentType
+                    }),
+                    route: 'download'
+                });
+
+                // -- Abundance -- //
+                that.abundanceTab = new AbundanceTabView(downloadModel);
+                if (that.abundanceTab.enable) {
+                    that.registerTab({
+                        tabId: 'abundance',
+                        tab: that.abundanceTab,
+                        route: 'abundance'
+                    });
+                } else {
+                    that.removeTab('abundance');
+                }
+
+                // -- Annotation tabs --//
+                const annotTabsOpts = {
+                    analysisID: analysisID,
+                    pipelineVersion: attr.pipeline_version,
+                    router: that.router
+                };
+
+                if (attr.experiment_type !== 'Xamplicon') {
+                    that.registerTab({
+                        tabId: 'functional',
+                        tab: new FunctionalTabView(annotTabsOpts),
+                        route: 'functional(/:innerTabId)',
+                        baseRoute: 'functional',
+                        // TODO: this is leaking information into the manager
+                        routingHandler: function(innerTabId) {
+                            this.changeTab(innerTabId || 'interpro'); // default
+                        }
+                    });
+                    that.enableTab('functional');
+                } else {
+                    that.removeTab('functional');
+                }
+
+                if (attr.experiment_type === 'assembly' && attr.pipeline_version === '5.0') {
+                    that.registerTab({
+                        tabId: 'path-systems',
+                        tab: new PathSystemsTabView(annotTabsOpts),
+                        route: 'path-systems(/:innerTabId)',
+                        baseRoute: 'path-systems',
+                        routingHandler: function(innerTabId) {
+                            this.changeTab(innerTabId || 'kegg-modules');
+                        }
+                    });
+                    that.enableTab('path-systems');
+
+                    that.registerTab({
+                        tabId: 'contigs-viewer',
+                        tab: new ContigsViewTab(annotTabsOpts),
+                        route: 'contigs-viewer'
+                    });
+                    that.enableTab('contigs-viewer');
+                } else {
+                    that.removeTab('path-systems');
+                    that.removeTab('contigs-viewer');
+                }
+
+                if (!Backbone.history.start({root: window.location.pathname})) {
+                    that.router.navigate('/overview', {trigger: true});
+                }
+            },
+            error(ignored, response) {
+                util.displayError(response.status, 'Could not retrieve analysis: ' + analysisID);
+            }
+        });
+        return this;
     }
 });
 
-let ContigCollection = Backbone.Collection.extend({
-    model: AnalysesContig,
-    initialize(options) {
-        this.accession = options.accession;
+/**
+ * Overview Tab
+ */
+const OverviewTabView = TabView.extend({
+    el: '#overview',
+    initialize(analysisData) {
+        this.analysisData = analysisData;
     },
-    url() {
-        return process.env.API_URL + 'analyses/' + this.accession + '/contigs';
+    render() {
+        this.$el.html('');
+        const description = this.constructDescriptionTable();
+        this.$el.append(new DetailList('Description', description));
+
+        let dataAnalysis = this.constructDataAnalysisTable();
+        if (Object.keys(dataAnalysis).length > 0) {
+            this.$el.append(new DetailList('Experiment details', dataAnalysis));
+        }
     },
-    parse(response) {
-        return response.data;
+    /**
+     * Business logic to create table of info related to current analysis
+     * @return {{Study: string, Sample: string}}
+     */
+    constructDescriptionTable() {
+        const attr = this.analysisData;
+        let description = {
+            'Study': util.createLinkTag(attr['study_url'], attr['study_accession']),
+            'Sample': util.createLinkTag(attr['sample_url'], attr['sample_accession'])
+        };
+
+        if (attr['experiment_type'] === 'assembly') {
+            description['Assembly'] = util.createLinkTag(
+                attr['assembly_url'],
+                attr['assembly_accession']);
+        } else {
+            description['Run'] = util.createLinkTag(
+                attr['run_url'],
+                attr['run_accession']);
+        }
+
+        description['Pipeline version'] = util.createLinkTag(
+            attr['pipeline_url'],
+            attr['pipeline_version']);
+
+        return description;
+    },
+    /**
+     * Business logic to create table of data analysis info related to current analysis
+     * @param {object} attr attributes from BackBone AnalysesView model
+     * @return {object}
+     */
+    constructDataAnalysisTable() {
+        const attr = this.analysisData;
+        const dataAnalysis = {};
+        if (attr['experiment_type']) {
+            dataAnalysis['Experiment type'] = attr['experiment_type'];
+        }
+        if (attr['instrument_model']) {
+            dataAnalysis['Instrument model'] = attr['instrument_model'];
+        }
+        if (attr['instrument_platform']) {
+            dataAnalysis['Instrument platform'] = attr['instrument_platform'];
+        }
+        return dataAnalysis;
     }
 });
 
-let ContigsView = Backbone.View.extend({
+/**
+ * QC results tab
+ */
+const QCTabView = TabView.extend({
+    template: _.template($('#qcTmpl').html()),
+    el: '#qc',
+    initialize(analysisID, pipelineVersion, experimentType) {
+        this.analysisID = analysisID;
+        this.pipelineVersion = parseFloat(pipelineVersion);
+        this.experimentType = experimentType;
+    },
+    render() {
+        const that = this;
+        this.$el.html(this.template({
+            analysisID: this.analysisID,
+            pipelineVersion: this.pipelineVersion,
+            experimentType: this.experimentType
+        }));
 
-    el: $('#contigs-containter'),
+        const qcStepChart = new charts.QcChart('qc-step-chart', {
+            accession: this.analysisID
+        });
+        qcStepChart.loaded.fail(() => {
+            this.$('#qc-step-chart')
+                .append('<h4>Could not load qc summary chart.</h4>');
+        });
+
+        if (this.pipelineVersion < 2) {
+            return this;
+        }
+
+        const nucleotideChart = new charts.NucleotideHist('nucleotide', {
+            accession: this.analysisID
+        });
+        nucleotideChart.loaded.fail(() => {
+            that.$('#nucleotide-section').hide();
+        }).done(() => {
+            that.$('#nucleotide-section').show();
+        });
+
+        // TODO: if a chart fails we are not notified
+        new charts.GcDistributionChart('reads-gc-hist', {accession: this.analysisID});
+        new charts.GcContentChart('reads-gc-barchart', {accession: this.analysisID});
+        new charts.ReadsLengthHist('reads-length-hist', {accession: this.analysisID});
+        new charts.SeqLengthChart('reads-length-barchart', {accession: this.analysisID});
+
+        return this;
+    }
+});
+
+/**
+ * Functional results tab
+ */
+let FunctionalTabView = TabManagerTabView.extend({
+    template: _.template($('#functionalTmpl').html()),
+    el: '#functional',
+    initialize({analysisID, pipelineVersion, router}) {
+        this.analysisID = analysisID;
+        this.pipelineVersion = pipelineVersion;
+        this.router = router;
+    },
+    /**
+     * Load all charts on functional tab
+     */
+    render() {
+        this.$el.html(this.template({pipelineVersion: this.pipelineVersion}));
+        // hook the tabs
+        this.hookTabs('#functional-analysis-tabs');
+
+        this.registerTab({
+            tabId: 'interpro',
+            tab: new InterProTabView(this.analysisID),
+            route: 'functional/interpro' // => default
+        });
+
+        this.registerTab({
+            tabId: 'go',
+            tab: new GOTermsTabView(this.analysisID),
+            route: 'functional/go'
+        });
+
+        if (this.pipelineVersion === '5.0') {
+            this.registerTab({
+                tabId: 'pfam',
+                tab: new PfamTabView(this.analysisID),
+                route: 'functional/pfam'
+            });
+            this.registerTab({
+                tabId: 'ko',
+                tab: new KOTabView(this.analysisID),
+                route: 'functional/ko'
+            });
+        }
+    }
+});
+
+// ------------------------- //
+// -- Functional sub tabs -- //
+// ------------------------- //
+
+const InterProTabView = TabView.extend({
+    el: '#interpro',
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+    },
+    render() {
+        const that = this;
+        const analysisID = this.analysisID;
+        const interproMatchPie = new charts.InterproMatchPie('interpro-pie-chart', {
+            accession: analysisID
+        });
+
+        interproMatchPie.loaded.done(() => {
+            let i = 0;
+            const totalCount = interproMatchPie.raw_data.reduce((v, e) => {
+                return v + e['attributes']['count'];
+            }, 0);
+            const tableData = interproMatchPie.raw_data.map((d) => {
+                d = d.attributes;
+                const colorDiv = getColourSquareIcon(i);
+                const interProLink = that.createInterProLink(d.description, d.accession);
+                return [
+                    ++i,
+                    colorDiv + interProLink,
+                    d.accession,
+                    d.count,
+                    (d.count * 100 / totalCount).toFixed(2)];
+            });
+            const headers = [
+                {sortBy: 'a', name: ''},
+                {sortBy: 'a', name: 'Entry name'},
+                {sortBy: 'a', name: 'ID'},
+                {sortBy: 'a', name: 'pCDS matched'},
+                {sortBy: 'a', name: '%'}
+            ];
+            const options = {
+                title: '',
+                headers: headers,
+                initPageSize: DEFAULT_PAGE_SIZE
+            };
+            const interproTable = new ClientSideTable(that.$('#interpro-table'), options);
+            interproTable.update(tableData, false, 1, tableData.length);
+
+            const numSeries = interproMatchPie.chart.series[0].data.length;
+            interproTable.$tbody.find('tr').hover((e) => {
+                let index = getSeriesIndex($(e.currentTarget).index(), numSeries);
+                interproMatchPie.chart.series[0].data[index].setState('hover');
+            }, (e) => {
+                let index = getSeriesIndex($(e.currentTarget).index(), numSeries);
+                interproMatchPie.chart.series[0].data[index].setState();
+            });
+
+            interproTable.$tbody.find('tr').click((e) => {
+                let index = getSeriesIndex($(e.currentTarget).index(), numSeries);
+                const series = interproMatchPie.chart.series[0].data[index];
+
+                setTableRowAndChartHiding(
+                    e.currentTarget,
+                    series,
+                    index,
+                    numSeries,
+                    !series.visible);
+            });
+        });
+        const seqFeatChart = new charts.SeqFeatSumChart('seqfeat-chart', {
+            accession: this.analysisID
+        });
+        seqFeatChart.loaded.fail(() => {
+            this.$('#SeqFeat-chart')
+                .append('<h4>Could not load sequence feature summary.</h4>');
+        });
+        return this;
+    },
+    /**
+     * Generate interpro link
+     * @param {string} text to display in link tag
+     * @param {string} id of interpro result
+     * @return {string}
+     */
+    createInterProLink(text, id) {
+        const url = INTERPRO_URL + 'entry/' + id;
+        return '<a href=\'' + url + '\'>' + text + '</a>';
+    }
+});
+
+const GOTermsTabView = TabView.extend({
+    el: '#go',
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+    },
+    render() {
+        const analysisID = this.analysisID;
+        this._$tabs = new window.Foundation.Tabs(this.$('#go-tabs'));
+
+        new charts.GoTermBarChart('biological-process-bar-chart', {
+            accession: analysisID,
+            lineage: 'biological_process'
+        }, {
+            title: 'Biological process',
+            color:
+                Commons.TAXONOMY_COLOURS[0]
+        });
+
+        new charts.GoTermBarChart('molecular-function-bar-chart', {
+            accession: analysisID,
+            lineage: 'molecular_function'
+        }, {
+            title: 'Molecular function',
+            color: Commons.TAXONOMY_COLOURS[1]
+        });
+
+        new charts.GoTermBarChart('cellular-component-bar-chart', {
+            accession: analysisID,
+            lineage: 'cellular_component'
+        }, {
+            title: 'Cellular component',
+            color: Commons.TAXONOMY_COLOURS[2]
+        });
+
+        new charts.GoTermPieChart('biological-process-pie-chart', {
+            accession: analysisID,
+            lineage: 'biological_process'
+        }, {
+            title: 'Biological process',
+            color: Commons.TAXONOMY_COLOURS[0]
+        });
+
+        new charts.GoTermPieChart('molecular-function-pie-chart', {
+            accession: analysisID,
+            lineage: 'molecular_function'
+        }, {
+            title: 'Molecular function',
+            color: Commons.TAXONOMY_COLOURS[1]
+        });
+
+        new charts.GoTermPieChart('cellular-component-pie-chart', {
+            accession: analysisID,
+            lineage: 'cellular_component'
+        }, {
+            title: 'Cellular component',
+            color: Commons.TAXONOMY_COLOURS[2]
+        });
+        return this;
+    }
+});
+
+const PfamTabView = TabView.extend({
+    el: '#pfam',
+    model: api.Pfam,
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+        this.model = new api.Pfam({
+            id: analysisID
+        });
+    },
+    render() {
+        const that = this;
+
+        this.tableView = new AnnotationTableView({
+            el: '#pfam-table',
+            model: api.Pfam,
+            analysisID: this.analysisID
+        });
+
+        this.tableView.render();
+
+        this.model.fetch({
+            data: {
+                page_size: 10 // Top 10.
+            },
+            success() {
+                const rawData = that.model.attributes.data;
+                const data = rawData.map((d) => d.attributes['count']);
+                let categoriesDescriptions = rawData.reduce((memo, d) => {
+                    memo[d.attributes['accession']] = d.attributes['description'];
+                    return memo;
+                }, {});
+                const chartOptions = {
+                    title: 'Top 10 Pfam entries',
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of matches'
+                        }
+                    },
+                    xAxis: {
+                        categories: rawData.map((d) => d.attributes['accession'])
+                    },
+                    tooltip: {
+                        formatter() {
+                            const description = categoriesDescriptions[this.key];
+                            let tooltip = this.series.name + '<br/>Count: ' + this.y;
+                            if (description) {
+                                tooltip += '<br />PFam entry: ' + description;
+                            }
+                            return tooltip;
+                        }
+                    },
+                    series: [{
+                        name: 'Analysis ' + that.analysisID,
+                        data: data,
+                        colors: Commons.TAXONOMY_COLOURS[1]
+                    }]
+                };
+
+                this.chart = new charts.GenericColumnChart('pfam-chart', chartOptions);
+            }, error(response) {
+                util.displayError(
+                    response.status,
+                    'Could not retrieve taxonomic analysis for: ' + analysisID,
+                    that.el);
+            }
+        });
+        return this;
+    }
+});
+
+const KOTabView = TabView.extend({
+    el: '#ko',
+    model: api.KeggOrtholog,
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+        this.model = new api.KeggOrtholog({
+            id: analysisID
+        });
+    },
+    render() {
+        const that = this;
+
+        this.tableView = new AnnotationTableView({
+            el: '#ko-table',
+            model: api.KeggOrtholog,
+            analysisID: this.analysisID
+        });
+
+        this.tableView.render();
+
+        this.model.fetch({
+            data: {
+                page_size: 10 // Top 10.
+            },
+            success() {
+                const rawData = that.model.attributes.data;
+                const data = rawData.map((d) => d.attributes['count']);
+                let categoriesDescriptions = rawData.reduce((memo, d) => {
+                    memo[d.attributes['accession']] = d.attributes['description'];
+                    return memo;
+                }, {});
+                const chartOptions = {
+                    title: 'Top 10 KO entries',
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of matches'
+                        }
+                    },
+                    xAxis: {
+                        categories: rawData.map((d) => d.attributes['accession'])
+                    },
+                    tooltip: {
+                        formatter() {
+                            const description = categoriesDescriptions[this.key];
+                            let tooltip = this.series.name + '<br/>Count: ' + this.y;
+                            if (description) {
+                                tooltip += '<br />KEGG Class: ' + description;
+                            }
+                            return tooltip;
+                        }
+                    },
+                    series: [{
+                        name: 'Analysis ' + that.analysisID,
+                        data: data,
+                        colors: Commons.TAXONOMY_COLOURS[1]
+                    }]
+                };
+
+                this.chart = new charts.GenericColumnChart('ko-chart', chartOptions);
+            }, error(response) {
+                util.displayError(
+                    response.status,
+                    'Could not retrieve KO analysis for: ' + analysisID,
+                    that.el);
+            }
+        });
+        return this;
+    }
+});
+
+// ------------------------- //
+// -- Path/Systems sub tabs //
+// -------------------------//
+
+let PathSystemsTabView = TabManagerTabView.extend({
+    template: _.template($('#pathSystemsTmpl').html()),
+    el: '#path-systems',
+    initialize({analysisID, pipelineVersion, router}) {
+        this.analysisID = analysisID;
+        this.pipelineVersion = pipelineVersion;
+        this.router = router;
+    },
+    /**
+     * Sub tabs
+     */
+    render() {
+        this.$el.html(this.template());
+        // hook the tabs
+        this.hookTabs('#path-systems-tabs');
+
+        this.keggTab = new KEGGModuleTabView(this.analysisID);
+        this.genomePropertiesTab = new GenomePropertiesTabView(this.analysisID);
+
+        this.registerTab({
+            tabId: 'kegg-modules',
+            tab: this.keggTab,
+            route: 'path-systems/kegg-modules' // => default route
+        });
+
+        this.registerTab({
+            tabId: 'genome-properties',
+            tab: this.genomePropertiesTab,
+            route: 'path-systems/genome-properties'
+        });
+    }
+});
+
+const KEGGModuleTabView = TabView.extend({
+    el: '#kegg-module',
+    model: api.KeggModule,
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+        this.model = new api.KeggModule({
+            id: analysisID
+        });
+    },
+    render() {
+        const KeggAnnotationTable = AnnotationTableView.extend({
+            buildRow(data) {
+                return [
+                    data['accession'],
+                    data['name'],
+                    data['description'],
+                    data['completeness'],
+                    data['matching-kos'].length,
+                    data['missing-kos'].length
+                ];
+            }
+        });
+        this.tableView = new KeggAnnotationTable({
+            el: '#kegg-module-table',
+            model: api.KeggModule,
+            analysisID: this.analysisID,
+            headers: [
+                {name: 'Class ID'},
+                {name: 'Name'},
+                {name: 'Description'},
+                {name: 'Completeness'},
+                {name: 'Matching KO'},
+                {name: 'Missing KO'}
+            ]
+        });
+        this.tableView.render();
+
+        this.chart = new charts.AnalysisKeggColumnChart('kegg-module-chart', {
+            accession: this.analysisID
+        });
+        return this;
+    }
+});
+
+const GenomePropertiesTabView = TabView.extend({
+    el: '#genome-properties',
+    model: api.GenomeProperties,
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+        this.model = new api.GenomeProperties({
+            id: analysisID
+        });
+    },
+    events: {
+        'click .gp-expander': 'collapseNode',
+        'click #gp-expand-all': 'expandAll',
+        'click #gp-collapse-all': 'collapseAll'
+    },
+    render() {
+        const that = this;
+        that.$('.loading').show();
+        this.model.fetch({
+            success() {
+                const genomePropertiesCount = {};
+
+                _.each(that.model.attributes.data, (d) => {
+                    const id = d.attributes['accession'];
+                    const count = parseInt(d.attributes['count']);
+                    // eslint-disable-next-line security/detect-object-injection
+                    genomePropertiesCount[id] = count;
+                });
+
+                /*
+                Each node {
+                    name: STRING,
+                    children: Array,
+                    id: STRING (GenPropXXXX)
+               }
+                */
+                const buildNodeHtml = (node, html, level) => {
+                    if (!node.aggregatedCount && !node.count) {
+                        return;
+                    }
+                    const linkUrl = 'https://www.ebi.ac.uk/interpro/genomeproperties/#' +
+                        node.id;
+                    const htmlNode = $('<div>' +
+                        util.createLinkTag(linkUrl, node.id) + ':' +
+                        util.createLinkTag(linkUrl, node.name) +
+                        '</div>');
+
+                    if (node.count === 0 || (node.aggregatedCount - node.count) === 0) {
+                        htmlNode.append('<span class="gp-entry-count">' +
+                            '<strong>' + node.aggregatedCount + '</strong>' +
+                            '</span>');
+                    } else {
+                        htmlNode.append('<span class="gp-entry-count">' +
+                            '<strong>' + node.aggregatedCount + '</strong>' +
+                            ' (' + node.count + ') ' +
+                            '</span>');
+                    }
+
+                    if (node.children && node.children.length) {
+                        htmlNode.prepend('<span class="gp-header">' +
+                            '<a class="gp-expander"></a>' +
+                            '</span>');
+                        const childContainer = $('<div></div>', {
+                            'class': 'children gp-node-level-' + level
+                        });
+                        if (level > 1) {
+                            childContainer.addClass('gp-collapsed');
+                        }
+                        htmlNode.append(childContainer);
+                        // keep going down the tree
+                        _.each(node.children, (child) => {
+                            buildNodeHtml(child, childContainer, level + 1);
+                        });
+                    } else {
+                        htmlNode.prepend('<span class="gp-header">・</span>');
+                    }
+                    html.append(htmlNode);
+                };
+
+                /**
+                 * Annotate the nodes with the counts.
+                 * @param {Object} node a gp node
+                 * @return {int} the aggregated count for a sub-tree
+                 */
+                const annotate = (node) => {
+                    node.count = genomePropertiesCount[node.id] || 0;
+                    node.aggregatedCount = (node.aggregatedCount || 0) + node.count;
+                    if (node.children && node.children.length) {
+                        node.aggregatedCount += _.reduce(node.children, (mem, child) => {
+                            return mem + annotate(child);
+                        }, 0);
+                    }
+                    return node.aggregatedCount;
+                };
+
+                annotate(genomePropertiesHierarchy);
+
+                const htmlContainter = $('<div class="genome-properties"></div>');
+                buildNodeHtml(genomePropertiesHierarchy, htmlContainter, 1);
+                htmlContainter.find('.gp-expander:first').addClass('gp-expander-expanded');
+                that.$el.append(htmlContainter);
+                that.$('.loading').hide();
+            }, error(response) {
+                util.displayError(
+                    response.status,
+                    'Could not retrieve genome properties analysis for: ' + analysisID,
+                    that.el);
+                that.$('.loading').hide();
+            }
+        });
+    },
+    /**
+     * Collapse the node children.
+     * @param {Event} event the click event
+     */
+    collapseNode(event) {
+        event.preventDefault();
+        const $target = this.$(event.currentTarget);
+        $target.toggleClass('gp-expander-expanded');
+        const $parentNode = $target.parent().parent();
+        $parentNode.find('.children:first').toggleClass('gp-collapsed');
+    },
+    /**
+     * Expand every node on the tree
+     */
+    expandAll() {
+        this.$('.gp-expander:not(:first)').addClass('gp-expander-expanded');
+        this.$('.children:not(:first)').removeClass('gp-collapsed');
+    },
+    /**
+     * Collapse every node on the tree
+     */
+    collapseAll() {
+        this.$('.gp-expander:not(:first)').removeClass('gp-expander-expanded');
+        this.$('.children:not(:first)').addClass('gp-collapsed');
+    }
+});
+
+/**
+ * Taxonomy results tab
+ */
+const TaxonomyTabView = TabView.extend({
+    template: _.template($('#taxonomicTabTmpl').html()),
+    el: '#taxonomic',
+    events: {
+        'click .tax-select-button': 'renderTaxonomyCategory'
+    },
+    render() {
+        const that = this;
+        this.model.fetch({
+            data: {},
+            success() {
+                let attributes = that.model.attributes;
+                const processedData = {
+                    enableSSU: attributes.taxonomy_ssu_count > 0 || attributes.taxonomy_count > 0,
+                    enableLSU: attributes.taxonomy_lsu_count > 0,
+                    enableITSoneDB: attributes.taxonomy_itsonedb_count > 0,
+                    enableITSUnite: attributes.taxonomy_itsunite_count > 0,
+                    isV2: !attributes.taxonomy_ssu_count && attributes.taxonomy_count > 0
+                };
+
+                that.$el.html(that.template(processedData));
+
+                // TODO: use TabViews
+                that._tabs = new window.Foundation.Tabs(that.$('#taxonomy-tabs'));
+
+                if (processedData.enableSSU || processedData.isV2) {
+                    that.$('#smallrRNA').trigger('click');
+                } else if (processedData.enableLSU) {
+                    that.$('#largerRNA').trigger('click');
+                } else if (processedData.enableITSoneDB) {
+                    that.$('#itsoneDB').trigger('click');
+                } else if (processedData.enableITSUnite) {
+                    that.$('#itsUNITE').trigger('click');
+                }
+            }, error(ignored, response) {
+                util.displayError(
+                    response.status,
+                    'Could not retrieve taxonomic analysis for: ' + analysisID,
+                    that.el);
+            }
+        });
+        return this;
+    },
+    /**
+     * Load taxonomy data and create graphs
+     * @param {jQuery.Event} event event
+    * @return {jQuery.Promise} taxonomy backbone model.
+     */
+    renderTaxonomyCategory(event) {
+        const category = $(event.currentTarget).val();
+
+        const kronaUrl = api.getKronaURL(analysisID, category);
+        const kronaChart = '<object class="krona_chart" ' +
+            'data="' + kronaUrl + '" ' +
+            'type="text/html"></object>';
+        this.$('#krona').html(kronaChart);
+
+        let promises = [];
+
+        // ITS doesn't load Domain pie or charts
+        if ($.inArray(category, ['/itsunite', '/itsonedb'])) {
+            const domainPie = new charts.TaxonomyPie('domain-composition-pie',
+                {accession: analysisID, type: category},
+                {title: 'Domain composition', seriesName: 'reads', subtitle: false}
+            );
+            promises.push(domainPie.dataReady);
+
+            const domainColumn = new charts.TaxonomyColumn('domain-composition-column', {
+                accession: analysisID,
+                type: category
+            }, {
+                title: 'Domain composition',
+                seriesName: 'reads',
+                subtitle: false
+            });
+            promises.push(domainColumn.loaded);
+        }
+        const phylumPie = new charts.TaxonomyPie('phylum-composition-pie',
+            {accession: analysisID, type: category, groupingDepth: 2},
+            {title: 'Phylum composition', seriesName: 'reads', legend: true}
+        );
+
+        promises.push(phylumPie.loaded);
+
+        phylumPie.loaded.done(() => {
+            const headers = [
+                {sortBy: 'a', name: ''},
+                {sortBy: 'a', name: 'Phylum'},
+                {sortBy: 'a', name: 'Domain'},
+                {sortBy: 'a', name: 'Unique OTUs'},
+                {sortBy: 'a', name: '%'}
+            ];
+            const total = _.reduce(phylumPie.clusteredData, (m, d) => m + d.y, 0);
+            let i = 0;
+            const data = _.map(phylumPie.clusteredData, function(d) {
+                const colorDiv = getColourSquareIcon(i);
+                return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
+            });
+            const options = {
+                title: '',
+                headers: headers,
+                initPageSize: DEFAULT_PAGE_SIZE
+            };
+            const phylumPieTable = new ClientSideTable($('#pie').find('.phylum-table'), options);
+            phylumPieTable.update(data, false, 1);
+
+            const numSeries = phylumPie.chart.series[0].data.length;
+            phylumPieTable.$tbody.find('tr').hover(function() {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                phylumPie.chart.series[0].data[index].setState('hover');
+            }, function() {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                phylumPie.chart.series[0].data[index].setState();
+            });
+            phylumPieTable.$tbody.find('tr').click(function() {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                const series = phylumPie.chart.series[0].data[index];
+                setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
+            });
+        });
+
+        const phylumColumn = new charts.TaxonomyColumn('phylum-composition-column', {
+            accession: analysisID,
+            type: category,
+            groupingDepth: 2
+        }, {
+            title: 'Phylum composition (top 10)',
+            seriesName: 'reads',
+            numColumns: 10
+        });
+
+        phylumColumn.loaded.done(() => {
+            const headers = [
+                {sortBy: 'a', name: ''},
+                {sortBy: 'a', name: 'Phylum'},
+                {sortBy: 'a', name: 'Domain'},
+                {sortBy: 'a', name: 'Unique OTUs'},
+                {sortBy: 'a', name: '%'}
+            ];
+            const total = _.reduce(phylumColumn.clusteredData, (m, d) => m + d.y, 0);
+            let i = 0;
+            const data = _.map(phylumColumn.clusteredData, function(d) {
+                const colorDiv = getColourSquareIcon(i);
+                return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
+            });
+            const options = {
+                title: '',
+                headers: headers,
+                initPageSize: DEFAULT_PAGE_SIZE
+            };
+            const phylumColumnTable = new ClientSideTable(
+                this.$('#column').find('.phylum-table'),
+                options
+            );
+            phylumColumnTable.update(data, false, 1);
+
+            const numSeries = phylumColumn.chart.series[0].data.length;
+
+            phylumColumnTable.$tbody.find('tr').hover((e) => {
+                let index = getSeriesIndex($(e.currentTarget).index(), numSeries);
+                phylumColumn.chart.series[0].data[index].setState('hover');
+            }, (e) => {
+                let index = getSeriesIndex($(e.currentTarget).index(), numSeries);
+                phylumColumn.chart.series[0].data[index].setState();
+            });
+            phylumColumnTable.$tbody.find('tr').click((e) => {
+                let index = getSeriesIndex($(e.currentTarget).index(), numSeries);
+                const series = phylumColumn.chart.series[0].data[index];
+                phylumColumn.chart.series[0].data[index].visible = false;
+
+                setTableRowAndChartHiding(e.currentTarget, series, index, numSeries, false);
+            });
+        });
+
+        // Load stacked column charts
+        const stackedColumn = new charts.TaxonomyColumnStacked('phylum-composition-stacked-column',
+            {accession: analysisID, type: category},
+            {title: 'Phylum composition', seriesName: 'reads'});
+
+        stackedColumn.loaded.done(() => {
+            const headers = [
+                {sortBy: 'a', name: ''},
+                {sortBy: 'a', name: 'Phylum'},
+                {sortBy: 'a', name: 'Domain'},
+                {sortBy: 'a', name: 'Unique OTUs'},
+                {sortBy: 'a', name: '%'}
+            ];
+            const total = _.reduce(stackedColumn.clusteredData, (m, d) => m + d.y, 0);
+            let i = 0;
+            const data = _.map(stackedColumn.clusteredData, function(d) {
+                const colorDiv = getColourSquareIcon(i);
+                return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
+            });
+            const options = {
+                title: '',
+                headers: headers,
+                initPageSize: DEFAULT_PAGE_SIZE
+            };
+            const numSeries = stackedColumn.chart.series[0].data.length;
+            const phylumStackedColumnTable = new ClientSideTable(
+                $('#stacked-column').find('.phylum-table'), options);
+            phylumStackedColumnTable.update(data, false, 1);
+
+            phylumStackedColumnTable.$tbody.find('tr').hover(() => {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                stackedColumn.chart.series[index].data[0].setState('hover');
+            }, () => {
+                let index = getSeriesIndex($(this).index(), numSeries);
+                stackedColumn.chart.series[index].data[0].setState();
+            });
+        });
+
+        promises.push(phylumColumn.loaded);
+        promises.push(stackedColumn.loaded);
+
+        return $.when(promises).promise();
+    }
+});
+
+/**
+ * Download results tab
+ */
+const DownloadTabView = TabView.extend({
+    template: _.template($('#downloadsTmpl').html()),
+    el: '#download',
+    render() {
+        const that = this;
+        // Order
+        const groupsKeys = [
+            'Sequence data',
+            'Functional analysis',
+            'Taxonomic analysis',
+            'Taxonomic analysis SSU rRNA',
+            'Taxonomic analysis LSU rRNA',
+            'non-coding RNAs'
+        ];
+        const data = that.model.attributes.downloadGroups;
+        const groups = {};
+        _.each(groupsKeys, (k) => {
+            // eslint-disable-next-line security/detect-object-injection
+            if (data[k]) {
+                // eslint-disable-next-line security/detect-object-injection
+                groups[k] = data[k];
+            }
+        });
+
+        that.$el.html(that.template({
+            groups: groups,
+            experiment_type: that.experiment_type
+        }));
+    }
+});
+
+/**
+ * Abundance results tab
+ */
+const AbundanceTabView = TabView.extend({
+    el: '#abundance',
+    /**
+     * Abundance and comparision.
+     * This table is only enabled for the analysis that have
+     * the 'Taxa abundance distribution' files.
+     * @param {Object} data Downloads endpoint data (added from the include data for Analysis).
+     * @return {AbundanceTabView} The view instance.
+     */
+    initialize(data) {
+        this.enable = false;
+        if (!data && _.has(data.attributes, 'downloadGroups')) {
+            return this;
+        }
+        const download = _.first(data.attributes.downloadGroups.Statistics);
+        if (download) {
+            this.enable = true;
+            this.download = download;
+        }
+        return this;
+    },
+    /**
+     * Get the taxa abundance distribution SVG and render that.
+     * @return {AbundanceTabView} The view instance.
+     */
+    render() {
+        const that = this;
+        if (!this.enable) {
+            return this;
+        }
+        this.$('#abundance-chart').attr('src', this.download.links.self);
+        $.get({
+            url: that.download.links.self,
+            success(svg) {
+                that.$('#abundance-disp').html(svg);
+            }
+        });
+        return this;
+    }
+});
+
+// -- Contigs Viewer -- //
+let ContigsViewTab = TabView.extend({
+    template: _.template($('#contigsViewerTmpl').html()),
+    el: '#contigs-viewer',
 
     events: {
         'click .contig-browser': 'contigViewer',
-        'click #filter': 'render'
+        'click #contigs-filter': 'reloadTable'
     },
-
-    initialize() {
+    /**
+     * Contigs Viewer and browser.
+     * This tabls provides a contig browser and table for the analysis.
+     * @param {string} analysisID The analysis id
+     */
+    initialize({analysisID}) {
         const that = this;
-        this.$igvDiv = $('#genome-browser');
-        this.$gbLoading = $('#gb-loading');
-        this.$tblLoading = $('#table-loading');
-        this.$popoverTemplate = _.template($('#igv-popup-template').html());
+        that.analysisID = analysisID;
+        that.collection = new api.ContigCollection({accession: analysisID});
+    },
+    /**
+     * Render
+     * @param {bool} viewFirst Load the first contig of the table
+     */
+    render() {
+        const that = this;
+        that.$el.html(that.template());
+        /* DOM */
+        this.$igvDiv = this.$('#genome-browser');
+        this.$gbLoading = this.$('#gb-loading');
+        this.$tblLoading = this.$('#table-loading');
+        /* IGV Popup templates */
+        this.$igvPopoverTpl = _.template($('#igv-popover-template').html());
+        this.$igvPopoverEntryTpl = _.template($('#igv-popover-entry').html());
+
         /* Slider */
-        this.$maxLen = $('#max-length');
-        this.$minLen = $('#min-length');
+        this.$maxLen = this.$('#max-length');
+        this.$minLen = this.$('#min-length');
         this.$lenSlider = this.$el.find('.slider').slider({
             range: true,
             min: 1000,
@@ -77,9 +1350,10 @@ let ContigsView = Backbone.View.extend({
             }
         });
         /* Features filters */
-        this.$cog = $('#cog-filter');
-        this.$kegg = $('#kegg-filter');
-        this.$taxonomtFilter = $('#taxonomy-filter');
+        this.$cog = this.$('#cog-filter');
+        this.$kegg = this.$('#kegg-filter');
+        this.$taxonomtFilter = this.$('#taxonomy-filter');
+        this.$gosFilter = this.$('#gos-filter');
 
         const tableOptions = {
             tableContainer: 'contigs-table',
@@ -91,9 +1365,9 @@ let ContigsView = Backbone.View.extend({
             initPageSize: DEFAULT_PAGE_SIZE,
             textFilter: true
         };
-        this.$contigsTable = new ClientSideTable($('#contigs-table'), tableOptions);
+        this.$contigsTable = new ClientSideTable(this.$('#contigs-table'), tableOptions);
+        this.reloadTable(true);
     },
-
     /**
      * Refresh the table data.
      * @return {Deferred} Deferred promise
@@ -107,7 +1381,8 @@ let ContigsView = Backbone.View.extend({
                 lt: this.$maxLen.val(),
                 cog: this.$cog.val(),
                 kegg: this.$kegg.val(),
-                taxonomy: this.$taxonomtFilter.val()
+                taxonomy: this.$taxonomtFilter.val(),
+                gos: this.$gosFilter.val()
             },
             success() {
                 const data = _.reduce(that.collection.models, (arr, model) => {
@@ -124,34 +1399,37 @@ let ContigsView = Backbone.View.extend({
                 }, []);
                 deferred.resolve(data);
             },
-            error(error) {
-                // TODO HANDLE error
-                console.log(error);
+            error(response) {
+                util.displayError(
+                    response.status,
+                    'Error while retrieving contigs data for: ' + that.analysisID,
+                    that.el);
                 deferred.reject();
             }
         });
         return deferred.promise();
     },
     /**
-     * Render
-     * @param {bool} viewFirst Load the first contig of the table
+     * Render a contig
+     * @param {Boolean} viewFirst load the first contig of the table
      */
-    render(viewFirst) {
+    reloadTable(viewFirst) {
         const that = this;
         this.$tblLoading.show();
         that.refreshTable().then((data) => {
             that.$contigsTable.update(data, true, 1);
             if (viewFirst) {
-                $('.contig-browser').first().trigger('click');
+                this.$('.contig-browser').first().trigger('click');
             }
-        }).catch((err) => {
-            // TODO HANDLE error
-            console.log('Error loading the contigs:' + err);
+        }).catch((response) => {
+            util.displayError(
+                response.status,
+                'Error loading the contigs: ' + that.analysisID,
+                that.el);
         }).always(() => {
             this.$tblLoading.hide();
         });
     },
-
     /**
      * View a contig using IGV.
      * @param {Event} e the event
@@ -159,9 +1437,10 @@ let ContigsView = Backbone.View.extend({
     contigViewer(e) {
         e.preventDefault();
         const that = this;
+        const $el = $(e.target);
 
-        const contigName = $(e.target).data('name');
-        const displayName = $(e.target).val();
+        const contigName = $el.data('name');
+        const displayName = $el.val();
         let options = {
             showChromosomeWidget: false,
             showTrackLabelButton: false,
@@ -169,21 +1448,21 @@ let ContigsView = Backbone.View.extend({
             showCenterGuide: false,
             reference: {
                 indexed: false,
-                fastaURL: process.env.API_URL + 'analyses/' + this.collection.accession + 
-                          '/contigs/' + contigName
+                fastaURL: process.env.API_URL + 'analyses/' + this.collection.accession +
+                    '/contigs/' + contigName
             },
             tracks: [{
                 name: displayName,
                 type: 'annotation',
                 format: 'gff3',
                 url: process.env.API_URL + 'analyses/' + this.collection.accession +
-                     '/annotations/' + contigName,
+                    '/annotations/' + contigName,
                 displayMode: 'EXPANDED',
                 nameField: 'gene'
             }],
             ebi: {
                 colorAttributes: [
-                    'Colour', /* Label */
+                    'Colour by', /* Label */
                     'COG',
                     'product',
                     'Pfam',
@@ -204,6 +1483,7 @@ let ContigsView = Backbone.View.extend({
         igv.createBrowser(this.$igvDiv, options).then((browser) => {
             // Customize the track Pop Over
             browser.on('trackclick', (ignored, data) => {
+                // FIXME: merge this with the genomeBrowser component.
                 if (!data || !data.length) {
                     return false;
                 }
@@ -216,30 +1496,138 @@ let ContigsView = Backbone.View.extend({
                     return false;
                 }
 
-                // By returning a string from the trackclick handler
-                // we're asking IGV to use our custom HTML in its pop-over.
-                const markup = this.$popoverTemplate({attributes: attributes});
+                attributes = _.reduce(attributes, (memo, el) => {
+                    memo[el.name.toLowerCase()] = el.value;
+                    return memo;
+                }, {});
+
+                /**
+                 * Get a key from the attributes
+                 * @param {*} key Dict Key
+                 * @param {*} def default value
+                 * @return {*} the value or default
+                 */
+                function getAttribute(key, def) {
+                    def = def || '';
+                    if (_.has(attributes, key)) {
+                        // eslint-disable-next-line security/detect-object-injection
+                        return attributes[key];
+                    } else {
+                        return def;
+                    }
+                }
+
+                // eslint-disable-next-line valid-jsdoc
+                /**
+                 * S
+                 * @param {*} key Key.
+                 * @return {*} The table with the data or an empty string
+                 */
+                function getAttrMultiValue(key, linkHref) {
+                    const val = getAttribute(key, '');
+                    if (val === '') {
+                        return '';
+                    }
+                    const data = val.split(',');
+                    return that.$igvPopoverEntryTpl({
+                        values: data.map((d) => {
+                            return {
+                                name: d,
+                                link: (linkHref) ? linkHref + d : ''
+                            };
+                        })
+                    });
+                }
+
+                /**
+                 * Calculate the property lenght.
+                 * @return {int} the lenght or undefined
+                 */
+                function getProtLenght() {
+                    const start = parseInt(getAttribute('start'));
+                    const end = parseInt(getAttribute('end'));
+                    if (_.isNaN(start) || _.isNaN(end)) {
+                        return undefined;
+                    }
+                    return Math.ceil((end - start) / 3);
+                }
+
+                const functionalData = {
+                    title: 'Functional annotation',
+                    data: [{
+                        name: 'E.C Number',
+                        value: getAttrMultiValue('ec_number', 'https://enzyme.expasy.org/EC/')
+                    }, {
+                        name: 'Pfam',
+                        value: getAttrMultiValue('pfam', 'https://pfam.xfam.org/family/')
+                    }, {
+                        name: 'KEGG',
+                        value: getAttrMultiValue(
+                            'kegg', 'https://www.genome.jp/dbget-bin/www_bget?')
+                    }, {
+                        name: 'eggNOG',
+                        value: getAttrMultiValue('eggnog')
+                    }, {
+                        name: 'COG',
+                        value: getAttrMultiValue('cog')
+                    }, {
+                        name: 'InterPro',
+                        value: getAttrMultiValue(
+                            'interpro', 'https://www.ebi.ac.uk/interpro/beta/entry/InterPro/')
+                    }]
+                };
+
+                const otherData = {
+                    title: 'Feature details',
+                    data: [{
+                        name: 'Type',
+                        value: getAttribute('type')
+                    }, {
+                        name: 'Inference',
+                        value: getAttribute('inference')
+                    }, {
+                        name: 'Start / End',
+                        value: getAttribute('start') + ' / ' + getAttribute('end')
+                    }, {
+                        name: 'Protein length',
+                        value: getProtLenght()
+                    }]
+                };
+
+                const markup = that.$igvPopoverTpl({
+                    name: getAttribute('id'),
+                    gene: getAttribute('gene'),
+                    product: getAttribute('product'),
+                    properties: [functionalData, otherData]
+                });
+
                 return markup;
             });
             this.igvBrowser = browser;
             this.$gbLoading.hide();
         }).catch((error) => {
-            // TODO: Handle
-            console.error(error);
+            // FIXME: clean the browser
+            util.displayError(
+                500,
+                'Error loading the contigs on the browser. Detail: ' + error,
+                that.el);
             that.igvBrowser = undefined;
             that.$gbLoading.hide();
-            // FIXME: clean the browser
         });
     }
 });
 
+// -- Common utilities to most of the views -- //
+
 /**
- * Fetch data and render nucleotide position chart in QC tab
- * @param {string} analysisID Accession of analysis
- * @return {object}
+ * Create a display of the series color
+ * @param {number} i index of series color
+ * @return {string} display element
  */
-function loadNucleotideDisp(analysisID) {
-    return new charts.NucleotideHist('nucleotide', {accession: analysisID});
+function getColourSquareIcon(i) {
+    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
+    return '<div class=\'puce-square-legend\' style=\'background-color: ' +
+        Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
 }
 
 /**
@@ -253,17 +1641,6 @@ function getSeriesIndex(index, numSeries) {
         index = numSeries - 1;
     }
     return index;
-}
-
-/**
- * Create a display of the series color
- * @param {number} i index of series color
- * @return {string} display element
- */
-function getColourSquareIcon(i) {
-    const taxColor = Math.min(TAXONOMY_COLOURS.length - 1, i);
-    return '<div class=\'puce-square-legend\' style=\'background-color: ' +
-        Commons.TAXONOMY_COLOURS[taxColor] + '\'></div>';
 }
 
 /**
@@ -284,566 +1661,9 @@ function setTableRowAndChartHiding(elem, series, index, numSeries, defaultVisibi
     }
 }
 
-/**
- * Generate interpro link
- * @param {string} text to display in link tag
- * @param {string} id of interpro result
- * @return {string}
- */
-function createInterProLink(text, id) {
-    const url = INTERPRO_URL + 'entry/' + id;
-    return '<a href=\'' + url + '\'>' + text + '</a>';
-}
-
-/**
- * Load krona chart for current view
- * @param {string} analysisID ENA primary accession for analysis
- * @param {string} type subunit type (for pipeline version 4.0 and above) ("ssu" or "lsu")
- */
-function loadKronaChart(analysisID, type) {
-    const kronaUrl = api.getKronaURL(analysisID, type);
-    const kronaChart = '<object class="krona_chart" ' +
-        'data="' + kronaUrl + '" ' +
-        'type="text/html"></object>';
-    $('#krona').html(kronaChart);
-}
-
-/**
- * Load taxonomy data and create graphs
- * @param {string} analysisID ENA analysis primary accession
- * @param {string} subunitType of analysis (see API documentation for endpoint)
- * @return {jQuery.Promise} taxonomy backbone model
- */
-function loadTaxonomy(analysisID, subunitType) {
-    loadKronaChart(analysisID, subunitType);
-
-    // Load pie charts
-    const domainPie = new charts.TaxonomyPie('domain-composition-pie',
-        {accession: analysisID, type: subunitType},
-        {title: 'Domain composition', seriesName: 'reads', subtitle: false}
-    );
-    const phylumPie = new charts.TaxonomyPie('phylum-composition-pie',
-        {accession: analysisID, type: subunitType, groupingDepth: 2},
-        {title: 'Phylum composition', seriesName: 'reads', legend: true}
-    );
-
-    phylumPie.loaded.done(() => {
-        const headers = [
-            {sortBy: 'a', name: ''},
-            {sortBy: 'a', name: 'Phylum'},
-            {sortBy: 'a', name: 'Domain'},
-            {sortBy: 'a', name: 'Unique OTUs'},
-            {sortBy: 'a', name: '%'}
-        ];
-        const total = _.reduce(phylumPie.clusteredData, function(m, d) {
-            return m + d.y;
-        }, 0);
-        let i = 0;
-        const data = _.map(phylumPie.clusteredData, function(d) {
-            const colorDiv = getColourSquareIcon(i);
-            return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
-        });
-        const options = {
-            title: '',
-            headers: headers,
-            initPageSize: DEFAULT_PAGE_SIZE
-        };
-        const phylumPieTable = new ClientSideTable($('#pie').find('.phylum-table'), options);
-        phylumPieTable.update(data, false, 1);
-
-        const numSeries = phylumPie.chart.series[0].data.length;
-        phylumPieTable.$tbody.find('tr').hover(function() {
-            let index = getSeriesIndex($(this).index(), numSeries);
-            phylumPie.chart.series[0].data[index].setState('hover');
-        }, function() {
-            let index = getSeriesIndex($(this).index(), numSeries);
-            phylumPie.chart.series[0].data[index].setState();
-        });
-        phylumPieTable.$tbody.find('tr').click(function() {
-            let index = getSeriesIndex($(this).index(), numSeries);
-            const series = phylumPie.chart.series[0].data[index];
-            setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
-        });
-    });
-
-    // Load column charts
-    const domainColumn = new charts.TaxonomyColumn('domain-composition-column',
-        {accession: analysisID, type: subunitType},
-        {title: 'Domain composition', seriesName: 'reads', subtitle: false});
-    const phylumColumn = new charts.TaxonomyColumn('phylum-composition-column',
-        {accession: analysisID, type: subunitType, groupingDepth: 2},
-        {title: 'Phylum composition (top 10)', seriesName: 'reads', numColumns: 10}
-    );
-
-    phylumColumn.loaded.done(() => {
-        const headers = [
-            {sortBy: 'a', name: ''},
-            {sortBy: 'a', name: 'Phylum'},
-            {sortBy: 'a', name: 'Domain'},
-            {sortBy: 'a', name: 'Unique OTUs'},
-            {sortBy: 'a', name: '%'}
-        ];
-        const total = _.reduce(phylumColumn.clusteredData, function(m, d) {
-            return m + d.y;
-        }, 0);
-        let i = 0;
-        const data = _.map(phylumColumn.clusteredData, function(d) {
-            const colorDiv = getColourSquareIcon(i);
-            return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
-        });
-        const options = {
-            title: '',
-            headers: headers,
-            initPageSize: DEFAULT_PAGE_SIZE
-        };
-        const phylumColumnTable = new ClientSideTable($('#column').find('.phylum-table'), options);
-        phylumColumnTable.update(data, false, 1);
-
-        const numSeries = phylumColumn.chart.series[0].data.length;
-        phylumColumnTable.$tbody.find('tr').hover(function() {
-            let index = getSeriesIndex($(this).index(), numSeries);
-            phylumColumn.chart.series[0].data[index].setState('hover');
-        }, function() {
-            let index = getSeriesIndex($(this).index(), numSeries);
-            phylumColumn.chart.series[0].data[index].setState();
-        });
-        phylumColumnTable.$tbody.find('tr').click(function() {
-            let index = getSeriesIndex($(this).index(), numSeries);
-            const series = phylumColumn.chart.series[0].data[index];
-            phylumColumn.chart.series[0].data[index].visible = false;
-            setTableRowAndChartHiding(this, series, index, numSeries, false);
-        });
-    });
-
-    // Load stacked column charts
-    const stackedColumn = new charts.TaxonomyColumnStacked('phylum-composition-stacked-column',
-        {accession: analysisID, type: subunitType},
-        {title: 'Phylum composition', seriesName: 'reads'});
-
-    stackedColumn.loaded.done(() => {
-        const headers = [
-            {sortBy: 'a', name: ''},
-            {sortBy: 'a', name: 'Phylum'},
-            {sortBy: 'a', name: 'Domain'},
-            {sortBy: 'a', name: 'Unique OTUs'},
-            {sortBy: 'a', name: '%'}
-        ];
-        const total = _.reduce(stackedColumn.clusteredData, function(m, d) {
-            return m + d.y;
-        }, 0);
-        let i = 0;
-        const data = _.map(stackedColumn.clusteredData, function(d) {
-            const colorDiv = getColourSquareIcon(i);
-            return [++i, colorDiv + d.name, d.lineage[0], d.y, (d.y * 100 / total).toFixed(2)];
-        });
-        const options = {
-            title: '',
-            headers: headers,
-            initPageSize: DEFAULT_PAGE_SIZE
-        };
-        const numSeries = stackedColumn.chart.series[0].data.length;
-        const phylumStackedColumnTable = new ClientSideTable(
-            $('#stacked-column').find('.phylum-table'), options);
-        phylumStackedColumnTable.update(data, false, 1);
-        phylumStackedColumnTable.$tbody.find('tr').hover(function() {
-            let index = getSeriesIndex($(this).index(), numSeries);
-            stackedColumn.chart.series[index].data[0].setState('hover');
-        }, function() {
-            let index = getSeriesIndex($(this).index(), numSeries);
-            stackedColumn.chart.series[index].data[0].setState();
-        });
-    });
-    return $.when(domainPie.dataReady,
-        phylumPie.loaded, domainColumn.loaded,
-        phylumColumn.loaded, stackedColumn.loaded).promise();
-}
-
-/**
- * Disable a subunit button and check the selected type
- * @param {string} enableType /ssu or /lsu
- */
-function disableSubUnitRadio(enableType) {
-    $('.rna-select-button[value!=\'' + enableType + '\']').attr('disabled', true);
-    $('.rna-select-button[value=\'' + enableType + '\']').attr('checked', true);
-}
-
-/**
- * Displays error if taxonomy graph data could not be loaded
- */
-function displayTaxonomyGraphError() {
-    const error = $('<h4>No taxonomy annotation has been associated with this analysis.</h4>');
-    console.debug('Failed to load taxonomy annotation associated with this analysis.');
-    $('#taxonomic').empty().append(error);
-}
-
-/**
- * Attempt to load taxonomy, and fallback to /lsu if /ssu does not exist
- * @param {string} analysisID accession of analysis
- * @param {string} subunitType of analysis
- * @param {float} pipelineVersion
- * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
- */
-function loadTaxonomyWithFallback(analysisID, subunitType, pipelineVersion, experimentType) {
-    loadTaxonomy(analysisID, subunitType).fail((model) => {
-        if (subunitType === '/ssu') {
-            subunitType = '/lsu';
-            loadTaxonomy(analysisID, subunitType).fail((model) => {
-                if (model.length === 0) {
-                    displayTaxonomyGraphError();
-                }
-            });
-        } else {
-            if (model.length === 0) {
-                displayTaxonomyGraphError();
-            }
-        }
-    });
-    if (['amplicon', 'metabarcoding'].indexOf(experimentType) > -1 && pipelineVersion >= 4.0) {
-        disableSubUnitRadio(subunitType);
-    }
-}
-
-/**
- * Load and display charts for selected view
- * @param {string} analysisID ENA analysis primary accession
- * @param {string} pipelineVersion
- * @param {string} experimentType of analysis {amplicon|wgs|metabarcoding}
- */
-function loadTaxonomicAnalysis(analysisID, pipelineVersion, experimentType) {
-    let type = parseFloat(pipelineVersion) >= 4.0 ? '/ssu' : '';
-    loadTaxonomyWithFallback(analysisID, type, pipelineVersion, experimentType);
-}
-
-/**
- * Load all charts on QC tab
- * @param {string} analysisID accession of analysis
- * @param {string} pipelineVersion version of pipeline used to conduct analysis
- */
-function loadQCAnalysis(analysisID, pipelineVersion) {
-    const seqFeatChart = new charts.SeqFeatSumChart('SeqFeat-chart',
-        {accession: analysisID});
-    seqFeatChart.loaded.fail(() => {
-        $('#SeqFeat-chart')
-            .append('<h4>Could not load sequence feature summary.</h4>');
-    });
-
-    const qcStepChart = new charts.QcChart('QC-step-chart',
-        {accession: analysisID});
-    qcStepChart.loaded.fail(() => {
-        $('#QC-step-chart')
-            .append('<h4>Could not load qc summary chart.</h4>');
-    });
-    if (parseFloat(pipelineVersion) > 2) {
-        const nucleotideChart = loadNucleotideDisp(analysisID);
-        nucleotideChart.loaded.fail(() => {
-            console.debug('Failed to load nucleotide hist.');
-            $('#nucleotide-section').hide();
-        }).done(() => {
-            $('#nucleotide-section').show();
-        });
-
-        new charts.GcContentChart('readsGCBarChart', {accession: analysisID});
-        new charts.GcDistributionChart('readsGCHist', {accession: analysisID});
-        new charts.ReadsLengthHist('readsLengthHist', {accession: analysisID});
-        new charts.SeqLengthChart('readsLengthBarChart', {accession: analysisID});
-    }
-}
-
-/**
- * Load all charts on functional tab
- * @param {string} analysisID accession of analysis
- */
-function loadFunctionalAnalysis(analysisID) {
-    const interproMatchPie = new charts.InterproMatchPie('InterProPie-chart',
-        {accession: analysisID});
-
-    interproMatchPie.loaded.done(() => {
-        let i = 0;
-        const totalCount = interproMatchPie.raw_data.reduce(function(v, e) {
-            return v + e['attributes']['count'];
-        }, 0);
-        const tableData = interproMatchPie.raw_data.map(function(d) {
-            d = d.attributes;
-            const colorDiv = getColourSquareIcon(i);
-            const interProLink = createInterProLink(d.description, d.accession);
-            return [
-                ++i,
-                colorDiv + interProLink,
-                d.accession,
-                d.count,
-                (d.count * 100 / totalCount).toFixed(2)];
-        });
-        const headers = [
-            {sortBy: 'a', name: ''},
-            {sortBy: 'a', name: 'Entry name'},
-            {sortBy: 'a', name: 'ID'},
-            {sortBy: 'a', name: 'pCDS matched'},
-            {sortBy: 'a', name: '%'}
-        ];
-        const options = {
-            title: '',
-            headers: headers,
-            initPageSize: DEFAULT_PAGE_SIZE
-        };
-        const interproTable = new ClientSideTable($('#InterPro-table'), options);
-        interproTable.update(tableData, false, 1, tableData.length);
-
-        const numSeries = interproMatchPie.chart.series[0].data.length;
-        interproTable.$tbody.find('tr').hover(function() {
-            let index = getSeriesIndex($(this).index(), numSeries);
-            interproMatchPie.chart.series[0].data[index].setState('hover');
-        }, function() {
-            let index = getSeriesIndex($(this).index(), numSeries);
-            interproMatchPie.chart.series[0].data[index].setState();
-        });
-
-        interproTable.$tbody.find('tr').click(function() {
-            let index = getSeriesIndex($(this).index(), numSeries);
-            const series = interproMatchPie.chart.series[0].data[index];
-            setTableRowAndChartHiding(this, series, index, numSeries, !series.visible);
-        });
-    });
-    new charts.GoTermBarChart('biological-process-bar-chart',
-        {accession: analysisID, lineage: 'biological_process'},
-        {title: 'Biological process', color: Commons.TAXONOMY_COLOURS[0]});
-    new charts.GoTermBarChart('molecular-function-bar-chart',
-        {accession: analysisID, lineage: 'molecular_function'},
-        {title: 'Molecular function', color: Commons.TAXONOMY_COLOURS[1]});
-    new charts.GoTermBarChart('cellular-component-bar-chart',
-        {accession: analysisID, lineage: 'cellular_component'},
-        {title: 'Cellular component', color: Commons.TAXONOMY_COLOURS[2]});
-
-    new charts.GoTermPieChart('biological-process-pie-chart',
-        {accession: analysisID, lineage: 'biological_process'},
-        {title: 'Biological process', color: Commons.TAXONOMY_COLOURS[0]});
-    new charts.GoTermPieChart('molecular-function-pie-chart',
-        {accession: analysisID, lineage: 'molecular_function'},
-        {title: 'Molecular function', color: Commons.TAXONOMY_COLOURS[1]});
-    new charts.GoTermPieChart('cellular-component-pie-chart',
-        {accession: analysisID, lineage: 'cellular_component'},
-        {title: 'Cellular component', color: Commons.TAXONOMY_COLOURS[2]});
-}
-
-let DownloadView = Backbone.View.extend({
-    model: api.RunDownloads,
-    template: _.template($('#downloadsTmpl').html()),
-    el: '#download-list',
-    initialize() {
-        const that = this;
-        this.model.fetch({
-            data: $.param({page_size: 250}),
-            success(response) {
-                setAbundanceTab(response.attributes.downloadGroups['Statistics']);
-                that.$el.html(that.template({
-                        groups: that.model.attributes.downloadGroups,
-                        experiment_type: that.experiment_type
-                    }
-                ));
-            }
-        });
-    }
+/* Entry point */
+const mainView = new AnalysisView({
+    model: new api.Analysis({id: analysisID, params: {include: 'downloads'}})
 });
 
-/**
- * Load download tab view
- * @param {string} analysisID ENA analysis primary accession
- * @param {string} experimentType Experiment Type [Assembly, Amplicon, Metabarcoding]
- */
-function loadDownloads(analysisID, experimentType) {
-    let downloads = new api.AnalysisDownloads({id: analysisID, experiment_type: experimentType});
-    new DownloadView({model: downloads});
-}
-
-/**
- * Callback for taxonomy size selection in taxonomic analysis tab
- * @param {string} srcElem jQuery selector string of event source element
- * @param {number} pipelineVersion
- */
-function onTaxonomySelect(srcElem) {
-    const type = $(srcElem).val();
-    loadTaxonomy(analysisID, type);
-}
-
-/**
- * Business logic to create table of info related to current analysis
- * @param {object} attr attributes from BackBone AnalysesView model
- * @return {{Study: string, Sample: string}}
- */
-function constructDescriptionTable(attr) {
-    let description = {
-        'Study': '<a href=\'' + attr['study_url'] + '\'>' +
-        attr['study_accession'] + '</a>',
-        'Sample': '<a href=\'' + attr['sample_url'] + '\'>' +
-        attr['sample_accession'] + '</a>'
-    };
-
-    if (attr['experiment_type'] === 'assembly') {
-        description['Assembly'] = '<a href=\'' + attr['assembly_url'] + '\'>' +
-            attr['assembly_accession'] + '</a>';
-    } else {
-        description['Run'] = '<a href=\'' + attr['run_url'] + '\'>' +
-            attr['run_accession'] + '</a>';
-    }
-
-    description['Pipeline version'] = '<a href=\'' + attr.pipeline_url + '\'>' +
-        attr.pipeline_version +
-        '</a>';
-
-    return description;
-}
-
-/**
- * Business logic to create table of data analysis info related to current analysis
- * @param {object} attr attributes from BackBone AnalysesView model
- * @return {object}
- */
-function constructDataAnalysisTable(attr) {
-    const dataAnalysis = {};
-    if (attr['experiment_type']) {
-        dataAnalysis['Experiment type'] = attr['experiment_type'];
-    }
-
-    if (attr['instrument_model']) {
-        dataAnalysis['Instrument model'] = attr['instrument_model'];
-    }
-
-    if (attr['instrument_platform']) {
-        dataAnalysis['Instrument platform'] = attr['instrument_platform'];
-    }
-    return dataAnalysis;
-}
-
-/**
- * Main view for the Analysis.
- * This view managed the tabs and the general
- * analysis data.
- */
-let AnalysisView = Backbone.View.extend({
-    model: api.Analysis,
-    template: _.template($('#analysisTmpl').html()),
-    el: '#main-content-area',
-    initialize() {
-        const that = this;
-        this.model.fetch({
-            data: {},
-            success(data) {
-                const attr = data.attributes;
-                /* Display rules */
-                attr.displaySsuButtons = attr.pipeline_version >= 4.0;
-                // attr.displayContigsViewer = attr.experiment_type === 'assembly' &&
-                //                              attr.annotationAvailable;
-                attr.displayContigsViewer = true;
-                if (attr.experiment_type === 'assembly') {
-                    attr.other_analyses = attr.assembly_url;
-                } else {
-                    attr.other_analyses = attr.run_url;
-                }
-
-                that.render(attr.pipeline_version, function() {
-                    if (attr.experiment_type === 'assembly') {
-                        $('#assembly-text-warning').removeClass('hidden');
-                        // Check if the viewer tab should be enabled.
-                    }
-                    $('#analysisSelect').val(attr.pipeline_version);
-
-                    let description = constructDescriptionTable(attr);
-                    let dataAnalysis = constructDataAnalysisTable(attr);
-
-                    const $overview = $('#overview');
-                    $overview.append(new DetailList('Description', description));
-                    if (Object.keys(dataAnalysis).length > 0) {
-                        $overview.append(new DetailList('Experiment details', dataAnalysis));
-                    }
-                    util.attachExpandButtonCallback();
-
-                    loadQCAnalysis(analysisID, attr.pipeline_version);
-                    loadTaxonomicAnalysis(analysisID, attr.pipeline_version,
-                                          attr.experiment_type);
-                    loadDownloads(analysisID, attr.experiment_type);
-
-                    if (attr.experiment_type !== 'amplicon') {
-                        loadFunctionalAnalysis(analysisID);
-                        enableTab('functional');
-                    } else {
-                        removeTab('functional');
-                        if (window.location.hash.substr(1) === 'functional') {
-                            util.changeTab($('#overview'));
-                        }
-                    }
-                    if (attr.displayContigsViewer) {
-                        that.contigsViewer = new ContigsView({
-                            el: $('#contigs-containter'),
-                            collection: new ContigCollection({accession: analysisID})
-                        });
-                        that.loadAssemblyViewer();
-                    }
-                });
-            },
-            error(ignored, response) {
-                util.displayError(response.status, 'Could not retrieve analysis: ' + analysisID);
-            }
-        });
-    },
-    render(pipelineVersion, callback) {
-        this.$el.html(this.template(this.model.toJSON()));
-        $('.rna-select-button').click(function() {
-            onTaxonomySelect(this);
-        });
-        util.attachTabHandlers();
-        callback();
-        return this.$el;
-    },
-    /**
-     * Load the Assembly Viewer in the corresponding tab
-     */
-    loadAssemblyViewer() {
-        this.contigsViewer.render(true);
-    }
-    // FIXME: move the tabs management to this view.
-});
-
-/**
- * Disable tab by id
- * @param {string} id of tab
- */
-function removeTab(id) {
-    $('[href=\'#' + id + '\']').parent('li').remove();
-}
-
-/**
- * Enable tab by id
- * @param {string} id of tab
- */
-function enableTab(id) {
-    $('[href=\'#' + id + '\']').parent('li').removeClass('disabled');
-}
-
-/**
- * Display abundance tab if data exists to populate it
- * @param {[*]} statisticsData
- */
-function setAbundanceTab(statisticsData) {
-    if (statisticsData !== undefined) {
-        const download = _.filter(statisticsData, function(entry) {
-            return entry.attributes.description.label === 'Taxa abundance distribution';
-        });
-        if (download.length > 0) {
-            $('#abundance-chart').attr('src', download[0].links.self);
-            $.get({
-                url: download[0].links.self,
-                success(svg) {
-                    $('#abundance-disp').html(svg);
-                }
-            });
-            enableTab('abundance');
-            return;
-        }
-    }
-    removeTab('abundance');
-    if (window.location.hash.substr(1) === 'abundance') {
-        util.changeTab($('#overview'));
-    }
-}
-
-let analysis = new api.Analysis({id: analysisID});
-new AnalysisView({model: analysis});
+mainView.render();
