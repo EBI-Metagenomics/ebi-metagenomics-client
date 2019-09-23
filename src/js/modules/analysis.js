@@ -1025,6 +1025,7 @@ const TaxonomyTabView = TabView.extend({
                     isV2: !attributes.taxonomy_ssu_count && attributes.taxonomy_count > 0
                 };
 
+                that.viewConf = processedData;
                 that.$el.html(that.template(processedData));
 
                 // TODO: use TabViews
@@ -1068,7 +1069,7 @@ const TaxonomyTabView = TabView.extend({
         const $phylumCompositionColumn = this.$('#phylum-composition-column').parent();
 
         // ITS doesn't load Domain pie or charts
-        if (!$.inArray(category, ['/itsunite', '/itsonedb'])) {
+        if ($.inArray(category, ['/', '/ssu', '/lsu'])) {
             const domainPie = new charts.TaxonomyPie('domain-composition-pie',
                 {accession: analysisID, type: category},
                 {title: 'Domain composition', seriesName: 'reads', subtitle: false}
@@ -1083,16 +1084,20 @@ const TaxonomyTabView = TabView.extend({
                 seriesName: 'reads',
                 subtitle: false
             });
-            if (!$phylumCompositionPie.hasClass('small-12 medium-8 larger-8')) {
-                $phylumCompositionPie.removeClass('small-12 medium-8 larger-8');
-            }
-            if (!$phylumCompositionColumn.hasClass('small-12 medium-8 larger-8')) {
-                $phylumCompositionColumn.addClass('small-12 medium-8 larger-8');
-            }
             promises.push(domainColumn.loaded);
         } else {
             $phylumCompositionPie.removeClass('small-12 medium-8 larger-8');
             $phylumCompositionColumn.removeClass('small-12 medium-8 larger-8');
+        }
+
+        if ($.inArray(category, ['/', '/ssu', '/lsu']) &&
+            (this.viewConf.enableSSU || this.viewConf.enableLSU)) {
+            if (!$phylumCompositionPie.hasClass('small-12 medium-8 larger-8')) {
+                $phylumCompositionPie.addClass('small-12 medium-8 larger-8');
+            }
+            if (!$phylumCompositionColumn.hasClass('small-12 medium-8 larger-8')) {
+                $phylumCompositionColumn.addClass('small-12 medium-8 larger-8');
+            }
         }
 
         const phylumPie = new charts.TaxonomyPie('phylum-composition-pie',
