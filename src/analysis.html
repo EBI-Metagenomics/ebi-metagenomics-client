@@ -100,10 +100,12 @@
             </div>
             <div class="tabs-panel" id="pie">
                 <div class="row">
-                    <div class="columns small-12 medium-4 larger-4">
-                        <div id="domain-composition-pie"></div>
-                    </div>
-                    <div class="columns small-12 medium-8 larger-8">
+                    <% if (enableSSU || enableLSU) { %>
+                        <div class="columns small-12 medium-4 larger-4">
+                            <div id="domain-composition-pie"></div>
+                        </div>
+                    <% } %>
+                    <div class="columns <%= (enableSSU || enableLSU) ? 'small-12 medium-8 larger-8' : '' %>">
                         <div id="phylum-composition-pie"></div>
                     </div>
                 </div>
@@ -115,10 +117,12 @@
             </div>
             <div class="tabs-panel" id="column">
                 <div class="row">
-                    <div class="columns small-12 medium-4 larger-4">
-                        <div id="domain-composition-column"></div>
-                    </div>
-                    <div class="columns small-12 medium-8 larger-8">
+                    <% if (enableSSU || enableLSU) { %>
+                        <div class="columns small-12 medium-4 larger-4">
+                            <div id="domain-composition-column"></div>
+                        </div>
+                    <% } %>
+                    <div class="columns <%= (enableSSU || enableLSU) ? 'small-12 medium-8 larger-8' : '' %>">
                         <div id="phylum-composition-column"></div>
                     </div>
                 </div>

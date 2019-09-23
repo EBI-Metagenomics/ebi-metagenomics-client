@@ -1065,7 +1065,7 @@ const TaxonomyTabView = TabView.extend({
         let promises = [];
 
         // ITS doesn't load Domain pie or charts
-        if ($.inArray(category, ['/itsunite', '/itsonedb'])) {
+        if (!$.inArray(category, ['/itsunite', '/itsonedb'])) {
             const domainPie = new charts.TaxonomyPie('domain-composition-pie',
                 {accession: analysisID, type: category},
                 {title: 'Domain composition', seriesName: 'reads', subtitle: false}
