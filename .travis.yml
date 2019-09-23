@@ -24,7 +24,8 @@ before_install:
   - python3 -V
   - pip3 -V
   - pip3 install --user "git+git://github.com/EBI-metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+  # TODO: replace pipeline-v5 when releases
+  - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@pipeline-v5#egg=emgcli"
 
   # EMG API CONFIG MODIFICATION
   # Add slack notification to config
