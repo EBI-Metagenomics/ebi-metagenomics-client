@@ -1064,6 +1064,9 @@ const TaxonomyTabView = TabView.extend({
 
         let promises = [];
 
+        const $phylumCompositionPie = this.$('#phylum-composition-pie').parent();
+        const $phylumCompositionColumn = this.$('#phylum-composition-column').parent();
+
         // ITS doesn't load Domain pie or charts
         if (!$.inArray(category, ['/itsunite', '/itsonedb'])) {
             const domainPie = new charts.TaxonomyPie('domain-composition-pie',
@@ -1080,8 +1083,18 @@ const TaxonomyTabView = TabView.extend({
                 seriesName: 'reads',
                 subtitle: false
             });
+            if (!$phylumCompositionPie.hasClass('small-12 medium-8 larger-8')) {
+                $phylumCompositionPie.removeClass('small-12 medium-8 larger-8');
+            }
+            if (!$phylumCompositionColumn.hasClass('small-12 medium-8 larger-8')) {
+                $phylumCompositionColumn.addClass('small-12 medium-8 larger-8');
+            }
             promises.push(domainColumn.loaded);
+        } else {
+            $phylumCompositionPie.removeClass('small-12 medium-8 larger-8');
+            $phylumCompositionColumn.removeClass('small-12 medium-8 larger-8');
         }
+
         const phylumPie = new charts.TaxonomyPie('phylum-composition-pie',
             {accession: analysisID, type: category, groupingDepth: 2},
             {title: 'Phylum composition', seriesName: 'reads', legend: true}
