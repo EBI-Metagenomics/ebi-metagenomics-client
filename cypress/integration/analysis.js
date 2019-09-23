@@ -115,7 +115,7 @@ describe('Analysis page', function() {
         });
 
         it('Should display correct number of results', function() {
-            cy.get('#download tbody > tr a', {timeout: 1000}).should('have.length', 64);
+            cy.get('#download tbody > tr a', {timeout: 10000}).should('have.length', 64);
         });
         it('Should display download groups correctly', function() {
             const headers = [
