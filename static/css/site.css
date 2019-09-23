@@ -876,6 +876,10 @@ ul.training > li:last-child:before {
     width: 14em;
 }
 
+.taxonomy-charts {
+    min-height: 400px;
+}
+
 .clear-filter {
     margin-top: 1.5em;
 }

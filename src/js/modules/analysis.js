@@ -1065,11 +1065,8 @@ const TaxonomyTabView = TabView.extend({
 
         let promises = [];
 
-        const $phylumCompositionPie = this.$('#phylum-composition-pie').parent();
-        const $phylumCompositionColumn = this.$('#phylum-composition-column').parent();
-
         // ITS doesn't load Domain pie or charts
-        if ($.inArray(category, ['/', '/ssu', '/lsu'])) {
+        if (_.indexOf(['/', '/ssu', '/lsu'], category) > -1) {
             const domainPie = new charts.TaxonomyPie('domain-composition-pie',
                 {accession: analysisID, type: category},
                 {title: 'Domain composition', seriesName: 'reads', subtitle: false}
@@ -1085,19 +1082,6 @@ const TaxonomyTabView = TabView.extend({
                 subtitle: false
             });
             promises.push(domainColumn.loaded);
-        } else {
-            $phylumCompositionPie.removeClass('small-12 medium-8 larger-8');
-            $phylumCompositionColumn.removeClass('small-12 medium-8 larger-8');
-        }
-
-        if ($.inArray(category, ['/', '/ssu', '/lsu']) &&
-            (this.viewConf.enableSSU || this.viewConf.enableLSU)) {
-            if (!$phylumCompositionPie.hasClass('small-12 medium-8 larger-8')) {
-                $phylumCompositionPie.addClass('small-12 medium-8 larger-8');
-            }
-            if (!$phylumCompositionColumn.hasClass('small-12 medium-8 larger-8')) {
-                $phylumCompositionColumn.addClass('small-12 medium-8 larger-8');
-            }
         }
 
         const phylumPie = new charts.TaxonomyPie('phylum-composition-pie',
@@ -1238,7 +1222,38 @@ const TaxonomyTabView = TabView.extend({
         promises.push(phylumColumn.loaded);
         promises.push(stackedColumn.loaded);
 
-        return $.when(promises).promise();
+        // Adjust the layout
+        const $phylumPie = this.$('#phylum-composition-pie');
+        $phylumPie.html('');
+        const $domainPie = this.$('#domain-composition-pie');
+        $domainPie.html('');
+        const $phylumColumn = this.$('#phylum-composition-column');
+        $phylumColumn.html('');
+        const $domainColumn = this.$('#domain-composition-column');
+        $domainColumn.html('');
+
+        const $piePhylumContainer = $phylumPie.parent();
+        const $pieDomainContainer = $domainPie.parent();
+        const $columnDomainContainer = $domainColumn.parent();
+        const $columnPhylumContainer = $phylumColumn.parent();
+
+        if (_.indexOf(['/', '/ssu', '/lsu'], category) > -1) {
+            if (!$piePhylumContainer.hasClass('medium-8 larger-8')) {
+                $piePhylumContainer.addClass('medium-8 larger-8');
+            }
+            if (!$columnPhylumContainer.hasClass('medium-8 larger-8')) {
+                $columnPhylumContainer.addClass('medium-8 larger-8');
+            }
+            $pieDomainContainer.show();
+            $columnDomainContainer.show();
+        } else {
+            $piePhylumContainer.removeClass('medium-8 larger-8');
+            $columnPhylumContainer.removeClass('medium-8 larger-8');
+            $pieDomainContainer.hide();
+            $columnDomainContainer.hide();
+        }
+
+        return $.when(promises);
     }
 });
 
