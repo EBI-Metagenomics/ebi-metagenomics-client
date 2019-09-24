@@ -279,7 +279,7 @@ const AnalysisView = TabManagerView.extend({
                     router: that.router
                 };
 
-                if (attr.experiment_type !== 'Xamplicon') {
+                if (attr.experiment_type !== 'amplicon') {
                     that.registerTab({
                         tabId: 'functional',
                         tab: new FunctionalTabView(annotTabsOpts),
