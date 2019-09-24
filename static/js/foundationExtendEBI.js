@@ -437,7 +437,7 @@ function invokeResponsiveMenuEBI() {
     activateEMBLdropdown();
 
     // Smooth scroll anchor links for jQuery users
-    smoothScrollAnchorLinksEBI();
+    // FIXME: smoothScrollAnchorLinksEBI();
 
     // Respond the local nav to browser window width
     invokeResponsiveMenuEBI();
