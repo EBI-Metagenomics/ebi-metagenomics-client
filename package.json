@@ -1,6 +1,6 @@
 {
   "name": "mgportalv2",
-  "version": "1.4.5",
+  "version": "1.5.0",
   "description": "New client to server updated MGPortal API",
   "main": "entry.js",
   "scripts": {
