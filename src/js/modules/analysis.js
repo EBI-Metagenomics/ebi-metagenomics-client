@@ -477,7 +477,8 @@ let FunctionalTabView = TabManagerTabView.extend({
             route: 'functional/go'
         });
 
-        if (this.pipelineVersion === '5.0') {
+        // TODO: uncomment when the new annotations get imported
+        if (this.pipelineVersion === 'X5.0') {
             this.registerTab({
                 tabId: 'pfam',
                 tab: new PfamTabView(this.analysisID),
@@ -488,6 +489,9 @@ let FunctionalTabView = TabManagerTabView.extend({
                 tab: new KOTabView(this.analysisID),
                 route: 'functional/ko'
             });
+        } else {
+            this.removeTab('pfam');
+            this.removeTab('ko');
         }
     }
 });
@@ -1272,6 +1276,7 @@ const DownloadTabView = TabView.extend({
             'Taxonomic analysis',
             'Taxonomic analysis SSU rRNA',
             'Taxonomic analysis LSU rRNA',
+            'Taxonomic analysis ITS',
             'non-coding RNAs'
         ];
         const data = that.model.attributes.downloadGroups;
@@ -1283,7 +1288,15 @@ const DownloadTabView = TabView.extend({
                 groups[k] = data[k];
             }
         });
-
+        // ITS grouping
+        let itsRes = groups['Taxonomic analysis ITS'] || [];
+        if (data['Taxonomic analysis ITSoneDB']) {
+            itsRes.push(...data['Taxonomic analysis ITSoneDB']);
+        }
+        if (data['Taxonomic analysis UNITE']) {
+            itsRes.push(...data['Taxonomic analysis UNITE']);
+        }
+        groups['Taxonomic analysis ITS'] = itsRes;
         that.$el.html(that.template({
             groups: groups,
             experiment_type: that.experiment_type
