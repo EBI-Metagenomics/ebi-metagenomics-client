@@ -1,7 +1,7 @@
 require('what-input');
 require('ebi-framework/libraries/foundation-6/js/foundation.js');
 require('ebi-framework/js/script');
-require('ebi-framework/js/foundationExtendEBI');
+require('../../static/js/foundationExtendEBI'); // patched (disabled smoothScrollAnchorLinksEBI)
 window.Foundation.addToJquery($);
 
 export const pagination = require('../partials/pagination.handlebars');

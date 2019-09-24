@@ -1296,7 +1296,9 @@ const DownloadTabView = TabView.extend({
         if (data['Taxonomic analysis UNITE']) {
             itsRes.push(...data['Taxonomic analysis UNITE']);
         }
-        groups['Taxonomic analysis ITS'] = itsRes;
+        if (itsRes.length > 0) {
+            groups['Taxonomic analysis ITS'] = itsRes;
+        }
         that.$el.html(that.template({
             groups: groups,
             experiment_type: that.experiment_type
