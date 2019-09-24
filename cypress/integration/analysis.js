@@ -589,20 +589,9 @@ describe('Analysis page', function() {
         });
     });
     context('Abundance tab', function() {
-        it('Should be visible if data is available', function() {
-            cy.server();
-            cy.route('GET', '**downloads**').as('apiDownloads');
-            openPage(origPage);
-            waitForPageLoad('Analysis MGYA00011845');
-            cy.wait('@apiDownloads');
-            checkTabWasRemoved('#abundance');
-        });
         it('Should be removed if no data available.', function() {
-            cy.server();
-            cy.route('GET', '**downloads**').as('apiDownloads');
             openPage(origPage);
             waitForPageLoad('Analysis MGYA00011845');
-            cy.wait('@apiDownloads');
             checkTabWasRemoved('#abundance');
         });
         it('Should change to default if no data available.', function() {
