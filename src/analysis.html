@@ -18,6 +18,7 @@
     <!-- Suggested layout containers / #content -->
     <div id="content">
         <div id="main-content-area" class="row column small-12 medium-12 large-12" role="main">
+            <img class="main-loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">
         </div>
     </div>
 
@@ -87,8 +88,12 @@
                 </a>
             </li>
         </ul>
-
-        <div class="tabs-content taxonomy-tabs-content" data-tabs-content="taxonomy-tabs">
+        <div class="loading-spinner min-height-500">
+            <img class="loading-gif-large" 
+                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"
+                 alt="Loading...">
+        </div>
+        <div class="tabs-content taxonomy-tabs-content min-height-500" data-tabs-content="taxonomy-tabs">
             <div class="tabs-panel is-active" id="krona">
                 <div id="tax-krona">
                     <!--<div class="msg_error" id="ie_krona">Krona chart is only working for latest versions of Internet-->
@@ -215,6 +220,7 @@
         <div class="tabs-content" data-tabs-content="functional-analysis-tabs">
             <div id="interpro" class="tabs-panel is-active">
                 <!-- InterPro -->
+                <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">                
                 <div class="row column">
                     <div id="seqfeat-chart" class="run-qc-chart"></div>
                 </div>
@@ -232,6 +238,7 @@
             </div>
             <div id="go" class="tabs-panel">
                 <!-- GO Terms -->
+                <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">
                 <div class="row column">
                     <h4>GO terms annotation</h4>
                     <p>A summary of Gene Ontology (GO) terms derived from InterPro matches to your sample is provided in
@@ -315,15 +322,12 @@
             </div>
             <div id="genome-properties" class="tabs-panel">
                 <!-- Genomes Properties -->
-                <div class="loading">
-                    <img class="loading-gif-large"/>
-                </div>
+                <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">
                 <button id='gp-expand-all' class="button">Expand all</button> 
                 <button id='gp-collapse-all' class="button">Collapse all</button>
             </div>
         </div>
     </script>
-
 
     <script id="analysisTmpl" type="text/template">
         <div class="column small-12 medium-12 large-12">

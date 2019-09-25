@@ -1,7 +1,11 @@
-const Backbone = require('backbone');
 const _ = require('underscore');
-const INTERPRO_URL = process.env.INTERPRO_URL;
+const Backbone = require('backbone');
+const Cocktail = require('backbone.cocktail');
+Cocktail.patch(Backbone);
+
 const Commons = require('../commons');
+const {TabMixin, TabsManagerMixin} = require('../mixins');
+
 const api = require('mgnify').api(process.env.API_URL);
 const charts = require('mgnify').charts;
 const util = require('../util');
@@ -15,8 +19,8 @@ require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
 require('tablesorter');
 
+const INTERPRO_URL = process.env.INTERPRO_URL;
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
-
 const DEFAULT_PAGE_SIZE = 25;
 
 const analysisID = util.getURLParameter();
@@ -25,191 +29,25 @@ util.setupPage('#browse-nav');
 util.specifyPageTitle('Analysis', analysisID);
 
 /**
- * Tabs Manager.
- * Common methods to manage tabs.
- */
-const TabsManagerMixin = {
-    tabs: {},
-    router: undefined,
-    /**
-     * Boot and hook the Tabs properties and methods.
-     * @param {string} elementId DOM element id for the containter.
-     */
-    hookTabs(elementId) {
-        this.$tabsTitleContainer = this.$(elementId);
-        this.$tabsTitleContainer.attr({
-            'role': 'tablist'
-        });
-        this.$tabTitles = this.$(elementId + ' .tabs-title');
-        _.each(this.$tabTitles, (title) => {
-            const $title = $(title);
-            const $link = $title.children(':first');
-            $title.attr({
-                'role': 'tab',
-                'aria-controls': $link.attr('href').slice(1), // TODO CHECK!
-                'aria-selected': false,
-                'tabindex': '-1'
-            });
-            $link.attr({
-                'role': 'presentation'
-            });
-        });
-
-        this.$tabTitles.on('click', this.selectTabHandler.bind(this));
-
-        const cont = this.$('[data-tabs-content="' + elementId.slice(1) + '"]');
-        this.$tabsContainterEls = cont.children('.tabs-panel');
-        _.each(this.$tabsContainterEls, (el) => {
-            const $el = $(el);
-            $el.attr({
-                'role': 'tabpanel',
-                'aria-labelledby': $el.attr('id')
-            });
-        });
-    },
-    /**
-     * Add a tab with the corresponding tab isntance and route.
-     * Provide a routingHandler if you want to customize the callback.
-     * This is used for inner tabs at the moment:
-     * For example for FnTab view inner tabs:
-     *  FnTab inner tabs are url are #functional/interpro, interpro is the actual
-     *  tabId so for FnTab the routing handler the app has to:
-     *      - route to FnTab
-     *      - FnTab has to route to interpro
-     * so the routingHandler for FnTab would be:
-     * ```js
-     * routingHandler(tabId) {
-     *  // tabId is interpro
-     *  // this is Fn inner changeTab
-     *  this.changeTab(subTabId);
-     *}
-     * ```
-     * @param {string} tabId the tab id
-     * @param {TabView} tab the tab instance
-     * @param {string} route backbone-type route (for example "/tabs/:name")
-     * @param {function} routingHandler route navigate handler
-     */
-    registerTab({tabId, tab, route, routingHandler, baseRoute}) {
-        this.tabs = this.tabs || {};
-        this.tabs[tabId] = {
-            tab: tab,
-            route: route,
-            baseRoute: baseRoute
-        };
-
-        this.router.route(route, tabId, (args) => {
-            this.changeTab(tabId);
-            if (_.isFunction(routingHandler)) {
-                routingHandler.apply(tab, [args]); /* route parameters */
-            }
-        });
-    },
-    /**
-    * Switch to the selected tabId.
-    * This method will:
-    * - call the renderTab method on the selected tab
-    * - update the DOM elements with the is-active and other visual changes required
-    * @param {string} tabId the tab Id selector
-    * @param {[string]} routes the routes
-    * @return {Object} view This view.
-    */
-    changeTab(tabId) {
-        const tabData = this.tabs[tabId];
-        if (!tabData) {
-            // TODO: show error banner!
-            return this;
-        }
-        const tab = tabData.tab;
-        tab.renderTab();
-        _.each(this.$tabsContainterEls, (el) => {
-            const $el = $(el);
-            const isActive = $el.attr('id') === tabId;
-            $el.attr('aria-hidden', !isActive);
-            $el.toggleClass('is-active', isActive);
-        });
-        _.each(this.$tabTitles, (el) => {
-            const $el = $(el).children(':first');
-            const isActive = $el.data('tab-id') === tabId;
-            $el.toggleClass('is-active', isActive);
-            $el.attr({
-                'aria-selected': isActive,
-                'tabindex': isActive ? '0' : '-1'
-            });
-        });
-        return this;
-    },
-    /**
-     * Tab selection Handler.
-     * This will trigger the router to change, that will
-     * then trigger the changeTab as a callback
-     * @param {Event} event click event
-    */
-    selectTabHandler(event) {
-        event.preventDefault();
-        const $tabAnchor = $(event.currentTarget);
-        const tabId = $tabAnchor.children(':first').data('tab-id');
-
-        const tabData = this.tabs[tabId];
-
-        this.router.navigate(tabData.baseRoute || tabData.route, {trigger: true});
-    },
-    /**
-     * Enable tab by id
-     * @param {string} tabId of tab
-     */
-    enableTab(tabId) {
-        this.$('[data-tab-id="' + tabId + '"]').parent('li').removeClass('disabled');
-    },
-    /**
-     * Disable tab by id
-     * @param {string} tabId of tab
-     */
-    removeTab(tabId) {
-        this.$('[data-tab-id="' + tabId + '"]').parent('li').remove();
-    }
-};
-
-/**
- * Tab mixin.
- * Provides the common view methods and properties.
- */
-const TabMixin = {
-    route: undefined, // The route that should trigger this view
-    rendered: false,
-    /**
-     * Cached render fn.
-     * @return {Object} This view
-     */
-    renderTab() {
-        if (!this.rendered) {
-            this.render();
-            this.rendered = true;
-        }
-        return this;
-    }
-};
-
-const TabView = Backbone.View.extend(TabMixin);
-const TabManagerView = Backbone.View.extend(TabsManagerMixin);
-const TabManagerTabView = Backbone.View.extend(TabsManagerMixin).extend(TabMixin);
-
-/**
  * Main view.
  * This view handles the tabs and the general data managment.
  */
-const AnalysisView = TabManagerView.extend({
+const AnalysisView = Backbone.View.extend({
+    mixins: [TabsManagerMixin],
     model: api.Analysis,
     template: _.template($('#analysisTmpl').html()),
     el: '#main-content-area',
     initialize() {
         this.router = new Backbone.Router();
+        this.$loadingSpinner = this.$('.main-loading-spinner');
     },
     render() {
         const that = this;
+        this.$loadingSpinner.show();
         this.model.fetch({
             data: {},
             success() {
-                that.$el.html(that.template(that.model.toJSON()));
+                that.$el.append(that.template(that.model.toJSON()));
 
                 that.hookTabs('#analysis-tabs');
 
@@ -317,13 +155,14 @@ const AnalysisView = TabManagerView.extend({
                     that.removeTab('path-systems');
                     that.removeTab('contigs-viewer');
                 }
-
+                that.$loadingSpinner.hide();
                 if (!Backbone.history.start({root: window.location.pathname})) {
                     that.router.navigate('/overview', {trigger: true});
                 }
             },
             error(ignored, response) {
                 util.displayError(response.status, 'Could not retrieve analysis: ' + analysisID);
+                that.$loadingSpinner.hide();
             }
         });
         return this;
@@ -333,7 +172,8 @@ const AnalysisView = TabManagerView.extend({
 /**
  * Overview Tab
  */
-const OverviewTabView = TabView.extend({
+const OverviewTabView = Backbone.View.extend({
+    mixins: [TabMixin],
     el: '#overview',
     initialize(analysisData) {
         this.analysisData = analysisData;
@@ -399,7 +239,8 @@ const OverviewTabView = TabView.extend({
 /**
  * QC results tab
  */
-const QCTabView = TabView.extend({
+const QCTabView = Backbone.View.extend({
+    mixins: [TabMixin],
     template: _.template($('#qcTmpl').html()),
     el: '#qc',
     initialize(analysisID, pipelineVersion, experimentType) {
@@ -449,7 +290,8 @@ const QCTabView = TabView.extend({
 /**
  * Functional results tab
  */
-let FunctionalTabView = TabManagerTabView.extend({
+const FunctionalTabView = Backbone.View.extend({
+    mixins: [TabsManagerMixin, TabMixin],
     template: _.template($('#functionalTmpl').html()),
     el: '#functional',
     initialize({analysisID, pipelineVersion, router}) {
@@ -477,8 +319,7 @@ let FunctionalTabView = TabManagerTabView.extend({
             route: 'functional/go'
         });
 
-        // TODO: uncomment when the new annotations get imported
-        if (this.pipelineVersion === 'X5.0') {
+        if (this.pipelineVersion === '5.0') {
             this.registerTab({
                 tabId: 'pfam',
                 tab: new PfamTabView(this.analysisID),
@@ -500,10 +341,12 @@ let FunctionalTabView = TabManagerTabView.extend({
 // -- Functional sub tabs -- //
 // ------------------------- //
 
-const InterProTabView = TabView.extend({
+const InterProTabView = Backbone.View.extend({
+    mixins: [TabMixin],
     el: '#interpro',
     initialize(analysisID) {
         this.analysisID = analysisID;
+        this.$loadingSpinner = this.$('.loading-spinner');
     },
     render() {
         const that = this;
@@ -511,6 +354,8 @@ const InterProTabView = TabView.extend({
         const interproMatchPie = new charts.InterproMatchPie('interpro-pie-chart', {
             accession: analysisID
         });
+
+        this.$loadingSpinner.show();
 
         interproMatchPie.loaded.done(() => {
             let i = 0;
@@ -568,9 +413,14 @@ const InterProTabView = TabView.extend({
             accession: this.analysisID
         });
         seqFeatChart.loaded.fail(() => {
-            this.$('#SeqFeat-chart')
+            this.$('#seqfeat-chart')
                 .append('<h4>Could not load sequence feature summary.</h4>');
         });
+
+        $.when(...[interproMatchPie.loaded, seqFeatChart.loaded]).always(() => {
+            that.$loadingSpinner.hide();
+        });
+
         return this;
     },
     /**
@@ -585,13 +435,17 @@ const InterProTabView = TabView.extend({
     }
 });
 
-const GOTermsTabView = TabView.extend({
+const GOTermsTabView = Backbone.View.extend({
+    mixins: [TabMixin],
     el: '#go',
     initialize(analysisID) {
         this.analysisID = analysisID;
+        this.$loadingSpinner = this.$('.loading-spinner');
     },
     render() {
         const analysisID = this.analysisID;
+        this.$loadingSpinner.show();
+
         this._$tabs = new window.Foundation.Tabs(this.$('#go-tabs'));
 
         new charts.GoTermBarChart('biological-process-bar-chart', {
@@ -642,11 +496,13 @@ const GOTermsTabView = TabView.extend({
             title: 'Cellular component',
             color: Commons.TAXONOMY_COLOURS[2]
         });
+        this.$loadingSpinner.hide();
         return this;
     }
 });
 
-const PfamTabView = TabView.extend({
+const PfamTabView = Backbone.View.extend({
+    mixins: [TabMixin],
     el: '#pfam',
     model: api.Pfam,
     initialize(analysisID) {
@@ -654,6 +510,7 @@ const PfamTabView = TabView.extend({
         this.model = new api.Pfam({
             id: analysisID
         });
+        this.$loadingSpinner = this.$('.loading-spinner');
     },
     render() {
         const that = this;
@@ -665,6 +522,8 @@ const PfamTabView = TabView.extend({
         });
 
         this.tableView.render();
+
+        this.$loadingSpinner.show();
 
         this.model.fetch({
             data: {
@@ -693,7 +552,7 @@ const PfamTabView = TabView.extend({
                             const description = categoriesDescriptions[this.key];
                             let tooltip = this.series.name + '<br/>Count: ' + this.y;
                             if (description) {
-                                tooltip += '<br />PFam entry: ' + description;
+                                tooltip += '<br/>PFam entry: ' + description;
                             }
                             return tooltip;
                         }
@@ -704,20 +563,22 @@ const PfamTabView = TabView.extend({
                         colors: Commons.TAXONOMY_COLOURS[1]
                     }]
                 };
-
                 this.chart = new charts.GenericColumnChart('pfam-chart', chartOptions);
-            }, error(response) {
+                this.$loadingSpinner.hide();
+            }, error(ignored, response) {
                 util.displayError(
                     response.status,
-                    'Could not retrieve taxonomic analysis for: ' + analysisID,
+                    'Could not retrieve Pfam results for: ' + analysisID,
                     that.el);
+                that.$loadingSpinner.hide();
             }
         });
         return this;
     }
 });
 
-const KOTabView = TabView.extend({
+const KOTabView = Backbone.View.extend({
+    mixins: [TabMixin],
     el: '#ko',
     model: api.KeggOrtholog,
     initialize(analysisID) {
@@ -725,6 +586,7 @@ const KOTabView = TabView.extend({
         this.model = new api.KeggOrtholog({
             id: analysisID
         });
+        this.$loadingSpinner = this.$('loading-spinner');
     },
     render() {
         const that = this;
@@ -736,6 +598,8 @@ const KOTabView = TabView.extend({
         });
 
         this.tableView.render();
+
+        this.$loadingSpinner.show();
 
         this.model.fetch({
             data: {
@@ -764,7 +628,7 @@ const KOTabView = TabView.extend({
                             const description = categoriesDescriptions[this.key];
                             let tooltip = this.series.name + '<br/>Count: ' + this.y;
                             if (description) {
-                                tooltip += '<br />KEGG Class: ' + description;
+                                tooltip += '<br/>KEGG Class: ' + description;
                             }
                             return tooltip;
                         }
@@ -775,13 +639,14 @@ const KOTabView = TabView.extend({
                         colors: Commons.TAXONOMY_COLOURS[1]
                     }]
                 };
-
                 this.chart = new charts.GenericColumnChart('ko-chart', chartOptions);
-            }, error(response) {
+                that.$loadingSpinner.hide();
+            }, error(ignored, response) {
                 util.displayError(
                     response.status,
                     'Could not retrieve KO analysis for: ' + analysisID,
                     that.el);
+                that.$loadingSpinner.hide();
             }
         });
         return this;
@@ -792,7 +657,8 @@ const KOTabView = TabView.extend({
 // -- Path/Systems sub tabs //
 // -------------------------//
 
-let PathSystemsTabView = TabManagerTabView.extend({
+let PathSystemsTabView = Backbone.View.extend({
+    mixins: [TabsManagerMixin, TabMixin],
     template: _.template($('#pathSystemsTmpl').html()),
     el: '#path-systems',
     initialize({analysisID, pipelineVersion, router}) {
@@ -825,7 +691,8 @@ let PathSystemsTabView = TabManagerTabView.extend({
     }
 });
 
-const KEGGModuleTabView = TabView.extend({
+const KEGGModuleTabView = Backbone.View.extend({
+    mixins: [TabMixin],
     el: '#kegg-module',
     model: api.KeggModule,
     initialize(analysisID) {
@@ -869,7 +736,8 @@ const KEGGModuleTabView = TabView.extend({
     }
 });
 
-const GenomePropertiesTabView = TabView.extend({
+const GenomePropertiesTabView = Backbone.View.extend({
+    mixins: [TabMixin],
     el: '#genome-properties',
     model: api.GenomeProperties,
     initialize(analysisID) {
@@ -877,6 +745,7 @@ const GenomePropertiesTabView = TabView.extend({
         this.model = new api.GenomeProperties({
             id: analysisID
         });
+        this.$loadingSpinner = this.$('.loading-spinner');
     },
     events: {
         'click .gp-expander': 'collapseNode',
@@ -885,7 +754,7 @@ const GenomePropertiesTabView = TabView.extend({
     },
     render() {
         const that = this;
-        that.$('.loading').show();
+        this.$loadingSpinner.show();
         this.model.fetch({
             success() {
                 const genomePropertiesCount = {};
@@ -902,7 +771,7 @@ const GenomePropertiesTabView = TabView.extend({
                     name: STRING,
                     children: Array,
                     id: STRING (GenPropXXXX)
-               }
+                }
                 */
                 const buildNodeHtml = (node, html, level) => {
                     if (!node.aggregatedCount && !node.count) {
@@ -913,7 +782,7 @@ const GenomePropertiesTabView = TabView.extend({
                     const htmlNode = $('<div>' +
                         util.createLinkTag(linkUrl, node.id) + ':' +
                         util.createLinkTag(linkUrl, node.name) +
-                        '</div>');
+                    '</div>');
 
                     if (node.count === 0 || (node.aggregatedCount - node.count) === 0) {
                         htmlNode.append('<span class="gp-entry-count">' +
@@ -969,13 +838,13 @@ const GenomePropertiesTabView = TabView.extend({
                 buildNodeHtml(genomePropertiesHierarchy, htmlContainter, 1);
                 htmlContainter.find('.gp-expander:first').addClass('gp-expander-expanded');
                 that.$el.append(htmlContainter);
-                that.$('.loading').hide();
-            }, error(response) {
+                that.$loadingSpinner.hide();
+            }, error(ignored, response) {
                 util.displayError(
                     response.status,
                     'Could not retrieve genome properties analysis for: ' + analysisID,
                     that.el);
-                that.$('.loading').hide();
+                that.$loadingSpinner.hide();
             }
         });
     },
@@ -1009,7 +878,8 @@ const GenomePropertiesTabView = TabView.extend({
 /**
  * Taxonomy results tab
  */
-const TaxonomyTabView = TabView.extend({
+const TaxonomyTabView = Backbone.View.extend({
+    mixins: [TabMixin],
     template: _.template($('#taxonomicTabTmpl').html()),
     el: '#taxonomic',
     events: {
@@ -1031,6 +901,8 @@ const TaxonomyTabView = TabView.extend({
 
                 that.viewConf = processedData;
                 that.$el.html(that.template(processedData));
+
+                that.$loadingSpinner = that.$('.loading-spinner');
 
                 // TODO: use TabViews
                 that._tabs = new window.Foundation.Tabs(that.$('#taxonomy-tabs'));
@@ -1060,6 +932,9 @@ const TaxonomyTabView = TabView.extend({
      */
     renderTaxonomyCategory(event) {
         const category = $(event.currentTarget).val();
+
+        this.$loadingSpinner.show();
+        this.$('.taxonomy-tabs-content').hide();
 
         const kronaUrl = api.getKronaURL(analysisID, category);
         const kronaChart = '<object class="krona_chart" ' +
@@ -1256,15 +1131,19 @@ const TaxonomyTabView = TabView.extend({
             $pieDomainContainer.hide();
             $columnDomainContainer.hide();
         }
-
-        return $.when(promises);
+        $.when(...promises).always(() => {
+            this.$loadingSpinner.hide();
+            this.$('.taxonomy-tabs-content').show();
+        });
+        return this;
     }
 });
 
 /**
  * Download results tab
  */
-const DownloadTabView = TabView.extend({
+const DownloadTabView = Backbone.View.extend({
+    mixins: [TabMixin],
     template: _.template($('#downloadsTmpl').html()),
     el: '#download',
     render() {
@@ -1299,6 +1178,9 @@ const DownloadTabView = TabView.extend({
         if (itsRes.length > 0) {
             groups['Taxonomic analysis ITS'] = itsRes;
         }
+
+        // TODO: add  CWL links depending on the type.
+
         that.$el.html(that.template({
             groups: groups,
             experiment_type: that.experiment_type
@@ -1309,7 +1191,8 @@ const DownloadTabView = TabView.extend({
 /**
  * Abundance results tab
  */
-const AbundanceTabView = TabView.extend({
+const AbundanceTabView = Backbone.View.extend({
+    mixins: [TabMixin],
     el: '#abundance',
     /**
      * Abundance and comparision.
@@ -1351,10 +1234,10 @@ const AbundanceTabView = TabView.extend({
 });
 
 // -- Contigs Viewer -- //
-let ContigsViewTab = TabView.extend({
+let ContigsViewTab = Backbone.View.extend({
+    mixins: [TabMixin],
     template: _.template($('#contigsViewerTmpl').html()),
     el: '#contigs-viewer',
-
     events: {
         'click .contig-browser': 'contigViewer',
         'click #contigs-filter': 'reloadTable'
@@ -1512,10 +1395,8 @@ let ContigsViewTab = TabView.extend({
                 colorAttributes: [
                     'Colour by', /* Label */
                     'COG',
-                    'product',
-                    'Pfam',
+                    'GOs',
                     'KEGG',
-                    'InterPro',
                     'eggNOG'
                 ],
                 showLegendButton: true
