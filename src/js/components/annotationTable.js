@@ -51,6 +51,7 @@ module.exports = Backbone.View.extend({
     },
     update(params) {
         const that = this;
+        const defer = $.Deferred();
         that.tableObj.showLoadingGif();
         this.params = $.extend({}, this.params, params);
         this.fetchXhr = this.model.fetch({
@@ -63,8 +64,12 @@ module.exports = Backbone.View.extend({
                     pagination.count,
                     response.links.first);
                 that.tableObj.hideLoadingGif();
+                defer.resolve();
+            }, error(ignored, response) {
+                defer.reject(response);
             }
         });
+        return defer.promise();
     },
     buildRow(data) {
         return [

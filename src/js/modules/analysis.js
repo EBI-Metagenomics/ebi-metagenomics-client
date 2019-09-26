@@ -356,8 +356,21 @@ const InterProTabView = Backbone.View.extend({
         });
 
         this.$loadingSpinner.show();
+        that.$('.row').hide();
 
-        interproMatchPie.loaded.done(() => {
+        const summaryPromise = $.Deferred();
+        const piePromise = $.Deferred();
+
+        const seqFeatChart = new charts.SeqFeatSumChart('seqfeat-chart', {
+            accession: this.analysisID
+        });
+        seqFeatChart.loaded.fail(() => {
+            this.$('#seqfeat-chart')
+                .removeClass('run-qc-chart')
+                .append('<h4>Could not load sequence feature summary.</h4>');
+        }).always(() => summaryPromise.resolve());
+
+        interproMatchPie.loaded.then(() => {
             let i = 0;
             const totalCount = interproMatchPie.raw_data.reduce((v, e) => {
                 return v + e['attributes']['count'];
@@ -408,17 +421,14 @@ const InterProTabView = Backbone.View.extend({
                     numSeries,
                     !series.visible);
             });
-        });
-        const seqFeatChart = new charts.SeqFeatSumChart('seqfeat-chart', {
-            accession: this.analysisID
-        });
-        seqFeatChart.loaded.fail(() => {
-            this.$('#seqfeat-chart')
-                .append('<h4>Could not load sequence feature summary.</h4>');
-        });
+        }).fail(() => {
+            this.$('#interpro-pie-chart')
+                .append('<h4>Could not load Inter Pro data.</h4>');
+        }).always(() => piePromise.resolve());
 
-        $.when(...[interproMatchPie.loaded, seqFeatChart.loaded]).always(() => {
+        $.when(summaryPromise, piePromise).then(() => {
             that.$loadingSpinner.hide();
+            that.$('.row').show();
         });
 
         return this;
@@ -453,8 +463,7 @@ const GOTermsTabView = Backbone.View.extend({
             lineage: 'biological_process'
         }, {
             title: 'Biological process',
-            color:
-                Commons.TAXONOMY_COLOURS[0]
+            color: Commons.TAXONOMY_COLOURS[0]
         });
 
         new charts.GoTermBarChart('molecular-function-bar-chart', {
@@ -521,9 +530,8 @@ const PfamTabView = Backbone.View.extend({
             analysisID: this.analysisID
         });
 
-        this.tableView.render();
-
-        this.$loadingSpinner.show();
+        const tablePromise = this.tableView.render();
+        const modelPromise = $.Deferred();
 
         this.model.fetch({
             data: {
@@ -552,7 +560,7 @@ const PfamTabView = Backbone.View.extend({
                             const description = categoriesDescriptions[this.key];
                             let tooltip = this.series.name + '<br/>Count: ' + this.y;
                             if (description) {
-                                tooltip += '<br/>PFam entry: ' + description;
+                                tooltip += '<br/>Pfam entry: ' + description;
                             }
                             return tooltip;
                         }
@@ -563,16 +571,21 @@ const PfamTabView = Backbone.View.extend({
                         colors: Commons.TAXONOMY_COLOURS[1]
                     }]
                 };
-                this.chart = new charts.GenericColumnChart('pfam-chart', chartOptions);
-                this.$loadingSpinner.hide();
+                that.chart = new charts.GenericColumnChart('pfam-chart', chartOptions);
+                modelPromise.resolve();
             }, error(ignored, response) {
                 util.displayError(
                     response.status,
                     'Could not retrieve Pfam results for: ' + analysisID,
                     that.el);
-                that.$loadingSpinner.hide();
+                modelPromise.reject();
             }
         });
+
+        $.when(tablePromise, modelPromise).always(() => {
+            that.$loadingSpinner.hide();
+        });
+
         return this;
     }
 });
@@ -586,7 +599,7 @@ const KOTabView = Backbone.View.extend({
         this.model = new api.KeggOrtholog({
             id: analysisID
         });
-        this.$loadingSpinner = this.$('loading-spinner');
+        this.$loadingSpinner = this.$('.loading-spinner');
     },
     render() {
         const that = this;
@@ -597,7 +610,8 @@ const KOTabView = Backbone.View.extend({
             analysisID: this.analysisID
         });
 
-        this.tableView.render();
+        const tablePromise = this.tableView.render();
+        const modelPromise = $.Deferred();
 
         this.$loadingSpinner.show();
 
@@ -639,16 +653,21 @@ const KOTabView = Backbone.View.extend({
                         colors: Commons.TAXONOMY_COLOURS[1]
                     }]
                 };
-                this.chart = new charts.GenericColumnChart('ko-chart', chartOptions);
-                that.$loadingSpinner.hide();
+                that.chart = new charts.GenericColumnChart('ko-chart', chartOptions);
+                modelPromise.resolve();
             }, error(ignored, response) {
                 util.displayError(
                     response.status,
                     'Could not retrieve KO analysis for: ' + analysisID,
                     that.el);
-                that.$loadingSpinner.hide();
+                modelPromise.reject();
             }
         });
+
+        $.when(tablePromise, modelPromise).always(() => {
+            that.$loadingSpinner.hide();
+        });
+
         return this;
     }
 });
@@ -693,15 +712,17 @@ let PathSystemsTabView = Backbone.View.extend({
 
 const KEGGModuleTabView = Backbone.View.extend({
     mixins: [TabMixin],
-    el: '#kegg-module',
+    el: '#kegg-modules',
     model: api.KeggModule,
     initialize(analysisID) {
         this.analysisID = analysisID;
         this.model = new api.KeggModule({
             id: analysisID
         });
+        this.$loadingSpinner = this.$('.loading-spinner');
     },
     render() {
+        this.$loadingSpinner.show();
         const KeggAnnotationTable = AnnotationTableView.extend({
             buildRow(data) {
                 return [
@@ -727,7 +748,14 @@ const KEGGModuleTabView = Backbone.View.extend({
                 {name: 'Missing KO'}
             ]
         });
-        this.tableView.render();
+        this.tableView.render().fail((response) => {
+            util.displayError(
+                response.status || 404,
+                'Could not retrieve KEGG Module analysis for: ' + analysisID,
+                this.tableView.el);
+        }).always(() => {
+            this.$loadingSpinner.hide();
+        });
 
         this.chart = new charts.AnalysisKeggColumnChart('kegg-module-chart', {
             accession: this.analysisID
@@ -754,7 +782,10 @@ const GenomePropertiesTabView = Backbone.View.extend({
     },
     render() {
         const that = this;
+
+        this.$('button').hide();
         this.$loadingSpinner.show();
+
         this.model.fetch({
             success() {
                 const genomePropertiesCount = {};
@@ -837,8 +868,11 @@ const GenomePropertiesTabView = Backbone.View.extend({
                 const htmlContainter = $('<div class="genome-properties"></div>');
                 buildNodeHtml(genomePropertiesHierarchy, htmlContainter, 1);
                 htmlContainter.find('.gp-expander:first').addClass('gp-expander-expanded');
-                that.$el.append(htmlContainter);
+
+                that.$('#gp-tree-container').html(htmlContainter);
+
                 that.$loadingSpinner.hide();
+                that.$('button').show();
             }, error(ignored, response) {
                 util.displayError(
                     response.status,

@@ -220,7 +220,8 @@
         <div class="tabs-content" data-tabs-content="functional-analysis-tabs">
             <div id="interpro" class="tabs-panel is-active">
                 <!-- InterPro -->
-                <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">                
+                <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">      
+          
                 <div class="row column">
                     <div id="seqfeat-chart" class="run-qc-chart"></div>
                 </div>
@@ -287,11 +288,13 @@
             <% if (pipelineVersion === '5.0') { %>            
                 <div id="pfam" class="tabs-panel">
                     <!-- Pfam -->
+                    <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">                    
                     <div id="pfam-chart"></div>
                     <div id="pfam-table"></div>    
                 </div>
                 <div id="ko" class="tabs-panel">
                     <!-- KEGG Ortholog -->
+                    <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">                    
                     <div id="ko-chart"></div>
                     <div id="ko-table"></div>    
                 </div>
@@ -317,6 +320,7 @@
         <div class="tabs-content" data-tabs-content="path-systems-tabs">
             <div id="kegg-modules" class="tabs-panel">
                 <!-- KEGG Modules -->
+                <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">                
                 <div id="kegg-module-chart"></div>
                 <div id="kegg-module-table"></div>
             </div>
@@ -325,6 +329,7 @@
                 <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">
                 <button id='gp-expand-all' class="button">Expand all</button> 
                 <button id='gp-collapse-all' class="button">Collapse all</button>
+                <div id="gp-tree-container"></div>
             </div>
         </div>
     </script>
@@ -383,7 +388,7 @@
                     <a data-tab-id="abundance" href="#abundance">Abundance and comparison</a>
                 </li>
                 <li class="tabs-title">
-                    <a data-tab-id="path-systems" href="#path-systems">Paths/Systems</a>
+                    <a data-tab-id="path-systems" href="#path-systems">Pathways/Systems</a>
                 </li>
                 <li class="tabs-title">
                     <a data-tab-id="contigs-viewer" href="#contigs-viewer">Contig Viewer</a>
