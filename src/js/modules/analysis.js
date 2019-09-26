@@ -70,11 +70,7 @@ const AnalysisView = Backbone.View.extend({
 
                 that.registerTab({
                     tabId: 'qc',
-                    tab: new QCTabView(
-                        analysisID,
-                        attr.pipeline_version,
-                        attr.experiment_type
-                    ),
+                    tab: new QCTabView(that.model),
                     route: 'qc'
                 });
 
@@ -243,10 +239,11 @@ const QCTabView = Backbone.View.extend({
     mixins: [TabMixin],
     template: _.template($('#qcTmpl').html()),
     el: '#qc',
-    initialize(analysisID, pipelineVersion, experimentType) {
-        this.analysisID = analysisID;
-        this.pipelineVersion = parseFloat(pipelineVersion);
-        this.experimentType = experimentType;
+    initialize(analysis) {
+        this.analysisID = analysis.get('id');
+        this.pipelineVersion = parseFloat(analysis.get('pipeline_version'));
+        this.experimentType = analysis.get('experiment_type');
+        this.analysisModel = analysis;
     },
     render() {
         const that = this;
@@ -257,7 +254,8 @@ const QCTabView = Backbone.View.extend({
         }));
 
         const qcStepChart = new charts.QcChart('qc-step-chart', {
-            accession: this.analysisID
+            accession: this.analysisID,
+            analysesModel: this.analysisModel
         });
         qcStepChart.loaded.fail(() => {
             this.$('#qc-step-chart')

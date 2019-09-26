@@ -30,7 +30,7 @@ module.exports = Backbone.View.extend({
             ],
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: false,
-            textFilter: true,
+            textFilter: false, // => Not supported by API (yet)
             callback: function(page, pageSize, order, search) {
                 that.update({
                     page: page,
