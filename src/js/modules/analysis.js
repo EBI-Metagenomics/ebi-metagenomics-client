@@ -1429,7 +1429,9 @@ let ContigsViewTab = Backbone.View.extend({
                 colorAttributes: [
                     'Colour by', /* Label */
                     'COG',
-                    'GOs',
+                    'GO',
+                    'Pfam',
+                    'InterPro',
                     'KEGG',
                     'eggNOG'
                 ],
