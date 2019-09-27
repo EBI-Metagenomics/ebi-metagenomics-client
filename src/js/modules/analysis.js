@@ -1315,8 +1315,9 @@ let ContigsViewTab = Backbone.View.extend({
         /* Features filters */
         this.$cog = this.$('#cog-filter');
         this.$kegg = this.$('#kegg-filter');
-        this.$taxonomtFilter = this.$('#taxonomy-filter');
-        this.$gosFilter = this.$('#gos-filter');
+        this.$goFilter = this.$('#go-filter');
+        this.$pfamFilter = this.$('#pfam-filter');
+        this.$interproFilter = this.$('#interpro-filter');
 
         const tableOptions = {
             tableContainer: 'contigs-table',
@@ -1344,8 +1345,9 @@ let ContigsViewTab = Backbone.View.extend({
                 lt: this.$maxLen.val(),
                 cog: this.$cog.val(),
                 kegg: this.$kegg.val(),
-                taxonomy: this.$taxonomtFilter.val(),
-                gos: this.$gosFilter.val()
+                go: this.$goFilter.val(),
+                interpro: this.$interproFilter.val(),
+                pfam: this.$pfamFilter.val()
             },
             success() {
                 const data = _.reduce(that.collection.models, (arr, model) => {
