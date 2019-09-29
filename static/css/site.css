@@ -1003,6 +1003,7 @@ path.link {
 
 .igv-content-div > .igv-popover {
     min-width: 500px;
+    max-width: 1000px;
 }
 
 .igv-popover-table-list {
@@ -1066,7 +1067,7 @@ path.link {
 }
 
 .igv-popover-track-popup-content {
-    overflow: scroll !important;
+    overflow-y: scroll !important;
 }
 
 .sub-legend caption,

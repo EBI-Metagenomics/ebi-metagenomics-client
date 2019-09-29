@@ -13,6 +13,7 @@ const genomePropertiesHierarchy = require('../../../static/data/genome-propertie
 
 const igv = require('igv').default;
 const ClientSideTable = require('../components/clientSideTable');
+const GenericTable = require('../components/genericTable');
 const DetailList = require('../components/detailList');
 const AnnotationTableView = require('../components/annotationTable');
 require('webpack-jquery-ui/slider');
@@ -129,6 +130,14 @@ const AnalysisView = Backbone.View.extend({
                     that.removeTab('functional');
                 }
 
+                that.registerTab({
+                    tabId: 'contigs-viewer',
+                    tab: new ContigsViewTab(annotTabsOpts),
+                    route: 'contigs-viewer'
+                });
+                that.enableTab('contigs-viewer');
+
+
                 if (attr.experiment_type === 'assembly' && attr.pipeline_version === '5.0') {
                     that.registerTab({
                         tabId: 'path-systems',
@@ -149,7 +158,7 @@ const AnalysisView = Backbone.View.extend({
                     that.enableTab('contigs-viewer');
                 } else {
                     that.removeTab('path-systems');
-                    that.removeTab('contigs-viewer');
+                    // that.removeTab('contigs-viewer');
                 }
                 that.$loadingSpinner.hide();
                 if (!Backbone.history.start({root: window.location.pathname})) {
@@ -1272,7 +1281,7 @@ let ContigsViewTab = Backbone.View.extend({
     el: '#contigs-viewer',
     events: {
         'click .contig-browser': 'contigViewer',
-        'click #contigs-filter': 'reloadTable'
+        'click #contigs-filter': 'updateTable'
     },
     /**
      * Contigs Viewer and browser.
@@ -1319,81 +1328,103 @@ let ContigsViewTab = Backbone.View.extend({
         this.$pfamFilter = this.$('#pfam-filter');
         this.$interproFilter = this.$('#interpro-filter');
 
-        const tableOptions = {
-            tableContainer: 'contigs-table',
+        let tableOptions = {
+            title: 'Contigs',
             headers: [
-                {sortBy: 'a', name: 'Name'},
-                {sortBy: 'a', name: 'Length (pb)'},
-                {sortBy: 'a', name: 'Coverage'}
+                {sortBy: 'name', name: 'Name'},
+                {sortBy: 'length', name: 'Length (bp)'},
+                {sortBy: 'coverage', name: 'Coverage'}
             ],
+            tableContainer: 'contigs-table',
+            textFilter: true,
             initPageSize: DEFAULT_PAGE_SIZE,
-            textFilter: true
+            callback: function(page, pageSize, order, search) {
+                that.updateTable({
+                    page: page,
+                    pageSize: pageSize,
+                    ordering: order || that.contigsTable.getCurrentOrder(),
+                    search: search
+                });
+            }
         };
-        this.$contigsTable = new ClientSideTable(this.$('#contigs-table'), tableOptions);
-        this.reloadTable(true);
+
+        this.contigsTable = new GenericTable(this.$('#contigs-table'), tableOptions);
+
+        this.updateTable({page: 1, pageSize: DEFAULT_PAGE_SIZE, viewFirst: true});
     },
     /**
      * Refresh the table data.
-     * @return {Deferred} Deferred promise
+     * @param {Number} page page
+     * @param {Number} pageSize pageSize
+     * @param {Bool} viewFirst load the first contig on the browser
      */
-    refreshTable() {
+    updateTable({page, pageSize, ordering, search, viewFirst}) {
         const that = this;
-        const deferred = $.Deferred();
+        that.contigsTable.showLoadingGif();
+
         this.collection.fetch({
             data: {
-                gt: this.$minLen.val(),
-                lt: this.$maxLen.val(),
-                cog: this.$cog.val(),
-                kegg: this.$kegg.val(),
-                go: this.$goFilter.val(),
-                interpro: this.$interproFilter.val(),
-                pfam: this.$pfamFilter.val()
+                gt: that.$minLen.val(),
+                lt: that.$maxLen.val(),
+                cog: that.$cog.val(),
+                kegg: that.$kegg.val(),
+                go: that.$goFilter.val(),
+                interpro: that.$interproFilter.val(),
+                pfam: that.$pfamFilter.val(),
+                page: page || 1,
+                pageSize: pageSize || DEFAULT_PAGE_SIZE,
+                ordering: ordering || that.contigsTable.getCurrentOrder(),
+                search: search
             },
-            success() {
-                const data = _.reduce(that.collection.models, (arr, model) => {
-                    arr.push([
-                        '<a href="#" class="contig-browser" data-name="' +
-                            model.attributes.contig_name +
-                        '">' +
-                            model.attributes.display_name +
-                        '</a>',
-                        model.attributes.length,
-                        model.attributes.coverage
-                    ]);
-                    return arr;
-                }, []);
-                deferred.resolve(data);
+            success(ignored, response) {
+                const pagination = response.meta.pagination;
+                that.reloadTable({
+                    viewFirst: viewFirst,
+                    page: pagination.page,
+                    pageSize: pageSize || DEFAULT_PAGE_SIZE,
+                    resultsCount: pagination.count,
+                    resultsDownloadLink: response.links.first
+                });
+                that.contigsTable.hideLoadingGif();
             },
-            error(response) {
+            error(ignored, response) {
                 util.displayError(
                     response.status,
                     'Error while retrieving contigs data for: ' + that.analysisID,
                     that.el);
-                deferred.reject();
             }
         });
-        return deferred.promise();
     },
     /**
      * Render a contig
      * @param {Boolean} viewFirst load the first contig of the table
      */
-    reloadTable(viewFirst) {
+    reloadTable({viewFirst, page, pageSize, resultsCount, resultsDownloadLink}) {
         const that = this;
-        this.$tblLoading.show();
-        that.refreshTable().then((data) => {
-            that.$contigsTable.update(data, true, 1);
-            if (viewFirst) {
-                this.$('.contig-browser').first().trigger('click');
-            }
-        }).catch((response) => {
-            util.displayError(
-                response.status,
-                'Error loading the contigs: ' + that.analysisID,
-                that.el);
-        }).always(() => {
-            this.$tblLoading.hide();
-        });
+        const data = _.reduce(that.collection.models, (arr, model) => {
+            arr.push([
+                '<a href="#" class="contig-browser" data-name="' +
+                    model.get('contig_id') +
+                '">' +
+                    model.get('contig_id') +
+                '</a>',
+                model.get('length'),
+                model.get('coverage')
+            ]);
+            return arr;
+        }, []);
+        this.contigsTable.update(
+            data,
+            true,
+            page,
+            pageSize,
+            resultsCount,
+            resultsDownloadLink
+        );
+        if (viewFirst) {
+            this.$('.contig-browser').first().trigger('click');
+        }
+        this.$tblLoading.hide();
     },
     /**
      * View a contig using IGV.
@@ -1446,7 +1477,6 @@ let ContigsViewTab = Backbone.View.extend({
         }
 
         igv.createBrowser(this.$igvDiv, options).then((browser) => {
-            // Customize the track Pop Over
             browser.on('trackclick', (ignored, data) => {
                 // FIXME: merge this with the genomeBrowser component.
                 if (!data || !data.length) {
@@ -1571,7 +1601,6 @@ let ContigsViewTab = Backbone.View.extend({
             this.igvBrowser = browser;
             this.$gbLoading.hide();
         }).catch((error) => {
-            // FIXME: clean the browser
             util.displayError(
                 500,
                 'Error loading the contigs on the browser. Detail: ' + error,
