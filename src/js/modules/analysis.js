@@ -54,6 +54,8 @@ const AnalysisView = Backbone.View.extend({
 
                 const attr = that.model.attributes;
 
+                // FIXME: the pipeline version should be a float not a string
+
                 if (attr.experiment_type === 'assembly') {
                     $('#assembly-text-warning').removeClass('hidden');
                 }
@@ -130,14 +132,6 @@ const AnalysisView = Backbone.View.extend({
                     that.removeTab('functional');
                 }
 
-                that.registerTab({
-                    tabId: 'contigs-viewer',
-                    tab: new ContigsViewTab(annotTabsOpts),
-                    route: 'contigs-viewer'
-                });
-                that.enableTab('contigs-viewer');
-
-
                 if (attr.experiment_type === 'assembly' && attr.pipeline_version === '5.0') {
                     that.registerTab({
                         tabId: 'path-systems',
@@ -158,7 +152,7 @@ const AnalysisView = Backbone.View.extend({
                     that.enableTab('contigs-viewer');
                 } else {
                     that.removeTab('path-systems');
-                    // that.removeTab('contigs-viewer');
+                    that.removeTab('contigs-viewer');
                 }
                 that.$loadingSpinner.hide();
                 if (!Backbone.history.start({root: window.location.pathname})) {
@@ -1281,7 +1275,10 @@ let ContigsViewTab = Backbone.View.extend({
     el: '#contigs-viewer',
     events: {
         'click .contig-browser': 'contigViewer',
-        'click #contigs-filter': 'updateTable'
+        'click #contigs-filter': 'updateTable',
+        'click .clear-filter': function() {
+             this.$('.table-filter').val('').trigger('keyup');
+        }
     },
     /**
      * Contigs Viewer and browser.

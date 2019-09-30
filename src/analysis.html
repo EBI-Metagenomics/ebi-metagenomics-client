@@ -190,15 +190,10 @@
 
     <script id="functionalTmpl" type="text/template">
         <div class="row column">
-            <p>These charts present the functional analysis of our pipeline, which focuses
-                on matches to the <a
-                        href="http://www.ebi.ac.uk/interpro" title="InterPro website"
-                        class="ext">InterPro
-                    database</a> and <a
-                        href="https://www.uniprot.org/help/gene_ontology" title="Gene Ontology webpage"
-                        class="ext">GO</a> terms. These
-                summarise the functional content of the sequences in the
-                sample. The full set of results files may be found under the "Download" tab.</p>
+            <p>
+                These charts present the functional analysis outputs of our pipeline, which focus on 
+                <a href="http://www.ebi.ac.uk/interpro" title="InterPro website" class="ext">InterPro</a>, <a href="https://pfam.xfam.org/" title="Pfam database webpage" class="ext">Pfam</a>, <a href="https://www.genome.jp/kegg/ko.html" title="KEGG orthologue (KO) webpage" class="ext">KEGG orthologue</a> and <a href="https://www.uniprot.org/help/gene_ontology" title="Gene Ontology webpage" class="ext">GO</a> term annotations. These summarise the functional content of the sequences in the sample. The full set of results files can be found under the "Download" tab.
+            </p>
         </div>
 
         <ul id="functional-analysis-tabs" class="tabs">
@@ -305,7 +300,7 @@
     <script id="pathSystemsTmpl" type="text/template">
         <div class="row column">
             <p>
-                Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth
+                These are the results from the biochemical pathways and systems predictions steps of our pipeline. These summarise the <a href="https://www.genome.jp/kegg/pathway.html" alt="KEGG pathways webpage">KEGG pathways</a>, <a href="https://www.ebi.ac.uk/interpro/genomeproperties/" alt="Genome Properties webpage">Genome Properties</a> and <a href="https://antismash.secondarymetabolites.org" alt="antiSMASH webpage">antiSMASH</a> annotations in this assembly. The full set of results files may be found under the "Download" tab.
             </p>
         </div>
 
@@ -316,6 +311,9 @@
             <li class="tabs-title">
                 <a data-tab-id='genome-properties' href="#genome-properties">Genome properties</a>
             </li>
+            <li class="tabs-title">
+                <a data-tab-id='antismash' href="#antismash">antiSMASH</a>
+            </li>    
         </ul>
         <div class="tabs-content" data-tabs-content="path-systems-tabs">
             <div id="kegg-modules" class="tabs-panel">
@@ -502,7 +500,7 @@
             </div>
             <div class="columns small-3 medium-3 large-3">
                 <div class="row columns">
-                    <h5>Contig length (pb)</h5>
+                    <h5>Contig length (bp)</h5>
                     <div class="row columns slider-group">
                         <div class="slider"></div>
                         <div class="row">

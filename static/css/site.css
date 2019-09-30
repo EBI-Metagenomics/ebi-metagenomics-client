@@ -1002,8 +1002,7 @@ path.link {
 }
 
 .igv-content-div > .igv-popover {
-    min-width: 500px;
-    max-width: 1000px;
+    width: 600px;
 }
 
 .igv-popover-table-list {
