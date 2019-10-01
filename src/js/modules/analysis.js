@@ -1436,9 +1436,9 @@ let ContigsViewTab = Backbone.View.extend({
             resultsCount,
             resultsDownloadLink
         );
-        // if (viewFirst) {
-        //     this.$('.contig-browser').first().trigger('click');
-        // }
+        if (viewFirst) {
+            this.$('.contig-browser').first().trigger('click');
+        }
         this.$tblLoading.hide();
     },
     /**
