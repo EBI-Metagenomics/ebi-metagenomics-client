@@ -12,6 +12,7 @@ const util = require('../util');
 const genomePropertiesHierarchy = require('../../../static/data/genome-properties-hierarchy.json');
 
 const igv = require('igv').default;
+const igvPopup = require('../components/igvPopup');
 const ClientSideTable = require('../components/clientSideTable');
 const GenericTable = require('../components/genericTable');
 const DetailList = require('../components/detailList');
@@ -23,6 +24,7 @@ require('tablesorter');
 const INTERPRO_URL = process.env.INTERPRO_URL;
 const TAXONOMY_COLOURS = Commons.TAXONOMY_COLOURS;
 const DEFAULT_PAGE_SIZE = 25;
+const MIN_CONTIG_LEN = 500;
 
 const analysisID = util.getURLParameter();
 
@@ -1310,10 +1312,8 @@ let ContigsViewTab = Backbone.View.extend({
         this.$minLen = this.$('#min-length');
         this.$lenSlider = this.$el.find('.slider').slider({
             range: true,
-            min: 1000,
-            max: 100000,
-            values: [10000, 100000],
-            change: (event, ui) => {
+            min: MIN_CONTIG_LEN,
+            change(event, ui) {
                 that.$maxLen.val(ui.values[1]);
                 that.$minLen.val(ui.values[0]);
             }
@@ -1347,6 +1347,24 @@ let ContigsViewTab = Backbone.View.extend({
 
         this.contigsTable = new GenericTable(this.$('#contigs-table'), tableOptions);
 
+        // Fetch with no filters to get MAX contig length
+        this.collection.fetch({
+            data: {
+                page: 1,
+                page_size: 1,
+                ordering: '-length'
+            }, success(ignored, response) {
+                const model = _.first(that.collection.models);
+                that.$lenSlider.slider('option', 'max', model.get('length'));
+                that.$lenSlider.slider('option', 'values', [MIN_CONTIG_LEN, model.get('length')]);
+            }, error(ignored, response) {
+                util.displayError(
+                    response.status,
+                    'Error while retrieving contigs data for: ' + that.analysisID,
+                    that.el);
+            }
+        });
+
         this.updateTable({page: 1, pageSize: DEFAULT_PAGE_SIZE, viewFirst: true});
     },
     /**
@@ -1369,7 +1387,7 @@ let ContigsViewTab = Backbone.View.extend({
                 interpro: that.$interproFilter.val(),
                 pfam: that.$pfamFilter.val(),
                 page: page || 1,
-                pageSize: pageSize || DEFAULT_PAGE_SIZE,
+                page_size: pageSize || DEFAULT_PAGE_SIZE,
                 ordering: ordering || that.contigsTable.getCurrentOrder(),
                 search: search
             },
@@ -1418,9 +1436,9 @@ let ContigsViewTab = Backbone.View.extend({
             resultsCount,
             resultsDownloadLink
         );
-        if (viewFirst) {
-            this.$('.contig-browser').first().trigger('click');
-        }
+        // if (viewFirst) {
+        //     this.$('.contig-browser').first().trigger('click');
+        // }
         this.$tblLoading.hide();
     },
     /**
@@ -1441,15 +1459,15 @@ let ContigsViewTab = Backbone.View.extend({
             showCenterGuide: false,
             reference: {
                 indexed: false,
-                fastaURL: process.env.API_URL + 'analyses/' + this.collection.accession +
-                    '/contigs/' + contigName
+                fastaURL: process.env.API_URL + 'analyses/' +
+                          this.collection.accession + '/contigs/' + contigName
             },
             tracks: [{
                 name: displayName,
                 type: 'annotation',
                 format: 'gff3',
-                url: process.env.API_URL + 'analyses/' + this.collection.accession +
-                    '/annotations/' + contigName,
+                url: process.env.API_URL + 'analyses/' +
+                     this.collection.accession + '/annotations/' + contigName,
                 displayMode: 'EXPANDED',
                 nameField: 'gene'
             }],
@@ -1475,125 +1493,7 @@ let ContigsViewTab = Backbone.View.extend({
 
         igv.createBrowser(this.$igvDiv, options).then((browser) => {
             browser.on('trackclick', (ignored, data) => {
-                // FIXME: merge this with the genomeBrowser component.
-                if (!data || !data.length) {
-                    return false;
-                }
-
-                let attributes = _.where(data, (d) => {
-                    return d.name;
-                });
-
-                if (attributes.length === 0) {
-                    return false;
-                }
-
-                attributes = _.reduce(attributes, (memo, el) => {
-                    memo[el.name.toLowerCase()] = el.value;
-                    return memo;
-                }, {});
-
-                /**
-                 * Get a key from the attributes
-                 * @param {*} key Dict Key
-                 * @param {*} def default value
-                 * @return {*} the value or default
-                 */
-                function getAttribute(key, def) {
-                    def = def || '';
-                    if (_.has(attributes, key)) {
-                        // eslint-disable-next-line security/detect-object-injection
-                        return attributes[key];
-                    } else {
-                        return def;
-                    }
-                }
-
-                // eslint-disable-next-line valid-jsdoc
-                /**
-                 * S
-                 * @param {*} key Key.
-                 * @return {*} The table with the data or an empty string
-                 */
-                function getAttrMultiValue(key, linkHref) {
-                    const val = getAttribute(key, '');
-                    if (val === '') {
-                        return '';
-                    }
-                    const data = val.split(',');
-                    return that.$igvPopoverEntryTpl({
-                        values: data.map((d) => {
-                            return {
-                                name: d,
-                                link: (linkHref) ? linkHref + d : ''
-                            };
-                        })
-                    });
-                }
-
-                /**
-                 * Calculate the property lenght.
-                 * @return {int} the lenght or undefined
-                 */
-                function getProtLenght() {
-                    const start = parseInt(getAttribute('start'));
-                    const end = parseInt(getAttribute('end'));
-                    if (_.isNaN(start) || _.isNaN(end)) {
-                        return undefined;
-                    }
-                    return Math.ceil((end - start) / 3);
-                }
-
-                const functionalData = {
-                    title: 'Functional annotation',
-                    data: [{
-                        name: 'E.C Number',
-                        value: getAttrMultiValue('ec_number', 'https://enzyme.expasy.org/EC/')
-                    }, {
-                        name: 'Pfam',
-                        value: getAttrMultiValue('pfam', 'https://pfam.xfam.org/family/')
-                    }, {
-                        name: 'KEGG',
-                        value: getAttrMultiValue(
-                            'kegg', 'https://www.genome.jp/dbget-bin/www_bget?')
-                    }, {
-                        name: 'eggNOG',
-                        value: getAttrMultiValue('eggnog')
-                    }, {
-                        name: 'COG',
-                        value: getAttrMultiValue('cog')
-                    }, {
-                        name: 'InterPro',
-                        value: getAttrMultiValue(
-                            'interpro', 'https://www.ebi.ac.uk/interpro/beta/entry/InterPro/')
-                    }]
-                };
-
-                const otherData = {
-                    title: 'Feature details',
-                    data: [{
-                        name: 'Type',
-                        value: getAttribute('type')
-                    }, {
-                        name: 'Inference',
-                        value: getAttribute('inference')
-                    }, {
-                        name: 'Start / End',
-                        value: getAttribute('start') + ' / ' + getAttribute('end')
-                    }, {
-                        name: 'Protein length',
-                        value: getProtLenght()
-                    }]
-                };
-
-                const markup = that.$igvPopoverTpl({
-                    name: getAttribute('id'),
-                    gene: getAttribute('gene'),
-                    product: getAttribute('product'),
-                    properties: [functionalData, otherData]
-                });
-
-                return markup;
+                return igvPopup(data, that.$igvPopoverTpl, that.$igvPopoverEntryTpl);
             });
             this.igvBrowser = browser;
             this.$gbLoading.hide();
