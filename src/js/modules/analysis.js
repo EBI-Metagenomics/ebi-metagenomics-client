@@ -715,7 +715,7 @@ let PathSystemsTabView = Backbone.View.extend({
         this.registerTab({
             tabId: 'antismash',
             tab: this.antiSMASHTab,
-            route: 'path-systems/anti-smash'
+            route: 'path-systems/antismash'
         });
     }
 });
