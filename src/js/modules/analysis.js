@@ -1189,6 +1189,7 @@ const DownloadTabView = Backbone.View.extend({
         const groupsKeys = [
             'Sequence data',
             'Functional analysis',
+            'Pathways and Systems',
             'Taxonomic analysis',
             'Taxonomic analysis SSU rRNA',
             'Taxonomic analysis LSU rRNA',
