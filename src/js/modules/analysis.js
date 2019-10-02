@@ -698,6 +698,7 @@ let PathSystemsTabView = Backbone.View.extend({
 
         this.keggTab = new KEGGModuleTabView(this.analysisID);
         this.genomePropertiesTab = new GenomePropertiesTabView(this.analysisID);
+        this.antiSMASHTab = new AntiSMASHTabView(this.analysisID);
 
         this.registerTab({
             tabId: 'kegg-modules',
@@ -709,6 +710,12 @@ let PathSystemsTabView = Backbone.View.extend({
             tabId: 'genome-properties',
             tab: this.genomePropertiesTab,
             route: 'path-systems/genome-properties'
+        });
+
+        this.registerTab({
+            tabId: 'antismash',
+            tab: this.antiSMASHTab,
+            route: 'path-systems/anti-smash'
         });
     }
 });
@@ -909,6 +916,89 @@ const GenomePropertiesTabView = Backbone.View.extend({
     collapseAll() {
         this.$('.gp-expander:not(:first)').removeClass('gp-expander-expanded');
         this.$('.children:not(:first)').addClass('gp-collapsed');
+    }
+});
+
+const AntiSMASHTabView = Backbone.View.extend({
+    mixins: [TabMixin],
+    el: '#antismash',
+    model: api.AntiSMASHGeneCluster,
+    initialize(analysisID) {
+        this.analysisID = analysisID;
+        this.model = new api.AntiSMASHGeneCluster({
+            id: analysisID
+        });
+        this.$loadingSpinner = this.$('.loading-spinner');
+    },
+    render() {
+        const that = this;
+
+        this.tableView = new AnnotationTableView({
+            el: '#antismash-gene-clusters-table',
+            model: api.AntiSMASHGeneCluster,
+            analysisID: this.analysisID
+        });
+
+        const tablePromise = this.tableView.render();
+        const modelPromise = $.Deferred();
+
+        this.$loadingSpinner.show();
+
+        this.model.fetch({
+            data: {
+                page_size: 10 // Top 10.
+            },
+            success() {
+                const rawData = that.model.attributes.data;
+                const data = rawData.map((d) => d.attributes['count']);
+                let categoriesDescriptions = rawData.reduce((memo, d) => {
+                    memo[d.attributes['accession']] = d.attributes['description'];
+                    return memo;
+                }, {});
+                const chartOptions = {
+                    title: 'Top 10 antiSMASH gene clusters',
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of matches'
+                        }
+                    },
+                    xAxis: {
+                        categories: rawData.map((d) => d.attributes['accession'])
+                    },
+                    tooltip: {
+                        formatter() {
+                            const description = categoriesDescriptions[this.key];
+                            let tooltip = this.series.name + '<br/>Count: ' + this.y;
+                            if (description) {
+                                tooltip += '<br/>antiSMASH gene cluster: ' + description;
+                            }
+                            return tooltip;
+                        }
+                    },
+                    series: [{
+                        name: 'Analysis ' + that.analysisID,
+                        data: data,
+                        colors: Commons.TAXONOMY_COLOURS[1]
+                    }]
+                };
+                that.chart = new charts.GenericColumnChart(
+                    'antismash-gene-clusters-chart', chartOptions);
+                modelPromise.resolve();
+            }, error(ignored, response) {
+                util.displayError(
+                    response.status,
+                    'Could not retrieve antiSMASH gene clusters analysis for: ' + analysisID,
+                    that.el);
+                modelPromise.reject();
+            }
+        });
+
+        $.when(tablePromise, modelPromise).always(() => {
+            that.$loadingSpinner.hide();
+        });
+
+        return this;
     }
 });
 
