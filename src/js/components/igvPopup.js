@@ -69,7 +69,7 @@ module.exports = function(data, template, entryTemplate) {
         return memo;
     }, {});
 
-    attributes = _.extend(attributes, [helperMethods, {entryTemplate: entryTemplate}]);
+    attributes = _.extend(attributes, helperMethods, {entryTemplate: entryTemplate});
 
     const functionalData = {
         title: 'Functional annotation',
