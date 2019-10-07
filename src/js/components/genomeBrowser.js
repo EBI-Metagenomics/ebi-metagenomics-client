@@ -148,7 +148,7 @@ module.exports = class GenomeBrowser {
                     }, {
                         name: 'InterPro',
                         value: getAttrMultiValue(
-                            'interpro', 'https://www.ebi.ac.uk/interpro/beta/entry/InterPro/')
+                            'interpro', 'https://www.ebi.ac.uk/interpro/entry/InterPro/')
                     }]
                 };
 
