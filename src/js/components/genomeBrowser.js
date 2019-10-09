@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const $ = require('jquery');
-const igv = require('igv').default;
+const igv = require('igv');
 const igvPopup = require('../components/igvPopup');
 require('style-loader!../../../static/css/genome-browser.css');
 

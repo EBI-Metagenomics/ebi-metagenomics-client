@@ -11,7 +11,7 @@ const charts = require('mgnify').charts;
 const util = require('../util');
 const genomePropertiesHierarchy = require('../../../static/data/genome-properties-hierarchy.json');
 
-const igv = require('igv').default;
+const igv = require('igv');
 const igvPopup = require('../components/igvPopup');
 const ClientSideTable = require('../components/clientSideTable');
 const GenericTable = require('../components/genericTable');
@@ -52,6 +52,7 @@ const AnalysisView = Backbone.View.extend({
             success() {
                 that.$el.append(that.template(that.model.toJSON()));
 
+                // FIXME: hook directly on the mixin
                 that.hookTabs('#analysis-tabs');
 
                 const attr = that.model.attributes;
@@ -1362,7 +1363,7 @@ const AbundanceTabView = Backbone.View.extend({
 });
 
 // -- Contigs Viewer -- //
-let ContigsViewTab = Backbone.View.extend({
+const ContigsViewTab = Backbone.View.extend({
     mixins: [TabMixin],
     template: _.template($('#contigsViewerTmpl').html()),
     el: '#contigs-viewer',
@@ -1371,7 +1372,8 @@ let ContigsViewTab = Backbone.View.extend({
         'click #contigs-filter': 'updateTable',
         'click .clear-filter': function() {
              this.$('.table-filter').val('').trigger('keyup');
-        }
+        },
+        'click #show-antismash': 'loadAntiSmash'
     },
     /**
      * Contigs Viewer and browser.
@@ -1421,7 +1423,9 @@ let ContigsViewTab = Backbone.View.extend({
             headers: [
                 {sortBy: 'name', name: 'Name'},
                 {sortBy: 'length', name: 'Length (bp)'},
-                {sortBy: 'coverage', name: 'Coverage'}
+                {sortBy: 'coverage', name: 'Coverage'},
+                {name: 'antiSMASH'},
+                {name: 'KEGG Modules'}
             ],
             tableContainer: 'contigs-table',
             textFilter: true,
@@ -1508,6 +1512,8 @@ let ContigsViewTab = Backbone.View.extend({
     reloadTable({viewFirst, page, pageSize, resultsCount, resultsDownloadLink}) {
         const that = this;
         const data = _.reduce(that.collection.models, (arr, model) => {
+            '<span>' + (model.get('antismash_geneclusters_count') || 0) + '</span>';
+            '<span>' + (model.get('kegg_modules_count') || 0) + '</span>';
             arr.push([
                 '<a href="#" class="contig-browser" data-name="' +
                     model.get('contig_id') +
@@ -1515,7 +1521,9 @@ let ContigsViewTab = Backbone.View.extend({
                     model.get('contig_id') +
                 '</a>',
                 model.get('length'),
-                model.get('coverage')
+                model.get('coverage'),
+                '<span>' + (model.get('antismash_geneclusters_count') || 0) + '</span>',
+                '<span>' + (model.get('kegg_modules_count') || 0) + '</span>'
             ]);
             return arr;
         }, []);
@@ -1542,25 +1550,29 @@ let ContigsViewTab = Backbone.View.extend({
         const $el = $(e.target);
 
         const contigName = $el.data('name');
+        this.currentContigName = contigName;
+
         const displayName = $el.val();
+
         let options = {
             showChromosomeWidget: false,
-            showTrackLabelButton: false,
-            showTrackLabels: false,
+            showTrackLabelButton: true,
+            showTrackLabels: true,
             showCenterGuide: false,
             reference: {
                 indexed: false,
                 fastaURL: process.env.API_URL + 'analyses/' +
-                          this.collection.accession + '/contigs/' + contigName
+                          this.collection.accession + '/contigs/' + this.currentContigName
             },
             tracks: [{
                 name: displayName,
                 type: 'annotation',
                 format: 'gff3',
                 url: process.env.API_URL + 'analyses/' +
-                     this.collection.accession + '/annotations/' + contigName,
+                     this.collection.accession + '/contigs/' + this.currentContigName +
+                     '/annotations',
                 displayMode: 'EXPANDED',
-                nameField: 'gene'
+                label: ''
             }],
             ebi: {
                 colorAttributes: [
@@ -1586,8 +1598,8 @@ let ContigsViewTab = Backbone.View.extend({
             browser.on('trackclick', (ignored, data) => {
                 return igvPopup(data, that.$igvPopoverTpl, that.$igvPopoverEntryTpl);
             });
-            this.igvBrowser = browser;
-            this.$gbLoading.hide();
+            that.igvBrowser = browser;
+            that.$gbLoading.hide();
         }).catch((error) => {
             util.displayError(
                 500,
@@ -1595,6 +1607,32 @@ let ContigsViewTab = Backbone.View.extend({
                 that.el);
             that.igvBrowser = undefined;
             that.$gbLoading.hide();
+        });
+    },
+    /**
+     * Load the contig antiSMASH gff track
+     * @param {Event} e the event
+     */
+    loadAntiSmash(e) {
+        e.preventDefault();
+        if (!this.igvBrowser) {
+            util.displayError('IGV error',
+                'Error loading the contigs on the browser.',
+                this.$el('.message-area'));
+        }
+        this.igvBrowser.loadTrack({
+            type: 'annotation',
+            format: 'gff3',
+            displayMode: 'EXPANDED',
+            url: process.env.API_URL + 'analyses/' +
+                 this.collection.accession + '/contigs/' + this.currentContigName +
+                 '/annotations?antismash=True',
+            label: 'antiSMASH'
+        }).then((newTrack) => {
+            console.log('Track loaded: ' + newTrack.name);
+        }).catch((error) => {
+            // Handle error
+            console.log(error);
         });
     }
 });
