@@ -15,31 +15,11 @@ const baseConfig = require('./webpack.base.config');
 
 module.exports = {
     plugins: baseConfig.plugins.concat([
-
-        // GZIP compression
+        // gzip compression
         new (getCompressionPlugin())({
             asset: '[path].gz[query]',
             test: /\.(js|css|html|svg)$/i,
-            cache: true,
-            algorithm(buffer, options, callback) {
-                require('node-zopfli').gzip(buffer, options, callback);
-            }
-        }),
-        // // Brotli compression
-        new (getCompressionPlugin())({
-            asset: '[path].br[query]',
-            test: /\.(js|css|html|svg)$/i,
-            cache: true,
-            algorithm(buffer, _, callback) {
-                require('iltorb').compress(
-                    buffer,
-                    {
-                        mode: 1, // text
-                        quality: 11 // goes from 1 (but quick) to 11 (but slow)
-                    },
-                    callback
-                );
-            }
+            cache: true
         })
     ]), // filter out empty values
     entry: baseConfig.entry,
