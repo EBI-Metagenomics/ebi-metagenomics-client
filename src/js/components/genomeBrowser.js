@@ -32,26 +32,23 @@ module.exports = class GenomeBrowser {
                 indexURL: config['fasta_index_url'],
                 index: true
             },
-            tracks: [
-                {
-                    name: config['name'],
-                    url: config['gff_url'],
-                    format: 'gff3',
-                    displayMode: 'EXPANDED'
-                }
-            ],
-            ebi: {
+            tracks: [{
+                type: 'mgnify-annotation',
+                name: config['name'],
+                url: config['gff_url'],
+                format: 'gff3',
+                displayMode: 'EXPANDED'
+            }, {
                 colorAttributes: [
-                    'Colour by',
-                    'COG',
-                    'product',
-                    'Pfam',
-                    'KEGG',
-                    'InterPro',
-                    'eggNOG'
-                ],
-                showLegendButton: true
-            }
+                    ['Default', ''],
+                    ['COG', 'COG'],
+                    ['Product', 'product'],
+                    ['Pfam', 'Pfam'],
+                    ['KEGG', 'KEGG'],
+                    ['InterPro', 'InterPro'],
+                    ['eggNOG', 'eggNOG']
+                ]
+            }]
         };
 
         this.$igvPopoverTpl = _.template($('#igv-popover-template').html());

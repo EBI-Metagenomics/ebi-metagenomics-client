@@ -504,8 +504,7 @@
                     <img id="table-loading" class="loading-gif-medium" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
                 </h4>
             </div>
-            <div class="columns small-3 medium-3 large-3">
-                <button id="show-antismash" class="button">antiSMASH</button>
+            <div class="columns small-3 medium-3 large-3 contig-viewer-filters">
                 <div class="row columns">
                     <h5>Contig length (bp)</h5>
                     <div class="row columns slider-group">
@@ -549,7 +548,17 @@
                         InterPro
                     </h5>
                     <input type="text" id="interpro-filter" name="interpro-filter" value="" placeholder="IPR015200">
-                </div>                
+                </div>
+                <div class="row columns">
+                    <h5>
+                        antiSMASH
+                    </h5>
+                    <label for="antismash-filter">Filter by gene cluster</label>
+                    <input type="text" id="antismash-filter" name="antismash-filter" value="" placeholder="terpene">
+                    
+                    <label for="antismash-only">Show only the contigs with antiSMASH annotations</label>
+                    <input id="antismash-only-filter" name="antismash-only" type="checkbox">
+                </div>
                 <div class="row columns">
                     <button id="contigs-filter" value="filter" class="button">Filter</button>
                 </div>                            
@@ -617,25 +626,27 @@
             </tbody>
         </table>
         <% _.each(properties, (prop) => { %>
-            <table class="stack hover igv-popover-table">
-                <caption class="igv-popover-section-header">
-                    <% print(prop.title) %>
-                </caption>
-                <tbody>
-                <% _.each(prop.data, (data) => { %>
-                    <% if (data.value && data.value !== '') { %>
-                        <tr>
-                            <td class="igv-popover-table-td-name">
-                                <% print(data.name) %>
-                            </td>
-                            <td>
-                                <% print(data.value) %>
-                            </td>
-                        </tr>
-                    <% } %>
-                <% }) %>
-                </tbody>
-            </table>
+            <% if (prop.data && prop.data.length > 0) { %>
+                <table class="stack hover igv-popover-table">
+                    <caption class="igv-popover-section-header">
+                        <% print(prop.title) %>
+                    </caption>
+                    <tbody>
+                    <% _.each(prop.data, (data) => { %>
+                        <% if (data.value && data.value !== '') { %>
+                            <tr>
+                                <td class="igv-popover-table-td-name">
+                                    <% print(data.name) %>
+                                </td>
+                                <td>
+                                    <% print(data.value) %>
+                                </td>
+                            </tr>
+                        <% } %>
+                    <% }) %>
+                    </tbody>
+                </table>
+            <% } %>
         <% }) %>
     </script>    
 

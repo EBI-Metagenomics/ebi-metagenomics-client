@@ -1069,6 +1069,11 @@ path.link {
     overflow-y: scroll !important;
 }
 
+.has-antismash::after {
+    content: url(../images/antismash-logo.png);
+    margin: 5px;
+}
+
 .sub-legend caption,
 .sub-legend tr {
     padding: 0;

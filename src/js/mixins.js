@@ -67,6 +67,7 @@ export const TabsManagerMixin = {
      */
     registerTab({tabId, tab, route, routingHandler, baseRoute}) {
         this.tabs = this.tabs || {};
+        // eslint-disable-next-line security/detect-object-injection
         this.tabs[tabId] = {
             tab: tab,
             route: route,
@@ -90,6 +91,7 @@ export const TabsManagerMixin = {
     * @return {Object} view This view.
     */
     changeTab(tabId) {
+        // eslint-disable-next-line security/detect-object-injection
         const tabData = this.tabs[tabId];
         if (!tabData) {
             // TODO: show error banner!
@@ -125,6 +127,7 @@ export const TabsManagerMixin = {
         const $tabAnchor = $(event.currentTarget);
         const tabId = $tabAnchor.children(':first').data('tab-id');
 
+        // eslint-disable-next-line security/detect-object-injection
         const tabData = this.tabs[tabId];
 
         this.router.navigate(tabData.baseRoute || tabData.route, {trigger: true});

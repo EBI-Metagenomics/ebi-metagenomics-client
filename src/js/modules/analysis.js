@@ -1373,7 +1373,7 @@ const ContigsViewTab = Backbone.View.extend({
         'click .clear-filter': function() {
              this.$('.table-filter').val('').trigger('keyup');
         },
-        'click #show-antismash': 'loadAntiSmash'
+        'click .antismash-load': 'loadAntiSmash'
     },
     /**
      * Contigs Viewer and browser.
@@ -1417,15 +1417,37 @@ const ContigsViewTab = Backbone.View.extend({
         this.$goFilter = this.$('#go-filter');
         this.$pfamFilter = this.$('#pfam-filter');
         this.$interproFilter = this.$('#interpro-filter');
+        this.$antismashFilter = this.$('#antismash-filter');
+        this.$antismashOnlyFilter = this.$('#antismash-only-filter');
+        /* Table */
+        let page = 1;
+        let pageSize = DEFAULT_PAGE_SIZE;
+
+        // Load from the URL
+        if ('URLSearchParams' in window) {
+            // TODO: Fix hardcoded value
+            const urlParams = new URLSearchParams(location.hash.replace('#contigs-viewer?', ''));
+
+            this.$maxLen.val(urlParams.get('lt'));
+            this.$minLen.val(urlParams.get('gt'));
+
+            this.$cog.val(urlParams.get('cog'));
+            this.$kegg.val(urlParams.get('kegg'));
+            this.$goFilter.val(urlParams.get('go'));
+            this.$pfamFilter.val(urlParams.get('pfam'));
+            this.$interproFilter.val(urlParams.get('interpro'));
+            this.$antismashFilter.val(urlParams.get('antismash'));
+            this.$antismashOnlyFilter.prop('checked', urlParams.get('antismash_only'));
+            page = urlParams.get('page') || page;
+            pageSize = urlParams.get('page_size') || pageSize;
+        }
 
         let tableOptions = {
             title: 'Contigs',
             headers: [
                 {sortBy: 'name', name: 'Name'},
                 {sortBy: 'length', name: 'Length (bp)'},
-                {sortBy: 'coverage', name: 'Coverage'},
-                {name: 'antiSMASH'},
-                {name: 'KEGG Modules'}
+                {sortBy: 'coverage', name: 'Coverage'}
             ],
             tableContainer: 'contigs-table',
             textFilter: true,
@@ -1451,7 +1473,10 @@ const ContigsViewTab = Backbone.View.extend({
             }, success(ignored, response) {
                 const model = _.first(that.collection.models);
                 that.$lenSlider.slider('option', 'max', model.get('length'));
-                that.$lenSlider.slider('option', 'values', [MIN_CONTIG_LEN, model.get('length')]);
+                that.$lenSlider.slider('option', 'values', [
+                    that.$minLen.val() || MIN_CONTIG_LEN,
+                    that.$maxLen.val() || model.get('length')
+                ]);
             }, error(ignored, response) {
                 util.displayError(
                     response.status,
@@ -1460,7 +1485,58 @@ const ContigsViewTab = Backbone.View.extend({
             }
         });
 
-        this.updateTable({page: 1, pageSize: DEFAULT_PAGE_SIZE, viewFirst: true});
+        this.updateTable({page: page, pageSize: pageSize, viewFirst: true});
+    },
+    /**
+     * Overload the renderTab method, to keep the
+     * filters synced
+     * @return {Object} the instance
+     */
+    renderTab() {
+        if (!this.rendered) {
+            this.render();
+            this.rendered = true;
+        }
+        this.getFilters();
+        return this;
+    },
+    /**
+     * Get the contigs viewer filters and update the querystring
+     * @param {Number} page page
+     * @param {Number} pageSize pageSize
+     * @param {String} ordering ordering
+     * @param {String} search search
+     * @return {Object} Object with the filter dict
+     */
+    getFilters(page, pageSize, ordering, search) {
+        // FIXME: hook the table filters
+        const that = this;
+        const params = {
+            gt: that.$minLen.val(),
+            lt: that.$maxLen.val(),
+            cog: that.$cog.val(),
+            kegg: that.$kegg.val(),
+            go: that.$goFilter.val(),
+            interpro: that.$interproFilter.val(),
+            pfam: that.$pfamFilter.val(),
+            antismash: that.$antismashFilter.val(),
+            antismash_only: that.$antismashOnlyFilter.is(':checked'),
+            page: page || 1,
+            page_size: pageSize || DEFAULT_PAGE_SIZE,
+            ordering: ordering || that.contigsTable.getCurrentOrder(),
+            search: search || ''
+        };
+        if ('URLSearchParams' in window) {
+            const urlParams = new URLSearchParams();
+            Object.keys(params).forEach((key) => {
+                // eslint-disable-next-line security/detect-object-injection
+                urlParams.set(key, params[key]);
+            });
+            window.history.replaceState('',
+                // TODO hardcoded value
+                document.title, location.pathname + '#contigs-viewer?' + urlParams);
+        }
+        return params;
     },
     /**
      * Refresh the table data.
@@ -1473,19 +1549,7 @@ const ContigsViewTab = Backbone.View.extend({
         that.contigsTable.showLoadingGif();
 
         this.collection.fetch({
-            data: {
-                gt: that.$minLen.val(),
-                lt: that.$maxLen.val(),
-                cog: that.$cog.val(),
-                kegg: that.$kegg.val(),
-                go: that.$goFilter.val(),
-                interpro: that.$interproFilter.val(),
-                pfam: that.$pfamFilter.val(),
-                page: page || 1,
-                page_size: pageSize || DEFAULT_PAGE_SIZE,
-                ordering: ordering || that.contigsTable.getCurrentOrder(),
-                search: search
-            },
+            data: that.getFilters(page, pageSize, ordering, search),
             success(ignored, response) {
                 const pagination = response.meta.pagination;
                 that.reloadTable({
@@ -1512,18 +1576,25 @@ const ContigsViewTab = Backbone.View.extend({
     reloadTable({viewFirst, page, pageSize, resultsCount, resultsDownloadLink}) {
         const that = this;
         const data = _.reduce(that.collection.models, (arr, model) => {
-            '<span>' + (model.get('antismash_geneclusters_count') || 0) + '</span>';
-            '<span>' + (model.get('kegg_modules_count') || 0) + '</span>';
+            let anchor = '';
+            if (model.get('antismash_geneclusters_count') > 0) {
+                anchor = '<a href="#" class="contig-browser has-antismash top" tabindex="2"' +
+                    'data-contig-id="' + model.get('contig_id') + '" ' +
+                    'data-antismash="true" '+
+                    'data-tooltip title="This contig has antiSMASH geneclusters."' +
+                '>' +
+                    model.get('contig_id') +
+                '</a>';
+            } else {
+                anchor = '<a href="#" class="contig-browser"' +
+                    'data-contig-id="' + model.get('contig_id') + '">' +
+                    model.get('contig_id') +
+                '</a>';
+            }
             arr.push([
-                '<a href="#" class="contig-browser" data-name="' +
-                    model.get('contig_id') +
-                '">' +
-                    model.get('contig_id') +
-                '</a>',
+                anchor,
                 model.get('length'),
-                model.get('coverage'),
-                '<span>' + (model.get('antismash_geneclusters_count') || 0) + '</span>',
-                '<span>' + (model.get('kegg_modules_count') || 0) + '</span>'
+                model.get('coverage')
             ]);
             return arr;
         }, []);
@@ -1549,8 +1620,8 @@ const ContigsViewTab = Backbone.View.extend({
         const that = this;
         const $el = $(e.target);
 
-        const contigName = $el.data('name');
-        this.currentContigName = contigName;
+        const contigId = $el.data('contig-id');
+        const antiSMASH = $el.data('antismash');
 
         const displayName = $el.val();
 
@@ -1562,31 +1633,40 @@ const ContigsViewTab = Backbone.View.extend({
             reference: {
                 indexed: false,
                 fastaURL: process.env.API_URL + 'analyses/' +
-                          this.collection.accession + '/contigs/' + this.currentContigName
+                          this.collection.accession + '/contigs/' + contigId
             },
             tracks: [{
                 name: displayName,
-                type: 'annotation',
+                type: 'mgnify-annotation',
                 format: 'gff3',
                 url: process.env.API_URL + 'analyses/' +
-                     this.collection.accession + '/contigs/' + this.currentContigName +
+                     this.collection.accession + '/contigs/' + contigId +
                      '/annotations',
                 displayMode: 'EXPANDED',
-                label: ''
-            }],
-            ebi: {
+                label: 'Functional annotation',
                 colorAttributes: [
-                    'Colour by', /* Label */
-                    'COG',
-                    'GO',
-                    'Pfam',
-                    'InterPro',
-                    'KEGG',
-                    'eggNOG'
-                ],
-                showLegendButton: true
-            }
+                    ['Default', ''],
+                    ['COG', 'COG'],
+                    ['GO', 'GO'],
+                    ['KEGG', 'KEGG'],
+                    ['Pfam', 'Pfam'],
+                    ['InterPro', 'InterPro']
+                ]
+            }],
+            showLegend: true
         };
+        if (antiSMASH) {
+            options.tracks.push({
+                type: 'mgnify-annotation',
+                format: 'gff3',
+                displayMode: 'EXPANDED',
+                url: process.env.API_URL + 'analyses/' +
+                     this.collection.accession + '/contigs/' + contigId +
+                     '/annotations?antismash=True',
+                label: 'antiSMASH',
+                colorBy: 'antiSMASH'
+            });
+        }
 
         this.$gbLoading.show();
 
@@ -1611,28 +1691,30 @@ const ContigsViewTab = Backbone.View.extend({
     },
     /**
      * Load the contig antiSMASH gff track
-     * @param {Event} e the event
+     * @param {string} contigId The contig identifier
      */
-    loadAntiSmash(e) {
-        e.preventDefault();
+    loadAntiSmash(contigId) {
+        const that = this;
+        // e.preventDefault();
         if (!this.igvBrowser) {
             util.displayError('IGV error',
                 'Error loading the contigs on the browser.',
                 this.$el('.message-area'));
         }
         this.igvBrowser.loadTrack({
-            type: 'annotation',
+            type: 'mgnify-annotation',
             format: 'gff3',
             displayMode: 'EXPANDED',
             url: process.env.API_URL + 'analyses/' +
-                 this.collection.accession + '/contigs/' + this.currentContigName +
+                 this.collection.accession + '/contigs/' + contigId +
                  '/annotations?antismash=True',
-            label: 'antiSMASH'
-        }).then((newTrack) => {
-            console.log('Track loaded: ' + newTrack.name);
+            label: 'antiSMASH',
+            colorBy: 'antiSMASH'
         }).catch((error) => {
-            // Handle error
-            console.log(error);
+            util.displayError(
+                'IGV Error',
+                'Error loading the contigs on the browser. Detail: ' + error,
+                that.$el('.message-area'));
         });
     }
 });
