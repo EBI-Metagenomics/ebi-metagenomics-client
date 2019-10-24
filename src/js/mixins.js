@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const {attachExpandButtonCallback} = require('../js/util');
 
 /**
  * Tabs Manager.
@@ -44,7 +45,7 @@ export const TabsManagerMixin = {
         });
     },
     /**
-     * Add a tab with the corresponding tab isntance and route.
+     * Add a tab with the corresponding tab instance and route.
      * Provide a routingHandler if you want to customize the callback.
      * This is used for inner tabs at the moment:
      * For example for FnTab view inner tabs:
@@ -162,6 +163,7 @@ export const TabMixin = {
     renderTab() {
         if (!this.rendered) {
             this.render();
+            attachExpandButtonCallback();
             this.rendered = true;
         }
         return this;

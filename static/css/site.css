@@ -1069,9 +1069,72 @@ path.link {
     overflow-y: scroll !important;
 }
 
-.has-antismash::after {
-    content: url(../images/antismash-logo.png);
-    margin: 5px;
+/* Annotations on contigs table */
+.contigs-legend {
+    margin-right: 5px;
+}
+
+.mgnify-icon {
+    margin: 0 1px;
+}
+
+.mgnify-icon.has_cog:before {
+    content: 'C';
+    color: rgb(0, 88, 160);
+    border: solid 1px;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 2px;    
+}
+
+.mgnify-icon.has_kegg:before {
+    content: 'K';
+    color: rgb(19, 160, 0);
+    border: solid 1px;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.mgnify-icon.has_go:before {
+    content: 'G';
+    color: rgb(231, 127, 96);
+    border: solid 1px;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.mgnify-icon.has_pfam:before {
+    content: 'P';
+    color: rgb(0, 11, 160);
+    border: solid 1px;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.mgnify-icon.has_interpro:before {
+    content: 'I';
+    color: rgb(141, 0, 160);
+    border: solid 1px;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.mgnify-icon.has_antismash:before {
+    content: 'A';
+    color: #A00000;
+    border: solid 1px;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.mgnify-icon.has_kegg_module:before {
+    content: 'KM';
+    color: rgb(77, 160, 0);
 }
 
 .sub-legend caption,

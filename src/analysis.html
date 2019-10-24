@@ -523,45 +523,65 @@
                     <h5>
                         COG Category
                     </h5>
-                    <input type="text" id="cog-filter" name="cog-filter" value="" placeholder="C">
+                    <input type="text" id="cog-filter" minlength="1" maxlength="1" name="cog-filter" value="" placeholder="C">
                 </div>
                 <div class="row columns">
                     <h5>
-                        KEGG ortholog
+                    KEGG ortholog
                     </h5>
-                    <input type="text" id="kegg-filter" name="kegg-filter" value="" placeholder="K00161">
+                    <input type="text" id="kegg-filter" minlength="4" name="kegg-filter" value="" placeholder="K00161">
                 </div>
                 <div class="row columns">
                     <h5>
                         GO
                     </h5>
-                    <input type="text" id="go-filter" name="go-filter" value="" placeholder="GO:1901575">
+                    <input type="text" id="go-filter" minlength="5" name="go-filter" value="" placeholder="GO:1901575">
                 </div>                
                 <div class="row columns">
                     <h5>
                         Pfam
                     </h5>
-                    <input type="text" id="pfam-filter" name="pfam-filter" value="" placeholder="PF02086">
+                    <input type="text" id="pfam-filter" minlength="4" name="pfam-filter" value="" placeholder="PF02086">
                 </div>
                 <div class="row columns">
                     <h5>
                         InterPro
                     </h5>
-                    <input type="text" id="interpro-filter" name="interpro-filter" value="" placeholder="IPR015200">
+                    <input type="text" id="interpro-filter" minlength="5" name="interpro-filter" value="" placeholder="IPR015200">
                 </div>
                 <div class="row columns">
                     <h5>
                         antiSMASH
                     </h5>
-                    <label for="antismash-filter">Filter by gene cluster</label>
-                    <input type="text" id="antismash-filter" name="antismash-filter" value="" placeholder="terpene">
-                    
-                    <label for="antismash-only">Show only the contigs with antiSMASH annotations</label>
-                    <input id="antismash-only-filter" name="antismash-only" type="checkbox">
+                    <input type="text" id="antismash-filter" minlength="3" name="antismash-filter" value="" placeholder="terpene">
+                </div>
+                <h5 class="row columns">
+                    Show contigs with:
+                </h5>
+                <div class="row columns">
+                    <input type="checkbox" id="facet-cog" data-name="cog" class="facet" checked>
+                    <label for="facet-cog">COG</label>
                 </div>
                 <div class="row columns">
-                    <button id="contigs-filter" value="filter" class="button">Filter</button>
-                </div>                            
+                    <input type="checkbox" id="facet-kegg" data-name="kegg" class="facet" checked>
+                    <label for="facet-kegg">KEGG ortholog</label>
+                </div>
+                <div class="row columns">
+                    <input type="checkbox" id="facet-go" data-name="go" class="facet" checked>
+                    <label for="facet-go">GO</label>
+                </div>
+                <div class="row columns">
+                    <input type="checkbox" id="facet-pfam" data-name="pfam" class="facet" checked>
+                    <label for="facet-pfam">Pfam</label>
+                </div>
+                <div class="row columns">
+                    <input type="checkbox" id="facet-interpro" data-name="interpro" class="facet" checked>
+                    <label for="facet-interpro">InterPro</label>
+                </div>
+                <div class="row columns">
+                    <input type="checkbox" id="facet-antismash" data-name="antismash" class="facet" checked>
+                    <label for="facet-antismash">antiSMASH</label>
+                </div>
             </div>
             <div class="columns small-9 medium-9 large-9">
                 <div id="contigs-table">
