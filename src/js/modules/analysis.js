@@ -1604,14 +1604,14 @@ const ContigsViewTab = Backbone.View.extend({
         const data = _.reduce(that.collection.models, (arr, model) => {
             let el = $('<div></div>');
             let anchor = $('<a href="#" class="contig-browser"' +
-                'data-contig-id="' + model.get('contig_id') + '">' +
+                'data-contig_id="' + model.get('contig_id') + '">' +
                 model.get('contig_id') +
             '</a>');
             el.append(anchor);
             for (let field in model.attributes) {
                 if (field.startsWith('has_') && model.get(field)) {
                     anchor.addClass(field);
-                    anchor.data('field', true);
+                    anchor.data(field, true);
                     el.append('<span class="mgnify-icon ' + field + '"></span>');
                 }
             }
@@ -1644,8 +1644,8 @@ const ContigsViewTab = Backbone.View.extend({
         const that = this;
         const $el = $(e.target);
 
-        const contigId = $el.data('contig-id');
-        const antiSMASH = $el.data('antismash');
+        const contigId = $el.data('contig_id');
+        const antiSMASH = $el.data('has_antismash');
 
         const displayName = $el.val();
 
