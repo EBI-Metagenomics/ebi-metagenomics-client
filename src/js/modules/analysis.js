@@ -1611,7 +1611,8 @@ const ContigsViewTab = Backbone.View.extend({
             for (let field in model.attributes) {
                 if (field.startsWith('has_') && model.get(field)) {
                     anchor.addClass(field);
-                    anchor.data(field, true);
+                    // TODO: this is not adding the value on the data-
+                    // anchor.data(field, true);
                     el.append('<span class="mgnify-icon ' + field + '"></span>');
                 }
             }
@@ -1645,7 +1646,7 @@ const ContigsViewTab = Backbone.View.extend({
         const $el = $(e.target);
 
         const contigId = $el.data('contig_id');
-        const antiSMASH = $el.data('has_antismash');
+        const antiSMASH = $el.hasClass('has_antismash');
 
         const displayName = $el.val();
 
