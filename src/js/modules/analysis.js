@@ -1516,7 +1516,7 @@ const ContigsViewTab = Backbone.View.extend({
             this.$antismashFilter.val(urlParams.get('antismash'));
 
             const facetFilters = urlParams.getAll('facet');
-            if (facetFilters) {
+            if (facetFilters && facetFilters.length > 0) {
                 _.each(this.$facetFilters, (el) =>
                     el.checked = _.contains(facetFilters, $(el).data('name'))
                 );
