@@ -1432,7 +1432,8 @@ const ContigsViewTab = Backbone.View.extend({
             headers: [
                 {sortBy: 'name', name: 'Name'},
                 {sortBy: 'length', name: 'Length (bp)'},
-                {sortBy: 'coverage', name: 'Coverage'}
+                {sortBy: 'coverage', name: 'Coverage'},
+                {sortBy: null, name: 'Features'}
             ],
             tableContainer: 'contigs-table',
             textFilter: true,
@@ -1602,24 +1603,27 @@ const ContigsViewTab = Backbone.View.extend({
     reloadTable({viewFirst, page, pageSize, resultsCount, resultsDownloadLink}) {
         const that = this;
         const data = _.reduce(that.collection.models, (arr, model) => {
-            let el = $('<div></div>');
-            let anchor = $('<a href="#" class="contig-browser"' +
+            const anchor = '<a href="#" class="contig-browser" ' +
+                'data-has_antismash="' + (model.get('has_antismash') > 0) + '" ' +
                 'data-contig_id="' + model.get('contig_id') + '">' +
                 model.get('contig_id') +
-            '</a>');
-            el.append(anchor);
+            '</a>';
+            let features = '';
             for (let field in model.attributes) {
-                if (field.startsWith('has_') && model.get(field)) {
-                    anchor.addClass(field);
-                    // TODO: this is not adding the value on the data-
-                    // anchor.data(field, true);
-                    el.append('<span class="mgnify-icon ' + field + '"></span>');
+                if (field.startsWith('has_')) {
+                    let span = '<span class="mgnify-icon ' + field + ' ';
+                    if (!model.get(field) || model.get(field) === 0) {
+                        span += 'feature-absent';
+                    }
+                    span += ' "></span>';
+                    features += span;
                 }
             }
             arr.push([
-                el.prop('outerHTML'),
+                anchor,
                 model.get('length'),
-                model.get('coverage')
+                model.get('coverage'),
+                features
             ]);
             return arr;
         }, []);
@@ -1646,7 +1650,7 @@ const ContigsViewTab = Backbone.View.extend({
         const $el = $(e.target);
 
         const contigId = $el.data('contig_id');
-        const antiSMASH = $el.hasClass('has_antismash');
+        const antiSMASH = $el.data('has_antismash');
 
         const displayName = $el.val();
 
@@ -1689,7 +1693,9 @@ const ContigsViewTab = Backbone.View.extend({
                      this.collection.accession + '/contigs/' + contigId +
                      '/annotations?antismash=True',
                 label: 'antiSMASH',
-                colorBy: 'antiSMASH'
+                colorBy: 'gene_kinds',
+                defaultColour: '#BEBEBE',
+                labelBy: 'gene_clusters'
             });
         }
 
@@ -1699,7 +1705,8 @@ const ContigsViewTab = Backbone.View.extend({
             igv.removeBrowser(this.igvBrowser);
         }
 
-        igv.createBrowser(this.$igvDiv, options).then((browser) => {
+        const igvPromise = igv.createBrowser(this.$igvDiv, options);
+        igvPromise.then((browser) => {
             browser.on('trackclick', (ignored, data) => {
                 return igvPopup(data, that.$igvPopoverTpl, that.$igvPopoverEntryTpl);
             });

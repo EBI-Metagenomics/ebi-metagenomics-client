@@ -1076,65 +1076,72 @@ path.link {
 
 .mgnify-icon {
     margin: 0 1px;
+    display: inline-block;
+    width: 20px;   
+    border: solid 1px;
+    font-weight: bold;
+    border-radius: 6px;
+    text-align: center;
 }
 
-.mgnify-icon.has_cog:before {
-    content: 'C';
+.has_cog {
     color: rgb(0, 88, 160);
-    border: solid 1px;
-    font-weight: bold;
-    border-radius: 6px;
-    padding: 2px;    
 }
 
-.mgnify-icon.has_kegg:before {
-    content: 'K';
+.has_cog:before {
+    content: 'C';
+}
+
+.has_kegg {
     color: rgb(19, 160, 0);
-    border: solid 1px;
-    font-weight: bold;
-    border-radius: 6px;
-    padding: 2px;
 }
 
-.mgnify-icon.has_go:before {
-    content: 'G';
+.has_kegg:before {
+    content: 'K';
+}
+
+.has_go {
     color: rgb(231, 127, 96);
-    border: solid 1px;
-    font-weight: bold;
-    border-radius: 6px;
-    padding: 2px;
 }
 
-.mgnify-icon.has_pfam:before {
-    content: 'P';
+.has_go:before {
+    content: 'G';
+}
+
+.has_pfam {
     color: rgb(0, 11, 160);
-    border: solid 1px;
-    font-weight: bold;
-    border-radius: 6px;
-    padding: 2px;
 }
 
-.mgnify-icon.has_interpro:before {
-    content: 'I';
+.has_pfam:before {
+    content: 'P';
+}
+
+.has_interpro {
     color: rgb(141, 0, 160);
-    border: solid 1px;
-    font-weight: bold;
-    border-radius: 6px;
-    padding: 2px;
 }
 
-.mgnify-icon.has_antismash:before {
+.has_interpro:before {
+    content: 'I';
+}
+
+.has_antismash {
+    color: rgb(160, 0, 0);
+}
+
+.has_antismash:before {
     content: 'A';
-    color: #A00000;
-    border: solid 1px;
-    font-weight: bold;
-    border-radius: 6px;
-    padding: 2px;
 }
 
-.mgnify-icon.has_kegg_module:before {
-    content: 'KM';
+.has_kegg_module {
     color: rgb(77, 160, 0);
+}
+
+.has_kegg_module:before {
+    content: 'KM';
+}
+
+.feature-absent {
+    color: rgb(206, 202, 202);
 }
 
 .sub-legend caption,
