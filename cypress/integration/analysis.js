@@ -8,6 +8,9 @@ const origPage = 'analyses/MGYA00011845';
  * Accession    Run         Study
  * MGYA00136035 ERR867655   ERP009703 (amplicon, SSU only)
  * MGYA00141547 ERR1022502  ERP012221 (metatranscriptomic, SSU + LSU)
+ * V5 studies
+ * MGYA00XXXXXX ERZXXXXXXX  ERPXXXXXX (assembly v5)
+ * MGYA00136035 ERR867655   ERP009703 (amplicon, ITS/LSU)
  */
 
 function verifyTabIsVisible(tabId) {
@@ -588,6 +591,7 @@ describe('Analysis page', function() {
                 'ribosome', '647 017 annotations (26.88%)');
         });
     });
+
     context('Abundance tab', function() {
         it('Should be removed if no data available.', function() {
             openPage(origPage);
@@ -606,6 +610,7 @@ describe('Analysis page', function() {
                 .should('have.class', 'is-active');
         });
     });
+
     context('Error handling', function() {
         it('Should display error message if invalid accession passed in URL', function() {
             const runId = 'MGYA00141547XXXX';
@@ -613,6 +618,59 @@ describe('Analysis page', function() {
             openPage(origPage);
             cy.contains('Error: 404', {timeout: 40000});
             cy.contains('Could not retrieve analysis: ' + runId, {timeout: 40000});
+        });
+    });
+
+    context('Pipeline V5', function() {
+        context('Taxonomic tab', function() {
+            context('Page organization', function() {
+            });
+            context('SSU', function() {
+            });
+            context('LSU', function() {
+            });
+        });
+        context('Functional tab', function() {
+            context('InterPro', function() {
+            });
+            context('GO', function() {
+            });
+            context('Pfam', function() {
+            });
+            context('KO', function() {
+            });
+        });
+        context('Pathway and systems tab', function() {
+            context('KEGG Module', function() {
+            });
+            context('Genome properties', function() {
+            });
+            context('antiSMASH', function() {
+            });
+        });
+        context('Contig viewer tab', function() {
+            context('IGV', function() {
+                it('Should change to default if no data available.', function() {
+                    openPage(origPage + '#abundance');
+                    waitForPageLoad('Analysis MGYA00011845');
+                    // Check defaulted to overview tab
+                    cy.contains('Description', {timeout: 40000}).should('be.visible');
+                    cy.get('a[href=\'#abundance\']')
+                        .should('not.exist');
+                    cy.get('a[href=\'#overview\']')
+                        .should('have.attr', 'aria-selected', 'true')
+                        .should('have.class', 'is-active');
+                });
+            });
+            context('Table', function() {
+            });
+        });
+        context('Downloads tab', function() {
+            context('IGV', function() {
+
+            });
+            context('Table', function() {
+            });
         });
     });
 

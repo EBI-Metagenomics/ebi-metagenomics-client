@@ -8,7 +8,11 @@
                 </h2>
             {{else}}
                 <h4>
-                    <a class="expand-button min" for="#{{tableContainer}}">{{sectionTitle}}</a>
+                    {{#if expandableTitle}}
+                        <a class="expand-button min" for="#{{tableContainer}}">{{sectionTitle}}</a>
+                    {{else}}
+                        <span>{{sectionTitle}}</span>
+                    {{/if}}
                     <img class="loading-gif-medium" src="static/images/ajax-loader.gif">
                 </h4>
             {{/if}}
@@ -21,15 +25,16 @@
             {{#if this.pagination}}
                 <label for="pagesize">Show:
                     <select id="pagesize" class="inline-select">
-                        <option value=50>50</option>
-                        <option value=25>25</option>
-                        <option selected value=10>10</option>
+                        <option value="50">50</option>
+                        <option value="25">25</option>
+                        <option selected value="10">10</option>
                     </select>
                     results
                     <span id="pagesize-text">
-                from a total of <span
-                            id="totalResults"></span> (page <span id="currentPage"></span> of <span
-                            id="maxPage"></span>).
+                        from a total of
+                    <span id="totalResults"></span>
+                        (page <span id="currentPage"></span> of
+                    <span id="maxPage"></span>).
             </span>
                 </label>
             {{/if}}
@@ -43,8 +48,9 @@
                 {{/if}}
                 {{#if textFilter}}
                     <div class="columns small-5 medium-5 large-5 float-right">
-                        <label class="right" for="tableFilter">Filter rows: <input class="table-filter search"
-                                                                                   type="text"></label>
+                        <label class="right" for="tableFilter">
+                            Filter rows: <input class="table-filter search" type="text">
+                        </label>
                     </div>
                 {{/if}}
                 {{#if biomeFilter}}
@@ -56,6 +62,9 @@
                 {{/if}}
             </div>
         </div>
+        {{#if headerPreContent}}
+            {{{ headerPreContent }}}
+        {{/if}}
     </div>
     <div class="row columns small-12 medium-12 large-12">
         <a class="right download-link">Download results</a>

@@ -90,6 +90,11 @@ module.exports = function(data, template, entryTemplate) {
             name: 'COG',
             value: attributes.getMulti('cog')
         }, {
+            name: 'GO',
+            value: attributes.getMulti(
+                'go',
+                'https://www.ebi.ac.uk/ols/search?q=')
+        }, {
             name: 'InterPro',
             value: attributes.getMulti(
                 'interpro', 'https://www.ebi.ac.uk/interpro/entry/InterPro/')
