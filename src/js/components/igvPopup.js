@@ -84,7 +84,7 @@ module.exports = function(data, template, entryTemplate) {
         title: 'Functional annotation',
         data: [{
             name: 'E.C Number',
-            value: attributes.getMulti('ec_number', 'https://enzyme.expasy.org/EC/')
+            value: attributes.getMulti('ecnumber', 'https://enzyme.expasy.org/EC/')
         }, {
             name: 'Pfam',
             value: attributes.getMulti('pfam', 'https://pfam.xfam.org/family/')
@@ -94,7 +94,8 @@ module.exports = function(data, template, entryTemplate) {
                 'kegg', 'https://www.genome.jp/dbget-bin/www_bget?')
         }, {
             name: 'eggNOG',
-            value: attributes.get('eggnog', (d) => decodeURIComponent(d))
+            value: attributes.get('eggnog', undefined,
+                                  (d) => (_.isString(d)) ? decodeURIComponent(d).trim() : '')
         }, {
             name: 'COG',
             value: attributes.getMulti('cog')
@@ -113,7 +114,8 @@ module.exports = function(data, template, entryTemplate) {
         }, {
             name: 'Notes',
             // Notes are URL encoded during the GFF generation
-            value: attributes.getMulti('as_notes', undefined, (d) => decodeURIComponent(d))
+            value: attributes.getMulti('as_notes', undefined,
+                                       (d) => (_.isString(d)) ? decodeURIComponent(d).trim() : '')
         }, {
             name: 'Cluster',
             value: attributes.getMulti('as_gene_clusters')
