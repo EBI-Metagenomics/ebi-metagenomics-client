@@ -2,8 +2,6 @@ const _ = require('underscore');
 const $ = require('jquery');
 const igv = require('igv');
 const igvPopup = require('../components/igvPopup');
-require('style-loader!../../../static/css/genome-browser.css');
-
 
 module.exports = class GenomeBrowser {
     /**

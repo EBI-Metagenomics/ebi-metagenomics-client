@@ -20,9 +20,10 @@ const helperMethods = {
      * Get multiples values
      * @param {*} key Key.
      * @param {string} linkHref url of the external resource prefix
+     * @param {function} cb post process callback
      * @return {*} The table with the data or an empty string
      */
-    getMulti(key, linkHref) {
+    getMulti(key, linkHref, cb) {
         const val = this.get(key, '');
         if (val === '') {
             return '';
@@ -30,6 +31,9 @@ const helperMethods = {
         const data = val.split(',');
         return this.entryTemplate({
             values: data.map((d) => {
+                if (cb) {
+                    d = cb(d);
+                }
                 return {
                     name: d,
                     link: (linkHref) ? linkHref + d : ''
@@ -85,7 +89,7 @@ module.exports = function(data, template, entryTemplate) {
                 'kegg', 'https://www.genome.jp/dbget-bin/www_bget?')
         }, {
             name: 'eggNOG',
-            value: attributes.getMulti('eggnog')
+            value: attributes.get('eggnog')
         }, {
             name: 'COG',
             value: attributes.getMulti('cog')
@@ -98,6 +102,16 @@ module.exports = function(data, template, entryTemplate) {
             name: 'InterPro',
             value: attributes.getMulti(
                 'interpro', 'https://www.ebi.ac.uk/interpro/entry/InterPro/')
+        }, { // antiSMASH
+            name: 'Type',
+            value: attributes.get('as_type')
+        }, {
+            name: 'Notes',
+            // Notes are URL encoded during the GFF generation
+            value: attributes.getMulti('as_notes', undefined, (d) => decodeURIComponent(d))
+        }, {
+            name: 'Cluster',
+            value: attributes.getMulti('as_gene_clusters')
         }]
     };
 
@@ -118,12 +132,18 @@ module.exports = function(data, template, entryTemplate) {
         }]
     };
 
-    const markup = template({
+    let templateData = {
         name: attributes.get('id'),
         gene: attributes.get('gene'),
         product: attributes.get('product'),
-        properties: [functionalData, otherData]
-    });
+        properties: []
+    };
 
-    return markup;
+    if (_.findIndex(functionalData.data, (d) => d.value.length > 0) != -1) {
+        templateData.properties.push(functionalData);
+    }
+
+    templateData.properties.push(otherData);
+
+    return template(templateData);
 };

@@ -1682,7 +1682,8 @@ const ContigsViewTab = Backbone.View.extend({
                     ['InterPro', 'InterPro']
                 ]
             }],
-            showLegend: true
+            showLegend: true,
+            legendParent: '#genome-browser'
         };
         if (antiSMASH) {
             options.tracks.push({
@@ -1693,9 +1694,9 @@ const ContigsViewTab = Backbone.View.extend({
                      this.collection.accession + '/contigs/' + contigId +
                      '/annotations?antismash=True',
                 label: 'antiSMASH',
-                colorBy: 'gene_kinds',
+                colorBy: 'as_type',
                 defaultColour: '#BEBEBE',
-                labelBy: 'gene_clusters'
+                labelBy: 'as_gene_clusters'
             });
         }
 
