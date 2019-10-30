@@ -5,13 +5,18 @@ const helperMethods = {
      * Get a key from the attributes
      * @param {*} key Dict Key
      * @param {*} def default value
+     * @param {function} cb transformation callback
      * @return {*} the value or default
      */
-    get(key, def) {
+    get(key, def, cb) {
         def = def || '';
         if (_.has(this, key)) {
             // eslint-disable-next-line security/detect-object-injection
-            return this[key];
+            let d = this[key];
+            if (cb) {
+                d = cb(d);
+            }
+            return d;
         } else {
             return def;
         }
@@ -89,7 +94,7 @@ module.exports = function(data, template, entryTemplate) {
                 'kegg', 'https://www.genome.jp/dbget-bin/www_bget?')
         }, {
             name: 'eggNOG',
-            value: attributes.get('eggnog')
+            value: attributes.get('eggnog', (d) => decodeURIComponent(d))
         }, {
             name: 'COG',
             value: attributes.getMulti('cog')
