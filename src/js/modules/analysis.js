@@ -318,7 +318,7 @@ const FunctionalTabView = Backbone.View.extend({
             route: 'functional/go'
         });
 
-        if (this.pipelineVersion === '5.0') {
+        if (this.pipelineVersion >= 5) {
             this.registerTab({
                 tabId: 'pfam',
                 tab: new PfamTabView(this.analysisID),
