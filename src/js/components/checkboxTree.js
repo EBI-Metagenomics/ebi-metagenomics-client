@@ -27,7 +27,7 @@ module.exports = function CheckboxTree() {
         $checkbox.click(function(e) {
             setChildrenCheckboxes($checkbox);
             setParentCheckboxStatus($checkbox);
-            if (e.originalEvent.isTrusted) {
+            if (e.originalEvent && e.originalEvent.isTrusted) {
                 propagateToFacets($(this).attr('name'), $(this).val(), $(this).is(':checked'));
             }
 

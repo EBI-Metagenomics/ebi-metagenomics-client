@@ -9,7 +9,6 @@ module.exports = class GenomeBrowser {
      * @param {object} config Configuration settings.
      */
     constructor(containerId, config) {
-        const that = this;
         const $container = $('#' + containerId);
         $container.empty();
 
@@ -53,7 +52,7 @@ module.exports = class GenomeBrowser {
         igv.createBrowser(document.getElementById(browserDivId), options).then((browser) => {
             $('.loading-gif-large').hide();
             browser.on('trackclick', (ignored, data) => {
-                return igvPopup(data, that.$igvPopoverTpl, that.$igvPopoverEntryTpl);
+                return igvPopup(data);
             });
         });
     }
