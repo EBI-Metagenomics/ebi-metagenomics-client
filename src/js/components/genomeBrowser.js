@@ -25,16 +25,14 @@ module.exports = class GenomeBrowser {
             showAllChromosomes: true,
             reference: {
                 fastaURL: config['fasta_url'],
-                indexURL: config['fasta_index_url'],
-                index: true
+                indexURL: config['fasta_index_url']
             },
             tracks: [{
                 type: 'mgnify-annotation',
                 name: config['name'],
                 url: config['gff_url'],
                 format: 'gff3',
-                displayMode: 'EXPANDED'
-            }, {
+                displayMode: 'EXPANDED',
                 colorAttributes: [
                     ['Default', ''],
                     ['COG', 'COG'],
