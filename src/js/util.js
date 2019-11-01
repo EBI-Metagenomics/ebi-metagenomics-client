@@ -594,7 +594,7 @@ export const AnalysesView = GenericTableView.extend({
                 attr.analysis_accession +
                 '</a>';
             const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
-                attr.pipeline_version +
+                attr.pipeline_version.toString() +
                 '</a>';
             return [
                 biome, sampleLink, attr['sample_desc'],

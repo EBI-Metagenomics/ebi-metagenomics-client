@@ -52,14 +52,10 @@ const AnalysisView = Backbone.View.extend({
             success() {
                 that.$el.append(that.template(that.model.toJSON()));
 
-                // FIXME: hook directly on the mixin
+                // TODO: hook directly on the mixin
                 that.hookTabs('#analysis-tabs');
 
-                const attr = that.model.attributes;
-
-                // FIXME: the pipeline version should be a float not a string
-
-                if (attr.experiment_type === 'assembly') {
+                if (that.model.get('experiment_type') === 'assembly') {
                     $('#assembly-text-warning').removeClass('hidden');
                 }
 
@@ -67,7 +63,7 @@ const AnalysisView = Backbone.View.extend({
                 // -- Common tabs --//
                 that.registerTab({
                     tabId: 'overview',
-                    tab: new OverviewTabView(attr),
+                    tab: new OverviewTabView(that.model.attributes),
                     route: 'overview' // => default route
                 });
 
@@ -86,7 +82,7 @@ const AnalysisView = Backbone.View.extend({
                 });
 
                 const downloadModel = new api.AnalysisDownloads();
-                downloadModel.load(attr.included);
+                downloadModel.load(that.model.get('included'));
 
                 that.registerTab({
                     tabId: 'download',
@@ -112,11 +108,11 @@ const AnalysisView = Backbone.View.extend({
                 // -- Annotation tabs --//
                 const annotTabsOpts = {
                     analysisID: analysisID,
-                    pipelineVersion: attr.pipeline_version,
+                    pipelineVersion: that.model.get('pipeline_version'),
                     router: that.router
                 };
 
-                if (attr.experiment_type !== 'amplicon') {
+                if (that.model.get('experiment_type') !== 'amplicon') {
                     that.registerTab({
                         tabId: 'functional',
                         tab: new FunctionalTabView(annotTabsOpts),
@@ -132,7 +128,8 @@ const AnalysisView = Backbone.View.extend({
                     that.removeTab('functional');
                 }
 
-                if (attr.experiment_type === 'assembly' && attr.pipeline_version === '5.0') {
+                if (that.model.get('experiment_type') === 'assembly' &&
+                    that.model.get('pipeline_version') >= 5.0) {
                     that.registerTab({
                         tabId: 'path-systems',
                         tab: new PathSystemsTabView(annotTabsOpts),
@@ -154,6 +151,7 @@ const AnalysisView = Backbone.View.extend({
                     that.removeTab('path-systems');
                     that.removeTab('contigs-viewer');
                 }
+
                 that.$loadingSpinner.hide();
                 if (!Backbone.history.start({root: window.location.pathname})) {
                     that.router.navigate('/overview', {trigger: true});
@@ -244,7 +242,7 @@ const QCTabView = Backbone.View.extend({
     el: '#qc',
     initialize(analysis) {
         this.analysisID = analysis.get('id');
-        this.pipelineVersion = parseFloat(analysis.get('pipeline_version'));
+        this.pipelineVersion = analysis.get('pipeline_version');
         this.experimentType = analysis.get('experiment_type');
         this.analysisModel = analysis;
     },
@@ -1042,10 +1040,15 @@ const TaxonomyTabView = Backbone.View.extend({
                     that.$('#itsUNITE').trigger('click');
                 }
             }, error(ignored, response) {
-                util.displayError(
-                    response.status,
-                    'Could not retrieve taxonomic analysis for: ' + analysisID,
-                    that.el);
+                if (response.status === 404) {
+                    that.$el.append('<div>There are no taxonomic results for : ' +
+                                    analysisID + '</div>');
+                } else {
+                    util.displayError(
+                        response.status,
+                        'Could not retrieve taxonomic analysis for: ' + analysisID,
+                        that.el);
+                }
             }
         });
         return this;
@@ -1070,7 +1073,7 @@ const TaxonomyTabView = Backbone.View.extend({
         let promises = [];
 
         // ITS doesn't load Domain pie or charts
-        if (_.indexOf(['/', '/ssu', '/lsu'], category) > -1) {
+        if (_.indexOf(['', '/ssu', '/lsu'], category) > -1) {
             const domainPie = new charts.TaxonomyPie('domain-composition-pie',
                 {accession: analysisID, type: category},
                 {title: 'Domain composition', seriesName: 'reads', subtitle: false}
@@ -1241,7 +1244,7 @@ const TaxonomyTabView = Backbone.View.extend({
         const $columnDomainContainer = $domainColumn.parent();
         const $columnPhylumContainer = $phylumColumn.parent();
 
-        if (_.indexOf(['/', '/ssu', '/lsu'], category) > -1) {
+        if (_.indexOf(['', '/ssu', '/lsu'], category) > -1) {
             if (!$piePhylumContainer.hasClass('medium-8 larger-8')) {
                 $piePhylumContainer.addClass('medium-8 larger-8');
             }
@@ -1402,9 +1405,6 @@ const ContigsViewTab = Backbone.View.extend({
         this.$igvDiv = this.$('#genome-browser');
         this.$gbLoading = this.$('#gb-loading');
         this.$tblLoading = this.$('#table-loading');
-        /* IGV Popup templates */
-        this.$igvPopoverTpl = _.template($('#igv-popover-template').html());
-        this.$igvPopoverEntryTpl = _.template($('#igv-popover-entry').html());
         /* Slider */
         this.$maxLen = this.$('#max-length');
         this.$minLen = this.$('#min-length');
@@ -1709,7 +1709,7 @@ const ContigsViewTab = Backbone.View.extend({
         const igvPromise = igv.createBrowser(this.$igvDiv, options);
         igvPromise.then((browser) => {
             browser.on('trackclick', (ignored, data) => {
-                return igvPopup(data, that.$igvPopoverTpl, that.$igvPopoverEntryTpl);
+                return igvPopup(data);
             });
             that.igvBrowser = browser;
             that.$gbLoading.hide();

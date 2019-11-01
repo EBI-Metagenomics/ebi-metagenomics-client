@@ -91,130 +91,54 @@
         </div>
 
         <script id="downloadsTmpl" type="text/template">
-        <% for (let groupName of ['Genome analysis', 'Pan-genome analysis']) { %>
-            <% if (groupName in genomeFiles){ %>
-                <div class="row columns">
-                    <h3><%= groupName %></h3>
-                        <div class="row columns">
-                            <table class="genome-downloads-table">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Compression</th>
-                                    <th>Format</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <% for (let entry of genomeFiles[groupName]) { %>
+            <% for (let groupName of ['Genome analysis', 'Pan-genome analysis']) { %>
+                <% if (groupName in genomeFiles){ %>
+                    <div class="row columns">
+                        <h3><%= groupName %></h3>
+                            <div class="row columns">
+                                <table class="genome-downloads-table">
+                                    <thead>
                                     <tr>
-                                    <td><%= entry.attributes.description.description %></td>
-                                    <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].compExtension
-                                        :
-                                        '-' %>
-                                    </td>
-                                    <td><%= entry.attributes['file-format'].name %></td>
-                                    <td><% if (entry.attributes.links.length===1){ %>
-                                        <div class="download-part">
-                                            <a href="<%= entry.attributes.links[0] %>"><span class="icon  icon-functional"
-                                                                                            data-icon="="></span>
-                                            </a>
-                                        </div>
-                                        <% } else { %>
-                                            <% _.each(entry.attributes.links, function(link, i){ %>
+                                        <th>Name</th>
+                                        <th>Compression</th>
+                                        <th>Format</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% for (let entry of genomeFiles[groupName]) { %>
+                                        <tr>
+                                        <td><%= entry.attributes.description.description %></td>
+                                        <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].compExtension
+                                            :
+                                            '-' %>
+                                        </td>
+                                        <td><%= entry.attributes['file-format'].name %></td>
+                                        <td><% if (entry.attributes.links.length===1){ %>
                                             <div class="download-part">
-                                                <a href="<%= link %>">Part <%= (i+1) %><span class="icon  icon-functional"
-                                                                                            data-icon="="></span>
+                                                <a href="<%= entry.attributes.links[0] %>"><span class="icon  icon-functional"
+                                                                                                data-icon="="></span>
                                                 </a>
                                             </div>
-                                            <% }) %>
-                                        <% } %>
-                                    </td>
-                                </tr>
-                                <% } %>
-                                </tbody>
-                            </table>
+                                            <% } else { %>
+                                                <% _.each(entry.attributes.links, function(link, i){ %>
+                                                <div class="download-part">
+                                                    <a href="<%= link %>">Part <%= (i+1) %><span class="icon  icon-functional"
+                                                                                                data-icon="="></span>
+                                                    </a>
+                                                </div>
+                                                <% }) %>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                    </tbody>
+                                </table>
+                        </div>
                     </div>
-                </div>
+                <% } %>
+                <br>
             <% } %>
-            <br>
-        <% } %>
-        </script>
-        <!-- IGV Popover templates -->
-        <script id="igv-popover-entry" type="text/template">
-            <% if (values.length > 0) { %>
-                <ul class="igv-popover-table-list">
-                    <% _.each(values, function(d) { %>
-                        <li>
-                            <% if (d.link) { %>
-                            <a href="<% print(d.link) %>" target="_blank"><% print(d.name) %></a>
-                            <% } else {%>
-                                <% print(d.name) %>
-                            <% } %>
-                        </li>
-                    <% }); %>
-                </ul>
-            <% } %>
-        </script>
-        <script id="igv-popover-template" type="text/template">
-            <table class="stack hover igv-popover-table">
-                <caption class="igv-popover-section-header">
-                    Feature
-                </caption>
-                <tbody>
-                    <%if (name) { %>
-                        <tr>
-                            <td class="igv-popover-table-td-name">
-                                ID
-                            </td>
-                            <td>
-                                <% print(name) %>
-                            </td>
-                        </tr>
-                    <% } %>
-                    <%if (gene) { %>
-                        <tr>
-                            <td class="igv-popover-table-td-name">
-                                Gene
-                            </td>
-                            <td>
-                                <em><% print(gene) %></em>
-                            </td>
-                        </tr>
-                    <% } %>
-                    <%if (product) { %>
-                        <tr>
-                            <td class="igv-popover-table-td-name">
-                                Product
-                            </td>                            
-                            <td>
-                                <% print(product) %>
-                            </td>
-                        </tr>
-                    <% } %>
-                </tbody>
-            </table>
-            <% _.each(properties, (prop) => { %>
-                <table class="stack hover igv-popover-table">
-                    <caption class="igv-popover-section-header">
-                        <% print(prop.title) %>
-                    </caption>
-                    <tbody>
-                    <% _.each(prop.data, (data) => { %>
-                        <% if (data.value && data.value !== '') { %>
-                            <tr>
-                                <td class="igv-popover-table-td-name">
-                                    <% print(data.name) %>
-                                </td>
-                                <td>
-                                    <% print(data.value) %>
-                                </td>
-                            </tr>
-                        <% } %>
-                    <% }) %>
-                    </tbody>
-                </table>
-            <% }) %>
         </script>
     </div>
 

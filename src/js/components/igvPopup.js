@@ -1,4 +1,6 @@
 const _ = require('underscore');
+const igvPopoverTpl = require('../../partials/igvPopover.handlebars');
+const igvPopoverEntryTpl = require('../../partials/igvPopoverEntry.handlebars');
 
 const helperMethods = {
     /**
@@ -34,7 +36,7 @@ const helperMethods = {
             return '';
         }
         const data = val.split(',');
-        return this.entryTemplate({
+        return igvPopoverEntryTpl({
             values: data.map((d) => {
                 if (cb) {
                     d = cb(d);
@@ -60,7 +62,21 @@ const helperMethods = {
     }
 };
 
-module.exports = function(data, template, entryTemplate) {
+const antiSMASHLabels = {
+    'biosynthetic': 'Core biosynthetic gene',
+    'biosynthetic-additional': 'Additional biosynthetic gene',
+    'regulatory': 'Regulatory genes',
+    'transport': 'Transport-related gene',
+    'resistance': 'Resistance genes'
+};
+
+/**
+ * Build the HTML for the IGV Pop Over.
+ * The information about a feature when it's clicked on.
+ * @param {Object} data the feature information provided by IGV
+ * @return {HTML} the rendered pop over
+ */
+module.exports = function(data) {
     if (!data || !data.length) {
         return false;
     }
@@ -78,7 +94,7 @@ module.exports = function(data, template, entryTemplate) {
         return memo;
     }, {});
 
-    attributes = _.extend(attributes, helperMethods, {entryTemplate: entryTemplate});
+    attributes = _.extend(attributes, helperMethods);
 
     const functionalData = {
         title: 'Functional annotation',
@@ -109,8 +125,10 @@ module.exports = function(data, template, entryTemplate) {
             value: attributes.getMulti(
                 'interpro', 'https://www.ebi.ac.uk/interpro/entry/InterPro/')
         }, { // antiSMASH
-            name: 'Type',
-            value: attributes.get('as_type')
+            name: 'Gene type',
+            value: attributes.get('as_type', undefined,
+                                  // eslint-disable-next-line security/detect-object-injection
+                                  (d) => antiSMASHLabels[d] || d)
         }, {
             name: 'Notes',
             // Notes are URL encoded during the GFF generation
@@ -152,5 +170,5 @@ module.exports = function(data, template, entryTemplate) {
 
     templateData.properties.push(otherData);
 
-    return template(templateData);
+    return igvPopoverTpl(templateData);
 };

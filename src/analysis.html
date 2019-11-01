@@ -29,7 +29,7 @@
                     <fieldset class="taxonomy-select-fieldset">
                         <legend>rRNA</legend>
 
-                        <input type="radio" <%= (!enableSSU) ? "disabled" : "" %> class="tax-select-button" value="<%= (isV2) ? '/' : '/ssu'%>" data-cy='ssu-btn' id="smallrRNA" name="tax-results">
+                        <input type="radio" <%= (!enableSSU) ? "disabled" : "" %> class="tax-select-button" value="<%= (isV2) ? '' : '/ssu'%>" data-cy='ssu-btn' id="smallrRNA" name="tax-results">
                         <label for="smallrRNA" <%= (!enableSSU) ? 'class="disabled"' : '' %>>small subunit rRNA</label>
 
                         <input type="radio" <%= (!enableLSU) ? "disabled" : "" %> class="tax-select-button" value="/lsu" data-cy='lsu-btn' id="largerRNA" name="tax-results">
@@ -191,8 +191,20 @@
     <script id="functionalTmpl" type="text/template">
         <div class="row column">
             <p>
+            <% if (pipelineVersion >= 5) { %>
                 These charts present the functional analysis outputs of our pipeline, which focus on 
                 <a href="http://www.ebi.ac.uk/interpro" title="InterPro website" class="ext">InterPro</a>, <a href="https://pfam.xfam.org/" title="Pfam database webpage" class="ext">Pfam</a>, <a href="https://www.genome.jp/kegg/ko.html" title="KEGG orthologue (KO) webpage" class="ext">KEGG orthologue</a> and <a href="https://www.uniprot.org/help/gene_ontology" title="Gene Ontology webpage" class="ext">GO</a> term annotations. These summarise the functional content of the sequences in the sample. The full set of results files can be found under the "Download" tab.
+            <% } else { %>
+                These charts present the functional analysis of our pipeline, which focuses
+                on matches to the <a
+                        href="http://www.ebi.ac.uk/interpro" title="InterPro website"
+                        class="ext">InterPro
+                    database</a> and <a
+                        href="https://www.uniprot.org/help/gene_ontology" title="Gene Ontology webpage"
+                        class="ext">GO</a> terms. These
+                summarise the functional content of the sequences in the
+                sample. The full set of results files may be found under the "Download" tab.                
+            <% } %>
             </p>
         </div>
 
@@ -203,7 +215,7 @@
             <li class="tabs-title">
                 <a data-tab-id="go" href="#functional/go">GO Terms</a>
             </li>
-            <% if (pipelineVersion === '5.0') { %>
+            <% if (pipelineVersion >= 5) { %>
                 <li class="tabs-title">
                     <a data-tab-id="pfam" href="#functional/pfam">Pfam</a>
                 </li>
@@ -280,7 +292,7 @@
                     </div>
                 </div>
             </div>
-            <% if (pipelineVersion === '5.0') { %>            
+            <% if (pipelineVersion >= 5) { %>            
                 <div id="pfam" class="tabs-panel">
                     <!-- Pfam -->
                     <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">                    
@@ -589,92 +601,10 @@
                 </div>
             </div>
         </section>
-    </script>
-
-    <!-- IGV Popover templates -->
-    <script id="igv-popover-entry" type="text/template">
-        <% if (values.length > 0) { %>
-            <ul class="igv-popover-table-list">
-                <% _.each(values, function(d) { %>
-                    <li>
-                        <% if (d.link) { %>
-                            <a href="<% print(d.link) %>" target="_blank"><% print(d.name) %></a>
-                        <% } else { %>
-                            <% print(d.name) %>
-                        <% } %>
-                    </li>
-                <% }); %>
-            </ul>
-        <% } %>
-    </script>
-    <script id="igv-popover-template" type="text/template">
-        <table class="stack hover igv-popover-table">
-            <caption class="igv-popover-section-header">
-                Feature
-            </caption>
-            <tbody>
-                <%if (name) { %>
-                    <tr>
-                        <td class="igv-popover-table-td-name">
-                            ID
-                        </td>
-                        <td>
-                            <% print(name) %>
-                        </td>
-                    </tr>
-                <% } %>
-                <%if (gene) { %>
-                    <tr>
-                        <td class="igv-popover-table-td-name">
-                            Gene
-                        </td>
-                        <td>
-                            <em><% print(gene) %></em>
-                        </td>
-                    </tr>
-                <% } %>
-                <%if (product) { %>
-                    <tr>
-                        <td class="igv-popover-table-td-name">
-                            Product
-                        </td>                            
-                        <td>
-                            <% print(product) %>
-                        </td>
-                    </tr>
-                <% } %>
-            </tbody>
-        </table>
-        <% _.each(properties, (prop) => { %>
-            <% if (prop.data && prop.data.length > 0) { %>
-                <table class="stack hover igv-popover-table">
-                    <caption class="igv-popover-section-header">
-                        <% print(prop.title) %>
-                    </caption>
-                    <tbody>
-                    <% _.each(prop.data, (data) => { %>
-                        <% if (data.value && data.value !== '') { %>
-                            <tr>
-                                <td class="igv-popover-table-td-name">
-                                    <% print(data.name) %>
-                                </td>
-                                <td>
-                                    <% print(data.value) %>
-                                </td>
-                            </tr>
-                        <% } %>
-                    <% }) %>
-                    </tbody>
-                </table>
-            <% } %>
-        <% }) %>
-    </script>    
-
+    </script>   
     <div id="footer">
         {{>partials/elixir}}
         {{>partials/footer}}
     </div>
-
 </body>
-
 </html>

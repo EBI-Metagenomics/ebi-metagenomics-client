@@ -1,4 +1,3 @@
-const _ = require('underscore');
 const $ = require('jquery');
 const igv = require('igv');
 const igvPopup = require('../components/igvPopup');
@@ -46,11 +45,10 @@ module.exports = class GenomeBrowser {
                     ['InterPro', 'InterPro'],
                     ['eggNOG', 'eggNOG']
                 ]
-            }]
+            }],
+            showLegend: true,
+            legendParent: '#genome-browser'
         };
-
-        this.$igvPopoverTpl = _.template($('#igv-popover-template').html());
-        this.$igvPopoverEntryTpl = _.template($('#igv-popover-entry').html());
 
         igv.createBrowser(document.getElementById(browserDivId), options).then((browser) => {
             $('.loading-gif-large').hide();
