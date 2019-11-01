@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head id="head">
     <title>MGnify &lt; EMBL-EBI</title>
     {{> partials/head this}}
@@ -9,336 +10,601 @@
     <meta name="og:description" content="View this analysis.">
     <meta name="twitter:description" content="View this analysis.">
 </head>
-<body class="level2"><!-- add any of your classes or IDs -->
-<div id="header-container">{{> partials/header this}}</div>
 
-<!-- Suggested layout containers / #content -->
-<div id="content">
-    <div id="main-content-area" class="row column small-12 medium-12 large-12" role="main">
+<body class="level2">
+    <!-- add any of your classes or IDs -->
+    <div id="header-container">{{> partials/header this}}</div>
+
+    <!-- Suggested layout containers / #content -->
+    <div id="content">
+        <div id="main-content-area" class="row column small-12 medium-12 large-12" role="main">
+            <img class="main-loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">
+        </div>
     </div>
-</div>
 
-<script id="runTmpl" type="text/template">
-    <div class="column small-12 medium-12 large-12">
-        <nav aria-label="You are here:" role="navigation">
-            <ul class="breadcrumbs columns">
-                <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
-                <% if (typeof assembly_accession === 'undefined') { %>
-                 <li><a href="<%= study_url %>">Study <%= study_accession %></a></li>
-                <% } %>
-                <li><a href="<%= sample_url %>">Sample <%= sample_accession %></a></li>
-                <% if (typeof assembly_accession !== 'undefined') { %>
-                <li><a href="<%= assembly_url %>">Assembly <%= assembly_accession %> </a></li>
-                <% } else { %>
-                <li><a href="<%= run_url %>">Run <%= run_accession %> </a></li>
-                <% } %>
-                <li>
-                    <span class="show-for-sr">Current: </span>Analysis <%= analysis_accession %>
-                </li>
-            </ul>
-        </nav>
-        <h2>Analysis <%= analysis_accession %></h2>
-        <section>
-            <h4><a href="<%= other_analyses %>">Other analyses</a>
-            </h4>
-        </section>
+    <script id="taxonomicTabTmpl" type="text/template">
+        <div class="row">
+            <% if (enableSSU || enableLSU) { %>
+                <div id="ssu-lsu-btns" class="columns small-10 medium-3 large-3">
+                    <fieldset class="taxonomy-select-fieldset">
+                        <legend>rRNA</legend>
 
-        <ul class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500" data-tabs
-            id="run-tabs">
-            <li class="tabs-title is-active"><a href="#overview" aria-selected="true">Overview</a></li>
-            <li class="tabs-title"><a href="#qc">Quality control</a></li>
-            <li class="tabs-title"><a href="#taxonomic">Taxonomic analysis</a></li>
-            <li class="tabs-title"><a href="#functional">Functional analysis</a></li>
-            <li class="tabs-title"><a href="#abundance">Abundance and comparison</a></li>
-            <li class="tabs-title"><a href="#download">Download</a></li>
-        </ul>
-        <div class="tabs-content" data-tab-content="run-tabs">
-            <div class="tabs-panel active" id="overview">
-            </div>
-            <div class="tabs-panel" id="qc">
-                <div class="row">
-                    <div class="center column small-12 medium-12 large-12">
-                        <p>The chart below shows the number of <%= experiment_type === 'assembly' ? 'contigs': 'reads' %> which pass the quality control steps
-                            in the pipeline. Paired-end sequences may have been merged, in which case
-                            the initial number of <%= experiment_type === 'assembly' ? 'contigs': 'reads' %> may differ from the number given by ENA.</p>
-                        <div id="QC-step-chart" class="run-qc-chart"></div>
-                        <% if (pipeline_version>2){ %>
-                        <p>The histograms below show the distributions of sequence lengths (left) and percentage GC
-                            content (right) for the sequences having passed quality control. Note that for
-                            large files, the distributions were compiled from a random subset of 2 million
-                            <%= experiment_type === 'assembly' ? 'contigs': 'reads' %>.
-                            The standard deviations are shown on each plot. The bar chart underneath each graph
-                            indicates
-                            the minimum, mean and maximum length and mean GC and AT content, respectively.</p>
-                        <% } %>
-                    </div>
-                </div>
-                <% if (pipeline_version>2){ %>
+                        <input type="radio" <%= (!enableSSU) ? "disabled" : "" %> class="tax-select-button" value="<%= (isV2) ? '' : '/ssu'%>" data-cy='ssu-btn' id="smallrRNA" name="tax-results">
+                        <label for="smallrRNA" <%= (!enableSSU) ? 'class="disabled"' : '' %>>small subunit rRNA</label>
 
-                <div class="row">
-                    <div class="columns small-12 medium-6 large-6">
-                        <div id='readsLengthHist' class="row columns"></div>
-                        <div id='readsLengthBarChart' class="row columns"></div>
-
-                    </div>
-                    <div class="columns small-12 medium-6 large-6">
-                        <div id='readsGCHist' class="row columns"></div>
-                        <div id='readsGCBarChart' class="row columns"></div>
-                    </div>
-                </div>
-                <div id="nucleotide-section" class="hidden">
-                    <div class="row columns">
-                        <p>The graph below show the relative abundance of nucletotides (A, C, G, T, or ambiguous base "N")
-                            at each position starting from the beginning of each <%= experiment_type === 'assembly' ? 'contig': 'read' %> up to the first 500 base pairs.</p>
-                    </div>
-                    <div id='nucleotide' class="row columns">
-                    </div>
-                </div>
-                <% } %>
-            </div>
-            <div class="tabs-panel" id="taxonomic">
-                <% if (displaySsuButtons){ %>
-                <div id="ssu-lsu-btns" class="row columns">
-                    <fieldset class="rna-select-fieldset">
-                        <legend>Select analysis</legend>
-                        <label for="smallrRNA"><input type="radio" class="rna-select-button" name="rRNA-type" value="/ssu" data-cy='ssu-btn' id="smallrRNA" checked>small subunit rRNA</label>
-                        <label for="largerRNA"><input type="radio" class="rna-select-button" name="rRNA-type" value="/lsu" data-cy='lsu-btn' id="largerRNA">large subunit rRNA</label>
+                        <input type="radio" <%= (!enableLSU) ? "disabled" : "" %> class="tax-select-button" value="/lsu" data-cy='lsu-btn' id="largerRNA" name="tax-results">
+                        <label for="largerRNA" <%= (!enableLSU) ? 'class="disabled"' : '' %>>
+                            large subunit rRNA
+                        </label>
                     </fieldset>
                 </div>
-                <% } %>
-                <div class="row columns">
-                    These are the results from the taxonomic analysis steps of our pipeline. You can switch between
-                    different views of the data using the menu of icons below (pie, bar, stacked and interactive
-                    krona charts). The data used to build these charts can be found under the "Download" tab.
+            <% } %>
+            <% if (enableITSoneDB || enableITSUnite) { %>
+                <div id="its-btns" class="columns small-5 medium-3 large-3 float-left">
+                    <fieldset class="taxonomy-select-fieldset">
+                        <legend>ITS</legend>
+
+                        <input id="itsoneDB" <%= (!enableITSoneDB) ? "disabled" : "" %> type="radio" class="tax-select-button" value="/itsonedb" data-cy='itsonedb-btn' name="tax-results">
+                        <label for="itsoneDB" <%= (!enableITSoneDB) ? 'class="disabled"' : '' %>>
+                            ITS with ITSoneDB
+                        </label>
+
+                        <input id="itsUNITE" <%= (!enableITSUnite) ? "disabled" : "" %> type="radio" class="tax-select-button" value="/unite" data-cy='itsunite-btn' name="tax-results">
+                        <label for="itsUNITE" <%= (!enableITSUnite) ? 'class="disabled"' : '' %>>
+                            ITS1/2 with UNITE
+                        </label>
+                    </fieldset>
                 </div>
-                <ul class="tabs" data-tabs id="taxonomy-tabs">
-                    <li class="tabs-title is-active">
-                        <a class="chart-icon-cont" href="#krona" aria-selected="true">
-                            <img class="chart-icon"
-                                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_krona_on.svg"/>
-                        </a>
-                    </li>
-                    <li class="tabs-title">
-                        <a class="chart-icon-cont" href="#pie" aria-selected="false">
-                            <img class="chart-icon"
-                                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_pie_on.svg"/>
-                        </a>
-                    </li>
-                    <li class="tabs-title">
-                        <a class="chart-icon-cont" href="#column" aria-selected="false">
-                            <img class="chart-icon"
-                                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_barh_on.svg"/>
-                        </a>
-                    </li>
-                    <li class="tabs-title">
-                        <a class="chart-icon-cont" href="#stacked-column" aria-selected="false">
-                            <img class="chart-icon"
-                                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_col_on.svg"/>
-                        </a>
-                    </li>
-                </ul>
-
-                <div class="tabs-content" data-tab-content="taxonomy-tabs">
-
-                    <div class="tabs-panel active" id="krona">
-                        <div id="tax-Krona">
-                            <!--<div class="msg_error" id="ie_krona">Krona chart is only working for latest versions of Internet-->
-                            <!--Explorer (IE 9+). <br/>-->
-                            <!--Please, update your browser to a more recent version - <a href="http://windows.microsoft.com/ie"-->
-                            <!--onclick="trackExternalDownload('http://windows.microsoft.com/ie')">Download-->
-                            <!--Now</a>.-->
-                        </div>
-
+            <% } %>
+        </div>
+        <div class="row columns">
+            These are the results from the taxonomic analysis steps of our pipeline. You can switch between
+            different views of the data using the menu of icons below (pie, bar, stacked and interactive
+            krona charts). The data used to build these charts can be found under the "Download" tab.
+        </div>
+        <ul id="taxonomy-tabs" class="tabs">
+            <li class="tabs-title is-active" aria-selected="true">
+                <a class="chart-icon-cont" href="#krona">
+                    <img class="chart-icon"
+                        src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_krona_on.svg"/>
+                </a>
+            </li>
+            <li class="tabs-title">
+                <a class="chart-icon-cont" href="#pie">
+                    <img class="chart-icon"
+                        src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_pie_on.svg"/>
+                </a>
+            </li>
+            <li class="tabs-title">
+                <a class="chart-icon-cont" href="#column">
+                    <img class="chart-icon"
+                        src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_barh_on.svg"/>
+                </a>
+            </li>
+            <li class="tabs-title">
+                <a class="chart-icon-cont" href="#stacked-column">
+                    <img class="chart-icon"
+                        src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_col_on.svg"/>
+                </a>
+            </li>
+        </ul>
+        <div class="loading-spinner min-height-500">
+            <img class="loading-gif-large" 
+                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"
+                 alt="Loading...">
+        </div>
+        <div class="tabs-content taxonomy-tabs-content min-height-500" data-tabs-content="taxonomy-tabs">
+            <div class="tabs-panel is-active" id="krona">
+                <div id="tax-krona">
+                    <!--<div class="msg_error" id="ie_krona">Krona chart is only working for latest versions of Internet-->
+                    <!--Explorer (IE 9+). <br/>-->
+                    <!--Please, update your browser to a more recent version - <a href="http://windows.microsoft.com/ie"-->
+                    <!--onclick="trackExternalDownload('http://windows.microsoft.com/ie')">Download-->
+                    <!--Now</a>.-->
+                </div>
+            </div>
+            <div class="tabs-panel" id="pie">
+                <div class="row taxonomy-charts">
+                    <div class="columns small-12 medium-4 larger-4">
+                        <div id="domain-composition-pie"></div>
                     </div>
-                    <div class="tabs-panel" id="pie">
-                        <div class="row">
-                            <div class="columns small-12 medium-4 larger-4">
-                                <div id="domain-composition-pie"></div>
-                            </div>
-                            <div class="columns small-12 medium-8 larger-8">
-                                <div id="phylum-composition-pie"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="columns small-12 medium-12 large-12">
-                                <div class="phylum-table"></div>
-                            </div>
-                        </div>
+                    <div class="columns small-12 medium-8 larger-8">
+                        <div id="phylum-composition-pie"></div>
                     </div>
-                    <div class="tabs-panel" id="column">
-                        <div class="row">
-                            <div class="columns small-12 medium-4 larger-4">
-                                <div id="domain-composition-column"></div>
-                            </div>
-                            <div class="columns small-12 medium-8 larger-8">
-                                <div id="phylum-composition-column"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="columns small-12 medium-12 large-12">
-                                <div class="phylum-table"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tabs-panel" id="stacked-column">
-                        <div class="row">
-                            <div class="columns small-12 medium-12 larger-12">
-                                <div id="phylum-composition-stacked-column"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="columns small-12 medium-12 large-12">
-                                <div class="phylum-table"></div>
-                            </div>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="columns small-12 medium-12 large-12">
+                        <div class="phylum-table"></div>
                     </div>
                 </div>
             </div>
-
-            <div class="tabs-panel" id="functional">
-                <div class="row column">
-                    <p>These charts present the functional analysis of our pipeline, which focuses
-                        on matches to the <a
-                                href="http://www.ebi.ac.uk/interpro" title="InterPro website"
-                                class="ext">InterPro
-                            database</a> and <a
-                                href="https://www.uniprot.org/help/gene_ontology" title="Gene Ontology webpage"
-                                class="ext">GO</a> terms. These
-                        summarise the functional content of the sequences in the
-                        sample. The full set of results files may be found under the "Download" tab.</p>
+            <div class="tabs-panel" id="column">
+                <div class="row taxonomy-charts">
+                    <div class="columns small-12 medium-4 larger-4">
+                        <div id="domain-composition-column"></div>
+                    </div>
+                    <div class="columns small-12 medium-8 larger-8">
+                        <div id="phylum-composition-column"></div>
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="columns small-12 medium-12 large-12">
+                        <div class="phylum-table"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tabs-panel" id="stacked-column">
+                <div class="row taxonomy-charts">
+                    <div class="columns small-12 medium-12 larger-12">
+                        <div id="phylum-composition-stacked-column"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="columns small-12 medium-12 large-12">
+                        <div class="phylum-table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="qcTmpl" type="text/template">
+        <div class="row">
+            <div class="center column small-12 medium-12 large-12">
+                <p>The chart below shows the number of <%= experimentType === 'assembly' ? 'contigs': 'reads' %> which pass the quality control steps
+                    in the pipeline. Paired-end sequences may have been merged, in which case
+                    the initial number of <%= experimentType === 'assembly' ? 'contigs': 'reads' %> may differ from the number given by ENA.</p>
+                <div id="qc-step-chart" class="run-qc-chart"></div>
+                <% if (pipelineVersion > 2) { %>
+                    <p>The histograms below show the distributions of sequence lengths (left) and percentage GC
+                        content (right) for the sequences having passed quality control. Note that for
+                        large files, the distributions were compiled from a random subset of 2 million
+                        <%= experimentType === 'assembly' ? 'contigs': 'reads' %>.
+                        The standard deviations are shown on each plot. The bar chart underneath each graph
+                        indicates
+                        the minimum, mean and maximum length and mean GC and AT content, respectively.</p>
+                <% } %>
+            </div>
+        </div>
+        <% if (pipelineVersion > 2) { %>
+            <div class="row">
+                <div class="columns small-12 medium-6 large-6">
+                    <div id="reads-length-hist" class="row columns"></div>
+                    <div id="reads-length-barchart" class="row columns"></div>
+                </div>
+                <div class="columns small-12 medium-6 large-6">
+                    <div id="reads-gc-hist" class="row columns"></div>
+                    <div id="reads-gc-barchart" class="row columns"></div>
+                </div>
+            </div>
+            <div id="nucleotide-section" class="hidden">
+                <div class="row columns">
+                    <p>The graph below show the relative abundance of nucletotides (A, C, G, T, or ambiguous base "N")
+                        at each position starting from the beginning of each <%= experimentType === 'assembly' ? 'contig': 'read' %> up to the first 500 base pairs.</p>
+                </div>
+                <div id='nucleotide' class="row columns">
+                </div>
+            </div>
+        <% } %>
+    </script>
+
+    <script id="functionalTmpl" type="text/template">
+        <div class="row column">
+            <p>
+            <% if (pipelineVersion >= 5) { %>
+                These charts present the functional analysis outputs of our pipeline, which focus on 
+                <a href="http://www.ebi.ac.uk/interpro" title="InterPro website" class="ext">InterPro</a>, <a href="https://pfam.xfam.org/" title="Pfam database webpage" class="ext">Pfam</a>, <a href="https://www.genome.jp/kegg/ko.html" title="KEGG orthologue (KO) webpage" class="ext">KEGG orthologue</a> and <a href="https://www.uniprot.org/help/gene_ontology" title="Gene Ontology webpage" class="ext">GO</a> term annotations. These summarise the functional content of the sequences in the sample. The full set of results files can be found under the "Download" tab.
+            <% } else { %>
+                These charts present the functional analysis of our pipeline, which focuses
+                on matches to the <a
+                        href="http://www.ebi.ac.uk/interpro" title="InterPro website"
+                        class="ext">InterPro
+                    database</a> and <a
+                        href="https://www.uniprot.org/help/gene_ontology" title="Gene Ontology webpage"
+                        class="ext">GO</a> terms. These
+                summarise the functional content of the sequences in the
+                sample. The full set of results files may be found under the "Download" tab.                
+            <% } %>
+            </p>
+        </div>
+
+        <ul id="functional-analysis-tabs" class="tabs">
+            <li class="tabs-title">
+                <a data-tab-id="interpro" href="#functional/interpro">InterPro</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tab-id="go" href="#functional/go">GO Terms</a>
+            </li>
+            <% if (pipelineVersion >= 5) { %>
+                <li class="tabs-title">
+                    <a data-tab-id="pfam" href="#functional/pfam">Pfam</a>
+                </li>
+                <li class="tabs-title">
+                    <a data-tab-id="ko" href="#functional/ko">KO</a>
+                </li>
+            <% } %>
+        </ul>
+        <div class="tabs-content" data-tabs-content="functional-analysis-tabs">
+            <div id="interpro" class="tabs-panel is-active">
+                <!-- InterPro -->
+                <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">      
+          
                 <div class="row column">
-                    <div id="SeqFeat-chart" class="run-qc-chart"></div>
+                    <div id="seqfeat-chart" class="run-qc-chart"></div>
                 </div>
                 <div class="row column">
                     <h4>InterPro match summary</h4>
                 </div>
                 <div class="row">
                     <div class="columns small-12 medium-4 large-4">
-                        <div id="InterProPie-chart"></div>
+                        <div id="interpro-pie-chart"></div>
                     </div>
                     <div class="columns small-12 medium-8 large-8">
-                        <div id="InterPro-table"></div>
+                        <div id="interpro-table"></div>
                     </div>
                 </div>
+            </div>
+            <div id="go" class="tabs-panel">
+                <!-- GO Terms -->
+                <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">
                 <div class="row column">
                     <h4>GO terms annotation</h4>
                     <p>A summary of Gene Ontology (GO) terms derived from InterPro matches to your sample is provided in
                         the charts below.</p>
-                    <p>Switch view:
-                    <ul class="tabs">
-                        <li class="tabs-title" id="go-bar-btn">
+                    <p>Switch view:</p>
+                    <ul id="go-tabs" class="tabs">
+                        <li id="go-bar-btn" class="tabs-title is-active">
                             <a class="chart-icon-cont" href="#go-slim-bar-charts" aria-selected="true">
                                 <img class="chart-icon"
-                                     src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_barh_on.svg"/>
+                                        src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_barh_on.svg"/>
                             </a>
                         </li>
-                        <li class="tabs-title" id="go-pie-btn">
+                        <li id="go-pie-btn" class="tabs-title">
                             <a class="chart-icon-cont" href="#go-slim-pie-charts" aria-selected="false">
                                 <img class="chart-icon"
-                                     src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_pie_on.svg"/>
+                                        src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ico_graph_pie_on.svg"/>
                             </a>
                         </li>
                     </ul>
-                    </p>
-                </div>
-                <div class="tabs-panel active row" id="go-slim-bar-charts">
-                    <div class="columns small-12 medium-4 large-4">
-                        <div id="biological-process-bar-chart"></div>
-                    </div>
-                    <div class="columns small-12 medium-4 large-4">
-                        <div id="molecular-function-bar-chart"></div>
-                    </div>
-                    <div class="columns small-12 medium-4 large-4">
-                        <div id="cellular-component-bar-chart"></div>
-                    </div>
-                </div>
-                <div class="tabs-panel row" id="go-slim-pie-charts">
-                    <div class="columns small-12 medium-4 large-4">
-                        <div id="biological-process-pie-chart"></div>
-                    </div>
-                    <div class="columns small-12 medium-4 large-4">
-                        <div id="molecular-function-pie-chart"></div>
-                    </div>
-                    <div class="columns small-12 medium-4 large-4">
-                        <div id="cellular-component-pie-chart"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tabs-panel" id="download">
-                <div id="download-list">
-                </div>
-            </div>
-            <div class="tabs-panel" id="abundance">
-                This page gives you information regarding metagenomic community diversity estimation and information
-                which allow comparisons between all study runs. The following plots illustrate the taxa abundance
-                distribution.
-                <div id="abundance-disp">
-                    <img id="abundance-chart" class='abundance-chart' src="">
-                </div>
-            </div>
-        </div>
-    </div>
-</script>
-
-<script id="downloadsTmpl" type="text/template">
-    <div class="row columns">
-        <div class="row columns">
-            <p>Here you can download the full set of analysis results files. Multi-part files should be concatenated after unzipping.</p>
-        </div>
-        <% _.each(groups, function(group, name){ %>
-        <h3> <%= name %></h3>
-        <div class="row columns">
-            <table class="runs-download-table">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Compression</th>
-                    <th>Format</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <% _.each(group, function(entry){ %>
-                <tr>
-                    <td><%= entry.attributes.description.label %></td>
-                    <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].compExtension
-                        :
-                        '-' %>
-                    </td>
-                    <td><%= entry.attributes['file-format'].name %></td>
-                    <td><% if (entry.attributes.links.length===1){ %>
-                        <div class="download-part">
-                            <a href="<%= entry.attributes.links[0] %>"><span class="icon  icon-functional"
-                                                                             data-icon="="></span>
-                            </a>
+                    <div class="tabs-content" data-tabs-content="go-tabs">
+                        <div id="go-slim-bar-charts" class="tabs-panel is-active row">
+                            <div class="columns small-12 medium-4 large-4">
+                                <div id="biological-process-bar-chart"></div>
+                            </div>
+                            <div class="columns small-12 medium-4 large-4">
+                                <div id="molecular-function-bar-chart"></div>
+                            </div>
+                            <div class="columns small-12 medium-4 large-4">
+                                <div id="cellular-component-bar-chart"></div>
+                            </div>
                         </div>
-                        <% } else { %>
-                        <% _.each(entry.attributes.links, function(link, i){ %>
-                        <div class="download-part">
-                            <a href="<%= link %>">Part <%= (i+1) %><span class="icon  icon-functional"
-                                                                         data-icon="="></span>
-                            </a>
+                        <div id="go-slim-pie-charts" class="tabs-panel row">
+                            <div class="columns small-12 medium-4 large-4">
+                                <div id="biological-process-pie-chart"></div>
+                            </div>
+                            <div class="columns small-12 medium-4 large-4">
+                                <div id="molecular-function-pie-chart"></div>
+                            </div>
+                            <div class="columns small-12 medium-4 large-4">
+                                <div id="cellular-component-pie-chart"></div>
+                            </div>
                         </div>
-                        <% }) %>
-                        <% } %>
-
-                    </td>
-                </tr>
-                <% }); %>
-                </tbody>
-            </table>
+                    </div>
+                </div>
+            </div>
+            <% if (pipelineVersion >= 5) { %>            
+                <div id="pfam" class="tabs-panel">
+                    <!-- Pfam -->
+                    <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">                    
+                    <div id="pfam-chart"></div>
+                    <div id="pfam-table"></div>    
+                </div>
+                <div id="ko" class="tabs-panel">
+                    <!-- KEGG Ortholog -->
+                    <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">                    
+                    <div id="ko-chart"></div>
+                    <div id="ko-table"></div>    
+                </div>
+            <% } %>
         </div>
-        <% }); %>
+    </script>
+
+    <script id="pathSystemsTmpl" type="text/template">
+        <div class="row column">
+            <p>
+                These are the results from the biochemical pathways and systems predictions steps of our pipeline. These summarise the <a href="https://www.genome.jp/kegg/module.html" alt="KEGG Module webpage" class="ext">KEGG Module</a>, <a href="https://www.ebi.ac.uk/interpro/genomeproperties/" alt="Genome Properties webpage" class="ext">Genome Properties</a> and <a href="https://antismash.secondarymetabolites.org" alt="antiSMASH webpage" class="ext">antiSMASH</a> annotations in this assembly. The full set of results files may be found under the "Download" tab.
+            </p>
+        </div>
+
+        <ul id="path-systems-tabs" class="tabs">
+            <li class="tabs-title">
+                <a data-tab-id='kegg-modules' href="#kegg-modules">KEGG Module</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tab-id='genome-properties' href="#genome-properties">Genome properties</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tab-id='antismash' href="#antismash">antiSMASH</a>
+            </li>    
+        </ul>
+        <div class="tabs-content" data-tabs-content="path-systems-tabs">
+            <div id="kegg-modules" class="tabs-panel">
+                <!-- KEGG Modules -->
+                <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">                
+                <div id="kegg-module-chart"></div>
+                <div id="kegg-module-table"></div>
+            </div>
+            <div id="genome-properties" class="tabs-panel">
+                <!-- Genomes Properties -->
+                <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">
+                <button id='gp-expand-all' class="button">Expand all</button> 
+                <button id='gp-collapse-all' class="button">Collapse all</button>
+                <div id="gp-tree-container"></div>
+            </div>
+            <div id="antismash" class="tabs-panel">
+                <!-- antiSMASH -->
+                <img class="loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">                
+                <div id="antismash-gene-clusters-chart"></div>
+                <div id="antismash-gene-clusters-table"></div>    
+            </div>
+        </div>
+    </script>
+
+    <script id="analysisTmpl" type="text/template">
+        <div class="column small-12 medium-12 large-12">
+            <nav aria-label="You are here:" role="navigation">
+                <ul class="breadcrumbs columns">
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
+                    <% if (typeof assembly_accession === 'undefined') { %>
+                        <li>
+                            <a href="<%= study_url %>">Study <%= study_accession %></a>
+                        </li>
+                    <% } %>
+                        <li>
+                            <a href="<%= sample_url %>">Sample <%= sample_accession %></a>
+                        </li>
+                    <% if (typeof assembly_accession !== 'undefined') { %>
+                        <li>
+                            <a href="<%= assembly_url %>">Assembly <%= assembly_accession %></a>
+                        </li>
+                    <% } else { %>
+                        <li>
+                            <a href="<%= run_url %>">Run <%= run_accession %></a>
+                        </li>
+                    <% } %>
+                    <li>
+                        <span class="show-for-sr">Current: </span>Analysis <%= analysis_accession %>
+                    </li>
+                </ul>
+            </nav>
+            <h2>Analysis <%= analysis_accession %></h2>
+            <section>
+                <h4>
+                <% if (experiment_type === 'assembly') { %>
+                    <a href="<%= assembly_url %>">Other analyses</a>
+                <% } else { %>
+                    <a href="<%= run_url %>">Other analyses</a>
+                <% } %>
+                </h4>
+            </section>
+            <ul id="analysis-tabs" class="tabs">
+                <li class="tabs-title">
+                    <a data-tab-id="overview" href="#overview">Overview</a>
+                </li>
+                <li class="tabs-title">
+                    <a data-tab-id="qc" href="#qc">Quality control</a>
+                </li>
+                <li class="tabs-title">
+                    <a data-tab-id="taxonomic" href="#taxonomic">Taxonomic analysis</a>
+                </li>
+                <li class="tabs-title">
+                    <a data-tab-id="functional" href="#functional">Functional analysis</a>
+                </li>
+                <li class="tabs-title">
+                    <a data-tab-id="abundance" href="#abundance">Abundance and comparison</a>
+                </li>
+                <li class="tabs-title">
+                    <a data-tab-id="path-systems" href="#path-systems">Pathways/Systems</a>
+                </li>
+                <li class="tabs-title">
+                    <a data-tab-id="contigs-viewer" href="#contigs-viewer">Contig Viewer</a>
+                </li>
+                <li class="tabs-title">
+                    <a data-tab-id="download" href="#download">Download</a>
+                </li>
+            </ul>
+            <div class="tabs-content" data-tabs-content="analysis-tabs">
+                <div class="tabs-panel" id="overview">
+                    <!-- OverviewTab -->
+                </div>
+                <div class="tabs-panel" id="qc">
+                    <!-- QCViewTab -->
+                </div>
+                <div class="tabs-panel" id="taxonomic">
+                    <!-- TaxonomyViewTab -->
+                </div>
+                <div class="tabs-panel" id="functional">
+                    <!-- FunctionalViewTab -->
+                </div>
+                <div class="tabs-panel" id="abundance">
+                    This page gives you information regarding metagenomic community diversity estimation and information
+                    which allow comparisons between all study runs. The following plots illustrate the taxa abundance
+                    distribution.
+                    <div id="abundance-disp">
+                        <img id="abundance-chart" class='abundance-chart' src="">
+                    </div>
+                </div>
+                <div class="tabs-panel" id="path-systems">
+                    <!-- PathSystemsTabView -->
+                </div>
+                <div class="tabs-panel" id="contigs-viewer">
+                    <!-- Contigs Viewer -->
+                </div>
+                <div class="tabs-panel" id="download">
+                    <!-- DownloadViewTab -->
+                </div>                
+            </div>
+        </div>
+    </script>
+
+    <script id="downloadsTmpl" type="text/template">
+        <div class="row columns">
+            <div class="row columns">
+                <p>Here you can download the full set of analysis results files. Multi-part files should be concatenated after unzipping.</p>
+            </div>
+            <% _.each(groups, function(group, name) { %>
+                <h3><%= name %></h3>
+                <div class="row columns">
+                    <table class="runs-download-table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Compression</th>
+                            <th>Format</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% _.each(group, function(entry) { %>
+                        <tr>
+                            <td><%= entry.attributes.description.label %></td>
+                            <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].compExtension
+                                :
+                                '-' %>
+                            </td>
+                            <td><%= entry.attributes['file-format'].name %></td>
+                            <td><% if (entry.attributes.links.length===1) { %>
+                                <div class="download-part">
+                                    <a href="<%= entry.attributes.links[0] %>"><span class="icon icon-functional"
+                                                                                    data-icon="="></span>
+                                    </a>
+                                </div>
+                                <% } else { %>
+                                    <% _.each(entry.attributes.links, function(link, i){ %>
+                                    <div class="download-part">
+                                        <a href="<%= link %>">Part <%= (i+1) %><span class="icon icon-functional"
+                                                                                    data-icon="="></span>
+                                        </a>
+                                    </div>
+                                    <% }) %>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% }); %>
+        </div>
+    </script>
+
+    <script id="contigsViewerTmpl" type="text/template">
+        <section class="row">
+            <div class="columns">
+                <h4>
+                    <a href="#genome-browser" class="" for="genome-browser">Contig Browser</a>
+                    <img id="gb-loading" class="loading-gif-medium" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+                </h4>
+            </div>
+            <div id="genome-browser" class="columns" style="min-height: 250px; position: relative;">
+            </div>
+        </section>
+        <section id="contigs-containter" class="row">
+            <div class="columns">
+                <h4>
+                    <a href="#contigs-table" class="" for="contigs-table">Assembly contigs</a>
+                    <img id="table-loading" class="loading-gif-medium" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+                </h4>
+            </div>
+            <div class="columns small-3 medium-3 large-3 contig-viewer-filters">
+                <div class="row columns">
+                    <h5>Contig length (bp)</h5>
+                    <div class="row columns slider-group">
+                        <div class="slider"></div>
+                        <div class="row">
+                            <div class="columns small-6">
+                                <input id="min-length" class="left slider-input" type="number">
+                            </div>
+                            <div class="columns small-6">
+                                <input id="max-length" class="right slider-input" type="number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row columns">
+                    <h5>
+                        COG Category
+                    </h5>
+                    <input type="text" id="cog-filter" minlength="1" maxlength="1" name="cog-filter" value="" placeholder="C">
+                </div>
+                <div class="row columns">
+                    <h5>
+                    KEGG ortholog
+                    </h5>
+                    <input type="text" id="kegg-filter" minlength="4" name="kegg-filter" value="" placeholder="K00161">
+                </div>
+                <div class="row columns">
+                    <h5>
+                        GO
+                    </h5>
+                    <input type="text" id="go-filter" minlength="5" name="go-filter" value="" placeholder="GO:1901575">
+                </div>                
+                <div class="row columns">
+                    <h5>
+                        Pfam
+                    </h5>
+                    <input type="text" id="pfam-filter" minlength="4" name="pfam-filter" value="" placeholder="PF02086">
+                </div>
+                <div class="row columns">
+                    <h5>
+                        InterPro
+                    </h5>
+                    <input type="text" id="interpro-filter" minlength="5" name="interpro-filter" value="" placeholder="IPR015200">
+                </div>
+                <div class="row columns">
+                    <h5>
+                        antiSMASH
+                    </h5>
+                    <input type="text" id="antismash-filter" minlength="3" name="antismash-filter" value="" placeholder="terpene">
+                </div>
+                <h5 class="row columns">
+                    Show contigs with:
+                </h5>
+                <div class="row columns">
+                    <input type="checkbox" id="facet-cog" data-name="cog" class="facet" checked>
+                    <label for="facet-cog">COG</label>
+                </div>
+                <div class="row columns">
+                    <input type="checkbox" id="facet-kegg" data-name="kegg" class="facet" checked>
+                    <label for="facet-kegg">KEGG ortholog</label>
+                </div>
+                <div class="row columns">
+                    <input type="checkbox" id="facet-go" data-name="go" class="facet" checked>
+                    <label for="facet-go">GO</label>
+                </div>
+                <div class="row columns">
+                    <input type="checkbox" id="facet-pfam" data-name="pfam" class="facet" checked>
+                    <label for="facet-pfam">Pfam</label>
+                </div>
+                <div class="row columns">
+                    <input type="checkbox" id="facet-interpro" data-name="interpro" class="facet" checked>
+                    <label for="facet-interpro">InterPro</label>
+                </div>
+                <div class="row columns">
+                    <input type="checkbox" id="facet-antismash" data-name="antismash" class="facet" checked>
+                    <label for="facet-antismash">antiSMASH</label>
+                </div>
+            </div>
+            <div class="columns small-9 medium-9 large-9">
+                <div id="contigs-table">
+                    <!-- Table containter -->
+                </div>
+            </div>
+        </section>
+    </script>   
+    <div id="footer">
+        {{>partials/elixir}}
+        {{>partials/footer}}
     </div>
-</script>
-
-<div id="footer">
-    {{>partials/elixir}}
-    {{>partials/footer}}
-</div>
-
 </body>
-
 </html>

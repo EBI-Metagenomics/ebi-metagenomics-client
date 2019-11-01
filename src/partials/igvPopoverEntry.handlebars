@@ -1,0 +1,13 @@
+{{#if values.length }}
+    <ul class="igv-popover-table-list">
+        {{#each values}}
+            <li>
+                {{#if this.link }}
+                    <a href="{{ this.link }}" target="_blank">{{ this.name }}</a>
+                {{else}}
+                    {{ this.name }}
+                {{/if}}
+            </li>
+        {{/each}}
+    </ul>
+{{/if}}

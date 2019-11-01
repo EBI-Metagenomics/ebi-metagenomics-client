@@ -1,0 +1,42 @@
+{
+    "accession": "MGYG-HGUT-00279", 
+    "completeness": 99.85, 
+    "contamination": 0.0, 
+    "eggnog_coverage": 92.01, 
+    "gc_content": 38.75, 
+    "genome_set": "CGR", 
+    "geographic_origin": "Asia", 
+    "gold_biome": "root:Host-Associated:Human:Digestive System:Large intestine", 
+    "ipr_coverage": 89.44, 
+    "length": 2005377, 
+    "n_50": 28599, 
+    "nc_rnas": 200, 
+    "ncbi_genome_accession": "GCA_003463825", 
+    "ncbi_sample_accession": "SAMN09736631", 
+    "ncbi_study_accession": "PRJNA482748",
+    "ena_study_accession": "ERP000000",
+    "ena_sample_accession": "ERS000000",
+    "ena_genome_accession": "ERZ00000",
+    "patric_genome_accession": "PATRIC_00000",
+    "num_contigs": 125, 
+    "num_proteins": 1941, 
+    "pangenome": {
+        "geographic_range": [
+            "North America", 
+            "Asia"
+        ], 
+        "num_genomes_non_redundant": 5, 
+        "num_genomes_total": 5, 
+        "pangenome_accessory_size": 1797, 
+        "pangenome_core_size": 415, 
+        "pangenome_eggnog_coverage": 89.1, 
+        "pangenome_ipr_coverage": 85.9, 
+        "pangenome_size": 2212
+    }, 
+    "rna_16s": 99.67, 
+    "rna_23s": 99.69, 
+    "rna_5s": 93.28, 
+    "taxon_lineage": "d__Bacteria;p__Firmicutes_C;c__Negativicutes;o__Veillonellales;f__Veillonellaceae;g__Veillonella;s__", 
+    "trnas": 20, 
+    "type": "Isolate"
+}

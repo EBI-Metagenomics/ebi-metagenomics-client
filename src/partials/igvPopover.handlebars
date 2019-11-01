@@ -1,0 +1,58 @@
+<table class="stack hover igv-popover-table">
+    <caption class="igv-popover-section-header">
+        Feature
+    </caption>
+    <tbody>
+        {{#if name}}
+            <tr>
+                <td class="igv-popover-table-td-name">
+                    ID
+                </td>
+                <td>
+                    {{ name }}
+                </td>
+            </tr>
+        {{/if}}
+        {{#if gene}}
+            <tr>
+                <td class="igv-popover-table-td-name">
+                    Gene
+                </td>
+                <td>
+                    <em>{{ gene }}</em>
+                </td>
+            </tr>
+        {{/if}}
+        {{#if product}}
+            <tr>
+                <td class="igv-popover-table-td-name">
+                    Product
+                </td>                            
+                <td>
+                    {{ product }}
+                </td>
+            </tr>
+        {{/if}}
+    </tbody>
+</table>
+{{#each properties}}
+    <table class="stack hover igv-popover-table">
+        <caption class="igv-popover-section-header">
+            {{ this.title }}
+        </caption>
+        <tbody>
+        {{#each this.data }}
+            {{#if this.value}}
+                <tr>
+                    <td class="igv-popover-table-td-name">
+                        {{ this.name }}
+                    </td>
+                    <td>
+                        {{{ this.value }}}
+                    </td>
+                </tr>
+            {{/if}}
+        {{/each}}
+        </tbody>
+    </table>
+{{/each}}

@@ -128,6 +128,7 @@ module.exports = class ClientSideTable extends GenericTable {
 
         this.$tbody.children('tr').hide();
         const remainingRows = this.$tbody.children(this.searchString ? 'tr.match' : 'tr');
+        // FIXME: For medium/large tables this is slow.
         remainingRows.slice(min, finalIndex).show();
     }
 
