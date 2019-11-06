@@ -594,7 +594,7 @@ export const AnalysesView = GenericTableView.extend({
                 attr.analysis_accession +
                 '</a>';
             const pipelineLink = '<a href=\'' + attr.pipeline_url + '\'>' +
-                attr.pipeline_version +
+                attr.pipeline_version.toString() +
                 '</a>';
             return [
                 biome, sampleLink, attr['sample_desc'],
@@ -628,10 +628,11 @@ export function getLoginStatus() {
  * Replace page with error message
  * @param {string} errorcode HTTP error code
  * @param {string} errormsg
+ * @param {string} containterId the containter element id
  */
-export function displayError(errorcode, errormsg) {
+export function displayError(errorcode, errormsg, containterId) {
     const tmpl = Commons.errorTmpl({errorcode, errormsg});
-    $('#main-content-area').html(tmpl);
+    $(containterId || '#main-content-area').html(tmpl);
 }
 
 /**
@@ -757,7 +758,7 @@ export function setupPage(tab, loginRedirect) {
         }
     });
     checkAPIonline();
-    setCurrentTab(tab);
+    // setCurrentTab(tab);
     return loginStatus;
 }
 
@@ -875,7 +876,7 @@ export function getSimpleTaxLineage(fullLineage, removePrefix) {
 /**
  * Remove the s__ prefixes from a lineage.
  * @param {string} lineage string with the lineage `d__Bacteria;p__Proteobacteria;c__Gammapr...`
- * @param {string} replace replace sting
+ * @param {string} replace replace string
  * @return {string}
  */
 export function cleanTaxLineage(lineage, replace) {
