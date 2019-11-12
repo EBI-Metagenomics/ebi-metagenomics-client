@@ -1648,6 +1648,8 @@ const ContigsViewTab = Backbone.View.extend({
         e.preventDefault();
         const that = this;
         const $el = $(e.target);
+        // Disable the click until it's done
+        that.$('.contig-browser').css('pointer-events', 'none');
 
         const contigId = $el.data('contig_id');
         const antiSMASH = $el.data('has_antismash');
@@ -1705,21 +1707,26 @@ const ContigsViewTab = Backbone.View.extend({
         if (this.igvBrowser) {
             igv.removeBrowser(this.igvBrowser);
         }
+        // force clean, the igvPromise is resolved faster than the
+        // the data loading of igv, if a user clicks multiples times
+        // on a fresh load then multiples browsers will appear
+        this.$(this.$igvDiv).html('');
 
-        const igvPromise = igv.createBrowser(this.$igvDiv, options);
-        igvPromise.then((browser) => {
+        this.igvPromise = igv.createBrowser(this.$igvDiv, options);
+        this.igvPromise.then((browser) => {
             browser.on('trackclick', (ignored, data) => {
                 return igvPopup(data);
             });
             that.igvBrowser = browser;
-            that.$gbLoading.hide();
         }).catch((error) => {
             util.displayError(
                 500,
                 'Error loading the contigs on the browser. Detail: ' + error,
                 that.el);
             that.igvBrowser = undefined;
+        }).finally(() => {
             that.$gbLoading.hide();
+            that.$('.contig-browser').css('pointer-events', 'auto');
         });
     },
     /**
