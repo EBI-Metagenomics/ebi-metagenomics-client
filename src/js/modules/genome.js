@@ -39,8 +39,6 @@ let GenomeView = Backbone.View.extend({
                     genomeStats['Non-redundant number of genomes in species'] = attr.num_genomes_nr;
                 }
 
-                // TODO and this `if (attr.pan)`?
-
                 genomeStats['Number of proteins'] = attr.num_proteins;
                 genomeStats['GC content'] = attr.gc_content + '%';
 
@@ -290,16 +288,46 @@ let genomeBrowserLoaded = false;
  */
 function loadGenomeBrowser(downloadsModel) {
     const files = downloadsModel.attributes.genomeFiles['Genome analysis'];
-    if (!genomeBrowserLoaded) {
-        const config = {
-            'name': genomeId,
-            'fasta_url': util.findFileUrl(files, genomeId + '.fna'),
-            'fasta_index_url': util.findFileUrl(files, genomeId + '.fna.fai'),
-            'gff_url': util.findFileUrl(files, genomeId + '.gff')
-        };
-        new GenomeBrowser('genome-browser-container', config);
-        genomeBrowserLoaded = true;
+    if (genomeBrowserLoaded) {
+        return;
     }
+    const reference = {
+        fasta_url: util.findFileUrl(files, genomeId + '.fna'),
+        fasta_index_url: util.findFileUrl(files, genomeId + '.fna.fai')
+    };
+    let tracks = [{
+        type: 'mgnify-annotation',
+        name: downloadsModel.get('name'),
+        url: util.findFileUrl(files, genomeId + '.gff'),
+        format: 'gff3',
+        label: 'Functional annotation',
+        displayMode: 'EXPANDED',
+        colorAttributes: [
+            ['Default', ''],
+            ['COG', 'COG'],
+            ['Product', 'product'],
+            ['Pfam', 'Pfam'],
+            ['KEGG', 'KEGG'],
+            ['InterPro', 'InterPro'],
+            ['eggNOG', 'eggNOG']
+        ]
+    }];
+    const antiSMASHfile = util.findFileUrl(files, genomeId + '_antismash.gff');
+    if (antiSMASHfile) {
+        tracks.push({
+            type: 'mgnify-annotation',
+            name: downloadsModel.get('name'),
+            url: antiSMASHfile,
+            format: 'gff3',
+            displayMode: 'EXPANDED',
+            label: 'antiSMASH',
+            colorBy: 'as_type',
+            defaultColour: '#BEBEBE',
+            labelBy: 'as_gene_clusters'
+        });
+    }
+    new GenomeBrowser('genome-browser-container', reference, tracks);
+    genomeBrowserLoaded = true;
 }
 
 /**

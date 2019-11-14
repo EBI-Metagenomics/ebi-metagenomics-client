@@ -6,9 +6,10 @@ module.exports = class GenomeBrowser {
     /**
      * Genome Browser
      * @param {string} containerId DOM elemenet id
-     * @param {object} config Configuration settings.
+     * @param {Object} reference Object with the fasta and the fasta_index urls.
+     * @param {[Object]} tracks IGV Tracks configuration options.
      */
-    constructor(containerId, config) {
+    constructor(containerId, reference, tracks) {
         const $container = $('#' + containerId);
         $container.empty();
 
@@ -19,30 +20,16 @@ module.exports = class GenomeBrowser {
         $container.append($browserDiv);
 
         let options = {
-            showTrackLabelButton: false,
-            showTrackLabels: false,
+            showChromosomeWidget: false,
+            showTrackLabelButton: true,
+            showTrackLabels: true,
             showCenterGuide: false,
             showAllChromosomes: true,
             reference: {
-                fastaURL: config['fasta_url'],
-                indexURL: config['fasta_index_url']
+                fastaURL: reference.fasta_url,
+                indexURL: reference.fasta_index_url
             },
-            tracks: [{
-                type: 'mgnify-annotation',
-                name: config['name'],
-                url: config['gff_url'],
-                format: 'gff3',
-                displayMode: 'EXPANDED',
-                colorAttributes: [
-                    ['Default', ''],
-                    ['COG', 'COG'],
-                    ['Product', 'product'],
-                    ['Pfam', 'Pfam'],
-                    ['KEGG', 'KEGG'],
-                    ['InterPro', 'InterPro'],
-                    ['eggNOG', 'eggNOG']
-                ]
-            }],
+            tracks: tracks,
             showLegend: true,
             legendParent: '#genome-browser'
         };
