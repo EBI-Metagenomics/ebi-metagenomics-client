@@ -139,60 +139,6 @@
     </div>
 </div>
 
-<script id="filtersTmpl" type="text/template">
-    <form id="<%= formId %>">
-        <h3>Filter results</h3>
-        <!--<button type='button' class="button reset">Clear filters</button>-->
-        <!--Function to build successive hierarchy of checkboxes-->
-        <% function drawAndExpand(child, name, parentValue){ %>
-        <% let forLabel = child.value+'checkbox'; %>
-        <% if (child.children){ %>
-        <button class="disp-children">&#9654;</button>
-        <% } %>
-        <input name="<%= name %>" type="checkbox" value="<%= parentValue+child.value %>"
-               class="facet-checkbox <%= forLabel %>"
-               id="<%= forLabel %>"/> <label for="<%= forLabel %>"><%= child.label %> (<%= child.count %>)</label>
-        <% _.each(child.children, function(child2){ %>
-        <div class="facet-child-group">
-            <% drawAndExpand(child2, name, parentValue+child.value+'/'); %>
-        </div>
-        <% });%>
-
-        <% } %>
-        <% _.each(facets, function(facet){ if (facet.label!=='Source'){ %>
-        <% facet.label = facet.label.toLowerCase() %>
-        <div class="facet-group <%= facet.label.replace(' ', '_')+'-group' %> ">
-            <% if (facet.type==='slider') {%>
-            <div class="switch tiny">
-                <% const switchId = formId+facet.label+'slider-switch' %>
-                <input class="switch-input" data-facet-name="<%= facet.label %>" id="<%= switchId %>" type="checkbox"
-                       checked>
-                <label class="switch-paddle" for="<%= switchId %>">
-                </label>
-            </div>
-            <h5><%= capitalize(facet.label) %> (<%= facet.units %>)</h5>
-            <div class="row columns slider-group">
-                <div id="<%= formId+facet.label+'slider' %>" class="slider"
-                     data-facet-slider="<%= facet.label+'slider' %>"></div>
-                <input class='left slider-input' name="<%= facet.label+'min' %>" data-facet-name="<%= facet.label %>"
-                       defaultValue="<%= facet.min %>" data-min type="number">
-                <input class='right slider-input' name="<%= facet.label+'max' %>" data-facet-name="<%= facet.label %>"
-                       defaultValue="<%= facet.max %>" data-max type="number">
-            </div>
-        </div>
-        <% } else { %>
-        <h5><%= capitalize(facet.label) %></h5>
-        <% _.each(facet.facetValues, function(child){ %>
-        <div class="facet-child-group show">
-            <% drawAndExpand(child, facet.id, '') %>
-        </div>
-        <% }); %>
-        <% } %>
-        </div>
-        <% }});%>
-    </form>
-</script>
-
 <script id="projectResultsTmpl" type="text/template">
     <div class="row">
         <div class="columns small-8 medium-8 large-8">
