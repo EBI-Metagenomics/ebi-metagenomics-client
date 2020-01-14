@@ -26,7 +26,7 @@ export let Util = {
         cy.get('ul.tabs > li.tabs-title a[href=\'#' + tabName + '\']').click();
     },
     urlExists: function(url) {
-        cy.request(url);
+        cy.request(url, {method: 'HEAD'});
     },
     stripWhitespace: function(str) {
         return str.replace(/\s/g, '');
