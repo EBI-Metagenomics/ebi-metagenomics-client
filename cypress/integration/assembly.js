@@ -66,6 +66,19 @@ describe('Assembly page', function() {
             cy.route('GET',
                 '**/' + accession + '/analyses**')
                 .as('analyses');
+            /** Stub non-critical requests */
+            cy.route({
+                method: 'GET',
+                url: 'https://www.ebi.ac.uk/ena/portal/api/search?result' +
+                     '=assembly&format=json&query=accession=GCA_900217105',
+                response: [{
+                    'accession': 'GCA_900217105',
+                    'version': '1X',
+                    'assembly_name': 'SRR4420304',
+                    'description': 'SRR4420304 assembly for human gut metagenome'
+                }]
+            });
+
             openPage(origPage);
             cy.wait('@analyses');
             waitForPageLoad('Assembly ' + accession);
