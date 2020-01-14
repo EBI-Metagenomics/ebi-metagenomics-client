@@ -4,8 +4,7 @@ import {
     waitForBiomesLoad,
     waitForSearchResults,
     setupDefaultSearchPageRouting,
-    login,
-    urlExists
+    login
 } from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
@@ -230,7 +229,7 @@ describe('Home page', function() {
             cy.get('input[name=\'study-accession\']').should('be.hidden');
             cy.contains('Please submit your data before requesting analysis as it must be archived in the ENA for us to process it.').should('be.visible');
             cy.contains('Go to ENA submission page').then(($el) => {
-                urlExists($el.attr('href'));
+                cy.request($el.attr('href'));
             });
         });
         it('Analysis type tooltip hover should display tooltip', function() {

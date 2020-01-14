@@ -7,7 +7,7 @@ const descriptionSection = '#overview div.row div.box';
 
 const assemblyTableColumns = {
     analysisAccession: {
-        data: ['MGYA0014002'],
+        data: ['MGYA00140023'],
         type: datatype.STR,
         sortable: false
     },
@@ -36,6 +36,16 @@ const assemblyTableColumns = {
 let assembliesTable;
 
 describe('Assembly page', function() {
+    before(function() {
+        cy.server();
+        cy.route('https://www.ebi.ac.uk/ena/portal/api/search?' +
+                 'result=assembly&format=json&query=accession=GCA_900217105', [{
+                'accession': 'GCA_900217105',
+                'version': '1X',
+                'assembly_name': 'SRR4420304',
+                'description': 'SRR4420304 assembly for human gut metagenome'
+        }]);
+    });
     context('Elements load correctly', function() {
         before(function() {
             openPage(origPage);
@@ -66,19 +76,6 @@ describe('Assembly page', function() {
             cy.route('GET',
                 '**/' + accession + '/analyses**')
                 .as('analyses');
-            /** Stub non-critical requests */
-            cy.route({
-                method: 'GET',
-                url: 'https://www.ebi.ac.uk/ena/portal/api/search?result' +
-                     '=assembly&format=json&query=accession=GCA_900217105',
-                response: [{
-                    'accession': 'GCA_900217105',
-                    'version': '1X',
-                    'assembly_name': 'SRR4420304',
-                    'description': 'SRR4420304 assembly for human gut metagenome'
-                }]
-            });
-
             openPage(origPage);
             cy.wait('@analyses');
             waitForPageLoad('Assembly ' + accession);
@@ -91,8 +88,15 @@ describe('Assembly page', function() {
             cy.get(descriptionSection).should('be.visible');
         });
         it('Description links should be valid', function() {
-            cy.get(descriptionSection + ' a').each(($el) => {
-                isValidLink($el);
+            const sampleLink = cy.get(descriptionSection + ' a').eq(0);
+            sampleLink.should('have.attr', 'href').then((href) => {
+                cy.request(href).then((resp) => {
+                    expect(resp['status']).to.equal(200);
+                });
+            });
+            const enaLink = cy.get(descriptionSection + ' a').eq(1);
+            enaLink.should('have.attr', 'href').then((href) => {
+                expect(href).to.equal('https://www.ebi.ac.uk/ena/browser/view/ERZ477708');
             });
         });
         it('Analyses table links should be valid', function() {
@@ -124,14 +128,14 @@ describe('Assembly page', function() {
     context('External links', function() {
         it('Should generate link to ena if page exists', function() {
             openPage(origPage);
-            cy.get('a[href=\'https://www.ebi.ac.uk/ena/data/view/ERZ477708\']')
+            cy.get('a[href=\'https://www.ebi.ac.uk/ena/browser/view/ERZ477708\']')
                 .should('be.visible');
         });
         it('Should generate non-link text if page does not exist', function() {
             cy.server();
             cy.route('GET', '**/assemblies/' + accession, 'fixture:assemblyNoEnaLink');
             openPage(origPage);
-            cy.get('a[href=\'https://www.ebi.ac.uk/ena/data/view/GCA_900217105\']')
+            cy.get('a[href=\'https://www.ebi.ac.uk/ena/browser/view/GCA_900217105\']')
                 .should('not.exist');
         });
     });

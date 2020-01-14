@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists, login} from '../util/util';
+import {openPage, datatype, isValidLink, login} from '../util/util';
 import Config from '../util/config';
 import GenericTableHandler from '../util/genericTable';
 
@@ -129,7 +129,12 @@ describe('Sample page', function() {
         });
         it('External links should all be valid', function() {
             cy.get('ul#links > li > a').each(($el) => {
-                urlExists($el.attr('href'));
+                const href = $el.attr('href');
+                if (href.includes('ena/browser')) {
+                    expect(href).to.equal('https://www.ebi.ac.uk/ena/browser/view/SRS429585');
+                } else {
+                    cy.request(href);
+                }
             });
         });
     });

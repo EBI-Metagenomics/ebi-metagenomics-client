@@ -38,8 +38,7 @@ function compareByName(a, b) {
  */
 function getExternalLinks(sampleAccession) {
     let urls = {};
-    urls['ENA website (' + sampleAccession + ')'] = 'https://www.ebi.ac.uk/ena/data/view/' +
-        sampleAccession;
+    urls['ENA website (' + sampleAccession + ')'] = process.env.ENA_URL + sampleAccession;
     return urls;
 }
 
