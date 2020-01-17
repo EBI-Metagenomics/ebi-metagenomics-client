@@ -113,6 +113,20 @@ export let Util = {
         cy.request(opts).then((resp) => {
             expect(resp['status']).to.eq(status || 200);
         });
+    },
+    /**
+     * Check the content of a tooltip for a highchart table
+     * @param {string} selector Chart bar for the hover event
+     * @param {Array} tooltip Array with the tooltip texts
+     */
+    checkChartTooltip: function(selector, tooltip) {
+        cy.get(selector)
+            .first()
+            .trigger('mouseover', {force: true})
+            .then(() => {
+                cy.get('svg .highcharts-tooltip text')
+                  .should('contain', tooltip); // i.e. 'Pan-genome Count: 2854'
+        });
     }
 };
 module.exports = Util;

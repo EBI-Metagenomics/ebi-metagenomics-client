@@ -97,7 +97,7 @@ describe('Login process', function() {
     context('Edge cases', function() {
         it('Display error message when accessing mydata page without being logged in', function() {
             openPage('mydata');
-            cy.get('h2').contains('Oh no! An error has occured!');
+            cy.get('h2').contains('Oh no! An error has occurred!');
             cy.get('h3').contains('You are not logged in.');
             cy.get('#main-content-area p').contains('Click here to login and view your data.');
             cy.get('#main-content-area a').click();
@@ -105,7 +105,7 @@ describe('Login process', function() {
         });
         it('Accessing private study when not logged in should display error', function() {
             openPage('studies/' + privateStudy);
-            cy.get('h2').contains('Oh no! An error has occured!');
+            cy.get('h2').contains('Oh no! An error has occurred!');
             cy.get('h3').contains('Error: 404');
             cy.get('p').contains('Could not retrieve study: ERP104179');
         });

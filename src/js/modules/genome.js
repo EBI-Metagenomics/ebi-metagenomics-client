@@ -150,7 +150,7 @@ let GenomeView = Backbone.View.extend({
                 util.attachTabHandlers();
             },
             error(ignored, response) {
-                util.displayError(response.status, 'Could not retrieve study: ' + genomeId);
+                util.displayError(response.status, 'Could not retrieve genome: ' + genomeId);
             }
         });
     }

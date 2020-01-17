@@ -41,11 +41,12 @@ class GenericTableHandler {
         }
     }
 
-    testSorting(pageSize, tests) {
+    testSorting(pageSize, tests, clientSide) {
         const that = this;
-        cy.server();
-        cy.route(config.API_URL + '**').as('apiCall');
-
+        if (!clientSide) {
+            cy.server();
+            cy.route(config.API_URL + '**').as('apiCall');
+        }
         let i = 0;
         for (let header in tests) {
             if (tests.hasOwnProperty(header)) {
@@ -54,7 +55,7 @@ class GenericTableHandler {
                     cy.log('Testing sorting for ' + header + '.');
                     const i2 = i;
                     this.getHeader(i2).click();
-                    cy.wait('@apiCall');
+                    if (!clientSide) cy.wait('@apiCall');
                     this.waitForTableLoad(pageSize);
                     this.getHeader(i2).then(($el) => {
                         const asc = Cypress.$($el).hasClass('sort-asc');
@@ -62,7 +63,7 @@ class GenericTableHandler {
                         cy.log('Should be ' + (asc ? 'ascending' : 'descending'));
                         that.checkOrdering(i2, type, asc);
                         that.getHeader(i2).click();
-                        cy.wait('@apiCall');
+                        if (!clientSide) cy.wait('@apiCall');
                         that.waitForTableLoad(pageSize);
                         cy.log('Should be ' + (!asc ? 'ascending' : 'descending'));
                         that.checkOrdering(i2, type, !asc);
