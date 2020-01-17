@@ -17,7 +17,7 @@ export let Util = {
         cy.get('table tbody tr', {timeout: 10000}).should('have.length', parseInt(results));
     },
     waitForSearchResults: function(rowSelector, numResults) {
-        cy.get(rowSelector, {timeout: 40000}).should('have.length', parseInt(numResults));
+        cy.get(rowSelector, {timeout: 10000}).should('have.length', parseInt(numResults));
     },
     assertTableIsCleared: function() {
         cy.get('table tr.sample').should('not.exist');
