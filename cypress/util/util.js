@@ -17,16 +17,13 @@ export let Util = {
         cy.get('table tbody tr', {timeout: 10000}).should('have.length', parseInt(results));
     },
     waitForSearchResults: function(rowSelector, numResults) {
-        cy.get(rowSelector, {timeout: 40000}).should('have.length', parseInt(numResults));
+        cy.get(rowSelector, {timeout: 10000}).should('have.length', parseInt(numResults));
     },
     assertTableIsCleared: function() {
         cy.get('table tr.sample').should('not.exist');
     },
     changeTab: function(tabName) {
         cy.get('ul.tabs > li.tabs-title a[href=\'#' + tabName + '\']').click();
-    },
-    urlExists: function(url) {
-        cy.request(url, {method: 'HEAD'});
     },
     stripWhitespace: function(str) {
         return str.replace(/\s/g, '');
@@ -107,9 +104,14 @@ export let Util = {
             'facetsdepth=3&query=domain_source:metagenomics_analyses',
             'fixture:analysesInitFilters.json').as('basicAnalysesFilters');
     },
-    isValidLink: function($el) {
-        cy.request(Cypress.$($el).attr('href')).then((resp) => {
-            expect(resp['status']).to.eq(200);
+    isValidLink: function($el, status) {
+        const opts = {};
+        if (status != 200) {
+            opts.failOnStatusCode = false;
+        }
+        opts.url = Cypress.$($el).attr('href');
+        cy.request(opts).then((resp) => {
+            expect(resp['status']).to.eq(status || 200);
         });
     }
 };

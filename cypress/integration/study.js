@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists, waitForPageLoad, changeTab} from '../util/util';
+import {openPage, datatype, waitForPageLoad, changeTab} from '../util/util';
 import Config from '../util/config';
 import GenericTableHandler from '../util/genericTable';
 
@@ -70,10 +70,11 @@ describe('Study page', function() {
 
         it('External links should all be valid', function() {
             cy.get('#ebi_ena_links > li > a').each(($el) => {
-                urlExists($el.attr('href'));
+                const expected = 'https://www.ebi.ac.uk/ena/browser/view/ERP019566';
+                expect($el.attr('href')).to.equal(expected);
             });
             cy.get('#europe_pmc_links > li > a').each(($el) => {
-                urlExists($el.attr('href'));
+                cy.request($el.attr('href'));
             });
         });
     });

@@ -1,4 +1,4 @@
-import {openPage, datatype, urlExists, login} from '../util/util';
+import {openPage, datatype, login} from '../util/util';
 import Config from '../util/config';
 import GenericTableHandler from '../util/genericTable';
 
@@ -129,7 +129,12 @@ describe('Sample page', function() {
         });
         it('External links should all be valid', function() {
             cy.get('ul#links > li > a').each(($el) => {
-                urlExists($el.attr('href'));
+                const href = $el.attr('href');
+                if (href.includes('ena/browser')) {
+                    expect(href).to.equal('https://www.ebi.ac.uk/ena/browser/view/ERS434640');
+                } else {
+                    cy.request(href);
+                }
             });
         });
     });
@@ -180,39 +185,6 @@ describe('Sample page', function() {
         it('Should be toggleable', function() {
             table.testTableHiding();
         });
-
-        // Redundant due to low number of runs per sample (2 rows in single page)
-        // it('Runs table should respond to pagination', function () {
-        //     table.testPagination(2, [{
-        //         index: 1,
-        //         data: ['SRR997122', 'amplicon', '', '', '2.0'],
-        //     }, {
-        //         index: 3,
-        //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
-        //     }, {
-        //         index: 'Next',
-        //         data: ['SRR997047', 'amplicon', '', '', '2.0'],
-        //         pageNum: 4
-        //     }, {
-        //         index: 'Previous',
-        //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
-        //         pageNum: 3
-        //     }, {
-        //         index: 'Last',
-        //         data: ['ERR010497', 'metatranscriptomic', '', '', '1.0'],
-        //         pageNum: 506,
-        //         pageSize: 18
-        //     }, {
-        //         index: 'First',
-        //         data: ['SRR997122', 'amplicon', '', '', '2.0'],
-        //         pageNum: 1
-        //     }]);
-        // });
-
-        // it('Runs table should respond to page size change', function () {
-        // TODO use sample with > 25 runs to test
-        //     table.testPageSizeChange(runsTableDefaultSize, 50)
-        // });
 
         it('Runs table download link should be valid', function() {
             table.testDownloadLink(
@@ -285,39 +257,6 @@ describe('Sample page', function() {
         it('Should be toggleable', function() {
             table.testTableHiding();
         });
-
-        // Redundant due to low number of runs per sample (2 rows in single page)
-        // it('Runs table should respond to pagination', function () {
-        //     table.testPagination(2, [{
-        //         index: 1,
-        //         data: ['SRR997122', 'amplicon', '', '', '2.0'],
-        //     }, {
-        //         index: 3,
-        //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
-        //     }, {
-        //         index: 'Next',
-        //         data: ['SRR997047', 'amplicon', '', '', '2.0'],
-        //         pageNum: 4
-        //     }, {
-        //         index: 'Previous',
-        //         data: ['SRR997072', 'amplicon', '', '', '2.0'],
-        //         pageNum: 3
-        //     }, {
-        //         index: 'Last',
-        //         data: ['ERR010497', 'metatranscriptomic', '', '', '1.0'],
-        //         pageNum: 506,
-        //         pageSize: 18
-        //     }, {
-        //         index: 'First',
-        //         data: ['SRR997122', 'amplicon', '', '', '2.0'],
-        //         pageNum: 1
-        //     }]);
-        // });
-
-        // it('Runs table should respond to page size change', function () {
-        // TODO use sample with > 25 runs to test
-        //     table.testPageSizeChange(runsTableDefaultSize, 50)
-        // });
 
         it('Assemblies table download link should be valid', function() {
             table.testDownloadLink(

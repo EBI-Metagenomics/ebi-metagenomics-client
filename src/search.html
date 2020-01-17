@@ -228,7 +228,7 @@
         <tr class="search-row">
             <td data-column="project-id"><a href="<%= entry.studyLink %>"><%= fields.id %></a></td>
             <td data-column="project-ena-accession"><a class="ext"
-                    href="https://www.ebi.ac.uk/ena/data/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a>
+                    href="https://www.ebi.ac.uk/ena/browser/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a>
             </td>
             <td data-column="project-biome"><%= fields.biome_name %></td>
             <td data-column="project-name"><%= fields.name %></td>
@@ -313,8 +313,8 @@
             <td data-column="analysis-sample"><a href="<%= entry.sampleLink %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
             <td data-column="analysis-project"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
             <td data-column="analysis-experiment-type"><%= fields.experiment_type %></td>
-            <td data-column="analysis-assembly"><a class="ext" href="https://www.ebi.ac.uk/ena/data/view/<%= entry.assemblyLink %>"><%= fields.ASSEMBLY %></a></td>
-            <td data-column="analysis-ena-run"><a class="ext" href="https://www.ebi.ac.uk/ena/data/view/<%= entry.runLink %>"><%= fields.ENA_RUN %></a></td>
+            <td data-column="analysis-assembly"><a class="ext" href="https://www.ebi.ac.uk/ena/browser/view/<%= entry.assemblyLink %>"><%= fields.ASSEMBLY %></a></td>
+            <td data-column="analysis-ena-run"><a class="ext" href="https://www.ebi.ac.uk/ena/browser/view/<%= entry.runLink %>"><%= fields.ENA_RUN %></a></td>
             <td data-column="analysis-ena-wgs-seq-set"><%= fields.ENA_WGS_SEQUENCE_SET %></td>
             </td>
         </tr>

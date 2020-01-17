@@ -113,7 +113,12 @@ describe('Run page', function() {
         });
         it('Description links should be valid', function() {
             cy.get(descriptionSection + ' a').each(($el) => {
-                isValidLink($el);
+                const link = $el[0].href;
+                if (link.includes('/ena/browser/')) {
+                    expect(link).to.equal('https://www.ebi.ac.uk/ena/browser/view/ERR770966');
+                } else {
+                    isValidLink($el);
+                }
             });
         });
         it('Analyses table links should be valid', function() {

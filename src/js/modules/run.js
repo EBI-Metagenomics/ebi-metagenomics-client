@@ -51,7 +51,7 @@ let RunView = Backbone.View.extend({
                                 ' from MGnify as analysis or upload of this run is ongoing. ' +
                                 'In the meantime, information relating to the run and its ' +
                                 'associated metadata can be found in ENA: ' +
-                                '<a href=\'https://www.ebi.ac.uk/ena/data/view/' + accession +
+                                '<a href=\'https://www.ebi.ac.uk/ena/browser/view/' + accession +
                                 '\'>' + accession + '</a></h4>';
                         }
                     }).then(() => {
