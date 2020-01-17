@@ -164,34 +164,6 @@ describe('Search page', function() {
             analysisTable.checkRowData(0,
                 ['MGYA00087095', '3.0', 'ERS782465', 'MGYS00001332', 'amplicon', '', '', '']);
         });
-
-        // it('Pagination - double page change', function() {
-        //     cy.route('**metagenomics_projects?**start=0**', 'fixture:projectsInitQuery')
-        //         .as('fetchPage1');
-        //     cy.route('**metagenomics_projects?**start=25**', 'fixture:projectsInitQueryPage2')
-        //         .as('fetchPage2');
-        //     loadPage(origPage + '#projects');
-        //     const firstPageFirstRowData = [
-        //         'PRJNA46321', 'MGYS00000277', 'Fecal',
-        //         '',
-        //         '',
-        //         '',
-        //         '',
-        //         'NIDDK'];
-        //     studyTable.waitForTableLoad(25);
-        //     studyTable.checkRowData(0,
-        //         firstPageFirstRowData);
-        //
-        //     cy.get('#projects-pagination > ul > li.page-item.next a').click({force: true});
-        //     cy.wait('@fetchPage2');
-        //     studyTable.checkRowData(0,
-        //         ['PRJEB9856', 'MGYS00001760', 'Cecum', '', '', '', 'COPENHAGEN UNIVERSITY']);
-        //
-        //     cy.get('#projects-pagination > ul > li.page-item.first a').click({force: true});
-        //     cy.wait('@fetchPage1');
-        //     studyTable.checkRowData(0,
-        //         firstPageFirstRowData);
-        // });
     });
 
     context('Display additional columns', function() {
@@ -359,20 +331,13 @@ describe('Search page', function() {
             const min = '40';
             const max = '88';
             enableSlider(samplesTempSwitchToggle, samplesTempCheckbox, samplesTempSliderContainer);
-            getInputText(samplesTempSliderContainer, 'min').clear().type(min).trigger('change');
-            getInputText(samplesTempSliderContainer, 'max').clear().type(max).trigger('change');
-            cy.contains('You searched for samples with temperature:[' + min + ' TO ' + max + '].');
 
+            getInputText(samplesTempSliderContainer, 'min').clear().type(min);
+            getInputText(samplesTempSliderContainer, 'max').clear().type(max).trigger('change');
+
+            cy.contains('You searched for samples with temperature:[' + min + ' TO ' + max + '].');
             changeTab('analyses');
             cy.contains('You searched for analyses with temperature:[' + min + ' TO ' + max + '].');
         });
     });
 });
-// describe("Search page - CSV fetching", function () {
-//     it("Download csv button should be disabled after click", function () {
-//         loadPage(origPage + "#projects");
-//         cy.get("#projectsResults button[name="download"]").click()
-// .should("have.attr", "disabled");
-//     });
-// //    TODO avoid download dialog box
-// });
