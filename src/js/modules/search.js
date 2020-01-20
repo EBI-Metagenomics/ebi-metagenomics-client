@@ -1,4 +1,4 @@
-const searchUrl = process.env.SEARCH_URL;
+const SEARCH_URL = process.env.SEARCH_URL;
 
 const util = require('../util');
 const _ = require('underscore');
@@ -21,7 +21,8 @@ util.attachTabHandlers();
 const DEFAULT_QUERIES = [
     'domain_source:metagenomics_projects',
     'domain_source:metagenomics_samples',
-    'domain_source:metagenomics_analyses'];
+    'domain_source:metagenomics_analyses'
+];
 
 const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)]/;
 
@@ -628,7 +629,7 @@ const Search = Backbone.Collection.extend({
         }
     },
     url() {
-        return searchUrl + this.tab;
+        return SEARCH_URL + this.tab;
     }
 });
 
@@ -720,7 +721,7 @@ const ResultsView = Backbone.View.extend({
                 delivery: 'download'
             });
         }).fail(function() {
-            alert('Could not download, an error has occured');
+            alert('Could not download, an error has occurred');
             //    TODO improve error handling
         }).always(function() {
             $buttonElem.removeClass('loading-cursor');
@@ -1041,15 +1042,36 @@ function updateAll(pagesize) {
  */
 function initAll(projectsView, samplesView, analysesView) {
     showSpinner();
-    const projectFacet = $.get(searchUrl +
-        'projects?format=json&size=1&start=0&' +
-        'facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_projects');
-    const sampleFacet = $.get(searchUrl +
-        'samples?format=json&size=1&start=0&' +
-        'facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_samples');
-    const analysisFacet = $.get(searchUrl +
-        'analyses?format=json&size=1&start=0&' +
-        'facetcount=10&facetsdepth=3&query=domain_source%3Ametagenomics_analyses');
+    const facetOptions = {
+        format: 'json',
+        size: 1,
+        start: 0,
+        facetcount: 10,
+        facetsdepth: 3
+    };
+    const projectFacet = $.get({
+        url: SEARCH_URL + 'projects',
+        data: _.extend({}, facetOptions, {
+            query: 'domain_source:metagenomics_projects'
+        }),
+        cache: false
+    });
+    const sampleFacet = $.get({
+        url: SEARCH_URL + 'samples',
+        data: _.extend({}, facetOptions, {
+            query: 'domain_source:metagenomics_samples'
+        }),
+        cache: false
+
+    });
+    const analysisFacet = $.get({
+        url: SEARCH_URL + 'analyses',
+        data: _.extend({}, facetOptions, {
+            query: 'domain_source:metagenomics_analyses'
+        }),
+        cache: false
+    });
+
     return $.when(
         projectsView.fetchAndRender(true, true),
         samplesView.fetchAndRender(true, true),
@@ -1112,5 +1134,3 @@ let analyses = new Analyses();
 let analysesView = new AnalysesView({collection: analyses});
 
 initAll(projectsView, samplesView, analysesView);
-
-

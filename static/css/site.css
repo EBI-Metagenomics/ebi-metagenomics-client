@@ -625,10 +625,32 @@ select.table-tools {
 .facet-child-group {
     margin-left: 1em;
     display: none;
+    clear: both;
 }
 
 .facet-child-group.show {
     display: block;
+    width: 100%;
+}
+
+.facet-label-container {
+    float: left;
+    width: 60%;
+}
+
+.facet-checkbox-container {
+    float: left;
+    width: 10%;
+}
+
+.disp-children {
+    float: left;
+    line-height: 1.3;
+}
+
+.more-fields {
+    clear: both;
+    padding: 15px 0;
 }
 
 .map-alert {
