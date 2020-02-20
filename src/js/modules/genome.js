@@ -54,6 +54,11 @@ let GenomeView = Backbone.View.extend({
                 // eslint-disable-next-line security/detect-object-injection
                 genomeStats[n50Tooltip] = attr.n_50;
 
+                if (attr.cmseq) {
+                    genomeStats['Strain heterogeneity (CMseq)'] = attr.cmseq;
+                }
+                genomeStats['Taxonomic inconsistency (CAT)'] = attr.taxincons;
+
                 let genomeAnnotationStats = {
                     'InterPro coverage': attr.ipr_cov + '%',
                     'EggNog coverage': attr.eggnog_cov + '%'
@@ -312,20 +317,21 @@ function loadGenomeBrowser(downloadsModel) {
             ['eggNOG', 'eggNOG']
         ]
     }];
-    const antiSMASHfile = util.findFileUrl(files, genomeId + '_antismash.gff');
-    if (antiSMASHfile) {
-        tracks.push({
-            type: 'mgnify-annotation',
-            name: downloadsModel.get('name'),
-            url: antiSMASHfile,
-            format: 'gff3',
-            displayMode: 'EXPANDED',
-            label: 'antiSMASH',
-            colorBy: 'as_type',
-            defaultColour: '#BEBEBE',
-            labelBy: 'as_gene_clusters'
-        });
-    }
+    // FIXME: enable when the data is re-imported
+    // const antiSMASHfile = util.findFileUrl(files, genomeId + '_antismash.gff');
+    // if (antiSMASHfile) {
+    //     tracks.push({
+    //         type: 'mgnify-annotation',
+    //         name: downloadsModel.get('name'),
+    //         url: antiSMASHfile,
+    //         format: 'gff3',
+    //         displayMode: 'EXPANDED',
+    //         label: 'antiSMASH',
+    //         colorBy: 'as_type',
+    //         defaultColour: '#BEBEBE',
+    //         labelBy: 'as_gene_clusters'
+    //     });
+    // }
     new GenomeBrowser('genome-browser-container', reference, tracks);
     genomeBrowserLoaded = true;
 }
