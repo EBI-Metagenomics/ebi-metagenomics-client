@@ -17,6 +17,8 @@ export const pipelines = {
     '3.0': require('../partials/pipelines/3.handlebars'),
     '4.0': require('../partials/pipelines/4.handlebars'),
     '4.1': require('../partials/pipelines/4.1.handlebars')
+    // TODO:
+    // '5.0': require('../partials/pipelines/5.handlebars')
 };
 
 require('../../static/images/nucleic_acids_research_D1_cover.gif');
@@ -72,3 +74,19 @@ export const TAXONOMY_COLOURS = [
 
 $(document).foundation();
 $(document).foundationExtendEBI();
+
+/**
+ * Show the message banner.
+ * This intended for high priority messages.
+ */
+const showBanner = () => {
+    const apiUrl = process.env.API_URL;
+    const url = apiUrl + 'banner-message';
+    $.get({url: url}).then((response) => {
+        if (!response || !response.data || !response.data.message) return;
+        const $container = $('<div class="row margin-top-medium"></div>')
+            .append($(response.data.message));
+        $('#main-content-area').prepend($container);
+    });
+};
+showBanner();
