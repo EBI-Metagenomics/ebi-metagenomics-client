@@ -82,7 +82,7 @@ $(document).foundationExtendEBI();
 const showBanner = () => {
     const apiUrl = process.env.API_URL;
     const url = apiUrl + 'banner-message';
-    $.get({url: url}).then((response) => {
+    $.get({url: url, cache: false}).then((response) => {
         if (!response || !response.data || !response.data.message) return;
         const $container = $('<div class="row margin-top-medium"></div>')
             .append($(response.data.message));
