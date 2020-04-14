@@ -173,18 +173,22 @@ module.exports = Backbone.View.extend({
             // TODO: build a new Client Side table widget.
             that.$tableEl.trigger('update');
 
-            that.$loading.hide();
-            that.$resultsSection.removeClass('hidden');
-
-            $([document.documentElement, document.body]).animate({
-                scrollTop: that.$resultsSection.offset().top - 120 // header and table header
-            }, 1000);
+            if (data.length === 0) {
+                this.$resultsSection.addClass('hidden');
+                that.showMessage('No matches found.', that.MSG_TYPE.WARNING);
+            } else {
+                that.$messageContainter.html('');
+                that.$resultsSection.removeClass('hidden');
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: that.$resultsSection.offset().top - 120 // header and table header
+                }, 1000);
+            }
         }).fail((error) => {
+            that.$messageContainter.html('');
             that.showMessage('Unexpected error.' + error.response || '', that.MSG_TYPE.ERROR);
         }).always(() => {
             that.$searchButton.prop('disabled', false);
             that.$loading.hide();
-            that.$messageContainter.html('');
         });
     },
 
@@ -230,7 +234,7 @@ module.exports = Backbone.View.extend({
      * @return {int} number of > chars found
      */
     countSequences(sequence) {
-        return sequence && sequence.match((/>/g) || []).length;
+        return sequence && (sequence.match(/>/g) || []).length;
     },
 
     /**
