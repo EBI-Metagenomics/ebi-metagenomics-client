@@ -224,10 +224,6 @@ table:not(.tablesorter) th.sort-both:after {
     width: auto;
 }
 
-.facet-group {
-    margin-bottom: .5em;
-}
-
 .slider-input {
     margin-top: .5em;
 }
@@ -623,41 +619,6 @@ select.table-tools {
 .run-qc-chart {
     width: 100%;
     height: 15em;
-}
-
-.facet-panel {
-    overflow: scroll;
-}
-
-.facet-child-group {
-    margin-left: 1em;
-    display: none;
-    clear: both;
-}
-
-.facet-child-group.show {
-    display: block;
-    width: 100%;
-}
-
-.facet-label-container {
-    float: left;
-    width: 60%;
-}
-
-.facet-checkbox-container {
-    float: left;
-    width: 10%;
-}
-
-.disp-children {
-    float: left;
-    line-height: 1.3;
-}
-
-.more-fields {
-    clear: both;
-    padding: 15px 0;
 }
 
 .map-alert {

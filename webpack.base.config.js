@@ -290,9 +290,10 @@ module.exports = {
             'SEARCH_URL',
             'INTERPRO_URL',
             'SEQUENCE_SEARCH_URL',
+            'SEARCH_CSV_ENDPOINT',
             'ENA_URL',
-            'DEPLOYMENT_SUBFOLDER']
-        ),
+            'DEPLOYMENT_SUBFOLDER'
+        ]),
         new CleanWebpackPlugin(['dist']),
         new webpack.ProvidePlugin({
             '$': 'jquery', 'jQuery': 'jquery', 'window.jQuery': 'jquery'
