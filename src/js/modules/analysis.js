@@ -798,7 +798,11 @@ const GenomePropertiesTabView = Backbone.View.extend({
 
                 _.each(that.model.attributes.data, (d) => {
                     const id = d.attributes['accession'];
-                    const count = parseInt(d.attributes['count']);
+                    const presence = d.attributes['presence'];
+                    let count = 0;
+                    if (presence === 'Yes' || presence === 'Partial') {
+                        count = 1;
+                    }
                     // eslint-disable-next-line security/detect-object-injection
                     genomePropertiesCount[id] = count;
                 });
