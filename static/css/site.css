@@ -108,6 +108,13 @@
     width: 5em;
 }
 
+.genome-search-loading {
+    margin-left: calc(50% - 2em);
+    height: 4em;
+    width: 4em;
+}
+
+
 td, th {
     word-wrap: break-word;
 }
