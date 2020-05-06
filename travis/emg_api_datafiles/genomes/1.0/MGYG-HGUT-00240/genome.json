@@ -33,6 +33,7 @@
     "rna_16s": 99.67, 
     "rna_23s": 99.76, 
     "rna_5s": 0.0, 
+    "taxincons": 0.0, 
     "taxon_lineage": "d__Bacteria;p__Firmicutes;c__Bacilli;o__Erysipelotrichales;f__Erysipelotrichaceae;g__Absiella;s__", 
     "trnas": 20, 
     "type": "Isolate"
