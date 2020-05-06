@@ -314,7 +314,7 @@ describe('Sample page', function() {
             const sampleId = 'ERS14747971323123';
             const origPage = 'samples/' + sampleId;
             openPage(origPage);
-            cy.get('h2').should('contain', 'Oh no! An error has occured!');
+            cy.get('h2').should('contain', 'Oh no! An error has occurred!');
             cy.contains('Error: 404');
             cy.contains('Could not retrieve sample: ' + sampleId);
         });

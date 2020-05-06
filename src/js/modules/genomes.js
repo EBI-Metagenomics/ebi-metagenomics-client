@@ -118,7 +118,7 @@ let GenomesView = util.GenericTableView.extend({
         this.tableObj.order = params.ordering;
         this.update(params);
 
-        // TODO: this has to be part of the generic table behaviuor.
+        // TODO: this has to be part of the generic table behaviour.
         const $clearBtn = $('.clear-filter');
         $clearBtn.click(() => {
             $('.table-filter').val('').trigger('keyup');

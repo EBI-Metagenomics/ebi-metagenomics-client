@@ -167,7 +167,7 @@ describe('Analysis page', function() {
 
             // Length filtering (reads filtered out)
             const filteredOutSeries =
-                '#qc-step-chart .highcharts-series-group .highcharts-series-0 > ' + 
+                '#qc-step-chart .highcharts-series-group .highcharts-series-0 > ' +
                 '.highcharts-point:nth-child(3)';
             hoverAndValidateTooltip(filteredOutSeries, 'Length filtering',
                 'Reads filtered out: 33 411 452');

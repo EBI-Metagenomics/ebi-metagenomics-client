@@ -202,7 +202,7 @@ describe('Super Study page', function() {
             const superStudyId = '99';
             const origPage = 'super-studies/' + superStudyId;
             openPage(origPage);
-            waitForPageLoad('Oh no! An error has occured!');
+            waitForPageLoad('Oh no! An error has occurred!');
             cy.contains('Error: 404');
             cy.contains('Could not retrieve Super Study: ' + superStudyId);
         });

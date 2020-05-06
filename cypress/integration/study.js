@@ -192,7 +192,7 @@ describe('Study page', function() {
             const studyId = 'ERP019566012345';
             const origPage = 'studies/' + studyId;
             openPage(origPage);
-            waitForPageLoad('Oh no! An error has occured!');
+            waitForPageLoad('Oh no! An error has occurred!');
             cy.contains('Error: 404');
             cy.contains('Could not retrieve study: ' + studyId);
         });
