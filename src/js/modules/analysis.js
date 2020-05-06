@@ -1034,14 +1034,14 @@ const TaxonomyTabView = Backbone.View.extend({
                 // TODO: use TabViews
                 that._tabs = new window.Foundation.Tabs(that.$('#taxonomy-tabs'));
 
-                if (processedData.enableSSU || processedData.isV2) {
-                    that.$('#smallrRNA').trigger('click');
-                } else if (processedData.enableLSU) {
-                    that.$('#largerRNA').trigger('click');
-                } else if (processedData.enableITSoneDB) {
+                if (processedData.enableITSoneDB) {
                     that.$('#itsoneDB').trigger('click');
                 } else if (processedData.enableITSUnite) {
                     that.$('#itsUNITE').trigger('click');
+                } else if (processedData.enableSSU || processedData.isV2) {
+                    that.$('#smallrRNA').trigger('click');
+                } else if (processedData.enableLSU) {
+                    that.$('#largerRNA').trigger('click');
                 }
             }, error(ignored, response) {
                 if (response.status === 404) {
