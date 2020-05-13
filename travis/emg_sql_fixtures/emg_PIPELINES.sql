@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `emg` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `emg`;
 -- MySQL dump 10.13  Distrib 5.7.28, for Linux (x86_64)
 --
 -- Host: mysql-vm-022.ebi.ac.uk    Database: emg

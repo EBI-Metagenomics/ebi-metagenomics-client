@@ -119,8 +119,8 @@ describe('Analysis V5', () => {
             const tooltipValues = [
                 {series: 1, tooltip: 'Initial contigs● Contigs remaining: 1 092 543'},
                 {series: 2, tooltip: 'Trimming● Contigs remaining: 1 092 543'},
-                {series: 3, tooltip: 'Length filtering● Contigs remaining: 1 092 543'},
-                {series: 4, tooltip: 'Ambiguous base filtering● Contigs remaining: 1 092 543'},
+                {series: 3, tooltip: 'Length filtering● Contigs remaining: 148 992'},
+                {series: 4, tooltip: 'Ambiguous base filtering● Contigs remaining: 148 992'},
                 {
                     series: 5,
                     tooltip: 'Contigs subsampled for QC analysis● Contigs remaining: 0'
@@ -162,11 +162,11 @@ describe('Analysis V5', () => {
               .should('contain', 'Content');
             checkChartTooltip(
                 '#reads-gc-barchart .highcharts-series-0 > rect:nth-child(1)',
-                'Content● GC content: 37.24%'
+                'Content● GC content: 38.13%'
             );
             checkChartTooltip(
                 '#reads-gc-barchart .highcharts-series-1 > rect:nth-child(1)',
-                'Content● AT content: 62.76%'
+                'Content● AT content: 61.87%'
             );
         });
 
