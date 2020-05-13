@@ -27,7 +27,7 @@ describe('Genomes page', () => {
             length: {
                 data: [
                     '2627858',
-                    '2005377'
+                    '2007253'
                 ],
                 type: datatype.NUM,
                 sortable: true

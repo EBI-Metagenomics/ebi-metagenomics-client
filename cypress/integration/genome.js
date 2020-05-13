@@ -48,7 +48,8 @@ describe('Genome page', () => {
                 ['GC content:', '33.75%'],
                 ['Taxonomic lineage:', 'Bacteria > Firmicutes > Bacilli > ' +
                                        'Erysipelotrichales > Erysipelotrichaceae > Absiella'],
-                ['N50 :', '33474']
+                ['N50 :', '33474'],
+                ['Taxonomic inconsistency (CAT):', '0']
             ];
             assertSection(1, 'Genome statistics', gsValues);
 
@@ -110,7 +111,7 @@ describe('Genome page', () => {
 
     context('COG analysis', () => {
         before(() => {
-            openPage('genomes/' + accessionValid + '#cog-analysis')
+            openPage('genomes/' + accessionValid + '#cog-analysis');
         });
 
         it('Should load the chart and the table', () => {
@@ -301,7 +302,7 @@ describe('Genome page', () => {
                 {column: 5, series: 0, tooltip: 'GenomeCount: 14'},
                 {column: 5, series: 1, tooltip: 'Pan-genomeCount: 17'},
                 {column: 10, series: 0, tooltip: 'GenomeCount: 11'},
-                {column: 10, series: 1, tooltip: 'Pan-genomeCount: 19'}
+                {column: 10, series: 1, tooltip: 'Pan-genomeCount: 18'}
             ];
             tooltipValues.forEach((element) => {
                 checkChartTooltip(
@@ -339,20 +340,20 @@ describe('Genome page', () => {
                 }, {
                     index: 'Next',
                     data: [
-                        'M00034',
+                        'M00176',
                         '',
                         '5',
-                        '9'
+                        '14'
                     ],
                     pageNum: 2,
                     pageSize: 25
                 }, {
                     index: 'Last',
                     data: [
-                        'M00159',
+                        'M00078',
                         '',
                         '0',
-                        '2'
+                        '1'
                     ],
                     pageNum: 7,
                     pageSize: 23
@@ -416,6 +417,8 @@ describe('Genome page', () => {
                  '-', 'FAI', '/genomes/MGYG-HGUT-00240/downloads/MGYG-HGUT-00240.fna.fai'],
                 ['Genome GFF file with various sequence annotations', '-', 'GFF',
                  '/genomes/MGYG-HGUT-00240/downloads/MGYG-HGUT-00240.gff'],
+                ['Genome GFF file with antiSMASH geneclusters annotations', '-', 'GFF',
+                 '/genomes/MGYG-HGUT-00240/downloads/MGYG-HGUT-00240_antismash.gff'],
                 ['eggNOG annotations of the protein coding sequences', '-', 'TSV',
                  '/genomes/MGYG-HGUT-00240/downloads/MGYG-HGUT-00240_eggNOG.tsv'],
                 ['InterProScan annotation of the protein coding sequences', '-', 'TSV',
@@ -436,6 +439,9 @@ describe('Genome page', () => {
                 ['Presence/absence binary matrix of the pan-genome across all conspecific genomes',
                  '-', 'TSV',
                  '/genomes/MGYG-HGUT-00240/downloads/genes_presence-absence.tsv'],
+                ['Tree generated from the pairwise Mash distances of conspecific genomes', '-',
+                 'Newick format',
+                 '/genomes/MGYG-HGUT-00240/downloads/mashtree.nwk'],
                 ['Protein sequence FASTA file of core and accessory genes', '-', 'FASTA',
                  '/genomes/MGYG-HGUT-00240/downloads/pan-genome.faa'],
                 ['eggNOG annotations of the core and accessory genes', '-', 'TSV',
