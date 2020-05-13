@@ -6,7 +6,7 @@ describe('Genomes page', () => {
     context('Browse genomes', () => {
         let genomesTable = {};
         beforeEach(() => {
-            openPage('/genomes');
+            openPage('genomes');
             waitForPageLoad('MGnify Genomes');
             genomesTable = new GenericTableHandler('#genomes-section', 2);
         });
@@ -101,7 +101,7 @@ describe('Genomes page', () => {
 
     context('Taxonomy tree', () => {
         before(() => {
-            openPage('/genomes');
+            openPage('genomes');
             waitForPageLoad('MGnify Genomes');
             changeTab('phylo-tab');
         });
@@ -214,7 +214,7 @@ describe('Genomes page', () => {
         before(() => {
             cy.server();
             cy.route('POST', '**/genome-search', 'fixture:genomeSearch.json');
-            openPage('/genomes');
+            openPage('genomes');
             waitForPageLoad('MGnify Genomes');
             changeTab('genome-search-tab');
         });
