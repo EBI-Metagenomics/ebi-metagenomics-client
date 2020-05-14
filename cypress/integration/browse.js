@@ -45,24 +45,27 @@ const studiesTableColumns = {
         sortable: false
     },
     accession: {
-        data: ['MGYS00002072', 'MGYS00001625'],
+        data: ['MGYS00002008', 'MGYS00001636'],
         type: datatype.STR,
         sortable: false // TODO fix test
     },
     study_name: {
         data: [
-            'Longitudinal study of the diabetic skin and wound microbiome',
-            'Fungi associated with Rhamnus cathartica in Southwestern Ontario'],
+            'EMG produced TPA metagenomics assembly of the Shotgun Sequencing ' +
+            'of Tara Oceans DNA samples corresponding to size fractions for  '+
+            'prokaryotes. (APY) data set',
+            'Origin and ecological selection of core and food-specific bacterial ' +
+            'communities associated with meat and seafood spoilage.'],
         type: datatype.STR,
         sortable: false
     },
     samples_count: {
-        data: ['259', '10'],
+        data: ['1', '160'],
         type: datatype.NUM,
         sortable: false
     },
     last_update: {
-        data: ['27-Nov-2017', '22-Mar-2017'],
+        data: ['3-Oct-2019', '23-Mar-2017'],
         type: datatype.DATE,
         sortable: false
     }
@@ -75,24 +78,32 @@ const samplesTableColumns = {
         sortable: false
     },
     sample_id: {
-        data: ['ERS1474797', 'ERS1474735'],
+        data: ['ERS487899', 'ERS1474832'],
         type: datatype.STR,
         sortable: false
     },
     sample_name: {
         data: [
-            'Control patient 9 right foot time 1',
-            'Patient 8 skin contralateral foot to wound time 5'],
+            'TARA_X000000263',
+            'Patient 2 wound swab time 0'
+        ],
         type: datatype.STR,
         sortable: false
     },
     sample_desc: {
-        data: ['control_skin_right', 'diabetic_skin_contra'],
+        data: [
+            // eslint-disable-next-line max-len
+            '"This sample (TARA_X000000263) was collected during the Tara Oceans expedition (2009-2013) at station TARA_004 (latitudeN=36.5533, longitudeE=-6.5669) on date/time=2009-09-15T11:30, using a PUMP (High Volume Peristaltic Pump).  The sample material (saline water (ENVO:00002010), including plankton (ENVO:xxxxxxxx)) was collected at a depth of 3-7 m, targeting a surface water layer (ENVO:00002042) in the marine biome (ENVO:00000447). The sample was size-fractionated (0.22-1.6 micrometres), and stored in liquid nitrogen for later detection of prokaryote nucleic acid sequences by pyrosequencing methods, and for later metagenomics analysis. This sample has replicate sample(s): TARA_X000000264."',
+            'wound_swab'
+        ],
         type: datatype.STR,
         sortable: false
     },
     last_update: {
-        data: ['27-Nov-2017', '27-Nov-2017'],
+        data: [
+            '25-Sep-2019',
+            '27-Nov-2017'
+        ],
         type: datatype.DATE,
         sortable: false
     }
@@ -143,7 +154,7 @@ describe('Browse page', function() {
         });
 
         it('Should contain correct number of studies', function() {
-            studiesTable.checkLoadedCorrectly(1, studiesTableDefaultSize, 123, studiesTableColumns);
+            studiesTable.checkLoadedCorrectly(1, studiesTableDefaultSize, 124, studiesTableColumns);
         });
 
         it('Should respond to ordering', function() {
@@ -168,55 +179,67 @@ describe('Browse page', function() {
                     index: 1,
                     data: [
                         '',
-                        'MGYS00002072',
-                        'Longitudinal study of the diabetic skin and wound microbiome',
-                        '259',
-                        '27-Nov-2017']
+                        'MGYS00002008',
+                        'EMG produced TPA metagenomics assembly of the Shotgun ' +
+                        'Sequencing of Tara Oceans DNA samples corresponding to ' +
+                        'size fractions for  prokaryotes. (APY) data set',
+                        '1',
+                        '3-Oct-2019'
+                    ]
                 }, {
                     index: 3,
                     data: [
                         '',
-                        'MGYS00001020',
-                        'Forest Soil Targeted Locus (Loci)',
-                        '23',
-                        '6-Jun-2016']
+                        'MGYS00001079',
+                        'Transient rapamycin treatment robustly increases lifespan' +
+                        ' and healthspan in middle-aged mice',
+                        '38',
+                        '16-Jun-2016'
+                    ]
                 }, {
                     index: 'Next',
                     data: [
                         '',
-                        'MGYS00000605',
-                        'Skin microbiome in human volunteers inoculated ' +
-                        'with H. ducreyi Raw sequence reads',
-                        '191',
-                        '4-Feb-2016'],
+                        'MGYS00000613',
+                        'Analysis of metagenomes from oak wood taken from '+
+                        'healthy and diseased trees.',
+                        '9',
+                        '22-Feb-2016'
+                    ],
                     pageNum: 4
                 }, {
                     index: 'Previous',
                     data: [
                         '',
-                        'MGYS00001020',
-                        'Forest Soil Targeted Locus (Loci)',
-                        '23',
-                        '6-Jun-2016'],
+                        'MGYS00001079',
+                        'Transient rapamycin treatment robustly increases lifespan' +
+                        ' and healthspan in middle-aged mice',
+                        '38',
+                        '16-Jun-2016'
+                    ],
                     pageNum: 3
                 }, {
                     index: 'Last',
                     data: [
                         '',
-                        'MGYS00000282',
-                        'Antarctica Aquatic Microbial Metagenome',
-                        '18',
-                        '20-Jan-2016'],
+                        'MGYS00000278',
+                        'Developing infant gut microbiome',
+                        '17',
+                        '20-Jan-2016'
+                    ],
                     pageNum: 5,
-                    pageSize: 23
+                    pageSize: 24
                 }, {
                     index: 'First',
                     data: [
                         '',
-                        'MGYS00002072',
-                        'Longitudinal study of the diabetic skin and wound microbiome',
-                        '259',
-                        '27-Nov-2017'],
+                        'MGYS00002008',
+                        'EMG produced TPA metagenomics assembly of the Shotgun ' +
+                        'Sequencing of Tara Oceans DNA samples corresponding to ' +
+                        'size fractions for  prokaryotes. (APY) data set',
+                        '1',
+                        '3-Oct-2019'
+                    ],
                     pageNum: 1
                 }], 5);
         });
@@ -239,7 +262,7 @@ describe('Browse page', function() {
             studiesTable.getClearButton().click();
             cy.get('span.biome_icon.air_b').should('not.exist');
             studiesTable.waitForTableLoad(studiesTableDefaultSize);
-            cy.get('span.biome_icon').first().should('have.class', 'soil_b');
+            cy.get('span.biome_icon').first().should('have.class', 'marine_b');
         });
 
         it('Download link should change with changes in filtering or ordering', function() {
@@ -310,6 +333,15 @@ describe('Browse page', function() {
     });
 
     context('Samples table', function() {
+        const tableFirstRecord = [
+            '',
+            'ERS487899',
+            'TARA_X000000263',
+            // eslint-disable-next-line max-len
+            '"This sample (TARA_X000000263) was collected during the Tara Oceans expedition (2009-2013) at station TARA_004 (latitudeN=36.5533, longitudeE=-6.5669) on date/time=2009-09-15T11:30, using a PUMP (High Volume Peristaltic Pump).  The sample material (saline water (ENVO:00002010), including plankton (ENVO:xxxxxxxx)) was collected at a depth of 3-7 m, targeting a surface water layer (ENVO:00002042) in the marine biome (ENVO:00000447). The sample was size-fractionated (0.22-1.6 micrometres), and stored in liquid nitrogen for later detection of prokaryote nucleic acid sequences by pyrosequencing methods, and for later metagenomics analysis. This sample has replicate sample(s): TARA_X000000264."',
+            '25-Sep-2019'
+        ];
+
         beforeEach(function() {
             openPage(origPage + '#samples');
             waitForPageLoad('Samples list');
@@ -317,7 +349,7 @@ describe('Browse page', function() {
         });
 
         it('Samples table should contain correct number of samples', function() {
-            samplesTable.checkLoadedCorrectly(1, samplesTableDefaultSize, 9158,
+            samplesTable.checkLoadedCorrectly(1, samplesTableDefaultSize, 9159,
                 samplesTableColumns);
         });
 
@@ -332,64 +364,60 @@ describe('Browse page', function() {
                     'ERS1474797',
                     'Control patient 9 right foot time 1',
                     'control_skin_right',
-                    '27-Nov-2017']]);
+                    '27-Nov-2017'
+                ]
+            ]);
         });
 
         it('Should respond to pagination', function() {
             samplesTable.testPagination(samplesTableDefaultSize, [
                 {
                     index: 1,
-                    data: [
-                        '',
-                        'ERS1474797',
-                        'Control patient 9 right foot time 1',
-                        'control_skin_right',
-                        '27-Nov-2017']
+                    data: tableFirstRecord
                 }, {
                     index: 3,
                     data: [
                         '',
-                        'ERS1474798',
-                        'Control patient 9 left foot time 2',
-                        'control_skin_left',
-                        '27-Nov-2017']
+                        'ERS1474869',
+                        'Patient 5 skin contralateral foot to wound time 5',
+                        'diabetic_skin_contra',
+                        '27-Nov-2017'
+                    ]
                 }, {
                     index: 'Next',
                     data: [
                         '',
-                        'ERS1474557',
-                        'Control patient 6 right foot time 1',
+                        'ERS1474507',
+                        'Control patient 1 right foot time 2',
                         'control_skin_right',
-                        '27-Nov-2017'], // 4th row
+                        '27-Nov-2017'
+                    ], // 4th row
                     pageNum: 4
                 }, {
                     index: 'Previous',
                     data: [
                         '',
-                        'ERS1474798',
-                        'Control patient 9 left foot time 2',
-                        'control_skin_left',
-                        '27-Nov-2017'],
+                        'ERS1474869',
+                        'Patient 5 skin contralateral foot to wound time 5',
+                        'diabetic_skin_contra',
+                        '27-Nov-2017'
+                    ],
                     pageNum: 3
                 }, {
                     index: 'Last',
                     data: [
                         '',
-                        'SRS211741',
-                        'J18, fermented Kimchi day 18',
+                        'SRS211740',
+                        'J16, fermented Kimchi day 16',
                         '(CLOB) Community DNA obtained by 454 GS FLX titanium ' +
-                        'sequencing from sample at 18days of kimchi fermentation',
-                        '13-Aug-2015'],
+                        'sequencing from sample at 16days of kimchi fermentation',
+                        '13-Aug-2015'
+                    ],
                     pageNum: 367,
-                    pageSize: 8
+                    pageSize: 9
                 }, {
                     index: 'First',
-                    data: [
-                        '',
-                        'ERS1474797',
-                        'Control patient 9 right foot time 1',
-                        'control_skin_right',
-                        '27-Nov-2017'],
+                    data: tableFirstRecord,
                     pageNum: 1
                 }]);
         });
@@ -412,7 +440,7 @@ describe('Browse page', function() {
             samplesTable.getClearButton().click();
             cy.get('span.biome_icon.air_b').should('not.exist');
             samplesTable.waitForTableLoad(samplesTableDefaultSize);
-            cy.get('span.biome_icon').first().should('have.class', 'soil_b');
+            cy.get('span.biome_icon').first().should('have.class', 'marine_b');
         });
 
         it('Download link should change with changes in filtering or ordering', function() {
@@ -500,7 +528,7 @@ describe('Browse page', function() {
             cy.wait('@studiesCall');
             cy.wait('@samplesCall');
             changeTab('studies');
-            studiesTable.waitForTableLoad(11);
+            studiesTable.waitForTableLoad(12);
             cy.get('#studies-section .biome-select').should('have.value', biome);
         });
 

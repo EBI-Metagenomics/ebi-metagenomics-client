@@ -167,7 +167,7 @@ describe('Analysis page', function() {
 
             // Length filtering (reads filtered out)
             const filteredOutSeries =
-                '#qc-step-chart .highcharts-series-group .highcharts-series-0 > ' + 
+                '#qc-step-chart .highcharts-series-group .highcharts-series-0 > ' +
                 '.highcharts-point:nth-child(3)';
             hoverAndValidateTooltip(filteredOutSeries, 'Length filtering',
                 'Reads filtered out: 33 411 452');
@@ -392,7 +392,7 @@ describe('Analysis page', function() {
         });
     });
     context('Taxonomy analysis tab (pipeline <4.0)', function() {
-        it('SSU/LSU buttons should appear/dissapear if pipeline version <4.0', function() {
+        it('SSU/LSU buttons should appear/disappear if pipeline version <4.0', function() {
             openPage(origPage);
             waitForPageLoad('Analysis MGYA00011845');
             changeTab('taxonomic');
@@ -618,59 +618,6 @@ describe('Analysis page', function() {
             openPage(origPage);
             cy.contains('Error: 404', {timeout: 40000});
             cy.contains('Could not retrieve analysis: ' + runId, {timeout: 40000});
-        });
-    });
-
-    context('Pipeline V5', function() {
-        context('Taxonomic tab', function() {
-            context('Page organization', function() {
-            });
-            context('SSU', function() {
-            });
-            context('LSU', function() {
-            });
-        });
-        context('Functional tab', function() {
-            context('InterPro', function() {
-            });
-            context('GO', function() {
-            });
-            context('Pfam', function() {
-            });
-            context('KO', function() {
-            });
-        });
-        context('Pathway and systems tab', function() {
-            context('KEGG Module', function() {
-            });
-            context('Genome properties', function() {
-            });
-            context('antiSMASH', function() {
-            });
-        });
-        context('Contig viewer tab', function() {
-            context('IGV', function() {
-                it('Should change to default if no data available.', function() {
-                    openPage(origPage + '#abundance');
-                    waitForPageLoad('Analysis MGYA00011845');
-                    // Check defaulted to overview tab
-                    cy.contains('Description', {timeout: 40000}).should('be.visible');
-                    cy.get('a[href=\'#abundance\']')
-                        .should('not.exist');
-                    cy.get('a[href=\'#overview\']')
-                        .should('have.attr', 'aria-selected', 'true')
-                        .should('have.class', 'is-active');
-                });
-            });
-            context('Table', function() {
-            });
-        });
-        context('Downloads tab', function() {
-            context('IGV', function() {
-
-            });
-            context('Table', function() {
-            });
         });
     });
 
