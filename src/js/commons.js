@@ -16,9 +16,8 @@ export const pipelines = {
     '2.0': require('../partials/pipelines/2.handlebars'),
     '3.0': require('../partials/pipelines/3.handlebars'),
     '4.0': require('../partials/pipelines/4.handlebars'),
-    '4.1': require('../partials/pipelines/4.1.handlebars')
-    // TODO:
-    // '5.0': require('../partials/pipelines/5.handlebars')
+    '4.1': require('../partials/pipelines/4.1.handlebars'),
+    '5.0': require('../partials/pipelines/5.handlebars')
 };
 
 require('../../static/images/nucleic_acids_research_D1_cover.gif');
