@@ -1,0 +1,368 @@
+<div class="grid_24">
+    <!-- Remove the breadcrumbs on homepage -->
+    <h2 class="pipeline_title">
+        Pipeline version 5.0 <span>- 06-Nov-2019</span>
+    </h2>
+
+    <p>
+        <a class="ext" href="https://emg-docs.readthedocs.io/en/latest/analysis.html">
+            Read the documentation.
+        </a>
+    </p>
+
+    <p>
+        This version of the MGnify analysis service offers specialised workflows for three different data types:
+        <a href="#amplicon">amplicon</a>, 
+        <a href="#raw-reads">raw metagenomic/metatranscriptomic reads</a>, and 
+        <a href="#assembly">assembly</a>.
+    </p>
+
+    <h3>Pipeline tools</h3>
+    <table class="stack hover responsive-table">
+        <thead>
+            <tr>
+                <th>
+                    Tool/Database
+                </th>
+                <th>
+                    Version
+                </th>
+                <th>
+                    Purpose
+                </th>
+                <th>
+                    Amplicon
+                </th>
+                <th>
+                    Raw reads
+                </th>
+                <th>
+                    Assemblies
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/jstjohn/SeqPrep">SeqPrep</a>
+                </td>
+                <td><em>1.2</em></td>
+                <td>Merging paired end reads</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td><a class="ext" href="http://www.usadellab.org/cms/?page=trimmomatic">Trimmomatic</a></td>
+                <td><em>0.36</em></td>
+                <td>Quality control</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td><a class="ext" href="http://biopython.org/wiki/Biopython">Biopython</a></td>
+                <td><em>1.74</em></td>
+                <td>Quality control</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/arq5x/bedtools2">
+                    bedtools
+                    </a>
+                </td>
+                <td><em>2.28.0</em></td>
+                <td>SSU/LSU rRNA masking for ITS</td>
+                <td class="text-center">Yes</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/EddyRivasLab/easel">
+                        Easel
+                    </a>
+                </td>
+                <td><em>0.45h</em></td>
+                <td>Sequence extraction</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="http://eddylab.org/infernal/">Infernal</a>
+                </td>
+                <td><em>1.1.2</em></td>
+                <td>RNA prediction</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://rfam.xfam.org/">Rfam</a>
+                </td>
+                <td><em>13.0</em></td>
+                <td>Identification of SSU/LSU rRNA and other ncRNA</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/jfmrod/MAPseq/">MAPseq</a>
+                </td>
+                <td><em>1.2.3</em></td>
+                <td>Taxonomic assignment of SSU/LSU rRNA and ITS</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/marbl/Krona/wiki">Kronatools</a>
+                </td>
+                <td><em>2.7.1</em></td>
+                <td>Visualisation of taxonomic analyses</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/biocore/biom-format">
+                        biom-format
+                    </a>
+                </td>
+                <td><em>2.1.6</em></td>
+                <td>Formatting of taxonomic analyses</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://motu-tool.org/">mOTUs2</a>
+                </td>
+                <td><em>2.5.1</em></td>
+                <td>Phylogenetic marker gene based taxonomic profiling</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/EBI-Metagenomics/FragGeneScan">FragGeneScan</a>
+                </td>
+                <td><em>1.20</em></td>
+                <td>Protein coding sequence prediction</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/hyattpd/prodigal/wiki">Prodigal</a>
+                </td>
+                <td><em>2.6.3</em></td>
+                <td>Protein coding sequence prediction</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/ebi-pf-team/interproscan/wiki">InterProScan</a>
+                </td>
+                <td><em>75.0</em></td>
+                <td>Protein function annotation with separate Pfam results</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/EBI-Metagenomics/pipeline-v5/tree/master/tools/GO-slim">GO terms in-house scripts</a>
+                </td>
+                <td><em>N/A</em></td>
+                <td>Assign gene ontology terms</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="http://eggnog5.embl.de">
+                        eggNOG
+                    </a>
+                </td>
+                <td><em>4.5.1</em></td>
+                <td>Protein function annotation</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/eggnogdb/eggnog-mapper">
+                        eggNOG-mapper
+                    </a>
+                </td>
+                <td><em>1.0.3</em></td>
+                <td>Protein function annotation</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/EddyRivasLab/hmmer">
+                        HMMER
+                    </a>
+                </td>
+                <td><em>3.2.1</em></td>
+                <td>KEGG Ortholog prediction</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/kegg_dbs/">KOfam - a modified version based on KEGG 90.0</a>
+                </td>
+                <td><em>2019-04-06</em></td>
+                <td>KEGG Ortholog prediction</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/EBI-Metagenomics/pipeline-v5/tree/master/tools/Assembly/KEGG_analysis">
+                        KEGG and in-house scripts
+                    </a>
+                </td>
+                <td><em>90.0</em></td>
+                <td>KEGG pathway predictions</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/ebi-pf-team/genome-properties">
+                        Genome Properties
+                    </a>
+                </td>
+                <td><em>2.0.1</em></td>
+                <td>Systems and pathways annotation</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/antismash/antismash">
+                        antiSMASH                    
+                    </a>
+                </td>
+                <td><em>4.2.0</em></td>
+                <td>Secondary metabolite biosynthetic gene cluster annotation</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://www.wsi.uni-tuebingen.de/lehrstuehle/algorithms-in-bioinformatics/software/diamond/">
+                        DIAMOND
+                    </a>
+                </td>
+                <td><em>0.9.25.126</em></td>
+                <td>Protein sequence-based taxonomic analysis</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://www.arb-silva.de/download/archive/">
+                        SILVA release
+                    </a>
+                </td>
+                <td><em>132</em></td>
+                <td>SSU/LSU rRNA taxonomic database</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="http://itsonedb.cloud.ba.infn.it/">
+                        ITSoneDB
+                    </a>
+                </td>
+                <td><em>1.138</em></td>
+                <td>ITS1 taxonomic database</td>
+                <td class="text-center">Yes</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://unite.ut.ee/">
+                        UNITE
+                    </a>
+                </td>
+                <td><em>8.0</em></td>
+                <td>ITS taxonomic database</td>
+                <td class="text-center">Yes</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://www.uniprot.org/uniref/">
+                        UniRef90
+                    </a>
+                </td>
+                <td><em>2019_11</em></td>
+                <td>Protein sequence-based taxonomic analysis</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="text-center">Yes</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="ext" href="https://github.com/ablab/spades">
+                        metaSPAdes
+                    </a>
+                </td>
+                <td><em>3.13</em></td>
+                <td>Assembly of raw reads (available on request)</td>
+                <td class="text-center">N/A</td>
+                <td class="text-center">N/A</td>
+                <td class="text-center">N/A</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 id="amplicon">Amplicon analysis pipeline</h3>
+    <div class="row columns text-center">
+        <img width="500px" alt="Amplicon analysis pipeline diagram" src="static/images/pipeline/version_5/pipeline_v5.0_amplicon.png">
+    </div>
+    
+    <h3 id="raw-reads">Raw reads analysis pipeline</h3>
+    <div class="row columns text-center">
+        <img width="600px" alt="Raw reads analysis pipeline diagram" src="static/images/pipeline/version_5/pipeline_v5.0_raw.png">
+    </div>
+
+    <h3 id="assembly">Assembly analysis pipeline</h3>    
+    <div class="row columns text-center">
+        <img width="600px" alt="Assembly analysis pipeline diagram" src="static/images/pipeline/version_5/pipeline_v5.0_assembly.png">
+    </div>
+</div>
