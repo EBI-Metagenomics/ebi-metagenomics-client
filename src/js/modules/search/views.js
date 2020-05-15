@@ -48,6 +48,7 @@ export const FacetItemView = Backbone.View.extend({
             const event = 'facet-item:change:' + this.model.get('queryDomain');
             Backbone.trigger(event, this.model);
         });
+        this.loadedMore = false;
     },
     render() {
         this.$el.html(this.template({
@@ -60,7 +61,7 @@ export const FacetItemView = Backbone.View.extend({
                 });
                 this.$el.append(itemView.render().el);
             });
-            if (this.model.get('children').length >= FACET_COUNT_DEF) {
+            if (!this.loadedMore) {
                 this.$el.append(
                     $('<a href="#" class="load-more">Load more</a>')
                 );
@@ -125,6 +126,8 @@ export const FacetView = Backbone.View.extend({
                 this.$('.loading-hover').removeClass('show');
             }, 1000);
         });
+        // view state vars
+        this.loadedMore = false;
         return this;
     },
     events: {
@@ -141,6 +144,7 @@ export const FacetView = Backbone.View.extend({
     }, 300),
     loadMore(e) {
         e.preventDefault();
+        this.loadedMore = true;
         this.$('.loading-hover').toggleClass('show', true);
         this.facetCollection.fetch({
             data: {
@@ -174,12 +178,11 @@ export const FacetView = Backbone.View.extend({
             this.views.push(itemView);
             this.$('.columns').append(itemView.render().el);
         });
-        if (!onlyCollection) {
-            if (this.facetCollection.length >= 10) { // 10 is the number of elements loaded
-                this.$('.columns').append(
-                    $('<a href="#" class="load-more show">Load more</a>')
-                );
-            }
+        // only for refresh
+        if (!onlyCollection && !this.loadedMore && this.facetCollection.length >= 10) {
+            this.$('.columns').append(
+                $('<a href="#" class="load-more show">Load more</a>')
+            );
         }
         return this;
     }
@@ -543,7 +546,7 @@ const ResultsView = Backbone.View.extend({
                 createRmvButton(label, value, closeCallback)
             );
         } else {
-            let $btn = $('[data-facet="' + label + '}"][data-value="'+ value +'"]', $container);
+            let $btn = $('[data-facet="' + label + '"][data-value="'+ value +'"]', $container);
             $btn.remove();
         }
         return this;

@@ -21,7 +21,7 @@ export const Search = Backbone.Collection.extend({
             'description'
         ].join(','),
         facetcount: 10,
-        facetsdepth: 5
+        facetsdepth: 2
     },
     filterBtnContainer: 'div.btn-container',
     initialize(queryText) {
@@ -41,13 +41,13 @@ export const Search = Backbone.Collection.extend({
  * @return {FacetTimeModel} model with children
  */
 function facetItemModelConstructor(item, parent) {
-    // get from item (first iteration)
     let queryDomain = item.queryDomain;
     let facetPath = item.facetPath;
     let model = undefined;
     if (parent) {
         queryDomain = parent.get('queryDomain');
         facetPath = parent.get('facetPath') + '/' + item.value;
+        // if it's there, get and refresh
         model = parent.get('children').get(item.value);
     }
     if (!model) {
@@ -70,7 +70,7 @@ function facetItemModelConstructor(item, parent) {
             return facetItemModelConstructor(child, model);
         });
         // expand collection
-        model.get('children').add(newModels, {merge: true});
+        model.get('children').set(newModels);
     }
     return model;
 }
@@ -114,23 +114,19 @@ export const FacetsCollection = Backbone.Collection.extend({
         if (!facet) return entries;
 
         _.each(facet.facetValues, (facetValue) => {
-            // if already exists, extend     the children
+            // if already exists, extend
             const oldModel = this.get(facetValue.value);
             if (oldModel) {
-                oldModel.children.add(_.map(facetValue.children, (child) => {
+                _.each(facetValue.children, (child) => {
                     return facetItemModelConstructor(
                         _.extend(child, {
-                            // passing for inner collections
-                            // i.e. organism/Bacteria/Proteobacteria/...
-                            facetPath: this.facetField + '/' + child.value,
                             facetField: this.facetField,
                             facetFieldLabel: this.facetFieldLabel,
                             queryDomain: this.queryDomain
                         }), oldModel
                     );
-                }), {
-                    merge: true
                 });
+                entries.push(oldModel);
             } else {
                 // else, create
                 const newModel = facetItemModelConstructor(

@@ -217,7 +217,11 @@ function initAll(projectsView, samplesView, analysesView) {
         queryDomain: 'samples',
         facets: [
             ['biome', 'Biome'],
-            ['experiment_type', 'Experiment type']
+            ['experiment_type', 'Experiment type'],
+            ['sequencing_method', 'Sequencing method'],
+            ['location_name', 'Location name'],
+            ['disease_status', 'Disease status'],
+            ['phenotype', 'Phenotype']
         ]
     });
 
@@ -225,8 +229,8 @@ function initAll(projectsView, samplesView, analysesView) {
         el: () => '#analysesFilters',
         queryDomain: 'analyses',
         facets: [
-            ['biome', 'Biome'],
             ['organism', 'Organism'],
+            ['biome', 'Biome'],
             ['pipeline_version', 'Pipeline version'],
             ['experiment_type', 'Experiment type'],
             ['GO', 'GO'],
