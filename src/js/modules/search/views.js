@@ -142,7 +142,7 @@ export const FacetView = Backbone.View.extend({
         if (search.length === 0) {
             this.facetCollection.each((model) => model.set('visible', true));
         }
-        if (search.length <= 3) return;
+        if (search.length <= 2) return;
         this.facetCollection.each((model) => {
             model.set('visible', model.get('label').toLowerCase().indexOf(search) > -1);
         });
