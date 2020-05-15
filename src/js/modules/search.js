@@ -207,8 +207,8 @@ function initAll(projectsView, samplesView, analysesView) {
         el: () => '#projectsFilters',
         queryDomain: 'projects',
         facets: [
-            ['biome', 'Biome'],
-            ['centre_name', 'Centre name']
+            {facetField: 'biome', facetFieldLabel: 'Biome'},
+            {facetField: 'centre_name', facetFieldLabel: 'Centre name', enableFilter: true}
         ]
     });
 
@@ -216,12 +216,12 @@ function initAll(projectsView, samplesView, analysesView) {
         el: () => '#samplesFilters',
         queryDomain: 'samples',
         facets: [
-            ['biome', 'Biome'],
-            ['experiment_type', 'Experiment type'],
-            ['sequencing_method', 'Sequencing method'],
-            ['location_name', 'Location name'],
-            ['disease_status', 'Disease status'],
-            ['phenotype', 'Phenotype']
+            {facetField: 'biome', facetFieldLabel: 'Biome'},
+            {facetField: 'experiment_type', facetFieldLabel: 'Experiment type'},
+            {facetField: 'sequencing_method', facetFieldLabel: 'Sequencing method'},
+            {facetField: 'location_name', facetFieldLabel: 'Location name', enableFilter: true},
+            {facetField: 'disease_status', facetFieldLabel: 'Disease status'},
+            {facetField: 'phenotype', facetFieldLabel: 'Phenotype'}
         ]
     });
 
@@ -229,12 +229,12 @@ function initAll(projectsView, samplesView, analysesView) {
         el: () => '#analysesFilters',
         queryDomain: 'analyses',
         facets: [
-            ['organism', 'Organism'],
-            ['biome', 'Biome'],
-            ['pipeline_version', 'Pipeline version'],
-            ['experiment_type', 'Experiment type'],
-            ['GO', 'GO'],
-            ['INTERPRO', 'InterPro']
+            {facetField: 'organism', facetFieldLabel: 'Organism'},
+            {facetField: 'biome', facetFieldLabel: 'Biome'},
+            {facetField: 'pipeline_version', facetFieldLabel: 'Pipeline version'},
+            {facetField: 'experiment_type', facetFieldLabel: 'Experiment type'},
+            {facetField: 'GO', facetFieldLabel: 'GO', enableFilter: true},
+            {facetField: 'INTERPRO', facetFieldLabel: 'InterPro', enableFilter: true}
         ]
     });
 

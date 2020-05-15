@@ -16,8 +16,6 @@ const collections = require('./collections');
 
 export const SLIDER_PARAM_RE = /(\w+):\[\s*([-]?\d+) TO ([-]?\d+)]/;
 
-const FACET_COUNT_DEF = 10;
-
 /**
  * View for a FacetItemModel, the checkboxes within the tree
  */
@@ -47,6 +45,9 @@ export const FacetItemView = Backbone.View.extend({
             // Events per {projects,samples,analyses}
             const event = 'facet-item:change:' + this.model.get('queryDomain');
             Backbone.trigger(event, this.model);
+        });
+        this.listenTo(this.model, 'change:visible', () => {
+            this.$el.toggle(this.model.get('visible'));
         });
         this.loadedMore = false;
     },
@@ -103,15 +104,15 @@ export const FacetItemView = Backbone.View.extend({
  */
 export const FacetView = Backbone.View.extend({
     template: _.template($('#facetViewTmpl').html()),
-    initialize(queryDomain, facetField, facetFieldLabel) {
-        this.queryDomain = queryDomain;
-        this.facetField = facetField;
-        this.facetFieldLabel = facetFieldLabel;
+    initialize(options) {
+        this.queryDomain = options.queryDomain;
+        this.facetField = options.facetField;
+        this.facetFieldLabel = options.facetFieldLabel;
         this.views = [];
         this.facetCollection = new collections.FacetsCollection([], {
-            facetField: facetField,
-            facetFieldLabel: facetFieldLabel,
-            queryDomain: queryDomain
+            facetField: options.facetField,
+            facetFieldLabel: options.facetFieldLabel,
+            queryDomain: options.queryDomain
         });
         this.listenTo(this.facetCollection, 'reset', () => {
             this.render();
@@ -128,6 +129,7 @@ export const FacetView = Backbone.View.extend({
         });
         // view state vars
         this.loadedMore = false;
+        this.enableFilter = options.enableFilter;
         return this;
     },
     events: {
@@ -135,13 +137,17 @@ export const FacetView = Backbone.View.extend({
         'click .facets > .load-more': 'loadMore'
     },
     filter: _.debounce(function(e) {
-        // FIXME: not functional
-        // this is only working on the first level (not searching in children of children...)
+        // Only working on the first level (not searching in children of children...)
         const search = e.currentTarget.value.toLowerCase();
-        this.facetCollection.forEach((item) => item.filter(search));
-        this.render(true);
+        if (search.length === 0) {
+            this.facetCollection.each((model) => model.set('visible', true));
+        }
+        if (search.length <= 3) return;
+        this.facetCollection.each((model) => {
+            model.set('visible', model.get('label').toLowerCase().indexOf(search) > -1);
+        });
         return this;
-    }, 300),
+    }, 500),
     loadMore(e) {
         e.preventDefault();
         this.loadedMore = true;
@@ -163,15 +169,15 @@ export const FacetView = Backbone.View.extend({
                 this.template({
                     cid: this.cid,
                     queryDomain: this.queryDomain,
-                    facetFieldLabel: this.facetFieldLabel
+                    facetFieldLabel: this.facetFieldLabel,
+                    enableFilter: this.enableFilter
                 })
             );
         }
         this.views.forEach((view) => view.remove());
         this.views = [];
         this.facetCollection.forEach((item) => {
-            // TODO: filtration not ready
-            // if (!item.get('visible')) return;
+            if (!item.get('visible')) return;
             const itemView = new FacetItemView({
               model: item
             });
@@ -196,11 +202,11 @@ export const FacetFiltersView = Backbone.View.extend({
     initialize(options) {
         this.queryDomain = options.queryDomain;
         this.facets = [];
-        _.each(options.facets, ([facetField, facetFieldLabel]) => {
+        _.each(options.facets, (facetOptions) => {
             const facetView = new FacetView(
-                this.queryDomain,
-                facetField,
-                facetFieldLabel
+                _.extend(facetOptions, {
+                    queryDomain: options.queryDomain
+                })
             );
             this.facets.push(facetView);
         });

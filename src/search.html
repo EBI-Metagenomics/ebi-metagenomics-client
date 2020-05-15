@@ -307,7 +307,9 @@
 
 <script id="facetViewTmpl" type="text/template">
     <h5><%= facetFieldLabel %></h5>
-    <!-- <input type="text" class="filter" value=""/> -->
+    <% if (enableFilter) { %>
+        <input type="text" class="filter" placeholder="Filter the list" value=""/>
+    <% } %>
     <div class="row columns facets">
         <!-- FacetViews will be injected here -->
     </div>
