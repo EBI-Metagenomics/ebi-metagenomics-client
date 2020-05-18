@@ -142,7 +142,9 @@ export const FacetView = Backbone.View.extend({
         if (search.length === 0) {
             this.facetCollection.each((model) => model.set('visible', true));
         }
-        if (search.length <= 2) return;
+        if (search.length <= 2) {
+            return this;
+        }
         this.facetCollection.each((model) => {
             model.set('visible', model.get('label').toLowerCase().indexOf(search) > -1);
         });
@@ -249,7 +251,8 @@ const ResultsView = Backbone.View.extend({
         const defaultQueries = [
             ProjectsView.prototype.defaultQuery,
             SamplesView.prototype.defaultQuery,
-            AnalysesView.prototype.defaultQuery];
+            AnalysesView.prototype.defaultQuery
+        ];
 
         if (defaultQueries.indexOf(params.query) === -1) {
             const splitParams = params.query.split(' AND ');
@@ -411,23 +414,22 @@ const ResultsView = Backbone.View.extend({
 
     /**
      * Store list of visible colums to cookie
-     * @param {string} facet string {projects, samples, analyses}
      * @param {[string]} columns list of column names
      */
-    saveVisibleColumns(facet, columns) {
+    saveVisibleColumns(columns) {
         let cookieData = Cookies.get(cookieName);
         if (cookieData) {
             cookieData = JSON.parse(cookieData);
         } else {
             cookieData = {};
         }
-        if (cookieData[facet]) {
-            cookieData[facet] = {
+        if (cookieData[this.facetName]) {
+            cookieData[this.facetName] = {
                 columns,
-                data: cookieData[facet]['data']
+                data: cookieData[this.facetName]['data']
             };
         } else {
-            cookieData[facet] = {
+            cookieData[this.facetName] = {
                 columns
             };
         }
@@ -480,58 +482,48 @@ const ResultsView = Backbone.View.extend({
 
     /**
      * Instantiate result view with modal for column toggling
-     * @param {string} facet {projects, samples, analyses}
      * @param {jQuery.HTMLElement} $table jQuery elem of table for facet
      * @param {jQuery.HTMLElement} $modal jQuery elem of modal for table and facet
      * @param {[string]} initColumns initially visible columns
      */
-    createDataTable(facet, $table, $modal, initColumns) {
+    createDataTable($table, $modal, initColumns) {
         const that = this;
-        /**
-         * Set column visibility
-         * @param {boolean} visible
-         * @param {string} dataColumn attribute value
-         */
-        function setColumnVisibility(visible, dataColumn) {
-            const tds = $table.find('td[data-column="' + dataColumn + '"]');
-            if (visible) {
-                tds.show();
-            } else {
-                tds.hide();
-            }
-        }
-
         _.each($table.find('thead').find('td'), function(column) {
             const text = $(column).text();
+            const chkId = _.uniqueId(that.tableEl); // for the label
             const label = $(column).attr('data-column');
             const checked = initColumns.indexOf(label) !== -1;
 
-            setColumnVisibility(checked, label);
+            $table.find('td[data-column="' + label + '"]').toggle(checked);
 
             const $checkbox = $('<input>', {
+                'id': chkId,
                 'data-column': label,
-                'type': 'checkbox'
+                'type': 'checkbox',
+                'class': 'toggle-visibility'
             });
             $checkbox.prop('checked', checked);
-            const $label = $('<label>', {
-                for: label,
-                text: text
-            });
-            const $container = $('<div class="row column"></div>');
-            $checkbox.click(function() {
-                setColumnVisibility(
-                    $(this).is(':checked'),
-                    $(this).attr('data-column')
-                );
 
-                const visibleColumns = [];
-                $modal.find('input[type=checkbox]:checked').each(function() {
-                    visibleColumns.push($(this).attr('data-column'));
+            // Toggle columns visibility handler
+            $checkbox.on('click', function() {
+                const $table = $(that.tableEl);
+                const $modal = $(that.tableModal);
+                $table.find('td[data-column="' + $(this).attr('data-column') + '"]')
+                      .toggle($(this).is(':checked'));
+                const visibleColumns = _.map($modal.find('input[type=checkbox]:checked'), (el) => {
+                    return el.dataset.column;
                 });
-                that.saveVisibleColumns(facet, visibleColumns);
+                that.saveVisibleColumns(visibleColumns);
             });
 
-            $container.append($label).append($checkbox);
+            const $label = $('<label>', {
+                'for': chkId,
+                'text': text,
+                'class': 'text-right'
+            });
+            const $container = $('<div class="row column"></div>')
+                .append($checkbox)
+                .append($label);
             $modal.append($container);
         });
     },
@@ -628,10 +620,10 @@ const ResultsView = Backbone.View.extend({
 
                 if (renderFilter) {
                     that.createDataTable(
-                        that.facetName,
                         $(that.tableEl),
                         $(that.tableModal),
-                        columns);
+                        columns
+                    );
                     that.pagination.init(
                         1,
                         that.params.size,
