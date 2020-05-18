@@ -39,11 +39,17 @@ describe('Pipeline page', function() {
             cy.contains('Pipeline version 4.0').should('be.visible');
         });
     });
+    context('Pipeline version 5.0', function() {
+        it('Page should load correctly', function() {
+            openPage(origPage + '5');
+            cy.contains('Pipeline version 5.0').should('be.visible');
+        });
+    });
     context('Non-existant pipeline version', function() {
         it('Should display error if pipeline version does not exist', function() {
             openPage(origPage + '4.5');
             cy.contains(
-                'No pipeline version found, available versions are 1.0, 2.0, 3.0, 4.0 & 4.1.');
+                'No pipeline version found, available versions are 1.0, 2.0, 3.0, 4.0, 4.1 & 5.0');
         });
     });
 });

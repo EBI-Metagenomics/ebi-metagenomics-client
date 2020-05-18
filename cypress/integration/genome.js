@@ -302,7 +302,7 @@ describe('Genome page', () => {
                 {column: 5, series: 0, tooltip: 'GenomeCount: 14'},
                 {column: 5, series: 1, tooltip: 'Pan-genomeCount: 17'},
                 {column: 10, series: 0, tooltip: 'GenomeCount: 11'},
-                {column: 10, series: 1, tooltip: 'Pan-genomeCount: 18'}
+                {column: 10, series: 1, tooltip: 'Pan-genomeCount: 19'}
             ];
             tooltipValues.forEach((element) => {
                 checkChartTooltip(
@@ -340,20 +340,20 @@ describe('Genome page', () => {
                 }, {
                     index: 'Next',
                     data: [
-                        'M00176',
+                        'M00006',
                         '',
                         '5',
-                        '14'
+                        '7'
                     ],
                     pageNum: 2,
                     pageSize: 25
                 }, {
                     index: 'Last',
                     data: [
-                        'M00078',
+                        'M00778',
                         '',
                         '0',
-                        '1'
+                        '2'
                     ],
                     pageNum: 7,
                     pageSize: 23
