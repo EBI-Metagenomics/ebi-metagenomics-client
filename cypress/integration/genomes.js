@@ -4,12 +4,12 @@ import GenericTableHandler from '../util/genericTable';
 
 describe('Genomes page', () => {
     context('Browse genomes', () => {
-        let genomesTable = {};
+
         beforeEach(() => {
             openPage('genomes');
             waitForPageLoad('MGnify Genomes');
-            genomesTable = new GenericTableHandler('#genomes-section', 2);
         });
+
         const genomesTableData = {
             biome_icon: {
                 data: ['', ''],
@@ -82,6 +82,7 @@ describe('Genomes page', () => {
             }
         };
         it('Table load, sort and filter', () => {
+            const genomesTable = new GenericTableHandler('#genomes-section', 2);
             genomesTable.checkLoadedCorrectly(1, 2, 2, genomesTableData);
             genomesTable.testSorting(2, genomesTableData);
             genomesTable.testFiltering('absi', [

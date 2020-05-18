@@ -3,6 +3,7 @@ import {openPage} from '../util/util';
 const origPage = 'pipelines';
 
 const pipelineTitles = [
+    'Pipeline v.5.0 (06-Nov-2019)',
     'Pipeline v.4.1 (17-Jan-2018)',
     'Pipeline v.4.0 (04-Sep-2017)',
     'Pipeline v.3.0 (30-Jun-2016)',
@@ -20,6 +21,9 @@ describe('Pipelines page', function() {
         });
     });
     context('Pipeline descriptions', function() {
+        it('Pipeline 5.0 should be visible', function() {
+            cy.contains(pipelineTitles[0]).should('be.visible');
+        });
         it('Pipeline 4.1 should be visible', function() {
             cy.contains(pipelineTitles[0]).should('be.visible');
         });
