@@ -113,103 +113,66 @@ describe('Search page', function() {
         it('Biome filters should restrict results', function() {
             const biome = 'Environmental/Air';
             routeWithBiomeFilter(biome);
-            cy.get('button.disp-children').first().click();
-            cy.get('input[value=\'' + biome + '\']').check({force: true});
+            cy.get('.toggle-tree-node').first().click();
+            cy.get('input[value="biome/' + biome + '"]').check({force: true});
             waitForSearchResults(rowSelector, 2);
             cy.get(studyTable.getColumnSelector(2)).contains('Air');
         });
 
-        // FIXME: this fails in Travis but works locally
-        // it('Centre name filters should restrict results', function() {
-        //     const centerName = 'BioProject';
-        //     routeWithCenterName(centerName);
-        //     cy.get('#centre_name_' + centerName + '_projects').check({force: true});
-        //     waitForSearchResults(rowSelector, 25);
-        //     cy.get(studyTable.getColumnSelector(7)).contains(centerName);
-        //     cy.get('tbody > tr > td[data-column=\'project-centre-name\']').contains(centerName);
-        // });
+        it('Centre name filters should restrict results', function() {
+            const centerName = 'BioProject';
+            routeWithCenterName(centerName);
+            cy.get('input[value="centre_name/' + centerName + '"]').check({force: true});
+            waitForSearchResults(rowSelector, 25);
+            cy.get(studyTable.getColumnSelector(7)).contains(centerName);
+            cy.get('tbody > tr > td[data-column=\'project-centre-name\']').contains(centerName);
+        });
 
         it('Clear button should reset search', function() {
             const biome = 'Environmental/Air';
             routeWithBiomeFilter(biome);
-            cy.get('button.disp-children').first().click();
-            cy.get('input[value=\'' + biome + '\']').check({force: true});
+            cy.get('.toggle-tree-node').first().click();
+            cy.get('input[value="biome/' + biome + '"]').check({force: true});
             studyTable.waitForTableLoad(2);
             cy.get(studyTable.getColumnSelector(2)).contains('Air');
             cy.get('#search-reset').click();
             studyTable.waitForTableLoad(3);
         });
 
-        it('Should pre-fill cached search query', function() {
-            testResultsAreFilteredByString();
-            // Navigate to another page, then return and verify string was pre-loaded
-            openPage('');
-            openPage(origPage);
-            studyTable.waitForTableLoad(25);
-            sampleTable.waitForTableLoad(25);
-            analysisTable.waitForTableLoad(25);
-            studyTable.checkRowData(0,
-                [
-                    'MGYS00001105',
-                    'PRJEB14421',
-                    'Sediment',
-                    '',
-                    '',
-                    '',
-                    '',
-                    'UNIVERSITY OF CAMBRIDGE']);
-            changeTab('samples');
-            sampleTable.checkRowData(0,
-                ['ERS782465', 'MGYS00001332', 'Test Brassicae', 'Test Brassicae']);
-            changeTab('analyses');
-            analysisTable.checkRowData(0,
-                ['MGYA00087095', '3.0', 'ERS782465', 'MGYS00001332', 'amplicon', '', '', '']);
-        });
+        // it('Should pre-fill cached search query', function() {
+            // FIXME: this has to be fixed with the querystring parameters feature
+            //     testResultsAreFilteredByString();
+            //     // Navigate to another page, then return and verify string was pre-loaded
+            //     openPage('');
+            //     openPage(origPage);
+            //     studyTable.waitForTableLoad(25);
+            //     sampleTable.waitForTableLoad(25);
+            //     analysisTable.waitForTableLoad(25);
+            //     studyTable.checkRowData(0,
+            //         [
+            //             'MGYS00001105',
+            //             'PRJEB14421',
+            //             'Sediment',
+            //             '',
+            //             '',
+            //             '',
+            //             '',
+            //             'UNIVERSITY OF CAMBRIDGE']);
+            //     changeTab('samples');
+            //     sampleTable.checkRowData(0,
+            //         ['ERS782465', 'MGYS00001332', 'Test Brassicae', 'Test Brassicae']);
+            //     changeTab('analyses');
+            //     analysisTable.checkRowData(0,
+            //         ['MGYA00087095', '3.0', 'ERS782465', 'MGYS00001332', 'amplicon', '', '', '']);
+        // });
     });
 
-    context('Display additional columns', function() {
-        const projectsModal = 'projectsModal';
-        const column = 'project-name';
+    context('Navigate hierarchy', function() {
+        // FIXME: implement
+    });
 
-        beforeEach(function() {
-            setupDefaultSearchPageRouting();
-            loadPage(origPage + '#projects');
-        });
-
-        function openExtraColumnModal() {
-            cy.get('a[data-open=\'' + projectsModal + '\']').click({force: true});
-            cy.get('#' + projectsModal).should('be.visible');
-        }
-
-        function closeExtraColumnModal() {
-            cy.get('#projectsModal button.close-button').click();
-            cy.get('#' + projectsModal).should('be.hidden');
-        }
-
-        it('Modal should open for extra column selection', function() {
-            openExtraColumnModal();
-        });
-
-        it('Added column should be visible', function() {
-            cy.get('td[data-column=\'' + column + '\']').should('be.hidden');
-
-            openExtraColumnModal();
-            cy.get('input[data-column=\'' + column + '\']').check();
-            closeExtraColumnModal();
-
-            cy.get('td[data-column=\'' + column + '\']').should('be.visible');
-        });
-
-        it('Removed column should be hidden', function() {
-            const column = 'project-biome';
-            cy.get('td[data-column=\'' + column + '\']').should('be.visible');
-
-            openExtraColumnModal();
-            cy.get('input[data-column=\'' + column + '\']').uncheck();
-            closeExtraColumnModal();
-
-            cy.get('td[data-column=\'' + column + '\']').should('be.hidden');
-        });
+    context('Filter facet list', function() {
+        // FIXME: implement
     });
 
     context('Deep linking', function() {

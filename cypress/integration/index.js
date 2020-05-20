@@ -75,85 +75,87 @@ describe('Home page', function() {
                 getBaseURL() + 'browse?lineage=root:Host-associated:Human:Skin#studies');
         });
 
-        it('Browse amplicon assemblies', function() {
-            cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:amplicon**',
-                'fixture:ampliconAnalysesQuery.json');
-            waitForStatsLoadingGif();
-            cy.get('#amplicon-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 2);
-            cy.get('#analysesResults h5', {timeout: 20000})
-                .contains('You searched for analyses with filters: experiment_type:amplicon.');
-        });
-        it('Browse assemblies', function() {
-            cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:assembly**',
-                'fixture:assemblyAnalysesQuery.json');
-            waitForStatsLoadingGif();
-            cy.get('#assembly-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 2);
-            cy.get('#analysesResults h5', {timeout: 20000})
-                .contains('You searched for analyses with filters: experiment_type:assembly.');
-        });
-        it('Browse metabarcoding analyses', function() {
-            cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metabarcoding**',
-                'fixture:metabarcodingAnalysesQuery.json');
-            waitForStatsLoadingGif();
-            cy.get('#metaB-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 2);
-            cy.get('#analysesResults h5', {timeout: 20000})
-                .contains('You searched for analyses with filters: experiment_type:metabarcoding.');
-        });
-        it('Browse metagenome analyses', function() {
-            cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metagenomic**',
-                'fixture:metagenomeAnalysesQuery.json');
-            waitForStatsLoadingGif();
-            cy.get('#metaG-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 2);
-            cy.get('#analysesResults h5', {timeout: 20000})
-                .contains('You searched for analyses with filters: experiment_type:metagenomic.');
-        });
-        it('Browse metatranscriptomes analyses', function() {
-            cy.route(
-                '**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metatranscriptomic**',
-                'fixture:metatranscriptomesAnalysesQuery.json');
-            waitForStatsLoadingGif();
-            cy.get('#metaT-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 2);
-            cy.get('#analysesResults h5', {timeout: 20000})
-                .contains(
-                    'You searched for analyses with filters: experiment_type:metatranscriptomic.');
-        });
-        it('Browse studies', function() {
-            setupDefaultSearchPageRouting();
-            waitForStatsLoadingGif();
-            cy.get('#project-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#projects');
-            waitForSearchResults('table tr.search-row:visible', 3);
-            cy.get('#projectsResults h5', {timeout: 20000})
-                .contains('You searched for studies with no parameters.');
-        });
-        it('Browse samples', function() {
-            setupDefaultSearchPageRouting();
-            waitForStatsLoadingGif();
-            cy.get('#sample-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#samples');
-            waitForSearchResults('table tr.search-row:visible', 3);
-            cy.get('#samplesResults h5', {timeout: 20000})
-                .contains('You searched for samples with no parameters.');
-        });
-        it('Browse analyses', function() {
-            setupDefaultSearchPageRouting();
-            waitForStatsLoadingGif();
-            cy.get('#run-stats a', options).click();
-            cy.url().should('eq', getBaseURL() + 'search#analyses');
-            waitForSearchResults('table tr.search-row:visible', 3);
-            cy.get('#analysesResults h5', {timeout: 20000})
-                .contains('You searched for analyses with no parameters.');
-        });
+        // it('Browse amplicon assemblies', function() {
+        //     cy.route(
+        //         '**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:amplicon**',
+        //         'fixture:ampliconAnalysesQuery.json'
+        //     );
+        //     waitForStatsLoadingGif();
+        //     cy.get('#amplicon-stats a', options).click();
+        //     cy.url().should('eq', getBaseURL() + 'search#analyses');
+        //     waitForSearchResults('table tr.search-row:visible', 2);
+        //     cy.get('#analysesResults h5', {timeout: 20000})
+        //         .contains('You searched for analyses with filters: experiment_type:amplicon.');
+        // });
+        // it('Browse assemblies', function() {
+        //     cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:assembly**',
+        //         'fixture:assemblyAnalysesQuery.json');
+        //     waitForStatsLoadingGif();
+        //     cy.get('#assembly-stats a', options).click();
+        //     cy.url().should('eq', getBaseURL() + 'search#analyses');
+        //     waitForSearchResults('table tr.search-row:visible', 2);
+        //     cy.get('#analysesResults h5', {timeout: 20000})
+        //         .contains('You searched for analyses with filters: experiment_type:assembly.');
+        // });
+        // it('Browse metabarcoding analyses', function() {
+        //     cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metabarcoding**',
+        //         'fixture:metabarcodingAnalysesQuery.json');
+        //     waitForStatsLoadingGif();
+        //     cy.get('#metaB-stats a', options).click();
+        //     cy.url().should('eq', getBaseURL() + 'search#analyses');
+        //     waitForSearchResults('table tr.search-row:visible', 2);
+        //     cy.get('#analysesResults h5', {timeout: 20000})
+        //         .contains('You searched for analyses with filters: experiment_type:metabarcoding.');
+        // });
+        // it('Browse metagenome analyses', function() {
+        //     cy.route('**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metagenomic**',
+        //         'fixture:metagenomeAnalysesQuery.json');
+        //     waitForStatsLoadingGif();
+        //     cy.get('#metaG-stats a', options).click();
+        //     cy.url().should('eq', getBaseURL() + 'search#analyses');
+        //     waitForSearchResults('table tr.search-row:visible', 2);
+        //     cy.get('#analysesResults h5', {timeout: 20000})
+        //         .contains('You searched for analyses with filters: experiment_type:metagenomic.');
+        // });
+        // it('Browse metatranscriptomes analyses', function() {
+        //     cy.route(
+        //         '**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:metatranscriptomic**',
+        //         'fixture:metatranscriptomesAnalysesQuery.json');
+        //     waitForStatsLoadingGif();
+        //     cy.get('#metaT-stats a', options).click();
+        //     cy.url().should('eq', getBaseURL() + 'search#analyses');
+        //     waitForSearchResults('table tr.search-row:visible', 2);
+        //     cy.get('#analysesResults h5', {timeout: 20000})
+        //         .contains(
+        //             'You searched for analyses with filters: experiment_type:metatranscriptomic.');
+        // });
+        // it('Browse studies', function() {
+        //     setupDefaultSearchPageRouting();
+        //     waitForStatsLoadingGif();
+        //     cy.get('#project-stats a', options).click();
+        //     cy.url().should('eq', getBaseURL() + 'search#projects');
+        //     waitForSearchResults('table tr.search-row:visible', 3);
+        //     cy.get('#projectsResults h5', {timeout: 20000})
+        //         .contains('You searched for studies with no parameters.');
+        // });
+        // it('Browse samples', function() {
+        //     setupDefaultSearchPageRouting();
+        //     waitForStatsLoadingGif();
+        //     cy.get('#sample-stats a', options).click();
+        //     cy.url().should('eq', getBaseURL() + 'search#samples');
+        //     waitForSearchResults('table tr.search-row:visible', 3);
+        //     cy.get('#samplesResults h5', {timeout: 20000})
+        //         .contains('You searched for samples with no parameters.');
+        // });
+        // it('Browse analyses', function() {
+        //     setupDefaultSearchPageRouting();
+        //     waitForStatsLoadingGif();
+        //     cy.get('#run-stats a', options).click();
+        //     cy.url().should('eq', getBaseURL() + 'search#analyses');
+        //     waitForSearchResults('table tr.search-row:visible', 3);
+        //     cy.get('#analysesResults h5', {timeout: 20000})
+        //         .contains('You searched for analyses with no parameters.');
+        // });
     });
     context('Latest studies', function() {
         beforeEach(function() {
