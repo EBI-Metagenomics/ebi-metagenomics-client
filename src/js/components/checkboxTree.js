@@ -215,15 +215,17 @@ module.exports = function CheckboxTree() {
     };
 
     const getFacetFields = function(facet, field) {
-        const fetch = $.get(searchUrl + facet +
-            '?query=domain_source%3Ametagenomics_' + facet + '&format=json&size=0&facetfields=' +
-            field + '&facetcount=1000&facetsdepth=10');
-        return fetch.promise();
+        return $.get(searchUrl + facet, {
+            query: 'domain_source:metagenomics_' + facet,
+            format: 'json',
+            size: 0,
+            facetfields: field,
+            facetcount: 1000,
+            facetsdepth: 2 // => first 2 levels
+        }).promise();
     };
 
     const init = function(facet, $elem, $btnContainer, tree, callback, values, inModal) {
-        // console.log(facet, $elem, $btnContainer, tree, callback, values);
-
         this.callback = callback;
         const $treeContainer = $('<div class=\'facet-container\'></div>');
         // Create title
