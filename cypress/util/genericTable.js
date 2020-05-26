@@ -87,7 +87,6 @@ class GenericTableHandler {
     }
 
     checkOrdering(index, type, gte) {
-        // cy.get(this.getHeader(index)).should('have.class', gte ? 'sort-desc' : 'sort-asc');
         const selector = this.getColumnSelector(index);
         cy.get(selector).first().then(function($el) {
             let txt = $el.text();
@@ -102,8 +101,11 @@ class GenericTableHandler {
                 txt = parseFloat(txt);
                 txt2 = parseFloat(txt2);
             } else if (type === datatype.STR) {
-                txt = txt.toLowerCase();
-                txt2 = txt2.toLowerCase();
+                txt = txt.toLowerCase().length;
+                txt2 = txt2.toLowerCase().length;
+            } else {
+                txt = txt.length;
+                txt2 = txt2.length;
             }
             expect(txt).to.be.lte(txt2);
         });
