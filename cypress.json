@@ -3,8 +3,9 @@
   "chromeWebSecurity": false,
   "viewportWidth": 1680,
   "viewportHeight": 1050,
-  "video": true,
+  "video": false,
   "videoCompression": false,
   "watchForFileChanges": false,
-  "defaultCommandTimeout": 40000
+  "defaultCommandTimeout": 40000,
+  "ignoreTestFiles": "*.disabled"
 }

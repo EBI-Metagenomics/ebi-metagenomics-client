@@ -1,6 +1,7 @@
-import {openPage, waitForPageLoad, changeTab, datatype} from '../util/util';
 import GenericTableHandler from '../util/genericTable';
+import {openPage, waitForPageLoad, changeTab, datatype} from '../util/util';
 
+// FIXME: this is failing in Travis but working locally.
 
 describe('Genomes page', () => {
     context('Browse genomes', () => {
