@@ -53,9 +53,14 @@ class GenericTableHandler {
                 const type = tests[header].type;
                 if (tests[header].sortable) {
                     cy.log('Testing sorting for ' + header + '.');
+
                     const i2 = i;
                     this.getHeader(i2).click();
-                    if (!clientSide) cy.wait('@apiCall');
+
+                    if (!clientSide) {
+                        cy.wait('@apiCall');
+                    }
+
                     this.waitForTableLoad(pageSize);
                     this.getHeader(i2).then(($el) => {
                         const asc = Cypress.$($el).hasClass('sort-asc');
@@ -63,7 +68,11 @@ class GenericTableHandler {
                         cy.log('Should be ' + (asc ? 'ascending' : 'descending'));
                         that.checkOrdering(i2, type, asc);
                         that.getHeader(i2).click();
-                        if (!clientSide) cy.wait('@apiCall');
+
+                        if (!clientSide) {
+                            cy.wait('@apiCall');
+                        }
+
                         that.waitForTableLoad(pageSize);
                         cy.log('Should be ' + (!asc ? 'ascending' : 'descending'));
                         that.checkOrdering(i2, type, !asc);
@@ -87,7 +96,6 @@ class GenericTableHandler {
     }
 
     checkOrdering(index, type, gte) {
-        // cy.get(this.getHeader(index)).should('have.class', gte ? 'sort-desc' : 'sort-asc');
         const selector = this.getColumnSelector(index);
         cy.get(selector).first().then(function($el) {
             let txt = $el.text();
@@ -95,17 +103,20 @@ class GenericTableHandler {
             if (!gte) {
                 txt = [txt2, txt2 = txt][0]; // Swap variables
             }
-            if (type === datatype.DATE) {
-                txt = new Date(txt);
-                txt2 = new Date(txt2);
-            } else if (type === datatype.NUM) {
-                txt = parseFloat(txt);
-                txt2 = parseFloat(txt2);
-            } else if (type === datatype.STR) {
+            if (type === datatype.STR || !type) {
                 txt = txt.toLowerCase();
                 txt2 = txt2.toLowerCase();
+                expect([txt, txt2]).to.have.ordered.members([txt, txt2].sort());
+            } else {
+                if (type === datatype.DATE) {
+                txt = new Date(txt);
+                txt2 = new Date(txt2);
+                } else if (type === datatype.NUM) {
+                    txt = parseFloat(txt);
+                    txt2 = parseFloat(txt2);
+                }
+                expect(txt).to.be.lte(txt2);
             }
-            expect(txt).to.be.lte(txt2);
         });
     }
 
