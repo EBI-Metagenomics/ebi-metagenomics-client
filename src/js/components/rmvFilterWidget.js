@@ -1,7 +1,13 @@
 module.exports = function FilterButtonCtnr() {
     const create = function(facet, value, callback) {
-        const $button = $('<button class=\'facet-remove-button button\'>' + facet + ': ' + value +
-            ' <span class="icon icon-functional" data-icon="x"/></button>');
+        const $button = $('<button/>', {
+            'class': 'facet-remove-button button',
+            'html': facet + ': ' + value
+        });
+        $button.append($('<span/>', {
+            'class': 'icon icon-functional',
+            'data-icon': 'x'
+        }));
         $button.click(function() {
             const $parent = $(this).parent();
             const facet = $parent.attr('data-facet');
@@ -12,8 +18,10 @@ module.exports = function FilterButtonCtnr() {
                 .click();
             callback();
         });
-        const $toggleContainer = $('<div data-facet=\'' + facet + '\' data-value=\'' + value +
-            '\'></div>');
+        const $toggleContainer = $('<div/>', {
+            'data-facet': facet,
+            'data-value': value
+        });
         $toggleContainer.append($button);
         return $toggleContainer;
     };

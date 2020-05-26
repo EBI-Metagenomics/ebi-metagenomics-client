@@ -33,7 +33,7 @@ util.specifyPageTitle('Analysis', analysisID);
 
 /**
  * Main view.
- * This view handles the tabs and the general data managment.
+ * This view handles the tabs and the general data management.
  */
 const AnalysisView = Backbone.View.extend({
     mixins: [TabsManagerMixin],
@@ -1542,6 +1542,7 @@ const ContigsViewTab = Backbone.View.extend({
      * @param {Object} params Filter parameters
      */
     refreshQueryString(params) {
+        // FIXME: replace with query-string package.
         if ('URLSearchParams' in window) {
             const urlParams = new URLSearchParams();
             Object.keys(params).forEach((key) => {

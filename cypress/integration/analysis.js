@@ -507,7 +507,7 @@ describe('Analysis page', function() {
                     index: 2,
                     data: [
                         '26',
-                        'ATPase, V0 complex,  c/d subunit',
+                        'ATPase, V0 complex, c/d subunit',
                         'IPR002843',
                         '1507',
                         '0.06']
@@ -519,7 +519,7 @@ describe('Analysis page', function() {
                     index: 'Next',
                     data: [
                         '26',
-                        'ATPase, V0 complex,  c/d subunit',
+                        'ATPase, V0 complex, c/d subunit',
                         'IPR002843',
                         '1507',
                         '0.06'],
@@ -532,7 +532,7 @@ describe('Analysis page', function() {
                     index: 'Last',
                     data: [
                         '26',
-                        'ATPase, V0 complex,  c/d subunit',
+                        'ATPase, V0 complex, c/d subunit',
                         'IPR002843',
                         '1507',
                         '0.06'],

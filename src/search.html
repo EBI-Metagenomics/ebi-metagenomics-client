@@ -27,8 +27,7 @@
         <div class="columns small-12 medium-12 large-12">
             <div id="bonsai"></div>
 
-            <h2>Search <img id='loading-icon' class='loading-gif-small'
-                                             src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"/></h2>
+            <h2>Search</h2>
         </div>
         <div class="row">
             <div class="columns small-6 medium-6 large-6">
@@ -37,6 +36,7 @@
                            placeholder="Search" data-cy="text-search-input">
                     <button id="search" type="submit" class="button" class="header-search-button" data-cy="text-search-submit">Search
                     </button>
+                    <button id="search-reset" class="button" type="reset">Clear all</button>                    
                 </form>
             </div>
         </div>
@@ -56,7 +56,15 @@
                         <div class="row">
                             <div class="columns small-3 medium-3 large-3 filters">
                                 <form id="projectsFilters" class="search-filters"></form>
-                                <div class="ebi-search"></div>
+                                <div class="ebi-search">
+                                    <p>
+                                        <small class="text-muted">
+                                            Powered by 
+                                            <a href="https://www.ebi.ac.uk/ebisearch/&quot;" class="ext" target="_blank">EBI Search
+                                            </a>
+                                        </small>
+                                    </p>
+                                </div>
                             </div>
                             <div class="columns small-9 medium-9 large-9">
                                 <div class="row columns">
@@ -64,14 +72,16 @@
                                         <div class="filter-clear"></div>
                                     </div>
                                 </div>
-                                <div class="row columns">
+                                <div class="row columns position-relative">
                                     <div class="reveal" id="projectsModal" data-reveal>
                                         <h4>Available columns</h4>
-                                        <ul>
-                                        </ul>
                                         <button class="close-button" data-close aria-label="Close modal" type="button">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
+                                    </div>
+                                    <div class="loading-table">
+                                        <img class="loading-hover-gif"
+                                        src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"/>
                                     </div>
                                     <div id="projectsResults"></div>
                                     <div id="projects-pagination"></div>
@@ -83,7 +93,15 @@
                         <div class="row">
                             <div class="columns small-3 medium-3 large-3 filters">
                                 <form id="samplesFilters" class="search-filters"></form>
-                                <div class="ebi-search"></div>
+                                <div class="ebi-search">
+                                    <p>
+                                        <small class="text-muted">
+                                            Powered by 
+                                            <a href="https://www.ebi.ac.uk/ebisearch/&quot;" class="ext" target="_blank">EBI Search
+                                            </a>
+                                        </small>
+                                    </p>                                    
+                                </div>
                             </div>
                             <div class="columns small-9 medium-9 large-9">
                                 <div class="row columns">
@@ -91,14 +109,16 @@
                                         <div class="filter-clear"></div>
                                     </div>
                                 </div>
-                                <div class="row columns">
+                                <div class="row columns position-relative">
                                     <div class="reveal" id="samplesModal" data-reveal>
                                         <h4>Available columns</h4>
-                                        <ul>
-                                        </ul>
                                         <button class="close-button" data-close aria-label="Close modal" type="button">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
+                                    </div>
+                                    <div class="loading-table">
+                                        <img class="loading-hover-gif"
+                                        src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"/>
                                     </div>
                                     <div id="samplesResults"></div>
                                     <div id="samples-pagination"></div>
@@ -110,7 +130,15 @@
                         <div class="row">
                             <div class="columns small-3 medium-3 large-3 filters">
                                 <form id="analysesFilters"  class="search-filters"></form>
-                                <div class="ebi-search"></div>
+                                <div class="ebi-search">
+                                    <p>
+                                        <small class="text-muted">
+                                            Powered by 
+                                            <a href="https://www.ebi.ac.uk/ebisearch/&quot;" class="ext" target="_blank">EBI Search
+                                            </a>
+                                        </small>
+                                    </p>
+                                </div>
                             </div>
                             <div class="columns small-9 medium-9 large-9">
                                 <div class="row columns">
@@ -118,14 +146,16 @@
                                         <div class="filter-clear"></div>
                                     </div>
                                 </div>
-                                <div class="row columns">
+                                <div class="row columns position-relative">
                                     <div class="reveal" id="analysesModal" data-reveal>
                                         <h4>Available columns</h4>
-                                        <ul>
-                                        </ul>
                                         <button class="close-button" data-close aria-label="Close modal" type="button">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
+                                    </div>
+                                    <div class="loading-table">
+                                        <img class="loading-hover-gif"
+                                        src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"/>
                                     </div>
                                     <div id="analysesResults"></div>
                                     <div id="analyses-pagination"></div>
@@ -267,6 +297,29 @@
         <% }); %>
         </tbody>
     </table>
+</script>
+
+<script id="facetViewTmpl" type="text/template">
+    <h5><%= facetFieldLabel %></h5>
+    <% if (enableFilter) { %>
+        <input type="text" class="filter" placeholder="Filter the list" value=""/>
+    <% } %>
+    <div class="row columns facets">
+        <!-- FacetViews will be injected here -->
+    </div>
+    <div class="loading-hover">
+        <img class='loading-hover-gif' src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"/>
+    </div>
+</script>
+
+<script id="facetItemTmpl" type="text/template">
+    <% if (entry.hasChildren()) { %>
+        <span class="toggle-tree-node">&#9654;</span>
+    <% } %>
+    <input id="<%= entry.cid %>" type="checkbox" name="<%= entry.get('label') %>" value="<%= entry.get('facetPath') %>" class="facet-checkbox">
+    <label for="<%= entry.cid %>" class="facet-checkbox-label">
+        <%= entry.get('label') %> (<%= entry.get('count') %>)
+    </label>
 </script>
 
 <div class="reveal" id="filtersModal" data-reveal>

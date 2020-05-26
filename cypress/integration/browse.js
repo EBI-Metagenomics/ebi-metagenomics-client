@@ -51,9 +51,8 @@ const studiesTableColumns = {
     },
     study_name: {
         data: [
-            'EMG produced TPA metagenomics assembly of the Shotgun Sequencing ' +
-            'of Tara Oceans DNA samples corresponding to size fractions for  '+
-            'prokaryotes. (APY) data set',
+            'EMG produced TPA metagenomics assembly of the Shotgun Sequencing of Tara Oceans DNA' +
+            ' samples corresponding to size fractions for prokaryotes. (APY) data set',
             'Origin and ecological selection of core and food-specific bacterial ' +
             'communities associated with meat and seafood spoilage.'],
         type: datatype.STR,
@@ -93,7 +92,7 @@ const samplesTableColumns = {
     sample_desc: {
         data: [
             // eslint-disable-next-line max-len
-            '"This sample (TARA_X000000263) was collected during the Tara Oceans expedition (2009-2013) at station TARA_004 (latitudeN=36.5533, longitudeE=-6.5669) on date/time=2009-09-15T11:30, using a PUMP (High Volume Peristaltic Pump).  The sample material (saline water (ENVO:00002010), including plankton (ENVO:xxxxxxxx)) was collected at a depth of 3-7 m, targeting a surface water layer (ENVO:00002042) in the marine biome (ENVO:00000447). The sample was size-fractionated (0.22-1.6 micrometres), and stored in liquid nitrogen for later detection of prokaryote nucleic acid sequences by pyrosequencing methods, and for later metagenomics analysis. This sample has replicate sample(s): TARA_X000000264."',
+            '"This sample (TARA_X000000263) was collected during the Tara Oceans expedition (2009-2013) at station TARA_004 (latitudeN=36.5533, longitudeE=-6.5669) on date/time=2009-09-15T11:30, using a PUMP (High Volume Peristaltic Pump). The sample material (saline water (ENVO:00002010), including plankton (ENVO:xxxxxxxx)) was collected at a depth of 3-7 m, targeting a surface water layer (ENVO:00002042) in the marine biome (ENVO:00000447). The sample was size-fractionated (0.22-1.6 micrometres), and stored in liquid nitrogen for later detection of prokaryote nucleic acid sequences by pyrosequencing methods, and for later metagenomics analysis. This sample has replicate sample(s): TARA_X000000264."',
             'wound_swab'
         ],
         type: datatype.STR,
@@ -115,9 +114,13 @@ let samplesTable;
 describe('Browse page', function() {
     beforeEach(function() {
         cy.server();
-        cy.route(Config.API_URL + '**studies**').as('studiesCall');
-        cy.route(Config.API_URL + '**samples**').as('samplesCall');
+
+        cy.log(Config.API_URL + 'studies**');
+
+        cy.route(Config.API_URL + 'studies**').as('studiesCall');
+        cy.route(Config.API_URL + 'samples**').as('samplesCall');
     });
+
     context('Super studies table', function() {
         beforeEach(function() {
             openPage(origPage + '#super-studies');
@@ -182,7 +185,7 @@ describe('Browse page', function() {
                         'MGYS00002008',
                         'EMG produced TPA metagenomics assembly of the Shotgun ' +
                         'Sequencing of Tara Oceans DNA samples corresponding to ' +
-                        'size fractions for  prokaryotes. (APY) data set',
+                        'size fractions for prokaryotes. (APY) data set',
                         '1',
                         '3-Oct-2019'
                     ]
@@ -236,7 +239,7 @@ describe('Browse page', function() {
                         'MGYS00002008',
                         'EMG produced TPA metagenomics assembly of the Shotgun ' +
                         'Sequencing of Tara Oceans DNA samples corresponding to ' +
-                        'size fractions for  prokaryotes. (APY) data set',
+                        'size fractions for prokaryotes. (APY) data set',
                         '1',
                         '3-Oct-2019'
                     ],
@@ -338,7 +341,7 @@ describe('Browse page', function() {
             'ERS487899',
             'TARA_X000000263',
             // eslint-disable-next-line max-len
-            '"This sample (TARA_X000000263) was collected during the Tara Oceans expedition (2009-2013) at station TARA_004 (latitudeN=36.5533, longitudeE=-6.5669) on date/time=2009-09-15T11:30, using a PUMP (High Volume Peristaltic Pump).  The sample material (saline water (ENVO:00002010), including plankton (ENVO:xxxxxxxx)) was collected at a depth of 3-7 m, targeting a surface water layer (ENVO:00002042) in the marine biome (ENVO:00000447). The sample was size-fractionated (0.22-1.6 micrometres), and stored in liquid nitrogen for later detection of prokaryote nucleic acid sequences by pyrosequencing methods, and for later metagenomics analysis. This sample has replicate sample(s): TARA_X000000264."',
+            '"This sample (TARA_X000000263) was collected during the Tara Oceans expedition (2009-2013) at station TARA_004 (latitudeN=36.5533, longitudeE=-6.5669) on date/time=2009-09-15T11:30, using a PUMP (High Volume Peristaltic Pump). The sample material (saline water (ENVO:00002010), including plankton (ENVO:xxxxxxxx)) was collected at a depth of 3-7 m, targeting a surface water layer (ENVO:00002042) in the marine biome (ENVO:00000447). The sample was size-fractionated (0.22-1.6 micrometres), and stored in liquid nitrogen for later detection of prokaryote nucleic acid sequences by pyrosequencing methods, and for later metagenomics analysis. This sample has replicate sample(s): TARA_X000000264."',
             '25-Sep-2019'
         ];
 

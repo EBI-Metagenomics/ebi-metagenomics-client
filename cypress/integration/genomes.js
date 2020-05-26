@@ -4,12 +4,10 @@ import GenericTableHandler from '../util/genericTable';
 
 describe('Genomes page', () => {
     context('Browse genomes', () => {
-
         beforeEach(() => {
             openPage('genomes');
             waitForPageLoad('MGnify Genomes');
         });
-
         const genomesTableData = {
             biome_icon: {
                 data: ['', ''],

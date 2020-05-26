@@ -101,7 +101,7 @@ before_install:
   - nginx -c $TRAVIS_BUILD_DIR/travis/nginx.conf
 
   # Install build dependencies
-  - npm install cypress@3.4.1
+  - npm install cypress@4.5.0
   - npm install -g webpack@4.40.1
   - npm install -g codecov@3.5.0
   - npm install -g nyc@14.1.1

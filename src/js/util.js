@@ -105,6 +105,19 @@ function getParentTab($elem) {
 }
 
 /**
+ * Get Hash From window.location
+ * @return {string} the hash value without the # prefix
+ */
+export function getHashFromLocation() {
+    const hashValue = window.location.hash.substr(1);
+    if (hashValue) {
+       return _.first(hashValue.split('?'));
+    } else {
+        return;
+    }
+}
+
+/**
  * Attach tab handler callback to switch tabs
  */
 export function attachTabHandlers() {
@@ -113,7 +126,7 @@ export function attachTabHandlers() {
     $dataTabs.each(function() {
         new window.Foundation.Tabs($(this));
     });
-    const linkTab = window.location.hash.substr(1);
+    const linkTab = getHashFromLocation();
     if (linkTab) {
         changeTab($('#' + linkTab));
     }
