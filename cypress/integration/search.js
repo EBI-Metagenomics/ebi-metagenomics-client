@@ -122,7 +122,7 @@ describe('Search page', function() {
         it('Centre name filters should restrict results', function() {
             const centerName = 'BioProject';
             routeWithCenterName(centerName);
-            cy.get('input[value="centre_name/' + centerName + '"]').check({force: true});
+            cy.get('input[value="centre_name/BioProject"]').check({force: true});
             waitForSearchResults(rowSelector, 25);
             cy.get(studyTable.getColumnSelector(7)).contains(centerName);
             cy.get('tbody > tr > td[data-column=\'project-centre-name\']').contains(centerName);

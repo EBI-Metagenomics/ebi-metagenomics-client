@@ -75,6 +75,7 @@ describe('Home page', function() {
                 getBaseURL() + 'browse?lineage=root:Host-associated:Human:Skin#studies');
         });
 
+        // FIXME: querystring instead of cookie problem.
         // it('Browse amplicon assemblies', function() {
         //     cy.route(
         //         '**/ebisearch/ws/rest/metagenomics_analyses?**experiment_type:amplicon**',
