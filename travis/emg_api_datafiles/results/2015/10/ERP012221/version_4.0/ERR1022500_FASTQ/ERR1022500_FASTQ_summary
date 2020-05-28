@@ -1,8 +1,8 @@
 Submitted nucleotide sequences	189734031
 Nucleotide sequences after trimming and quality filtering	164427393
-Nucleotide sequences with predicted CDS	110153680
-Nucleotide sequences with predicted RNA	21510000
-Nucleotide sequences with InterProScan match	10050989
+Reads with predicted CDS	110153680
+Reads with predicted RNA	21510000
+Reads with InterProScan match	10050989
 Predicted CDS	110153680
 Predicted CDS with InterProScan match	10050989
 Total InterProScan matches	15807182
