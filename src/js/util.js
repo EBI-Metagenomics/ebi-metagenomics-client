@@ -805,9 +805,10 @@ export function specifyPageTitle(objectType, id) {
  * @param {string} fromEmail email address of sender
  * @param {string} subject of email
  * @param {string} body of email
+ * @param {bool} consent is consent for ENA
  * @return {JQuery.Promise} of ajax request
  */
-export function sendMail(fromEmail, subject, body) {
+export function sendMail(fromEmail, subject, body, consent) {
     const deferred = $.Deferred();
     console.log('Sending mail');
     $.ajax({
@@ -823,7 +824,8 @@ export function sendMail(fromEmail, subject, body) {
                 'attributes': {
                     'from_email': fromEmail,
                     'subject': subject,
-                    'message': body
+                    'message': body,
+                    'is_consent': consent || false
                 }
             }
         }),
@@ -832,6 +834,7 @@ export function sendMail(fromEmail, subject, body) {
             deferred.resolve(true);
         },
         error(e) {
+            // TODO: report error to the team
             console.error(e);
             console.error('Failed to send email.');
             deferred.resolve(false);
