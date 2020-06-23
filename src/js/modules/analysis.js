@@ -1281,7 +1281,7 @@ const DownloadTabView = Backbone.View.extend({
     render() {
         const that = this;
         // Order
-        const groupsKeys = [
+        const order = [
             'Sequence data',
             'Functional analysis',
             'Pathways and Systems',
@@ -1289,16 +1289,19 @@ const DownloadTabView = Backbone.View.extend({
             'Taxonomic analysis SSU rRNA',
             'Taxonomic analysis LSU rRNA',
             'Taxonomic analysis ITS',
+            'Taxonomic analysis mOTU',
             'non-coding RNAs'
         ];
         const data = that.model.attributes.downloadGroups;
+        const dataKeysOrdered = _.sortBy(_.allKeys(data), (dataKey) => {
+            const idx = _.indexOf(order, dataKey);
+            // push items that are missing on the order list to the end
+            return (idx === -1) ? 9999 : idx;
+        });
         const groups = {};
-        _.each(groupsKeys, (k) => {
+        _.each(dataKeysOrdered, (key) => {
             // eslint-disable-next-line security/detect-object-injection
-            if (data[k]) {
-                // eslint-disable-next-line security/detect-object-injection
-                groups[k] = data[k];
-            }
+            groups[key] = data[key];
         });
         // ITS grouping
         let itsRes = groups['Taxonomic analysis ITS'] || [];
@@ -1311,8 +1314,6 @@ const DownloadTabView = Backbone.View.extend({
         if (itsRes.length > 0) {
             groups['Taxonomic analysis ITS'] = itsRes;
         }
-
-        // TODO: add  CWL links depending on the type.
 
         that.$el.html(that.template({
             groups: groups,
