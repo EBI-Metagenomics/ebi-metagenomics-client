@@ -43,9 +43,10 @@ before_install:
   # Create tables from django model
   - emgcli migrate
 
-  # Join fixtures from multiple .sql files to populate db.
-  - echo -e "SET FOREIGN_KEY_CHECKS = 0;\n$(cat travis/emg_sql_fixtures/*.sql)\nSET FOREIGN_KEY_CHECKS = 1;" > travis/emg_sql_fixtures/merged.sql
-  - mysql -u root --password="" --database=emg < travis/emg_sql_fixtures/merged.sql
+  # import the sql fixtures
+  - mysql -u root --password='' --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
+  - for S in travis/emg_sql_fixtures/*.sql; do echo "SQL >>>> $S"; mysql -u root --password="" --database=emg < "$S"; done
+  - mysql -u root --password="" --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
 
   ## EMG FIXTURES
   - travis/create_download_files.sh
