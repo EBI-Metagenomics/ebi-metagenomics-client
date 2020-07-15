@@ -132,8 +132,8 @@ let GenomesView = util.GenericTableView.extend({
  * @param {string} releaseVersion Release version
  */
 function genPhyloTree(releaseVersion) {
-    new api.ReleaseDownloads({id: releaseVersion}).fetch().done((data) => {
-        const url = util.findFileUrl(data.data, 'phylo_tree.json');
+    new api.ReleaseDownloads({id: releaseVersion}).fetch().done((response) => {
+        const url = util.findFileUrl(response.data, 'phylo_tree.json');
         new PhyloTree('phylo-tree', url);
     });
 }

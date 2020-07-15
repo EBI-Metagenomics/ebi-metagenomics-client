@@ -906,12 +906,10 @@ export function cleanTaxLineage(lineage, replace) {
  * @return {string} url
  */
 export function findFileUrl(files, alias) {
-    let url = null;
-    for (let f of files) {
-        if (f.attributes.alias === alias) {
-            url = f.attributes.links[0];
-            break;
-        }
+    const fileData = _.findWhere(files, {id: alias});
+    if (!fileData) {
+        return '';
     }
-    return url;
+    const file = _.first(fileData.attributes.links) || {};
+    return file.link;
 }
