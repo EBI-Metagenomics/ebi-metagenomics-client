@@ -466,30 +466,55 @@
                         </thead>
                         <tbody>
                         <% _.each(group, function(entry) { %>
-                        <tr>
-                            <td><%= entry.attributes.description.label %></td>
-                            <td><%= entry.attributes['file-format'].compression ? entry.attributes['file-format'].compExtension
-                                :
-                                '-' %>
-                            </td>
-                            <td><%= entry.attributes['file-format'].name %></td>
-                            <td><% if (entry.attributes.links.length===1) { %>
-                                <div class="download-part">
-                                    <a href="<%= entry.attributes.links[0] %>"><span class="icon icon-functional"
-                                                                                    data-icon="="></span>
-                                    </a>
-                                </div>
-                                <% } else { %>
-                                    <% _.each(entry.attributes.links, function(link, i){ %>
+                            <% var entryAttrs = entry.attributes; %>
+                            <tr>
+                                <td><%= entryAttrs.description.label %></td>
+                                <td>
+                                    <% if (entryAttrs["file-format"].compression) { %>
+                                        <%= entryAttrs["file-format"].compExtension %>
+                                    <% } else { %> 
+                                        -
+                                    <% } %>
+                                </td>
+                                <td><%= entryAttrs["file-format"].name %></td>
+                                <td>
+                                <% if (entryAttrs.links.length === 1) { %>
+                                    <% var link = _.first(entryAttrs.links) %>
                                     <div class="download-part">
-                                        <a href="<%= link %>">Part <%= (i+1) %><span class="icon icon-functional"
-                                                                                    data-icon="="></span>
+                                        <a href="<%= link.link %>">
+                                            <span class="icon icon-functional" data-icon="="></span>
                                         </a>
+                                        <% if (link.checksum && link.checksum.checksum) { %>
+                                            <a href="#"
+                                               class="file-checksum"
+                                               data-fileurl="<%= link.link %>"
+                                               data-checksum="<%= link.checksum.checksum %>"
+                                               data-checksum-algorithm="<%= link.checksum['checksum-algorithm'] %>">
+                                                <span class="icon icon-common" data-icon="&#xf292;"></span>
+                                            </span>
+                                        <% } %>
                                     </div>
+                                <% } else { %>
+                                    <% _.each(entryAttrs.links, function(link, i) { %>
+                                        <div class="download-part">
+                                            <a href="<%= link.link %>">
+                                                Part <%= (i+1) %>
+                                                <span class="icon icon-functional" data-icon="="></span>
+                                            </a>
+                                            <% if (link.checksum && link.checksum.checksum) { %>
+                                                <a href="#"
+                                                   class="file-checksum"
+                                                   data-fileurl="<%= link.link %>"
+                                                   data-checksum="<%= link.checksum.checksum %>"
+                                                   data-checksum-algorithm="<%= link.checksum['checksum-algorithm'] %>">
+                                                    <span class="icon icon-common" data-icon="&#xf292;"></span>
+                                                </span>
+                                            <% } %>                                            
+                                        </div>
                                     <% }) %>
                                 <% } %>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                         <% }); %>
                         </tbody>
                     </table>

@@ -134,16 +134,16 @@
     </div>
     <script id="downloadsTmpl" type="text/template">
         <% for (let [pipeline, groups] of Object.entries(pipeline_files)){ %>
-        <div class="row columns">
-            <h3>Pipeline version: <%= pipeline %></h3>
-            <% for (let [key, downloads] of Object.entries(groups)){ %>
-            <h4><%= key %></h4>
-            <% _.each(downloads, function(download){ %>
-            <p><a href="<%= download.attributes.link %>"><%= download.attributes.description.label %></a></p>
-            <% }); %>
-            <% } %>
-        </div>
-        <br>
+            <div class="row columns">
+                <h3>Pipeline version: <%= pipeline %></h3>
+                <% for (let [key, downloads] of Object.entries(groups)){ %>
+                    <h4><%= key %></h4>
+                    <% _.each(downloads, function(download){ %>
+                        <p><a href="<%= download.attributes.link %>"><%= download.attributes.description.label %></a></p>
+                    <% }); %>
+                <% } %>
+            </div>
+            <br>
         <% } %>
     </script>
 </div>
