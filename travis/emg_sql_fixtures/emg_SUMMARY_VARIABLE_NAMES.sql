@@ -21,7 +21,7 @@
 
 LOCK TABLES SUMMARY_VARIABLE_NAMES WRITE;
 /*!40000 ALTER TABLE SUMMARY_VARIABLE_NAMES DISABLE KEYS */;
-INSERT INTO SUMMARY_VARIABLE_NAMES (VAR_NAME, DESCRIPTION) VALUES ('Nucleotide sequences after clustering',NULL),('Nucleotide sequences after format-specific filtering',NULL),('Nucleotide sequences after length filtering',NULL),('Nucleotide sequences after repeat masking and filtering',NULL),('Nucleotide sequences after undetermined bases filtering',NULL),('Reads with InterProScan match',NULL),('Reads with predicted CDS',NULL),('Reads with predicted RNA',NULL),('Reads with predicted rRNA',NULL),('Predicted CDS',NULL),('Predicted CDS with InterProScan match',NULL),('Submitted nucleotide sequences',NULL),('Total InterProScan matches',NULL);
+INSERT INTO SUMMARY_VARIABLE_NAMES (VAR_NAME, DESCRIPTION) VALUES ('Nucleotide sequences after clustering',NULL),('Nucleotide sequences after format-specific filtering',NULL),('Nucleotide sequences after length filtering',NULL),('Nucleotide sequences after repeat masking and filtering',NULL),('Nucleotide sequences after undetermined bases filtering',NULL),('Reads with InterProScan match',NULL),('Reads with predicted CDS',NULL),('Reads with predicted RNA',NULL),('Reads with predicted RNA',NULL),('Predicted CDS',NULL),('Predicted CDS with InterProScan match',NULL),('Submitted nucleotide sequences',NULL),('Total InterProScan matches',NULL);
 /*!40000 ALTER TABLE SUMMARY_VARIABLE_NAMES ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

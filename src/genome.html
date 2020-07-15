@@ -114,17 +114,17 @@
                                             '-' %>
                                         </td>
                                         <td><%= entry.attributes['file-format'].name %></td>
-                                        <td><% if (entry.attributes.links.length===1){ %>
+                                        <td><% if (entry.attributes.links.length === 1){ %>
                                             <div class="download-part">
-                                                <a href="<%= entry.attributes.links[0] %>"><span class="icon  icon-functional"
-                                                                                                data-icon="="></span>
+                                                <a href="<%= entry.attributes.links[0].link %>">
+                                                    <span class="icon icon-functional" data-icon="="></span>
                                                 </a>
                                             </div>
                                             <% } else { %>
-                                                <% _.each(entry.attributes.links, function(link, i){ %>
+                                                <% _.each(entry.attributes.links, function(link, i) { %>
                                                 <div class="download-part">
-                                                    <a href="<%= link %>">Part <%= (i+1) %><span class="icon  icon-functional"
-                                                                                                data-icon="="></span>
+                                                    <a href="<%= link.link %>">Part <%= (i+1) %>
+                                                        <span class="icon  icon-functional" data-icon="="></span>
                                                     </a>
                                                 </div>
                                                 <% }) %>

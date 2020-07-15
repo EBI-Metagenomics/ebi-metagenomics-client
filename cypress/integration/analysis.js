@@ -426,7 +426,7 @@ describe('Analysis page', function() {
             hoverAndValidateTooltip(
                 '#seqfeat-chart .highcharts-series-group .highcharts-series-0 > ' +
                 '.highcharts-point:nth-child(2)',
-                'Reads with predicted rRNA', '7 159 621');
+                'Reads with predicted RNA', '7 159 621');
             hoverAndValidateTooltip(
                 '#seqfeat-chart .highcharts-series-group .highcharts-series-0 > ' +
                 '.highcharts-point:nth-child(3)',
