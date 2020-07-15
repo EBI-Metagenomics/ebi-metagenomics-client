@@ -1278,6 +1278,22 @@ const DownloadTabView = Backbone.View.extend({
     mixins: [TabMixin],
     template: _.template($('#downloadsTmpl').html()),
     el: '#download',
+    events: {
+        'click a.file-checksum': function(event) {
+            const $a = $(event.currentTarget);
+            const filename = _.last(($a.data('fileurl') || 'checksum.txt').split('/'));
+            const checksum = $a.data('checksum');
+            const checksumAlgorithm = $a.data('checksum-algorithm');
+            const downloadFilename = filename.replace(/\.[^/.]+$/, '.' + checksumAlgorithm);
+
+            const objectURL = URL.createObjectURL(
+                new Blob([checksum + ' ' + filename], {type: 'text/plain'})
+            );
+            $a.attr('href', objectURL);
+            $a.attr('download', downloadFilename);
+            _.delay(() => URL.revokeObjectURL(objectURL), 150);
+        }
+    },
     render() {
         const that = this;
         // Order

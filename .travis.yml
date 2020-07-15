@@ -43,9 +43,10 @@ before_install:
   # Create tables from django model
   - emgcli migrate
 
-  # Join fixtures from multiple .sql files to populate db.
-  - echo -e "SET FOREIGN_KEY_CHECKS = 0;\n$(cat travis/emg_sql_fixtures/*.sql)\nSET FOREIGN_KEY_CHECKS = 1;" > travis/emg_sql_fixtures/merged.sql
-  - mysql -u root --password="" --database=emg < travis/emg_sql_fixtures/merged.sql
+  # import the sql fixtures
+  - mysql -u root --password='' --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
+  - for S in travis/emg_sql_fixtures/*.sql; do echo "SQL >>>> $S"; mysql -u root --password="" --database=emg < "$S"; done
+  - mysql -u root --password="" --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
 
   ## EMG FIXTURES
   - travis/create_download_files.sh
@@ -74,7 +75,7 @@ before_install:
   - emgcli import_summary ERZ477576 ~/results .go --pipeline 5.0
   - emgcli import_summary ERZ477576 ~/results .go_slim --pipeline 5.0
   - emgcli import_summary ERZ477576 ~/results .pfam --pipeline 5.0
-  - emgcli import_summary ERZ477576 ~/results .paths.gprops --pipeline 5.0
+  - emgcli import_summary ERZ477576 ~/results .gprops --pipeline 5.0
   - emgcli import_summary ERZ477576 ~/results .antismash --pipeline 5.0
 
   - emgcli import_kegg_modules $TRAVIS_BUILD_DIR/travis/fixtures/kegg_module_orthology.json
