@@ -1,6 +1,6 @@
 {
   "name": "mgportalv2",
-  "version": "1.6.10",
+  "version": "1.6.11",
   "description": "Webclient for the MGnify API",
   "main": "entry.js",
   "scripts": {
@@ -53,7 +53,7 @@
     "jquery.typewatch": "^3.0.0",
     "js-cookie": "^2.1.4",
     "livefilter": "^2.13.0",
-    "mgnify": "https://github.com/EBI-Metagenomics/ebi-metagenomics-webkit/archive/v1.6.3.tar.gz",
+    "mgnify": "https://github.com/EBI-Metagenomics/ebi-metagenomics-webkit/archive/v1.6.4.tar.gz",
     "motion-ui": "^1.2.3",
     "node-js-marker-clusterer": "^1.0.0",
     "ol": "^5.3.2",
