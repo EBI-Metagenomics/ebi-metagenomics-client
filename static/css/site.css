@@ -847,11 +847,6 @@ ul.training > li:before {
     margin: 0 5px 0 -15px;
 }
 
-ul.training > li:last-child:before {
-    content: "K";
-    font-family: EBI-Common;
-}
-
 .rebranding-announcement {
     margin-top: 1em;
     text-align: center;
