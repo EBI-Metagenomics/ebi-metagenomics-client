@@ -57,7 +57,9 @@ let GenomeView = Backbone.View.extend({
                 if (attr.cmseq) {
                     genomeStats['Strain heterogeneity (CMseq)'] = attr.cmseq;
                 }
-                genomeStats['Taxonomic inconsistency (CAT)'] = attr.taxincons;
+                if (attr.taxincons) {
+                    genomeStats['Taxonomic inconsistency (CAT)'] = attr.taxincons;
+                }
 
                 let genomeAnnotationStats = {
                     'InterPro coverage': attr.ipr_cov + '%',
