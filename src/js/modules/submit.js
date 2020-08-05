@@ -10,12 +10,13 @@ const fetch = userDetails.fetch();
 
 /**
  * General mailto url for give consent button
- * @return {object} userdata from API
+ * @param {object} userData
+ * @return {object} user data from API
  */
 function sendConsentRequest(userData) {
     let body = 'I consent for the MGnify team to analyse the private data of my account ' +
         util.getUsername() + '.';
-    return util.sendMail(userData['email'], 'Request consent', body);
+    return util.sendMail(userData['email'], 'Request consent', body, true);
 }
 
 /**
@@ -29,7 +30,7 @@ function notLoggedInCallBack() {
 
 /**
  * Display success or error message on consent request callback
- * @param {boolean} success true if request successfuly sent
+ * @param {boolean} success true if request successfully sent
  **/
 function consentRequestCallback(success) {
     if (success) {
