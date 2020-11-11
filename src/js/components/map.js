@@ -1,15 +1,11 @@
 const _ = require('underscore');
-// let MarkerClusterer = require('node-js-marker-clusterer');
 const ol = require('ol');
 const source = require('ol/source');
 const layer = require('ol/layer');
 const geom = require('ol/geom');
 const proj = require('ol/proj');
-const extent = require('ol/extent');
 const styleLib = require('ol/style');
 const controlLib = require('ol/control');
-const overlayLib = require('ol/Overlay');
-const styleCss = require('ol/ol.css');
 
 module.exports = class MapHandler {
     /**
@@ -96,7 +92,8 @@ module.exports = class MapHandler {
 
         let raster = new layer.Tile({
             source: new source.OSM({
-                url: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en'
+                url: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en',
+                crossOrigin: null
             })
         });
 
