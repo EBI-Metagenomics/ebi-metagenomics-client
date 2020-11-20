@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const api = require('mgnify').api(process.env.API_URL);
-const Map = require('../components/map');
+const { MapView } = require('../components/googleMap');
 const DetailList = require('../components/detailList');
 const util = require('../util');
 
@@ -63,13 +63,22 @@ let SampleView = Backbone.View.extend({
                 that.model.attributes.external_links = _.map(urls, function(url, text) {
                     return util.createListItem(util.createLinkTag(url, text));
                 });
+                
                 that.$el.html(that.template(that.model.toJSON()));
+
                 if (Object.keys(metadataObj).length > 0) {
                     $('#sample-metadata').html(new DetailList('Sample metadata', metadataObj));
                 } else {
                     $('#sample-metadata').html('No metadata to be displayed.');
                 }
-                new Map('map', [that.model], false);
+                const mapView = new MapView({
+                    samples: [that.model],
+                    zoom: 4
+                });
+                mapView.on('map:no-samples', function() {
+                    $('#sample-description').removeClass('small-6 medium-6 large-6');
+                });
+                mapView.render();
                 deferred.resolve(true);
             },
             error(ignored, response) {

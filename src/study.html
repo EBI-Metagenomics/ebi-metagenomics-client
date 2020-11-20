@@ -40,45 +40,47 @@
             <div class="tabs-content" data-tab-content="study-tabs">
                 <div class="tabs-panel active" id="overview">
                     <div class="row">
-                        <div class="columns small-12 medium-4 large-4">
-                            <h4>Last updated: <%= last_update %></h4>
-                            <section>
-                                <h3>Classification</h3>
-                                <% _.each(biomes, function(biome){ %>
-                                <div class="row columns">
-                                    <span class="biome_icon icon_sm <%= biome.icon %>" title="<%= biome.name %>"></span>
-                                    <%= biome.name %>
-                                    <!--<p> <%= biome.name %></p>-->
-                                </div>
+                        <div id="study-description" class="columns small-12 medium-4 large-4">
+                            <h4>
+                                Last updated: <%= last_update %>
+                            </h4>
+                            <div class="columns row">
+                                <h3 class="columns">Classification</h3>
+                                <% _.each(biomes, function(biome) { %>
+                                    <div class="columns">
+                                        <span class="biome_icon icon_sm <%= biome.icon %>" title="<%= biome.name %>"></span>
+                                        <%= biome.name %>
+                                    </div>
                                 <% }); %>
-                                <h3>Description</h3>
-                                <p class="study-abstract"> <%= abstract %></p>
-                            </section>
-                        </div>
-                        <div class="columns small-12 medium-8 large-8 map">
-                            <div id="map">
                             </div>
-                            <span class="no-coords-span">No sample coordinates available to display.</span>
-                            <!--<div id="warning" class="map-alert text-center">-->
-                            <!--Some samples have no associated latitude/longitude coordinates and could not be-->
-                            <!--marked on the map.-->
-                            <!--</div>-->
+                            <div class="columns">
+                                <h3>Description</h3>
+                                <p class="study-abstract">
+                                    <%= abstract %>
+                                </p>
+                            </div>
+                        </div>
+                        <div id="map-container" class="columns small-12 medium-8 large-8 map">
+                            <img class="map-spinner loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">
+                            <div id="map"></div>
                         </div>
                     </div>
                     <hr>
                     <section id="external-links-section">
                         <div class="row">
-                            <% if (related_studies.length>0) { %>
-                            <div class="columns small-12 medium-4 large-4">
-                                <h3>Related studies</h3>
-                                <div class="row columns">
-                                    <ul data-cy="relatedStudies">
-                                        <% _.each(related_studies, function(study) { %>
-                                        <li><a href="<%= study.study_url %>"><%= study.id %></a></li>
-                                        <% }); %>
-                                    </ul>
+                            <% if (related_studies.length > 0) { %>
+                                <div class="columns small-12 medium-4 large-4">
+                                    <h3>Related studies</h3>
+                                    <div class="row columns">
+                                        <ul data-cy="relatedStudies">
+                                            <% _.each(related_studies, function(study) { %>
+                                                <li>
+                                                    <a href="<%= study.study_url %>"><%= study.id %></a>
+                                                </li>
+                                            <% }); %>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
                             <% } %>
                             <div class="columns small-12 medium-8 large-8">
                                 <h3>External links</h3>

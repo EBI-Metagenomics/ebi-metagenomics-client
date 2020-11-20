@@ -1,0 +1,14 @@
+<div class="callout callout-white">
+    <p class="h6">
+        Samples on this geographical location
+    </p>
+    <ul class="no-bullet">
+        <% samples.forEach(function(sample) { %>
+            <li>
+                <a href="<%= sample.get('sample_url') %>">
+                    <%= sample.get('sample_accession') %>
+                </a>   
+            </li>    
+        <% }) %>
+    </ul>
+</div>
