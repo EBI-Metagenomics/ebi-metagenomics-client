@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const api = require('mgnify').api(process.env.API_URL);
-const { MapView } = require('../components/googleMap');
+const { SamplesMapView } = require('../components/samplesMap');
 const util = require('../util');
 
 require('../../../static/js/jquery.liveFilter.js');
@@ -42,64 +42,6 @@ let StudyView = Backbone.View.extend({
     }
 });
 
-let MapData = Backbone.View.extend({
-    initialize(params) {
-        const that = this;
-        this.parentView = params.parentView;
-        this.data = [];
-        this.collection = params['collection'];
-        this.study_accession = params['study_accession'];
-
-        const mapView = new MapView();
-        mapView.on('map:no-samples', function() {
-            that.parentView.adjustToNoMap();
-        });
-        mapView.toggleLoading(true);
-
-        this.collection.fetch({
-            data: $.param({study_accession: that.study_accession}),
-            success(response, meta) {
-                let data = response.models;
-                that.data = that.data.concat(data);
-                if (meta.links.next !== null) {
-                    that.url = meta.links.next;
-                    that.fetchAll();
-                } else {
-                    mapView.setSamples(that.data);
-                    mapView.render();
-                }
-            },
-            error() {
-                console.error("Error fetching the study");
-            }
-        });
-    },
-    fetchAll() {
-        const that = this;
-
-        const mapView = new MapView();
-        mapView.on('map:no-samples', function() {
-            that.parentView.adjustToNoMap();
-        });
-        mapView.toggleLoading(true);
-
-        this.collection.fetch({
-            data: $.param({study_accession: that.study_accession}),
-            success(response, meta) {
-                let data = response.models;
-                that.data = that.data.concat(data);
-                if (meta.links.next !== null) {
-                    that.collection.url = meta.links.next;
-                    that.fetchAll();
-                } else {
-                    mapView.setSamples(that.data);
-                    mapView.render();
-                }
-            }
-        });
-    }
-});
-
 let DownloadsView = Backbone.View.extend({
     model: api.StudyDownloads,
     template: _.template($('#downloadsTmpl').html()),
@@ -124,12 +66,23 @@ function initPage() {
 
     let analyses = new api.StudyAnalyses({id: studyId});
     let downloads = new api.StudyDownloads({id: studyId});
-    let samples = new api.SamplesCollection();
 
     studyView.fetchAndRender().done(() => {
+        
         new util.AnalysesView({collection: analyses});
-        new MapData({collection: samples, study_accession: studyId, parentView: studyView});
+
         new DownloadsView({model: downloads});
+
+        const samplesMapView = new SamplesMapView({
+            study: study
+        });
+
+        samplesMapView.on("samples-map:no-samples", () => {
+            studyView.adjustToNoMap();
+        });
+
+        samplesMapView.render();
+
         util.attachExpandButtonCallback();
     });
 }

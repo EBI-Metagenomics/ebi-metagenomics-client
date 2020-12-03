@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const api = require('mgnify').api(process.env.API_URL);
-const { MapView } = require('../components/googleMap');
+const { SamplesMapView } = require('../components/samplesMap');
 const DetailList = require('../components/detailList');
 const util = require('../util');
 
@@ -71,11 +71,11 @@ let SampleView = Backbone.View.extend({
                 } else {
                     $('#sample-metadata').html('No metadata to be displayed.');
                 }
-                const mapView = new MapView({
+                const mapView = new SamplesMapView({
                     samples: [that.model],
                     zoom: 4
                 });
-                mapView.on('map:no-samples', function() {
+                mapView.on("samples-map:no-samples", function() {
                     $('#sample-description').removeClass('small-6 medium-6 large-6');
                 });
                 mapView.render();
