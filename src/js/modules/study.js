@@ -1,7 +1,7 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const api = require('mgnify').api(process.env.API_URL);
-const Map = require('../components/map');
+const { SamplesMapView } = require('../components/samplesMap');
 const util = require('../util');
 
 require('../../../static/js/jquery.liveFilter.js');
@@ -9,7 +9,6 @@ require('../../../static/js/jquery.liveFilter.js');
 util.setupPage('#browse-nav');
 
 let studyId = util.getURLParameter();
-// util.specifyPageTitle('Study', studyId);
 
 let StudyView = Backbone.View.extend({
     model: api.Study,
@@ -33,46 +32,13 @@ let StudyView = Backbone.View.extend({
                 util.displayError(response.status, 'Could not retrieve study: ' + studyId);
             }
         });
-    }
-});
-
-let MapData = Backbone.View.extend({
-    initialize(params) {
-        this.data = [];
-        this.collection = params['collection'];
-        this.study_accession = params['study_accession'];
-        const that = this;
-        this.collection.fetch({
-            data: $.param({study_accession: that.study_accession}),
-            success(response, meta) {
-                let data = response.models;
-                that.data = that.data.concat(data);
-                if (meta.links.next !== null) {
-                    that.url = meta.links.next;
-                    that.fetchAll();
-                } else {
-                    new Map('map', that.data, true, studyId);
-                }
-            },
-            error() {
-            }
-        });
     },
-    fetchAll() {
-        const that = this;
-        this.collection.fetch({
-            data: $.param({study_accession: that.study_accession}),
-            success(response, meta) {
-                let data = response.models;
-                that.data = that.data.concat(data);
-                if (meta.links.next !== null) {
-                    that.collection.url = meta.links.next;
-                    that.fetchAll();
-                } else {
-                    new Map('map', that.data, true);
-                }
-            }
-        });
+
+    /**
+     * Adjust the Layout as there is no map.
+     */
+    adjustToNoMap() {
+        this.$("#study-description").removeClass("small-12 medium-4 large-4");
     }
 });
 
@@ -100,12 +66,23 @@ function initPage() {
 
     let analyses = new api.StudyAnalyses({id: studyId});
     let downloads = new api.StudyDownloads({id: studyId});
-    let samples = new api.SamplesCollection();
 
     studyView.fetchAndRender().done(() => {
+        
         new util.AnalysesView({collection: analyses});
-        new MapData({collection: samples, study_accession: studyId});
+
         new DownloadsView({model: downloads});
+
+        const samplesMapView = new SamplesMapView({
+            study: study
+        });
+
+        samplesMapView.on("samples-map:no-samples", () => {
+            studyView.adjustToNoMap();
+        });
+
+        samplesMapView.render();
+
         util.attachExpandButtonCallback();
     });
 }

@@ -37,6 +37,12 @@ require('../../static/images/twitter_card/card_image_no_ebi_logo.jpg');
 require('../../static/images/submission_process.svg');
 require('../../static/images/ajax-loader.gif');
 
+require('../../static/images/maps/m1.png');
+require('../../static/images/maps/m2.png');
+require('../../static/images/maps/m3.png');
+require('../../static/images/maps/m4.png');
+require('../../static/images/maps/m5.png');
+
 require('style-loader?name=[name].[ext]!../../static/css/elixir-banner.css');
 require('style-loader?name=[name].[ext]!../../static/css/ebi-global.css');
 require('style-loader?name=[name].[ext]!../../static/css/theme-embl-petrol.css');
@@ -73,6 +79,9 @@ export const TAXONOMY_COLOURS = [
 
 $(document).foundation();
 $(document).foundationExtendEBI();
+
+// keys
+export const GMAPS_API_KEY = process.env.GMAPS_API_KEY;
 
 /**
  * Show the message banner.

@@ -34,35 +34,38 @@
                 </div>
             </div>
             <div class="row">
-                <div class="column small-6 medium-6 large-6">
-                    <h4>Last updated: <%= last_update %></h4>
-                    <h3>Description</h3>
-                    <p><%= sample_desc %></p>
-                    <h3>External links</h3>
-                    <div class="row columns">
-                        <ul id="ebi_ena_links">
-                            <li><a class="ext" href="<%= ena_url %>">
-                                ENA website (<%= sample_accession %>)
-                            </a></li>
-                            <li><a class="ext" href="<%= biosample_url %>">
-                                EBI biosample (<%= biosample %>)
-                            </a></li>
-                        </ul>
+                <div id="sample-description" class="columns small-6 medium-6 large-6">
+                    <div class="columns">
+                        <h4>
+                            Last updated: <%= last_update %>
+                        </h4>
+                        <h3>Description</h3>
+                        <p><%= sample_desc %></p>
                     </div>
-                    <h3>Classification</h3>
-                    <p>
-                        <span class="biome_icon icon_sm <%= biome_icon %>" title="<%= biome_name %>"></span>
-                        <%= biome_name %>
-                    </p>
+                    <div class="columns">
+                        <h3>External links</h3>
+                        <div class="row columns">
+                            <ul id="ebi_ena_links">
+                                <li><a class="ext" href="<%= ena_url %>">
+                                    ENA website (<%= sample_accession %>)
+                                </a></li>
+                                <li><a class="ext" href="<%= biosample_url %>">
+                                    EBI biosample (<%= biosample %>)
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="columns row">
+                        <h3 class="columns">Classification</h3>
+                        <div class="columns">
+                            <span class="biome_icon icon_sm <%= biome_icon %>" title="<%= biome_name %>"></span>
+                            <%= biome_name %>
+                        </div>
+                    </div>
                 </div>
-                <div class="column small-6 medium-6 large-6 map">
-                    <div id="map">
-                    </div>
-                    <span class="no-coords-span">No sample coordinates available to display.</span>
-                    <!--<div id="warning" class="map-alert text-center">-->
-                    <!--Some samples have no associated latitude/longitude coordinates and could not be-->
-                    <!--marked on the map.-->
-                    <!--</div>-->
+                <div id="map-container" class="columns small-6 medium-6 large-6 map">
+                    <img class="map-spinner loading-spinner loading-gif-large" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" alt="Loading...">
+                    <div id="map"></div>
                 </div>
             </div>
             <hr>

@@ -1,10 +1,10 @@
 const webpack = require('webpack');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const path = require('path');
 
 const subfolder = process.env.DEPLOYMENT_SUBFOLDER;
 const apiUrl = process.env.API_URL;
@@ -281,10 +281,6 @@ module.exports = {
             minify: minifyOptions,
             templateData: templateFixtures
         }),
-        new ScriptExtHtmlWebpackPlugin({
-            // Used to ensure map API callback exists
-            defer: ['sample.js', 'study.js']
-        }),
         new webpack.EnvironmentPlugin([
             'API_URL',
             'SEARCH_URL',
@@ -292,7 +288,8 @@ module.exports = {
             'SEQUENCE_SEARCH_URL',
             'SEARCH_CSV_ENDPOINT',
             'ENA_URL',
-            'DEPLOYMENT_SUBFOLDER'
+            'DEPLOYMENT_SUBFOLDER',
+            'GMAPS_API_KEY'
         ]),
         new CleanWebpackPlugin(['dist']),
         new webpack.ProvidePlugin({
@@ -327,6 +324,12 @@ module.exports = {
                 test: /\.(jpe?g|png|gif|svg|ico)$/,
                 loader: 'file-loader',
                 options: {name: '[path][name].[ext]', context: ''}
+            }, {
+                test: /\.html$/,
+                include: [
+                    path.resolve(__dirname, "src/templates")
+                ],
+                loader: 'underscore-template-loader',
             }]
     },
     node: {
