@@ -68,27 +68,33 @@
                     <hr>
                     <section id="external-links-section">
                         <div class="row">
-                            <% if (related_studies.length>0) { %>
-                            <div class="columns small-12 medium-4 large-4">
-                                <h3>Related studies</h3>
-                                <div class="row columns">
-                                    <ul data-cy="relatedStudies">
-                                        <% _.each(related_studies, function(study) { %>
-                                        <li><a href="<%= study.study_url %>"><%= study.id %></a></li>
-                                        <% }); %>
-                                    </ul>
+                            <% if (related_studies.length > 0) { %>
+                                <div class="columns small-12 medium-4 large-4">
+                                    <h3>Related studies</h3>
+                                    <div class="row columns">
+                                        <ul data-cy="relatedStudies">
+                                            <% _.each(related_studies, function(study) { %>
+                                                <li>
+                                                    <a href="<%= study.study_url %>"><%= study.id %></a>
+                                                </li>
+                                            <% }); %>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
                             <% } %>
                             <div class="columns small-12 medium-8 large-8">
-                                <h3>External links</h3>
-                                <div class="row columns">
-                                    <ul id="ebi_ena_links">
-                                        <li><a class="ext" href="<%= ena_url %>">
-                                            ENA website (<%= study_secondary_accession%>)
-                                        </a></li>
-                                    </ul>
-                                </div>
+                                <% if (study.get("is_public")) { %>
+                                    <h3>External links</h3>
+                                    <div class="row columns">
+                                        <ul id="ebi_ena_links">
+                                            <li>
+                                                <a class="ext" href="<%= ena_url %>">
+                                                ENA website (<%= study_secondary_accession %>)
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                <% } %>
                                 <h3>Publications</h3>
                                 <div class="row columns" data-cy="publications">
                                     <ul id="europe_pmc_links">
