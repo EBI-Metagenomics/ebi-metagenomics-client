@@ -29,18 +29,37 @@ module.exports = {
             minChunks: 3,
             maxAsyncRequests: 5,
             maxInitialRequests: 3
-            // cacheGroups: {
-            //     commons: {
-            //         name: 'common',
-            //         chunks: 'all',
-            //         minChunks: 2
-            //     }
-            // }
         },
         noEmitOnErrors: true, // NoEmitOnErrorsPlugin
         concatenateModules: true // ModuleConcatenationPlugin
     },
     devtool: '#inline-source-map',
-    node: baseConfig.node
+    node: baseConfig.node,
+    devServer: {
+        port: 9000,
+        proxy: {
+            '/metagenomics/api/latest': {
+                target: 'https://www.ebi.ac.uk/',
+                secure: false,
+                changeOrigin: true,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+                    "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+                },
+            },
+            '/metagenomics/studies': {
+                target: 'http://localhost:9000/',
+                pathRewrite: {
+                    '^/metagenomics/studies/.*$' : '/metagenomics/study.html',
+                },
+            },
+            '/metagenomics/samples': {
+                target: 'http://localhost:9000/',
+                pathRewrite: {
+                    '^/metagenomics/samples/.*$' : '/metagenomics/sample.html',
+                },
+            },
+        }
+    }
 };
-
