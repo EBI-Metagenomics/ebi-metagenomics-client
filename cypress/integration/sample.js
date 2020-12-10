@@ -117,16 +117,21 @@ describe('Sample page', function() {
         });
 
         it('Verify elements are present', function() {
-            const colSelector = '#main-content-area > div.row > div.column > div.column';
+            const colSelector = '#main-content-area > div.row > div.column';
             cy.get('h3').should('contain', sampleId);
             cy.get('h2').should('contain', 'Sample ASSDL1');
-            cy.get(colSelector + ' > h3:nth-child(2)').should('contain', 'Description');
-            cy.get(colSelector + ' > h3').should('contain', 'Classification');
-            cy.get(colSelector + ' > p').should('contain', 'ASS depth profile');
+            
+            const descOverview = '#sample-description > .columns:nth-child(1)';
+            cy.get(descOverview + ' > h3:nth-child(2)').should('contain', 'Description');
+            cy.get(descOverview + ' > p').should('contain', 'ASS depth profile');
+
+            const classification = '#sample-description > .columns:nth-child(3)';
+            cy.get(classification + ' > h3').should('contain', 'Classification');
             cy.get('#sample-metadata')
                 .should('contain', 'Collection date:')
                 .should('contain', '01/02/2013');
         });
+
         it('External links should all be valid', function() {
             cy.get('ul#links > li > a').each(($el) => {
                 const href = $el.attr('href');
