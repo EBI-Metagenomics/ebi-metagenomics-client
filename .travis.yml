@@ -122,6 +122,9 @@ after_script:
   - codecov
 
 cache:
-  - apt
-  - pip
-  - npm
+  apt: true
+  pip: true
+  npm: true
+  directories:
+    # cache binaries (cypress!)
+    - ~/.cache

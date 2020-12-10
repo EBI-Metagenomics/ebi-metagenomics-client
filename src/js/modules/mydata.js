@@ -5,18 +5,24 @@ const _ = require('underscore');
 util.setupPage('#overview');
 
 const StudiesViewWithEna = util.StudiesView.extend({
+
     getRowData(attr) {
-        let studyLink = '<a href=\'' + attr.study_url + '\'>' + attr.study_accession + '</a>';
+
+        let studyLink = '<a href="' + attr.study_url + '" >' + attr.study_accession + '</a>';
+        let enaLink = '';
+
         if (!attr['is_public']) {
             studyLink = '<span class="icon icon-functional icon-spacer" data-icon="L"></span>' +
                 studyLink;
+        } else {
+            enaLink = '<a class="ext" href="' + attr.ena_url + '" >(' +
+                attr.study_secondary_accession + ')</a>';
         }
-        const enaLink = '<a class=\'ext\' href=\'' + attr.ena_url + '\'>(' +
-            attr.study_secondary_accession + ')</a>';
+
         const biomes = _.map(attr.biomes, function(b) {
-            return '<span class=\'biome_icon icon_xs ' + b.icon + '\' title=\'' + b.name +
-                '\'></span>';
+            return '<span class="biome_icon icon_xs ' + b.icon + '" title="' + b.name + '"></span>';
         });
+
         return [
             biomes.join(' '),
             studyLink + '<br>' + enaLink,
@@ -26,6 +32,7 @@ const StudiesViewWithEna = util.StudiesView.extend({
             attr['last_update']];
     }
 });
+
 util.getLoginStatus().done(function(isLoggedIn) {
     if (isLoggedIn) {
         const userStudies = new authApi.UserStudies();
@@ -37,7 +44,7 @@ util.getLoginStatus().done(function(isLoggedIn) {
             sectionTitle: 'My studies'
         });
     } else {
-        const here = '<a data-open=\'loginModal\'>here</a>';
+        const here = '<a data-open="loginModal">here</a>';
         util.displayError('You are not logged in.', 'Click ' + here +
             ' to login and view your data.');
     }

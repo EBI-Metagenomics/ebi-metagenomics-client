@@ -236,10 +236,6 @@ table:not(.tablesorter) th.sort-both:after {
     float: right;
 }
 
-/*th.updated{*/
-/*width: 5%*/
-/*}*/
-
 select.table-tools {
     -webkit-appearance: menulist;
     height: auto;
@@ -253,24 +249,17 @@ select.table-tools {
     height: 30em;
 }
 
-.centered {
-    text-align: center;
-}
-
 #map {
     height: 100%;
     width: 100%;
 }
 
-.no-coords-span {
-    background: #333;
-    color: #fff;
-    position: relative;
-    bottom: 15em;
+.callout.callout-white {
+    background-color: #fff;
+}
+
+.centered {
     text-align: center;
-    margin: 0 auto;
-    display: none;
-    width: 12em;
 }
 
 .expand-button {
@@ -725,12 +714,6 @@ a.ext:hover, a.ext:active, a.ext:focus {
 
 .biome-disp > a {
     display: inline;
-}
-
-.map-marker-data {
-    width: 25em;
-    height: 15em;
-    overflow-y: scroll;
 }
 
 .masthead {
