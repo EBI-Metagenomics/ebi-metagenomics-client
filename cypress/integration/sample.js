@@ -117,7 +117,7 @@ describe('Sample page', function() {
         });
 
         it('Verify elements are present', function() {
-            const colSelector = '#main-content-area > div.row > div.column';
+            const colSelector = '#main-content-area > div.row > div.column > div.column';
             cy.get('h3').should('contain', sampleId);
             cy.get('h2').should('contain', 'Sample ASSDL1');
             cy.get(colSelector + ' > h3:nth-child(2)').should('contain', 'Description');
