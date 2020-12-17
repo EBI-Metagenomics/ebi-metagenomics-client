@@ -1,0 +1,28 @@
+.loading-hover,
+.loading-table {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    opacity: 0.95;
+    display: none;
+}
+
+.loading-hover.show,
+.loading-table.show {
+    display: block;
+}
+
+.loading-hover-gif {
+    position: absolute;
+    top: 50%;
+    left: calc(50% - 1.5em);
+    height: 3em;
+    width: 3em;
+}
+
+.loading-table > .loading-hover-gif {
+    height: 7em;
+    width: 7em;
+}

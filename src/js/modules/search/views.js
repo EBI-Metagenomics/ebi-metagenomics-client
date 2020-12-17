@@ -11,6 +11,7 @@ const Cookies = require('js-cookie');
 const cookieName = commons.COOKIE_NAME;
 
 require('style-loader!../../../../static/css/modules/search.css');
+require('style-loader!../../../../static/css/modules/table.css');
 
 const collections = require('./collections');
 

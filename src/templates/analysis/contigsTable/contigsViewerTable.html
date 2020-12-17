@@ -1,0 +1,68 @@
+<div>
+    <div class="row margin-bottom-medium">
+        <div class="columns">
+            <span class="contigs-legend">
+                <span class="mgnify-icon has_cog"></span>
+                <span>COG</span>
+            </span>
+
+            <span class="contigs-legend">
+                <span class="mgnify-icon has_kegg"></span>
+                <span>KEGG ortholog</span>
+            </span>
+
+            <span class="contigs-legend">
+                <span class="mgnify-icon has_go"></span>
+                <span>GO</span>
+            </span>
+
+            <span class="contigs-legend">
+                <span class="mgnify-icon has_pfam"></span>
+                <span>Pfam</span>
+            </span>
+
+            <span class="contigs-legend">
+                <span class="mgnify-icon has_interpro"></span>
+                <span>InterPro</span>
+            </span>
+
+            <span class="contigs-legend">
+                <span class="mgnify-icon has_antismash"></span>
+                <span>antiSMASH</span>
+            </span>
+        </div>
+    </div>
+    <!-- TODO: enable
+        <div class="row columns small-12 medium-12 large-12">
+            <a class="right download-link">Download results</a>
+        </div> 
+    -->
+    <div class="row columns small-12 medium-12 large-12 position-relative">
+        <div id="table-loading" class="loading-table">
+            <img class="loading-hover-gif" src="/static/images/ajax-loader.gif">
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <% headers.forEach(function(header) { %>
+                        <th class="<%= header.class %>">
+                            <%= header.name %>
+                        </th>
+                        <% }) %>
+                </tr>
+            </thead>
+            <tbody id="<%= tableId %>-body">
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination row columns">
+        <ul id="<%= tableId %>-pagination" class="pagination pagination-sm" role="navigation" aria-label="Pagination">
+            <li>
+                <button type="button" class="cursor-prev button primary">Previous</button>
+            </li>
+            <li>
+                <button type="button" class="cursor-next button primary">Next</button>
+            </li>
+        </ul>
+    </div>
+</div>

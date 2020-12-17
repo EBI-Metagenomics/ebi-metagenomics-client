@@ -538,7 +538,6 @@
             <div class="columns">
                 <h4>
                     <a href="#contigs-table" class="" for="contigs-table">Assembly contigs</a>
-                    <img id="table-loading" class="loading-gif-medium" src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
                 </h4>
             </div>
             <div class="columns small-3 medium-3 large-3 contig-viewer-filters">
@@ -621,6 +620,32 @@
                 </div>
             </div>
             <div class="columns small-9 medium-9 large-9">
+                <div class="row columns small-8 medium-8 large-8">
+                    <h4>
+                        <span>Contigs</span>
+                    </h4>
+                </div>
+                <div class="row">
+                    <div class="columns small-12 medium-6 large-6">
+                        <label>
+                            Total matches:
+                            <span id="contigs-table-total-results">
+                            </span>
+                        </label>
+                    </div>
+                    <div class="columns small-12 medium-6 large-6">
+                        <div class="row">
+                            <div class="columns small-2 medium-2 large-2 float-right">
+                                <button id="clear-filter" class="clear-filter button right">Clear</button>
+                            </div>
+                            <div class="columns small-5 medium-5 large-5 float-right">
+                                <label class="right" for="search">
+                                    Filter rows: <input id="contigs-search" class="table-filter search" name="search" type="text">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div id="contigs-table">
                     <!-- Table containter -->
                 </div>
