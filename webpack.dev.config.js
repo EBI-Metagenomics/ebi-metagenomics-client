@@ -69,6 +69,12 @@ module.exports = {
                     '^/metagenomics/analyses/.*$' : '/metagenomics/analysis.html',
                 },
             },
+            '/metagenomics/search': {
+                target: 'http://localhost:9000/',
+                pathRewrite: {
+                    '^/metagenomics/search' : '/metagenomics/search.html',
+                },
+            },            
         }
     }
 };
