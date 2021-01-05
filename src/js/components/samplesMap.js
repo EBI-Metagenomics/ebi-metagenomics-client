@@ -101,11 +101,13 @@ export const SamplesMapView = Backbone.View.extend({
         let samplesCollection = new api.SamplesCollection();
 
         const fetchPage = (url) => {
+            const studyAccession = that.study.get("study_accession");
+            
             if (_.isString(url)) {
                 samplesCollection.url = url;
             }
-            samplesCollection.fetch({
-                data: $.param({ study_accession: that.study.get("study_accession") }),
+
+            let fetchHandler = {
                 success(response, meta) {
                     let data = response.models;
                     that.samples = that.samples.concat(data);
@@ -116,7 +118,15 @@ export const SamplesMapView = Backbone.View.extend({
                         deferred.resolve();
                     }
                 }
-            });
+            }
+
+            // Prevent adding the filter again, for next/prev pages links
+            // the study accession is already included
+            if (samplesCollection.url.indexOf(studyAccession) === -1) {
+                fetchHandler.data = $.param({ study_accession: studyAccession })
+            }
+
+            samplesCollection.fetch(fetchHandler);
         }
 
         // start the download cascade

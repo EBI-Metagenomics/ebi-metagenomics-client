@@ -1,0 +1,25 @@
+<% rows.forEach(function(row) { %>
+    <tr>
+        <td class="name">
+            <a href="#"
+                class="contig-browser"
+                data-has_antismash="<%= (row.model.get('has_antismash') > 0) %>"
+                data-contig_id="<%= row.model.get('contig_id') %>"
+            >
+                <%= row.model.get('contig_id') %>
+            </a>
+        </td>
+        <td class="length">
+            <%= row.model.get('length') %>
+        </td>
+        <td class="coverage">
+            <%= row.model.get('coverage') %>
+        </td>
+        <td>
+            <% row.features.forEach(function(feature) { %>
+                <span class="mgnify-icon <%= feature.field %> <%= (feature.missing) ? 'feature-absent' : '' %>">
+                </span>
+            <% }) %>
+        </td>
+    </tr>
+<% }) %>
