@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const {attachExpandButtonCallback} = require('../js/util');
+const {attachExpandButtonCallback} = require('../../util');
 
 /**
  * Tabs Manager.

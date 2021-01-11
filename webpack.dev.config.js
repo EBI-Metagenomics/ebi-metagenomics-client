@@ -38,10 +38,13 @@ module.exports = {
     devServer: {
         port: 9000,
         proxy: {
-            '/metagenomics/api/latest': {
-                target: 'https://www.ebi.ac.uk/',
+            '/metagenomics/api': {
+                target: 'http://localhost:8000/',
                 secure: false,
                 changeOrigin: true,
+                pathRewrite: {
+                    '^/metagenomics/api/latest': '/v1',
+                },
                 headers: {
                     "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
@@ -60,6 +63,18 @@ module.exports = {
                     '^/metagenomics/samples/.*$' : '/metagenomics/sample.html',
                 },
             },
+            '/metagenomics/analyses': {
+                target: 'http://localhost:9000/',
+                pathRewrite: {
+                    '^/metagenomics/analyses/.*$' : '/metagenomics/analysis.html',
+                },
+            },
+            '/metagenomics/search': {
+                target: 'http://localhost:9000/',
+                pathRewrite: {
+                    '^/metagenomics/search' : '/metagenomics/search.html',
+                },
+            },            
         }
     }
 };

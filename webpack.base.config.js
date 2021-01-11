@@ -51,8 +51,6 @@ module.exports = {
             'src/js/modules/assembly.js',
         analysis:
             'src/js/modules/analysis.js',
-        compare:
-            'src/js/modules/compare.js',
         about:
             'src/js/modules/about.js',
         help:
@@ -125,15 +123,6 @@ module.exports = {
             filename: 'browse.html',
             template: 'handlebars-loader!./src/browse.html',
             chunks: ['browse', 'commons'],
-            minify: minifyOptions,
-            templateData: templateFixtures
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Compare page',
-            inject: true,
-            filename: 'compare.html',
-            template: 'handlebars-loader!./src/compare.html',
-            chunks: ['compare', 'commons'],
             minify: minifyOptions,
             templateData: templateFixtures
         }),
