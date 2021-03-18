@@ -304,8 +304,8 @@ const ResultsView = Backbone.View.extend({
      * @return {{filters: *, query: *}}
      */
     loadSearchParams(facet) {
-        // FIXME: not functional.
-        //        requires requires the package query-string
+        // TODO: not functional.
+        //      requires the package query-string
         // const qs = queryString.parse(location.search) || {};
         // return {
         //     filters: _.pick(qs, facet),
@@ -596,7 +596,7 @@ const ResultsView = Backbone.View.extend({
 
     fetchAndRender(renderFilter) {
         const that = this;
-        // FIXME: not functional.
+        // TODO:  not functional.
         //        requires the package query-string
         // // update the query string
         // window.history.replaceState('',
@@ -644,9 +644,21 @@ const ResultsView = Backbone.View.extend({
                     });
                 }
 
-                $(that.el).find('button[name="download"]').click(function() {
-                    that.fetchCSV($(this));
-                });
+                // Until the backend is fixed (EMG-1542) we are capping the 
+                // total numer of results users can download
+                // using the CSV button
+                var $csvButton = $(that.el).find('button[name="download"]');
+                $csvButton.prop('title', '');
+                if (that.totalResults > 100) {
+                    $csvButton.prop('disabled', true);
+                    $csvButton.prop('title', 'CSV download limited to 100 results.');
+                } else {
+                    $csvButton.prop('disabled', false);
+                    $csvButton.on('click', function() {
+                        that.fetchCSV($(this));
+                    });
+                }
+
                 $('.loading-table').removeClass('show');
             },
             error() {
