@@ -51,6 +51,12 @@ module.exports = {
                     "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
                 },
             },
+            '/metagenomics$': {
+                target: 'http://localhost:9000/',
+                pathRewrite: {
+                    '^/metagenomics$' : '/metagenomics/index.html',
+                },
+            },
             '/metagenomics/studies': {
                 target: 'http://localhost:9000/',
                 pathRewrite: {
@@ -74,7 +80,7 @@ module.exports = {
                 pathRewrite: {
                     '^/metagenomics/search' : '/metagenomics/search.html',
                 },
-            },            
+            },
         }
     }
 };
