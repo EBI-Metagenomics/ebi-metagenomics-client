@@ -19,6 +19,7 @@ jobs:
               run: |
                   sudo chmod 777 /var/log/nginx/*
                   sudo chmod 777 /var/run/*
+                  sudo chmod 777 /var/run
                   sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
                   cat ci/nginx.conf
                   nginx -c "$(pwd)/ci/nginx.conf"
