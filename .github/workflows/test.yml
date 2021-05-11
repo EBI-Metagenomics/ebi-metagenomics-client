@@ -17,10 +17,10 @@ jobs:
             - uses: actions/checkout@v2
             - name: 🌎 Setup NginX
               run: |
-                  echo $GITHUB_WORKSPACE
-                  echo ${{ github.workspace }}
                   sudo chmod 777 /var/log/nginx/*
                   sudo chmod 777 /var/run/*
+                  sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
+                  cat ci/nginx.conf
                   nginx -c "$(pwd)/ci/nginx.conf"
             - name: 🐍 - Set up Python 3.6
               uses: actions/setup-python@v2
