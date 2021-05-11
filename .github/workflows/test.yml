@@ -1,0 +1,142 @@
+name: Testing
+
+on: [push, pull_request]
+env:
+    EMG_CONFIG: ${{ github.workspace }}/ci/config.yaml
+    API_URL: http://localhost:9000/metagenomics/api/v1/
+    SEARCH_URL: https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        # strategy:
+        #   matrix:
+        #     python-version: [3.6, 3.7.1, 3.8.6]
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: 🐍 - Set up Python 3.6
+              uses: actions/setup-python@v2
+              with:
+                  python-version: 3.6
+            - name: 📜 - Set up JS Node 10
+              uses: actions/setup-node@v1
+              with:
+                  node-version: '10'
+            - name: 💾 Start MongoDB
+              uses: supercharge/mongodb-github-action@1.3.0
+              with:
+                  mongodb-version: 4.0.6
+            - name: 🌎 Setup NginX
+              run: |
+                  ls -l /var/log/nginx/
+                  ls -l /var/run/
+                  sudo chmod 777 /var/log/nginx/*
+                  sudo chmod 777 /var/run/nginx.pid
+                  nginx -c ci/nginx.conf
+
+            - name: 🔧🔬 - Install EMG API
+              run: |
+                  python -V
+                  pip -V
+                  pip install "git+git://github.com/EBI-Metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
+                  pip install "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+                  ls -l
+
+            - name: 💾 - Setting MySQL
+              run: |
+                  sudo systemctl start mysql
+                  mysql --version
+                  mysql -uroot -proot -e 'CREATE DATABASE emg;'
+                  mysql -uroot -proot -e 'CREATE DATABASE ena;'
+                  mysql -uroot -proot -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES'"
+                  emgcli migrate
+                  mysql -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
+                  for SQL_FIXTURE in ci/emg_sql_fixtures/*.sql; do echo "SQL >>>> $SQL_FIXTURE"; mysql -uroot -proot --database=emg < "$SQL_FIXTURE"; done
+                  mysql -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
+            - name: 🪜 - Setting up Fixtures
+              run: |
+                  source ci/create_download_files.sh
+                  ls -lh ~/results
+
+                  emgcli import_taxonomy ERR1022502 ~/results --pipeline 4.0
+                  emgcli import_qc ERR1022502 ~/results --pipeline 4.0
+                  emgcli import_summary ERR1022502 ~/results .ipr --pipeline 4.0
+                  emgcli import_summary ERR1022502 ~/results .go_slim --pipeline 4.0
+                  emgcli import_summary ERR1022502 ~/results .go --pipeline 4.0
+
+                  emgcli import_taxonomy ERR1022502 ~/results --pipeline 2.0
+                  emgcli import_qc ERR1022502 ~/results --pipeline 2.0
+                  emgcli import_summary ERR1022502 ~/results .ipr --pipeline 2.0
+                  emgcli import_summary ERR1022502 ~/results .go_slim --pipeline 2.0
+                  emgcli import_summary ERR1022502 ~/results .go --pipeline 2.0
+
+                  emgcli import_taxonomy ERR867655 ~/results --pipeline 4.0
+                  emgcli import_qc ERR867655 ~/results --pipeline 4.0
+                  emgcli import_summary ERR867655 ~/results .ipr --pipeline 4.0
+                  emgcli import_summary ERR867655 ~/results .go_slim --pipeline 4.0
+                  emgcli import_summary ERR867655 ~/results .go --pipeline 4.0
+
+                  emgcli import_taxonomy ERP104236 ~/results --pipeline 4.0
+                  emgcli import_qc ERP104236 ~/results --pipeline 4.0
+                  emgcli import_summary ERP104236 ~/results .ipr --pipeline 4.0
+                  emgcli import_summary ERP104236 ~/results .go_slim --pipeline 4.0
+                  emgcli import_summary ERP104236 ~/results .go --pipeline 4.0
+
+                  emgcli import_taxonomy ERZ477576 ~/results --pipeline 5.0
+                  emgcli import_qc ERZ477576 ~/results --pipeline 5.0
+                  emgcli import_contigs ERZ477576 ~/results --pipeline 5.0
+                  emgcli import_summary ERZ477576 ~/results .ipr --pipeline 5.0
+                  emgcli import_summary ERZ477576 ~/results .go --pipeline 5.0
+
+                  emgcli import_summary ERZ477576 ~/results .go_slim --pipeline 5.0
+                  emgcli import_summary ERZ477576 ~/results .pfam --pipeline 5.0
+                  emgcli import_summary ERZ477576 ~/results .gprops --pipeline 5.0
+                  emgcli import_summary ERZ477576 ~/results .antismash --pipeline 5.0
+
+                  emgcli import_kegg_modules ${{ github.workspace }}/ci/fixtures/kegg_module_orthology.json
+                  emgcli import_kegg_classes ${{ github.workspace }}/ci/fixtures/kegg_class_orthology.json
+                  emgcli import_cog_descriptions ${{ github.workspace }}/ci/fixtures/cog.csv
+                  emgcli import_genomes ${{ github.workspace }}/ci/emg_api_datafiles/genomes/ 1.0
+
+                  git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
+
+                  mysql -uroot -proot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
+            - name: 🔬 - Start EMG API
+              run: |
+                  emgcli collectstatic --noinput
+                  emgcli check --deploy
+                  cd emgapi
+                  export GUNICORN_CMD_ARGS="--bind 127.0.0.1:9000 --workers=1 --daemon -p emg.pid --error-logfile error.log --access-logfile access.log" 
+                  emgdeploy emgcli.wsgi:application
+                  ps aux | grep emgdeploy
+                  cd ..
+                  curl --silent http://localhost:9000/v1/
+            - name: 🔧 - Install
+              run: |
+                  npm ci
+                  npm run build
+                  mv dist/* /usr/share/nginx/html/
+            - name: 🧪 - Testing
+              uses: cypress-io/github-action@v2
+            - name: 📊 - Coverage
+              run: |
+                  npm run coverage
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v1
+            - name: 🐞 - Error log
+              run: |
+                  cat emgapi/error.log
+                  cat emgapi/access.log
+            - name: 📮 - Slack Notification
+              uses: rtCamp/action-slack-notify@v2
+              continue-on-error: true
+              if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'|| github.ref == 'refs/heads/compatible_with_django3_api'
+              env:
+                  SLACK_COLOR: "${{ job.status == 'success' && 'good' || 'danger' }}"
+                  SLACK_USERNAME: 'Github Actions API'
+                  SLACK_ICON_EMOJI: ':octocat:'
+                  SLACK_TITLE: 'webkit results in GitHub Actions'
+                  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+                  SLACK_CHANNEL: '#metagenomics-notify'
+                  MSG_MINIMAL: Actions URL

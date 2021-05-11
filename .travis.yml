@@ -73,6 +73,7 @@ before_install:
   - emgcli import_contigs ERZ477576 ~/results --pipeline 5.0
   - emgcli import_summary ERZ477576 ~/results .ipr --pipeline 5.0
   - emgcli import_summary ERZ477576 ~/results .go --pipeline 5.0
+  
   - emgcli import_summary ERZ477576 ~/results .go_slim --pipeline 5.0
   - emgcli import_summary ERZ477576 ~/results .pfam --pipeline 5.0
   - emgcli import_summary ERZ477576 ~/results .gprops --pipeline 5.0
