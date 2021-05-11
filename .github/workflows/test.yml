@@ -14,6 +14,7 @@ jobs:
         #     python-version: [3.6, 3.7.1, 3.8.6]
 
         steps:
+            - uses: actions/checkout@v2
             - name: 🌎 Setup NginX
               run: |
                   whoami
@@ -21,8 +22,7 @@ jobs:
                   ls -l
                   sudo chmod 777 /var/log/nginx/*
                   sudo chmod 777 /var/run/*
-                  nginx -c ci/nginx.conf
-            - uses: actions/checkout@v2
+                  nginx -c "$(pwd)/ci/nginx.conf"
             - name: 🐍 - Set up Python 3.6
               uses: actions/setup-python@v2
               with:
