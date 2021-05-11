@@ -17,9 +17,8 @@ jobs:
             - uses: actions/checkout@v2
             - name: 🌎 Setup NginX
               run: |
-                  whoami
-                  pwd
-                  ls -l
+                  echo $GITHUB_WORKSPACE
+                  echo ${{ github.workspace }}
                   sudo chmod 777 /var/log/nginx/*
                   sudo chmod 777 /var/run/*
                   nginx -c "$(pwd)/ci/nginx.conf"
