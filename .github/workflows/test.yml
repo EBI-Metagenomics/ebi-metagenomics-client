@@ -38,8 +38,8 @@ jobs:
               run: |
                   python -V
                   pip -V
-                  pip install "git+git://github.com/EBI-Metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-                  pip install "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+                  pip install "git+git://github.com/EBI-Metagenomics/django-rest-framework-json-api@004f363c1b408243bd9827377955901020a773cc#egg=djangorestframework-jsonapi"
+                  pip install "git+git://github.com/EBI-metagenomics/emgapi@master#egg=emgcli"
                   ls -l
 
             - name: 💾 - Setting MySQL
