@@ -125,12 +125,18 @@ jobs:
                   curl --silent http://localhost:9000/metagenomics/
             - name: 🧪 - Testing
               uses: cypress-io/github-action@v2
-            # - name: 📊 - Coverage
+            - name: 📸 - Failed tests snapshots
+              uses: actions/upload-artifact@v2
+              if: failure()
+              with:
+                name: tests-snapshots
+                path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/cypress/screenshots/           # - name: 📊 - Coverage
             #   run: |
             #       npm run coverage
             # - name: Upload coverage to Codecov
             #   uses: codecov/codecov-action@v1
             - name: 🐞 - Error log
+              if: failure()
               run: |
                   echo "API error log"
                   cat emgapi/error.log
