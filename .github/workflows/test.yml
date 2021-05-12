@@ -106,13 +106,13 @@ jobs:
                   emgcli collectstatic --noinput
                   emgcli check --deploy
                   cd emgapi
-                  export GUNICORN_CMD_ARGS="--bind 127.0.0.1:9000 --workers=1 --daemon -p emg.pid --error-logfile error.log --access-logfile access.log" 
+                  export GUNICORN_CMD_ARGS="--bind 127.0.0.1:8000 --workers=1 --daemon -p emg.pid --error-logfile error.log --access-logfile access.log" 
                   emgdeploy emgcli.wsgi:application
                   ps aux | grep emgdeploy
                   cd ..
-                  curl --silent http://localhost:8000/v1/
                   curl --silent http://localhost:9000/metagenomics/api/
             - name: 🔧 - Install
+              continue-on-error: true
               run: |
                   npm ci
                   npm run build
@@ -120,16 +120,24 @@ jobs:
                   mv dist/metagenomics/* /usr/share/nginx/html/
                   ls /usr/share/nginx/html/
             - name: 🧪 - Testing
+              continue-on-error: true
               uses: cypress-io/github-action@v2
             - name: 📊 - Coverage
+              continue-on-error: true
               run: |
                   npm run coverage
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v1
             - name: 🐞 - Error log
               run: |
+                  echo "API error log"
                   cat emgapi/error.log
+                  echo "API access log"
                   cat emgapi/access.log
+                  echo "NGINX error log"
+                  cat /var/log/nginx/error.log
+                  echo "NGINX access log"
+                  cat /var/log/nginx/access.log
             - name: 📮 - Slack Notification
               uses: rtCamp/action-slack-notify@v2
               continue-on-error: true
