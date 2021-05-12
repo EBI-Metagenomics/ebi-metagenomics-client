@@ -59,6 +59,7 @@ jobs:
                   source ci/create_download_files.sh
                   ls -lh ~/results
             - name: 🔬 - Start EMG API
+              continue-on-error: true
               run: |
                   emgcli collectstatic --noinput
                   emgcli check --deploy
@@ -67,9 +68,12 @@ jobs:
                   emgdeploy emgcli.wsgi:application
                   ps aux | grep emgdeploy
                   cd ..
-                  echo ""
+                  echo "nginx"
                   curl --silent http://localhost:9000/metagenomics/api/v1/
+                  echo "gunicorn v1/"
                   curl --silent http://localhost:8000/v1/
+                  echo "gunicorn meta/v1/"
+                  curl --silent http://localhost:8000/metagenomics/api/v1/
             # - name: 🔧 - Install
             #   run: |
             #       npm ci
