@@ -110,24 +110,23 @@ jobs:
                   emgdeploy emgcli.wsgi:application
                   ps aux | grep emgdeploy
                   cd ..
-                  curl --silent http://localhost:9000/metagenomics/api/
-            - name: 🔧 - Install
-              continue-on-error: true
-              run: |
-                  npm ci
-                  npm run build
-                  ls dist/
-                  mv dist/metagenomics/* /usr/share/nginx/html/
-                  ls /usr/share/nginx/html/
-            - name: 🧪 - Testing
-              continue-on-error: true
-              uses: cypress-io/github-action@v2
-            - name: 📊 - Coverage
-              continue-on-error: true
-              run: |
-                  npm run coverage
-            - name: Upload coverage to Codecov
-              uses: codecov/codecov-action@v1
+                  echo ""
+                  curl --silent http://localhost:9000/metagenomics/api/v1/
+                  curl --silent http://localhost:8000/v1/
+            # - name: 🔧 - Install
+            #   run: |
+            #       npm ci
+            #       npm run build
+            #       ls dist/
+            #       mv dist/metagenomics/* /usr/share/nginx/html/
+            #       ls /usr/share/nginx/html/
+            # - name: 🧪 - Testing
+            #   uses: cypress-io/github-action@v2
+            # - name: 📊 - Coverage
+            #   run: |
+            #       npm run coverage
+            # - name: Upload coverage to Codecov
+            #   uses: codecov/codecov-action@v1
             - name: 🐞 - Error log
               run: |
                   echo "API error log"
