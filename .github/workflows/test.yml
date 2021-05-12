@@ -22,7 +22,6 @@ jobs:
                   sudo chmod 777 /var/run
                   sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
                   nginx -c "$(pwd)/ci/nginx.conf"
-                  curl --silent http://localhost:9000/
             - name: 🐍 - Set up Python 3.6
               uses: actions/setup-python@v2
               with:
@@ -58,8 +57,12 @@ jobs:
               run: |
                   source ci/create_download_files.sh
                   ls -lh ~/results
+
+
+                  git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
+
+                  mysql -uroot -proot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
             - name: 🔬 - Start EMG API
-              continue-on-error: true
               run: |
                   emgcli collectstatic --noinput
                   emgcli check --deploy
@@ -73,8 +76,7 @@ jobs:
                   echo "gunicorn v1/"
                   curl --silent http://localhost:8000/v1/
                   echo "gunicorn meta/v1/"
-                  curl --silent http://localhost:8000/metagenomics/api/v1/
-            # - name: 🔧 - Install
+                  curl --silent http://localhost:8000/metagenomics/api/v1/            # - name: 🔧 - Install
             #   run: |
             #       npm ci
             #       npm run build
