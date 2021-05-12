@@ -119,9 +119,9 @@ jobs:
                   npm ci
                   npm run build
                   ls dist/
-                  mv dist/metagenomics/* /usr/share/nginx/html/
+                  mv dist/metagenomics /usr/share/nginx/html/metagenomics
                   ls /usr/share/nginx/html/
-                  echo "web iondex"
+                  echo "web index"
                   curl --silent http://localhost:9000/metagenomics/
             # - name: 🧪 - Testing
             #   uses: cypress-io/github-action@v2
