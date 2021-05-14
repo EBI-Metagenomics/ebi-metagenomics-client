@@ -417,7 +417,7 @@ describe('Analysis page', function() {
         it('Should have the proper subtabs', function() {
             checkV4FunctionalTabs();
         });
-        it('Should load seq feat summary correctly', function() {
+        it.only('Should load seq feat summary correctly', function() {
             cy.wait('@analysisQuery');
             hoverAndValidateTooltip(
                 '#seqfeat-chart .highcharts-series-group .highcharts-series-0 > ' +
