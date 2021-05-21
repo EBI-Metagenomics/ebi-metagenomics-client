@@ -108,7 +108,7 @@ describe('Study page', function() {
         });
     });
 
-    context.only('Analysis table', function() {
+    context('Analysis table', function() {
         before(function() {
             openPage(origPage);
             waitForPageLoad(pageTitle);

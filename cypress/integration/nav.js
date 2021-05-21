@@ -52,7 +52,11 @@ const pagesBreadcrumbs = {
         'studies/MGYS00000553',
         'samples/ERS853149',
         'runs/ERR1022502'],
-    'analyses/MGYA00140340': ['', 'samples/SRS429585', 'assemblies/ERZ477905'],
+    'analyses/MGYA00140340': [
+        '',
+        'samples/SRS429585',
+        'assemblies/ERZ477905'
+    ],
     'samples/ERS1474828': ['', 'browse#samples'],
     'browse': [''],
     'search': [''],
