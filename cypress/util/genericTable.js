@@ -91,7 +91,7 @@ class GenericTableHandler {
 
     waitForLoadingIconHidden() {
         if (this.hasLoadingGif) {
-            this.getLoadingIcon().should('be.hidden', {timeout: 40000});
+            this.getLoadingIcon().should('be.hidden', {timeout: 100000});
         }
     }
 

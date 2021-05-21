@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export API_URL="http://localhost:9000/metagenomics/api/latest/"
+export API_URL="http://localhost:8000/v1/"
 export SEARCH_URL="http://localhost:9000/ebisearch/ws/rest/metagenomics_"
 export SEARCH_CSV_URL="http://localhost:9000/metagenomics/api/v1/ebi-search-download/"
 export INTERPRO_URL="http://localhost:9000/interpro/"

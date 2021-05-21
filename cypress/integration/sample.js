@@ -106,12 +106,12 @@ const runTableColumns = {
 };
 
 function waitForPageLoad(projectId) {
-    cy.get('h3').should('contain', projectId);
+    cy.get('h3').should('contain', projectId, {timeout: 100000});
 }
 
 describe('Sample page', function() {
     context('General', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
             waitForPageLoad(sampleId);
         });

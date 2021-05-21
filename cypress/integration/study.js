@@ -16,17 +16,17 @@ const analysisTableColumns = {
         sortable: false
     },
     accession: {
-        data: ['ERS1474796', 'ERS1474806'],
+        data: ['ERS1474776', 'ERS1474795'],
         type: datatype.STR,
         sortable: false
     },
     sample_name: {
-        data: ['control_skin_left', 'diabetic_skin_contra'],
+        data: ['control_skin_right', 'control_skin_right'],
         type: datatype.STR,
         sortable: false
     },
     run_accession: {
-        data: ['ERR1760043', 'ERR1760053'],
+        data: ['ERR1760023', 'ERR1760042'],
         type: datatype.STR,
         sortable: false
     },
@@ -36,7 +36,7 @@ const analysisTableColumns = {
         sortable: false
     },
     analysis_accession: {
-        data: ['MGYA00140353', 'MGYA00140377'],
+        data: ['MGYA00140358', 'MGYA00140550'],
         type: datatype.STR,
         sortable: false
     }
@@ -46,7 +46,7 @@ let table;
 
 describe('Study page', function() {
     context('General', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
             waitForPageLoad(pageTitle);
             cy.contains('Longitudinal study of the diabetic skin and wound microbiome')
@@ -108,8 +108,8 @@ describe('Study page', function() {
         });
     });
 
-    context('Analysis table', function() {
-        beforeEach(function() {
+    context.only('Analysis table', function() {
+        before(function() {
             openPage(origPage);
             waitForPageLoad(pageTitle);
             table = new GenericTableHandler('#analysis-section', analysesTableDefaultSize);
@@ -144,12 +144,12 @@ describe('Study page', function() {
                     index: 1,
                     data: [
                         '',
-                        'ERS1474796', 'control_skin_left', 'ERR1760043', '4.0', 'MGYA00140353']
+                        'ERS1474776', 'control_skin_right', 'ERR1760023', '4.0', 'MGYA00140358']
                 }, {
                     index: 3,
                     data: [
                         '',
-                        'ERS1474615', 'wound_swab', 'ERR1759931', '4.0', 'MGYA00140403']
+                        'ERS1474717', 'diabetic_skin_contra', 'ERR1759967', '4.0', 'MGYA00140503']
                 }, {
                     index: 'Next', // 4th page
                     data: [
@@ -159,7 +159,7 @@ describe('Study page', function() {
                     index: 'Previous',
                     data: [
                         '',
-                        'ERS1474615', 'wound_swab', 'ERR1759931', '4.0', 'MGYA00140403'],
+                        'ERS1474717', 'diabetic_skin_contra', 'ERR1759967', '4.0', 'MGYA00140503'],
                     pageNum: 3
                 }, {
                     index: 'Last',
@@ -172,7 +172,7 @@ describe('Study page', function() {
                     index: 'First',
                     data: [
                         '',
-                        'ERS1474796', 'control_skin_left', 'ERR1760043', '4.0', 'MGYA00140353'],
+                        'ERS1474776', 'control_skin_right', 'ERR1760023', '4.0', 'MGYA00140358'],
                     pageNum: 1
                 }]);
         });
@@ -230,9 +230,10 @@ describe('Study page', function() {
                 'Phylum level taxonomies LSU',
                 'Phylum level taxonomies SSU'];
             const files = pipeline2Files.concat(pipeline4Files);
-            let i = 0;
-            cy.get('#downloads > div > p').each(function($el) {
-                expect(Cypress.$($el).text()).to.eq(files[i++]);
+            const ps = cy.get('#downloads > div > p');
+            ps.should('have.length.of', files.length - 1)
+            ps.each(function($el) {
+                expect(files).to.have.string(Cypress.$($el).text());
             });
         });
         // TODO test before release
