@@ -50,12 +50,16 @@ const proxyRoutes = [
     regex: "^/metagenomics/contigs/.*$",
     page: "/metagenomics/contigs.html",
   },
-  {
-    label: "/metagenomics/genomes",
-    regex: "^/metagenomics/genomes/.*$",
-    page: "/metagenomics/genomes.html",
-  },
-  "/metagenomics/genomes",
+  // {
+  //   label: "/metagenomics/genome",
+  //   regex: "^/metagenomics/genome/.+$",
+  //   page: "/metagenomics/genome.html",
+  // },
+  // {
+  //   label: "/metagenomics/genomes",
+  //   regex: "^/metagenomics/genomes/?$",
+  //   page: "/metagenomics/genomes.html",
+  // },
   "/metagenomics/genome-search",
   "/metagenomics/healthcheck",
   "/metagenomics/browse",
@@ -98,6 +102,16 @@ const getProxyRoutes = () => {
       },
     };
   });
+  routes["/metagenomics/genome"]={
+    target: "http://localhost:9000/",
+    pathRewrite: {
+      "^/metagenomics/genomes/.+$": "/metagenomics/genome.html",
+      "^/metagenomics/genomes/?$": "/metagenomics/genomes.html",
+      "^/metagenomics/genome-search": "/metagenomics/genome-search.html",
+
+    }
+  }
+  console.log(routes);
   return routes;
 };
 
