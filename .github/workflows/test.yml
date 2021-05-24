@@ -111,6 +111,8 @@ jobs:
                   mysql -uroot -proot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
             - name: 🔬 - Start EMG API
               run: |
+                  echo ":${{ github.workspace }}/emgapi/tests/" >> 
+                  echo $PYTHONPATH  
                   emgcli collectstatic --noinput
                   emgcli check --deploy
                   cd emgapi

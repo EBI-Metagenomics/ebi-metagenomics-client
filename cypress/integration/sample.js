@@ -145,7 +145,7 @@ describe('Sample page', function() {
     });
 
     let table;
-    context.only('Study table', function() {
+    context('Study table', function() {
         beforeEach(function() {
             openPage('');
             openPage(origPage);
