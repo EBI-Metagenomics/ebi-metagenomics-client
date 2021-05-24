@@ -77,14 +77,14 @@ const samplesTableColumns = {
         sortable: false
     },
     sample_id: {
-        data: ['ERS487899', 'ERS1474832'],
+        data: ['ERS487899', 'ERS1474525'],
         type: datatype.STR,
         sortable: false
     },
     sample_name: {
         data: [
             'TARA_X000000263',
-            'Patient 2 wound swab time 0'
+            'Control patient 2 right foot time 5'
         ],
         type: datatype.STR,
         sortable: false
@@ -93,7 +93,7 @@ const samplesTableColumns = {
         data: [
             // eslint-disable-next-line max-len
             '"This sample (TARA_X000000263) was collected during the Tara Oceans expedition (2009-2013) at station TARA_004 (latitudeN=36.5533, longitudeE=-6.5669) on date/time=2009-09-15T11:30, using a PUMP (High Volume Peristaltic Pump). The sample material (saline water (ENVO:00002010), including plankton (ENVO:xxxxxxxx)) was collected at a depth of 3-7 m, targeting a surface water layer (ENVO:00002042) in the marine biome (ENVO:00000447). The sample was size-fractionated (0.22-1.6 micrometres), and stored in liquid nitrogen for later detection of prokaryote nucleic acid sequences by pyrosequencing methods, and for later metagenomics analysis. This sample has replicate sample(s): TARA_X000000264."',
-            'wound_swab'
+            'control_skin_right'
         ],
         type: datatype.STR,
         sortable: false
@@ -381,8 +381,8 @@ describe('Browse page', function() {
                     index: 3,
                     data: [
                         '',
-                        'ERS1474869',
-                        'Patient 5 skin contralateral foot to wound time 5',
+                        'ERS1474617',
+                        'Patient 10 skin contralateral foot to wound time 1',
                         'diabetic_skin_contra',
                         '27-Nov-2017'
                     ]
@@ -390,9 +390,9 @@ describe('Browse page', function() {
                     index: 'Next',
                     data: [
                         '',
-                        'ERS1474507',
-                        'Control patient 1 right foot time 2',
-                        'control_skin_right',
+                        'ERS1474708',
+                        'Patient 7 wound swab time 1',
+                        'wound_swab',
                         '27-Nov-2017'
                     ], // 4th row
                     pageNum: 4
@@ -400,8 +400,8 @@ describe('Browse page', function() {
                     index: 'Previous',
                     data: [
                         '',
-                        'ERS1474869',
-                        'Patient 5 skin contralateral foot to wound time 5',
+                        'ERS1474617',
+                        'Patient 10 skin contralateral foot to wound time 1',
                         'diabetic_skin_contra',
                         '27-Nov-2017'
                     ],
