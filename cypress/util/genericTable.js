@@ -91,7 +91,7 @@ class GenericTableHandler {
 
     waitForLoadingIconHidden() {
         if (this.hasLoadingGif) {
-            this.getLoadingIcon().should('be.hidden', {timeout: 100000});
+            this.getLoadingIcon().should('be.hidden');
         }
     }
 
@@ -211,7 +211,7 @@ class GenericTableHandler {
     }
 
     getLoadingIcon() {
-        return cy.get(this.parentId + ' img.loading-gif-medium');
+        return cy.get(this.parentId + ' img.loading-gif-medium', {timeout: 100000});
     }
 
     getFilterInput() {

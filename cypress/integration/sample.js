@@ -106,7 +106,7 @@ const runTableColumns = {
 };
 
 function waitForPageLoad(projectId) {
-    cy.get('h3').should('contain', projectId, {timeout: 100000});
+    cy.get('h3', {timeout: 100000}).should('contain', projectId);
 }
 
 describe('Sample page', function() {
