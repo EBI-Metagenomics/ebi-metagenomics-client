@@ -145,10 +145,9 @@ describe('Sample page', function() {
     });
 
     let table;
-    context('Study table', function() {
+    context.only('Study table', function() {
         beforeEach(function() {
             openPage('');
-            login();
             openPage(origPage);
             waitForPageLoad(sampleId);
             table = new GenericTableHandler('#studies-section', studiesTableDefaultSize);
