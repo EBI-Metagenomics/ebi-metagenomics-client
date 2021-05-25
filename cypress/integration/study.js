@@ -16,17 +16,17 @@ const analysisTableColumns = {
         sortable: false
     },
     accession: {
-        data: ['ERS1474776', 'ERS1474795'],
+        data: ['ERS1474796', 'ERS1474806'],
         type: datatype.STR,
         sortable: false
     },
     sample_name: {
-        data: ['control_skin_right', 'control_skin_right'],
+        data: ['control_skin_left', 'diabetic_skin_contra'],
         type: datatype.STR,
         sortable: false
     },
     run_accession: {
-        data: ['ERR1760023', 'ERR1760042'],
+        data: ['ERR1760043', 'ERR1760053'],
         type: datatype.STR,
         sortable: false
     },
@@ -36,7 +36,7 @@ const analysisTableColumns = {
         sortable: false
     },
     analysis_accession: {
-        data: ['MGYA00140358', 'MGYA00140550'],
+        data: ['MGYA00140353', 'MGYA00140377'],
         type: datatype.STR,
         sortable: false
     }
@@ -144,12 +144,12 @@ describe('Study page', function() {
                     index: 1,
                     data: [
                         '',
-                        'ERS1474776', 'control_skin_right', 'ERR1760023', '4.0', 'MGYA00140358']
+                        'ERS1474796', 'control_skin_left', 'ERR1760043', '4.0', 'MGYA00140353']
                 }, {
                     index: 3,
                     data: [
                         '',
-                        'ERS1474717', 'diabetic_skin_contra', 'ERR1759967', '4.0', 'MGYA00140503']
+                        'ERS1474615', 'wound_swab', 'ERR1759931', '4.0', 'MGYA00140403']
                 }, {
                     index: 'Next', // 4th page
                     data: [
@@ -159,7 +159,7 @@ describe('Study page', function() {
                     index: 'Previous',
                     data: [
                         '',
-                        'ERS1474717', 'diabetic_skin_contra', 'ERR1759967', '4.0', 'MGYA00140503'],
+                        'ERS1474615', 'wound_swab', 'ERR1759931', '4.0', 'MGYA00140403'],
                     pageNum: 3
                 }, {
                     index: 'Last',
@@ -172,7 +172,7 @@ describe('Study page', function() {
                     index: 'First',
                     data: [
                         '',
-                        'ERS1474776', 'control_skin_right', 'ERR1760023', '4.0', 'MGYA00140358'],
+                        'ERS1474796', 'control_skin_left', 'ERR1760043', '4.0', 'MGYA00140353'],
                     pageNum: 1
                 }]);
         });
