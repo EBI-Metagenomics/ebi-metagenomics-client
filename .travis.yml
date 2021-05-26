@@ -1,7 +1,8 @@
+dist: bionic
+
 language: node_js
 node_js:
   - 10
-
 python:
   - "3.6"
 
@@ -13,15 +14,15 @@ addons:
   apt:
     packages:
       - nginx
-      - python3-pip
       - libgconf-2-4
+      - python3-pip
 env:
   global:
     - API_URL=http://localhost:9000/metagenomics/api/v1/ SEARCH_URL=https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_ EMG_CONFIG=$TRAVIS_BUILD_DIR/travis/config.yaml
 
 before_install:
+  - python -V
   - pip3 install --user --upgrade pip six==1.11.0 setuptools
-  - python3 -V
   - pip3 -V
   - pip3 install --user "git+git://github.com/EBI-metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
   - pip3 install --user "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
