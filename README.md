@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client.svg?branch=master)](https://travis-ci.org/EBI-Metagenomics/ebi-metagenomics-client)
+[![Testing](https://github.com/EBI-Metagenomics/ebi-metagenomics-client/actions/workflows/test.yml/badge.svg)](https://github.com/EBI-Metagenomics/ebi-metagenomics-client/actions/workflows/test.yml)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/a6b6fad49bc34f10b3498086faacbde6)](https://www.codacy.com/app/mb1069/ebi-metagenomics-client?utm_source=github.com&utm_medium=referral&utm_content=EBI-Metagenomics/ebi-metagenomics-client&utm_campaign=Badge_Coverage)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a6b6fad49bc34f10b3498086faacbde6)](https://www.codacy.com/app/mb1069/ebi-metagenomics-client?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EBI-Metagenomics/ebi-metagenomics-client&amp;utm_campaign=Badge_Grade)
  # ebi-metagenomics-client
