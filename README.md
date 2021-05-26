@@ -1,6 +1,6 @@
 [![Testing](https://github.com/EBI-Metagenomics/ebi-metagenomics-client/actions/workflows/test.yml/badge.svg)](https://github.com/EBI-Metagenomics/ebi-metagenomics-client/actions/workflows/test.yml)
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/a6b6fad49bc34f10b3498086faacbde6)](https://www.codacy.com/app/mb1069/ebi-metagenomics-client?utm_source=github.com&utm_medium=referral&utm_content=EBI-Metagenomics/ebi-metagenomics-client&utm_campaign=Badge_Coverage)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a6b6fad49bc34f10b3498086faacbde6)](https://www.codacy.com/app/mb1069/ebi-metagenomics-client?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EBI-Metagenomics/ebi-metagenomics-client&amp;utm_campaign=Badge_Grade)
+[![codecov](https://codecov.io/gh/EBI-Metagenomics/ebi-metagenomics-client/branch/master/graph/badge.svg?token=WyXvRIQvq8)](https://codecov.io/gh/EBI-Metagenomics/ebi-metagenomics-client)
+
  # ebi-metagenomics-client
 #### Requirements:
  - npm >= 5.3.0
