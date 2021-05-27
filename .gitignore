@@ -24,3 +24,5 @@ coverage.lcov
 
 # Local API configs
 config
+
+.sha1.sha1
