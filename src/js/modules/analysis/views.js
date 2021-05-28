@@ -108,6 +108,7 @@ export const AnalysisView = Backbone.View.extend({
                 const annotTabsOpts = {
                     analysisID: analysisID,
                     pipelineVersion: that.model.get('pipeline_version'),
+                    instrumentPlatform: that.model.get('instrument_platform'),
                     router: that.router
                 };
 
@@ -292,16 +293,27 @@ const FunctionalTabView = Backbone.View.extend({
     mixins: [TabsManagerMixin, TabMixin],
     template: _.template($('#functionalTmpl').html()),
     el: '#functional',
-    initialize({analysisID, pipelineVersion, router}) {
+    initialize({analysisID, pipelineVersion, instrumentPlatform, router}) {
         this.analysisID = analysisID;
         this.pipelineVersion = pipelineVersion;
+        // Analysis from long-read tech has some limitatsions
+        // this will enable a message on the template
+        this.longReadExperiment = _.contains([
+            "OXFORD_NANOPORE",
+            "PACBIO_SMRT"
+        ], instrumentPlatform);
         this.router = router;
     },
     /**
      * Load all charts on functional tab
      */
     render() {
-        this.$el.html(this.template({pipelineVersion: this.pipelineVersion}));
+        this.$el.html(
+            this.template({
+                longReadExperiment: this.longReadExperiment, 
+                pipelineVersion: this.pipelineVersion
+            })
+        );
         // hook the tabs
         this.hookTabs('#functional-analysis-tabs');
 
