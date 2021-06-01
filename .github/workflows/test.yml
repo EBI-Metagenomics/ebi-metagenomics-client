@@ -135,6 +135,8 @@ jobs:
           npm run eslint
       - name: 🧪 - Testing
         uses: cypress-io/github-action@v2
+        with:
+          spec: cypress/integration/index.js
       - name: 📉 - Get Coverage
         run: |
           npm run coverage
