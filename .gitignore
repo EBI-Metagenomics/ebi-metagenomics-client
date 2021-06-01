@@ -9,6 +9,7 @@ cypress/screenshots/
 # IDE (Webstorm) files
 *.iml
 *.idea
+.vscode
 
 # Merged fixture file
 travis/emg_sql_fixtures/merged.sql
