@@ -109,11 +109,11 @@ jobs:
             # - name: 🔬 - Start EMG API
             #   run: |
             #       export PYTHONPATH="$PYTHONPATH:${{ github.workspace }}/emgapi/tests/"
-            #       echo $PYTHONPATH  
+            #       echo $PYTHONPATH
             #       emgcli collectstatic --noinput
             #       emgcli check --deploy
             #       cd emgapi
-            #       export GUNICORN_CMD_ARGS="--bind 127.0.0.1:8000 --workers=1 --daemon -p emg.pid --error-logfile error.log --access-logfile access.log" 
+            #       export GUNICORN_CMD_ARGS="--bind 127.0.0.1:8000 --workers=1 --daemon -p emg.pid --error-logfile error.log --access-logfile access.log"
             #       emgdeploy emgcli.wsgi:application
             #       ps aux | grep emgdeploy
             #       cd ..
@@ -143,8 +143,8 @@ jobs:
               uses: actions/upload-artifact@v2
               if: failure()
               with:
-                name: tests-snapshots
-                path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/cypress/screenshots/           # - name: 📊 - Coverage
+                  name: tests-snapshots
+                  path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/cypress/screenshots/ # - name: 📊 - Coverage
             - name: 🐞 - Error log
               if: failure()
               run: |
