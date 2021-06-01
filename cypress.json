@@ -1,0 +1,11 @@
+{
+  "projectId": "8vc1o6",
+  "chromeWebSecurity": false,
+  "viewportWidth": 1680,
+  "viewportHeight": 1050,
+  "video": false,
+  "videoCompression": false,
+  "watchForFileChanges": false,
+  "defaultCommandTimeout": 40000,
+  "ignoreTestFiles": "*.disabled"
+}

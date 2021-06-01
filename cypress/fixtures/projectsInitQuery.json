@@ -1,0 +1,200 @@
+{
+  "_comment": "Basic ebiSearch query response with no filters",
+  "hitCount": 3,
+  "entries": [
+    {
+      "id": "MGYS00000277",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA46321"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000217",
+          "MGYA00000216",
+          "MGYA00000221",
+          "MGYA00000220",
+          "MGYA00000214",
+          "MGYA00000215",
+          "MGYA00000222",
+          "MGYA00000204",
+          "MGYA00000205",
+          "MGYA00000206",
+          "MGYA00000207",
+          "MGYA00000213",
+          "MGYA00000212",
+          "MGYA00000211",
+          "MGYA00000210",
+          "MGYA00000208",
+          "MGYA00000209",
+          "MGYA00000219",
+          "MGYA00000218"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS070527",
+          "SRS070526",
+          "SRS070510",
+          "SRS070511",
+          "SRS070523",
+          "SRS070522",
+          "SRS070521",
+          "SRS070520",
+          "SRS070519",
+          "SRS070525",
+          "SRS070529",
+          "SRS070528",
+          "SRS070524",
+          "SRS070530",
+          "SRS070532",
+          "SRS070533",
+          "SRS070534",
+          "SRS070535",
+          "SRS070536"
+        ],
+        "biome_name": [
+          "Fecal"
+        ],
+        "centre_name": [
+          "NIDDK"
+        ],
+        "creation_date": [],
+        "description": [
+          "Inflammatory bowel diseases (IBD), such as Crohn’s disease, are chronic, immunologically mediated disorders that have severe medical consequences. The current hypothesis is that these diseases are due to an overly aggressive immune response to a subset of commensal enteric bacteria. Studies to date on IBD have suggested that the disorder may be caused by a combination of bacteria and host susceptibility; however the etiologies of these diseases remain an enigma. \nIn this application, we propose to develop and demonstrate the ability to profile Crohn’s disease at an unprecedented molecular level by elucidation of specific biomarkers (bacterial strains, genes, or proteins) that correlate to disease symptoms. To achieve this goal, we will employ a multidisciplinary approach based on metagenomic and metaproteomic molecular tools to elucidate the composition of the commensal microbiota in monozygotic twins that are either healthy or exhibit Crohn’s disease (for concordant, both are diseased; for discordant, one is healthy and one is diseased). \nThe central hypotheses of this proposal are (1) that specific members and/or functional activities of the gastrointestinal (GI) microbiota differ in patients with Crohn’s disease as compared to healthy individuals, and (2) that it will be possible to elucidate microbial signatures which correlate with the occurrence and progression of this disease by integration of data obtained from 16S rRNA-based molecular fingerprinting, metagenomics, and metaproteomics approaches. To address these hypotheses, three specific aims are proposed: 1) Obtain data on community gene content (metagenome) in a subset of healthy twins and twins with Crohn’s Disease to assess potential differences in the metabolic capabilities of the gut microbiota associated with CD, 2) Obtain data on community protein content (metaproteome) in a subset of healthy twins and twins with Crohn’s Disease to assess the state of expressed proteins associated with CD, 3) Apply various statistical clustering and classification methods to correlate/associate microbial community composition, gene and protein content with patient metadata, including metabolite profiles and clinical phenotype. \nThe ultimate goal of these efforts is to identify novel biomarkers for non-invasive diagnostics of CD and to eventually identify drug targets (i.e. bacterial strains) for cure or suppression of disease symptoms. \nPUBLIC HEALTH RELEVANCE: This study aims to unravel the contribution of the bacteria that normally inhabit the human gastrointestinal tract to Crohn’s disease by using a multidisciplinary approach to study changes in the structure and function of gut microbial communities in three sets of patient cohorts who have Crohn’s disease. These results will be compared with those obtained from the study of healthy individuals and have the potential to identify new biomarkers of disease severity, location, and progression."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "MGYS00000277"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Human Gut Microbiome in Crohn's Disease"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "MGYS00000510",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB10407"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00009786",
+          "MGYA00009787",
+          "MGYA00009793",
+          "MGYA00009792",
+          "MGYA00009795",
+          "MGYA00009794",
+          "MGYA00009790",
+          "MGYA00009788",
+          "MGYA00009789",
+          "MGYA00009791"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS814570",
+          "ERS814571",
+          "ERS814572",
+          "ERS814573",
+          "ERS814569",
+          "ERS814568",
+          "ERS814567",
+          "ERS814566",
+          "ERS814565",
+          "ERS814564"
+        ],
+        "biome_name": [
+          "Forest soil"
+        ],
+        "centre_name": [
+          "University of Athens, Greece"
+        ],
+        "creation_date": [],
+        "description": [
+          "This study aims at the metagenomic analysis of ligninocellulose-degrading microbial communities of Mediterranean forest soils. For this purpose, two soil ecosystems with distinct ecophysiological characteristics were selected, and thorough spatio-seasonal sampling was undertaken. Total DNA was extracted from 48 soil samples, and PCR amplification was performed with both 16S (V3-V4) region- and ITS2-specific universal primers for the analysis of bacterial and fungal diversity, respectively. High-throughput amplicon sequencing was performed with the Illumina MiSeq technology."
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "MGYS00000510"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Study of the bacterial and fungal diversity in soil habitats with increased ligninocellulolytic activity"
+        ],
+        "releaseDate_date": []
+      }
+    },
+    {
+      "id": "MGYS00001033",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA264611"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00052283",
+          "MGYA00052282",
+          "MGYA00052281",
+          "MGYA00052280",
+          "MGYA00052287",
+          "MGYA00052286",
+          "MGYA00052285",
+          "MGYA00052284",
+          "MGYA00052289",
+          "MGYA00052288",
+          "MGYA00052273",
+          "MGYA00052276",
+          "MGYA00052277",
+          "MGYA00052274",
+          "MGYA00052275",
+          "MGYA00052278",
+          "MGYA00052279"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS731752",
+          "SRS731753",
+          "SRS731750",
+          "SRS731751",
+          "SRS731745",
+          "SRS731754",
+          "SRS731747",
+          "SRS731746",
+          "SRS731749",
+          "SRS731748",
+          "SRS731758",
+          "SRS731755",
+          "SRS728259",
+          "SRS731759",
+          "SRS731756",
+          "SRS726940",
+          "SRS731757"
+        ],
+        "biome_name": [
+          "Agricultural"
+        ],
+        "centre_name": [
+          "BioProject"
+        ],
+        "creation_date": [],
+        "description": [
+          "Mid-term abandoned agricultural land (grassland) in Veluwe, the NETHERLANDS"
+        ],
+        "domain_source": [
+          "metagenomics_projects"
+        ],
+        "id": [
+          "MGYS00001033"
+        ],
+        "last_modification_date": [],
+        "name": [
+          "Soil microbes Targeted Locus (Loci)"
+        ],
+        "releaseDate_date": []
+      }
+    }
+  ]
+}

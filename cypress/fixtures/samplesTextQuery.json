@@ -1,0 +1,821 @@
+{
+  "hitCount": 35,
+  "entries": [
+    {
+      "id": "ERS782465",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS782465"
+        ],
+        "name": [
+          "Test Brassicae"
+        ],
+        "biome_name": [
+          "Phylloplane"
+        ],
+        "description": [
+          "Test Brassicae"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001332"
+        ],
+        "project_name": [
+          "tes"
+        ]
+      }
+    },
+    {
+      "id": "ERS782466",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS782466"
+        ],
+        "name": [
+          "Test Brassicae"
+        ],
+        "biome_name": [
+          "Phylloplane"
+        ],
+        "description": [
+          "Test Brassicae"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001332"
+        ],
+        "project_name": [
+          "tes"
+        ]
+      }
+    },
+    {
+      "id": "ERS2162772",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS2162772"
+        ],
+        "name": [
+          "s11"
+        ],
+        "biome_name": [
+          "Engineered"
+        ],
+        "description": [
+          "s1 for test"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002185"
+        ],
+        "project_name": [
+          "metagenome"
+        ]
+      }
+    },
+    {
+      "id": "ERS657526",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS657526"
+        ],
+        "name": [
+          "[ERS657526:ERR754624] eDNA North Sea"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "description": [
+          "Catching diversity using denovo sequenzing"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000464"
+        ],
+        "project_name": [
+          "Denovo test of eDNA sample"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443828",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443828"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1441670",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1441670"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1205946",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1205946"
+        ],
+        "name": [
+          "Daisy Lake shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443845",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443845"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443830",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443830"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443826",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443826"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443841",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443841"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443838",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443838"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443843",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443843"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443839",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443839"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443835",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443835"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1436509",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1436509"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443743",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443743"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443742",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443742"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443831",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443831"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443840",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443840"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443833",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443833"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443834",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443834"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443837",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443837"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443832",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443832"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS1443844",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS1443844"
+        ],
+        "name": [
+          "Daisy Lake Shotgun"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "description": [
+          "Daisy Lake Shotgun"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001105"
+        ],
+        "project_name": [
+          "Daisy Lake Shotgun Test"
+        ]
+      }
+    }
+  ],
+  "facets": [
+    {
+      "id": "domain_source",
+      "label": "Source",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "Metagenomics Samples",
+          "value": "metagenomics_samples",
+          "count": 35
+        }
+      ]
+    },
+    {
+      "id": "biome",
+      "label": "Biome",
+      "total": 3,
+      "facetValues": [
+        {
+          "label": "Environmental",
+          "value": "Environmental",
+          "count": 27,
+          "children": [
+            {
+              "label": "Aquatic",
+              "value": "Aquatic",
+              "count": 26,
+              "children": [
+                {
+                  "label": "Freshwater",
+                  "value": "Freshwater",
+                  "count": 25,
+                  "children": [
+                    {
+                      "label": "Lentic",
+                      "value": "Lentic",
+                      "count": 25,
+                      "children": [
+                        {
+                          "label": "Sediment",
+                          "value": "Sediment",
+                          "count": 25
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "Marine",
+                  "value": "Marine",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Terrestrial",
+              "value": "Terrestrial",
+              "count": 1,
+              "children": [
+                {
+                  "label": "Soil",
+                  "value": "Soil",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Permafrost",
+                      "value": "Permafrost",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Engineered",
+          "value": "Engineered",
+          "count": 4,
+          "children": [
+            {
+              "label": "Modeled",
+              "value": "Modeled",
+              "count": 2,
+              "children": [
+                {
+                  "label": "Simulated communities (DNA mixture)",
+                  "value": "Simulated communities (DNA mixture)",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Biotransformation",
+              "value": "Biotransformation",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "label": "Host-associated",
+          "value": "Host-associated",
+          "count": 4,
+          "children": [
+            {
+              "label": "Plants",
+              "value": "Plants",
+              "count": 2,
+              "children": [
+                {
+                  "label": "Phylloplane",
+                  "value": "Phylloplane",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Human",
+              "value": "Human",
+              "count": 2,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 2,
+                  "children": [
+                    {
+                      "label": "Oral",
+                      "value": "Oral",
+                      "count": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "experiment_type",
+      "label": "Experiment type",
+      "total": 2,
+      "facetValues": [
+        {
+          "label": "Metagenomic",
+          "value": "metagenomic",
+          "count": 31
+        },
+        {
+          "label": "Amplicon",
+          "value": "amplicon",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "sequencing_method",
+      "label": "Sequencing method",
+      "total": 4,
+      "facetValues": [
+        {
+          "label": "Illumina",
+          "value": "Illumina",
+          "count": 24
+        },
+        {
+          "label": "MiSeq",
+          "value": "MiSeq",
+          "count": 2
+        },
+        {
+          "label": "Sequencing on Illumina HiSeq: 100 bp paired end",
+          "value": "Sequencing on Illumina HiSeq: 100 bp paired end",
+          "count": 1
+        },
+        {
+          "label": "2015-08",
+          "value": "2015-08",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "location_name",
+      "label": "Location name",
+      "total": 5,
+      "facetValues": [
+        {
+          "label": "Canada",
+          "value": "Canada",
+          "count": 26
+        },
+        {
+          "label": "Japan",
+          "value": "Japan",
+          "count": 2
+        },
+        {
+          "label": "USA",
+          "value": "USA",
+          "count": 2
+        },
+        {
+          "label": "Guangzhou",
+          "value": "Guangzhou",
+          "count": 1
+        },
+        {
+          "label": "North Sea",
+          "value": "North Sea",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

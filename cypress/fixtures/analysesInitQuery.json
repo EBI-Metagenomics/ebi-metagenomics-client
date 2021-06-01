@@ -1,0 +1,98 @@
+{
+  "hitCount": 3,
+  "entries": [
+    {
+      "id": "MGYA00028224_2.0",
+      "source": "metagenomics_analyses",
+      "fields": {
+        "id": [
+          "MGYA00028224_2.0"
+        ],
+        "name": [
+          "MGYA00028224"
+        ],
+        "biome_name": [],
+        "description": [],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000605"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS879378"
+        ],
+        "experiment_type": [
+          "amplicon"
+        ],
+        "pipeline_version": [
+          "2.0"
+        ],
+        "ASSEMBLY": [],
+        "ENA_RUN": [
+          "SRR1923947"
+        ],
+        "ENA_WGS_SEQUENCE_SET": []
+      }
+    },
+    {
+      "id": "MGYA00165264_4.1",
+      "source": "metagenomics_analyses",
+      "fields": {
+        "id": [
+          "MGYA00165264_4.1"
+        ],
+        "name": [
+          "MGYA00165264"
+        ],
+        "biome_name": [],
+        "description": [],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002376"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS1922041"
+        ],
+        "experiment_type": [
+          "amplicon"
+        ],
+        "pipeline_version": [
+          "4.1"
+        ],
+        "ASSEMBLY": [],
+        "ENA_RUN": [
+          "SRR5180164"
+        ],
+        "ENA_WGS_SEQUENCE_SET": []
+      }
+    },
+    {
+      "id": "MGYA00005890_2.0",
+      "source": "metagenomics_analyses",
+      "fields": {
+        "id": [
+          "MGYA00005890_2.0"
+        ],
+        "name": [
+          "MGYA00005890"
+        ],
+        "biome_name": [],
+        "description": [],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000482"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS624611"
+        ],
+        "experiment_type": [
+          "metagenomic"
+        ],
+        "pipeline_version": [
+          "2.0"
+        ],
+        "ASSEMBLY": [],
+        "ENA_RUN": [
+          "ERR695595"
+        ],
+        "ENA_WGS_SEQUENCE_SET": []
+      }
+    }
+  ]
+}

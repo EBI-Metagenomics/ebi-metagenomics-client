@@ -1,0 +1,891 @@
+{
+    "chunking_proteins": [
+        {
+            "checksum": "sha1$06342059eced60145da3c8bed7cde7980a4c4e9b", 
+            "basename": "ERZ477576_FASTA_FASTA_CDS.faa.chunks", 
+            "nameext": ".chunks", 
+            "nameroot": "ERZ477576_FASTA_FASTA_CDS.faa", 
+            "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/ERZ477576_FASTA_FASTA_CDS.faa.chunks", 
+            "class": "File", 
+            "size": 32
+        }, 
+        {
+            "checksum": "sha1$3911d266ec0de275ee5b398ee2e3e49b3372eab0", 
+            "basename": "ERZ477576_FASTA_FASTA_CDS.faa.gz", 
+            "nameext": ".gz", 
+            "nameroot": "ERZ477576_FASTA_FASTA_CDS.faa", 
+            "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/ERZ477576_FASTA_FASTA_CDS.faa.gz", 
+            "class": "File", 
+            "size": 39759768
+        }, 
+        {
+            "checksum": "sha1$e5fd9cfe0e8039111d54b588e77b2bb0cad41c3a", 
+            "basename": "from_chunking_ERZ477576_FASTA_FASTA_CDS.faa", 
+            "nameext": ".faa", 
+            "nameroot": "from_chunking_ERZ477576_FASTA_FASTA_CDS", 
+            "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/from_chunking_ERZ477576_FASTA_FASTA_CDS.faa", 
+            "class": "File", 
+            "size": 4
+        }
+    ], 
+    "compressed_files": [
+        {
+            "checksum": "sha1$dbe2cdee09184779093d246b529b39b844e089c2", 
+            "basename": "ERZ477576_FASTA_FASTA.cmsearch.all.tblout.deoverlapped.gz", 
+            "nameext": ".gz", 
+            "nameroot": "ERZ477576_FASTA_FASTA.cmsearch.all.tblout.deoverlapped", 
+            "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/ERZ477576_FASTA_FASTA.cmsearch.all.tblout.deoverlapped.gz", 
+            "class": "File", 
+            "size": 76101
+        }, 
+        {
+            "checksum": "sha1$362bb909d88bc937a395764c71a654950b6dcedf", 
+            "basename": "ERZ477576_FASTA_FASTA.cmsearch.all.tblout.gz", 
+            "nameext": ".gz", 
+            "nameroot": "ERZ477576_FASTA_FASTA.cmsearch.all.tblout", 
+            "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/ERZ477576_FASTA_FASTA.cmsearch.all.tblout.gz", 
+            "class": "File", 
+            "size": 110466
+        }
+    ], 
+    "stats": {
+        "basename": "functional-annotation", 
+        "nameext": "", 
+        "nameroot": "functional-annotation", 
+        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation", 
+        "listing": [
+            {
+                "class": "Directory", 
+                "basename": "stats", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/stats", 
+                "listing": [
+                    {
+                        "checksum": "sha1$d8617ea8632671df01d552e9f768804492a6f999", 
+                        "basename": "pfam.stats", 
+                        "size": 93, 
+                        "class": "File", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/stats/pfam.stats"
+                    }, 
+                    {
+                        "checksum": "sha1$647e049d609b52f1e8f1b461a5b2dbfc17e64737", 
+                        "basename": "ko.stats", 
+                        "size": 84, 
+                        "class": "File", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/stats/ko.stats"
+                    }, 
+                    {
+                        "checksum": "sha1$1b26cd1b806ae3cf5fd4b57bd847800b700240e3", 
+                        "basename": "antismash.stats", 
+                        "size": 99, 
+                        "class": "File", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/stats/antismash.stats"
+                    }, 
+                    {
+                        "checksum": "sha1$e1fb281df547412603a1346d5941c5c45bfe9be2", 
+                        "basename": "go.stats", 
+                        "size": 86, 
+                        "class": "File", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/stats/go.stats"
+                    }, 
+                    {
+                        "checksum": "sha1$168c3d70475e146e2199817006b2de1afee10d03", 
+                        "basename": "orf.stats", 
+                        "size": 87, 
+                        "class": "File", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/stats/orf.stats"
+                    }, 
+                    {
+                        "checksum": "sha1$b81d918691e002c975236a9e4ff106452477ec1f", 
+                        "basename": "interproscan.stats", 
+                        "size": 117, 
+                        "class": "File", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/stats/interproscan.stats"
+                    }
+                ]
+            }
+        ], 
+        "class": "Directory"
+    }, 
+    "index_fasta_file": {
+        "checksum": "sha1$ab8d4156d9c57359f5530b81bc4c97c95ef52c03", 
+        "basename": "ERZ477576_FASTA_FASTA.fasta.bgz.fai", 
+        "nameext": ".fai", 
+        "nameroot": "ERZ477576_FASTA_FASTA.fasta.bgz", 
+        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/ERZ477576_FASTA_FASTA.fasta.bgz.fai", 
+        "class": "File", 
+        "size": 10529312
+    }, 
+    "bgzip_fasta_file": {
+        "checksum": "sha1$d45f5841059b28f0676906883b2dd5272d54a711", 
+        "basename": "ERZ477576_FASTA_FASTA.fasta.bgz", 
+        "nameext": ".bgz", 
+        "nameroot": "ERZ477576_FASTA_FASTA.fasta", 
+        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/ERZ477576_FASTA_FASTA.fasta.bgz", 
+        "class": "File", 
+        "size": 55478917
+    }, 
+    "pathways_systems_folder": {
+        "basename": "pathways-systems", 
+        "listing": [
+            {
+                "format": "http://edamontology.org/format_3475", 
+                "checksum": "sha1$29848badeeb14f0bd6096c2d450b050211711113", 
+                "basename": "ERZ477576_FASTA_FASTA.summary.kegg_contigs.tsv", 
+                "nameroot": "ERZ477576_FASTA_FASTA.summary.kegg_contigs", 
+                "nameext": ".tsv", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems/ERZ477576_FASTA_FASTA.summary.kegg_contigs.tsv", 
+                "class": "File", 
+                "size": 8161505
+            }, 
+            {
+                "format": "http://edamontology.org/format_3752", 
+                "checksum": "sha1$87aad2e92ca0f81da49a6f5b4c731f033555e117", 
+                "basename": "ERZ477576_FASTA_FASTA.summary.kegg_pathways", 
+                "nameroot": "ERZ477576_FASTA_FASTA.summary", 
+                "nameext": ".kegg_pathways", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems/ERZ477576_FASTA_FASTA.summary.kegg_pathways", 
+                "class": "File", 
+                "size": 43014
+            }, 
+            {
+                "format": "http://edamontology.org/format_3752", 
+                "checksum": "sha1$dba9ba52e9ec87055e2e8fceaaeece966fa24dcd", 
+                "basename": "ERZ477576_FASTA_FASTA.summary.gprops", 
+                "nameroot": "ERZ477576_FASTA_FASTA.summary", 
+                "nameext": ".gprops", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems/ERZ477576_FASTA_FASTA.summary.gprops", 
+                "class": "File", 
+                "size": 72095
+            }
+        ], 
+        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems", 
+        "class": "Directory"
+    }, 
+    "pathways_systems_folder_antismash": {
+        "basename": "pathways-systems", 
+        "nameext": "", 
+        "nameroot": "pathways-systems", 
+        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems", 
+        "listing": [
+            {
+                "checksum": "sha1$4799e7133f5b3089c5c660e65c84d4609690a6d8", 
+                "basename": "ERZ477576_FASTA_FASTA_antismash_geneclusters.txt", 
+                "size": 97808, 
+                "class": "File", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems/ERZ477576_FASTA_FASTA_antismash_geneclusters.txt"
+            }, 
+            {
+                "checksum": "sha1$42f3d3306bbcb196c3cefa8649f433e5cbebc319", 
+                "basename": "ERZ477576_FASTA_FASTA_antismash_final.gbk.gz", 
+                "size": 94998031, 
+                "class": "File", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems/ERZ477576_FASTA_FASTA_antismash_final.gbk.gz"
+            }, 
+            {
+                "checksum": "sha1$3e34d4098eb4575a5ef60b7095788d862bc152ce", 
+                "basename": "ERZ477576_FASTA_FASTA.antismash.gff.bgz", 
+                "size": 69650, 
+                "class": "File", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems/ERZ477576_FASTA_FASTA.antismash.gff.bgz"
+            }, 
+            {
+                "checksum": "sha1$0a1427dd9541bb089f87b310ad5f644d848b63c4", 
+                "basename": "ERZ477576_FASTA_FASTA_antismash_final.embl.gz", 
+                "size": 96434479, 
+                "class": "File", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems/ERZ477576_FASTA_FASTA_antismash_final.embl.gz"
+            }, 
+            {
+                "checksum": "sha1$42ddae05eb12d3e77ca8c5566954f746830a3a55", 
+                "basename": "ERZ477576_FASTA_FASTA.antismash.gff.bgz.tbi", 
+                "size": 9733, 
+                "class": "File", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems/ERZ477576_FASTA_FASTA.antismash.gff.bgz.tbi"
+            }
+        ], 
+        "class": "Directory"
+    }, 
+    "functional_annotation_folder": {
+        "class": "Directory", 
+        "basename": "functional-annotation", 
+        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation", 
+        "listing": [
+            {
+                "format": "http://edamontology.org/format_2306", 
+                "checksum": "sha1$55d5da1c84c886ed24bc9c7f22ba41474cfe91db", 
+                "basename": "ERZ477576_FASTA_FASTA.annotations.gff.bgz", 
+                "nameroot": "ERZ477576_FASTA_FASTA.annotations.gff", 
+                "nameext": ".bgz", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.annotations.gff.bgz", 
+                "class": "File", 
+                "size": 35284282
+            }, 
+            {
+                "checksum": "sha1$3de549dbb453fea960b4549b1d740bd550cc5a16", 
+                "basename": "ERZ477576_FASTA_FASTA.annotations.gff.bgz.tbi", 
+                "nameext": ".tbi", 
+                "nameroot": "ERZ477576_FASTA_FASTA.annotations.gff.bgz", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.annotations.gff.bgz.tbi", 
+                "class": "File", 
+                "size": 2753840
+            }, 
+            {
+                "checksum": "sha1$9b5bd2741066ae038469015d88c7053abd61f249", 
+                "basename": "ERZ477576_FASTA_FASTA.emapper.annotations.gz", 
+                "nameext": ".gz", 
+                "nameroot": "ERZ477576_FASTA_FASTA.emapper.annotations", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.emapper.annotations.gz", 
+                "class": "File", 
+                "size": 34118920
+            }, 
+            {
+                "checksum": "sha1$7c9d544a664b2e846512d6468463c8a8869636cf", 
+                "basename": "ERZ477576_FASTA_FASTA.emapper.seed_orthologs.gz", 
+                "nameext": ".gz", 
+                "nameroot": "ERZ477576_FASTA_FASTA.emapper.seed_orthologs", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.emapper.seed_orthologs.gz", 
+                "class": "File", 
+                "size": 5022317
+            }, 
+            {
+                "checksum": "sha1$603c11b5bacad687299d2b6705394928858e63e1", 
+                "basename": "ERZ477576_FASTA_FASTA.summary.ips", 
+                "nameext": ".ips", 
+                "nameroot": "ERZ477576_FASTA_FASTA.summary", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.summary.ips", 
+                "class": "File", 
+                "size": 435359
+            }, 
+            {
+                "checksum": "sha1$a2736919130f25510c57a9a025044899acf84fb2", 
+                "basename": "ERZ477576_FASTA_FASTA.summary.ko", 
+                "nameext": ".ko", 
+                "nameroot": "ERZ477576_FASTA_FASTA.summary", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.summary.ko", 
+                "class": "File", 
+                "size": 209779
+            }, 
+            {
+                "checksum": "sha1$66df790df77c4ba1b22df3c203bdefc89890eb33", 
+                "basename": "ERZ477576_FASTA_FASTA.summary.pfam", 
+                "nameext": ".pfam", 
+                "nameroot": "ERZ477576_FASTA_FASTA.summary", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.summary.pfam", 
+                "class": "File", 
+                "size": 246259
+            }, 
+            {
+                "format": "http://edamontology.org/format_3752", 
+                "checksum": "sha1$a28679d7a19a2f37fe26c8c475e9483a39cd947c", 
+                "basename": "ERZ477576_FASTA_FASTA.summary.go", 
+                "nameroot": "ERZ477576_FASTA_FASTA.summary", 
+                "nameext": ".go", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.summary.go", 
+                "class": "File", 
+                "size": 141922
+            }, 
+            {
+                "format": "http://edamontology.org/format_3752", 
+                "checksum": "sha1$8835721e0c27598cb5262524886ca6d6ae6a47a6", 
+                "basename": "ERZ477576_FASTA_FASTA.summary.go_slim", 
+                "nameroot": "ERZ477576_FASTA_FASTA.summary", 
+                "nameext": ".go_slim", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.summary.go_slim", 
+                "class": "File", 
+                "size": 7550
+            }, 
+            {
+                "checksum": "sha1$6750c65bf80bb3832839cfe9d10a0bdc0fbc2423", 
+                "basename": "ERZ477576_FASTA_FASTA.I5.tsv.chunks", 
+                "nameext": ".chunks", 
+                "nameroot": "ERZ477576_FASTA_FASTA.I5.tsv", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.I5.tsv.chunks", 
+                "class": "File", 
+                "size": 31
+            }, 
+            {
+                "checksum": "sha1$87170c49e2872ae78cb7c1565fe882e74d1523ed", 
+                "basename": "ERZ477576_FASTA_FASTA.I5.tsv.gz", 
+                "nameext": ".gz", 
+                "nameroot": "ERZ477576_FASTA_FASTA.I5.tsv", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.I5.tsv.gz", 
+                "class": "File", 
+                "size": 28538337
+            }, 
+            {
+                "checksum": "sha1$54f84d3da77f6f76e583ca5b7cb137bf92ac37cd", 
+                "basename": "ERZ477576_FASTA_FASTA.hmm.tsv.chunks", 
+                "nameext": ".chunks", 
+                "nameroot": "ERZ477576_FASTA_FASTA.hmm.tsv", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.hmm.tsv.chunks", 
+                "class": "File", 
+                "size": 32
+            }, 
+            {
+                "checksum": "sha1$d8c9cab610208c32e889fddf1864bf0a43221251", 
+                "basename": "ERZ477576_FASTA_FASTA.hmm.tsv.gz", 
+                "nameext": ".gz", 
+                "nameroot": "ERZ477576_FASTA_FASTA.hmm.tsv", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA.hmm.tsv.gz", 
+                "class": "File", 
+                "size": 4164372
+            }, 
+            {
+                "checksum": "sha1$4d3f4201d031cb3028a4a6c5af7af6d09af11694", 
+                "basename": "ERZ477576_FASTA_FASTA_summary.diamond.chunks", 
+                "nameext": ".chunks", 
+                "nameroot": "ERZ477576_FASTA_FASTA_summary.diamond", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA_summary.diamond.chunks", 
+                "class": "File", 
+                "size": 40
+            }, 
+            {
+                "checksum": "sha1$d8aa0dd73f061f3f4be884b2a8c71a81d08630ea", 
+                "basename": "ERZ477576_FASTA_FASTA_summary.diamond.gz", 
+                "nameext": ".gz", 
+                "nameroot": "ERZ477576_FASTA_FASTA_summary.diamond", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/ERZ477576_FASTA_FASTA_summary.diamond.gz", 
+                "class": "File", 
+                "size": 12015384
+            }, 
+            {
+                "checksum": "sha1$e5fd9cfe0e8039111d54b588e77b2bb0cad41c3a", 
+                "basename": "from_chunking_ERZ477576_FASTA_FASTA.I5.tsv", 
+                "nameext": ".tsv", 
+                "nameroot": "from_chunking_ERZ477576_FASTA_FASTA.I5", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/from_chunking_ERZ477576_FASTA_FASTA.I5.tsv", 
+                "class": "File", 
+                "size": 4
+            }, 
+            {
+                "checksum": "sha1$e5fd9cfe0e8039111d54b588e77b2bb0cad41c3a", 
+                "basename": "from_chunking_ERZ477576_FASTA_FASTA.hmm.tsv", 
+                "nameext": ".tsv", 
+                "nameroot": "from_chunking_ERZ477576_FASTA_FASTA.hmm", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/from_chunking_ERZ477576_FASTA_FASTA.hmm.tsv", 
+                "class": "File", 
+                "size": 4
+            }, 
+            {
+                "checksum": "sha1$e5fd9cfe0e8039111d54b588e77b2bb0cad41c3a", 
+                "basename": "from_chunking_ERZ477576_FASTA_FASTA_summary.diamond", 
+                "nameext": ".diamond", 
+                "nameroot": "from_chunking_ERZ477576_FASTA_FASTA_summary", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/functional-annotation/from_chunking_ERZ477576_FASTA_FASTA_summary.diamond", 
+                "class": "File", 
+                "size": 4
+            }
+        ]
+    }, 
+    "chunking_nucleotides": [
+        {
+            "checksum": "sha1$91422d6e8053cc73293f42e701beb35c9512c6dc", 
+            "basename": "ERZ477576_FASTA_FASTA.fasta.chunks", 
+            "nameext": ".chunks", 
+            "nameroot": "ERZ477576_FASTA_FASTA.fasta", 
+            "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/ERZ477576_FASTA_FASTA.fasta.chunks", 
+            "class": "File", 
+            "size": 30
+        }, 
+        {
+            "checksum": "sha1$e04a56ba9bc028572efe42e379e3e69bd95aab93", 
+            "basename": "ERZ477576_FASTA_FASTA.fasta.gz", 
+            "nameext": ".gz", 
+            "nameroot": "ERZ477576_FASTA_FASTA.fasta", 
+            "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/ERZ477576_FASTA_FASTA.fasta.gz", 
+            "class": "File", 
+            "size": 54801982
+        }, 
+        {
+            "checksum": "sha1$50bf4635f1bdb762b57a7cd1f746a98513f8f35b", 
+            "basename": "ERZ477576_FASTA_FASTA_CDS.ffn.chunks", 
+            "nameext": ".chunks", 
+            "nameroot": "ERZ477576_FASTA_FASTA_CDS.ffn", 
+            "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/ERZ477576_FASTA_FASTA_CDS.ffn.chunks", 
+            "class": "File", 
+            "size": 32
+        }, 
+        {
+            "checksum": "sha1$0b1bf3fdfa148e12f900275f0a622371fdc556df", 
+            "basename": "ERZ477576_FASTA_FASTA_CDS.ffn.gz", 
+            "nameext": ".gz", 
+            "nameroot": "ERZ477576_FASTA_FASTA_CDS.ffn", 
+            "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/ERZ477576_FASTA_FASTA_CDS.ffn.gz", 
+            "class": "File", 
+            "size": 57496646
+        }, 
+        {
+            "checksum": "sha1$e5fd9cfe0e8039111d54b588e77b2bb0cad41c3a", 
+            "basename": "from_chunking_ERZ477576_FASTA_FASTA.fasta", 
+            "nameext": ".fasta", 
+            "nameroot": "from_chunking_ERZ477576_FASTA_FASTA", 
+            "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/from_chunking_ERZ477576_FASTA_FASTA.fasta", 
+            "class": "File", 
+            "size": 4
+        }, 
+        {
+            "checksum": "sha1$e5fd9cfe0e8039111d54b588e77b2bb0cad41c3a", 
+            "basename": "from_chunking_ERZ477576_FASTA_FASTA_CDS.ffn", 
+            "nameext": ".ffn", 
+            "nameroot": "from_chunking_ERZ477576_FASTA_FASTA_CDS", 
+            "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/from_chunking_ERZ477576_FASTA_FASTA_CDS.ffn", 
+            "class": "File", 
+            "size": 4
+        }
+    ], 
+    "taxonomy-summary_folder": {
+        "basename": "taxonomy-summary", 
+        "listing": [
+            {
+                "basename": "SSU", 
+                "listing": [
+                    {
+                        "checksum": "sha1$60c6fa9aa477e5ee21d0c8f6b6e0ce2f22fc9660", 
+                        "basename": "ERZ477576_FASTA_FASTA_SSU.fasta.mseq.gz", 
+                        "nameext": ".gz", 
+                        "nameroot": "ERZ477576_FASTA_FASTA_SSU.fasta.mseq", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/SSU/ERZ477576_FASTA_FASTA_SSU.fasta.mseq.gz", 
+                        "class": "File", 
+                        "size": 5254
+                    }, 
+                    {
+                        "format": "http://edamontology.org/format_3746", 
+                        "checksum": "sha1$eef4b204a173e572934ea58c023a001cb8c2d042", 
+                        "basename": "ERZ477576_FASTA_FASTA_SSU.fasta.mseq.tsv", 
+                        "nameroot": "ERZ477576_FASTA_FASTA_SSU.fasta.mseq", 
+                        "nameext": ".tsv", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/SSU/ERZ477576_FASTA_FASTA_SSU.fasta.mseq.tsv", 
+                        "class": "File", 
+                        "size": 3312
+                    }, 
+                    {
+                        "format": "https://www.iana.org/assignments/media-types/text/tab-separated-values", 
+                        "checksum": "sha1$97d7112e8e442eb2954e9f34d265ac88fe1ece8f", 
+                        "basename": "ERZ477576_FASTA_FASTA_SSU.fasta.mseq.txt", 
+                        "nameroot": "ERZ477576_FASTA_FASTA_SSU.fasta.mseq", 
+                        "nameext": ".txt", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/SSU/ERZ477576_FASTA_FASTA_SSU.fasta.mseq.txt", 
+                        "class": "File", 
+                        "size": 2740
+                    }, 
+                    {
+                        "format": "https://www.iana.org/assignments/media-types/text/html", 
+                        "checksum": "sha1$8cbe4a6e4a31f016a25560011b788431bbdfae58", 
+                        "basename": "krona.html", 
+                        "nameroot": "krona", 
+                        "nameext": ".html", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/SSU/krona.html", 
+                        "class": "File", 
+                        "size": 233183
+                    }, 
+                    {
+                        "checksum": "sha1$d0b4bed69dd0a1a01ef01173bd55bda9cf7a185e", 
+                        "basename": "ERZ477576_FASTA_FASTA_SSU.fasta.mseq_hdf5.biom", 
+                        "nameext": ".biom", 
+                        "nameroot": "ERZ477576_FASTA_FASTA_SSU.fasta.mseq_hdf5", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/SSU/ERZ477576_FASTA_FASTA_SSU.fasta.mseq_hdf5.biom", 
+                        "class": "File", 
+                        "size": 37040
+                    }, 
+                    {
+                        "checksum": "sha1$d8e08ffd86d7f2bf3c7077fbf713d7549cc15876", 
+                        "basename": "ERZ477576_FASTA_FASTA_SSU.fasta.mseq_json.biom", 
+                        "nameext": ".biom", 
+                        "nameroot": "ERZ477576_FASTA_FASTA_SSU.fasta.mseq_json", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/SSU/ERZ477576_FASTA_FASTA_SSU.fasta.mseq_json.biom", 
+                        "class": "File", 
+                        "size": 4920
+                    }
+                ], 
+                "class": "Directory", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/SSU"
+            }, 
+            {
+                "basename": "LSU", 
+                "listing": [
+                    {
+                        "checksum": "sha1$309f3a8a729aa282cedcb7ff6cfe3c532d678055", 
+                        "basename": "ERZ477576_FASTA_FASTA_LSU.fasta.mseq.gz", 
+                        "nameext": ".gz", 
+                        "nameroot": "ERZ477576_FASTA_FASTA_LSU.fasta.mseq", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/LSU/ERZ477576_FASTA_FASTA_LSU.fasta.mseq.gz", 
+                        "class": "File", 
+                        "size": 8227
+                    }, 
+                    {
+                        "format": "http://edamontology.org/format_3746", 
+                        "checksum": "sha1$76e9625e70e636169cecacba7424845d42127ae5", 
+                        "basename": "ERZ477576_FASTA_FASTA_LSU.fasta.mseq.tsv", 
+                        "nameroot": "ERZ477576_FASTA_FASTA_LSU.fasta.mseq", 
+                        "nameext": ".tsv", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/LSU/ERZ477576_FASTA_FASTA_LSU.fasta.mseq.tsv", 
+                        "class": "File", 
+                        "size": 3560
+                    }, 
+                    {
+                        "format": "https://www.iana.org/assignments/media-types/text/tab-separated-values", 
+                        "checksum": "sha1$70c920fd6b8dd484d2def16d5611926a82843973", 
+                        "basename": "ERZ477576_FASTA_FASTA_LSU.fasta.mseq.txt", 
+                        "nameroot": "ERZ477576_FASTA_FASTA_LSU.fasta.mseq", 
+                        "nameext": ".txt", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/LSU/ERZ477576_FASTA_FASTA_LSU.fasta.mseq.txt", 
+                        "class": "File", 
+                        "size": 2981
+                    }, 
+                    {
+                        "format": "https://www.iana.org/assignments/media-types/text/html", 
+                        "checksum": "sha1$67581122467d881d776008458885d430a56ce843", 
+                        "basename": "krona.html", 
+                        "nameroot": "krona", 
+                        "nameext": ".html", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/LSU/krona.html", 
+                        "class": "File", 
+                        "size": 233368
+                    }, 
+                    {
+                        "checksum": "sha1$491b04af7ae153b44766d64087398cf9b5785535", 
+                        "basename": "ERZ477576_FASTA_FASTA_LSU.fasta.mseq_hdf5.biom", 
+                        "nameext": ".biom", 
+                        "nameroot": "ERZ477576_FASTA_FASTA_LSU.fasta.mseq_hdf5", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/LSU/ERZ477576_FASTA_FASTA_LSU.fasta.mseq_hdf5.biom", 
+                        "class": "File", 
+                        "size": 37040
+                    }, 
+                    {
+                        "checksum": "sha1$7984d2bd152464d4467e4a728687a5fef30cdd73", 
+                        "basename": "ERZ477576_FASTA_FASTA_LSU.fasta.mseq_json.biom", 
+                        "nameext": ".biom", 
+                        "nameroot": "ERZ477576_FASTA_FASTA_LSU.fasta.mseq_json", 
+                        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/LSU/ERZ477576_FASTA_FASTA_LSU.fasta.mseq_json.biom", 
+                        "class": "File", 
+                        "size": 5289
+                    }
+                ], 
+                "class": "Directory", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary/LSU"
+            }
+        ], 
+        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/taxonomy-summary", 
+        "class": "Directory"
+    }, 
+    "bgzip_index": {
+        "checksum": "sha1$9d6947f19b073a3dc260592bf46c409bcfa08484", 
+        "basename": "ERZ477576_FASTA_FASTA.fasta.bgz.gzi", 
+        "nameext": ".gzi", 
+        "nameroot": "ERZ477576_FASTA_FASTA.fasta.bgz", 
+        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/ERZ477576_FASTA_FASTA.fasta.bgz.gzi", 
+        "class": "File", 
+        "size": 43608
+    }, 
+    "sequence-categorisation_folder": {
+        "basename": "sequence-categorisation", 
+        "listing": [
+            {
+                "checksum": "sha1$77c26fd0c07ecf2141c1d6474d0ea421ced6a7ed", 
+                "basename": "LSU.fasta.chunks", 
+                "nameext": ".chunks", 
+                "nameroot": "LSU.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/LSU.fasta.chunks", 
+                "class": "File", 
+                "size": 12
+            }, 
+            {
+                "checksum": "sha1$3b63bb64b5e5e63f2456d2c8b05c3672ce9f962d", 
+                "basename": "LSU.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "LSU.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/LSU.fasta.gz", 
+                "class": "File", 
+                "size": 30466
+            }, 
+            {
+                "checksum": "sha1$e8350a233281602dde29cfa42682a23c76ec6676", 
+                "basename": "SSU.fasta.chunks", 
+                "nameext": ".chunks", 
+                "nameroot": "SSU.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/SSU.fasta.chunks", 
+                "class": "File", 
+                "size": 12
+            }, 
+            {
+                "checksum": "sha1$99561ce0694447856f035d20cf08203f217c2eb4", 
+                "basename": "SSU.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "SSU.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/SSU.fasta.gz", 
+                "class": "File", 
+                "size": 11728
+            }, 
+            {
+                "checksum": "sha1$e5fd9cfe0e8039111d54b588e77b2bb0cad41c3a", 
+                "basename": "from_chunking_LSU.fasta", 
+                "nameext": ".fasta", 
+                "nameroot": "from_chunking_LSU", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/from_chunking_LSU.fasta", 
+                "class": "File", 
+                "size": 4
+            }, 
+            {
+                "checksum": "sha1$e5fd9cfe0e8039111d54b588e77b2bb0cad41c3a", 
+                "basename": "from_chunking_SSU.fasta", 
+                "nameext": ".fasta", 
+                "nameroot": "from_chunking_SSU", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/from_chunking_SSU.fasta", 
+                "class": "File", 
+                "size": 4
+            }, 
+            {
+                "checksum": "sha1$6dfde5ccf00323fbfed5f8be0cbfbe06f8266c62", 
+                "basename": "5S.fa.gz", 
+                "nameext": ".gz", 
+                "nameroot": "5S.fa", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/5S.fa.gz", 
+                "class": "File", 
+                "size": 189
+            }, 
+            {
+                "checksum": "sha1$dbbb03bc594d52c51b36cb1c0b9062d23fdc5e12", 
+                "basename": "5_8S.fa.gz", 
+                "nameext": ".gz", 
+                "nameroot": "5_8S.fa", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/5_8S.fa.gz", 
+                "class": "File", 
+                "size": 267
+            }, 
+            {
+                "checksum": "sha1$ea050d8ddcbee5098a427040f3072e1b48c3dc47", 
+                "basename": "LSU_rRNA_archaea.RF02540.fa.gz", 
+                "nameext": ".gz", 
+                "nameroot": "LSU_rRNA_archaea.RF02540.fa", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/LSU_rRNA_archaea.RF02540.fa.gz", 
+                "class": "File", 
+                "size": 1642
+            }, 
+            {
+                "checksum": "sha1$2b671eecc4b2c9efdb62ad4d76faafbc73eaec2e", 
+                "basename": "LSU_rRNA_bacteria.RF02541.fa.gz", 
+                "nameext": ".gz", 
+                "nameroot": "LSU_rRNA_bacteria.RF02541.fa", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/LSU_rRNA_bacteria.RF02541.fa.gz", 
+                "class": "File", 
+                "size": 28138
+            }, 
+            {
+                "checksum": "sha1$2601b9dd128a92dbe378da17cd0dca5e0563d396", 
+                "basename": "LSU_rRNA_eukarya.RF02543.fa.gz", 
+                "nameext": ".gz", 
+                "nameroot": "LSU_rRNA_eukarya.RF02543.fa", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/LSU_rRNA_eukarya.RF02543.fa.gz", 
+                "class": "File", 
+                "size": 777
+            }, 
+            {
+                "checksum": "sha1$76bf7d210ee8a5a16cca844578f8c7d7e500565a", 
+                "basename": "SSU_rRNA_archaea.RF01959.fa.gz", 
+                "nameext": ".gz", 
+                "nameroot": "SSU_rRNA_archaea.RF01959.fa", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/SSU_rRNA_archaea.RF01959.fa.gz", 
+                "class": "File", 
+                "size": 1124
+            }, 
+            {
+                "checksum": "sha1$d5e5c89212e9bba4c87f1541c3f3c5d40e8dc40d", 
+                "basename": "SSU_rRNA_bacteria.RF00177.fa.gz", 
+                "nameext": ".gz", 
+                "nameroot": "SSU_rRNA_bacteria.RF00177.fa", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/SSU_rRNA_bacteria.RF00177.fa.gz", 
+                "class": "File", 
+                "size": 9413
+            }, 
+            {
+                "checksum": "sha1$aa00f63fcbb1cd81aa0acbc7372dd7fe9382132d", 
+                "basename": "SSU_rRNA_eukarya.RF01960.fa.gz", 
+                "nameext": ".gz", 
+                "nameroot": "SSU_rRNA_eukarya.RF01960.fa", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/SSU_rRNA_eukarya.RF01960.fa.gz", 
+                "class": "File", 
+                "size": 1062
+            }, 
+            {
+                "checksum": "sha1$e1a8797c6ddbc9aca0c0124d940ec27b4db054e2", 
+                "basename": "Archaea_SRP.RF01857.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "Archaea_SRP.RF01857.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/Archaea_SRP.RF01857.fasta.gz", 
+                "class": "File", 
+                "size": 429
+            }, 
+            {
+                "checksum": "sha1$5d95da71ef4ff58af637500e0417613e815a2eb7", 
+                "basename": "Bacteria_large_SRP.RF01854.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "Bacteria_large_SRP.RF01854.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/Bacteria_large_SRP.RF01854.fasta.gz", 
+                "class": "File", 
+                "size": 193
+            }, 
+            {
+                "checksum": "sha1$8ce5edd02e82bd7d9b463eff1c47ed88c9eb046e", 
+                "basename": "Bacteria_small_SRP.RF00169.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "Bacteria_small_SRP.RF00169.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/Bacteria_small_SRP.RF00169.fasta.gz", 
+                "class": "File", 
+                "size": 1748
+            }, 
+            {
+                "checksum": "sha1$53cbfbec424e10d0d8a783037a66042d1334019b", 
+                "basename": "Dictyostelium_SRP.RF01570.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "Dictyostelium_SRP.RF01570.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/Dictyostelium_SRP.RF01570.fasta.gz", 
+                "class": "File", 
+                "size": 215
+            }, 
+            {
+                "checksum": "sha1$62b06d8569e2b1c66ecf7b71e1c9625829a9aa38", 
+                "basename": "Metazoa_SRP.RF00017.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "Metazoa_SRP.RF00017.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/Metazoa_SRP.RF00017.fasta.gz", 
+                "class": "File", 
+                "size": 265
+            }, 
+            {
+                "checksum": "sha1$a809c733043579d33f3ea201eb520f5b26b62f1c", 
+                "basename": "Protozoa_SRP.RF01856.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "Protozoa_SRP.RF01856.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/Protozoa_SRP.RF01856.fasta.gz", 
+                "class": "File", 
+                "size": 153
+            }, 
+            {
+                "checksum": "sha1$2f9111b2938c148693f1f476d420b2f67a4c0d58", 
+                "basename": "RNaseP_arch.RF00373.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "RNaseP_arch.RF00373.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/RNaseP_arch.RF00373.fasta.gz", 
+                "class": "File", 
+                "size": 616
+            }, 
+            {
+                "checksum": "sha1$c4e0c0397f5250dfe20fec4b9781db3d4256a33c", 
+                "basename": "RNaseP_bact_a.RF00010.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "RNaseP_bact_a.RF00010.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/RNaseP_bact_a.RF00010.fasta.gz", 
+                "class": "File", 
+                "size": 8041
+            }, 
+            {
+                "checksum": "sha1$5193ff69fde02ca8237079a2864e05f92038d4fc", 
+                "basename": "RNaseP_bact_b.RF00011.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "RNaseP_bact_b.RF00011.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/RNaseP_bact_b.RF00011.fasta.gz", 
+                "class": "File", 
+                "size": 470
+            }, 
+            {
+                "checksum": "sha1$b144dd45206718e9dd0e1dd982a1b2028697fe59", 
+                "basename": "RNase_P.RF01577.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "RNase_P.RF01577.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/RNase_P.RF01577.fasta.gz", 
+                "class": "File", 
+                "size": 1884
+            }, 
+            {
+                "checksum": "sha1$bca5eadddbcbe30603d8738cc59536d6033b447e", 
+                "basename": "alpha_tmRNA.RF01849.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "alpha_tmRNA.RF01849.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/alpha_tmRNA.RF01849.fasta.gz", 
+                "class": "File", 
+                "size": 4069
+            }, 
+            {
+                "checksum": "sha1$d9e42bfe12c67d15f35b122b4cd04d352e3d8ee3", 
+                "basename": "beta_tmRNA.RF01850.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "beta_tmRNA.RF01850.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/beta_tmRNA.RF01850.fasta.gz", 
+                "class": "File", 
+                "size": 780
+            }, 
+            {
+                "checksum": "sha1$d47e71ca4a76ede27102dfcdf6a9c9811510176d", 
+                "basename": "cyano_tmRNA.RF01851.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "cyano_tmRNA.RF01851.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/cyano_tmRNA.RF01851.fasta.gz", 
+                "class": "File", 
+                "size": 973
+            }, 
+            {
+                "checksum": "sha1$7ab985ff9ce423ca1e31f01dc653ff7c0b4b3235", 
+                "basename": "mt-tmRNA.RF02544.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "mt-tmRNA.RF02544.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/mt-tmRNA.RF02544.fasta.gz", 
+                "class": "File", 
+                "size": 1197
+            }, 
+            {
+                "checksum": "sha1$49572923fc6e499808e2ef0ae896e5e7f35682cf", 
+                "basename": "tRNA-Sec.RF01852.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "tRNA-Sec.RF01852.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/tRNA-Sec.RF01852.fasta.gz", 
+                "class": "File", 
+                "size": 1508
+            }, 
+            {
+                "checksum": "sha1$1ecdf3752f92957a2b58bd299b24e2978444787e", 
+                "basename": "tRNA.RF00005.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "tRNA.RF00005.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/tRNA.RF00005.fasta.gz", 
+                "class": "File", 
+                "size": 63050
+            }, 
+            {
+                "checksum": "sha1$8fb00313a505f345fa7f86aca3623185dcd92647", 
+                "basename": "tmRNA.RF00023.fasta.gz", 
+                "nameext": ".gz", 
+                "nameroot": "tmRNA.RF00023.fasta", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation/tmRNA.RF00023.fasta.gz", 
+                "class": "File", 
+                "size": 13170
+            }
+        ], 
+        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/sequence-categorisation", 
+        "class": "Directory"
+    }, 
+    "pathways_systems_folder_antismash_summary": {
+        "basename": "pathways-systems", 
+        "nameext": "", 
+        "nameroot": "pathways-systems", 
+        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems", 
+        "listing": [
+            {
+                "checksum": "sha1$271187b70de6c0604fb59b00ab701d22634e87a3", 
+                "basename": "ERZ477576_FASTA_FASTA.summary.antismash", 
+                "size": 586, 
+                "class": "File", 
+                "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/pathways-systems/ERZ477576_FASTA_FASTA.summary.antismash"
+            }
+        ], 
+        "class": "Directory"
+    }, 
+    "rna-count": {
+        "checksum": "sha1$b48fbab1499a14fe70d0412796553c7dbaa9abac", 
+        "basename": "RNA-counts", 
+        "nameext": "", 
+        "nameroot": "RNA-counts", 
+        "location": "file:///nfs/nobackup/metagenomics/mbc/mgnify-pipeline/results/version_5.0/MBC_ERZ477576_2/RNA-counts", 
+        "class": "File", 
+        "size": 26
+    }
+}

@@ -1,0 +1,56 @@
+{
+  "data": {
+    "type": "assemblies",
+    "id": "ERZ477708",
+    "attributes": {
+      "experiment-type": "assembly",
+      "accession": "ERZ477708",
+      "wgs-accession": "OBJK01",
+      "legacy-accession": "illegal_accession"
+    },
+    "relationships": {
+      "samples": {
+        "data": [
+          {
+            "type": "samples",
+            "id": "SRS1743794",
+            "links": {
+              "self": "http://localhost:9000/metagenomics/api/v1/samples/SRS1743794"
+            }
+          }
+        ],
+        "meta": {
+          "count": 1
+        }
+      },
+      "analyses": {
+        "links": {
+          "related": "http://localhost:9000/metagenomics/api/v1/assemblies/ERZ477708/analyses"
+        }
+      },
+      "pipelines": {
+        "data": [
+          {
+            "type": "pipelines",
+            "id": "4.0",
+            "links": {
+              "self": "http://localhost:9000/metagenomics/api/v1/pipelines/4.0"
+            }
+          }
+        ],
+        "meta": {
+          "count": 1
+        }
+      },
+      "runs": {
+        "data": [],
+        "meta": {
+          "count": 0
+        }
+      }
+    },
+    "links": {
+      "self": "http://localhost:9000/metagenomics/api/v1/assemblies/ERZ477708"
+    }
+  }
+}

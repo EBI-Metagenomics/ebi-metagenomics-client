@@ -1,0 +1,78 @@
+{
+  "_comment": "Basic ebiSearch query response for samples with no filters",
+  "hitCount": 3,
+  "entries": [
+    {
+      "id": "SRS371887",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "SRS371887"
+        ],
+        "name": [
+          "Generic sample from unclassified Bacteria (miscellaneous)"
+        ],
+        "biome_name": [
+          "Large intestine"
+        ],
+        "description": [
+          "Generic sample from unclassified Bacteria (miscellaneous)"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000633"
+        ],
+        "project_name": [
+          "Microbial composition of samples from infant gut"
+        ]
+      }
+    },
+    {
+      "id": "ERS549102",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS549102"
+        ],
+        "name": [
+          "Lu-1_2_fun"
+        ],
+        "biome_name": [
+          "Phylloplane"
+        ],
+        "description": [
+          "Lu-1_2"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001357"
+        ],
+        "project_name": [
+          "The bacteria and fungi associated with the leaves of Arabidopsis thaliana"
+        ]
+      }
+    },
+    {
+      "id": "ERS915169",
+      "source": "metagenomics_samples",
+      "fields": {
+        "id": [
+          "ERS915169"
+        ],
+        "name": [
+          "10317.000004222"
+        ],
+        "biome_name": [
+          "Human"
+        ],
+        "description": [
+          "American Gut Project Stool sample"
+        ],
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000596"
+        ],
+        "project_name": [
+          "American Gut Project"
+        ]
+      }
+    }
+  ]
+}

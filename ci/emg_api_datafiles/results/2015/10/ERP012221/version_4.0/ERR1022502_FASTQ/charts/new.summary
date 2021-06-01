@@ -1,0 +1,10 @@
+Submitted nucleotide sequences	213741460
+Nucleotide sequences after format-specific filtering	213741430
+Nucleotide sequences after length filtering	180329978
+Nucleotide sequences after undetermined bases filtering	180329978
+Reads with predicted CDS	129224380
+Reads with predicted RNA	7159621
+Reads with InterProScan match	12488689
+Predicted CDS	129224380
+Predicted CDS with InterProScan match	12488689
+Total InterProScan matches	19762347

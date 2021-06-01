@@ -1,0 +1,44 @@
+{
+  "name": "mgportalv2",
+  "version": "2.0.0-alpha.1",
+  "description": "Web Client for the Mgnify service at EBI",
+  "homepage": "https://github.com/EBI-Metagenomics/ebi-metagenomics-client#readme",
+  "main": "src/index.tsx",
+  "scripts": {
+    "test": "cypress run --spec cypress/integration/home.js",
+    "coverage": "node_modules/istanbul-combine/cli.js -d coverage -b . -r lcov -r html coverage/*.js.json;",
+    "build": "webpack --mode=production"
+  },
+  "author": "MGnify Team",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EBI-Metagenomics/ebi-metagenomics-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EBI-Metagenomics/ebi-metagenomics-client/issues"
+  },
+  "dependencies": {
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "17.0.8",
+    "@types/react-dom": "17.0.5",
+    "css-loader": "5.2.6",
+    "source-map-loader": "3.0.0",
+    "style-loader": "2.0.0",
+    "ts-loader": "9.2.2",
+    "typescript": "4.3.2",
+    "webpack": "5.38.1",
+    "webpack-cli": "4.7.0"
+  },
+  "nyc": {
+    "exclude": [
+      "static/libraries/*.*.js",
+      "static/libraries/*.js",
+      "static/libraries/jquery.twbsPagination.js",
+      "static/libraries"
+    ]
+  }
+}
