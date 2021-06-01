@@ -129,6 +129,9 @@ jobs:
                   mv dist /usr/share/nginx/html/metagenomics
                   echo "\nweb index"
                   curl --silent http://localhost:9000/metagenomics/
+            - name: 🧹 - ESlint
+              run: |
+                  npm run eslint
             - name: 🧪 - Testing
               uses: cypress-io/github-action@v2
             - name: 📉 - Get Coverage

@@ -28,7 +28,10 @@ describe('Home page', function() {
             openPage(origPage);
         });
 
-        it.only('Browse by selected biomes"', function() {
+        it.only('Open the Home page"', function() {
+            cy.contains('Mgnify');
+        });
+        it('Browse by selected biomes"', function() {
             cy.contains('Or by selected biomes');
             // Check biome icons are loaded
             cy.get('#top10biomes span.biome_icon').then(($els) => {

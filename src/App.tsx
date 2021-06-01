@@ -1,14 +1,10 @@
-import React, { Component} from "react";
-import "./App.css";
+import React from 'react';
+import './App.css';
 
-class App extends Component{
-  render(){
-    return(
-      <div className="App">
-        <h1> Hello, World! </h1>
-      </div>
-    );
-  }
-}
+const App: React.FC = () => (
+  <div className="App">
+    <h1>Mgnify - EBI</h1>
+  </div>
+);
 
 export default App;

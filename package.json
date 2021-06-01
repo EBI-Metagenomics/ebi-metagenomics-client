@@ -5,9 +5,10 @@
   "homepage": "https://github.com/EBI-Metagenomics/ebi-metagenomics-client#readme",
   "main": "src/index.tsx",
   "scripts": {
-    "test": "cypress run --spec cypress/integration/home.js",
+    "test": "cypress run --spec cypress/integration/index.js",
     "coverage": "node_modules/istanbul-combine/cli.js -d coverage -b . -r lcov -r html coverage/*.js.json;",
-    "build": "webpack --mode=production"
+    "build": "webpack --mode=production",
+    "eslint": "eslint src/*"
   },
   "author": "MGnify Team",
   "license": "ISC",
@@ -25,7 +26,18 @@
   "devDependencies": {
     "@types/react": "17.0.8",
     "@types/react-dom": "17.0.5",
+    "@typescript-eslint/eslint-plugin": "4.26.0",
+    "@typescript-eslint/parser": "4.26.0",
     "css-loader": "5.2.6",
+    "cypress": "7.4.0",
+    "eslint": "7.27.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-import-resolver-typescript": "2.4.0",
+    "eslint-plugin-import": "2.23.4",
+    "eslint-plugin-jsx-a11y": "6.4.1",
+    "eslint-plugin-react": "7.24.0",
+    "eslint-plugin-react-hooks": "4.2.0",
+    "istanbul-lib-coverage": "3.0.0",
     "source-map-loader": "3.0.0",
     "style-loader": "2.0.0",
     "ts-loader": "9.2.2",
