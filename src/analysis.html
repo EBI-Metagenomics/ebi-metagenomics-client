@@ -207,6 +207,14 @@
                 sample. The full set of results files may be found under the "Download" tab.                
             <% } %>
             </p>
+            <% if (longReadExperiment) { %>
+                <div class="callout warning">
+                    <p>
+                        <b>Caution:</b>
+                        The sequences in this sample are derived from long-read sequencing technology. Gene-prediction on this sequence data can be problematic, potentially resulting in fewer and/or truncated predictions.
+                    </p>
+                </div>
+            <% } %>
         </div>
 
         <ul id="functional-analysis-tabs" class="tabs">

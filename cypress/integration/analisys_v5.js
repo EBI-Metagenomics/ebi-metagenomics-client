@@ -177,8 +177,6 @@ describe('Analysis V5', () => {
     });
 
     context('Functional tab', () => {
-        const analysisId = 'MGYA00383254';
-        const pageUrl = 'analyses/' + analysisId + '#functional';
         const tabs = [
             'InterPro',
             'GO Terms',
@@ -186,19 +184,26 @@ describe('Analysis V5', () => {
             'KO'
         ];
         it('Should have 4 inner tabs', () => {
-            openPage(pageUrl);
+            const analysisId = 'MGYA00383254';
+            openPage(`analyses/${analysisId}#functional`);
             waitForPageLoad('Analysis ' + analysisId);
             cy.get('#functional-analysis-tabs li').should('have.length', 4);
             cy.get('#functional-analysis-tabs li').each(($li) => {
                 expect($li.text().replace('\n', '').trim()).to.be.oneOf(tabs);
             });
+            // Long Read message
+            cy.get('#functional .callout').should('not.exist');
         });
-    });
-
-    context('Contig viewer tab', () => {
-    });
-
-    context('Downloads tab', () => {
+        it('Should display a message for long-read analysis', () => {
+            const analysisId = 'MGYA00022366';
+            openPage(`analyses/${analysisId}#functional`);
+            waitForPageLoad('Analysis ' + analysisId);
+            // V2.0 WGS analysis
+            cy.get('#functional-analysis-tabs li').should('have.length', 2);
+            // Long Read message
+            cy.get('#functional .callout').should('contain',
+                'The sequences in this sample are derived from long-read sequencing technology. Gene-prediction on this sequence data can be problematic, potentially resulting in fewer and/or truncated predictions.');
+        });
     });
 
     context('Error handling', () => {
