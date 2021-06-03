@@ -137,11 +137,11 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           spec: cypress/integration/index.js
-      - name: 📉 - Get Coverage
-        run: |
-          npm run coverage
-      # - name: 📉 -Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v1
+      # - name: 📉 - Get Coverage
+      #   run: |
+      #     npm run coverage
+      - name: 📉 -Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
       - name: 📸 - Failed tests snapshots
         uses: actions/upload-artifact@v2
         if: failure()
