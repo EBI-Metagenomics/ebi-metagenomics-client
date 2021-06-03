@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react';
 
 const EBIHeader: React.FC = () => {
@@ -6,7 +7,10 @@ const EBIHeader: React.FC = () => {
   return (
     <header
       id="masthead-black-bar"
-      className="clearfix masthead-black-bar | ebi-header-footer vf-content vf-u-fullbleed"
+      className={
+        'clearfix masthead-black-bar | ' +
+        'ebi-header-footer vf-content vf-u-fullbleed'
+      }
     >
       <div>
         <nav
@@ -28,7 +32,13 @@ const EBIHeader: React.FC = () => {
             </div>
             <div className="columns medium-7">
               <div className="large-10 medium-12">
-                <div className="margin-bottom-large padding-top-xsmall margin-top-large">
+                <div
+                  className={
+                    'margin-bottom-large ' +
+                    'padding-top-xsmall ' +
+                    'margin-top-large'
+                  }
+                >
                   <h3
                     className="no-underline inline"
                     style={{ lineHeight: '1rem' }}
@@ -41,7 +51,15 @@ const EBIHeader: React.FC = () => {
                   molecular biology:
                 </div>
               </div>
-              <div className="row large-up-3 medium-up-3 small-up-2 no-underline medium-11">
+              <div
+                className={
+                  'row large-up-3 ' +
+                  'medium-up-3 ' +
+                  'small-up-2 ' +
+                  'no-underline ' +
+                  'medium-11'
+                }
+              >
                 <div className="column padding-bottom-medium">
                   <a className="" href="https://www.embl.de/research/index.php">
                     <h5 className="inline underline">Research:</h5> perform
@@ -204,7 +222,7 @@ const EBIHeader: React.FC = () => {
         <nav className="row">
           <ul id="global-nav" className="menu global-nav text-right">
             <li className="home-mobile">
-              <a href="https://www.ebi.ac.uk"></a>
+              <a href="https://www.ebi.ac.uk">&nbsp;</a>
             </li>
             <li className="where embl hide">
               <a href="http://www.embl.org">EMBL</a>
@@ -231,6 +249,7 @@ const EBIHeader: React.FC = () => {
               }`}
             >
               <button
+                type="button"
                 className="button float-right"
                 onClick={() => setActive(!active)}
               >
