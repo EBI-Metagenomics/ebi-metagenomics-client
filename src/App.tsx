@@ -1,10 +1,12 @@
 import React from 'react';
 import './App.css';
+import EBIHeader from './components/UI/EBIHeader';
 
 const App: React.FC = () => (
-  <div className="App">
-    <h1>Mgnify - EBI</h1>
-  </div>
+  <>
+    <EBIHeader />
+    <h1>MGnify - EBI.</h1>
+  </>
 );
 
 export default App;
