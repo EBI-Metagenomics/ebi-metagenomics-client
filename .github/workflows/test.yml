@@ -125,9 +125,8 @@ jobs:
         run: |
           npm ci
           npm run build
-          ls dist/
           mv dist /usr/share/nginx/html/metagenomics
-          cp public/* /usr/share/nginx/html/metagenomics/
+          ls /usr/share/nginx/html/metagenomics
           echo "\nweb index"
           curl --silent http://localhost:9000/metagenomics/
       - name: 🧹 - ESlint
