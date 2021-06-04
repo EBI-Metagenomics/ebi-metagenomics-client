@@ -6,9 +6,10 @@ module.exports = {
   entry: './src/index.tsx',
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: './dist',
-    port: 3000,
+    contentBase: path.join(__dirname, 'dist'),
+    port: 9000,
     hot: true,
+    contentBasePublicPath: '/metagenomics',
   },
   module: {
     rules: [
@@ -34,6 +35,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public', 'index.html'),
+      title: 'MGnify <- EBI',
     }),
   ],
 };

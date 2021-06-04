@@ -23,13 +23,25 @@ function defaultLoginFieldsAreVisible(confidentialityText) {
 }
 
 describe('Home page', function() {
-    context('Check for elements', function() {
+
+    context.only('Minimal checks', function() {
         before(function() {
             openPage(origPage);
         });
 
-        it.only('Open the Home page"', function() {
-            cy.contains('Mgnify');
+        it('Open the Home page"', function() {
+            cy.contains('MGnify');
+        });
+        it('It has EBI header"', function() {
+            cy.contains('EMBL-EBI');
+            cy.get('.ebi-header-footer .global-nav .where.ebi').then(($els) => {
+                expect($els).to.have.length(1);
+            });
+        });
+    });
+    context('Check for elements', function() {
+        before(function() {
+            openPage(origPage);
         });
         it('Browse by selected biomes"', function() {
             cy.contains('Or by selected biomes');
