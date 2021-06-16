@@ -21,7 +21,13 @@ jobs:
         #     python-version: [3.6, 3.7.1, 3.8.6]
 
         steps:
+            - name: 🌱 - Get git branch name
+              id: git-branch-name
+              uses: EthanSK/git-branch-name-action@v1
             - uses: actions/checkout@v2
+            - name: 📣 - Announce git branch name
+              run: |
+                  echo ${GIT_BRANCH_NAME}
             - name: 🌎 - Setup NginX
               run: |
                   sudo chmod 777 /var/log/nginx/*
@@ -47,7 +53,7 @@ jobs:
                   python -V
                   pip -V
                   pip install "git+git://github.com/EBI-Metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-                  pip install "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+                  pip install "git+git://github.com/EBI-metagenomics/emgapi@${GIT_BRANCH_NAME}#egg=emgcli" || pip install "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
                   ls -l
 
             - name: 💾 - Setting MySQL
