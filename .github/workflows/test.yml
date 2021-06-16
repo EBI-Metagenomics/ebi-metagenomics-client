@@ -21,7 +21,14 @@ jobs:
         #     python-version: [3.6, 3.7.1, 3.8.6]
 
         steps:
+            - name: 🌱 - Get git branch name
+              id: git-branch-name
+              uses: EthanSK/git-branch-name-action@v1
             - uses: actions/checkout@v2
+            - name: Echo branch name
+              run: |
+                  echo ${GIT_BRANCH_NAME}
+                  echo ${GITHUB_REF}
             - name: 🌎 - Setup NginX
               run: |
                   sudo chmod 777 /var/log/nginx/*
