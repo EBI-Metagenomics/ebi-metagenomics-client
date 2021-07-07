@@ -48,7 +48,8 @@
                         </li>
                         <li class="tabs-title"><a href="#phylo-tab">Taxonomy tree</a></li>
                         <li class="tabs-title"><a href="#protein-catalog-tab">Protein catalogue</a></li>
-                        <li class="tabs-title"><a href="#genome-search-tab">Search</a></li>
+                        <li class="tabs-title"><a href="#genome-search-tab">Search by Gene</a></li>
+                        <li class="tabs-title"><a href="#genome-search-mag-tab">Search by MAG</a></li>
                     </ul>
                     <div class="tabs-content" data-tab-content="data-tabs">
                         <div class="tabs-panel active" id="genome-list-tab">
@@ -163,6 +164,54 @@
                                         </div>
                                     </section>
                                 </section>
+                        </div>
+                        <div id="genome-search-mag-tab" class="tabs-panel">
+                            <section id="genome-search-mag">
+                                <section>
+                                    <h2>
+                                        Search MAG files in the UHGG catalogue
+                                    </h2>
+                                    <p>
+                                        Compare your MAG file or your MAG collection against this catalog to see if they are novel.
+                                        Powered by <a href="https://sourmash.readthedocs.io/">Sourmash</a>.
+                                    </p>
+                                    <div id="message-containter-2"></div>
+                                </section>
+                                <section id="search-mag-section">
+                                    <mgnify-sourmash-component id="sourmash" show_directory_checkbox></mgnify-sourmash-component>
+                                    <div class="columns text-center">
+                                        <button id="search-button-mag" type="button"
+                                            class="button black-background" disabled>Search</button>
+                                        <button id="clear-button-mag" type="button"
+                                            class="button secondary">Clear</button>
+                                    </div>
+                                </section>
+                                <!-- Search results -->
+                                <section>
+                                    <div id="results-mag-section" class="hidden">
+                                        <div class="row" id="results-job-sent">
+                                            <h3>Job Information</h3>
+                                            <div id="results-job-description">
+                                            </div>
+                                            <h4>Job Information</h4>
+                                            <dl>
+                                                <dt>Job ID</dt>
+                                                <dd id="results-job-id">...</dd>
+                                                <dt>Status</dt>
+                                                <dd><span id="results-status">...</span><span id="results-timer-label"></span></dd>
+                                                <dt>Link</dt>
+                                                <dd id="results-link">...</dd>
+                                                <dt>Processed Files</dt>
+                                                <dd id="results-files">...</dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                    <div class="row center">
+                                        <img class="genome-search-mag-loading"
+                                            src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" />
+                                    </div>
+                                </section>
+                            </section>
                         </div>
                     </div>
                 </div>

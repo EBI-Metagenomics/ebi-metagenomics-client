@@ -102,16 +102,14 @@ const getProxyRoutes = () => {
       },
     };
   });
-  routes["/metagenomics/genome"]={
+  routes["/metagenomics/genome"] = {
     target: "http://localhost:9000/",
     pathRewrite: {
       "^/metagenomics/genomes/.+$": "/metagenomics/genome.html",
       "^/metagenomics/genomes/?$": "/metagenomics/genomes.html",
       "^/metagenomics/genome-search": "/metagenomics/genome-search.html",
-
-    }
-  }
-  console.log(routes);
+    },
+  };
   return routes;
 };
 
