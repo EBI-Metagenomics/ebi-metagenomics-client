@@ -20,6 +20,12 @@ const STATUS_TYPE = {
   URL_JOB: "Recovering...",
 };
 
+const getLinkToMagFromAccession = (accession) =>
+  `<a href="https://www.ebi.ac.uk/metagenomics/genomes/${accession}">${accession}</a>`;
+
+const getLinkToCSV = (url, filename) =>
+  `<a download="${filename}.csv" href="${url}"><i class="icon icon-fileformats icon-CSV"></i></a>`;
+
 /**
  * Genome Search MAG View.
  * This view contains the sourmash component and displays the results of a search job.
@@ -260,7 +266,21 @@ module.exports = Backbone.View.extend({
       this.$("#results-files").html(
         "<ul>" +
           this.jobState.results
-            .map((s) => `<li>${s.job_id} | ${s.status}</li>`)
+            .map(
+              (s) =>
+                `<li>${s.filename} | ${
+                  s.status === "SUCCESS"
+                    ? `<span class="result-mag-match">${
+                        s.result.p_query
+                      } similarity with ${getLinkToMagFromAccession(
+                        s.result.match
+                      )}</span> | <span class="result-mag-csv">${getLinkToCSV(
+                        s.results_url,
+                        s.filename
+                      )}</span>`
+                    : "FAIL"
+                }</li>`
+            )
             .join("") +
           "</ul>"
       );
