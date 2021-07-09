@@ -38,7 +38,7 @@ module.exports = Backbone.View.extend({
     "sketchedall #sourmash": "allSequencesSketched",
     "change #sourmash": "filesChanged",
     "click #search-button-mag": "submitJob",
-    "click #clear-button-mag": "reset",
+    "click .clear-button-mag": "reset",
   },
 
   MSG_TYPE: {
@@ -108,9 +108,18 @@ module.exports = Backbone.View.extend({
    * Resets all varaibles
    */
   reset() {
+    this.jobID = null;
+    this.status = STATUS_TYPE.START;
+    this.jobState = null;
+    this.selectedFiles = null;
+    this.signatures = null;
+    this.timer = null;
+    this.timerID = null;
+
     this.$sourmash[0].clear();
     this.$submitButton.attr("disabled", "disabled");
     this.$submitButton.attr("title", SUBMIT_DISABLED_TEXT);
+    this.refresh();
   },
 
   submitJob(event) {
@@ -166,23 +175,26 @@ module.exports = Backbone.View.extend({
     if (this.timerID) {
       clearInterval(this.timerID);
     }
-    this.timer = SECONDS_TO_CHECK;
+    this.timer = 0;
   },
   checkStatus() {
+    if (this.checking) return;
     if (this.timer > 0) {
       this.$timerLabel.html(`[Checking again in ${this.timer} seconds]`);
       this.timer--;
       return;
     }
-    this.$timerLabel.html("");
-    if (this.controller) {
-      this.controller.abort();
-    }
+    this.checking = true;
+    this.timer = SECONDS_TO_CHECK;
+    this.$timerLabel.html("[Checking...]");
+    // if (this.controller) {
+    //   this.controller.abort();
+    // }
     this.$loading.show();
-    this.controller = new AbortController();
+    // this.controller = new AbortController();
     fetch(this.API_URL + "genomes-search/status/" + this.jobID, {
       method: "GET",
-      signal: this.controller.signal,
+      //   signal: this.controller.signal,
     })
       .then((response) => {
         if (response.ok) return response.json();
@@ -193,11 +205,14 @@ module.exports = Backbone.View.extend({
       .then((result) => {
         this.jobState.job_id = result.data.group_id;
         this.jobState.results = result.data.signatures;
-        this.status = this.jobState.results.some((s) => s.status === "PENDING")
+        this.status = this.jobState.results.some((s) =>
+          ["PENDING", "IN_QUEUE", "RUNNING"].includes(s.status)
+        )
           ? STATUS_TYPE.PENDING_JOB
           : STATUS_TYPE.RETRIEVED_JOB;
         if (this.status === STATUS_TYPE.RETRIEVED_JOB) {
           this.clearIntervalChecker();
+          this.$timerLabel.html("");
         } else {
           this.timer = SECONDS_TO_CHECK;
         }
@@ -213,7 +228,8 @@ module.exports = Backbone.View.extend({
       .finally(() => {
         this.$loading.hide();
         this.refresh();
-        this.controller = null;
+        this.checking = false;
+        // this.controller = null;
       });
   },
 
@@ -268,7 +284,7 @@ module.exports = Backbone.View.extend({
           this.jobState.results
             .map(
               (s) =>
-                `<li>${s.filename} | ${
+                `<li>${s.filename || s.job_id} | ${
                   s.status === "SUCCESS"
                     ? `<span class="result-mag-match">${
                         s.result.p_query
@@ -278,8 +294,15 @@ module.exports = Backbone.View.extend({
                         s.results_url,
                         s.filename
                       )}</span>`
-                    : "FAIL"
-                }</li>`
+                    : s.status
+                }
+                ${
+                  s.status === "IN_QUEUE"
+                    ? ` : Position: ${s.position_in_queue}`
+                    : ""
+                }
+                ${s.status === "FAILURE" ? `<pre>${s.reason}</pre>` : ""}
+                </li>`
             )
             .join("") +
           "</ul>"
