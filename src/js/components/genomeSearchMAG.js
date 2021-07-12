@@ -3,6 +3,7 @@
  */
 require("../commons");
 require("mgnify-sourmash-component");
+require("static/css/modules/genomes-sourmash.css");
 
 // TODO: ⚠️ Improve the style of this view
 const Backbone = require("backbone");
@@ -35,7 +36,8 @@ module.exports = Backbone.View.extend({
   el: "#genome-search-mag",
 
   events: {
-    "sketched #sourmash": "sequenceSketched",
+    // "sketched #sourmash": "sequenceSketched",
+    // "sketchedError #sourmash": "sequenceSketchedError",
     "sketchedall #sourmash": "allSequencesSketched",
     "change #sourmash": "filesChanged",
     "click #search-button-mag": "submitJob",
@@ -103,6 +105,12 @@ module.exports = Backbone.View.extend({
     this.signatures = event.detail.signatures;
     this.$submitButton.removeAttr("disabled");
     this.$submitButton.removeAttr("title");
+    if (Object.keys(event.detail.errors || {}).length) {
+      this.showMessage(
+        "<p>We could'n process some of the files. If you press search now, those will be ignored.</pre>",
+        this.MSG_TYPE.WARNING
+      );
+    }
   },
 
   /**
@@ -285,7 +293,9 @@ module.exports = Backbone.View.extend({
           this.jobState.results
             .map(
               (s) =>
-                `<li>${s.filename || s.job_id} | ${
+                `<li><span class="filename">${
+                  s.filename || s.job_id
+                }</span> | ${
                   s.status === "SUCCESS"
                     ? `<span class="result-mag-match">${
                         s.result.p_query
@@ -312,7 +322,7 @@ module.exports = Backbone.View.extend({
       this.$("#results-files").html(
         "<ul>" +
           (this.jobState.signatures_received || [])
-            .map((s) => `<li>${s}</li>`)
+            .map((s) => `<li><span class="filename">${s}</span></li>`)
             .join("") +
           "</ul>"
       );
