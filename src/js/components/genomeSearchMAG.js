@@ -1,9 +1,10 @@
 /**
- * BIGSI genome search
+ * Sourmash MAG search
  */
 require("../commons");
 require("mgnify-sourmash-component");
 
+// TODO: ⚠️ Improve the style of this view
 const Backbone = require("backbone");
 const queryString = require("query-string");
 
