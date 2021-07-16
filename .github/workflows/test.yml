@@ -125,9 +125,9 @@ jobs:
         run: |
           npm ci
           npm run build
-          cp dist /usr/share/nginx/html/metagenomics
           npm run coverage:instrument
-          cp coverage/instrumented/* /usr/share/nginx/html/metagenomics
+          mv dist /usr/share/nginx/html/metagenomics
+          cp -r coverage/instrumented/* /usr/share/nginx/html/metagenomics/
           ls /usr/share/nginx/html/metagenomics
           echo "\nweb index"
           curl --silent http://localhost:9000/metagenomics/
