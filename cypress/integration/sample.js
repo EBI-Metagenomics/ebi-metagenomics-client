@@ -106,12 +106,12 @@ const runTableColumns = {
 };
 
 function waitForPageLoad(projectId) {
-    cy.get('h3').should('contain', projectId);
+    cy.get('h3', {timeout: 100000}).should('contain', projectId);
 }
 
 describe('Sample page', function() {
     context('General', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
             waitForPageLoad(sampleId);
         });
@@ -148,7 +148,6 @@ describe('Sample page', function() {
     context('Study table', function() {
         beforeEach(function() {
             openPage('');
-            login();
             openPage(origPage);
             waitForPageLoad(sampleId);
             table = new GenericTableHandler('#studies-section', studiesTableDefaultSize);

@@ -91,7 +91,7 @@ class GenericTableHandler {
 
     waitForLoadingIconHidden() {
         if (this.hasLoadingGif) {
-            this.getLoadingIcon().should('be.hidden', {timeout: 40000});
+            this.getLoadingIcon().should('be.hidden');
         }
     }
 
@@ -171,9 +171,14 @@ class GenericTableHandler {
 
     testDownloadLink(expectedURL) {
         this.getDownloadLink().should(($el) => {
-            expect($el.attr('href').replace('localhost', '127.0.0.1')).to.eq(
-                expectedURL.replace('localhost', '127.0.0.1')
-            );
+            expect(
+                $el.attr('href')
+                    .replace('localhost', '127.0.0.1')
+                    .replace('ordering=&', '')
+                ).to.eq(expectedURL
+                    .replace('localhost', '127.0.0.1')
+                    .replace('ordering=&', '')
+                );
         });
     }
 
@@ -211,7 +216,7 @@ class GenericTableHandler {
     }
 
     getLoadingIcon() {
-        return cy.get(this.parentId + ' img.loading-gif-medium');
+        return cy.get(this.parentId + ' img.loading-gif-medium', {timeout: 100000});
     }
 
     getFilterInput() {

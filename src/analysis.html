@@ -363,8 +363,8 @@
         <div class="column small-12 medium-12 large-12">
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
-                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}">Home</a></li>
-                    <% if (typeof assembly_accession === 'undefined') { %>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
+                    <% if (typeof assembly_accession === 'undefined' || assembly_accession === null) { %>
                         <li>
                             <a href="<%= study_url %>">Study <%= study_accession %></a>
                         </li>
@@ -372,7 +372,7 @@
                         <li>
                             <a href="<%= sample_url %>">Sample <%= sample_accession %></a>
                         </li>
-                    <% if (typeof assembly_accession !== 'undefined') { %>
+                    <% if (typeof assembly_accession !== 'undefined' && assembly_accession !== null) { %>
                         <li>
                             <a href="<%= assembly_url %>">Assembly <%= assembly_accession %></a>
                         </li>

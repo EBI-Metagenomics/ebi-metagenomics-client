@@ -437,6 +437,10 @@ const InterProTabView = Backbone.View.extend({
             this.$('#interpro-pie-chart')
                 .append('<h4>Could not load Inter Pro data.</h4>');
         }).always(() => piePromise.resolve());
+        
+        summaryPromise.done().then(() => {
+            that.$('.row').show();
+        });
 
         $.when(summaryPromise, piePromise).then(() => {
             that.$loadingSpinner.hide();

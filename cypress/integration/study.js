@@ -46,7 +46,7 @@ let table;
 
 describe('Study page', function() {
     context('General', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
             waitForPageLoad(pageTitle);
             cy.contains('Longitudinal study of the diabetic skin and wound microbiome')
@@ -109,7 +109,7 @@ describe('Study page', function() {
     });
 
     context('Analysis table', function() {
-        beforeEach(function() {
+        before(function() {
             openPage(origPage);
             waitForPageLoad(pageTitle);
             table = new GenericTableHandler('#analysis-section', analysesTableDefaultSize);
@@ -123,7 +123,7 @@ describe('Study page', function() {
             table.checkLoadedCorrectly(1, analysesTableDefaultSize, 258, analysisTableColumns);
         });
 
-        it('Should respond to ordering', function() {
+        it.only('Should respond to ordering', function() {
             table.testSorting(10, analysisTableColumns);
         });
 
@@ -181,7 +181,7 @@ describe('Study page', function() {
             table.testPageSizeChange(analysesTableDefaultSize, 25);
         });
 
-        it('Analysis table download link should be valid', function() {
+        it.only('Analysis table download link should be valid', function() {
             table.testDownloadLink(Config.API_URL + 'studies/' + projectId +
                 '/analyses?include=sample&format=csv');
         });
@@ -230,9 +230,10 @@ describe('Study page', function() {
                 'Phylum level taxonomies LSU',
                 'Phylum level taxonomies SSU'];
             const files = pipeline2Files.concat(pipeline4Files);
-            let i = 0;
-            cy.get('#downloads > div > p').each(function($el) {
-                expect(Cypress.$($el).text()).to.eq(files[i++]);
+            const ps = cy.get('#downloads > div > p');
+            ps.should('have.length.of', files.length - 1)
+            ps.each(function($el) {
+                expect(files).to.have.string(Cypress.$($el).text());
             });
         });
         // TODO test before release

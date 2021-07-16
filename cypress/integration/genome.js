@@ -396,7 +396,14 @@ describe('Genome page', () => {
             cy.get('#downloads-section h3').last().should('contain', 'Pan-genome analysis');
         });
         const compareTable = (table, data) => {
-            table.find('tbody tr').each((idx, el) => {
+            data.sort((a,b) => a[0] > b[0] ? 1 : -1);
+            const trs = table.find('tbody tr');
+            trs.sort((a,b) => {
+                const aStr = Cypress.$(a).find('td').first().html().trim();
+                const bStr = Cypress.$(b).find('td').first().html().trim();
+                return aStr > bStr ? 1 : -1;
+            });
+            trs.each((idx, el) => {
                 const $el = Cypress.$(el);
                 $el.children('td').each((tdIdx, td) => {
                     if (tdIdx !== 3) {

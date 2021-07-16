@@ -588,19 +588,19 @@ export const AnalysesView = GenericTableView.extend({
     },
 
     renderData(page, pageSize, resultCount, requestURL) {
-        const tableData = _.map(this.collection.models, function(m) {
+        const tableData = _.map(this.collection.models, function (m) {
             const attr = m.attributes;
             const biome = '<span class="biome_icon icon_xs ' + m.attributes.biome.icon + '" title="'
                 + m.attributes.biome.name + '"></span>';
             const sampleLink = '<a href=\'' + attr.sample_url + '\'>' + attr.sample_accession +
                 '</a>';
             let runAssemblyLink;
-            if (typeof attr.run_accession === 'undefined') {
-                runAssemblyLink = '<a href=\'' + attr.assembly_url + '\'>' +
-                    attr.assembly_accession +
+            if (attr.run_accession) {
+                runAssemblyLink = '<a href=\'' + attr.run_url + '\'>' + attr.run_accession +
                     '</a>';
             } else {
-                runAssemblyLink = '<a href=\'' + attr.run_url + '\'>' + attr.run_accession +
+                runAssemblyLink = '<a href=\'' + attr.assembly_url + '\'>' +
+                    attr.assembly_accession +
                     '</a>';
             }
             const analysisLink = '<a href=\'' + attr.analysis_url + '\'>' +

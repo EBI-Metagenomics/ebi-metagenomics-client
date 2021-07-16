@@ -3,19 +3,22 @@ emg:
     default:
       ENGINE: 'django.db.backends.mysql'
       NAME: 'emg'
-      USER: 'travis'
+      USER: 'root'
+      PASSWORD: 'root'
       HOST: localhost
       PORT: 3306
     ena_pro:
       ENGINE: 'django.db.backends.mysql'
       NAME: 'ena'
-      USER: 'travis'
+      USER: 'root'
+      PASSWORD: 'root'
       HOST: localhost
       PORT: 3306
     era_pro:
       ENGINE: 'django.db.backends.mysql'
       NAME: 'ena'
-      USER: 'travis'
+      USER: 'root'
+      PASSWORD: 'root'
       HOST: localhost
       PORT: 3306
   session_engine: 'django.contrib.sessions.backends.cached_db'
@@ -28,7 +31,7 @@ emg:
   documentation:
     title: 'EBI Metagenomics API'
     description: 'Is a free resource to visualise and discover metagenomic datasets. For more details go to http://www.ebi.ac.uk/metagenomics/'
-  allowed_host: ['localhost', '127.0.0.1']
+  allowed_host: ['localhost', '127.0.0.1', 'localhost:9000', '127.0.0.1:9000']
   slack:
     token: '{SLACK_TOKEN}'
     channel: 'metagenomics-test'
