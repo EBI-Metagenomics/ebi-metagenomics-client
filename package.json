@@ -6,7 +6,8 @@
   "main": "src/index.tsx",
   "scripts": {
     "test": "cypress run --spec cypress/integration/index.js",
-    "coverage": "node_modules/istanbul-combine/cli.js -d coverage -b . -r lcov -r html coverage/*.js.json;",
+    "coverage:instrument": "nyc instrument dist coverage/instrumented",
+    "coverage": "nyc -d coverage -b . -r lcov -r html coverage/*.js.json;",
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
     "start": "webpack serve",
