@@ -416,6 +416,8 @@ describe('Analysis page', function() {
         });
         it('Should have the proper subtabs', function() {
             checkV4FunctionalTabs();
+            // Long Read message
+            cy.get('#functional .callout').should('not.exist')
         });
         it('Should load seq feat summary correctly', function() {
             cy.wait('@analysisQuery');

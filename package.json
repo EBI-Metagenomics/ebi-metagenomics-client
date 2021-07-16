@@ -1,6 +1,6 @@
 {
   "name": "mgportalv2",
-  "version": "1.8.5",
+  "version": "1.8.6",
   "description": "Webclient for the MGnify API",
   "main": "entry.js",
   "scripts": {
