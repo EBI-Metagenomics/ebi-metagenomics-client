@@ -1,2 +1,2 @@
 ignore:
-    - 'static/libraries/'
+  - 'static/libraries/'

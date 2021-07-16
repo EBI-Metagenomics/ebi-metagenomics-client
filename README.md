@@ -7,7 +7,7 @@ This is the source ocode for the future version of the Mgnify website
 
 #### Requirements:
 
--   Node.js >=10.13.0
+- Node.js >=10.13.0
 
 #### How to setup your project?
 

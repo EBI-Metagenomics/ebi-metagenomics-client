@@ -7,3 +7,5 @@ ci
 
 #Old test suite
 cypress
+
+.nyc_output
