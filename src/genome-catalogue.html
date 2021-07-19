@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+
+<head id="head">
+    <title>Browse genomes &lt; MGnify &lt; EMBL-EBI</title>
+    {{> partials/head this}}
+    <meta property="og:title" content="MGnify browse page > EMBL-EBI">
+    <meta property="twitter:title" content="MGnify browse page > EMBL-EBI">
+
+    <meta name="og:description" content="Browse data on MGnify.">
+    <meta name="twitter:description" content="Browse data on MGnify.">
+</head>
+
+<body class="level2">
+<!-- add any of your classes or IDs -->
+<div id="header-container">
+    {{> partials/header this}}
+</div>
+
+<div id="content">
+    <section id="main-content-area" class="row" role="main">
+        {{> partials/banners this}}
+        <script id="genomeCatalogueTmpl" type="text/template">
+            <nav aria-label="You are here:" role="navigation">
+                <ul class="breadcrumbs columns">
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#genomes">Browse genomes</a>
+                    </li>
+                    <li>
+                        <span class="show-for-sr">Current: </span> Genome catalogue <%= catalogue_id %>
+                    </li>
+                </ul>
+            </nav>
+            <h2><%= catalogue_name %></h2>
+<!--            <p>-->
+                <%= catalogue_description %>
+<!--                We provide below easy access and visualization of 4,644 species-level prokaryotic genomes corresponding-->
+<!--                to the Unified Human Gastrointestinal Genome (UHGG) catalogue.-->
+<!--                These species clusters represent a total of 286,997 metagenome-assembled and isolate genomes-->
+<!--                from the human gut microbiome. Species phylogeny and taxonomic annotations were generated with-->
+<!--                the Genome Taxonomy Database (<a href="https://gtdb.ecogenomic.org/">GTDB</a>). Each genome and its-->
+<!--                functional annotations can be-->
+<!--                explored interactively in the genome browser. Assemblies, annotations and pan-genome results are also-->
+<!--                available as a separate download and in our <a-->
+<!--                    href="http://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/">FTP server</a>.-->
+<!--            </p>-->
+<!--            <p>-->
+<!--                Version 1.0 released July 2020-->
+<!--            </p>-->
+            <div class="row">
+                <ul class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500"
+                    data-tabs id="data-tabs">
+                    <li class="tabs-title is-active"><a href="#genome-list-tab" aria-selected="true">Genome list</a>
+                    </li>
+                    <li class="tabs-title"><a href="#phylo-tab">Taxonomy tree</a></li>
+                    <li class="tabs-title"><a href="#protein-catalog-tab">Protein catalogue</a></li>
+                    <li class="tabs-title"><a href="#genome-search-tab">Search</a></li>
+                </ul>
+                <div class="tabs-content" data-tab-content="data-tabs">
+                    <div class="tabs-panel active" id="genome-list-tab">
+                        <section id="genomes-section" class="table-container"></section>
+                    </div>
+                    <div id="phylo-tab" class="tabs-panel">
+                        <section id="phylo-section" class="table-container">
+                            <h2>Taxonomy tree</h2>
+                            <div id="phylo-tree"></div>
+                            <div>
+                                The tree viewer is a derivative of the <a href="https://gtdb.ecogenomic.org/tree">GTDB
+                                Tree viewer</a>, used under the GNU General Public License, version 3
+                            </div>
+                        </section>
+                    </div>
+                    <div id="protein-catalog-tab" class="tabs-panel">
+                        <section id="protein-catalog-section">
+                            <h2><%= protein_catalogue_name %></h2>
+                            <%= protein_catalogue_description %>
+<!--                            <p>-->
+<!--                                The Unified Human Gastrointestinal Protein (UHGP) catalogue was generated with all-->
+<!--                                coding sequences of the 286,997 human gut genomes.-->
+<!--                            </p>-->
+<!--                            <p>-->
+<!--                                A total of 625 million protein sequences were clustered with MMseqs2 linclust into:-->
+<!--                            </p>-->
+<!--                            <ul>-->
+<!--                                <li>170,602,708 representative sequences at 100% amino acid identity (UHGP-100).-->
+<!--                                </li>-->
+<!--                                <li>20,239,340 representative sequences at 95% amino acid identity (UHGP-95).</li>-->
+<!--                                <li>13,907,849 representative sequences at 90% amino acid identity (UHGP-90).</li>-->
+<!--                                <li>4,735,546 representative sequences at 50% amino acid identity (UHGP-50).</li>-->
+<!--                            </ul>-->
+<!--                            <p>-->
+<!--                                A further set of high-quality (HQ) subsets of the UHGP-95/90/50 were generated,-->
+<!--                                consisting of protein clusters where at least two proteins from independent genomes were-->
+<!--                                retrieved from the same species.-->
+<!--                            </p>-->
+<!--                            <p>All these files and their functional annotations can be downloaded from our public FTP-->
+<!--                                website:-->
+<!--                                <a-->
+<!--                                        href="http://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/">ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/</a>-->
+<!--                            </p>-->
+                        </section>
+                    </div>
+                    <div id="genome-search-tab" class="tabs-panel">
+                        <section id="genome-search">
+                            <section>
+                                <h2>
+                                    Search DNA fragments in the <%= catalogue_name %> catalogue
+                                </h2>
+                                <p>
+                                    This is a <a
+                                        href="https://www.nature.com/articles/s41587-018-0010-1">BIGSI-based</a> search
+                                    engine designed to query short sequence
+                                    fragments (50-5,000 bp in length) against representative genomes from
+                                    the catalogue.
+                                </p>
+                            </section>
+                            <section>
+                                <div class="row columns text-center">
+                                    <p class="paste-sequence">
+                                        Paste a sequence
+                                    </p>
+                                    <div id="message-containter"></div>
+                                </div>
+                                <!-- Search form -->
+                                <section>
+                                    <form id="search-form">
+                                        <div>
+                                            <label for="sequence" id="example-seq" style="cursor: pointer">Paste
+                                                in your sequence or
+                                                use the
+                                                <a href="#" id="example">example</a>
+                                            </label>
+
+                                            <label for="fasta-file" style="cursor: pointer">Or upload a fasta file
+                                                <input type="file" name="fasta" id="fasta-file"
+                                                       accept=".fasta, .fna, .ffn, .frn, .txt">
+                                            </label>
+                                        </div>
+                                        <div class="row columns">
+                                                <textarea id="sequence" class="sequence"
+                                                          title="DNA Sequence"></textarea>
+                                        </div>
+                                        <div class="row">
+                                            <div class="columns">
+                                                <div class="row">
+                                                    <div class="columns medium-6 small-6 large-6">
+                                                        <label for="threshold">
+                                                            The minimum proportion of K-mers from the query that must be
+                                                            matched, can be defined below (default: 0.4)
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="row ">
+                                                    <div class="columns medium-2 small-2 large-2">
+                                                        <input id="threshold" name="threshold" type="number" min="0.1"
+                                                               max="1.0" value="0.4" step="0.1">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="columns text-center">
+                                                <button id="search-button" type="submit"
+                                                        class="button black-background">Search
+                                                </button>
+                                                <button id="clear-button" type="button"
+                                                        class="button secondary">Clear
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </section>
+                                <!-- Search results -->
+                                <section>
+                                    <div id="results-section" class="hidden">
+                                        <div class="row">
+                                            <img class="genome-search-loading"
+                                                 src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+                                            <div id="results-table" class="columns">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </section>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </script>
+    </section>
+</div>
+
+<div id="footer">
+    {{>partials/elixir}}
+    {{>partials/footer}}
+</div>
+</body>
+</html>

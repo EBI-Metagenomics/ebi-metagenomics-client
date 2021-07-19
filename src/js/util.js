@@ -617,6 +617,68 @@ export const AnalysesView = GenericTableView.extend({
     }
 });
 
+export const GenomesView = GenericTableView.extend({
+    tableObj: null,
+    pagination: null,
+    columns: [
+        {sortBy: null, name: 'Biome'},
+        {sortBy: 'accession', name: 'Accession'},
+        {sortBy: 'length', name: 'Length'},
+        {sortBy: 'num_genomes_total', name: 'Num. of genomes'},
+        {sortBy: 'completeness', name: 'Completeness'},
+        {sortBy: 'contamination', name: 'Contamination'},
+        {sortBy: null, name: 'Type'},
+        {sortBy: null, name: 'Taxonomy'},
+        {sortBy: 'last_update', name: 'Last updated'}
+    ],
+
+    getRowData(attr) {
+        const biome = attr.biome;
+        const biomeIcon = '<span class="biome_icon icon_xs ' + biome.icon + '" title="' +
+            biome.name +
+            '"></span>';
+        const genomeUrl = '<a href=\'' + attr.genome_url + '\'>' + attr.accession +
+            '</a>';
+        return [
+            biomeIcon,
+            genomeUrl,
+            attr.length,
+            attr.num_genomes_total || 1,
+            attr.completeness,
+            attr.contamination,
+            attr.type,
+            getSimpleTaxLineage(attr.taxon_lineage, true),
+            attr.last_updated
+        ];
+    },
+
+    initialize(options) {
+        const that = this;
+        const initPageSize = options.initPageSize || DEFAULT_PAGE_SIZE;
+        const domSelector = options.domSelector || '#genomes-section';
+        // this.truncateAbstract = options.truncateAbstract || false;
+        let tableOptions = {
+            title: options.sectionTitle,
+            headers: this.columns,
+            initialOrdering: null,
+            initPageSize: initPageSize,
+            isHeader: options.isPageHeader,
+            textFilter: options.filter,
+            tableClass: options.tableClass,
+            callback: function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order,
+                    search: search
+                });
+            }
+        };
+        this.tableObj = new GenericTable($(domSelector), tableOptions);
+        this.update({page: 1, page_size: initPageSize, ordering: null, search: null});
+    }
+});
+
 /**
  * Check is user is logged in
  * @return {jQuery.jqXHR} true if user is logged in
