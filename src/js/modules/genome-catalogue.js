@@ -44,7 +44,7 @@ function initPage() {
     let genomeCatalogue = new api.GenomeCatalogue({id: genomeCatalogueId});
     let genomeCatalogueView = new GenomeCatalogueView({model: genomeCatalogue});
 
-    let genomes = new api.GenomeCatalogueGenomesCollection({catalogue_id: genomeCatalogueId});
+    let genomes = new api.GenomeCatalogueGenomeCollection({catalogue_id: genomeCatalogueId});
 
     genomeCatalogueView.fetchAndRender().done(() => {
         // Set the document title.
