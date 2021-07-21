@@ -121,11 +121,13 @@ jobs:
       #       curl --silent http://localhost:9000/metagenomics/api/v1/
       #       echo "\ngunicorn v1/"
       #       curl --silent http://localhost:8000/v1/
+
+      # TODO: ⚠️ the json genereted is not understood by codecov
       - name: 🔧 - Install
         run: |
           npm ci
           npm run build
-          npm run coverage:instrument
+          npm run coverage:instrument 
           mv dist /usr/share/nginx/html/metagenomics
           cp -r coverage/instrumented/* /usr/share/nginx/html/metagenomics/
           ls /usr/share/nginx/html/metagenomics
@@ -138,9 +140,9 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           spec: cypress/integration/index.js
-      # - name: 📉 - Get Coverage
-      #   run: |
-      #     npm run coverage
+      - name: 📉 - Get Coverage
+        run: |
+          npm run coverage
       - name: 📉 -Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
