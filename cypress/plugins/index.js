@@ -12,6 +12,8 @@
 // the project's config changing)
 
 module.exports = (on, config) => {
+    require('@cypress/code-coverage/task')(on, config);
     // `on` is used to hook into various events Cypress emits
     // `config` is the resolved Cypress config
+    return config;
 };

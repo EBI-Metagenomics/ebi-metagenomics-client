@@ -6,9 +6,9 @@
   "main": "src/index.tsx",
   "scripts": {
     "test": "cypress run --spec cypress/integration/index.js",
+    "clean": "rimraf dist coverage",
     "coverage:instrument": "nyc instrument dist coverage/instrumented",
     "coverage:serve": "cp dist/index.html coverage/instrumented/ && mv coverage/instrumented coverage/metagenomics && npx http-server -p 9000 coverage",
-    "coverage:report": "nyc report -r lcov",
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
     "start": "webpack serve",
@@ -31,6 +31,7 @@
     "react-dom": "17.0.2"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.9.9",
     "@istanbuljs/nyc-config-typescript": "1.0.1",
     "@types/react": "17.0.14",
     "@types/react-dom": "17.0.9",
@@ -49,9 +50,9 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "html-webpack-plugin": "5.3.2",
     "husky": "7.0.1",
-    "istanbul-lib-coverage": "3.0.0",
     "nyc": "15.1.0",
     "prettier": "2.3.2",
+    "rimraf": "3.0.2",
     "source-map-loader": "3.0.0",
     "source-map-support": "0.5.19",
     "style-loader": "3.1.0",

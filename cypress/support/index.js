@@ -19,27 +19,4 @@ import './commands';
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-const istanbul = require('istanbul-lib-coverage');
-
-const map = istanbul.createCoverageMap({});
-
-Cypress.on('window:before:unload', (e) => {
-    const coverage = e.currentTarget.__coverage__;
-
-    if (coverage) {
-        map.merge(coverage);
-    }
-});
-
-after(() => {
-    cy.window().then((win) => {
-        const coverage = win.__coverage__;
-
-        if (coverage) {
-            map.merge(coverage);
-        }
-        const spec = window.location.pathname.split('/').slice(-1);
-
-        cy.writeFile('coverage/' + spec + '.json', JSON.stringify(map));
-    });
-});
+import '@cypress/code-coverage/support'
