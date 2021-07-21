@@ -142,11 +142,7 @@ jobs:
           spec: cypress/integration/index.js
       - name: 📉 - Get Coverage
         run: |
-<<<<<<< HEAD
           npm run coverage:report
-=======
-          npm run coverage
->>>>>>> c08460912630ae3d3a446ad9e098b35afaa0ec6b
       - name: 📉 -Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
