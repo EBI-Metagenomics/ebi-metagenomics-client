@@ -26,7 +26,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
-    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+    modules: [
+      path.resolve(__dirname),
+      path.resolve(__dirname, 'src'),
+      'node_modules',
+    ],
   },
   output: {
     filename: 'mgnify_bundle.js',

@@ -1,0 +1,5 @@
+{
+  "api": "https://www.ebi.ac.uk/metagenomics/api/v1/",
+  "website": "http://localhost:9000/",
+  "basename": "/"
+}

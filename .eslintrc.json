@@ -17,17 +17,32 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint", "react-hooks"],
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "react-hooks"
+  ],
   "rules": {
-    "@typescript-eslint/no-use-before-define": ["error"],
-    "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/no-use-before-define": [
+      "error"
+    ],
+    "@typescript-eslint/no-shadow": [
+      "error"
+    ],
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {
         "allowExpressions": true
       }
     ],
-    "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
+    "react/jsx-filename-extension": [
+      "warn",
+      {
+        "extensions": [
+          ".tsx"
+        ]
+      }
+    ],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react/prop-types": "off",
@@ -41,7 +56,13 @@
       }
     ],
     "no-shadow": "off",
-    "max-len": ["warn", { "code": 80 }]
+    "max-len": [
+      "warn",
+      {
+        "code": 80,
+        "ignoreUrls": true
+      }
+    ]
   },
   "settings": {
     "import/resolver": {
