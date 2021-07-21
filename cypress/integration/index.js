@@ -39,6 +39,18 @@ describe('Home page', function() {
             cy.get('.ebi-header-footer .embl-bar').contains('Six sites');
             cy.get('.ebi-header-footer .global-nav #embl-selector button').click();
             cy.get('.ebi-header-footer .embl-bar').should('be.hidden', 'Six sites');
+            cy.get('.ebi-header-footer .global-nav #embl-selector button').click();
+            cy.get('.ebi-header-footer .embl-bar').contains('Six sites');
+            cy.get('.ebi-header-footer .embl-bar .close-button').click();
+            cy.get('.ebi-header-footer .embl-bar').should('be.hidden', 'Six sites');
+        });
+        it('EBI header search"', function() {
+            cy.get('.ebi-header-footer .global-nav .where.ebi').contains('EMBL-EBI');
+            cy.get('.ebi-header-footer .search-bar').should('be.hidden', '#global-searchbox');
+            cy.get('.ebi-header-footer .search-toggle').click();
+            cy.get('.ebi-header-footer .search-bar').contains('Search');
+            cy.get('.ebi-header-footer .search-bar .close-button').click();
+            cy.get('.ebi-header-footer .search-bar').should('be.hidden', '#global-searchbox');
         });
     });
     context('Check for elements', function() {

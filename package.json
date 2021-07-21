@@ -6,6 +6,7 @@
   "main": "src/index.tsx",
   "scripts": {
     "test": "cypress run --spec cypress/integration/index.js",
+    "test:open": "cypress open",
     "clean": "rimraf dist coverage",
     "coverage:instrument": "nyc instrument dist coverage/instrumented",
     "coverage:serve": "cp dist/index.html coverage/instrumented/ && mv coverage/instrumented coverage/metagenomics && npx http-server -p 9000 coverage",
