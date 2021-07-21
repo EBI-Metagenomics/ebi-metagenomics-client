@@ -7,7 +7,8 @@
   "scripts": {
     "test": "cypress run --spec cypress/integration/index.js",
     "coverage:instrument": "nyc instrument dist coverage/instrumented",
-    "coverage": "nyc -d coverage -b . -r lcov -r html coverage/*.js.json;",
+    "coverage:serve": "cp dist/index.html coverage/instrumented/ && mv coverage/instrumented coverage/metagenomics && npx http-server -p 9000 coverage",
+    "coverage:report": "nyc report -r lcov",
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
     "start": "webpack serve",
