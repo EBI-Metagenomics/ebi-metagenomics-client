@@ -140,9 +140,6 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           spec: cypress/integration/index.js
-      - name: 📉 - Get Coverage
-        run: |
-          npm run coverage:report
       - name: 📉 -Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
