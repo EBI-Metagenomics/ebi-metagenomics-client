@@ -32,7 +32,7 @@ describe('Home page', function() {
         it('Open the Home page"', function() {
             cy.contains('MGnify');
         });
-        it('It has EBI header"', function() {
+        it('has EBI header"', function() {
             cy.get('.ebi-header-footer .global-nav .where.ebi').contains('EMBL-EBI');
             cy.get('.ebi-header-footer .embl-bar').should('be.hidden', 'Six sites');
             cy.get('.ebi-header-footer .global-nav #embl-selector button').click();
@@ -44,13 +44,23 @@ describe('Home page', function() {
             cy.get('.ebi-header-footer .embl-bar .close-button').click();
             cy.get('.ebi-header-footer .embl-bar').should('be.hidden', 'Six sites');
         });
-        it('EBI header search"', function() {
+        it('has EBI header search"', function() {
             cy.get('.ebi-header-footer .global-nav .where.ebi').contains('EMBL-EBI');
             cy.get('.ebi-header-footer .search-bar').should('be.hidden', '#global-searchbox');
             cy.get('.ebi-header-footer .search-toggle').click();
             cy.get('.ebi-header-footer .search-bar').contains('Search');
             cy.get('.ebi-header-footer .search-bar .close-button').click();
             cy.get('.ebi-header-footer .search-bar').should('be.hidden', '#global-searchbox');
+        });
+        it('has EBI footer"', function() {
+            cy.get('footer.vf-footer .vf-footer__notice').contains('EMBL-EBI is');
+            cy.get('footer.vf-footer').contains('Copyright');
+        });
+        it('has Cookie banner"', function() {
+            cy.get('div.vf-banner .vf-banner__text').contains('This website');
+            cy.get('div.vf-banner .vf-button').contains('Accept');
+            cy.get('div.vf-banner .vf-button').click();
+            cy.get('div.vf-banner').should('not.exist');
         });
     });
     context('Check for elements', function() {
