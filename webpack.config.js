@@ -22,6 +22,13 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(png|jp(e*)g|svg|gif)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/[hash][ext][query]',
+        },
+      },
     ],
   },
   resolve: {
@@ -29,6 +36,7 @@ module.exports = {
     modules: [
       path.resolve(__dirname),
       path.resolve(__dirname, 'src'),
+      path.resolve(__dirname, 'public'),
       'node_modules',
     ],
   },

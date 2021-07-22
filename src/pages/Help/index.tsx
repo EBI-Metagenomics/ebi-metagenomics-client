@@ -1,11 +1,11 @@
 import React from 'react';
 
-const HomePage: React.FC = () => {
+const HelpPage: React.FC = () => {
   return (
     <section className="vf-content">
-      <h1>MGnify - EBI.</h1>
+      <h1>Help me.</h1>
     </section>
   );
 };
 
-export default HomePage;
+export default HelpPage;
