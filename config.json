@@ -1,5 +1,6 @@
 {
   "api": "https://www.ebi.ac.uk/metagenomics/api/v1/",
+  "ebisearch": "https://www.ebi.ac.uk/ebisearch/ws/rest/",
   "website": "http://localhost:9000/",
   "basename": "/"
 }

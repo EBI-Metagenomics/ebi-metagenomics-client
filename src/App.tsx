@@ -13,24 +13,28 @@ const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Help = lazy(() => import('./pages/Help'));
 
+const Loading: React.FC = () => <div>Loading</div>;
+
 const App: React.FC = () => (
   <>
     <EBIHeader />
     <MainMenu />
     <HeroHeader />
-    <Suspense fallback={() => <div>Loading</div>}>
-      <Switch>
-        <Route path="/about">
-          <About />
-        </Route>
-        <Route path="/help">
-          <Help />
-        </Route>
-        <Route path="/">
-          <Home />
-        </Route>
-      </Switch>
-    </Suspense>
+    <div className="vf-body" style={{ marginBottom: '1em' }}>
+      <Suspense fallback={<Loading />}>
+        <Switch>
+          <Route path="/about">
+            <About />
+          </Route>
+          <Route path="/help">
+            <Help />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </Suspense>
+    </div>
     <EBIFooter />
     <CookieBanner />
   </>
