@@ -29,9 +29,6 @@ describe('Home page', function() {
             openPage(origPage);
         });
 
-        it('Open the Home page"', function() {
-            cy.contains('MGnify');
-        });
         it('has EBI header"', function() {
             cy.get('.ebi-header-footer .global-nav .where.ebi').contains('EMBL-EBI');
             cy.get('.ebi-header-footer .embl-bar').should('be.hidden', 'Six sites');
