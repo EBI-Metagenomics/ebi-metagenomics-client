@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://mgportalv2/./src/components/Home/SearchBy/DataType/style.css"],"names":[],"mappings":"AAAA,mBACE,eAAiB,CACjB,iBACF","file":"css/436.1b649d2f.chunk.css","sourcesContent":[".mg-small-table td {\n  font-size: 0.9rem;\n  padding: 0.5em 0.3em;\n}\n"],"sourceRoot":""}
