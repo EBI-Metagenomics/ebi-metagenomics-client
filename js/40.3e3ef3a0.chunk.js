@@ -1,0 +1,2 @@
+(self.webpackChunkmgportalv2=self.webpackChunkmgportalv2||[]).push([[40],{40:(e,t,a)=>{"use strict";a.r(t),a.d(t,{default:()=>n});var l=a(294);const n=()=>l.createElement("section",{className:"vf-content"},l.createElement("h1",null,"MGnify - EBI."))}}]);
+//# sourceMappingURL=40.3e3ef3a0.chunk.js.map
