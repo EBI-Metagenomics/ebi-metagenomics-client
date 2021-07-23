@@ -10,6 +10,7 @@ module.exports = {
     port: 9000,
     hot: true,
     contentBasePublicPath: '/metagenomics',
+    historyApiFallback: true,
   },
   module: {
     rules: [

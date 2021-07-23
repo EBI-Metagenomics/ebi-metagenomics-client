@@ -10,6 +10,7 @@ const CookieBanner: React.FC = () => {
     const expires = new Date();
     // Set expire date to now + 1 year
     expires.setFullYear(expires.getFullYear() + 1);
+    // eslint-disable-next-line max-len
     document.cookie = `cookies-accepted=true;expires=${expires.toUTCString()};path=${
       config.website
     }`;

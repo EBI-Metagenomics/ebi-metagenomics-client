@@ -128,7 +128,8 @@ jobs:
           npm ci
           npm run build
           npm run coverage:instrument 
-          mv dist /usr/share/nginx/html/metagenomics
+          cp -r dist metagenomics
+          mv metagenomics /usr/share/nginx/html/metagenomics
           cp -r coverage/instrumented/* /usr/share/nginx/html/metagenomics/
           ls /usr/share/nginx/html/metagenomics
           echo "\nweb index"
@@ -140,10 +141,20 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           spec: cypress/integration/index.js
-      - name: 📉 -Upload coverage to Codecov
+      - name: 📉 - Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           directory: ${{ github.workspace }}/coverage/
+
+      - name: 🚀 - Deploy Site
+        if: github.ref == 'refs/heads/new-client'
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: dist # The folder the action should deploy.
+          CLEAN: true # Automatically remove deleted files from the deploy branch
+
       - name: 📸 - Failed tests snapshots
         uses: actions/upload-artifact@v2
         if: failure()
