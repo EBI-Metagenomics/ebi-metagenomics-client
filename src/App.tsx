@@ -12,6 +12,8 @@ import './App.css';
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Help = lazy(() => import('./pages/Help'));
+const TextSearch = lazy(() => import('./pages/TextSearch'));
+const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
 
 const Loading: React.FC = () => <div>Loading</div>;
 
@@ -28,6 +30,12 @@ const App: React.FC = () => (
           </Route>
           <Route path="/help">
             <Help />
+          </Route>
+          <Route path="/search">
+            <TextSearch />
+          </Route>
+          <Route path="/sequence-search">
+            <SequenceSearch />
           </Route>
           <Route path="/">
             <Home />

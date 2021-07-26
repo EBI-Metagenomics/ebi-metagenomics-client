@@ -6,8 +6,8 @@ type SomeComponentProps = RouteComponentProps;
 const pages = [
   { label: 'Overview', path: '/' },
   // { label: 'Submit data', path: '/submit' },
-  // { label: 'Text search', path: '' },
-  // { label: 'Sequence search', path: '' },
+  { label: 'Text search', path: '/search' },
+  { label: 'Sequence search', path: '/sequence-search' },
   // { label: 'Browse data', path: '' },
   // { label: 'Genomes', path: '' },
   // { label: 'API', path: '' },

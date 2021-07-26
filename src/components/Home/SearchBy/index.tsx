@@ -5,11 +5,19 @@ import DataType from './DataType';
 
 const SearchBy: React.FC = () => {
   return (
-    <OutterCard>
+    <OutterCard className="search-by-section">
       <h3 className="vf-card__heading">Search by</h3>
       <div className="vf-grid">
-        <InnerCard title="Text search" label="Name, biome, or keyword" to="/" />
-        <InnerCard title="Sequence search" label="Sequence search" to="/" />
+        <InnerCard
+          title="Text search"
+          label="Name, biome, or keyword"
+          to="/search"
+        />
+        <InnerCard
+          title="Sequence search"
+          label="Sequence search"
+          to="/sequence-search"
+        />
       </div>
       <h3 className="vf-card__heading">Or by data type</h3>
       <DataType />
