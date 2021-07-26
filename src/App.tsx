@@ -6,16 +6,16 @@ import HeroHeader from './components/UI/HeroHeader';
 import EBIFooter from './components/UI/EBIFooter';
 import CookieBanner from './components/UI/CookieBanner';
 import MainMenu from './components/Nav/MainMenu';
+import Loading from './components/UI/Loading';
 
 import './App.css';
+import './styles/biomes.css';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Help = lazy(() => import('./pages/Help'));
 const TextSearch = lazy(() => import('./pages/TextSearch'));
 const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
-
-const Loading: React.FC = () => <div>Loading</div>;
 
 const App: React.FC = () => (
   <>

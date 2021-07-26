@@ -14,8 +14,8 @@
     "build:dev": "webpack --mode=development",
     "start": "webpack serve",
     "watch": "webpack --mode=development --watch",
-    "eslint": "eslint src/*",
-    "eslint:fix": "eslint src/* --fix",
+    "eslint": "eslint src",
+    "eslint:fix": "eslint src --fix",
     "prettier": "prettier --write .",
     "prepare": "husky install"
   },

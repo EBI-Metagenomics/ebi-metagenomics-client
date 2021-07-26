@@ -2,10 +2,39 @@ import { useState, useEffect } from 'react';
 import config from 'config.json';
 
 type KeyValue = {
-  [key: string]: string | number;
+  [key: string]: string | number | Record<string, unknown> | [];
+};
+type MGnifyResponse = {
+  data: Array<{
+    attributes: KeyValue;
+    id: string;
+    links: KeyValue;
+    type: string;
+    relationships: {
+      biomes?: {
+        data?: Array<{
+          id: string;
+        }>;
+      };
+      [key: string]: unknown;
+    };
+  }>;
+  links: {
+    first?: string;
+    last?: string;
+    next?: string;
+    prev?: string;
+  };
+  meta: {
+    pagination: {
+      count: number;
+      page: number;
+      pages: number;
+    };
+  };
 };
 
-const useData: (url: string) => null | KeyValue = (url) => {
+const useData: (url: string) => null | KeyValue | MGnifyResponse = (url) => {
   const [data, setData] = useState(null);
 
   async function fetchData(): Promise<void> {
@@ -22,7 +51,7 @@ const useData: (url: string) => null | KeyValue = (url) => {
 
 export const useEBISearchData: (
   endpoint: string,
-  parameters: KeyValue
+  parameters?: KeyValue
 ) => null | KeyValue = (endpoint, parameters = {}) => {
   const defaultParameters = {
     format: 'json',
@@ -33,7 +62,22 @@ export const useEBISearchData: (
     .map(([key, value]) => `${key}=${value}`)
     .join('&')}`;
   const data = useData(url);
-  return data;
+  return data as null | KeyValue;
+};
+
+export const useMGnifyData: (
+  endpoint: string,
+  parameters?: KeyValue
+) => null | MGnifyResponse = (endpoint, parameters = {}) => {
+  const defaultParameters = {};
+  const allParemeters = { ...defaultParameters, ...parameters };
+  let url = `${config.api}${endpoint}`;
+  if (Object.keys(allParemeters).length > 0)
+    url += `?${Object.entries(allParemeters)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&')}`;
+  const data = useData(url);
+  return data as MGnifyResponse | null;
 };
 
 export default useData;

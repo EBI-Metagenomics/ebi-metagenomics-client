@@ -3,11 +3,7 @@
     "outDir": "./dist/",
     "baseUrl": ".",
     "paths": {
-      "*": [
-        "*",
-        "src/*",
-        "public/*",
-      ]
+      "*": ["*", "src/*", "public/*"]
     },
     "sourceMap": true,
     "module": "es2020",

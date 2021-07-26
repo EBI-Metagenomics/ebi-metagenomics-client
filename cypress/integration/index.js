@@ -111,26 +111,26 @@ describe('Home page', function() {
                 getBaseURL() + 'browse?lineage=root:Host-associated:Human:Skin#studies');
         });
     });
-    context.skip('Latest studies', function() {
+    context('Latest studies', function() {
         beforeEach(function() {
             openPage(origPage);
         });
 
         it('Check for elements"', function() {
-            cy.get('#latestStudies').contains('Latest studies');
+            cy.get('.request-by-section').contains('Latest studies');
         });
 
         it('Click to view all studies', function() {
             cy.contains('View all studies').click();
-            cy.contains('Studies list');
-            cy.title().should('include', 'Browse');
+            // cy.contains('Studies list');
+            // cy.title().should('include', 'Browse');
         });
 
         it('Click to view specific study', function() {
-            cy.get('#studies > .study', {timeout: 5000}).should('have.length', parseInt(25));
-            cy.get('#latestStudies').contains('View more').first().click();
-            cy.contains('Study');
-            cy.title().should('include', 'Study');
+            cy.get('.latest-studies-section > .study', {timeout: 5000}).should('have.length', parseInt(25));
+            cy.get('.latest-studies-section').contains('View more').first().click();
+            // cy.contains('Study');
+            // cy.title().should('include', 'Study');
         });
     });
     context('Getting started section', function() {
