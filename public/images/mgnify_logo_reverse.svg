@@ -35,6 +35,11 @@
       }
       .microscope {
          stroke-width: 2;
+         fill: black;
+         stroke: white;
+      }
+      .mg-base {
+         fill: black;
       }
    </style>
   <g
@@ -51,7 +56,7 @@
          sodipodi:nodetypes="cssccssccccccccccscsccccccccccscscccccccccccsccsssssccccccscscccccccscscscccsscscscccccccccccccccc" />
     </g>
     <rect
-       class="mgnify"
+       class="mgnify mg-base"
        id="rect8169"
        width="31.318796"
        height="5.8359466"

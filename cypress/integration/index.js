@@ -54,10 +54,10 @@ describe('Home page', function() {
             cy.get('footer.vf-footer').contains('Copyright');
         });
         it('has Cookie banner"', function() {
-            cy.get('div.vf-banner .vf-banner__text').contains('This website');
-            cy.get('div.vf-banner .vf-button').contains('Accept');
-            cy.get('div.vf-banner .vf-button').click();
-            cy.get('div.vf-banner').should('not.exist');
+            cy.get('.mg-cookie-banner .vf-banner__text').contains('This website');
+            cy.get('.mg-cookie-banner .vf-button').contains('Accept');
+            cy.get('.mg-cookie-banner .vf-button').click();
+            cy.get('.mg-cookie-banner').should('not.exist');
         });
     });
     context('Check for elements', function() {

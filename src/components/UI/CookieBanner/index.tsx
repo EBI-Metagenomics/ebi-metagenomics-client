@@ -19,7 +19,7 @@ const CookieBanner: React.FC = () => {
   if (!display) return null;
   return (
     <div
-      className="vf-banner vf-banner--fixed vf-banner--bottom vf-banner--notice"
+      className="vf-banner vf-banner--fixed vf-banner--bottom vf-banner--notice mg-cookie-banner"
       data-vf-js-banner=""
       data-vf-js-banner-state="dismissible"
       data-vf-js-banner-button-text="NaN"
