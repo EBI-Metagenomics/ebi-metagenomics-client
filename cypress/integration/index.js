@@ -60,29 +60,29 @@ describe('Home page', function() {
             cy.get('div.vf-banner').should('not.exist');
         });
     });
-    context.skip('Check for elements', function() {
+    context('Check for elements', function() {
         before(function() {
             openPage(origPage);
         });
         it('Browse by selected biomes"', function() {
             cy.contains('Or by selected biomes');
             // Check biome icons are loaded
-            cy.get('#top10biomes span.biome_icon').then(($els) => {
+            cy.get('.search-by-biomes-section span.biome_icon').then(($els) => {
                 expect($els).to.have.length(10);
             });
         });
 
         it('Select specific biomes', function() {
-            cy.get('#top10biomes').contains('Plants');
-            cy.get('#top10biomes').contains('Human');
-            cy.get('#top10biomes').contains('Skin');
-            cy.get('#top10biomes').contains('Soil');
-            cy.get('#top10biomes').contains('Food production');
-            cy.get('#top10biomes').contains('Digestive system');
-            cy.get('#top10biomes').contains('Digestive system');
-            cy.get('#top10biomes').contains('Aquatic');
-            cy.get('#top10biomes').contains('Marine');
-            cy.get('#top10biomes').contains('Wastewater');
+            cy.get('.search-by-biomes-section').contains('Plants');
+            cy.get('.search-by-biomes-section').contains('Human');
+            cy.get('.search-by-biomes-section').contains('Skin');
+            cy.get('.search-by-biomes-section').contains('Soil');
+            cy.get('.search-by-biomes-section').contains('Food production');
+            cy.get('.search-by-biomes-section').contains('Digestive system');
+            cy.get('.search-by-biomes-section').contains('Digestive system');
+            cy.get('.search-by-biomes-section').contains('Aquatic');
+            cy.get('.search-by-biomes-section').contains('Marine');
+            cy.get('.search-by-biomes-section').contains('Wastewater');
         });
     });
 
@@ -153,9 +153,6 @@ describe('Home page', function() {
         it('Sequence search btn should link to seq search page', function() {
             cy.contains('Sequence search').click();
             cy.get('h2').should('contain', 'Sequence Search');
-            // cy.get('[data-cy=\'seq-search-getting-started-btn\']').then(($el) => {
-            //     expect(Cypress.$($el).attr('href')).to.contain('sequence-search');
-            // });
         });
     });
 

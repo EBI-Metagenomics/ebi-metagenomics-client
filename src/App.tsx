@@ -20,9 +20,12 @@ const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
 const App: React.FC = () => (
   <>
     <EBIHeader />
-    <MainMenu />
     <HeroHeader />
-    <div className="vf-body" style={{ marginBottom: '1em' }}>
+    <MainMenu />
+    <div
+      className="vf-body"
+      style={{ marginBottom: '1em', marginTop: '0.5em' }}
+    >
       <Suspense fallback={<Loading />}>
         <Switch>
           <Route path="/about">

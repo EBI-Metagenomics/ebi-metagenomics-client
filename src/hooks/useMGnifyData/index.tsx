@@ -33,18 +33,20 @@ type MGnifyResponse = {
     };
   };
 };
+async function fetchData(
+  url: string,
+  callback: (unknown) => void
+): Promise<void> {
+  const response = await fetch(url);
+  const json = await response.json();
+  callback(json);
+}
 
 const useData: (url: string) => null | KeyValue | MGnifyResponse = (url) => {
   const [data, setData] = useState(null);
 
-  async function fetchData(): Promise<void> {
-    const response = await fetch(url);
-    const json = await response.json();
-    setData(json);
-  }
-
   useEffect(() => {
-    fetchData();
+    fetchData(url, setData);
   }, [url]);
   return data;
 };

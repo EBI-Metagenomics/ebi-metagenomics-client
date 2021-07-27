@@ -2,6 +2,7 @@ import React from 'react';
 import InnerCard from 'components/UI/InnerCard';
 import OutterCard from 'components/UI/OutterCard';
 import DataType from './DataType';
+import Biomes from './Biomes';
 
 const SearchBy: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const SearchBy: React.FC = () => {
       <h3 className="vf-card__heading">Or by data type</h3>
       <DataType />
       <h3 className="vf-card__heading">Or by selected biomes</h3>
+      <Biomes />
     </OutterCard>
   );
 };

@@ -1,11 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useEBISearchData } from 'hooks/useMGnifyData';
 import './style.css';
 
-const DataAnalysesTypeRow: React.FC<{ type: string; label: string }> = ({
-  type,
-  label,
-}) => {
+const DataAnalysesTypeRow: React.FC<{
+  type: string;
+  label: string;
+  link: string;
+}> = ({ type, label, link }) => {
   const data = useEBISearchData('metagenomics_analyses', {
     query: 'domain_source:metagenomics_analyses',
     size: 0,
@@ -19,47 +21,61 @@ const DataAnalysesTypeRow: React.FC<{ type: string; label: string }> = ({
   return (
     <tr className="vf-table__row">
       <td className="vf-table__cell" style={{ textAlign: 'right' }}>
-        {data?.hitCount || '??'}
+        <Link to={link} className="mg-link">
+          {data?.hitCount || '...'}
+        </Link>
       </td>
       <td className="vf-table__cell">{label}</td>
     </tr>
   );
 };
-const DataTypeRow: React.FC<{ label: string; endpoint: string }> = ({
-  label,
-  endpoint,
-}) => {
-  const data = useEBISearchData(endpoint, {
-    query: `domain_source:${endpoint}`,
-    size: 0,
-    fields: 'id,name,description,biome_name,metagenomics_samples',
-    facetcount: 0,
-    facetsdepth: 5,
-  });
+const DataTypeRow: React.FC<{ label: string; endpoint: string; link: string }> =
+  ({ label, endpoint, link }) => {
+    const data = useEBISearchData(endpoint, {
+      query: `domain_source:${endpoint}`,
+      size: 0,
+      fields: 'id,name,description,biome_name,metagenomics_samples',
+      facetcount: 0,
+      facetsdepth: 5,
+    });
 
-  if (!data) return null;
-  return (
-    <tr className="vf-table__row">
-      <td className="vf-table__cell" style={{ textAlign: 'right' }}>
-        {data?.hitCount || '??'}
-      </td>
-      <td className="vf-table__cell">{label}</td>
-    </tr>
-  );
-};
+    if (!data) return null;
+    return (
+      <tr className="vf-table__row">
+        <td className="vf-table__cell" style={{ textAlign: 'right' }}>
+          <Link to={link} className="mg-link">
+            {data?.hitCount || '??'}
+          </Link>
+        </td>
+        <td className="vf-table__cell">{label}</td>
+      </tr>
+    );
+  };
 
 const DataType: React.FC = () => {
   const analysesTypes = [
-    { type: 'amplicon', label: 'amplicon' },
-    { type: 'assembly', label: 'assemblies' },
-    { type: 'metabarcoding', label: 'metabarcoding' },
-    { type: 'metagenomic', label: 'metagenomes' },
-    { type: 'metatranscriptomic', label: 'metatranscriptomics' },
+    { type: 'amplicon', label: 'amplicon', link: '' },
+    { type: 'assembly', label: 'assemblies', link: '' },
+    { type: 'metabarcoding', label: 'metabarcoding', link: '' },
+    { type: 'metagenomic', label: 'metagenomes', link: '' },
+    { type: 'metatranscriptomic', label: 'metatranscriptomics', link: '' },
   ];
   const types = [
-    { label: 'studies', endpoint: 'metagenomics_projects' },
-    { label: 'samples', endpoint: 'metagenomics_samples' },
-    { label: 'analyses', endpoint: 'metagenomics_analyses' },
+    {
+      label: 'studies',
+      endpoint: 'metagenomics_projects',
+      link: '/search#projects',
+    },
+    {
+      label: 'samples',
+      endpoint: 'metagenomics_samples',
+      link: '/search#samples',
+    },
+    {
+      label: 'analyses',
+      endpoint: 'metagenomics_analyses',
+      link: '/search#analyses',
+    },
   ];
 
   return (
@@ -73,8 +89,13 @@ const DataType: React.FC = () => {
       </div>
       <table className="vf-table mg-small-table">
         <tbody className="vf-table__body">
-          {analysesTypes.map(({ type, label }) => (
-            <DataAnalysesTypeRow type={type} label={label} key={type} />
+          {analysesTypes.map(({ type, label, link }) => (
+            <DataAnalysesTypeRow
+              type={type}
+              label={label}
+              link={link}
+              key={type}
+            />
           ))}
         </tbody>
       </table>
@@ -87,8 +108,13 @@ const DataType: React.FC = () => {
       </div>
       <table className="vf-table mg-small-table">
         <tbody className="vf-table__body">
-          {types.map(({ endpoint, label }) => (
-            <DataTypeRow endpoint={endpoint} label={label} key={endpoint} />
+          {types.map(({ endpoint, label, link }) => (
+            <DataTypeRow
+              endpoint={endpoint}
+              label={label}
+              link={link}
+              key={endpoint}
+            />
           ))}
         </tbody>
       </table>

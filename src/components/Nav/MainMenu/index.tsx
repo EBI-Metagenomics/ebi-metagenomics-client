@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import './style.css';
 
 type SomeComponentProps = RouteComponentProps;
 
@@ -17,7 +18,8 @@ const pages = [
 ];
 const MainMenu: React.FC<SomeComponentProps> = ({ location }) => {
   return (
-    <nav className="vf-navigation vf-navigation--main | vf-cluster">
+    // eslint-disable-next-line max-len
+    <nav className="vf-navigation vf-navigation--main | vf-cluster mg-main-menu vf-u-fullbleed">
       <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
         {pages.map(({ label, path }) => (
           <li className="vf-navigation__item" key={path}>

@@ -51,7 +51,7 @@ const LatestStudies: React.FC = () => {
   const data = useMGnifyData('studies/recent');
   if (!data) return <Loading />;
   return (
-    <section>
+    <section className="vf-stack vf-stack--200">
       <div className="vf-grid vf-grid__col-1 latest-studies-section">
         {data.data.map(({ id, attributes, relationships }) => (
           <LatestStudy
@@ -63,10 +63,11 @@ const LatestStudies: React.FC = () => {
           />
         ))}
       </div>
-      <Link to="/browse/studies/" className="vf-button vf-primary">
-        View all studies
-      </Link>
-      View all studies
+      <div className="mg-right">
+        <Link to="/browse/studies/" className="vf-button vf-button--primary">
+          View all studies
+        </Link>
+      </div>
     </section>
   );
 };
