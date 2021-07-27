@@ -1,6 +1,7 @@
 import React from 'react';
 import SearchBy from 'components/Home/SearchBy';
 import Request from 'components/Home/Request';
+import BlogExcerpts from 'components/Home/BlogExcerpts';
 
 const HomePage: React.FC = () => {
   return (
@@ -10,6 +11,8 @@ const HomePage: React.FC = () => {
         <SearchBy />
         <Request />
       </div>
+      <hr />
+      <BlogExcerpts />
     </section>
   );
 };

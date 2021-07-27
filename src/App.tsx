@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import EBIHeader from './components/UI/EBIHeader';
 import HeroHeader from './components/UI/HeroHeader';
 import EBIFooter from './components/UI/EBIFooter';
+import ElixirBanner from './components/UI/ElixirBanner';
 import CookieBanner from './components/UI/CookieBanner';
 import MainMenu from './components/Nav/MainMenu';
 import Loading from './components/UI/Loading';
@@ -26,7 +27,7 @@ const App: React.FC = () => (
       className="vf-body"
       style={{ marginBottom: '1em', marginTop: '0.5em' }}
     >
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Loading size="large" />}>
         <Switch>
           <Route path="/about">
             <About />
@@ -46,6 +47,7 @@ const App: React.FC = () => (
         </Switch>
       </Suspense>
     </div>
+    <ElixirBanner />
     <EBIFooter />
     <CookieBanner />
   </>

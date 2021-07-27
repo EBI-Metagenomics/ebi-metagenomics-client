@@ -33,6 +33,22 @@ type MGnifyResponse = {
     };
   };
 };
+
+type BlogResponse = {
+  [category: string]: {
+    title: string;
+    url: string;
+    image: string;
+    excerpt: string;
+    category: string;
+    published: string;
+    emg: {
+      text: string;
+      url: string;
+    };
+  };
+};
+
 async function fetchData(
   url: string,
   callback: (unknown) => void
@@ -80,6 +96,12 @@ export const useMGnifyData: (
       .join('&')}`;
   const data = useData(url);
   return data as MGnifyResponse | null;
+};
+export const useBlogData: (resource: string) => null | BlogResponse = (
+  resource
+) => {
+  const data = useData(`${config.blog}${resource}`);
+  return data as BlogResponse | null;
 };
 
 export default useData;

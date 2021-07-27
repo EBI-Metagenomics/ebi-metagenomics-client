@@ -2,3 +2,9 @@
   max-height: 32rem;
   overflow-y: scroll;
 }
+
+@media (max-width: 1023px) {
+  .latest-studies-section {
+    max-height: 61rem;
+  }
+}

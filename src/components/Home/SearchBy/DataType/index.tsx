@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Loading from 'components/UI/Loading';
 import { useEBISearchData } from 'hooks/useMGnifyData';
 import './style.css';
 
@@ -17,7 +18,14 @@ const DataAnalysesTypeRow: React.FC<{
     facets: `experiment_type:${type}`,
   });
 
-  if (!data) return null;
+  if (!data)
+    return (
+      <tr>
+        <td>
+          <Loading size="small" />
+        </td>
+      </tr>
+    );
   return (
     <tr className="vf-table__row">
       <td className="vf-table__cell" style={{ textAlign: 'right' }}>

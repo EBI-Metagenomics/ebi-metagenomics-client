@@ -1,0 +1,65 @@
+/* Spinner 3 starts here */
+.mg-loading-spinner {
+  animation: spinnerOne 1s linear infinite;
+  background: #18974c;
+  border-radius: 100%;
+  width: 3em;
+  height: 3em;
+  opacity: 1;
+}
+.mg-loading-spinner-2 {
+  position: relative;
+  opacity: 1;
+  animation: spinnerTwo 1s linear infinite;
+  background: white;
+  border-radius: 100%;
+  width: 1.4em;
+  height: 1.4em;
+  top: -2.2em;
+  left: 0.8em;
+}
+.mg-loading-spinner.small {
+  width: 1em;
+  height: 1em;
+}
+.mg-loading-spinner.large {
+  width: 6em;
+  height: 6em;
+}
+.mg-loading-spinner-2.small {
+  width: 0.5em;
+  height: 0.5em;
+  top: -0.75em;
+  left: 0.25em;
+}
+.mg-loading-spinner-2.large {
+  top: -4.4em;
+  left: 1.6em;
+  width: 2.8em;
+  height: 2.8em;
+}
+
+@keyframes spinnerOne {
+  0%,
+  35% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  20%,
+  50% {
+    opacity: 0.5;
+    transform: scale(1.3);
+  }
+}
+@keyframes spinnerTwo {
+  0%,
+  35% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  20%,
+  50% {
+    opacity: 0.5;
+    transform: scale(1.5);
+  }
+}
