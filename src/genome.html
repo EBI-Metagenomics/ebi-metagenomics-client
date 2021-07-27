@@ -30,7 +30,7 @@
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
                     <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
-                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/genomes">Browse genomes</a>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#genomes">Browse genomes</a>
                     </li>
                     <li>
                         <span class="show-for-sr">Current: </span> Genome <%= accession %>
@@ -56,8 +56,11 @@
                     <li class="tabs-title"><a href="#kegg-module-analysis">KEGG module analysis</a></li>
                     <li class="tabs-title"><a href="#downloads">Downloads</a></li>
                 </ul>
+                </ul>
                 <div class="tabs-content" data-tab-content="genome-tabs">
                     <div class="tabs-panel active" id="overview">
+                        <section id="catalogues-section">
+                        </section>
                         <section id="genome-details">
                         </section>
                     </div>
@@ -90,6 +93,32 @@
             </div>
             <p>A full copy of the raw analysis data is available in the <a id="downloads-link-bottom" href="javascript:void(0);">downloads tab</a>.</p>
         </div>
+
+        <script id="cataloguesTmpl" type="text/template">
+            <div class="row columns">
+                <h4><a class="expand-button min" for="#catalogues">Genome catalogues</a></h4>
+                <table>
+                    <thead>
+                        <th class="biome-icon"></th>
+                        <th>Catalogue</th>
+                        <th>Biome</th>
+                    </thead>
+                    <% for (let catalogue of catalogues) { %>
+                    <tr>
+                        <td>
+                            <span class="biome_icon icon_s <%= catalogue.biome.icon %>" title="<%= catalogue.biome.name %>"></span>
+                        </td>
+                        <td>
+                            <a href="<%= catalogue.catalogue_url %>"><%= catalogue.catalogue_name %></a>
+                        </td>
+                        <td>
+                            <%= catalogue.biome.name %>
+                        </td>
+                    <% } %>
+                    </tr>
+                </table>
+            </div>
+        </script>
 
         <script id="downloadsTmpl" type="text/template">
             <% for (let groupName of ['Genome analysis', 'Pan-genome analysis']) { %>

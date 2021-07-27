@@ -287,6 +287,21 @@ let DownloadsView = Backbone.View.extend({
     }
 });
 
+let GenomeCataloguesView = Backbone.View.extend({
+    template: _.template($('#cataloguesTmpl').html()),
+    el: '#catalogues-section',
+    init() {
+        const that = this;
+        return this.collection.fetch({
+            success() {
+                const data = {catalogues: that.collection.toJSON()};
+                console.log(data);
+                that.$el.html(that.template(data));
+            }
+        });
+    }
+});
+
 let genomeBrowserLoaded = false;
 
 /**
@@ -347,6 +362,10 @@ function initPage() {
 
     let downloads = new api.GenomeDownloads({id: genomeId});
     let downloadsView = new DownloadsView({model: downloads});
+
+    let catalogues = new api.GenomeGenomeCatalogueCollection({id: genomeId});
+    let cataloguesView = new GenomeCataloguesView({collection: catalogues});
+
     genomeView.fetchAndRender().done(() => {
         util.attachExpandButtonCallback();
         // Charts //
@@ -354,6 +373,8 @@ function initPage() {
         loadKeggClass(genome);
         loadKeggModule(genome);
     });
+
+    cataloguesView.init();
 
     downloadsView.init().done(() => {
         // Genome browser loading is delayed UNLESS div is visible

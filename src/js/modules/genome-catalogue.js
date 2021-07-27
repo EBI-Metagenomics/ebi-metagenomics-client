@@ -1,7 +1,6 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const api = require('mgnify').api(process.env.API_URL);
-// const GenomesView = require('../modules/genomes');
 const util = require('../util');
 const marked = require('marked');
 
@@ -22,9 +21,9 @@ let GenomeCatalogueView = Backbone.View.extend({
             success() {
                 that.model.set({
                     catalogue_description:
-                        marked(that.model.attributes.catalogue_description),
+                        marked(that.model.attributes.catalogue_description || ''),
                     protein_catalogue_description:
-                        marked(that.model.attributes.protein_catalogue_description)
+                        marked(that.model.attributes.protein_catalogue_description || '')
                 });
                 that.$el.html(that.template(that.model.toJSON()));
                 util.attachTabHandlers();
@@ -56,23 +55,20 @@ function initPage() {
             sectionTitle: 'Genomes'
         });
 
-        // const tablePromise = this.genomeTablesView.render();
-        // const modelPromise = $.Deferred();
-
         util.attachExpandButtonCallback();
     });
 
     /**
      * Generate the phylogenetic tree
-     * @param {string} releaseVersion Catalogue release version
+     * @param {string} catalogueId Genome Catalogue ID
      */
-    function genPhyloTree(releaseVersion) {
-        new api.ReleaseDownloads({id: releaseVersion}).fetch().done((response) => {
+    function genPhyloTree(catalogueId) {
+        new api.GenomeCatalogueDownloads({id: catalogueId}).fetch().done((response) => {
             const url = util.findFileUrl(response.data, 'phylo_tree.json');
             new PhyloTree('phylo-tree', url);
         });
     }
-    genPhyloTree('1.0');
+    genPhyloTree(genomeCatalogueId);
 }
 
 initPage();
