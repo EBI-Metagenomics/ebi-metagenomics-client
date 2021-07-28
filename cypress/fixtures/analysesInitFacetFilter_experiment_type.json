@@ -1,0 +1,49 @@
+{
+  "_comment": "ebiSearch response for analyses filters",
+  "hitCount": 127566,
+  "entries": [
+    {
+      "id": "MGYA00028224_2.0",
+      "source": "metagenomics_analyses"
+    }
+  ],
+  "facets": [
+    {
+      "id": "experiment_type",
+      "label": "Experiment Type",
+      "total": 6,
+      "facetValues": [
+        {
+          "label": "Amplicon",
+          "value": "amplicon",
+          "count": 100890
+        },
+        {
+          "label": "Metagenomic",
+          "value": "metagenomic",
+          "count": 17245
+        },
+        {
+          "label": "Assembly",
+          "value": "assembly",
+          "count": 5948
+        },
+        {
+          "label": "Metatranscriptomic",
+          "value": "metatranscriptomic",
+          "count": 1727
+        },
+        {
+          "label": "Metabarcoding",
+          "value": "metabarcoding",
+          "count": 1601
+        },
+        {
+          "label": "Unknown",
+          "value": "unknown",
+          "count": 155
+        }
+      ]
+    }
+  ]
+}

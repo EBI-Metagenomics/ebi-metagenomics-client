@@ -304,17 +304,23 @@ const ResultsView = Backbone.View.extend({
      * @return {{filters: *, query: *}}
      */
     loadSearchParams(facet) {
-        // TODO: not functional.
-        //      requires the package query-string
-        // const qs = queryString.parse(location.search) || {};
-        // return {
-        //     filters: _.pick(qs, facet),
-        //     query: qs.query
-        // };
         return {
             filters: undefined,
             query: undefined
         };
+        // TODO: this is not complete
+        // remove tab from hash
+        // example: #analysis?<query-string>
+        // const hashArray = location.hash.split("?");
+        // if (_.isEmpty(hashArray)) {
+        //     hashArray = ["", ""];
+        // }
+        // const qsString = hashArray[1];
+        // const qs = queryString.parse(qsString) || {};
+        // return {
+        //     filters: _.pick(qs, facet),
+        //     query: qs.query
+        // };
     },
 
     /**
@@ -578,27 +584,9 @@ const ResultsView = Backbone.View.extend({
         }, 500);
     },
 
-    /**
-     * Calculate pagination metrics
-     * @param {number} hitcount total number of results
-     * @param {number} start starting
-     * @param {number} pagesize pagesize
-     * @return {{page: number, pages: number}}
-     */
-    getPagesObj(hitcount, start, pagesize) {
-        let page = (parseInt(start) / parseInt(pagesize)) + 1;
-        let pages = Math.ceil(parseInt(hitcount) / parseInt(pagesize)) || 1;
-        return {
-            page,
-            pages
-        };
-    },
-
     fetchAndRender(renderFilter) {
         const that = this;
-        // TODO:  not functional.
-        //        requires the package query-string
-        // // update the query string
+        // TODO: this is not complete
         // window.history.replaceState('',
         //     document.title,
         //     location.pathname +
@@ -634,12 +622,16 @@ const ResultsView = Backbone.View.extend({
                             that.update(page);
                         });
                 } else {
-                    const pageObj = that.getPagesObj(
-                        response.hitCount,
-                        that.params.start,
-                        that.params.size
-                    );
-                    that.pagination.update(pageObj, function(page) {
+                    const start = parseInt(that.params.start);
+                    const pageSize = parseInt(that.params.size);
+                    const count = parseInt(response.hitCount);
+                    const paginationOptions =  {
+                        count: count,
+                        page: (start / pageSize) + 1,
+                        pages: Math.ceil(count / pageSize) || 1,
+                    };
+
+                    that.pagination.update(paginationOptions, function(page) {
                         that.update(page);
                     });
                 }
