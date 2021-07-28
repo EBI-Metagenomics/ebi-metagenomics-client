@@ -88,6 +88,10 @@ module.exports = Backbone.View.extend({
     const urlParams = queryString.parse(qs, { arrayFormat: "bracket" });
     return urlParams.job_id;
   },
+  removeJobIDFromURL() {
+    const url = location.href.replace(/[\?]?job_id.+/, "");
+    history.pushState({}, "CLEAR", url);
+  },
 
   /**
    * Triggered when thelist of selected files have changed
@@ -125,6 +129,10 @@ module.exports = Backbone.View.extend({
     this.timer = null;
     this.timerID = null;
 
+    if (this.getJobIDFromURL()) {
+      this.removeJobIDFromURL();
+    }
+    this.$messageContainter.html("");
     this.$sourmash[0].clear();
     this.$submitButton.attr("disabled", "disabled");
     this.$submitButton.attr("title", SUBMIT_DISABLED_TEXT);
@@ -133,6 +141,7 @@ module.exports = Backbone.View.extend({
 
   submitJob(event) {
     this.status = STATUS_TYPE.SEARCHING;
+    this.$messageContainter.html("");
     this.refresh();
     const formdata = new FormData();
     formdata.append("mag_catalog", "HGUT");
@@ -161,7 +170,6 @@ module.exports = Backbone.View.extend({
         this.status = STATUS_TYPE.PENDING_JOB;
         this.jobState = result.data;
         this.startIntervalChecker();
-        console.log("Success:", result);
       })
       .catch((error) => {
         this.showMessage(
@@ -262,6 +270,58 @@ module.exports = Backbone.View.extend({
       )
     );
   },
+  refreshResultTable() {
+    const emoji = {
+      SUCCESS: "✅",
+      FAILURE: "❌",
+      IN_QUEUE: "🕛",
+    };
+    this.$("#results-files").html(
+      `<table>
+        <tr>
+          <th>Job ID</th>
+          <th>Filename</th>
+          <th>Status</th>
+          <th>% query covered</th>
+          <th>Genome</th>
+          <th>Download</th>
+        </tr>
+        ${this.jobState.results
+          .sort((s1, s2) => (s1.status < s2.status ? 1 : -1))
+          .map(
+            (s) =>
+              `<tr>
+                <td><span class="filename">${s.job_id}</span></td>
+                <td><span class="filename">${s.filename}</span></td>
+                <td>${emoji[s.status] || ""} ${s.status}</td>
+                ${
+                  s.status === "SUCCESS"
+                    ? `
+                  <td>${s.result.p_query}</td>
+                  <td>
+                    ${getLinkToMagFromAccession(s.result.match)}
+                  </td>
+                  <td><span class="result-mag-csv">
+                    ${getLinkToCSV(s.results_url, s.filename)}
+                  </span></td>`
+                    : ""
+                }
+                ${
+                  s.status === "IN_QUEUE"
+                    ? `<td colspan="3">Position: ${s.position_in_queue}</td>`
+                    : ""
+                }
+                ${
+                  s.status === "FAILURE"
+                    ? `<td colspan="3"><pre>${s.reason}</pre></td>`
+                    : ""
+                }
+              </tr>`
+          )
+          .join("")}
+      </table>`
+    );
+  },
 
   refreshJob() {
     if (!this.jobState) {
@@ -286,38 +346,12 @@ module.exports = Backbone.View.extend({
         `job_id=${this.jobState.job_id}`
       );
     }
+    if (url !== location.href) {
+      history.pushState({}, "URL_WITH_JOB_ID", url);
+    }
     if (url) this.$("#results-link").html(`<a href="${url}">${url}</a>`);
     if (this.jobState.results) {
-      this.$("#results-files").html(
-        "<ul>" +
-          this.jobState.results
-            .map(
-              (s) =>
-                `<li><span class="filename">${
-                  s.filename || s.job_id
-                }</span> | ${
-                  s.status === "SUCCESS"
-                    ? `<span class="result-mag-match">${
-                        s.result.p_query
-                      } similarity with ${getLinkToMagFromAccession(
-                        s.result.match
-                      )}</span> | <span class="result-mag-csv">${getLinkToCSV(
-                        s.results_url,
-                        s.filename
-                      )}</span>`
-                    : s.status
-                }
-                ${
-                  s.status === "IN_QUEUE"
-                    ? ` : Position: ${s.position_in_queue}`
-                    : ""
-                }
-                ${s.status === "FAILURE" ? `<pre>${s.reason}</pre>` : ""}
-                </li>`
-            )
-            .join("") +
-          "</ul>"
-      );
+      this.refreshResultTable();
     } else {
       this.$("#results-files").html(
         "<ul>" +
