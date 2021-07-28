@@ -1,0 +1,63 @@
+[
+  {
+    "title": "MGnify: the microbiome analysis resource in 2020",
+    "journal": "Nucleic Acids Research",
+    "year": 2019,
+    "link": "https://academic.oup.com/nar/article/48/D1/D570/5614179",
+    "doi": "10.1093/nar/gkz1035",
+    "authors": "Mitchell AL, Almeida A, Beracochea M, Boland M, Burgin J, Cochrane G, Crusoe MR, Kale V, Potter SC, Richardson LJ, Sakharova E, Scheremetjew M, Korobeynikov A, Shlemov A, Kunyavskaya O, Lapidus A and Finn RD",
+    "recent": true,
+    "main": true
+  },
+  {
+    "title": "A new genomic blueprint of the human gut microbiota",
+    "journal": "Nature",
+    "year": 2019,
+    "link": "https://www.nature.com/articles/s41586-019-0965-1",
+    "doi": "10.1038/s41586-019-0965-1",
+    "authors": "Almeida A, Mitchell AL, Boland M, Forster SC, Gloor GB, Tarkowska A, Lawley TD and Finn RD",
+    "recent": true
+  },
+  {
+    "title": "Human gastrointestinal bacteria genome and culture collection",
+    "journal": "Nature Biotechnology",
+    "year": 2019,
+    "link": "https://www.nature.com/articles/s41587-018-0009-7",
+    "doi": "10.1038/s41587-018-0009-7",
+    "authors": "Forster SC, Kumar N, Anonye BO, Almeida A, Viciani E, Stares MD, Dunn M, Mkandawire TT, Zhu A, Browne HP, Shao Y, Pike LJ, Louie T, Mitchell AL, Neville BA, Finn RD, Lawley TD",
+    "recent": true
+  },
+  {
+    "title": "Benchmarking taxonomic assignments based on 16S rRNA gene profiling of the microbiota from commonly sampled environments",
+    "journal": "GigaScience",
+    "year": 2017,
+    "link": "https://doi.org/10.1093/gigascience/giy054",
+    "doi": "10.1093/gigascience/giy054",
+    "authors": "Almeida A, Mitchell AL, Tarkowska A, Finn RD.",
+    "recent": true
+  },
+  {
+    "title": "EBI Metagenomics in 2017: enriching the analysis of microbial communities, from sequence reads to assemblies",
+    "journal": "Nucleic Acids Research",
+    "year": 2017,
+    "link": "https://doi.org/10.1093/nar/gkx967",
+    "doi": "10.1093/nar/gkx967",
+    "authors": "Mitchell AL, Scheremetjew M, Denise H, Potter S, Tarkowska A, Qureshi M, Salazar GA, Pesseat S, Boland M, Hunter FMI, ten Hoopen P, Alako B, Amid C, Wilkinson DJ, Curtis TP, Cochrane G and Finn RD"
+  },
+  {
+    "title": "EBI metagenomics in 2016 - an expanding and evolving resource for the analysis and archiving of metagenomic data",
+    "journal": "Nucleic Acids Research",
+    "year": 2015,
+    "link": "http://nar.oxfordjournals.org/content/44/D1/D595.full",
+    "doi": "10.1093/nar/gkv1195",
+    "authors": "Mitchell AL, Bucchini F, Cochrane G, Denise H, ten Hoopen P, Fraser M, Pesseat S, Potter S, Scheremetjew M, Sterk P and Finn RD"
+  },
+  {
+    "title": "EBI metagenomics - a new resource for the analysis and archiving of metagenomic data",
+    "journal": "Nucleic Acids Research",
+    "year": 2013,
+    "link": "http://dx.doi.org/10.1093/nar/gkt961",
+    "doi": "10.1093/nar/gkt961",
+    "authors": "Hunter S, Corbett M, Denise H, Fraser M, Gonzalez-Beltran A, Hunter C, Jones P, Leinonen R, McAnulla C, Maguire E, Maslen J, Mitchell AL, Nuka G, Oisel A, Pesseat S, Radhakrishnan R, Rocca-Serra P, Scheremetjew M, Sterk P, Vaughan D, Cochrane G, Field D and Sansone SA"
+  }
+]

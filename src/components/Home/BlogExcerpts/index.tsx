@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import Loading from 'components/UI/Loading';
 import InnerCard from 'components/UI/InnerCard';

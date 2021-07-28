@@ -2,6 +2,7 @@ import React from 'react';
 import SearchBy from 'components/Home/SearchBy';
 import Request from 'components/Home/Request';
 import BlogExcerpts from 'components/Home/BlogExcerpts';
+import Publications, { MainPublication } from 'components/Publications';
 
 const HomePage: React.FC = () => {
   return (
@@ -13,6 +14,10 @@ const HomePage: React.FC = () => {
       </div>
       <hr />
       <BlogExcerpts />
+      <h2>Latest publications</h2>
+      <Publications />
+      <h2>How to cite</h2>
+      <MainPublication />
     </section>
   );
 };

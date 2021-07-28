@@ -1,0 +1,26 @@
+.mg-pub {
+  margin-bottom: 0.7em;
+}
+.mg-pub-title {
+  font-weight: bold;
+}
+.mg-pub-journal {
+  font-style: italic;
+}
+.mg-pub-year {
+  font-family: monospace;
+}
+
+.mg-pub-section-header {
+  text-align: left;
+}
+
+.mg-pub-cover {
+  width: 10em;
+}
+
+@media (min-width: 846px) {
+  .mg-pub-section-header {
+    text-align: right;
+  }
+}
