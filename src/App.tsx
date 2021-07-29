@@ -17,6 +17,7 @@ const About = lazy(() => import('./pages/About'));
 const Help = lazy(() => import('./pages/Help'));
 const TextSearch = lazy(() => import('./pages/TextSearch'));
 const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
+const Browse = lazy(() => import('./pages/Browse'));
 
 const App: React.FC = () => (
   <>
@@ -40,6 +41,9 @@ const App: React.FC = () => (
           </Route>
           <Route path="/sequence-search">
             <SequenceSearch />
+          </Route>
+          <Route path="/browse">
+            <Browse />
           </Route>
           <Route path="/">
             <Home />

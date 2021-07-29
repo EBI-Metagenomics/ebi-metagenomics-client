@@ -9,7 +9,7 @@ const pages = [
   // { label: 'Submit data', path: '/submit' },
   { label: 'Text search', path: '/search' },
   { label: 'Sequence search', path: '/sequence-search' },
-  // { label: 'Browse data', path: '' },
+  { label: 'Browse data', path: '/browse' },
   // { label: 'Genomes', path: '' },
   // { label: 'API', path: '' },
   { label: 'About', path: '/about' },
