@@ -19,3 +19,7 @@ declare module '*.gif' {
   const file: any;
   export default file;
 }
+declare module '*.png' {
+  const file: any;
+  export default file;
+}
