@@ -1,0 +1,69 @@
+{
+  "_comment": "ebiSearch response for analyses filters",
+  "hitCount": 127566,
+  "entries": [
+    {
+      "id": "MGYA00028224_2.0",
+      "source": "metagenomics_analyses"
+    }
+  ],
+  "facets": [
+    {
+      "id": "INTERPRO",
+      "label": "InterPro",
+      "total": 23092,
+      "facetValues": [
+        {
+          "label": "Aldolase-type TIM barrel",
+          "value": "IPR013785",
+          "count": 23365
+        },
+        {
+          "label": "ArsR-like helix-turn-helix domain",
+          "value": "IPR011991",
+          "count": 23361
+        },
+        {
+          "label": "NAD(P)-binding domain",
+          "value": "IPR016040",
+          "count": 23266
+        },
+        {
+          "label": "Rossmann-like alpha/beta/alpha sandwich fold",
+          "value": "IPR014729",
+          "count": 23245
+        },
+        {
+          "label": "Pyridoxal phosphate-dependent transferase, major domain",
+          "value": "IPR015421",
+          "count": 23144
+        },
+        {
+          "label": "Histidine kinase/HSP90-like ATPase",
+          "value": "IPR003594",
+          "count": 23099
+        },
+        {
+          "label": "ABC transporter-like",
+          "value": "IPR003439",
+          "count": 23093
+        },
+        {
+          "label": "Tetratricopeptide-like helical domain superfamily",
+          "value": "IPR011990",
+          "count": 23049
+        },
+        {
+          "label": "Pyridoxal phosphate-dependent transferase domain 1",
+          "value": "IPR015422",
+          "count": 23043
+        },
+        {
+          "label": "HAD superfamily",
+          "value": "IPR023214",
+          "count": 22935
+        }
+      ]
+    }
+  ]
+}

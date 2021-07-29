@@ -1,0 +1,49 @@
+{
+  "_comment": "Basic ebiSearch query for sample filters",
+  "hitCount": 94347,
+  "entries": [
+    {
+      "id": "SRS371887",
+      "source": "metagenomics_samples"
+    }
+  ],
+  "facets": [
+    {
+      "id": "experiment_type",
+      "label": "Experiment type",
+      "total": 6,
+      "facetValues": [
+        {
+          "label": "Amplicon",
+          "value": "amplicon",
+          "count": 80399
+        },
+        {
+          "label": "Metagenomic",
+          "value": "metagenomic",
+          "count": 9318
+        },
+        {
+          "label": "Assembly",
+          "value": "assembly",
+          "count": 2667
+        },
+        {
+          "label": "Metatranscriptomic",
+          "value": "metatranscriptomic",
+          "count": 1301
+        },
+        {
+          "label": "Metabarcoding",
+          "value": "metabarcoding",
+          "count": 1164
+        },
+        {
+          "label": "Unknown",
+          "value": "unknown",
+          "count": 133
+        }
+      ]
+    }
+  ]
+}

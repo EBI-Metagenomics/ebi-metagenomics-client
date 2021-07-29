@@ -1,0 +1,69 @@
+{
+  "_comment": "Basic ebiSearch query response for filters of projects",
+  "hitCount": 1583,
+  "entries": [
+    {
+      "id": "MGYS00000277",
+      "source": "metagenomics_projects"
+    }
+  ],
+  "facets": [
+    {
+      "id": "centre_name",
+      "label": "Centre name",
+      "total": 516,
+      "facetValues": [
+        {
+          "label": "BioProject",
+          "value": "BioProject",
+          "count": 558
+        },
+        {
+          "label": "EMG",
+          "value": "EMG",
+          "count": 68
+        },
+        {
+          "label": "EMBL-EBI",
+          "value": "EMBL-EBI",
+          "count": 36
+        },
+        {
+          "label": "UNIMIB",
+          "value": "UNIMIB",
+          "count": 11
+        },
+        {
+          "label": "CSIRO",
+          "value": "CSIRO",
+          "count": 10
+        },
+        {
+          "label": "GSC",
+          "value": "GSC",
+          "count": 10
+        },
+        {
+          "label": "EESC/USP",
+          "value": "EESC/USP",
+          "count": 9
+        },
+        {
+          "label": "VTT",
+          "value": "VTT",
+          "count": 9
+        },
+        {
+          "label": "BGI",
+          "value": "BGI",
+          "count": 9
+        },
+        {
+          "label": "ANAND",
+          "value": "ANAND",
+          "count": 8
+        }
+      ]
+    }
+  ]
+}

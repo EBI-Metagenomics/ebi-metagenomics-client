@@ -1,0 +1,69 @@
+{
+  "_comment": "ebiSearch response for analyses filters",
+  "hitCount": 127566,
+  "entries": [
+    {
+      "id": "MGYA00028224_2.0",
+      "source": "metagenomics_analyses"
+    }
+  ],
+  "facets": [
+    {
+      "id": "GO",
+      "label": "GO",
+      "total": 4189,
+      "facetValues": [
+        {
+          "label": "DNA binding",
+          "value": "GO:0003677",
+          "count": 24075
+        },
+        {
+          "label": "catalytic activity",
+          "value": "GO:0003824",
+          "count": 23776
+        },
+        {
+          "label": "ATP binding",
+          "value": "GO:0005524",
+          "count": 23727
+        },
+        {
+          "label": "membrane",
+          "value": "GO:0016020",
+          "count": 23723
+        },
+        {
+          "label": "oxidation-reduction process",
+          "value": "GO:0055114",
+          "count": 23721
+        },
+        {
+          "label": "DNA replication",
+          "value": "GO:0006260",
+          "count": 23636
+        },
+        {
+          "label": "metabolic process",
+          "value": "GO:0008152",
+          "count": 23611
+        },
+        {
+          "label": "oxidoreductase activity",
+          "value": "GO:0016491",
+          "count": 23558
+        },
+        {
+          "label": "transport",
+          "value": "GO:0006810",
+          "count": 23531
+        },
+        {
+          "label": "integral component of membrane",
+          "value": "GO:0016021",
+          "count": 23506
+        }
+      ]
+    }
+  ]
+}

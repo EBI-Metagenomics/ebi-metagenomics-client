@@ -1,0 +1,69 @@
+{
+  "_comment": "Basic ebiSearch query for sample filters",
+  "hitCount": 94347,
+  "entries": [
+    {
+      "id": "SRS371887",
+      "source": "metagenomics_samples"
+    }
+  ],
+  "facets": [
+    {
+      "id": "phenotype",
+      "label": "Phenotype",
+      "total": 12,
+      "facetValues": [
+        {
+          "label": "NA",
+          "value": "NA",
+          "count": 25
+        },
+        {
+          "label": "Crohns disease",
+          "value": "Crohns disease",
+          "count": 22
+        },
+        {
+          "label": "Infant",
+          "value": "Infant",
+          "count": 17
+        },
+        {
+          "label": "None",
+          "value": "none",
+          "count": 16
+        },
+        {
+          "label": "Healthy",
+          "value": "healthy",
+          "count": 12
+        },
+        {
+          "label": "Crohn's Disease",
+          "value": "Crohn's Disease",
+          "count": 12
+        },
+        {
+          "label": "Obese",
+          "value": "obese",
+          "count": 7
+        },
+        {
+          "label": "Healthy",
+          "value": "Healthy",
+          "count": 7
+        },
+        {
+          "label": "Lean",
+          "value": "lean",
+          "count": 6
+        },
+        {
+          "label": "Overweight",
+          "value": "overweight",
+          "count": 3
+        }
+      ]
+    }
+  ]
+}

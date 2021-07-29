@@ -90,6 +90,18 @@ const getProxyRoutes = () => {
           "X-Requested-With, content-type, Authorization",
       },
     },
+    "/ebisearch/ws/rest": {
+      target: "http://www.ebi.ac.uk/",
+      secure: false,
+      changeOrigin: true,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods":
+          "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers":
+          "X-Requested-With, content-type",
+      },
+    },
   };
   proxyRoutes.forEach((route) => {
     const label = typeof route === "string" ? route : route.label;
@@ -108,7 +120,6 @@ const getProxyRoutes = () => {
       "^/metagenomics/genomes/.+$": "/metagenomics/genome.html",
       "^/metagenomics/genomes/?$": "/metagenomics/genomes.html",
       "^/metagenomics/genome-search": "/metagenomics/genome-search.html",
-
     }
   }
   console.log(routes);
@@ -158,6 +169,9 @@ module.exports = {
   },
   devtool: "#inline-source-map",
   node: baseConfig.node,
+  watchOptions: {
+    ignored: /node_modules/
+  },
   devServer: {
     port: 9000,
     proxy: getProxyRoutes(),

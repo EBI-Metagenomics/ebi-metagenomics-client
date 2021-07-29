@@ -1,0 +1,69 @@
+{
+  "_comment": "Basic ebiSearch query for sample filters",
+  "hitCount": 94347,
+  "entries": [
+    {
+      "id": "SRS371887",
+      "source": "metagenomics_samples"
+    }
+  ],
+  "facets": [
+    {
+      "id": "sequencing_method",
+      "label": "Sequencing method",
+      "total": 269,
+      "facetValues": [
+        {
+          "label": "Illumina",
+          "value": "Illumina",
+          "count": 6808
+        },
+        {
+          "label": "Illumina MiSeq",
+          "value": "Illumina MiSeq",
+          "count": 5574
+        },
+        {
+          "label": "Illumina Miseq",
+          "value": "Illumina Miseq",
+          "count": 4236
+        },
+        {
+          "label": "Pyrosequencing",
+          "value": "pyrosequencing",
+          "count": 4233
+        },
+        {
+          "label": "454",
+          "value": "454",
+          "count": 2764
+        },
+        {
+          "label": "454 Titanium",
+          "value": "454 Titanium",
+          "count": 1113
+        },
+        {
+          "label": "Illumina MiSeq2500 250bp-PE",
+          "value": "Illumina MiSeq2500 250bp-PE",
+          "count": 831
+        },
+        {
+          "label": "MiSeq",
+          "value": "MiSeq",
+          "count": 786
+        },
+        {
+          "label": "Illumina MiSeq 2x250",
+          "value": "Illumina MiSeq 2x250",
+          "count": 747
+        },
+        {
+          "label": "Sequencing by synthesis, Illumina paired-end",
+          "value": "Sequencing by synthesis, Illumina paired-end",
+          "count": 730
+        }
+      ]
+    }
+  ]
+}
