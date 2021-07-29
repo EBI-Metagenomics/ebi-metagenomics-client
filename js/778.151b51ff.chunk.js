@@ -1,2 +1,0 @@
-(self.webpackChunkmgportalv2=self.webpackChunkmgportalv2||[]).push([[778],{778:(e,t,a)=>{"use strict";a.r(t),a.d(t,{default:()=>c});var l=a(294);const c=()=>l.createElement("section",{className:"vf-content"},l.createElement("h1",null,"About Page."))}}]);
-//# sourceMappingURL=778.151b51ff.chunk.js.map
