@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useMGnifyData } from 'hooks/useMGnifyData';
 import Loading from 'components/UI/Loading';
+import FetchError from 'components/UI/FetchError';
 import { getBiomeIcon } from 'utils/biomes';
 
 import './style.css';
@@ -48,7 +49,9 @@ const LatestStudy: React.FC<LatestStudyProps> = ({
 };
 
 const LatestStudies: React.FC = () => {
-  const data = useMGnifyData('studies/recent');
+  const { data, loading, error } = useMGnifyData('studies/recent');
+  if (loading) return <Loading size="large" />;
+  if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   return (
     <section className="vf-stack vf-stack--200">

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import { useEBISearchData } from 'hooks/useMGnifyData';
+import FetchError from 'components/UI/FetchError';
 import './style.css';
 
 const DataAnalysesTypeRow: React.FC<{
@@ -9,7 +10,7 @@ const DataAnalysesTypeRow: React.FC<{
   label: string;
   link: string;
 }> = ({ type, label, link }) => {
-  const data = useEBISearchData('metagenomics_analyses', {
+  const { data, loading, error } = useEBISearchData('metagenomics_analyses', {
     query: 'domain_source:metagenomics_analyses',
     size: 0,
     fields: 'id,name,description,biome_name,metagenomics_samples',
@@ -17,8 +18,7 @@ const DataAnalysesTypeRow: React.FC<{
     facetsdepth: 5,
     facets: `experiment_type:${type}`,
   });
-
-  if (!data)
+  if (loading)
     return (
       <tr>
         <td>
@@ -26,6 +26,7 @@ const DataAnalysesTypeRow: React.FC<{
         </td>
       </tr>
     );
+  if (error) return <FetchError error={error} />;
   return (
     <tr className="vf-table__row">
       <td className="vf-table__cell" style={{ textAlign: 'right' }}>
@@ -39,21 +40,24 @@ const DataAnalysesTypeRow: React.FC<{
 };
 const DataTypeRow: React.FC<{ label: string; endpoint: string; link: string }> =
   ({ label, endpoint, link }) => {
-    const data = useEBISearchData(endpoint, {
+    const { data, loading, error } = useEBISearchData(endpoint, {
       query: `domain_source:${endpoint}`,
       size: 0,
       fields: 'id,name,description,biome_name,metagenomics_samples',
       facetcount: 0,
       facetsdepth: 5,
     });
-
-    if (!data) return null;
+    if (error) return <FetchError error={error} />;
     return (
       <tr className="vf-table__row">
         <td className="vf-table__cell" style={{ textAlign: 'right' }}>
-          <Link to={link} className="mg-link">
-            {data?.hitCount || '??'}
-          </Link>
+          {loading ? (
+            <Loading size="small" />
+          ) : (
+            <Link to={link} className="mg-link">
+              {data?.hitCount || '??'}
+            </Link>
+          )}
         </td>
         <td className="vf-table__cell">{label}</td>
       </tr>

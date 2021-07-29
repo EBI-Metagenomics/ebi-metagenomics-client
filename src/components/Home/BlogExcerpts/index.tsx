@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Loading from 'components/UI/Loading';
+import FetchError from 'components/UI/FetchError';
 import InnerCard from 'components/UI/InnerCard';
 import OutterCard from 'components/UI/OutterCard';
 import { useBlogData } from 'hooks/useMGnifyData';
@@ -32,8 +33,9 @@ const BlogExcerpt: React.FC<{
 };
 
 const BlogExcerpts: React.FC = () => {
-  const data = useBlogData('feed-first-of-each.json');
-  if (!data) return <Loading size="large" />;
+  const { data, loading, error } = useBlogData('feed-first-of-each.json');
+  if (loading) return <Loading size="large" />;
+  if (error) return <FetchError error={error} />;
   return (
     <div>
       <div className="vf-grid">

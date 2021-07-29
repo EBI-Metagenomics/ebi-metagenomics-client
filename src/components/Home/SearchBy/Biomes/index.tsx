@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useMGnifyData } from 'hooks/useMGnifyData';
 import Loading from 'components/UI/Loading';
+import FetchError from 'components/UI/FetchError';
 import { getBiomeIcon } from 'utils/biomes';
 
 const Biome: React.FC<{ lineage: string; name: string; count: number }> = ({
@@ -33,8 +34,12 @@ const Biome: React.FC<{ lineage: string; name: string; count: number }> = ({
 };
 
 const Biomes: React.FC = () => {
-  const data = useMGnifyData('biomes/top10', { ordering: '-samples_count' });
-  if (!data) return <Loading />;
+  const { data, loading, error } = useMGnifyData('biomes/top10', {
+    ordering: '-samples_count',
+  });
+  if (loading) return <Loading />;
+  if (error) return <FetchError error={error} />;
+
   return (
     <section className="vf-stack vf-stack--200 search-by-biomes-section">
       <div className="vf-grid vf-grid__col-5">

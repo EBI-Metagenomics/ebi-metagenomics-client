@@ -49,28 +49,101 @@ type BlogResponse = {
   };
 };
 
-async function fetchData(
-  url: string,
-  callback: (unknown) => void
-): Promise<void> {
-  const response = await fetch(url);
-  const json = await response.json();
-  callback(json);
+export type ErrorFromFetch = {
+  status?: number;
+  response?: Promise<Response>;
+  type: ErrorTypes;
+  error?: unknown;
+};
+export enum ErrorTypes {
+  FetchError,
+  NotOK,
+  JSONError,
 }
 
-const useData: (url: string) => null | KeyValue | MGnifyResponse = (url) => {
-  const [data, setData] = useState(null);
+interface DataResponse {
+  data: null | KeyValue | MGnifyResponse | BlogResponse;
+  error: ErrorFromFetch | null;
+  loading: boolean;
+}
 
+interface EBIDataResponse extends DataResponse {
+  data: KeyValue;
+}
+interface MgnifyDataResponse extends DataResponse {
+  data: MGnifyResponse;
+}
+interface BlogDataResponse extends DataResponse {
+  data: BlogResponse;
+}
+
+async function fetchData(
+  url: string,
+  updateState: (DataResponse) => void
+): Promise<void> {
+  let response = null;
+  let json = null;
+  try {
+    response = await fetch(url);
+  } catch (error) {
+    updateState({
+      error: {
+        error,
+        type: ErrorTypes.FetchError,
+      },
+      loading: false,
+    });
+    return;
+  }
+  if (!response.ok) {
+    updateState({
+      error: {
+        status: response.status,
+        response,
+        type: ErrorTypes.NotOK,
+      },
+      loading: false,
+    });
+    return;
+  }
+  try {
+    json = await response.json();
+  } catch (error) {
+    updateState({
+      error: {
+        error,
+        type: ErrorTypes.JSONError,
+      },
+      loading: false,
+    });
+    return;
+  }
+
+  updateState({ data: json, loading: false });
+}
+
+const useData: (url: string) => DataResponse = (url) => {
+  const [state, setFullState] = useState({
+    data: null,
+    loading: true,
+    error: null,
+  });
+  const setPartialState = (updatedValues): void => {
+    setFullState((prevState) => ({
+      ...prevState,
+      ...updatedValues,
+    }));
+  };
   useEffect(() => {
-    fetchData(url, setData);
+    fetchData(url, setPartialState);
   }, [url]);
-  return data;
+  return state;
 };
 
 export const useEBISearchData: (
   endpoint: string,
   parameters?: KeyValue
-) => null | KeyValue = (endpoint, parameters = {}) => {
+) => EBIDataResponse = (endpoint, parameters = {}) => {
   const defaultParameters = {
     format: 'json',
     start: 0,
@@ -80,13 +153,13 @@ export const useEBISearchData: (
     .map(([key, value]) => `${key}=${value}`)
     .join('&')}`;
   const data = useData(url);
-  return data as null | KeyValue;
+  return data as EBIDataResponse;
 };
 
 export const useMGnifyData: (
   endpoint: string,
   parameters?: KeyValue
-) => null | MGnifyResponse = (endpoint, parameters = {}) => {
+) => MgnifyDataResponse = (endpoint, parameters = {}) => {
   const defaultParameters = {};
   const allParemeters = { ...defaultParameters, ...parameters };
   let url = `${config.api}${endpoint}`;
@@ -95,13 +168,14 @@ export const useMGnifyData: (
       .map(([key, value]) => `${key}=${value}`)
       .join('&')}`;
   const data = useData(url);
-  return data as MGnifyResponse | null;
+  return data as MgnifyDataResponse;
 };
-export const useBlogData: (resource: string) => null | BlogResponse = (
+
+export const useBlogData: (resource: string) => BlogDataResponse = (
   resource
 ) => {
   const data = useData(`${config.blog}${resource}`);
-  return data as BlogResponse | null;
+  return data as BlogDataResponse;
 };
 
 export default useData;
