@@ -49,7 +49,7 @@
     "max-len": [
       "warn",
       {
-        "code": 80,
+        "code": 85,
         "ignoreUrls": true
       }
     ]

@@ -12,7 +12,6 @@ import innovateImg from 'images/funding/innovate-uk-logo.png';
 const AboutPage: React.FC = () => {
   return (
     <section className="vf-content">
-      <h1>The MGnify resource</h1>
       <h2>The MGnify resource</h2>
       <p>
         Microbiome research involves the study of all genomes present within a
