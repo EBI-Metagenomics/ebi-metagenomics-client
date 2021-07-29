@@ -1,0 +1,44 @@
+{
+  "_comment": "ebiSearch response for analyses filters",
+  "hitCount": 127566,
+  "entries": [
+    {
+      "id": "MGYA00028224_2.0",
+      "source": "metagenomics_analyses"
+    }
+  ],
+  "facets": [
+    {
+      "id": "pipeline_version",
+      "label": "Pipeline version",
+      "total": 5,
+      "facetValues": [
+        {
+          "label": "2.0",
+          "value": "2.0",
+          "count": 54845
+        },
+        {
+          "label": "3.0",
+          "value": "3.0",
+          "count": 41062
+        },
+        {
+          "label": "4.1",
+          "value": "4.1",
+          "count": 23345
+        },
+        {
+          "label": "4.0",
+          "value": "4.0",
+          "count": 5021
+        },
+        {
+          "label": "1.0",
+          "value": "1.0",
+          "count": 3293
+        }
+      ]
+    }
+  ]
+}

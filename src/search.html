@@ -178,39 +178,40 @@
         </div>
     </div>
     <div class="row btn-container">
-
     </div>
-    <table id="projectsTable">
-        <thead>
-        <tr>
-            <td data-column="project-id">MGnify ID</td>
-            <td data-column="project-ena-accession">ENA accession</td>
-            <td data-column="project-biome">Biome</td>
-            <td data-column="project-name">Name</td>
-            <td data-column="project-desc">Description</td>
-            <td data-column="project-sample-count">Samples</td>
-            <td data-column="project-analysis-count">Analyses</td>
-            <td data-column="project-centre-name">Centre name</td>
-        </tr>
-        </thead>
-        <tbody>
-        <% _.each(entries, function(entry){ %>
-        <% const fields = entry.fields %>
-        <tr class="search-row">
-            <td data-column="project-id"><a href="<%= entry.studyLink %>"><%= fields.id %></a></td>
-            <td data-column="project-ena-accession"><a class="ext"
-                    href="https://www.ebi.ac.uk/ena/browser/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a>
-            </td>
-            <td data-column="project-biome"><%= fields.biome_name %></td>
-            <td data-column="project-name"><%= fields.name %></td>
-            <td data-column="project-desc"><%= fields.description %></td>
-            <td data-column="project-sample-count"><%= fields.METAGENOMICS_SAMPLES.length %></td>
-            <td data-column="project-analysis-count"><%= fields.METAGENOMICS_ANALYSES.length %></td>
-            <td data-column="project-centre-name"><%= fields.centre_name %></td>
-        </tr>
-        <% }); %>
-        </tbody>
-    </table>
+    <div class="overflow-x-scroll">
+        <table id="projectsTable">
+            <thead>
+            <tr>
+                <td data-column="project-id">MGnify ID</td>
+                <td data-column="project-ena-accession">ENA accession</td>
+                <td data-column="project-biome">Biome</td>
+                <td data-column="project-name">Name</td>
+                <td data-column="project-desc">Description</td>
+                <td data-column="project-sample-count">Samples</td>
+                <td data-column="project-analysis-count">Analyses</td>
+                <td data-column="project-centre-name">Centre name</td>
+            </tr>
+            </thead>
+            <tbody>
+            <% _.each(entries, function(entry){ %>
+            <% const fields = entry.fields %>
+            <tr class="search-row">
+                <td data-column="project-id"><a href="<%= entry.studyLink %>"><%= fields.id %></a></td>
+                <td data-column="project-ena-accession"><a class="ext"
+                        href="https://www.ebi.ac.uk/ena/browser/view/<%= fields.ENA_PROJECT %>"><%= fields.ENA_PROJECT %></a>
+                </td>
+                <td data-column="project-biome"><%= fields.biome_name %></td>
+                <td data-column="project-name"><%= fields.name %></td>
+                <td data-column="project-desc"><%= fields.description %></td>
+                <td data-column="project-sample-count"><%= fields.METAGENOMICS_SAMPLES.length %></td>
+                <td data-column="project-analysis-count"><%= fields.METAGENOMICS_ANALYSES.length %></td>
+                <td data-column="project-centre-name"><%= fields.centre_name %></td>
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
 </script>
 
 <script id="samplesResultsTmpl" type="text/template">
@@ -221,33 +222,33 @@
         </div>
         <div class="columns small-4 medium-4 large-4">
             <button class="button right" name="download">Download results as CSV</button>
-
             <p><a data-open="samplesModal">Show / Hide columns</a></p>
-
         </div>
     </div>
-    <table id="samplesTable">
-        <thead>
-        <tr>
-            <td data-column="sample-id">Sample</td>
-            <td data-column="sample-projects">MGnify ID</td>
-            <td data-column="sample-name">Name</td>
-            <td data-column="sample-desc">Description</td>
-        </tr>
-        </thead>
-        <tbody>
-        <% _.each(entries, function(entry){ %>
-        <% const fields = entry.fields %>
-        <tr class="search-row">
-            <td data-column="sample-id"><a href="<%= entry.sampleLink %>"><%= entry.id %></a></td>
-            <td data-column="sample-projects"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a>
-            </td>
-            <td data-column="sample-name"><%= fields.name %></td>
-            <td data-column="sample-desc"><%= fields.description %></td>
-        </tr>
-        <% }); %>
-        </tbody>
-    </table>
+    <div class="overflow-x-scroll">
+        <table id="samplesTable">
+            <thead>
+            <tr>
+                <td data-column="sample-id">Sample</td>
+                <td data-column="sample-projects">MGnify ID</td>
+                <td data-column="sample-name">Name</td>
+                <td data-column="sample-desc">Description</td>
+            </tr>
+            </thead>
+            <tbody>
+            <% _.each(entries, function(entry){ %>
+            <% const fields = entry.fields %>
+            <tr class="search-row">
+                <td data-column="sample-id"><a href="<%= entry.sampleLink %>"><%= entry.id %></a></td>
+                <td data-column="sample-projects"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a>
+                </td>
+                <td data-column="sample-name"><%= fields.name %></td>
+                <td data-column="sample-desc"><%= fields.description %></td>
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
 </script>
 
 <script id="analysesResultsTmpl" type="text/template">
@@ -262,36 +263,38 @@
             <p><a data-open="analysesModal">Show / Hide columns</a></p>
         </div>
     </div>
-    <table id="analysesTable">
-        <thead>
-        <tr>
-            <td data-column="analysis-id">Analysis</td>
-            <td data-column="analysis-pipeline-vers">Pipeline version</td>
-            <td data-column="analysis-sample">Sample</td>
-            <td data-column="analysis-project">MGnify ID</td>
-            <td data-column="analysis-experiment-type">Experiment type</td>
-            <td data-column="analysis-assembly">Assembly</td>
-            <td data-column="analysis-ena-run">ENA run</td>
-            <td data-column="analysis-ena-wgs-seq-set">ENA WGS sequence set</td>
-        </tr>
-        </thead>
-        <tbody>
-        <% _.each(entries, function(entry){ %>
-        <% const fields = entry.fields %>
-        <tr class="search-row">
-            <td data-column="analysis-id"><a href="<%= entry.analysisLink %>"><%= entry.analysisId %></a></td>
-            <td data-column="analysis-pipeline-vers"><a href="<%= entry.pipelineLink %>"><%= fields.pipeline_version %></a>
-            <td data-column="analysis-sample"><a href="<%= entry.sampleLink %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
-            <td data-column="analysis-project"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
-            <td data-column="analysis-experiment-type"><%= fields.experiment_type %></td>
-            <td data-column="analysis-assembly"><a class="ext" href="https://www.ebi.ac.uk/ena/browser/view/<%= entry.assemblyLink %>"><%= fields.ASSEMBLY %></a></td>
-            <td data-column="analysis-ena-run"><a class="ext" href="https://www.ebi.ac.uk/ena/browser/view/<%= entry.runLink %>"><%= fields.ENA_RUN %></a></td>
-            <td data-column="analysis-ena-wgs-seq-set"><%= fields.ENA_WGS_SEQUENCE_SET %></td>
-            </td>
-        </tr>
-        <% }); %>
-        </tbody>
-    </table>
+    <div class="overflow-x-scroll">
+        <table id="analysesTable">
+            <thead>
+            <tr>
+                <td data-column="analysis-id">Analysis</td>
+                <td data-column="analysis-pipeline-vers">Pipeline version</td>
+                <td data-column="analysis-sample">Sample</td>
+                <td data-column="analysis-project">MGnify ID</td>
+                <td data-column="analysis-experiment-type">Experiment type</td>
+                <td data-column="analysis-assembly">Assembly</td>
+                <td data-column="analysis-ena-run">ENA run</td>
+                <td data-column="analysis-ena-wgs-seq-set">ENA WGS sequence set</td>
+            </tr>
+            </thead>
+            <tbody>
+            <% _.each(entries, function(entry){ %>
+            <% const fields = entry.fields %>
+            <tr class="search-row">
+                <td data-column="analysis-id"><a href="<%= entry.analysisLink %>"><%= entry.analysisId %></a></td>
+                <td data-column="analysis-pipeline-vers"><a href="<%= entry.pipelineLink %>"><%= fields.pipeline_version %></a>
+                <td data-column="analysis-sample"><a href="<%= entry.sampleLink %>"><%= fields.METAGENOMICS_SAMPLES %></a></td>
+                <td data-column="analysis-project"><a href="<%= entry.studyLink %>"><%= fields.METAGENOMICS_PROJECTS %></a></td>
+                <td data-column="analysis-experiment-type"><%= fields.experiment_type %></td>
+                <td data-column="analysis-assembly"><a class="ext" href="https://www.ebi.ac.uk/ena/browser/view/<%= entry.assemblyLink %>"><%= fields.ASSEMBLY %></a></td>
+                <td data-column="analysis-ena-run"><a class="ext" href="https://www.ebi.ac.uk/ena/browser/view/<%= entry.runLink %>"><%= fields.ENA_RUN %></a></td>
+                <td data-column="analysis-ena-wgs-seq-set"><%= fields.ENA_WGS_SEQUENCE_SET %></td>
+                </td>
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
 </script>
 
 <script id="facetViewTmpl" type="text/template">
