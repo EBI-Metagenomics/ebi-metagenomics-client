@@ -171,3 +171,9 @@
   width: 30px;
   height: 30px;
 }
+
+/*biome tiny icon*/
+.biome_icon.icon_xxs {
+  width: 20px;
+  height: 20px;
+}

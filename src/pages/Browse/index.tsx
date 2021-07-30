@@ -5,6 +5,7 @@ import { useMGnifyData } from 'hooks/useMGnifyData';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
 import useQueryParamState from 'hooks/useQueryParamState';
+import BiomeSelector from 'components/UI/BiomeSelector';
 
 function getOrderingQueryParmFromSortedColumn(tableSortBy: any): string {
   if (!tableSortBy.length) return '';
@@ -17,11 +18,14 @@ function getOrderingQueryParmFromSortedColumn(tableSortBy: any): string {
 const Browse: React.FC = () => {
   const [pageQuery, setPageQuery] = useQueryParamState('page', 1);
   const [orderingQuery, setOrderingQuery] = useQueryParamState('order', '');
+  const [biomeFilter, setBiomeFilter] = useQueryParamState('biome', 'root');
   const { data: studiesList, loading } = useMGnifyData('studies', {
     page: Number(pageQuery),
     ordering: orderingQuery,
+    lineage: biomeFilter,
     page_size: 10,
   });
+
   const columns = React.useMemo(
     () => [
       {
@@ -64,6 +68,12 @@ const Browse: React.FC = () => {
   return (
     <section className="vf-content">
       <h2>Browse Page.</h2>
+      <BiomeSelector
+        onSelect={(biome) => {
+          setBiomeFilter(biome);
+        }}
+      />
+      <div style={{ height: '2rem' }} />
       <EMGTable
         cols={columns}
         data={studiesList}
