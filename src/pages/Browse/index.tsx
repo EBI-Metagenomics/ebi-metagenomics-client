@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMGnifyData } from 'hooks/useMGnifyData';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
@@ -20,7 +20,8 @@ const Browse: React.FC = () => {
   const [orderingQuery, setOrderingQuery] = useQueryParamState('order', '');
   const [biomeFilter, setBiomeFilter] = useQueryParamState('biome', 'root');
 
-  const { data: studiesList, loading } = useMGnifyData('studies', {
+  const [hasData, setHasData] = useState(false);
+  const { data: studiesList } = useMGnifyData('studies', {
     page: Number(pageQuery),
     ordering: orderingQuery,
     lineage: biomeFilter,
@@ -62,31 +63,38 @@ const Browse: React.FC = () => {
     []
   );
 
-  if (loading) {
-    return <h1>loading</h1>;
-  }
+  useEffect(() => {
+    setHasData(!!studiesList);
+  }, [studiesList]);
 
   return (
     <section className="vf-content">
       <h2>Browse Page.</h2>
       <BiomeSelector
-        onSelect={(biome) => {
+        onSelect={async (biome) => {
+          await setHasData(false);
+          setPageQuery(1);
           setBiomeFilter(biome);
+          await studiesList;
+          setHasData(true);
         }}
         initialValue={biomeFilter}
       />
       <div style={{ height: '2rem' }} />
-      <EMGTable
-        cols={columns}
-        data={studiesList}
-        title="Studies"
-        fetchPage={(pageIndex) => {
-          setPageQuery(pageIndex + 1);
-        }}
-        onChangeSort={(sortBy) =>
-          setOrderingQuery(getOrderingQueryParamFromSortedColumn(sortBy))
-        }
-      />
+      {hasData && (
+        <EMGTable
+          cols={columns}
+          data={studiesList}
+          title={`Studies (${studiesList.meta.pagination.count})`}
+          fetchPage={(pageIndex) => {
+            setPageQuery(pageIndex + 1);
+          }}
+          onChangeSort={(sortBy) =>
+            setOrderingQuery(getOrderingQueryParamFromSortedColumn(sortBy))
+          }
+          initialPage={Number(pageQuery) - 1}
+        />
+      )}
     </section>
   );
 };

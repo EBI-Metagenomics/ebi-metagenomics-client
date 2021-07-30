@@ -2,18 +2,6 @@
 import React, { MouseEventHandler } from 'react';
 import { Column, usePagination, useSortBy, useTable } from 'react-table';
 
-type EMGTableProps = {
-  cols: Column[];
-  data: {
-    data: Record<string, any>[];
-    meta: Record<string, any>;
-    links?: Record<string, any>;
-  };
-  title?: string;
-  fetchPage?: (pageIndex: number, pageSize: number) => void;
-  onChangeSort?: (columnId: string) => void;
-};
-
 type PaginationRanges = {
   startingPages: number[];
   endingPages: number[];
@@ -28,7 +16,7 @@ function getPaginationRanges(
 ): PaginationRanges {
   const startingPages = pageCount > 1 ? [0, 1] : [0];
 
-  const adjacentPages = [Math.max(2, pageIndex - 2)];
+  const adjacentPages = pageCount > 2 ? [Math.max(2, pageIndex - 2)] : [];
   for (
     let page = adjacentPages[0] + 1;
     page < pageCount - 2 && adjacentPages.length < 5;
@@ -38,9 +26,9 @@ function getPaginationRanges(
   }
 
   let endingPages = [];
-  if (pageCount > 3) {
+  if (pageCount > 7) {
     endingPages = [pageCount - 2, pageCount - 1];
-  } else if (pageCount > 2) {
+  } else if (pageCount > 6) {
     endingPages = [pageCount - 1];
   }
 
@@ -93,12 +81,26 @@ const PaginationButton: React.FC<PaginationButtonProps> = ({
   );
 };
 
+type EMGTableProps = {
+  cols: Column[];
+  data: {
+    data: Record<string, any>[];
+    meta: Record<string, any>;
+    links?: Record<string, any>;
+  };
+  title?: string;
+  fetchPage?: (pageIndex: number, pageSize: number) => void;
+  onChangeSort?: (columnId: string) => void;
+  initialPage?: number;
+};
+
 const EMGTable: React.FC<EMGTableProps> = ({
   cols,
   data,
   title,
   fetchPage,
   onChangeSort,
+  initialPage = 0,
 }) => {
   const {
     getTableProps,
@@ -117,7 +119,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
     {
       columns: cols,
       data: data.data,
-      initialState: { pageIndex: 0 },
+      initialState: { pageIndex: initialPage },
       pageCount: data.meta.pagination.pages,
       manualPagination: true,
       manualSortBy: true,
