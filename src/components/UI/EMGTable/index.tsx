@@ -134,7 +134,6 @@ const EMGTable: React.FC<EMGTableProps> = ({
 
   React.useEffect(() => {
     if (onChangeSort) {
-      console.log(sortBy);
       onChangeSort(sortBy);
     }
   }, [onChangeSort, sortBy]);

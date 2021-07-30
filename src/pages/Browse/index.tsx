@@ -7,7 +7,7 @@ import { getBiomeIcon } from 'utils/biomes';
 import useQueryParamState from 'hooks/useQueryParamState';
 import BiomeSelector from 'components/UI/BiomeSelector';
 
-function getOrderingQueryParmFromSortedColumn(tableSortBy: any): string {
+function getOrderingQueryParamFromSortedColumn(tableSortBy: any): string {
   if (!tableSortBy.length) return '';
   const col = tableSortBy[0];
   return `${col.desc ? '-' : ''}${col.id
@@ -19,6 +19,7 @@ const Browse: React.FC = () => {
   const [pageQuery, setPageQuery] = useQueryParamState('page', 1);
   const [orderingQuery, setOrderingQuery] = useQueryParamState('order', '');
   const [biomeFilter, setBiomeFilter] = useQueryParamState('biome', 'root');
+
   const { data: studiesList, loading } = useMGnifyData('studies', {
     page: Number(pageQuery),
     ordering: orderingQuery,
@@ -72,6 +73,7 @@ const Browse: React.FC = () => {
         onSelect={(biome) => {
           setBiomeFilter(biome);
         }}
+        initialValue={biomeFilter}
       />
       <div style={{ height: '2rem' }} />
       <EMGTable
@@ -82,7 +84,7 @@ const Browse: React.FC = () => {
           setPageQuery(pageIndex + 1);
         }}
         onChangeSort={(sortBy) =>
-          setOrderingQuery(getOrderingQueryParmFromSortedColumn(sortBy))
+          setOrderingQuery(getOrderingQueryParamFromSortedColumn(sortBy))
         }
       />
     </section>

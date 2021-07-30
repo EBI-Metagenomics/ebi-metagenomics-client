@@ -1,10 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import groupBy from 'lodash/groupBy';
 import split from 'lodash/split';
 import map from 'lodash/map';
+import flatMap from 'lodash/flatMap';
+import find from 'lodash/find';
 
 import Select from 'react-select';
 import { useMGnifyData } from 'hooks/useMGnifyData';
@@ -12,6 +14,7 @@ import { getBiomeIcon } from 'utils/biomes';
 
 type BiomeSelectorProps = {
   onSelect: (lineage: string) => void;
+  initialValue?: string;
 };
 
 type OptionProps = {
@@ -31,11 +34,14 @@ const OptionLabel: React.FC<OptionProps> = ({ value, label }) => (
   </div>
 );
 
-const BiomeSelector: React.FC<BiomeSelectorProps> = ({ onSelect }) => {
+const BiomeSelector: React.FC<BiomeSelectorProps> = ({
+  onSelect,
+  initialValue,
+}) => {
   const { data: biomes, loading } = useMGnifyData(
     'biomes/root/children?depth_gte=1&depth_lte=3&page_size=100'
   );
-
+  const [value, setValue] = useState<OptionProps | undefined>();
   const options = React.useMemo(() => {
     if (loading) {
       return [{ label: 'Loading...', value: 'root' }];
@@ -54,6 +60,16 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({ onSelect }) => {
       })),
     }));
   }, [biomes, loading]);
+
+  useEffect(() => {
+    if (initialValue && options?.length && !loading) {
+      setValue(
+        find(flatMap(options, 'options'), (o) => {
+          return o.value.id === initialValue;
+        })
+      );
+    }
+  }, [initialValue, options, loading]);
 
   return (
     <Select
@@ -101,8 +117,10 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({ onSelect }) => {
         }),
       }}
       placeholder="Filter by biome"
+      value={value}
       onChange={(option, action) => {
         if (action.action === 'select-option') {
+          setValue(option);
           onSelect(option.value.id);
         }
       }}
