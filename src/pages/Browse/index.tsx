@@ -1,9 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useMGnifyData } from 'hooks/useMGnifyData';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
+import useQueryParamState from 'hooks/useQueryParamState';
 
 function getOrderingQueryParmFromSortedColumn(tableSortBy: any): string {
   if (!tableSortBy.length) return '';
@@ -14,10 +15,10 @@ function getOrderingQueryParmFromSortedColumn(tableSortBy: any): string {
 }
 
 const Browse: React.FC = () => {
-  const [pageQuery, setPageQuery] = useState(1);
-  const [orderingQuery, setOrderingQuery] = useState(null);
+  const [pageQuery, setPageQuery] = useQueryParamState('page', 1);
+  const [orderingQuery, setOrderingQuery] = useQueryParamState('order', '');
   const { data: studiesList, loading } = useMGnifyData('studies', {
-    page: pageQuery,
+    page: Number(pageQuery),
     ordering: orderingQuery,
     page_size: 10,
   });
