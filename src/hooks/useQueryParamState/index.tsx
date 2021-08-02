@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 
 const useQueryParamState: <S>(
@@ -31,6 +31,77 @@ const useQueryParamState: <S>(
   };
 
   return [value, setParameterInURL];
+};
+
+type QueryState = {
+  [parameter: string]: unknown;
+};
+type SerializersType = {
+  [parameter: string]: (str: string) => unknown;
+};
+
+const getQueryStateFromURL = (
+  state: QueryState,
+  searchStr: string,
+  serializers: SerializersType
+): QueryState => {
+  const innerState = {};
+  const parametersFromURL = new URLSearchParams(searchStr);
+  Object.entries(state).forEach(([parameter, value]) => {
+    const serializer = serializers[parameter] || String;
+    innerState[parameter] = serializer(
+      parametersFromURL.get(parameter) || (value as string)
+    );
+  });
+  return innerState;
+};
+export const useQueryParametersState: (
+  initialState: QueryState,
+  serializers?: SerializersType
+) => [QueryState, (s: QueryState) => void] = (initialState, serializers) => {
+  const location = useLocation();
+  const history = useHistory();
+  const stateWithURL = useMemo(
+    () => getQueryStateFromURL(initialState, location.search, serializers),
+    [initialState, location.search, serializers]
+  );
+  const [currentState, setCurrentState] = useState(stateWithURL);
+
+  // The Query parameters have changed, so we need to update the value if needed.
+  useEffect(() => {
+    const newState = getQueryStateFromURL(
+      initialState,
+      location.search,
+      serializers
+    );
+    if (JSON.stringify(newState) === JSON.stringify(currentState)) return;
+    setCurrentState(newState);
+  }, [location.search, currentState, initialState, serializers]);
+
+  // Pushes the new URL(including the new parameter value) into history
+  const setParametersInURL: (newState: QueryState) => void = (newState) => {
+    if (JSON.stringify(newState) === JSON.stringify(currentState)) return;
+    const parametersToChange = new URLSearchParams(location.search);
+
+    let changed = false;
+    Object.entries(newState).forEach(([parameter, newValue]) => {
+      if (newState[parameter] !== currentState[parameter]) {
+        parametersToChange.set(parameter, String(newValue));
+        if (newValue === initialState[parameter]) {
+          parametersToChange.delete(parameter);
+        }
+        changed = true;
+      }
+    });
+
+    // The default value is not displayed in the URL
+    if (changed) {
+      location.search = parametersToChange.toString();
+      history.push(location);
+    }
+  };
+
+  return [currentState, setParametersInURL];
 };
 
 export default useQueryParamState;

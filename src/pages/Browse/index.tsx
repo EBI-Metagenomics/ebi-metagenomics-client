@@ -4,7 +4,7 @@ import React from 'react';
 import { useMGnifyData } from 'hooks/useMGnifyData';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
-import useQueryParamState from 'hooks/useQueryParamState';
+import { useQueryParametersState } from 'hooks/useQueryParamState';
 import BiomeSelector from 'components/UI/BiomeSelector';
 
 function getOrderingQueryParmFromSortedColumn(tableSortBy: any): string {
@@ -16,13 +16,20 @@ function getOrderingQueryParmFromSortedColumn(tableSortBy: any): string {
 }
 
 const Browse: React.FC = () => {
-  const [pageQuery, setPageQuery] = useQueryParamState('page', 1);
-  const [orderingQuery, setOrderingQuery] = useQueryParamState('order', '');
-  const [biomeFilter, setBiomeFilter] = useQueryParamState('biome', 'root');
+  const [queryParameters, setQueryParameters] = useQueryParametersState(
+    {
+      page: 1,
+      order: '',
+      biome: 'root',
+    },
+    {
+      page: Number,
+    }
+  );
   const { data: studiesList, loading } = useMGnifyData('studies', {
-    page: Number(pageQuery),
-    ordering: orderingQuery,
-    lineage: biomeFilter,
+    page: Number(queryParameters.page),
+    ordering: queryParameters.order as string,
+    lineage: queryParameters.biome as string,
     page_size: 10,
   });
 
@@ -70,7 +77,11 @@ const Browse: React.FC = () => {
       <h2>Browse Page.</h2>
       <BiomeSelector
         onSelect={(biome) => {
-          setBiomeFilter(biome);
+          setQueryParameters({
+            ...queryParameters,
+            biome,
+            // page: 1,
+          });
         }}
       />
       <div style={{ height: '2rem' }} />
@@ -79,11 +90,18 @@ const Browse: React.FC = () => {
         data={studiesList}
         title="Studies"
         fetchPage={(pageIndex) => {
-          setPageQuery(pageIndex + 1);
+          setQueryParameters({
+            ...queryParameters,
+            page: pageIndex + 1,
+          });
         }}
-        onChangeSort={(sortBy) =>
-          setOrderingQuery(getOrderingQueryParmFromSortedColumn(sortBy))
-        }
+        onChangeSort={(sortBy) => {
+          setQueryParameters({
+            ...queryParameters,
+            order: getOrderingQueryParmFromSortedColumn(sortBy),
+            // page: 1,
+          });
+        }}
       />
     </section>
   );
