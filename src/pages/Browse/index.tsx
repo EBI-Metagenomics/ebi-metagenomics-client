@@ -82,7 +82,7 @@ const Browse: React.FC = () => {
           setQueryParameters({
             ...queryParameters,
             biome,
-            // page: 1,
+            page: 1,
           });
           await studiesList;
           setHasData(true);
@@ -102,10 +102,12 @@ const Browse: React.FC = () => {
             });
           }}
           onChangeSort={(sortBy) => {
+            const order = getOrderingQueryParamFromSortedColumn(sortBy);
+            if (order === queryParameters.order) return;
             setQueryParameters({
               ...queryParameters,
-              order: getOrderingQueryParamFromSortedColumn(sortBy),
-              // page: 1,
+              order,
+              page: 1,
             });
           }}
           initialPage={(queryParameters.page as number) - 1}
