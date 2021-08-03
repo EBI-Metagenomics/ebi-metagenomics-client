@@ -58,7 +58,7 @@ export const MainPublication: React.FC = () => {
 const Publications: React.FC = () => {
   const [showMore, setShowMore] = useState(false);
   return (
-    <section>
+    <section className="mg-pub-section">
       {publications
         .filter((pub) => showMore || pub.recent)
         .map((pub) => (
