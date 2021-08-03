@@ -58,7 +58,10 @@ const getQueryStateFromURL = (
 export const useQueryParametersState: (
   initialState: QueryState,
   serializers?: SerializersType
-) => [QueryState, (s: QueryState) => void] = (initialState, serializers) => {
+) => [QueryState, (s: QueryState) => void] = (
+  initialState,
+  serializers = {}
+) => {
   const location = useLocation();
   const history = useHistory();
   const stateWithURL = useMemo(
@@ -84,10 +87,12 @@ export const useQueryParametersState: (
     const parametersToChange = new URLSearchParams(location.search);
 
     let changed = false;
-    Object.entries(newState).forEach(([parameter, newValue]) => {
+    Object.entries(initialState).forEach(([parameter, defaultValue]) => {
+      const newValue =
+        parameter in newState ? newState[parameter] : defaultValue;
       if (newState[parameter] !== currentState[parameter]) {
         parametersToChange.set(parameter, String(newValue));
-        if (newValue === initialState[parameter]) {
+        if (newValue === defaultValue) {
           parametersToChange.delete(parameter);
         }
         changed = true;

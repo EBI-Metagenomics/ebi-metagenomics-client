@@ -46,6 +46,7 @@
       }
     ],
     "no-shadow": "off",
+    "jsx-a11y/label-has-associated-control": "warn",
     "max-len": [
       "warn",
       {

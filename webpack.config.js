@@ -17,7 +17,14 @@ module.exports = function (env, options) {
       port: 9000,
       hot: true,
       contentBasePublicPath: '/metagenomics',
-      historyApiFallback: true,
+      historyApiFallback: {
+        rewrites: [
+          {
+            from: /.*(\/(?:js|css|static)\/.+)$/,
+            to: (context) => context.match[1],
+          },
+        ],
+      },
     },
     module: {
       rules: [
