@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://mgportalv2/./src/styles/filters.css"],"names":[],"mappings":"AAAA,0BAEE,YAAa,CACb,6BAA8B,CAF9B,UAGF","file":"css/354.4206c602.chunk.css","sourcesContent":[".mg-filter-checkbox-label {\n  width: 100%;\n  display: flex;\n  justify-content: space-between;\n}\n"],"sourceRoot":""}
