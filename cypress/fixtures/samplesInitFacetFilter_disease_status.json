@@ -1,0 +1,69 @@
+{
+  "_comment": "Basic ebiSearch query for sample filters",
+  "hitCount": 94347,
+  "entries": [
+    {
+      "id": "SRS371887",
+      "source": "metagenomics_samples"
+    }
+  ],
+  "facets": [
+    {
+      "id": "disease_status",
+      "label": "Disease status",
+      "total": 38,
+      "facetValues": [
+        {
+          "label": "Missing: Not provided",
+          "value": "Missing: Not provided",
+          "count": 371
+        },
+        {
+          "label": "Vulvovaginal candidiasis",
+          "value": "vulvovaginal candidiasis",
+          "count": 103
+        },
+        {
+          "label": "Not applicable",
+          "value": "Not applicable",
+          "count": 98
+        },
+        {
+          "label": "Normal_control",
+          "value": "Normal_control",
+          "count": 52
+        },
+        {
+          "label": "Bacterial vaginiasis; vulvovaginal candidiasis",
+          "value": "bacterial vaginiasis; vulvovaginal candidiasis",
+          "count": 46
+        },
+        {
+          "label": "Moderately severe asthmatics on inhaled corticosteroids",
+          "value": "moderately severe asthmatics on inhaled corticosteroids",
+          "count": 27
+        },
+        {
+          "label": "Severe asthmatic, on high dose inhaled steroids or oral corticosteroids, patient",
+          "value": "severe asthmatic, on high dose inhaled steroids or oral corticosteroids, patient",
+          "count": 26
+        },
+        {
+          "label": "NA",
+          "value": "NA",
+          "count": 25
+        },
+        {
+          "label": "Control non-asthmatic patient",
+          "value": "control non-asthmatic patient",
+          "count": 22
+        },
+        {
+          "label": "Bacterial vaginiasis",
+          "value": "bacterial vaginiasis",
+          "count": 22
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "_comment": "Basic ebiSearch query for sample filters",
+  "hitCount": 94347,
+  "entries": [
+    {
+      "id": "SRS371887",
+      "source": "metagenomics_samples"
+    }
+  ],
+  "facets": [
+    {
+      "id": "location_name",
+      "label": "Location name",
+      "total": 1277,
+      "facetValues": [
+        {
+          "label": "USA",
+          "value": "USA",
+          "count": 17698
+        },
+        {
+          "label": "United Kingdom",
+          "value": "United Kingdom",
+          "count": 6183
+        },
+        {
+          "label": "GAZ:United States of America",
+          "value": "GAZ:United States of America",
+          "count": 4103
+        },
+        {
+          "label": "Canada",
+          "value": "Canada",
+          "count": 3641
+        },
+        {
+          "label": "Malawi",
+          "value": "Malawi",
+          "count": 2888
+        },
+        {
+          "label": "Germany",
+          "value": "Germany",
+          "count": 2847
+        },
+        {
+          "label": "Japan",
+          "value": "Japan",
+          "count": 2718
+        },
+        {
+          "label": "Denmark",
+          "value": "Denmark",
+          "count": 2538
+        },
+        {
+          "label": "China",
+          "value": "China",
+          "count": 2424
+        },
+        {
+          "label": "USA:CO:Boulder",
+          "value": "USA:CO:Boulder",
+          "count": 1968
+        }
+      ]
+    }
+  ]
+}

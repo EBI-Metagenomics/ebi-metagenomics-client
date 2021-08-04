@@ -4,7 +4,7 @@ export const Pagination = function() {
     let pageSize = '#pagesize';
     let pagination = '#pagination';
 
-    let opts = {
+    let defaultOptions = {
         startPage: null,
         totalPages: null,
         activeClass: 'current',
@@ -30,11 +30,11 @@ export const Pagination = function() {
      * @param {function} callback page change callback
      */
     function init(initPage, initPageSize, totalPages, totalResults, callback) {
-        opts.startPage = Math.max(1, parseInt(initPage));
-        opts.totalPages = Math.max(1, parseInt(totalPages));
+        defaultOptions.startPage = Math.max(1, parseInt(initPage));
+        defaultOptions.totalPages = Math.max(1, parseInt(totalPages));
         setPageDisplay(initPage, totalPages, totalResults);
         $(pageSize).val(initPageSize);
-        $(this.pagination).twbsPagination(opts).on('page', function(evt, page) {
+        $(this.pagination).twbsPagination(defaultOptions).on('page', function(evt, page) {
             callback(page);
         });
     }
@@ -64,17 +64,22 @@ export const Pagination = function() {
      * @param {function} callback
      */
     function update(p, callback) {
-        let totPages = p.pages;
-        setPageDisplay(p.page, totPages, p.count);
-        opts.startPage = p.page;
-        opts.totalPages = totPages;
-        $(this.pagination).twbsPagination('destroy');
-        $(this.pagination).twbsPagination($.extend({}, opts, {
+        setPageDisplay(p.page, p.pages, p.count);
+        defaultOptions.startPage = p.page;
+
+        const $pagination = $(this.pagination);
+        $pagination.removeData('twbs-pagination');
+        $pagination.off('page');
+        $pagination.empty();
+
+        $pagination.twbsPagination($.extend({}, defaultOptions, {
             startPage: p.PAGE,
-            totalPages: totPages
-        })).on('page', function(evt, page) {
+            totalPages: p.pages
+        })).on('page', function(_, page) {
             callback(page);
         });
+
+        return $pagination;
     }
 
     /**
@@ -100,5 +105,3 @@ export const Pagination = function() {
         setPageDisplay: setPageDisplay
     };
 };
-
-// window.Pagination = Pagination;

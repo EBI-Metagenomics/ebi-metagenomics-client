@@ -9,18 +9,6 @@
   ],
   "facets": [
     {
-      "id": "domain_source",
-      "label": "Source",
-      "total": 1,
-      "facetValues": [
-        {
-          "label": "Metagenomics Projects",
-          "value": "metagenomics_projects",
-          "count": 1583
-        }
-      ]
-    },
-    {
       "id": "biome",
       "label": "Biome",
       "total": 4,
@@ -493,63 +481,6 @@
           "label": "Mixed",
           "value": "Mixed",
           "count": 2
-        }
-      ]
-    },
-    {
-      "id": "centre_name",
-      "label": "Centre name",
-      "total": 516,
-      "facetValues": [
-        {
-          "label": "BioProject",
-          "value": "BioProject",
-          "count": 558
-        },
-        {
-          "label": "EMG",
-          "value": "EMG",
-          "count": 68
-        },
-        {
-          "label": "EMBL-EBI",
-          "value": "EMBL-EBI",
-          "count": 36
-        },
-        {
-          "label": "UNIMIB",
-          "value": "UNIMIB",
-          "count": 11
-        },
-        {
-          "label": "CSIRO",
-          "value": "CSIRO",
-          "count": 10
-        },
-        {
-          "label": "GSC",
-          "value": "GSC",
-          "count": 10
-        },
-        {
-          "label": "EESC/USP",
-          "value": "EESC/USP",
-          "count": 9
-        },
-        {
-          "label": "VTT",
-          "value": "VTT",
-          "count": 9
-        },
-        {
-          "label": "BGI",
-          "value": "BGI",
-          "count": 9
-        },
-        {
-          "label": "ANAND",
-          "value": "ANAND",
-          "count": 8
         }
       ]
     }
