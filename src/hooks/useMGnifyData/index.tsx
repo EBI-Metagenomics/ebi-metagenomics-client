@@ -59,6 +59,7 @@ export enum ErrorTypes {
   FetchError,
   NotOK,
   JSONError,
+  NullURL,
 }
 
 interface DataResponse {
@@ -76,6 +77,15 @@ interface MgnifyDataResponse extends DataResponse {
 interface BlogDataResponse extends DataResponse {
   data: BlogResponse;
 }
+
+const EmptyResponse = {
+  data: null,
+  loading: false,
+  error: {
+    type: ErrorTypes.NullURL,
+    error: 'The queried URL is null',
+  },
+};
 
 async function fetchData(
   url: string,
@@ -119,7 +129,7 @@ async function fetchData(
     return;
   }
 
-  updateState({ data: json, loading: false });
+  updateState({ data: json, loading: false, error: null });
 }
 
 const useData: (url: string) => DataResponse = (url) => {
@@ -135,6 +145,11 @@ const useData: (url: string) => DataResponse = (url) => {
     }));
   };
   useEffect(() => {
+    // If the URL is null don't do the fetch and return the empty response
+    if (!url) {
+      setFullState(EmptyResponse);
+      return;
+    }
     fetchData(url, setPartialState);
   }, [url]);
   return state;
@@ -152,7 +167,8 @@ export const useEBISearchData: (
   const url = `${config.ebisearch}${endpoint}?${Object.entries(allParemeters)
     .map(([key, value]) => `${key}=${value}`)
     .join('&')}`;
-  const data = useData(url);
+  console.log(url);
+  const data = useData([null, undefined].includes(endpoint) ? null : url);
   return data as EBIDataResponse;
 };
 
@@ -167,14 +183,16 @@ export const useMGnifyData: (
     url += `?${Object.entries(allParemeters)
       .map(([key, value]) => `${key}=${value}`)
       .join('&')}`;
-  const data = useData(url);
+  const data = useData([null, undefined].includes(endpoint) ? null : url);
   return data as MgnifyDataResponse;
 };
 
 export const useBlogData: (resource: string) => BlogDataResponse = (
   resource
 ) => {
-  const data = useData(`${config.blog}${resource}`);
+  const data = useData(
+    [null, undefined].includes(resource) ? null : `${config.blog}${resource}`
+  );
   return data as BlogDataResponse;
 };
 

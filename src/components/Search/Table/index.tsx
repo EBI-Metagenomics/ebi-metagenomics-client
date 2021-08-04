@@ -146,21 +146,22 @@ const SearchTable: React.FC = () => {
   });
 
   const { pathname } = useLocation();
+  console.log(dataFor?.[pathname]?.endpoint);
   const { data, loading, error } = useEBISearchData(
-    dataFor[pathname].endpoint,
+    dataFor?.[pathname]?.endpoint,
     {
-      query: queryParameters?.query || dataFor[pathname].query,
+      query: queryParameters?.query || dataFor?.[pathname]?.query,
       size: PAGE_SIZE,
-      fields: dataFor[pathname].fields,
+      fields: dataFor?.[pathname]?.fields,
       facetcount: 10,
       facetsdepth: 2,
       facets: '',
     }
   );
 
-  const columns = useMemo(() => dataFor[pathname].columns, [pathname]);
+  const columns = useMemo(() => dataFor?.[pathname]?.columns, [pathname]);
   if (loading) return <Loading size="small" />;
-  if (error) return <FetchError error={error} />;
+  if (error || !data) return <FetchError error={error} />;
   const fomattedData = {
     data: data.entries as Record<string, unknown>[],
     meta: {
