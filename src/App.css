@@ -22,3 +22,12 @@ body div#root a.mg-link:hover {
 div.mg-right {
   text-align: right;
 }
+
+span.mg-number {
+  font-size: 0.9rem;
+  font-family: monospace;
+  background: #d3d3d3;
+  color: #3d3d3d;
+  margin-left: 0.5rem;
+  padding: 0.2rem;
+}

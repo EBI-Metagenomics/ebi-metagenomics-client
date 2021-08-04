@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
+import React, { useEffect, useState, useContext } from 'react';
+import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 
 const TextSearch: React.FC = () => {
-  const [queryParameters, setQueryParameters] = useQueryParametersState({
-    query: '',
-  });
+  const { queryParameters, setQueryParameters } =
+    useContext(SearchQueryContext);
   const [searchTerms, setSearchTerms] = useState(
     queryParameters.query as string
   );
@@ -12,7 +11,7 @@ const TextSearch: React.FC = () => {
     setSearchTerms(queryParameters.query as string);
   }, [queryParameters.query]);
   return (
-    <form className="vf-form vf-form--search vf-form--search--responsive | vf-sidebar vf-sidebar--end">
+    <div className="vf-form vf-form--search vf-form--search--responsive vf-sidebar vf-sidebar--end">
       <div className="vf-sidebar__inner">
         <div className="vf-form__item | vf-search__item">
           <input
@@ -51,7 +50,7 @@ const TextSearch: React.FC = () => {
           <span className="icon icon-common icon-times-circle" />
         </button>
       </div>
-    </form>
+    </div>
   );
 };
 

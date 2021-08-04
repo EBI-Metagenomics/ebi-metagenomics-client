@@ -33,7 +33,7 @@ const useQueryParamState: <S>(
   return [value, setParameterInURL];
 };
 
-type QueryState = {
+export type QueryState = {
   [parameter: string]: unknown;
 };
 type SerializersType = {

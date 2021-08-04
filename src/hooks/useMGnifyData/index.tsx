@@ -167,7 +167,6 @@ export const useEBISearchData: (
   const url = `${config.ebisearch}${endpoint}?${Object.entries(allParemeters)
     .map(([key, value]) => `${key}=${value}`)
     .join('&')}`;
-  console.log(url);
   const data = useData([null, undefined].includes(endpoint) ? null : url);
   return data as EBIDataResponse;
 };

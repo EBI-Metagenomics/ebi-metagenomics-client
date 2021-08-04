@@ -1,18 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useContext } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { useEBISearchData } from 'hooks/useMGnifyData';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-
-const PAGE_SIZE = 25;
+import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 
 const dataFor = {
   '/search/studies': {
-    endpoint: 'metagenomics_projects',
-    query: 'domain_source:metagenomics_projects',
-    fields: 'ENA_PROJECT,biome_name,centre_name',
     columns: [
       {
         id: 'study_id',
@@ -52,9 +46,6 @@ const dataFor = {
     ],
   },
   '/search/samples': {
-    endpoint: 'metagenomics_samples',
-    query: 'domain_source:metagenomics_samples',
-    fields: 'METAGENOMICS_PROJECTS,name,description',
     columns: [
       {
         id: 'sample_id',
@@ -89,10 +80,6 @@ const dataFor = {
     ],
   },
   '/search/analyses': {
-    endpoint: 'metagenomics_analyses',
-    query: 'domain_source:metagenomics_analyses',
-    fields:
-      'METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,pipeline_version,experiment_type',
     columns: [
       {
         id: 'analyses_id',
@@ -140,24 +127,12 @@ const dataFor = {
     ],
   },
 };
-const SearchTable: React.FC = () => {
-  const [queryParameters] = useQueryParametersState({
-    query: '',
-  });
+const PAGE_SIZE = 25; // TODO: move to table
 
+const SearchTable: React.FC = () => {
   const { pathname } = useLocation();
-  console.log(dataFor?.[pathname]?.endpoint);
-  const { data, loading, error } = useEBISearchData(
-    dataFor?.[pathname]?.endpoint,
-    {
-      query: queryParameters?.query || dataFor?.[pathname]?.query,
-      size: PAGE_SIZE,
-      fields: dataFor?.[pathname]?.fields,
-      facetcount: 10,
-      facetsdepth: 2,
-      facets: '',
-    }
-  );
+  const { searchData } = useContext(SearchQueryContext);
+  const { data, loading, error } = searchData?.[pathname] || {};
 
   const columns = useMemo(() => dataFor?.[pathname]?.columns, [pathname]);
   if (loading) return <Loading size="small" />;

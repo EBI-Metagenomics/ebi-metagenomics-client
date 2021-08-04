@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 
 const tabs = [
   { label: 'Studies', to: '/search/studies' },
@@ -10,6 +11,8 @@ const tabs = [
 const SearchTabs: React.FC = () => {
   const location = useLocation();
   const history = useHistory();
+  const { searchData } = useContext(SearchQueryContext);
+
   useEffect(() => {
     if (!tabs.some(({ to }) => to === location.pathname)) {
       history.replace({
@@ -17,7 +20,7 @@ const SearchTabs: React.FC = () => {
         pathname: tabs[0].to,
       });
     }
-  }, [location.pathname, history]);
+  }, [location, history]);
   return (
     <div className="vf-tabs">
       <ul className="vf-tabs__list">
@@ -30,6 +33,9 @@ const SearchTabs: React.FC = () => {
               to={to}
             >
               {label}
+              <span className="mg-number">
+                {searchData?.[to]?.data?.hitCount || ''}
+              </span>
             </Link>
           </li>
         ))}

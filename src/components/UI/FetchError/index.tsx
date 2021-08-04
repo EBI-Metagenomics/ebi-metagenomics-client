@@ -6,7 +6,7 @@ const refreshPage = (): void => {
 };
 
 const FetchError: React.FC<{ error: ErrorFromFetch }> = ({ error }) => {
-  if (error.type === ErrorTypes.NullURL) return null;
+  if (!error || error.type === ErrorTypes.NullURL) return null;
   return (
     <div
       className="vf-box vf-box-theme--primary vf-box--easy"
