@@ -1,4 +1,6 @@
 import React from 'react';
+import { Switch, Route, useLocation } from 'react-router-dom';
+
 import CentreNameFilter from 'components/Search/Filter/CentreName';
 import SearchTabs from 'src/components/Search/Tabs';
 import TextSearch from 'src/components/Search/Filter/Text';
@@ -9,9 +11,17 @@ import SearchQueryContext from './SearchQueryContext';
 
 const PAGE_SIZE = 25;
 
+const formatToFacet = (facetName: string, strValue: string): string =>
+  strValue
+    .split(',')
+    .filter(Boolean)
+    .map((v) => `centre_name:${v}`)
+    .join(',');
+
 const TextSearchPage: React.FC = () => {
   const [queryParameters, setQueryParameters] = useQueryParametersState({
     query: '',
+    centre_name: '',
   });
 
   const searchDataStudies = useEBISearchData('metagenomics_projects', {
@@ -22,7 +32,10 @@ const TextSearchPage: React.FC = () => {
     fields: 'ENA_PROJECT,biome_name,centre_name',
     facetcount: 10,
     facetsdepth: 2,
-    facets: '',
+    facets: `${formatToFacet(
+      'centre_name',
+      queryParameters.centre_name as string
+    )}`,
   });
   const searchDataSamples = useEBISearchData('metagenomics_samples', {
     query:
@@ -63,7 +76,11 @@ const TextSearchPage: React.FC = () => {
         <SearchTabs />
         <section className="embl-grid">
           <div className="vf-stack vf-stack--400">
-            <CentreNameFilter />
+            <Switch>
+              <Route path="/search/studies">
+                <CentreNameFilter />
+              </Route>
+            </Switch>
           </div>
           <SearchTable />
         </section>
