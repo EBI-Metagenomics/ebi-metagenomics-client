@@ -8,14 +8,6 @@ const CentreNameFilter: React.FC = () => {
   const location = useLocation();
   const { searchData, queryParameters, setQueryParameters } =
     useContext(SearchQueryContext);
-
-  const facetData = useMemo(
-    () =>
-      (searchData?.[location.pathname]?.data?.facets || []).filter(
-        (f) => f.id === 'centre_name'
-      )?.[0],
-    [location.pathname, searchData]
-  );
   const [selected, setSelected] = useState(
     (queryParameters.centre_name as string).split(',').filter(Boolean)
   );
@@ -24,6 +16,14 @@ const CentreNameFilter: React.FC = () => {
       (queryParameters.centre_name as string).split(',').filter(Boolean)
     );
   }, [queryParameters.centre_name]);
+
+  const facetData = useMemo(
+    () =>
+      (searchData?.[location.pathname]?.data?.facets || []).filter(
+        (f) => f.id === 'centre_name'
+      )?.[0],
+    [location.pathname, searchData]
+  );
 
   if (searchData?.[location.pathname].loading) return <Loading />;
   if (searchData?.[location.pathname].error) return null;

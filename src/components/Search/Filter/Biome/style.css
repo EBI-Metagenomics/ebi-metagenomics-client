@@ -1,0 +1,16 @@
+.mg-biome-selector {
+  display: flex;
+}
+.mg-biome-selector button,
+.mg-biome-selector .mg-biome-spacer {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+.mg-biome-selector button.mg-expander {
+  background: transparent;
+  border: 0;
+}
+.mg-biome-selector div:last-child {
+  flex-grow: 2;
+}
