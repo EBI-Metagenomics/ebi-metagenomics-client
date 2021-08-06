@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import CentreNameFilter from 'components/Search/Filter/CentreName';
 import BiomeFilter from 'components/Search/Filter/Biome';
+import TemperatureFilter from 'components/Search/Filter/Temperature';
 import SearchTabs from 'src/components/Search/Tabs';
 import TextSearch from 'src/components/Search/Filter/Text';
 import SearchTable from 'src/components/Search/Table';
@@ -25,11 +26,39 @@ const getFacets = (facetNames: string[], queryParameters: QueryState): string =>
     .filter(Boolean)
     .join(',');
 
+const getSamplesQuery = (
+  names: string[],
+  queryParameters: QueryState
+): string => {
+  const query = names
+    .map((name) => {
+      switch (name) {
+        case 'query':
+          return queryParameters[name];
+        case 'temperature': {
+          const newRange = (queryParameters[name] as string)
+            .split(',')
+            .filter(Boolean)
+            .map(Number);
+
+          return newRange.length === 2
+            ? `${name}:[${Math.min(...newRange)} TO ${Math.max(...newRange)}]`
+            : '';
+        }
+        default:
+          return '';
+      }
+    })
+    .filter(Boolean);
+  if (query.length) return query.join(' AND ');
+  return 'domain_source:metagenomics_samples';
+};
 const TextSearchPage: React.FC = () => {
   const [queryParameters, setQueryParameters] = useQueryParametersState({
     query: '',
     centre_name: '',
     biome: '',
+    temperature: '',
   });
 
   const searchDataStudies = useEBISearchData('metagenomics_projects', {
@@ -43,9 +72,7 @@ const TextSearchPage: React.FC = () => {
     facets: getFacets(['centre_name', 'biome'], queryParameters),
   });
   const searchDataSamples = useEBISearchData('metagenomics_samples', {
-    query:
-      (queryParameters?.query as string) ||
-      'domain_source:metagenomics_samples',
+    query: getSamplesQuery(['query', 'temperature'], queryParameters),
     size: PAGE_SIZE,
     fields: 'METAGENOMICS_PROJECTS,name,description',
     facetcount: 10,
@@ -88,6 +115,7 @@ const TextSearchPage: React.FC = () => {
               </Route>
               <Route path="/search/samples">
                 <BiomeFilter />
+                <TemperatureFilter />
               </Route>
               <Route path="/search/analyses">
                 <BiomeFilter />

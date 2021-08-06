@@ -3,3 +3,10 @@
   display: flex;
   justify-content: space-between;
 }
+
+.mg-switch-and-slider {
+  display: flex;
+}
+.mg-switch-and-slider > *:last-child {
+  flex-grow: 2;
+}
