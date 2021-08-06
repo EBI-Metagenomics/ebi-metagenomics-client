@@ -19,7 +19,7 @@ type BiomeSelectorProps = {
 
 type OptionProps = {
   value: any;
-  label: string;
+  label: string | number | Record<string, unknown> | [];
 };
 
 const OptionLabel: React.FC<OptionProps> = ({ value, label }) => (
