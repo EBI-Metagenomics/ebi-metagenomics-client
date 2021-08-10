@@ -26,7 +26,7 @@ export const UserDetails = Backbone.Model.extend({
         return api.API_URL + 'utils/myaccounts';
     },
     parse(response) {
-        let user;
+        let user ={};
         if (response.data.length > 0) {
             const attr = response.data[0].attributes;
             user = {
@@ -36,9 +36,31 @@ export const UserDetails = Backbone.Model.extend({
                 'analysis': attr['analysis'],
                 'submitter': attr['submitter']
             };
-        } else {
-            user = {};
-        }
+            if (response.data.length > 1) {
+                user.otherSubmitters = response.data
+                    .slice(1)
+                    .map((submitter) => {
+                        const attr2 = submitter.attributes;
+                        return {
+                            'firstName': attr2['first-name'],
+                            'surname': attr2['surname'],
+                            'email': attr2['email-address'],
+                            'analysis': attr2['analysis'],
+                            'submitter': attr2['submitter']
+                        }
+                    })
+            }
+        } 
         return user;
+    },
+    getEmails() {
+        let email = this.attributes['email'];
+        if (this.attributes.otherSubmitters && this.attributes.otherSubmitters.length){
+            email += ','+this.attributes.otherSubmitters
+                .map(submitter=>submitter.email)
+                .filter(Boolean)
+                .join(',');
+        }
+        return email;  
     }
 });
