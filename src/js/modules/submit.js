@@ -51,6 +51,8 @@ fetchLogin.done(function(loggedIn) {
             let userData = userDetails.attributes;
             // If consent not given display consent button
             if (userData['analysis'] !== true) {
+                $('#consent-webin-account').html(userData.id);
+                $('#consent-webin-emails').html(userDetails.getEmails());
                 const $button = $('<button class=\'button\'>Give consent.</button>');
                 $button.click(function(e) {
                     const consentGiven = $('#consent-given').is(':checked');

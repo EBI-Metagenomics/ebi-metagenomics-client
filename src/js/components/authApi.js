@@ -30,6 +30,7 @@ export const UserDetails = Backbone.Model.extend({
         if (response.data.length > 0) {
             const attr = response.data[0].attributes;
             user = {
+                'id': response.data[0].id,
                 'firstName': attr['first-name'],
                 'surname': attr['surname'],
                 'email': attr['email-address'],
