@@ -11,7 +11,7 @@ describe('Submit page', function() {
             cy.contains('Please click here to login').should('be.visible');
         });
     });
-    context('User is logged in, consent not already given', function() {
+    context.only('User is logged in, consent not already given', function() {
         beforeEach(function() {
             openPage(origPage);
             cy.contains('Please click here to login').click();
@@ -21,10 +21,11 @@ describe('Submit page', function() {
         it('Should display consent button if logged in but consent not given', function() {
             cy.contains('Give consent').should('be.visible');
         });
-        it('Should display Webin account and emails to give consent', function() {
-            cy.get("#consent-webin-account").contains("Webin-000");
-            cy.get("#consent-webin-emails").contains("test@ebi.ac.uk");
-            cy.get("#consent-webin-emails").contains("test2@ebi.ac.uk");
+        it.only('Should display Webin account and emails to give consent', function() {
+            cy.contains('Submit data');
+            cy.contains('Webin-000');
+            cy.contains('test@ebi.ac.uk');
+            cy.contains('test2@ebi.ac.uk');
         });
         it('Should prevent clicking give consent without checking box', function() {
             const errorText = 'Please check the box above.';
