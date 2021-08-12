@@ -86,7 +86,11 @@ const EmptyResponse = {
     error: 'The queried URL is null',
   },
 };
-
+const NewRequest = {
+  data: null,
+  loading: true,
+  error: null,
+};
 async function fetchData(
   url: string,
   updateState: (DataResponse) => void
@@ -133,11 +137,7 @@ async function fetchData(
 }
 
 const useData: (url: string) => DataResponse = (url) => {
-  const [state, setFullState] = useState({
-    data: null,
-    loading: true,
-    error: null,
-  });
+  const [state, setFullState] = useState(NewRequest);
   const setPartialState = (updatedValues): void => {
     setFullState((prevState) => ({
       ...prevState,
@@ -150,6 +150,8 @@ const useData: (url: string) => DataResponse = (url) => {
       setFullState(EmptyResponse);
       return;
     }
+    // TODO: Add support for stale data
+    // setFullState(NewRequest);
     fetchData(url, setPartialState);
   }, [url]);
   return state;

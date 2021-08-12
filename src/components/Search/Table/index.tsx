@@ -136,6 +136,7 @@ const SearchTable: React.FC = () => {
   const { pathname } = useLocation();
   const { searchData } = useContext(SearchQueryContext);
   const { data, loading, error } = searchData?.[pathname] || {};
+  // console.log({loading});
 
   const columns = useMemo(() => dataFor?.[pathname]?.columns, [pathname]);
   if (loading) return <Loading size="small" />;
@@ -155,6 +156,7 @@ const SearchTable: React.FC = () => {
       data={fomattedData}
       title={`${dataFor?.[pathname]?.label || ''} (${data.hitCount})`}
       initialPage={1}
+      className="mg-search-result"
     />
   );
 };

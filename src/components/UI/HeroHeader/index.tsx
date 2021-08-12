@@ -1,6 +1,6 @@
 import React from 'react';
 import './style.css';
-// import MGnifyHeader from 'images/embl-ebi-background-4.jpg';
+
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
 
 const HeroHeader: React.FC = () => {

@@ -10,12 +10,14 @@ const origPage = 'search';
 
 const initialResultSize = 3;
 
-const rowSelector = 'table tr.vf-table__row:visible';
+const rowSelector = 'table tbody tr.vf-table__row';
 
 const textQueryInput = '[data-cy=\'text-search-input\']';
 const submitTextQuery = '[data-cy=\'text-search-submit\']';
 
 const pageSizeSelect = '[data-cy=\'page-size-select\']';
+
+const PAGE_SIZE = 25;
 
 function loadPage(page) {
     openPage(page);
@@ -72,7 +74,7 @@ let sampleTable;
 let analysisTable;
 
 function initTableHandlers() {
-    studyTable = new GenericTableHandler('#projectsResults', 3, false);
+    studyTable = new GenericTableHandler('.mg-search-result', 3, false);
     sampleTable = new GenericTableHandler('#samplesResults', 3, false);
     analysisTable = new GenericTableHandler('#analysesResults', 3, false);
 }
@@ -95,23 +97,14 @@ describe('Search page', function() {
     context('general Functionality', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
-            // loadPage(origPage);
-            // initTableHandlers();
             openPage(origPage);
             cy.get(`.mg-main-menu`).contains('Text search').click();
 
         });
 
-        it('Text query should apply to all facets', function() {
-            testResultsAreFilteredByString();
-        });
 
-        it('Correct number of results.', function() {
-            // openPage(origPage);
-            // cy.get(`.mg-main-menu`).contains('Text search').click();
-            cy.wait(1000);
-            cy.get(pageSizeSelect).select('50');
-            waitForSearchResults(rowSelector, 50);
+        it.only('Correct number of results.', function() {
+            waitForSearchResults(rowSelector, PAGE_SIZE);
         });
 
         it.only('Biome filters should restrict results', function() {
@@ -123,32 +116,44 @@ describe('Search page', function() {
                 .then((text) =>{
                     facetCount=text;
                     cy.get(`label[for='${biome}']`).click();
-                    waitForSearchResults(rowSelector, 26);
+                    waitForSearchResults(rowSelector, PAGE_SIZE);
                     cy.get('.vf-table__caption').contains(facetCount)
                 });
-            // cy.get('input[value="biome/' + biome + '"]').check({force: true});
-            // cy.get(studyTable.getColumnSelector(2)).contains('Air');
         });
 
-        // FIXME: works locally, fix for Travis.
-        // it('Centre name filters should restrict results', function() {
-        //     const centerName = 'BioProject';
-        //     routeWithCenterName(centerName);
-        //     cy.get('input[value="centre_name/BioProject"]').check({force: true});
-        //     waitForSearchResults(rowSelector, 25);
-        //     cy.get(studyTable.getColumnSelector(7)).contains(centerName);
-        //     cy.get('tbody > tr > td[data-column=\'project-centre-name\']').contains(centerName);
-        // });
-
-        it('Clear button should reset search', function() {
+        it.only('Biome expanded filters should restrict results', function() {
             const biome = 'Environmental/Air';
             routeWithBiomeFilter(biome);
-            cy.get('.toggle-tree-node').first().click();
-            cy.get('input[value="biome/' + biome + '"]').check({force: true});
-            studyTable.waitForTableLoad(2);
-            cy.get(studyTable.getColumnSelector(2)).contains('Air');
-            cy.get('#search-reset').click();
+            let facetCount = 0;
+            cy.get(`.mg-expander`).first().click()
+            cy.get(`label[for='${biome}'] .mg-number`)
+                .invoke('text')
+                .then((text) =>{
+                    facetCount=text;
+                    cy.get(`label[for='${biome}']`).click();
+                    waitForSearchResults(rowSelector, PAGE_SIZE);
+                    cy.get('.vf-table__caption').contains(facetCount)
+                });
+        });
+
+        it.only('Centre name filters should restrict results', function() {
+            const centerName = 'EMG';
+            routeWithCenterName(centerName);
+            cy.get(`label[for='${centerName}']`).click();
+            waitForSearchResults(rowSelector, PAGE_SIZE);
+            cy.get('.mg-search-result tbody tr td:last-child').contains(centerName);
+        });
+
+        it.only('Clear button should reset search', function() {
+            const biome = 'Environmental/Air';
+            routeWithBiomeFilter(biome);
+            cy.get(`.mg-expander`).first().click()
+            const studyTable = new GenericTableHandler('.mg-search-result', PAGE_SIZE, false);
+            cy.get(`label[for='${biome}']`).click();
             studyTable.waitForTableLoad(3);
+            // cy.get(studyTable.getColumnSelector(2)).contains('Air');
+            // cy.get('#search-reset').click();
+            // studyTable.waitForTableLoad(3);
         });
 
         // it('Should pre-fill cached search query', function() {

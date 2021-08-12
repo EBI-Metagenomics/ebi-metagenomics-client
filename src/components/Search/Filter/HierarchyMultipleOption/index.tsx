@@ -5,14 +5,16 @@ import Loading from 'components/UI/Loading';
 import './style.css';
 import 'styles/filters.css';
 
-interface BiomeDataType {
+interface OptionDataType {
   value: string;
   label: string;
   count: number;
-  biomeChildren?: BiomeDataType[];
+  optionChildren?: OptionDataType[];
+  children?: OptionDataType[];
 }
-interface BiomeProps extends BiomeDataType {
+interface HierarchyOptionProps extends OptionDataType {
   depth?: number;
+  shouldExpand: (value: string) => boolean;
   handleSelection: (evt: {
     target: {
       value?: string;
@@ -21,24 +23,25 @@ interface BiomeProps extends BiomeDataType {
   }) => void;
   isSelected: (value: string) => boolean;
 }
-const Biome: React.FC<BiomeProps> = ({
+const HierarchyOption: React.FC<HierarchyOptionProps> = ({
   value,
   label,
   count,
-  biomeChildren,
+  optionChildren,
   depth = 0,
+  shouldExpand,
   handleSelection,
   isSelected,
 }) => {
-  const [displayChildren, setDisplayChildren] = useState(false);
+  const [displayChildren, setDisplayChildren] = useState(shouldExpand(value));
   return (
     <div
       style={{
-        marginLeft: `${depth}rem`,
+        marginLeft: `${depth * 0.5}rem`,
       }}
     >
-      <div className="mg-biome-selector">
-        {biomeChildren?.length ? (
+      <div className="mg-hierarchy-selector">
+        {optionChildren?.length ? (
           <button
             type="button"
             className="mg-expander"
@@ -47,7 +50,7 @@ const Biome: React.FC<BiomeProps> = ({
             {displayChildren ? '▾' : '▸'}
           </button>
         ) : (
-          <span className="mg-biome-spacer" />
+          <span className="mg-hierarchy-spacer" />
         )}
         <div className="vf-form__item vf-form__item--checkbox">
           <input
@@ -66,25 +69,26 @@ const Biome: React.FC<BiomeProps> = ({
           </label>
         </div>
       </div>
-      {biomeChildren &&
-        biomeChildren.length &&
+      {optionChildren &&
+        optionChildren.length &&
         displayChildren &&
-        biomeChildren.map(
+        optionChildren.map(
           ({
             label: childLabel,
             value: childValue,
             count: childCount,
-            biomeChildren: childChildren,
+            children: childChildren,
           }) => (
-            <Biome
+            <HierarchyOption
               key={`${value}/${childValue}`}
               label={childLabel}
               value={`${value}/${childValue}`}
               count={childCount}
               depth={depth + 1}
-              biomeChildren={childChildren}
+              optionChildren={childChildren}
               handleSelection={handleSelection}
               isSelected={isSelected}
+              shouldExpand={shouldExpand}
             />
           )
         )}
@@ -92,29 +96,40 @@ const Biome: React.FC<BiomeProps> = ({
   );
 };
 
-const BiomesFilter: React.FC = () => {
+type MultipleOptionProps = {
+  facetName: string;
+  header: string;
+};
+
+const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
+  facetName,
+  header,
+}) => {
   const location = useLocation();
   const { searchData, queryParameters, setQueryParameters } =
     useContext(SearchQueryContext);
   const [selected, setSelected] = useState(
-    (queryParameters.biome as string).split(',').filter(Boolean)
+    (queryParameters[facetName] as string).split(',').filter(Boolean)
   );
   useEffect(() => {
-    setSelected((queryParameters.biome as string).split(',').filter(Boolean));
-  }, [queryParameters.biome]);
+    setSelected(
+      (queryParameters[facetName] as string).split(',').filter(Boolean)
+    );
+  }, [queryParameters, facetName]);
 
   const facetData = useMemo(
     () =>
       (searchData?.[location.pathname]?.data?.facets || []).filter(
-        (f) => f.id === 'biome'
+        (f) => f.id === facetName
       )?.[0],
-    [location.pathname, searchData]
+    [location.pathname, searchData, facetName]
   );
 
   if (searchData?.[location.pathname].loading) return <Loading />;
   if (searchData?.[location.pathname].error) return null;
 
   if (!facetData) return null;
+
   const handleSelection = (event): void => {
     const { value, checked: isChecked } = event.target as HTMLInputElement;
     let newSelected = [...selected];
@@ -125,26 +140,27 @@ const BiomesFilter: React.FC = () => {
     }
     setQueryParameters({
       ...queryParameters,
-      biome: newSelected.sort().join(','),
+      [facetName]: newSelected.sort().join(','),
     });
   };
 
   return (
     <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
-      <legend className="vf-form__legend">Biome</legend>
+      <legend className="vf-form__legend">{header}</legend>
       {facetData.facetValues.map(({ label, value, count, children }) => (
-        <Biome
+        <HierarchyOption
           key={value}
           label={label}
           value={value}
           count={count}
-          biomeChildren={children}
+          optionChildren={children}
           handleSelection={handleSelection}
           isSelected={(v) => selected.includes(v)}
+          shouldExpand={(v) => selected.some((s) => s.startsWith(v))}
         />
       ))}
     </fieldset>
   );
 };
 
-export default BiomesFilter;
+export default HierarchyMultipleOptionFilter;

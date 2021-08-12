@@ -92,6 +92,7 @@ type EMGTableProps = {
   fetchPage?: (pageIndex: number, pageSize: number) => void;
   onChangeSort?: (columnId: string) => void;
   initialPage?: number;
+  className?: string;
 };
 
 const EMGTable: React.FC<EMGTableProps> = ({
@@ -101,6 +102,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
   fetchPage,
   onChangeSort,
   initialPage = 0,
+  className = '',
 }) => {
   const {
     getTableProps,
@@ -147,7 +149,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
 
   return (
     <section>
-      <table {...getTableProps} className="vf-table--striped">
+      <table {...getTableProps} className={`vf-table--striped ${className}`}>
         <caption className="vf-table__caption">{title}</caption>
         <thead className="vf-table__header">
           {headerGroups.map((headerGroup) => (

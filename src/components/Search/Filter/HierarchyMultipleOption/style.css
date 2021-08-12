@@ -1,0 +1,16 @@
+.mg-hierarchy-selector {
+  display: flex;
+}
+.mg-hierarchy-selector button,
+.mg-hierarchy-selector .mg-hierarchy-spacer {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+.mg-hierarchy-selector button.mg-expander {
+  background: transparent;
+  border: 0;
+}
+.mg-hierarchy-selector div:last-child {
+  flex-grow: 2;
+}

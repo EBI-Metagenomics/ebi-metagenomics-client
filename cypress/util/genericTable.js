@@ -279,7 +279,7 @@ class GenericTableHandler {
     }
 
     getTableSelector() {
-        return this.parentId + ' table ';
+        return this.parentId;
     }
 
     getClearButton() {

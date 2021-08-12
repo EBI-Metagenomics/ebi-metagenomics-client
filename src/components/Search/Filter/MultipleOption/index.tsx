@@ -4,25 +4,32 @@ import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 import Loading from 'components/UI/Loading';
 import 'styles/filters.css';
 
-const ExperimentTypeFilter: React.FC = () => {
+type MultipleOptionProps = {
+  facetName: string;
+  header: string;
+};
+const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
+  facetName,
+  header,
+}) => {
   const location = useLocation();
   const { searchData, queryParameters, setQueryParameters } =
     useContext(SearchQueryContext);
   const [selected, setSelected] = useState(
-    (queryParameters.experiment_type as string).split(',').filter(Boolean)
+    (queryParameters[facetName] as string).split(',').filter(Boolean)
   );
   useEffect(() => {
     setSelected(
-      (queryParameters.experiment_type as string).split(',').filter(Boolean)
+      (queryParameters[facetName] as string).split(',').filter(Boolean)
     );
-  }, [queryParameters.experiment_type]);
+  }, [queryParameters, facetName]);
 
   const facetData = useMemo(
     () =>
       (searchData?.[location.pathname]?.data?.facets || []).filter(
-        (f) => f.id === 'experiment_type'
+        (f) => f.id === facetName
       )?.[0],
-    [location.pathname, searchData]
+    [location.pathname, searchData, facetName]
   );
 
   if (searchData?.[location.pathname].loading) return <Loading />;
@@ -39,13 +46,13 @@ const ExperimentTypeFilter: React.FC = () => {
     }
     setQueryParameters({
       ...queryParameters,
-      experiment_type: newSelected.sort().join(','),
+      [facetName]: newSelected.sort().join(','),
     });
   };
 
   return (
     <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
-      <legend className="vf-form__legend">Experiment type</legend>
+      <legend className="vf-form__legend">{header}</legend>
       {facetData.facetValues.map(({ label, value, count }) => (
         <div className="vf-form__item vf-form__item--checkbox" key={value}>
           <input
@@ -67,5 +74,4 @@ const ExperimentTypeFilter: React.FC = () => {
     </fieldset>
   );
 };
-
-export default ExperimentTypeFilter;
+export default MultipleOptionFilter;

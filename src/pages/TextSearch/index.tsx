@@ -1,11 +1,10 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import CentreNameFilter from 'components/Search/Filter/CentreName';
-import BiomeFilter from 'components/Search/Filter/Biome';
+import MultipleOptionFilter from 'components/Search/Filter/MultipleOption';
+import HierarchyMultipleOptionFilter from 'src/components/Search/Filter/HierarchyMultipleOption';
 import TemperatureFilter from 'components/Search/Filter/Temperature';
 import DepthFilter from 'components/Search/Filter/Depth';
-import ExperimentTypeFilter from 'components/Search/Filter/ExperimentType';
 import SearchTabs from 'src/components/Search/Tabs';
 import TextSearch from 'src/components/Search/Filter/Text';
 import SearchTable from 'src/components/Search/Table';
@@ -13,7 +12,10 @@ import { useEBISearchData } from 'hooks/useMGnifyData';
 import { QueryState, useQueryParametersState } from 'hooks/useQueryParamState';
 import SearchQueryContext from './SearchQueryContext';
 
+import './style.css';
+
 const PAGE_SIZE = 25;
+const FACET_DEPTH = 4;
 
 const formatToFacet = (facetName: string, strValue: string): string =>
   strValue
@@ -64,6 +66,14 @@ const TextSearchPage: React.FC = () => {
     temperature: '',
     depth: '',
     experiment_type: '',
+    sequencing_method: '',
+    location_name: '',
+    disease_status: '',
+    phenotype: '',
+    organism: '',
+    pipeline_version: '',
+    GO: '',
+    INTERPRO: '',
   });
 
   const searchDataStudies = useEBISearchData('metagenomics_projects', {
@@ -73,7 +83,7 @@ const TextSearchPage: React.FC = () => {
     size: PAGE_SIZE,
     fields: 'ENA_PROJECT,biome_name,centre_name',
     facetcount: 10,
-    facetsdepth: 3,
+    facetsdepth: FACET_DEPTH,
     facets: getFacets(['centre_name', 'biome'], queryParameters),
   });
   const searchDataSamples = useEBISearchData('metagenomics_samples', {
@@ -81,8 +91,18 @@ const TextSearchPage: React.FC = () => {
     size: PAGE_SIZE,
     fields: 'METAGENOMICS_PROJECTS,name,description',
     facetcount: 10,
-    facetsdepth: 3,
-    facets: getFacets(['biome', 'experiment_type'], queryParameters),
+    facetsdepth: FACET_DEPTH,
+    facets: getFacets(
+      [
+        'biome',
+        'experiment_type',
+        'location_name',
+        'disease_status',
+        'sequencing_method',
+        'phenotype',
+      ],
+      queryParameters
+    ),
   });
   const searchDataAnalyses = useEBISearchData('metagenomics_analyses', {
     query:
@@ -92,8 +112,18 @@ const TextSearchPage: React.FC = () => {
     fields:
       'METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,pipeline_version,experiment_type',
     facetcount: 10,
-    facetsdepth: 3,
-    facets: getFacets(['biome'], queryParameters),
+    facetsdepth: FACET_DEPTH,
+    facets: getFacets(
+      [
+        'biome',
+        'organism',
+        'pipeline_version',
+        'experiment_type',
+        'GO',
+        'INTERPRO',
+      ],
+      queryParameters
+    ),
   });
   const context = {
     searchData: {
@@ -106,28 +136,73 @@ const TextSearchPage: React.FC = () => {
   };
 
   return (
-    <section className="vf-content">
+    <section className="vf-content mg-page-search">
       <h2>Text Search.</h2>
       <SearchQueryContext.Provider value={context}>
         <TextSearch />
         <SearchTabs />
-        <section className="embl-grid">
-          <div className="vf-stack vf-stack--400">
+        <section className="vf-grid">
+          <div className="vf-stack vf-stack--200">
             <Switch>
               <Route path="/search/studies">
-                <BiomeFilter />
-                <CentreNameFilter />
+                <HierarchyMultipleOptionFilter
+                  facetName="biome"
+                  header="Biome"
+                />
+                <MultipleOptionFilter
+                  facetName="centre_name"
+                  header="Centre Name"
+                />
               </Route>
               <Route path="/search/samples">
                 <TemperatureFilter />
                 <DepthFilter />
-                <BiomeFilter />
-                <ExperimentTypeFilter />
+                <HierarchyMultipleOptionFilter
+                  facetName="biome"
+                  header="Biome"
+                />
+                <MultipleOptionFilter
+                  facetName="experiment_type"
+                  header="Experiment type"
+                />
+                <MultipleOptionFilter
+                  facetName="sequencing_method"
+                  header="Sequencing method"
+                />
+                <MultipleOptionFilter
+                  facetName="location_name"
+                  header="Location name"
+                />
+                <MultipleOptionFilter
+                  facetName="disease_status"
+                  header="Disease status"
+                />
+                <MultipleOptionFilter
+                  facetName="phenotype"
+                  header="Phenotype"
+                />
               </Route>
               <Route path="/search/analyses">
                 <TemperatureFilter />
                 <DepthFilter />
-                <BiomeFilter />
+                <HierarchyMultipleOptionFilter
+                  facetName="organism"
+                  header="Organism"
+                />
+                <HierarchyMultipleOptionFilter
+                  facetName="biome"
+                  header="Biome"
+                />
+                <MultipleOptionFilter
+                  facetName="pipeline_version"
+                  header="Pipeline version"
+                />
+                <MultipleOptionFilter
+                  facetName="experiment_type"
+                  header="Experiment type"
+                />
+                <MultipleOptionFilter facetName="GO" header="GO" />
+                <MultipleOptionFilter facetName="INTERPRO" header="InterPro" />
               </Route>
             </Switch>
           </div>
