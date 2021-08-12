@@ -2,12 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-import groupBy from 'lodash/groupBy';
-import split from 'lodash/split';
-import map from 'lodash/map';
-import flatMap from 'lodash/flatMap';
-import find from 'lodash/find';
-
+import { groupBy, split, map, flatMap, find } from 'lodash-es';
 import Select from 'react-select';
 import { useMGnifyData } from 'hooks/useMGnifyData';
 import { getBiomeIcon } from 'utils/biomes';

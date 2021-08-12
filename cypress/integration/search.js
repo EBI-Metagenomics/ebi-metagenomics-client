@@ -10,7 +10,7 @@ const origPage = 'search';
 
 const initialResultSize = 3;
 
-const rowSelector = 'table tr.search-row:visible';
+const rowSelector = 'table tr.vf-table__row:visible';
 
 const textQueryInput = '[data-cy=\'text-search-input\']';
 const submitTextQuery = '[data-cy=\'text-search-submit\']';
@@ -95,8 +95,11 @@ describe('Search page', function() {
     context('general Functionality', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
-            loadPage(origPage);
-            initTableHandlers();
+            // loadPage(origPage);
+            // initTableHandlers();
+            openPage(origPage);
+            cy.get(`.mg-main-menu`).contains('Text search').click();
+
         });
 
         it('Text query should apply to all facets', function() {
@@ -104,19 +107,27 @@ describe('Search page', function() {
         });
 
         it('Correct number of results.', function() {
-            openPage(origPage);
+            // openPage(origPage);
+            // cy.get(`.mg-main-menu`).contains('Text search').click();
             cy.wait(1000);
             cy.get(pageSizeSelect).select('50');
             waitForSearchResults(rowSelector, 50);
         });
 
-        it('Biome filters should restrict results', function() {
-            const biome = 'Environmental/Air';
+        it.only('Biome filters should restrict results', function() {
+            const biome = 'Environmental';
             routeWithBiomeFilter(biome);
-            cy.get('.toggle-tree-node').first().click();
-            cy.get('input[value="biome/' + biome + '"]').check({force: true});
-            waitForSearchResults(rowSelector, 2);
-            cy.get(studyTable.getColumnSelector(2)).contains('Air');
+            let facetCount = 0;
+            cy.get(`label[for='${biome}'] .mg-number`)
+                .invoke('text')
+                .then((text) =>{
+                    facetCount=text;
+                    cy.get(`label[for='${biome}']`).click();
+                    waitForSearchResults(rowSelector, 26);
+                    cy.get('.vf-table__caption').contains(facetCount)
+                });
+            // cy.get('input[value="biome/' + biome + '"]').check({force: true});
+            // cy.get(studyTable.getColumnSelector(2)).contains('Air');
         });
 
         // FIXME: works locally, fix for Travis.

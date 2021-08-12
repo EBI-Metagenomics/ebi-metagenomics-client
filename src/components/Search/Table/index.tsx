@@ -7,6 +7,7 @@ import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 
 const dataFor = {
   '/search/studies': {
+    label: 'Studies',
     columns: [
       {
         id: 'study_id',
@@ -46,6 +47,7 @@ const dataFor = {
     ],
   },
   '/search/samples': {
+    label: 'Samples',
     columns: [
       {
         id: 'sample_id',
@@ -80,6 +82,7 @@ const dataFor = {
     ],
   },
   '/search/analyses': {
+    label: 'Analyses',
     columns: [
       {
         id: 'analyses_id',
@@ -150,7 +153,7 @@ const SearchTable: React.FC = () => {
     <EMGTable
       cols={columns}
       data={fomattedData}
-      title={`Studies (${data.hitCount})`}
+      title={`${dataFor?.[pathname]?.label || ''} (${data.hitCount})`}
       initialPage={1}
     />
   );

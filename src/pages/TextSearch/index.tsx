@@ -4,6 +4,8 @@ import { Switch, Route } from 'react-router-dom';
 import CentreNameFilter from 'components/Search/Filter/CentreName';
 import BiomeFilter from 'components/Search/Filter/Biome';
 import TemperatureFilter from 'components/Search/Filter/Temperature';
+import DepthFilter from 'components/Search/Filter/Depth';
+import ExperimentTypeFilter from 'components/Search/Filter/ExperimentType';
 import SearchTabs from 'src/components/Search/Tabs';
 import TextSearch from 'src/components/Search/Filter/Text';
 import SearchTable from 'src/components/Search/Table';
@@ -35,7 +37,8 @@ const getSamplesQuery = (
       switch (name) {
         case 'query':
           return queryParameters[name];
-        case 'temperature': {
+        case 'temperature':
+        case 'depth': {
           const newRange = (queryParameters[name] as string)
             .split(',')
             .filter(Boolean)
@@ -59,6 +62,8 @@ const TextSearchPage: React.FC = () => {
     centre_name: '',
     biome: '',
     temperature: '',
+    depth: '',
+    experiment_type: '',
   });
 
   const searchDataStudies = useEBISearchData('metagenomics_projects', {
@@ -72,12 +77,12 @@ const TextSearchPage: React.FC = () => {
     facets: getFacets(['centre_name', 'biome'], queryParameters),
   });
   const searchDataSamples = useEBISearchData('metagenomics_samples', {
-    query: getSamplesQuery(['query', 'temperature'], queryParameters),
+    query: getSamplesQuery(['query', 'temperature', 'depth'], queryParameters),
     size: PAGE_SIZE,
     fields: 'METAGENOMICS_PROJECTS,name,description',
     facetcount: 10,
     facetsdepth: 3,
-    facets: getFacets(['biome'], queryParameters),
+    facets: getFacets(['biome', 'experiment_type'], queryParameters),
   });
   const searchDataAnalyses = useEBISearchData('metagenomics_analyses', {
     query:
@@ -114,10 +119,14 @@ const TextSearchPage: React.FC = () => {
                 <CentreNameFilter />
               </Route>
               <Route path="/search/samples">
-                <BiomeFilter />
                 <TemperatureFilter />
+                <DepthFilter />
+                <BiomeFilter />
+                <ExperimentTypeFilter />
               </Route>
               <Route path="/search/analyses">
+                <TemperatureFilter />
+                <DepthFilter />
                 <BiomeFilter />
               </Route>
             </Switch>
