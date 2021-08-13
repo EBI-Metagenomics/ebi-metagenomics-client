@@ -132,7 +132,7 @@ jobs:
           mv metagenomics /usr/share/nginx/html/metagenomics
           cp -r coverage/instrumented/* /usr/share/nginx/html/metagenomics/
           ls /usr/share/nginx/html/metagenomics
-          echo "\nweb index"
+          echo "=== web index ==="
           curl --silent http://localhost:9000/metagenomics/
       - name: 🧹 - ESlint
         run: |
