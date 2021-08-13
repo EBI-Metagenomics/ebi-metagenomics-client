@@ -60,83 +60,44 @@ function routeWithCenterName(center) {
         'fixture:projectsCenterFilter').as('centerQueryProjects');
 }
 
-function filterByText(testString) {
-    cy.get(textQueryInput).type(testString);
-    cy.get(submitTextQuery).click();
+function testCheckboxNumberIsReflectedInTable(labelFor) {
+    let facetCount = 0;
+    cy.get(`label[for='${labelFor}'] .mg-number`)
+        .invoke('text')
+        .then((text) =>{
+            facetCount=text;
+            cy.get(`label[for='${labelFor}']`).click();
+            waitForSearchResults(rowSelector, PAGE_SIZE);
+            cy.get('.vf-table__caption').contains(facetCount)
+        });
 }
-
-/**
- * Verify number of results responds to selector
- */
-
-let studyTable;
-let sampleTable;
-let analysisTable;
-
-function initTableHandlers() {
-    studyTable = new GenericTableHandler('.mg-search-result', 3, false);
-    sampleTable = new GenericTableHandler('#samplesResults', 3, false);
-    analysisTable = new GenericTableHandler('#analysesResults', 3, false);
-}
-
-function testResultsAreFilteredByString() {
-    routeWithTextQuery();
-    const testString = 'Test';
-    filterByText(testString);
-    // Tables have hidden columns
-    studyTable.checkRowData(0,
-        ['MGYS00001105', 'PRJEB14421', 'Sediment', '', '', '', '', 'UNIVERSITY OF CAMBRIDGE']);
-    changeTab('samples');
-    sampleTable.checkRowData(0, ['ERS782465', 'MGYS00001332', 'Test Brassicae', 'Test Brassicae']);
-    changeTab('analyses');
-    analysisTable.checkRowData(0,
-        ['MGYA00087095', '3.0', 'ERS782465', 'MGYS00001332', 'amplicon', '', '', '']);
-}
-
 describe('Search page', function() {
-    context('general Functionality', function() {
+    context.only('Search Study Functionality', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
             openPage(origPage);
             cy.get(`.mg-main-menu`).contains('Text search').click();
-
         });
 
 
-        it.only('Correct number of results.', function() {
+        it('Correct number of results.', function() {
             waitForSearchResults(rowSelector, PAGE_SIZE);
         });
 
-        it.only('Biome filters should restrict results', function() {
+        it('Biome filters should restrict results', function() {
             const biome = 'Environmental';
             routeWithBiomeFilter(biome);
-            let facetCount = 0;
-            cy.get(`label[for='${biome}'] .mg-number`)
-                .invoke('text')
-                .then((text) =>{
-                    facetCount=text;
-                    cy.get(`label[for='${biome}']`).click();
-                    waitForSearchResults(rowSelector, PAGE_SIZE);
-                    cy.get('.vf-table__caption').contains(facetCount)
-                });
+            testCheckboxNumberIsReflectedInTable(biome);
         });
 
-        it.only('Biome expanded filters should restrict results', function() {
+        it('Biome expanded filters should restrict results', function() {
             const biome = 'Environmental/Air';
             routeWithBiomeFilter(biome);
-            let facetCount = 0;
             cy.get(`.mg-expander`).first().click()
-            cy.get(`label[for='${biome}'] .mg-number`)
-                .invoke('text')
-                .then((text) =>{
-                    facetCount=text;
-                    cy.get(`label[for='${biome}']`).click();
-                    waitForSearchResults(rowSelector, PAGE_SIZE);
-                    cy.get('.vf-table__caption').contains(facetCount)
-                });
+            testCheckboxNumberIsReflectedInTable(biome);
         });
 
-        it.only('Centre name filters should restrict results', function() {
+        it('Centre name filters should restrict results', function() {
             const centerName = 'EMG';
             routeWithCenterName(centerName);
             cy.get(`label[for='${centerName}']`).click();
@@ -144,67 +105,109 @@ describe('Search page', function() {
             cy.get('.mg-search-result tbody tr td:last-child').contains(centerName);
         });
 
-        it.only('Clear button should reset search', function() {
+        it('Clear button should reset search', function() {
             const biome = 'Environmental/Air';
             routeWithBiomeFilter(biome);
             cy.get(`.mg-expander`).first().click()
             const studyTable = new GenericTableHandler('.mg-search-result', PAGE_SIZE, false);
             cy.get(`label[for='${biome}']`).click();
             studyTable.waitForTableLoad(3);
-            // cy.get(studyTable.getColumnSelector(2)).contains('Air');
-            // cy.get('#search-reset').click();
-            // studyTable.waitForTableLoad(3);
         });
-
-        // it('Should pre-fill cached search query', function() {
-            // FIXME: this has to be fixed with the querystring parameters feature
-            //     testResultsAreFilteredByString();
-            //     // Navigate to another page, then return and verify string was pre-loaded
-            //     openPage('');
-            //     openPage(origPage);
-            //     studyTable.waitForTableLoad(25);
-            //     sampleTable.waitForTableLoad(25);
-            //     analysisTable.waitForTableLoad(25);
-            //     studyTable.checkRowData(0,
-            //         [
-            //             'MGYS00001105',
-            //             'PRJEB14421',
-            //             'Sediment',
-            //             '',
-            //             '',
-            //             '',
-            //             '',
-            //             'UNIVERSITY OF CAMBRIDGE']);
-            //     changeTab('samples');
-            //     sampleTable.checkRowData(0,
-            //         ['ERS782465', 'MGYS00001332', 'Test Brassicae', 'Test Brassicae']);
-            //     changeTab('analyses');
-            //     analysisTable.checkRowData(0,
-            //         ['MGYA00087095', '3.0', 'ERS782465', 'MGYS00001332', 'amplicon', '', '', '']);
-        // });
     });
 
-    context('Navigate hierarchy', function() {
-        // FIXME: implement
-    });
-
-    context('Filter facet list', function() {
-        // FIXME: implement
-    });
-
-    context('Deep linking', function() {
+    context.only('Clicking tabs should reflect on table', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
+            openPage(origPage);
+            cy.get(`.mg-main-menu`).contains('Text search').click();
         });
         it('Changing tabs should update result view', function() {
-            loadPage(origPage + '#projects');
-            cy.get('#projectsResults > div > div > h5').should('contain', 'studies');
-            loadPage(origPage + '#samples');
-            cy.get('#samplesResults > div > div > h5').should('contain', 'samples');
-            loadPage(origPage + '#analyses');
-            cy.get('#analysesResults > div > div > h5').should('contain', 'analyses');
+            cy.get(`.mg-search-tabs li`).contains('Analyses').click();
+            cy.get('.mg-search-result caption').should('contain', 'Analyses');
+            cy.get(`.mg-search-tabs li`).contains('Samples').click();
+            cy.get('.mg-search-result caption').should('contain', 'Samples');
+            cy.get(`.mg-search-tabs li`).contains('Studies').click();
+            cy.get('.mg-search-result caption').should('contain', 'Studies');
         });
     });
+
+    context.only('Search Samples Functionality', function() {
+        beforeEach(function() {
+            setupDefaultSearchPageRouting();
+            openPage(origPage);
+            cy.get(`.mg-main-menu`).contains('Text search').click();
+            cy.get(`.mg-search-tabs li`).contains('Samples').click();
+        });
+
+
+        it('Correct number of results.', function() {
+            waitForSearchResults(rowSelector, PAGE_SIZE);
+        });
+        it('Biome filters should restrict results', function() {
+            const biome = 'Environmental';
+            routeWithBiomeFilter(biome);
+            testCheckboxNumberIsReflectedInTable(biome);
+        });
+        it('Experiment type filters should restrict results', function() {
+            const experimentType = 'amplicon';
+            routeWithCenterName(experimentType);
+            testCheckboxNumberIsReflectedInTable(experimentType);
+        });
+        it('sequencing method filters should restrict results', function() {
+            const method = 'illumina';
+            routeWithCenterName(method);
+            testCheckboxNumberIsReflectedInTable(method);
+        });
+        it('Location name filters should restrict results', function() {
+            const location = 'Canada';
+            routeWithCenterName(location);
+            testCheckboxNumberIsReflectedInTable(location);
+        });
+    });
+    context.only('Search Analyses Functionality', function() {
+        beforeEach(function() {
+            setupDefaultSearchPageRouting();
+            openPage(origPage);
+            cy.get(`.mg-main-menu`).contains('Text search').click();
+            cy.get(`.mg-search-tabs li`).contains('Analyses').click();
+        });
+
+
+        it('Correct number of results.', function() {
+            waitForSearchResults(rowSelector, PAGE_SIZE);
+        });
+        it('Organism filters should restrict results', function() {
+            const organism = 'Bacteria';
+            routeWithBiomeFilter(organism);
+            testCheckboxNumberIsReflectedInTable(organism);
+        });
+        it('Biome filters should restrict results', function() {
+            const biome = 'Environmental';
+            routeWithBiomeFilter(biome);
+            testCheckboxNumberIsReflectedInTable(biome);
+        });
+        it('Experiment type filters should restrict results', function() {
+            const experimentType = 'amplicon';
+            routeWithCenterName(experimentType);
+            testCheckboxNumberIsReflectedInTable(experimentType);
+        });
+        it('Pipeline filters should restrict results', function() {
+            const version = '4.1';
+            routeWithCenterName(version);
+            testCheckboxNumberIsReflectedInTable(version);
+        });
+        it('GO filters should restrict results', function() {
+            const go = 'GO:0003677';
+            routeWithCenterName(go);
+            testCheckboxNumberIsReflectedInTable(go);
+        });
+        it('InterPro filters should restrict results', function() {
+            const ipro = 'IPR013785';
+            routeWithCenterName(ipro);
+            testCheckboxNumberIsReflectedInTable(ipro);
+        });
+    });
+
 
     function setupDefaultSliderRouting() {
         cy.route('GET',

@@ -22,7 +22,7 @@ const SearchTabs: React.FC = () => {
     }
   }, [location, history]);
   return (
-    <div className="vf-tabs">
+    <div className="vf-tabs mg-search-tabs">
       <ul className="vf-tabs__list">
         {tabs.map(({ label, to }) => (
           <li className="vf-tabs__item" key={label}>
