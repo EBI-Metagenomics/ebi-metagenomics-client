@@ -2,7 +2,7 @@ import {openPage} from '../util/util';
 
 const origPage = 'about';
 
-describe('About page', function() {
+describe('About page', { retries: 3 }, function() {
     context('Dropdown citations view', function() {
         before(function() {
             openPage('');

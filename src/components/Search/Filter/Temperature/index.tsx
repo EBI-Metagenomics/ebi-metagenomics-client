@@ -42,7 +42,7 @@ const TemperatureFilter: React.FC = () => {
     });
   };
   return (
-    <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
+    <fieldset className="vf-form__fieldset vf-stack vf-stack--400 mg-temperature-filter">
       <legend className="vf-form__legend">Temperature (°C)</legend>
       <div className="mg-switch-and-slider">
         <Switch id="temp_filter" onChange={handleSwitch} isOn={enabled} />
