@@ -4,6 +4,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = function (env, options) {
   const isEnvProduction = options.mode === 'production';
@@ -79,6 +80,7 @@ module.exports = function (env, options) {
           chunkFilename: 'css/[name].[contenthash:8].chunk.css',
         }),
       isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
+      new CleanWebpackPlugin(),
     ].filter(Boolean),
     optimization: {
       minimize: isEnvProduction,
