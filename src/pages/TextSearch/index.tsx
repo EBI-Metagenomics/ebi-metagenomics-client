@@ -161,7 +161,7 @@ const TextSearchPage: React.FC = () => {
                 <MultipleOptionFilter
                   facetName="centre_name"
                   header="Centre Name"
-                  includeTextFilter={true}
+                  includeTextFilter
                 />
               </Route>
               <Route path="/search/samples">
@@ -182,7 +182,7 @@ const TextSearchPage: React.FC = () => {
                 <MultipleOptionFilter
                   facetName="location_name"
                   header="Location name"
-                  includeTextFilter={true}
+                  includeTextFilter
                 />
                 <MultipleOptionFilter
                   facetName="disease_status"
@@ -215,12 +215,12 @@ const TextSearchPage: React.FC = () => {
                 <MultipleOptionFilter
                   facetName="GO"
                   header="GO"
-                  includeTextFilter={true}
+                  includeTextFilter
                 />
                 <MultipleOptionFilter
                   facetName="INTERPRO"
                   header="InterPro"
-                  includeTextFilter={true}
+                  includeTextFilter
                 />
               </Route>
             </Switch>

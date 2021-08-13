@@ -125,7 +125,11 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
     [location.pathname, searchData, facetName]
   );
 
-  if (searchData?.[location.pathname].loading) return <Loading />;
+  if (
+    searchData?.[location.pathname].loading &&
+    !searchData?.[location.pathname].isStale
+  )
+    return <Loading />;
   if (searchData?.[location.pathname].error) return null;
 
   if (!facetData) return null;
@@ -146,7 +150,11 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
 
   return (
     <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
-      <legend className="vf-form__legend">{header}</legend>
+      <legend className="vf-form__legend">
+        {header}
+        {searchData?.[location.pathname].loading &&
+          searchData?.[location.pathname].isStale && <Loading size="small" />}
+      </legend>
       {facetData.facetValues.map(({ label, value, count, children }) => (
         <HierarchyOption
           key={value}

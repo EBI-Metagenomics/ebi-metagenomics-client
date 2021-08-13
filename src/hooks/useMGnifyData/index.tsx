@@ -66,6 +66,7 @@ interface DataResponse {
   data: null | KeyValue | MGnifyResponse | BlogResponse;
   error: ErrorFromFetch | null;
   loading: boolean;
+  isStale: boolean;
 }
 
 interface EBIDataResponse extends DataResponse {
@@ -85,12 +86,15 @@ const EmptyResponse = {
     type: ErrorTypes.NullURL,
     error: 'The queried URL is null',
   },
+  isStale: false,
 };
 const NewRequest = {
   data: null,
   loading: true,
   error: null,
+  isStale: false,
 };
+
 async function fetchData(
   url: string,
   updateState: (DataResponse) => void
@@ -106,6 +110,7 @@ async function fetchData(
         type: ErrorTypes.FetchError,
       },
       loading: false,
+      isStale: false,
     });
     return;
   }
@@ -117,6 +122,7 @@ async function fetchData(
         type: ErrorTypes.NotOK,
       },
       loading: false,
+      isStale: false,
     });
     return;
   }
@@ -129,11 +135,12 @@ async function fetchData(
         type: ErrorTypes.JSONError,
       },
       loading: false,
+      isStale: false,
     });
     return;
   }
 
-  updateState({ data: json, loading: false, error: null });
+  updateState({ data: json, loading: false, error: null, isStale: false });
 }
 
 const useData: (url: string) => DataResponse = (url) => {
@@ -151,7 +158,10 @@ const useData: (url: string) => DataResponse = (url) => {
       return;
     }
     // TODO: Add support for stale data
-    // setFullState(NewRequest);
+    setPartialState({
+      loading: true,
+      isStale: true,
+    });
     fetchData(url, setPartialState);
   }, [url]);
   return state;

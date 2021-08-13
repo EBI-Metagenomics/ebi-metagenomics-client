@@ -5,6 +5,8 @@ import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 
+import './style.css';
+
 const dataFor = {
   '/search/studies': {
     label: 'Studies',
@@ -135,11 +137,11 @@ const PAGE_SIZE = 25; // TODO: move to table
 const SearchTable: React.FC = () => {
   const { pathname } = useLocation();
   const { searchData } = useContext(SearchQueryContext);
-  const { data, loading, error } = searchData?.[pathname] || {};
+  const { data, loading, error, isStale } = searchData?.[pathname] || {};
   // console.log({loading});
 
   const columns = useMemo(() => dataFor?.[pathname]?.columns, [pathname]);
-  if (loading) return <Loading size="small" />;
+  if (loading && !isStale) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
   const fomattedData = {
     data: data.entries as Record<string, unknown>[],
@@ -151,13 +153,16 @@ const SearchTable: React.FC = () => {
   };
 
   return (
-    <EMGTable
-      cols={columns}
-      data={fomattedData}
-      title={`${dataFor?.[pathname]?.label || ''} (${data.hitCount})`}
-      initialPage={1}
-      className="mg-search-result"
-    />
+    <div className="mg-overlay-container">
+      <div className={loading && isStale ? 'mg-overlay' : undefined} />
+      <EMGTable
+        cols={columns}
+        data={fomattedData}
+        title={`${dataFor?.[pathname]?.label || ''} (${data.hitCount})`}
+        initialPage={1}
+        className="mg-search-result"
+      />
+    </div>
   );
 };
 
