@@ -1,6 +1,6 @@
 import {openPage, isValidLink} from '../util/util';
 
-const origPage = 'help';
+const origPage = '';
 
 describe('Help page', function() {
     context.skip('Refer from phmmer search', function() {
@@ -16,7 +16,7 @@ describe('Help page', function() {
     });
     context('General', function() {
         before(function() {
-            openPage(origPage);
+            openPage('');
             cy.get(`.mg-main-menu`).contains('Help').click();
         });
         it('Elements should be present', function() {

@@ -6,7 +6,7 @@ import {
 } from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
-const origPage = 'search';
+const origPage = '';
 
 const initialResultSize = 3;
 

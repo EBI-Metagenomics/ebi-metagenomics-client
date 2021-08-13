@@ -5,7 +5,7 @@ const origPage = 'about';
 describe('About page', function() {
     context('Dropdown citations view', function() {
         before(function() {
-            openPage(origPage);
+            openPage('');
             cy.get(`.mg-main-menu`).contains('About').click();
         });
         it('Contains all the about sections', function() {
