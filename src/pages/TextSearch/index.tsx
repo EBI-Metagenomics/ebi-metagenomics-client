@@ -32,7 +32,8 @@ const getFacets = (facetNames: string[], queryParameters: QueryState): string =>
 
 const getSamplesQuery = (
   names: string[],
-  queryParameters: QueryState
+  queryParameters: QueryState,
+  defaultValue: string
 ): string => {
   const query = names
     .map((name) => {
@@ -56,7 +57,7 @@ const getSamplesQuery = (
     })
     .filter(Boolean);
   if (query.length) return query.join(' AND ');
-  return 'domain_source:metagenomics_samples';
+  return defaultValue;
 };
 const TextSearchPage: React.FC = () => {
   const [queryParameters, setQueryParameters] = useQueryParametersState({
@@ -77,9 +78,11 @@ const TextSearchPage: React.FC = () => {
   });
 
   const searchDataStudies = useEBISearchData('metagenomics_projects', {
-    query:
-      (queryParameters?.query as string) ||
-      'domain_source:metagenomics_projects',
+    query: getSamplesQuery(
+      ['query'],
+      queryParameters,
+      'domain_source:metagenomics_projects'
+    ),
     size: PAGE_SIZE,
     fields: 'ENA_PROJECT,biome_name,centre_name',
     facetcount: 10,
@@ -87,7 +90,11 @@ const TextSearchPage: React.FC = () => {
     facets: getFacets(['centre_name', 'biome'], queryParameters),
   });
   const searchDataSamples = useEBISearchData('metagenomics_samples', {
-    query: getSamplesQuery(['query', 'temperature', 'depth'], queryParameters),
+    query: getSamplesQuery(
+      ['query', 'temperature', 'depth'],
+      queryParameters,
+      'domain_source:metagenomics_samples'
+    ),
     size: PAGE_SIZE,
     fields: 'METAGENOMICS_PROJECTS,name,description',
     facetcount: 10,
@@ -105,9 +112,11 @@ const TextSearchPage: React.FC = () => {
     ),
   });
   const searchDataAnalyses = useEBISearchData('metagenomics_analyses', {
-    query:
-      (queryParameters?.query as string) ||
-      'domain_source:metagenomics_analyses',
+    query: getSamplesQuery(
+      ['query', 'temperature', 'depth'],
+      queryParameters,
+      'domain_source:metagenomics_analyses'
+    ),
     size: PAGE_SIZE,
     fields:
       'METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,pipeline_version,experiment_type',
@@ -152,6 +161,7 @@ const TextSearchPage: React.FC = () => {
                 <MultipleOptionFilter
                   facetName="centre_name"
                   header="Centre Name"
+                  includeTextFilter={true}
                 />
               </Route>
               <Route path="/search/samples">
@@ -172,6 +182,7 @@ const TextSearchPage: React.FC = () => {
                 <MultipleOptionFilter
                   facetName="location_name"
                   header="Location name"
+                  includeTextFilter={true}
                 />
                 <MultipleOptionFilter
                   facetName="disease_status"
@@ -201,8 +212,16 @@ const TextSearchPage: React.FC = () => {
                   facetName="experiment_type"
                   header="Experiment type"
                 />
-                <MultipleOptionFilter facetName="GO" header="GO" />
-                <MultipleOptionFilter facetName="INTERPRO" header="InterPro" />
+                <MultipleOptionFilter
+                  facetName="GO"
+                  header="GO"
+                  includeTextFilter={true}
+                />
+                <MultipleOptionFilter
+                  facetName="INTERPRO"
+                  header="InterPro"
+                  includeTextFilter={true}
+                />
               </Route>
             </Switch>
           </div>

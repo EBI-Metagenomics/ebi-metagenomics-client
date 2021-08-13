@@ -7,10 +7,12 @@ import 'styles/filters.css';
 type MultipleOptionProps = {
   facetName: string;
   header: string;
+  includeTextFilter?: boolean;
 };
 const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   facetName,
   header,
+  includeTextFilter = false,
 }) => {
   const location = useLocation();
   const { searchData, queryParameters, setQueryParameters } =
@@ -18,6 +20,7 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   const [selected, setSelected] = useState(
     (queryParameters[facetName] as string).split(',').filter(Boolean)
   );
+  const [textFilter, setTextFilter] = useState('');
   useEffect(() => {
     setSelected(
       (queryParameters[facetName] as string).split(',').filter(Boolean)
@@ -53,24 +56,40 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   return (
     <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
       <legend className="vf-form__legend">{header}</legend>
-      {facetData.facetValues.map(({ label, value, count }) => (
-        <div className="vf-form__item vf-form__item--checkbox" key={value}>
-          <input
-            type="checkbox"
-            name={value}
-            value={value}
-            id={value}
-            className="vf-form__checkbox"
-            onChange={handleSelection}
-            checked={selected.includes(value)}
-          />
-          <label className="vf-form__label" htmlFor={value}>
-            <span className="mg-filter-checkbox-label">
-              {label} <span className="mg-number">{count}</span>
-            </span>
-          </label>
-        </div>
-      ))}
+      {includeTextFilter && (
+        <input
+          type="text"
+          placeholder="Filter the list"
+          className="vf-form__input"
+          value={textFilter}
+          onChange={(evt) => setTextFilter(evt.target.value)}
+        />
+      )}
+      {facetData.facetValues
+        .filter(
+          ({ label, value }) =>
+            textFilter === '' ||
+            label.toLowerCase().includes(textFilter.toLowerCase()) ||
+            value.toLowerCase().includes(textFilter.toLowerCase())
+        )
+        .map(({ label, value, count }) => (
+          <div className="vf-form__item vf-form__item--checkbox" key={value}>
+            <input
+              type="checkbox"
+              name={value}
+              value={value}
+              id={value}
+              className="vf-form__checkbox"
+              onChange={handleSelection}
+              checked={selected.includes(value)}
+            />
+            <label className="vf-form__label" htmlFor={value}>
+              <span className="mg-filter-checkbox-label">
+                {label} <span className="mg-number">{count}</span>
+              </span>
+            </label>
+          </div>
+        ))}
     </fieldset>
   );
 };
