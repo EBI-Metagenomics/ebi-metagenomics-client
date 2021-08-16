@@ -158,7 +158,12 @@ const SearchTable: React.FC = () => {
       <EMGTable
         cols={columns}
         data={fomattedData}
-        title={`${dataFor?.[pathname]?.label || ''} (${data.hitCount})`}
+        title={
+          <>
+            {dataFor?.[pathname]?.label || ''}{' '}
+            <span className="mg-number">{data.hitCount}</span>
+          </>
+        }
         initialPage={1}
         className="mg-search-result"
       />

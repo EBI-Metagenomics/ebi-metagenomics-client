@@ -72,6 +72,25 @@ function testSliderFilter(selector) {
     // TODO: maybe test with URL when nginx is well configured
 }
 
+function checkNumberOfResultsDecreaseAfterAction(action){
+    cy.get(`.vf-table__caption .mg-number`)
+    .invoke('text')
+    .then((text) =>{
+        const count=Number(text);
+        action();
+        cy.wait(100);
+        cy.get('.mg-overlay-container > .mg-overlay')
+            .should('not.exist');
+        
+        cy.get('.vf-table__caption .mg-number')
+            .invoke('text')
+            .then((text2) =>{
+                const count2=Number(text2);
+                assert.isTrue(count2<count, "The number of results should have decreased")
+            });
+    });
+
+}
 describe('Search page', function() {
     context('Search Study Functionality', function() {
         beforeEach(function() {
@@ -83,6 +102,10 @@ describe('Search page', function() {
 
         it('Correct number of results.', function() {
             waitForSearchResults(rowSelector, PAGE_SIZE);
+            checkNumberOfResultsDecreaseAfterAction(()=>{
+                cy.get('.mg-text-search-textfield').type('Test');
+                cy.get('.mg-text-search').contains('Search').click();        
+            });
         });
 
         it('Biome filters should restrict results', function() {
@@ -143,6 +166,10 @@ describe('Search page', function() {
 
         it('Correct number of results.', function() {
             waitForSearchResults(rowSelector, PAGE_SIZE);
+            checkNumberOfResultsDecreaseAfterAction(()=>{
+                cy.get('.mg-text-search-textfield').type('Test');
+                cy.get('.mg-text-search').contains('Search').click();        
+            });
         });
         it('Temperature filter should work', function() {
             testSliderFilter('.mg-temperature-filter');
@@ -183,6 +210,10 @@ describe('Search page', function() {
 
         it('Correct number of results.', function() {
             waitForSearchResults(rowSelector, PAGE_SIZE);
+            checkNumberOfResultsDecreaseAfterAction(()=>{
+                cy.get('.mg-text-search-textfield').type('Test');
+                cy.get('.mg-text-search').contains('Search').click();        
+            });
         });
         it('Temperature filter should work', function() {
             testSliderFilter('.mg-temperature-filter');

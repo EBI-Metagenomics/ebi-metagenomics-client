@@ -88,7 +88,7 @@ type EMGTableProps = {
     meta: Record<string, any>;
     links?: Record<string, any>;
   };
-  title?: string;
+  title?: string | React.CElement<any, any>;
   fetchPage?: (pageIndex: number, pageSize: number) => void;
   onChangeSort?: (columnId: string) => void;
   initialPage?: number;
