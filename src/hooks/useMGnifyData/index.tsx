@@ -145,24 +145,30 @@ async function fetchData(
 
 const useData: (url: string) => DataResponse = (url) => {
   const [state, setFullState] = useState(NewRequest);
+  // A flag to be able to clean up in case acomponent is unmount before the request is completed
+  let isActive = true;
   const setPartialState = (updatedValues): void => {
-    setFullState((prevState) => ({
-      ...prevState,
-      ...updatedValues,
-    }));
+    if (isActive)
+      setFullState((prevState) => ({
+        ...prevState,
+        ...updatedValues,
+      }));
   };
   useEffect(() => {
     // If the URL is null don't do the fetch and return the empty response
-    if (!url) {
+    if (url) {
+      setPartialState({
+        loading: true,
+        isStale: true,
+      });
+      fetchData(url, setPartialState);
+    } else {
       setFullState(EmptyResponse);
-      return;
     }
-    // TODO: Add support for stale data
-    setPartialState({
-      loading: true,
-      isStale: true,
-    });
-    fetchData(url, setPartialState);
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      isActive = false;
+    };
   }, [url]);
   return state;
 };

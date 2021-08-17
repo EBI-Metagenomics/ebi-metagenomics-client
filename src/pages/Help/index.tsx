@@ -106,7 +106,7 @@ const HelpPage: React.FC = () => {
           materials
         </h3>
 
-        <p>
+        <div>
           This provide training materials as part of the{' '}
           <a
             title="EBI Train online"
@@ -156,7 +156,7 @@ const HelpPage: React.FC = () => {
               </a>
             </li>
           </ul>
-        </p>
+        </div>
       </article>
       <article>
         <h3>

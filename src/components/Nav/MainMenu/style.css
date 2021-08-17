@@ -3,4 +3,11 @@
   top: 0;
   z-index: 10000;
   background-color: lightgrey;
+  display: flex;
+}
+
+.mg-main-menu > img {
+  height: 2rem;
+  margin-right: 2rem;
+  padding-bottom: 0.1rem;
 }
