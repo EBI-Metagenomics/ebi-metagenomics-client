@@ -159,7 +159,7 @@ let RequestPublicFormView = Backbone.View.extend({
             const userData = new authApi.UserDetails();
             userData.fetch().done(() => {
                 const attr = userData['attributes'];
-                const email = userData.getEmails();
+                const email = userData.getEmails(true);
                 const studyAcc = this.$el.find('input[name=study-accession]').val();
                 const analysisType = this.$el.find('input[name=analysis-type]:checked').val();
                 const comments = this.$el.find('input[name=reason]').val();

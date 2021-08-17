@@ -54,14 +54,16 @@ export const UserDetails = Backbone.Model.extend({
         } 
         return user;
     },
-    getEmails() {
-        let email = this.attributes['email'];
+    getEmails(includeMain=false) {
+        let email = '';
         if (this.attributes.otherSubmitters && this.attributes.otherSubmitters.length){
-            email += ','+this.attributes.otherSubmitters
+            email += this.attributes.otherSubmitters
                 .map(submitter=>submitter.email)
                 .filter(Boolean)
                 .join(',');
         }
-        return email;  
+        return includeMain
+            ? this.attributes['email'] + ',' + email
+            : email;  
     }
 });
