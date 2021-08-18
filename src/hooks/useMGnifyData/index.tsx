@@ -62,11 +62,17 @@ export enum ErrorTypes {
   NullURL,
 }
 
+export enum ResponseFormat {
+  JSON,
+  HTML,
+  TXT,
+}
 interface DataResponse {
-  data: null | KeyValue | MGnifyResponse | BlogResponse;
+  data: null | KeyValue | MGnifyResponse | BlogResponse | HTMLHtmlElement;
   error: ErrorFromFetch | null;
   loading: boolean;
   isStale: boolean;
+  rawResponse?: Response;
 }
 
 interface EBIDataResponse extends DataResponse {
@@ -78,6 +84,9 @@ interface MgnifyDataResponse extends DataResponse {
 interface BlogDataResponse extends DataResponse {
   data: BlogResponse;
 }
+interface HTMLDataResponse extends DataResponse {
+  data: HTMLHtmlElement;
+}
 
 const EmptyResponse = {
   data: null,
@@ -87,22 +96,27 @@ const EmptyResponse = {
     error: 'The queried URL is null',
   },
   isStale: false,
+  rawResponse: null,
 };
 const NewRequest = {
   data: null,
   loading: true,
   error: null,
   isStale: false,
+  rawResponse: null,
 };
 
 async function fetchData(
   url: string,
-  updateState: (DataResponse) => void
+  updateState: (DataResponse) => void,
+  format: ResponseFormat = ResponseFormat.JSON
 ): Promise<void> {
   let response = null;
-  let json = null;
+  let data = null;
   try {
-    response = await fetch(url);
+    response = await fetch(url, {
+      credentials: 'same-origin',
+    });
   } catch (error) {
     updateState({
       error: {
@@ -111,6 +125,7 @@ async function fetchData(
       },
       loading: false,
       isStale: false,
+      rawResponse: response,
     });
     return;
   }
@@ -123,27 +138,62 @@ async function fetchData(
       },
       loading: false,
       isStale: false,
+      rawResponse: response,
     });
     return;
   }
-  try {
-    json = await response.json();
-  } catch (error) {
-    updateState({
-      error: {
-        error,
-        type: ErrorTypes.JSONError,
-      },
-      loading: false,
-      isStale: false,
-    });
-    return;
+  switch (format) {
+    case ResponseFormat.JSON:
+      try {
+        data = await response.json();
+      } catch (error) {
+        updateState({
+          error: {
+            error,
+            type: ErrorTypes.JSONError,
+          },
+          loading: false,
+          isStale: false,
+          rawResponse: response,
+        });
+        return;
+      }
+      break;
+    case ResponseFormat.HTML:
+      try {
+        const html = await response.text();
+        const el = document.createElement('html');
+        el.innerHTML = html;
+        data = el;
+      } catch (error) {
+        updateState({
+          error: {
+            error,
+            type: ErrorTypes.JSONError,
+          },
+          loading: false,
+          isStale: false,
+          rawResponse: response,
+        });
+        return;
+      }
+      break;
+    default:
+      data = await response.text();
   }
-
-  updateState({ data: json, loading: false, error: null, isStale: false });
+  updateState({
+    data,
+    loading: false,
+    error: null,
+    isStale: false,
+    rawResponse: response,
+  });
 }
 
-const useData: (url: string) => DataResponse = (url) => {
+const useData: (url: string, format?: ResponseFormat) => DataResponse = (
+  url,
+  format = ResponseFormat.JSON
+) => {
   const [state, setFullState] = useState(NewRequest);
   // A flag to be able to clean up in case acomponent is unmount before the request is completed
   let isActive = true;
@@ -161,7 +211,7 @@ const useData: (url: string) => DataResponse = (url) => {
         loading: true,
         isStale: true,
       });
-      fetchData(url, setPartialState);
+      fetchData(url, setPartialState, format);
     } else {
       setFullState(EmptyResponse);
     }
@@ -211,6 +261,14 @@ export const useBlogData: (resource: string) => BlogDataResponse = (
     [null, undefined].includes(resource) ? null : `${config.blog}${resource}`
   );
   return data as BlogDataResponse;
+};
+
+export const useMgnifyForm: () => HTMLDataResponse = () => {
+  const data = useData(
+    `${config.api.replace('v1/', '')}http-auth/login_form`,
+    ResponseFormat.HTML
+  );
+  return data as HTMLDataResponse;
 };
 
 export default useData;
