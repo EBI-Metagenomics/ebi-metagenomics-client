@@ -1,25 +1,65 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 
 import UserContext from 'pages/Login/UserContext';
-import { useMgnifyForm } from 'hooks/useMGnifyData';
+import {
+  useMgnifyForm,
+  useMgnifyLogin,
+  useMgnifyLogout,
+} from 'hooks/useMGnifyData';
 
 const Login: React.FC = () => {
+  const userRef = useRef(null);
+  const passwordRef = useRef(null);
   const { data, loading, error } = useMgnifyForm();
-  const { username, isAuthenticated, setUser } = useContext(UserContext);
+  const [shouldLogout, setShouldLogout] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const { rawResponse } = useMgnifyLogout(shouldLogout);
+  useEffect(() => {
+    setShouldLogout(false);
+  }, [rawResponse]);
+  const {
+    username: loggedUsername,
+    isAuthenticated,
+    setUser,
+  } = useContext(UserContext);
+  const [form, setForm] = useState({
+    username: null,
+    password: null,
+    csrfmiddlewaretoken: null,
+  });
+  const {
+    data: dataLogin,
+    loading: loadingLogin,
+    rawResponse: rawResponseLogin,
+  } = useMgnifyLogin(form.username, form.password, form.csrfmiddlewaretoken);
+  useEffect(() => {
+    if (!loadingLogin) {
+      if (dataLogin) {
+        setLoginError(
+          (dataLogin.querySelector('.text-error') as HTMLElement)?.innerText ||
+            ''
+        );
+      } else if (rawResponseLogin?.type === 'opaqueredirect') {
+        setUser({ username: form.username, isAuthenticated: true });
+        setLoginError('');
+      }
+    }
+  }, [dataLogin, loadingLogin, form.username, rawResponseLogin?.type, setUser]);
+
+  const handleLogout = (): void => {
+    setShouldLogout(true);
+    setUser({ username: null, isAuthenticated: false });
+  };
   if (isAuthenticated) {
     return (
       <div className="vf-stack vf-stack--400">
         <div>
-          You are already logged in as <b>{username}</b>
+          You are logged in as <b>{loggedUsername}</b>
         </div>
-        <button
-          type="button"
-          className="vf-button"
-          onClick={() => setUser({ username: null, isAuthenticated: false })}
-        >
+        <button type="button" className="vf-button" onClick={handleLogout}>
           Logout
         </button>
       </div>
@@ -31,15 +71,15 @@ const Login: React.FC = () => {
   const csrfmiddlewaretoken = (
     data.querySelector('input[name="csrfmiddlewaretoken"]') as HTMLInputElement
   ).value;
-  // is missing the csrftoken cookie
+  const handleSubmit = (): void => {
+    setForm({
+      username: userRef.current.value,
+      password: passwordRef.current.value,
+      csrfmiddlewaretoken,
+    });
+  };
   return (
     <div className="vf-form vf-stack vf-stack--400">
-      <input
-        type="hidden"
-        name="csrfmiddlewaretoken"
-        value={csrfmiddlewaretoken}
-      />
-
       <div className="vf-form__item">
         <label htmlFor="id_username" className="vf-form__label">
           Webin-ID:
@@ -52,6 +92,7 @@ const Login: React.FC = () => {
           autoCorrect="off"
           id="id_username"
           className="vf-form__input"
+          ref={userRef}
           required
         />
       </div>
@@ -67,6 +108,7 @@ const Login: React.FC = () => {
           autoCorrect="off"
           className="vf-form__input"
           id="id_password"
+          ref={passwordRef}
           required
         />
       </div>
@@ -76,13 +118,13 @@ const Login: React.FC = () => {
           name="submit"
           className="vf-button"
           id="submit-id-submit"
-          onClick={() =>
-            setUser({ username: 'tavocho', isAuthenticated: true })
-          }
+          onClick={handleSubmit}
         >
           Log in
         </button>
       </div>
+      {loadingLogin && <Loading />}
+      {loginError && <div className="vf-box">{loginError}</div>}
       <div className="form-forgotten">
         <a href="https://www.ebi.ac.uk/ena/submit/sra/#reset-password">
           Forgot your password?

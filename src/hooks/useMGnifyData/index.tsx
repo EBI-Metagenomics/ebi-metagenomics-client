@@ -109,14 +109,13 @@ const NewRequest = {
 async function fetchData(
   url: string,
   updateState: (DataResponse) => void,
-  format: ResponseFormat = ResponseFormat.JSON
+  format: ResponseFormat = ResponseFormat.JSON,
+  fetchOptions: RequestInit = {}
 ): Promise<void> {
   let response = null;
   let data = null;
   try {
-    response = await fetch(url, {
-      credentials: 'same-origin',
-    });
+    response = await fetch(url, fetchOptions);
   } catch (error) {
     updateState({
       error: {
@@ -190,10 +189,11 @@ async function fetchData(
   });
 }
 
-const useData: (url: string, format?: ResponseFormat) => DataResponse = (
-  url,
-  format = ResponseFormat.JSON
-) => {
+const useData: (
+  url: string,
+  format?: ResponseFormat,
+  fetchOptions?: RequestInit
+) => DataResponse = (url, format = ResponseFormat.JSON, fetchOptions = {}) => {
   const [state, setFullState] = useState(NewRequest);
   // A flag to be able to clean up in case acomponent is unmount before the request is completed
   let isActive = true;
@@ -211,7 +211,7 @@ const useData: (url: string, format?: ResponseFormat) => DataResponse = (
         loading: true,
         isStale: true,
       });
-      fetchData(url, setPartialState, format);
+      fetchData(url, setPartialState, format, fetchOptions);
     } else {
       setFullState(EmptyResponse);
     }
@@ -219,7 +219,11 @@ const useData: (url: string, format?: ResponseFormat) => DataResponse = (
       // eslint-disable-next-line react-hooks/exhaustive-deps
       isActive = false;
     };
-  }, [url]);
+  }, [
+    url,
+    format,
+    new URLSearchParams((fetchOptions?.body as string) || '').toString(),
+  ]);
   return state;
 };
 
@@ -250,7 +254,11 @@ export const useMGnifyData: (
     url += `?${Object.entries(allParemeters)
       .map(([key, value]) => `${key}=${value}`)
       .join('&')}`;
-  const data = useData([null, undefined].includes(endpoint) ? null : url);
+  const data = useData(
+    [null, undefined].includes(endpoint) ? null : url,
+    ResponseFormat.JSON,
+    { credentials: 'include' }
+  );
   return data as MgnifyDataResponse;
 };
 
@@ -266,7 +274,45 @@ export const useBlogData: (resource: string) => BlogDataResponse = (
 export const useMgnifyForm: () => HTMLDataResponse = () => {
   const data = useData(
     `${config.api.replace('v1/', '')}http-auth/login_form`,
-    ResponseFormat.HTML
+    ResponseFormat.HTML,
+    {
+      credentials: 'include',
+    }
+  );
+  return data as HTMLDataResponse;
+};
+export const useMgnifyLogout: (shouldLogout: boolean) => HTMLDataResponse = (
+  shouldLogout
+) => {
+  const data = useData(
+    shouldLogout ? `${config.api.replace('v1/', '')}http-auth/logout` : null,
+    ResponseFormat.HTML,
+    { credentials: 'include' }
+  );
+  return data as HTMLDataResponse;
+};
+export const useMgnifyLogin: (
+  username: string,
+  password: string,
+  csrfmiddlewaretoken: string
+) => HTMLDataResponse = (username, password, csrfmiddlewaretoken) => {
+  const formData = new FormData();
+  formData.append('username', username);
+  formData.append('password', password);
+  formData.append('csrfmiddlewaretoken', csrfmiddlewaretoken);
+
+  const data = useData(
+    username ? `${config.api.replace('v1/', '')}http-auth/login/` : null,
+    ResponseFormat.HTML,
+    {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfmiddlewaretoken,
+      },
+      credentials: 'include',
+      body: formData,
+      redirect: 'manual',
+    }
   );
   return data as HTMLDataResponse;
 };

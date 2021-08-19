@@ -8,6 +8,7 @@ import ElixirBanner from './components/UI/ElixirBanner';
 import CookieBanner from './components/UI/CookieBanner';
 import MainMenu from './components/Nav/MainMenu';
 import Loading from './components/UI/Loading';
+import LoginMonitor from './components/Login/Monitor';
 
 import UserContext from './pages/Login/UserContext';
 
@@ -35,6 +36,7 @@ const App: React.FC = () => {
         setUser,
       }}
     >
+      <LoginMonitor />
       <EBIHeader />
       <HeroHeader />
       <MainMenu />
