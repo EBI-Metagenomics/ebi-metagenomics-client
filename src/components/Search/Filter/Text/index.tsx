@@ -11,7 +11,7 @@ const TextSearch: React.FC = () => {
     setSearchTerms(queryParameters.query as string);
   }, [queryParameters.query]);
   return (
-    <div className="vf-form vf-form--search vf-form--search--responsive vf-sidebar vf-sidebar--end mg-text-search">
+    <div className="vf-form vf-form--search vf-sidebar vf-sidebar--end mg-text-search">
       <div className="vf-sidebar__inner">
         <div className="vf-form__item | vf-search__item">
           <input
@@ -25,30 +25,31 @@ const TextSearch: React.FC = () => {
             }}
           />
         </div>
-
-        <button
-          type="button"
-          className="vf-search__button | vf-button vf-button--primary mg-text-search-button"
-          onClick={() => {
-            setQueryParameters({
-              ...queryParameters,
-              query: searchTerms,
-            });
-          }}
-        >
-          <span className="vf-button__text">Search </span>
-          <span className="icon icon-common icon-search" />
-        </button>
-        <button
-          type="button"
-          className="vf-search__button | vf-button vf-button--tertiary mg-text-search-clear"
-          onClick={() => {
-            setQueryParameters({});
-          }}
-        >
-          <span className="vf-button__text">Clear All </span>
-          <span className="icon icon-common icon-times-circle" />
-        </button>
+        <div className="vf-form__item | vf-search__item">
+          <button
+            type="button"
+            className="vf-search__button | vf-button vf-button--primary mg-text-search-button"
+            onClick={() => {
+              setQueryParameters({
+                ...queryParameters,
+                query: searchTerms,
+              });
+            }}
+          >
+            <span className="vf-button__text">Search </span>
+            <span className="icon icon-common icon-search" />
+          </button>
+          <button
+            type="button"
+            className="vf-search__button | vf-button vf-button--tertiary mg-text-search-clear"
+            onClick={() => {
+              setQueryParameters({});
+            }}
+          >
+            <span className="vf-button__text">Clear All </span>
+            <span className="icon icon-common icon-times-circle" />
+          </button>
+        </div>
       </div>
     </div>
   );

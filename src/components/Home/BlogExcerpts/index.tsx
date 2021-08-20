@@ -38,7 +38,7 @@ const BlogExcerpts: React.FC = () => {
   if (error) return <FetchError error={error} />;
   return (
     <div>
-      <div className="vf-grid">
+      <div className="vf-grid vf-grid__col-2">
         {data.spotlight && (
           <BlogExcerpt
             title="Spotlight"

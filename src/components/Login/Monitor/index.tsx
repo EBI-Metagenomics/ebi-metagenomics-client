@@ -31,7 +31,7 @@ const LoginMonitor: React.FC = () => {
         setUser({ username: id, isAuthenticated: id !== null });
       }
     }
-    // eslint-disable-next line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, loading, rawResponse, setUser]);
   let backgroundColor = 'green';
   if (isAuthenticated) backgroundColor = 'green';
