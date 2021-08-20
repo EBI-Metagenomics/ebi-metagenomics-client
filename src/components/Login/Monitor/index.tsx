@@ -10,9 +10,11 @@ const TIME_TO_CHECK_AGAIN = 1000 * 60;
 
 const LoginMonitor: React.FC = () => {
   const [count, setCount] = useState(1);
-  const { data, loading, rawResponse } = useMGnifyData('utils/myaccounts', {
-    count,
-  });
+  const { data, loading, rawResponse } = useMGnifyData(
+    'utils/myaccounts',
+    { count },
+    { credentials: 'include' }
+  );
   const { isAuthenticated, setUser } = useContext(UserContext);
   useInterval(() => {
     // Your custom logic here
@@ -29,7 +31,8 @@ const LoginMonitor: React.FC = () => {
         setUser({ username: id, isAuthenticated: id !== null });
       }
     }
-  }, [data, loading, rawResponse, isAuthenticated, setUser]);
+    // eslint-disable-next line react-hooks/exhaustive-deps
+  }, [data, loading, rawResponse, setUser]);
   let backgroundColor = 'green';
   if (isAuthenticated) backgroundColor = 'green';
   if (loading) backgroundColor = 'yellow';

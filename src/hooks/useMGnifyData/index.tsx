@@ -245,8 +245,9 @@ export const useEBISearchData: (
 
 export const useMGnifyData: (
   endpoint: string,
-  parameters?: KeyValue
-) => MgnifyDataResponse = (endpoint, parameters = {}) => {
+  parameters?: KeyValue,
+  fetchOptions?: RequestInit
+) => MgnifyDataResponse = (endpoint, parameters = {}, fetchOptions = {}) => {
   const defaultParameters = {};
   const allParemeters = { ...defaultParameters, ...parameters };
   let url = `${config.api}${endpoint}`;
@@ -257,7 +258,7 @@ export const useMGnifyData: (
   const data = useData(
     [null, undefined].includes(endpoint) ? null : url,
     ResponseFormat.JSON,
-    { credentials: 'include' }
+    fetchOptions
   );
   return data as MgnifyDataResponse;
 };
@@ -275,9 +276,7 @@ export const useMgnifyForm: () => HTMLDataResponse = () => {
   const data = useData(
     `${config.api.replace('v1/', '')}http-auth/login_form`,
     ResponseFormat.HTML,
-    {
-      credentials: 'include',
-    }
+    { credentials: 'include' }
   );
   return data as HTMLDataResponse;
 };
