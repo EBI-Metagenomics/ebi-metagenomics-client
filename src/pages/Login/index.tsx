@@ -1,68 +1,27 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import OutterCard from 'components/UI/OutterCard';
 
 import UserContext from 'pages/Login/UserContext';
-import {
-  useMgnifyForm,
-  useMgnifyLogin,
-  useMgnifyLogout,
-} from 'hooks/useMGnifyData';
+import useAuthentication from 'hooks/useAuthentication';
 
 import enaUserImg from 'public/images/ico_ena_user.jpg';
 
 const Login: React.FC = () => {
   const userRef = useRef(null);
   const passwordRef = useRef(null);
-  const { data, loading, error } = useMgnifyForm();
-  const [shouldLogout, setShouldLogout] = useState(false);
-  const [loginError, setLoginError] = useState('');
-  const { rawResponse } = useMgnifyLogout(shouldLogout);
-  useEffect(() => {
-    setShouldLogout(false);
-  }, [rawResponse]);
-  const {
-    username: loggedUsername,
-    isAuthenticated,
-    setUser,
-  } = useContext(UserContext);
-  const [form, setForm] = useState({
-    username: null,
-    password: null,
-    csrfmiddlewaretoken: null,
-  });
-  const {
-    data: dataLogin,
-    loading: loadingLogin,
-    rawResponse: rawResponseLogin,
-  } = useMgnifyLogin(form.username, form.password, form.csrfmiddlewaretoken);
-  useEffect(() => {
-    if (!loadingLogin) {
-      if (dataLogin) {
-        setLoginError(
-          (dataLogin.querySelector('.text-error') as HTMLElement)?.innerText ||
-            ''
-        );
-      } else if (rawResponseLogin?.type === 'opaqueredirect') {
-        setUser({ username: form.username, isAuthenticated: true });
-        setLoginError('');
-      }
-    }
-  }, [dataLogin, loadingLogin, form.username, rawResponseLogin?.type, setUser]);
+  const { username, isAuthenticated } = useContext(UserContext);
+  const { login, logout, loginError, loading, error } = useAuthentication();
 
-  const handleLogout = (): void => {
-    setShouldLogout(true);
-    setUser({ username: null, isAuthenticated: false });
-  };
   if (isAuthenticated) {
     return (
       <div className="vf-stack vf-stack--400">
         <div>
-          You are logged in as <b>{loggedUsername}</b>
+          You are logged in as <b>{username}</b>
         </div>
-        <button type="button" className="vf-button" onClick={handleLogout}>
+        <button type="button" className="vf-button" onClick={logout}>
           Logout
         </button>
       </div>
@@ -71,15 +30,8 @@ const Login: React.FC = () => {
 
   if (loading) return <Loading />;
   if (error) return <FetchError error={error} />;
-  const csrfmiddlewaretoken = (
-    data.querySelector('input[name="csrfmiddlewaretoken"]') as HTMLInputElement
-  ).value;
   const handleSubmit = (): void => {
-    setForm({
-      username: userRef.current.value,
-      password: passwordRef.current.value,
-      csrfmiddlewaretoken,
-    });
+    login(userRef.current.value, passwordRef.current.value);
   };
   return (
     <div className="vf-grid vf-grid__col-2">
@@ -127,7 +79,7 @@ const Login: React.FC = () => {
             Log in
           </button>
         </div>
-        {loadingLogin && <Loading />}
+        {/* {loadingLogin && <Loading />} */}
         {loginError && <div className="vf-box">{loginError}</div>}
         <div className="form-forgotten">
           <a href="https://www.ebi.ac.uk/ena/submit/sra/#reset-password">
