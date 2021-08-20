@@ -15,7 +15,7 @@ const fetch = userDetails.fetch();
  */
 function sendConsentRequest(userData) {
     let body = 'I consent for the MGnify team to analyse the private data of my account ' +
-        util.getUsername() + '.';
+        (util.getUsername() || userData.id) + '.';
     return util.sendMail(userDetails.getEmails(true), 'Request consent', body, true);
 }
 
