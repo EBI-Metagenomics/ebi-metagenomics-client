@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import config from 'config.json';
+import Cookies from 'universal-cookie';
 
 type KeyValue = {
   [key: string]: string | number | Record<string, unknown> | [];
@@ -114,6 +115,7 @@ async function fetchData(
 ): Promise<void> {
   let response = null;
   let data = null;
+
   try {
     response = await fetch(url, fetchOptions);
   } catch (error) {
@@ -311,6 +313,41 @@ export const useMgnifyLogin: (
       credentials: 'include',
       body: formData,
       redirect: 'manual',
+    }
+  );
+  return data as HTMLDataResponse;
+};
+export const useMgnifyEmail: (
+  fromEmail: string,
+  subject: string,
+  body: string,
+  consent: boolean,
+  cc?: string
+) => HTMLDataResponse = (fromEmail, subject, body, consent, cc = '') => {
+  const cookies = new Cookies();
+
+  const data = useData(
+    fromEmail ? `${config.api}utils/notify` : null,
+    ResponseFormat.HTML,
+    {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': cookies.get('csrftoken'),
+        'Content-Type': 'application/vnd.api+json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        data: {
+          type: 'notifies',
+          attributes: {
+            from_email: fromEmail,
+            cc: cc,
+            subject: subject,
+            message: body,
+            is_consent: consent || false,
+          },
+        },
+      }),
     }
   );
   return data as HTMLDataResponse;

@@ -22,18 +22,22 @@ const TextSearch = lazy(() => import('./pages/TextSearch'));
 const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
 const Browse = lazy(() => import('./pages/Browse'));
 const Login = lazy(() => import('./pages/Login'));
+const Submit = lazy(() => import('./pages/Submit'));
 
 const App: React.FC = () => {
   const [user, setUser] = useState({
     username: null,
     isAuthenticated: false,
   });
+  const [details, setDetails] = useState(null);
   return (
     <UserContext.Provider
       value={{
         username: user.username,
         isAuthenticated: user.isAuthenticated,
+        details,
         setUser,
+        setDetails,
       }}
     >
       <LoginMonitor />
@@ -63,6 +67,9 @@ const App: React.FC = () => {
             </Route>
             <Route path="/login">
               <Login />
+            </Route>
+            <Route path="/submit">
+              <Submit />
             </Route>
             <Route path="/">
               <Home />

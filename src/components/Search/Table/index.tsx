@@ -153,8 +153,8 @@ const SearchTable: React.FC = () => {
   };
 
   return (
-    <div className="mg-overlay-container">
-      <div className={loading && isStale ? 'mg-overlay' : undefined} />
+    <div className="mg-table-overlay-container">
+      <div className={loading && isStale ? 'mg-table-overlay' : undefined} />
       <EMGTable
         cols={columns}
         data={fomattedData}

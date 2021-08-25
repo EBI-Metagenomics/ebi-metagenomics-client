@@ -10,7 +10,7 @@ type SomeComponentProps = RouteComponentProps;
 
 const pages = [
   { label: 'Overview', path: '/' },
-  // { label: 'Submit data', path: '/submit' },
+  { label: 'Submit data', path: '/submit' },
   { label: 'Text search', path: '/search' },
   { label: 'Sequence search', path: '/sequence-search' },
   { label: 'Browse data', path: '/browse' },
@@ -64,7 +64,7 @@ const MainMenu: React.FC<SomeComponentProps> = ({ location }) => {
       <nav className="vf-navigation vf-navigation--main | vf-cluster vf-u-fullbleed">
         <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
           {pages
-            .filter(({ label }) => !isAuthenticated || label !== 'Login')
+            // .filter(({ label }) => !isAuthenticated || label !== 'Login')
             .map(({ label, path }) => (
               <li className="vf-navigation__item" key={path}>
                 <Link
@@ -77,7 +77,7 @@ const MainMenu: React.FC<SomeComponentProps> = ({ location }) => {
                   }
                   to={path}
                 >
-                  {label}
+                  {isAuthenticated && label === 'Login' ? 'Logout' : label}
                 </Link>
               </li>
             ))}
