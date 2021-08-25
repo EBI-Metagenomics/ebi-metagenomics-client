@@ -1,5 +1,6 @@
 import React from 'react';
 import { QueryState } from 'hooks/useQueryParamState';
+import { noop } from 'lodash-es';
 
 const SearchQueryContext = React.createContext({
   searchData: {
@@ -20,8 +21,7 @@ const SearchQueryContext = React.createContext({
     },
   },
   queryParameters: {} as QueryState,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-  setQueryParameters: (s: QueryState) => {},
+  setQueryParameters: noop as (s: QueryState) => void,
 });
 
 export default SearchQueryContext;

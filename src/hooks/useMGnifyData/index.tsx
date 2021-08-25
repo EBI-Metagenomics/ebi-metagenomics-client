@@ -341,8 +341,8 @@ export const useMgnifyEmail: (
           type: 'notifies',
           attributes: {
             from_email: fromEmail,
-            cc: cc,
-            subject: subject,
+            cc,
+            subject,
             message: body,
             is_consent: consent || false,
           },

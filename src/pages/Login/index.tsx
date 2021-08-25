@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, FormEvent } from 'react';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
@@ -30,55 +30,58 @@ const Login: React.FC = () => {
 
   if (loading) return <Loading />;
   if (error) return <FetchError error={error} />;
-  const handleSubmit = (): void => {
+  const handleSubmit = (event: FormEvent): void => {
+    event.preventDefault();
     login(userRef.current.value, passwordRef.current.value);
   };
   return (
     <div className="vf-grid vf-grid__col-2">
       <div className="vf-form vf-stack vf-stack--400">
-        <div className="vf-form__item">
-          <label htmlFor="id_username" className="vf-form__label">
-            Webin-ID:
-          </label>
-          <input
-            type="text"
-            name="username"
-            maxLength={100}
-            autoCapitalize="off"
-            autoCorrect="off"
-            id="id_username"
-            className="vf-form__input"
-            ref={userRef}
-            required
-          />
-        </div>
-        <div className="vf-form__item">
-          <label htmlFor="id_password" className="vf-form__label">
-            Password:
-          </label>
-          <input
-            type="password"
-            name="password"
-            maxLength={100}
-            autoCapitalize="off"
-            autoCorrect="off"
-            className="vf-form__input"
-            id="id_password"
-            ref={passwordRef}
-            required
-          />
-        </div>
-        <div className="form-actions-no-box">
-          <button
-            type="button"
-            name="submit"
-            className="vf-button"
-            id="submit-id-submit"
-            onClick={handleSubmit}
-          >
-            Log in
-          </button>
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="vf-form__item">
+            <label htmlFor="id_username" className="vf-form__label">
+              Webin-ID:
+            </label>
+            <input
+              type="text"
+              name="username"
+              maxLength={100}
+              autoCapitalize="off"
+              autoCorrect="off"
+              id="id_username"
+              className="vf-form__input"
+              ref={userRef}
+              required
+            />
+          </div>
+          <div className="vf-form__item">
+            <label htmlFor="id_password" className="vf-form__label">
+              Password:
+            </label>
+            <input
+              type="password"
+              name="password"
+              maxLength={100}
+              autoCapitalize="off"
+              autoCorrect="off"
+              className="vf-form__input"
+              id="id_password"
+              ref={passwordRef}
+              required
+            />
+          </div>
+          <br />
+          <div className="form-actions-no-box">
+            <button
+              type="submit"
+              name="submit"
+              className="vf-button"
+              id="submit-id-submit"
+            >
+              Log in
+            </button>
+          </div>
+        </form>
         {/* {loadingLogin && <Loading />} */}
         {loginError && <div className="vf-box">{loginError}</div>}
         <div className="form-forgotten">

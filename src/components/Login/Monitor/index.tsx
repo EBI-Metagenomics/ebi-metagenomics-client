@@ -17,8 +17,7 @@ const LoginMonitor: React.FC = () => {
   );
   const { isAuthenticated, setUser, setDetails } = useContext(UserContext);
   useInterval(() => {
-    // Your custom logic here
-    setCount(count + 1);
+    setCount((c) => c + 1);
   }, TIME_TO_CHECK_AGAIN);
   useEffect(() => {
     if (!loading && !isStale) {
@@ -32,9 +31,9 @@ const LoginMonitor: React.FC = () => {
         setDetails(data?.data as unknown as UserDetails);
       }
     }
-  }, [data, loading, rawResponse, setUser, isStale]);
+  }, [data, loading, rawResponse, setUser, setDetails, isStale]);
   useEffect(() => {
-    setCount(count + 1);
+    setCount((c) => c + 1);
   }, [isAuthenticated]);
   let backgroundColor = 'green';
   if (isAuthenticated) backgroundColor = 'green';

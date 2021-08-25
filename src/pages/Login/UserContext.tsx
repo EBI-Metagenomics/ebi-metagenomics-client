@@ -1,4 +1,5 @@
 import React from 'react';
+import { noop } from 'lodash-es';
 
 type UserType = {
   username: null | string;
@@ -19,9 +20,8 @@ const UserContext = React.createContext({
   username: null,
   isAuthenticated: false,
   details: null,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-  setUser: (u: UserType) => null,
-  setDetails: (details: UserDetails) => null,
+  setUser: noop as (u: UserType) => void,
+  setDetails: noop as (details: UserDetails) => void,
 });
 
 export const getEmailsFromDetails = (details: UserDetails): string[] =>

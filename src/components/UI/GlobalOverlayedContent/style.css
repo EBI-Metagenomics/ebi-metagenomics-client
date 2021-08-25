@@ -17,3 +17,16 @@
   width: 50%;
   min-height: 20vh;
 }
+.mg-overlay-close {
+  z-index: 100002;
+  position: absolute;
+  left: calc(75% - 1.5rem);
+  background: lightgray;
+  color: gray;
+  top: 10%;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.mg-overlay-close:hover {
+  font-weight: bold;
+}

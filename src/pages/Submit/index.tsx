@@ -31,7 +31,7 @@ const SubmitPage: React.FC = () => {
     }
   }, [data, loading, errorEmail]);
 
-  const handleConsentClick = () => {
+  const handleConsentClick = (): void => {
     if (!consentCheckboxRef.current.checked) {
       setError(true);
     } else {
@@ -76,10 +76,11 @@ const SubmitPage: React.FC = () => {
       </p>
       <p>
         Once your reads are uploaded to ENA, navigate to the home page, click
-        'Submit and/or Request' and complete the form to request an analysis
-        with MGnify. You will receive an email once the analysis starts and
-        another when the analysis of all samples is complete (
+        &apos;Submit and/or Request&apos; and complete the form to request an
+        analysis with MGnify. You will receive an email once the analysis starts
+        and another when the analysis of all samples is complete (
         <button
+          type="button"
           className="vf-button vf-button--link mg-button-as-link"
           onClick={() => setShowModal(true)}
         >
