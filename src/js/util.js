@@ -806,9 +806,10 @@ export function specifyPageTitle(objectType, id) {
  * @param {string} subject of email
  * @param {string} body of email
  * @param {bool} consent is consent for ENA
+ * @param {string} cc Other email addresses to CarbonCopy
  * @return {JQuery.Promise} of ajax request
  */
-export function sendMail(fromEmail, subject, body, consent) {
+export function sendMail(fromEmail, subject, body, consent, cc='') {
     const deferred = $.Deferred();
     console.log('Sending mail');
     $.ajax({
@@ -823,6 +824,7 @@ export function sendMail(fromEmail, subject, body, consent) {
                 'type': 'notifies',
                 'attributes': {
                     'from_email': fromEmail,
+                    'cc': cc,
                     'subject': subject,
                     'message': body,
                     'is_consent': consent || false
