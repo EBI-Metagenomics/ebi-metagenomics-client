@@ -84,8 +84,9 @@ module.exports = Backbone.View.extend({
   },
 
   getJobIDFromURL() {
-    const qs = queryString.extract(location.href);
-    const urlParams = queryString.parse(qs, { arrayFormat: "bracket" });
+    const hash = location.hash.split("?");
+    if (hash.length < 2) return undefined;
+    const urlParams = queryString.parse(hash[1], { arrayFormat: "bracket" });
     return urlParams.job_id;
   },
   removeJobIDFromURL() {
@@ -208,10 +209,11 @@ module.exports = Backbone.View.extend({
     //   this.controller.abort();
     // }
     this.$loading.show();
+
     // this.controller = new AbortController();
     fetch(this.API_URL + "genomes-search/status/" + this.jobID, {
       method: "GET",
-      //   signal: this.controller.signal,
+      cache: "no-store",
     })
       .then((response) => {
         if (response.ok) return response.json();
@@ -275,15 +277,15 @@ module.exports = Backbone.View.extend({
       SUCCESS: "✅",
       FAILURE: "❌",
       IN_QUEUE: "🕛",
+      NO_RESULTS: "🔸",
     };
     this.$("#results-files").html(
       `<table>
         <tr>
-          <th>Job ID</th>
           <th>Filename</th>
           <th>Status</th>
-          <th>% query covered</th>
-          <th>Genome</th>
+          <th>Best Match<br/>(% query covered)</th>
+          <th>Total No. of matches</th>
           <th>Download</th>
         </tr>
         ${this.jobState.results
@@ -291,19 +293,26 @@ module.exports = Backbone.View.extend({
           .map(
             (s) =>
               `<tr>
-                <td><span class="filename">${s.job_id}</span></td>
-                <td><span class="filename">${s.filename}</span></td>
-                <td>${emoji[s.status] || ""} ${s.status}</td>
+                <td><span class="filename">${s.filename || s.job_id}</span></td>
+                <td>${emoji[s.result.status || s.status] || ""} ${
+                s.result.status || s.status
+              }</td>
                 ${
-                  s.status === "SUCCESS"
+                  s.status === "SUCCESS" && s.result.status !== "NO_RESULTS"
                     ? `
-                  <td>${s.result.p_query}</td>
                   <td>
-                    ${getLinkToMagFromAccession(s.result.match)}
+                  ${getLinkToMagFromAccession(s.result.match)} 
+                  (${s.result.p_query})
                   </td>
+                  <td>${s.result.total_matches}</td>
                   <td><span class="result-mag-csv">
                     ${getLinkToCSV(s.results_url, s.filename)}
                   </span></td>`
+                    : ""
+                }
+                ${
+                  s.status === "SUCCESS" && s.result.status === "NO_RESULTS"
+                    ? `<td colspan="3">We couldn't find any matches with your query</td>`
                     : ""
                 }
                 ${
