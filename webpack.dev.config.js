@@ -76,6 +76,7 @@ const proxyRoutes = [
   "/metagenomics/search",
   "/metagenomics/sequenceSearch",
   "/metagenomics/pipelines",
+  "/metagenomics/mydata",
 ];
 
 const getProxyRoutes = () => {
@@ -95,16 +96,30 @@ const getProxyRoutes = () => {
           "X-Requested-With, content-type, Authorization",
       },
     },
+    "/http-auth/login": {
+      //tryign to redirect connctions to the API
+      target: "http://localhost:8000/",
+      secure: false,
+      changeOrigin: true,
+      pathRewrite: {
+        "^/http-auth/login": "/http-auth/login/",
+      },
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods":
+          "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers":
+          "X-Requested-With, content-type, Authorization",
+      },
+    },
     "/ebisearch/ws/rest": {
       target: "http://www.ebi.ac.uk/",
       secure: false,
       changeOrigin: true,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods":
-          "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers":
-          "X-Requested-With, content-type",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, content-type",
       },
     },
   };
@@ -119,14 +134,14 @@ const getProxyRoutes = () => {
       },
     };
   });
-  routes["/metagenomics/genome"]={
+  routes["/metagenomics/genome"] = {
     target: "http://localhost:9000/",
     pathRewrite: {
       "^/metagenomics/genomes/.+$": "/metagenomics/genome.html",
       "^/metagenomics/genomes/?$": "/metagenomics/genomes.html",
       "^/metagenomics/genome-search": "/metagenomics/genome-search.html",
-    }
-  }
+    },
+  };
   console.log(routes);
   return routes;
 };
@@ -175,7 +190,7 @@ module.exports = {
   devtool: "#inline-source-map",
   node: baseConfig.node,
   watchOptions: {
-    ignored: /node_modules/
+    ignored: /node_modules/,
   },
   devServer: {
     port: 9000,

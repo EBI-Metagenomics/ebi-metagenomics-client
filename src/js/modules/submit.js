@@ -15,8 +15,8 @@ const fetch = userDetails.fetch();
  */
 function sendConsentRequest(userData) {
     let body = 'I consent for the MGnify team to analyse the private data of my account ' +
-        util.getUsername() + '.';
-    return util.sendMail(userData['email'], 'Request consent', body, true);
+        (util.getUsername() || userData.id) + '.';
+    return util.sendMail(userDetails.getEmails(true), 'Request consent', body, true);
 }
 
 /**
@@ -51,6 +51,11 @@ fetchLogin.done(function(loggedIn) {
             let userData = userDetails.attributes;
             // If consent not given display consent button
             if (userData['analysis'] !== true) {
+                $('#consent-webin-account').html(userData.id);
+                const cc = userDetails.getEmails();
+                $('#consent-webin-emails').html(
+                    userData.email + (cc ? ' - CC:'+ cc :'')
+                );
                 const $button = $('<button class=\'button\'>Give consent.</button>');
                 $button.click(function(e) {
                     const consentGiven = $('#consent-given').is(':checked');
