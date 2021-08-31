@@ -319,7 +319,7 @@ module.exports = Backbone.View.extend({
                   ${getLinkToMagFromAccession(s.result.match)} 
                   (${s.result.p_query})
                   </td>
-                  <td>${s.result.total_matches}</td>
+                  <td>${s.result.matches}</td>
                   <td><span class="result-mag-csv">
                     ${getLinkToCSV(s.results_url, s.filename)}
                   </span></td>`
