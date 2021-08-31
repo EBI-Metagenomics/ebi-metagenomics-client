@@ -271,7 +271,7 @@ let GenomeCataloguesView = util.GenericTableView.extend({
             attr.biome_name + '"></span>';
         const genomeCatalogueLink = '<a href=\'' + attr.catalogue_url + '\'>' + attr.catalogue_id +
             '</a>';
-        return [biomes, genomeCatalogueLink, attr.catalogue_name, attr.catalogue_description,
+        return [biomes, genomeCatalogueLink, attr.catalogue_name, attr.catalogue_version, attr.genome_count,
             attr.last_updated];
     },
     initialize() {
@@ -280,7 +280,8 @@ let GenomeCataloguesView = util.GenericTableView.extend({
             {sortBy: null, name: 'Biome'},
             {sortBy: 'catalogue_id', name: 'Catalogue ID'},
             {sortBy: 'catalogue_name', name: 'Catalogue name'},
-            {sortBy: null, name: 'Description'},
+            {sortBy: 'version', name: 'Catalogue version'},
+            {sortBy: 'genome_count', name: 'Genomes count'},
             {sortBy: 'last_update', name: 'Last updated'}
         ];
         let params = createInitParams();
