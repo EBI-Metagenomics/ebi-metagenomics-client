@@ -57,7 +57,7 @@
     "js-cookie": "^2.1.4",
     "livefilter": "^2.13.0",
     "mgnify": "1.8.0",
-    "mgnify-sourmash-component": "0.0.10",
+    "mgnify-sourmash-component": "0.1.1",
     "motion-ui": "^1.2.3",
     "node-js-marker-clusterer": "^1.0.0",
     "query-string": "^7.0.1",

@@ -4,8 +4,7 @@
 require("../commons");
 require("mgnify-sourmash-component");
 require("static/css/modules/genomes-sourmash.css");
-
-// TODO: ⚠️ Improve the style of this view
+const {SearchStorage} = require("../modules/search/SearchStorage");
 const Backbone = require("backbone");
 const queryString = require("query-string");
 
@@ -60,6 +59,7 @@ module.exports = Backbone.View.extend({
     this.$resultsSeccion = this.$("#results-mag-section");
     this.$resultsDescription = this.$("#results-job-description");
     this.$timerLabel = this.$("#results-timer-label");
+    this.$catalogLabel = this.$("#search-mag-catalog-label");
     this.$loading = this.$(".genome-search-mag-loading");
 
     this.jobID = this.getJobIDFromURL();
@@ -73,7 +73,20 @@ module.exports = Backbone.View.extend({
     this.timer = null;
     this.timerID = null;
 
+    this.catalog = "HGUT";
+
     this.$loading.hide();
+    this.searchStorage = new SearchStorage(
+      'sourmashJobs-'+this.catalog,
+      document.querySelector(".genome-search-history"),
+      (jobID)=>{
+        this.reset();
+        this.status = STATUS_TYPE.URL_JOB;
+        this.jobState = {jobID};
+        this.jobID = jobID;
+        this.startIntervalChecker();  
+      }
+    );
     this.refresh();
     if (this.status === STATUS_TYPE.URL_JOB) {
       this.jobState = {
@@ -145,7 +158,7 @@ module.exports = Backbone.View.extend({
     this.$messageContainter.html("");
     this.refresh();
     const formdata = new FormData();
-    formdata.append("mag_catalog", "HGUT");
+    formdata.append("mag_catalog", this.catalog);
     for (let [filename, signature] of Object.entries(this.signatures)) {
       formdata.append(
         "file_uploaded",
@@ -229,6 +242,7 @@ module.exports = Backbone.View.extend({
         )
           ? STATUS_TYPE.PENDING_JOB
           : STATUS_TYPE.RETRIEVED_JOB;
+        this.searchStorage.add(this.jobState.job_id);
         if (this.status === STATUS_TYPE.RETRIEVED_JOB) {
           this.clearIntervalChecker();
           this.$timerLabel.html("");
@@ -291,14 +305,15 @@ module.exports = Backbone.View.extend({
         ${this.jobState.results
           .sort((s1, s2) => (s1.status < s2.status ? 1 : -1))
           .map(
-            (s) =>
-              `<tr>
+            (s) => {
+              const resultStatus = s.result && s.result.status;
+              return `<tr>
                 <td><span class="filename">${s.filename || s.job_id}</span></td>
-                <td>${emoji[s.result.status || s.status] || ""} ${
-                s.result.status || s.status
+                <td>${emoji[resultStatus || s.status] || ""} ${
+                  resultStatus || s.status
               }</td>
                 ${
-                  s.status === "SUCCESS" && s.result.status !== "NO_RESULTS"
+                  s.status === "SUCCESS" && resultStatus !== "NO_RESULTS"
                     ? `
                   <td>
                   ${getLinkToMagFromAccession(s.result.match)} 
@@ -311,7 +326,7 @@ module.exports = Backbone.View.extend({
                     : ""
                 }
                 ${
-                  s.status === "SUCCESS" && s.result.status === "NO_RESULTS"
+                  s.status === "SUCCESS" && resultStatus === "NO_RESULTS"
                     ? `<td colspan="3">We couldn't find any matches with your query</td>`
                     : ""
                 }
@@ -326,6 +341,7 @@ module.exports = Backbone.View.extend({
                     : ""
                 }
               </tr>`
+            }
           )
           .join("")}
       </table>`
@@ -372,6 +388,7 @@ module.exports = Backbone.View.extend({
     }
   },
   refresh() {
+    this.$catalogLabel.html(this.catalog);
     this.refreshJob();
     this.$searchSeccion.hide();
     this.$resultsSeccion.hide();
@@ -401,5 +418,6 @@ module.exports = Backbone.View.extend({
         this.$resultsSeccion.show();
         break;
     }
+    this.searchStorage.render();
   },
 });

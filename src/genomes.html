@@ -170,11 +170,11 @@
                                 <section>
                                     <div style="width:100%;text-align: right;">
                                         Powered by <a href="https://sourmash.readthedocs.io/">Sourmash</a>.
-                                        <img src="/images/sourmash_logo.png" style="height:2em" />
+                                        <img src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/sourmash_logo.png" style="height:2em" />
                                     </div>
 
                                     <h2>
-                                        Search MAG files in the UHGG catalogue
+                                        Search MAG files in the <span id="search-mag-catalog-label"></span> catalogue
                                     </h2>
                                     <p>
                                         Compare your MAG file or your MAG collection against this catalog to see if they are novel.<br/>
@@ -218,6 +218,17 @@
                                         <img class="genome-search-mag-loading"
                                             src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" />
                                     </div>
+                                </section>
+                                <section>
+                                <details>
+                                    <summary><h4 style="display: inline; cursor: pointer;">Search History</h4></summary>
+                                    <div>
+                                        <p>Here is a list of previous searches in this catalog:</p>
+                                        <div class="genome-search-history">_
+                                        </div>
+                                        <p class="small"><b>Notice</b>: Results are only kept in our servers for 30 days.</p>
+                                    </div>
+                                </details>
                                 </section>
                             </section>
                         </div>
