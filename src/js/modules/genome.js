@@ -295,7 +295,6 @@ let GenomeCataloguesView = Backbone.View.extend({
         return this.collection.fetch({
             success() {
                 const data = {catalogues: that.collection.toJSON()};
-                console.log(data);
                 that.$el.html(that.template(data));
             }
         });
