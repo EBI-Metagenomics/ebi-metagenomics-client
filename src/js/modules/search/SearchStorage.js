@@ -55,7 +55,11 @@ export class SearchStorage {
               (jobID) => `
                 <li>
                   <a href="#genome-search-mag-tab?job_id=${jobID}">${jobID}</a>
-                  <button id="remove_${jobID}" class="button secondary small hollow">Remove</button>
+                  <button 
+                    id="remove_${jobID}" 
+                    class="button secondary small hollow" 
+                    style="padding: 0.2em; margin: 0.2em;"
+                  >Remove</button>
                 </li>`
             )
             .join("")}

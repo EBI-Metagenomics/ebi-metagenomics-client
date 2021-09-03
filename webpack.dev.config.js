@@ -50,16 +50,21 @@ const proxyRoutes = [
     regex: "^/metagenomics/contigs/.*$",
     page: "/metagenomics/contigs.html",
   },
-  // {
-  //   label: "/metagenomics/genome",
-  //   regex: "^/metagenomics/genome/.+$",
-  //   page: "/metagenomics/genome.html",
-  // },
+  {
+    label: "/metagenomics/genomes",
+    regex: "^/metagenomics/genomes/.+$",
+    page: "/metagenomics/genome.html",
+  },
   // {
   //   label: "/metagenomics/genomes",
   //   regex: "^/metagenomics/genomes/?$",
   //   page: "/metagenomics/genomes.html",
   // },
+  {
+    label: "/metagenomics/genome-catalogues",
+    regex: "^/metagenomics/genome-catalogues/.*$",
+    page: "/metagenomics/genome-catalogue.html",
+  },
   "/metagenomics/genome-search",
   "/metagenomics/healthcheck",
   "/metagenomics/browse",

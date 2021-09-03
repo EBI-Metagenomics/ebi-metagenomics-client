@@ -39,10 +39,10 @@ jobs:
               uses: actions/setup-python@v2
               with:
                   python-version: 3.6
-            - name: 📜 - Set up JS Node 10
+            - name: 📜 - Set up JS Node 14
               uses: actions/setup-node@v1
               with:
-                  node-version: '10'
+                  node-version: '14'
             - name: 💾 Start MongoDB
               uses: supercharge/mongodb-github-action@1.3.0
               with:
@@ -53,7 +53,7 @@ jobs:
                   python -V
                   pip -V
                   pip install "git+git://github.com/EBI-Metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-                  pip install "git+git://github.com/EBI-metagenomics/emgapi@${GIT_BRANCH_NAME}#egg=emgcli" || pip install "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+                  pip install "git+git://github.com/EBI-metagenomics/emgapi@feature/multiple-genome-catalogues#egg=emgcli"
                   ls -l
 
             - name: 💾 - Setting MySQL
@@ -110,9 +110,9 @@ jobs:
                   emgcli import_kegg_modules ${{ github.workspace }}/ci/fixtures/kegg_module_orthology.json
                   emgcli import_kegg_classes ${{ github.workspace }}/ci/fixtures/kegg_class_orthology.json
                   emgcli import_cog_descriptions ${{ github.workspace }}/ci/fixtures/cog.csv
-                  emgcli import_genomes ${{ github.workspace }}/ci/emg_api_datafiles/genomes/ 1.0
+                  emgcli import_genomes ${{ github.workspace }}/ci/emg_api_datafiles/ genomes/hgut/1.0/ Human\ Gut 1.0 root:Host-Associated:Human:Digestive\ System:Large\ intestine
 
-                  git clone --single-branch --branch ${GIT_BRANCH_NAME} https://github.com/EBI-Metagenomics/emgapi.git || git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
+                  git clone --single-branch --branch feature/multiple-genome-catalogues https://github.com/EBI-Metagenomics/emgapi.git
 
                   mysql -uroot -proot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
             - name: 🔬 - Start EMG API
@@ -133,7 +133,7 @@ jobs:
             - name: 🔧 - Install
               run: |
                   npm ci
-                  npm install "https://github.com/EBI-Metagenomics/ebi-metagenomics-webkit#${GIT_BRANCH_NAME}" || echo "No matching branch of ebi-metagenomics-webkit was found or installed."
+                  npm install "https://github.com/EBI-Metagenomics/ebi-metagenomics-webkit#feature/multiple-genome-catalogues" || echo "No matching branch of ebi-metagenomics-webkit was found or installed."
                   npm run build
                   ls dist/
                   mv dist/metagenomics /usr/share/nginx/html/metagenomics

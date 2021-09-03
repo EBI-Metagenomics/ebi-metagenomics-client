@@ -51,6 +51,7 @@ module.exports = Backbone.View.extend({
 
   initialize(settings) {
     this.API_URL = settings.api_url;
+    this.catalog = settings.catalogue_id;
 
     this.$sourmash = this.$("#sourmash");
     this.$messageContainter = this.$("#message-containter-2");
@@ -72,8 +73,6 @@ module.exports = Backbone.View.extend({
     this.signatures = null;
     this.timer = null;
     this.timerID = null;
-
-    this.catalog = "HGUT";
 
     this.$loading.hide();
     this.searchStorage = new SearchStorage(

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head id="head">
+    <title>Browse genomes &lt; MGnify &lt; EMBL-EBI</title>
+    {{> partials/head this}}
+    <meta property="og:title" content="MGnify browse page > EMBL-EBI" />
+    <meta property="twitter:title" content="MGnify browse page > EMBL-EBI" />
+
+    <meta name="og:description" content="Browse data on MGnify." />
+    <meta name="twitter:description" content="Browse data on MGnify." />
+  </head>
+
+  <body class="level2">
+    <!-- add any of your classes or IDs -->
+    <div id="header-container">{{> partials/header this}}</div>
+
+    <div id="content">
+      <section id="main-content-area" class="row" role="main">
+        {{> partials/banners this}}
+        <script id="genomeCatalogueTmpl" type="text/template">
+          <nav aria-label="You are here:" role="navigation">
+              <ul class="breadcrumbs columns">
+                  <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
+                  <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#genomes">Browse genomes</a>
+                  </li>
+                  <li>
+                      <span class="show-for-sr">Current: </span> Genome catalogue <%= catalogue_id %>
+                  </li>
+              </ul>
+          </nav>
+          <h2><%= catalogue_name %></h2>
+              <%= catalogue_description %>
+          <div class="row">
+              <ul class="tabs" data-deep-link="true" data-update-history="true" data-deep-link-smudge="500"
+                  data-tabs id="data-tabs">
+                  <li class="tabs-title is-active"><a href="#genome-list-tab" aria-selected="true">Genome list</a>
+                  </li>
+                  <li class="tabs-title"><a href="#phylo-tab">Taxonomy tree</a></li>
+                  <li class="tabs-title"><a href="#protein-catalog-tab">Protein catalogue</a></li>
+                  <li class="tabs-title"><a href="#genome-search-tab">Search by Gene</a></li>
+                  <li class="tabs-title"><a href="#genome-search-mag-tab">Search by MAG</a></li>
+          </ul>
+              <div class="tabs-content" data-tab-content="data-tabs">
+                  <div class="tabs-panel active" id="genome-list-tab">
+                      <section id="genomes-section" class="table-container"></section>
+                  </div>
+                  <div id="phylo-tab" class="tabs-panel">
+                      <section id="phylo-section" class="table-container">
+                          <h2>Taxonomy tree</h2>
+                          <div id="phylo-tree"></div>
+                          <div>
+                              The tree viewer is a derivative of the <a href="https://gtdb.ecogenomic.org/tree">GTDB
+                              Tree viewer</a>, used under the GNU General Public License, version 3
+                          </div>
+                      </section>
+                  </div>
+                  <div id="protein-catalog-tab" class="tabs-panel">
+                      <section id="protein-catalog-section">
+                          <h2><%= protein_catalogue_name %></h2>
+                          <%= protein_catalogue_description %>
+                      </section>
+                  </div>
+                  <div id="genome-search-tab" class="tabs-panel">
+                      <section id="genome-search">
+                          <section>
+                              <h2>
+                                  Search DNA fragments in the <%= catalogue_name %> catalogue
+                              </h2>
+                              <p>
+                                  This is a <a
+                                      href="https://www.nature.com/articles/s41587-018-0010-1">BIGSI-based</a> search
+                                  engine designed to query short sequence
+                                  fragments (50-5,000 bp in length) against representative genomes from
+                                  the catalogue.
+                              </p>
+                          </section>
+                          <section>
+                              <div class="row columns text-center">
+                                  <p class="paste-sequence">
+                                      Paste a sequence
+                                  </p>
+                                  <div id="message-containter"></div>
+                              </div>
+                              <!-- Search form -->
+                              <section>
+                                  <form id="search-form">
+                                      <div>
+                                          <label for="sequence" id="example-seq" style="cursor: pointer">Paste
+                                              in your sequence or
+                                              use the
+                                              <a href="#" id="example">example</a>
+                                          </label>
+
+                                          <label for="fasta-file" style="cursor: pointer">Or upload a fasta file
+                                              <input type="file" name="fasta" id="fasta-file"
+                                                     accept=".fasta, .fna, .ffn, .frn, .txt">
+                                          </label>
+                                      </div>
+                                      <div class="row columns">
+                                              <textarea id="sequence" class="sequence"
+                                                        title="DNA Sequence"></textarea>
+                                      </div>
+                                      <div class="row">
+                                          <div class="columns">
+                                              <div class="row">
+                                                  <div class="columns medium-6 small-6 large-6">
+                                                      <label for="threshold">
+                                                          The minimum proportion of K-mers from the query that must be
+                                                          matched, can be defined below (default: 0.4)
+                                                      </label>
+                                                  </div>
+                                              </div>
+                                              <div class="row ">
+                                                  <div class="columns medium-2 small-2 large-2">
+                                                      <input id="threshold" name="threshold" type="number" min="0.1"
+                                                             max="1.0" value="0.4" step="0.1">
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="columns text-center">
+                                              <button id="search-button" type="submit"
+                                                      class="button black-background">Search
+                                              </button>
+                                              <button id="clear-button" type="button"
+                                                      class="button secondary">Clear
+                                              </button>
+                                          </div>
+                                      </div>
+                                  </form>
+                              </section>
+                              <!-- Search results -->
+                              <section>
+                                  <div id="results-section" class="hidden">
+                                      <div class="row">
+                                          <img class="genome-search-loading"
+                                               src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+                                          <div id="results-table" class="columns">
+                                          </div>
+                                      </div>
+                                  </div>
+                              </section>
+                          </section>
+                      </section>
+                  </div>
+                  <div id="genome-search-mag-tab" class="tabs-panel">
+                      <section id="genome-search-mag">
+                          <section>
+                              <div style="width:100%;text-align: right;">
+                                  Powered by <a href="https://sourmash.readthedocs.io/">Sourmash</a>.
+                                  <img src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/sourmash_logo.png" style="height:2em" />
+                              </div>
+
+                              <h3>
+                                  Search MAG files in the <span id="search-mag-catalog-label"></span> catalogue
+                              </h3>
+                              <p>
+                                  Compare your MAG file or your MAG collection against this catalog to see if they are novel.<br/>
+                              </p>
+                              <div id="message-containter-2"></div>
+                              <section id="search-mag-section">
+                                  <mgnify-sourmash-component id="sourmash" show_directory_checkbox></mgnify-sourmash-component>
+                                  <div class="columns text-center">
+                                      <button id="search-button-mag" type="button"
+                                          class="button black-background" disabled>Search</button>
+                                      <button id="clear-button-mag" type="button"
+                                          class="button secondary clear-button-mag">Clear</button>
+                                  </div>
+                              </section>
+                              <!-- Search results -->
+                              <section>
+                                  <div id="results-mag-section" class="hidden results-mag-section">
+                                      <div id="results-job-sent">
+                                          <h4>Search Results</h4>
+                                          <div id="results-job-description">
+                                          </div>
+                                          <h5>Job Information</h5>
+                                          <dl>
+                                              <dt>Job ID</dt>
+                                              <dd id="results-job-id">...</dd>
+                                              <dt>Status</dt>
+                                              <dd><span id="results-status">...</span> <span id="results-timer-label"></span></dd>
+                                              <dt>Link</dt>
+                                              <dd id="results-link">...</dd>
+                                              <dt>Processed Files</dt>
+                                          </dl>
+                                          <div id="results-files" class="results-files">...</div>
+                                      </div>
+                                      <div class="columns text-center">
+                                          <button id="clear-button-mag" type="button"
+                                              class="button secondary clear-button-mag">Start a new search</button>
+                                      </div>
+                                  </div>
+                                  <div class="center">
+                                      <img class="genome-search-mag-loading"
+                                          src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif" />
+                                  </div>
+                              </section>
+                              <section>
+                                <details>
+                                    <summary><h4 style="display: inline; cursor: pointer;">Search History</h4></summary>
+                                    <div>
+                                        <p>Here is a list of previous searches in this catalog:</p>
+                                        <div class="genome-search-history">_
+                                        </div>
+                                        <p class="small"><b>Notice</b>: Results are only kept in our servers for 30 days.</p>
+                                    </div>
+                                </details>
+                              </section>
+                            </section>
+                      </section>
+                  </div>
+              </div>
+          </div>
+        </script>
+      </section>
+    </div>
+
+    <div id="footer">{{>partials/elixir}} {{>partials/footer}}</div>
+  </body>
+</html>
