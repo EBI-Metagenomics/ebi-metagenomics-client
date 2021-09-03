@@ -2,7 +2,7 @@ import GenericTableHandler from '../util/genericTable';
 import {openPage, waitForPageLoad, changeTab, datatype} from '../util/util';
 
 
-describe('Genome catalogue page', () => {
+describe.only('Genome catalogue page', () => {
     const catalogueId = 'human-gut-v1-0';
     context('Browse genomes', () => {
         beforeEach(() => {
