@@ -110,7 +110,7 @@ jobs:
                   emgcli import_kegg_modules ${{ github.workspace }}/ci/fixtures/kegg_module_orthology.json
                   emgcli import_kegg_classes ${{ github.workspace }}/ci/fixtures/kegg_class_orthology.json
                   emgcli import_cog_descriptions ${{ github.workspace }}/ci/fixtures/cog.csv
-                  emgcli import_genomes ${{ github.workspace }}/ci/emg_api_datafiles/ genomes/hgut/1.0/ Human\ Gut 1.0 root:Host-Associated:Human:Digestive\ System:Large\ intestine
+                  emgcli import_genomes ~/results/ genomes/hgut/1.0/ Human\ Gut 1.0 root:Host-Associated:Human:Digestive\ System:Large\ intestine
 
                   git clone --single-branch --branch feature/multiple-genome-catalogues https://github.com/EBI-Metagenomics/emgapi.git
 
