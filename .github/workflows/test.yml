@@ -28,13 +28,6 @@ jobs:
             - name: 📣 - Announce git branch name
               run: |
                   echo ${GIT_BRANCH_NAME}
-            - name: 🌎 - Setup NginX
-              run: |
-                  sudo chown runner /var/log/nginx/*
-                  sudo chown runner /var/run/*
-                  sudo chown runner /var/run
-                  sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
-                  nginx -c "$(pwd)/ci/nginx.conf"
             - name: 🐍 - Set up Python 3.6
               uses: actions/setup-python@v2
               with:
@@ -67,6 +60,13 @@ jobs:
                   mysql -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
                   for SQL_FIXTURE in ci/emg_sql_fixtures/*.sql; do echo "SQL >>>> $SQL_FIXTURE"; mysql -uroot -proot --database=emg < "$SQL_FIXTURE"; done
                   mysql -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
+            - name: 🌎 - Setup NginX
+              run: |
+                  sudo chown runner /var/log/nginx/*
+                  sudo chown runner /var/run/*
+                  sudo chown runner /var/run
+                  sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
+                  nginx -c "$(pwd)/ci/nginx.conf"
             - name: 🪜 - Setting up Fixtures
               run: |
                   source ci/create_download_files.sh
