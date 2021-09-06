@@ -42,7 +42,6 @@ jobs:
                   mongodb-version: 4.0.6
             - name: 🔧🔬 - Install EMG API
               run: |
-                  pip install --user --upgrade pip setuptools
                   python -V
                   pip -V
                   pip install "git+git://github.com/EBI-Metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
