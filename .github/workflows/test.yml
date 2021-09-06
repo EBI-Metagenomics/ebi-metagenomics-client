@@ -28,13 +28,6 @@ jobs:
             - name: 📣 - Announce git branch name
               run: |
                   echo ${GIT_BRANCH_NAME}
-            - name: 🌎 - Setup NginX
-              run: |
-                  sudo chmod 777 /var/log/nginx/*
-                  sudo chmod 777 /var/run/*
-                  sudo chmod 777 /var/run
-                  sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
-                  nginx -c "$(pwd)/ci/nginx.conf"
             - name: 🐍 - Set up Python 3.6
               uses: actions/setup-python@v2
               with:
@@ -49,7 +42,6 @@ jobs:
                   mongodb-version: 4.0.6
             - name: 🔧🔬 - Install EMG API
               run: |
-                  pip install --user --upgrade pip setuptools
                   python -V
                   pip -V
                   pip install "git+git://github.com/EBI-Metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
@@ -67,6 +59,13 @@ jobs:
                   mysql -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
                   for SQL_FIXTURE in ci/emg_sql_fixtures/*.sql; do echo "SQL >>>> $SQL_FIXTURE"; mysql -uroot -proot --database=emg < "$SQL_FIXTURE"; done
                   mysql -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
+            - name: 🌎 - Setup NginX
+              run: |
+                  sudo chown runner /var/log/nginx/*
+                  sudo chown runner /var/run/*
+                  sudo chown runner /var/run
+                  sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
+                  nginx -c "$(pwd)/ci/nginx.conf"
             - name: 🪜 - Setting up Fixtures
               run: |
                   source ci/create_download_files.sh
@@ -157,13 +156,13 @@ jobs:
               if: failure()
               run: |
                   echo "API error log"
-                  cat emgapi/error.log
+                  cat emgapi/error.log || echo "No API log"
                   echo "API access log"
-                  cat emgapi/access.log
+                  cat emgapi/access.log || echo "No access log"
                   echo "NGINX error log"
-                  cat /var/log/nginx/error.log
+                  cat /var/log/nginx/error.log || echo "No nginx error log"
                   echo "NGINX access log"
-                  cat /var/log/nginx/access.log
+                  cat /var/log/nginx/access.log || echo "No nginx access log"
             - name: 📮 - Slack Notification
               uses: rtCamp/action-slack-notify@v2
               continue-on-error: true
