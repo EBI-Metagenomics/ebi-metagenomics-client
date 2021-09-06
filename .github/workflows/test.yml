@@ -30,9 +30,6 @@ jobs:
                   echo ${GIT_BRANCH_NAME}
             - name: 🌎 - Setup NginX
               run: |
-                  sudo chown nginx:nginx /var/log/nginx/*
-                  sudo chown nginx:nginx /var/run/*
-                  sudo chown nginx:nginx /var/run
                   sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
                   nginx -c "$(pwd)/ci/nginx.conf"
             - name: 🐍 - Set up Python 3.6
@@ -157,13 +154,13 @@ jobs:
               if: failure()
               run: |
                   echo "API error log"
-                  cat emgapi/error.log
+                  cat emgapi/error.log || echo "No API log"
                   echo "API access log"
-                  cat emgapi/access.log
+                  cat emgapi/access.log || echo "No access log"
                   echo "NGINX error log"
-                  cat /var/log/nginx/error.log
+                  cat /tmp/nginx_error.log || echo "No nginx error log"
                   echo "NGINX access log"
-                  cat /var/log/nginx/access.log
+                  cat /tmp/nginx_host.access.log || echo "No nginx access log"
             - name: 📮 - Slack Notification
               uses: rtCamp/action-slack-notify@v2
               continue-on-error: true
