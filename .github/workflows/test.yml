@@ -53,7 +53,7 @@ jobs:
                   python -V
                   pip -V
                   pip install "git+git://github.com/EBI-Metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-                  pip install "git+git://github.com/EBI-metagenomics/emgapi@${GIT_BRANCH_NAME}#egg=emgcli" || pip install "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+                  pip install "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
                   ls -l
 
             - name: 💾 - Setting MySQL
@@ -112,7 +112,7 @@ jobs:
                   emgcli import_cog_descriptions ${{ github.workspace }}/ci/fixtures/cog.csv
                   emgcli import_genomes ~/results/ genomes/hgut/1.0/ Human\ Gut 1.0 root:Host-Associated:Human:Digestive\ System:Large\ intestine
 
-                  git clone --single-branch --branch ${GIT_BRANCH_NAME} https://github.com/EBI-Metagenomics/emgapi.git || git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
+                  git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
 
                   mysql -uroot -proot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
             - name: 🔬 - Start EMG API
