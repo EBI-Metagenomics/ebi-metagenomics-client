@@ -30,7 +30,7 @@
             <nav aria-label="You are here:" role="navigation">
                 <ul class="breadcrumbs columns">
                     <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
-                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/genomes">Browse genomes</a>
+                    <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/browse#genomes">Browse genomes</a>
                     </li>
                     <li>
                         <span class="show-for-sr">Current: </span> Genome <%= accession %>
@@ -58,6 +58,8 @@
                 </ul>
                 <div class="tabs-content" data-tab-content="genome-tabs">
                     <div class="tabs-panel active" id="overview">
+                        <section id="catalogues-section">
+                        </section>
                         <section id="genome-details">
                         </section>
                     </div>

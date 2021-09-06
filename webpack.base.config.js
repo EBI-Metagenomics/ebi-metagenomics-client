@@ -63,8 +63,8 @@ module.exports = {
             'src/js/modules/pipeline.js',
         publication:
             'src/js/modules/publication.js',
-        genomes:
-            'src/js/modules/genomes.js',
+        genomeCatalogue:
+            'src/js/modules/genome-catalogue.js',
         genome:
             'src/js/modules/genome.js'
     },
@@ -253,11 +253,11 @@ module.exports = {
             templateData: templateFixtures
         }),
         new HtmlWebpackPlugin({
-            title: 'Genomes page',
+            title: 'Genome catalogue page',
             inject: true,
-            filename: 'genomes.html',
-            template: 'handlebars-loader!./src/genomes.html',
-            chunks: ['genomes', 'commons'],
+            filename: 'genome-catalogue.html',
+            template: 'handlebars-loader!./src/genome-catalogue.html',
+            chunks: ['genomeCatalogue', 'commons'],
             minify: minifyOptions,
             templateData: templateFixtures
         }),
