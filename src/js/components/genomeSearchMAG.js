@@ -236,6 +236,7 @@ module.exports = Backbone.View.extend({
       .then((result) => {
         this.jobState.job_id = result.data.group_id;
         this.jobState.results = result.data.signatures;
+        this.jobState.results_url = result.data.results_url;
         this.status = this.jobState.results.some((s) =>
           ["PENDING", "IN_QUEUE", "RUNNING"].includes(s.status)
         )
@@ -373,7 +374,19 @@ module.exports = Backbone.View.extend({
     if (url !== location.href) {
       history.pushState({}, "URL_WITH_JOB_ID", url);
     }
-    if (url) this.$("#results-link").html(`<a href="${url}">${url}</a>`);
+    if (url) {
+      this.$("#results-link").html(
+        `<a href="${url}">${url}</a>
+        ${this.status === STATUS_TYPE.RETRIEVED_JOB 
+          ? `<br/>
+              <a class="button small" download="${this.jobID}.tgz" href="${this.jobState.results_url}">
+                <span class="icon icon-common icon-download"></span>
+                Download all Results [.tgz]
+              </a>`
+          :''
+        }`
+      );
+    }
     if (this.jobState.results) {
       this.refreshResultTable();
     } else {
