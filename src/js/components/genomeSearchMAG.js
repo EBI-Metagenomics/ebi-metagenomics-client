@@ -4,7 +4,7 @@
 require("../commons");
 require("mgnify-sourmash-component");
 require("static/css/modules/genomes-sourmash.css");
-const {SearchStorage} = require("../modules/search/SearchStorage");
+const { SearchStorage } = require("../modules/search/SearchStorage");
 const Backbone = require("backbone");
 const queryString = require("query-string");
 
@@ -76,14 +76,14 @@ module.exports = Backbone.View.extend({
 
     this.$loading.hide();
     this.searchStorage = new SearchStorage(
-      'sourmashJobs-'+this.catalog,
+      "sourmashJobs-" + this.catalog,
       document.querySelector(".genome-search-history"),
-      (jobID)=>{
+      (jobID) => {
         this.reset();
         this.status = STATUS_TYPE.URL_JOB;
-        this.jobState = {jobID};
+        this.jobState = { jobID };
         this.jobID = jobID;
-        this.startIntervalChecker();  
+        this.startIntervalChecker();
       }
     );
     this.refresh();
@@ -304,14 +304,13 @@ module.exports = Backbone.View.extend({
         </tr>
         ${this.jobState.results
           .sort((s1, s2) => (s1.status < s2.status ? 1 : -1))
-          .map(
-            (s) => {
-              const resultStatus = s.result && s.result.status;
-              return `<tr>
+          .map((s) => {
+            const resultStatus = s.result && s.result.status;
+            return `<tr>
                 <td><span class="filename">${s.filename || s.job_id}</span></td>
                 <td>${emoji[resultStatus || s.status] || ""} ${
-                  resultStatus || s.status
-              }</td>
+              resultStatus || s.status
+            }</td>
                 ${
                   s.status === "SUCCESS" && resultStatus !== "NO_RESULTS"
                     ? `
@@ -340,9 +339,8 @@ module.exports = Backbone.View.extend({
                     ? `<td colspan="3"><pre>${s.reason}</pre></td>`
                     : ""
                 }
-              </tr>`
-            }
-          )
+              </tr>`;
+          })
           .join("")}
       </table>`
     );
@@ -375,15 +373,19 @@ module.exports = Backbone.View.extend({
       history.pushState({}, "URL_WITH_JOB_ID", url);
     }
     if (url) {
+      const showDownloadButton =
+        this.status === STATUS_TYPE.RETRIEVED_JOB &&
+        this.jobState.results.some((job) => job.status === "SUCCESS");
       this.$("#results-link").html(
         `<a href="${url}">${url}</a>
-        ${this.status === STATUS_TYPE.RETRIEVED_JOB 
-          ? `<br/>
+        ${
+          showDownloadButton
+            ? `<br/>
               <a class="button small" download="${this.jobID}.tgz" href="${this.jobState.results_url}">
                 <span class="icon icon-common icon-download"></span>
                 Download all Results [.tgz]
               </a>`
-          :''
+            : ""
         }`
       );
     }

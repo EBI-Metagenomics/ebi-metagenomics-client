@@ -25,3 +25,13 @@
 .results-files ul li {
   margin-bottom: 0.8em;
 }
+details.mg-sourmash-readmore {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  background: #efefef;
+}
+details.mg-sourmash-readmore summary{
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
