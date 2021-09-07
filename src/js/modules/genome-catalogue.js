@@ -83,5 +83,3 @@ function initPage() {
 }
 
 initPage();
-
-  

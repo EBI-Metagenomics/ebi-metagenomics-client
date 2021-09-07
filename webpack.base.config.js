@@ -246,13 +246,13 @@ module.exports = {
       templateData: templateFixtures,
     }),
     new HtmlWebpackPlugin({
-      title: 'Genome catalogue page',
+      title: "Genome catalogue page",
       inject: true,
-      filename: 'genome-catalogue.html',
-      template: 'handlebars-loader!./src/genome-catalogue.html',
-      chunks: ['genomeCatalogue', 'commons'],
+      filename: "genome-catalogue.html",
+      template: "handlebars-loader!./src/genome-catalogue.html",
+      chunks: ["genomeCatalogue", "commons"],
       minify: minifyOptions,
-      templateData: templateFixtures
+      templateData: templateFixtures,
     }),
     new HtmlWebpackPlugin({
       title: "Genome page",

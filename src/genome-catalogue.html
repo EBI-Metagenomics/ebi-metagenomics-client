@@ -37,9 +37,8 @@
                   </li>
                   <li class="tabs-title"><a href="#phylo-tab">Taxonomy tree</a></li>
                   <li class="tabs-title"><a href="#protein-catalog-tab">Protein catalogue</a></li>
-                  <li class="tabs-title"><a href="#genome-search-tab">Search by Gene</a></li>
-                  <li class="tabs-title"><a href="#genome-search-mag-tab">Search by MAG</a></li>
-          </ul>
+                  <li class="tabs-title"><a href="#genome-search-tab">Search</a></li>
+              </ul>
               <div class="tabs-content" data-tab-content="data-tabs">
                   <div class="tabs-panel active" id="genome-list-tab">
                       <section id="genomes-section" class="table-container"></section>
@@ -93,12 +92,12 @@
 
                                           <label for="fasta-file" style="cursor: pointer">Or upload a fasta file
                                               <input type="file" name="fasta" id="fasta-file"
-                                                     accept=".fasta, .fna, .ffn, .frn, .txt">
+                                                      accept=".fasta, .fna, .ffn, .frn, .txt">
                                           </label>
                                       </div>
                                       <div class="row columns">
                                               <textarea id="sequence" class="sequence"
-                                                        title="DNA Sequence"></textarea>
+                                                          title="DNA Sequence"></textarea>
                                       </div>
                                       <div class="row">
                                           <div class="columns">
@@ -113,7 +112,7 @@
                                               <div class="row ">
                                                   <div class="columns medium-2 small-2 large-2">
                                                       <input id="threshold" name="threshold" type="number" min="0.1"
-                                                             max="1.0" value="0.4" step="0.1">
+                                                              max="1.0" value="0.4" step="0.1">
                                                   </div>
                                               </div>
                                           </div>
@@ -133,7 +132,7 @@
                                   <div id="results-section" class="hidden">
                                       <div class="row">
                                           <img class="genome-search-loading"
-                                               src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
+                                              src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif">
                                           <div id="results-table" class="columns">
                                           </div>
                                       </div>
@@ -196,17 +195,17 @@
                                   </div>
                               </section>
                               <section>
-                                <details>
-                                    <summary><h4 style="display: inline; cursor: pointer;">Search History</h4></summary>
-                                    <div>
-                                        <p>Here is a list of previous searches in this catalog:</p>
-                                        <div class="genome-search-history">_
-                                        </div>
-                                        <p class="small"><b>Notice</b>: Results are only kept in our servers for 30 days.</p>
-                                    </div>
-                                </details>
+                                  <details>
+                                      <summary><h4 style="display: inline; cursor: pointer;">Search History</h4></summary>
+                                      <div>
+                                          <p>Here is a list of previous searches in this catalog:</p>
+                                          <div class="genome-search-history">_
+                                          </div>
+                                          <p class="small"><b>Notice</b>: Results are only kept in our servers for 30 days.</p>
+                                      </div>
+                                  </details>
                               </section>
-                            </section>
+                          </section>
                       </section>
                   </div>
               </div>
