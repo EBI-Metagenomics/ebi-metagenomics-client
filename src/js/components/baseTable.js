@@ -28,6 +28,7 @@ module.exports = class BaseTable {
         this.$container = $container;
         this.$container.empty();
         let title = options['title'];
+        let description = options['description'];
         let headers = options['headers'];
         let initialOrdering = options['initialOrdering'];
         let initPageSize = options['initPageSize'];
@@ -40,6 +41,7 @@ module.exports = class BaseTable {
         this.headers = headers;
         let params = {
             sectionTitle: title,
+            descriptionText: description,
             expandableTitle: _.isUndefined(expandableTitle) ? true : expandableTitle,
             headers: headers,
             pagination: true,

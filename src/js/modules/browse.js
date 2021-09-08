@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const marked = require('marked');
 const util = require('../util');
 const commons = require('../commons');
 const api = require('mgnify').api(process.env.API_URL);
@@ -290,6 +291,11 @@ let GenomeCataloguesView = util.GenericTableView.extend({
 
         let tableOptions = {
             title: 'Genome catalogues list',
+            description: marked('Genome catalogues are biome-specific collections of ' +
+                'metagenomic-assembled and isolate genomes. ' +
+                'The latest version of each catalogue is shown on this website. ' +
+                'Data for current and previous versions are available on the ' +
+                '[FTP server](ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/).'),
             headers: columns,
             initialOrdering: params.ordering,
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
