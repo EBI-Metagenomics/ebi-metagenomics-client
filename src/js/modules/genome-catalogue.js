@@ -6,6 +6,9 @@ const marked = require('marked');
 
 require('../../../static/js/jquery.liveFilter.js');
 const PhyloTree = require('../components/phyloTree');
+const GenomesSearchView = require("../components/genomeSearch");
+const GenomesSearchMAGView = require("../components/genomeSearchMAG");
+
 
 util.setupPage('#browse-nav');
 
@@ -56,6 +59,13 @@ function initPage() {
         });
 
         util.attachExpandButtonCallback();
+        new GenomesSearchView({
+            api_url: api.API_URL + "genome-search",
+        });
+        new GenomesSearchMAGView({
+            api_url: api.API_URL,
+            catalogue_id: genomeCatalogueView.model.id,
+        });
     });
 
     /**
@@ -69,6 +79,7 @@ function initPage() {
         });
     }
     genPhyloTree(genomeCatalogueId);
+    
 }
 
 initPage();

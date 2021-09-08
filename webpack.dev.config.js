@@ -142,7 +142,6 @@ const getProxyRoutes = () => {
       "^/metagenomics/genome-search": "/metagenomics/genome-search.html",
     },
   };
-  console.log(routes);
   return routes;
 };
 
