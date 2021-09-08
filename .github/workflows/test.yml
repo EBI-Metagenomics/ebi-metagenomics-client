@@ -52,6 +52,8 @@ jobs:
               run: |
                   sudo systemctl start mysql
                   mysql --version
+                  mysql -uroot -proot -e 'DROP DATABASE IF EXISTS emg;'
+                  mysql -uroot -proot -e 'DROP DATABASE IF EXISTS ena;'
                   mysql -uroot -proot -e 'CREATE DATABASE emg;'
                   mysql -uroot -proot -e 'CREATE DATABASE ena;'
                   mysql -uroot -proot -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES'"
