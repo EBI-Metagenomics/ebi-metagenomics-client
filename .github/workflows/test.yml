@@ -132,7 +132,7 @@ jobs:
             - name: 🔧 - Install
               run: |
                   npm ci
-                  npm install "https://github.com/EBI-Metagenomics/ebi-metagenomics-webkit#feature/multiple-genome-catalogues" || echo "No matching branch of ebi-metagenomics-webkit was found or installed."
+                  npm install "https://github.com/EBI-Metagenomics/ebi-metagenomics-webkit#${GIT_BRANCH_NAME}" || echo "No matching branch of ebi-metagenomics-webkit was found or installed."
                   npm run build
                   ls dist/
                   mv dist/metagenomics /usr/share/nginx/html/metagenomics
