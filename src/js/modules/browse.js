@@ -272,10 +272,12 @@ let GenomeCataloguesView = util.GenericTableView.extend({
             attr.biome_name + '"></span>';
         const genomeCatalogueLink = '<a href=\'' + attr.catalogue_url + '\'>' +
             attr.catalogue_id + '</a>';
+        const genomeCatalogueViewButton = '<a class=\'button\' href=\'' +
+            attr.catalogue_url + '\'>View genomes</a>';
         const genomeCatalogueNameLink = '<a href=\'' + attr.catalogue_url + '\'>' +
             attr.catalogue_name + '</a>';
         return [biomes, genomeCatalogueLink, genomeCatalogueNameLink, attr.catalogue_version,
-            attr.genome_count, attr.last_updated];
+            attr.genome_count, attr.last_updated, genomeCatalogueViewButton];
     },
     initialize() {
         const that = this;
@@ -285,19 +287,23 @@ let GenomeCataloguesView = util.GenericTableView.extend({
             {sortBy: 'catalogue_name', name: 'Catalogue name'},
             {sortBy: 'version', name: 'Catalogue version'},
             {sortBy: 'genome_count', name: 'Genomes count'},
-            {sortBy: 'last_update', name: 'Last updated'}
+            {sortBy: 'last_update', name: 'Last updated'},
+            {sortBy: null, name: 'Link'}
         ];
         let params = createInitParams();
 
         const $genomesSection = $('#genome-catalogues-section');
 
         let tableOptions = {
-            title: 'Genome catalogues list',
+            title: 'Genome catalogues',
             description: marked('Genome catalogues are biome-specific collections of ' +
                 'metagenomic-assembled and isolate genomes. ' +
                 'The latest version of each catalogue is shown on this website. ' +
                 'Data for current and previous versions are available on the ' +
-                '[FTP server](ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/).'),
+                '[FTP server](ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/).' +
+                '\n\n' +
+                'Select a catalogue in the table to browse or search its genomes.'
+            ),
             headers: columns,
             initialOrdering: params.ordering,
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
