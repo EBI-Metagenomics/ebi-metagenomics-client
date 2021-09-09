@@ -273,7 +273,7 @@ let GenomeCataloguesView = util.GenericTableView.extend({
         const genomeCatalogueLink = '<a href=\'' + attr.catalogue_url + '\'>' +
             attr.catalogue_id + '</a>';
         const genomeCatalogueViewButton = '<a class=\'button\' href=\'' +
-            attr.catalogue_url + '\'>View genomes</a>';
+            attr.catalogue_url + '\'>View catalogue</a>';
         const genomeCatalogueNameLink = '<a href=\'' + attr.catalogue_url + '\'>' +
             attr.catalogue_name + '</a>';
         return [biomes, genomeCatalogueLink, genomeCatalogueNameLink, attr.catalogue_version,
