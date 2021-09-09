@@ -270,10 +270,12 @@ let GenomeCataloguesView = util.GenericTableView.extend({
     getRowData(attr) {
         const biomes = '<span class="biome_icon icon_xs ' + attr.biome_icon + '" title="' +
             attr.biome_name + '"></span>';
-        const genomeCatalogueLink = '<a href=\'' + attr.catalogue_url + '\'>' + attr.catalogue_id +
-            '</a>';
-        return [biomes, genomeCatalogueLink, attr.catalogue_name, attr.catalogue_version, attr.genome_count,
-            attr.last_updated];
+        const genomeCatalogueLink = '<a href=\'' + attr.catalogue_url + '\'>' +
+            attr.catalogue_id + '</a>';
+        const genomeCatalogueNameLink = '<a href=\'' + attr.catalogue_url + '\'>' +
+            attr.catalogue_name + '</a>';
+        return [biomes, genomeCatalogueLink, genomeCatalogueNameLink, attr.catalogue_version,
+            attr.genome_count, attr.last_updated];
     },
     initialize() {
         const that = this;
@@ -301,7 +303,7 @@ let GenomeCataloguesView = util.GenericTableView.extend({
             initPageSize: Commons.DEFAULT_PAGE_SIZE,
             isHeader: true,
             textFilter: true,
-            biomeFilter: true,
+            biomeFilter: false,
             tableClass: 'genome-catalogues-table',
             hideIfEmpty: false,
             callback: function(page, pageSize, order, search) {
