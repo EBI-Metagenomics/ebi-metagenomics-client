@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import React, { useEffect, useState } from 'react';
-import { useMGnifyData } from 'hooks/useMGnifyData';
+import useMGnifyData from 'hooks/data/useMGnifyData';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
 import { useQueryParametersState } from 'hooks/useQueryParamState';

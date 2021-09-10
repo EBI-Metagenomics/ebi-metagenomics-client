@@ -1,10 +1,8 @@
 import { useContext, useState, useEffect } from 'react';
-import {
-  useMgnifyForm,
-  useMgnifyLogin,
-  useMgnifyLogout,
-  ErrorFromFetch,
-} from 'hooks/useMGnifyData';
+import useMgnifyForm from 'hooks/data/useMgnifyForm';
+import useMgnifyLogin from 'hooks/data/useMgnifyLogin';
+import useMgnifyLogout from 'hooks/data/useMgnifyLogout';
+import { ErrorFromFetch } from 'hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
 
 type AuthenticationFunctions = {

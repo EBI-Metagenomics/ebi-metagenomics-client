@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { useMGnifyData } from 'hooks/useMGnifyData';
+import useMGnifyData from 'hooks/data/useMGnifyData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import { getBiomeIcon } from 'utils/biomes';

@@ -4,7 +4,7 @@ import GlobalOverlayedContent from 'components/UI/GlobalOverlayedContent';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import UserContext, { getEmailsFromDetails } from 'pages/Login/UserContext';
-import { useMgnifyEmail } from 'hooks/useMGnifyData';
+import useMgnifyEmail from 'hooks/data/useMgnifyEmail';
 
 import processImg from 'images/submission_process.svg';
 

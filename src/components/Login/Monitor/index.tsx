@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import useInterval from 'hooks/useInterval';
-import { useMGnifyData } from 'hooks/useMGnifyData';
+import useMGnifyData from 'hooks/data/useMGnifyData';
 
 import UserContext, { UserDetails } from 'pages/Login/UserContext';
 

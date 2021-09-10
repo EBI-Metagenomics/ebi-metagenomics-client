@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
-import { useEBISearchData } from 'hooks/useMGnifyData';
+import useEBISearchData from 'hooks/data/useEBISearchData';
 import FetchError from 'components/UI/FetchError';
 import './style.css';
 
