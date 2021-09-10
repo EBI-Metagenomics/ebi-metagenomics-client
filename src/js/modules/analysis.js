@@ -10,7 +10,7 @@ util.specifyPageTitle('Analysis', analysisID);
 
 /* Entry point */
 const mainView = new views.AnalysisView({
-    model: new api.Analysis({id: analysisID, params: {include: 'downloads'}})
+    model: new api.Analysis({id: analysisID, params: {include: 'downloads,assembly'}})
 });
 
 mainView.render();

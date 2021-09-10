@@ -10,19 +10,20 @@ const api = require('mgnify').api(process.env.API_URL);
 const charts = require('mgnify').charts;
 
 const {TabMixin, TabsManagerMixin} = require('./mixins');
-const {getColourSquareIcon, getSeriesIndex, setTableRowAndChartHiding} = require('./helpers')
+const {getColourSquareIcon, getSeriesIndex, setTableRowAndChartHiding} = require('./helpers');
 const genomePropertiesHierarchy = require('../../../../static/data/genome-properties-hierarchy.json');
 
 const igv = require('igv');
 const igvPopup = require('../../components/igvPopup');
 const ClientSideTable = require('../../components/clientSideTable');
 const DetailList = require('../../components/detailList');
+const ExperimentTableTpl = require('../../../partials/experymentDetails.handlebars');
 const AnnotationTableView = require('../../components/annotationTable');
 require('webpack-jquery-ui/slider');
 require('webpack-jquery-ui/css');
 require('tablesorter');
 
-const { ContigsTable } = require("../../components/contigsViewerTable");
+const {ContigsTable} = require('../../components/contigsViewerTable');
 
 const INTERPRO_URL = process.env.INTERPRO_URL;
 const DEFAULT_PAGE_SIZE = 25;
@@ -47,14 +48,18 @@ export const AnalysisView = Backbone.View.extend({
         const that = this;
         this.$loadingSpinner.show();
         this.model.fetch({
-            data: {},
             success() {
                 that.$el.append(that.template(that.model.toJSON()));
 
                 // TODO: hook directly on the mixin
                 that.hookTabs('#analysis-tabs');
 
-                if (that.model.get('experiment_type') === 'assembly') {
+                const isAssembly = _.contains(
+                    ['assembly', 'hybrid_assembly', 'long_reads_assembly'],
+                    that.model.get('experiment_type')
+                );
+
+                if (isAssembly) {
                     $('#assembly-text-warning').removeClass('hidden');
                 }
 
@@ -62,7 +67,7 @@ export const AnalysisView = Backbone.View.extend({
                 // -- Common tabs --//
                 that.registerTab({
                     tabId: 'overview',
-                    tab: new OverviewTabView(that.model.attributes),
+                    tab: new OverviewTabView(that.model),
                     route: 'overview' // => default route
                 });
 
@@ -128,7 +133,7 @@ export const AnalysisView = Backbone.View.extend({
                     that.removeTab('functional');
                 }
 
-                if (that.model.get('experiment_type') === 'assembly' &&
+                if (isAssembly &&
                     that.model.get('pipeline_version') >= 5.0) {
                     that.registerTab({
                         tabId: 'path-systems',
@@ -172,64 +177,91 @@ export const AnalysisView = Backbone.View.extend({
 const OverviewTabView = Backbone.View.extend({
     mixins: [TabMixin],
     el: '#overview',
-    initialize(analysisData) {
-        this.analysisData = analysisData;
+    /**
+     * OverviewTabView
+     * @param {api.AnalysisModel} analysisModel
+     */
+    initialize(analysisModel) {
+        this.analysisModel = analysisModel;
     },
     render() {
         this.$el.html('');
         const description = this.constructDescriptionTable();
         this.$el.append(new DetailList('Description', description));
 
-        let dataAnalysis = this.constructDataAnalysisTable();
-        if (Object.keys(dataAnalysis).length > 0) {
-            this.$el.append(new DetailList('Experiment details', dataAnalysis));
-        }
+        this.constructExperimentDetailsTable().then((experimentDetails) => {
+            if (_.isEmpty(experimentDetails)) return;
+            this.$el.append(experimentDetails);
+        });
     },
     /**
      * Business logic to create table of info related to current analysis
      * @return {{Study: string, Sample: string}}
      */
     constructDescriptionTable() {
-        const attr = this.analysisData;
+        const model = this.analysisModel;
         let description = {
-            'Study': util.createLinkTag(attr['study_url'], attr['study_accession']),
-            'Sample': util.createLinkTag(attr['sample_url'], attr['sample_accession'])
+            'Study': util.createLinkTag(model.get('study_url'), model.get('study_accession')),
+            'Sample': util.createLinkTag(model.get('sample_url'), model.get('sample_accession'))
         };
-
-        if (attr['experiment_type'] === 'assembly') {
+        const isAssembly = _.contains(
+            ['assembly','hybrid_assembly','long_reads_assembly'],
+            model.get('experiment_type')
+        );
+        if (isAssembly) {
             description['Assembly'] = util.createLinkTag(
-                attr['assembly_url'],
-                attr['assembly_accession']);
+                model.get('assembly_url'),
+                model.get('assembly_accession'));
         } else {
             description['Run'] = util.createLinkTag(
-                attr['run_url'],
-                attr['run_accession']);
+                model.get('run_url'),
+                model.get('run_accession'));
         }
 
         description['Pipeline version'] = util.createLinkTag(
-            attr['pipeline_url'],
-            attr['pipeline_version']);
+            model.get('pipeline_url'),
+            model.get('pipeline_version'));
 
         return description;
     },
     /**
-     * Business logic to create table of data analysis info related to current analysis
-     * @param {object} attr attributes from BackBone AnalysesView model
-     * @return {object}
+     * Business logic to create table of data analysis info related to current analysis.
+     * Returns a pre-rendered html element.
+     * @return {Promise}
      */
-    constructDataAnalysisTable() {
-        const attr = this.analysisData;
-        const dataAnalysis = {};
-        if (attr['experiment_type']) {
-            dataAnalysis['Experiment type'] = attr['experiment_type'];
+     constructExperimentDetailsTable() {
+        const deferred = $.Deferred();
+        const model = this.analysisModel;
+        const templateModel = {
+            analysis: model.toJSON(),
+            runs: []
+        };
+
+        const render = () => {
+            return $(ExperimentTableTpl({model: templateModel, id: _.uniqueId('experimentTable')}));
+        };
+
+        if (model.get('experiment_type') === 'hybrid_assembly') {
+            /**
+             * Analyses for hybrid assemblies.
+             * In this case the data about the instrument is contained in the runs.
+            */
+            const assembly = model.get('assembly');
+            const runCollections = new api.AssemblyRuns(assembly.get('assembly_id'));
+            runCollections.fetch().then(() => {
+                _.each(runCollections.models, (run) => {
+                    templateModel.runs.push(run.toJSON());
+                });
+                deferred.resolve(render());
+            }).catch((error) => {
+                // FIXME: show the error message to the user
+                deferred.reject(error);
+            });
+        } else {
+            deferred.resolve(render());
         }
-        if (attr['instrument_model']) {
-            dataAnalysis['Instrument model'] = attr['instrument_model'];
-        }
-        if (attr['instrument_platform']) {
-            dataAnalysis['Instrument platform'] = attr['instrument_platform'];
-        }
-        return dataAnalysis;
+
+        return deferred.promise();
     }
 });
 
@@ -296,11 +328,12 @@ const FunctionalTabView = Backbone.View.extend({
     initialize({analysisID, pipelineVersion, instrumentPlatform, router}) {
         this.analysisID = analysisID;
         this.pipelineVersion = pipelineVersion;
-        // Analysis from long-read tech has some limitatsions
+        // Analysis from long-read tech has some limitations
         // this will enable a message on the template
+        // FIXME: use the experyment type
         this.longReadExperiment = _.contains([
-            "OXFORD_NANOPORE",
-            "PACBIO_SMRT"
+            'OXFORD_NANOPORE',
+            'PACBIO_SMRT'
         ], instrumentPlatform);
         this.router = router;
     },
@@ -310,7 +343,7 @@ const FunctionalTabView = Backbone.View.extend({
     render() {
         this.$el.html(
             this.template({
-                longReadExperiment: this.longReadExperiment, 
+                longReadExperiment: this.longReadExperiment,
                 pipelineVersion: this.pipelineVersion
             })
         );
@@ -437,7 +470,7 @@ const InterProTabView = Backbone.View.extend({
             this.$('#interpro-pie-chart')
                 .append('<h4>Could not load Inter Pro data.</h4>');
         }).always(() => piePromise.resolve());
-        
+
         summaryPromise.done().then(() => {
             that.$('.row').show();
         });
@@ -1426,7 +1459,7 @@ const ContigsViewTab = Backbone.View.extend({
         }, 300),
         'click .clear-filter': function() {
              this.$('.table-filter').val('').trigger('keyup');
-        },        
+        }
     },
     /**
      * Contigs Viewer and browser.
@@ -1445,7 +1478,7 @@ const ContigsViewTab = Backbone.View.extend({
         const that = this;
 
         this.$el.html(this.template());
-        
+
         this.$igvDiv = this.$('#genome-browser');
         this.$gbLoading = this.$('#gb-loading');
 
@@ -1467,22 +1500,22 @@ const ContigsViewTab = Backbone.View.extend({
 
         // Load filters from query string
         const qs = queryString.extract(location.href);
-        const urlParams = queryString.parse(qs, {arrayFormat: "bracket"});
+        const urlParams = queryString.parse(qs, {arrayFormat: 'bracket'});
 
         this.loadFilterParams(urlParams);
 
         that.contigsTable = new ContigsTable(that.collection);
-        that.contigsTable.setElement("#contigs-table");
-        
-        that.contigsTable.on("contigs-table:render:done", function() {
+        that.contigsTable.setElement('#contigs-table');
+
+        that.contigsTable.on('contigs-table:render:done', function() {
             const firstRow = _.first(that.contigsTable.getRows());
             that.loadContig(firstRow.model);
-        })
+        });
 
         // Fetch with no filters to get MAX contig length
         this.collection.fetch({
             data: {
-                page_size: 1,
+                page_size: 1
             }, success() {
                 const model = _.first(that.collection.models);
                 const min = that.$minLen.val() || MIN_CONTIG_LEN;
@@ -1491,14 +1524,13 @@ const ContigsViewTab = Backbone.View.extend({
                 that.$lenSlider.slider('option', 'values', [min, max]);
                 that.$minLen.val(min);
                 that.$maxLen.val(max);
-                that.$lenSlider.on("slidechange", function(event, ui) {
+                that.$lenSlider.on('slidechange', function(event, ui) {
                     that.$maxLen.val(ui.values[1]);
                     that.$minLen.val(ui.values[0]);
                     that.$maxLen.trigger('change');
                 });
 
                 that.contigsTable.render(urlParams);
-
             }, error(ignored, response) {
                 util.displayError(
                     response.status,
@@ -1509,10 +1541,9 @@ const ContigsViewTab = Backbone.View.extend({
     },
 
     /**
-     * Get urls parameters and 
+     * Get urls parameters and
      */
     loadFilterParams(urlParams) {
-
         this.$maxLen.val(urlParams.lt);
         this.$minLen.val(urlParams.gt);
 
@@ -1563,7 +1594,7 @@ const ContigsViewTab = Backbone.View.extend({
     refreshTable() {
         const that = this;
         this.contigsTable.refreshTable(this.getTableFilters());
-        this.contigsTable.on("contigs-table:refresh:done", function(parameters) {
+        this.contigsTable.on('contigs-table:refresh:done', function(parameters) {
             that.refreshQueryString(parameters);
         });
         return this;
@@ -1587,7 +1618,7 @@ const ContigsViewTab = Backbone.View.extend({
         });
         window.history.replaceState('',
             document.title,
-            location.pathname + '#contigs-viewer?' + queryString.stringify(urlParams, {arrayFormat: "bracket"}));
+            location.pathname + '#contigs-viewer?' + queryString.stringify(urlParams, {arrayFormat: 'bracket'}));
     },
 
     /**
