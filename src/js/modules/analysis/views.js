@@ -54,12 +54,7 @@ export const AnalysisView = Backbone.View.extend({
                 // TODO: hook directly on the mixin
                 that.hookTabs('#analysis-tabs');
 
-                const isAssembly = _.contains(
-                    ['assembly', 'hybrid_assembly', 'long_reads_assembly'],
-                    that.model.get('experiment_type')
-                );
-
-                if (isAssembly) {
+                if (that.model.isAssembly()) {
                     $('#assembly-text-warning').removeClass('hidden');
                 }
 
@@ -85,8 +80,7 @@ export const AnalysisView = Backbone.View.extend({
                     route: 'taxonomic'
                 });
 
-                const downloadModel = new api.AnalysisDownloads();
-                downloadModel.load(that.model.get('included'));
+                const downloadModel = that.model.get('downloads');
 
                 that.registerTab({
                     tabId: 'download',
@@ -113,7 +107,7 @@ export const AnalysisView = Backbone.View.extend({
                 const annotTabsOpts = {
                     analysisID: analysisID,
                     pipelineVersion: that.model.get('pipeline_version'),
-                    instrumentPlatform: that.model.get('instrument_platform'),
+                    experimentType: that.model.get('experiment_type'),
                     router: that.router
                 };
 
@@ -133,7 +127,7 @@ export const AnalysisView = Backbone.View.extend({
                     that.removeTab('functional');
                 }
 
-                if (isAssembly &&
+                if (that.model.isAssembly() &&
                     that.model.get('pipeline_version') >= 5.0) {
                     that.registerTab({
                         tabId: 'path-systems',
@@ -204,11 +198,8 @@ const OverviewTabView = Backbone.View.extend({
             'Study': util.createLinkTag(model.get('study_url'), model.get('study_accession')),
             'Sample': util.createLinkTag(model.get('sample_url'), model.get('sample_accession'))
         };
-        const isAssembly = _.contains(
-            ['assembly','hybrid_assembly','long_reads_assembly'],
-            model.get('experiment_type')
-        );
-        if (isAssembly) {
+        
+        if (model.isAssembly()) {
             description['Assembly'] = util.createLinkTag(
                 model.get('assembly_url'),
                 model.get('assembly_accession'));
@@ -232,33 +223,47 @@ const OverviewTabView = Backbone.View.extend({
      constructExperimentDetailsTable() {
         const deferred = $.Deferred();
         const model = this.analysisModel;
-        const templateModel = {
-            analysis: model.toJSON(),
-            runs: []
-        };
-
-        const render = () => {
-            return $(ExperimentTableTpl({model: templateModel, id: _.uniqueId('experimentTable')}));
-        };
+        let templateModel = {};
 
         if (model.get('experiment_type') === 'hybrid_assembly') {
             /**
              * Analyses for hybrid assemblies.
              * In this case the data about the instrument is contained in the runs.
             */
+            templateModel = { 
+                analysis: model.toJSON(),
+                runs: []
+            }
             const assembly = model.get('assembly');
             const runCollections = new api.AssemblyRuns(assembly.get('assembly_id'));
             runCollections.fetch().then(() => {
                 _.each(runCollections.models, (run) => {
                     templateModel.runs.push(run.toJSON());
                 });
-                deferred.resolve(render());
+                deferred.resolve(
+                    $(ExperimentTableTpl({
+                        model: templateModel,
+                        id: _.uniqueId('experimentTable')
+                    }))
+                );
             }).catch((error) => {
-                // FIXME: show the error message to the user
+                // TODO: show the error message to the user
                 deferred.reject(error);
             });
         } else {
-            deferred.resolve(render());
+            // TODO: refactor this
+            if (model.has('experiment_type')) {
+                templateModel['Experiment type'] = model.get('experiment_type');
+            }
+            if (model.has('instrument_model')) {
+                templateModel['Instrument model'] = model.get('instrument_model');
+            }
+            if (model.has('instrument_platform')) {
+                templateModel['Instrument platform'] = model.get('instrument_platform');
+            }
+            deferred.resolve(
+                new DetailList('Experiment details', templateModel)
+            );
         }
 
         return deferred.promise();
@@ -325,16 +330,10 @@ const FunctionalTabView = Backbone.View.extend({
     mixins: [TabsManagerMixin, TabMixin],
     template: _.template($('#functionalTmpl').html()),
     el: '#functional',
-    initialize({analysisID, pipelineVersion, instrumentPlatform, router}) {
+    initialize({analysisID, pipelineVersion, experimentType, router}) {
         this.analysisID = analysisID;
         this.pipelineVersion = pipelineVersion;
-        // Analysis from long-read tech has some limitations
-        // this will enable a message on the template
-        // FIXME: use the experyment type
-        this.longReadExperiment = _.contains([
-            'OXFORD_NANOPORE',
-            'PACBIO_SMRT'
-        ], instrumentPlatform);
+        this.longReadExperiment = experimentType === 'long_reads_assembly';
         this.router = router;
     },
     /**
