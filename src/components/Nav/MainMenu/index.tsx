@@ -1,5 +1,7 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState, useContext } from 'react';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import UserContext from 'pages/Login/UserContext';
+
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
 
 import './style.css';
@@ -8,7 +10,7 @@ type SomeComponentProps = RouteComponentProps;
 
 const pages = [
   { label: 'Overview', path: '/' },
-  // { label: 'Submit data', path: '/submit' },
+  { label: 'Submit data', path: '/submit' },
   { label: 'Text search', path: '/search' },
   { label: 'Sequence search', path: '/sequence-search' },
   { label: 'Browse data', path: '/browse' },
@@ -16,7 +18,7 @@ const pages = [
   // { label: 'API', path: '' },
   { label: 'About', path: '/about' },
   { label: 'Help', path: '/help' },
-  // { label: 'Login', path: '' },
+  { label: 'Login', path: '/login' },
 ];
 
 const START_POS = 100;
@@ -24,6 +26,7 @@ const START_MARGIN = -8;
 
 const MainMenu: React.FC<SomeComponentProps> = ({ location }) => {
   const imgRef = useRef(null);
+  const { isAuthenticated } = useContext(UserContext);
   const [animationState, setAnimationState] = useState({
     marginLeft: `${START_MARGIN}rem`,
     opacity: 0,
@@ -60,22 +63,24 @@ const MainMenu: React.FC<SomeComponentProps> = ({ location }) => {
 
       <nav className="vf-navigation vf-navigation--main | vf-cluster vf-u-fullbleed">
         <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
-          {pages.map(({ label, path }) => (
-            <li className="vf-navigation__item" key={path}>
-              <Link
-                className="vf-navigation__link"
-                aria-current={
-                  (path === '/' && location.pathname === path) ||
-                  (path !== '/' && location.pathname.startsWith(path))
-                    ? 'page'
-                    : undefined
-                }
-                to={path}
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
+          {pages
+            // .filter(({ label }) => !isAuthenticated || label !== 'Login')
+            .map(({ label, path }) => (
+              <li className="vf-navigation__item" key={path}>
+                <Link
+                  className="vf-navigation__link"
+                  aria-current={
+                    (path === '/' && location.pathname === path) ||
+                    (path !== '/' && location.pathname.startsWith(path))
+                      ? 'page'
+                      : undefined
+                  }
+                  to={path}
+                >
+                  {isAuthenticated && label === 'Login' ? 'Logout' : label}
+                </Link>
+              </li>
+            ))}
         </ul>
       </nav>
     </div>

@@ -79,14 +79,14 @@ function checkNumberOfResultsDecreaseAfterAction(action){
         const count=Number(text);
         action();
         cy.wait(100);
-        cy.get('.mg-overlay-container > .mg-overlay')
+        cy.get('.mg-table-overlay-container > .mg-table-overlay')
             .should('not.exist');
         
         cy.get('.vf-table__caption .mg-number')
             .invoke('text')
             .then((text2) =>{
                 const count2=Number(text2);
-                assert.isTrue(count2<count, "The number of results should have decreased")
+                assert.isTrue(count2<count, "The number of results should have decreased: ["+count2+"<"+count+"]")
             });
     });
 

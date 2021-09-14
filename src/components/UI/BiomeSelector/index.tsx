@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import { groupBy, split, map, flatMap, find } from 'lodash-es';
 import Select from 'react-select';
-import { useMGnifyData } from 'hooks/useMGnifyData';
+import useMGnifyData from 'hooks/data/useMGnifyData';
 import { getBiomeIcon } from 'utils/biomes';
 
 type BiomeSelectorProps = {

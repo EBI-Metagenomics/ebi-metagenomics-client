@@ -8,7 +8,7 @@ const HomePage: React.FC = () => {
   return (
     <section className="vf-content vf-stack--600">
       <h2>Getting started</h2>
-      <div className="vf-grid">
+      <div className="vf-grid vf-grid__col-2">
         <SearchBy />
         <Request />
       </div>

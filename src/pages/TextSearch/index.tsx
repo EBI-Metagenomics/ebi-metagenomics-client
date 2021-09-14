@@ -8,7 +8,7 @@ import DepthFilter from 'components/Search/Filter/Depth';
 import SearchTabs from 'src/components/Search/Tabs';
 import TextSearch from 'src/components/Search/Filter/Text';
 import SearchTable from 'src/components/Search/Table';
-import { useEBISearchData } from 'hooks/useMGnifyData';
+import useEBISearchData from 'hooks/data/useEBISearchData';
 import { QueryState, useQueryParametersState } from 'hooks/useQueryParamState';
 import SearchQueryContext from './SearchQueryContext';
 

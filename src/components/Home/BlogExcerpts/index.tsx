@@ -4,7 +4,7 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import InnerCard from 'components/UI/InnerCard';
 import OutterCard from 'components/UI/OutterCard';
-import { useBlogData } from 'hooks/useMGnifyData';
+import useBlogData from 'hooks/data/useBlogData';
 
 import config from 'config.json';
 
@@ -38,7 +38,7 @@ const BlogExcerpts: React.FC = () => {
   if (error) return <FetchError error={error} />;
   return (
     <div>
-      <div className="vf-grid">
+      <div className="vf-grid vf-grid__col-2">
         {data.spotlight && (
           <BlogExcerpt
             title="Spotlight"
