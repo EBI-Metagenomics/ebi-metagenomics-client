@@ -61,7 +61,8 @@ module.exports = Backbone.View.extend({
                 {sortBy: 'a', name: 'Geographic origin'},
                 {sortBy: 'a', name: 'Num. K-mers in query'},
                 {sortBy: 'a', name: 'Num. K-mers found in genome'},
-                {sortBy: 'a', name: '% K-mers found'}
+                {sortBy: 'a', name: '% K-mers found'},
+                {sortBy: 'a', name: 'BLAST score (log p)'}
             ],
             initPageSize: DEFAULT_PAGE_SIZE,
             textFilter: false
@@ -164,7 +165,8 @@ module.exports = Backbone.View.extend({
                     d.mgnify.attributes['geographic-origin'],
                     d.bigsi['num_kmers'],
                     d.bigsi['num_kmers_found'],
-                    d.bigsi['percent_kmers_found']
+                    d.bigsi['percent_kmers_found'],
+                    `${d.bigsi['score']} (${d.bigsi['log_pvalue']})`
                 ];
             });
 
