@@ -23,6 +23,7 @@ const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
 const Browse = lazy(() => import('./pages/Browse'));
 const Login = lazy(() => import('./pages/Login'));
 const Submit = lazy(() => import('./pages/Submit'));
+const Study = lazy(() => import('./pages/Study'));
 
 const App: React.FC = () => {
   const [user, setUser] = useState({
@@ -70,6 +71,9 @@ const App: React.FC = () => {
             </Route>
             <Route path="/submit">
               <Submit />
+            </Route>
+            <Route path="/studies">
+              <Study />
             </Route>
             <Route path="/">
               <Home />

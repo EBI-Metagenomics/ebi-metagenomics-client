@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { groupBy, split, map, flatMap, find } from 'lodash-es';
 import Select from 'react-select';
 import useMGnifyData from 'hooks/data/useMGnifyData';
+import { MGnifyResponseList } from 'hooks/data/useData';
 import { getBiomeIcon } from 'utils/biomes';
 
 type BiomeSelectorProps = {
@@ -41,8 +42,9 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
     if (loading) {
       return [{ label: 'Loading...', value: 'root' }];
     }
-    const groupedLineages = groupBy(biomes.data, (biome) =>
-      split(biome.id.replace('root:', ''), ':', 1).join(':')
+    const groupedLineages = groupBy(
+      (biomes as MGnifyResponseList).data,
+      (biome) => split(biome.id.replace('root:', ''), ':', 1).join(':')
     );
     return map(groupedLineages, (childBiomes, lineageLabel) => ({
       label: lineageLabel,

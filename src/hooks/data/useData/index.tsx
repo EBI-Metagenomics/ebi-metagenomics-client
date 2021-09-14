@@ -17,21 +17,23 @@ export type KeyValue = {
   [key: string]: string | number | Record<string, unknown> | [];
 };
 
-export type MGnifyResponse = {
-  data: Array<{
-    attributes: KeyValue;
-    id: string;
-    links: KeyValue;
-    type: string;
-    relationships: {
-      biomes?: {
-        data?: Array<{
-          id: string;
-        }>;
-      };
-      [key: string]: unknown;
+export type MGnifyDatum = {
+  attributes: KeyValue;
+  id: string;
+  links: KeyValue;
+  type: string;
+  relationships: {
+    biomes?: {
+      data?: Array<{
+        id: string;
+      }>;
     };
-  }>;
+    [key: string]: unknown;
+  };
+};
+
+export interface MGnifyResponse {
+  data: Array<MGnifyDatum> | MGnifyDatum;
   links: {
     first?: string;
     last?: string;
@@ -45,7 +47,14 @@ export type MGnifyResponse = {
       pages: number;
     };
   };
-};
+}
+export interface MGnifyResponseList extends MGnifyResponse {
+  data: Array<MGnifyDatum>;
+}
+
+export interface MGnifyResponseObj extends MGnifyResponse {
+  data: MGnifyDatum;
+}
 
 export type BlogResponse = {
   [category: string]: {

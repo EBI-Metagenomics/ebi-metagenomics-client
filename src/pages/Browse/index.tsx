@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import useMGnifyData from 'hooks/data/useMGnifyData';
+import { MGnifyResponseList } from 'hooks/data/useData';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
@@ -93,7 +94,7 @@ const Browse: React.FC = () => {
       {hasData && (
         <EMGTable
           cols={columns}
-          data={studiesList}
+          data={studiesList as MGnifyResponseList}
           title={`Studies (${studiesList.meta.pagination.count})`}
           fetchPage={(pageIndex) => {
             setQueryParameters({

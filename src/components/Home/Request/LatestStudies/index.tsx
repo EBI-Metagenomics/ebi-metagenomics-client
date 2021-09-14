@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import useMGnifyData from 'hooks/data/useMGnifyData';
+import { MGnifyDatum } from 'hooks/data/useData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import { getBiomeIcon } from 'utils/biomes';
@@ -56,15 +57,17 @@ const LatestStudies: React.FC = () => {
   return (
     <section className="vf-stack vf-stack--200">
       <div className="vf-grid vf-grid__col-1 latest-studies-section">
-        {data.data.map(({ id, attributes, relationships }) => (
-          <LatestStudy
-            key={id}
-            id={id}
-            name={attributes['study-name'] as string}
-            abstract={attributes['study-abstract'] as string}
-            lineage={relationships?.biomes?.data?.[0]?.id}
-          />
-        ))}
+        {(data.data as Array<MGnifyDatum>).map(
+          ({ id, attributes, relationships }) => (
+            <LatestStudy
+              key={id}
+              id={id}
+              name={attributes['study-name'] as string}
+              abstract={attributes['study-abstract'] as string}
+              lineage={relationships?.biomes?.data?.[0]?.id}
+            />
+          )
+        )}
       </div>
       <div className="mg-right">
         <Link to="/browse/studies/" className="vf-button vf-button--primary">

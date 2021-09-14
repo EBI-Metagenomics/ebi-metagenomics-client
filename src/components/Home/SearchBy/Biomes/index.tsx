@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import useMGnifyData from 'hooks/data/useMGnifyData';
+import { MGnifyResponseList } from 'hooks/data/useData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import { getBiomeIcon } from 'utils/biomes';
@@ -43,7 +44,7 @@ const Biomes: React.FC = () => {
   return (
     <section className="vf-stack vf-stack--200 search-by-biomes-section">
       <div className="vf-grid vf-grid__col-5">
-        {data.data.map(({ id, attributes }) => (
+        {(data as MGnifyResponseList).data.map(({ id, attributes }) => (
           <Biome
             key={id}
             lineage={id}
