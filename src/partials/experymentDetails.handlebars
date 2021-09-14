@@ -25,7 +25,7 @@
                             Instruments:
                         </div>
                     {{/if}}
-                    <div class="column small-12 medium-8 large-8 {{#unless @first}}small-offset-12 medium-offset-4 large-offset-4{{/unless}}">
+                    <div data-cy="instrument" class="column small-12 medium-8 large-8 {{#unless @first}}small-offset-12 medium-offset-4 large-offset-4{{/unless}}">
                         platform: {{this.instrument_platform}}, model: {{this.instrument_model}}
                     </div>
                 {{/each}}

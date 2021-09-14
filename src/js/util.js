@@ -841,7 +841,7 @@ export function setupPage(tab, loginRedirect) {
  * Attach click handler for expandable div button
  */
 export function attachExpandButtonCallback() {
-    $('.expand-button').on('click', function() {
+    $(document).on('click', '.expand-button', function(){ 
         if ($(this).hasClass('min')) {
             $(this).removeClass('min');
             $($(this).attr('for')).slideUp();

@@ -21,7 +21,7 @@
 
 LOCK TABLES EXPERIMENT_TYPE WRITE;
 /*!40000 ALTER TABLE EXPERIMENT_TYPE DISABLE KEYS */;
-INSERT INTO EXPERIMENT_TYPE VALUES (1,'metatranscriptomic'),(2,'metagenomic'),(3,'amplicon'),(4,'assembly'),(5,'metabarcoding'),(6,'unknown');
+INSERT INTO EXPERIMENT_TYPE VALUES (1,'metatranscriptomic'),(2,'metagenomic'),(3,'amplicon'),(4,'assembly'),(5,'metabarcoding'),(6,'unknown'),(7, 'hybrid_assembly'),(8,'long_reads_assembly');
 /*!40000 ALTER TABLE EXPERIMENT_TYPE ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

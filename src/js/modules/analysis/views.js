@@ -228,7 +228,8 @@ const OverviewTabView = Backbone.View.extend({
         if (model.get('experiment_type') === 'hybrid_assembly') {
             /**
              * Analyses for hybrid assemblies.
-             * In this case the data about the instrument is contained in the runs.
+             * In this case the data about the sequencing instruments is pulled 
+             * from the runs.
             */
             templateModel = { 
                 analysis: model.toJSON(),
@@ -241,13 +242,12 @@ const OverviewTabView = Backbone.View.extend({
                     templateModel.runs.push(run.toJSON());
                 });
                 deferred.resolve(
-                    $(ExperimentTableTpl({
+                    ExperimentTableTpl({
                         model: templateModel,
                         id: _.uniqueId('experimentTable')
-                    }))
+                    })
                 );
             }).catch((error) => {
-                // TODO: show the error message to the user
                 deferred.reject(error);
             });
         } else {

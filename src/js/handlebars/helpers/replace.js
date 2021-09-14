@@ -3,5 +3,5 @@ module.exports = function(target, replacement, options) {
     if (!string) {
         return string;
     }
-    return string.replace(target, replacement);
+    return string.replace(new RegExp(target, 'g'), replacement);
 };
