@@ -3,5 +3,6 @@
   "ebisearch": "https://www.ebi.ac.uk/ebisearch/ws/rest/",
   "website": "http://localhost:9000/",
   "blog": "https://ebi-metagenomics.github.io/blog/",
-  "basename": "/"
+  "basename": "/",
+  "googleMapsKey": "XXX"
 }

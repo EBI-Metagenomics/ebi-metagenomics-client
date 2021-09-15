@@ -1,0 +1,20 @@
+.mg-map-container {
+  min-width: 50vw;
+  min-height: 20vh;
+  display: flex;
+  flex-direction: column;
+}
+.mg-map-container .mg-map-wrapper {
+  background-color: 'rgba(0,0,0, 0.1)';
+  flex-grow: 2;
+}
+
+.mg-map-container .mg-map-progress {
+  line-height: 0;
+}
+.mg-map-container .mg-map-progress progress {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 3px;
+}

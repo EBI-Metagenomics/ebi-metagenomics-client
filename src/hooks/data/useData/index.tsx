@@ -11,6 +11,7 @@ export enum ErrorTypes {
   NotOK,
   JSONError,
   NullURL,
+  OtherError,
 }
 
 export type KeyValue = {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { MGnifyDatum } from 'hooks/data/useData';
+import SamplesMap from 'src/components/UI/SamplesMap';
 import { getBiomeIcon } from 'utils/biomes';
 
 type StudyOverviewProps = {
@@ -32,7 +33,11 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
             <p className="vf-box__text">{data.attributes['study-abstract']}</p>
           </div>
         </div>
-        <div>MAP</div>
+        <SamplesMap study={data.id} />
+      </div>
+      <div className="vf-box vf-box--easy vf-box-theme--primary">
+        <h5 className="vf-box__heading">Related studies</h5>
+        <p className="vf-box__text" />
       </div>
     </section>
   );
