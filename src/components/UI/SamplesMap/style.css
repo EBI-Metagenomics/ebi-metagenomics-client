@@ -12,6 +12,10 @@
 .mg-map-container .mg-map-progress {
   line-height: 0;
 }
+.mg-map-container .mg-map-progress div {
+  padding-top: 0.5em;
+}
+
 .mg-map-container .mg-map-progress progress {
   padding: 0;
   margin: 0;
