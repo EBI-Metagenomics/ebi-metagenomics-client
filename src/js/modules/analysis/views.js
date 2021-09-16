@@ -253,7 +253,7 @@ const OverviewTabView = Backbone.View.extend({
         } else {
             // TODO: refactor this
             if (model.has('experiment_type')) {
-                templateModel['Experiment type'] = model.get('experiment_type');
+                templateModel['Experiment type'] = model.get('experiment_type').replace(/_/g, " ");
             }
             if (model.has('instrument_model')) {
                 templateModel['Instrument model'] = model.get('instrument_model');

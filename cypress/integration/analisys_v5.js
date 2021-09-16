@@ -99,7 +99,7 @@ describe('Analysis V5', () => {
         before(() => {
             cy.server()
             cy.route('GET', '**/analyses/MGYA00383254?include=downloads,assembly', 'fixture:hybridAssemblyAnalysis');
-            cy.route('GET', '**assemblies/ERZ477576/runs', 'fixture:hybridAssemblyAnalysisRuns');
+            cy.route('GET', '**/assemblies/ERZ477576/runs**', 'fixture:hybridAssemblyAnalysisRuns');
 
             openPage(pageUrl);
             waitForPageLoad('Analysis ' + analysisId);
