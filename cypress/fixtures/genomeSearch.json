@@ -2,1208 +2,1376 @@
     "query": "GGAGTGCGGCGGAAAGTTAACCTATGCCGGACCCTGCGGGAATCCAGCTGCGTTCGAACAAGCAACCAACATATATATCTGAATTTGGATGTGGTGGGCACTTTGTTGTTAGGCGCTTTGAGGTGCGAGTGACACTTTGGGGTGCGCGGAGCCCTGGGTTGGGTCGATGATTTGGGATGAGCTTCTTACTTAGGTGAAGAGGGGCTTTATGGCTGAGAGGTAGTCTTTGGCTACGTCGGCTTTATCTGCTTGGAAATTGTGCCAGGCCCACCATTGGACCATTCCTACGAAGCTTGAGGCTATGTGGTGTAGTAGGAAGCTTCGGTCCATGGTGGCGGCGGGGCCGTTTGGGTCGGTAGGGACGGTTTCGGCTGCTCGGGCCATGATGGTCTTGCGGAGGCTGTCGGCGAAGACGCGTGAACCGGCGCCGGCTACCAGTGCCCGTACACCCTGACGGCGCTCCCAGAGGTTGTTGAGGATATGCTCGACCTGTACGAGTGGGTCATCGAGGGGCGTACCGTCATCGTCGAGGGCATGGGTGCAGATATCGCGCACGAGCTCAGCGAGCAGGTCATCTTTGCTTTTGAAGAGGCCGTAGAACGTGGCCCGACCCACATGGGCGCGAGCGATGATGTCGCCGACGGTGATCTTGCCGTAGTCCTCTTCGCGCAGCAGCTCGGAGAACGCCGCGACGATCGCGGCGCGGCTTTTGGCCTTGCGGGCATCCATGGCTATGCGTCCGCGTCAACGAGCAGACAGCGGAGCGTCCCGGAGCAGCCCTCGTAGGGGCGCTTGCCGGCGCCGTAGCCGACGGCTTCGATGCGGTAGCGTGAGGGCAGTTGGTCGGACGTGCGCAGAGCAGTGACGATGGCGGCGCCCGTGGGCGTCACGAGCTCGCCGGCGACCGGTGCAGGCGTGAGGGCGATATTGCCCGCCTGGCACAGGTTGACGACAGCGGGGACGGGAATGGGCATGAGGCCGTGGGCGCAGCGAATGGCGCCGTGGCCCTCGAAAAGCGAC",
     "threshold": 0.4,
     "results": [
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-01992",
-          "attributes": {
-            "genome-id": 2169,
-            "geographic-range": [
-              "Europe"
-            ],
-            "geographic-origin": "Europe",
-            "accession": "MGYG-HGUT-01992",
-            "ena-genome-accession": null,
-            "ena-sample-accession": "ERS396461",
-            "ena-study-accession": "ERP004605",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 2017875,
-            "num-contigs": 229,
-            "n-50": 11279,
-            "gc-content": 60.06,
-            "type": "MAG",
-            "completeness": 95.7,
-            "contamination": 2.02,
-            "rna-5s": 0,
-            "rna-16s": 0,
-            "rna-23s": 0,
-            "trnas": 18,
-            "nc-rnas": 53,
-            "num-proteins": 1742,
-            "eggnog-coverage": 91.22,
-            "ipr-coverage": 88.81,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
-            "num-genomes-total": 4,
-            "num-genomes-non-redundant": 4,
-            "pangenome-size": 2415,
-            "pangenome-core-size": 726,
-            "pangenome-accessory-size": 1689,
-            "pangenome-eggnog-coverage": 81.95,
-            "pangenome-ipr-coverage": 81.66,
-            "last-update": "2019-07-31T16:29:05.927493",
-            "first-created": "2019-07-31T16:29:05.923547"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01992/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-01992",
+                "attributes": {
+                    "genome-id": 2169,
+                    "geographic-range": [
+                        "Europe"
+                    ],
+                    "geographic-origin": "Europe",
+                    "accession": "MGYG-HGUT-01992",
+                    "ena-genome-accession": null,
+                    "ena-sample-accession": "ERS396461",
+                    "ena-study-accession": "ERP004605",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 2010685,
+                    "num-contigs": 229,
+                    "n-50": 11679,
+                    "gc-content": 60.06,
+                    "type": "MAG",
+                    "completeness": 95.7,
+                    "contamination": 2.02,
+                    "rna-5s": 0.0,
+                    "rna-16s": 0.0,
+                    "rna-23s": 0.0,
+                    "trnas": 18.0,
+                    "nc-rnas": 53,
+                    "num-proteins": 1742,
+                    "eggnog-coverage": 91.22,
+                    "ipr-coverage": 88.81,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
+                    "cmseq": 0.06,
+                    "taxincons": 0.0,
+                    "num-genomes-total": 4,
+                    "num-genomes-non-redundant": 4,
+                    "pangenome-size": 2415,
+                    "pangenome-core-size": 726,
+                    "pangenome-accessory-size": 1689,
+                    "pangenome-eggnog-coverage": 81.95,
+                    "pangenome-ipr-coverage": 81.66,
+                    "last-update": "2020-07-16T14:33:46.691007",
+                    "first-created": "2019-09-17T12:33:14.768855"
+                },
+                "relationships": {
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01992/kegg-class"
+                        }
+                    },
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01992/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01992/cogs"
+                        }
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01992/downloads"
+                        }
+                    },
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01992/kegg-module"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01992"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01992/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01992/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01992/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 100.0,
+                "num_kmers": 990,
+                "num_kmers_found": 990,
+                "sample_name": "MGYG-HGUT-01992",
+                "score": 1020.0,
+                "min_score": 1020.0,
+                "max_score": 1020.0,
+                "max_mismatches": 0,
+                "min_mismatches": 0,
+                "mismatches": 0,
+                "max_nident": 1020,
+                "nident": 1020,
+                "min_nident": 1020,
+                "pident": 100.0,
+                "max_pident": 100.0,
+                "min_pident": 100.0,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1350.13,
+                "log_pvalue": -1350.13,
+                "kmer-presence": "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01992"
-          }
         },
-        "bigsi": {
-          "percent_kmers_found": 100,
-          "num_kmers": 990,
-          "num_kmers_found": 990,
-          "sample_name": "MGYG-HGUT-01992"
-        }
-      },
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-03081",
-          "attributes": {
-            "genome-id": 3732,
-            "geographic-range": [
-              "Europe"
-            ],
-            "geographic-origin": "Europe",
-            "accession": "MGYG-HGUT-03081",
-            "ena-genome-accession": "ERZ970784",
-            "ena-sample-accession": "SRS1996016",
-            "ena-study-accession": "SRP100518",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 2043835,
-            "num-contigs": 160,
-            "n-50": 16662,
-            "gc-content": 59.89,
-            "type": "MAG",
-            "completeness": 97.14,
-            "contamination": 2,
-            "rna-5s": 94.12,
-            "rna-16s": 0,
-            "rna-23s": 99.45,
-            "trnas": 19,
-            "nc-rnas": 62,
-            "num-proteins": 1755,
-            "eggnog-coverage": 91.4,
-            "ipr-coverage": 89.06,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
-            "num-genomes-total": 2,
-            "num-genomes-non-redundant": 1,
-            "pangenome-size": 1999,
-            "pangenome-core-size": 1451,
-            "pangenome-accessory-size": 548,
-            "pangenome-eggnog-coverage": 88.59,
-            "pangenome-ipr-coverage": 87.09,
-            "last-update": "2019-07-31T17:42:53.175712",
-            "first-created": "2019-07-31T17:42:53.171962"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-03081/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-03081",
+                "attributes": {
+                    "genome-id": 3732,
+                    "geographic-range": [
+                        "Europe"
+                    ],
+                    "geographic-origin": "Europe",
+                    "accession": "MGYG-HGUT-03081",
+                    "ena-genome-accession": "ERZ970784",
+                    "ena-sample-accession": "SRS1996016",
+                    "ena-study-accession": "SRP100518",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 2038625,
+                    "num-contigs": 160,
+                    "n-50": 16629,
+                    "gc-content": 59.89,
+                    "type": "MAG",
+                    "completeness": 97.14,
+                    "contamination": 2.0,
+                    "rna-5s": 94.12,
+                    "rna-16s": 0.0,
+                    "rna-23s": 99.45,
+                    "trnas": 19.0,
+                    "nc-rnas": 62,
+                    "num-proteins": 1755,
+                    "eggnog-coverage": 91.4,
+                    "ipr-coverage": 89.06,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
+                    "cmseq": 0.06,
+                    "taxincons": 0.0,
+                    "num-genomes-total": 2,
+                    "num-genomes-non-redundant": 1,
+                    "pangenome-size": 1999,
+                    "pangenome-core-size": 1451,
+                    "pangenome-accessory-size": 548,
+                    "pangenome-eggnog-coverage": 88.59,
+                    "pangenome-ipr-coverage": 87.09,
+                    "last-update": "2020-07-16T15:47:50.509763",
+                    "first-created": "2019-09-17T14:02:47.477734"
+                },
+                "relationships": {
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03081/kegg-class"
+                        }
+                    },
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03081/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03081/cogs"
+                        }
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03081/downloads"
+                        }
+                    },
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03081/kegg-module"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03081"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-03081/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-03081/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-03081/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 51.92,
+                "num_kmers": 990,
+                "num_kmers_found": 514,
+                "sample_name": "MGYG-HGUT-03081",
+                "score": 906.23,
+                "min_score": -215.33,
+                "max_score": 968.67,
+                "max_mismatches": 303,
+                "min_mismatches": 15,
+                "mismatches": 32,
+                "max_nident": 1005,
+                "nident": 988,
+                "min_nident": 717,
+                "pident": 96.86274509803921,
+                "max_pident": 98.52941176470588,
+                "min_pident": 70.29411764705883,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1198.82,
+                "log_pvalue": -1198.82,
+                "kmer-presence": "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000000000000000000010000010010000000000100000000100110000000001000000000000001000000000000000000000000101000000000000000000001000000000000000000000100000000000000011111111111111111111111111111111111111111110000000000000000001000000000000111111111111111111111000000000000000000000001000000000000000000001000000000000000000000000111111111000110000001100100000000000000000000000000000000000000000000000000000010000000010011100000000011000000001000000000100000100000000100000000000010000000000000100000111111111111111111111111111111111110000000000110100000010000000000000000000000000000000000111111111111111111111111111111111111111111111111111111111111111111111111110000000000100010000000000000001000"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-03081"
-          }
         },
-        "bigsi": {
-          "percent_kmers_found": 51.92,
-          "num_kmers": 990,
-          "num_kmers_found": 514,
-          "sample_name": "MGYG-HGUT-03081"
-        }
-      },
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-03862",
-          "attributes": {
-            "genome-id": 390,
-            "geographic-range": [],
-            "geographic-origin": "North America",
-            "accession": "MGYG-HGUT-03862",
-            "ena-genome-accession": null,
-            "ena-sample-accession": "ERS1066673",
-            "ena-study-accession": "ERP013933",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 2080037,
-            "num-contigs": 273,
-            "n-50": 10883,
-            "gc-content": 60.01,
-            "type": "MAG",
-            "completeness": 93.95,
-            "contamination": 2.42,
-            "rna-5s": 0,
-            "rna-16s": 0,
-            "rna-23s": 0,
-            "trnas": 19,
-            "nc-rnas": 56,
-            "num-proteins": 1804,
-            "eggnog-coverage": 90.96,
-            "ipr-coverage": 90.24,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
-            "num-genomes-total": null,
-            "num-genomes-non-redundant": null,
-            "pangenome-size": null,
-            "pangenome-core-size": null,
-            "pangenome-accessory-size": null,
-            "pangenome-eggnog-coverage": null,
-            "pangenome-ipr-coverage": null,
-            "last-update": "2019-07-31T15:04:03.801406",
-            "first-created": "2019-07-31T15:04:03.798100"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-03862/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-03862",
+                "attributes": {
+                    "genome-id": 390,
+                    "geographic-range": [],
+                    "geographic-origin": "North America",
+                    "accession": "MGYG-HGUT-03862",
+                    "ena-genome-accession": null,
+                    "ena-sample-accession": "ERS1066673",
+                    "ena-study-accession": "ERP013933",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 2071420,
+                    "num-contigs": 273,
+                    "n-50": 10851,
+                    "gc-content": 60.01,
+                    "type": "MAG",
+                    "completeness": 93.95,
+                    "contamination": 2.42,
+                    "rna-5s": 0.0,
+                    "rna-16s": 0.0,
+                    "rna-23s": 0.0,
+                    "trnas": 19.0,
+                    "nc-rnas": 56,
+                    "num-proteins": 1804,
+                    "eggnog-coverage": 90.96,
+                    "ipr-coverage": 90.24,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
+                    "cmseq": 0.32,
+                    "taxincons": 0.0,
+                    "num-genomes-total": null,
+                    "num-genomes-non-redundant": null,
+                    "pangenome-size": null,
+                    "pangenome-core-size": null,
+                    "pangenome-accessory-size": null,
+                    "pangenome-eggnog-coverage": null,
+                    "pangenome-ipr-coverage": null,
+                    "last-update": "2020-07-16T13:07:19.605570",
+                    "first-created": "2019-09-17T10:35:45.356487"
+                },
+                "relationships": {
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03862/kegg-class"
+                        }
+                    },
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03862/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03862/cogs"
+                        }
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03862/downloads"
+                        }
+                    },
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03862/kegg-module"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-03862"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-03862/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-03862/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-03862/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 49.7,
+                "num_kmers": 990,
+                "num_kmers_found": 492,
+                "sample_name": "MGYG-HGUT-03862",
+                "score": 877.82,
+                "min_score": -627.39,
+                "max_score": 960.6,
+                "max_mismatches": 402,
+                "min_mismatches": 16,
+                "mismatches": 38,
+                "max_nident": 1004,
+                "nident": 982,
+                "min_nident": 618,
+                "pident": 96.27450980392157,
+                "max_pident": 98.43137254901961,
+                "min_pident": 60.588235294117645,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1161.03,
+                "log_pvalue": -1161.03,
+                "kmer-presence": "000000000000010010000110000000000000000010001000000001100000010000000000000000000000000000001000000000100010010000000000000000000000000000000100000000101000000000000000000000000001000000000000000001000000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111000000010000000100000010000000011111010100000000000011000000000000000100000000000000001000000000000000000000100000010000000000000000010000001100000000010000011111111111111000000000000000000000000000000000000000000010010000000010000000001000000000000001000000000000100000010000000000000000001000000001000000000100000000001000000100000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111101100000000000000000010"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-03862"
-          }
         },
-        "bigsi": {
-          "percent_kmers_found": 49.7,
-          "num_kmers": 990,
-          "num_kmers_found": 492,
-          "sample_name": "MGYG-HGUT-03862"
-        }
-      },
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-01200",
-          "attributes": {
-            "genome-id": 3578,
-            "geographic-range": [
-              "Europe"
-            ],
-            "geographic-origin": "Europe",
-            "accession": "MGYG-HGUT-01200",
-            "ena-genome-accession": null,
-            "ena-sample-accession": "ERS608518",
-            "ena-study-accession": "ERP008729",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 2059773,
-            "num-contigs": 109,
-            "n-50": 28022,
-            "gc-content": 60.11,
-            "type": "MAG",
-            "completeness": 96.77,
-            "contamination": 1.61,
-            "rna-5s": 0,
-            "rna-16s": 0,
-            "rna-23s": 0,
-            "trnas": 19,
-            "nc-rnas": 59,
-            "num-proteins": 1740,
-            "eggnog-coverage": 93.33,
-            "ipr-coverage": 92.07,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
-            "num-genomes-total": 2,
-            "num-genomes-non-redundant": 1,
-            "pangenome-size": 1858,
-            "pangenome-core-size": 1475,
-            "pangenome-accessory-size": 383,
-            "pangenome-eggnog-coverage": 91.93,
-            "pangenome-ipr-coverage": 90.96,
-            "last-update": "2019-07-31T17:35:35.881852",
-            "first-created": "2019-07-31T17:35:35.878144"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01200/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-01200",
+                "attributes": {
+                    "genome-id": 3578,
+                    "geographic-origin": "Europe",
+                    "geographic-range": [
+                        "Europe"
+                    ],
+                    "accession": "MGYG-HGUT-01200",
+                    "ena-genome-accession": null,
+                    "ena-sample-accession": "ERS608518",
+                    "ena-study-accession": "ERP008729",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 2056369,
+                    "num-contigs": 109,
+                    "n-50": 27991,
+                    "gc-content": 60.11,
+                    "type": "MAG",
+                    "completeness": 96.77,
+                    "contamination": 1.61,
+                    "rna-5s": 0.0,
+                    "rna-16s": 0.0,
+                    "rna-23s": 0.0,
+                    "trnas": 19.0,
+                    "nc-rnas": 59,
+                    "num-proteins": 1740,
+                    "eggnog-coverage": 93.33,
+                    "ipr-coverage": 92.07,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
+                    "cmseq": 0.5,
+                    "taxincons": 0.0,
+                    "num-genomes-total": 2,
+                    "num-genomes-non-redundant": 1,
+                    "pangenome-size": 1858,
+                    "pangenome-core-size": 1475,
+                    "pangenome-accessory-size": 383,
+                    "pangenome-eggnog-coverage": 91.93,
+                    "pangenome-ipr-coverage": 90.96,
+                    "last-update": "2020-07-16T15:40:43.874752",
+                    "first-created": "2019-09-17T13:53:59.577864"
+                },
+                "relationships": {
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01200/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01200/cogs"
+                        }
+                    },
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01200/kegg-module"
+                        }
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    },
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01200/kegg-class"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01200/downloads"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01200"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01200/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01200/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01200/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 47.88,
+                "num_kmers": 990,
+                "num_kmers_found": 474,
+                "sample_name": "MGYG-HGUT-01200",
+                "score": 896.87,
+                "min_score": -308.0,
+                "max_score": 963.99,
+                "max_mismatches": 326,
+                "min_mismatches": 17,
+                "mismatches": 35,
+                "max_nident": 1003,
+                "nident": 985,
+                "min_nident": 694,
+                "pident": 96.56862745098039,
+                "max_pident": 98.33333333333333,
+                "min_pident": 68.03921568627452,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1186.37,
+                "log_pvalue": -1186.37,
+                "kmer-presence": "000000000000100000000000010000000100000000000000000001000000000010000000010000000000000000001000001000100010001000000000000001000001000000000000000000000001000000000100000000010001000100000000000000010100000000000000000000010000000000000000000000100000000011111111111111111111111111111111111001000000000000000001010000000011111100010000000000000000000000000001000000000000100001000000001000000000000000100000000100000000000010000001000000000110000000000011111111111111000000000000000000000010000000011111111111111111000100001001001000000000000000011111000000000010000000000000000001011111111111111000000000000000000000000001000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111100000000000000000000000"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01200"
-          }
         },
-        "bigsi": {
-          "percent_kmers_found": 47.88,
-          "num_kmers": 990,
-          "num_kmers_found": 474,
-          "sample_name": "MGYG-HGUT-01200"
-        }
-      },
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-01096",
-          "attributes": {
-            "genome-id": 2118,
-            "geographic-range": [
-              "Europe"
-            ],
-            "geographic-origin": "Europe",
-            "accession": "MGYG-HGUT-01096",
-            "ena-genome-accession": null,
-            "ena-sample-accession": "ERS473415",
-            "ena-study-accession": "ERP005989",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 2060284,
-            "num-contigs": 63,
-            "n-50": 53363,
-            "gc-content": 60.13,
-            "type": "MAG",
-            "completeness": 99.19,
-            "contamination": 0.81,
-            "rna-5s": 0,
-            "rna-16s": 0,
-            "rna-23s": 0,
-            "trnas": 20,
-            "nc-rnas": 66,
-            "num-proteins": 1731,
-            "eggnog-coverage": 94.17,
-            "ipr-coverage": 92.66,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__Collinsella aerofaciens_F",
-            "num-genomes-total": 6,
-            "num-genomes-non-redundant": 2,
-            "pangenome-size": 2041,
-            "pangenome-core-size": 1315,
-            "pangenome-accessory-size": 726,
-            "pangenome-eggnog-coverage": 86.38,
-            "pangenome-ipr-coverage": 86.58,
-            "last-update": "2019-07-31T16:26:46.213304",
-            "first-created": "2019-07-31T16:26:46.210019"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01096/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-01096",
+                "attributes": {
+                    "genome-id": 2118,
+                    "geographic-origin": "Europe",
+                    "geographic-range": [
+                        "Europe"
+                    ],
+                    "accession": "MGYG-HGUT-01096",
+                    "ena-genome-accession": null,
+                    "ena-sample-accession": "ERS473415",
+                    "ena-study-accession": "ERP005989",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 2058974,
+                    "num-contigs": 63,
+                    "n-50": 53343,
+                    "gc-content": 60.13,
+                    "type": "MAG",
+                    "completeness": 99.19,
+                    "contamination": 0.81,
+                    "rna-5s": 0.0,
+                    "rna-16s": 0.0,
+                    "rna-23s": 0.0,
+                    "trnas": 20.0,
+                    "nc-rnas": 66,
+                    "num-proteins": 1731,
+                    "eggnog-coverage": 94.17,
+                    "ipr-coverage": 92.66,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__Collinsella aerofaciens_F",
+                    "cmseq": 0.0,
+                    "taxincons": 0.0,
+                    "num-genomes-total": 6,
+                    "num-genomes-non-redundant": 2,
+                    "pangenome-size": 2041,
+                    "pangenome-core-size": 1315,
+                    "pangenome-accessory-size": 726,
+                    "pangenome-eggnog-coverage": 86.38,
+                    "pangenome-ipr-coverage": 86.58,
+                    "last-update": "2020-07-16T14:31:30.678138",
+                    "first-created": "2019-09-17T12:30:15.918883"
+                },
+                "relationships": {
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01096/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01096/cogs"
+                        }
+                    },
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01096/kegg-module"
+                        }
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    },
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01096/kegg-class"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01096/downloads"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01096"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01096/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01096/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01096/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 46.77,
+                "num_kmers": 990,
+                "num_kmers_found": 463,
+                "sample_name": "MGYG-HGUT-01096",
+                "score": 861.43,
+                "min_score": -860.24,
+                "max_score": 955.75,
+                "max_mismatches": 458,
+                "min_mismatches": 17,
+                "mismatches": 41,
+                "max_nident": 1003,
+                "nident": 979,
+                "min_nident": 562,
+                "pident": 95.98039215686275,
+                "max_pident": 98.33333333333333,
+                "min_pident": 55.09803921568628,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1139.23,
+                "log_pvalue": -1139.23,
+                "kmer-presence": "000000001000100000000000000000000100000000001000000000000000000010000000000000000000000100001100000000100010000000000000000000000001000000000100000000011000000001000000000000001001000100000000100000000100011111111000000000010000100000000100100000100000000000000000011111111111111111111111111000000000000000000001010101010000000000000000000000001000000010000000000000000000000000000100001000000000000000000000000000000000000010000000000000000000000000000000000000000000000001000000000000000000000000000010000000000000001000001001000000000000000100000000000000000000000000000000000001011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111100100000100000000010000"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01096"
-          }
         },
-        "bigsi": {
-          "percent_kmers_found": 46.77,
-          "num_kmers": 990,
-          "num_kmers_found": 463,
-          "sample_name": "MGYG-HGUT-01096"
-        }
-      },
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-02970",
-          "attributes": {
-            "genome-id": 782,
-            "geographic-range": [
-              "North America"
-            ],
-            "geographic-origin": "North America",
-            "accession": "MGYG-HGUT-02970",
-            "ena-genome-accession": "ERZ934692",
-            "ena-sample-accession": "SRS1820246",
-            "ena-study-accession": "SRP093965",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 1993599,
-            "num-contigs": 204,
-            "n-50": 14028,
-            "gc-content": 60.19,
-            "type": "MAG",
-            "completeness": 90.59,
-            "contamination": 3.71,
-            "rna-5s": 0,
-            "rna-16s": 0,
-            "rna-23s": 0,
-            "trnas": 18,
-            "nc-rnas": 56,
-            "num-proteins": 1773,
-            "eggnog-coverage": 88.89,
-            "ipr-coverage": 87.82,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
-            "num-genomes-total": 3,
-            "num-genomes-non-redundant": 3,
-            "pangenome-size": 2161,
-            "pangenome-core-size": 752,
-            "pangenome-accessory-size": 1409,
-            "pangenome-eggnog-coverage": 85.19,
-            "pangenome-ipr-coverage": 84.78,
-            "last-update": "2019-07-31T15:23:04.012660",
-            "first-created": "2019-07-31T15:23:04.009175"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02970/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-02970",
+                "attributes": {
+                    "genome-id": 782,
+                    "geographic-range": [
+                        "North America"
+                    ],
+                    "geographic-origin": "North America",
+                    "accession": "MGYG-HGUT-02970",
+                    "ena-genome-accession": "ERZ934692",
+                    "ena-sample-accession": "SRS1820246",
+                    "ena-study-accession": "SRP093965",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 1986738,
+                    "num-contigs": 204,
+                    "n-50": 13994,
+                    "gc-content": 60.19,
+                    "type": "MAG",
+                    "completeness": 90.59,
+                    "contamination": 3.71,
+                    "rna-5s": 0.0,
+                    "rna-16s": 0.0,
+                    "rna-23s": 0.0,
+                    "trnas": 18.0,
+                    "nc-rnas": 56,
+                    "num-proteins": 1773,
+                    "eggnog-coverage": 88.89,
+                    "ipr-coverage": 87.82,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
+                    "cmseq": 0.25,
+                    "taxincons": 0.0,
+                    "num-genomes-total": 3,
+                    "num-genomes-non-redundant": 3,
+                    "pangenome-size": 2161,
+                    "pangenome-core-size": 752,
+                    "pangenome-accessory-size": 1409,
+                    "pangenome-eggnog-coverage": 85.19,
+                    "pangenome-ipr-coverage": 84.78,
+                    "last-update": "2020-07-16T13:26:05.583891",
+                    "first-created": "2019-09-17T11:05:11.167968"
+                },
+                "relationships": {
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02970/kegg-class"
+                        }
+                    },
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02970/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02970/cogs"
+                        }
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02970/downloads"
+                        }
+                    },
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02970/kegg-module"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02970"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02970/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02970/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02970/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 44.65,
+                "num_kmers": 990,
+                "num_kmers_found": 442,
+                "sample_name": "MGYG-HGUT-02970",
+                "score": 862.56,
+                "min_score": -820.97,
+                "max_score": 955.03,
+                "max_mismatches": 449,
+                "min_mismatches": 17,
+                "mismatches": 41,
+                "max_nident": 1003,
+                "nident": 979,
+                "min_nident": 571,
+                "pident": 95.98039215686275,
+                "max_pident": 98.33333333333333,
+                "min_pident": 55.98039215686274,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1140.74,
+                "log_pvalue": -1140.74,
+                "kmer-presence": "000000000000000000000100000000000000000000000010000001000000000000000000000000000000000000010000000000100010000000000000000000010001010000000100100010001000000000000000000000000001001000000000000001000000000000000000000000000000000000000100000000100000000011111111111111111111111111111111111100000000000000000001010100000011111010100000000000010000000000000000000010000000000001000000001000000000000100000000010000000000000000000000000000000110000011111111111111000000000000001000000000001010000000000000000000000000000100000001001000000000000101000000000000000000000000000000000000000000001000001100000000000000000000000000111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111100100000000000001000000"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02970"
-          }
         },
-        "bigsi": {
-          "percent_kmers_found": 44.65,
-          "num_kmers": 990,
-          "num_kmers_found": 442,
-          "sample_name": "MGYG-HGUT-02970"
-        }
-      },
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-00660",
-          "attributes": {
-            "genome-id": 3229,
-            "geographic-range": [],
-            "geographic-origin": "Europe",
-            "accession": "MGYG-HGUT-00660",
-            "ena-genome-accession": null,
-            "ena-sample-accession": "ERS1444719",
-            "ena-study-accession": "ERP019502",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 2045007,
-            "num-contigs": 192,
-            "n-50": 16262,
-            "gc-content": 60.01,
-            "type": "MAG",
-            "completeness": 92.74,
-            "contamination": 1.81,
-            "rna-5s": 0,
-            "rna-16s": 0,
-            "rna-23s": 0,
-            "trnas": 18,
-            "nc-rnas": 62,
-            "num-proteins": 1701,
-            "eggnog-coverage": 90.95,
-            "ipr-coverage": 90.65,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
-            "num-genomes-total": null,
-            "num-genomes-non-redundant": null,
-            "pangenome-size": null,
-            "pangenome-core-size": null,
-            "pangenome-accessory-size": null,
-            "pangenome-eggnog-coverage": null,
-            "pangenome-ipr-coverage": null,
-            "last-update": "2019-07-31T17:19:05.817374",
-            "first-created": "2019-07-31T17:19:05.813572"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-00660/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-00660",
+                "attributes": {
+                    "genome-id": 3229,
+                    "geographic-origin": "Europe",
+                    "geographic-range": [],
+                    "accession": "MGYG-HGUT-00660",
+                    "ena-genome-accession": null,
+                    "ena-sample-accession": "ERS1444719",
+                    "ena-study-accession": "ERP019502",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 2038987,
+                    "num-contigs": 192,
+                    "n-50": 16230,
+                    "gc-content": 60.01,
+                    "type": "MAG",
+                    "completeness": 92.74,
+                    "contamination": 1.81,
+                    "rna-5s": 0.0,
+                    "rna-16s": 0.0,
+                    "rna-23s": 0.0,
+                    "trnas": 18.0,
+                    "nc-rnas": 62,
+                    "num-proteins": 1701,
+                    "eggnog-coverage": 90.95,
+                    "ipr-coverage": 90.65,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
+                    "cmseq": 0.37,
+                    "taxincons": 0.0,
+                    "num-genomes-total": null,
+                    "num-genomes-non-redundant": null,
+                    "pangenome-size": null,
+                    "pangenome-core-size": null,
+                    "pangenome-accessory-size": null,
+                    "pangenome-eggnog-coverage": null,
+                    "pangenome-ipr-coverage": null,
+                    "last-update": "2020-07-16T15:23:29.676696",
+                    "first-created": "2019-09-17T13:34:04.895793"
+                },
+                "relationships": {
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00660/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00660/cogs"
+                        }
+                    },
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00660/kegg-module"
+                        }
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    },
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00660/kegg-class"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00660/downloads"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00660"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-00660/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-00660/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-00660/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 44.55,
+                "num_kmers": 990,
+                "num_kmers_found": 441,
+                "sample_name": "MGYG-HGUT-00660",
+                "score": 888.38,
+                "min_score": -415.09,
+                "max_score": 960.91,
+                "max_mismatches": 352,
+                "min_mismatches": 18,
+                "mismatches": 37,
+                "max_nident": 1002,
+                "nident": 983,
+                "min_nident": 668,
+                "pident": 96.37254901960785,
+                "max_pident": 98.23529411764706,
+                "min_pident": 65.49019607843137,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1175.08,
+                "log_pvalue": -1175.08,
+                "kmer-presence": "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000000000010000000000000100011000001000000000000000000000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111100000000000000000000000000000011111111111111100000000000000010000000000000000000000000100000001000000000000000000001001000000000000000000100100000000000000000000011010000000000000000100000000001001000000111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000000100000010000001000000000000000000000100000000000000000000000011111111000010000001000100100000000000000100000100000000000000000010000000000000000001000011100000100000000000001000000000000000000100010000010000000010000000000000100000111111111111111111111111111111100100000000000001100000010000000000000000000000000000000000000000000000000000111111111111111111111111111111111111111111111111111111110000000010100000000000000000000000"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-00660"
-          }
         },
-        "bigsi": {
-          "percent_kmers_found": 44.55,
-          "num_kmers": 990,
-          "num_kmers_found": 441,
-          "sample_name": "MGYG-HGUT-00660"
-        }
-      },
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-00789",
-          "attributes": {
-            "genome-id": 1420,
-            "geographic-range": [],
-            "geographic-origin": "Asia",
-            "accession": "MGYG-HGUT-00789",
-            "ena-genome-accession": "ERZ860443",
-            "ena-sample-accession": "ERS848661",
-            "ena-study-accession": "ERP012177",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 2056896,
-            "num-contigs": 87,
-            "n-50": 36084,
-            "gc-content": 60.08,
-            "type": "MAG",
-            "completeness": 98.39,
-            "contamination": 0.81,
-            "rna-5s": 0,
-            "rna-16s": 0,
-            "rna-23s": 0,
-            "trnas": 20,
-            "nc-rnas": 70,
-            "num-proteins": 1733,
-            "eggnog-coverage": 94.81,
-            "ipr-coverage": 93.25,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__Collinsella sp002232035",
-            "num-genomes-total": null,
-            "num-genomes-non-redundant": null,
-            "pangenome-size": null,
-            "pangenome-core-size": null,
-            "pangenome-accessory-size": null,
-            "pangenome-eggnog-coverage": null,
-            "pangenome-ipr-coverage": null,
-            "last-update": "2019-07-31T15:54:05.484358",
-            "first-created": "2019-07-31T15:54:05.480502"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-00789/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-00789",
+                "attributes": {
+                    "genome-id": 1420,
+                    "geographic-range": [],
+                    "geographic-origin": "Asia",
+                    "accession": "MGYG-HGUT-00789",
+                    "ena-genome-accession": "ERZ860443",
+                    "ena-sample-accession": "ERS848661",
+                    "ena-study-accession": "ERP012177",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 2053989,
+                    "num-contigs": 87,
+                    "n-50": 36051,
+                    "gc-content": 60.08,
+                    "type": "MAG",
+                    "completeness": 98.39,
+                    "contamination": 0.81,
+                    "rna-5s": 0.0,
+                    "rna-16s": 0.0,
+                    "rna-23s": 0.0,
+                    "trnas": 20.0,
+                    "nc-rnas": 70,
+                    "num-proteins": 1733,
+                    "eggnog-coverage": 94.81,
+                    "ipr-coverage": 93.25,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__Collinsella sp002232035",
+                    "cmseq": 0.01,
+                    "taxincons": 0.0,
+                    "num-genomes-total": null,
+                    "num-genomes-non-redundant": null,
+                    "pangenome-size": null,
+                    "pangenome-core-size": null,
+                    "pangenome-accessory-size": null,
+                    "pangenome-eggnog-coverage": null,
+                    "pangenome-ipr-coverage": null,
+                    "last-update": "2020-07-16T13:56:36.443142",
+                    "first-created": "2019-09-17T11:50:32.295667"
+                },
+                "relationships": {
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00789/kegg-module"
+                        }
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00789/downloads"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    },
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00789/kegg-class"
+                        }
+                    },
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00789/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00789/cogs"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-00789"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-00789/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-00789/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-00789/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 44.04,
+                "num_kmers": 990,
+                "num_kmers_found": 436,
+                "sample_name": "MGYG-HGUT-00789",
+                "score": 863.75,
+                "min_score": -812.12,
+                "max_score": 955.88,
+                "max_mismatches": 448,
+                "min_mismatches": 18,
+                "mismatches": 42,
+                "max_nident": 1002,
+                "nident": 978,
+                "min_nident": 572,
+                "pident": 95.88235294117646,
+                "max_pident": 98.23529411764706,
+                "min_pident": 56.07843137254902,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1142.32,
+                "log_pvalue": -1142.32,
+                "kmer-presence": "000000000000000000000000000000000000000000000000000001000000010000100000010001000001000000000000001000100110000000000000000000000001010001000100000000001000000000000000000100000001000100000000000010000000000000000000000000000000100000000000000001110000000011111111111111111111111111000000000100000000000000010000000000000000000000000000000000011111000000000000000000001000000001000000000000000000000010000000010000000000000000010001000100000100000111111111111111000000000000000000000000000000000000000000100010000000000010000101001100000000000010000000000000000000000011000000000001000000000000001001000000000010000000000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111100100000000000000000000"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-00789"
-          }
         },
-        "bigsi": {
-          "percent_kmers_found": 44.04,
-          "num_kmers": 990,
-          "num_kmers_found": 436,
-          "sample_name": "MGYG-HGUT-00789"
-        }
-      },
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-02142",
-          "attributes": {
-            "genome-id": 577,
-            "geographic-range": [
-              "North America"
-            ],
-            "geographic-origin": "North America",
-            "accession": "MGYG-HGUT-02142",
-            "ena-genome-accession": null,
-            "ena-sample-accession": "SRS1993548",
-            "ena-study-accession": "SRP100446",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 2111454,
-            "num-contigs": 95,
-            "n-50": 33495,
-            "gc-content": 59.87,
-            "type": "MAG",
-            "completeness": 98.39,
-            "contamination": 0.81,
-            "rna-5s": 0,
-            "rna-16s": 0,
-            "rna-23s": 0,
-            "trnas": 20,
-            "nc-rnas": 66,
-            "num-proteins": 1791,
-            "eggnog-coverage": 92.24,
-            "ipr-coverage": 90.73,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
-            "num-genomes-total": 2,
-            "num-genomes-non-redundant": 1,
-            "pangenome-size": 1809,
-            "pangenome-core-size": 1718,
-            "pangenome-accessory-size": 91,
-            "pangenome-eggnog-coverage": 92.43,
-            "pangenome-ipr-coverage": 90.77,
-            "last-update": "2019-07-31T15:13:13.260993",
-            "first-created": "2019-07-31T15:13:13.256860"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02142/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-02142",
+                "attributes": {
+                    "genome-id": 577,
+                    "geographic-range": [
+                        "North America"
+                    ],
+                    "geographic-origin": "North America",
+                    "accession": "MGYG-HGUT-02142",
+                    "ena-genome-accession": null,
+                    "ena-sample-accession": "SRS1993548",
+                    "ena-study-accession": "SRP100446",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 2108482,
+                    "num-contigs": 95,
+                    "n-50": 33464,
+                    "gc-content": 59.87,
+                    "type": "MAG",
+                    "completeness": 98.39,
+                    "contamination": 0.81,
+                    "rna-5s": 0.0,
+                    "rna-16s": 0.0,
+                    "rna-23s": 0.0,
+                    "trnas": 20.0,
+                    "nc-rnas": 66,
+                    "num-proteins": 1791,
+                    "eggnog-coverage": 92.24,
+                    "ipr-coverage": 90.73,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
+                    "cmseq": 0.03,
+                    "taxincons": 0.0,
+                    "num-genomes-total": 2,
+                    "num-genomes-non-redundant": 1,
+                    "pangenome-size": 1809,
+                    "pangenome-core-size": 1718,
+                    "pangenome-accessory-size": 91,
+                    "pangenome-eggnog-coverage": 92.43,
+                    "pangenome-ipr-coverage": 90.77,
+                    "last-update": "2020-07-16T13:16:39.345030",
+                    "first-created": "2019-09-17T10:49:43.193596"
+                },
+                "relationships": {
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02142/kegg-module"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02142/kegg-class"
+                        }
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02142/downloads"
+                        }
+                    },
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02142/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02142/cogs"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02142"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02142/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02142/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02142/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 42.83,
+                "num_kmers": 990,
+                "num_kmers_found": 424,
+                "sample_name": "MGYG-HGUT-02142",
+                "score": 882.03,
+                "min_score": -501.09,
+                "max_score": 958.91,
+                "max_mismatches": 374,
+                "min_mismatches": 18,
+                "mismatches": 38,
+                "max_nident": 1002,
+                "nident": 982,
+                "min_nident": 646,
+                "pident": 96.27450980392157,
+                "max_pident": 98.23529411764706,
+                "min_pident": 63.333333333333336,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1166.63,
+                "log_pvalue": -1166.63,
+                "kmer-presence": "000100000000000001000100000100000000000000000000000001000000100100000000010000000000000000000000000000000001001000010000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000001000000000000000000000011111111111111100000000000000010000000000000000000000000100000000000000000000000000001000000000100000000000000000000000100000000001011010000000000000000010000000000000000000111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000010000000100000000001000001000000100000100100000000000000000000000011111111000000000111100100100000010000010000000000000000010010000000000000000010000001010011100000000000000000000000000000000000000000000000000000000000010000001000110000111111111111111111111111111111111110000000000110000000100000000000000010000000010000000000111111111111111111111111111111111111111111111111111111111111111111111111111111111111100100000001100000000000"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02142"
-          }
         },
-        "bigsi": {
-          "percent_kmers_found": 42.83,
-          "num_kmers": 990,
-          "num_kmers_found": 424,
-          "sample_name": "MGYG-HGUT-02142"
-        }
-      },
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-02728",
-          "attributes": {
-            "genome-id": 313,
-            "geographic-range": [],
-            "geographic-origin": "Europe",
-            "accession": "MGYG-HGUT-02728",
-            "ena-genome-accession": null,
-            "ena-sample-accession": "SRS1876528",
-            "ena-study-accession": "SRP095580",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 1878266,
-            "num-contigs": 289,
-            "n-50": 9647,
-            "gc-content": 59.89,
-            "type": "MAG",
-            "completeness": 89.06,
-            "contamination": 1.24,
-            "rna-5s": 0,
-            "rna-16s": 0,
-            "rna-23s": 0,
-            "trnas": 19,
-            "nc-rnas": 58,
-            "num-proteins": 1674,
-            "eggnog-coverage": 89.78,
-            "ipr-coverage": 88.41,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
-            "num-genomes-total": null,
-            "num-genomes-non-redundant": null,
-            "pangenome-size": null,
-            "pangenome-core-size": null,
-            "pangenome-accessory-size": null,
-            "pangenome-eggnog-coverage": null,
-            "pangenome-ipr-coverage": null,
-            "last-update": "2019-07-31T15:00:26.260951",
-            "first-created": "2019-07-31T15:00:26.257451"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02728/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-02728",
+                "attributes": {
+                    "genome-id": 313,
+                    "geographic-range": [],
+                    "geographic-origin": "Europe",
+                    "accession": "MGYG-HGUT-02728",
+                    "ena-genome-accession": null,
+                    "ena-sample-accession": "SRS1876528",
+                    "ena-study-accession": "SRP095580",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 1869354,
+                    "num-contigs": 289,
+                    "n-50": 9617,
+                    "gc-content": 59.89,
+                    "type": "MAG",
+                    "completeness": 89.06,
+                    "contamination": 1.24,
+                    "rna-5s": 0.0,
+                    "rna-16s": 0.0,
+                    "rna-23s": 0.0,
+                    "trnas": 19.0,
+                    "nc-rnas": 58,
+                    "num-proteins": 1674,
+                    "eggnog-coverage": 89.78,
+                    "ipr-coverage": 88.41,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
+                    "cmseq": 0.18,
+                    "taxincons": 0.0,
+                    "num-genomes-total": null,
+                    "num-genomes-non-redundant": null,
+                    "pangenome-size": null,
+                    "pangenome-core-size": null,
+                    "pangenome-accessory-size": null,
+                    "pangenome-eggnog-coverage": null,
+                    "pangenome-ipr-coverage": null,
+                    "last-update": "2020-07-16T13:03:45.012915",
+                    "first-created": "2019-09-17T10:30:07.198009"
+                },
+                "relationships": {
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02728/kegg-module"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02728/kegg-class"
+                        }
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02728/downloads"
+                        }
+                    },
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02728/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02728/cogs"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02728"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02728/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02728/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02728/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 40.61,
+                "num_kmers": 990,
+                "num_kmers_found": 402,
+                "sample_name": "MGYG-HGUT-02728",
+                "score": 849.34,
+                "min_score": -985.94,
+                "max_score": 950.05,
+                "max_mismatches": 489,
+                "min_mismatches": 18,
+                "mismatches": 44,
+                "max_nident": 1002,
+                "nident": 976,
+                "min_nident": 531,
+                "pident": 95.68627450980392,
+                "max_pident": 98.23529411764706,
+                "min_pident": 52.05882352941177,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1123.15,
+                "log_pvalue": -1123.15,
+                "kmer-presence": "000100001000000001000100110000000000000000000000000000000000000000000000010000000000000000000000000000000010000001000000000000000001010000000000000000000000000001000000000000000000000100000000000001010000000000000000000000000100000000000000001000001000000011111111111111111111111111111111111111111111111000010000000000100000000000000000000000000100010000000010010000000000100001000000000000000000000000000000000000000000000000010000000000000100000000000011111111000000000000000000000000000000000000000000100010000000000000000001001000000000100010000000000000000010010100001000000001000000001000000000000000000001000000000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110000000000000000010000000000000000000000111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111100000000100000000101000"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02728"
-          }
         },
-        "bigsi": {
-          "percent_kmers_found": 40.61,
-          "num_kmers": 990,
-          "num_kmers_found": 402,
-          "sample_name": "MGYG-HGUT-02728"
-        }
-      },
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-02740",
-          "attributes": {
-            "genome-id": 2848,
-            "geographic-range": [],
-            "geographic-origin": "Europe",
-            "accession": "MGYG-HGUT-02740",
-            "ena-genome-accession": null,
-            "ena-sample-accession": "SRS1876585",
-            "ena-study-accession": "SRP095580",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 1946851,
-            "num-contigs": 212,
-            "n-50": 14103,
-            "gc-content": 60.11,
-            "type": "MAG",
-            "completeness": 97.98,
-            "contamination": 2.42,
-            "rna-5s": 0,
-            "rna-16s": 0,
-            "rna-23s": 0,
-            "trnas": 20,
-            "nc-rnas": 64,
-            "num-proteins": 1711,
-            "eggnog-coverage": 91.88,
-            "ipr-coverage": 90.88,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
-            "num-genomes-total": null,
-            "num-genomes-non-redundant": null,
-            "pangenome-size": null,
-            "pangenome-core-size": null,
-            "pangenome-accessory-size": null,
-            "pangenome-eggnog-coverage": null,
-            "pangenome-ipr-coverage": null,
-            "last-update": "2019-07-31T17:00:47.224033",
-            "first-created": "2019-07-31T17:00:47.220552"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02740/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-02740",
+                "attributes": {
+                    "genome-id": 2848,
+                    "geographic-range": [],
+                    "geographic-origin": "Europe",
+                    "accession": "MGYG-HGUT-02740",
+                    "ena-genome-accession": null,
+                    "ena-sample-accession": "SRS1876585",
+                    "ena-study-accession": "SRP095580",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 1940244,
+                    "num-contigs": 212,
+                    "n-50": 14071,
+                    "gc-content": 60.11,
+                    "type": "MAG",
+                    "completeness": 97.98,
+                    "contamination": 2.42,
+                    "rna-5s": 0.0,
+                    "rna-16s": 0.0,
+                    "rna-23s": 0.0,
+                    "trnas": 20.0,
+                    "nc-rnas": 64,
+                    "num-proteins": 1711,
+                    "eggnog-coverage": 91.88,
+                    "ipr-coverage": 90.88,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
+                    "cmseq": 0.05,
+                    "taxincons": 0.0,
+                    "num-genomes-total": null,
+                    "num-genomes-non-redundant": null,
+                    "pangenome-size": null,
+                    "pangenome-core-size": null,
+                    "pangenome-accessory-size": null,
+                    "pangenome-eggnog-coverage": null,
+                    "pangenome-ipr-coverage": null,
+                    "last-update": "2020-07-16T15:05:05.296212",
+                    "first-created": "2019-09-17T13:12:04.555982"
+                },
+                "relationships": {
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02740/kegg-module"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02740/kegg-class"
+                        }
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02740/downloads"
+                        }
+                    },
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02740/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02740/cogs"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-02740"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02740/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02740/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02740/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 40.4,
+                "num_kmers": 990,
+                "num_kmers_found": 400,
+                "sample_name": "MGYG-HGUT-02740",
+                "score": 875.44,
+                "min_score": -564.61,
+                "max_score": 955.39,
+                "max_mismatches": 388,
+                "min_mismatches": 19,
+                "mismatches": 40,
+                "max_nident": 1001,
+                "nident": 980,
+                "min_nident": 632,
+                "pident": 96.07843137254902,
+                "max_pident": 98.13725490196079,
+                "min_pident": 61.96078431372549,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1157.87,
+                "log_pvalue": -1157.87,
+                "kmer-presence": "000000000000000010000100000000000000000000000000000001000000000000000000010000000000000000000100000000100010000000000000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111001000000000000000000000000000011111111111111100010001000000100000000101100000000000010000000000000000000000000000000000000000000100100000000000000000000100000000011010000000000000000100000000000000000000111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000000010100100000001000001000010000000001001000000000000000000000011111111000000000001100000000000000000000000000000000000000000000000000000000000000000000011100000100000000000000000000010000000000000010000010000000000000000000000100000111111111111111111111111111111111110000000000000100000000000000000000010001000000000000000111111111111111111111111111111111111111111111111111111111111111111111111110000000010000000000000000000000000"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-02740"
-          }
         },
-        "bigsi": {
-          "percent_kmers_found": 40.4,
-          "num_kmers": 990,
-          "num_kmers_found": 400,
-          "sample_name": "MGYG-HGUT-02740"
-        }
-      },
-      {
-        "mgnify": {
-          "type": "genomes",
-          "id": "MGYG-HGUT-01092",
-          "attributes": {
-            "genome-id": 486,
-            "geographic-range": [
-              "North America",
-              "Europe"
-            ],
-            "geographic-origin": "Europe",
-            "accession": "MGYG-HGUT-01092",
-            "ena-genome-accession": null,
-            "ena-sample-accession": "ERS473404",
-            "ena-study-accession": "ERP005989",
-            "ncbi-genome-accession": null,
-            "ncbi-sample-accession": null,
-            "ncbi-study-accession": null,
-            "img-genome-accession": null,
-            "patric-genome-accession": null,
-            "length": 2221580,
-            "num-contigs": 70,
-            "n-50": 66432,
-            "gc-content": 59.85,
-            "type": "MAG",
-            "completeness": 100,
-            "contamination": 0.81,
-            "rna-5s": 94.12,
-            "rna-16s": 99.61,
-            "rna-23s": 99.52,
-            "trnas": 19,
-            "nc-rnas": 64,
-            "num-proteins": 1882,
-            "eggnog-coverage": 89.43,
-            "ipr-coverage": 87.78,
-            "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
-            "num-genomes-total": 55,
-            "num-genomes-non-redundant": 51,
-            "pangenome-size": 6776,
-            "pangenome-core-size": 394,
-            "pangenome-accessory-size": 6382,
-            "pangenome-eggnog-coverage": 59.27,
-            "pangenome-ipr-coverage": 65.2,
-            "last-update": "2019-07-31T15:08:41.269748",
-            "first-created": "2019-07-31T15:08:41.266195"
-          },
-          "relationships": {
-            "downloads": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01092/downloads"
-              }
-            },
-            "releases": {
-              "data": [
-                {
-                  "type": "releases",
-                  "id": "1.0",
-                  "links": {
-                    "self": "http://localhost:9000/metagenomics/api/v1/release/1.0"
-                  }
+        {
+            "mgnify": {
+                "type": "genomes",
+                "id": "MGYG-HGUT-01092",
+                "attributes": {
+                    "genome-id": 486,
+                    "geographic-range": [
+                        "North America",
+                        "Europe"
+                    ],
+                    "geographic-origin": "Europe",
+                    "accession": "MGYG-HGUT-01092",
+                    "ena-genome-accession": null,
+                    "ena-sample-accession": "ERS473404",
+                    "ena-study-accession": "ERP005989",
+                    "ncbi-genome-accession": null,
+                    "ncbi-sample-accession": null,
+                    "ncbi-study-accession": null,
+                    "img-genome-accession": null,
+                    "patric-genome-accession": null,
+                    "length": 2220171,
+                    "num-contigs": 70,
+                    "n-50": 66411,
+                    "gc-content": 59.85,
+                    "type": "MAG",
+                    "completeness": 100.0,
+                    "contamination": 0.81,
+                    "rna-5s": 94.12,
+                    "rna-16s": 99.61,
+                    "rna-23s": 99.52,
+                    "trnas": 19.0,
+                    "nc-rnas": 64,
+                    "num-proteins": 1882,
+                    "eggnog-coverage": 89.43,
+                    "ipr-coverage": 87.78,
+                    "taxon-lineage": "d__Bacteria;p__Actinobacteriota;c__Coriobacteriia;o__Coriobacteriales;f__Coriobacteriaceae;g__Collinsella;s__",
+                    "cmseq": 0.0,
+                    "taxincons": 0.0,
+                    "num-genomes-total": 55,
+                    "num-genomes-non-redundant": 51,
+                    "pangenome-size": 6776,
+                    "pangenome-core-size": 394,
+                    "pangenome-accessory-size": 6382,
+                    "pangenome-eggnog-coverage": 59.27,
+                    "pangenome-ipr-coverage": 65.2,
+                    "last-update": "2020-07-16T13:12:00.747676",
+                    "first-created": "2019-09-17T10:42:44.200189"
+                },
+                "relationships": {
+                    "kegg-class-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01092/kegg-class"
+                        }
+                    },
+                    "antismash-geneclusters": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01092/antismash-genecluster"
+                        }
+                    },
+                    "cog-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01092/cogs"
+                        }
+                    },
+                    "downloads": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01092/downloads"
+                        }
+                    },
+                    "kegg-modules-matches": {
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01092/kegg-module"
+                        }
+                    },
+                    "releases": {
+                        "data": []
+                    },
+                    "biome": {
+                        "data": {
+                            "type": "biomes",
+                            "id": "root:Host-associated:Human:Digestive system:Large intestine"
+                        },
+                        "links": {
+                            "related": "https://www.ebi.ac.uk/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
+                        }
+                    }
+                },
+                "links": {
+                    "self": "https://www.ebi.ac.uk/metagenomics/api/v1/genomes/MGYG-HGUT-01092"
                 }
-              ],
-              "meta": {
-                "count": 1
-              }
             },
-            "biome": {
-              "data": {
-                "type": "biomes",
-                "id": "root:Host-associated:Human:Digestive system:Large intestine"
-              },
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/biomes/root:Host-associated:Human:Digestive%20system:Large%20intestine"
-              }
-            },
-            "kegg-modules-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01092/kegg-module"
-              }
-            },
-            "cog-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01092/cogs"
-              }
-            },
-            "kegg-class-matches": {
-              "links": {
-                "related": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01092/kegg-class"
-              }
+            "bigsi": {
+                "percent_kmers_found": 40.3,
+                "num_kmers": 990,
+                "num_kmers_found": 399,
+                "sample_name": "MGYG-HGUT-01092",
+                "score": 875.77,
+                "min_score": -560.48,
+                "max_score": 955.51,
+                "max_mismatches": 387,
+                "min_mismatches": 19,
+                "mismatches": 40,
+                "max_nident": 1001,
+                "nident": 980,
+                "min_nident": 633,
+                "pident": 96.07843137254902,
+                "max_pident": 98.13725490196079,
+                "min_pident": 62.05882352941177,
+                "length": 1020,
+                "evalue": 0.0,
+                "pvalue": 0.0,
+                "log_evalue": -1158.31,
+                "log_pvalue": -1158.31,
+                "kmer-presence": "100000000000100000000000000000000000000000000000000001000000000000000001000000000000000000000000000000100010000000000000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000001000000001000000000000011111111111111100000101000000000000000001000000000000000000000000000000010000000000100001000000001000000000000000000000010000000000011000000000000000100100000000000001000000111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000000000000010001000000000000000000000100000000000000000000000000011111111000010000001100000000000000000000010000001010000000000000010000000000000000001000011110000000000000000000000000000000000000000000000000000000000000000001000000000111111111111111111111111111111111110000000000000100000000001000000000000000000000000000100111111111111111111111111111111111111111111111111111111111111111111111111110011000010000000000000000000000000"
             }
-          },
-          "links": {
-            "self": "http://localhost:9000/metagenomics/api/v1/genomes/MGYG-HGUT-01092"
-          }
-        },
-        "bigsi": {
-          "percent_kmers_found": 40.3,
-          "num_kmers": 990,
-          "num_kmers_found": 399,
-          "sample_name": "MGYG-HGUT-01092"
         }
-      }
     ]
-  }
+}

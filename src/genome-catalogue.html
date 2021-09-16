@@ -46,7 +46,7 @@
                   </div>
                   <div id="phylo-tab" class="tabs-panel">
                       <section id="phylo-section" class="table-container">
-                          <h2>Taxonomy tree</h2>
+                          <h3>Taxonomy tree</h3>
                           <div id="phylo-tree"></div>
                           <div>
                               The tree viewer is a derivative of the <a href="https://gtdb.ecogenomic.org/tree">GTDB
@@ -56,16 +56,16 @@
                   </div>
                   <div id="protein-catalog-tab" class="tabs-panel">
                       <section id="protein-catalog-section">
-                          <h2><%= protein_catalogue_name %></h2>
+                          <h3><%= protein_catalogue_name %></h3>
                           <%= protein_catalogue_description %>
                       </section>
                   </div>
                   <div id="genome-search-tab" class="tabs-panel">
                       <section id="genome-search">
                           <section>
-                              <h2>
+                              <h3>
                                   Search DNA fragments in the <%= catalogue_name %> catalogue
-                              </h2>
+                              </h3>
                               <p>
                                   This is a <a
                                       href="https://www.nature.com/articles/s41587-018-0010-1">BIGSI-based</a> search
@@ -157,9 +157,11 @@
                                   Compare your MAG file or your MAG collection against this catalog to see if they are novel.<br/>
                               </p>
                               <details class="mg-sourmash-readmore">
-                                <summary>Read More</summary>
+                                <summary>Instructions</summary>
                                 <p>
-                                    Use the browse button below to upload either a single FastA file, or multiple files by holding [ctrl] or [shift] while clicking in the file explorer. Alternatively you can select a whole directory of files using the directory mode (select this option below the Browse button). In this mode, the tool will process all FastA files in the selected directory, however it will not check subdirectories.
+                                    Use the browse button below to upload either a single FastA file, or multiple files by holding [ctrl] or [shift] while clicking in the file explorer.
+                                    Alternatively you can select a whole directory of files using the directory mode (select this option below the Browse button).
+                                    In this mode, the tool will process all FastA files in the selected directory, however it will not descend into subdirectories.
                                 </p>
                                 <p>
                                     Your files are not uploaded into our servers. Rather, Sourmash generates a signature of your file(s) in your browser, and compares this against our MAG catalogue.
