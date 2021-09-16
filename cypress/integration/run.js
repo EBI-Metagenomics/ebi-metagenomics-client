@@ -62,10 +62,10 @@ describe('Run page', function() {
         it('Should display description section', function() {
             cy.contains('Description').should('be.visible');
             cy.get(descriptionSection).then(($el) => {
-                const text = $el.text();
-                expect(text).to.contain('Study:\n                MGYS00000462');
-                expect(text).to.contain('Sample:\n                ERS667576');
-                expect(text).to.contain('ENA accession:\n                ' + accession);
+                const text = $el.text().replace(/\s+/g, ' ').replaceAll('\n', '');
+                expect(text).to.contain('Study: MGYS00000462');
+                expect(text).to.contain('Sample: ERS667576');
+                expect(text).to.contain('ENA accession: ' + accession);
             });
         });
         it('Table of analyses should load correctly', function() {
