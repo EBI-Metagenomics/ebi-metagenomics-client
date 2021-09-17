@@ -1,12 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { MGnifyDatum } from 'hooks/data/useData';
-import SamplesMap from 'src/components/UI/SamplesMap';
+import SamplesMap from 'components/UI/SamplesMap';
+import Box from 'components/UI/Box';
 import { getBiomeIcon } from 'utils/biomes';
+import { Publication } from 'components/Publications';
+import config from 'config.json';
 
 type StudyOverviewProps = {
   data: MGnifyDatum;
+  included: Array<unknown>;
 };
-const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
+const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
   const lineage = data.relationships.biomes.data[0].id;
   return (
     <section>
@@ -18,26 +23,64 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
               data?.attributes?.['last-update'] as string
             ).toDateString()}
           </h4>
-          <div className="vf-box vf-box--easy vf-box-theme--primary">
-            <h5 className="vf-box__heading">Classification</h5>
-            <p className="vf-box__text">
-              <span
-                className={`biome_icon icon_sm ${getBiomeIcon(lineage)}`}
-                style={{ float: 'initial' }}
-              />
-              {lineage}
-            </p>
-          </div>
-          <div className="vf-box vf-box--easy vf-box-theme--primary">
-            <h5 className="vf-box__heading">Description</h5>
-            <p className="vf-box__text">{data.attributes['study-abstract']}</p>
-          </div>
+          <Box label="Classification">
+            <span
+              className={`biome_icon icon_sm ${getBiomeIcon(lineage)}`}
+              style={{ float: 'initial' }}
+            />
+            {lineage}
+          </Box>
+          <Box label="Description">{data.attributes['study-abstract']}</Box>
         </div>
         <SamplesMap study={data.id} />
       </div>
-      <div className="vf-box vf-box--easy vf-box-theme--primary">
-        <h5 className="vf-box__heading">Related studies</h5>
-        <p className="vf-box__text" />
+      <div className="mg-flex">
+        {data?.relationships?.studies?.data?.length && (
+          <Box label="Related studies">
+            <ul className="vf-list">
+              {data.relationships.studies.data.map(({ id }) => (
+                <li key={id as string}>
+                  <Link to={`/studies/${id}`}>{id}</Link>
+                </li>
+              ))}
+            </ul>
+          </Box>
+        )}
+        <div>
+          {data?.attributes?.['is-public'] && (
+            <Box label="External links">
+              <ul className="vf-list">
+                <li>
+                  <a
+                    className="ext"
+                    href={`${config.enaURL}/${data.attributes['secondary-accession']}`}
+                  >
+                    ENA website ({data.attributes['secondary-accession']})
+                  </a>
+                </li>
+              </ul>
+            </Box>
+          )}
+          <Box label="Publications">
+            <ul className="vf-list">
+              {included
+                .filter(({ type }) => type === 'publications')
+                .map(({ attributes, id }) => (
+                  <li key={id as string}>
+                    <Publication
+                      title={attributes['pub-title']}
+                      journal={attributes['iso-journal']}
+                      year={attributes['published-year']}
+                      link={`http://${attributes.doi}`}
+                      doi={attributes.doi}
+                      authors={attributes.authors}
+                      maxAuthorsLength={70}
+                    />
+                  </li>
+                ))}
+            </ul>
+          </Box>
+        </div>
       </div>
     </section>
   );

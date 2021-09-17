@@ -19,7 +19,10 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
           <li className="vf-tabs__item" key={label}>
             <Link
               className={`vf-tabs__link ${
-                to === location.pathname ? 'is-active' : ''
+                to === location.pathname ||
+                (to.startsWith('#') && to === location.hash)
+                  ? 'is-active'
+                  : ''
               }`}
               to={to}
             >

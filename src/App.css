@@ -37,3 +37,9 @@ button.mg-button-as-link {
   font-weight: 400;
   font-size: 1em;
 }
+
+.mg-flex {
+  display: flex;
+  gap: var(--page-grid-gap, 1em);
+  align-items: flex-start;
+}

@@ -29,6 +29,9 @@ export type MGnifyDatum = {
         id: string;
       }>;
     };
+    studies?: {
+      data: Array<KeyValue>;
+    };
     [key: string]: unknown;
   };
 };
@@ -48,6 +51,7 @@ export interface MGnifyResponse {
       pages: number;
     };
   };
+  included: Array<KeyValue>;
 }
 export interface MGnifyResponseList extends MGnifyResponse {
   data: Array<MGnifyDatum>;

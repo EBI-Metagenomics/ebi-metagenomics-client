@@ -4,5 +4,6 @@
   "website": "http://localhost:9000/",
   "blog": "https://ebi-metagenomics.github.io/blog/",
   "basename": "/",
-  "googleMapsKey": "XXX"
+  "enaURL": "https://www.ebi.ac.uk/ena/browser/view/",
+  "googleMapsKey": "XX"
 }

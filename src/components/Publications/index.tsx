@@ -5,14 +5,26 @@ import publications from './publications.json';
 
 import './style.css';
 
-const Publication: React.FC<{
+const trimAuthors = (text: string, maxAuthorsLength: number): string => {
+  const authorList = text.slice(0, maxAuthorsLength).split(',');
+  authorList.pop();
+  authorList.push(' et al.');
+  return authorList.join(',');
+};
+
+export const Publication: React.FC<{
   title: string;
   journal: string;
   year: number;
   link: string;
   doi: string;
   authors: string;
-}> = ({ title, journal, year, link, doi, authors }) => {
+  maxAuthorsLength?: number;
+}> = ({ title, journal, year, link, doi, authors, maxAuthorsLength }) => {
+  const trimmedAuthors =
+    maxAuthorsLength && authors.length > maxAuthorsLength
+      ? trimAuthors(authors, maxAuthorsLength)
+      : authors;
   return (
     <section className="mg-pub">
       <span className="mg-pub-title">{title}.</span>{' '}
@@ -24,7 +36,7 @@ const Publication: React.FC<{
           {doi}
         </a>
       </span>
-      <div className="mg-pub-authors">{authors}.</div>
+      <div className="mg-pub-authors">{trimmedAuthors}.</div>
     </section>
   );
 };
