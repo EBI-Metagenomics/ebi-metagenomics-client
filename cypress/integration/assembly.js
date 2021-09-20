@@ -56,9 +56,9 @@ describe('Assembly page', function() {
         it('Should display description section', function() {
             cy.contains('Description').should('be.visible');
             cy.get(descriptionSection).then(($el) => {
-                const text = $el.text().replace('');
-                expect(text).to.contain('Sample:\n                SRS1743794');
-                expect(text).to.contain('ENA accession:\n                ' + accession);
+                const text = $el.text().replace(/\s+/g, ' ').replaceAll('\n', '');
+                expect(text).to.include('Sample: SRS1743794');
+                expect(text).to.include('ENA accession: ' + accession);
             });
         });
         it('Table of analyses should load correctly', function() {
@@ -96,7 +96,7 @@ describe('Assembly page', function() {
             });
             const enaLink = cy.get(descriptionSection + ' a').eq(1);
             enaLink.should('have.attr', 'href').then((href) => {
-                expect(href).to.equal('https://www.ebi.ac.uk/ena/browser/view/ERZ477708');
+                expect(href.endsWith('/ena/browser/view/ERZ477708')).to.be.true;
             });
         });
         it('Analyses table links should be valid', function() {

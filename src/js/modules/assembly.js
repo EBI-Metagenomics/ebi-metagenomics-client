@@ -65,12 +65,17 @@ let AssemblyView = Backbone.View.extend({
                 attr.assembly_id +
                 '</a>';
         }).then(() => {
-            let description = {
-                'Sample': samples,
-                'Runs': runs,
+            let description = {}
+            if (!_.isEmpty(samples)) {
+                description.Sample = samples; 
+            }
+            if (!_.isEmpty(runs)) {
+                description.Runs = runs;
+            }
+            if (!_.isEmpty(enaAccess)) {
                 // TODO url must be checked using gca
-                'ENA accession': enaAccess
-            };
+                description['ENA accession'] = enaAccess
+            }
             $('#overview').append(new DetailList('Description', description));
         });
     }

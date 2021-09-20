@@ -92,6 +92,31 @@ describe('Analysis V5', () => {
         });
     });
 
+    context('Overview tab - hybrid assemblies', () => {
+        const analysisId = 'MGYA00383254';
+        const pageUrl = 'analyses/' + analysisId;
+
+        before(() => {
+            cy.server()
+            cy.route('GET', '**/analyses/MGYA00383254?include=downloads,assembly', 'fixture:hybridAssemblyAnalysis');
+            cy.route('GET', '**/assemblies/ERZ477576/runs**', 'fixture:hybridAssemblyAnalysisRuns');
+
+            openPage(pageUrl);
+            waitForPageLoad('Analysis ' + analysisId);
+        });
+
+        it('Should display hybrid', () => {
+            cy.contains('Study:').next().should('contain', 'MGYS00002008');
+            cy.contains('Assembly:').next().should('contain', 'ERZ477576');
+            cy.contains('Pipeline version:').next().should('contain', '5.0');
+            cy.contains('Experiment type:').next().should('contain', 'hybrid assembly');
+
+            cy.get('[data-cy="instrument"]').should('have.length', 2);
+            cy.get('[data-cy="instrument"]').eq(0).should('contain', 'platform: LS454, model: 454 GS FLX Titanium');
+            cy.get('[data-cy="instrument"]').eq(1).should('contain', 'platform: ION_TORRENT, model: Ion Torrent PGM');
+        });
+    })
+    
     context('QC tab', () => {
         const analysisId = 'MGYA00383254';
         const pageUrl = 'analyses/' + analysisId;

@@ -1,0 +1,145 @@
+{
+  "links": {
+    "first": "http://localhost:8000/v1/assemblies/ERZ477576/runs?page=1",
+    "last": "http://localhost:8000/v1/assemblies/ERZ477576/runs?page=1",
+    "next": null,
+    "prev": null
+  },
+  "data": [
+    {
+      "type": "runs",
+      "id": "ERR010482",
+      "attributes": {
+        "experiment-type": "metagenomic",
+        "accession": "ERR010482",
+        "secondary-accession": "ERR010482",
+        "instrument-platform": "LS454",
+        "instrument-model": "454 GS FLX Titanium"
+      },
+      "relationships": {
+        "study": {
+          "data": {
+            "type": "studies",
+            "id": "MGYS00000257"
+          },
+          "links": {
+            "related": "http://localhost:8000/v1/studies/MGYS00000257"
+          }
+        },
+        "sample": {
+          "data": {
+            "type": "samples",
+            "id": "SRS009545"
+          },
+          "links": {
+            "related": "http://localhost:8000/v1/samples/SRS009545"
+          }
+        },
+        "assemblies": {
+          "links": {
+            "related": "http://localhost:8000/v1/runs/ERR010482/assemblies"
+          },
+          "data": [
+            {
+              "type": "assemblies",
+              "id": "ERZ477576",
+              "links": {
+                "self": "http://localhost:8000/v1/assemblies/ERZ477576"
+              }
+            }
+          ]
+        },
+        "pipelines": {
+          "data": [
+            {
+              "type": "pipelines",
+              "id": "1.0",
+              "links": {
+                "self": "http://localhost:8000/v1/pipelines/1.0"
+              }
+            }
+          ]
+        },
+        "analyses": {
+          "links": {
+            "related": "http://localhost:8000/v1/runs/ERR010482/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:8000/v1/runs/ERR010482"
+      }
+    },
+    {
+      "type": "runs",
+      "id": "DRR014527",
+      "attributes": {
+        "experiment-type": "amplicon",
+        "accession": "DRR014527",
+        "secondary-accession": "DRR014527",
+        "instrument-platform": "ION_TORRENT",
+        "instrument-model": "Ion Torrent PGM"
+      },
+      "relationships": {
+        "study": {
+          "data": {
+            "type": "studies",
+            "id": "MGYS00001820"
+          },
+          "links": {
+            "related": "http://localhost:8000/v1/studies/MGYS00001820"
+          }
+        },
+        "sample": {
+          "data": {
+            "type": "samples",
+            "id": "DRS012855"
+          },
+          "links": {
+            "related": "http://localhost:8000/v1/samples/DRS012855"
+          }
+        },
+        "assemblies": {
+          "links": {
+            "related": "http://localhost:8000/v1/runs/DRR014527/assemblies"
+          },
+          "data": [
+            {
+              "type": "assemblies",
+              "id": "ERZ477576",
+              "links": {
+                "self": "http://localhost:8000/v1/assemblies/ERZ477576"
+              }
+            }
+          ]
+        },
+        "pipelines": {
+          "data": [
+            {
+              "type": "pipelines",
+              "id": "3.0",
+              "links": {
+                "self": "http://localhost:8000/v1/pipelines/3.0"
+              }
+            }
+          ]
+        },
+        "analyses": {
+          "links": {
+            "related": "http://localhost:8000/v1/runs/DRR014527/analyses"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:8000/v1/runs/DRR014527"
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pages": 1,
+      "count": 2
+    }
+  }
+}
