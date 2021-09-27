@@ -25,5 +25,6 @@ coverage.lcov
 
 # Local API configs
 config
+config.private.json
 
 .sha1.sha1

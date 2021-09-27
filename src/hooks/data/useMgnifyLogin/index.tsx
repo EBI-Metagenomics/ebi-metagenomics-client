@@ -1,11 +1,13 @@
+import { useContext } from 'react';
 import useData, { HTMLDataResponse, ResponseFormat } from 'hooks/data/useData';
-import config from 'config.json';
+import UserContext from 'pages/Login/UserContext';
 
 const useMgnifyLogin: (
   username: string,
   password: string,
   csrfmiddlewaretoken: string
 ) => HTMLDataResponse = (username, password, csrfmiddlewaretoken) => {
+  const { config } = useContext(UserContext);
   const formData = new FormData();
   formData.append('username', username);
   formData.append('password', password);

@@ -1,10 +1,11 @@
+import { useContext } from 'react';
 import useData, {
   DataResponse,
   MGnifyResponse,
   KeyValue,
   ResponseFormat,
 } from 'hooks/data/useData';
-import config from 'config.json';
+import UserContext from 'pages/Login/UserContext';
 
 interface MgnifyDataResponse extends DataResponse {
   data: MGnifyResponse;
@@ -15,6 +16,7 @@ const useMGnifyData: (
   parameters?: KeyValue,
   fetchOptions?: RequestInit
 ) => MgnifyDataResponse = (endpoint, parameters = {}, fetchOptions = {}) => {
+  const { config } = useContext(UserContext);
   const defaultParameters = {};
   const allParemeters = { ...defaultParameters, ...parameters };
   let url = `${config.api}${endpoint}`;

@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { MGnifyDatum } from 'hooks/data/useData';
 import SamplesMap from 'components/UI/SamplesMap';
 import Box from 'components/UI/Box';
 import { getBiomeIcon } from 'utils/biomes';
 import { Publication } from 'components/Publications';
-import config from 'config.json';
+import UserContext from 'pages/Login/UserContext';
 
 type StudyOverviewProps = {
   data: MGnifyDatum;
   included: Array<unknown>;
 };
 const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
+  const { config } = useContext(UserContext);
   const lineage = data.relationships.biomes.data[0].id;
   return (
     <section>

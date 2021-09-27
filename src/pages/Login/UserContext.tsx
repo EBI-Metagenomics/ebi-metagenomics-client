@@ -20,6 +20,7 @@ const UserContext = React.createContext({
   username: null,
   isAuthenticated: false,
   details: null,
+  config: null,
   setUser: noop as (u: UserType) => void,
   setDetails: noop as (details: UserDetails) => void,
 });

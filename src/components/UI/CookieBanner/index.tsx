@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import config from 'config.json';
+import React, { useState, useContext } from 'react';
+import UserContext from 'pages/Login/UserContext';
 
 const CookieBanner: React.FC = () => {
+  const { config } = useContext(UserContext);
   const [display, setDisplay] = useState(
     !!document && !(document.cookie.match(/cookies-accepted=(true)/i) || [])[1]
   );

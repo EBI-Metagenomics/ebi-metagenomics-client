@@ -1,5 +1,6 @@
+import { useContext } from 'react';
 import useData, { DataResponse, KeyValue } from 'hooks/data/useData';
-import config from 'config.json';
+import UserContext from 'pages/Login/UserContext';
 
 interface EBIDataResponse extends DataResponse {
   data: KeyValue;
@@ -9,6 +10,7 @@ const useEBISearchData: (
   endpoint: string,
   parameters?: KeyValue
 ) => EBIDataResponse = (endpoint, parameters = {}) => {
+  const { config } = useContext(UserContext);
   const defaultParameters = {
     format: 'json',
     start: 0,

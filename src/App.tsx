@@ -1,6 +1,8 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
+import mergePrivateConfig from 'utils/config';
+import initialConfig from 'config.json';
 import EBIHeader from './components/UI/EBIHeader';
 import HeroHeader from './components/UI/HeroHeader';
 import EBIFooter from './components/UI/EBIFooter';
@@ -30,7 +32,11 @@ const App: React.FC = () => {
     username: null,
     isAuthenticated: false,
   });
+  const [config, setConfig] = useState(initialConfig);
   const [details, setDetails] = useState(null);
+  useEffect(() => {
+    mergePrivateConfig(setConfig);
+  }, []);
   return (
     <UserContext.Provider
       value={{
@@ -39,6 +45,7 @@ const App: React.FC = () => {
         details,
         setUser,
         setDetails,
+        config,
       }}
     >
       <LoginMonitor />

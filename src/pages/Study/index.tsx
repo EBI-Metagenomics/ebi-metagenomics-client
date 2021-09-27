@@ -31,7 +31,7 @@ const StudyPage: React.FC = () => {
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
           <RouteForHash hash="#overview" isDefault>
-            <Overview data={studyData} included={included} />
+            <Overview data={studyData} included={included || []} />
           </RouteForHash>
           <RouteForHash hash="#analysis">
             <div>analysis ????</div>

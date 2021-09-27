@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState, ReactElement } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+  ReactElement,
+} from 'react';
 import ReactDOMServer from 'react-dom/server';
 // import { Link } from 'react-router-dom';
 
@@ -10,8 +16,8 @@ import FetchError from 'components/UI/FetchError';
 import useSamplesProvider from 'hooks/data/useSamplesProvider';
 import { ErrorTypes, MGnifyDatum } from 'hooks/data/useData';
 
+import UserContext from 'pages/Login/UserContext';
 import './style.css';
-import config from 'config.json';
 
 const LIMIT = 200;
 
@@ -153,6 +159,8 @@ type SamplesMapProps = {
 const SamplesMap: React.FC<SamplesMapProps> = ({ study }) => {
   const [limit, setLimit] = useState(LIMIT);
   const { samples, total } = useSamplesProvider(study, limit);
+  const { config } = useContext(UserContext);
+
   const samplesFiltered = samples.filter((sample) => {
     if (
       sample.attributes &&

@@ -1,7 +1,8 @@
 import Cookies from 'universal-cookie';
+import { useContext } from 'react';
 
 import useData, { HTMLDataResponse, ResponseFormat } from 'hooks/data/useData';
-import config from 'config.json';
+import UserContext from 'pages/Login/UserContext';
 
 const useMgnifyEmail: (
   fromEmail: string,
@@ -10,6 +11,7 @@ const useMgnifyEmail: (
   consent: boolean,
   cc?: string
 ) => HTMLDataResponse = (fromEmail, subject, body, consent, cc = '') => {
+  const { config } = useContext(UserContext);
   const cookies = new Cookies();
 
   const data = useData(

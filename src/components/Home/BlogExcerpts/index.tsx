@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
@@ -6,7 +6,7 @@ import InnerCard from 'components/UI/InnerCard';
 import OutterCard from 'components/UI/OutterCard';
 import useBlogData from 'hooks/data/useBlogData';
 
-import config from 'config.json';
+import UserContext from 'pages/Login/UserContext';
 
 const removeHTMLTags = (text: string): string => {
   return text.replace(/&lt;.+?&gt;/g, '').trim();
@@ -34,6 +34,8 @@ const BlogExcerpt: React.FC<{
 
 const BlogExcerpts: React.FC = () => {
   const { data, loading, error } = useBlogData('feed-first-of-each.json');
+  const { config } = useContext(UserContext);
+
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   return (
