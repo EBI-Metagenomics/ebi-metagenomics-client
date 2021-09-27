@@ -1,1 +1,0 @@
-(self.webpackChunkmgportalv2=self.webpackChunkmgportalv2||[]).push([[612],{612:e=>{"use strict";e.exports={}}}]);
