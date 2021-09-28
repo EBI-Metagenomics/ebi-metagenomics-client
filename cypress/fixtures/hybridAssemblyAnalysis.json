@@ -1,0 +1,169 @@
+{
+  "data": {
+    "type": "analysis-jobs",
+    "id": "MGYA00383254",
+    "attributes": {
+      "analysis-summary": [],
+      "pipeline-version": "5.0",
+      "analysis-status": "completed",
+      "accession": "MGYA00383254",
+      "experiment-type": "hybrid_assembly",
+      "complete-time": "2019-11-11T12:36:17",
+      "instrument-platform": "ILLUMINA",
+      "instrument-model": "Illumina HiSeq 2000"
+    },
+    "relationships": {
+      "taxonomy-lsu": {
+        "links": {
+          "related": "http://localhost:8000/v1/analyses/MGYA00383254/taxonomy/lsu"
+        }
+      },
+      "sample": {
+        "data": null
+      },
+      "study": {
+        "data": {
+          "type": "studies",
+          "id": "MGYS00002008"
+        },
+        "links": {
+          "related": "http://localhost:8000/v1/studies/MGYS00002008"
+        }
+      },
+      "assembly": {
+        "data": {
+          "type": "assemblies",
+          "id": "ERZ477576"
+        },
+        "links": {
+          "related": "http://localhost:8000/v1/assemblies/ERZ477576"
+        }
+      },
+      "taxonomy": {
+        "links": {
+          "related": "http://localhost:8000/v1/analyses/MGYA00383254/taxonomy"
+        }
+      },
+      "interpro-identifiers": {
+        "links": {
+          "related": "http://localhost:8000/v1/analyses/MGYA00383254/interpro-identifiers"
+        }
+      },
+      "taxonomy-ssu": {
+        "links": {
+          "related": "http://localhost:8000/v1/analyses/MGYA00383254/taxonomy/ssu"
+        }
+      },
+      "taxonomy-itsunite": {
+        "links": {
+          "related": "http://localhost:8000/v1/analyses/MGYA00383254/taxonomy/unite"
+        }
+      },
+      "go-terms": {
+        "links": {
+          "related": "http://localhost:8000/v1/analyses/MGYA00383254/go-terms"
+        }
+      },
+      "taxonomy-itsonedb": {
+        "links": {
+          "related": "http://localhost:8000/v1/analyses/MGYA00383254/taxonomy/itsonedb"
+        }
+      },
+      "genome-properties": {
+        "links": {
+          "related": "http://localhost:8000/v1/analyses/MGYA00383254/genome-properties"
+        }
+      },
+      "run": {
+        "data": null
+      },
+      "downloads": {
+        "links": {
+          "related": "http://localhost:8000/v1/analyses/MGYA00383254/downloads"
+        },
+        "data": []
+      },
+      "go-slim": {
+        "links": {
+          "related": "http://localhost:8000/v1/analyses/MGYA00383254/go-slim"
+        }
+      },
+      "antismash-gene-clusters": {
+        "links": {
+          "related": "http://localhost:8000/v1/analyses/MGYA00383254/antismash-gene-clusters"
+        }
+      }
+    },
+    "links": {
+      "self": "http://localhost:8000/v1/analyses/MGYA00383254"
+    }
+  },
+  "included": [
+    {
+      "type": "assemblies",
+      "id": "ERZ477576",
+      "attributes": {
+        "experiment-type": "assembly",
+        "accession": "ERZ477576",
+        "wgs-accession": "OCZA01",
+        "legacy-accession": "GCA_900216085",
+        "coverage": null,
+        "min-gap-length": null
+      },
+      "relationships": {
+        "analyses": {
+          "links": {
+            "related": "http://localhost:8000/v1/assemblies/ERZ477576/analyses"
+          },
+          "data": null
+        },
+        "runs": {
+          "links": {
+            "related": "http://localhost:8000/v1/assemblies/ERZ477576/runs"
+          },
+          "data": [
+            {
+              "type": "runs",
+              "id": "DRR014527",
+              "links": {
+                "self": "http://localhost:8000/v1/runs/DRR014527"
+              }
+            },
+            {
+              "type": "runs",
+              "id": "SRR997122",
+              "links": {
+                "self": "http://localhost:8000/v1/runs/SRR997122"
+              }
+            }
+          ]
+        },
+        "pipelines": {
+          "data": [
+            {
+              "type": "pipelines",
+              "id": "5.0",
+              "links": {
+                "self": "http://localhost:8000/v1/pipelines/5.0"
+              }
+            }
+          ]
+        },
+        "samples": {
+          "data": [
+            {
+              "type": "samples",
+              "id": "ERS487899",
+              "links": {
+                "self": "http://localhost:8000/v1/samples/ERS487899"
+              }
+            }
+          ]
+        }
+      },
+      "links": {
+        "self": "http://localhost:8000/v1/assemblies/ERZ477576"
+      }
+    }
+  ]
+}

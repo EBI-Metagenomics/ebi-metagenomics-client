@@ -23,11 +23,13 @@ describe('Genome page', () => {
                   .each(($row, idx) => {
                     $row.children('.column').each((_, el) => {
                         const $el = Cypress.$(el);
+                        const text = $el.text().replace(/\s+/g, ' ').replaceAll('\n', '');
+
                         if ($el.hasClass('detailList-key')) {
-                            expect($el).to.have.text(valuesArray[idx][0]);
+                            expect(text).to.contains(valuesArray[idx][0]);
                         }
                         if ($el.hasClass('detailList-value')) {
-                            expect($el).to.have.text(valuesArray[idx][1]);
+                            expect(text).to.contains(valuesArray[idx][1]);
                             if (valuesArray[idx][2]) {
                                 expect($el.children('a')).to.have.prop('href', valuesArray[idx][2]);
                             }

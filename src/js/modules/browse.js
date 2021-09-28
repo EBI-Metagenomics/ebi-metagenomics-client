@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const marked = require('marked');
 const util = require('../util');
 const commons = require('../commons');
 const api = require('mgnify').api(process.env.API_URL);
@@ -261,6 +262,72 @@ let PublicationsView = util.GenericTableView.extend({
     }
 });
 
+let GenomeCataloguesView = util.GenericTableView.extend({
+    tableObj: null,
+    pagination: null,
+    params: {},
+
+    getRowData(attr) {
+        const biomes = '<span class="biome_icon icon_xs ' + attr.biome_icon + '" title="' +
+            attr.biome_name + '"></span>';
+        const genomeCatalogueLink = '<a href=\'' + attr.catalogue_url + '\'>' +
+            attr.catalogue_id + '</a>';
+        const genomeCatalogueViewButton = '<a class=\'button\' href=\'' +
+            attr.catalogue_url + '\'>View catalogue</a>';
+        const genomeCatalogueNameLink = '<a href=\'' + attr.catalogue_url + '\'>' +
+            attr.catalogue_name + '</a>';
+        return [biomes, genomeCatalogueLink, genomeCatalogueNameLink, attr.catalogue_version,
+            attr.genome_count, attr.last_updated, genomeCatalogueViewButton];
+    },
+    initialize() {
+        const that = this;
+        const columns = [
+            {sortBy: null, name: 'Biome'},
+            {sortBy: 'catalogue_id', name: 'Catalogue ID'},
+            {sortBy: 'catalogue_name', name: 'Catalogue name'},
+            {sortBy: 'version', name: 'Catalogue version'},
+            {sortBy: 'genome_count', name: 'Genomes count'},
+            {sortBy: 'last_update', name: 'Last updated'},
+            {sortBy: null, name: 'Link'}
+        ];
+        let params = createInitParams();
+
+        const $genomesSection = $('#genome-catalogues-section');
+
+        let tableOptions = {
+            title: 'Genome catalogues',
+            description: marked('Genome catalogues are biome-specific collections of ' +
+                'metagenomic-assembled and isolate genomes. ' +
+                'The latest version of each catalogue is shown on this website. ' +
+                'Data for current and previous versions are available on the ' +
+                '[FTP server](ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/).' +
+                '\n\n' +
+                'Select a catalogue in the table to browse or search its genomes.'
+            ),
+            headers: columns,
+            initialOrdering: params.ordering,
+            initPageSize: Commons.DEFAULT_PAGE_SIZE,
+            isHeader: true,
+            textFilter: true,
+            biomeFilter: false,
+            tableClass: 'genome-catalogues-table',
+            hideIfEmpty: false,
+            callback: function(page, pageSize, order, search) {
+                that.update({
+                    page: page,
+                    page_size: pageSize,
+                    ordering: order || that.tableObj.getCurrentOrder(),
+                    search: search,
+                    lineage: $('.biome-select').val()
+                });
+            }
+        };
+        this.tableObj = new GenericTable($genomesSection, tableOptions);
+        this.tableObj.order = params.ordering;
+        this.update(params);
+    }
+});
+
 let BiomeTree = api.BiomeWithChildren.extend({
     initialize(params) {
         this.rootLineage = params['rootLineage'] || 'root';
@@ -310,6 +377,9 @@ let studiesView = new StudiesView({collection: studies});
 let samples = new api.SamplesCollection();
 let samplesView = new SamplesView({collection: samples});
 
+let genomeCatalogues = new api.GenomeCataloguesCollection();
+let genomeCataloguesView = new GenomeCataloguesView({collection: genomeCatalogues});
+
 let publications = new api.PublicationsCollection();
 new PublicationsView({collection: publications});
 
@@ -327,6 +397,7 @@ function initBiomeFilter() {
         };
         studiesView.update(updateObj);
         samplesView.update(updateObj);
+        genomeCataloguesView.update(updateObj);
     });
 
     const $clearBtn = $('.clear-filter');

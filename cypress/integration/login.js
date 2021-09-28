@@ -8,7 +8,7 @@ const origPage = '';
 Cypress.Cookies.debug(true);
 
 Cypress.Cookies.defaults({
-    whitelist: 'csrftoken'
+    preserve: 'csrftoken'
 });
 
 let table;

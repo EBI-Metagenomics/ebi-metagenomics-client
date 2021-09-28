@@ -347,6 +347,7 @@ function initPage() {
 
     let downloads = new api.GenomeDownloads({id: genomeId});
     let downloadsView = new DownloadsView({model: downloads});
+
     genomeView.fetchAndRender().done(() => {
         util.attachExpandButtonCallback();
         // Charts //

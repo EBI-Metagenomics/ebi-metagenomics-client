@@ -1,0 +1,37 @@
+.results-mag-section dl {
+  display: grid;
+  grid-template: auto / 10em 1fr;
+}
+.results-mag-section dt {
+  font-weight: bold;
+  text-align: right;
+  padding-right: 1em;
+}
+
+.results-mag-section dd {
+  padding: 0;
+}
+
+.filename {
+  font-family: monospace;
+}
+.result-mag-match a {
+  white-space: nowrap;
+}
+.results-files ul {
+  list-style-type: none;
+}
+
+.results-files ul li {
+  margin-bottom: 0.8em;
+}
+details.mg-sourmash-readmore {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  background: #efefef;
+}
+details.mg-sourmash-readmore summary{
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}

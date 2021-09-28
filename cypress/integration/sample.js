@@ -271,6 +271,7 @@ describe('Sample page', function() {
     });
 
     context('Metadata display', function() {
+
         it('Info message should be displayed if no metadata available for display', function() {
             const projectId = 'ERS1474797';
             const origPage = 'samples/' + projectId;
@@ -286,29 +287,30 @@ describe('Sample page', function() {
             openPage(origPage);
             waitForPageLoad(projectId);
             cy.get('#sample-metadata').then(($el) => {
-                const text = Cypress.$($el).text();
-                expect(text).to.contain('Collection date:\n                2014-11-17');
+                // remove extra spaces and \n chars
+                const text = Cypress.$($el).text().replace(/\s+/g, ' ').replaceAll('\n', '');
+                expect(text).to.contain('Collection date: 2014-11-17');
                 expect(text)
                     .to
-                    .contain('ENA checklist:\n                GSC MIxS plant associated (ERC000020)');
+                    .contain('ENA checklist: GSC MIxS plant associated (ERC000020)');
                 expect(text)
                     .to
-                    .contain('Geographic location (region and locality):\n                Cologne');
-                expect(text).to.contain('Host common name:\n                Thale cress');
-                expect(text).to.contain('Host taxid:\n                3702');
-                expect(text).to.contain('Instrument model:\n                Illumina MiSeq');
-                expect(text).to.contain('Investigation type:\n                metagenome');
-                expect(text).to.contain('NCBI sample classification:\n                1297885');
-                expect(text).to.contain('Plant product:\n                clay');
-                expect(text)
-                    .to
-                    .contain(
-                        'Plant-associated environmental package:\n                plant-associated');
+                    .contain('Geographic location (region and locality): Cologne');
+                expect(text).to.contain('Host common name: Thale cress');
+                expect(text).to.contain('Host taxid: 3702');
+                expect(text).to.contain('Instrument model: Illumina MiSeq');
+                expect(text).to.contain('Investigation type: metagenome');
+                expect(text).to.contain('NCBI sample classification: 1297885');
+                expect(text).to.contain('Plant product: clay');
                 expect(text)
                     .to
                     .contain(
-                        'Project name:\n                ena-STUDY-MPIPZ-29-10-2015-07:38:39:510-31');
-                expect(text).to.contain('Sequencing method:\n                MiSeq');
+                        'Plant-associated environmental package: plant-associated');
+                expect(text)
+                    .to
+                    .contain(
+                        'Project name:\ ena-STUDY-MPIPZ-29-10-2015-07:38:39:510-31');
+                expect(text).to.contain('Sequencing method: MiSeq');
             });
         });
     });
