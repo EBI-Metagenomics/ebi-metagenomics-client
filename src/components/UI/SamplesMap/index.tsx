@@ -114,7 +114,7 @@ const MyMapComponent: React.FC<MapProps> = ({ data }) => {
         Object.values(markers.current),
         {
           imagePath:
-            'https://googlemaps.github.io/js-markerclustererplus/images/m',
+            'https://raw.githubusercontent.com/googlemaps/js-markerclustererplus/master/images/m',
           maxZoom: 10,
         }
       );
@@ -162,17 +162,14 @@ const SamplesMap: React.FC<SamplesMapProps> = ({ study }) => {
   const { config } = useContext(UserContext);
 
   const samplesFiltered = samples.filter((sample) => {
-    if (
-      sample.attributes &&
-      'longitude' in sample.attributes &&
-      'latitude' in sample.attributes
-    ) {
+    try {
       return (
-        sample.attributes.longitude !== 0.0 &&
-        sample.attributes.latitude !== 0.0
+        Number(sample.attributes.longitude) !== 0.0 &&
+        Number(sample.attributes.latitude) !== 0.0
       );
+    } catch {
+      return false;
     }
-    return false;
   });
 
   return (

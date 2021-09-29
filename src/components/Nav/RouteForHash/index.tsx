@@ -13,7 +13,7 @@ const RouteForHash: React.FC<PropsType> = ({
   const location = useLocation();
   const history = useHistory();
   if (location.hash === '' && isDefault) {
-    history.push(hash);
+    history.replace(hash);
   }
 
   if (location.hash === hash) {

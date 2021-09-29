@@ -14,6 +14,7 @@ type StudyOverviewProps = {
 const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
   const { config } = useContext(UserContext);
   const lineage = data.relationships.biomes.data[0].id;
+  const publications = included.filter(({ type }) => type === 'publications');
   return (
     <section>
       <div className="vf-grid">
@@ -36,7 +37,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
         <SamplesMap study={data.id} />
       </div>
       <div className="mg-flex">
-        {data?.relationships?.studies?.data?.length && (
+        {data?.relationships?.studies?.data?.length > 0 && (
           <Box label="Related studies">
             <ul className="vf-list">
               {data.relationships.studies.data.map(({ id }) => (
@@ -62,11 +63,10 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
               </ul>
             </Box>
           )}
-          <Box label="Publications">
-            <ul className="vf-list">
-              {included
-                .filter(({ type }) => type === 'publications')
-                .map(({ attributes, id }) => (
+          {publications?.length > 0 && (
+            <Box label="Publications">
+              <ul className="vf-list">
+                {publications.map(({ attributes, id }) => (
                   <li key={id as string}>
                     <Publication
                       title={attributes['pub-title']}
@@ -79,8 +79,9 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
                     />
                   </li>
                 ))}
-            </ul>
-          </Box>
+              </ul>
+            </Box>
+          )}
         </div>
       </div>
     </section>
