@@ -51,7 +51,6 @@ function initPage() {
     genomeCatalogueView.fetchAndRender().done(() => {
         // Set the document title.
         document.title = genomeCatalogueView.model.attributes.catalogue_name + ' genomes';
-        // this.genomeTablesView = 
         new util.GenomesView({
             collection: genomes,
             initPageSize: 10,
