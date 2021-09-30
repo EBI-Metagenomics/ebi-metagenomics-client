@@ -1,6 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { MouseEventHandler } from 'react';
+import React from 'react';
 import { Column, usePagination, useSortBy, useTable } from 'react-table';
+
+import { MGnifyResponse } from 'src/hooks/data/useData';
+import { useQueryParametersState } from 'hooks/useQueryParamState';
+import PaginationButton from './PaginationButton';
 
 type PaginationRanges = {
   startingPages: number[];
@@ -46,51 +50,13 @@ function getPaginationRanges(
   };
 }
 
-type PaginationButtonProps = {
-  currentPageIndex: number;
-  pageIndex: number;
-  gotoPage: (pageIndex: number) => MouseEventHandler;
-};
-
-const PaginationButton: React.FC<PaginationButtonProps> = ({
-  currentPageIndex,
-  pageIndex,
-  gotoPage,
-}) => {
-  if (currentPageIndex === pageIndex) {
-    return (
-      <li className="vf-pagination__item vf-pagination__item--is-active">
-        <span className="vf-pagination__label" aria-current="page">
-          <span className="vf-u-sr-only">Page </span>
-          {currentPageIndex + 1}
-        </span>
-      </li>
-    );
-  }
-  return (
-    <li className="vf-pagination__item">
-      <button
-        type="button"
-        onClick={() => gotoPage(pageIndex)}
-        className="vf-button vf-button--link vf-pagination__link"
-      >
-        <span className="vf-u-sr-only"> page</span>
-        {pageIndex + 1}
-      </button>
-    </li>
-  );
-};
-
 type EMGTableProps = {
   cols: Column[];
-  data: {
-    data: Record<string, any>[];
-    meta: Record<string, any>;
-    links?: Record<string, any>;
-  };
+  data: MGnifyResponse;
   title?: string | React.CElement<any, any>;
-  fetchPage?: (pageIndex: number, pageSize: number) => void;
-  onChangeSort?: (columnId: string) => void;
+  // fetchPage?: (pageIndex: number, pageSize: number) => void;
+  showPagination?: boolean;
+  onChangeSort?: (columnId: Array<{ id: string; desc: boolean }>) => void;
   initialPage?: number;
   className?: string;
 };
@@ -99,10 +65,10 @@ const EMGTable: React.FC<EMGTableProps> = ({
   cols,
   data,
   title,
-  fetchPage,
   onChangeSort,
   initialPage = 0,
   className = '',
+  showPagination = true,
 }) => {
   const {
     getTableProps,
@@ -129,12 +95,29 @@ const EMGTable: React.FC<EMGTableProps> = ({
     useSortBy,
     usePagination
   );
+  const [queryParameters, setQueryParameters] = useQueryParametersState(
+    {
+      page: 1,
+      order: '',
+      page_size: 10,
+    },
+    {
+      page: Number,
+      page_size: Number,
+    }
+  );
 
   React.useEffect(() => {
-    if (fetchPage) {
-      fetchPage(pageIndex, pageSize);
+    if (showPagination) {
+      // fetch page
+      setQueryParameters({
+        ...queryParameters,
+        page: pageIndex + 1,
+        page_size: pageSize,
+      });
     }
-  }, [fetchPage, pageIndex, pageSize]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showPagination, setQueryParameters, pageIndex, pageSize]);
 
   React.useEffect(() => {
     if (onChangeSort) {
@@ -203,7 +186,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
         </tbody>
       </table>
 
-      {fetchPage && (
+      {showPagination && (
         <nav className="vf-pagination" aria-label="Pagination">
           <ul className="vf-pagination__list">
             <li className="vf-pagination__item vf-pagination__item--previous-page">

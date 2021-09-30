@@ -5,6 +5,7 @@ import SamplesMap from 'components/UI/SamplesMap';
 import Box from 'components/UI/Box';
 import { getBiomeIcon } from 'utils/biomes';
 import { Publication } from 'components/Publications';
+import AnalysesTable from 'components/Analyses/Table';
 import UserContext from 'pages/Login/UserContext';
 
 type StudyOverviewProps = {
@@ -36,6 +37,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
         </div>
         <SamplesMap study={data.id} />
       </div>
+      <br />
       <div className="mg-flex">
         {data?.relationships?.studies?.data?.length > 0 && (
           <Box label="Related studies">
@@ -83,6 +85,10 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
             </Box>
           )}
         </div>
+      </div>
+      <br />
+      <div>
+        <AnalysesTable />
       </div>
     </section>
   );

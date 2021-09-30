@@ -145,9 +145,12 @@ const SearchTable: React.FC = () => {
   if (error || !data) return <FetchError error={error} />;
   const fomattedData = {
     data: data.entries as Record<string, unknown>[],
+    links: {},
     meta: {
       pagination: {
         pages: Math.ceil((data.hitCount as number) / PAGE_SIZE),
+        count: 25,
+        page: 1,
       },
     },
   };

@@ -8,7 +8,9 @@ import { getBiomeIcon } from 'utils/biomes';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import BiomeSelector from 'components/UI/BiomeSelector';
 
-function getOrderingQueryParamFromSortedColumn(tableSortBy: any): string {
+function getOrderingQueryParamFromSortedColumn(
+  tableSortBy: Array<{ id: string; desc: boolean }>
+): string {
   if (!tableSortBy.length) return '';
   const col = tableSortBy[0];
   return `${col.desc ? '-' : ''}${col.id
@@ -25,14 +27,15 @@ const Browse: React.FC = () => {
     },
     {
       page: Number,
+      page_size: Number,
     }
   );
   const [hasData, setHasData] = useState(false);
   const { data: studiesList } = useMGnifyData('studies', {
-    page: Number(queryParameters.page),
+    page: queryParameters.page as number,
     ordering: queryParameters.order as string,
     lineage: queryParameters.biome as string,
-    page_size: 10,
+    page_size: queryParameters.page_size as number,
   });
 
   const columns = React.useMemo(
@@ -96,12 +99,6 @@ const Browse: React.FC = () => {
           cols={columns}
           data={studiesList as MGnifyResponseList}
           title={`Studies (${studiesList.meta.pagination.count})`}
-          fetchPage={(pageIndex) => {
-            setQueryParameters({
-              ...queryParameters,
-              page: pageIndex + 1,
-            });
-          }}
           onChangeSort={(sortBy) => {
             const order = getOrderingQueryParamFromSortedColumn(sortBy);
             if (order === queryParameters.order) return;
