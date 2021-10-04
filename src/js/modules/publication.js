@@ -31,7 +31,7 @@ let PublicationView = Backbone.View.extend({
                 if (attr['medicineJournal']) {
                     description['Medical journal'] = attr['medicineJournal'];
                 }
-                $('#publication-details').append(new DetailList('Extenal links', description));
+                $('#publication-details').append(new DetailList('External links', description));
                 util.attachTabHandlers();
             },
             error(ignored, response) {
@@ -65,6 +65,23 @@ const PublicationStudiesView = util.StudiesView.extend({
     }
 });
 
+const PublicationEuropePMCAnnotationsView = Backbone.View.extend({
+    model: api.PublicationEuropePMCAnnotations,
+    template: _.template($('#europePMCAnnotationsTmpl').html()),
+    el: '#europe-pmc-annotations',
+    initialize({publicationId}) {
+        // eslint-disable-next-line new-cap
+        this.model = new this.model({id: publicationId});
+        this.model.fetch();
+        this.model.on('sync', this.render, this);
+    },
+    render() {
+        const that = this;
+        that.$el.html(that.template(that.model.toJSON()));
+        util.attachTabHandlers();
+    }
+});
+
 /**
  * Method to initialise page load
  */
@@ -80,6 +97,9 @@ function initPage() {
             isPageHeader: false,
             textFilter: false,
             sectionTitle: 'Associated studies'
+        });
+        new PublicationEuropePMCAnnotationsView({
+            publicationId: publicationID
         });
         util.attachExpandButtonCallback();
     });

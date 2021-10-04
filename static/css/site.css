@@ -72,6 +72,34 @@
     width: 9em;
 }
 
+.europe-pmc-annotations {
+    position: relative;
+}
+
+.europe-pmc-logo {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.publications-epmc-annotations-section, .publications-epmc-annotation {
+    padding-left: 2em;
+    padding-bottom: 10px;
+    border-left: 1px solid #d0d0ce;
+}
+
+span.publications-epmc-annotation-prefix {
+    color: #777777;
+}
+
+span.publications-epmc-annotation-match {
+    font-weight: bold;
+}
+
+a.space-after-10 {
+    margin-right: 10px;
+}
+
 .runs-download-table {
     table-layout: fixed;
     text-align: center;
