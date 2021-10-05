@@ -102,7 +102,7 @@
                                     <ul id="europe_pmc_links">
                                         <% _.each(publications, function(pub){ %>
                                         <li>
-                                            <span class="pub-title"><%= pub.title %> <br></span>
+                                            <a href="<%= pub.pubMgnifyURL %>"><span class="pub-title"><%= pub.title %> <br></span></a>
                                             <%= pub.authors %> <br>
                                             <%= pub.publishedYear %> <%= pub.volume %>
                                             (PMID: <a class="ext" href="<%= pub.pmc_url %>"><%= pub.pubmedID %></a>)
