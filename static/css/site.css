@@ -88,6 +88,10 @@
     border-left: 1px solid #d0d0ce;
 }
 
+span.publications-empc-annotations-count {
+    font-size: smaller;
+}
+
 span.publications-epmc-annotation-prefix {
     color: #777777;
 }
