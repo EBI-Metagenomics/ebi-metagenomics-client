@@ -1,0 +1,635 @@
+{
+  "data": {
+    "sample_processing": [
+      {
+        "title": "Sequencing platform",
+        "description": "",
+        "annotations": [
+          {
+            "prefix": "Pyrosequencing of total community DNA Shotgun sequencing runs were performed on the ",
+            "exact": "454 FLX pyrosequencer",
+            "postfix": " from total fecal community DNA.",
+            "tags": [
+              {
+                "name": "454 FLX pyrosequencer",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/OBI/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FOBI_0000702"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-2c4870e2de8496ef11768655f5e26d4a",
+            "type": "Sequencing",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "DNA obtained from three separate 10 mg frozen aliquots of each fecal sample were pooled (≥200µg DNA) and used for ",
+            "exact": "pyrosequencing",
+            "postfix": " (see below).",
+            "tags": [
+              {
+                "name": "pyrosequencing",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C99481"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-a3280f7b13abc63c09001f0de97dfa4f",
+            "type": "Sequencing",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Selection of operational taxonomic units (OTUs) 16S rRNA gene-derived ",
+            "exact": "pyrosequencing",
+            "postfix": " data were pre-processed to remove sequences with low quality scores, sequences with ambiguous characters, or sequences outside of the length bounds (V6 < 50nt, V2 < 200nt), and binned according to sample-specific barcode (e.g. ref.",
+            "tags": [
+              {
+                "name": "pyrosequencing",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C99481"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-86331d4e85640ea10df45eb2a19c190d",
+            "type": "Sequencing",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "",
+            "exact": "Pyrosequencing",
+            "postfix": " of total community DNA Shotgun sequencing runs were performed on the 454 FLX pyrosequencer from total fecal community DNA.",
+            "tags": [
+              {
+                "name": "Pyrosequencing",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C99481"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-825d5a7c00fc34418500c9bc9a9f429e",
+            "type": "Sequencing",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Two samples were also analyzed in a single run employing Titanium extra long read ",
+            "exact": "pyrosequencing",
+            "postfix": " technology (see Supplementary Table 4,5).",
+            "tags": [
+              {
+                "name": "pyrosequencing",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C99481"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-fa3e3c284d29760e376e0ae103033e37",
+            "type": "Sequencing",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Sequencing reads with degenerate bases (“Ns”) were removed along with all duplicate sequences, as sequences of identical length and content are a common artifact of the ",
+            "exact": "pyrosequencing",
+            "postfix": " methodology.",
+            "tags": [
+              {
+                "name": "pyrosequencing",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C99481"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-592042485fbc458ed413af6dde70dc96",
+            "type": "Sequencing",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Two samples were also analyzed in a single run employing ",
+            "exact": "Titanium",
+            "postfix": " extra long read pyrosequencing technology (see Supplementary Table 4,5).",
+            "tags": [
+              {
+                "name": "Titanium",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C95189"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-10b0ec7b71a26c954afc364b5cea59ae",
+            "type": "Sequencing",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          }
+        ]
+      },
+      {
+        "title": "Library strategy",
+        "description": "e.g. aplicon, whole metagenome",
+        "annotations": [
+          {
+            "prefix": "CAZyme analysis ",
+            "exact": "Metagenomic",
+            "postfix": " sequence reads were searched against a library of modules derived from all entries in the Carbohydrate-Active enZymes (CAZy) database (www.cazy.org using FASTY33 e-value<10−6).",
+            "tags": [
+              {
+                "name": "Metagenomic",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCBITaxon/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCBITaxon_410658"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-23b6ed4488d437b1c7d35a6125d16eea",
+            "type": "LS",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Pyrosequencing of total community DNA ",
+            "exact": "Shotgun",
+            "postfix": " sequencing runs were performed on the 454 FLX pyrosequencer from total fecal community DNA.",
+            "tags": [
+              {
+                "name": "Shotgun",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C19646"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-bfb69528cd53d738b955e3e1930c94b9",
+            "type": "LS",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          }
+        ]
+      }
+    ],
+    "other": [
+      {
+        "title": "State",
+        "description": "Host/Environment state",
+        "annotations": [
+          {
+            "prefix": "A gene-by-sample matrix was generated based on BLASTX comparisons of each microbiome with our custom 44-genome database, in order to calculate an odds ratio based on the frequency of each gene in each twin versus the respective ",
+            "exact": "co-twin",
+            "postfix": ".",
+            "tags": [
+              {
+                "name": "co-twin",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/DOID/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_13576"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-c0e4061ead367b14c94a6d869412debd",
+            "type": "State",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "We complemented this approach with taxon-based methods27, which disregard some of the information contained in the phylogenetic tree of the taxa in question, but have the advantage that specific taxa unique to, or shared among, groups of samples can be identified (e.g., those from ",
+            "exact": "lean",
+            "postfix": " or obese individuals).",
+            "tags": [
+              {
+                "name": "lean",
+                "uri": "http://www.ebi.ac.uk/efo/EFO_0004995"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-7e65605877482710c7a6e548a5a5cfbc",
+            "type": "State",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "A gene by sample matrix was then screened to identify genes ‘commonly-enriched’ in either the obese or ",
+            "exact": "lean",
+            "postfix": " gut microbiome (defined by an odds ratio greater than 2 or less than 0.5 when comparing the pooled obese twin microbiomes to the pooled lean twin microbiomes and when comparing each individual obese twin microbiome to the aggregate lean twin microbiome, or vice versa).",
+            "tags": [
+              {
+                "name": "lean",
+                "uri": "http://www.ebi.ac.uk/efo/EFO_0004995"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-9eb3871f18765880b7b28ca7ae6616ec",
+            "type": "State",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "A gene by sample matrix was then screened to identify genes ‘commonly-enriched’ in either the obese or lean gut microbiome (defined by an odds ratio greater than 2 or less than 0.5 when comparing the pooled obese twin microbiomes to the pooled ",
+            "exact": "lean twin",
+            "postfix": " microbiomes and when comparing each individual obese twin microbiome to the aggregate lean twin microbiome, or vice versa).",
+            "tags": [
+              {
+                "name": "lean twin",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C73427"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-e14f2ebcd54e929fd4f61e903bcefb4f",
+            "type": "State",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "We also searched for genes that were consistently enriched or depleted in all six ",
+            "exact": "MZ twin-pairs",
+            "postfix": ".",
+            "tags": [
+              {
+                "name": "MZ twin-pairs",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/GAZ/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FGAZ_00007760"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-762d0b9db056cceab50bbc3f75306707",
+            "type": "State",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "We complemented this approach with taxon-based methods27, which disregard some of the information contained in the phylogenetic tree of the taxa in question, but have the advantage that specific taxa unique to, or shared among, groups of samples can be identified (e.g., those from lean or ",
+            "exact": "obese",
+            "postfix": " individuals).",
+            "tags": [
+              {
+                "name": "obese",
+                "uri": "http://www.ebi.ac.uk/efo/EFO_0001073"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-2dc6aa709be12791cdf63d551e578a0f",
+            "type": "State",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "A gene by sample matrix was then screened to identify genes ‘commonly-enriched’ in either the ",
+            "exact": "obese",
+            "postfix": " or lean gut microbiome (defined by an odds ratio greater than 2 or less than 0.5 when comparing the pooled obese twin microbiomes to the pooled lean twin microbiomes and when comparing each individual obese twin microbiome to the aggregate lean twin microbiome, or vice versa).",
+            "tags": [
+              {
+                "name": "obese",
+                "uri": "http://www.ebi.ac.uk/efo/EFO_0001073"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-41c0c86e8144db313771da6b16c4237b",
+            "type": "State",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "A gene by sample matrix was then screened to identify genes ‘commonly-enriched’ in either the obese or lean gut microbiome (defined by an odds ratio greater than 2 or less than 0.5 when comparing the pooled ",
+            "exact": "obese twin",
+            "postfix": " microbiomes to the pooled lean twin microbiomes and when comparing each individual obese twin microbiome to the aggregate lean twin microbiome, or vice versa).",
+            "tags": [
+              {
+                "name": "obese twin",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/MP/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FMP_0001261"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-c1cc283faeee219e36c115528b83614b",
+            "type": "State",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "A gene-by-sample matrix was generated based on BLASTX comparisons of each microbiome with our custom 44-genome database, in order to calculate an odds ratio based on the frequency of each gene in each ",
+            "exact": "twin",
+            "postfix": " versus the respective co-twin.",
+            "tags": [
+              {
+                "name": "twin",
+                "uri": "http://www.ebi.ac.uk/efo/EFO_0007803"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-580851e1c9b7402491b1bcd73ff06e4d",
+            "type": "State",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "To determine if the UniFrac distances were on average significantly different for pairs of samples (i.e. between ",
+            "exact": "twin-pairs",
+            "postfix": ", between twins and their mother, or between unrelated individuals), we performed a t-test on the UniFrac distance matrix, and generated a p-value for the t-statistic by permutation of the rows and columns as in the Mantel test, regenerating the t-statistic for 1,000 random samples, and using the distribution to obtain an empirical p-value.",
+            "tags": [
+              {
+                "name": "twin-pairs",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C73427"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-6565ef372ed2aa76c30e7bd6f7086d14",
+            "type": "State",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "To determine if the UniFrac distances were on average significantly different for pairs of samples (i.e. between twin-pairs, between ",
+            "exact": "twins",
+            "postfix": " and their mother, or between unrelated individuals), we performed a t-test on the UniFrac distance matrix, and generated a p-value for the t-statistic by permutation of the rows and columns as in the Mantel test, regenerating the t-statistic for 1,000 random samples, and using the distribution to obtain an empirical p-value.",
+            "tags": [
+              {
+                "name": "twins",
+                "uri": "http://www.ebi.ac.uk/efo/EFO_0007803"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-826632ab4d5c3d72ea98019f1f75dcdf",
+            "type": "State",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          }
+        ]
+      },
+      {
+        "title": "Sample material",
+        "description": "Sample from which the microbiome is extracted",
+        "annotations": [
+          {
+            "prefix": "",
+            "exact": "De-identified",
+            "postfix": " samples were stored at −80°C before processing.",
+            "tags": [
+              {
+                "name": "De-identified",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/GENEPIO/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FGENEPIO_0001795"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-a4fa04cf4b6a23603359da501456bef0",
+            "type": "Sample-Material",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "",
+            "exact": "De-identified samples",
+            "postfix": " were stored at −80°C before processing.",
+            "tags": [
+              {
+                "name": "De-identified samples",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C68755"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-75a128fb9177ee84f2e1e6755b81791c",
+            "type": "Sample-Material",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "16S rRNA gene sequence-based surveys Complementary phylogenetic and taxon-based methods were used to compare 16S rRNA sequences among ",
+            "exact": "fecal",
+            "postfix": " communities.",
+            "tags": [
+              {
+                "name": "fecal",
+                "uri": "http://www.ebi.ac.uk/efo/EFO_0009523"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-ca85535699bd68e3dc2f3e09c9270c88",
+            "type": "Sample-Material",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Pyrosequencing of total community DNA Shotgun sequencing runs were performed on the 454 FLX pyrosequencer from total ",
+            "exact": "fecal",
+            "postfix": " community DNA.",
+            "tags": [
+              {
+                "name": "fecal",
+                "uri": "http://www.ebi.ac.uk/efo/EFO_0009523"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-3f779ca1ccd1fb74f46e1d53f4fd68b8",
+            "type": "Sample-Material",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "DNA obtained from three separate 10 mg frozen aliquots of each ",
+            "exact": "fecal sample",
+            "postfix": " were pooled (≥200µg DNA) and used for pyrosequencing (see below).",
+            "tags": [
+              {
+                "name": "fecal sample",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/COVOC/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FCOVOC_0010005"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-c5f7718c731b5f9d912743cdb67c4eb7",
+            "type": "Sample-Material",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "METHODS Community DNA preparation ",
+            "exact": "Fecal samples",
+            "postfix": " were frozen immediately after they were produced.",
+            "tags": [
+              {
+                "name": "Fecal samples",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/SYMP/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FSYMP_0000146"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-e75cf3ad09445d62fe3095bb4f91911d",
+            "type": "Sample-Material",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "An aliquot (~500mg) of each sample was then suspended, while frozen, in a solution containing 500 µl of extraction buffer [200 mM Tris (pH 8.0), 200 mM NaCl, 20 mM EDTA], 210 µl of 20% SDS, 500 µl of a mixture of phenol:chloroform:isoamyl alcohol (25:24:1, pH 7.9), and 500 µl of a ",
+            "exact": "slurry",
+            "postfix": " of 0.1 mm-diameter zirconia/silica beads (BioSpec Products, Bartlesville, OK).",
+            "tags": [
+              {
+                "name": "slurry",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C63391"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-00e8a34fc8eb3a1d3237f2d0102f8099",
+            "type": "Sample-Material",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          }
+        ]
+      },
+      {
+        "title": "Gene",
+        "description": "Target gene(s) (e.g. hypervariable regions of 16s/18s rRNA gene)",
+        "annotations": [
+          {
+            "prefix": "",
+            "exact": "16S rRNA",
+            "postfix": " gene sequence-based surveys Complementary phylogenetic and taxon-based methods were used to compare 16S rRNA sequences among fecal communities.",
+            "tags": [
+              {
+                "name": "16S rRNA",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C105370"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-cfafef696c6dbec2229eb4162bfe775b",
+            "type": "Gene",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Prior to both types of analyses, we grouped ",
+            "exact": "16S rRNA",
+            "postfix": " gene sequences into Operational Taxonomic Units (OTUs/phylotypes) using both cd-hit28 and the furthest-neighbor-like (FNL) algorithm, with a sequence identity threshold of 97%, which is commonly used to define ‘species’-level phylotypes.",
+            "tags": [
+              {
+                "name": "16S rRNA",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C105370"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-ed5185be9a6703bdadd4e5e50ca12e90",
+            "type": "Gene",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Selection of operational taxonomic units (OTUs) ",
+            "exact": "16S rRNA",
+            "postfix": " gene-derived pyrosequencing data were pre-processed to remove sequences with low quality scores, sequences with ambiguous characters, or sequences outside of the length bounds (V6 < 50nt, V2 < 200nt), and binned according to sample-specific barcode (e.g. ref.",
+            "tags": [
+              {
+                "name": "16S rRNA",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C105370"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-3c40bc6b8134154e1f2ca12cee7aa234",
+            "type": "Gene",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "PD is the total amount of branch length in a phylogenetic tree constructed from the combined ",
+            "exact": "16S rRNA",
+            "postfix": " datasets, leading to the sequences in a given sample.",
+            "tags": [
+              {
+                "name": "16S rRNA",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C105370"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-9b9c7e0c2bc2ec08048a7c171d3440a4",
+            "type": "Gene",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Tree building and UniFrac clustering for PCA analysis A relaxed neighbor-joining tree was built from one representative sequence per OTU using Clearcut31, employing the Kimura correction (the PH Lane mask was applied to ",
+            "exact": "V2",
+            "postfix": " and full-length data), but otherwise with default comparisons.",
+            "tags": [
+              {
+                "name": "V2",
+                "uri": "http://www.ebi.ac.uk/efo/EFO_0009899"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-1137be44e3847bfa62b6c723a228ed6e",
+            "type": "Gene",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Selection of operational taxonomic units (OTUs) 16S rRNA gene-derived pyrosequencing data were pre-processed to remove sequences with low quality scores, sequences with ambiguous characters, or sequences outside of the length bounds (V6 < 50nt, ",
+            "exact": "V2 < 200nt",
+            "postfix": "), and binned according to sample-specific barcode (e.g. ref.",
+            "tags": [
+              {
+                "name": "V2 < 200nt",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/FBbt/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FFBbt_00100237"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-d04e2d8fb47c4322d6b820f956d6e4e7",
+            "type": "Gene",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Selection of operational taxonomic units (OTUs) 16S rRNA gene-derived pyrosequencing data were pre-processed to remove sequences with low quality scores, sequences with ambiguous characters, or sequences outside of the length bounds (",
+            "exact": "V6 < 50nt",
+            "postfix": ", V2 < 200nt), and binned according to sample-specific barcode (e.g. ref.",
+            "tags": [
+              {
+                "name": "V6 < 50nt",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCBITaxon/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCBITaxon_400050"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-cbb2c2f4b0e5546a335dfb9bd35f903f",
+            "type": "Gene",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          }
+        ]
+      },
+      {
+        "title": "Body site",
+        "description": "Host body region/structure where microbiome is found",
+        "annotations": [
+          {
+            "prefix": "Rarefaction and phylogenetic diversity (PD) measurements To determine which individuals had the most diverse communities of ",
+            "exact": "gut",
+            "postfix": " bacteria, rarefaction plots and Phylogenetic Diversity (PD) measurements, as described by Faith32, were made for each sample.",
+            "tags": [
+              {
+                "name": "gut",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/UBERON/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FUBERON_0001007"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-86eec80ac5749901266a1c2b1afc89de",
+            "type": "Body-Site",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Microbiome sequences were compared against the custom database of 44 ",
+            "exact": "gut",
+            "postfix": " genomes (BLASTX e-value<10−5, bitscore>50, and %identity>50).",
+            "tags": [
+              {
+                "name": "gut",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/UBERON/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FUBERON_0001007"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-b9121161f82e7ffc73403a6022bc99e1",
+            "type": "Body-Site",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "A gene by sample matrix was then screened to identify genes ‘commonly-enriched’ in either the obese or lean ",
+            "exact": "gut",
+            "postfix": " microbiome (defined by an odds ratio greater than 2 or less than 0.5 when comparing the pooled obese twin microbiomes to the pooled lean twin microbiomes and when comparing each individual obese twin microbiome to the aggregate lean twin microbiome, or vice versa).",
+            "tags": [
+              {
+                "name": "gut",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/UBERON/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FUBERON_0001007"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-250259357c1fcd7eb3f01ea9416c99aa",
+            "type": "Body-Site",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          }
+        ]
+      },
+      {
+        "title": "Host",
+        "description": "The organism where the microbiome is found",
+        "annotations": [
+          {
+            "prefix": "Finally, human sequences were removed by identifying sequences homologous to the ",
+            "exact": "H.sapiens",
+            "postfix": " reference genome (BLASTN e-value<10−5, %identity>75, and score>50).",
+            "tags": [
+              {
+                "name": "H.sapiens",
+                "uri": "https://www.ebi.ac.uk/ols/search?q=H.sapiens"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-7e957c312300442a202cddb02d478a29",
+            "type": "Host",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          },
+          {
+            "prefix": "Finally, ",
+            "exact": "human",
+            "postfix": " sequences were removed by identifying sequences homologous to the H.sapiens reference genome (BLASTN e-value<10−5, %identity>75, and score>50).",
+            "tags": [
+              {
+                "name": "human",
+                "uri": "https://www.ebi.ac.uk/ols/ontologies/NCBITaxon/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCBITaxon_9606"
+              }
+            ],
+            "id": "http://europepmc.org/article/PMC/PMC2677729#Metagenomics-048df6d284e470191a2ca93352cd6323",
+            "type": "Host",
+            "section": "Methods (http://purl.org/orb/Methods)",
+            "provider": "Metagenomics"
+          }
+        ]
+      }
+    ]
+  }
+}

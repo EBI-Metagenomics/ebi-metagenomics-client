@@ -29,7 +29,7 @@
                     </li>
                 </ul>
             </nav>
-            <h2>Publication <%= title %></h2>
+            <h2>Publication: <%= title %></h2>
             <h4><%= authors %></h4>
             <div class="row">
                 <div class="columns small-12 medium-12 large-12">
@@ -41,8 +41,78 @@
                 </div>
             </div>
             <div class="row">
+                <div id='europe-pmc-annotations' class="columns small-12 medium-12 large-12">
+                </div>
+            </div>
+            <div class="row">
                 <div class="columns small-12 medium-12 large-12">
                     <section id="studies-section" class="table-container"></section>
+                </div>
+            </div>
+        </script>
+        <script id="europePMCAnnotationsTmpl" type="text/template">
+            <div class="row">
+                <div class="europe-pmc-annotations columns small-12 medium-12 large-12">
+                    <div class="row columns">
+                        <h4><a class="expand-button min" for="#annotations">Europe PMC Annotations</a></h4>
+                        <div id="annotations" class="box">
+                            <div style="width:100%;text-align: right;">
+                                Powered by <a href="https://https://europepmc.org/">Europe PMC</a>.
+                                <img src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/logos/europe_pmc_logo.png" style="height:2em" alt="Europe PMC Logo"/>
+                            </div>
+                            <p>
+                                Through automated text-mining, many publications have additional metadata available
+                                in the form of <a href="https://europepmc.org/Annotations" class="ext">Annotations</a>
+                                from <a href="https://europepmc.org" class="ext">Europe PMC</a>.
+                                Any Metagenomics-relevant annotations are shown here.
+                            </p>
+
+                            <% if (_.every(annotations, function (annotationSection) { return annotationSection.groupedAnnotations.length === 0 })) { %>
+                                <div class="callout notice">
+                                    <p>
+                                        No metagenomics annotations were found on Europe PMC.
+                                        Annotations from other providers might be available on the
+                                        <a class="ext" href="https://europepmc.org/abstract/MED/<%= pmid %>">Europe PMC website</a>.
+                                    </p>
+                                </div>
+
+                            <% } else { %>
+                                <% _.each(annotations, function(annotationsSection, sectionIdx) { %>
+                                    <h5><%= annotationsSection.sectionTitle %></h5>
+                                    <% _.each(annotationsSection.groupedAnnotations, function(annotationTypeGroup, groupIdx) { %>
+                                        <h6>
+                                            <a class="expand-button" for="#annotation-group-<%= sectionIdx %>-<%= groupIdx %>">
+                                                <%= annotationTypeGroup.title %>
+                                                <span class="publications-empc-annotations-count">(<%= annotationTypeGroup.annotations.length %>)</span>
+                                            </a>
+                                        </h6>
+                                        <div id="annotation-group-<%= sectionIdx %>-<%= groupIdx %>" class="hidden publications-epmc-annotations-section">
+                                            <p>
+                                                <%= annotationTypeGroup.description %>
+                                            </p>
+                                            <% _.each(annotationTypeGroup.annotations, function(annotation, annotationIdx) { %>
+                                                <h6><a class="expand-button" for="#annotation-<%= sectionIdx %>-<%= groupIdx %>-<%= annotationIdx %>"><%= annotation.exact %></a></h6>
+                                                <div id="annotation-<%= sectionIdx %>-<%= groupIdx %>-<%= annotationIdx %>" class="hidden publications-epmc-annotation">
+                                                    <p>Mentioned in the <%= annotation.sectionName %> section:</p>
+                                                    <p>
+                                                        <span class="publications-epmc-annotation-prefix">&hellip;<%= annotation.prefix %></span>
+                                                        <span class="publications-epmc-annotation-match"><a class='ext' target="_blank" href="<%= annotation.id %>"><%= annotation.exact %></a></span>
+                                                        <span class="publications-epmc-annotation-prefix"><%= annotation.postfix %>&hellip;</span>
+                                                    </p>
+                                                    <a class='ext space-after-10' target="_blank" href="<%= annotation.id %>">View on Europe PMC</a>
+                                                    <% _.each(annotation.tags, function(tag) { %>
+                                                        <a class="ext space-after-10" target="_blank" href="<%= tag.uri %>">Ontology definition for ‘<%= tag.name%>’</a>
+                                                    <% }); %>
+                                                </div>
+                                            <% }); %>
+                                        </div>
+                                    <% }); %>
+                                <br/>
+                                <% }); %>
+                            <% } %>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </script>
