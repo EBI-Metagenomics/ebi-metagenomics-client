@@ -65,14 +65,16 @@ describe('Publication page', function() {
                 });
             });
 
-            cy.get('#annotation-group-0-0 > :nth-child(14) > .expand-button').click();
-            cy.get('#annotation-0-0-6 > :nth-child(2)').should('be.visible');
-            cy.get('#annotation-0-0-6 > :nth-child(3)')
+            cy.get('#annotation-group-0-0 > :nth-child(2) > .expand-button').click();
+            cy.get('#annotation-0-0-0 > :nth-child(1)').should('be.visible');
+            // eslint-disable-next-line max-len
+            cy.get('#annotation-0-0-0 > :nth-child(1) > .publications-epmc-mention-header > div > :nth-child(1)')
                 .should('be.visible')
                 // eslint-disable-next-line max-len
-                .should('have.attr', 'href', 'http://europepmc.org/article/PMC/PMC2677729#Metagenomics-10b0ec7b71a26c954afc364b5cea59ae');
-            cy.get('#annotation-0-0-6 > a:nth-child(4)')
-                .should('contain', 'Ontology definition for ‘Titanium’')
+                .should('have.attr', 'href', 'http://europepmc.org/article/PMC/PMC2677729#Metagenomics-a3280f7b13abc63c09001f0de97dfa4f');
+            // eslint-disable-next-line max-len
+            cy.get('#annotation-0-0-0 > :nth-child(1) > .publications-epmc-mention-header > div > :nth-child(2)')
+                .should('contain', 'Definition of ‘pyrosequencing’')
                 .should('be.visible');
         });
     });

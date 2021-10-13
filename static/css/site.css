@@ -83,9 +83,21 @@
 }
 
 .publications-epmc-annotations-section, .publications-epmc-annotation {
-    padding-left: 2em;
-    padding-bottom: 10px;
+    padding: 10px 0 10px 2em;
     border-left: 1px solid #d0d0ce;
+}
+
+.publications-epmc-mention {
+    margin-bottom: 10px;
+    border: 1px solid #d0d0ce;
+    padding: 10px;
+}
+
+.publications-epmc-mention-header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 span.publications-empc-annotations-count {
