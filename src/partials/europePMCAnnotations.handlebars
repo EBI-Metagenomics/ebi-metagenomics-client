@@ -1,0 +1,71 @@
+<div>
+    <div style="width:100%;text-align:right;margin-bottom:16px">
+        Powered by <a href="https://europepmc.org/">Europe PMC</a>.
+        <img src="static/images/logos/europe_pmc_logo.png" style="height:2em" alt="Europe PMC Logo"/>
+    </div>
+    <p>
+        Through automated text-mining, many publications may have additional metadata available
+        in the form of <a href="https://europepmc.org/Annotations" class="ext">Annotations</a>
+        from <a href="https://europepmc.org" class="ext">Europe PMC</a>.
+        Any Metagenomics-relevant annotations are shown here.
+    </p>
+
+    {{#unless hasAnnotations }}
+        <div class="callout notice">
+            <p>
+                No metagenomics annotations were found on Europe PMC.
+                Annotations from other providers might be available on the
+                <a class="ext" href="https://europepmc.org/abstract/MED/<%= pmid %>">Europe PMC website</a>.
+            </p>
+        </div>
+
+    {{ else }}
+        {{#each annotations }}
+            <h5>{{sectionTitle }}</h5>
+            {{#each groupedAnnotations }}
+                <h6>
+                    <a class="expand-button" for="#annotation-group-{{@root.id}}-{{@../index}}-{{@index}}">
+                        {{this.title}}
+                        <span class="publications-empc-annotations-count">({{ this.mentionsCount }})</span>
+                    </a>
+                </h6>
+                <div id="annotation-group-{{@root.id}}-{{@../index}}-{{@index}}" class="hidden publications-epmc-annotations-section">
+                    <p>
+                        <span class="badge secondary">?</span>
+                        <i>{{description}}</i>
+                    </p>
+                    {{#each annotations}}
+                        <h6>
+                            <a class="expand-button" for="#annotation-{{@root.id}}-{{@../../index}}-{{@../index}}-{{@index}}">
+                                {{this.annotation_text}}
+                                <span class="publications-empc-annotations-count">({{this.mentions.length }})</span>
+                            </a>
+                        </h6>
+                        <div id="annotation-{{@root.id}}-{{@../../index}}-{{@../index}}-{{@index}}" class="hidden publications-epmc-annotation">
+                            {{#each mentions }}
+                                <div class="publications-epmc-mention">
+                                    <div class="publications-epmc-mention-header">
+                                        <p>Mentioned in the {{sectionName}} section:</p>
+                                        <div>
+                                            <a class='ext space-after-10' target="_blank" href="{{id}}">View on Europe PMC</a>
+                                            {{#each tags }}
+                                                <a class="ext space-after-10" target="_blank" href="{{uri}}">Definition of ‘{{name}}’</a>
+                                            {{/each}}
+                                        </div>
+                                    </div>
+                                    <p>
+                                        <span class="publications-epmc-annotation-prefix">&hellip;{{prefix}}</span>
+                                        <span class="publications-epmc-annotation-match"><a class='ext' target="_blank" href="{{id}}">{{exact}}</a></span>
+                                        <span class="publications-epmc-annotation-prefix">{{postfix}}&hellip;</span>
+                                    </p>
+                                </div>
+                            {{/each}}
+                        </div>
+                    {{/each}}
+                </div>
+            {{/each}}
+            <br/>
+        {{/each}}
+    {{/unless}}
+</div>
+

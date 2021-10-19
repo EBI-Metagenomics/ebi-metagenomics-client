@@ -5,6 +5,7 @@ const util = require('../util');
 const DetailList = require('../components/detailList');
 
 require('../../../static/js/jquery.liveFilter.js');
+const {PublicationEuropePMCAnnotationsView} = require('../components/europePMCAnnotations');
 
 util.setupPage('#browse-nav');
 
@@ -65,23 +66,6 @@ const PublicationStudiesView = util.StudiesView.extend({
     }
 });
 
-const PublicationEuropePMCAnnotationsView = Backbone.View.extend({
-    model: api.PublicationEuropePMCAnnotations,
-    template: _.template($('#europePMCAnnotationsTmpl').html()),
-    el: '#europe-pmc-annotations',
-    initialize({publicationId}) {
-        // eslint-disable-next-line new-cap
-        this.model = new this.model({id: publicationId});
-        this.model.fetch();
-        this.model.on('sync', this.render, this);
-    },
-    render() {
-        const that = this;
-        that.$el.html(that.template(that.model.toJSON()));
-        util.attachTabHandlers();
-    }
-});
-
 /**
  * Method to initialise page load
  */
@@ -99,7 +83,8 @@ function initPage() {
             sectionTitle: 'Associated studies'
         });
         new PublicationEuropePMCAnnotationsView({
-            publicationId: publicationID
+            publicationId: publicationID,
+            el: '#europe-pmc-annotations'
         });
         util.attachExpandButtonCallback();
     });
