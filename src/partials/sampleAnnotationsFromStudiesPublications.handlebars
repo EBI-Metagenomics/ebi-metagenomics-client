@@ -1,0 +1,19 @@
+<div>
+    <h5>Additional metadata from Publications</h5>
+    {{#if query_possible}}
+        Additional metadata that may relate to this sample is available via publications in the following associated
+        studies:
+        {{#each studies_with_annotations}}
+            <a href="{{this.study_url}}">{{this.accession}}</a>&nbsp;
+        {{/each}}
+        <br/>
+        These additional metadata are extracted by <a href="https://europepmc.org" class="ext">Europe PMC</a>
+        using text-mining on the publications. Browse the studies to explore further.
+    {{else}}
+        <p>
+            Additional metadata for this sample may be available via annotations on the publications linked to by
+            the associated studies in the table below.
+            Unfortunately these couldn’t be fetched at this time &ndash; please view each study to explore more.
+        </p>
+    {{/if}}
+</div>
