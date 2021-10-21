@@ -45,6 +45,12 @@ const analysisTableColumns = {
 let table;
 
 describe('Study page', function() {
+    before(() => {
+        cy.server();
+        cy.intercept('GET', '**/europe_pmc_annotations',
+            {fixture: 'publicationEuropePMCAnnotations.json'});
+    });
+
     context('General', function() {
         before(function() {
             openPage(origPage);
@@ -73,9 +79,25 @@ describe('Study page', function() {
                 const expected = 'https://www.ebi.ac.uk/ena/browser/view/ERP019566';
                 expect($el.attr('href')).to.equal(expected);
             });
-            cy.get('#europe_pmc_links > li > a').each(($el) => {
+            cy.get('#europe_pmc_links > li > a:not([data-open])').each(($el) => {
                 cy.request($el.attr('href'));
             });
+        });
+    });
+
+    context('Publication annotations modal', function() {
+        before(function() {
+            openPage(origPage);
+            waitForPageLoad(pageTitle);
+            cy.contains('Longitudinal study of the diabetic skin and wound microbiome')
+                .should('be.visible');
+        });
+
+        it('Should open annotations modal for publication', function() {
+            cy.get('#europe_pmc_links > li').should('be.visible');
+            cy.contains('Show metadata from Europe PMC Annotations').should('exist');
+            cy.contains('Show metadata from Europe PMC Annotations').click();
+            cy.get('h3').contains('Annotations from Europe PMC').should('be.visible');
         });
     });
 
@@ -123,7 +145,7 @@ describe('Study page', function() {
             table.checkLoadedCorrectly(1, analysesTableDefaultSize, 258, analysisTableColumns);
         });
 
-        it.only('Should respond to ordering', function() {
+        it('Should respond to ordering', function() {
             table.testSorting(10, analysisTableColumns);
         });
 
@@ -181,7 +203,7 @@ describe('Study page', function() {
             table.testPageSizeChange(analysesTableDefaultSize, 25);
         });
 
-        it.only('Analysis table download link should be valid', function() {
+        it('Analysis table download link should be valid', function() {
             table.testDownloadLink(Config.API_URL + 'studies/' + projectId +
                 '/analyses?include=sample&format=csv');
         });
