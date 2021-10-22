@@ -1,10 +1,11 @@
 const Backbone = require('backbone');
 const _ = require('underscore');
 const api = require('mgnify').api(process.env.API_URL);
-const { SamplesMapView } = require('../components/samplesMap');
+const {SamplesMapView} = require('../components/samplesMap');
 const util = require('../util');
 
 require('../../../static/js/jquery.liveFilter.js');
+const {PublicationEuropePMCAnnotationsView} = require("../components/europePMCAnnotations");
 
 util.setupPage('#browse-nav');
 
@@ -83,7 +84,15 @@ function initPage() {
 
         samplesMapView.render();
 
+        _.forEach(study.attributes.publications, function(pub) {
+            new PublicationEuropePMCAnnotationsView({
+                publicationId: pub.pubmedID,
+                el: '#europe-pmc-annotations-' + pub.pubmedID
+            });
+        });
+
         util.attachExpandButtonCallback();
+        util.enableRevealModals();
     });
 }
 

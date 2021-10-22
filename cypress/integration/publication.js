@@ -58,22 +58,22 @@ describe('Publication page', function() {
                 cy.contains(groupTitle).should('exist');
             });
 
-            cy.get('#annotations >> .expand-button').each(($el) => {
+            cy.get('#europe-pmc-annotations >>> .expand-button').each(($el) => {
                 cy.wrap($el).click();
                 cy.wrap($el).invoke('attr', 'for').then((forId) => {
                     cy.get(`${forId}`).should('be.visible');
                 });
             });
 
-            cy.get('#annotation-group-0-0 > :nth-child(2) > .expand-button').click();
-            cy.get('#annotation-0-0-0 > :nth-child(1)').should('be.visible');
+            cy.get(`#annotation-group-${pubmedId}-0-0 > :nth-child(2) > .expand-button`).click();
+            cy.get(`#annotation-${pubmedId}-0-0-0 > :nth-child(1)`).should('be.visible');
             // eslint-disable-next-line max-len
-            cy.get('#annotation-0-0-0 > :nth-child(1) > .publications-epmc-mention-header > div > :nth-child(1)')
+            cy.get(`#annotation-${pubmedId}-0-0-0 > :nth-child(1) > .publications-epmc-mention-header > div > :nth-child(1)`)
                 .should('be.visible')
                 // eslint-disable-next-line max-len
                 .should('have.attr', 'href', 'http://europepmc.org/article/PMC/PMC2677729#Metagenomics-a3280f7b13abc63c09001f0de97dfa4f');
             // eslint-disable-next-line max-len
-            cy.get('#annotation-0-0-0 > :nth-child(1) > .publications-epmc-mention-header > div > :nth-child(2)')
+            cy.get(`#annotation-${pubmedId}-0-0-0 > :nth-child(1) > .publications-epmc-mention-header > div > :nth-child(2)`)
                 .should('contain', 'Definition of ‘pyrosequencing’')
                 .should('be.visible');
         });

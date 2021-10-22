@@ -5,6 +5,9 @@ const { SamplesMapView } = require('../components/samplesMap');
 const DetailList = require('../components/detailList');
 const util = require('../util');
 
+const {SampleAdditionalMetadataFromStudiesPublicationsView} =
+    require('../components/europePMCAnnotations');
+
 require('../../../static/js/jquery.liveFilter.js');
 
 util.setupPage('#browse-nav');
@@ -113,6 +116,10 @@ function initPage() {
         });
         new util.RunsView({collection: runs});
         new util.AssembliesView({collection: assemblies});
+        new SampleAdditionalMetadataFromStudiesPublicationsView({
+            sampleId: sampleId,
+            el: '#additional-metadata'
+        });
         util.attachExpandButtonCallback();
     });
 }

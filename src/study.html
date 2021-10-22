@@ -101,13 +101,29 @@
                                 <div class="row columns" data-cy="publications">
                                     <ul id="europe_pmc_links">
                                         <% _.each(publications, function(pub){ %>
-                                        <li>
+                                        <li style="margin-bottom: 1em">
                                             <a href="<%= pub.pubMgnifyURL %>"><span class="pub-title"><%= pub.title %> <br></span></a>
                                             <%= pub.authors %> <br>
                                             <%= pub.publishedYear %> <%= pub.volume %>
                                             (PMID: <a class="ext" href="<%= pub.pmc_url %>"><%= pub.pubmedID %></a>)
-                                            (DOI: <a class="ext" href="<%= pub.doi_url %>"><%= pub.doi %></a>)
-                                            </p>
+                                            (DOI: <a class="ext" href="<%= pub.doi_url %>"><%= pub.doi %></a>) <br>
+                                            <a data-open="europe-pmc-annotations-modal-<%= pub.pubmedID %>">Show metadata from Europe PMC Annotations</a>
+                                            <div class="large reveal" id="europe-pmc-annotations-modal-<%= pub.pubmedID %>" data-reveal>
+                                                <h3 class="centered">Annotations from Europe PMC</h3>
+                                                <button class="close-button" data-close aria-label="Close modal" type="button">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <div id="europe-pmc-annotations-<%= pub.pubmedID %>">
+                                                    <div class="loading-spinner">
+                                                        <h6>
+                                                        <img class="loading-gif-small"
+                                                             src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"
+                                                             alt="Loading...">
+                                                            Checking for annotations...
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </li>
                                         <% }); %>
                                         <% if (publications.length===0) { %>

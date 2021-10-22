@@ -854,6 +854,16 @@ export function attachExpandButtonCallback() {
 }
 
 /**
+ * Enable Foundation Reveal (modal handler) for all .reveals on page.
+ */
+export function enableRevealModals() {
+    const $reveals = $('.reveal');
+    $reveals.each(function() {
+        new window.Foundation.Reveal($(this));
+    });
+}
+
+/**
  * Add an id to the start of the page title
  * @param {string} objectType Study | Sample | Run | Analysis
  * @param {string} id to add to page title

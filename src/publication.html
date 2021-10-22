@@ -41,92 +41,22 @@
                 </div>
             </div>
             <div class="row">
-                <div id='europe-pmc-annotations' class="columns small-12 medium-12 large-12">
+                <div class="columns small-12 medium-12 large-12">
+                    <div class="europe-pmc-annotations row columns">
+                        <h4><a class="expand-button min" for="#europe-pmc-annotations">Europe PMC Annotations</a></h4>
+                        <div id='europe-pmc-annotations' class="box">
+                            <div class="loading-spinner">
+                                <img class="loading-gif-large"
+                                     src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"
+                                     alt="Loading...">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="columns small-12 medium-12 large-12">
                     <section id="studies-section" class="table-container"></section>
-                </div>
-            </div>
-        </script>
-        <script id="europePMCAnnotationsTmpl" type="text/template">
-            <div class="row">
-                <div class="europe-pmc-annotations columns small-12 medium-12 large-12">
-                    <div class="row columns">
-                        <h4><a class="expand-button min" for="#annotations">Europe PMC Annotations</a></h4>
-                        <div id="annotations" class="box">
-                            <div style="width:100%;text-align: right;">
-                                Powered by <a href="https://europepmc.org/">Europe PMC</a>.
-                                <img src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/logos/europe_pmc_logo.png" style="height:2em" alt="Europe PMC Logo"/>
-                            </div>
-                            <p>
-                                Through automated text-mining, many publications have additional metadata available
-                                in the form of <a href="https://europepmc.org/Annotations" class="ext">Annotations</a>
-                                from <a href="https://europepmc.org" class="ext">Europe PMC</a>.
-                                Any Metagenomics-relevant annotations are shown here.
-                            </p>
-
-                            <% if (!hasAnnotations) { %>
-                                <div class="callout notice">
-                                    <p>
-                                        No metagenomics annotations were found on Europe PMC.
-                                        Annotations from other providers might be available on the
-                                        <a class="ext" href="https://europepmc.org/abstract/MED/<%= pmid %>">Europe PMC website</a>.
-                                    </p>
-                                </div>
-
-                            <% } else { %>
-                                <% _.each(annotations, function(annotationsSection, sectionIdx) { %>
-                                    <h5><%= annotationsSection.sectionTitle %></h5>
-                                    <% _.each(annotationsSection.groupedAnnotations, function(annotationTypeGroup, groupIdx) { %>
-                                        <h6>
-                                            <a class="expand-button" for="#annotation-group-<%= sectionIdx %>-<%= groupIdx %>">
-                                                <%= annotationTypeGroup.title %>
-                                                <span class="publications-empc-annotations-count">(<%= annotationTypeGroup.mentionsCount %>)</span>
-                                            </a>
-                                        </h6>
-                                        <div id="annotation-group-<%= sectionIdx %>-<%= groupIdx %>" class="hidden publications-epmc-annotations-section">
-                                            <p>
-                                                <%= annotationTypeGroup.description %>
-                                            </p>
-                                            <% _.each(annotationTypeGroup.annotations, function(annotation, annotationIdx) { %>
-                                                <h6>
-                                                    <a class="expand-button" for="#annotation-<%= sectionIdx %>-<%= groupIdx %>-<%= annotationIdx %>">
-                                                        <%= annotation.annotation_text %>
-                                                        <span class="publications-empc-annotations-count">(<%= annotation.mentions.length %>)</span>
-                                                    </a>
-                                                </h6>
-                                                <div id="annotation-<%= sectionIdx %>-<%= groupIdx %>-<%= annotationIdx %>" class="hidden publications-epmc-annotation">
-                                                    <% _.each(annotation.mentions, function(mention) { %>
-                                                        <div class="publications-epmc-mention">
-                                                            <div class="publications-epmc-mention-header">
-                                                                <p>Mentioned in the <%= mention.sectionName %> section:</p>
-                                                                <div>
-                                                                    <a class='ext space-after-10' target="_blank" href="<%= mention.id %>">View on Europe PMC</a>
-                                                                    <% _.each(mention.tags, function(tag) { %>
-                                                                    <a class="ext space-after-10" target="_blank" href="<%= tag.uri %>">Definition of ‘<%= tag.name%>’</a>
-                                                                    <% }); %>
-                                                                </div>
-                                                            </div>
-                                                            <p>
-                                                                <span class="publications-epmc-annotation-prefix">&hellip;<%= mention.prefix %></span>
-                                                                <span class="publications-epmc-annotation-match"><a class='ext' target="_blank" href="<%= annotation.id %>"><%= mention.exact %></a></span>
-                                                                <span class="publications-epmc-annotation-prefix"><%= mention.postfix %>&hellip;</span>
-                                                            </p>
-
-                                                        </div>
-                                                    <% }); %>
-                                                </div>
-                                            <% }); %>
-                                        </div>
-                                    <% }); %>
-                                <br/>
-                                <% }); %>
-                            <% } %>
-
-                        </div>
-                    </div>
                 </div>
             </div>
         </script>
