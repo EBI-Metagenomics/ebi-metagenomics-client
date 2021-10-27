@@ -712,6 +712,10 @@ a.ext:hover, a.ext:active, a.ext:focus {
     background: url(../images/ico_ext_link_on.png) no-repeat 0 3px;
 }
 
+i.icon-blue {
+    color: #537EFF;
+}
+
 tr.disabled {
     opacity: 0.3;
 }
