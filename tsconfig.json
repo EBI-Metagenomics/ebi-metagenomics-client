@@ -3,11 +3,20 @@
     "outDir": "./dist/",
     "baseUrl": ".",
     "paths": {
-      "*": ["*", "src/*", "public/*"]
+      "*": [
+        "*",
+        "src/*",
+        "public/*"
+      ]
     },
     "sourceMap": true,
     "module": "es2020",
     "target": "es6",
+    "lib": [
+      "es2019",
+      "dom",
+      "esnext"
+    ],
     "jsx": "react",
     "allowJs": true,
     "moduleResolution": "node",

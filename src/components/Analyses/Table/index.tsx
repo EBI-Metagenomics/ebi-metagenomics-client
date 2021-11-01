@@ -8,20 +8,37 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
+import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
 
 const AnalysesTable: React.FC = () => {
   const accession = useURLAccession();
+  const [queryParameters] = useQueryParametersState(
+    {
+      'analyses-page': 1,
+      'analyses-page_size': 25,
+      'analyses-order': '',
+    },
+    {
+      'analyses-page': Number,
+      'analyses-page_size': Number,
+    }
+  );
   const { data, loading, error, isStale } = useMGnifyData(
     `studies/${accession}/analyses`,
-    { include: 'sample' }
+    {
+      include: 'sample',
+      page: queryParameters['analyses-page'] as number,
+      ordering: queryParameters['analyses-order'] as string,
+      page_size: queryParameters['analyses-page_size'] as number,
+    }
   );
   if (loading && !isStale) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
 
   const samples = {};
   data.included
-    .filter(({ type }) => type === 'samples')
+    ?.filter(({ type }) => type === 'samples')
     .forEach((sample) => {
       samples[sample.id as string] = {
         description: sample.attributes['sample-desc'],
@@ -85,16 +102,16 @@ const AnalysesTable: React.FC = () => {
   ];
 
   return (
-    <div className="mg-table-overlay-container">
-      <div className={loading && isStale ? 'mg-table-overlay' : undefined} />
-      <EMGTable
-        cols={columns}
-        data={data as MGnifyResponseList}
-        title="Analyses"
-        initialPage={1}
-        className="mg-anlyses-table"
-      />
-    </div>
+    <EMGTable
+      cols={columns}
+      data={data as MGnifyResponseList}
+      title="Analyses"
+      initialPage={(queryParameters['analyses-page'] as number) - 1}
+      className="mg-anlyses-table"
+      loading={loading}
+      isStale={isStale}
+      namespace="analyses-"
+    />
   );
 };
 

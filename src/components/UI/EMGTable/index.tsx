@@ -1,10 +1,13 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { Column, usePagination, useSortBy, useTable } from 'react-table';
 
+import Loading from 'components/UI/Loading';
 import { MGnifyResponse } from 'src/hooks/data/useData';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import PaginationButton from './PaginationButton';
+
+import './style.css';
 
 type PaginationRanges = {
   startingPages: number[];
@@ -50,25 +53,40 @@ function getPaginationRanges(
   };
 }
 
+function getOrderingQueryParamFromSortedColumn(
+  tableSortBy: Array<{ id: string; desc: boolean }>
+): string {
+  if (!tableSortBy.length) return '';
+  const col = tableSortBy[0];
+  return `${col.desc ? '-' : ''}${col.id
+    .replace(/attributes./g, '')
+    .replace(/-/g, '_')}`;
+}
+
 type EMGTableProps = {
   cols: Column[];
   data: MGnifyResponse;
   title?: string | React.CElement<any, any>;
-  // fetchPage?: (pageIndex: number, pageSize: number) => void;
   showPagination?: boolean;
-  onChangeSort?: (columnId: Array<{ id: string; desc: boolean }>) => void;
   initialPage?: number;
   className?: string;
+  namespace?: string;
+  sortable?: boolean;
+  loading?: boolean;
+  isStale?: boolean;
 };
 
 const EMGTable: React.FC<EMGTableProps> = ({
   cols,
   data,
   title,
-  onChangeSort,
   initialPage = 0,
   className = '',
+  namespace = '',
   showPagination = true,
+  sortable = false,
+  loading = false,
+  isStale = false,
 }) => {
   const {
     getTableProps,
@@ -95,99 +113,119 @@ const EMGTable: React.FC<EMGTableProps> = ({
     useSortBy,
     usePagination
   );
+  const tableRef = useRef(null);
   const [queryParameters, setQueryParameters] = useQueryParametersState(
     {
-      page: 1,
-      order: '',
-      page_size: 10,
+      [`${namespace}page`]: 1,
+      [`${namespace}order`]: '',
+      [`${namespace}page_size`]: 10,
     },
     {
-      page: Number,
-      page_size: Number,
+      [`${namespace}page`]: Number,
+      [`${namespace}page_size`]: Number,
     }
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (showPagination) {
-      // fetch page
       setQueryParameters({
         ...queryParameters,
-        page: pageIndex + 1,
-        page_size: pageSize,
+        [`${namespace}page`]: pageIndex + 1,
+        [`${namespace}page_size`]: pageSize,
       });
     }
+    if (tableRef.current) tableRef.current.scrollIntoView();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showPagination, setQueryParameters, pageIndex, pageSize]);
 
-  React.useEffect(() => {
-    if (onChangeSort) {
-      onChangeSort(sortBy);
+  useEffect(() => {
+    if (sortable) {
+      const order = getOrderingQueryParamFromSortedColumn(sortBy);
+      if (order === queryParameters.order) return;
+      setQueryParameters({
+        ...queryParameters,
+        [`${namespace}order`]: order,
+        [`${namespace}page`]: 1,
+      });
+      if (tableRef.current) tableRef.current.scrollIntoView();
     }
-  }, [onChangeSort, sortBy]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showPagination, setQueryParameters, sortBy, sortable]);
 
-  const paginationRanges = React.useMemo(
+  const paginationRanges = useMemo(
     () => getPaginationRanges(pageIndex, pageCount),
     [pageIndex, pageCount]
   );
 
+  if (loading && !isStale) return <Loading size="small" />;
+
   return (
     <section>
-      <table {...getTableProps} className={`vf-table--striped ${className}`}>
-        <caption className="vf-table__caption">{title}</caption>
-        <thead className="vf-table__header">
-          {headerGroups.map((headerGroup) => (
-            <tr
-              {...headerGroup.getHeaderGroupProps()}
-              className="vf-table__row"
-            >
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  className="vf-table__heading"
-                >
-                  {column.render('Header')}
-                  {onChangeSort && (
-                    <>
-                      &nbsp;
-                      <span>
-                        {/* eslint-disable-next-line no-nested-ternary */}
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <i className="icon icon-common icon-sort-down" />
+      <div className="mg-table-overlay-container">
+        <div className={loading && isStale ? 'mg-table-overlay' : undefined} />
+        <table
+          {...getTableProps}
+          className={`vf-table--striped ${className}`}
+          ref={tableRef}
+        >
+          <caption className="vf-table__caption">{title}</caption>
+          <thead className="vf-table__header">
+            {headerGroups.map((headerGroup) => (
+              <tr
+                {...headerGroup.getHeaderGroupProps()}
+                className="vf-table__row"
+              >
+                {headerGroup.headers.map((column) => (
+                  <th
+                    {...(sortable && column.canSort
+                      ? column.getHeaderProps(column.getSortByToggleProps())
+                      : { key: column.id })}
+                    className="vf-table__heading"
+                  >
+                    {column.render('Header')}
+                    {sortable && column.canSort && (
+                      <>
+                        &nbsp;
+                        <span>
+                          {/* eslint-disable-next-line no-nested-ternary */}
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <i className="icon icon-common icon-sort-down" />
+                            ) : (
+                              <i className="icon icon-common icon-sort-up" />
+                            )
                           ) : (
-                            <i className="icon icon-common icon-sort-up" />
-                          )
-                        ) : (
-                          <i className="icon icon-common icon-sort" />
-                        )}
-                      </span>
-                    </>
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()} className="vf-table__body">
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} className="vf-table__row">
-                {row.cells.map((cell) => {
-                  return (
-                    <td {...cell.getCellProps()} className="vf-table__cell">
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
+                            <i className="icon icon-common icon-sort" />
+                          )}
+                        </span>
+                      </>
+                    )}
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()} className="vf-table__body">
+            {rows.map((row) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()} className="vf-table__row">
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()} className="vf-table__cell">
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
       {showPagination && (
-        <nav className="vf-pagination" aria-label="Pagination">
+        <nav className="vf-pagination mg-table-footer" aria-label="Pagination">
           <ul className="vf-pagination__list">
             <li className="vf-pagination__item vf-pagination__item--previous-page">
               <button

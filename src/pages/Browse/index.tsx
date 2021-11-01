@@ -1,22 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+import EMGTable from 'components/UI/EMGTable';
+import BiomeSelector from 'components/UI/BiomeSelector';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
-import EMGTable from 'components/UI/EMGTable';
-import { getBiomeIcon } from 'utils/biomes';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
-import BiomeSelector from 'components/UI/BiomeSelector';
-
-function getOrderingQueryParamFromSortedColumn(
-  tableSortBy: Array<{ id: string; desc: boolean }>
-): string {
-  if (!tableSortBy.length) return '';
-  const col = tableSortBy[0];
-  return `${col.desc ? '-' : ''}${col.id
-    .replace(/attributes./g, '')
-    .replace(/-/g, '_')}`;
-}
+import { getBiomeIcon } from 'utils/biomes';
 
 const Browse: React.FC = () => {
   const [queryParameters, setQueryParameters] = useQueryParametersState(
@@ -31,7 +23,11 @@ const Browse: React.FC = () => {
     }
   );
   const [hasData, setHasData] = useState(false);
-  const { data: studiesList } = useMGnifyData('studies', {
+  const {
+    data: studiesList,
+    loading,
+    isStale,
+  } = useMGnifyData('studies', {
     page: queryParameters.page as number,
     ordering: queryParameters.order as string,
     lineage: queryParameters.biome as string,
@@ -50,15 +46,14 @@ const Browse: React.FC = () => {
             style={{ float: 'initial' }}
           />
         ),
+        disableSortBy: true,
       },
       {
-        id: 'accession',
+        id: 'study_id',
         Header: 'Accession',
         accessor: 'attributes.accession',
-        Cell: ({ cell, row }) => (
-          <a href={row.original.links.self} className="vf-link">
-            {cell.value}
-          </a>
+        Cell: ({ cell }) => (
+          <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
         ),
       },
       {
@@ -68,6 +63,12 @@ const Browse: React.FC = () => {
       {
         Header: 'Samples',
         accessor: 'attributes.samples-count',
+      },
+      {
+        id: 'last_update',
+        Header: 'Last Updated',
+        accessor: 'attributes.last-update',
+        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
       },
     ],
     []
@@ -99,16 +100,10 @@ const Browse: React.FC = () => {
           cols={columns}
           data={studiesList as MGnifyResponseList}
           title={`Studies (${studiesList.meta.pagination.count})`}
-          onChangeSort={(sortBy) => {
-            const order = getOrderingQueryParamFromSortedColumn(sortBy);
-            if (order === queryParameters.order) return;
-            setQueryParameters({
-              ...queryParameters,
-              order,
-              page: 1,
-            });
-          }}
           initialPage={(queryParameters.page as number) - 1}
+          sortable
+          loading={loading}
+          isStale={isStale}
         />
       )}
     </section>
