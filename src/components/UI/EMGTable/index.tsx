@@ -1,5 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, {
+  useRef,
+  useEffect,
+  useMemo,
+  useState,
+  MouseEventHandler,
+} from 'react';
 import { Column, usePagination, useSortBy, useTable } from 'react-table';
 
 import Loading from 'components/UI/Loading';
@@ -69,6 +75,7 @@ type EMGTableProps = {
   title?: string | React.CElement<any, any>;
   showPagination?: boolean;
   initialPage?: number;
+  initialPageSize?: number;
   className?: string;
   namespace?: string;
   sortable?: boolean;
@@ -81,6 +88,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
   data,
   title,
   initialPage = 0,
+  initialPageSize = 25,
   className = '',
   namespace = '',
   showPagination = true,
@@ -88,6 +96,17 @@ const EMGTable: React.FC<EMGTableProps> = ({
   loading = false,
   isStale = false,
 }) => {
+  const [queryParameters, setQueryParameters] = useQueryParametersState(
+    {
+      [`${namespace}page`]: 1,
+      [`${namespace}order`]: '',
+      [`${namespace}page_size`]: initialPageSize,
+    },
+    {
+      [`${namespace}page`]: Number,
+      [`${namespace}page_size`]: Number,
+    }
+  );
   const {
     getTableProps,
     getTableBodyProps,
@@ -98,6 +117,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
     canNextPage,
     pageCount,
     gotoPage,
+    setPageSize,
     nextPage,
     previousPage,
     state: { pageIndex, pageSize, sortBy },
@@ -105,7 +125,10 @@ const EMGTable: React.FC<EMGTableProps> = ({
     {
       columns: cols,
       data: data.data,
-      initialState: { pageIndex: initialPage },
+      initialState: {
+        pageIndex: initialPage,
+        pageSize: queryParameters[`${namespace}page_size`],
+      },
       pageCount: data.meta.pagination.pages,
       manualPagination: true,
       manualSortBy: true,
@@ -114,40 +137,55 @@ const EMGTable: React.FC<EMGTableProps> = ({
     usePagination
   );
   const tableRef = useRef(null);
-  const [queryParameters, setQueryParameters] = useQueryParametersState(
-    {
-      [`${namespace}page`]: 1,
-      [`${namespace}order`]: '',
-      [`${namespace}page_size`]: 10,
-    },
-    {
-      [`${namespace}page`]: Number,
-      [`${namespace}page_size`]: Number,
-    }
-  );
+  const [isChangingPage, setChangingPage] = useState(false);
 
   useEffect(() => {
-    if (showPagination) {
+    if (
+      showPagination &&
+      queryParameters[`${namespace}page`] !== pageIndex + 1
+    ) {
       setQueryParameters({
         ...queryParameters,
         [`${namespace}page`]: pageIndex + 1,
+      });
+      if (tableRef.current && isChangingPage) {
+        tableRef.current.scrollIntoView();
+        setChangingPage(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showPagination, setQueryParameters, pageIndex]);
+
+  useEffect(() => {
+    if (
+      showPagination &&
+      queryParameters[`${namespace}page_size`] !== pageSize
+    ) {
+      setQueryParameters({
+        ...queryParameters,
         [`${namespace}page_size`]: pageSize,
       });
+      if (tableRef.current && isChangingPage) {
+        tableRef.current.scrollIntoView();
+        setChangingPage(false);
+      }
     }
-    if (tableRef.current) tableRef.current.scrollIntoView();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showPagination, setQueryParameters, pageIndex, pageSize]);
+  }, [showPagination, setQueryParameters, pageSize]);
 
   useEffect(() => {
     if (sortable) {
       const order = getOrderingQueryParamFromSortedColumn(sortBy);
-      if (order === queryParameters.order) return;
+      if (order === queryParameters[`${namespace}order`]) return;
       setQueryParameters({
         ...queryParameters,
         [`${namespace}order`]: order,
         [`${namespace}page`]: 1,
       });
-      if (tableRef.current) tableRef.current.scrollIntoView();
+      if (tableRef.current && isChangingPage) {
+        tableRef.current.scrollIntoView();
+        setChangingPage(false);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showPagination, setQueryParameters, sortBy, sortable]);
@@ -156,6 +194,14 @@ const EMGTable: React.FC<EMGTableProps> = ({
     () => getPaginationRanges(pageIndex, pageCount),
     [pageIndex, pageCount]
   );
+  const goToPageAndScroll = (pageNumber): MouseEventHandler => {
+    setChangingPage(true);
+    return gotoPage(pageNumber);
+  };
+  const changeSizeAndScroll = (evt): void => {
+    setChangingPage(true);
+    return setPageSize(+evt.target.value);
+  };
 
   if (loading && !isStale) return <Loading size="small" />;
 
@@ -225,70 +271,87 @@ const EMGTable: React.FC<EMGTableProps> = ({
       </div>
 
       {showPagination && (
-        <nav className="vf-pagination mg-table-footer" aria-label="Pagination">
-          <ul className="vf-pagination__list">
-            <li className="vf-pagination__item vf-pagination__item--previous-page">
-              <button
-                disabled={!canPreviousPage}
-                type="button"
-                onClick={previousPage}
-                className="vf-button vf-button--link vf-pagination__link"
-              >
-                Previous<span className="vf-u-sr-only"> page</span>
-              </button>
-            </li>
-
-            {paginationRanges.startingPages.map((paginationIndex) => (
-              <PaginationButton
-                key={paginationIndex}
-                currentPageIndex={pageIndex}
-                pageIndex={paginationIndex}
-                gotoPage={gotoPage}
-              />
-            ))}
-
-            {paginationRanges.hasJumpFromStart && (
-              <li className="vf-pagination__item">
-                <span className="vf-pagination__label">...</span>
+        <section className="mg-table-footer">
+          <label className="vf-form__label">
+            Page Size:
+            <select
+              className="vf-form__select"
+              value={queryParameters[`${namespace}page_size`] as number}
+              onBlur={changeSizeAndScroll}
+              onChange={changeSizeAndScroll}
+            >
+              {[10, 25, 50].map((pg) => (
+                <option key={pg} value={pg}>
+                  Show {pg}
+                </option>
+              ))}
+            </select>
+          </label>
+          <nav className="vf-pagination" aria-label="Pagination">
+            <ul className="vf-pagination__list">
+              <li className="vf-pagination__item vf-pagination__item--previous-page">
+                <button
+                  disabled={!canPreviousPage}
+                  type="button"
+                  onClick={previousPage}
+                  className="vf-button vf-button--link vf-pagination__link"
+                >
+                  Previous<span className="vf-u-sr-only"> page</span>
+                </button>
               </li>
-            )}
 
-            {paginationRanges.adjacentPages.map((paginationIndex) => (
-              <PaginationButton
-                key={paginationIndex}
-                currentPageIndex={pageIndex}
-                pageIndex={paginationIndex}
-                gotoPage={gotoPage}
-              />
-            ))}
+              {paginationRanges.startingPages.map((paginationIndex) => (
+                <PaginationButton
+                  key={paginationIndex}
+                  currentPageIndex={pageIndex}
+                  pageIndex={paginationIndex}
+                  gotoPage={goToPageAndScroll}
+                />
+              ))}
 
-            {paginationRanges.hasJumpToEnd && (
-              <li className="vf-pagination__item">
-                <span className="vf-pagination__label">...</span>
+              {paginationRanges.hasJumpFromStart && (
+                <li className="vf-pagination__item">
+                  <span className="vf-pagination__label">...</span>
+                </li>
+              )}
+
+              {paginationRanges.adjacentPages.map((paginationIndex) => (
+                <PaginationButton
+                  key={paginationIndex}
+                  currentPageIndex={pageIndex}
+                  pageIndex={paginationIndex}
+                  gotoPage={goToPageAndScroll}
+                />
+              ))}
+
+              {paginationRanges.hasJumpToEnd && (
+                <li className="vf-pagination__item">
+                  <span className="vf-pagination__label">...</span>
+                </li>
+              )}
+
+              {paginationRanges.endingPages.map((paginationIndex) => (
+                <PaginationButton
+                  key={paginationIndex}
+                  currentPageIndex={pageIndex}
+                  pageIndex={paginationIndex}
+                  gotoPage={goToPageAndScroll}
+                />
+              ))}
+
+              <li className="vf-pagination__item vf-pagination__item--next-page">
+                <button
+                  disabled={!canNextPage}
+                  type="button"
+                  onClick={nextPage}
+                  className="vf-button vf-button--link vf-pagination__link"
+                >
+                  Next<span className="vf-u-sr-only"> page</span>
+                </button>
               </li>
-            )}
-
-            {paginationRanges.endingPages.map((paginationIndex) => (
-              <PaginationButton
-                key={paginationIndex}
-                currentPageIndex={pageIndex}
-                pageIndex={paginationIndex}
-                gotoPage={gotoPage}
-              />
-            ))}
-
-            <li className="vf-pagination__item vf-pagination__item--next-page">
-              <button
-                disabled={!canNextPage}
-                type="button"
-                onClick={nextPage}
-                className="vf-button vf-button--link vf-pagination__link"
-              >
-                Next<span className="vf-u-sr-only"> page</span>
-              </button>
-            </li>
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        </section>
       )}
     </section>
   );

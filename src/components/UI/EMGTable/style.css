@@ -1,7 +1,18 @@
-.vf-pagination.mg-table-footer {
+.mg-table-footer {
   position: sticky;
   bottom: 0;
   background: hsla(0, 0%, 100%, 0.8);
+  display: flex;
+  flex-wrap: wrap-reverse;
+}
+.mg-table-footer .vf-pagination {
+  min-width: 75%;
+  flex-grow: 2;
+}
+.mg-table-footer > label {
+  flex-grow: 1;
+  padding: 0.5em;
+  color: #707372;
 }
 
 .mg-table-overlay-container {

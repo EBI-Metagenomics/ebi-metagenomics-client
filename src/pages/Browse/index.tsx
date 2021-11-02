@@ -16,6 +16,7 @@ const Browse: React.FC = () => {
       page: 1,
       order: '',
       biome: 'root',
+      page_size: 25,
     },
     {
       page: Number,

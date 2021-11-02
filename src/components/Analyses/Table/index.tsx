@@ -11,12 +11,13 @@ import useURLAccession from 'hooks/useURLAccession';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
 
+const initialPageSize = 10;
 const AnalysesTable: React.FC = () => {
   const accession = useURLAccession();
   const [queryParameters] = useQueryParametersState(
     {
       'analyses-page': 1,
-      'analyses-page_size': 25,
+      'analyses-page_size': initialPageSize,
       'analyses-order': '',
     },
     {
@@ -107,6 +108,7 @@ const AnalysesTable: React.FC = () => {
       data={data as MGnifyResponseList}
       title="Analyses"
       initialPage={(queryParameters['analyses-page'] as number) - 1}
+      initialPageSize={initialPageSize}
       className="mg-anlyses-table"
       loading={loading}
       isStale={isStale}
