@@ -12,9 +12,11 @@
         <td class="length">
             <%= row.model.get('length') %>
         </td>
-        <td class="coverage">
-            <%= row.model.get('coverage') %>
-        </td>
+        <% if (showCoverage) { %>
+            <td class="coverage">
+                <%= row.model.get('coverage') %>
+            </td>
+        <% } %>
         <td>
             <% row.features.forEach(function(feature) { %>
                 <span class="mgnify-icon <%= feature.field %> <%= (feature.missing) ? 'feature-absent' : '' %>">

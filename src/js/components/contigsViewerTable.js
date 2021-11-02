@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const util = require('../util');
 const Backbone = require('backbone');
 const queryString = require('query-string');
 
@@ -16,7 +17,8 @@ export const ContigsTable = Backbone.View.extend({
         'click .cursor-prev': 'previuos',
     },
 
-    initialize(collection) {
+    initialize(collection, showCoverage) {
+        this.showCoverage = _.isBoolean(showCoverage) && showCoverage;
         this.collection = collection;
     },
 
@@ -28,15 +30,20 @@ export const ContigsTable = Backbone.View.extend({
     render(filters) {
         const that = this;
         const tableId = "contigs-table";
+        let headers = [
+            {name: "Name"},
+            {name: "Length (bp)"},
+        ]
+        if (that.showCoverage) {
+            headers.push({name: "Coverage"});
+        }
+        headers.push(
+            {name: "Features"}
+        )
         this.$el.html(this.template({
             tableId: tableId,
             title: "Contigs",
-            headers: [
-                {name: "Name"},
-                {name: "Length (bp)"},
-                {name: "Coverage"},
-                {name: "Features"}
-            ],
+            headers: headers,
         }));
 
         this.$tbody = $("#" + tableId + "-body");
@@ -95,7 +102,7 @@ export const ContigsTable = Backbone.View.extend({
                     });   
                 });
 
-                that.$tbody.html(that.rowsTemplate({ rows: that._rows }));
+                that.$tbody.html(that.rowsTemplate({ rows: that._rows, showCoverage: that.showCoverage }));
                 that.trigger("contigs-table:refresh:done", that._filters);
                 deferred.resolve();
             },
