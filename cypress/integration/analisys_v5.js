@@ -231,6 +231,51 @@ describe('Analysis V5', () => {
         });
     });
 
+    context('Contigs Viewer', () => {
+        
+        context('Contigs table', () => {
+            const analysisId = 'MGYA00383254';
+            const pageUrl = 'analyses/' + analysisId + '#contigs-viewer';
+            
+            it('The contig table should have 4 headers', () => {
+                openPage(pageUrl);
+                waitForPageLoad('Analysis ' + analysisId);
+                const headers = [
+                    "Name",
+                    "Length (bp)",
+                    "Coverage",
+                    "Features"
+                ]
+                cy.get('#contigs-table table thead tr th').should('have.length', headers.length);
+                cy.get('#contigs-table table thead tr th').each(($li) => {
+                    expect($li.text().replace('\n', '').trim()).to.be.oneOf(headers);
+                });
+            });
+    
+            it('The contig table should not have the "coverage" for long-reads', () => {
+                // Fixture with patched experiment type to long_reads
+                cy.server();
+                cy.route('GET',
+                '**/v1/analyses/MGYA00383254?include=downloads,assembly',
+                'fixture:analysisAssemblyVersion5_LongReads');
+    
+                openPage(pageUrl);
+                waitForPageLoad('Analysis ' + analysisId);
+
+                const headers = [
+                    "Name",
+                    "Length (bp)",
+                    "Features"
+                ]
+
+                cy.get('#contigs-table table thead tr th').should('have.length', headers.length);
+                cy.get('#contigs-table table thead tr th').each(($li) => {
+                    expect($li.text().replace('\n', '').trim()).to.be.oneOf(headers);
+                });
+            });
+        });
+    });
+
     context('Error handling', () => {
         it('Should display error message if invalid accession passed in URL', () => {
             const assemblyId = 'MGYA00141547XXXX';

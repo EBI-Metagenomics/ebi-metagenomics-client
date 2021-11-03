@@ -1,0 +1,203 @@
+{
+    "data": {
+      "type": "analysis-jobs",
+      "id": "MGYA00383254",
+      "attributes": {
+        "analysis-status": "completed",
+        "pipeline-version": "5.0",
+        "analysis-summary": [
+          {
+            "key": "Predicted SSU sequences",
+            "value": "96"
+          },
+          {
+            "key": "Predicted LSU sequences",
+            "value": "130"
+          },
+          {
+            "key": "Contigs with predicted CDS",
+            "value": "148761"
+          },
+          {
+            "key": "Contigs with InterProScan match",
+            "value": "127461"
+          },
+          {
+            "key": "Contigs with predicted RNA",
+            "value": "2050"
+          },
+          {
+            "key": "Nucleotide sequences after format-specific filtering",
+            "value": "1092543"
+          },
+          {
+            "key": "Nucleotide sequences after length filtering",
+            "value": "148992"
+          },
+          {
+            "key": "Nucleotide sequences after undetermined bases filtering",
+            "value": "148992"
+          },
+          {
+            "key": "Predicted CDS",
+            "value": "286339"
+          },
+          {
+            "key": "Predicted CDS with InterProScan match",
+            "value": "206832"
+          },
+          {
+            "key": "Submitted nucleotide sequences",
+            "value": "1092543"
+          },
+          {
+            "key": "Total InterProScan matches",
+            "value": "632722"
+          }
+        ],
+        "experiment-type": "long_reads_assembly",
+        "accession": "MGYA00383254",
+        "complete-time": "2019-11-11T12:36:17",
+        "instrument-platform": "ILLUMINA",
+        "instrument-model": "Illumina HiSeq 2000"
+      },
+      "relationships": {
+        "go-terms": {
+          "links": {
+            "related": "http://localhost:8000/v1/analyses/MGYA00383254/go-terms"
+          }
+        },
+        "taxonomy-itsunite": {
+          "links": {
+            "related": "http://localhost:8000/v1/analyses/MGYA00383254/taxonomy/unite"
+          }
+        },
+        "sample": {
+          "data": null
+        },
+        "assembly": {
+          "data": {
+            "type": "assemblies",
+            "id": "ERZ477576"
+          },
+          "links": {
+            "related": "http://localhost:8000/v1/assemblies/ERZ477576"
+          }
+        },
+        "taxonomy-lsu": {
+          "links": {
+            "related": "http://localhost:8000/v1/analyses/MGYA00383254/taxonomy/lsu"
+          }
+        },
+        "run": {
+          "data": null
+        },
+        "go-slim": {
+          "links": {
+            "related": "http://localhost:8000/v1/analyses/MGYA00383254/go-slim"
+          }
+        },
+        "downloads": {
+          "links": {
+            "related": "http://localhost:8000/v1/analyses/MGYA00383254/downloads"
+          },
+          "data": []
+        },
+        "taxonomy-itsonedb": {
+          "links": {
+            "related": "http://localhost:8000/v1/analyses/MGYA00383254/taxonomy/itsonedb"
+          }
+        },
+        "taxonomy-ssu": {
+          "links": {
+            "related": "http://localhost:8000/v1/analyses/MGYA00383254/taxonomy/ssu"
+          }
+        },
+        "genome-properties": {
+          "links": {
+            "related": "http://localhost:8000/v1/analyses/MGYA00383254/genome-properties"
+          }
+        },
+        "study": {
+          "data": {
+            "type": "studies",
+            "id": "MGYS00002008"
+          },
+          "links": {
+            "related": "http://localhost:8000/v1/studies/MGYS00002008"
+          }
+        },
+        "interpro-identifiers": {
+          "links": {
+            "related": "http://localhost:8000/v1/analyses/MGYA00383254/interpro-identifiers"
+          }
+        },
+        "taxonomy": {
+          "links": {
+            "related": "http://localhost:8000/v1/analyses/MGYA00383254/taxonomy"
+          }
+        },
+        "antismash-gene-clusters": {
+          "links": {
+            "related": "http://localhost:8000/v1/analyses/MGYA00383254/antismash-gene-clusters"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost:8000/v1/analyses/MGYA00383254"
+      }
+    },
+    "included": [
+      {
+        "type": "assemblies",
+        "id": "ERZ477576",
+        "attributes": {
+          "experiment-type": "long_reads_assembly",
+          "accession": "ERZ477576",
+          "wgs-accession": "OCZA01",
+          "legacy-accession": "GCA_900216085",
+          "coverage": null,
+          "min-gap-length": null
+        },
+        "relationships": {
+          "runs": {
+            "links": {
+              "related": "http://localhost:8000/v1/assemblies/ERZ477576/runs"
+            },
+            "data": []
+          },
+          "analyses": {
+            "links": {
+              "related": "http://localhost:8000/v1/assemblies/ERZ477576/analyses"
+            },
+            "data": null
+          },
+          "samples": {
+            "data": [
+              {
+                "type": "samples",
+                "id": "ERS487899",
+                "links": {
+                  "self": "http://localhost:8000/v1/samples/ERS487899"
+                }
+              }
+            ]
+          },
+          "pipelines": {
+            "data": [
+              {
+                "type": "pipelines",
+                "id": "5.0",
+                "links": {
+                  "self": "http://localhost:8000/v1/pipelines/5.0"
+                }
+              }
+            ]
+          }
+        },
+        "links": {
+          "self": "http://localhost:8000/v1/assemblies/ERZ477576"
+        }
+      }
+    ]
+  }

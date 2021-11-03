@@ -1450,8 +1450,8 @@ const ContigsViewTab = Backbone.View.extend({
         'change input[type=checkbox]': 'refreshTable',
         'keyup input[type=text]': _.debounce(function(e) {
             const el = $(e.currentTarget);
-            const minlenght = el.data('minlenght');
-            if (!_.isUndefined(minlenght) && el.val().lenght < minlenght) {
+            const minlength = el.data('minlength');
+            if (!_.isUndefined(minlength) && el.val().length < minlength) {
                 return;
             }
             this.refreshTable();
@@ -1465,10 +1465,13 @@ const ContigsViewTab = Backbone.View.extend({
      * This tabls provides a contig browser and table for the analysis.
      * @param {string} analysisID The analysis id
      */
-    initialize({analysisID}) {
+    initialize({analysisID, experimentType}) {
         const that = this;
         that.analysisID = analysisID;
         that.collection = new api.ContigCollection({accession: analysisID});
+        // Long Read assemblies don't have the coverage in the fasta headers as expected.
+        // we just hide that col in the table
+        that.showCoverage = experimentType !== 'long_reads_assembly'
     },
     /**
      * Render
@@ -1503,7 +1506,7 @@ const ContigsViewTab = Backbone.View.extend({
 
         this.loadFilterParams(urlParams);
 
-        that.contigsTable = new ContigsTable(that.collection);
+        that.contigsTable = new ContigsTable(that.collection, that.showCoverage);
         that.contigsTable.setElement('#contigs-table');
 
         that.contigsTable.on('contigs-table:render:done', function() {
