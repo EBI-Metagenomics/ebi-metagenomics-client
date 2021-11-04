@@ -107,7 +107,7 @@
                                             <%= pub.publishedYear %> <%= pub.volume %>
                                             (PMID: <a class="ext" href="<%= pub.pmc_url %>"><%= pub.pubmedID %></a>)
                                             (DOI: <a class="ext" href="<%= pub.doi_url %>"><%= pub.doi %></a>) <br>
-                                            <a data-open="europe-pmc-annotations-modal-<%= pub.pubmedID %>"><i class="icon icon-common icon-spacer icon-eye icon-blue"></i>Show metadata from Europe PMC Annotations</a>
+                                            <a data-open="europe-pmc-annotations-modal-<%= pub.pubmedID %>" class="metadata">Show metadata from Europe PMC Annotations</a>
                                             <div class="large reveal" id="europe-pmc-annotations-modal-<%= pub.pubmedID %>" data-reveal>
                                                 <h3 class="centered">Annotations from Europe PMC</h3>
                                                 <button class="close-button" data-close aria-label="Close modal" type="button">

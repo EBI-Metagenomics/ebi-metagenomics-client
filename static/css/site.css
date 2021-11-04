@@ -712,8 +712,13 @@ a.ext:hover, a.ext:active, a.ext:focus {
     background: url(../images/ico_ext_link_on.png) no-repeat 0 3px;
 }
 
-i.icon-blue {
-    color: #537EFF;
+a.metadata, a.metadata:link {
+    padding-left: 56px;
+    background: url(../images/icon_metadata.svg) no-repeat 0 0;
+}
+
+a.metadata:hover, a.metadata:active, a.metadata:focus {
+    background: url(../images/icon_metadata_hover.svg) no-repeat 0 0;
 }
 
 tr.disabled {
