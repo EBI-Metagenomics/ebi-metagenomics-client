@@ -300,7 +300,7 @@ let GenomeCataloguesView = util.GenericTableView.extend({
                 'metagenomic-assembled and isolate genomes. ' +
                 'The latest version of each catalogue is shown on this website. ' +
                 'Data for current and previous versions are available on the ' +
-                '[FTP server](ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/).' +
+                '[FTP server](https://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/).' +
                 '\n\n' +
                 'Select a catalogue in the table to browse or search its genomes.'
             ),
