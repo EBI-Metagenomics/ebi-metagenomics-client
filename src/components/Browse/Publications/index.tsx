@@ -8,12 +8,11 @@ import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 
-const BrowseSuperStudies: React.FC = () => {
+const BrowsePublications: React.FC = () => {
   const [queryParameters] = useQueryParametersState(
     {
       page: 1,
       order: '',
-      biome: 'root',
       page_size: 25,
     },
     {
@@ -23,32 +22,51 @@ const BrowseSuperStudies: React.FC = () => {
   );
   const [hasData, setHasData] = useState(false);
   const {
-    data: superStudiesList,
+    data: publicationsList,
     loading,
     isStale,
-  } = useMGnifyData('super-studies', {
+  } = useMGnifyData('publications', {
     page: queryParameters.page as number,
     ordering: queryParameters.order as string,
-    lineage: queryParameters.biome as string,
     page_size: queryParameters.page_size as number,
   });
 
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Title',
-        accessor: 'attributes.title',
+        id: 'pubmed_id',
+        Header: 'PMID',
+        accessor: 'id',
         Cell: ({ cell }) => (
-          <Link
-            to={`/super-studies/${cell.row.original.attributes['url-slug']}`}
-          >
+          <a href={`https://europepmc.org/abstract/MED/${cell.value}`}>
             {cell.value}
-          </Link>
+          </a>
         ),
       },
       {
-        Header: 'Description',
-        accessor: 'attributes.description',
+        Header: 'Publication title',
+        accessor: 'attributes.pub-title',
+        disableSortBy: true,
+      },
+      {
+        Header: 'Studies',
+        accessor: 'attributes.studies-count',
+      },
+      {
+        Header: 'Year of pub.',
+        accessor: 'attributes.published-year',
+      },
+      {
+        Header: 'Link',
+        accessor: 'attributes.pubmed-id',
+        Cell: ({ cell }) => (
+          <Link
+            to={`/publications/${cell.value}`}
+            className="vf-button vf-button--primary vf-button--sm "
+          >
+            View details
+          </Link>
+        ),
         disableSortBy: true,
       },
     ],
@@ -56,25 +74,24 @@ const BrowseSuperStudies: React.FC = () => {
   );
 
   useEffect(() => {
-    setHasData(!!superStudiesList);
-  }, [superStudiesList]);
+    setHasData(!!publicationsList);
+  }, [publicationsList]);
 
   return (
     <section className="mg-browse-section">
       {hasData && (
         <EMGTable
           cols={columns}
-          data={superStudiesList as MGnifyResponseList}
-          title={`Studies (${superStudiesList.meta.pagination.count})`}
+          data={publicationsList as MGnifyResponseList}
+          title={`Samples (${publicationsList.meta.pagination.count})`}
           initialPage={(queryParameters.page as number) - 1}
           sortable
           loading={loading}
           isStale={isStale}
-          showPagination={false}
         />
       )}
     </section>
   );
 };
 
-export default BrowseSuperStudies;
+export default BrowsePublications;
