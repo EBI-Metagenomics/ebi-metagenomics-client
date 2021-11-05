@@ -83,7 +83,7 @@ const BrowsePublications: React.FC = () => {
         <EMGTable
           cols={columns}
           data={publicationsList as MGnifyResponseList}
-          title={`Samples (${publicationsList.meta.pagination.count})`}
+          title={`Publications (${publicationsList.meta.pagination.count})`}
           initialPage={(queryParameters.page as number) - 1}
           sortable
           loading={loading}

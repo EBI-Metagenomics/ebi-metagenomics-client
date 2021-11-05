@@ -7,6 +7,7 @@ import BrowseStudies from 'components/Browse/Studies';
 import BrowseSuperStudies from 'components/Browse/SuperStudies';
 import BrowseSamples from 'components/Browse/Samples';
 import BrowsePublications from 'components/Browse/Publications';
+import BrowseGenomes from 'components/Browse/Genomes';
 import Tabs from 'components/UI/Tabs';
 
 const tabs = [
@@ -34,6 +35,9 @@ const Browse: React.FC = () => {
         </Route>
         <Route path="/browse/publications">
           <BrowsePublications />
+        </Route>
+        <Route path="/browse/genomes">
+          <BrowseGenomes />
         </Route>
         <Route>
           <Redirect to="/browse/super-studies" />

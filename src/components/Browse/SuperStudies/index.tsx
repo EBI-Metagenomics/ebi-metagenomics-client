@@ -65,7 +65,7 @@ const BrowseSuperStudies: React.FC = () => {
         <EMGTable
           cols={columns}
           data={superStudiesList as MGnifyResponseList}
-          title={`Studies (${superStudiesList.meta.pagination.count})`}
+          title={`Super Studies (${superStudiesList.meta.pagination.count})`}
           initialPage={(queryParameters.page as number) - 1}
           sortable
           loading={loading}
