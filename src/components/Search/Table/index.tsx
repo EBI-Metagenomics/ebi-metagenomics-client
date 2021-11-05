@@ -165,7 +165,7 @@ const SearchTable: React.FC = () => {
           <span className="mg-number">{data.hitCount}</span>
         </>
       }
-      initialPage={1}
+      initialPage={0}
       className="mg-search-result"
       loading={loading}
       isStale={isStale}

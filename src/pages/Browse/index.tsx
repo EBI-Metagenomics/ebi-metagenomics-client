@@ -5,6 +5,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import BrowseStudies from 'components/Browse/Studies';
 import BrowseSuperStudies from 'components/Browse/SuperStudies';
+import BrowseSamples from 'components/Browse/Samples';
 import Tabs from 'components/UI/Tabs';
 
 const tabs = [
@@ -26,6 +27,9 @@ const Browse: React.FC = () => {
         </Route>
         <Route path="/browse/studies">
           <BrowseStudies />
+        </Route>
+        <Route path="/browse/samples">
+          <BrowseSamples />
         </Route>
         <Route>
           <Redirect to="/browse/super-studies" />
