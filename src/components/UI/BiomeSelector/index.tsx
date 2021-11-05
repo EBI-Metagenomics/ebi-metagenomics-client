@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { groupBy, split, map, flatMap, find } from 'lodash-es';
 import Select from 'react-select';
 import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
+import { MGnifyResponseList, MGnifyDatum } from 'hooks/data/useData';
 import { getBiomeIcon } from 'utils/biomes';
 
 type BiomeSelectorProps = {
@@ -14,7 +14,7 @@ type BiomeSelectorProps = {
 };
 
 type OptionProps = {
-  value: any;
+  value: MGnifyDatum | string;
   label: string | number | Record<string, unknown> | [];
 };
 
@@ -22,7 +22,9 @@ const OptionLabel: React.FC<OptionProps> = ({ value, label }) => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
     <div style={{ display: 'flex' }}>
       <span
-        className={`biome_icon icon_xxs ${getBiomeIcon(value.id)}`}
+        className={`biome_icon icon_xxs ${getBiomeIcon(
+          typeof value === 'string' ? value : value.id
+        )}`}
         style={{ float: 'initial' }}
       />
     </div>
@@ -118,7 +120,9 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
       onChange={(option, action) => {
         if (action.action === 'select-option') {
           setValue(option);
-          onSelect(option.value.id);
+          onSelect(
+            typeof option.value === 'string' ? option.value : option.value.id
+          );
         }
       }}
       formatOptionLabel={OptionLabel}

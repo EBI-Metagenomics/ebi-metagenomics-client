@@ -159,12 +159,12 @@ const SearchTable: React.FC = () => {
     <EMGTable
       cols={columns}
       data={fomattedData}
-      title={
+      title={() => (
         <>
           {dataFor?.[pathname]?.label || ''}{' '}
           <span className="mg-number">{data.hitCount}</span>
         </>
-      }
+      )}
       initialPage={0}
       className="mg-search-result"
       loading={loading}
