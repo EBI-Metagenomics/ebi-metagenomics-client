@@ -10,6 +10,7 @@ interface OptionDataType {
   label: string;
   count: number;
   optionChildren?: OptionDataType[];
+  // eslint-disable-next-line react/no-unused-prop-types
   children?: OptionDataType[];
 }
 interface HierarchyOptionProps extends OptionDataType {

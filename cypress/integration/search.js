@@ -56,7 +56,7 @@ function testCheckboxNumberIsReflectedInTable(labelFor) {
             facetCount=text;
             cy.get(`label[for='${labelFor}']`).click();
             waitForSearchResults(rowSelector, PAGE_SIZE);
-            cy.get('.vf-table__caption').contains(facetCount)
+            cy.get('.vf-tabs__item .is-active .mg-number').contains(facetCount)
         });
 }
 
@@ -73,7 +73,7 @@ function testSliderFilter(selector) {
 }
 
 function checkNumberOfResultsDecreaseAfterAction(action){
-    cy.get(`.vf-table__caption .mg-number`)
+    cy.get(`.vf-tabs__item .is-active .mg-number`)
     .invoke('text')
     .then((text) =>{
         const count=Number(text);
@@ -82,7 +82,7 @@ function checkNumberOfResultsDecreaseAfterAction(action){
         cy.get('.mg-table-overlay-container > .mg-table-overlay')
             .should('not.exist');
         
-        cy.get('.vf-table__caption .mg-number')
+        cy.get('.vf-tabs__item .is-active .mg-number')
             .invoke('text')
             .then((text2) =>{
                 const count2=Number(text2);
@@ -147,11 +147,11 @@ describe('Search page', function() {
         });
         it('Changing tabs should update result view', function() {
             cy.get(`.mg-search-tabs li`).contains('Analyses').click();
-            cy.get('.mg-search-result caption').should('contain', 'Analyses');
+            cy.get('.vf-tabs__item .is-active').should('contain', 'Analyses');
             cy.get(`.mg-search-tabs li`).contains('Samples').click();
-            cy.get('.mg-search-result caption').should('contain', 'Samples');
+            cy.get('.vf-tabs__item .is-active').should('contain', 'Samples');
             cy.get(`.mg-search-tabs li`).contains('Studies').click();
-            cy.get('.mg-search-result caption').should('contain', 'Studies');
+            cy.get('.vf-tabs__item .is-active').should('contain', 'Studies');
         });
     });
 

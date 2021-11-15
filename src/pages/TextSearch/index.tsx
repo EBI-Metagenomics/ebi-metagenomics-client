@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import MultipleOptionFilter from 'components/Search/Filter/MultipleOption';
@@ -165,15 +165,24 @@ const TextSearchPage: React.FC = () => {
       queryParameters
     ),
   });
-  const context = {
-    searchData: {
-      '/search/studies': searchDataStudies,
-      '/search/samples': searchDataSamples,
-      '/search/analyses': searchDataAnalyses,
-    },
-    queryParameters,
-    setQueryParameters,
-  };
+  const context = useMemo(
+    () => ({
+      searchData: {
+        '/search/studies': searchDataStudies,
+        '/search/samples': searchDataSamples,
+        '/search/analyses': searchDataAnalyses,
+      },
+      queryParameters,
+      setQueryParameters,
+    }),
+    [
+      searchDataStudies,
+      searchDataSamples,
+      searchDataAnalyses,
+      queryParameters,
+      setQueryParameters,
+    ]
+  );
 
   return (
     <section className="vf-content mg-page-search">
