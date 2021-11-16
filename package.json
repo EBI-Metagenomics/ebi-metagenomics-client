@@ -29,8 +29,9 @@
     "url": "https://github.com/EBI-Metagenomics/ebi-metagenomics-client/issues"
   },
   "dependencies": {
-    "@googlemaps/markerclustererplus": "1.2.0",
+    "@googlemaps/markerclustererplus": "1.2.2",
     "@googlemaps/react-wrapper": "1.1.5",
+    "@types/lodash": "^4.14.175",
     "lodash-es": "4.17.21",
     "react": "17.0.2",
     "react-dom": "17.0.2",

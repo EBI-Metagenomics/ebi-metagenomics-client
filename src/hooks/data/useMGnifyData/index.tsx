@@ -18,7 +18,10 @@ const useMGnifyData: (
 ) => MgnifyDataResponse = (endpoint, parameters = {}, fetchOptions = {}) => {
   const { config } = useContext(UserContext);
   const defaultParameters = {};
-  const allParemeters = { ...defaultParameters, ...parameters };
+  const cleanedParameters = Object.fromEntries(
+    Object.entries(parameters).filter(([, value]) => value !== undefined)
+  );
+  const allParemeters = { ...defaultParameters, ...cleanedParameters };
   let url = `${config.api}${endpoint}`;
   if (Object.keys(allParemeters).length > 0)
     url += `?${Object.entries(allParemeters)

@@ -37,7 +37,7 @@ export type MGnifyDatum = {
 };
 
 export interface MGnifyResponse {
-  data: Array<MGnifyDatum> | MGnifyDatum;
+  data: Array<MGnifyDatum> | MGnifyDatum | Record<string, unknown>[];
   links: {
     first?: string;
     last?: string;
@@ -51,7 +51,7 @@ export interface MGnifyResponse {
       pages: number;
     };
   };
-  included: Array<KeyValue>;
+  included?: Array<KeyValue>;
 }
 export interface MGnifyResponseList extends MGnifyResponse {
   data: Array<MGnifyDatum>;

@@ -24,7 +24,6 @@ jobs:
           MAPS_KEY: ${{ secrets.GOOGLE_MAPS_DEV_KEY }}
         run: |
           echo "{\"googleMapsKey\": \"$MAPS_KEY\"}" > "$(pwd)/config.private.json"
-          cat "$(pwd)/config.private.json"
       - name: 🌎 - Setup NginX
         run: |
           sudo chmod 777 /var/log/nginx/*

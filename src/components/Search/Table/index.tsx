@@ -5,7 +5,7 @@ import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 
-import './style.css';
+// import './style.css';
 
 const dataFor = {
   '/search/studies': {
@@ -145,29 +145,31 @@ const SearchTable: React.FC = () => {
   if (error || !data) return <FetchError error={error} />;
   const fomattedData = {
     data: data.entries as Record<string, unknown>[],
+    links: {},
     meta: {
       pagination: {
         pages: Math.ceil((data.hitCount as number) / PAGE_SIZE),
+        count: 25,
+        page: 1,
       },
     },
   };
 
   return (
-    <div className="mg-table-overlay-container">
-      <div className={loading && isStale ? 'mg-table-overlay' : undefined} />
-      <EMGTable
-        cols={columns}
-        data={fomattedData}
-        title={
-          <>
-            {dataFor?.[pathname]?.label || ''}{' '}
-            <span className="mg-number">{data.hitCount}</span>
-          </>
-        }
-        initialPage={1}
-        className="mg-search-result"
-      />
-    </div>
+    <EMGTable
+      cols={columns}
+      data={fomattedData}
+      title={
+        <>
+          {dataFor?.[pathname]?.label || ''}{' '}
+          <span className="mg-number">{data.hitCount}</span>
+        </>
+      }
+      initialPage={1}
+      className="mg-search-result"
+      loading={loading}
+      isStale={isStale}
+    />
   );
 };
 
