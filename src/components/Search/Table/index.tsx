@@ -141,7 +141,7 @@ const SearchTable: React.FC = () => {
   // console.log({loading});
 
   const columns = useMemo(() => dataFor?.[pathname]?.columns, [pathname]);
-  if (loading && !isStale) return <Loading size="small" />;
+  if (loading && (!isStale || !data)) return <Loading size="large" />;
   if (error || !data) return <FetchError error={error} />;
   const fomattedData = {
     data: data.entries as Record<string, unknown>[],
@@ -159,13 +159,13 @@ const SearchTable: React.FC = () => {
     <EMGTable
       cols={columns}
       data={fomattedData}
-      title={
+      title={() => (
         <>
           {dataFor?.[pathname]?.label || ''}{' '}
           <span className="mg-number">{data.hitCount}</span>
         </>
-      }
-      initialPage={1}
+      )}
+      initialPage={0}
       className="mg-search-result"
       loading={loading}
       isStale={isStale}

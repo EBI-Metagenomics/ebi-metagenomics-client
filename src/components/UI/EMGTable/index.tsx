@@ -72,7 +72,7 @@ function getOrderingQueryParamFromSortedColumn(
 type EMGTableProps = {
   cols: Column[];
   data: MGnifyResponse;
-  title?: string | React.CElement<any, any>;
+  title?: string | React.ElementType;
   showPagination?: boolean;
   initialPage?: number;
   initialPageSize?: number;

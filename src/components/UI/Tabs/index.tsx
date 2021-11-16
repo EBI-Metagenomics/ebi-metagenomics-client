@@ -5,7 +5,7 @@ export const Tab: React.FC = () => null;
 
 type TabsProps = {
   tabs: Array<{
-    label: string;
+    label: string | React.ElementType;
     to: string;
   }>;
 };
@@ -15,8 +15,8 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
   return (
     <div className="vf-tabs mg-search-tabs">
       <ul className="vf-tabs__list">
-        {tabs.map(({ label, to }) => (
-          <li className="vf-tabs__item" key={label}>
+        {tabs.map(({ label: Label, to }) => (
+          <li className="vf-tabs__item" key={to}>
             <Link
               className={`vf-tabs__link ${
                 to === location.pathname ||
@@ -26,7 +26,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
               }`}
               to={to}
             >
-              {label}
+              {typeof Label === 'string' ? Label : <Label />}
             </Link>
           </li>
         ))}

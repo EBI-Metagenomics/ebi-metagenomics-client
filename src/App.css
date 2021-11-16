@@ -43,3 +43,7 @@ button.mg-button-as-link {
   gap: var(--page-grid-gap, 1em);
   align-items: flex-start;
 }
+
+.mg-list__item {
+  margin-left: 0.6rem;
+}

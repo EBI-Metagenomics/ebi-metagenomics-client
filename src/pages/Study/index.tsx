@@ -7,6 +7,7 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Study/Overview';
+import SummaryTab from 'components/Study/SummaryTab';
 import RouteForHash from 'components/Nav/RouteForHash';
 
 const tabs = [
@@ -34,7 +35,7 @@ const StudyPage: React.FC = () => {
             <Overview data={studyData} included={included || []} />
           </RouteForHash>
           <RouteForHash hash="#analysis">
-            <div>analysis ????</div>
+            <SummaryTab accession={accession} />
           </RouteForHash>
         </div>
       </section>

@@ -1,11 +1,11 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React, { useContext, useMemo } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import MultipleOptionFilter from 'components/Search/Filter/MultipleOption';
 import HierarchyMultipleOptionFilter from 'src/components/Search/Filter/HierarchyMultipleOption';
 import TemperatureFilter from 'components/Search/Filter/Temperature';
 import DepthFilter from 'components/Search/Filter/Depth';
-import SearchTabs from 'src/components/Search/Tabs';
+import Tabs from 'components/UI/Tabs';
 import TextSearch from 'src/components/Search/Filter/Text';
 import SearchTable from 'src/components/Search/Table';
 import useEBISearchData from 'hooks/data/useEBISearchData';
@@ -59,6 +59,37 @@ const getSamplesQuery = (
   if (query.length) return query.join(' AND ');
   return defaultValue;
 };
+
+const TextSearchCount: React.FC<{ to: string; label: string }> = ({
+  to,
+  label,
+}) => {
+  const { searchData } = useContext(SearchQueryContext);
+  return (
+    <>
+      {label}
+      <span className="mg-number">
+        {searchData?.[to]?.data?.hitCount || ''}
+      </span>
+    </>
+  );
+};
+
+const tabs = [
+  {
+    to: '/search/studies',
+    label: () => <TextSearchCount to="/search/studies" label="Studies" />,
+  },
+  {
+    to: '/search/samples',
+    label: () => <TextSearchCount to="/search/samples" label="Samples" />,
+  },
+  {
+    to: '/search/analyses',
+    label: () => <TextSearchCount to="/search/analyses" label="Analyses" />,
+  },
+];
+
 const TextSearchPage: React.FC = () => {
   const [queryParameters, setQueryParameters] = useQueryParametersState({
     query: '',
@@ -134,22 +165,31 @@ const TextSearchPage: React.FC = () => {
       queryParameters
     ),
   });
-  const context = {
-    searchData: {
-      '/search/studies': searchDataStudies,
-      '/search/samples': searchDataSamples,
-      '/search/analyses': searchDataAnalyses,
-    },
-    queryParameters,
-    setQueryParameters,
-  };
+  const context = useMemo(
+    () => ({
+      searchData: {
+        '/search/studies': searchDataStudies,
+        '/search/samples': searchDataSamples,
+        '/search/analyses': searchDataAnalyses,
+      },
+      queryParameters,
+      setQueryParameters,
+    }),
+    [
+      searchDataStudies,
+      searchDataSamples,
+      searchDataAnalyses,
+      queryParameters,
+      setQueryParameters,
+    ]
+  );
 
   return (
     <section className="vf-content mg-page-search">
       <h2>Text Search.</h2>
       <SearchQueryContext.Provider value={context}>
         <TextSearch />
-        <SearchTabs />
+        <Tabs tabs={tabs} />
         <section className="vf-grid">
           <div className="vf-stack vf-stack--200">
             <Switch>
@@ -222,6 +262,9 @@ const TextSearchPage: React.FC = () => {
                   header="InterPro"
                   includeTextFilter
                 />
+              </Route>
+              <Route>
+                <Redirect to="/search/studies" />
               </Route>
             </Switch>
           </div>

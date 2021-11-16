@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useEffect, useMemo } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import mergePrivateConfig from 'utils/config';
@@ -37,17 +37,19 @@ const App: React.FC = () => {
   useEffect(() => {
     mergePrivateConfig(setConfig);
   }, []);
+  const value = useMemo(
+    () => ({
+      username: user.username,
+      isAuthenticated: user.isAuthenticated,
+      details,
+      setUser,
+      setDetails,
+      config,
+    }),
+    [config, details, user.isAuthenticated, user.username]
+  );
   return (
-    <UserContext.Provider
-      value={{
-        username: user.username,
-        isAuthenticated: user.isAuthenticated,
-        details,
-        setUser,
-        setDetails,
-        config,
-      }}
-    >
+    <UserContext.Provider value={value}>
       <LoginMonitor />
       <EBIHeader />
       <HeroHeader />
