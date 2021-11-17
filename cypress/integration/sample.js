@@ -110,6 +110,12 @@ function waitForPageLoad(projectId) {
 }
 
 describe('Sample page', function() {
+    beforeEach(() => {
+        cy.server();
+        cy.intercept('GET', '**/studies_publications_annotations_existence',
+            {fixture: 'sampleStudiesPublicationsAnnotations.json'});
+    });
+
     context('General', function() {
         before(function() {
             openPage(origPage);
@@ -120,7 +126,7 @@ describe('Sample page', function() {
             const colSelector = '#main-content-area > div.row > div.column';
             cy.get('h3').should('contain', sampleId);
             cy.get('h2').should('contain', 'Sample ASSDL1');
-            
+
             const descOverview = '#sample-description > .columns:nth-child(1)';
             cy.get(descOverview + ' > h3:nth-child(2)').should('contain', 'Description');
             cy.get(descOverview + ' > p').should('contain', 'ASS depth profile');
@@ -166,6 +172,46 @@ describe('Sample page', function() {
             const url = Config.API_URL + 'samples/' + sampleId
                 + '/studies?ordering=&format=csv';
             table.testDownloadLink(url);
+        });
+    });
+
+    context('Additional metadata', function() {
+        beforeEach(function() {
+            openPage(origPage);
+            waitForPageLoad(sampleId);
+        });
+
+        it('Should show link to study with additional metadata', function() {
+            cy.contains('Additional metadata from Publications').should('be.visible');
+            cy.get('#additional-metadata > div > a')
+                .should('be.visible');
+        });
+
+        it('Should hide additional metadata section if there are no annotations', function() {
+            cy.intercept('GET', '**/studies_publications_annotations_existence', {body: {
+                data: {
+                    query_possible: true,
+                    study_has_annotations: {}
+                }
+            }});
+            openPage(origPage);
+            waitForPageLoad(sampleId);
+            cy.get('#additional-metadata > h5 > img').should('not.exist');
+            // wait for loading spinner
+            cy.get('#additional-metadata').should('be.empty');
+        });
+
+        it('Should show warning if additional metadata cannot be queried', function() {
+            cy.intercept('GET', '**/studies_publications_annotations_existence', {body: {
+                    data: {
+                        query_possible: false
+                    }
+                }});
+            openPage(origPage);
+            waitForPageLoad(sampleId);
+            cy.get('#additional-metadata > h5 > img').should('not.exist');
+            // wait for loading spinner
+            cy.get('#additional-metadata').should('not.be.empty');
         });
     });
 
@@ -271,7 +317,6 @@ describe('Sample page', function() {
     });
 
     context('Metadata display', function() {
-
         it('Info message should be displayed if no metadata available for display', function() {
             const projectId = 'ERS1474797';
             const origPage = 'samples/' + projectId;

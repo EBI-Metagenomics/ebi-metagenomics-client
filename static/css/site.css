@@ -72,6 +72,50 @@
     width: 9em;
 }
 
+.europe-pmc-annotations {
+    position: relative;
+}
+
+.europe-pmc-logo {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.publications-epmc-annotations-section, .publications-epmc-annotation {
+    padding: 10px 0 10px 2em;
+    border-left: 1px solid #d0d0ce;
+}
+
+.publications-epmc-mention {
+    margin-bottom: 10px;
+    border: 1px solid #d0d0ce;
+    padding: 10px;
+}
+
+.publications-epmc-mention-header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+span.publications-empc-annotations-count {
+    font-size: smaller;
+}
+
+span.publications-epmc-annotation-prefix {
+    color: #777777;
+}
+
+span.publications-epmc-annotation-match {
+    font-weight: bold;
+}
+
+a.space-after-10 {
+    margin-right: 10px;
+}
+
 .runs-download-table {
     table-layout: fixed;
     text-align: center;
@@ -666,6 +710,15 @@ a.ext, a.ext:link {
 
 a.ext:hover, a.ext:active, a.ext:focus {
     background: url(../images/ico_ext_link_on.png) no-repeat 0 3px;
+}
+
+a.metadata, a.metadata:link {
+    padding-left: 56px;
+    background: url(../images/icon_metadata.svg) no-repeat 0 0;
+}
+
+a.metadata:hover, a.metadata:active, a.metadata:focus {
+    background: url(../images/icon_metadata_hover.svg) no-repeat 0 0;
 }
 
 tr.disabled {

@@ -220,11 +220,15 @@ let PublicationsView = util.GenericTableView.extend({
             + attr.pubmedID + '</a> ';
         const studyLink = '<a href=\'' + attr.pubMgnifyURL + '#studies-section\'>'
             + attr.studiesCount + '</a>';
+        const publicationViewButton = '<a class=\'button\' href=\'' +
+            attr.pubMgnifyURL + '\'>View details</a>';
         return [
             pubmedLink,
             attr['title'],
             studyLink,
-            attr['publishedYear']];
+            attr['publishedYear'],
+            publicationViewButton
+        ];
     },
     initialize() {
         const that = this;
@@ -232,7 +236,8 @@ let PublicationsView = util.GenericTableView.extend({
             {sortBy: 'pubmed_id', name: 'PMID'},
             {sortBy: null, name: 'Publication title'},
             {sortBy: 'studies_count', name: 'Studies'},
-            {sortBy: 'published_year', name: 'Year of pub.'}
+            {sortBy: 'published_year', name: 'Year of pub.'},
+            {sortBy: null, name: 'Link'}
         ];
         let params = createInitParams({biome: false, ordering: '-published_year'});
 

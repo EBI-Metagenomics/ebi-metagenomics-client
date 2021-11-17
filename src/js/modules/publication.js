@@ -5,6 +5,7 @@ const util = require('../util');
 const DetailList = require('../components/detailList');
 
 require('../../../static/js/jquery.liveFilter.js');
+const {PublicationEuropePMCAnnotationsView} = require('../components/europePMCAnnotations');
 
 util.setupPage('#browse-nav');
 
@@ -31,7 +32,7 @@ let PublicationView = Backbone.View.extend({
                 if (attr['medicineJournal']) {
                     description['Medical journal'] = attr['medicineJournal'];
                 }
-                $('#publication-details').append(new DetailList('Extenal links', description));
+                $('#publication-details').append(new DetailList('External links', description));
                 util.attachTabHandlers();
             },
             error(ignored, response) {
@@ -80,6 +81,10 @@ function initPage() {
             isPageHeader: false,
             textFilter: false,
             sectionTitle: 'Associated studies'
+        });
+        new PublicationEuropePMCAnnotationsView({
+            publicationId: publicationID,
+            el: '#europe-pmc-annotations'
         });
         util.attachExpandButtonCallback();
     });

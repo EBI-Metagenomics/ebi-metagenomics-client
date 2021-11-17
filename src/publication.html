@@ -29,7 +29,7 @@
                     </li>
                 </ul>
             </nav>
-            <h2>Publication <%= title %></h2>
+            <h2>Publication: <%= title %></h2>
             <h4><%= authors %></h4>
             <div class="row">
                 <div class="columns small-12 medium-12 large-12">
@@ -38,6 +38,20 @@
             </div>
             <div class="row">
                 <div id='publication-details' class="columns small-12 medium-12 large-12">
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns small-12 medium-12 large-12">
+                    <div class="europe-pmc-annotations row columns">
+                        <h4><a class="expand-button min" for="#europe-pmc-annotations">Europe PMC Annotations</a></h4>
+                        <div id='europe-pmc-annotations' class="box">
+                            <div class="loading-spinner">
+                                <img class="loading-gif-large"
+                                     src="{{htmlWebpackPlugin.options.templateData.subfolder}}/static/images/ajax-loader.gif"
+                                     alt="Loading...">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
