@@ -1,12 +1,10 @@
 import React, { useLayoutEffect, useRef, useState, useContext } from 'react';
-import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import UserContext from 'pages/Login/UserContext';
 
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
 
 import './style.css';
-
-type SomeComponentProps = RouteComponentProps;
 
 const pages = [
   { label: 'Overview', path: '/' },
@@ -24,7 +22,8 @@ const pages = [
 const START_POS = 100;
 const START_MARGIN = -8;
 
-const MainMenu: React.FC<SomeComponentProps> = ({ location }) => {
+const MainMenu: React.FC = () => {
+  const location = useLocation();
   const imgRef = useRef(null);
   const { isAuthenticated } = useContext(UserContext);
   const [animationState, setAnimationState] = useState({
@@ -87,4 +86,4 @@ const MainMenu: React.FC<SomeComponentProps> = ({ location }) => {
   );
 };
 
-export default withRouter(MainMenu);
+export default MainMenu;

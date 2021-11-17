@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const useQueryParamState: <S>(
   parameter: string,
   defaultValue: S
 ) => [string | S, (s: S) => void] = (parameter, defaultValue) => {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const parameters = new URLSearchParams(location.search);
   const [value, setValue] = useState(parameters.get(parameter) || defaultValue);
 
@@ -27,7 +27,7 @@ const useQueryParamState: <S>(
       parametersToChange.delete(parameter);
     }
     location.search = parametersToChange.toString();
-    history.push(location);
+    navigate(location);
   };
 
   return [value, setParameterInURL];
@@ -63,7 +63,7 @@ export const useQueryParametersState: (
   serializers = {}
 ) => {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const stateWithURL = useMemo(
     () => getQueryStateFromURL(initialState, location.search, serializers),
     [initialState, location.search, serializers]
@@ -102,7 +102,7 @@ export const useQueryParametersState: (
     // The default value is not displayed in the URL
     if (changed) {
       location.search = parametersToChange.toString();
-      history.push(location);
+      navigate(location);
     }
   };
 

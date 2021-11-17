@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useState, useEffect, useMemo } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import mergePrivateConfig from 'utils/config';
 import initialConfig from 'config.json';
@@ -59,35 +59,17 @@ const App: React.FC = () => {
         style={{ marginBottom: '1em', marginTop: '0.5em' }}
       >
         <Suspense fallback={<Loading size="large" />}>
-          <Switch>
-            <Route path="/about">
-              <About />
-            </Route>
-            <Route path="/help">
-              <Help />
-            </Route>
-            <Route path="/search">
-              <TextSearch />
-            </Route>
-            <Route path="/sequence-search">
-              <SequenceSearch />
-            </Route>
-            <Route path="/browse">
-              <Browse />
-            </Route>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/submit">
-              <Submit />
-            </Route>
-            <Route path="/studies">
-              <Study />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/search/*" element={<TextSearch />} />
+            <Route path="/sequence-search" element={<SequenceSearch />} />
+            <Route path="/browse/*" element={<Browse />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/submit" element={<Submit />} />
+            <Route path="/studies/*" element={<Study />} />
+          </Routes>
         </Suspense>
       </div>
       <ElixirBanner />

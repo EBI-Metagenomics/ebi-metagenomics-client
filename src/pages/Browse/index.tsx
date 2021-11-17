@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 import BrowseStudies from 'components/Browse/Studies';
 import BrowseSuperStudies from 'components/Browse/SuperStudies';
@@ -19,30 +19,20 @@ const tabs = [
 ];
 
 const Browse: React.FC = () => {
+  const loc = useLocation();
+  console.log(loc);
   return (
     <section className="vf-content">
       <h2>Browse Page.</h2>
       <Tabs tabs={tabs} />
-      <Switch>
-        <Route path="/browse/super-studies">
-          <BrowseSuperStudies />
-        </Route>
-        <Route path="/browse/studies">
-          <BrowseStudies />
-        </Route>
-        <Route path="/browse/samples">
-          <BrowseSamples />
-        </Route>
-        <Route path="/browse/publications">
-          <BrowsePublications />
-        </Route>
-        <Route path="/browse/genomes">
-          <BrowseGenomes />
-        </Route>
-        <Route>
-          <Redirect to="/browse/super-studies" />
-        </Route>
-      </Switch>
+      <Routes>
+        <Route path="super-studies" element={<BrowseSuperStudies />} />
+        <Route path="studies" element={<BrowseStudies />} />
+        <Route path="samples" element={<BrowseSamples />} />
+        <Route path="publications" element={<BrowsePublications />} />
+        <Route path="genomes" element={<BrowseGenomes />} />
+        <Route index element={<Navigate to="super-studies" replace />} />
+      </Routes>
     </section>
   );
 };

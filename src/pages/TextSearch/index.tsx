@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import MultipleOptionFilter from 'components/Search/Filter/MultipleOption';
 import HierarchyMultipleOptionFilter from 'src/components/Search/Filter/HierarchyMultipleOption';
@@ -192,81 +192,94 @@ const TextSearchPage: React.FC = () => {
         <Tabs tabs={tabs} />
         <section className="vf-grid">
           <div className="vf-stack vf-stack--200">
-            <Switch>
-              <Route path="/search/studies">
-                <HierarchyMultipleOptionFilter
-                  facetName="biome"
-                  header="Biome"
-                />
-                <MultipleOptionFilter
-                  facetName="centre_name"
-                  header="Centre Name"
-                  includeTextFilter
-                />
-              </Route>
-              <Route path="/search/samples">
-                <TemperatureFilter />
-                <DepthFilter />
-                <HierarchyMultipleOptionFilter
-                  facetName="biome"
-                  header="Biome"
-                />
-                <MultipleOptionFilter
-                  facetName="experiment_type"
-                  header="Experiment type"
-                />
-                <MultipleOptionFilter
-                  facetName="sequencing_method"
-                  header="Sequencing method"
-                />
-                <MultipleOptionFilter
-                  facetName="location_name"
-                  header="Location name"
-                  includeTextFilter
-                />
-                <MultipleOptionFilter
-                  facetName="disease_status"
-                  header="Disease status"
-                />
-                <MultipleOptionFilter
-                  facetName="phenotype"
-                  header="Phenotype"
-                />
-              </Route>
-              <Route path="/search/analyses">
-                <TemperatureFilter />
-                <DepthFilter />
-                <HierarchyMultipleOptionFilter
-                  facetName="organism"
-                  header="Organism"
-                />
-                <HierarchyMultipleOptionFilter
-                  facetName="biome"
-                  header="Biome"
-                />
-                <MultipleOptionFilter
-                  facetName="pipeline_version"
-                  header="Pipeline version"
-                />
-                <MultipleOptionFilter
-                  facetName="experiment_type"
-                  header="Experiment type"
-                />
-                <MultipleOptionFilter
-                  facetName="GO"
-                  header="GO"
-                  includeTextFilter
-                />
-                <MultipleOptionFilter
-                  facetName="INTERPRO"
-                  header="InterPro"
-                  includeTextFilter
-                />
-              </Route>
-              <Route>
-                <Redirect to="/search/studies" />
-              </Route>
-            </Switch>
+            <Routes>
+              <Route
+                path="studies"
+                element={
+                  <>
+                    <HierarchyMultipleOptionFilter
+                      facetName="biome"
+                      header="Biome"
+                    />
+                    <MultipleOptionFilter
+                      facetName="centre_name"
+                      header="Centre Name"
+                      includeTextFilter
+                    />
+                  </>
+                }
+              />
+              <Route
+                path="samples"
+                element={
+                  <>
+                    <TemperatureFilter />
+                    <DepthFilter />
+                    <HierarchyMultipleOptionFilter
+                      facetName="biome"
+                      header="Biome"
+                    />
+                    <MultipleOptionFilter
+                      facetName="experiment_type"
+                      header="Experiment type"
+                    />
+                    <MultipleOptionFilter
+                      facetName="sequencing_method"
+                      header="Sequencing method"
+                    />
+                    <MultipleOptionFilter
+                      facetName="location_name"
+                      header="Location name"
+                      includeTextFilter
+                    />
+                    <MultipleOptionFilter
+                      facetName="disease_status"
+                      header="Disease status"
+                    />
+                    <MultipleOptionFilter
+                      facetName="phenotype"
+                      header="Phenotype"
+                    />
+                  </>
+                }
+              />
+              <Route
+                path="analyses"
+                element={
+                  <>
+                    <TemperatureFilter />
+                    <DepthFilter />
+                    <HierarchyMultipleOptionFilter
+                      facetName="organism"
+                      header="Organism"
+                    />
+                    <HierarchyMultipleOptionFilter
+                      facetName="biome"
+                      header="Biome"
+                    />
+                    <MultipleOptionFilter
+                      facetName="pipeline_version"
+                      header="Pipeline version"
+                    />
+                    <MultipleOptionFilter
+                      facetName="experiment_type"
+                      header="Experiment type"
+                    />
+                    <MultipleOptionFilter
+                      facetName="GO"
+                      header="GO"
+                      includeTextFilter
+                    />
+                    <MultipleOptionFilter
+                      facetName="INTERPRO"
+                      header="InterPro"
+                      includeTextFilter
+                    />
+                  </>
+                }
+              />
+              <Route index element={<Navigate to="studies" replace />} />
+            </Routes>
           </div>
           <SearchTable />
         </section>

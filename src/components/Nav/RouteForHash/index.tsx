@@ -1,5 +1,5 @@
-import React from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type PropsType = {
   hash: string;
@@ -11,10 +11,12 @@ const RouteForHash: React.FC<PropsType> = ({
   children,
 }) => {
   const location = useLocation();
-  const history = useHistory();
-  if (location.hash === '' && isDefault) {
-    history.replace(hash);
-  }
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (location.hash === '' && isDefault) {
+      navigate(hash, { replace: true });
+    }
+  });
 
   if (location.hash === hash) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
