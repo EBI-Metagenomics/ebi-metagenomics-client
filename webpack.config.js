@@ -8,16 +8,17 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = function (env, options) {
   const isEnvProduction = options.mode === 'production';
-  const isEnvDevelopment = options.mode === 'development';
   return {
     mode: isEnvProduction ? 'production' : 'development',
     entry: './src/index.tsx',
     devtool: isEnvProduction ? 'source-map' : 'inline-source-map',
     devServer: {
-      contentBase: path.join(__dirname, 'dist'),
       port: 9000,
       hot: true,
-      contentBasePublicPath: '/metagenomics',
+      static: {
+        directory: path.join(__dirname, 'dist'),
+        publicPath: '/metagenomics',
+      },
       historyApiFallback: {
         rewrites: [
           {
@@ -79,7 +80,6 @@ module.exports = function (env, options) {
           filename: 'css/[name].[contenthash:8].css',
           chunkFilename: 'css/[name].[contenthash:8].chunk.css',
         }),
-      isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       new CleanWebpackPlugin(),
     ].filter(Boolean),
     optimization: {

@@ -18,6 +18,7 @@ export let Util = {
     },
     waitForSearchResults: function(rowSelector, numResults) {
         cy.get(rowSelector, {timeout: 10000}).should('have.length', parseInt(numResults));
+        cy.get('.mg-table-overlay', {timeout: 10000}).should('not.exist');
     },
     assertTableIsCleared: function() {
         cy.get('table tr.sample').should('not.exist');
