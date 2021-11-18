@@ -5,6 +5,7 @@ import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum } from 'hooks/data/useData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
+import TruncatedText from 'components/UI/TextTruncated';
 import { getBiomeIcon } from 'utils/biomes';
 
 import './style.css';
@@ -31,8 +32,7 @@ const LatestStudy: React.FC<LatestStudyProps> = ({
         </Link>
       </h3>
       <p className="vf-summary__text">
-        {abstract.substring(0, 250)}
-        {abstract.length >= 250 && '...'}
+        <TruncatedText text={abstract} />
       </p>
       <div className="vf-summary__text vf-grid">
         <Link to={`/studies/${id}`} className="vf-button vf-button--sm">

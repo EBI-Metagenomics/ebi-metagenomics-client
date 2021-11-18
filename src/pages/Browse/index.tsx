@@ -1,7 +1,5 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import BrowseStudies from 'components/Browse/Studies';
 import BrowseSuperStudies from 'components/Browse/SuperStudies';
@@ -19,8 +17,6 @@ const tabs = [
 ];
 
 const Browse: React.FC = () => {
-  const loc = useLocation();
-  console.log(loc);
   return (
     <section className="vf-content">
       <h2>Browse Page.</h2>
