@@ -1,40 +1,11 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-  ReactElement,
-} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
-// import { Link } from 'react-router-dom';
 
-import { Wrapper, Status } from '@googlemaps/react-wrapper';
 import MarkerClusterer from '@googlemaps/markerclustererplus';
 
-import Loading from 'components/UI/Loading';
-import FetchError from 'components/UI/FetchError';
-import useSamplesProvider from 'hooks/data/useSamplesProvider';
-import { ErrorTypes, MGnifyDatum } from 'hooks/data/useData';
+import { MGnifyDatum } from 'hooks/data/useData';
 
-import UserContext from 'pages/Login/UserContext';
 import './style.css';
-
-const LIMIT = 200;
-
-const render = (status: Status): ReactElement => {
-  if (status === Status.LOADING) return <Loading />;
-  if (status === Status.FAILURE)
-    return (
-      <FetchError
-        error={{
-          status: 200,
-          type: ErrorTypes.OtherError,
-          error: status,
-        }}
-      />
-    );
-  return null;
-};
 
 // TODO: make the link play nicer with react-router
 const MarkerPopup: React.FC<{ sample: MGnifyDatum }> = ({ sample }) => (
@@ -62,9 +33,10 @@ const ClusterMarkerPopup: React.FC<{ accessions: string[] }> = ({
 );
 
 type MapProps = {
-  data: Array<MGnifyDatum>;
+  samples: Array<MGnifyDatum>;
 };
-const MyMapComponent: React.FC<MapProps> = ({ data }) => {
+
+const SamplesMap: React.FC<MapProps> = ({ samples }) => {
   const ref = useRef();
   const [theMap, setTheMap] = useState(null);
   const markerCluster = useRef<MarkerClusterer>(null);
@@ -84,12 +56,12 @@ const MyMapComponent: React.FC<MapProps> = ({ data }) => {
     }
   }, [theMap]);
   useEffect(() => {
-    if (theMap && data) {
+    if (theMap && samples) {
       if (markerCluster.current) {
         markerCluster.current.clearMarkers();
       }
 
-      data
+      samples
         .filter(({ id }) => !(id in markers.current))
         .forEach((sample) => {
           const position = {
@@ -148,63 +120,9 @@ const MyMapComponent: React.FC<MapProps> = ({ data }) => {
 
       theMap.fitBounds(newBoundary.current);
     }
-  }, [theMap, data]);
+  }, [theMap, samples]);
 
   return <div ref={ref} id="map" style={{ height: '100%' }} />;
-};
-
-type SamplesMapProps = {
-  study: string;
-};
-const SamplesMap: React.FC<SamplesMapProps> = ({ study }) => {
-  const [limit, setLimit] = useState(LIMIT);
-  const { samples, total } = useSamplesProvider(study, limit);
-  const { config } = useContext(UserContext);
-
-  const samplesFiltered = samples.filter((sample) => {
-    try {
-      return (
-        Number(sample.attributes.longitude) !== 0.0 &&
-        Number(sample.attributes.latitude) !== 0.0
-      );
-    } catch {
-      return false;
-    }
-  });
-
-  return (
-    <div className="mg-map-container">
-      <div className="mg-map-wrapper">
-        <Wrapper apiKey={config.googleMapsKey} render={render}>
-          <MyMapComponent data={samplesFiltered} />
-        </Wrapper>
-      </div>
-      {total && (
-        <div className="mg-map-progress">
-          <progress max={total} value={samples.length} />
-          {total > limit && (
-            <div>
-              ⚠️ We are only loading the first {LIMIT} samples. Click{' '}
-              <button
-                type="button"
-                className="vf-button vf-button--link mg-button-as-link"
-                onClick={() => setLimit(total)}
-              >
-                HERE
-              </button>{' '}
-              to load them all.
-            </div>
-          )}
-          {samplesFiltered.length === 0 && (
-            <div>
-              ⚠️ None of the {total > limit ? 'loaded' : ''} samples have
-              geolocation co-ordinates.
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
 };
 
 export default SamplesMap;

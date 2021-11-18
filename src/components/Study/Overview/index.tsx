@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { MGnifyDatum } from 'hooks/data/useData';
-import SamplesMap from 'components/UI/SamplesMap';
+import SamplesMapByStudy from 'components/UI/SamplesMap/ByStudy';
 import Box from 'components/UI/Box';
 import { getBiomeIcon } from 'utils/biomes';
 import { Publication } from 'components/Publications';
@@ -35,7 +35,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
           </Box>
           <Box label="Description">{data.attributes['study-abstract']}</Box>
         </div>
-        <SamplesMap study={data.id} />
+        <SamplesMapByStudy study={data.id} />
       </div>
       <br />
       <div className="mg-flex">

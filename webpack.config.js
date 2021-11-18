@@ -25,10 +25,11 @@ module.exports = function (env, options) {
             from: /.*(\/(?:js|css|static)\/.+)$/,
             to: (context) => context.match[1],
           },
+          {
+            from: /.*/,
+            to: '/index.html',
+          },
         ],
-      },
-      devMiddleware: {
-        publicPath: '/metagenomics',
       },
     },
     module: {

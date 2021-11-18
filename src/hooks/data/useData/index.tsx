@@ -29,6 +29,11 @@ export type MGnifyDatum = {
         id: string;
       }>;
     };
+    biome?: {
+      data?: {
+        id: string;
+      };
+    };
     studies?: {
       data: Array<KeyValue>;
     };
