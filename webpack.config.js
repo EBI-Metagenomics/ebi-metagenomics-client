@@ -27,6 +27,9 @@ module.exports = function (env, options) {
           },
         ],
       },
+      devMiddleware: {
+        publicPath: '/metagenomics',
+      },
     },
     module: {
       rules: [

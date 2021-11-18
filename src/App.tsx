@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useState, useEffect, useMemo } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 
 import mergePrivateConfig from 'utils/config';
 import initialConfig from 'config.json';
@@ -50,34 +50,36 @@ const App: React.FC = () => {
     [config, details, user.isAuthenticated, user.username]
   );
   return (
-    <UserContext.Provider value={value}>
-      <LoginMonitor />
-      <EBIHeader />
-      <HeroHeader />
-      <MainMenu />
-      <div
-        className="vf-body"
-        style={{ marginBottom: '1em', marginTop: '0.5em' }}
-      >
-        <Suspense fallback={<Loading size="large" />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/help" element={<Help />} />
-            <Route path="/search/*" element={<TextSearch />} />
-            <Route path="/sequence-search" element={<SequenceSearch />} />
-            <Route path="/browse/*" element={<Browse />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/submit" element={<Submit />} />
-            <Route path="/studies/*" element={<Study />} />
-            <Route path="/super-studies/*" element={<SuperStudy />} />
-          </Routes>
-        </Suspense>
-      </div>
-      <ElixirBanner />
-      <EBIFooter />
-      <CookieBanner />
-    </UserContext.Provider>
+    <BrowserRouter basename={config.basename}>
+      <UserContext.Provider value={value}>
+        <LoginMonitor />
+        <EBIHeader />
+        <HeroHeader />
+        <MainMenu />
+        <div
+          className="vf-body"
+          style={{ marginBottom: '1em', marginTop: '0.5em' }}
+        >
+          <Suspense fallback={<Loading size="large" />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/help" element={<Help />} />
+              <Route path="/search/*" element={<TextSearch />} />
+              <Route path="/sequence-search" element={<SequenceSearch />} />
+              <Route path="/browse/*" element={<Browse />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/submit" element={<Submit />} />
+              <Route path="/studies/*" element={<Study />} />
+              <Route path="/super-studies/*" element={<SuperStudy />} />
+            </Routes>
+          </Suspense>
+        </div>
+        <ElixirBanner />
+        <EBIFooter />
+        <CookieBanner />
+      </UserContext.Provider>
+    </BrowserRouter>
   );
 };
 
