@@ -13,7 +13,7 @@ const RouteForHash: React.FC<PropsType> = ({
   const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
-    if (location.hash === '' && isDefault) {
+    if (location.hash === '' && hash !== '' && isDefault) {
       navigate(hash, { replace: true });
     }
   });
