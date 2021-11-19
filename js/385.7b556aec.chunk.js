@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkmgportalv2=self.webpackChunkmgportalv2||[]).push([[385],{385:e=>{e.exports=JSON.parse('{"googleMapsKey":"","basename":"/ebi-metagenomics-client"}')}}]);
