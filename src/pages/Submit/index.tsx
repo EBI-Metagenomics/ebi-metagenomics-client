@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import GlobalOverlayedContent from 'components/UI/GlobalOverlayedContent';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
+import ExtLink from 'components/UI/ExtLink';
 import UserContext, { getEmailsFromDetails } from 'pages/Login/UserContext';
 import useMgnifyEmail from 'hooks/data/useMgnifyEmail';
 
@@ -68,9 +69,9 @@ const SubmitPage: React.FC = () => {
       <p>
         With a valid ENA submitter account, you can submit your data directly
         using the{' '}
-        <a className="ext" href="https://www.ebi.ac.uk/ena/submit/sra/#home">
+        <ExtLink href="https://www.ebi.ac.uk/ena/submit/sra/#home">
           ENA Webin tool
-        </a>
+        </ExtLink>
         , which will help you describe your metadata and upload your sequence
         data.
       </p>

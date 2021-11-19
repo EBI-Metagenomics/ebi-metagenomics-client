@@ -6,6 +6,7 @@ import Box from 'components/UI/Box';
 import { getBiomeIcon } from 'utils/biomes';
 import { Publication } from 'components/Publications';
 import AnalysesTable from 'components/Analyses/Table';
+import ExtLink from 'components/UI/ExtLink';
 import UserContext from 'pages/Login/UserContext';
 
 type StudyOverviewProps = {
@@ -55,12 +56,11 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
             <Box label="External links">
               <ul className="vf-list">
                 <li>
-                  <a
-                    className="ext"
+                  <ExtLink
                     href={`${config.enaURL}/${data.attributes['secondary-accession']}`}
                   >
                     ENA website ({data.attributes['secondary-accession']})
-                  </a>
+                  </ExtLink>
                 </li>
               </ul>
             </Box>

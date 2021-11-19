@@ -1,0 +1,13 @@
+.vf-content a.mg-ext {
+  white-space: nowrap;
+  text-decoration: none;
+}
+.vf-content a.mg-ext:hover {
+  text-decoration: underline;
+}
+
+.mg-ext span.icon {
+  font-size: 0.7rem;
+  vertical-align: middle;
+  color: var(--vf-color--grey, #707372);
+}

@@ -32,7 +32,7 @@ export const Publication: React.FC<{
       <span className="mg-pub-year">{year}</span>){' '}
       <span className="mg-pub-doi">
         doi:
-        <a title={title} href={link} className="ext">
+        <a title={title} href={link} className="mg-ext">
           {doi}
         </a>
       </span>

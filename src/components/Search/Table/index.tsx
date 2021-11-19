@@ -3,6 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
+import ExtLink from 'components/UI/ExtLink';
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 
 // import './style.css';
@@ -25,12 +26,11 @@ const dataFor = {
         accessor: (study) => study?.fields?.ENA_PROJECT?.[0] || '',
         Cell: ({ cell }) => (
           <span>
-            <a
+            <ExtLink
               href={`https://www.ebi.ac.uk/ena/browser/view/${cell.value}`}
-              className="ext"
             >
               {cell.value}
-            </a>
+            </ExtLink>
           </span>
         ),
       },

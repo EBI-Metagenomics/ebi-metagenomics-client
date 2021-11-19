@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
+import ExtLink from 'components/UI/ExtLink';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
@@ -38,9 +39,9 @@ const BrowsePublications: React.FC = () => {
         Header: 'PMID',
         accessor: 'id',
         Cell: ({ cell }) => (
-          <a href={`https://europepmc.org/abstract/MED/${cell.value}`}>
+          <ExtLink href={`https://europepmc.org/abstract/MED/${cell.value}`}>
             {cell.value}
-          </a>
+          </ExtLink>
         ),
       },
       {

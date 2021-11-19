@@ -3,6 +3,7 @@ import React from 'react';
 import { MGnifyDatum } from 'hooks/data/useData';
 import SamplesMap from 'components/UI/SamplesMap/BySamplesArray';
 import Box from 'components/UI/Box';
+import ExtLink from 'components/UI/ExtLink';
 import { getBiomeIcon } from 'utils/biomes';
 
 type SampleOverviewProps = {
@@ -25,20 +26,18 @@ const SampleOverview: React.FC<SampleOverviewProps> = ({ data }) => {
           <Box label="External links">
             <ul>
               <li>
-                <a
-                  className="ext"
+                <ExtLink
                   href={`https://www.ebi.ac.uk/ena/browser/view/${data.attributes.accession}`}
                 >
                   ENA website ({data.attributes.accession})
-                </a>
+                </ExtLink>
               </li>
               <li>
-                <a
-                  className="ext"
+                <ExtLink
                   href={`https://www.ebi.ac.uk/biosamples/samples/${data.attributes.biosample}`}
                 >
                   EBI biosample ({data.attributes.biosample})
-                </a>
+                </ExtLink>
               </li>
             </ul>
           </Box>
