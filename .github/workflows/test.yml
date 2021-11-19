@@ -154,6 +154,12 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           directory: ${{ github.workspace }}/coverage/
+      - name: ⚙️ - Rebuild for deployment
+        if: github.ref == 'refs/heads/new-client'
+        run: |
+          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"basename\": \"\"}" > "$(pwd)/config.private.json"
+          npm run clean
+          npm run build
       - name: 🚀 - Deploy Site
         if: github.ref == 'refs/heads/new-client'
         uses: JamesIves/github-pages-deploy-action@3.7.1

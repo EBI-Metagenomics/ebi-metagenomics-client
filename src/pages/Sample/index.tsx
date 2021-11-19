@@ -9,7 +9,7 @@ import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Sample/Overview';
 
 const tabs = [
-  { label: 'Sample metadata', to: '#metadata' },
+  { label: 'Sample metadata', to: '#' },
   { label: 'Associated studies', to: '#studies' },
   { label: 'Analysed associated runs', to: '#runs' },
   { label: 'Analysed associated assemblies', to: '#assemblies' },

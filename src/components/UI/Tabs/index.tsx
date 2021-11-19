@@ -11,7 +11,6 @@ type TabsProps = {
 };
 const Tabs: React.FC<TabsProps> = ({ tabs }) => {
   const location = useLocation();
-
   return (
     <div className="vf-tabs mg-search-tabs">
       <ul className="vf-tabs__list">
@@ -20,7 +19,8 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
             <Link
               className={`vf-tabs__link ${
                 to === location.pathname ||
-                (to.startsWith('#') && to === location.hash)
+                (to.startsWith('#') && to === location.hash) ||
+                (to === '#' && '' === location.hash)
                   ? 'is-active'
                   : ''
               }`}
