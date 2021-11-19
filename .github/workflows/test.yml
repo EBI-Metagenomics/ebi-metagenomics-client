@@ -157,7 +157,7 @@ jobs:
       - name: ⚙️ - Rebuild for deployment
         if: github.ref == 'refs/heads/new-client'
         run: |
-          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"basename\": \"\"}" > "$(pwd)/config.private.json"
+          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"basename\": \"\/ebi-metagenomics-client\"}" > "$(pwd)/config.private.json"
           npm run clean
           npm run build
       - name: 🚀 - Deploy Site
