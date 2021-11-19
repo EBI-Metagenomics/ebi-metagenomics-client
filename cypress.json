@@ -7,5 +7,6 @@
   "videoCompression": false,
   "watchForFileChanges": false,
   "defaultCommandTimeout": 40000,
-  "ignoreTestFiles": "*.disabled"
+  "ignoreTestFiles": "*.disabled",
+  "retries": 3
 }
