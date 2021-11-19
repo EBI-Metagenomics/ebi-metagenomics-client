@@ -20,7 +20,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
               className={`vf-tabs__link ${
                 to === location.pathname ||
                 (to.startsWith('#') && to === location.hash) ||
-                (to === '#' && '' === location.hash)
+                (to === '#' && location.hash === '')
                   ? 'is-active'
                   : ''
               }`}
