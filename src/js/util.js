@@ -663,7 +663,8 @@ export const GenomesView = GenericTableView.extend({
             initialOrdering: null,
             initPageSize: initPageSize,
             isHeader: options.isPageHeader,
-            textFilter: options.filter,
+            textFilter: true,
+            hideIfEmpty: false,
             tableClass: options.tableClass,
             callback: function(page, pageSize, order, search) {
                 that.update({
