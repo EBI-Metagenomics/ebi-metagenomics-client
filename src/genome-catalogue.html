@@ -47,6 +47,18 @@
                   <div id="phylo-tab" class="tabs-panel">
                       <section id="phylo-section" class="table-container">
                           <h3>Taxonomy tree</h3>
+                          <div class="columns small-5 medium-5 large-5 float-right">
+                              <div id="genome-tax-filter">
+                                  <label for="tax-filter" style="flex-grow: 1">
+                                      Filter taxonomy: <input class="search" type="text" id="tax-filter">
+                                  </label>
+                                  <div id="tax-filter-result-controls" class="disabled">
+                                      <button id="tax-result-prev" class="button secondary small"><i class="icon icon-common icon-previous-page"></i></button>
+                                      <span id="tax-filter-counts"><span id="tax-filter-current">0</span>/<span id="tax-filter-total">0</span></span>
+                                      <button id="tax-result-next" class="button secondary small"><i class="icon icon-common icon-next-page"></i></button>
+                                  </div>
+                              </div>
+                          </div>
                           <div id="phylo-tree"></div>
                           <div>
                               The tree viewer is a derivative of the <a href="https://gtdb.ecogenomic.org/tree">GTDB
