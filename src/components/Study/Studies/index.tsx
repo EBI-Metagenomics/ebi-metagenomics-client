@@ -13,7 +13,12 @@ import { getBiomeIcon } from 'utils/biomes';
 
 const initialPageSize = 10;
 
-const AssociatedStudies: React.FC = () => {
+type AssociatedStudiesProps = {
+  rootEndpoint: string;
+};
+const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
+  rootEndpoint,
+}) => {
   const accession = useURLAccession();
   const [queryParameters] = useQueryParametersState(
     {
@@ -27,7 +32,7 @@ const AssociatedStudies: React.FC = () => {
     }
   );
   const { data, loading, error, isStale } = useMGnifyData(
-    `samples/${accession}/studies`,
+    `${rootEndpoint}/${accession}/studies`,
     {
       page: queryParameters['studies-page'] as number,
       ordering: queryParameters['studies-order'] as string,

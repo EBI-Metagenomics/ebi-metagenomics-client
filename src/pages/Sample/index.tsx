@@ -7,7 +7,7 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Sample/Overview';
-import AssociatedStudies from 'components/Sample/Studies';
+import AssociatedStudies from 'src/components/Study/Studies';
 import AssociatedRuns from 'components/Sample/Runs';
 import AssociatedAssemblies from 'components/Sample/Assemblies';
 import RouteForHash from 'components/Nav/RouteForHash';
@@ -48,7 +48,7 @@ const SamplePage: React.FC = () => {
                 />
               </RouteForHash>
               <RouteForHash hash="#studies">
-                <AssociatedStudies />
+                <AssociatedStudies rootEndpoint="samples" />
               </RouteForHash>
               <RouteForHash hash="#runs">
                 <AssociatedRuns />

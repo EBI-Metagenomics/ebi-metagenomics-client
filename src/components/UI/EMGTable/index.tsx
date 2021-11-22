@@ -86,7 +86,7 @@ type EMGTableProps = {
 const EMGTable: React.FC<EMGTableProps> = ({
   cols,
   data,
-  title,
+  title: Title,
   initialPage = 0,
   initialPageSize = 25,
   className = '',
@@ -214,7 +214,11 @@ const EMGTable: React.FC<EMGTableProps> = ({
           className={`vf-table--striped ${className}`}
           ref={tableRef}
         >
-          <caption className="vf-table__caption">{title}</caption>
+          {Title && (
+            <caption className="vf-table__caption">
+              {typeof Title === 'string' ? Title : <Title />}
+            </caption>
+          )}
           <thead className="vf-table__header">
             {headerGroups.map((headerGroup) => (
               <tr

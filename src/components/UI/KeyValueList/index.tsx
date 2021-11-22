@@ -1,7 +1,7 @@
 import React from 'react';
 
 type KeyValueProps = {
-  list: { key: string; value: string }[];
+  list: { key: string; value: string | React.ElementType }[];
 };
 
 const KeyValueList: React.FC<KeyValueProps> = ({ list }) => (
@@ -12,10 +12,10 @@ const KeyValueList: React.FC<KeyValueProps> = ({ list }) => (
       rowGap: '0.5rem',
     }}
   >
-    {list.map(({ key, value }) => (
+    {list.map(({ key, value: Value }) => (
       <React.Fragment key={key}>
         <div style={{ textAlign: 'right' }}>{key}:</div>
-        <div>{value}</div>
+        <div>{typeof Value === 'string' ? Value : <Value />}</div>
       </React.Fragment>
     ))}
   </div>
