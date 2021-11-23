@@ -37,7 +37,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
   initialValue,
 }) => {
   const { data: biomes, loading } = useMGnifyData(
-    'biomes/root/children?depth_gte=1&depth_lte=3&page_size=100'
+    'biomes/root/children?depth_gte=1&depth_lte=4&page_size=100'
   );
   const [value, setValue] = useState<OptionProps | undefined>();
   const options = React.useMemo(() => {
@@ -52,10 +52,17 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
       label: lineageLabel,
       options: childBiomes.map((biome) => ({
         value: biome,
-        label:
+        label: `${
+          (biome.attributes['lineage'] as string).replace(/[^:]/g, '').length >
+          2
+            ? ' - '
+            : ''
+        }${
           lineageLabel === biome.attributes['biome-name']
             ? `All ${lineageLabel}`
-            : biome.attributes['biome-name'],
+            : biome.attributes['biome-name']
+        }
+            `,
       })),
     }));
   }, [biomes, loading]);

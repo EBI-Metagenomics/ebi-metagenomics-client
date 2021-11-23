@@ -15,7 +15,7 @@ const Biome: React.FC<{ lineage: string; name: string; count: number }> = ({
   return (
     <div>
       <Link
-        to={`/metagenomics/browse?lineage=${lineage}#studies`}
+        to={`/browse/studies?biome=${lineage}`}
         className="vf-grid vf-grid__col-1 mg-link"
         style={{ textAlign: 'center', gridRowGap: '0.2em' }}
       >

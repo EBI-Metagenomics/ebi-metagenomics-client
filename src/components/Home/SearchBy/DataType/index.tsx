@@ -66,27 +66,52 @@ const DataTypeRow: React.FC<{ label: string; endpoint: string; link: string }> =
 
 const DataType: React.FC = () => {
   const analysesTypes = [
-    { type: 'amplicon', label: 'amplicon', link: '' },
-    { type: 'assembly', label: 'assemblies', link: '' },
-    { type: 'metabarcoding', label: 'metabarcoding', link: '' },
-    { type: 'metagenomic', label: 'metagenomes', link: '' },
-    { type: 'metatranscriptomic', label: 'metatranscriptomics', link: '' },
+    {
+      type: 'amplicon',
+      label: 'amplicon',
+      link: '/search/analyses?experiment_type=amplicon',
+    },
+    {
+      type: 'assembly',
+      label: 'assemblies',
+      link: '/search/analyses?experiment_type=assembly',
+    },
+    {
+      type: 'metabarcoding',
+      label: 'metabarcoding',
+      link: '/search/analyses?experiment_type=metabarcoding',
+    },
+    {
+      type: 'metagenomic',
+      label: 'metagenomes',
+      link: '/search/analyses?experiment_type=metagenomic',
+    },
+    {
+      type: 'metatranscriptomic',
+      label: 'metatranscriptomics',
+      link: '/search/analyses?experiment_type=metatranscriptomic',
+    },
+    {
+      type: 'long_reads_assembly',
+      label: 'Long Reads Assemblies',
+      link: '/search/analyses?experiment_type=long_reads_assembly',
+    },
   ];
   const types = [
     {
       label: 'studies',
       endpoint: 'metagenomics_projects',
-      link: '/search#projects',
+      link: '/search/studies',
     },
     {
       label: 'samples',
       endpoint: 'metagenomics_samples',
-      link: '/search#samples',
+      link: '/search/samples',
     },
     {
       label: 'analyses',
       endpoint: 'metagenomics_analyses',
-      link: '/search#analyses',
+      link: '/search/analyses',
     },
   ];
 
