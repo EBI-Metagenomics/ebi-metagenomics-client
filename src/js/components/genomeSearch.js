@@ -159,7 +159,7 @@ module.exports = Backbone.View.extend({
                 const accession = d.bigsi['sample_name'];
                 return [
                     '<a href="/metagenomics/genomes/' + accession + '">' + accession + '</a>',
-                    util.getSimpleTaxLineage(d.mgnify.attributes['taxon-lineage'], true),
+                    util.getSimpleTaxLineage(d.mgnify.attributes['taxon-lineage'], true, true),
                     d.mgnify.attributes['length'],
                     d.mgnify.attributes['num-contigs'],
                     d.mgnify.attributes['completeness'],

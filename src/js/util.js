@@ -627,7 +627,7 @@ export const GenomesView = GenericTableView.extend({
         {sortBy: 'num_genomes_total', name: 'Num. of genomes'},
         {sortBy: 'completeness', name: 'Completeness'},
         {sortBy: 'contamination', name: 'Contamination'},
-        {sortBy: null, name: 'Type'},
+        {sortBy: 'type', name: 'Type'},
         {sortBy: null, name: 'Taxonomy'},
         {sortBy: 'last_update', name: 'Last updated'}
     ],
@@ -647,7 +647,7 @@ export const GenomesView = GenericTableView.extend({
             attr.completeness,
             attr.contamination,
             attr.type,
-            getSimpleTaxLineage(attr.taxon_lineage, true),
+            getSimpleTaxLineage(attr.taxon_lineage, true, true),
             attr.last_updated
         ];
     },
@@ -944,10 +944,11 @@ export function wrapTextTooltip(text, tooltipText) {
 /**
  * Retrieve a non-blank taxonomic identity from the species level or upwards
  * @param {string} fullLineage
- * @param {bool} removePrefix true if this should remove the 'd|p|c|o|f|g|s__' prefix
+ * @param {boolean} removePrefix true if this should remove the 'd|p|c|o|f|g|s__' prefix
+ * @param {boolean} hoverForFull if true this returns a tooltip of the full lineage. if false, just text.
  * @return {string}
  */
-export function getSimpleTaxLineage(fullLineage, removePrefix) {
+export function getSimpleTaxLineage(fullLineage, removePrefix, hoverForFull=false) {
     const l = fullLineage.split(';');
     let head = l.pop();
     // Remove all until species
@@ -958,10 +959,17 @@ export function getSimpleTaxLineage(fullLineage, removePrefix) {
     while (head.length <= 3) {
         head = l.pop();
     }
+    let simple = head;
     if (removePrefix && head) {
-        return cleanTaxLineage(head);
+        simple = cleanTaxLineage(head);
     }
-    return head;
+    if (hoverForFull) {
+        return wrapTextTooltip(simple, cleanTaxLineage(fullLineage, ';')
+            .split(';')
+            .filter((d) => d.length > 0)
+            .join(' > '));
+    }
+    return simple;
 }
 
 /**
