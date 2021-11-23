@@ -33,6 +33,7 @@ module.exports = Backbone.View.extend({
         this.MAX_LEN = settings.max_len || 5000;
         this.MIN_LEN = settings.min_len || 50;
         this.API_URL = settings.api_url;
+        this.catalogue_id = settings.catalogue_id;
 
         this.$form = this.$('#search-form');
         this.$fastaFile = this.$('#fasta-file');
@@ -150,7 +151,8 @@ module.exports = Backbone.View.extend({
             url: that.API_URL,
             data: {
                 seq: sequence,
-                threshold: threshold
+                threshold: threshold,
+                catalogues_filter: that.catalogue_id
             }
         }).done((response) => {
             const data = response.results.map((d) => {
