@@ -6,10 +6,10 @@ import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
-import ExtLink from 'components/UI/ExtLink';
 import GenomesTable from 'components/Genomes/Table';
 import PhyloTree from 'components/Genomes/PhyloTree';
-import { processMDLinks } from 'utils/miniMDProcessor';
+import ReactMarkdown from 'react-markdown';
+
 import RouteForHash from 'components/Nav/RouteForHash';
 
 const tabs = [
@@ -29,23 +29,14 @@ const GenomePage: React.FC = () => {
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const { data: genomeData } = data as MGnifyResponseObj;
-  const blocks = processMDLinks(
-    (genomeData.attributes.description as string) || ''
-  );
   return (
     <section className="vf-content">
       <h2>{genomeData.attributes.name}</h2>
-      <p>
-        {blocks.map((block) =>
-          block.type === 'text' ? (
-            <span key={block.content}>{block.content}</span>
-          ) : (
-            <ExtLink key={block.content} href={block.href}>
-              {block.content}
-            </ExtLink>
-          )
-        )}
-      </p>
+      <div>
+        <ReactMarkdown>
+          {genomeData.attributes.description as string}
+        </ReactMarkdown>
+      </div>
       <Tabs tabs={tabs} />
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
@@ -54,6 +45,12 @@ const GenomePage: React.FC = () => {
           </RouteForHash>
           <RouteForHash hash="#phylo-tab">
             <PhyloTree />
+          </RouteForHash>
+          <RouteForHash hash="#protein-catalog-tab">
+            <h3>{genomeData.attributes['protein-catalogue-name'] as string}</h3>
+            <ReactMarkdown>
+              {genomeData.attributes['protein-catalogue-description'] as string}
+            </ReactMarkdown>
           </RouteForHash>
         </div>
       </section>
