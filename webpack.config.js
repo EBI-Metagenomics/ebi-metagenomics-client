@@ -26,7 +26,7 @@ module.exports = function (env, options) {
             to: (context) => context.match[1],
           },
           {
-            from: /.*/,
+            from: /.*(\/(?!json)\/.+)$/, // Excluding json from the fallback for HRM to work
             to: '/index.html',
           },
         ],

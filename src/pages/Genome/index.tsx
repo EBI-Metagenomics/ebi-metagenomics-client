@@ -8,6 +8,7 @@ import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import ExtLink from 'components/UI/ExtLink';
 import GenomesTable from 'components/Genomes/Table';
+import PhyloTree from 'components/Genomes/PhyloTree';
 import { processMDLinks } from 'utils/miniMDProcessor';
 import RouteForHash from 'components/Nav/RouteForHash';
 
@@ -50,6 +51,9 @@ const GenomePage: React.FC = () => {
         <div className="vf-stack vf-stack--200">
           <RouteForHash hash="" isDefault>
             <GenomesTable />
+          </RouteForHash>
+          <RouteForHash hash="#phylo-tab">
+            <PhyloTree />
           </RouteForHash>
         </div>
       </section>

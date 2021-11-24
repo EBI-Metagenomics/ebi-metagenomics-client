@@ -1,0 +1,30 @@
+.mg-hierarchy-selector {
+  display: flex;
+  margin-bottom: 5px;
+  transition: all 0.4s ease-out;
+  height: 0;
+  opacity: 0;
+}
+.mg-hierarchy-selector button,
+.mg-hierarchy-selector .mg-hierarchy-spacer {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+.mg-hierarchy-selector button.mg-expander {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.mg-hierarchy-selector div:last-child {
+  flex-grow: 2;
+}
+.mg-hierarchy-selector .mg-hierarchy-label {
+  background-color: var(--vf-color--green--lightest, #d0debb);
+  padding: 0.1rem;
+}
+
+.mg-hierarchy-selector.show {
+  height: 1rem;
+  opacity: 1;
+}

@@ -53,8 +53,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
       options: childBiomes.map((biome) => ({
         value: biome,
         label: `${
-          (biome.attributes['lineage'] as string).replace(/[^:]/g, '').length >
-          2
+          (biome.attributes.lineage as string).replace(/[^:]/g, '').length > 2
             ? ' - '
             : ''
         }${
