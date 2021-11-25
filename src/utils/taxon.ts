@@ -33,3 +33,17 @@ export function getSimpleTaxLineage(
   }
   return head;
 }
+
+export const TAXONOMY_COLOURS = [
+  '#058dc7',
+  '#82d23d',
+  '#e26736',
+  '#fbe300',
+  '#24cbe5',
+  '#c49ecc',
+  '#ffc08a',
+  '#708090',
+  '#6af9c4',
+  '#caae74',
+  '#cccccc',
+];

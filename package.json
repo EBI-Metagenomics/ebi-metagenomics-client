@@ -32,6 +32,8 @@
     "@googlemaps/markerclustererplus": "1.2.8",
     "@googlemaps/react-wrapper": "1.1.12",
     "@types/lodash": "4.14.177",
+    "highcharts": "9.3.1",
+    "highcharts-react-official": "3.1.0",
     "igv": "https://github.com/EBI-Metagenomics/igv.js/archive/v2.3.0+mgnify5.tar.gz",
     "lodash-es": "4.17.21",
     "react": "17.0.2",

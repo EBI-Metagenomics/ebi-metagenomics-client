@@ -1,17 +1,23 @@
 import React, { Suspense, lazy } from 'react';
 
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import Overview from 'components/Genomes/Overview';
-// import GenomeBrowser from 'components/Genomes/Browser';
+import useMGnifyData from 'hooks/data/useMGnifyData';
+import { MGnifyResponseObj } from 'hooks/data/useData';
+import useURLAccession from 'hooks/useURLAccession';
 import { cleanTaxLineage } from 'utils/taxon';
 
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
+const COGAnalysis = lazy(() => import('components/Genomes/COGAnalysis'));
+const KEGGClassAnalysis = lazy(
+  () => import('components/Genomes/KEGGClassAnalysis')
+);
+const KEGGModulesAnalysis = lazy(
+  () => import('components/Genomes/KEGGModulesAnalysis')
+);
 
 const tabs = [
   { label: 'Overview', to: '#overview' },
@@ -51,6 +57,21 @@ const GenomePage: React.FC = () => {
           <RouteForHash hash="#genome-browser">
             <Suspense fallback={<Loading size="large" />}>
               <GenomeBrowser />
+            </Suspense>
+          </RouteForHash>
+          <RouteForHash hash="#cog-analysis">
+            <Suspense fallback={<Loading size="large" />}>
+              <COGAnalysis />
+            </Suspense>
+          </RouteForHash>
+          <RouteForHash hash="#kegg-class-analysis">
+            <Suspense fallback={<Loading size="large" />}>
+              <KEGGClassAnalysis />
+            </Suspense>
+          </RouteForHash>
+          <RouteForHash hash="#kegg-module-analysis">
+            <Suspense fallback={<Loading size="large" />}>
+              <KEGGModulesAnalysis />
             </Suspense>
           </RouteForHash>
         </div>
