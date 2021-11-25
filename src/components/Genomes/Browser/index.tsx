@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
+import ReactDOMServer from 'react-dom/server';
 import igv from 'igv';
 
 import UserContext from 'pages/Login/UserContext';
 import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
+import GenomeBrowserPopup from './Popup';
 
 const GenomeBrowser: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -47,9 +49,9 @@ const GenomeBrowser: React.FC = () => {
   useEffect(() => {
     igv.createBrowser(divRef.current, options).then((browser) => {
       setLoading(false);
-      // browser.on('trackclick', (ignored, data) => {
-      //     return igvPopup(data);
-      // });
+      browser.on('trackclick', (ignored, data) =>
+        ReactDOMServer.renderToString(<GenomeBrowserPopup data={data} />)
+      );
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -26,8 +26,11 @@ declare module '*.png' {
 
 
 declare module 'igv' {
+  type Browser = {
+    on: (event: string, callback: (ignored: boolean, data: {name:string, value: string|number}[])=>unknown)=> void;
+  }
   const igv:{
-    createBrowser: (element: unknown, options:unknown)=> Promise<unknown>
+    createBrowser: (element: unknown, options:unknown)=> Promise<Browser>;
   }
   export default igv;
 }
