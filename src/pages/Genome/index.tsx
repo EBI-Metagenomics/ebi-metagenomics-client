@@ -5,6 +5,7 @@ import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import Overview from 'components/Genomes/Overview';
+import Downloads from 'components/Downloads';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseObj } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
@@ -73,6 +74,9 @@ const GenomePage: React.FC = () => {
             <Suspense fallback={<Loading size="large" />}>
               <KEGGModulesAnalysis />
             </Suspense>
+          </RouteForHash>
+          <RouteForHash hash="#downloads">
+            <Downloads endpoint="genomes" accession={accession} />
           </RouteForHash>
         </div>
       </section>

@@ -9,7 +9,7 @@ import React, {
 import { Column, usePagination, useSortBy, useTable } from 'react-table';
 
 import Loading from 'components/UI/Loading';
-import { MGnifyResponse } from 'src/hooks/data/useData';
+import { MGnifyResponse, MGnifyDatum } from 'src/hooks/data/useData';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import PaginationButton from './PaginationButton';
 
@@ -71,7 +71,7 @@ function getOrderingQueryParamFromSortedColumn(
 
 type EMGTableProps = {
   cols: Column[];
-  data: MGnifyResponse;
+  data: MGnifyResponse | Array<MGnifyDatum>;
   title?: string | React.ElementType;
   showPagination?: boolean;
   initialPage?: number;
@@ -124,12 +124,12 @@ const EMGTable: React.FC<EMGTableProps> = ({
   } = useTable(
     {
       columns: cols,
-      data: data.data,
+      data: (data as MGnifyResponse)?.data || data,
       initialState: {
         pageIndex: initialPage,
         pageSize: queryParameters[`${namespace}page_size`],
       },
-      pageCount: data.meta.pagination.pages,
+      pageCount: (data as MGnifyResponse)?.meta?.pagination?.pages || 1,
       manualPagination: true,
       manualSortBy: true,
     },
