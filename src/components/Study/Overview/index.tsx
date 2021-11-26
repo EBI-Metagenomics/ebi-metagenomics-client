@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { MGnifyDatum } from 'hooks/data/useData';
-import SamplesMapByStudy from 'components/UI/SamplesMap/ByStudy';
-import Box from 'components/UI/Box';
-import { getBiomeIcon } from 'utils/biomes';
 import { Publication } from 'components/Publications';
-import AnalysesTable from 'components/Analyses/Table';
+import AnalysesTable from 'components/Analysis/Analyses';
+import Box from 'components/UI/Box';
 import ExtLink from 'components/UI/ExtLink';
+import SamplesMapByStudy from 'components/UI/SamplesMap/ByStudy';
+import { MGnifyDatum } from 'hooks/data/useData';
+import { getBiomeIcon } from 'utils/biomes';
 import UserContext from 'pages/Login/UserContext';
 
 type StudyOverviewProps = {
@@ -88,7 +88,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
       </div>
       <br />
       <div>
-        <AnalysesTable />
+        <AnalysesTable rootEndpoint="studies" />
       </div>
     </section>
   );

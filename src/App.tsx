@@ -31,6 +31,7 @@ const SuperStudy = lazy(() => import('./pages/SuperStudy'));
 const Publication = lazy(() => import('./pages/Publication'));
 const GenomeCatalogue = lazy(() => import('./pages/GenomeCatalogue'));
 const Genome = lazy(() => import('./pages/Genome'));
+const Run = lazy(() => import('./pages/Run'));
 
 const App: React.FC = () => {
   const [user, setUser] = useState({
@@ -83,6 +84,7 @@ const App: React.FC = () => {
                 element={<GenomeCatalogue />}
               />
               <Route path="/genomes/*" element={<Genome />} />
+              <Route path="/runs/*" element={<Run />} />
             </Routes>
           </Suspense>
         </div>

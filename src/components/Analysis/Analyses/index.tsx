@@ -6,13 +6,17 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
+import { MGnifyResponseList, MGnifyDatum } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
 
 const initialPageSize = 10;
-const AnalysesTable: React.FC = () => {
+type AssociatedAnaysesProps = {
+  rootEndpoint: string;
+};
+
+const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const accession = useURLAccession();
   const [queryParameters] = useQueryParametersState(
     {
@@ -26,7 +30,7 @@ const AnalysesTable: React.FC = () => {
     }
   );
   const { data, loading, error, isStale } = useMGnifyData(
-    `studies/${accession}/analyses`,
+    `${rootEndpoint}/${accession}/analyses`,
     {
       include: 'sample',
       page: queryParameters['analyses-page'] as number,
@@ -36,6 +40,8 @@ const AnalysesTable: React.FC = () => {
   );
   if (loading && !isStale) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
+
+  if (!(data.data as MGnifyDatum[]).length) return null;
 
   const samples = {};
   data.included
@@ -79,7 +85,7 @@ const AnalysesTable: React.FC = () => {
     {
       id: 'assembly_id',
       Header: ' Run / Assembly accession',
-      accessor: (analysis) => analysis?.relationships?.sample?.data?.id || '',
+      accessor: (analysis) => analysis?.relationships?.assembly?.data?.id || '',
       Cell: ({ cell }) => (
         <Link to={`/assemblies/${cell.value}`}>{cell.value}</Link>
       ),
@@ -101,7 +107,7 @@ const AnalysesTable: React.FC = () => {
       ),
     },
   ];
-
+  const showPagination = (data.meta?.pagination?.count || 1) > initialPageSize;
   return (
     <EMGTable
       cols={columns}
@@ -113,6 +119,7 @@ const AnalysesTable: React.FC = () => {
       loading={loading}
       isStale={isStale}
       namespace="analyses-"
+      showPagination={showPagination}
     />
   );
 };

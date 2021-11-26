@@ -6,7 +6,7 @@ import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import TruncatedText from 'components/UI/TextTruncated';
 import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
+import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
@@ -41,6 +41,7 @@ const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
   );
   if (loading && !isStale) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
+  if (!(data.data as MGnifyDatum[]).length) return null;
 
   const columns = [
     {
@@ -82,6 +83,7 @@ const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
       Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
     },
   ];
+  const showPagination = (data.meta?.pagination?.count || 1) > initialPageSize;
 
   return (
     <EMGTable
@@ -93,6 +95,7 @@ const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
       loading={loading}
       isStale={isStale}
       namespace="studies-"
+      showPagination={showPagination}
     />
   );
 };

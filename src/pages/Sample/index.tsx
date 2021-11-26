@@ -9,7 +9,7 @@ import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Sample/Overview';
 import AssociatedStudies from 'src/components/Study/Studies';
 import AssociatedRuns from 'components/Sample/Runs';
-import AssociatedAssemblies from 'components/Sample/Assemblies';
+import AssociatedAssemblies from 'src/components/Assembly/Assemblies';
 import RouteForHash from 'components/Nav/RouteForHash';
 import KeyValueList from 'components/UI/KeyValueList';
 
@@ -54,7 +54,7 @@ const SamplePage: React.FC = () => {
                 <AssociatedRuns />
               </RouteForHash>
               <RouteForHash hash="#assemblies">
-                <AssociatedAssemblies />
+                <AssociatedAssemblies rootEndpoint="samples" />
               </RouteForHash>
             </div>
           </section>

@@ -18,6 +18,10 @@ export type KeyValue = {
   [key: string]: string | number | Record<string, unknown> | [];
 };
 
+type RelationshipDatum = {
+  id: string;
+  type: string;
+};
 export type MGnifyDatum = {
   attributes: KeyValue;
   id: string;
@@ -25,17 +29,22 @@ export type MGnifyDatum = {
   type: string;
   relationships: {
     biomes?: {
-      data?: Array<{
-        id: string;
-      }>;
+      data?: Array<RelationshipDatum>;
     };
     biome?: {
-      data?: {
-        id: string;
-      };
+      data?: RelationshipDatum;
     };
     studies?: {
       data: Array<KeyValue>;
+    };
+    study?: {
+      data: RelationshipDatum;
+    };
+    samples?: {
+      data: Array<KeyValue>;
+    };
+    sample?: {
+      data: RelationshipDatum;
     };
     [key: string]: unknown;
   };
