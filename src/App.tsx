@@ -33,6 +33,7 @@ const GenomeCatalogue = lazy(() => import('./pages/GenomeCatalogue'));
 const Genome = lazy(() => import('./pages/Genome'));
 const Run = lazy(() => import('./pages/Run'));
 const Assembly = lazy(() => import('./pages/Assembly'));
+const Pipelines = lazy(() => import('./pages/Pipelines'));
 
 const App: React.FC = () => {
   const [user, setUser] = useState({
@@ -87,6 +88,7 @@ const App: React.FC = () => {
               <Route path="/genomes/*" element={<Genome />} />
               <Route path="/runs/*" element={<Run />} />
               <Route path="/assemblies/*" element={<Assembly />} />
+              <Route path="/pipelines/*" element={<Pipelines />} />
             </Routes>
           </Suspense>
         </div>
