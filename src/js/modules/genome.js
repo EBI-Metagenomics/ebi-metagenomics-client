@@ -75,12 +75,6 @@ let GenomeView = Backbone.View.extend({
                 if (attr.pangenome_accessory_size) {
                     pangenomeStats['Pan-genome accessory size'] = attr.pangenome_accessory_size;
                 }
-                if (attr.pangenome_ipr_cov) {
-                    pangenomeStats['Pan-genome InterPro coverage'] = attr.pangenome_ipr_cov + '%';
-                }
-                if (attr.pangenome_eggnog_cov) {
-                    pangenomeStats['Pan-genome EggNOG coverage'] = attr.pangenome_eggnog_cov + '%';
-                }
 
                 let rnaStats = {
                     'rRNA 5s total gene length coverage': attr.rna_5s + '%',
@@ -167,7 +161,6 @@ function loadCog(genome) {
     const cogColumn = new charts.GenomeCogColumnChart(
         'cog-column',
         {accession: genomeId},
-        {includePangenome: loadPangenomeData}
     );
     cogColumn.loaded.done(() => {
         let headers = [
@@ -175,15 +168,8 @@ function loadCog(genome) {
             {sortBy: 'a', name: 'Description'},
             {sortBy: 'a', name: 'Genome count'}
         ];
-        if (loadPangenomeData) {
-            headers.push({sortBy: 'a', name: 'Pan-genome count'});
-        }
         const data = cogColumn.data.map((e) => {
-            let r = [e.name, e.description, e['genome-count']];
-            if (loadPangenomeData) {
-                r.push(e['pangenome-count']);
-            }
-            return r;
+            return [e.name, e.description, e['genome-count']];
         });
         const options = {
             title: '',
@@ -205,7 +191,6 @@ function loadKeggClass(genome) {
     const keggColumn = new charts.GenomeKeggClassColumnChart(
         'kegg-class-column',
         {accession: genomeId},
-        {includePangenome: loadPangenomeData}
     );
     keggColumn.loaded.done(() => {
         let headers = [
@@ -213,15 +198,8 @@ function loadKeggClass(genome) {
             {sortBy: 'a', name: 'Description'},
             {sortBy: 'a', name: 'Genome count'}
         ];
-        if (loadPangenomeData) {
-            headers.push({sortBy: 'a', name: 'Pan-genome count'});
-        }
         const data = keggColumn.data.map((e) => {
-            let r = [e['class-id'], e.name, e['genome-count']];
-            if (loadPangenomeData) {
-                r.push(e['pangenome-count']);
-            }
-            return r;
+            return [e['class-id'], e.name, e['genome-count']];
         });
         const options = {
             title: '',
@@ -242,8 +220,7 @@ function loadKeggModule(genome) {
     const loadPangenomeData = genome.get('num_genomes_total') > 1;
     const keggColumn = new charts.GenomeKeggModuleColumnChart(
         'kegg-module-column',
-        {accession: genomeId},
-        {includePangenome: loadPangenomeData}
+        {accession: genomeId}
     );
     keggColumn.loaded.done(() => {
         let headers = [
@@ -251,15 +228,8 @@ function loadKeggModule(genome) {
             {sortBy: 'a', name: 'Description'},
             {sortBy: 'a', name: 'Genome count'}
         ];
-        if (loadPangenomeData) {
-            headers.push({sortBy: 'a', name: 'Pan-genome count'});
-        }
         const data = keggColumn.data.map((e) => {
-            let r = [e.name, e.description, e['genome-count']];
-            if (loadPangenomeData) {
-                r.push(e['pangenome-count']);
-            }
-            return r;
+            return [e.name, e.description, e['genome-count']];
         });
         const options = {
             title: '',
