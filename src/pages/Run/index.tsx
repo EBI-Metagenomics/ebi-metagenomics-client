@@ -60,10 +60,10 @@ const RunPage: React.FC = () => {
   ];
   return (
     <section className="vf-content">
-      <h2>Run: {runData?.attributes?.['pub-title'] || ''}</h2>
+      <h2>Run: {runData?.id || ''}</h2>
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
-          <Box label="Publication details">
+          <Box label="Description">
             <KeyValueList list={details} />
           </Box>
           <Box label="Associated analyses">

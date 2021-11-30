@@ -46,6 +46,12 @@ export type MGnifyDatum = {
     sample?: {
       data: RelationshipDatum;
     };
+    runs?: {
+      data: Array<KeyValue>;
+    };
+    run?: {
+      data: RelationshipDatum;
+    };
     [key: string]: unknown;
   };
 };
