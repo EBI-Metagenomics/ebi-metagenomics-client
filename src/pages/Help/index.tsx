@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 import ExtLink from 'components/UI/ExtLink';
 
 import './style.css';
@@ -42,6 +42,9 @@ const HelpPage: React.FC = () => {
             FAQ
           </ExtLink>
           .
+          <br />
+          Alternatively you can see a high level view of the pipelines{' '}
+          <Link to="/pipelines">HERE</Link>.
         </p>
       </article>
 
