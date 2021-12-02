@@ -14,8 +14,14 @@ interface MgnifyDataResponse extends DataResponse {
 const useMGnifyData: (
   endpoint: string,
   parameters?: KeyValue,
-  fetchOptions?: RequestInit
-) => MgnifyDataResponse = (endpoint, parameters = {}, fetchOptions = {}) => {
+  fetchOptions?: RequestInit,
+  format?: ResponseFormat
+) => MgnifyDataResponse = (
+  endpoint,
+  parameters = {},
+  fetchOptions = {},
+  format = ResponseFormat.JSON
+) => {
   const { config } = useContext(UserContext);
   const defaultParameters = {};
   const cleanedParameters = Object.fromEntries(
@@ -29,7 +35,7 @@ const useMGnifyData: (
       .join('&')}`;
   const data = useData(
     [null, undefined].includes(endpoint) ? null : url,
-    ResponseFormat.JSON,
+    format,
     fetchOptions
   );
   return data as MgnifyDataResponse;

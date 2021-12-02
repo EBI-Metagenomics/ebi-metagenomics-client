@@ -10,8 +10,7 @@ import KeyValueList from 'components/UI/KeyValueList';
 import ExtLink from 'components/UI/ExtLink';
 import { Link } from 'react-router-dom';
 import AssociatedAnalyses from 'src/components/Analysis/Analyses';
-
-const ENA_VIEW_URL = 'https://www.ebi.ac.uk/ena/browser/view/';
+import { ENA_VIEW_URL } from 'utils/urls';
 
 const AssemblyPage: React.FC = () => {
   const accession = useURLAccession();

@@ -4,12 +4,14 @@ export enum ResponseFormat {
   JSON,
   HTML,
   TXT,
+  TSV,
 }
 
 export enum ErrorTypes {
   FetchError,
   NotOK,
   JSONError,
+  TSVError,
   NullURL,
   OtherError,
 }
@@ -44,6 +46,12 @@ export type MGnifyDatum = {
       data: Array<KeyValue>;
     };
     sample?: {
+      data: RelationshipDatum;
+    };
+    assemblies?: {
+      data: Array<KeyValue>;
+    };
+    assembly?: {
       data: RelationshipDatum;
     };
     runs?: {
@@ -179,6 +187,26 @@ async function fetchData(
           error: {
             error,
             type: ErrorTypes.JSONError,
+          },
+          loading: false,
+          isStale: false,
+          rawResponse: response,
+        });
+        return;
+      }
+      break;
+    case ResponseFormat.TSV:
+      try {
+        const text = await response.text();
+        data = text
+          .split('\n')
+          .filter(Boolean)
+          .map((line) => line.split('\t'));
+      } catch (error) {
+        updateState({
+          error: {
+            error,
+            type: ErrorTypes.TSVError,
           },
           loading: false,
           isStale: false,

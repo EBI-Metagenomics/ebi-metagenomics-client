@@ -5,6 +5,7 @@ import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import ExtLink from 'components/UI/ExtLink';
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
+import { ENA_VIEW_URL } from 'utils/urls';
 
 // import './style.css';
 
@@ -26,11 +27,7 @@ const dataFor = {
         accessor: (study) => study?.fields?.ENA_PROJECT?.[0] || '',
         Cell: ({ cell }) => (
           <span>
-            <ExtLink
-              href={`https://www.ebi.ac.uk/ena/browser/view/${cell.value}`}
-            >
-              {cell.value}
-            </ExtLink>
+            <ExtLink href={ENA_VIEW_URL + cell.value}>{cell.value}</ExtLink>
           </span>
         ),
       },
