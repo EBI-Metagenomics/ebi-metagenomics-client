@@ -3,15 +3,14 @@ import KeyValueList from 'components/UI/KeyValueList';
 import ExtLink from 'components/UI/ExtLink';
 import { MGnifyDatum } from 'hooks/data/useData';
 import { cleanTaxLineage } from 'utils/taxon';
-
-const ENA_VIEW_URL = 'https://www.ebi.ac.uk/ena/browser/view/';
-
-const IMG_URL =
-  ' https://img.jgi.doe.gov/cgi-bin/m/main.cgi?section=TaxonDetail&page=taxonDetail&taxon_oid=';
-const NCBI_ASSEMBLY_URL = 'https://www.ncbi.nlm.nih.gov/assembly/';
-const NCBI_SAMPLE_URL = 'https://www.ncbi.nlm.nih.gov/biosample/?term=';
-const NCBI_PROJECT_URL = 'https://www.ncbi.nlm.nih.gov/bioproject/';
-const PATRIC_URL = 'https://www.patricbrc.org/view/Genome/';
+import {
+  ENA_VIEW_URL,
+  IMG_URL,
+  NCBI_ASSEMBLY_URL,
+  NCBI_PROJECT_URL,
+  NCBI_SAMPLE_URL,
+  PATRIC_URL,
+} from 'src/utils/urls';
 
 type GenomeOverviewProps = {
   data: MGnifyDatum;
@@ -252,12 +251,12 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
               },
               {
                 key: 'NCBI study accession',
-                value: data.attributes['ncbi-study-accessi']
+                value: data.attributes['ncbi-study-accession']
                   ? () => (
                       <ExtLink
                         href={
                           NCBI_PROJECT_URL +
-                          data.attributes['ncbi-study-accessi']
+                          data.attributes['ncbi-study-accession']
                         }
                       >
                         {data.attributes['ncbi-study-accession']}

@@ -5,6 +5,7 @@ import SamplesMap from 'components/UI/SamplesMap/BySamplesArray';
 import Box from 'components/UI/Box';
 import ExtLink from 'components/UI/ExtLink';
 import { getBiomeIcon } from 'utils/biomes';
+import { ENA_VIEW_URL } from 'utils/urls';
 
 type SampleOverviewProps = {
   data: MGnifyDatum;
@@ -26,9 +27,7 @@ const SampleOverview: React.FC<SampleOverviewProps> = ({ data }) => {
           <Box label="External links">
             <ul>
               <li>
-                <ExtLink
-                  href={`https://www.ebi.ac.uk/ena/browser/view/${data.attributes.accession}`}
-                >
+                <ExtLink href={ENA_VIEW_URL + data.attributes.accession}>
                   ENA website ({data.attributes.accession})
                 </ExtLink>
               </li>

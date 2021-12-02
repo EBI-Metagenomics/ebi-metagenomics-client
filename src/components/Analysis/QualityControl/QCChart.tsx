@@ -1,0 +1,122 @@
+import React, { useRef } from 'react';
+import * as Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+
+import Loading from 'components/UI/Loading';
+import FetchError from 'components/UI/FetchError';
+import useMGnifyData from 'hooks/data/useMGnifyData';
+import { MGnifyDatum, ResponseFormat } from 'hooks/data/useData';
+import useURLAccession from 'hooks/useURLAccession';
+
+type QualityControlProps = {
+  analysisData: MGnifyDatum;
+};
+const QualityControlChart: React.FC<QualityControlProps> = ({
+  analysisData,
+}) => {
+  const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+  const accession = useURLAccession();
+  const { data, loading, error } = useMGnifyData(
+    `analyses/${accession}/summary`,
+    {},
+    {},
+    ResponseFormat.TSV
+  );
+  const isAssembly = analysisData.attributes['experiment-type'] === 'assembly';
+
+  if (loading) return <Loading size="large" />;
+  if (error) return <FetchError error={error} />;
+  if (!data) return <Loading />;
+  const unit = isAssembly ? 'contigs' : 'reads';
+  const capUnit = isAssembly ? 'Contigs' : 'Reads';
+  const summaryData = Object.fromEntries(
+    data as unknown as Array<[k: string, v: string]>
+  );
+  const remaining = [0, 0, 0, 0, 0];
+  const filtered = [0, 0, 0, 0, 0];
+  const subsampled = [0, 0, 0, 0, 0];
+
+  const analysisSummary = {};
+  (
+    (analysisData.attributes?.['analysis-summary'] as {
+      key: string;
+      value: string;
+    }[]) || []
+  ).forEach(({ key, value }) => {
+    analysisSummary[key] = value;
+  });
+
+  subsampled[4] = Number(summaryData.sequence_count);
+  remaining[0] = Number(analysisSummary['Submitted nucleotide sequences']);
+  remaining[1] = Number(
+    analysisSummary['Nucleotide sequences after format-specific filtering']
+  );
+  remaining[2] = Number(
+    analysisSummary['Nucleotide sequences after length filtering']
+  );
+  remaining[3] = Number(
+    analysisSummary['Nucleotide sequences after undetermined bases filtering']
+  );
+  filtered[2] = remaining[1] - remaining[2];
+  filtered[1] = remaining[0] - remaining[1];
+  filtered[4] = remaining[3] - remaining[4] - subsampled[4];
+
+  const options = {
+    chart: {
+      type: 'bar',
+      height: 240,
+    },
+    title: {
+      text: `Number of sequence ${unit} per QC step`,
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'Count',
+      },
+    },
+    xAxis: {
+      categories: [
+        `Initial ${unit}`,
+        'Trimming',
+        'Length filtering',
+        'Ambiguous base filtering',
+        `${capUnit} subsampled for QC analysis`,
+      ],
+    },
+    plotOptions: {
+      series: {
+        stacking: 'normal',
+      },
+    },
+    credits: {
+      enabled: false,
+    },
+    series: [
+      {
+        name: `${capUnit} filtered out`,
+        data: filtered,
+        color: '#CCCCD3',
+      },
+      {
+        name: `${capUnit} remaining`,
+        data: remaining,
+        color: '#058DC7',
+      },
+      {
+        name: `${capUnit} after sampling`,
+        data: subsampled,
+        color: '#8dc7c7',
+      },
+    ],
+  };
+  return (
+    <HighchartsReact
+      highcharts={Highcharts}
+      options={options}
+      ref={chartComponentRef}
+    />
+  );
+};
+
+export default QualityControlChart;
