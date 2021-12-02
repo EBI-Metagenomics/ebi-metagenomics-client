@@ -1,0 +1,1 @@
+{"version":3,"file":"css/128.26ebe93e.chunk.css","mappings":"AAAA,cAEE,WAAY,CADZ,UAEF","sources":["webpack://mgportalv2/./src/components/Analysis/QualityControl/style.css"],"sourcesContent":[".run-qc-chart {\n  width: 100%;\n  height: 15em;\n}\n"],"names":[],"sourceRoot":""}
