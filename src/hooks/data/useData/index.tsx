@@ -111,8 +111,16 @@ export type ErrorFromFetch = {
   error?: unknown;
 };
 
+export type TSVResponse = Array<string>[];
+
 export interface DataResponse {
-  data: null | KeyValue | MGnifyResponse | BlogResponse | HTMLHtmlElement;
+  data:
+    | null
+    | KeyValue
+    | MGnifyResponse
+    | BlogResponse
+    | HTMLHtmlElement
+    | TSVResponse;
   error: ErrorFromFetch | null;
   loading: boolean;
   isStale: boolean;

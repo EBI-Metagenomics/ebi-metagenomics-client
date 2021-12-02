@@ -76,7 +76,7 @@ const AnalysisPage: React.FC = () => {
             <Overview data={analysisData} />
           </RouteForHash>
           <RouteForHash hash="#qc">
-            <QualityControl data={analysisData} />
+            <QualityControl analysisData={analysisData} />
           </RouteForHash>
         </div>
       </section>

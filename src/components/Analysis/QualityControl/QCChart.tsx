@@ -2,36 +2,24 @@ import React, { useRef } from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-import Loading from 'components/UI/Loading';
-import FetchError from 'components/UI/FetchError';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyDatum, ResponseFormat } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
+import { MGnifyDatum } from 'hooks/data/useData';
 
 type QualityControlProps = {
   analysisData: MGnifyDatum;
+  summaryData: {
+    [key: string]: string;
+  };
 };
 const QualityControlChart: React.FC<QualityControlProps> = ({
   analysisData,
+  summaryData,
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const accession = useURLAccession();
-  const { data, loading, error } = useMGnifyData(
-    `analyses/${accession}/summary`,
-    {},
-    {},
-    ResponseFormat.TSV
-  );
   const isAssembly = analysisData.attributes['experiment-type'] === 'assembly';
 
-  if (loading) return <Loading size="large" />;
-  if (error) return <FetchError error={error} />;
-  if (!data) return <Loading />;
   const unit = isAssembly ? 'contigs' : 'reads';
   const capUnit = isAssembly ? 'Contigs' : 'Reads';
-  const summaryData = Object.fromEntries(
-    data as unknown as Array<[k: string, v: string]>
-  );
+
   const remaining = [0, 0, 0, 0, 0];
   const filtered = [0, 0, 0, 0, 0];
   const subsampled = [0, 0, 0, 0, 0];

@@ -1,26 +1,87 @@
 import React from 'react';
 
-import { MGnifyDatum } from 'hooks/data/useData';
+import useURLAccession from 'hooks/useURLAccession';
+import useMGnifyData from 'hooks/data/useMGnifyData';
+import Loading from 'components/UI/Loading';
+import FetchError from 'components/UI/FetchError';
+import { MGnifyDatum, ResponseFormat } from 'hooks/data/useData';
 import QualityControlChart from './QCChart';
-
+import ContigsHistogram from './ContigsHistogram';
+import NucleotidesHistogram from './NucleotidesHistogram';
+import ContigsDistribution from './ContigsDistribution';
+import SeqLengthChart from './SeqLengthChart';
+import GCContentChart from './GCContentChart';
 import './style.css';
 
 type QualityControlProps = {
-  data: MGnifyDatum;
+  analysisData: MGnifyDatum;
 };
-const QualityControl: React.FC<QualityControlProps> = ({ data }) => {
-  const isAssembly = data.attributes['experiment-type'] === 'assembly';
+const QualityControl: React.FC<QualityControlProps> = ({ analysisData }) => {
+  const accession = useURLAccession();
+  const { data, loading, error } = useMGnifyData(
+    `analyses/${accession}/summary`,
+    {},
+    {},
+    ResponseFormat.TSV
+  );
+  if (loading) return <Loading size="large" />;
+  if (error) return <FetchError error={error} />;
+  if (!data) return <Loading />;
+  const summaryData = Object.fromEntries(
+    data as unknown as Array<[k: string, v: string]>
+  );
+
+  const isAssembly = analysisData.attributes['experiment-type'] === 'assembly';
+  const unit = isAssembly ? 'contig' : 'read';
+  const units = isAssembly ? 'contigs' : 'reads';
 
   return (
     <div className="vf-stack vf-stack--200">
       <p>
-        The chart below shows the number of {isAssembly ? 'contigs' : 'reads'}{' '}
-        which pass the quality control steps in the pipeline. Paired-end
-        sequences may have been merged, in which case the initial number of{' '}
-        {isAssembly ? 'contigs' : 'reads'} may differ from the number given by
-        ENA.
+        The chart below shows the number of {units} which pass the quality
+        control steps in the pipeline. Paired-end sequences may have been
+        merged, in which case the initial number of {units} may differ from the
+        number given by ENA.
       </p>
-      <QualityControlChart analysisData={data} />
+      <QualityControlChart
+        analysisData={analysisData}
+        summaryData={summaryData}
+      />
+      {Number(analysisData.attributes['pipeline-version']) > 2 && (
+        <>
+          <p>
+            The histograms below show the distributions of sequence lengths
+            (left) and percentage GC content (right) for the sequences having
+            passed quality control. Note that for large files, the distributions
+            were compiled from a random subset of 2 million
+            {units}. The standard deviations are shown on each plot. The bar
+            chart underneath each graph indicates the minimum, mean and maximum
+            length and mean GC and AT content, respectively.
+          </p>
+          <div className="vf-grid vf-grid__col-2">
+            <div className="vf-stack">
+              <ContigsHistogram
+                analysisData={analysisData}
+                summaryData={summaryData}
+              />
+              <SeqLengthChart summaryData={summaryData} />
+            </div>
+            <div className="vf-stack">
+              <ContigsDistribution
+                analysisData={analysisData}
+                summaryData={summaryData}
+              />
+              <GCContentChart summaryData={summaryData} />
+            </div>
+          </div>
+          <p>
+            The graph below show the relative abundance of nucletotides (A, C,
+            G, T, or ambiguous base &quot;N&quot;) at each position starting
+            from the beginning of each {unit} up to the first 500 base pairs.
+          </p>
+          <NucleotidesHistogram />
+        </>
+      )}
     </div>
   );
 };
