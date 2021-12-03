@@ -1,3 +1,6 @@
+.mg-table {
+  width: 100%;
+}
 .mg-table-footer {
   position: sticky;
   bottom: 0;
@@ -39,4 +42,9 @@
   50% {
     opacity: 0.2;
   }
+}
+.mg-table-caption > div {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 }

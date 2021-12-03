@@ -14,6 +14,7 @@ import { useQueryParametersState } from 'hooks/useQueryParamState';
 import PaginationButton from './PaginationButton';
 
 import './style.css';
+import TextInputDebounced from '../TextInputDebounced';
 
 type PaginationRanges = {
   startingPages: number[];
@@ -74,6 +75,7 @@ type EMGTableProps = {
   data: MGnifyResponse | Array<MGnifyDatum>;
   title?: string | React.ElementType;
   showPagination?: boolean;
+  showTextFilter?: boolean;
   initialPage?: number;
   initialPageSize?: number;
   className?: string;
@@ -92,6 +94,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
   className = '',
   namespace = '',
   showPagination = true,
+  showTextFilter = false,
   sortable = false,
   loading = false,
   isStale = false,
@@ -101,6 +104,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
       [`${namespace}page`]: 1,
       [`${namespace}order`]: '',
       [`${namespace}page_size`]: initialPageSize,
+      [`${namespace}search`]: initialPageSize,
     },
     {
       [`${namespace}page`]: Number,
@@ -211,12 +215,15 @@ const EMGTable: React.FC<EMGTableProps> = ({
         <div className={loading && isStale ? 'mg-table-overlay' : undefined} />
         <table
           {...getTableProps}
-          className={`vf-table--striped ${className}`}
+          className={`vf-table--striped mg-table ${className}`}
           ref={tableRef}
         >
           {Title && (
-            <caption className="vf-table__caption">
-              {typeof Title === 'string' ? Title : <Title />}
+            <caption className="vf-table__caption mg-table-caption">
+              <div>
+                {typeof Title === 'string' ? Title : <Title />}
+                {showTextFilter && <TextInputDebounced namespace={namespace} />}
+              </div>
             </caption>
           )}
           <thead className="vf-table__header">

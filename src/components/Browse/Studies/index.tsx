@@ -17,6 +17,7 @@ const BrowseStudies: React.FC = () => {
       order: '',
       biome: 'root',
       page_size: 25,
+      search: '',
     },
     {
       page: Number,
@@ -33,6 +34,7 @@ const BrowseStudies: React.FC = () => {
     ordering: queryParameters.order as string,
     lineage: queryParameters.biome as string,
     page_size: queryParameters.page_size as number,
+    search: (queryParameters.search as string) || undefined,
   });
 
   const columns = React.useMemo(
@@ -104,6 +106,7 @@ const BrowseStudies: React.FC = () => {
           sortable
           loading={loading}
           isStale={isStale}
+          showTextFilter
         />
       )}
     </section>
