@@ -54,13 +54,6 @@ let GenomeView = Backbone.View.extend({
                 // eslint-disable-next-line security/detect-object-injection
                 genomeStats[n50Tooltip] = attr.n_50;
 
-                if (attr.cmseq) {
-                    genomeStats['Strain heterogeneity (CMseq)'] = attr.cmseq;
-                }
-                if (attr.taxincons) {
-                    genomeStats['Taxonomic inconsistency (CAT)'] = attr.taxincons;
-                }
-
                 let genomeAnnotationStats = {
                     'InterPro coverage': attr.ipr_cov + '%',
                     'EggNog coverage': attr.eggnog_cov + '%'
@@ -187,7 +180,6 @@ function loadCog(genome) {
  * @param {Genome} genome Genome model
  */
 function loadKeggClass(genome) {
-    const loadPangenomeData = genome.get('num_genomes_total') > 1;
     const keggColumn = new charts.GenomeKeggClassColumnChart(
         'kegg-class-column',
         {accession: genomeId},
