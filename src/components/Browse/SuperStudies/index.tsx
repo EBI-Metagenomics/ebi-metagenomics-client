@@ -26,6 +26,7 @@ const BrowseSuperStudies: React.FC = () => {
     data: superStudiesList,
     loading,
     isStale,
+    downloadURL,
   } = useMGnifyData('super-studies', {
     page: queryParameters.page as number,
     ordering: queryParameters.order as string,
@@ -71,6 +72,7 @@ const BrowseSuperStudies: React.FC = () => {
           loading={loading}
           isStale={isStale}
           showPagination={false}
+          downloadURL={downloadURL}
         />
       )}
     </section>

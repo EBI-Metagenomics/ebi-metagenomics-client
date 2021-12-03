@@ -45,6 +45,11 @@
 }
 .mg-table-caption > div {
   display: flex;
+  flex-direction: row-reverse;
   width: 100%;
   justify-content: space-between;
+}
+.mg-table-caption > div > div {
+  display: flex;
+  gap: 1em;
 }

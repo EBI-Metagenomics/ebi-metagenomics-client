@@ -24,7 +24,7 @@ const AssociatedRuns: React.FC = () => {
       'runs-page_size': Number,
     }
   );
-  const { data, loading, error, isStale } = useMGnifyData(
+  const { data, loading, error, isStale, downloadURL } = useMGnifyData(
     `samples/${accession}/runs`,
     {
       page: queryParameters['runs-page'] as number,
@@ -72,6 +72,7 @@ const AssociatedRuns: React.FC = () => {
       loading={loading}
       isStale={isStale}
       namespace="runs-"
+      downloadURL={downloadURL}
     />
   );
 };

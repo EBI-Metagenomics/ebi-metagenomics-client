@@ -31,7 +31,7 @@ const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
       'studies-page_size': Number,
     }
   );
-  const { data, loading, error, isStale } = useMGnifyData(
+  const { data, loading, error, isStale, downloadURL } = useMGnifyData(
     `${rootEndpoint}/${accession}/studies`,
     {
       page: queryParameters['studies-page'] as number,
@@ -96,6 +96,7 @@ const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
       isStale={isStale}
       namespace="studies-"
       showPagination={showPagination}
+      downloadURL={downloadURL}
     />
   );
 };

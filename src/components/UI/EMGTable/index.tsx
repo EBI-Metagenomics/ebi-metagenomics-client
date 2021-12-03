@@ -83,6 +83,7 @@ type EMGTableProps = {
   sortable?: boolean;
   loading?: boolean;
   isStale?: boolean;
+  downloadURL?: string;
 };
 
 const EMGTable: React.FC<EMGTableProps> = ({
@@ -98,6 +99,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
   sortable = false,
   loading = false,
   isStale = false,
+  downloadURL = null,
 }) => {
   const [queryParameters, setQueryParameters] = useQueryParametersState(
     {
@@ -218,11 +220,29 @@ const EMGTable: React.FC<EMGTableProps> = ({
           className={`vf-table--striped mg-table ${className}`}
           ref={tableRef}
         >
-          {Title && (
+          {(Title || showTextFilter || downloadURL) && (
             <caption className="vf-table__caption mg-table-caption">
               <div>
-                {typeof Title === 'string' ? Title : <Title />}
-                {showTextFilter && <TextInputDebounced namespace={namespace} />}
+                <div>
+                  {showTextFilter && (
+                    <TextInputDebounced namespace={namespace} />
+                  )}
+                  {downloadURL && (
+                    <>
+                      {' '}
+                      <a
+                        href={downloadURL}
+                        className="vf-button vf-button--secondary vf-button--sm"
+                        style={{ whiteSpace: 'nowrap' }}
+                        download
+                      >
+                        <span className="icon icon-common icon-download" />{' '}
+                        Download
+                      </a>
+                    </>
+                  )}
+                </div>
+                {Title && (typeof Title === 'string' ? Title : <Title />)}
               </div>
             </caption>
           )}

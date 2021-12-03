@@ -15,6 +15,7 @@ const BrowsePublications: React.FC = () => {
       page: 1,
       order: '',
       page_size: 25,
+      search: '',
     },
     {
       page: Number,
@@ -26,10 +27,12 @@ const BrowsePublications: React.FC = () => {
     data: publicationsList,
     loading,
     isStale,
+    downloadURL,
   } = useMGnifyData('publications', {
     page: queryParameters.page as number,
     ordering: queryParameters.order as string,
     page_size: queryParameters.page_size as number,
+    search: (queryParameters.search as string) || undefined,
   });
 
   const columns = React.useMemo(
@@ -89,6 +92,8 @@ const BrowsePublications: React.FC = () => {
           sortable
           loading={loading}
           isStale={isStale}
+          showTextFilter
+          downloadURL={downloadURL}
         />
       )}
     </section>

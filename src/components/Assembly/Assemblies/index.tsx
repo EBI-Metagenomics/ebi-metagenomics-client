@@ -35,7 +35,7 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
     }
   );
   const url = getURLByEndpoint(rootEndpoint, accession);
-  const { data, loading, error, isStale } = useMGnifyData(url, {
+  const { data, loading, error, isStale, downloadURL } = useMGnifyData(url, {
     sample_accession: rootEndpoint === 'samples' ? accession : undefined,
     page: queryParameters['assembly-page'] as number,
     ordering: queryParameters['assembly-order'] as string,
@@ -85,6 +85,7 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
       isStale={isStale}
       namespace="assembly-"
       showPagination={showPagination}
+      downloadURL={downloadURL}
     />
   );
 };

@@ -17,6 +17,7 @@ const BrowseSamples: React.FC = () => {
       order: '',
       biome: 'root',
       page_size: 25,
+      search: '',
     },
     {
       page: Number,
@@ -28,11 +29,13 @@ const BrowseSamples: React.FC = () => {
     data: samplesList,
     loading,
     isStale,
+    downloadURL,
   } = useMGnifyData('samples', {
     page: queryParameters.page as number,
     ordering: queryParameters.order as string,
     lineage: queryParameters.biome as string,
     page_size: queryParameters.page_size as number,
+    search: (queryParameters.search as string) || undefined,
   });
 
   const columns = React.useMemo(
@@ -104,6 +107,8 @@ const BrowseSamples: React.FC = () => {
           sortable
           loading={loading}
           isStale={isStale}
+          showTextFilter
+          downloadURL={downloadURL}
         />
       )}
     </section>

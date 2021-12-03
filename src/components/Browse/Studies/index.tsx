@@ -29,6 +29,7 @@ const BrowseStudies: React.FC = () => {
     data: studiesList,
     loading,
     isStale,
+    downloadURL,
   } = useMGnifyData('studies', {
     page: queryParameters.page as number,
     ordering: queryParameters.order as string,
@@ -107,6 +108,7 @@ const BrowseStudies: React.FC = () => {
           loading={loading}
           isStale={isStale}
           showTextFilter
+          downloadURL={downloadURL}
         />
       )}
     </section>

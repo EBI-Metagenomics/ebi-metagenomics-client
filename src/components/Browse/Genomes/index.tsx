@@ -26,6 +26,7 @@ const BrowseSamples: React.FC = () => {
     data: genomesList,
     loading,
     isStale,
+    downloadURL,
   } = useMGnifyData('genome-catalogues', {
     page: queryParameters.page as number,
     ordering: queryParameters.order as string,
@@ -103,6 +104,7 @@ const BrowseSamples: React.FC = () => {
           sortable
           loading={loading}
           isStale={isStale}
+          downloadURL={downloadURL}
         />
       )}
     </section>
