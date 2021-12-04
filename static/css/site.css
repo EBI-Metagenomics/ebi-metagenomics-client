@@ -1011,6 +1011,12 @@ path.link {
     overflow-x: scroll;
 }
 
+#genome-tax-filter {
+    display: flex;
+    align-items: flex-end;
+    column-gap: 10px;
+}
+
 .igv-popover-mgnify-header {
     font-size: 1.6em;
     text-align: center;

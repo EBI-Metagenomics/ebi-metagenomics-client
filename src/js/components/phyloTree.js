@@ -1,4 +1,5 @@
 /* eslint-disable require-jsdoc */
+const _ = require('underscore');
 const util = require('../util');
 const d3 = require('d3');
 
@@ -31,16 +32,36 @@ function color(d) {
     return color;
 }
 
+function searchHighlight(d) {
+    if (d.data.isSearchMatch) {
+        return '4px solid #734595';
+    }
+    return 'unset';
+}
+
 function getResetButton() {
     return $('<button id="reset-tree-btn" class="button">Reset</button>');
 }
 
 function collapse(d) {
+    delete d.data.isSearchMatch;
     if (d.children) {
         d._children = d.children;
         d._children.forEach(collapse);
         d.children = null;
     }
+}
+
+function expand(d) {
+    if (d._children) {
+        d.children = d._children;
+        d._children = null;
+    }
+}
+
+function toggleExpansion(d) {
+    if (d.children) return collapse(d);
+    if (d._children) return expand(d);
 }
 
 module.exports = class PhyloTree {
@@ -92,6 +113,7 @@ module.exports = class PhyloTree {
                 .attr('width', barWidth)
                 .attr('class', 'entry')
                 .style('fill', color)
+                .style('outline', searchHighlight)
                 .on('click', click);
 
             nodeEnter.append('text').attr('dy', 3.5).attr('dx', 5.5).text(function(d) {
@@ -101,7 +123,7 @@ module.exports = class PhyloTree {
                     return name + ' (' + d.type + ')';
                 } else {
                     const count = (d.countgen || d.coungen); // TODO: fix coungen
-                    if (count <= 1 && name.startsWith('MGYG-')) {
+                    if (count <= 1 && name.startsWith('MGYG')) {
                         return name;
                     } else {
                         return name + ' (' + count + ')';
@@ -124,7 +146,8 @@ module.exports = class PhyloTree {
                 })
                 .style('opacity', 1)
                 .select('rect')
-                .style('fill', color);
+                .style('fill', color)
+                .style('outline', searchHighlight);
 
             // Transition exiting nodes to the parent's new position.
             node.exit()
@@ -163,19 +186,13 @@ module.exports = class PhyloTree {
             });
         }
 
-        // Toggle children on click.
+        // Either open genome detail or toggle children on click
         function click(d) {
             const name = d.data.name;
-            if (d.children == null && d._children == null && (name.substring(0, 3) == 'MGY')) {
+            if (d.children == null && d._children == null && (name.substring(0, 3) === 'MGY')) {
                 window.open(util.subfolder + '/genomes/' + name);
             }
-            if (d.children) {
-                d._children = d.children;
-                d.children = null;
-            } else {
-                d.children = d._children;
-                d._children = null;
-            }
+            toggleExpansion(d);
             if (d.children && d.children.length === 1 && d.children[0]['type'] !== 'genome' &&
                 d.children[0]._children) {
                 update(d);
@@ -207,6 +224,73 @@ module.exports = class PhyloTree {
             update(root);
         }
 
-        resetBtn.click(collapseAll);
+        const filterInput = $('#tax-filter');
+
+        resetBtn.on('click', function() {
+            filterInput.val('');
+            $('#tax-filter-current').text(0);
+            $('#tax-filter-total').text(0);
+            collapseAll();
+        });
+
+        function addDescendentMatches(node, search, matches) {
+            if (node.data.name.toLowerCase().includes(search)) {
+                matches.push(node);
+            }
+            if (!(node.children || node._children)) return matches;
+            (node.children || node._children).forEach(function(child) {
+                addDescendentMatches(child, search, matches);
+            });
+        }
+
+        function goToSearchResult(n) {
+            collapseAll();
+            that.currentSearchIndex = n;
+            const node = that.matches[n];
+            $('#tax-filter-current').text(n + 1);
+            node.data.isSearchMatch = true;
+            node.ancestors().reverse().forEach(function(p) {
+                expand(p);
+                update(p);
+            });
+            update(node);
+        }
+
+        function goToNextSearchResult() {
+            if (that.currentSearchIndex + 1 >= that.matches.length) {
+                return goToSearchResult(0);
+            }
+            goToSearchResult(that.currentSearchIndex + 1);
+        }
+
+        function goToPreviousSearchResult() {
+            if (that.currentSearchIndex === 0) {
+                return goToSearchResult(that.matches.length - 1);
+            }
+            goToSearchResult(that.currentSearchIndex - 1);
+        }
+
+        $('#tax-result-next').on('click', goToNextSearchResult);
+        $('#tax-result-prev').on('click', goToPreviousSearchResult);
+
+        filterInput.keyup(_.debounce(function() {
+            that.matches = [];
+            that.currentSearchIndex = 0;
+            if (filterInput.val() === '') {
+                return collapseAll();
+            }
+            addDescendentMatches(root, filterInput.val().toLowerCase(), that.matches);
+            $('#tax-filter-current').text(0);
+            $('#tax-filter-total').text(that.matches.length);
+            if (that.matches.length > 0) {
+                $('#tax-filter-result-controls').removeClass('disabled');
+            } else {
+                $('#tax-filter-result-controls').addClass('disabled');
+            }
+
+            if (that.matches.length > 0) {
+                goToSearchResult(0);
+            }
+        }, 300));
     }
 };

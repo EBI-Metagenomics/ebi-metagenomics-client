@@ -22,7 +22,7 @@ const STATUS_TYPE = {
 };
 
 const getLinkToMagFromAccession = (accession) =>
-  `<a href="https://www.ebi.ac.uk/metagenomics/genomes/${accession}">${accession}</a>`;
+  `<a href="${window.location.protocol}//${window.location.host}/metagenomics/genomes/${accession}">${accession}</a>`;
 
 const getLinkToCSV = (url, filename) =>
   `<a download="${filename}.csv" href="${url}"><i class="icon icon-fileformats icon-CSV"></i></a>`;

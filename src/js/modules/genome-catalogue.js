@@ -61,6 +61,7 @@ function initPage() {
         util.attachExpandButtonCallback();
         new GenomesSearchView({
             api_url: api.API_URL + "genome-search",
+            catalogue_id: genomeCatalogueView.model.id,
         });
         new GenomesSearchMAGView({
             api_url: api.API_URL,

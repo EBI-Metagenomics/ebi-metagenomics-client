@@ -31,6 +31,7 @@ module.exports = class GenomeBrowser {
             },
             tracks: tracks,
             showLegend: true,
+            legendGroups: {cog: true, antiSMASH: false, other: true},
             legendParent: '#genome-browser'
         };
 

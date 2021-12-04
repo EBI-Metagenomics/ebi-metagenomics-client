@@ -44,8 +44,6 @@
                     "pangenome-size": 2415,
                     "pangenome-core-size": 726,
                     "pangenome-accessory-size": 1689,
-                    "pangenome-eggnog-coverage": 81.95,
-                    "pangenome-ipr-coverage": 81.66,
                     "last-update": "2020-07-16T14:33:46.691007",
                     "first-created": "2019-09-17T12:33:14.768855"
                 },
@@ -159,8 +157,6 @@
                     "pangenome-size": 1999,
                     "pangenome-core-size": 1451,
                     "pangenome-accessory-size": 548,
-                    "pangenome-eggnog-coverage": 88.59,
-                    "pangenome-ipr-coverage": 87.09,
                     "last-update": "2020-07-16T15:47:50.509763",
                     "first-created": "2019-09-17T14:02:47.477734"
                 },
@@ -272,8 +268,6 @@
                     "pangenome-size": null,
                     "pangenome-core-size": null,
                     "pangenome-accessory-size": null,
-                    "pangenome-eggnog-coverage": null,
-                    "pangenome-ipr-coverage": null,
                     "last-update": "2020-07-16T13:07:19.605570",
                     "first-created": "2019-09-17T10:35:45.356487"
                 },
@@ -387,8 +381,6 @@
                     "pangenome-size": 1858,
                     "pangenome-core-size": 1475,
                     "pangenome-accessory-size": 383,
-                    "pangenome-eggnog-coverage": 91.93,
-                    "pangenome-ipr-coverage": 90.96,
                     "last-update": "2020-07-16T15:40:43.874752",
                     "first-created": "2019-09-17T13:53:59.577864"
                 },
@@ -502,8 +494,6 @@
                     "pangenome-size": 2041,
                     "pangenome-core-size": 1315,
                     "pangenome-accessory-size": 726,
-                    "pangenome-eggnog-coverage": 86.38,
-                    "pangenome-ipr-coverage": 86.58,
                     "last-update": "2020-07-16T14:31:30.678138",
                     "first-created": "2019-09-17T12:30:15.918883"
                 },
@@ -617,8 +607,6 @@
                     "pangenome-size": 2161,
                     "pangenome-core-size": 752,
                     "pangenome-accessory-size": 1409,
-                    "pangenome-eggnog-coverage": 85.19,
-                    "pangenome-ipr-coverage": 84.78,
                     "last-update": "2020-07-16T13:26:05.583891",
                     "first-created": "2019-09-17T11:05:11.167968"
                 },
@@ -730,8 +718,6 @@
                     "pangenome-size": null,
                     "pangenome-core-size": null,
                     "pangenome-accessory-size": null,
-                    "pangenome-eggnog-coverage": null,
-                    "pangenome-ipr-coverage": null,
                     "last-update": "2020-07-16T15:23:29.676696",
                     "first-created": "2019-09-17T13:34:04.895793"
                 },
@@ -843,8 +829,6 @@
                     "pangenome-size": null,
                     "pangenome-core-size": null,
                     "pangenome-accessory-size": null,
-                    "pangenome-eggnog-coverage": null,
-                    "pangenome-ipr-coverage": null,
                     "last-update": "2020-07-16T13:56:36.443142",
                     "first-created": "2019-09-17T11:50:32.295667"
                 },
@@ -958,8 +942,6 @@
                     "pangenome-size": 1809,
                     "pangenome-core-size": 1718,
                     "pangenome-accessory-size": 91,
-                    "pangenome-eggnog-coverage": 92.43,
-                    "pangenome-ipr-coverage": 90.77,
                     "last-update": "2020-07-16T13:16:39.345030",
                     "first-created": "2019-09-17T10:49:43.193596"
                 },
@@ -1071,8 +1053,6 @@
                     "pangenome-size": null,
                     "pangenome-core-size": null,
                     "pangenome-accessory-size": null,
-                    "pangenome-eggnog-coverage": null,
-                    "pangenome-ipr-coverage": null,
                     "last-update": "2020-07-16T13:03:45.012915",
                     "first-created": "2019-09-17T10:30:07.198009"
                 },
@@ -1184,8 +1164,6 @@
                     "pangenome-size": null,
                     "pangenome-core-size": null,
                     "pangenome-accessory-size": null,
-                    "pangenome-eggnog-coverage": null,
-                    "pangenome-ipr-coverage": null,
                     "last-update": "2020-07-16T15:05:05.296212",
                     "first-created": "2019-09-17T13:12:04.555982"
                 },
@@ -1300,8 +1278,6 @@
                     "pangenome-size": 6776,
                     "pangenome-core-size": 394,
                     "pangenome-accessory-size": 6382,
-                    "pangenome-eggnog-coverage": 59.27,
-                    "pangenome-ipr-coverage": 65.2,
                     "last-update": "2020-07-16T13:12:00.747676",
                     "first-created": "2019-09-17T10:42:44.200189"
                 },

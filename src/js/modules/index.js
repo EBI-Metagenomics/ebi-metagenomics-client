@@ -256,6 +256,7 @@ function initObjectCounts() {
     const metaGountReq = $.get({url: new ebisearch.MetagenomicCount().url, cache: false});
     const metaTCountReq = $.get({url: new ebisearch.MetatranscriptomicCount().url, cache: false});
     const metaBCountReq = $.get({url: new ebisearch.MetabarcodingCount().url, cache: false});
+    const genomeCataloguesCountReq = new api.GenomeCataloguesCollection().fetch();
 
     /**
      * Set filter in site cookie
@@ -315,7 +316,8 @@ function initObjectCounts() {
         assemblyCountReq,
         metaGountReq,
         metaBCountReq,
-        metaTCountReq
+        metaTCountReq,
+        genomeCataloguesCountReq
     ).done(() => {
         const projectCount = projectCountReq.responseJSON.hitCount;
         const sampleCount = sampleCountReq.responseJSON.hitCount;
@@ -325,6 +327,7 @@ function initObjectCounts() {
         const metaGCount = metaGountReq.responseJSON.hitCount;
         const metaTCount = metaTCountReq.responseJSON.hitCount;
         const metaBCount = metaBCountReq.responseJSON.hitCount;
+        const genomeCataloguesCount = genomeCataloguesCountReq.responseJSON.data.length;
 
         const data = [
             ['#amplicon-stats', ampliconCount, 'amplicon', '#analyses'],
@@ -339,6 +342,9 @@ function initObjectCounts() {
         _.each(data, function(d) {
             appendNewAnchorEl(...d);
         });
+        $('#genome-stats').append(
+            `<a href="${util.subfolder}/browse#genomes">${genomeCataloguesCount}</a>`
+        );
         $('#stats-loading').hide();
         $('#stats-disp').show();
     });
