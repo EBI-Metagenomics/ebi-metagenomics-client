@@ -45,7 +45,6 @@ describe('Genome page', () => {
                 ['Completeness:', '98.59%'],
                 ['Num. of contigs:', '137'],
                 ['Total number of genomes in species:', '4'],
-                ['Non-redundant number of genomes in species:', '4'],
                 ['Number of proteins:', '3182'],
                 ['GC content:', '28.26%'],
                 ['Taxonomic lineage:', 'Bacteria > Firmicutes_A > Clostridia > ' +
@@ -330,7 +329,9 @@ describe('Genome page', () => {
                 ['eggNOG annotations of the protein coding sequences', '-', 'TSV',
                  '/genomes/MGYG000000001/downloads/MGYG000000001_eggNOG.tsv'],
                 ['InterProScan annotation of the protein coding sequences', '-', 'TSV',
-                 '/genomes/MGYG000000001/downloads/MGYG000000001_InterProScan.tsv']
+                 '/genomes/MGYG000000001/downloads/MGYG000000001_InterProScan.tsv'],
+                ['rRNA sequence of the genome species representative', '-', 'FASTA',
+                 '/genomes/MGYG000000001/downloads/MGYG000000001_rRNAs.fasta']
             ];
             cy.get('.genome-downloads-table').first().then((table) => {
                 compareTable(table, data);

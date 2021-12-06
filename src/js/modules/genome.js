@@ -35,9 +35,6 @@ let GenomeView = Backbone.View.extend({
                 if (attr.num_genomes_total) {
                     genomeStats['Total number of genomes in species'] = attr.num_genomes_total;
                 }
-                if (attr.num_genomes_nr) {
-                    genomeStats['Non-redundant number of genomes in species'] = attr.num_genomes_nr;
-                }
 
                 genomeStats['Number of proteins'] = attr.num_proteins;
                 genomeStats['GC content'] = attr.gc_content + '%';
