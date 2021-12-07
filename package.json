@@ -1,6 +1,6 @@
 {
   "name": "mgportalv2",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Webclient for the MGnify API",
   "main": "entry.js",
   "scripts": {
@@ -57,7 +57,7 @@
     "js-cookie": "^2.1.4",
     "livefilter": "^2.13.0",
     "marked": "^2.1.3",
-    "mgnify": "^1.8.5",
+    "mgnify": "^1.8.6",
     "mgnify-sourmash-component": "0.2.2",
     "motion-ui": "^1.2.3",
     "node-js-marker-clusterer": "^1.0.0",
