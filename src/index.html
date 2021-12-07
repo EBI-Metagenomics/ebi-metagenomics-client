@@ -48,19 +48,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row columns">
+                        <div class="row columns padding-bottom-large">
                             <h3>Or by data type</h3>
                             <div class="index-stats-disp">
                                 <div id="stats-loading">
                                     <img class="loading-gif-large" src="static/images/ajax-loader.gif" alt="Loading...">
                                 </div>
                                 <div id="stats-disp" class="row hidden">
-                                    <div class="columns small-1 medium-1 large-1">
-                             <span class="icon icon-conceptual icon-c3"
-                                   style="font-size: 2rem"
-                                   data-icon="d"></span>
-                                    </div>
                                     <div class="columns small-6 medium-6 large-6">
+                                        <div class="columns small-12 medium-12">
+                                            <span class="icon icon-conceptual icon-c3" style="font-size: 2rem"
+                                                  data-icon="d"></span>
+                                        </div>
                                         <div class="columns small-12 medium-12 index-stats">
                                             <div class="index-stats-label"><span id="amplicon-stats"></span></div>
                                             amplicon
@@ -82,13 +81,12 @@
                                             metatranscriptomes
                                         </div>
                                     </div>
-                                    <div class="columns small-1 medium-1 large-1">
-                                        <div class="columns small-1">
-                                        <span class="icon icon-functional icon-c9" style="font-size: 2rem"
-                                              data-icon="U"></span>
+
+                                    <div class="columns small-6 medium-6 large-6">
+                                        <div class="columns small-12 medium-12">
+                                            <span class="icon icon-functional icon-c9" style="font-size: 2rem"
+                                                  data-icon="U"></span>
                                         </div>
-                                    </div>
-                                    <div class="columns small-4 medium-4 large-4">
                                         <div class="columns small-12 medium-12 index-stats">
                                             <div class="index-stats-label"><span id="project-stats"></span></div>
                                             studies
@@ -101,11 +99,15 @@
                                             <div class="index-stats-label"><span id="run-stats"></span></div>
                                             analyses
                                         </div>
+                                        <div class="columns small-12 medium-12 index-stats">
+                                            <div class="index-stats-label"><span id="genome-stats"></span></div>
+                                            MAG&nbsp;catalogues
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row columns">
+                        <div class="row columns padding-bottom-large">
                             <h3>Or by selected biomes</h3>
                             <div id="top10biomes" class="row columns">
                                 <script id="biomeTmpl" type="text/template">

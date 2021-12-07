@@ -3,11 +3,11 @@ import {openPage, waitForPageLoad, changeTab, datatype} from '../util/util';
 
 
 describe('Genome catalogue page', () => {
-    const catalogueId = 'human-gut-v1-0';
+    const catalogueId = 'human-gut-v2-0';
     context('Browse genomes', () => {
         beforeEach(() => {
             openPage('genome-catalogues/' + catalogueId);
-            waitForPageLoad('Human Gut v1.0');
+            waitForPageLoad('Human Gut v2.0');
         });
         const genomesTableData = {
             biome_icon: {
@@ -17,39 +17,39 @@ describe('Genome catalogue page', () => {
             },
             accession: {
                 data: [
-                    'MGYG-HGUT-00240',
-                    'MGYG-HGUT-00279'
+                    'MGYG000000001',
+                    'MGYG000000003'
                 ],
                 type: datatype.STR,
                 sortable: true
             },
             length: {
                 data: [
-                    '2627858',
-                    '2007253'
+                    '3219617',
+                    '3229518'
                 ],
                 type: datatype.NUM,
                 sortable: true
             },
             num_of_genomes: {
                 data: [
-                    '44',
-                    '5'
+                    '4',
+                    '1181'
                 ],
                 type: datatype.NUM,
                 sortable: true
             },
             completeness: {
                 data: [
-                    '100',
-                    '99.85'
+                    '98.59',
+                    '100'
                 ],
                 type: datatype.NUM,
                 sortable: true
             },
             contamination: {
                 data: [
-                    '0',
+                    '0.7',
                     '0'
                 ],
                 type: datatype.NUM,
@@ -61,12 +61,12 @@ describe('Genome catalogue page', () => {
                     'Isolate'
                 ],
                 type: datatype.STR,
-                sortable: false
+                sortable: true
             },
             taxonomy: {
                 data: [
-                    'Absiella',
-                    'Veillonella'
+                    'GCA-900066495 sp902362365',
+                    'Alistipes shahii'
                 ],
                 type: datatype.STR,
                 sortable: false
@@ -81,37 +81,37 @@ describe('Genome catalogue page', () => {
             }
         };
         it('Table load and sort', () => {
-            const genomesTable = new GenericTableHandler('#genomes-section', 2);
-            genomesTable.checkLoadedCorrectly(1, 2, 2, genomesTableData);
-            genomesTable.testSorting(2, genomesTableData);
+            const genomesTable = new GenericTableHandler('#genomes-section', 3);
+            genomesTable.checkLoadedCorrectly(1, 3, 3, genomesTableData);
+            genomesTable.testSorting(3, genomesTableData);
         });
     });
 
     context('Taxonomy tree', () => {
         before(() => {
             openPage('genome-catalogues/' + catalogueId);
-            waitForPageLoad('Human Gut v1.0');
+            waitForPageLoad('Human Gut v2.0');
             changeTab('phylo-tab');
         });
         it('Load', () => {
             cy.get('#phylo-tree').get('svg');
             // base tree
             cy.get('.node').eq(0).contains('Domain (root)');
-            cy.get('.node').eq(1).contains('Bacteria (4616)');
-            cy.get('.node').eq(2).contains('Archaea (28)');
+            cy.get('.node').eq(1).contains('Archaea (28)');
+            cy.get('.node').eq(2).contains('Bacteria (4716)');
         });
         it('Tree is interactive', () => {
             // clicks
-            cy.get('.node').eq(1).click();
+            cy.get('.node').eq(2).click();
             cy.get('.node').contains('Bdellovibrionota (1)');
             cy.get('.node:contains("Bdellovibrionota (1)")').click();
-            cy.get('.node').contains('MGYG-HGUT-03389');
+            cy.get('.node').contains('MGYG000003389');
             cy.get('#reset-tree-btn').click();
             // reset
             cy.get('.node').should('have.length', 3);
             cy.get('.node').eq(0).contains('Domain (root)');
-            cy.get('.node').eq(1).contains('Bacteria (4616)');
-            cy.get('.node').eq(2).contains('Archaea (28)');
+            cy.get('.node').eq(1).contains('Archaea (28)');
+            cy.get('.node').eq(2).contains('Bacteria (4716)');
         });
     });
 

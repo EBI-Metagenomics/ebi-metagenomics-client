@@ -111,7 +111,7 @@ jobs:
                   emgcli import_kegg_modules ${{ github.workspace }}/ci/fixtures/kegg_module_orthology.json
                   emgcli import_kegg_classes ${{ github.workspace }}/ci/fixtures/kegg_class_orthology.json
                   emgcli import_cog_descriptions ${{ github.workspace }}/ci/fixtures/cog.csv
-                  emgcli import_genomes ~/results/ genomes/hgut/1.0/ Human\ Gut 1.0 root:Host-Associated:Human:Digestive\ System:Large\ intestine
+                  emgcli import_genomes ~/results/ genomes/uhgg/2.0/ Human\ Gut 2.0 root:Host-Associated:Human:Digestive\ System:Large\ intestine
 
                   git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
 
@@ -134,7 +134,7 @@ jobs:
             - name: 🔧 - Install
               run: |
                   npm ci
-                  npm install "https://github.com/EBI-Metagenomics/ebi-metagenomics-webkit#${GIT_BRANCH_NAME}" || echo "No matching branch of ebi-metagenomics-webkit was found or installed."
+                  npm install "https://github.com/EBI-Metagenomics/ebi-metagenomics-webkit#${GIT_BRANCH_NAME}" || npm install "https://github.com/EBI-Metagenomics/ebi-metagenomics-webkit"
                   npm run build
                   ls dist/
                   mv dist/metagenomics /usr/share/nginx/html/metagenomics

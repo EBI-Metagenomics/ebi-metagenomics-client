@@ -4,8 +4,8 @@ import ClientSideTableHandler from '../util/clientSideTable';
 
 
 describe('Genome page', () => {
-    const accessionValid = 'MGYG-HGUT-00240';
-    const accessionInvalid = 'MGYG-HGUT-00000';
+    const accessionValid = 'MGYG000000001';
+    const accessionInvalid = 'MGYG000000000';
 
     context('Overview', () => {
         before(() => {
@@ -40,58 +40,53 @@ describe('Genome page', () => {
 
             const gsValues = [
                 ['Type:', 'Isolate'],
-                ['Length (bp):', '2627858'],
-                ['Contamination:', '0%'],
-                ['Completeness:', '100%'],
-                ['Num. of contigs:', '162'],
-                ['Total number of genomes in species:', '44'],
-                ['Non-redundant number of genomes in species:', '32'],
-                ['Number of proteins:', '2583'],
-                ['GC content:', '33.75%'],
-                ['Taxonomic lineage:', 'Bacteria > Firmicutes > Bacilli > ' +
-                                       'Erysipelotrichales > Erysipelotrichaceae > Absiella'],
-                ['N50 :', '33474'],
-                ['Taxonomic inconsistency (CAT):', '0']
+                ['Length (bp):', '3219617'],
+                ['Contamination:', '0.7%'],
+                ['Completeness:', '98.59%'],
+                ['Num. of contigs:', '137'],
+                ['Total number of genomes in species:', '4'],
+                ['Number of proteins:', '3182'],
+                ['GC content:', '28.26%'],
+                ['Taxonomic lineage:', 'Bacteria > Firmicutes_A > Clostridia > ' +
+                'Peptostreptococcales > Peptostreptococcaceae > GCA-900066495 > ' +
+                'GCA-900066495 sp902362365'],
+                ['N50 :', '47258']
             ];
             assertSection(1, 'Genome statistics', gsValues);
 
             const gaValues = [
-                ['InterPro coverage:', '83.16%'],
-                ['EggNog coverage:', '87.46%']
+                ['InterPro coverage:', '86.42%'],
+                ['EggNog coverage:', '93.78%']
             ];
             assertSection(2, 'Genome annotations', gaValues);
 
             const pgValues = [
-                ['Pan-genome size:', '15051'],
-                ['Pan-genome core size:', '959'],
-                ['Pan-genome accessory size:', '14092'],
-                ['Pan-genome InterPro coverage:', '73.32%'],
-                ['Pan-genome EggNOG coverage:', '79.96%']
+                ['Pan-genome size:', '3154'],
+                ['Pan-genome core size:', '1350'],
+                ['Pan-genome accessory size:', '1804']
             ];
             assertSection(3, 'Pan-genome statistics', pgValues);
 
             const grcValues = [
-                ['rRNA 5s total gene length coverage:', '0%'],
-                ['rRNA 16s total gene length coverage:', '99.67%'],
-                ['rRNA 23s total gene length coverage:', '99.76%'],
+                ['rRNA 5s total gene length coverage:', '88.24%'],
+                ['rRNA 16s total gene length coverage:', '99.74%'],
+                ['rRNA 23s total gene length coverage:', '99.83%'],
                 ['tRNAs:', '20'],
-                ['ncRNA:', '92']
+                ['ncRNA:', '63']
             ];
             assertSection(4, 'Genome RNA coverage', grcValues);
 
             const gmValues = [
-                ['Origin of representative genome:', 'Asia'],
-                ['Geographic range of pan-genome:', 'Asia, Europe, North America']
+                ['Origin of representative genome:', 'Europe'],
+                ['Geographic range of pan-genome:', 'Europe, North America']
             ];
             assertSection(5, 'Geographic metadata', gmValues);
 
             const elValues = [
-                ['NCBI genome accession:', 'GCA_003473755',
-                 'https://www.ncbi.nlm.nih.gov/assembly/GCA_003473755'],
-                ['NCBI sample accession:', 'SAMN09734867',
-                 'https://www.ncbi.nlm.nih.gov/biosample/?term=SAMN09734867'],
-                ['NCBI study accession:', 'PRJNA482748',
-                 'https://www.ncbi.nlm.nih.gov/bioproject/PRJNA482748']
+                ['ENA sample accession:', 'ERS370061',
+                 'https://www.ebi.ac.uk/ena/browser/view/ERS370061'],
+                ['ENA study accession:', 'ERP105624',
+                 'https://www.ebi.ac.uk/ena/browser/view/ERP105624']
             ];
             assertSection(6, 'External links', elValues);
         });
@@ -123,25 +118,20 @@ describe('Genome page', () => {
             cy.get('#cog-column svg .highcharts-title')
               .should('contain', 'Top 10 COG categories');
             cy.get('#cog-column svg .highcharts-subtitle')
-              .should('contain', 'Total: 2170 Genome COG matches - Drag to zoom in/out');
+              .should('contain', 'Total: 3141 Genome COG matches - Drag to zoom in/out');
             // Chart legend
             cy.get('.highcharts-legend-item.highcharts-series-0 text')
               .should('contain', 'Genome');
-            cy.get('.highcharts-legend-item.highcharts-series-1 text')
-              .should('contain', 'Pan-genome');
             // Table
             cy.get('.cog-column-table').should('be.visible');
-            cy.get('.cog-column-table table tbody > tr').should('have.length', 23);
+            cy.get('.cog-column-table table tbody > tr').should('have.length', 21);
         });
 
         it('Check chart data', () => {
             const tooltipValues = [
-                {column: 1, series: 0, tooltip: 'GenomeCount: 493'},
-                {column: 1, series: 1, tooltip: 'Pan-genomeCount: 2854'},
-                {column: 5, series: 0, tooltip: 'GenomeCount: 162'},
-                {column: 5, series: 1, tooltip: 'Pan-genomeCount: 596'},
-                {column: 10, series: 0, tooltip: 'GenomeCount: 81'},
-                {column: 10, series: 1, tooltip: 'Pan-genomeCount: 271'}
+                {column: 1, series: 0, tooltip: 'GenomeCount: 656'},
+                {column: 5, series: 0, tooltip: 'GenomeCount: 187'},
+                {column: 10, series: 0, tooltip: 'GenomeCount: 149'}
             ];
             tooltipValues.forEach((element) => {
                 checkChartTooltip(
@@ -153,19 +143,17 @@ describe('Genome page', () => {
         });
 
         it('Check table data', () => {
-            const table = new ClientSideTableHandler('.cog-column-table', 23, false);
-            table.checkLoadedCorrectly(1, 23, 23);
-            table.checkRowData(0, 1, 23, [
+            const table = new ClientSideTableHandler('.cog-column-table', 21, false);
+            table.checkLoadedCorrectly(1, 21, 21);
+            table.checkRowData(0, 1, 21, [
                 'S',
-                '',
-                '493',
-                '2854'
+                'Function unknown',
+                '656'
             ]);
-            table.checkRowData(7, 1, 23, [
+            table.checkRowData(5, 1, 21, [
                 'C',
-                '',
-                '100',
-                '315'
+                'Energy production and conversion',
+                '185'
             ]);
         });
     });
@@ -182,25 +170,20 @@ describe('Genome page', () => {
             cy.get('#kegg-class-column svg .highcharts-title')
               .should('contain', 'Top 10 KEGG brite categories');
             cy.get('#kegg-class-column svg .highcharts-subtitle')
-              .should('contain', 'Total: 2978 KEGG matches - Drag to zoom in/out');
+              .should('contain', 'Total: 2895 KEGG matches - Drag to zoom in/out');
             // Chart legend
             cy.get('.highcharts-legend-item.highcharts-series-0 text')
               .should('contain', 'Genome');
-            cy.get('.highcharts-legend-item.highcharts-series-1 text')
-              .should('contain', 'Pan-genome');
             // Table
             cy.get('.kegg-class-column-table').should('be.visible');
-            cy.get('.kegg-class-column-table table tbody > tr').should('have.length', 43);
+            cy.get('.kegg-class-column-table table tbody > tr').should('have.length', 48);
         });
 
         it('Check chart data', () => {
             const tooltipValues = [
-                {column: 1, series: 0, tooltip: 'GenomeCount: 577'},
-                {column: 1, series: 1, tooltip: 'Pan-genomeCount: 1742'},
-                {column: 5, series: 0, tooltip: 'GenomeCount: 144'},
-                {column: 5, series: 1, tooltip: 'Pan-genomeCount: 407'},
-                {column: 10, series: 0, tooltip: 'GenomeCount: 86'},
-                {column: 10, series: 1, tooltip: 'Pan-genomeCount: 345'}
+                {column: 1, series: 0, tooltip: 'GenomeCount: 493'},
+                {column: 5, series: 0, tooltip: 'GenomeCount: 172'},
+                {column: 10, series: 0, tooltip: 'GenomeCount: 83'}
             ];
             tooltipValues.forEach((element) => {
                 checkChartTooltip(
@@ -213,18 +196,16 @@ describe('Genome page', () => {
 
         it('Check table data', () => {
             const table = new ClientSideTableHandler('.kegg-class-column-table', 25, false);
-            table.checkLoadedCorrectly(1, 25, 43);
+            table.checkLoadedCorrectly(1, 25, 48);
             table.checkRowData(0, 1, 25, [
                 '09182',
                 '',
-                '577',
-                '1742'
+                '493'
             ]);
             table.checkRowData(7, 1, 25, [
-                '09124',
+                '09191',
                 '',
-                '105',
-                '350'
+                '88'
             ]);
             let paginationData = [
                 {
@@ -232,19 +213,17 @@ describe('Genome page', () => {
                     data: [
                         '09182',
                         '',
-                        '577',
-                        '1742'
+                        '493'
                     ]
                 }, {
                     index: 'Last',
                     data: [
-                        '09143',
+                        '09109',
                         '',
-                        '17',
-                        '56'
+                        '18'
                     ],
                     pageNum: 2,
-                    pageSize: 18
+                    pageSize: 23
                 }
             ];
             table.testPagination(25, paginationData);
@@ -260,12 +239,7 @@ describe('Genome page', () => {
                     sortable: false
                 },
                 genome_count: {
-                    data: ['577', '0'],
-                    type: datatype.NUM,
-                    sortable: true
-                },
-                pangenome_count: {
-                    data: ['1742', '1'],
+                    data: ['493', '1'],
                     type: datatype.NUM,
                     sortable: true
                 }
@@ -286,25 +260,20 @@ describe('Genome page', () => {
             cy.get('#kegg-module-column svg .highcharts-title')
               .should('contain', 'Top 10 KEGG module categories');
             cy.get('#kegg-module-column svg .highcharts-subtitle')
-              .should('contain', 'Total: 527 KEGG module matches - Drag to zoom in/out');
+              .should('contain', 'Total: 955 KEGG module matches - Drag to zoom in/out');
             // Chart legend
             cy.get('.highcharts-legend-item.highcharts-series-0 text')
               .should('contain', 'Genome');
-            cy.get('.highcharts-legend-item.highcharts-series-1 text')
-              .should('contain', 'Pan-genome');
             // Table
             cy.get('.kegg-module-column-table').should('be.visible');
-            cy.get('.kegg-module-column-table table tbody > tr').should('have.length', 173);
+            cy.get('.kegg-module-column-table table tbody > tr').should('have.length', 198);
         });
 
         it('Check chart data', () => {
             const tooltipValues = [
-                {column: 1, series: 0, tooltip: 'GenomeCount: 56'},
-                {column: 1, series: 1, tooltip: 'Pan-genomeCount: 75'},
-                {column: 5, series: 0, tooltip: 'GenomeCount: 14'},
-                {column: 5, series: 1, tooltip: 'Pan-genomeCount: 17'},
-                {column: 10, series: 0, tooltip: 'GenomeCount: 11'}
-                // {column: 10, series: 1, tooltip: 'Pan-genomeCount: 19'} TODO: fix this one, for some reason it's failing in travis
+                {column: 1, series: 0, tooltip: 'GenomeCount: 55'},
+                {column: 5, series: 0, tooltip: 'GenomeCount: 22'},
+                {column: 10, series: 0, tooltip: 'GenomeCount: 12'}
             ];
             tooltipValues.forEach((element) => {
                 checkChartTooltip(
@@ -315,78 +284,8 @@ describe('Genome page', () => {
             });
         });
 
-        // FIXME: failing in Travis but working locally.
-        // it('Check table data', () => {
-        //     const table = new ClientSideTableHandler('.kegg-module-column-table', 25, false);
-        //     table.checkLoadedCorrectly(1, 25, 173);
-        //     table.checkRowData(0, 1, 25, [
-        //         'M00178',
-        //         '',
-        //         '56',
-        //         '75'
-        //     ]);
-        //     table.checkRowData(7, 1, 25, [
-        //         'M00048',
-        //         '',
-        //         '12',
-        //         '21'
-        //     ]);
-        //     let paginationData = [
-        //         {
-        //             index: 1,
-        //             data: [
-        //                 'M00178',
-        //                 '',
-        //                 '56',
-        //                 '75'
-        //             ]
-        //         }, {
-        //             index: 'Next',
-        //             data: [
-        //                 'M00006',
-        //                 '',
-        //                 '5',
-        //                 '7'
-        //             ],
-        //             pageNum: 2,
-        //             pageSize: 25
-        //         }, {
-        //             index: 'Last',
-        //             data: [
-        //                 'M00778',
-        //                 '',
-        //                 '0',
-        //                 '2'
-        //             ],
-        //             pageNum: 7,
-        //             pageSize: 23
-        //         }
-        //     ];
-        //     table.testPagination(25, paginationData);
-        //     const tableColumns = {
-        //         module_id: {
-        //             data: ['', ''],
-        //             type: datatype.STR,
-        //             sortable: false
-        //         },
-        //         description: {
-        //             data: ['', ''],
-        //             type: datatype.STR,
-        //             sortable: false
-        //         },
-        //         genome_count: {
-        //             data: ['57', '0'],
-        //             type: datatype.NUM,
-        //             sortable: true
-        //         },
-        //         pangenome_count: {
-        //             data: ['78', '9'],
-        //             type: datatype.NUM,
-        //             sortable: true
-        //         }
-        //     };
-        //     table.testSorting(25, tableColumns);
-        // });
+        // TODO: test KEGG module table
+
     });
 
     context('Downloads', () => {
@@ -419,20 +318,20 @@ describe('Genome page', () => {
         it('Genome analysis', () => {
             const data = [
                 ['All predicted CDS', '-', 'FASTA',
-                 '/genomes/MGYG-HGUT-00240/downloads/MGYG-HGUT-00240.faa'],
+                 '/genomes/MGYG000000001/downloads/MGYG000000001.faa'],
                 ['DNA sequence FASTA file of the genome assembly of the species representative',
-                 '-', 'FASTA', '/genomes/MGYG-HGUT-00240/downloads/MGYG-HGUT-00240.fna'],
+                 '-', 'FASTA', '/genomes/MGYG000000001/downloads/MGYG000000001.fna'],
                 ['DNA sequence FASTA file index of the genome assembly of the species ' +
                  'representative',
-                 '-', 'FAI', '/genomes/MGYG-HGUT-00240/downloads/MGYG-HGUT-00240.fna.fai'],
+                 '-', 'FAI', '/genomes/MGYG000000001/downloads/MGYG000000001.fna.fai'],
                 ['Genome GFF file with various sequence annotations', '-', 'GFF',
-                 '/genomes/MGYG-HGUT-00240/downloads/MGYG-HGUT-00240.gff'],
-                ['Genome GFF file with antiSMASH geneclusters annotations', '-', 'GFF',
-                 '/genomes/MGYG-HGUT-00240/downloads/MGYG-HGUT-00240_antismash.gff'],
+                 '/genomes/MGYG000000001/downloads/MGYG000000001.gff'],
                 ['eggNOG annotations of the protein coding sequences', '-', 'TSV',
-                 '/genomes/MGYG-HGUT-00240/downloads/MGYG-HGUT-00240_eggNOG.tsv'],
+                 '/genomes/MGYG000000001/downloads/MGYG000000001_eggNOG.tsv'],
                 ['InterProScan annotation of the protein coding sequences', '-', 'TSV',
-                 '/genomes/MGYG-HGUT-00240/downloads/MGYG-HGUT-00240_InterProScan.tsv']
+                 '/genomes/MGYG000000001/downloads/MGYG000000001_InterProScan.tsv'],
+                ['rRNA sequence of the genome species representative', '-', 'FASTA',
+                 '/genomes/MGYG000000001/downloads/MGYG000000001_rRNAs.fasta']
             ];
             cy.get('.genome-downloads-table').first().then((table) => {
                 compareTable(table, data);
@@ -440,24 +339,17 @@ describe('Genome page', () => {
         });
         it('Pan-genome analysis', () => {
             const data = [
-                ['Protein sequence FASTA file of accessory genes', '-', 'FASTA',
-                 '/genomes/MGYG-HGUT-00240/downloads/accessory_genes.faa'],
-                ['Protein sequence FASTA file of core genes ' +
-                 '(&gt;=90% of the genomes with &gt;=90% amino acid identity)',
-                 '-', 'FASTA',
-                 '/genomes/MGYG-HGUT-00240/downloads/core_genes.faa'],
+                ['List of core genes in the entire pangenome',
+                 '-', 'TAB',
+                 '/genomes/MGYG000000001/downloads/core_genes.txt'],
                 ['Presence/absence binary matrix of the pan-genome across all conspecific genomes',
                  '-', 'TSV',
-                 '/genomes/MGYG-HGUT-00240/downloads/genes_presence-absence.tsv'],
+                 '/genomes/MGYG000000001/downloads/gene_presence_absence.Rtab'],
                 ['Tree generated from the pairwise Mash distances of conspecific genomes', '-',
                  'Newick format',
-                 '/genomes/MGYG-HGUT-00240/downloads/mashtree.nwk'],
-                ['Protein sequence FASTA file of core and accessory genes', '-', 'FASTA',
-                 '/genomes/MGYG-HGUT-00240/downloads/pan-genome.faa'],
-                ['eggNOG annotations of the core and accessory genes', '-', 'TSV',
-                 '/genomes/MGYG-HGUT-00240/downloads/pan-genome_eggNOG.tsv'],
-                ['InterProScan annotations of the core and accessory genes', '-', 'TSV',
-                 '/genomes/MGYG-HGUT-00240/downloads/pan-genome_InterProScan.tsv']
+                 '/genomes/MGYG000000001/downloads/mashtree.nwk'],
+                ['DNA sequence FASTA file of the pangenome', '-', 'FASTA',
+                 '/genomes/MGYG000000001/downloads/pan-genome.fna']
             ];
             cy.get('.genome-downloads-table').last().then((table) => {
                 compareTable(table, data);
