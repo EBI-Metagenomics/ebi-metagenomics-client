@@ -113,6 +113,8 @@ export type ErrorFromFetch = {
 
 export type TSVResponse = Array<string>[];
 
+export type FASTAResponse = Array<string>[];
+
 export interface DataResponse {
   data:
     | null
@@ -120,7 +122,8 @@ export interface DataResponse {
     | MGnifyResponse
     | BlogResponse
     | HTMLHtmlElement
-    | TSVResponse;
+    | TSVResponse
+    | FASTAResponse;
   error: ErrorFromFetch | null;
   loading: boolean;
   isStale: boolean;

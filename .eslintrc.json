@@ -54,6 +54,7 @@
       }
     ],
     "no-shadow": "off",
+    "ignoreRestSiblings": 0,
     "jsx-a11y/label-has-associated-control": "off",
     "max-len": [
       "warn",
