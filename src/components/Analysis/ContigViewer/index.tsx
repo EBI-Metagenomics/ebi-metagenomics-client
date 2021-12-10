@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import useURLAccession from 'hooks/useURLAccession';
 import useMGnifyData from 'hooks/data/useMGnifyData';
@@ -90,12 +85,11 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
       if (node === null) return;
       igv.createBrowser(node, options).then((browser) => {
         browser.on('trackclick', (ignored, trackData) => {
-          console.log(trackData);
           // return igvPopup(data);
         });
       });
     },
-    [data]
+    [accession, antiSMASH, config.api, contigId, displayName, fastaURL]
   );
 
   if (loading) return <Loading size="small" />;
@@ -148,7 +142,7 @@ const ContigsViewer: React.FC = () => {
       }
     }
     return null;
-  }, [data, queryParameters, setQueryParameters]);
+  }, [data, queryParameters]);
 
   useEffect(() => {
     // If a new contig is autoselected (e.g. page change), put it in URL
