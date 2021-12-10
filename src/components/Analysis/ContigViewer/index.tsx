@@ -1,4 +1,9 @@
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+} from 'react';
 
 import useURLAccession from 'hooks/useURLAccession';
 import useMGnifyData from 'hooks/data/useMGnifyData';
@@ -125,15 +130,6 @@ const ContigsViewer: React.FC = () => {
     }),
     [data, error, loading, queryParameters, setQueryParameters]
   );
-
-  // useEffect(() => {
-  //   if (data?.data?.[0] && !queryParameters.selected_contig) {
-  //     setQueryParameters({
-  //       ...queryParameters,
-  //       selected_contig: data.data[0].attributes['contig-id'],
-  //     });
-  //   }
-  // }, [data, queryParameters, setQueryParameters]);
 
   const contig = useMemo(() => {
     let selectedContig;
