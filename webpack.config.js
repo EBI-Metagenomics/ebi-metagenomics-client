@@ -4,6 +4,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = function (env, options) {
@@ -78,6 +79,11 @@ module.exports = function (env, options) {
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, 'public', 'index.html'),
         title: 'MGnify - EBI',
+      }),
+      new CopyPlugin({
+        patterns: [
+          { from: path.resolve(__dirname, 'public', '404.html'), to: '.' },
+        ],
       }),
       isEnvProduction &&
         new MiniCssExtractPlugin({
