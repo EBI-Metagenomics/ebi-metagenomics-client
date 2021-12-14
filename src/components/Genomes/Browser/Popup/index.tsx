@@ -191,11 +191,53 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
     ],
   };
 
+  const metaproteomicData = {
+    title: 'Metaproteomics',
+    data: [
+      {
+        name: 'Peptide sequence',
+        Value:
+          attributes.pep_seq &&
+          (() => <MultipleField value={attributes.pep_seq} />),
+      },
+      {
+        name: 'Protein specral matches (PSM)',
+        Value:
+          attributes.pep_psm &&
+          (() => <MultipleField value={attributes.pep_psm} />),
+      },
+      {
+        name: 'Validated PSM',
+        Value:
+          attributes.pep_vpsm &&
+          (() => <MultipleField value={attributes.pep_vpsm} />),
+      },
+      {
+        name: 'Confidence',
+        Value:
+          attributes.pep_conf &&
+          (() => <MultipleField value={attributes.pep_conf} />),
+      },
+      {
+        name: 'Pride ID',
+        Value:
+          attributes.pep_pxd &&
+          (() => (
+            <ExtLink
+              href={`https://www.ebi.ac.uk/pride/archive/projects/${attributes.pep_pxd}`}
+            >
+              {attributes.pep_pxd}
+            </ExtLink>
+          )),
+      },
+    ],
+  };
+
   return {
     name: attributes.id,
     gene: attributes.gene,
     product: attributes.product,
-    properties: [functionalData, otherData],
+    properties: [functionalData, otherData, metaproteomicData],
   };
 };
 
@@ -230,9 +272,11 @@ const GenomeBrowserPopup: React.FC<GenomeBrowserPopupProps> = ({ data }) => {
       </table>
       {properties.map((property) => (
         <table className="stack hover igv-popover-table" key={property.title}>
-          <caption className="igv-popover-section-header">
-            {property.title}
-          </caption>
+          {property.data.filter((d) => !!d.Value).length > 0 && (
+            <caption className="igv-popover-section-header">
+              {property.title}
+            </caption>
+          )}
           <tbody>
             {property.data
               .map(

@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import useURLAccession from 'hooks/useURLAccession';
 import useMGnifyData from 'hooks/data/useMGnifyData';
@@ -12,10 +18,14 @@ import useData, {
 import './style.css';
 import UserContext from 'pages/Login/UserContext';
 import igv from 'igv';
+
 import ContigsTable from 'components/Analysis/ContigViewer/Table';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
 import { find } from 'lodash-es';
+import GFFCompare from 'components/Analysis/ContigViewer/GFFCompare';
+import ReactDOMServer from 'react-dom/server';
+import GenomeBrowserPopup from 'components/Genomes/Browser/Popup';
 
 type ContigProps = {
   contig: MGnifyDatum;
@@ -31,6 +41,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
   const antiSMASH = contig.attributes['has-antismash'];
   const displayName = contig.attributes['contig-name'];
+  const [igvBrowser, setIgvBrowser] = useState(null);
 
   const igvContainer = useCallback(
     (node) => {
@@ -84,9 +95,10 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
       if (node === null) return;
       igv.createBrowser(node, options).then((browser) => {
-        browser.on('trackclick', (ignored, trackData) => {
-          // return igvPopup(data);
-        });
+        browser.on('trackclick', (ignored, trackData) =>
+          ReactDOMServer.renderToString(<GenomeBrowserPopup data={trackData} />)
+        );
+        setIgvBrowser(browser);
       });
     },
     [accession, antiSMASH, config.api, contigId, displayName, fastaURL]
@@ -99,6 +111,21 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   return (
     <div id="contig">
       <div ref={igvContainer} />
+      <GFFCompare
+        handleGFFTrack={(track) => {
+          if (igvBrowser.findTracks('name', track.name).length) {
+            // Don't load same track. Can happen in spurious re-renders.
+            return;
+          }
+          igvBrowser.loadTrack({
+            name: track.name,
+            type: 'annotation',
+            url: `data:application/octet-stream;base64,${track.encodedGFF}`,
+            format: 'gff3',
+            filterTypes: [],
+          });
+        }}
+      />
     </div>
   );
 };
