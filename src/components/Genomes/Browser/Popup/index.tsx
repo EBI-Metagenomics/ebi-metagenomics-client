@@ -26,19 +26,23 @@ const antiSMASHLabels = {
   resistance: 'Resistance genes',
 };
 
-const MultipleField: React.FC<{ value: string; url?: string }> = ({
-  value,
-  url,
-}) => {
+const MultipleField: React.FC<{
+  value: string;
+  url?: string;
+  decodeValue?: boolean;
+}> = ({ value, url, decodeValue }) => {
   if (!value) return null;
   const parts = value.split(',');
   return (
     <ul className="vf-list">
-      {parts.map((part) => (
-        <li key={part}>
-          {url ? <ExtLink href={`${url}${part}`}>{part}</ExtLink> : part}
-        </li>
-      ))}
+      {parts.map((part) => {
+        const text = decodeValue ? decodeURIComponent(part) : part;
+        return (
+          <li key={part}>
+            {url ? <ExtLink href={`${url}${part}`}>{text}</ExtLink> : text}
+          </li>
+        );
+      })}
     </ul>
   );
 };
@@ -195,38 +199,22 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
     title: 'Metaproteomics',
     data: [
       {
-        name: 'Peptide sequence',
+        name: 'Peptide sequences',
         Value:
-          attributes.pep_seq &&
-          (() => <MultipleField value={attributes.pep_seq} />),
-      },
-      {
-        name: 'Protein specral matches (PSM)',
-        Value:
-          attributes.pep_psm &&
-          (() => <MultipleField value={attributes.pep_psm} />),
-      },
-      {
-        name: 'Validated PSM',
-        Value:
-          attributes.pep_vpsm &&
-          (() => <MultipleField value={attributes.pep_vpsm} />),
-      },
-      {
-        name: 'Confidence',
-        Value:
-          attributes.pep_conf &&
-          (() => <MultipleField value={attributes.pep_conf} />),
+          attributes.peptide_sequences &&
+          (() => (
+            <MultipleField value={attributes.peptide_sequences} decodeValue />
+          )),
       },
       {
         name: 'Pride ID',
         Value:
-          attributes.pep_pxd &&
+          attributes.pride_id &&
           (() => (
             <ExtLink
-              href={`https://www.ebi.ac.uk/pride/archive/projects/${attributes.pep_pxd}`}
+              href={`https://www.ebi.ac.uk/pride/archive/projects/${attributes.pride_id}`}
             >
-              {attributes.pep_pxd}
+              {attributes.pride_id}
             </ExtLink>
           )),
       },
