@@ -34,7 +34,7 @@ const LatestStudy: React.FC<LatestStudyProps> = ({
       <p className="vf-summary__text">
         <TruncatedText text={abstract} />
       </p>
-      <div className="vf-summary__text vf-grid">
+      {/* <div className="vf-summary__text vf-grid">
         <Link to={`/studies/${id}`} className="vf-button vf-button--sm">
           View more
         </Link>
@@ -44,7 +44,7 @@ const LatestStudy: React.FC<LatestStudyProps> = ({
         >
           Samples
         </Link>
-      </div>
+      </div> */}
     </article>
   );
 };
