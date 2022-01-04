@@ -8,13 +8,19 @@
       // When the single page app is loaded further down in this file,
       // the correct url will be waiting in the browser's history for
       // the single page app to route accordingly.
-      (function(l) {
-        if (l.search[1] === '/' ) {
-          var decoded = l.search.slice(1).split('&').map(function(s) {
-            return s.replace(/~and~/g, '&')
-          }).join('?');
-          window.history.replaceState(null, null,
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(
+            null,
+            null,
             l.pathname.slice(0, -1) + decoded + l.hash
           );
         }
-      }(window.location))</script><script defer="defer" src="js/main.6990cc29.js"></script><link href="css/main.b1293c2e.css" rel="stylesheet"></head><body class="vf-body vf-stack ebi-black-bar-loaded embl-content-hub-loaded"><div id="root"></div></body></html>
+      })(window.location);</script><script defer="defer" src="js/main.a9eea852.js"></script><link href="css/main.b1293c2e.css" rel="stylesheet"></head><body class="vf-body vf-stack ebi-black-bar-loaded embl-content-hub-loaded"><div id="root"></div></body></html>
