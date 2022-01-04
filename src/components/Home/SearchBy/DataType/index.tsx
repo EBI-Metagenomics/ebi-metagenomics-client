@@ -38,31 +38,34 @@ const DataAnalysesTypeRow: React.FC<{
     </tr>
   );
 };
-const DataTypeRow: React.FC<{ label: string; endpoint: string; link: string }> =
-  ({ label, endpoint, link }) => {
-    const { data, loading, error } = useEBISearchData(endpoint, {
-      query: `domain_source:${endpoint}`,
-      size: 0,
-      fields: 'id,name,description,biome_name,metagenomics_samples',
-      facetcount: 0,
-      facetsdepth: 5,
-    });
-    if (error) return <FetchError error={error} />;
-    return (
-      <tr className="vf-table__row">
-        <td className="vf-table__cell" style={{ textAlign: 'right' }}>
-          {loading ? (
-            <Loading size="small" />
-          ) : (
-            <Link to={link} className="mg-link">
-              {data?.hitCount || '??'}
-            </Link>
-          )}
-        </td>
-        <td className="vf-table__cell">{label}</td>
-      </tr>
-    );
-  };
+const DataTypeRow: React.FC<{
+  label: string;
+  endpoint: string;
+  link: string;
+}> = ({ label, endpoint, link }) => {
+  const { data, loading, error } = useEBISearchData(endpoint, {
+    query: `domain_source:${endpoint}`,
+    size: 0,
+    fields: 'id,name,description,biome_name,metagenomics_samples',
+    facetcount: 0,
+    facetsdepth: 5,
+  });
+  if (error) return <FetchError error={error} />;
+  return (
+    <tr className="vf-table__row">
+      <td className="vf-table__cell" style={{ textAlign: 'right' }}>
+        {loading ? (
+          <Loading size="small" />
+        ) : (
+          <Link to={link} className="mg-link">
+            {data?.hitCount || '??'}
+          </Link>
+        )}
+      </td>
+      <td className="vf-table__cell">{label}</td>
+    </tr>
+  );
+};
 
 const DataType: React.FC = () => {
   const analysesTypes = [

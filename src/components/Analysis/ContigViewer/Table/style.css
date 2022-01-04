@@ -1,22 +1,22 @@
 div.emg-contig-feature-flag {
-    border-radius: 0.4em;
-    border: 2px solid;
-    width: 1.1em;
-    height: 1.3em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
+  border-radius: 0.4em;
+  border: 2px solid;
+  width: 1.1em;
+  height: 1.3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
 }
 
 div.emg-contig-feature-flags {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    align-items: center;
-    grid-column-gap: 4px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  align-items: center;
+  grid-column-gap: 4px;
 }
 
 button.contig-id-button {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
