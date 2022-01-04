@@ -6,7 +6,7 @@ import Loading from 'components/UI/Loading';
 
 type EMGTableProps = {
   cols: Column[];
-  data: Array<any>;
+  data: Array<unknown>;
   className?: string;
   sortable?: boolean;
   loading?: boolean;

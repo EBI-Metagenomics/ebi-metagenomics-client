@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { unescape } from 'lodash';
+import { unescape } from 'lodash-es';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
