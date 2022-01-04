@@ -54,7 +54,7 @@ const Biomes: React.FC = () => {
         ))}
       </div>
       <div className="mg-right">
-        <Link to="/biomes/" className="vf-button vf-button--primary">
+        <Link to="/browse/biomes/" className="vf-button vf-button--primary">
           View all biomes
         </Link>
       </div>
