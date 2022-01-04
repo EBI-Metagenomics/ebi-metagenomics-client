@@ -128,7 +128,7 @@ describe('Home page', function() {
 
         it('Click to view specific study', function() {
             cy.get('.latest-studies-section > .study', {timeout: 5000}).should('have.length', parseInt(25));
-            cy.get('.latest-studies-section').contains('View more').first().click();
+            // cy.get('.latest-studies-section').contains('View more').first().click();
             // cy.contains('Study');
             // cy.title().should('include', 'Study');
         });
