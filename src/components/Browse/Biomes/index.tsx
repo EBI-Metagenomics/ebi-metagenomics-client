@@ -13,7 +13,7 @@ const BrowseBiomes: React.FC = () => {
   const [queryParameters] = useQueryParametersState(
     {
       page: 1,
-      order: '',
+      order: '-samples_count',
       page_size: 25,
       search: '',
     },
@@ -68,6 +68,7 @@ const BrowseBiomes: React.FC = () => {
       },
       {
         Header: 'Samples excluding sub-lineages',
+        id: 'samples_count',
         accessor: (biome) => ({
           lineage: biome.attributes.lineage,
           count: biome.attributes['samples-count'],
