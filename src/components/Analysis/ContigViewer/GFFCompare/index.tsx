@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import {
   db,
@@ -6,8 +6,10 @@ import {
   GFF,
 } from 'components/Analysis/ContigViewer/GFFCompare/gff_db';
 import { useLiveQuery } from 'dexie-react-hooks';
+
 import ArrowForLink from 'components/UI/ArrowForLink';
 import PlainTable from 'components/UI/PlainTable';
+import FileUploaderButton from 'components/UI/FileUploaderButton';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 
 Modal.setAppElement('#root');
@@ -32,7 +34,6 @@ const modalStyle = {
 
 const GFFCompare: React.FC<GFFCompareProps> = ({ handleGFFTrack }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
-  const fileInput = useRef<HTMLInputElement>(null);
   const [uploadError, setUploadError] = useState(null);
   const [comparisonQueryParams, setComparisonQueryParams] =
     useQueryParametersState(
@@ -146,22 +147,12 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ handleGFFTrack }) => {
                 The GFF will be stored in your browser, not sent to MGnify
                 servers.
               </p>
-
-              <input
-                type="file"
-                id="upload-picker"
-                hidden
-                ref={fileInput}
-                onChange={(e) => addGff(e.target.files[0])}
+              <FileUploaderButton
+                onChange={(e) =>
+                  addGff((e.target as HTMLInputElement).files[0])
+                }
                 accept=".gff,.gff3"
               />
-              <button
-                className="vf-button vf-button--primary vf-button--sm"
-                onClick={() => fileInput.current?.click()}
-                type="button"
-              >
-                Browse for file...
-              </button>
               {uploadError && (
                 <p className="vf-form__helper vf-form__helper--error">
                   {uploadError}

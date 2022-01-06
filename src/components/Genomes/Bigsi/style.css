@@ -4,3 +4,11 @@
   font-size: 0.9em;
   margin: 0;
 }
+
+.vf-content input.mg-threshold {
+  width: 4em;
+  display: inline-block;
+  height: 1.8em;
+  margin: 2px;
+  border: 1px solid rgb(204, 204, 204);
+}

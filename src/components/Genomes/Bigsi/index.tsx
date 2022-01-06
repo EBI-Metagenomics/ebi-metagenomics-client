@@ -5,6 +5,7 @@ import ExtLink from 'src/components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
 
 import InfoBanner from 'src/components/UI/InfoBanner';
+import FileUploaderButton from 'src/components/UI/FileUploaderButton';
 import BigsiResults from './Results';
 
 import example1 from './examples/human-gut-v2-0.txt';
@@ -29,7 +30,6 @@ type BigsyProps = {
 };
 const BigsiSearch: React.FC<BigsyProps> = ({ catalogueName, catalogueID }) => {
   const textareaSeq = useRef(null);
-  const fileInput = useRef(null);
   const [shouldSearch, setShouldSearch] = useState(false);
   const [kmers, setKmers] = useState(KMERS_DEFAULT);
   const [errors, setErrors] = useState<{
@@ -61,11 +61,10 @@ const BigsiSearch: React.FC<BigsyProps> = ({ catalogueName, catalogueID }) => {
     setSequence('');
     setKmers(KMERS_DEFAULT);
     setShouldSearch(false);
-    fileInput.current.value = '';
   };
 
-  const handleFileLoad = (): void => {
-    const { files } = fileInput.current as HTMLInputElement;
+  const handleFileLoad = (event): void => {
+    const { files } = event.target;
     const reader = new FileReader();
 
     reader.addEventListener(
@@ -97,39 +96,40 @@ const BigsiSearch: React.FC<BigsyProps> = ({ catalogueName, catalogueID }) => {
       </section>
       <section>
         <div>
-          <h5>Paste a sequence</h5>
-          <div id="message-containter" />
+          <h5>Enter a sequence</h5>
+          <p>You can use any of these methods to enter your sequence:</p>
+          <ul>
+            <li>Paste in your sequence in the area below.</li>
+            <li>
+              <label
+                htmlFor="sequence"
+                id="example-seq"
+                style={{ cursor: 'pointer' }}
+              >
+                Use the{' '}
+                <button
+                  type="button"
+                  className="vf-button vf-button--link mg-button-as-link"
+                  onClick={handleExampleClick}
+                >
+                  example.
+                </button>
+              </label>
+            </li>
+            <li>
+              <label htmlFor="fasta-file" style={{ cursor: 'pointer' }}>
+                Upload a fasta file{' '}
+                <FileUploaderButton
+                  onChange={handleFileLoad}
+                  accept=".fasta, .fna, .ffn, .frn, .fa, .txt"
+                />
+              </label>
+            </li>
+          </ul>
         </div>
 
         <section>
-          <div>
-            <label
-              htmlFor="sequence"
-              id="example-seq"
-              style={{ cursor: 'pointer' }}
-            >
-              Paste in your sequence or use the{' '}
-              <button
-                type="button"
-                className="vf-button vf-button--link mg-button-as-link"
-                onClick={handleExampleClick}
-              >
-                example.
-              </button>
-            </label>
-
-            <label htmlFor="fasta-file" style={{ cursor: 'pointer' }}>
-              Or upload a fasta file{' '}
-              <input
-                type="file"
-                name="fasta"
-                id="fasta-file"
-                accept=".fasta, .fna, .ffn, .frn, .fa, .txt"
-                onChange={handleFileLoad}
-                ref={fileInput}
-              />
-            </label>
-          </div>
+          <div />
           <div>
             <textarea-sequence
               id="textareaID"
@@ -162,6 +162,7 @@ const BigsiSearch: React.FC<BigsyProps> = ({ catalogueName, catalogueID }) => {
               value={kmers}
               step="0.1"
               onChange={handleKmersChange}
+              className="vf-form__input mg-threshold"
             />
           </div>
           {!valid && (
