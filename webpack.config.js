@@ -54,6 +54,10 @@ module.exports = function (env, options) {
             filename: 'static/[hash][ext][query]',
           },
         },
+        {
+          test: /\.(txt|fa|fasta)$/,
+          type: 'asset/source',
+        },
       ],
     },
     resolve: {

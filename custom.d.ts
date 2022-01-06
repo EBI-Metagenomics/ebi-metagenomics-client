@@ -23,6 +23,10 @@ declare module '*.png' {
   const file: any;
   export default file;
 }
+declare module '*.txt' {
+  const file: any;
+  export default file;
+}
 
 declare module 'igv' {
   type Browser = {
@@ -38,4 +42,19 @@ declare module 'igv' {
     createBrowser: (element: unknown, options: unknown) => Promise<Browser>;
   };
   export default igv;
+}
+
+declare namespace JSX {
+  interface IntrinsicElements {
+    'textarea-sequence': TextareaSequenceProps;
+  }
+}
+
+interface TextareaSequenceProps
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLElement>,
+    HTMLElement
+  > {
+  height: string;
+  single: 'true' | 'false';
 }

@@ -133,6 +133,9 @@ export interface DataResponse {
 export interface HTMLDataResponse extends DataResponse {
   data: HTMLHtmlElement;
 }
+export interface MGnifyResponseGenericObj extends DataResponse {
+  data: KeyValue;
+}
 
 async function fetchData(
   url: string,

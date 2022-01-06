@@ -45,6 +45,7 @@
     "react-router-dom": "6.2.1",
     "react-select": "5.2.1",
     "react-table": "^7.7.0",
+    "textarea-sequence": "3.5.1",
     "universal-cookie": "4.0.4"
   },
   "devDependencies": {

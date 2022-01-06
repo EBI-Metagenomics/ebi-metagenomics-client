@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseObj } from 'hooks/data/useData';
@@ -8,8 +9,7 @@ import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import GenomesTable from 'components/Genomes/Table';
 import PhyloTree from 'components/Genomes/PhyloTree';
-import ReactMarkdown from 'react-markdown';
-
+import BigsiSearch from 'components/Genomes/Bigsi';
 import RouteForHash from 'components/Nav/RouteForHash';
 
 const tabs = [
@@ -45,6 +45,12 @@ const GenomePage: React.FC = () => {
           </RouteForHash>
           <RouteForHash hash="#phylo-tab">
             <PhyloTree />
+          </RouteForHash>
+          <RouteForHash hash="#genome-search-tab">
+            <BigsiSearch
+              catalogueName={genomeData.attributes.name as string}
+              catalogueID={genomeData.id}
+            />
           </RouteForHash>
           <RouteForHash hash="#protein-catalog-tab">
             <h3>{genomeData.attributes['protein-catalogue-name'] as string}</h3>

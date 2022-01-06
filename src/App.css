@@ -38,6 +38,11 @@ button.mg-button-as-link {
   font-size: 1em;
 }
 
+button.mg-button[disabled] {
+  background-color: lightgrey;
+  border-color: lightgrey;
+}
+
 .mg-flex {
   display: flex;
   gap: var(--page-grid-gap, 1em);

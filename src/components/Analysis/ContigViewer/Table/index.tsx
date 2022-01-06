@@ -1,12 +1,9 @@
 import React, { useContext, useMemo } from 'react';
 
-import Tippy from '@tippyjs/react';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import 'tippy.js/dist/tippy.css';
-
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
+import Tooltip from 'components/UI/Tooltip';
 import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
 
 import './style.css';
@@ -54,14 +51,14 @@ const ContigFeatureFlag: React.FC<ContigFeatureProps> = ({
     present ? 'Has' : 'Does’t have'
   } ${annotationType} annotations`;
   return (
-    <Tippy content={tooltip}>
+    <Tooltip content={tooltip}>
       <div
         className="emg-contig-feature-flag vf-text vf-text-body--4"
         style={{ borderColor: color, color }}
       >
         {letter}
       </div>
-    </Tippy>
+    </Tooltip>
   );
 };
 
