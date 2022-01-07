@@ -1,5 +1,6 @@
 import React from 'react';
 import ExtLink from 'components/UI/ExtLink';
+import './style.css';
 
 type PropertyDataType = { name: string; value: string | number };
 type GenomeBrowserPopupProps = {
@@ -38,7 +39,7 @@ const MultipleField: React.FC<{
       {parts.map((part) => {
         const text = decodeValue ? decodeURIComponent(part) : part;
         return (
-          <li key={part}>
+          <li key={part} className="igv-popup-multiple-field-item">
             {url ? <ExtLink href={`${url}${part}`}>{text}</ExtLink> : text}
           </li>
         );

@@ -101,7 +101,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
         setIgvBrowser(browser);
       });
     },
-    [accession, antiSMASH, config.api, contigId, displayName, fastaURL]
+    [fastaURL, displayName, config.api, accession, contigId, antiSMASH]
   );
 
   if (loading) return <Loading size="small" />;
@@ -111,21 +111,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   return (
     <div id="contig">
       <div ref={igvContainer} />
-      <GFFCompare
-        handleGFFTrack={(track) => {
-          if (igvBrowser.findTracks('name', track.name).length) {
-            // Don't load same track. Can happen in spurious re-renders.
-            return;
-          }
-          igvBrowser.loadTrack({
-            name: track.name,
-            type: 'annotation',
-            url: `data:application/octet-stream;base64,${track.encodedGFF}`,
-            format: 'gff3',
-            filterTypes: [],
-          });
-        }}
-      />
+      <GFFCompare igvBrowser={igvBrowser} />
     </div>
   );
 };
@@ -136,6 +122,7 @@ const ContigsViewer: React.FC = () => {
   const [queryParameters, setQueryParameters] = useQueryParametersState({
     contigsPageCursor: '',
     selectedContig: '',
+    gffComparisonId: '',
   });
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/contigs`,
