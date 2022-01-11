@@ -169,7 +169,7 @@ const DataType: React.FC = () => {
   const emgApiTypes = [
     {
       endpoint: 'genome-catalogues',
-      link: '/browse#genomes',
+      link: '/browse/genomes',
       aggregator: (cataloguesData) =>
         cataloguesData?.data
           ?.map((cat) => cat.attributes['genome-count'])
