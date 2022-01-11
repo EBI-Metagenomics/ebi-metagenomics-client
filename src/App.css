@@ -22,6 +22,9 @@ body div#root a.mg-link:hover {
 div.mg-right {
   text-align: right;
 }
+div.mg-center {
+  text-align: center;
+}
 
 span.mg-number {
   font-size: 0.9rem;
@@ -41,6 +44,9 @@ button.mg-button-as-link {
 button.mg-button[disabled] {
   background-color: lightgrey;
   border-color: lightgrey;
+  transform: none;
+  box-shadow: 8px 8px 0 #ddd, -5px -5px rgb(0 0 0 / 0%);
+  cursor: initial;
 }
 
 .mg-flex {

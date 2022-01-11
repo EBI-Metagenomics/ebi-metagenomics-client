@@ -87,6 +87,14 @@ module.exports = function (env, options) {
       new CopyPlugin({
         patterns: [
           { from: path.resolve(__dirname, 'public', '404.html'), to: '.' },
+          {
+            from: '*.{js,map,wasm}',
+            context: path.resolve(
+              __dirname,
+              'node_modules/mgnify-sourmash-component/dist/'
+            ),
+            to: 'js/',
+          },
         ],
       }),
       isEnvProduction &&

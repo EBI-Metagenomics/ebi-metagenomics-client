@@ -289,7 +289,15 @@ const EMGTable: React.FC<EMGTableProps> = ({
                 <tr {...row.getRowProps()} className="vf-table__row">
                   {row.cells.map((cell) => {
                     return (
-                      <td {...cell.getCellProps()} className="vf-table__cell">
+                      <td
+                        {...cell.getCellProps()}
+                        colSpan={
+                          typeof cell.column?.colspan === 'function'
+                            ? cell.column.colspan(cell)
+                            : cell.column?.colspan
+                        }
+                        className="vf-table__cell"
+                      >
                         {cell.render('Cell')}
                       </td>
                     );

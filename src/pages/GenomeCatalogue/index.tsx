@@ -10,6 +10,7 @@ import Tabs from 'components/UI/Tabs';
 import GenomesTable from 'components/Genomes/Table';
 import PhyloTree from 'components/Genomes/PhyloTree';
 import BigsiSearch from 'components/Genomes/Bigsi';
+import SourmashSearch from 'components/Genomes/Sourmash';
 import RouteForHash from 'components/Nav/RouteForHash';
 
 const tabs = [
@@ -48,6 +49,12 @@ const GenomePage: React.FC = () => {
           </RouteForHash>
           <RouteForHash hash="#genome-search-tab">
             <BigsiSearch
+              catalogueName={genomeData.attributes.name as string}
+              catalogueID={genomeData.id}
+            />
+          </RouteForHash>
+          <RouteForHash hash="#genome-search-mag-tab">
+            <SourmashSearch
               catalogueName={genomeData.attributes.name as string}
               catalogueID={genomeData.id}
             />

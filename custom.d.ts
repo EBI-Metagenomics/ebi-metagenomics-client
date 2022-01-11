@@ -47,6 +47,7 @@ declare module 'igv' {
 declare namespace JSX {
   interface IntrinsicElements {
     'textarea-sequence': TextareaSequenceProps;
+    'mgnify-sourmash-component': MGnifySourmashComponentProps;
   }
 }
 
@@ -57,4 +58,12 @@ interface TextareaSequenceProps
   > {
   height: string;
   single: 'true' | 'false';
+}
+interface MGnifySourmashComponentProps
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLElement>,
+    HTMLElement
+  > {
+  id: string;
+  show_directory_checkbox: boolean;
 }

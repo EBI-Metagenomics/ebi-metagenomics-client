@@ -166,32 +166,29 @@ const BigsiSearch: React.FC<BigsyProps> = ({ catalogueName, catalogueID }) => {
             />
           </div>
           {!valid && (
-            <InfoBanner
-              Content={() => (
-                <div>
-                  <p>
-                    The sequence above has the following errors and can&apos;t
-                    be submitted.
-                  </p>
-                  <ul>
-                    {errors.tooShort && (
-                      <li>
-                        The sequence has to have at least {MIN_BASES}{' '}
-                        nucleotides
-                      </li>
-                    )}
-                    {errors.hasInvalidCharacters && (
-                      <li>The sequence has invalid characters</li>
-                    )}
-                    {errors.multipleSequences && (
-                      <li>
-                        There are multiple sequences and only 1 is supported
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              )}
-            />
+            <InfoBanner>
+              <div>
+                <p>
+                  The sequence above has the following errors and can&apos;t be
+                  submitted.
+                </p>
+                <ul>
+                  {errors.tooShort && (
+                    <li>
+                      The sequence has to have at least {MIN_BASES} nucleotides
+                    </li>
+                  )}
+                  {errors.hasInvalidCharacters && (
+                    <li>The sequence has invalid characters</li>
+                  )}
+                  {errors.multipleSequences && (
+                    <li>
+                      There are multiple sequences and only 1 is supported
+                    </li>
+                  )}
+                </ul>
+              </div>
+            </InfoBanner>
           )}
           <div className="mg-right">
             {!valid && (
