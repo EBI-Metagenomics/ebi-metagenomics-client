@@ -1,0 +1,1 @@
+/*! For license information please see mgnify-sourmash-component.js.LICENSE.txt */
