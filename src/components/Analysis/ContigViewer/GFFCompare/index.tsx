@@ -119,6 +119,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
         ),
       },
     ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comparisonQueryParams, setComparisonQueryParams]);
 
   async function addGff(gffFile): Promise<void> {

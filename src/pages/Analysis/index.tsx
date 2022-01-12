@@ -9,6 +9,7 @@ import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Analysis/Overview';
 import QualityControl from 'components/Analysis/QualityControl';
 import ContigViewer from 'components/Analysis/ContigViewer';
+import TaxonomySubpage from 'components/Analysis/Taxonomy';
 import RouteForHash from 'components/Nav/RouteForHash';
 import { Link } from 'react-router-dom';
 
@@ -81,6 +82,9 @@ const AnalysisPage: React.FC = () => {
           </RouteForHash>
           <RouteForHash hash="#contigs-viewer">
             <ContigViewer />
+          </RouteForHash>
+          <RouteForHash hash="#taxonomic">
+            <TaxonomySubpage accession={accession} />
           </RouteForHash>
         </div>
       </section>
