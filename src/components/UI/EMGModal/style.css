@@ -1,0 +1,13 @@
+.ReactModal__Body--open {
+    overflow: hidden;
+}
+
+.emg-modal-close {
+    position: fixed;
+    right: 8px;
+    top: 8px;
+}
+
+.emg-modal-close > button > i {
+    color: var(--vf-color__text--secondary, #373a36);
+}

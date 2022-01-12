@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ExtLink from 'components/UI/ExtLink';
 import EuropePMCLogo from 'images/europe_pmc_logo.png';
 import useMGnifyData from 'hooks/data/useMGnifyData';
@@ -10,11 +10,7 @@ import Accordion, {
   AccordionContentPanel,
   AccordionList,
 } from 'components/UI/Accordion';
-
-type PublicationAnnotationProps = {
-  publicationId: string;
-  pubmedId: string;
-};
+import EMGModal from 'components/UI/EMGModal';
 
 type Tag = {
   name: string;
@@ -114,6 +110,10 @@ const AnnotationSuperGroup: React.FC<{
     </>
   );
 };
+type PublicationAnnotationProps = {
+  publicationId: string;
+  pubmedId: string;
+};
 
 const PublicationAnnotations: React.FC<PublicationAnnotationProps> = ({
   publicationId,
@@ -130,7 +130,7 @@ const PublicationAnnotations: React.FC<PublicationAnnotationProps> = ({
   );
 
   return (
-    <div className="vf-stack vf-stack--200">
+    <div className="vf-stack vf-stack--400">
       <div style={{ width: '100%', textAlign: 'right' }}>
         Powered by <a href="https://europepmc.org">Europe PMC</a>.
         <img
@@ -166,6 +166,47 @@ const PublicationAnnotations: React.FC<PublicationAnnotationProps> = ({
         </>
       )}
     </div>
+  );
+};
+
+export const PublicationAnnotationsPopupBadge: React.FC<
+  PublicationAnnotationProps
+> = ({ publicationId, pubmedId }) => {
+  const { data, loading, error } = useMGnifyData(
+    `publications/${publicationId}/europe_pmc_annotations`
+  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  if (loading) return <Loading size="small" />;
+  if (error) return <FetchError error={error} />;
+  const annotations = data.data as unknown as Record<string, AnnotationGroup[]>;
+  const hasAnnotations = !!(
+    annotations?.sample_processing?.length || annotations.other?.length
+  );
+  if (!hasAnnotations) return null;
+  return (
+    <>
+      <EMGModal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel={`Europe PMC Annotations for ${publicationId}`}
+      >
+        <h1>Annotations from Europe PMC</h1>
+        <PublicationAnnotations
+          publicationId={publicationId}
+          pubmedId={pubmedId}
+        />
+      </EMGModal>
+      <button
+        className="vf-button vf-button--link vf-button--sm"
+        type="button"
+        onClick={() => setIsModalOpen(true)}
+      >
+        <span className="vf-badge vf-badge--secondary">
+          <i className="icon icon-common" data-icon="&#xf1c0;" /> meta
+        </span>{' '}
+        Show metadata from Europe PMC Annotations
+      </button>
+    </>
   );
 };
 

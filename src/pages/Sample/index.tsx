@@ -12,6 +12,7 @@ import AssociatedRuns from 'components/Sample/Runs';
 import AssociatedAssemblies from 'src/components/Assembly/Assemblies';
 import RouteForHash from 'components/Nav/RouteForHash';
 import KeyValueList from 'components/UI/KeyValueList';
+import AnnotationMetadata from 'components/Sample/AnnotationMetadata';
 
 const tabs = [
   { label: 'Sample metadata', to: '#' },
@@ -46,6 +47,7 @@ const SamplePage: React.FC = () => {
                     }[]) || []
                   }
                 />
+                <AnnotationMetadata sampleAccession={accession} />
               </RouteForHash>
               <RouteForHash hash="#studies">
                 <AssociatedStudies rootEndpoint="samples" />
