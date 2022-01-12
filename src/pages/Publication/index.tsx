@@ -9,6 +9,7 @@ import Box from 'components/UI/Box';
 import KeyValueList from 'components/UI/KeyValueList';
 import ExtLink from 'components/UI/ExtLink';
 import AssociatedStudies from 'components/Study/Studies';
+import PublicationAnnotations from 'components/Publications/EuropePMCAnnotations';
 
 const PublicationPage: React.FC = () => {
   const accession = useURLAccession();
@@ -67,6 +68,12 @@ const PublicationPage: React.FC = () => {
           )}
           <Box label="Publication details">
             <KeyValueList list={details} />
+          </Box>
+          <Box label="Europe PMC Annotations">
+            <PublicationAnnotations
+              publicationId={accession}
+              pubmedId={publicationData.id}
+            />
           </Box>
           <Box label="Associated studies">
             <AssociatedStudies rootEndpoint="publications" />
