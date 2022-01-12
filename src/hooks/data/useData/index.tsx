@@ -65,7 +65,11 @@ export type MGnifyDatum = {
 };
 
 export interface MGnifyResponse {
-  data: Array<MGnifyDatum> | MGnifyDatum | Record<string, unknown>[];
+  data:
+    | Array<MGnifyDatum>
+    | MGnifyDatum
+    | Record<string, unknown>
+    | Record<string, unknown>[];
   links: {
     first?: string;
     last?: string;
