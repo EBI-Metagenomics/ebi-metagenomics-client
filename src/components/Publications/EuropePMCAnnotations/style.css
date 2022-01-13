@@ -1,8 +1,8 @@
 .publications-epmc-annotation-prefix {
-    color: var(--vf-color--neutral--600, #707372);
+  color: var(--vf-color--neutral--600, #707372);
 }
 
 .publication-epmc-mention {
-    padding: 8px;
-    border-bottom: 1px solid var(--vf-color--neutral--200, #e4e4e4);
+  padding: 8px;
+  border-bottom: 1px solid var(--vf-color--neutral--200, #e4e4e4);
 }

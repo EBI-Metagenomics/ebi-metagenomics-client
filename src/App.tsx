@@ -11,7 +11,7 @@ import CookieBanner from './components/UI/CookieBanner';
 import MainMenu from './components/Nav/MainMenu';
 import Loading from './components/UI/Loading';
 import LoginMonitor from './components/Login/Monitor';
-
+import ErrorBoundary from './components/ErrorBoundary';
 import UserContext from './pages/Login/UserContext';
 
 import './App.css';
@@ -68,31 +68,33 @@ const App: React.FC = () => {
           className="vf-body"
           style={{ marginBottom: '1em', marginTop: '0.5em' }}
         >
-          <Suspense fallback={<Loading size="large" />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/help" element={<Help />} />
-              <Route path="/search/*" element={<TextSearch />} />
-              <Route path="/sequence-search" element={<SequenceSearch />} />
-              <Route path="/browse/*" element={<Browse />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/submit" element={<Submit />} />
-              <Route path="/studies/*" element={<Study />} />
-              <Route path="/super-studies/*" element={<SuperStudy />} />
-              <Route path="/samples/*" element={<Sample />} />
-              <Route path="/publications/*" element={<Publication />} />
-              <Route
-                path="/genome-catalogues/*"
-                element={<GenomeCatalogue />}
-              />
-              <Route path="/genomes/*" element={<Genome />} />
-              <Route path="/runs/*" element={<Run />} />
-              <Route path="/assemblies/*" element={<Assembly />} />
-              <Route path="/pipelines/*" element={<Pipelines />} />
-              <Route path="/analyses/*" element={<Analysis />} />
-            </Routes>
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<Loading size="large" />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/help" element={<Help />} />
+                <Route path="/search/*" element={<TextSearch />} />
+                <Route path="/sequence-search" element={<SequenceSearch />} />
+                <Route path="/browse/*" element={<Browse />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/submit" element={<Submit />} />
+                <Route path="/studies/*" element={<Study />} />
+                <Route path="/super-studies/*" element={<SuperStudy />} />
+                <Route path="/samples/*" element={<Sample />} />
+                <Route path="/publications/*" element={<Publication />} />
+                <Route
+                  path="/genome-catalogues/*"
+                  element={<GenomeCatalogue />}
+                />
+                <Route path="/genomes/*" element={<Genome />} />
+                <Route path="/runs/*" element={<Run />} />
+                <Route path="/assemblies/*" element={<Assembly />} />
+                <Route path="/pipelines/*" element={<Pipelines />} />
+                <Route path="/analyses/*" element={<Analysis />} />
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
         </div>
         <ElixirBanner />
         <EBIFooter />

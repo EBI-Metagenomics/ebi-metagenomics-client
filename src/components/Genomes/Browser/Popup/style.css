@@ -1,9 +1,9 @@
 .igv-popover {
-    z-index: 10000;
-    max-width: 60%;
+  z-index: 10000;
+  max-width: 60%;
 }
 
 li.igv-popup-multiple-field-item:not(:last-child) {
-    border-bottom: 1px solid var(--vf-color--neutral--200);
-    padding-bottom: 4px;
+  border-bottom: 1px solid var(--vf-color--neutral--200);
+  padding-bottom: 4px;
 }

@@ -17,30 +17,15 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": [
-    "react",
-    "@typescript-eslint",
-    "react-hooks"
-  ],
+  "plugins": ["react", "@typescript-eslint", "react-hooks"],
   "rules": {
-    "@typescript-eslint/no-use-before-define": [
-      "error"
-    ],
-    "@typescript-eslint/no-shadow": [
-      "error"
-    ],
-    "@typescript-eslint/explicit-function-return-type": [
-      "error",
-      {
-        "allowExpressions": true
-      }
-    ],
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/explicit-function-return-type": "off",
     "react/jsx-filename-extension": [
       "warn",
       {
-        "extensions": [
-          ".tsx"
-        ]
+        "extensions": [".tsx"]
       }
     ],
     "react/no-unstable-nested-components": [
