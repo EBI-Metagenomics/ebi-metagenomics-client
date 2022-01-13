@@ -57,7 +57,6 @@ const StackedColumnChart: React.FC<StackedColumnChartProps> = ({
         );
       }
     }
-    chartComponentRef.current.chart.redraw();
   }, [selectedValue]);
 
   const dataSummary = transformData(clusteredData);

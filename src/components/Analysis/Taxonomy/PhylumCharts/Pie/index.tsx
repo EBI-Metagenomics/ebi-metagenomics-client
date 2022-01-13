@@ -84,7 +84,6 @@ const PieChart: React.FC<PieProps> = ({
         chartComponentRef.current.chart.series[0].data[index]
       );
     }
-    chartComponentRef.current.chart.redraw();
   }, [selectedValue]);
   const groupedData = groupAfterN(clusteredData, 10);
   const options: Record<string, unknown> = {

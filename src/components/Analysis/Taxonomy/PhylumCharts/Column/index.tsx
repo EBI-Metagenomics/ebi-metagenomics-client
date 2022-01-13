@@ -46,7 +46,6 @@ const ColumnChart: React.FC<ColumnChartProps> = ({
         );
       }
     }
-    chartComponentRef.current.chart.redraw();
   }, [selectedValue]);
 
   const dataSummary = clusteredData.slice(0, NUM_COLUMNS);
