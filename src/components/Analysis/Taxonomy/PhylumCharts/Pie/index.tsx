@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { TAXONOMY_COLOURS } from 'src/utils/taxon';
@@ -48,14 +48,32 @@ type PieProps = {
   clusteredData: Array<TaxDatum>;
   title: string;
   showLegend?: boolean;
+  selectedValue?: number | null;
 };
 
 const PieChart: React.FC<PieProps> = ({
   clusteredData,
   title,
+  selectedValue = null,
   showLegend = false,
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+  useEffect(() => {
+    if (chartComponentRef.current && selectedValue !== null) {
+      const index = Math.min(
+        selectedValue as number,
+        chartComponentRef.current.chart.series[0].data.length - 1
+      );
+      chartComponentRef.current.chart.series[0].data.forEach((d) =>
+        d.setState('')
+      );
+      chartComponentRef.current.chart.series[0].data[index].setState('hover');
+      chartComponentRef.current.chart.tooltip.refresh(
+        chartComponentRef.current.chart.series[0].data[index]
+      );
+    }
+    chartComponentRef.current.chart.redraw();
+  }, [selectedValue]);
   const groupedData = groupAfterN(clusteredData, 10);
   const options: Record<string, unknown> = {
     chart: {
@@ -96,6 +114,7 @@ const PieChart: React.FC<PieProps> = ({
       },
     ],
   };
+
   if (showLegend) {
     options.legend = {
       title: {
@@ -114,7 +133,6 @@ const PieChart: React.FC<PieProps> = ({
       /* eslint-enable react/no-this-in-sfc */
     };
   }
-
   return (
     <HighchartsReact
       highcharts={Highcharts}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Row } from 'react-table';
 
 import EMGTable from 'components/UI/EMGTable';
 import { useQueryParametersState } from 'src/hooks/useQueryParamState';
@@ -29,8 +30,14 @@ const sortFunction = (order) => (a: TaxDatum, b: TaxDatum) => {
 
 type PhylumTableProps = {
   clusteredData: Array<TaxDatum>;
+  onMouseEnterRow?: (row: Row) => void;
+  onMouseLeaveRow?: (row: Row) => void;
 };
-const PhylumTable: React.FC<PhylumTableProps> = ({ clusteredData }) => {
+const PhylumTable: React.FC<PhylumTableProps> = ({
+  clusteredData,
+  onMouseEnterRow = () => null,
+  onMouseLeaveRow = () => null,
+}) => {
   const [{ order }] = useQueryParametersState({ order: '' });
 
   const columns = [
@@ -80,6 +87,8 @@ const PhylumTable: React.FC<PhylumTableProps> = ({ clusteredData }) => {
       initialPageSize={100}
       className="mg-anlyses-table"
       showPagination={false}
+      onMouseEnterRow={onMouseEnterRow}
+      onMouseLeaveRow={onMouseLeaveRow}
       sortable
     />
   );

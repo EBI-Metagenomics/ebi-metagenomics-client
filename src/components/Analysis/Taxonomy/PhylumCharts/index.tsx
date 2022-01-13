@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Row } from 'react-table';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
@@ -7,6 +8,7 @@ import { MGnifyDatum } from 'src/hooks/data/useData';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
 import PhylumTable from '../PhylumTable';
 import PhylumPie from './Pie';
+import PhylumColumn from './Column';
 
 const DEPTH_TO_CLUSTER = 2;
 
@@ -96,6 +98,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/taxonomy${category}`
   );
+  const [selectedRow, setSelectedRow] = useState(null);
 
   if (loading) return <Loading />;
   if (error) return <FetchError error={error} />;
@@ -105,6 +108,12 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
   );
   const clusteredDataTop = clusterData(data.data as MGnifyDatum[]);
   const includesDomainCharts = ['', '/ssu', '/lsu'].includes(category);
+  const handleMouseEnterRow = (row: Row): void => setSelectedRow(row.values);
+  const handleMouseLeaveRow = (): void => setSelectedRow(null);
+
+  const selectedCategory = clusteredDataTop.findIndex(
+    (e) => e.name === selectedRow?.lineage
+  );
   return (
     <div className="vf-stack">
       <div
@@ -113,6 +122,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
         {chartType === 'pie' && includesDomainCharts && (
           <PhylumPie
             clusteredData={clusteredDataTop}
+            selectedValue={selectedCategory >= 0 ? selectedCategory : null}
             title="Domain composition"
           />
         )}
@@ -120,14 +130,32 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
           <PhylumPie
             clusteredData={clusteredData}
             title="Phylum composition"
+            selectedValue={selectedRow ? selectedRow.i - 1 : null}
             showLegend
           />
         )}
-        {chartType === 'column' && <b>column</b>}
+        {chartType === 'column' && includesDomainCharts && (
+          <PhylumColumn
+            clusteredData={clusteredDataTop}
+            selectedValue={selectedCategory >= 0 ? selectedCategory : null}
+            title="Domain composition"
+          />
+        )}
+        {chartType === 'column' && (
+          <PhylumColumn
+            clusteredData={clusteredData}
+            title="Phylum composition (top 10)"
+            selectedValue={selectedRow ? selectedRow.i - 1 : null}
+          />
+        )}
         {chartType === 'stacked-column' && <b>stacked-column</b>}
       </div>
       <div>
-        <PhylumTable clusteredData={clusteredData} />
+        <PhylumTable
+          clusteredData={clusteredData}
+          onMouseEnterRow={handleMouseEnterRow}
+          onMouseLeaveRow={handleMouseLeaveRow}
+        />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import React, {
   useState,
   MouseEventHandler,
 } from 'react';
-import { Column, usePagination, useSortBy, useTable } from 'react-table';
+import { Column, usePagination, useSortBy, useTable, Row } from 'react-table';
 
 import Loading from 'components/UI/Loading';
 import { MGnifyResponse, MGnifyDatum } from 'src/hooks/data/useData';
@@ -84,6 +84,8 @@ type EMGTableProps = {
   loading?: boolean;
   isStale?: boolean;
   downloadURL?: string;
+  onMouseEnterRow?: (row: Row) => void;
+  onMouseLeaveRow?: (row: Row) => void;
 };
 
 const EMGTable: React.FC<EMGTableProps> = ({
@@ -100,6 +102,8 @@ const EMGTable: React.FC<EMGTableProps> = ({
   loading = false,
   isStale = false,
   downloadURL = null,
+  onMouseEnterRow = () => null,
+  onMouseLeaveRow = () => null,
 }) => {
   const [queryParameters, setQueryParameters] = useQueryParametersState(
     {
@@ -286,7 +290,12 @@ const EMGTable: React.FC<EMGTableProps> = ({
             {rows.map((row) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()} className="vf-table__row">
+                <tr
+                  {...row.getRowProps()}
+                  className="vf-table__row"
+                  onMouseEnter={() => onMouseEnterRow(row)}
+                  onMouseLeave={() => onMouseLeaveRow(row)}
+                >
                   {row.cells.map((cell) => {
                     return (
                       <td
