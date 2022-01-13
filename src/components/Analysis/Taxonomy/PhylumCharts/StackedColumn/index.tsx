@@ -4,8 +4,6 @@ import HighchartsReact from 'highcharts-react-official';
 import { TAXONOMY_COLOURS } from 'src/utils/taxon';
 import { TaxDatum } from '..';
 
-const NUM_COLUMNS = 10;
-
 /**
  * Sum data by parameter
  */
@@ -16,20 +14,33 @@ function sumData(data: { y: number }[]): number {
   });
   return sum;
 }
-type ColumnChartProps = {
+/**
+ * Reformat data into multiple series
+ */
+function transformData(
+  data: Array<{ name: string; y: number }>
+): Array<{ name: string; data: [number]; color: string }> {
+  let i = 0;
+  const maxColorIndex = TAXONOMY_COLOURS.length - 1;
+  return data.map((e) => ({
+    name: e.name,
+    data: [e.y],
+    color: TAXONOMY_COLOURS[Math.min(i++, maxColorIndex)],
+  }));
+}
+
+type StackedColumnChartProps = {
   clusteredData: Array<TaxDatum>;
   title: string;
   showLegend?: boolean;
-  showTotal?: boolean;
   selectedValue?: number | null;
 };
 
-const ColumnChart: React.FC<ColumnChartProps> = ({
+const StackedColumnChart: React.FC<StackedColumnChartProps> = ({
   clusteredData,
   title,
   selectedValue = null,
   showLegend = false,
-  showTotal = false,
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   useEffect(() => {
@@ -39,19 +50,18 @@ const ColumnChart: React.FC<ColumnChartProps> = ({
       chartComponentRef.current.chart.series[0].data.forEach((d) =>
         d.setState('')
       );
-      if (index < chartComponentRef.current.chart.series[0].data.length) {
-        chartComponentRef.current.chart.series[0].data[index].setState('hover');
+      if (index < chartComponentRef.current.chart.series.length) {
+        chartComponentRef.current.chart.series[index].data[0].setState('hover');
         chartComponentRef.current.chart.tooltip.refresh(
-          chartComponentRef.current.chart.series[0].data[index]
+          chartComponentRef.current.chart.series[index].data[0]
         );
       }
     }
     chartComponentRef.current.chart.redraw();
   }, [selectedValue]);
 
-  const dataSummary = clusteredData.slice(0, NUM_COLUMNS);
-  const categories = dataSummary.map((e) => e.name);
-  const total = sumData(clusteredData);
+  const dataSummary = transformData(clusteredData);
+  const sum = sumData(clusteredData);
   const options: Record<string, unknown> = {
     chart: {
       plotBackgroundColor: null,
@@ -62,49 +72,49 @@ const ColumnChart: React.FC<ColumnChartProps> = ({
     title: {
       text: title,
     },
+    subtitle: {
+      text: `Total: ${sum} reads`,
+    },
     credits: {
       enabled: false,
-    },
-    series: [
-      {
-        colorByPoint: true,
-        data: dataSummary,
-        colors: TAXONOMY_COLOURS,
-      },
-    ],
-    xAxis: {
-      categories,
-      title: {
-        text: null,
-      },
-    },
-    yAxis: {
-      min: 0,
-      title: {
-        text: 'Number of sequences',
-        align: 'high',
-      },
-      labels: {
-        overflow: 'justify',
-      },
     },
     tooltip: {
       /* eslint-disable react/no-this-in-sfc */
       formatter() {
-        const perc = (100 * this.y) / total;
-        return `${this.x}<br/><b>${this.y}</b> reads (${perc.toFixed(2)}%)`;
+        const perc = (100 * this.y) / sum;
+        return (
+          `${this.series.name}<br/>` +
+          `<b>${this.y}</b> reads (${perc.toFixed(2)}%)`
+        );
       },
       /* eslint-enable react/no-this-in-sfc */
+    },
+    plotOptions: {
+      series: {
+        stacking: 'percent',
+        dataLabels: {
+          enabled: true,
+        },
+      },
+    },
+    yAxis: {
+      min: 0,
+      max: 100,
+    },
+    xAxis: {
+      title: {
+        text: null,
+        enabled: false,
+      },
+      labels: {
+        enabled: false,
+      },
     },
     legend: {
       enabled: false,
     },
+    series: dataSummary,
   };
-  if (showTotal) {
-    options.subtitle = {
-      text: `Total: ${sumData(clusteredData)} reads`,
-    };
-  }
 
   if (showLegend) {
     options.legend = {
@@ -133,4 +143,4 @@ const ColumnChart: React.FC<ColumnChartProps> = ({
   );
 };
 
-export default ColumnChart;
+export default StackedColumnChart;

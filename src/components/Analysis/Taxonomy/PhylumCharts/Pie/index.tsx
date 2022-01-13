@@ -5,6 +5,16 @@ import { TAXONOMY_COLOURS } from 'src/utils/taxon';
 import { TaxDatum } from '..';
 
 /**
+ * Sum data by parameter
+ */
+function sumData(data: { y: number }[]): number {
+  let sum = 0;
+  data.forEach((e) => {
+    sum += e.y;
+  });
+  return sum;
+}
+/**
  * Extend reference array of colours such that last colour is duplicated for
  * additional data point
  */
@@ -48,6 +58,7 @@ type PieProps = {
   clusteredData: Array<TaxDatum>;
   title: string;
   showLegend?: boolean;
+  showTotal?: boolean;
   selectedValue?: number | null;
 };
 
@@ -56,6 +67,7 @@ const PieChart: React.FC<PieProps> = ({
   title,
   selectedValue = null,
   showLegend = false,
+  showTotal = false,
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   useEffect(() => {
@@ -114,6 +126,11 @@ const PieChart: React.FC<PieProps> = ({
       },
     ],
   };
+  if (showTotal) {
+    options.subtitle = {
+      text: `Total: ${sumData(clusteredData)} reads`,
+    };
+  }
 
   if (showLegend) {
     options.legend = {

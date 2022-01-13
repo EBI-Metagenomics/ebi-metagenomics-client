@@ -9,6 +9,7 @@ import { TAXONOMY_COLOURS } from 'utils/taxon';
 import PhylumTable from '../PhylumTable';
 import PhylumPie from './Pie';
 import PhylumColumn from './Column';
+import PhylumStackedColumn from './StackedColumn';
 
 const DEPTH_TO_CLUSTER = 2;
 
@@ -117,7 +118,11 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
   return (
     <div className="vf-stack">
       <div
-        className={`vf-grid ${includesDomainCharts ? 'vf-grid__col-2' : ''}`}
+        className={`vf-grid ${
+          includesDomainCharts && chartType !== 'stacked-column'
+            ? 'vf-grid__col-2'
+            : ''
+        }`}
       >
         {chartType === 'pie' && includesDomainCharts && (
           <PhylumPie
@@ -131,6 +136,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
             clusteredData={clusteredData}
             title="Phylum composition"
             selectedValue={selectedRow ? selectedRow.i - 1 : null}
+            showTotal
             showLegend
           />
         )}
@@ -146,9 +152,16 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
             clusteredData={clusteredData}
             title="Phylum composition (top 10)"
             selectedValue={selectedRow ? selectedRow.i - 1 : null}
+            showTotal
           />
         )}
-        {chartType === 'stacked-column' && <b>stacked-column</b>}
+        {chartType === 'stacked-column' && (
+          <PhylumStackedColumn
+            clusteredData={clusteredData}
+            title="Phylum composition (top 10)"
+            selectedValue={selectedRow ? selectedRow.i - 1 : null}
+          />
+        )}
       </div>
       <div>
         <PhylumTable
