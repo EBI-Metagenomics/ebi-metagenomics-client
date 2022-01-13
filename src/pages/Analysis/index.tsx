@@ -56,21 +56,17 @@ const AnalysisPage: React.FC = () => {
       : null,
     { label: 'Download', to: '#download' },
   ].filter(Boolean);
-
+  const linkToOtherAnalyses = isAssembly(analysisData)
+    ? analysisData?.relationships?.assembly?.data?.id
+    : analysisData?.relationships?.run?.data?.id;
   return (
     <section className="vf-content">
       <h2>Analysis {accession}</h2>
-      <h4>
-        <Link
-          to={
-            isAssembly(analysisData)
-              ? `/assemblies/${analysisData.relationships.assembly.data.id}`
-              : `/runs/${analysisData.relationships.run.data.id}`
-          }
-        >
-          Other Analyses
-        </Link>
-      </h4>
+      {linkToOtherAnalyses && (
+        <h4>
+          <Link to={linkToOtherAnalyses}>Other Analyses</Link>
+        </h4>
+      )}
       <Tabs tabs={tabs} />
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
