@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { ReactChild, ReactChildren, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import CoverImage from 'images/cover_main_publication.gif';
 import publications from './publications.json';
@@ -13,6 +14,7 @@ const trimAuthors = (text: string, maxAuthorsLength: number): string => {
 };
 
 export const Publication: React.FC<{
+  id?: string;
   title: string;
   journal: string;
   year: number;
@@ -20,14 +22,30 @@ export const Publication: React.FC<{
   doi: string;
   authors: string;
   maxAuthorsLength?: number;
-}> = ({ title, journal, year, link, doi, authors, maxAuthorsLength }) => {
+  children?: ReactChild | ReactChildren;
+}> = ({
+  id,
+  title,
+  journal,
+  year,
+  link,
+  doi,
+  authors,
+  maxAuthorsLength,
+  children,
+}) => {
   const trimmedAuthors =
     maxAuthorsLength && authors.length > maxAuthorsLength
       ? trimAuthors(authors, maxAuthorsLength)
       : authors;
+  const titleLink = id ? (
+    <Link to={`/publications/${id}`}>{title}</Link>
+  ) : (
+    <a href={link}>{title}</a>
+  );
   return (
     <section className="mg-pub">
-      <span className="mg-pub-title">{title}.</span>{' '}
+      <span className="mg-pub-title">{titleLink}</span>{' '}
       <span className="mg-pub-journal">{journal}</span> (
       <span className="mg-pub-year">{year}</span>){' '}
       <span className="mg-pub-doi">
@@ -37,6 +55,7 @@ export const Publication: React.FC<{
         </a>
       </span>
       <div className="mg-pub-authors">{trimmedAuthors}.</div>
+      {children}
     </section>
   );
 };
@@ -55,6 +74,7 @@ export const MainPublication: React.FC = () => {
         <p>To cite MGnify, please refer to the following publication:</p>
         {publication && (
           <Publication
+            id={publication.id}
             title={publication.title}
             journal={publication.journal}
             year={publication.year}
@@ -76,6 +96,7 @@ const Publications: React.FC = () => {
         .map((pub) => (
           <article key={pub.doi}>
             <Publication
+              id={pub.id}
               title={pub.title}
               journal={pub.journal}
               year={pub.year}

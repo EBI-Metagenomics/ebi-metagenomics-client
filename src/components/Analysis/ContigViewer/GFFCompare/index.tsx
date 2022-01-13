@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import Modal from 'react-modal';
+
 import {
   db,
   encodeGFF,
@@ -12,25 +12,10 @@ import FileUploaderButton from 'components/UI/FileUploaderButton';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
 import { Browser } from 'igv';
-
-Modal.setAppElement('#root');
+import EMGModal from 'components/UI/EMGModal';
 
 type GFFCompareProps = {
   igvBrowser: Browser;
-};
-
-const modalStyle = {
-  overlay: {
-    zIndex: 10000,
-  },
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
 };
 
 const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
@@ -140,11 +125,10 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
 
   return (
     <div>
-      <Modal
+      <EMGModal
         isOpen={modalIsOpen}
         onRequestClose={() => setIsOpen(false)}
         contentLabel="Example Modal"
-        style={modalStyle}
       >
         <div className="vf-stack vf-stack--800">
           <h1>Compare a GFF to the contig</h1>
@@ -182,7 +166,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
             <PlainTable cols={columns} data={gffs} />
           </div>
         </div>
-      </Modal>
+      </EMGModal>
       <button
         className="vf-button vf-button--secondary vf-button--sm"
         type="button"

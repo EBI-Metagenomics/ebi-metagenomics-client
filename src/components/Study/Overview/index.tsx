@@ -8,6 +8,7 @@ import SamplesMapByStudy from 'components/UI/SamplesMap/ByStudy';
 import { MGnifyDatum } from 'hooks/data/useData';
 import { getBiomeIcon } from 'utils/biomes';
 import UserContext from 'pages/Login/UserContext';
+import { PublicationAnnotationsPopupBadge } from 'components/Publications/EuropePMCAnnotations';
 
 type StudyOverviewProps = {
   data: MGnifyDatum;
@@ -71,14 +72,20 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
                 {publications.map(({ attributes, id }) => (
                   <li key={id as string}>
                     <Publication
+                      id={id}
                       title={attributes['pub-title']}
                       journal={attributes['iso-journal']}
                       year={attributes['published-year']}
-                      link={`http://${attributes.doi}`}
+                      link={`http://dx.doi.org/${attributes.doi}`}
                       doi={attributes.doi}
                       authors={attributes.authors}
                       maxAuthorsLength={70}
-                    />
+                    >
+                      <PublicationAnnotationsPopupBadge
+                        publicationId={id}
+                        pubmedId={attributes['pubmed-id']}
+                      />
+                    </Publication>
                   </li>
                 ))}
               </ul>
