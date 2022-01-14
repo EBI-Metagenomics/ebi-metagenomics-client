@@ -1,11 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import KeyValueList from 'components/UI/KeyValueList';
-import { MGnifyDatum } from 'hooks/data/useData';
 import { Link } from 'react-router-dom';
-
-type GenomeOverviewProps = {
-  data: MGnifyDatum;
-};
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 
 function isAssembly(experimentType: string): boolean {
   return ['assembly', 'hybrid_assembly', 'long_reads_assembly'].includes(
@@ -13,7 +9,9 @@ function isAssembly(experimentType: string): boolean {
   );
 }
 
-const AnalysisOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
+const AnalysisOverview: React.FC = () => {
+  const { overviewData: data } = useContext(AnalysisContext);
+
   return (
     <section>
       <div className="vf-stack">

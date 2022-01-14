@@ -120,7 +120,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
       <div
         className={`vf-grid ${
           includesDomainCharts && chartType !== 'stacked-column'
-            ? 'vf-grid__col-2 mg-tax-charts-2'
+            ? 'vf-grid__col-2 mg-grid-30-70'
             : ''
         }`}
       >

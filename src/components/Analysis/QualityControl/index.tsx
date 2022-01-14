@@ -1,23 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-import useURLAccession from 'hooks/useURLAccession';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import { MGnifyDatum, ResponseFormat } from 'hooks/data/useData';
+import { ResponseFormat } from 'hooks/data/useData';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import QualityControlChart from './QCChart';
 import ContigsHistogram from './ContigsHistogram';
 import NucleotidesHistogram from './NucleotidesHistogram';
 import ContigsDistribution from './ContigsDistribution';
 import SeqLengthChart from './SeqLengthChart';
 import GCContentChart from './GCContentChart';
+
 import './style.css';
 
-type QualityControlProps = {
-  analysisData: MGnifyDatum;
-};
-const QualityControl: React.FC<QualityControlProps> = ({ analysisData }) => {
-  const accession = useURLAccession();
+const QualityControl: React.FC = () => {
+  const { overviewData: analysisData } = useContext(AnalysisContext);
+  const accession = analysisData.id;
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/summary`,
     {},
@@ -43,10 +42,7 @@ const QualityControl: React.FC<QualityControlProps> = ({ analysisData }) => {
         merged, in which case the initial number of {units} may differ from the
         number given by ENA.
       </p>
-      <QualityControlChart
-        analysisData={analysisData}
-        summaryData={summaryData}
-      />
+      <QualityControlChart summaryData={summaryData} />
       {Number(analysisData.attributes['pipeline-version']) > 2 && (
         <>
           <p>
@@ -60,17 +56,11 @@ const QualityControl: React.FC<QualityControlProps> = ({ analysisData }) => {
           </p>
           <div className="vf-grid vf-grid__col-2">
             <div className="vf-stack">
-              <ContigsHistogram
-                analysisData={analysisData}
-                summaryData={summaryData}
-              />
+              <ContigsHistogram summaryData={summaryData} />
               <SeqLengthChart summaryData={summaryData} />
             </div>
             <div className="vf-stack">
-              <ContigsDistribution
-                analysisData={analysisData}
-                summaryData={summaryData}
-              />
+              <ContigsDistribution summaryData={summaryData} />
               <GCContentChart summaryData={summaryData} />
             </div>
           </div>

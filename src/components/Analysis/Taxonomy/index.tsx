@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import useMGnifyData from 'hooks/data/useMGnifyData';
-import { useQueryParametersState } from 'src/hooks/useQueryParamState';
+import { useQueryParametersState } from 'hooks/useQueryParamState';
 import UserContext from 'pages/Login/UserContext';
 import PhylumCharts from './PhylumCharts';
 
@@ -138,8 +139,8 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
         These are the results from the taxonomic analysis steps of our pipeline.
         You can switch between different views of the data using the menu of
         icons below (pie, bar, stacked and interactive krona charts). The data
-        used to build these charts can be found under the &quot;Download&quot;
-        tab.
+        used to build these charts can be found under the{' '}
+        <Link to="#download">Download</Link> tab.
       </div>
       <TabsForQueryParameter
         tabs={tabs}

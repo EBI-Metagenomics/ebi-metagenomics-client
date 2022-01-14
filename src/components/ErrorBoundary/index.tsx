@@ -22,9 +22,9 @@ export class ErrorBoundary extends React.Component<
   render() {
     const { children } = this.props;
     const { error } = this.state;
-    // eslint-disable-next-line no-console
-    console.error(error);
     if (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
       return (
         <div
           className="vf-box vf-box-theme--primary vf-box--easy"

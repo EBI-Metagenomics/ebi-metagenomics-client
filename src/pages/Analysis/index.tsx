@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseObj } from 'hooks/data/useData';
@@ -10,8 +10,10 @@ import Overview from 'components/Analysis/Overview';
 import QualityControl from 'components/Analysis/QualityControl';
 import ContigViewer from 'components/Analysis/ContigViewer';
 import TaxonomySubpage from 'components/Analysis/Taxonomy';
+import FunctionalSubpage from 'components/Analysis/Functional';
 import RouteForHash from 'components/Nav/RouteForHash';
 import { Link } from 'react-router-dom';
+import AnalysisContext from './AnalysisContext';
 
 const hasAbundance = (
   includes: { attributes?: { 'group-type'?: string } }[]
@@ -33,6 +35,7 @@ const AnalysisPage: React.FC = () => {
   const { data, loading, error } = useMGnifyData(`analyses/${accession}`, {
     include: 'downloads',
   });
+  const value = useMemo(() => ({ overviewData: data?.data }), [data]);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
@@ -70,18 +73,23 @@ const AnalysisPage: React.FC = () => {
       <Tabs tabs={tabs} />
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
-          <RouteForHash hash="#overview" isDefault>
-            <Overview data={analysisData} />
-          </RouteForHash>
-          <RouteForHash hash="#qc">
-            <QualityControl analysisData={analysisData} />
-          </RouteForHash>
-          <RouteForHash hash="#contigs-viewer">
-            <ContigViewer />
-          </RouteForHash>
-          <RouteForHash hash="#taxonomic">
-            <TaxonomySubpage accession={accession} />
-          </RouteForHash>
+          <AnalysisContext.Provider value={value}>
+            <RouteForHash hash="#overview" isDefault>
+              <Overview />
+            </RouteForHash>
+            <RouteForHash hash="#qc">
+              <QualityControl />
+            </RouteForHash>
+            <RouteForHash hash="#contigs-viewer">
+              <ContigViewer />
+            </RouteForHash>
+            <RouteForHash hash="#taxonomic">
+              <TaxonomySubpage accession={accession} />
+            </RouteForHash>
+            <RouteForHash hash="#functional">
+              <FunctionalSubpage />
+            </RouteForHash>
+          </AnalysisContext.Provider>
         </div>
       </section>
     </section>

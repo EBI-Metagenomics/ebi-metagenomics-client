@@ -78,6 +78,7 @@ type EMGTableProps = {
   showTextFilter?: boolean;
   initialPage?: number;
   initialPageSize?: number;
+  initialPageCount?: number;
   className?: string;
   namespace?: string;
   sortable?: boolean;
@@ -94,6 +95,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
   title: Title,
   initialPage = 0,
   initialPageSize = 25,
+  initialPageCount = null,
   className = '',
   namespace = '',
   showPagination = true,
@@ -139,7 +141,10 @@ const EMGTable: React.FC<EMGTableProps> = ({
         pageIndex: initialPage,
         pageSize: queryParameters[`${namespace}page_size`],
       },
-      pageCount: (data as MGnifyResponse)?.meta?.pagination?.pages || 1,
+      pageCount:
+        initialPageCount ||
+        (data as MGnifyResponse)?.meta?.pagination?.pages ||
+        1,
       manualPagination: true,
       manualSortBy: true,
     },

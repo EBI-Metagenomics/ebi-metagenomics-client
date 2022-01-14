@@ -83,3 +83,7 @@ fieldset.mg-fieldbox .vf-form__legend {
 fieldset.mg-fieldbox label {
   display: block;
 }
+
+.mg-grid-30-70 {
+  grid-template-columns: 30% 70%;
+}

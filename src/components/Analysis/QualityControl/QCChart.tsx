@@ -1,19 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-
-import { MGnifyDatum } from 'hooks/data/useData';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 
 type QualityControlProps = {
-  analysisData: MGnifyDatum;
   summaryData: {
     [key: string]: string;
   };
 };
 const QualityControlChart: React.FC<QualityControlProps> = ({
-  analysisData,
   summaryData,
 }) => {
+  const { overviewData: analysisData } = useContext(AnalysisContext);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const isAssembly = analysisData.attributes['experiment-type'] === 'assembly';
 

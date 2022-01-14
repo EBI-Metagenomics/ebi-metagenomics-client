@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 
 type TabsProps = {
@@ -15,8 +15,17 @@ const TabsForQueryParameter: React.FC<TabsProps> = ({
   defaultValue,
 }) => {
   const [queryParameters, setQueryParameters] = useQueryParametersState({
-    [queryParameter]: defaultValue,
+    [queryParameter]: '',
   });
+  useEffect(() => {
+    if (queryParameters[queryParameter] === '') {
+      setQueryParameters({
+        ...queryParameters,
+        [queryParameter]: defaultValue,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryParameters, queryParameter]);
   const value = queryParameters[queryParameter];
 
   return (

@@ -1,23 +1,21 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyDatum, ResponseFormat, TSVResponse } from 'hooks/data/useData';
+import { ResponseFormat, TSVResponse } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
+import AnalysisContext from 'src/pages/Analysis/AnalysisContext';
 
 type ContigsHistogramProps = {
-  analysisData: MGnifyDatum;
   summaryData: {
     [key: string]: string;
   };
 };
-const ContigsHistogram: React.FC<ContigsHistogramProps> = ({
-  analysisData,
-  summaryData,
-}) => {
+const ContigsHistogram: React.FC<ContigsHistogramProps> = ({ summaryData }) => {
+  const { overviewData } = useContext(AnalysisContext);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const accession = useURLAccession();
   const { data, loading, error } = useMGnifyData(
@@ -36,7 +34,7 @@ const ContigsHistogram: React.FC<ContigsHistogramProps> = ({
   ]);
   const lengthMax = Math.max(...histData.map(([x]) => x));
 
-  const isAssembly = analysisData.attributes['experiment-type'] === 'assembly';
+  const isAssembly = overviewData.attributes['experiment-type'] === 'assembly';
   const unit = isAssembly ? 'contigs' : 'reads';
   const capUnit = isAssembly ? 'Contigs' : 'Reads';
 
