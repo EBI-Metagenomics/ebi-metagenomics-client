@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import useMGnifyData from 'src/hooks/data/useMGnifyData';
-import Loading from 'src/components/UI/Loading';
-import FetchError from 'src/components/UI/FetchError';
-import { MGnifyDatum } from 'src/hooks/data/useData';
-import { TAXONOMY_COLOURS } from 'src/utils/taxon';
+import useMGnifyData from 'hooks/data/useMGnifyData';
+import Loading from 'components/UI/Loading';
+import FetchError from 'components/UI/FetchError';
+import { MGnifyDatum } from 'hooks/data/useData';
+import { TAXONOMY_COLOURS } from 'utils/taxon';
 import GOBarChart from './BarChart';
 import GOPieChart from './PieChart';
 

@@ -9,6 +9,8 @@ import { useQueryParametersState } from 'hooks/useQueryParamState';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import InterProTab from './InterPro';
 import GOTab from './GO';
+import PfamTab from './Pfam';
+import KOTab from './KO';
 
 const PARAMETER_NAME = 'type';
 const PARAMETER_DEFAULT = 'interpro';
@@ -81,6 +83,8 @@ const FunctionalAnalysis: React.FC = () => {
       <div className="vf-tabs-content">
         {queryParameters[PARAMETER_NAME] === 'interpro' && <InterProTab />}
         {queryParameters[PARAMETER_NAME] === 'go' && <GOTab />}
+        {queryParameters[PARAMETER_NAME] === 'pfam' && <PfamTab />}
+        {queryParameters[PARAMETER_NAME] === 'ko' && <KOTab />}
       </div>
     </div>
   );

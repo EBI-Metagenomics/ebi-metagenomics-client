@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { TAXONOMY_COLOURS } from 'src/utils/taxon';
+import { TAXONOMY_COLOURS } from 'utils/taxon';
 
 type GOPieChartProps = {
   categories: Array<string>;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Row } from 'react-table';
 
 import EMGTable from 'components/UI/EMGTable';
-import { useQueryParametersState } from 'src/hooks/useQueryParamState';
+import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { TaxDatum } from '../PhylumCharts';
 
 const sortFunction = (order) => (a: TaxDatum, b: TaxDatum) => {

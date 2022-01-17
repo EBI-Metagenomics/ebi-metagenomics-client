@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { TAXONOMY_COLOURS } from 'src/utils/taxon';
+import { TAXONOMY_COLOURS } from 'utils/taxon';
 import { TaxDatum } from '..';
 
 /**

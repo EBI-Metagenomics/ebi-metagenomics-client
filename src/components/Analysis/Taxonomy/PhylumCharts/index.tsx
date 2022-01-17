@@ -4,7 +4,7 @@ import { Row } from 'react-table';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyDatum } from 'src/hooks/data/useData';
+import { MGnifyDatum } from 'hooks/data/useData';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
 import PhylumTable from '../PhylumTable';
 import PhylumPie from './Pie';

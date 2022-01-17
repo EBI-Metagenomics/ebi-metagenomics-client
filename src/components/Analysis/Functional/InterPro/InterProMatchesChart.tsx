@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useContext, useState } from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import AnalysisContext from 'src/pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import useInterProMatchesProvider, {
   InterProCountType,
-} from 'src/hooks/data/useInterProMatchesProvider';
-import Loading from 'src/components/UI/Loading';
-import { TAXONOMY_COLOURS } from 'src/utils/taxon';
-import FetchError from 'src/components/UI/FetchError';
+} from 'hooks/data/useInterProMatchesProvider';
+import Loading from 'components/UI/Loading';
+import { TAXONOMY_COLOURS } from 'utils/taxon';
+import FetchError from 'components/UI/FetchError';
 import { noop } from 'lodash-es';
 
 type InterProMatchesChartProps = {

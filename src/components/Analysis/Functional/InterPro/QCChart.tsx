@@ -1,7 +1,7 @@
 import React, { useRef, useContext } from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import AnalysisContext from 'src/pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 
 /**
  * Get the series for a category.
