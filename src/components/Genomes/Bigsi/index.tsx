@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import 'textarea-sequence/dist/textarea-sequence';
 
-import ExtLink from 'src/components/UI/ExtLink';
+import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
 
-import InfoBanner from 'src/components/UI/InfoBanner';
-import FileUploaderButton from 'src/components/UI/FileUploaderButton';
+import InfoBanner from 'components/UI/InfoBanner';
+import FileUploaderButton from 'components/UI/FileUploaderButton';
 import BigsiResults from './Results';
 
 import example1 from './examples/human-gut-v2-0.txt';

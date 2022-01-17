@@ -9,8 +9,8 @@ import Box from 'components/UI/Box';
 import KeyValueList from 'components/UI/KeyValueList';
 import ExtLink from 'components/UI/ExtLink';
 import { Link } from 'react-router-dom';
-import AssociatedAssemblies from 'src/components/Assembly/Assemblies';
-import AssociatedAnalyses from 'src/components/Analysis/Analyses';
+import AssociatedAssemblies from 'components/Assembly/Assemblies';
+import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from 'utils/urls';
 
 const RunPage: React.FC = () => {

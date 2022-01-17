@@ -5,8 +5,8 @@ import AssemblyImg from 'images/pipeline/version_5/pipeline_v5.0_assembly.png';
 import RawImg from 'images/pipeline/version_5/pipeline_v5.0_raw.png';
 
 import './style.css';
-import Tabs from 'src/components/UI/Tabs';
-import RouteForHash from 'src/components/Nav/RouteForHash';
+import Tabs from 'components/UI/Tabs';
+import RouteForHash from 'components/Nav/RouteForHash';
 
 type TableProps = {
   onHoverStep?: (step: number) => void;

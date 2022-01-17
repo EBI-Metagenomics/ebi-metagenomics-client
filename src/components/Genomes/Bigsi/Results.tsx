@@ -6,7 +6,7 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import { getSimpleTaxLineage, cleanTaxLineage } from 'utils/taxon';
-import Tooltip from 'src/components/UI/Tooltip';
+import Tooltip from 'components/UI/Tooltip';
 
 type ResultsProps = {
   sequence: string;

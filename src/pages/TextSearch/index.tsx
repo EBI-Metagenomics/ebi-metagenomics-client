@@ -2,12 +2,12 @@ import React, { useContext, useMemo } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import MultipleOptionFilter from 'components/Search/Filter/MultipleOption';
-import HierarchyMultipleOptionFilter from 'src/components/Search/Filter/HierarchyMultipleOption';
+import HierarchyMultipleOptionFilter from 'components/Search/Filter/HierarchyMultipleOption';
 import TemperatureFilter from 'components/Search/Filter/Temperature';
 import DepthFilter from 'components/Search/Filter/Depth';
 import Tabs from 'components/UI/Tabs';
-import TextSearch from 'src/components/Search/Filter/Text';
-import SearchTable from 'src/components/Search/Table';
+import TextSearch from 'components/Search/Filter/Text';
+import SearchTable from 'components/Search/Table';
 import useEBISearchData from 'hooks/data/useEBISearchData';
 import { QueryState, useQueryParametersState } from 'hooks/useQueryParamState';
 import SearchQueryContext from './SearchQueryContext';

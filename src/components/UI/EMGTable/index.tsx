@@ -9,7 +9,7 @@ import React, {
 import { Column, usePagination, useSortBy, useTable, Row } from 'react-table';
 
 import Loading from 'components/UI/Loading';
-import { MGnifyResponse, MGnifyDatum } from 'src/hooks/data/useData';
+import { MGnifyResponse, MGnifyDatum } from 'hooks/data/useData';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import PaginationButton from './PaginationButton';
 

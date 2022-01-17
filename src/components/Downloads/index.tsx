@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from 'src/hooks/data/useMGnifyData';
+import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 
 type DownloadsProps = {

@@ -10,7 +10,7 @@ import {
   NCBI_PROJECT_URL,
   NCBI_SAMPLE_URL,
   PATRIC_URL,
-} from 'src/utils/urls';
+} from 'utils/urls';
 
 type GenomeOverviewProps = {
   data: MGnifyDatum;

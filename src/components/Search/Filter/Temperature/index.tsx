@@ -2,8 +2,8 @@ import React, { useEffect, useState, useContext, memo } from 'react';
 
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 
-import Slider from 'src/components/UI/Slider';
-import Switch from 'src/components/UI/Switch';
+import Slider from 'components/UI/Slider';
+import Switch from 'components/UI/Switch';
 
 const MIN = -20;
 const MAX = 100;

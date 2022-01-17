@@ -1,7 +1,7 @@
 import React from 'react';
 import 'mgnify-sourmash-component';
 import SourmashLogo from 'images/sourmash_logo.png';
-import InfoBanner from 'src/components/UI/InfoBanner';
+import InfoBanner from 'components/UI/InfoBanner';
 import useSearchStorage from 'hooks/useSearchStorage';
 import SourmashHistory from './History';
 import SourmashForm from './Form';
