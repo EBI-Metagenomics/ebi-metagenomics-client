@@ -6,8 +6,9 @@ import ExtLink from 'components/UI/ExtLink';
 import InfoBanner from 'components/UI/InfoBanner';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 
-import AnalysisContext from 'src/pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import InterProTab from './InterPro';
+import GOTab from './GO';
 
 const PARAMETER_NAME = 'type';
 const PARAMETER_DEFAULT = 'interpro';
@@ -79,6 +80,7 @@ const FunctionalAnalysis: React.FC = () => {
       />
       <div className="vf-tabs-content">
         {queryParameters[PARAMETER_NAME] === 'interpro' && <InterProTab />}
+        {queryParameters[PARAMETER_NAME] === 'go' && <GOTab />}
       </div>
     </div>
   );
