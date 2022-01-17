@@ -11,6 +11,7 @@ import QualityControl from 'components/Analysis/QualityControl';
 import ContigViewer from 'components/Analysis/ContigViewer';
 import TaxonomySubpage from 'components/Analysis/Taxonomy';
 import FunctionalSubpage from 'components/Analysis/Functional';
+import PathwaysSubpage from 'components/Analysis/Pathways';
 import RouteForHash from 'components/Nav/RouteForHash';
 import { Link } from 'react-router-dom';
 import AnalysisContext from './AnalysisContext';
@@ -24,7 +25,9 @@ const hasAbundance = (
 };
 
 const isAssembly = (data: MGnifyDatum): boolean =>
-  data.attributes['experiment-type'] === 'assembly';
+  ['assembly', 'hybrid_assembly'].includes(
+    data.attributes['experiment-type'] as string
+  );
 const isAtleastVersion5 = (data: MGnifyDatum): boolean =>
   Number(data.attributes['pipeline-version']) >= 5;
 const isNotAmplicon = (data: MGnifyDatum): boolean =>
@@ -88,6 +91,9 @@ const AnalysisPage: React.FC = () => {
             </RouteForHash>
             <RouteForHash hash="#functional">
               <FunctionalSubpage />
+            </RouteForHash>
+            <RouteForHash hash="#path-systems">
+              <PathwaysSubpage />
             </RouteForHash>
           </AnalysisContext.Provider>
         </div>
