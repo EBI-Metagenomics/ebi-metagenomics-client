@@ -150,10 +150,10 @@ describe('Home page', function() {
             cy.contains('Text search').click();
             cy.get('h2').should('contain', 'Text Search');
         });
-        it('Sequence search btn should link to seq search page', function() {
-            cy.contains('Sequence search').click();
-            cy.get('h2').should('contain', 'Sequence Search');
-        });
+        // it('Sequence search btn should link to seq search page', function() {
+        //     cy.contains('Sequence search').click();
+        //     cy.get('h2').should('contain', 'Sequence Search');
+        // });
     });
 
     function testAnalysisTypeTooltip(tooltipDataAttr) {
