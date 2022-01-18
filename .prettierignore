@@ -8,4 +8,7 @@ ci
 #Old test suite
 cypress
 
+# static data
+public/data
+
 .nyc_output

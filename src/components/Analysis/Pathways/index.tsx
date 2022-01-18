@@ -5,6 +5,8 @@ import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import ExtLink from 'components/UI/ExtLink';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import KeggModule from './KeggModule';
+import AntiSMASH from './AntiSMASH';
+import GenomeProperties from './GenomeProperties';
 
 const PARAMETER_NAME = 'type';
 const PARAMETER_DEFAULT = 'kegg-modules';
@@ -45,9 +47,9 @@ const PathwaysSubPage: React.FC = () => {
       <div className="vf-tabs-content">
         {queryParameters[PARAMETER_NAME] === 'kegg-modules' && <KeggModule />}
         {queryParameters[PARAMETER_NAME] === 'genome-properties' && (
-          <b>genome-properties</b>
+          <GenomeProperties />
         )}
-        {queryParameters[PARAMETER_NAME] === 'antismash' && <b>antismash</b>}
+        {queryParameters[PARAMETER_NAME] === 'antismash' && <AntiSMASH />}
       </div>
     </div>
   );
