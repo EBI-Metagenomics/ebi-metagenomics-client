@@ -3,6 +3,7 @@ import SearchBy from 'components/Home/SearchBy';
 import Request from 'components/Home/Request';
 import BlogExcerpts from 'components/Home/BlogExcerpts';
 import Publications, { MainPublication } from 'components/Publications';
+import Twitter from 'components/Twitter';
 
 const HomePage: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const HomePage: React.FC = () => {
       <Publications />
       <h2>How to cite</h2>
       <MainPublication />
+      <Twitter />
     </section>
   );
 };

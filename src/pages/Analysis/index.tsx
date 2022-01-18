@@ -14,6 +14,7 @@ import FunctionalSubpage from 'components/Analysis/Functional';
 import PathwaysSubpage from 'components/Analysis/Pathways';
 import RouteForHash from 'components/Nav/RouteForHash';
 import { Link } from 'react-router-dom';
+import Downloads from 'src/components/Downloads';
 import AnalysisContext from './AnalysisContext';
 
 const hasAbundance = (
@@ -94,6 +95,9 @@ const AnalysisPage: React.FC = () => {
             </RouteForHash>
             <RouteForHash hash="#path-systems">
               <PathwaysSubpage />
+            </RouteForHash>
+            <RouteForHash hash="#download">
+              <Downloads endpoint="analyses" accession={accession} />
             </RouteForHash>
           </AnalysisContext.Provider>
         </div>

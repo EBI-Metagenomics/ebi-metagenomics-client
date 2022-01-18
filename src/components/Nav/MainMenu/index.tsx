@@ -5,27 +5,27 @@ import UserContext from 'pages/Login/UserContext';
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
 
 import './style.css';
+import ExtLink from 'src/components/UI/ExtLink';
 
-const pages = [
+const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'Overview', path: '/' },
   { label: 'Submit data', path: '/submit' },
   { label: 'Text search', path: '/search' },
-  { label: 'Sequence search', path: '/sequence-search' },
+  { label: 'Sequence search' },
   { label: 'Browse data', path: '/browse' },
-  // { label: 'Genomes', path: '' },
-  // { label: 'API', path: '' },
+  { label: 'API' },
   { label: 'About', path: '/about' },
   { label: 'Help', path: '/help' },
   { label: 'Login', path: '/login' },
 ];
 
 const START_POS = 100;
-const START_MARGIN = -8;
+const START_MARGIN = -7;
 
 const MainMenu: React.FC = () => {
   const location = useLocation();
   const imgRef = useRef(null);
-  const { isAuthenticated } = useContext(UserContext);
+  const { isAuthenticated, config } = useContext(UserContext);
   const [animationState, setAnimationState] = useState({
     marginLeft: `${START_MARGIN}rem`,
     opacity: 0,
@@ -48,11 +48,16 @@ const MainMenu: React.FC = () => {
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+  // Getting link to Mgnify Hmmer from the config
+  pages[3].href = config.hmmer;
+  // Getting link to API from the config
+  pages[5].href = config.api;
   return (
-    <div className="mg-main-menu">
+    <div className="mg-main-menu vf-u-fullbleed">
       <img
         src={MGnifyLogo}
         alt="MGnify Logo"
+        className="mg-logo-sticky"
         style={{
           marginLeft: animationState.marginLeft,
           opacity: animationState.opacity,
@@ -64,20 +69,27 @@ const MainMenu: React.FC = () => {
         <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
           {pages
             // .filter(({ label }) => !isAuthenticated || label !== 'Login')
-            .map(({ label, path }) => (
+            .map(({ label, path, href }) => (
               <li className="vf-navigation__item" key={path}>
-                <Link
-                  className="vf-navigation__link"
-                  aria-current={
-                    (path === '/' && location.pathname === path) ||
-                    (path !== '/' && location.pathname.startsWith(path))
-                      ? 'page'
-                      : undefined
-                  }
-                  to={path}
-                >
-                  {isAuthenticated && label === 'Login' ? 'Logout' : label}
-                </Link>
+                {path && (
+                  <Link
+                    className="vf-navigation__link"
+                    aria-current={
+                      (path === '/' && location.pathname === path) ||
+                      (path !== '/' && location.pathname.startsWith(path))
+                        ? 'page'
+                        : undefined
+                    }
+                    to={path}
+                  >
+                    {isAuthenticated && label === 'Login' ? 'Logout' : label}
+                  </Link>
+                )}
+                {!path && href && (
+                  <ExtLink href={href} className="vf-navigation__link">
+                    {label}
+                  </ExtLink>
+                )}
               </li>
             ))}
         </ul>
