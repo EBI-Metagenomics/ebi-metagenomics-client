@@ -7,6 +7,20 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+let config = {};
+try {
+  const publicConfig = require('./config.json');
+  config = publicConfig;
+} catch {
+  console.warn("Couldn't load the public config");
+}
+try {
+  const privateConfig = require('./config.private.json');
+  config = { ...config, ...privateConfig };
+} catch {
+  console.log("Couldn't load the private config");
+}
+
 module.exports = function (env, options) {
   const isEnvProduction = options.mode === 'production';
   return {
@@ -18,7 +32,7 @@ module.exports = function (env, options) {
       hot: true,
       static: {
         directory: path.join(__dirname, 'dist'),
-        publicPath: '/metagenomics',
+        publicPath: config.basename || '/metagenomics',
       },
       historyApiFallback: {
         rewrites: [
