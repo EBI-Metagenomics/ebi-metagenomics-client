@@ -1,4 +1,8 @@
 .vf-hero {
-  background-image: url('images/embl-ebi-background-4.jpg');
+  background-image: url('https://www.embl.org/files/wp-content/uploads/covid19-homepage-banner.jpg');
   margin-bottom: 0;
+}
+
+.vf-hero .vf-hero__content {
+  background-color: rgba(255, 255, 255, 0.8);
 }
