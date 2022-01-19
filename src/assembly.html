@@ -23,11 +23,15 @@
     <div class="column small-12 medium-12 large-12">
         <nav aria-label="You are here:" role="navigation">
             <ul class="breadcrumbs columns">
-                <li><a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a></li>
+                <li>
+                    <a href="{{htmlWebpackPlugin.options.templateData.subfolder}}/">Home</a>
+                </li>
                 <% if (samples.length === 1) { %>
-                <li><a href="<%= samples[0].url %>">Sample <%= samples[0].id %></a></li>
+                    <li>
+                        <a href="<%= samples[0].url %>">Sample <%= samples[0].id %></a>
+                    </li>
                 <% } else { %>
-                <li>Multiple samples</li>
+                    <li>Multiple samples</li>
                 <% } %>
                 <li>
                     <span class="show-for-sr">Current: </span>Assembly <%= assembly_id %>
@@ -35,6 +39,15 @@
             </ul>
         </nav>
         <h2>Assembly <%= assembly_id %></h2>
+        <% if (legacy_redirection) { %>
+            <section>
+                <div class="callout warning">
+                    <p>
+                        The assembly <%= legacy_redirection_accession %> has been re-assigned the accession <a href="<%= analysis_url %>"><%= assembly_id %></a>.
+                    </p>
+                </div>
+            </section>                 
+        <% } %>
         <section id="overview"></section>
         <section id="analyses"></section>
     </div>
