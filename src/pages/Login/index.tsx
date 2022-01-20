@@ -24,7 +24,7 @@ const Login: React.FC = () => {
       navigate('/?show=private-request');
       return null;
     }
-    if (from === 'private-request') {
+    if (from === 'public-request') {
       navigate('/?show=public-request');
       return null;
     }

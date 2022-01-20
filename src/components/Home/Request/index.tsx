@@ -5,17 +5,20 @@ import EMGModal from 'components/UI/EMGModal';
 import UserContext from 'src/pages/Login/UserContext';
 import { useQueryParametersState } from 'src/hooks/useQueryParamState';
 import LatestStudies from './LatestStudies';
-import RequestPublic from './Public';
+import MailForm from './MailForm';
+import PrivateRequest from './Private';
 
 const SearchBy: React.FC = () => {
   const [{ show }] = useQueryParametersState({
     show: '',
   });
-  const [modal, setModal] = useState({
-    show: show === 'public-request',
-    isPublic: true,
-  });
   const { isAuthenticated } = useContext(UserContext);
+  const [modal, setModal] = useState({
+    show:
+      isAuthenticated &&
+      ['public-request', 'private-request'].includes(show as string),
+    isPublic: show === 'public-request',
+  });
   return (
     <>
       <EMGModal
@@ -28,7 +31,7 @@ const SearchBy: React.FC = () => {
         }
         contentLabel="Request Analysis"
       >
-        {modal.isPublic ? <RequestPublic /> : <div>YEBO!</div>}
+        {modal.isPublic ? <MailForm isPublic /> : <PrivateRequest />}
       </EMGModal>
       <OutterCard className="request-by-section">
         <h3 className="vf-card__heading">Request analysis of</h3>

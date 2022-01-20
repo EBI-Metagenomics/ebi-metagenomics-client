@@ -35,7 +35,11 @@ const getRequestEmail = (
     subject,
   };
 };
-const RequestPublic: React.FC = () => {
+
+type MailFormProps = {
+  isPublic: boolean;
+};
+const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
   const [analysisType, setAnalysisType] = useState('Analysis');
   const [accession, setAccession] = useState('');
   const [comments, setComments] = useState('');
@@ -117,14 +121,16 @@ const RequestPublic: React.FC = () => {
   };
   return (
     <section>
-      <h2>Request an analysis of a public dataset</h2>
+      {isPublic && <h2>Request an analysis of a public dataset</h2>}
       <div className="vf-stack">
-        <p>
-          Using this form, you can request analysis of a suitable publicly
-          available dataset, held within an INSDC database. Enter the study
-          accession below and we will prioritise it for analysis with our
-          pipeline.
-        </p>
+        {isPublic && (
+          <p>
+            Using this form, you can request analysis of a suitable publicly
+            available dataset, held within an INSDC database. Enter the study
+            accession below and we will prioritise it for analysis with our
+            pipeline.
+          </p>
+        )}
         <div>
           <label className="vf-text-heading--4">
             Study accession
@@ -212,4 +218,4 @@ const RequestPublic: React.FC = () => {
   );
 };
 
-export default RequestPublic;
+export default MailForm;
