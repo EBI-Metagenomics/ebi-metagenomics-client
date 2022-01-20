@@ -1,11 +1,12 @@
 import React, { useContext, useRef, FormEvent } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import OutterCard from 'components/UI/OutterCard';
 
 import UserContext from 'pages/Login/UserContext';
 import useAuthentication from 'hooks/useAuthentication';
+import { useQueryParametersState } from 'hooks/useQueryParamState';
 
 import enaUserImg from 'public/images/ico_ena_user.jpg';
 
@@ -14,8 +15,19 @@ const Login: React.FC = () => {
   const passwordRef = useRef(null);
   const { username, isAuthenticated } = useContext(UserContext);
   const { login, logout, loginError, loading, error } = useAuthentication();
-
+  const [{ from }] = useQueryParametersState({
+    from: '',
+  });
+  const navigate = useNavigate();
   if (isAuthenticated) {
+    if (from === 'private-request') {
+      navigate('/?show=private-request');
+      return null;
+    }
+    if (from === 'private-request') {
+      navigate('/?show=public-request');
+      return null;
+    }
     return (
       <div className="vf-stack vf-stack--400">
         <div>
