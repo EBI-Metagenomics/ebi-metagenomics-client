@@ -39,6 +39,8 @@ button.mg-button-as-link {
   margin: 0;
   font-weight: 400;
   font-size: 1em;
+  background-color: transparent;
+  border: 0;
 }
 button.mg-button-as-tab {
   padding: 0 1rem;
