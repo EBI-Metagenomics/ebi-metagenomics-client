@@ -52,6 +52,10 @@ const MainMenu: React.FC = () => {
   pages[3].href = config.hmmer;
   // Getting link to API from the config
   pages[5].href = config.api;
+  const menuPages = pages;
+  if (isAuthenticated) {
+    menuPages.push({ label: 'My Data', path: '/mydata' });
+  }
   return (
     <div className="mg-main-menu vf-u-fullbleed">
       <img
@@ -67,7 +71,7 @@ const MainMenu: React.FC = () => {
 
       <nav className="vf-navigation vf-navigation--main | vf-cluster vf-u-fullbleed">
         <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
-          {pages
+          {menuPages
             // .filter(({ label }) => !isAuthenticated || label !== 'Login')
             .map(({ label, path, href }) => (
               <li className="vf-navigation__item" key={path}>

@@ -3,16 +3,17 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 
 import mergePrivateConfig from 'utils/config';
 import initialConfig from 'config.json';
-import EBIHeader from './components/UI/EBIHeader';
-import HeroHeader from './components/UI/HeroHeader';
-import EBIFooter from './components/UI/EBIFooter';
-import ElixirBanner from './components/UI/ElixirBanner';
-import CookieBanner from './components/UI/CookieBanner';
-import MainMenu from './components/Nav/MainMenu';
-import Loading from './components/UI/Loading';
-import LoginMonitor from './components/Login/Monitor';
-import ErrorBoundary from './components/ErrorBoundary';
-import UserContext from './pages/Login/UserContext';
+import EBIHeader from 'components/UI/EBIHeader';
+import HeroHeader from 'components/UI/HeroHeader';
+import EBIFooter from 'components/UI/EBIFooter';
+import ElixirBanner from 'components/UI/ElixirBanner';
+import CookieBanner from 'components/UI/CookieBanner';
+import MainMenu from 'components/Nav/MainMenu';
+import Loading from 'components/UI/Loading';
+import LoginMonitor from 'components/Login/Monitor';
+import ErrorBoundary from 'components/ErrorBoundary';
+import MyData from 'pages/MyData';
+import UserContext from 'pages/Login/UserContext';
 
 import './App.css';
 import './styles/biomes.css';
@@ -92,6 +93,7 @@ const App: React.FC = () => {
                 <Route path="/assemblies/*" element={<Assembly />} />
                 <Route path="/pipelines/*" element={<Pipelines />} />
                 <Route path="/analyses/*" element={<Analysis />} />
+                <Route path="/mydata" element={<MyData />} />
               </Routes>
             </Suspense>
           </ErrorBoundary>
