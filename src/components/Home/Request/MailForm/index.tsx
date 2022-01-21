@@ -39,23 +39,26 @@ const getRequestEmail = (
 type MailFormProps = {
   isPublic: boolean;
 };
+
+const EMPTY_EMAIL = {
+  fromEmail: null,
+  subject: null,
+  body: null,
+  consent: null,
+};
 const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
   const [analysisType, setAnalysisType] = useState('Analysis');
   const [accession, setAccession] = useState('');
   const [comments, setComments] = useState('');
   const [result, setResult] = useState('');
   const [isAccessionOK, setAccessionOK] = useState(true);
+  const [completed, setCompleted] = useState(false);
   const {
     username,
     details,
     // setUser, setDetails, isAuthenticated, config
   } = useContext(UserContext);
-  const [email, setEmail] = useState({
-    fromEmail: null,
-    subject: null,
-    body: null,
-    consent: null,
-  });
+  const [email, setEmail] = useState(EMPTY_EMAIL);
   const {
     data,
     loading,
@@ -64,12 +67,15 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
   useEffect(() => {
     if (email.fromEmail) {
       if (!loading && data && !errorEmail) {
-        setResult('Analysis request was succesfully submitted.');
-      } else if (!loading && (!data || errorEmail)) {
+        setResult(
+          `Analysis request for [${accession}] was succesfully submitted.`
+        );
+      } else if (errorEmail) {
         setResult(
           'Failed to send analysis request, please try again or contact our helpdesk.'
         );
       }
+      setCompleted(true);
     }
   }, [data, loading, errorEmail, email.fromEmail]);
   useEffect(() => {
@@ -81,23 +87,6 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
       );
     else setResult('');
   }, [accession, isAccessionOK]);
-  // useEffect(() => {
-  //   //Fake login
-  //   setUser({ username: 'Webin-460', isAuthenticated: true });
-  //   setDetails([
-  //     {
-  //       type: 'submitters',
-  //       id: 'Webin-460',
-  //       attributes: {
-  //         'first-name': '',
-  //         surname: '',
-  //         'email-address': 'metagenomics@ebi.ac.uk',
-  //         analysis: true,
-  //         submitter: true,
-  //       },
-  //     },
-  //   ]);
-  // }, []);
 
   const handleAccessionChange = (event) => {
     setAccession(event.target.value);
@@ -105,7 +94,7 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
   };
   const handleSubmit = () => {
     const { body, subject } = getRequestEmail(
-      true,
+      isPublic,
       analysisType,
       comments,
       accession,
@@ -118,6 +107,15 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
       subject,
       consent: false,
     });
+  };
+  const handleClear = () => {
+    setAnalysisType('Analysis');
+    setAccession('');
+    setComments('');
+    setResult('');
+    setAccessionOK(true);
+    setCompleted(false);
+    setEmail(EMPTY_EMAIL);
   };
   return (
     <section>
@@ -204,12 +202,20 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
         </div>
         <div>
           <button
-            className="vf-button mg-button"
+            className="vf-button vf-button--primary mg-button vf-button--sm "
             type="button"
             onClick={handleSubmit}
-            disabled={accession.length === 0 || !isAccessionOK}
+            disabled={accession.length === 0 || !isAccessionOK || completed}
           >
             Submit request
+          </button>
+          <button
+            id="clear-button"
+            type="button"
+            className="vf-button vf-button--sm vf-button--tertiary"
+            onClick={handleClear}
+          >
+            Clear
           </button>
         </div>
       </div>
