@@ -113,7 +113,7 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
       getDetailsByWebin(details, username)
     );
     setEmail({
-      fromEmail: getEmailsFromDetails(details),
+      fromEmail: getEmailsFromDetails(details).join(','),
       body,
       subject,
       consent: false,
