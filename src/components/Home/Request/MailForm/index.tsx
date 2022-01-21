@@ -7,6 +7,7 @@ import UserContext, {
   getEmailsFromDetails,
 } from 'pages/Login/UserContext';
 import useMgnifyEmail from 'src/hooks/data/useMgnifyEmail';
+import { ErrorTypes } from 'src/hooks/data/useData';
 
 const accessionRegex = /((?:PRJEB|PRJNA|PRJDB|PRJDA|MGYS|ERP|SRP|DRP)\d{5,})/;
 
@@ -70,7 +71,7 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
         setResult(
           `Analysis request for [${accession}] was succesfully submitted.`
         );
-      } else if (errorEmail) {
+      } else if (errorEmail?.type !== ErrorTypes.NullURL) {
         setResult(
           'Failed to send analysis request, please try again or contact our helpdesk.'
         );
