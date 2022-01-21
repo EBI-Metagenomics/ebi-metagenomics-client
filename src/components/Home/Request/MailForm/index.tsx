@@ -78,7 +78,7 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
       }
       setCompleted(true);
     }
-  }, [data, loading, errorEmail, email.fromEmail]);
+  }, [data, loading, errorEmail, email.fromEmail, accession]);
   useEffect(() => {
     if (accession.length > 0 && !isAccessionOK)
       setResult(
