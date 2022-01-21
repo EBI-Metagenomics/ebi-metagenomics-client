@@ -15,7 +15,7 @@ const SearchBy: React.FC = () => {
   const { isAuthenticated } = useContext(UserContext);
   const [modal, setModal] = useState({
     show:
-      isAuthenticated &&
+      // isAuthenticated &&
       ['public-request', 'private-request'].includes(show as string),
     isPublic: show === 'public-request',
   });

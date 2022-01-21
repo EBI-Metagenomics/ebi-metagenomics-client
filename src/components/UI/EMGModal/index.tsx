@@ -20,7 +20,8 @@ const modalStyle = {
     transform: 'translate(-50%, -50%)',
     maxHeight: 'calc(100vh - 5em)',
     overflowY: 'auto',
-    maxWidth: '80vw',
+    width: '80vw',
+    height: '60vh',
   },
 };
 
