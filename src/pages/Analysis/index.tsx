@@ -14,7 +14,8 @@ import FunctionalSubpage from 'components/Analysis/Functional';
 import PathwaysSubpage from 'components/Analysis/Pathways';
 import RouteForHash from 'components/Nav/RouteForHash';
 import { Link } from 'react-router-dom';
-import Downloads from 'src/components/Downloads';
+import Downloads from 'components/Downloads';
+import Abundance from 'components/Analysis/Abundance';
 import AnalysisContext from './AnalysisContext';
 
 const hasAbundance = (
@@ -39,7 +40,10 @@ const AnalysisPage: React.FC = () => {
   const { data, loading, error } = useMGnifyData(`analyses/${accession}`, {
     include: 'downloads',
   });
-  const value = useMemo(() => ({ overviewData: data?.data }), [data]);
+  const value = useMemo(
+    () => ({ overviewData: data?.data, included: data?.included }),
+    [data]
+  );
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
@@ -92,6 +96,9 @@ const AnalysisPage: React.FC = () => {
             </RouteForHash>
             <RouteForHash hash="#functional">
               <FunctionalSubpage />
+            </RouteForHash>
+            <RouteForHash hash="#abundance">
+              <Abundance />
             </RouteForHash>
             <RouteForHash hash="#path-systems">
               <PathwaysSubpage />

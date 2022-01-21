@@ -6,8 +6,8 @@ import useMGnifyData from 'hooks/data/useMGnifyData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import { MGnifyDatum } from 'src/hooks/data/useData';
-import ExtLink from 'src/components/UI/ExtLink';
+import { MGnifyDatum } from 'hooks/data/useData';
+import ExtLink from 'components/UI/ExtLink';
 
 /**
  * Annotate the nodes with the counts.

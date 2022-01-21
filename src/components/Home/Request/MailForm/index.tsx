@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Tooltip from 'components/UI/Tooltip';
-import InfoBanner from 'src/components/UI/InfoBanner';
+import InfoBanner from 'components/UI/InfoBanner';
 import UserContext, {
   UserDetail,
   getDetailsByWebin,
   getEmailsFromDetails,
 } from 'pages/Login/UserContext';
-import useMgnifyEmail from 'src/hooks/data/useMgnifyEmail';
-import { ErrorTypes } from 'src/hooks/data/useData';
+import useMgnifyEmail from 'hooks/data/useMgnifyEmail';
+import { ErrorTypes } from 'hooks/data/useData';
 
 const accessionRegex = /((?:PRJEB|PRJNA|PRJDB|PRJDA|MGYS|ERP|SRP|DRP)\d{5,})/;
 

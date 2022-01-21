@@ -127,7 +127,8 @@ export interface DataResponse {
     | BlogResponse
     | HTMLHtmlElement
     | TSVResponse
-    | FASTAResponse;
+    | FASTAResponse
+    | string;
   error: ErrorFromFetch | null;
   loading: boolean;
   isStale: boolean;

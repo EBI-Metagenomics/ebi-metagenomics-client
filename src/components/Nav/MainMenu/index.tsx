@@ -5,7 +5,7 @@ import UserContext from 'pages/Login/UserContext';
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
 
 import './style.css';
-import ExtLink from 'src/components/UI/ExtLink';
+import ExtLink from 'components/UI/ExtLink';
 
 const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'Overview', path: '/' },
