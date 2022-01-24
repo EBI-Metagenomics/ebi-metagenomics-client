@@ -51,6 +51,7 @@ const BrowseStudies: React.FC = () => {
           />
         ),
         disableSortBy: true,
+        className: 'mg-biome',
       },
       {
         id: 'study_id',

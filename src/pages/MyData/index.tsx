@@ -44,6 +44,7 @@ const MyData: React.FC = () => {
             style={{ float: 'initial' }}
           />
         ),
+        className: 'mg-biome',
         disableSortBy: true,
       },
       {

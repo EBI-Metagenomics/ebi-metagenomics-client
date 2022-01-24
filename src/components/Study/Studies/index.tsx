@@ -54,6 +54,7 @@ const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
           style={{ float: 'initial' }}
         />
       ),
+      className: 'mg-biome',
     },
     {
       id: 'study',

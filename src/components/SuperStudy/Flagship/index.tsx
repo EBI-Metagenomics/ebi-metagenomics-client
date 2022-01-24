@@ -47,6 +47,7 @@ const FlagshipTable: React.FC = () => {
           style={{ float: 'initial' }}
         />
       ),
+      className: 'mg-biome',
     },
     {
       id: 'study',

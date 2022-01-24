@@ -42,12 +42,10 @@ const BrowseBiomes: React.FC = () => {
         Header: '',
         accessor: 'id',
         Cell: ({ cell }) => (
-          <span
-            className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
-            style={{ float: 'initial' }}
-          />
+          <span className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`} />
         ),
         disableSortBy: true,
+        className: 'mg-biome',
       },
       {
         id: 'biome_name',

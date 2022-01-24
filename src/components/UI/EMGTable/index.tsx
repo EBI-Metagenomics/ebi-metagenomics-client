@@ -310,7 +310,10 @@ const EMGTable: React.FC<EMGTableProps> = ({
                             ? cell.column.colspan(cell)
                             : cell.column?.colspan
                         }
-                        className="vf-table__cell"
+                        className={`vf-table__cell ${
+                          cell.column?.className || ''
+                        }`}
+                        style={{ ...(cell.column?.style || {}) }}
                       >
                         {cell.render('Cell')}
                       </td>

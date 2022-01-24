@@ -29,11 +29,11 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
             ).toDateString()}
           </h4>
           <Box label="Classification">
-            <span
+            <div
               className={`biome_icon icon_sm ${getBiomeIcon(lineage)}`}
               style={{ float: 'initial' }}
             />
-            {lineage}
+            <div>{lineage}</div>
           </Box>
           <Box label="Description">{data.attributes['study-abstract']}</Box>
         </div>

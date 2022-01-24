@@ -51,6 +51,7 @@ const BrowseSamples: React.FC = () => {
           />
         ),
         disableSortBy: true,
+        className: 'mg-biome',
       },
       {
         Header: 'Accession',

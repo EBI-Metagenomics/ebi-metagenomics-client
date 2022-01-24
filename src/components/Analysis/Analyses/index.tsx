@@ -66,6 +66,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
           style={{ float: 'initial' }}
         />
       ),
+      className: 'mg-biome',
     },
     {
       id: 'sample',

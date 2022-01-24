@@ -48,6 +48,7 @@ const GenomesTable: React.FC = () => {
         />
       ),
       disableSortBy: true,
+      className: 'mg-biome',
     },
     {
       id: 'genome',

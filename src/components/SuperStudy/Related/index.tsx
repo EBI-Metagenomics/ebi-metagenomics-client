@@ -46,6 +46,7 @@ const RelatedTable: React.FC = () => {
           style={{ float: 'initial' }}
         />
       ),
+      className: 'mg-biome',
     },
     {
       id: 'study',

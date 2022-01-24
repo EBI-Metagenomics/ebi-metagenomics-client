@@ -5,7 +5,11 @@
   /*background-image: url(images/ico_biome_sprite.png);*/
   background-size: cover;
   float: left;
-  margin-right: 0.5em;
+  /* margin-right: 0.5em; */
+}
+td.mg-biome {
+  vertical-align: middle;
+  text-align: center;
 }
 
 .biome_icon.air_b {
