@@ -46,6 +46,9 @@ const SummaryTab: React.FC<SummaryProps> = ({ accession }) => {
       link,
     });
   });
+  const orderedPipelines = Object.entries(pipelines).sort(
+    ([a], [b]) => Number(b) - Number(a)
+  );
   return (
     <section>
       <p>
@@ -58,7 +61,7 @@ const SummaryTab: React.FC<SummaryProps> = ({ accession }) => {
       {loading && <Loading />}
       {error && <FetchError error={error} />}
       <ul className="vf-list">
-        {Object.entries(pipelines).map(([pipeline, groups]) => (
+        {orderedPipelines.map(([pipeline, groups]) => (
           <li key={pipeline} className="vf-list__item mg-list__item">
             <h4>Pipeline version: {pipeline}</h4>
             <ul className="vf-list">

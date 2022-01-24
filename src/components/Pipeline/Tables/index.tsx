@@ -1313,7 +1313,7 @@ export const Table5: React.FC = () => (
           <ExtLink href="https://github.com/ablab/spades">metaSPAdes</ExtLink>
         </td>
         <td>
-          <em>3.13</em>
+          <em>3.15</em>
         </td>
         <td>Assembly of raw reads (available on request)</td>
         <td className="text-center">N/A</td>
