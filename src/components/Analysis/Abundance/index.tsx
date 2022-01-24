@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import useData, { ResponseFormat } from 'src/hooks/data/useData';
+import useData, { ResponseFormat } from 'hooks/data/useData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 

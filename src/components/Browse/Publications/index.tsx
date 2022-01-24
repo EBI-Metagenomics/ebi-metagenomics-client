@@ -8,6 +8,7 @@ import ExtLink from 'components/UI/ExtLink';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
+import Loading from 'components/UI/Loading';
 
 const BrowsePublications: React.FC = () => {
   const [queryParameters] = useQueryParametersState(
@@ -80,6 +81,7 @@ const BrowsePublications: React.FC = () => {
   useEffect(() => {
     setHasData(!!publicationsList);
   }, [publicationsList]);
+  if (!publicationsList && loading) return <Loading />;
 
   return (
     <section className="mg-browse-section">

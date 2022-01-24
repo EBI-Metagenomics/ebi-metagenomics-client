@@ -9,6 +9,7 @@ import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
+import Loading from 'components/UI/Loading';
 
 const BrowseStudies: React.FC = () => {
   const [queryParameters, setQueryParameters] = useQueryParametersState(
@@ -82,7 +83,7 @@ const BrowseStudies: React.FC = () => {
   useEffect(() => {
     setHasData(!!studiesList);
   }, [studiesList]);
-
+  if (!studiesList && loading) return <Loading />;
   return (
     <section className="mg-browse-section">
       <BiomeSelector

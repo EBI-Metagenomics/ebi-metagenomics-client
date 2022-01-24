@@ -7,6 +7,7 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
+import Loading from 'components/UI/Loading';
 
 const BrowseSuperStudies: React.FC = () => {
   const [queryParameters] = useQueryParametersState(
@@ -59,6 +60,7 @@ const BrowseSuperStudies: React.FC = () => {
   useEffect(() => {
     setHasData(!!superStudiesList);
   }, [superStudiesList]);
+  if (!superStudiesList && loading) return <Loading />;
 
   return (
     <section className="mg-browse-section">
