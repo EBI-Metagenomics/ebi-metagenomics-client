@@ -16,7 +16,7 @@ type StudyOverviewProps = {
 };
 const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
   const { config } = useContext(UserContext);
-  const lineage = data.relationships.biomes.data[0].id;
+  const lineage = data?.relationships?.biomes?.data?.[0]?.id || '';
   const publications = included.filter(({ type }) => type === 'publications');
   return (
     <section>

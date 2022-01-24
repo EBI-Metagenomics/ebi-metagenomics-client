@@ -8,9 +8,34 @@ import UserContext from 'pages/Login/UserContext';
 import SamplesMap from 'components/UI/SamplesMap';
 import render from '../render';
 import '../style.css';
+import InfoBanner from '../../InfoBanner';
 
 const LIMIT = 200;
 
+type LoadMoreSamplesProps = {
+  total: number;
+  limit: number;
+  handleRequest: () => void;
+};
+
+const LoadMoreSamples: React.FC<LoadMoreSamplesProps> = ({
+  total,
+  limit,
+  handleRequest,
+}) =>
+  total > limit ? (
+    <div>
+      ⚠️ We are only loading the first {LIMIT} samples. Click{' '}
+      <button
+        type="button"
+        className="vf-button vf-button--link mg-button-as-link"
+        onClick={handleRequest}
+      >
+        HERE
+      </button>{' '}
+      to load them all.
+    </div>
+  ) : null;
 type SamplesMapProps = {
   study: string;
 };
@@ -29,6 +54,19 @@ const SamplesMapByStudy: React.FC<SamplesMapProps> = ({ study }) => {
       return false;
     }
   });
+  if (samplesFiltered.length === 0) {
+    return (
+      <InfoBanner type="info" title="Notice">
+        None of the {total > limit ? 'loaded' : ''} samples have geolocation
+        co-ordinates.
+        <LoadMoreSamples
+          total={total}
+          limit={limit}
+          handleRequest={() => setLimit(total)}
+        />
+      </InfoBanner>
+    );
+  }
 
   return (
     <div className="mg-map-container">
@@ -40,25 +78,11 @@ const SamplesMapByStudy: React.FC<SamplesMapProps> = ({ study }) => {
       {total && (
         <div className="mg-map-progress">
           <progress max={total} value={samples.length} />
-          {total > limit && (
-            <div>
-              ⚠️ We are only loading the first {LIMIT} samples. Click{' '}
-              <button
-                type="button"
-                className="vf-button vf-button--link mg-button-as-link"
-                onClick={() => setLimit(total)}
-              >
-                HERE
-              </button>{' '}
-              to load them all.
-            </div>
-          )}
-          {samplesFiltered.length === 0 && (
-            <div>
-              ⚠️ None of the {total > limit ? 'loaded' : ''} samples have
-              geolocation co-ordinates.
-            </div>
-          )}
+          <LoadMoreSamples
+            total={total}
+            limit={limit}
+            handleRequest={() => setLimit(total)}
+          />
         </div>
       )}
     </div>
