@@ -8,3 +8,8 @@
 .mg-page-search .vf-form__legend {
   font-size: 1.2rem;
 }
+@media (min-width: 846px) {
+  .mg-grid-search {
+    grid-template-columns: 25% 75%;
+  }
+}

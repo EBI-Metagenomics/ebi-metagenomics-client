@@ -9,12 +9,13 @@ import React, {
 import { Column, usePagination, useSortBy, useTable, Row } from 'react-table';
 
 import Loading from 'components/UI/Loading';
+import TextInputDebounced from 'components/UI/TextInputDebounced';
+import LoadingOverlay from 'components/UI/LoadingOverlay';
 import { MGnifyResponse, MGnifyDatum } from 'hooks/data/useData';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import PaginationButton from './PaginationButton';
 
 import './style.css';
-import TextInputDebounced from '../TextInputDebounced';
 
 type PaginationRanges = {
   startingPages: number[];
@@ -222,8 +223,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
 
   return (
     <section>
-      <div className="mg-table-overlay-container">
-        <div className={loading && isStale ? 'mg-table-overlay' : undefined} />
+      <LoadingOverlay loading={loading && isStale}>
         <table
           {...getTableProps}
           className={`vf-table--striped mg-table ${className}`}
@@ -324,7 +324,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
             })}
           </tbody>
         </table>
-      </div>
+      </LoadingOverlay>
 
       {showPagination && (
         <section className="mg-table-footer">

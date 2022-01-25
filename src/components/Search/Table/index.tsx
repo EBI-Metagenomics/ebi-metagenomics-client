@@ -157,10 +157,10 @@ const SearchTable: React.FC = () => {
       cols={columns}
       data={fomattedData}
       title={() => (
-        <>
+        <div>
           {dataFor?.[pathname]?.label || ''}{' '}
           <span className="mg-number">{data.hitCount}</span>
-        </>
+        </div>
       )}
       initialPage={0}
       className="mg-search-result"

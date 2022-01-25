@@ -190,7 +190,7 @@ const TextSearchPage: React.FC = () => {
       <SearchQueryContext.Provider value={context}>
         <TextSearch />
         <Tabs tabs={tabs} />
-        <section className="vf-grid">
+        <section className="vf-grid mg-grid-search">
           <div className="vf-stack vf-stack--200">
             <Routes>
               <Route
@@ -260,6 +260,9 @@ const TextSearchPage: React.FC = () => {
                     <MultipleOptionFilter
                       facetName="pipeline_version"
                       header="Pipeline version"
+                      sortFn={({ value: a }, { value: b }) =>
+                        Number(b) - Number(a)
+                      }
                     />
                     <MultipleOptionFilter
                       facetName="experiment_type"

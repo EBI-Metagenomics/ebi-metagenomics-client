@@ -1,18 +1,22 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
-import Loading from 'components/UI/Loading';
+import LoadingOverlay from 'components/UI/LoadingOverlay';
+
 import 'styles/filters.css';
 
 type MultipleOptionProps = {
   facetName: string;
   header: string;
   includeTextFilter?: boolean;
+  sortFn?: (a: unknown, b: unknown) => number;
 };
 const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   facetName,
   header,
   includeTextFilter = false,
+  sortFn = undefined,
 }) => {
   const location = useLocation();
   const { searchData, queryParameters, setQueryParameters } =
@@ -27,19 +31,16 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
     );
   }, [queryParameters, facetName]);
 
-  const facetData = useMemo(
-    () =>
-      (searchData?.[location.pathname]?.data?.facets || []).filter(
-        (f) => f.id === facetName
-      )?.[0],
-    [location.pathname, searchData, facetName]
-  );
+  const facetData = useMemo(() => {
+    const tmpData = (
+      searchData?.[location.pathname]?.data?.facets || []
+    ).filter((f) => f.id === facetName)?.[0]?.facetValues;
+    if (tmpData && typeof sortFn === 'function') {
+      tmpData.sort(sortFn);
+    }
+    return tmpData;
+  }, [location.pathname, searchData, facetName, sortFn]);
 
-  if (
-    searchData?.[location.pathname].loading &&
-    !searchData?.[location.pathname].isStale
-  )
-    return <Loading />;
   if (searchData?.[location.pathname].error) return null;
 
   if (!facetData) return null;
@@ -58,47 +59,45 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   };
 
   return (
-    <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
-      <legend className="vf-form__legend">
-        {header}
-        {searchData?.[location.pathname].loading &&
-          searchData?.[location.pathname].isStale && <Loading size="small" />}
-      </legend>
-      {includeTextFilter && (
-        <input
-          type="text"
-          placeholder="Filter the list"
-          className="vf-form__input"
-          value={textFilter}
-          onChange={(evt) => setTextFilter(evt.target.value)}
-        />
-      )}
-      {facetData.facetValues
-        .filter(
-          ({ label, value }) =>
-            textFilter === '' ||
-            label.toLowerCase().includes(textFilter.toLowerCase()) ||
-            value.toLowerCase().includes(textFilter.toLowerCase())
-        )
-        .map(({ label, value, count }) => (
-          <div className="vf-form__item vf-form__item--checkbox" key={value}>
-            <input
-              type="checkbox"
-              name={value}
-              value={value}
-              id={value}
-              className="vf-form__checkbox"
-              onChange={handleSelection}
-              checked={selected.includes(value)}
-            />
-            <label className="vf-form__label" htmlFor={value}>
-              <span className="mg-filter-checkbox-label">
-                {label} <span className="mg-number">{count}</span>
-              </span>
-            </label>
-          </div>
-        ))}
-    </fieldset>
+    <LoadingOverlay loading={searchData?.[location.pathname].loading}>
+      <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
+        <legend className="vf-form__legend">{header}</legend>
+        {includeTextFilter && (
+          <input
+            type="text"
+            placeholder="Filter the list"
+            className="vf-form__input"
+            value={textFilter}
+            onChange={(evt) => setTextFilter(evt.target.value)}
+          />
+        )}
+        {facetData
+          .filter(
+            ({ label, value }) =>
+              textFilter === '' ||
+              label.toLowerCase().includes(textFilter.toLowerCase()) ||
+              value.toLowerCase().includes(textFilter.toLowerCase())
+          )
+          .map(({ label, value, count }) => (
+            <div className="vf-form__item vf-form__item--checkbox" key={value}>
+              <input
+                type="checkbox"
+                name={value}
+                value={value}
+                id={value}
+                className="vf-form__checkbox"
+                onChange={handleSelection}
+                checked={selected.includes(value)}
+              />
+              <label className="vf-form__label" htmlFor={value}>
+                <span className="mg-filter-checkbox-label">
+                  {label} <span className="mg-number">{count}</span>
+                </span>
+              </label>
+            </div>
+          ))}
+      </fieldset>
+    </LoadingOverlay>
   );
 };
 export default MultipleOptionFilter;

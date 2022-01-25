@@ -1,9 +1,11 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
-import Loading from 'components/UI/Loading';
-import './style.css';
+import LoadingOverlay from 'components/UI/LoadingOverlay';
+
 import 'styles/filters.css';
+import './style.css';
 
 interface OptionDataType {
   value: string;
@@ -126,11 +128,6 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
     [location.pathname, searchData, facetName]
   );
 
-  if (
-    searchData?.[location.pathname].loading &&
-    !searchData?.[location.pathname].isStale
-  )
-    return <Loading />;
   if (searchData?.[location.pathname].error) return null;
 
   if (!facetData) return null;
@@ -150,25 +147,23 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   };
 
   return (
-    <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
-      <legend className="vf-form__legend">
-        {header}
-        {searchData?.[location.pathname].loading &&
-          searchData?.[location.pathname].isStale && <Loading size="small" />}
-      </legend>
-      {facetData.facetValues.map(({ label, value, count, children }) => (
-        <HierarchyOption
-          key={value}
-          label={label}
-          value={value}
-          count={count}
-          optionChildren={children}
-          handleSelection={handleSelection}
-          isSelected={(v) => selected.includes(v)}
-          shouldExpand={(v) => selected.some((s) => s.startsWith(v))}
-        />
-      ))}
-    </fieldset>
+    <LoadingOverlay loading={searchData?.[location.pathname].loading}>
+      <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
+        <legend className="vf-form__legend">{header}</legend>
+        {facetData.facetValues.map(({ label, value, count, children }) => (
+          <HierarchyOption
+            key={value}
+            label={label}
+            value={value}
+            count={count}
+            optionChildren={children}
+            handleSelection={handleSelection}
+            isSelected={(v) => selected.includes(v)}
+            shouldExpand={(v) => selected.some((s) => s.startsWith(v))}
+          />
+        ))}
+      </fieldset>
+    </LoadingOverlay>
   );
 };
 
