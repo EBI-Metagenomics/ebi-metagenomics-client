@@ -55,7 +55,7 @@ const AssociatedRuns: React.FC = () => {
       accessor: 'attributes.instrument-platform',
     },
     {
-      Header: 'pipeline versions',
+      Header: 'Pipeline versions',
       accessor: 'relationships.pipelines.data',
       Cell: ({ cell }) =>
         (cell.value as { id: string }[]).map(({ id }) => id).join(', '),

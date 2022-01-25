@@ -79,7 +79,7 @@ function checkNumberOfResultsDecreaseAfterAction(action){
         const count=Number(text);
         action();
         cy.wait(100);
-        cy.get('.mg-table-overlay-container > .mg-table-overlay')
+        cy.get('.mg-loading-overlay-container > .mg-loading-overlay')
             .should('not.exist');
         
         cy.get('.vf-tabs__item .is-active .mg-number')
