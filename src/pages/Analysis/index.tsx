@@ -68,8 +68,8 @@ const AnalysisPage: React.FC = () => {
     { label: 'Download', to: '#download' },
   ].filter(Boolean);
   const linkToOtherAnalyses = isAssembly(analysisData)
-    ? analysisData?.relationships?.assembly?.data?.id
-    : analysisData?.relationships?.run?.data?.id;
+    ? `/assemblies/${analysisData?.relationships?.assembly?.data?.id}`
+    : `/runs/${analysisData?.relationships?.run?.data?.id}`;
   return (
     <section className="vf-content">
       <h2>Analysis {accession}</h2>

@@ -8,6 +8,7 @@ import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
+import InfoBanner from 'src/components/UI/InfoBanner';
 
 const initialPageSize = 10;
 
@@ -43,7 +44,8 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
   });
   if (loading && !isStale) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
-  if (!(data.data as MGnifyDatum[]).length) return null;
+  if (!(data.data as MGnifyDatum[]).length)
+    return <InfoBanner type="info" title="No associated assemblies found." />;
 
   const columns = [
     {

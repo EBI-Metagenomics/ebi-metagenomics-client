@@ -6,7 +6,7 @@ import AnalysisContext from 'pages/Analysis/AnalysisContext';
 type QualityControlProps = {
   summaryData: {
     [key: string]: string;
-  };
+  } | null;
 };
 const QualityControlChart: React.FC<QualityControlProps> = ({
   summaryData,
@@ -32,7 +32,7 @@ const QualityControlChart: React.FC<QualityControlProps> = ({
     analysisSummary[key] = value;
   });
 
-  subsampled[4] = Number(summaryData.sequence_count);
+  if (summaryData) subsampled[4] = Number(summaryData.sequence_count);
   remaining[0] = Number(analysisSummary['Submitted nucleotide sequences']);
   remaining[1] = Number(
     analysisSummary['Nucleotide sequences after format-specific filtering']
@@ -45,7 +45,7 @@ const QualityControlChart: React.FC<QualityControlProps> = ({
   );
   filtered[2] = remaining[1] - remaining[2];
   filtered[1] = remaining[0] - remaining[1];
-  filtered[4] = remaining[3] - remaining[4] - subsampled[4];
+  if (summaryData) filtered[4] = remaining[3] - remaining[4] - subsampled[4];
 
   const options = {
     chart: {

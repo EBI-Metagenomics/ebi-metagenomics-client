@@ -29,7 +29,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       'analyses-page_size': Number,
     }
   );
-  const { data, loading, error, isStale } = useMGnifyData(
+  const { data, loading, error, isStale, downloadURL } = useMGnifyData(
     `${rootEndpoint}/${accession}/analyses`,
     {
       include: 'sample',
@@ -121,6 +121,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       isStale={isStale}
       namespace="analyses-"
       showPagination={showPagination}
+      downloadURL={downloadURL}
     />
   );
 };

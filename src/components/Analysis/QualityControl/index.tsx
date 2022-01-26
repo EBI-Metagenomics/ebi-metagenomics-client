@@ -24,11 +24,12 @@ const QualityControl: React.FC = () => {
     ResponseFormat.TSV
   );
   if (loading) return <Loading size="large" />;
-  if (error) return <FetchError error={error} />;
-  if (!data) return <Loading />;
-  const summaryData = Object.fromEntries(
-    data as unknown as Array<[k: string, v: string]>
-  );
+  // if (error) return <FetchError error={error} />;
+  // if (!data) return <Loading />;
+  const summaryData =
+    error || !data
+      ? null
+      : Object.fromEntries(data as unknown as Array<[k: string, v: string]>);
 
   const isAssembly = analysisData.attributes['experiment-type'] === 'assembly';
   const unit = isAssembly ? 'contig' : 'read';
@@ -43,7 +44,7 @@ const QualityControl: React.FC = () => {
         number given by ENA.
       </p>
       <QualityControlChart summaryData={summaryData} />
-      {Number(analysisData.attributes['pipeline-version']) > 2 && (
+      {summaryData && Number(analysisData.attributes['pipeline-version']) > 2 && (
         <>
           <p>
             The histograms below show the distributions of sequence lengths
