@@ -2,8 +2,25 @@ import { useContext } from 'react';
 import useData, { DataResponse, KeyValue } from 'hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
 
+const getDownloadURL =
+  (api: string, endpoint: string, parameters: KeyValue) => (total: number) => {
+    const allParameters = {
+      ...parameters,
+      total,
+      facetcount: undefined,
+      facetsdepth: undefined,
+    };
+    return `${api}ebi-search-download/${endpoint}?${Object.entries(
+      allParameters
+    )
+      .filter(([, value]) => Boolean(value))
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&')}`;
+  };
+
 interface EBIDataResponse extends DataResponse {
   data: KeyValue;
+  getDownloadURL?: (total: number) => string;
 }
 
 const useEBISearchData: (
@@ -20,7 +37,9 @@ const useEBISearchData: (
     .map(([key, value]) => `${key}=${value}`)
     .join('&')}`;
   const data = useData([null, undefined].includes(endpoint) ? null : url);
-  return data as EBIDataResponse;
+  const dataEBI = data as EBIDataResponse;
+  dataEBI.getDownloadURL = getDownloadURL(config.api, endpoint, allParemeters);
+  return dataEBI;
 };
 
 export default useEBISearchData;

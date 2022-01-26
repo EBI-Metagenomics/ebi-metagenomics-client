@@ -10,6 +10,7 @@
 .mg-hierarchy-selector button.mg-expander {
   background: transparent;
   border: 0;
+  cursor: pointer;
 }
 .mg-hierarchy-selector div:last-child {
   flex-grow: 2;

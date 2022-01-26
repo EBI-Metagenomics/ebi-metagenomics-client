@@ -145,7 +145,7 @@ const DataType: React.FC = () => {
     },
     {
       type: 'long_reads_assembly',
-      label: 'Long Reads Assemblies',
+      label: 'long reads assemblies',
       link: '/search/analyses?experiment_type=long_reads_assembly',
     },
   ];
@@ -182,13 +182,13 @@ const DataType: React.FC = () => {
   ];
 
   return (
-    <div className="vf-grid vf-grid__col-2" style={{ fontSize: '0.7rem' }}>
+    <div className="vf-grid vf-grid__col-2">
       <div>
         <h5>
           <span className="icon icon-conceptual icon-c3" data-icon="d" />
           &nbsp; Analysis types
         </h5>
-        <table className="vf-table mg-small-table">
+        <table className="vf-table">
           <tbody className="vf-table__body">
             {analysesTypes.map(({ type, label, link }) => (
               <DataAnalysesTypeRow
@@ -206,7 +206,7 @@ const DataType: React.FC = () => {
           <span className="icon icon-functional icon-c9" data-icon="U" />
           &nbsp; Public data
         </h5>
-        <table className="vf-table mg-small-table">
+        <table className="vf-table">
           <tbody className="vf-table__body">
             {types.map(({ endpoint, label, link }) => (
               <DataTypeRow

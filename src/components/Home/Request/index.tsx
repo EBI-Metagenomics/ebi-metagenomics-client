@@ -4,6 +4,7 @@ import OutterCard from 'components/UI/OutterCard';
 import EMGModal from 'components/UI/EMGModal';
 import UserContext from 'pages/Login/UserContext';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
+import { Link } from 'react-router-dom';
 import LatestStudies from './LatestStudies';
 import MailForm from './MailForm';
 import PrivateRequest from './Private';
@@ -57,6 +58,11 @@ const SearchBy: React.FC = () => {
         </div>
         <h3 className="vf-card__heading">Latest studies</h3>
         <LatestStudies />
+        <div className="mg-right">
+          <Link to="/browse/studies/" className="vf-button vf-button--primary">
+            View all studies
+          </Link>
+        </div>
       </OutterCard>
     </>
   );

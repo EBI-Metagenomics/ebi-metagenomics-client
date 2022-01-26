@@ -69,11 +69,6 @@ const LatestStudies: React.FC = () => {
           )
         )}
       </div>
-      <div className="mg-right">
-        <Link to="/browse/studies/" className="vf-button vf-button--primary">
-          View all studies
-        </Link>
-      </div>
     </section>
   );
 };

@@ -1,8 +1,10 @@
 .latest-studies-section {
-  max-height: 32rem;
+  max-height: 44rem;
   overflow-y: scroll;
 }
-
+.latest-studies-section article.vf-summary {
+  margin-bottom: 0;
+}
 @media (max-width: 1023px) {
   .latest-studies-section {
     max-height: 61rem;

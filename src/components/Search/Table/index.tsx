@@ -1,9 +1,11 @@
 import React, { useMemo, useContext } from 'react';
 import { useLocation, Link } from 'react-router-dom';
+
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import ExtLink from 'components/UI/ExtLink';
+import Tooltip from 'components/UI/Tooltip';
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 import { ENA_VIEW_URL } from 'utils/urls';
 
@@ -130,11 +132,13 @@ const dataFor = {
   },
 };
 const PAGE_SIZE = 25; // TODO: move to table
+const DOWNLOAD_LIMIT = 100;
 
 const SearchTable: React.FC = () => {
   const { pathname } = useLocation();
   const { searchData } = useContext(SearchQueryContext);
-  const { data, loading, error, isStale } = searchData?.[pathname] || {};
+  const { data, loading, error, isStale, getDownloadURL } =
+    searchData?.[pathname] || {};
   // console.log({loading});
 
   const columns = useMemo(() => dataFor?.[pathname]?.columns, [pathname]);
@@ -160,12 +164,22 @@ const SearchTable: React.FC = () => {
         <div>
           {dataFor?.[pathname]?.label || ''}{' '}
           <span className="mg-number">{data.hitCount}</span>
+          {data.hitCount > DOWNLOAD_LIMIT && (
+            <Tooltip content="CSV download limited to 100 results.">
+              <sup>
+                <span className="icon icon-common icon-info" />
+              </sup>
+            </Tooltip>
+          )}
         </div>
       )}
       initialPage={0}
       className="mg-search-result"
       loading={loading}
       isStale={isStale}
+      downloadURL={
+        data.hitCount > DOWNLOAD_LIMIT ? null : getDownloadURL(data.hitCount)
+      }
     />
   );
 };
