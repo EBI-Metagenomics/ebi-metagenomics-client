@@ -56,7 +56,7 @@ const AnalysisPage: React.FC = () => {
     isNotAmplicon(analysisData)
       ? { label: 'Functional analysis', to: '#functional' }
       : null,
-    hasAbundance(included)
+    included && hasAbundance(included)
       ? { label: 'Abundance and comparison', to: '#abundance' }
       : null,
     isAssembly(analysisData) && isAtleastVersion5(analysisData)

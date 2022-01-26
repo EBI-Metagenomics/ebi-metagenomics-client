@@ -44,7 +44,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   if (!(data.data as MGnifyDatum[]).length) return null;
 
   const samples = {};
-  data.included
+  (data.included || [])
     ?.filter(({ type }) => type === 'samples')
     .forEach((sample) => {
       samples[sample.id as string] = {
