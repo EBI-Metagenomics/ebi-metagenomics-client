@@ -84,11 +84,23 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       Cell: ({ cell }) => unescape(cell.value),
     },
     {
-      id: 'assembly_id',
+      id: 'assembly_run_id',
       Header: ' Run / Assembly accession',
-      accessor: (analysis) => analysis?.relationships?.assembly?.data?.id || '',
+      accessor: (analysis) => ({
+        assembly: analysis?.relationships?.assembly?.data?.id || '',
+        run: analysis?.relationships?.run?.data?.id || '',
+      }),
       Cell: ({ cell }) => (
-        <Link to={`/assemblies/${cell.value}`}>{cell.value}</Link>
+        <>
+          {cell.value.assembly && (
+            <Link to={`/assemblies/${cell.value.assembly}`}>
+              {cell.value.assembly}
+            </Link>
+          )}
+          {cell.value.run && (
+            <Link to={`/runs/${cell.value.run}`}>{cell.value.run}</Link>
+          )}
+        </>
       ),
     },
     {
