@@ -16,12 +16,14 @@ const TabsForQueryParameter: React.FC<TabsProps> = ({
 }) => {
   const [queryParameters, setQueryParameters] = useQueryParametersState({
     [queryParameter]: '',
+    page: 1,
   });
   useEffect(() => {
     if (queryParameters[queryParameter] === '') {
       setQueryParameters({
         ...queryParameters,
         [queryParameter]: defaultValue,
+        page: 1,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,6 +44,7 @@ const TabsForQueryParameter: React.FC<TabsProps> = ({
                 setQueryParameters({
                   ...queryParameters,
                   [queryParameter]: to,
+                  page: 1,
                 })
               }
             >

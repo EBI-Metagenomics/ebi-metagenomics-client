@@ -12,6 +12,9 @@
   min-width: 75%;
   flex-grow: 2;
 }
+.mg-table-footer .vf-pagination .vf-pagination__item {
+  align-self: center;
+}
 .mg-table-footer > label {
   flex-grow: 1;
   padding: 0.5em;

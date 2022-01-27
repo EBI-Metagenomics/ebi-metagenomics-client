@@ -4,3 +4,8 @@
   background-color: #f4f4f8;
   border: 1px solid #e0e0e0;
 }
+
+.mg-analyses-taxonomy label,
+.mg-analyses-taxonomy input[type='radio'] {
+  cursor: pointer;
+}

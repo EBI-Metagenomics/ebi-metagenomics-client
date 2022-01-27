@@ -65,7 +65,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   };
 
   return (
-    <div className="vf-stack">
+    <div className="vf-stack mg-analyses-taxonomy">
       <div>
         {(enableSSU || enableLSU) && (
           <fieldset
