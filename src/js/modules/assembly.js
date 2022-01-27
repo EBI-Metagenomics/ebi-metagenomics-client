@@ -27,6 +27,20 @@ let AssemblyView = Backbone.View.extend({
             data: {},
             success(data) {
                 const attr = data.attributes;
+                /**
+                 * Handle legacy assemblies redirection.
+                 * Legacy assemblies were given new accessions, the api returns a 302 for those.
+                 * This code handles that case, and shows the user a warning message as the url changes.
+                 */
+                that.model.set({legacy_redirection: false});
+                if (accession !== attr["assembly_id"]) {
+                    that.model.set({
+                        legacy_redirection: true,
+                        legacy_redirection_accession: accession
+                    });
+                    accession = attr["assembly_id"];
+                    window.history.replaceState("", `${objType}: ${accession}`, attr["analysis_url"]);
+                }
                 that.render(attr).then(() => {
                     deferred.resolve();
                 });
@@ -141,9 +155,9 @@ let AssemblyAnalysesView = util.GenericTableView.extend({
 let assembly = new api.Assembly({id: accession});
 let assemblyView = new AssemblyView({model: assembly});
 
-let assemblyAnalyses = new api.AssemblyAnalyses({id: accession});
 assemblyView.init()
     .then(() => {
+        let assemblyAnalyses = new api.AssemblyAnalyses({id: accession});
         return new AssemblyAnalysesView({collection: assemblyAnalyses});
     }).then(() => {
     util.attachExpandButtonCallback();
