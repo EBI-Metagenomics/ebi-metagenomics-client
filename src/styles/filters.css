@@ -1,3 +1,8 @@
+.mg-filter {
+  max-height: 70vh;
+  overflow: scroll;
+}
+
 .mg-filter-checkbox-label {
   width: 100%;
   display: flex;

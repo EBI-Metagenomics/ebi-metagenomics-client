@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import Loading from 'components/UI/Loading';
-import FetchError from 'components/UI/FetchError';
 import { ResponseFormat } from 'hooks/data/useData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import QualityControlChart from './QCChart';
@@ -24,8 +23,6 @@ const QualityControl: React.FC = () => {
     ResponseFormat.TSV
   );
   if (loading) return <Loading size="large" />;
-  // if (error) return <FetchError error={error} />;
-  // if (!data) return <Loading />;
   const summaryData =
     error || !data
       ? null

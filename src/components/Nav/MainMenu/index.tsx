@@ -71,7 +71,7 @@ const MainMenu: React.FC = () => {
             ? [...pages, { label: 'My Data', path: '/mydata' }]
             : pages
           ).map(({ label, path, href }) => (
-            <li className="vf-navigation__item" key={path}>
+            <li className="vf-navigation__item" key={label}>
               {path && (
                 <Link
                   className="vf-navigation__link"
