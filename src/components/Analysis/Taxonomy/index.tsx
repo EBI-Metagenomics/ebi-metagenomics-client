@@ -36,18 +36,16 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   const enableLSU = datum?.taxonomy_lsu_count > 0;
   const enableITSoneDB = datum?.taxonomy_itsonedb_count > 0;
   const enableITSUnite = datum?.taxonomy_itsunite_count > 0;
-  const isV2 = !datum?.taxonomy_ssu_count && datum?.taxonomy_count > 0;
 
   const { config } = useContext(UserContext);
-  const [taxResults, setTaxResults] = useState('');
+  const [taxResults, setTaxResults] = useState('/unite');
   useEffect(() => {
     if (!loading && !error && data) {
       setTaxResults(
         (enableITSoneDB && '/itsonedb') ||
           (enableITSUnite && '/unite') ||
-          (enableSSU && isV2 && '/ssu') ||
-          (enableLSU && '/lsu') ||
-          ''
+          (enableSSU && '/ssu') ||
+          (enableLSU && '/lsu')
       );
     }
   }, [
@@ -58,7 +56,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
     enableITSoneDB,
     enableLSU,
     enableSSU,
-    isV2,
   ]);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
