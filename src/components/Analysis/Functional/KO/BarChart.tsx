@@ -1,12 +1,16 @@
 import React, { useContext, useRef } from 'react';
 import * as Highcharts from 'highcharts';
+import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
-import { TAXONOMY_COLOURS } from 'utils/taxon';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
+
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
+import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum } from 'hooks/data/useData';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import { TAXONOMY_COLOURS } from 'utils/taxon';
+
+addExportMenu(Highcharts);
 
 const KOBarChart: React.FC = () => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);

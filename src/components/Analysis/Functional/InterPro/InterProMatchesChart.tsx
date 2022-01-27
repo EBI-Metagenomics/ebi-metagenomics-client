@@ -1,14 +1,18 @@
 import React, { useRef, useEffect, useContext, useState } from 'react';
 import * as Highcharts from 'highcharts';
+import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
+import { noop } from 'lodash-es';
+
+import FetchError from 'components/UI/FetchError';
+import Loading from 'components/UI/Loading';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import useInterProMatchesProvider, {
   InterProCountType,
 } from 'hooks/data/useInterProMatchesProvider';
-import Loading from 'components/UI/Loading';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
-import FetchError from 'components/UI/FetchError';
-import { noop } from 'lodash-es';
+
+addExportMenu(Highcharts);
 
 type InterProMatchesChartProps = {
   selectedName?: string;

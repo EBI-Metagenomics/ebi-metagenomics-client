@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import * as Highcharts from 'highcharts';
+import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 
 import Loading from 'components/UI/Loading';
@@ -7,6 +8,8 @@ import FetchError from 'components/UI/FetchError';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { ResponseFormat, TSVResponse } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
+
+addExportMenu(Highcharts);
 
 const NucleotidesHistogram: React.FC = () => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);

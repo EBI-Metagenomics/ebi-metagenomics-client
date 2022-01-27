@@ -51,6 +51,7 @@ const InterPro: React.FC = () => {
             backgroundColor:
               colorMap.get(cell.value) || TAXONOMY_COLOURS.slice(-1)[0],
             verticalAlign: 'sub',
+            border: '1px solid white',
           }}
         >
           &nbsp;

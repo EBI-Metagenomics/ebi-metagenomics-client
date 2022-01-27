@@ -1,7 +1,11 @@
 import React, { useRef, useContext } from 'react';
 import * as Highcharts from 'highcharts';
+import addExportMenu from 'highcharts/modules/exporting';
+
 import HighchartsReact from 'highcharts-react-official';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
+
+addExportMenu(Highcharts);
 
 /**
  * Get the series for a category.
@@ -20,7 +24,11 @@ function getSeriesCategory(
   if (series !== undefined) {
     return series.value;
   }
-  return seqData.find(({ key }) => key === `Reads${category}`);
+  series = seqData.find(({ key }) => key === `Reads${category}`);
+  if (series !== undefined) {
+    return series.value;
+  }
+  return 0;
 }
 
 const InterProQCChart: React.FC = () => {

@@ -36,14 +36,14 @@ export function getSimpleTaxLineage(
 
 export const TAXONOMY_COLOURS = [
   '#ABD3DB',
-  '#F2F2F2',
   '#F2D9D0',
   '#F2A477',
   '#5F9595',
   '#D9C4B8',
   '#EEEEAB',
   '#8990B3',
-  '#DEE3FF',
+  '#DEFFE3',
   '#A0B392',
-  '#D9C4B8',
+  '#DEE3FF',
+  '#F2F2F2',
 ];

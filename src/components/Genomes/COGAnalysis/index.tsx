@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import * as Highcharts from 'highcharts';
+import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 
 import Loading from 'components/UI/Loading';
@@ -10,6 +11,8 @@ import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import useDefaultGenomeConfig from 'hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
+
+addExportMenu(Highcharts);
 
 const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   includePangenomes = true,

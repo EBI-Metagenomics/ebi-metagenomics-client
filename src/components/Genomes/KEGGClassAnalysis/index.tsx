@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import * as Highcharts from 'highcharts';
+import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 
 import Loading from 'components/UI/Loading';
@@ -11,6 +12,8 @@ import useURLAccession from 'hooks/useURLAccession';
 import { useQueryParametersState } from 'hooks/useQueryParamState';
 import useDefaultGenomeConfig from 'hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
+
+addExportMenu(Highcharts);
 
 const initialPageSize = 10;
 

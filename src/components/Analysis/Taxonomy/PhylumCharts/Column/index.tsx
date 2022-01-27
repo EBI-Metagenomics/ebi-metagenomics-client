@@ -1,8 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import * as Highcharts from 'highcharts';
+import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
+
 import { TAXONOMY_COLOURS } from 'utils/taxon';
 import { TaxDatum } from '..';
+
+addExportMenu(Highcharts);
 
 const NUM_COLUMNS = 10;
 

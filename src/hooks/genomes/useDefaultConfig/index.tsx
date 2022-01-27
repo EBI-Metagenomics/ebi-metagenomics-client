@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import * as Highcharts from 'highcharts';
+
 import { TAXONOMY_COLOURS } from 'utils/taxon';
 
 type DefaultConfigType = {
