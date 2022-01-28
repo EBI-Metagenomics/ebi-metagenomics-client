@@ -56,12 +56,6 @@ const ContigsDistribution: React.FC<ContigsHistogramProps> = ({
         fontWeight: 'bold',
       },
     },
-    // subtitle: {
-    //     text: ( (typeof chartOptions !== 'undefined' &&
-    //         chartOptions['isFromSubset'])
-    //         ? 'A subset of the sequences was used to generate this chart. - '
-    //         : '') + 'Click and drag in the plot area to zoom in'
-    // },
     yAxis: {
       title: { text: `Number of ${unit}` },
     },

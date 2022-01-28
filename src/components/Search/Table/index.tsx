@@ -1,4 +1,4 @@
-import React, { useMemo, useContext } from 'react';
+import React, { useMemo, useContext, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 
 import Loading from 'components/UI/Loading';
@@ -8,9 +8,36 @@ import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 import { ENA_VIEW_URL } from 'utils/urls';
+import ColumnSelector from './ColumnSelector';
 
-// import './style.css';
-
+const initialColumnsState = {
+  '/search/studies': {
+    study_id: true,
+    ena_id: true,
+    biome: true,
+    name: false,
+    description: false,
+    samples: false,
+    analyses: false,
+    centre: true,
+  },
+  '/search/samples': {
+    sample_id: true,
+    mgnify_id: true,
+    sample_name: true,
+    sample_description: true,
+  },
+  '/search/analyses': {
+    analyses_id: true,
+    pipeline: true,
+    sample_id: true,
+    mgnify_id: true,
+    experiment: true,
+    assembly: false,
+    ena_run: false,
+    ena_wgs: false,
+  },
+};
 const dataFor = {
   '/search/studies': {
     label: 'Studies',
@@ -37,13 +64,31 @@ const dataFor = {
         id: 'biome',
         Header: 'Biome',
         accessor: (study) => study?.fields?.biome_name?.join(':'),
-        Cell: ({ cell }) => <span>{cell.value}</span>,
+      },
+      {
+        id: 'name',
+        Header: 'Name',
+        accessor: (study) => study?.fields?.name?.join(', '),
+      },
+      {
+        id: 'description',
+        Header: 'Description',
+        accessor: (study) => study?.fields?.description?.join('. '),
+      },
+      {
+        id: 'samples',
+        Header: 'Samples',
+        accessor: (study) => study?.fields?.METAGENOMICS_SAMPLES?.length,
+      },
+      {
+        id: 'analyses',
+        Header: 'Analyses',
+        accessor: (study) => study?.fields?.METAGENOMICS_ANALYSES?.length,
       },
       {
         id: 'centre',
         Header: 'Centre name',
         accessor: (study) => study?.fields?.centre_name?.[0],
-        Cell: ({ cell }) => <span>{cell.value}</span>,
       },
     ],
   },
@@ -126,7 +171,21 @@ const dataFor = {
         id: 'experiment',
         Header: 'Experiment type',
         accessor: (analysis) => analysis?.fields?.experiment_type?.[0],
-        Cell: ({ cell }) => <span>{cell.value}</span>,
+      },
+      {
+        id: 'assembly',
+        Header: 'Assembly',
+        accessor: (analysis) => analysis?.fields?.ASSEMBLY?.[0],
+      },
+      {
+        id: 'ena_run',
+        Header: 'ENA run',
+        accessor: (analysis) => analysis?.fields?.ENA_RUN?.[0],
+      },
+      {
+        id: 'ena_wgs',
+        Header: 'ENA WGS sequence set',
+        accessor: (analysis) => analysis?.fields?.ENA_WGS_SEQUENCE_SET?.[0],
       },
     ],
   },
@@ -139,7 +198,7 @@ const SearchTable: React.FC = () => {
   const { searchData } = useContext(SearchQueryContext);
   const { data, loading, error, isStale, getDownloadURL } =
     searchData?.[pathname] || {};
-  // console.log({loading});
+  const [selectedColumns, setSelectedColumns] = useState(initialColumnsState);
 
   const columns = useMemo(() => dataFor?.[pathname]?.columns, [pathname]);
   if (loading && (!isStale || !data)) return <Loading size="large" />;
@@ -155,24 +214,40 @@ const SearchTable: React.FC = () => {
       },
     },
   };
-
   return (
     <EMGTable
-      cols={columns}
+      cols={columns.filter(({ id }) => selectedColumns?.[pathname]?.[id])}
       data={fomattedData}
-      title={() => (
+      Title={
         <div>
           {dataFor?.[pathname]?.label || ''}{' '}
           <span className="mg-number">{data.hitCount}</span>
+        </div>
+      }
+      ExtraBarComponent={
+        <>
+          <Tooltip content="Show/Hide Columns">
+            <section>
+              <ColumnSelector
+                pathname={pathname}
+                columns={dataFor}
+                selectedColumns={selectedColumns}
+                setSelectedColumns={setSelectedColumns}
+              />
+            </section>
+          </Tooltip>
           {data.hitCount > DOWNLOAD_LIMIT && (
             <Tooltip content="CSV download limited to 100 results.">
-              <sup>
-                <span className="icon icon-common icon-info" />
-              </sup>
+              <div
+                className="vf-button vf-button--sm mg-button-disabled"
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                <span className="icon icon-common icon-download" /> Download
+              </div>
             </Tooltip>
           )}
-        </div>
-      )}
+        </>
+      }
       initialPage={0}
       className="mg-search-result"
       loading={loading}

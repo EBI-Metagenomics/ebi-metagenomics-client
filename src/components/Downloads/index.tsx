@@ -68,7 +68,7 @@ const Downloads: React.FC<DownloadsProps> = ({ endpoint, accession }) => {
           <EMGTable
             cols={columns}
             data={downloads as Array<MGnifyDatum>}
-            title={category}
+            Title={category}
             loading={loading}
             showPagination={false}
           />
