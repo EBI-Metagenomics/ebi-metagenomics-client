@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash-es';
 import './style.css';
 
+import 'styles/filters.css';
+
 type SelectionType = {
   min: number;
   max: number;
@@ -10,6 +12,7 @@ type SelectionType = {
 type SliderProps = {
   min: number;
   max: number;
+  step?: number;
   selection?: SelectionType;
   isEnabled?: boolean;
   onChange?: (selection: SelectionType) => void;
@@ -21,6 +24,7 @@ const areEqual = (s1: SelectionType, s2: SelectionType): boolean =>
 const Slider: React.FC<SliderProps> = ({
   min,
   max,
+  step = 1,
   isEnabled = true,
   selection = null,
   onChange = (s) => s,
@@ -50,6 +54,7 @@ const Slider: React.FC<SliderProps> = ({
         type="range"
         min={min}
         max={max}
+        step={step}
         name="min"
         value={currentSelection.min}
         className="original"
@@ -65,6 +70,7 @@ const Slider: React.FC<SliderProps> = ({
         type="range"
         min={min}
         max={max}
+        step={step}
         name="max"
         value={currentSelection.max}
         className="ghost"
