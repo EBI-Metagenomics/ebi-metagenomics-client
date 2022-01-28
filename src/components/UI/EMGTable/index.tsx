@@ -324,6 +324,19 @@ const EMGTable: React.FC<EMGTableProps> = ({
             })}
           </tbody>
         </table>
+        {!loading && !rows.length && (
+          <div
+            className="vf-box vf-box-theme--primary vf-box--easy"
+            style={{
+              backgroundColor: '#d1e3f6',
+            }}
+          >
+            <h3 className="vf-box__heading">
+              <span className="icon icon-common icon-exclamation-triangle" /> No
+              matching data
+            </h3>
+          </div>
+        )}
       </LoadingOverlay>
 
       {showPagination && (
