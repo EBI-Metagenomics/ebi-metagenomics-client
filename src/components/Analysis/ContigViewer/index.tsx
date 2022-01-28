@@ -26,6 +26,11 @@ import { find } from 'lodash-es';
 import GFFCompare from 'components/Analysis/ContigViewer/GFFCompare';
 import ReactDOMServer from 'react-dom/server';
 import GenomeBrowserPopup from 'components/Genomes/Browser/Popup';
+import ContigLengthFilter from 'components/Analysis/ContigViewer/Filter/ContigLength';
+import ContigTextFilter from 'components/Analysis/ContigViewer/Filter/ContigText';
+// eslint-disable-next-line max-len
+import ContigAnnotationTypeFilter from 'components/Analysis/ContigViewer/Filter/ContigAnnotationType';
+import LoadingOverlay from 'components/UI/LoadingOverlay';
 
 type ContigProps = {
   contig: MGnifyDatum;
@@ -122,13 +127,41 @@ const ContigsViewer: React.FC = () => {
   const accession = useURLAccession();
 
   const [queryParameters, setQueryParameters] = useQueryParametersState({
-    contigsPageCursor: '',
-    selectedContig: '',
-    gffComparisonId: '',
+    contigs_page_cursor: '',
+    selected_contig: '',
+    gff_comparison_id: '',
+    contig_length: '',
+    cog_category_search: '',
+    kegg_ortholog_search: '',
+    go_term_search: '',
+    pfam_search: '',
+    interpro_search: '',
+    antismash_search: '',
+    annotation_type: '',
+    contigs_search: '',
   });
+  const lengthRange = useMemo(() => {
+    return (queryParameters.contig_length as string)
+      .split(',')
+      .filter(Boolean)
+      .map(Number);
+  }, [queryParameters.contig_length]);
+
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/contigs`,
-    { cursor: queryParameters.contigsPageCursor as string },
+    {
+      cursor: queryParameters.contigs_page_cursor as string,
+      search: queryParameters.contigs_search as string,
+      gt: lengthRange[0],
+      lt: lengthRange[1],
+      cog: queryParameters.cog_category_search as string,
+      kegg: queryParameters.kegg_ortholog_search as string,
+      go: queryParameters.go_term_search as string,
+      pfam: queryParameters.pfam_search as string,
+      interpro: queryParameters.interpro_search as string,
+      antismash: queryParameters.antismash_search as string,
+      'facet[]': queryParameters.annotation_type as string,
+    },
     {}
   );
 
@@ -146,7 +179,7 @@ const ContigsViewer: React.FC = () => {
     if (!data) return null;
 
     const selectedContigId =
-      queryParameters.selectedContig ||
+      queryParameters.selected_contig ||
       data.data?.[0]?.attributes?.['contig-id'];
 
     if (selectedContigId) {
@@ -164,7 +197,7 @@ const ContigsViewer: React.FC = () => {
     // If a new contig is autoselected (e.g. page change), put it in URL
     if (
       contig &&
-      contig.attributes['contig-id'] !== queryParameters.selectedContig
+      contig.attributes['contig-id'] !== queryParameters.selected_contig
     ) {
       setQueryParameters({
         ...queryParameters,
@@ -175,20 +208,15 @@ const ContigsViewer: React.FC = () => {
 
   useEffect(() => {
     // If the contig in URL isnt in the data-page, remove the bad ID from URL
-    if (queryParameters.selectedContig && data && !contig) {
+    if (queryParameters.selected_contig && data && !contig) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { selectedContig: notInPageContigId, ...otherQueryParams } =
+      const { selected_contig: notInPageContigId, ...otherQueryParams } =
         queryParameters;
       setQueryParameters(otherQueryParams);
     }
   }, [data, contig, queryParameters, setQueryParameters]);
 
-  if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
-  if (!data || !contig) return <Loading />;
-  // const isAssembly = analysisData.attributes['experiment-type'] === 'assembly';
-  // const unit = isAssembly ? 'contig' : 'read';
-  // const units = isAssembly ? 'contigs' : 'reads';
   return (
     <div className="vf-stack vf-stack--800">
       <ContigsQueryContext.Provider value={context}>
@@ -198,11 +226,40 @@ const ContigsViewer: React.FC = () => {
               <summary>
                 <b>Contig browser</b>
               </summary>
-              <Contig contig={contig} />
+              <div className="contig-igv-container">
+                <LoadingOverlay loading={loading}>
+                  {!!contig && <Contig contig={contig} />}
+                  {!contig && (
+                    <div
+                      className="vf-box vf-box-theme--primary vf-box--easy"
+                      style={{
+                        backgroundColor: '#d1e3f6',
+                        margin: '8px auto',
+                      }}
+                    >
+                      <h3 className="vf-box__heading">No contig selected</h3>
+                      <p className="vf-box__text">
+                        Select a contig from the table to load the interactive
+                        annotation viewer
+                      </p>
+                    </div>
+                  )}
+                </LoadingOverlay>
+              </div>
             </details>
           </div>
         </section>
-        <section>
+        <section className="vf-grid mg-contigs-list">
+          <div className="vf-stack vf-stack--800">
+            <ContigLengthFilter />
+            <ContigTextFilter title="COG Category" placeholder="C" />
+            <ContigTextFilter title="KEGG Ortholog" placeholder="K00161" />
+            <ContigTextFilter title="GO Term" placeholder="GO:1901575" />
+            <ContigTextFilter title="Pfam" placeholder="PF02086" />
+            <ContigTextFilter title="InterPro" placeholder="IPR015200" />
+            <ContigTextFilter title="antiSMASH" placeholder="terpene" />
+            <ContigAnnotationTypeFilter />
+          </div>
           <ContigsTable />
         </section>
       </ContigsQueryContext.Provider>

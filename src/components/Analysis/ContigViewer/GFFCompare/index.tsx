@@ -24,8 +24,8 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
 
   const [comparisonQueryParams, setComparisonQueryParams] =
     useQueryParametersState(
-      { gffComparisonId: null },
-      { gffComparisonId: Number }
+      { gff_comparison_id: null },
+      { gff_comparison_id: Number }
     );
 
   const { setQueryParameters, queryParameters } =
@@ -34,10 +34,10 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
   const gffs = useLiveQuery(() => db.gffs.toArray());
 
   useEffect(() => {
-    if (comparisonQueryParams.gffComparisonId) {
-      db.gffs.get(comparisonQueryParams.gffComparisonId).then((gff) => {
+    if (comparisonQueryParams.gff_comparison_id) {
+      db.gffs.get(comparisonQueryParams.gff_comparison_id).then((gff) => {
         if (gff === undefined) {
-          setComparisonQueryParams({ gffComparisonId: null });
+          setComparisonQueryParams({ gff_comparison_id: null });
         } else {
           igvBrowser.removeTrackByName(gff.name);
           igvBrowser.loadTrack({
@@ -67,7 +67,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
               const gff = await db.gffs.get(row.original.id);
               setQueryParameters({
                 ...queryParameters,
-                gffComparisonId: gff.id,
+                gff_comparison_id: gff.id,
               });
               setIsOpen(false);
             }}

@@ -1,0 +1,9 @@
+@media (min-width: 846px) {
+    .mg-contigs-list {
+        grid-template-columns: 25% 75%;
+    }
+}
+
+.contig-igv-container {
+    min-height: 240px;
+}

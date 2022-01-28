@@ -1,6 +1,5 @@
 import React, { useContext, useMemo } from 'react';
 
-import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import Tooltip from 'components/UI/Tooltip';
@@ -10,6 +9,7 @@ import './style.css';
 
 import ArrowForLink from 'components/UI/ArrowForLink';
 import CursorPagination from 'components/UI/EMGTable/CursorPagination';
+import TruncatedText from 'components/UI/TextTruncated';
 
 type ContigFeatureProps = {
   annotationType: string;
@@ -80,11 +80,11 @@ const ContigsTable: React.FC = () => {
             onClick={() =>
               setQueryParameters({
                 ...queryParameters,
-                selectedContig: cell.value,
+                selected_contig: cell.value,
               })
             }
           >
-            {cell.value}
+            <TruncatedText text={cell.value} withTooltip maxLength={32} />
             <ArrowForLink />
           </button>
         ),
@@ -121,7 +121,6 @@ const ContigsTable: React.FC = () => {
     ];
   }, [queryParameters, setQueryParameters]);
 
-  if (loading && !data) return <Loading size="large" />;
   if (error || !data) return <FetchError error={error} />;
 
   return (
@@ -130,21 +129,20 @@ const ContigsTable: React.FC = () => {
         cols={contigsColumns}
         data={data}
         showPagination={false}
-        title={() => (
-          <>
-            Assembly Contigs
-            <span className="mg-number">{data.meta.pagination.count}</span>
-          </>
-        )}
+        title={() => <>Assembly Contigs ({data.meta.pagination.count})</>}
         initialPage={0}
         className="mg-contigs-table"
         namespace="contigs_"
-        loading={loading}
+        isStale={loading}
+        showTextFilter
       />
       <CursorPagination
         paginationLinks={data.links}
         handleCursor={(cursor) =>
-          setQueryParameters({ ...queryParameters, contigsPageCursor: cursor })
+          setQueryParameters({
+            ...queryParameters,
+            contigs_page_cursor: cursor,
+          })
         }
       />
     </div>
