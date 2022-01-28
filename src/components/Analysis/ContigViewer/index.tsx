@@ -111,7 +111,9 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   return (
     <div id="contig">
       <div ref={igvContainer} />
-      <GFFCompare igvBrowser={igvBrowser} />
+      {config?.featureFlags?.contigIgvGffUploader && (
+        <GFFCompare igvBrowser={igvBrowser} />
+      )}
     </div>
   );
 };

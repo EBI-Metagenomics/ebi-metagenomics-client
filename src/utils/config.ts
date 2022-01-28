@@ -8,6 +8,9 @@ export type ConfigType = {
   basename: string;
   enaURL: string;
   googleMapsKey: string;
+  featureFlags?: {
+    [feature: string]: boolean;
+  };
 };
 
 const mergePrivateConfig = (callback: (x: ConfigType) => void): void => {
