@@ -115,7 +115,10 @@ const TextSearchPage: React.FC = () => {
       'domain_source:metagenomics_projects'
     ),
     size: PAGE_SIZE,
-    fields: 'ENA_PROJECT,biome_name,centre_name',
+    /* eslint-disable max-len */
+    fields:
+      'ENA_PROJECT,METAGENOMICS_ANALYSES,METAGENOMICS_SAMPLES,biome_name,centre_name,description,name',
+    /* eslint-enable max-len */
     facetcount: 10,
     facetsdepth: FACET_DEPTH,
     facets: getFacets(['centre_name', 'biome'], queryParameters),
@@ -149,8 +152,10 @@ const TextSearchPage: React.FC = () => {
       'domain_source:metagenomics_analyses'
     ),
     size: PAGE_SIZE,
+    /* eslint-disable max-len */
     fields:
-      'METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,pipeline_version,experiment_type',
+      'METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,pipeline_version,experiment_type,ASSEMBLY,ENA_RUN,ENA_WGS_SEQUENCE_SET',
+    /* eslint-enable max-len */
     facetcount: 10,
     facetsdepth: FACET_DEPTH,
     facets: getFacets(

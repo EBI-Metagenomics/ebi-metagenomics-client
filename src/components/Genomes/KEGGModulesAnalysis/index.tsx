@@ -121,7 +121,7 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
       <EMGTable
         cols={columns}
         data={data as MGnifyResponseList}
-        title={`All ${data.meta.pagination.count} KEGG modules`}
+        Title={`All ${data.meta.pagination.count} KEGG modules`}
         loading={loading}
         initialPage={(queryParameters['keggmod-page'] as number) - 1}
         initialPageSize={initialPageSize}

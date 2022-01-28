@@ -8,6 +8,13 @@
   padding-top: 0.3rem;
 }
 
+.mg-search-tabs .vf-tabs__link.is-active {
+  z-index: 100;
+}
+.mg-search-tabs .vf-tabs__list::before {
+  z-index: 110;
+}
+
 .mg-main-menu > img {
   height: 2rem;
   margin-right: 2rem;

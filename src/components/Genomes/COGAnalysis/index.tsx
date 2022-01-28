@@ -98,7 +98,7 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
       <EMGTable
         cols={columns}
         data={data as MGnifyResponseList}
-        title={`All ${data.meta.pagination.count} COG categories`}
+        Title={`All ${data.meta.pagination.count} COG categories`}
         loading={loading}
         showPagination={false}
       />

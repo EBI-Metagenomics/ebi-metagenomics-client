@@ -74,7 +74,7 @@ function getOrderingQueryParamFromSortedColumn(
 type EMGTableProps = {
   cols: Column[];
   data: MGnifyResponse | Array<MGnifyDatum> | Record<string, unknown>[];
-  title?: string | React.ElementType;
+  Title?: React.ReactNode;
   showPagination?: boolean;
   showTextFilter?: boolean;
   initialPage?: number;
@@ -86,6 +86,7 @@ type EMGTableProps = {
   loading?: boolean;
   isStale?: boolean;
   downloadURL?: string;
+  ExtraBarComponent?: React.ReactNode;
   onMouseEnterRow?: (row: Row) => void;
   onMouseLeaveRow?: (row: Row) => void;
 };
@@ -93,7 +94,7 @@ type EMGTableProps = {
 const EMGTable: React.FC<EMGTableProps> = ({
   cols,
   data,
-  title: Title,
+  Title,
   initialPage = 0,
   initialPageSize = 25,
   initialPageCount = null,
@@ -105,6 +106,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
   loading = false,
   isStale = false,
   downloadURL = null,
+  ExtraBarComponent = null,
   onMouseEnterRow = () => null,
   onMouseLeaveRow = () => null,
 }) => {
@@ -233,6 +235,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
             <caption className="vf-table__caption mg-table-caption">
               <div>
                 <div>
+                  {ExtraBarComponent}
                   {showTextFilter && (
                     <TextInputDebounced namespace={namespace} />
                   )}
@@ -251,7 +254,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
                     </>
                   )}
                 </div>
-                {Title && (typeof Title === 'string' ? Title : <Title />)}
+                {Title}
               </div>
             </caption>
           )}

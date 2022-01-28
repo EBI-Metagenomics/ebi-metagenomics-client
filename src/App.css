@@ -53,12 +53,13 @@ button.mg-button-as-tab {
   cursor: pointer;
 }
 
-button.mg-button[disabled] {
+button.mg-button[disabled],
+.vf-button.mg-button-disabled {
   background-color: lightgrey;
   border-color: lightgrey;
   transform: none;
   box-shadow: 8px 8px 0 #ddd, -5px -5px rgb(0 0 0 / 0%);
-  cursor: initial;
+  cursor: default;
 }
 
 .mg-flex {

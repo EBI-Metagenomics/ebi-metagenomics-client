@@ -124,7 +124,7 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
       <EMGTable
         cols={columns}
         data={data as MGnifyResponseList}
-        title={`All ${data.meta.pagination.count} KEGG classes`}
+        Title={`All ${data.meta.pagination.count} KEGG classes`}
         loading={loading}
         initialPage={(queryParameters['kegg-page'] as number) - 1}
         initialPageSize={initialPageSize}
