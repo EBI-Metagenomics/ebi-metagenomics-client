@@ -5,9 +5,11 @@ import './style.css';
 
 type TextInputDebouncedProps = {
   namespace: string;
+  placeholder?: string;
 };
 const TextInputDebounced: React.FC<TextInputDebouncedProps> = ({
   namespace,
+  placeholder = 'Enter your search terms',
 }) => {
   const [queryParameters, setQueryParameters] = useQueryParametersState({
     [`${namespace}search`]: '',
@@ -38,7 +40,7 @@ const TextInputDebounced: React.FC<TextInputDebouncedProps> = ({
       </label>
       <input
         type="search"
-        placeholder="Enter your search terms"
+        placeholder={placeholder}
         id="searchitem"
         className="vf-form__input"
         onChange={handleOnChange}

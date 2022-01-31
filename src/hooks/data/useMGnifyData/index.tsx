@@ -30,10 +30,23 @@ const useMGnifyData: (
   );
   const allParameters = { ...defaultParameters, ...cleanedParameters };
   let url = `${config.api}${endpoint}`;
-  if (Object.keys(allParameters).length > 0)
-    url += `?${Object.entries(allParameters)
-      .map(([key, value]) => `${key}=${value}`)
-      .join('&')}`;
+  if (Object.keys(allParameters).length > 0) {
+    Object.entries(allParameters).forEach(([key, value], idx) => {
+      let joinChar = idx === 0 ? '?' : '&';
+      if (key.includes('[]')) {
+        (value as string)
+          .split(',')
+          .forEach((repeatedParamValue, repeatedParamIdx) => {
+            if (repeatedParamIdx > 0) {
+              joinChar = '&';
+            }
+            url += `${joinChar}${key}=${repeatedParamValue}`;
+          });
+      } else {
+        url += `${joinChar}${key}=${value}`;
+      }
+    });
+  }
   const data = useData(
     [null, undefined].includes(endpoint) ? null : url,
     format,

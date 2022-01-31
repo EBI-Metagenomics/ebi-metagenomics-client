@@ -11,6 +11,7 @@
   background: lightgray;
   display: list-item;
   animation: palpitation 1s linear infinite;
+  z-index: 10;
 }
 
 @keyframes palpitation {
