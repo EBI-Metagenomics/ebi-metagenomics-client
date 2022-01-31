@@ -1,6 +1,9 @@
 import React from 'react';
+import { TwitterTimelineEmbed } from 'react-twitter-embed';
 
-const Twitter: React.FC = () => (
+import './style.css';
+
+export const TwitterHandle: React.FC = () => (
   <div className="mg-right vf-text-body vf-text-body--1">
     <a
       href="https://twitter.com/MgnifyDB"
@@ -15,4 +18,18 @@ const Twitter: React.FC = () => (
     </a>
   </div>
 );
+
+const Twitter: React.FC = () => (
+  <div className="mg-twitter-timeline">
+    <div>
+      <TwitterTimelineEmbed
+        sourceType="profile"
+        screenName="MGnifyDB"
+        options={{ height: 400, width: 700 }}
+        theme="dark"
+      />
+    </div>
+  </div>
+);
+
 export default Twitter;
