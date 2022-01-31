@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { debounce } from 'lodash-es';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { debounce, round } from 'lodash-es';
 import './style.css';
 
 import 'styles/filters.css';
@@ -12,7 +12,9 @@ type SelectionType = {
 type SliderProps = {
   min: number;
   max: number;
-  step?: number;
+  steps?: number;
+  precision?: number;
+  logarithmic?: boolean;
   selection?: SelectionType;
   isEnabled?: boolean;
   onChange?: (selection: SelectionType) => void;
@@ -24,7 +26,9 @@ const areEqual = (s1: SelectionType, s2: SelectionType): boolean =>
 const Slider: React.FC<SliderProps> = ({
   min,
   max,
-  step = 1,
+  steps = 100,
+  precision = 0,
+  logarithmic = false,
   isEnabled = true,
   selection = null,
   onChange = (s) => s,
@@ -48,46 +52,69 @@ const Slider: React.FC<SliderProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection]);
 
+  const step = useMemo(() => {
+    if (logarithmic) {
+      return (Math.log10(max) - Math.log10(min)) / steps;
+    }
+    return (max - min) / steps;
+  }, [steps, min, max, logarithmic]);
+
+  const scaleMin = useMemo(() => {
+    return logarithmic ? Math.log10(min) : min;
+  }, [logarithmic, min]);
+
+  const scaleMax = useMemo(() => {
+    return logarithmic ? Math.log10(max) : max;
+  }, [logarithmic, max]);
+
   return (
     <div className="mg-multirange-wrapper">
       <input
         type="range"
-        min={min}
-        max={max}
+        min={scaleMin}
+        max={scaleMax}
         step={step}
         name="min"
-        value={currentSelection.min}
+        value={
+          logarithmic ? Math.log10(currentSelection.min) : currentSelection.min
+        }
         className="original"
         disabled={!isEnabled}
         onChange={(evt) => {
+          const scaleLoc = Number(evt.target.value);
+          const newVal = logarithmic ? 10 ** scaleLoc : scaleLoc;
           setCurrentSelection({
-            min: Number(evt.target.value),
-            max: currentSelection.max,
+            ...currentSelection,
+            min: round(newVal, precision),
           });
         }}
       />
       <input
         type="range"
-        min={min}
-        max={max}
+        min={scaleMin}
+        max={scaleMax}
         step={step}
         name="max"
-        value={currentSelection.max}
+        value={
+          logarithmic ? Math.log10(currentSelection.max) : currentSelection.max
+        }
         className="ghost"
         disabled={!isEnabled}
         onChange={(evt) => {
+          const scaleLoc = Number(evt.target.value);
+          const newVal = logarithmic ? 10 ** scaleLoc : scaleLoc;
           setCurrentSelection({
-            max: Number(evt.target.value),
-            min: currentSelection.min,
+            ...currentSelection,
+            max: round(newVal, precision),
           });
         }}
       />
       <div className="labels">
         <div className="label-min">
-          <span>{Math.min(currentSelection.min, currentSelection.max)}</span>
+          <span>{currentSelection.min}</span>
         </div>
         <div className="label-max">
-          <span>{Math.max(currentSelection.min, currentSelection.max)}</span>
+          <span>{currentSelection.max}</span>
         </div>
       </div>
     </div>

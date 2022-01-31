@@ -5,7 +5,7 @@ import Switch from 'components/UI/Switch';
 import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
 
 const MIN = 500;
-const MAX = 100000;
+const MAX = 10e6;
 
 const ContigLengthFilter: React.FC = () => {
   const { queryParameters, setQueryParameters } =
@@ -53,13 +53,14 @@ const ContigLengthFilter: React.FC = () => {
         <Slider
           min={MIN}
           max={MAX}
-          step={100}
+          steps={100}
           isEnabled={enabled}
           selection={{
             min: range?.[0] || MIN,
             max: range?.[1] || MAX,
           }}
           onChange={handleSlider}
+          logarithmic
         />
       </div>
     </fieldset>
