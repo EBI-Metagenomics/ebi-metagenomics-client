@@ -129,7 +129,7 @@ const ContigsTable: React.FC = () => {
         cols={contigsColumns}
         data={data}
         showPagination={false}
-        title={() => <>Assembly Contigs ({data.meta.pagination.count})</>}
+        Title={<>Assembly Contigs ({data.meta.pagination.count})</>}
         initialPage={0}
         className="mg-contigs-table"
         namespace="contigs_"

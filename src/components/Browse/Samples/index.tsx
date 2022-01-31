@@ -105,7 +105,7 @@ const BrowseSamples: React.FC = () => {
         <EMGTable
           cols={columns}
           data={samplesList as MGnifyResponseList}
-          title={`Samples (${samplesList.meta.pagination.count})`}
+          Title={`Samples (${samplesList.meta.pagination.count})`}
           initialPage={(queryParameters.page as number) - 1}
           sortable
           loading={loading}

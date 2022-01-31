@@ -93,7 +93,7 @@ const BrowseBiomes: React.FC = () => {
         <EMGTable
           cols={columns}
           data={biomesList as MGnifyResponseList}
-          title={`Biomes (${biomesList.meta.pagination.count})`}
+          Title={`Biomes (${biomesList.meta.pagination.count})`}
           initialPage={(queryParameters.page as number) - 1}
           sortable
           loading={loading}
