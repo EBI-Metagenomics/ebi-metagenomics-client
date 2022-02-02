@@ -191,7 +191,7 @@ const TextSearchPage: React.FC = () => {
 
   return (
     <section className="vf-content mg-page-search">
-      <h2>Text Search.</h2>
+      <h2>Text Search</h2>
       <SearchQueryContext.Provider value={context}>
         <TextSearch />
         <Tabs tabs={tabs} />

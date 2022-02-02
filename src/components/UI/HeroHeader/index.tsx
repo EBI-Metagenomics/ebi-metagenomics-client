@@ -1,10 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './style.css';
 
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
 
 const HeroHeader: React.FC = () => {
+  const searchBox = useRef<HTMLInputElement>();
+  const location = useLocation();
+  const navigate = useNavigate();
   return (
     <section className="vf-hero vf-hero--400 | vf-u-fullbleed">
       <div className="vf-hero__content | vf-box | vf-stack vf-stack--400">
@@ -20,6 +23,74 @@ const HeroHeader: React.FC = () => {
         <p className="vf-hero__subheading">
           Submit, analyse, discover and compare microbiome data
         </p>
+        <div
+          className={`emg-header-search-wrapper ${
+            location.pathname !== '/' && 'hidden'
+          }`}
+        >
+          <form
+            className="vf-form vf-form--search vf-form--search--mini | vf-sidebar vf-sidebar--end"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const searchText = searchBox.current.value;
+              const searchParams = new URLSearchParams({ query: searchText });
+              await navigate(`/search/studies?${searchParams.toString()}`);
+              searchBox.current.value = '';
+              searchBox.current.blur();
+            }}
+          >
+            <div className="vf-sidebar__inner">
+              <div className="vf-form__item">
+                <label
+                  className="vf-form__label vf-u-sr-only | vf-search__label"
+                  htmlFor="searchitem"
+                >
+                  Search
+                </label>
+                <input
+                  type="search"
+                  placeholder="Search MGnify"
+                  ref={searchBox}
+                  className="vf-form__input"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="vf-search__button | vf-button vf-button--primary"
+              >
+                <span className="vf-button__text | vf-u-sr-only">Search</span>
+
+                <span className="icon icon-common icon-search" />
+              </button>
+            </div>
+            <div style={{ padding: '0 4px' }}>
+              <p className="vf-text-body--5">
+                Example searches:{' '}
+                <Link
+                  to="/search/studies?query=tara%20oceans"
+                  className="vf-link"
+                >
+                  Tara oceans
+                </Link>
+                ,{' '}
+                <Link
+                  to="/search/studies?query=MGYS00000410"
+                  className="vf-link"
+                >
+                  MGYS00000410
+                </Link>
+                ,{' '}
+                <Link
+                  to="/search/studies?query=human%20gut"
+                  className="vf-link"
+                >
+                  Human Gut
+                </Link>
+              </p>
+            </div>
+          </form>
+        </div>
       </div>
     </section>
   );

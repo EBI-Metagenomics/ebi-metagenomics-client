@@ -6,3 +6,13 @@
 .vf-hero .vf-hero__content {
   background-color: rgba(255, 255, 255, 0.9);
 }
+
+.emg-header-search-wrapper {
+  transition: max-height 300ms;
+  overflow: hidden;
+  max-height: 200px;
+}
+
+.emg-header-search-wrapper.hidden {
+  max-height: 0;
+}
