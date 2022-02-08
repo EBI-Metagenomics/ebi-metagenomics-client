@@ -7,3 +7,11 @@ li.igv-popup-multiple-field-item:not(:last-child) {
   border-bottom: 1px solid var(--vf-color--neutral--200);
   padding-bottom: 4px;
 }
+
+.igv-popover-section-header {
+  padding: 8px;
+}
+
+.igv-popover-table {
+  width: 100%;
+}

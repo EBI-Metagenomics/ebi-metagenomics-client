@@ -200,14 +200,6 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
     title: 'Metaproteomics',
     data: [
       {
-        name: 'Peptide sequences',
-        Value:
-          attributes.peptide_sequences &&
-          (() => (
-            <MultipleField value={attributes.peptide_sequences} decodeValue />
-          )),
-      },
-      {
         name: 'Pride ID',
         Value:
           attributes.pride_id &&
@@ -218,6 +210,28 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
               {attributes.pride_id}
             </ExtLink>
           )),
+      },
+      {
+        name: 'Unambiguous peptides',
+        Value: attributes.unambiguous,
+      },
+      {
+        name: attributes.unambiguous === 'True' ? 'List of peptides' : '',
+        Value:
+          attributes.unambiguous === 'True'
+            ? () => <MultipleField value={attributes.unambiguous_sequences} />
+            : () => <div />,
+      },
+      {
+        name: 'Ambiguous peptides',
+        Value: attributes.ambiguous,
+      },
+      {
+        name: attributes.ambiguous === 'True' ? 'List of peptides' : '',
+        Value:
+          attributes.ambiguous === 'True'
+            ? () => <MultipleField value={attributes.ambiguous_sequences} />
+            : () => <div />,
       },
     ],
   };
