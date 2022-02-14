@@ -98,3 +98,8 @@ html
   .vf-table__row:not(.vf-table__row--selected):hover {
   background-color: #fffadc;
 }
+
+pre.vf-code-example__pre > button {
+  float: right;
+  margin: 0;
+}

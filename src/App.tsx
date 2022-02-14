@@ -17,6 +17,9 @@ import UserContext from 'pages/Login/UserContext';
 
 import './App.css';
 import './styles/biomes.css';
+import 'react-toastify/dist/ReactToastify.css';
+import './styles/toast.css';
+import { ToastContainer } from 'react-toastify';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -62,6 +65,7 @@ const App: React.FC = () => {
     <BrowserRouter basename={config.basename}>
       <UserContext.Provider value={value}>
         <LoginMonitor />
+        <ToastContainer />
         <EBIHeader />
         <HeroHeader />
         <MainMenu />

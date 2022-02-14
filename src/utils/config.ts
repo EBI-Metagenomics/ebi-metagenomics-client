@@ -11,6 +11,7 @@ export type ConfigType = {
   featureFlags?: {
     [feature: string]: boolean;
   };
+  jupyterLabURL: string;
 };
 
 const mergePrivateConfig = (callback: (x: ConfigType) => void): void => {
