@@ -9,6 +9,7 @@ import { MGnifyDatum } from 'hooks/data/useData';
 import { getBiomeIcon } from 'utils/biomes';
 import UserContext from 'pages/Login/UserContext';
 import { PublicationAnnotationsPopupBadge } from 'components/Publications/EuropePMCAnnotations';
+import ProgrammaticAccessBox from 'components/UI/ProgrammaticAccess';
 
 type StudyOverviewProps = {
   data: MGnifyDatum;
@@ -93,6 +94,24 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
           )}
         </div>
       </div>
+      <ProgrammaticAccessBox
+        apiPath={`studies/${data.id}`}
+        entityLabel="Study"
+        notebooks={[
+          {
+            notebookPath:
+              'mgnify-examples/R%20Examples/Fetch%20Analyses%20metadata%20for%20a%20Study.ipynb',
+            notebookLang: 'R',
+            notebookVars: { MGYS: data.id },
+          },
+          {
+            notebookPath:
+              'mgnify-examples/Python%20Examples/Load%20Analyses%20for%20a%20MGnify%20Study.ipynb',
+            notebookLang: 'Python',
+            notebookVars: { MGYS: data.id },
+          },
+        ]}
+      />
       <br />
       <div>
         <AnalysesTable rootEndpoint="studies" />

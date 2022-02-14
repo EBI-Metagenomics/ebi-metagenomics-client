@@ -21,17 +21,19 @@ const tabs = [
 const Browse: React.FC = () => {
   return (
     <section className="vf-content">
-      <h2>Browse Page.</h2>
+      <h2>Browse MGnify</h2>
       <Tabs tabs={tabs} />
-      <Routes>
-        <Route path="super-studies" element={<BrowseSuperStudies />} />
-        <Route path="studies" element={<BrowseStudies />} />
-        <Route path="samples" element={<BrowseSamples />} />
-        <Route path="publications" element={<BrowsePublications />} />
-        <Route path="genomes" element={<BrowseGenomes />} />
-        <Route path="biomes" element={<BrowseBiomes />} />
-        <Route index element={<Navigate to="super-studies" replace />} />
-      </Routes>
+      <div style={{ paddingTop: '8px' }}>
+        <Routes>
+          <Route path="super-studies" element={<BrowseSuperStudies />} />
+          <Route path="studies" element={<BrowseStudies />} />
+          <Route path="samples" element={<BrowseSamples />} />
+          <Route path="publications" element={<BrowsePublications />} />
+          <Route path="genomes" element={<BrowseGenomes />} />
+          <Route path="biomes" element={<BrowseBiomes />} />
+          <Route index element={<Navigate to="super-studies" replace />} />
+        </Routes>
+      </div>
     </section>
   );
 };
