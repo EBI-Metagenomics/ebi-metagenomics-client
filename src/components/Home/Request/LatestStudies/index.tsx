@@ -61,7 +61,10 @@ const LatestStudies: React.FC = () => {
   if (!data) return <Loading />;
   return (
     <section className="vf-stack vf-stack--200">
-      <FixedHeightScrollable className="vf-grid vf-grid__col-1" heightPx={800}>
+      <FixedHeightScrollable
+        className="vf-grid vf-grid__col-1 latest-studies-section"
+        heightPx={800}
+      >
         {(data.data as Array<MGnifyDatum>).map(
           ({ id, attributes, relationships }) => (
             <LatestStudy
