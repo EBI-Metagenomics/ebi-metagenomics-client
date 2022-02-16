@@ -17,7 +17,7 @@ const OutterCard: React.FC<{
           loading="lazy"
         />
       )}
-      <div className="vf-card__content | vf-stack vf-stack--400">
+      <div className="vf-card__content | vf-stack vf-stack--600">
         {children}
       </div>
     </article>

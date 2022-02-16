@@ -133,7 +133,7 @@ describe('Home page', function() {
             // cy.title().should('include', 'Study');
         });
     });
-    context('Getting started section', function() {
+    context('CTA section', function() {
         beforeEach(function() {
             openPage(origPage);
         });

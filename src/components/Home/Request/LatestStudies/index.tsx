@@ -9,6 +9,8 @@ import TruncatedText from 'components/UI/TextTruncated';
 import { getBiomeIcon } from 'utils/biomes';
 
 import './style.css';
+import { useMedia } from 'react-use';
+import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 
 type LatestStudyProps = {
   id: string;
@@ -28,10 +30,10 @@ const LatestStudy: React.FC<LatestStudyProps> = ({
       <span className={`biome_icon icon_xs ${icon}`} />
       <h3 className="vf-summary__title">
         <Link to={`/studies/${id}`} className="vf-summary__link">
-          {name}
+          <TruncatedText text={name} maxLength={100} />
         </Link>
       </h3>
-      <p className="vf-summary__text">
+      <p className="vf-summary__text vf-u-type__text-body--5">
         <TruncatedText text={abstract} />
       </p>
       {/* <div className="vf-summary__text vf-grid">
@@ -50,13 +52,16 @@ const LatestStudy: React.FC<LatestStudyProps> = ({
 };
 
 const LatestStudies: React.FC = () => {
-  const { data, loading, error } = useMGnifyData('studies/recent');
+  const isSmall = useMedia('(max-width: 768px)');
+  const { data, loading, error } = useMGnifyData('studies/recent', {
+    page_size: isSmall ? 3 : 20,
+  });
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   return (
     <section className="vf-stack vf-stack--200">
-      <div className="vf-grid vf-grid__col-1 latest-studies-section">
+      <FixedHeightScrollable className="vf-grid vf-grid__col-1" heightPx={800}>
         {(data.data as Array<MGnifyDatum>).map(
           ({ id, attributes, relationships }) => (
             <LatestStudy
@@ -68,7 +73,7 @@ const LatestStudies: React.FC = () => {
             />
           )
         )}
-      </div>
+      </FixedHeightScrollable>
     </section>
   );
 };

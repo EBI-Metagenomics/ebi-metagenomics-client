@@ -1,0 +1,17 @@
+.biome_icon_hoverable {
+    filter: grayscale(40%);
+}
+.biome_icon_hoverable:hover {
+    filter: grayscale(0%) drop-shadow(0 0 5px #ddd);
+    transition: filter 0.1s linear;
+}
+
+.responsive_biomes_grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@media (min-width: 768px) {
+    .responsive_biomes_grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}

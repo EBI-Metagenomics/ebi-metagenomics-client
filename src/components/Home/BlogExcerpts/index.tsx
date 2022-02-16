@@ -3,10 +3,10 @@ import React, { useContext } from 'react';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import InnerCard from 'components/UI/InnerCard';
-import OutterCard from 'components/UI/OutterCard';
 import useBlogData from 'hooks/data/useBlogData';
 
 import UserContext from 'pages/Login/UserContext';
+import Twitter from 'components/Twitter';
 
 const removeHTMLTags = (text: string): string => {
   return text.replace(/&lt;.+?&gt;/g, '').trim();
@@ -19,16 +19,15 @@ const BlogExcerpt: React.FC<{
   url: string;
 }> = ({ title, header, image, excerpt, url }) => {
   return (
-    <OutterCard className="blog">
-      <h3 className="vf-card__heading">{title}</h3>
-      <InnerCard
-        image={image}
-        title={header}
-        label={removeHTMLTags(excerpt)}
-        to={url}
-        externalLink
-      />
-    </OutterCard>
+    <InnerCard
+      image={image}
+      title={header}
+      label={removeHTMLTags(excerpt)}
+      to={url}
+      externalLink
+      className="vf-card--striped vf-u-grid__col--span-3--xs vf-u-grid__col--span-1--md"
+      badge={title}
+    />
   );
 };
 
@@ -38,9 +37,15 @@ const BlogExcerpts: React.FC = () => {
 
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
+  const blogClass =
+    'vf-grid vf-grid__col-3 | vf-card-container | ' +
+    'vf-u-fullbleed vf-u-background-color-ui--grey--light';
+  const twitterClass =
+    'vf-card vf-card--brand vf-card--bordered ' +
+    'vf-u-grid__col--span-3--xs vf-u-grid__col--span-1--md';
   return (
     <div>
-      <div className="vf-grid vf-grid__col-2">
+      <div className={blogClass}>
         {data.spotlight && (
           <BlogExcerpt
             title="Spotlight"
@@ -59,11 +64,17 @@ const BlogExcerpts: React.FC = () => {
             url={data.tools.url}
           />
         )}
-      </div>
-      <div className="mg-right" style={{ marginTop: '0.2em' }}>
-        <a href={config.blog} className="vf-button vf-button--primary">
-          View all articles
-        </a>
+        <article className={twitterClass}>
+          <Twitter />
+        </article>
+        <div
+          className="vf-grid__col--span-2 mg-right"
+          style={{ marginTop: '0.2em' }}
+        >
+          <a href={config.blog} className="vf-button vf-button--primary">
+            View all articles
+          </a>
+        </div>
       </div>
     </div>
   );

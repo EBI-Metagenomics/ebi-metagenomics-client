@@ -7,6 +7,8 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import { getBiomeIcon } from 'utils/biomes';
 
+import './style.css';
+
 const Biome: React.FC<{ lineage: string; name: string; count: number }> = ({
   lineage,
   name,
@@ -21,8 +23,12 @@ const Biome: React.FC<{ lineage: string; name: string; count: number }> = ({
       >
         <div>
           <span
-            className={`biome_icon icon_sm ${getBiomeIcon(lineage)}`}
-            style={{ float: 'initial' }}
+            className={`biome_icon_hoverable biome_icon icon_sm ${getBiomeIcon(
+              lineage
+            )}`}
+            style={{
+              float: 'initial',
+            }}
           />
         </div>
         <div className="biome-text">
@@ -43,7 +49,7 @@ const Biomes: React.FC = () => {
 
   return (
     <section className="vf-stack vf-stack--200 search-by-biomes-section">
-      <div className="vf-grid vf-grid__col-5">
+      <div className="vf-grid vf-grid__col responsive_biomes_grid">
         {(data as MGnifyResponseList).data.map(({ id, attributes }) => (
           <Biome
             key={id}

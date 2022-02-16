@@ -3,12 +3,12 @@ import SearchBy from 'components/Home/SearchBy';
 import Request from 'components/Home/Request';
 import BlogExcerpts from 'components/Home/BlogExcerpts';
 import Publications, { MainPublication } from 'components/Publications';
-import Twitter from 'components/Twitter';
+import './style.css';
 
 const HomePage: React.FC = () => {
   return (
-    <section className="vf-content vf-stack--600">
-      <h2>Getting started</h2>
+    <section className="vf-content vf-stack vf-stack--800">
+      <div />
       <div className="vf-grid vf-grid__col-2">
         <SearchBy />
         <Request />
@@ -19,7 +19,6 @@ const HomePage: React.FC = () => {
       <Publications />
       <h2>How to cite</h2>
       <MainPublication />
-      <Twitter />
     </section>
   );
 };

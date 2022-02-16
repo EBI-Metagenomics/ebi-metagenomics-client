@@ -92,7 +92,7 @@ describe('Login process', function() {
         it('Logout should redirect to overview', function() {
             login();
             cy.get(logoutButton).click();
-            cy.contains('Getting started');
+            cy.contains('Search by');
         });
     });
 

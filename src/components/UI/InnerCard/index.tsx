@@ -8,7 +8,9 @@ type InnerCardProps = {
   image?: string;
   imageAltText?: string;
   externalLink?: boolean;
+  className?: string;
   to: string | (() => void);
+  badge?: string;
 };
 
 const InnerCard: React.FC<InnerCardProps> = ({
@@ -18,9 +20,11 @@ const InnerCard: React.FC<InnerCardProps> = ({
   image,
   imageAltText,
   externalLink = false,
+  className = 'vf-card--bordered',
+  badge,
 }) => {
   return (
-    <article className="vf-card vf-card--striped vf-card--bordered">
+    <article className={`vf-card vf-card--brand ${className}`}>
       {image && (
         <img
           src={image}
@@ -31,6 +35,9 @@ const InnerCard: React.FC<InnerCardProps> = ({
       )}
       <div className="vf-card__content | vf-stack vf-stack--400">
         <h3 className="vf-card__heading">
+          {badge && (
+            <span className="vf-badge vf-badge--tertiary">{badge}</span>
+          )}
           {externalLink && typeof to === 'string' && (
             <a className="vf-card__link" href={to}>
               {title} <ArrowForLink />

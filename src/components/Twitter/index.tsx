@@ -25,8 +25,7 @@ const Twitter: React.FC = () => (
       <TwitterTimelineEmbed
         sourceType="profile"
         screenName="MGnifyDB"
-        options={{ height: 400, width: 700 }}
-        theme="dark"
+        options={{ height: 480, width: 480 }}
       />
     </div>
   </div>

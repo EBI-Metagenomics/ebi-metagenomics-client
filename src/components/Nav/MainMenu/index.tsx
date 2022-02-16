@@ -6,6 +6,8 @@ import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
 
 import './style.css';
 import ExtLink from 'components/UI/ExtLink';
+import { useMedia } from 'react-use';
+import EMGModal from 'components/UI/EMGModal';
 
 const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'Overview', path: '/' },
@@ -22,20 +24,81 @@ const pages: Array<{ label: string; path?: string; href?: string }> = [
 const START_POS = 100;
 const START_MARGIN = -7;
 
-const MainMenu: React.FC = () => {
+const Nav: React.FC = () => {
   const location = useLocation();
+  const { isAuthenticated } = useContext(UserContext);
+  return (
+    <nav className="vf-navigation vf-navigation--main | vf-cluster vf-u-fullbleed">
+      <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
+        {(isAuthenticated
+          ? [...pages, { label: 'My Data', path: '/mydata' }]
+          : pages
+        ).map(({ label, path, href }) => (
+          <li className="vf-navigation__item" key={label}>
+            {path && (
+              <Link
+                className="vf-navigation__link"
+                aria-current={
+                  (path === '/' && location.pathname === path) ||
+                  (path !== '/' && location.pathname.startsWith(path))
+                    ? 'page'
+                    : undefined
+                }
+                to={path}
+              >
+                {isAuthenticated && label === 'Login' ? 'Logout' : label}
+              </Link>
+            )}
+            {!path && href && (
+              <ExtLink href={href} className="vf-navigation__link">
+                {label}
+              </ExtLink>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};
+
+const MobileNav: React.FC = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  return (
+    <div>
+      <EMGModal
+        isOpen={isMobileMenuOpen}
+        onRequestClose={() => setIsMobileMenuOpen(false)}
+        contentLabel="MGnify menu"
+      >
+        <Nav />
+      </EMGModal>
+      <button
+        style={{ margin: 0 }}
+        type="button"
+        className="vf-button vf-button--link"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      >
+        <i className="icon icon-common icon-bars" />
+      </button>
+    </div>
+  );
+};
+
+const MainMenu: React.FC = () => {
   const imgRef = useRef(null);
-  const { isAuthenticated, config } = useContext(UserContext);
+  const { config } = useContext(UserContext);
+  const isSmall = useMedia('(max-width: 768px)');
   const [animationState, setAnimationState] = useState({
-    marginLeft: `${START_MARGIN}rem`,
-    opacity: 0,
+    marginLeft: isSmall ? 0 : `${START_MARGIN}rem`,
+    opacity: isSmall ? 1 : 0,
   });
   useLayoutEffect(() => {
     const onScroll = (): void => {
+      if (isSmall) return;
       const topPos = imgRef.current.getBoundingClientRect().top;
       let newMargin = START_MARGIN;
       if (topPos < START_POS) {
-        const m = (START_MARGIN - 1) / (START_POS - 0);
+        const m = (START_MARGIN - 1) / START_POS;
         const b = START_MARGIN - m * START_POS;
         newMargin = m * topPos + b;
       }
@@ -47,11 +110,12 @@ const MainMenu: React.FC = () => {
 
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [isSmall]);
   // Getting link to Mgnify Hmmer from the config
   pages[3].href = config.hmmer;
   // Getting link to API from the config
   pages[5].href = config.api;
+
   return (
     <div className="mg-main-menu vf-u-fullbleed">
       <img
@@ -64,37 +128,7 @@ const MainMenu: React.FC = () => {
         }}
         ref={imgRef}
       />
-
-      <nav className="vf-navigation vf-navigation--main | vf-cluster vf-u-fullbleed">
-        <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
-          {(isAuthenticated
-            ? [...pages, { label: 'My Data', path: '/mydata' }]
-            : pages
-          ).map(({ label, path, href }) => (
-            <li className="vf-navigation__item" key={label}>
-              {path && (
-                <Link
-                  className="vf-navigation__link"
-                  aria-current={
-                    (path === '/' && location.pathname === path) ||
-                    (path !== '/' && location.pathname.startsWith(path))
-                      ? 'page'
-                      : undefined
-                  }
-                  to={path}
-                >
-                  {isAuthenticated && label === 'Login' ? 'Logout' : label}
-                </Link>
-              )}
-              {!path && href && (
-                <ExtLink href={href} className="vf-navigation__link">
-                  {label}
-                </ExtLink>
-              )}
-            </li>
-          ))}
-        </ul>
-      </nav>
+      {isSmall ? <MobileNav /> : <Nav />}
     </div>
   );
 };
