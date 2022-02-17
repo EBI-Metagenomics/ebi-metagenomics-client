@@ -19,6 +19,7 @@ const useInterProMatchesProvider = (
   limit = Infinity
 ): InterProMatchesProviderResponse => {
   const [page, setPage] = useState(1);
+  const [fetchedAllOrLimit, setFetchedAllOrLimit] = useState(false);
   const [matches, setMatches] = useState<Array<InterProCountType>>([]);
   const [processed, setProcessed] = useState(0);
   const [total, setTotal] = useState(null);
@@ -57,6 +58,9 @@ const useInterProMatchesProvider = (
       }
       if (data?.links?.next && aggregatedMatches.length < limit) {
         setPage(page + 1);
+        setFetchedAllOrLimit(false);
+      } else {
+        setFetchedAllOrLimit(true);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,8 +71,13 @@ const useInterProMatchesProvider = (
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limit]);
-
-  return { matches, processed, total, loading, error };
+  return {
+    matches,
+    processed,
+    total,
+    loading: loading || !fetchedAllOrLimit,
+    error,
+  };
 };
 
 export default useInterProMatchesProvider;

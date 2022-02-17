@@ -33,11 +33,13 @@ const InterProMatchesChart: React.FC<InterProMatchesChartProps> = ({
     if (matches) {
       const newTotal = matches.reduce((agg, { matches: m }) => agg + m, 0);
       setTotalCount(newTotal);
-      onTotalChange(newTotal);
-      onMatchesChange(matches);
+      if (!loading) {
+        onTotalChange(newTotal);
+        onMatchesChange(matches);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [matches]);
+  }, [matches, loading]);
   useEffect(() => {
     if (chartComponentRef.current && selectedName !== null) {
       let index = chartComponentRef.current.chart.series[0].data.findIndex(
@@ -54,7 +56,7 @@ const InterProMatchesChart: React.FC<InterProMatchesChartProps> = ({
       );
     }
   }, [selectedName]);
-  if (loading && !matches?.length) return <Loading />;
+  if (loading) return <Loading />;
   if (error) return <FetchError error={error} />;
 
   const options: Record<string, unknown> = {
