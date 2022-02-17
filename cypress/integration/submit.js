@@ -8,13 +8,13 @@ describe('Submit page', function() {
         });
         it('Elements should be visible', function() {
             cy.contains('Submit data').should('be.visible');
-            cy.contains('Please click here to login').should('be.visible');
+            cy.contains('Login with Webin').should('be.visible');
         });
     });
     context('User is logged in, consent not already given', function() {
         beforeEach(function() {
             openPage(origPage);
-            cy.contains('Please click here to login').click();
+            cy.contains('Login with Webin').click();
             cy.get(loginModal).should('be.visible');
             fillLoginModalForm();
         });

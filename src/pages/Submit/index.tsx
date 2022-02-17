@@ -94,7 +94,7 @@ const SubmitPage: React.FC = () => {
       </p>
       {!isAuthenticated && (
         <Link to="/login" className="vf-button vf-button--primary">
-          Please click here to login
+          Login with Webin
         </Link>
       )}
       {isAuthenticated && !hasGivenConsent && (
