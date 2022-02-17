@@ -69,11 +69,13 @@ const dataFor = {
         id: 'name',
         Header: 'Name',
         accessor: (study) => study?.fields?.name?.join(', '),
+        className: 'break-anywhere',
       },
       {
         id: 'description',
         Header: 'Description',
         accessor: (study) => study?.fields?.description?.join('. '),
+        className: 'break-anywhere',
       },
       {
         id: 'samples',
@@ -117,6 +119,7 @@ const dataFor = {
         pathnames: ['/search/studies'],
         accessor: (study) => study?.fields?.name?.[0],
         Cell: ({ cell }) => <span>{cell.value}</span>,
+        className: 'break-anywhere',
       },
       {
         id: 'sample_description',
@@ -124,6 +127,7 @@ const dataFor = {
         pathnames: ['/search/studies'],
         accessor: (study) => study?.fields?.description?.[0],
         Cell: ({ cell }) => <span>{cell.value}</span>,
+        className: 'break-anywhere',
       },
     ],
   },

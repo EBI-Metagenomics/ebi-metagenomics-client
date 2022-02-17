@@ -23,7 +23,7 @@ const Browse: React.FC = () => {
     <section className="vf-content">
       <h2>Browse MGnify</h2>
       <Tabs tabs={tabs} />
-      <div style={{ paddingTop: '8px' }}>
+      <div className="vf-u-padding__top--600">
         <Routes>
           <Route path="super-studies" element={<BrowseSuperStudies />} />
           <Route path="studies" element={<BrowseStudies />} />

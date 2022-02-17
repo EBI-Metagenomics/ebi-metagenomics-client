@@ -1,10 +1,7 @@
 .mg-page-search .vf-grid .vf-stack fieldset {
-  border: 1px solid #eeeeee;
   padding: 4px;
 }
-.mg-page-search .vf-grid .vf-stack fieldset:hover {
-  border: 1px solid #dddddd;
-}
+
 .mg-page-search .vf-form__legend {
   font-size: 1.2rem;
 }

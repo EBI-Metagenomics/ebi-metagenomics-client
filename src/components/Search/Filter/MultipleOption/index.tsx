@@ -7,6 +7,7 @@ import useEBISearchData from 'hooks/data/useEBISearchData';
 
 import 'styles/filters.css';
 import Loading from 'src/components/UI/Loading';
+import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 
 const location2endpoint = {
   '/search/studies': 'metagenomics_projects',
@@ -82,9 +83,10 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   };
 
   return (
-    <section className="mg-filter">
+    // <section className="mg-filter">
+    <FixedHeightScrollable className="mg-filter" heightPx={600}>
       <LoadingOverlay loading={searchData?.[location.pathname].loading}>
-        <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
+        <fieldset className="vf-form__fieldset vf-stack vf-stack--200">
           <legend className="vf-form__legend">{header}</legend>
           {includeTextFilter && (
             <input
@@ -140,7 +142,8 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
           )}
         </fieldset>
       </LoadingOverlay>
-    </section>
+    </FixedHeightScrollable>
+    // {/*</section>*/}
   );
 };
 export default MultipleOptionFilter;

@@ -69,7 +69,7 @@ const TextSearchCount: React.FC<{ to: string; label: string }> = ({
     <>
       {label}
       <span className="mg-number">
-        {searchData?.[to]?.data?.hitCount || ''}
+        {searchData?.[to]?.data?.hitCount || '0'}
       </span>
     </>
   );
@@ -194,9 +194,9 @@ const TextSearchPage: React.FC = () => {
       <h2>Text Search</h2>
       <SearchQueryContext.Provider value={context}>
         <TextSearch />
-        <Tabs tabs={tabs} />
-        <section className="vf-grid mg-grid-search">
-          <div className="vf-stack vf-stack--200">
+        <Tabs tabs={tabs} preservedQueryParameters={['query']} />
+        <section className="vf-grid mg-grid-search vf-u-padding__top--400">
+          <div className="vf-stack vf-stack--800">
             <Routes>
               <Route
                 path="studies"

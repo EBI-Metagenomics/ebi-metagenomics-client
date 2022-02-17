@@ -148,7 +148,7 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
 
   return (
     <LoadingOverlay loading={searchData?.[location.pathname].loading}>
-      <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
+      <fieldset className="vf-form__fieldset vf-stack vf-stack--200">
         <legend className="vf-form__legend">{header}</legend>
         {facetData.facetValues.map(({ label, value, count, children }) => (
           <HierarchyOption

@@ -7,3 +7,7 @@
 .contig-igv-container {
     min-height: 240px;
 }
+
+.mg-contig-filter.vf-form__legend {
+    font-size: 1.2rem;
+}

@@ -69,10 +69,7 @@ const App: React.FC = () => {
         <EBIHeader />
         <HeroHeader />
         <MainMenu />
-        <div
-          className="vf-body"
-          style={{ marginBottom: '1em', marginTop: '0.5em' }}
-        >
+        <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
           <ErrorBoundary>
             <Suspense fallback={<Loading size="large" />}>
               <Routes>

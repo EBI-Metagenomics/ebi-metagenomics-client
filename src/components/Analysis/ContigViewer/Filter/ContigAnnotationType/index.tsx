@@ -31,8 +31,10 @@ const ContigAnnotationTypeFilter: React.FC = () => {
     });
   };
   return (
-    <fieldset className="vf-form__fieldset vf-stack vf-stack--400 mg-contig-text-filter">
-      <legend className="vf-form__legend">Show contigs with:</legend>
+    <fieldset className="vf-form__fieldset vf-stack vf-stack--200 mg-contig-text-filter">
+      <legend className="vf-form__legend mg-contig-filter">
+        Show contigs with:
+      </legend>
       {TYPES.map((annotationType) => {
         const id = annotationType.toLowerCase();
         return (

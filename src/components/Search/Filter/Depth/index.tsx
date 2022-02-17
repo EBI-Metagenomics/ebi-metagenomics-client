@@ -39,7 +39,7 @@ const DepthFilter: React.FC = () => {
     });
   };
   return (
-    <fieldset className="vf-form__fieldset vf-stack vf-stack--400 mg-depth-filter">
+    <fieldset className="vf-form__fieldset vf-stack vf-stack--200 mg-depth-filter">
       <legend className="vf-form__legend">Depth (meters)</legend>
       <div className="mg-switch-and-slider">
         <Switch id="temp_filter" onChange={handleSwitch} isOn={enabled} />

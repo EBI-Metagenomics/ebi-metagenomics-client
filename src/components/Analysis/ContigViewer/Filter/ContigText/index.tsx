@@ -12,7 +12,7 @@ const ContigTextFilter: React.FC<ContigTextFilterProps> = ({
 }) => {
   return (
     <fieldset className="vf-form__fieldset vf-stack vf-stack--200 mg-contig-text-filter">
-      <legend className="vf-form__legend">{title}</legend>
+      <legend className="vf-form__legend mg-contig-filter">{title}</legend>
       <TextInputDebounced
         namespace={`${title.replaceAll(' ', '_').toLowerCase()}_`}
         placeholder={placeholder}

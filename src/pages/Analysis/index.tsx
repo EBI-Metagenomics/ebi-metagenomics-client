@@ -75,7 +75,10 @@ const AnalysisPage: React.FC = () => {
       <h2>Analysis {accession}</h2>
       {linkToOtherAnalyses && (
         <h4>
-          <Link to={linkToOtherAnalyses}>Other Analyses</Link>
+          <Link to={linkToOtherAnalyses}>
+            <i className="icon icon-common icon-arrow-circle-left" /> Other
+            Analyses
+          </Link>
         </h4>
       )}
       <Tabs tabs={tabs} />

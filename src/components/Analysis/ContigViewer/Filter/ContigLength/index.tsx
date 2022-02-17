@@ -43,7 +43,9 @@ const ContigLengthFilter: React.FC = () => {
   };
   return (
     <fieldset className="vf-form__fieldset vf-stack vf-stack--200 mg-contig-length-filter">
-      <legend className="vf-form__legend">Contig length (bp)</legend>
+      <legend className="vf-form__legend mg-contig-filter">
+        Contig length (bp)
+      </legend>
       <div className="mg-switch-and-slider">
         <Switch
           id="contig_length_filter"
