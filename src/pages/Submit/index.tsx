@@ -1,6 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import GlobalOverlayedContent from 'components/UI/GlobalOverlayedContent';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import ExtLink from 'components/UI/ExtLink';
@@ -8,6 +7,7 @@ import UserContext, { getEmailsFromDetails } from 'pages/Login/UserContext';
 import useMgnifyEmail from 'hooks/data/useMgnifyEmail';
 
 import processImg from 'images/submission_process.svg';
+import EMGModal from 'components/UI/EMGModal';
 
 const SubmitPage: React.FC = () => {
   const consentCheckboxRef = useRef(null);
@@ -47,13 +47,17 @@ const SubmitPage: React.FC = () => {
   };
   return (
     <section className="vf-content">
-      <GlobalOverlayedContent show={showModal} setShowModal={setShowModal}>
+      <EMGModal
+        isOpen={showModal}
+        onRequestClose={() => setShowModal(false)}
+        contentLabel="MGnify Submission Process - diagram"
+      >
         <img
           src={processImg}
           alt="MGnify Submission Process"
           style={{ height: '80vh' }}
         />
-      </GlobalOverlayedContent>
+      </EMGModal>
       <h2>Submit data</h2>
       <p>
         We provide a free service for submission of raw metagenomics sequence

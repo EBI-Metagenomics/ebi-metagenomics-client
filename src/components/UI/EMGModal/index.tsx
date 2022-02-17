@@ -21,7 +21,7 @@ const modalStyle = {
     maxHeight: 'calc(100vh - 5em)',
     overflowY: 'auto',
     width: '80vw',
-    height: '60vh',
+    height: '80vh',
   },
 };
 
