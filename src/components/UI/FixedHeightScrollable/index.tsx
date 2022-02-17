@@ -29,7 +29,7 @@ const FixedHeightScrollable: React.FC<{
   return (
     <div
       ref={scrollRef}
-      className={className}
+      className={`${className} fixed-height-scrollable__outer`}
       style={{
         maxHeight: `${heightPx}px`,
         overflowY: 'scroll',
@@ -38,7 +38,9 @@ const FixedHeightScrollable: React.FC<{
         ...(canScrollToBottom && isScrolledFromTop && bothBorderStyle),
       }}
     >
-      <div ref={innerRef}>{children}</div>
+      <div ref={innerRef} className="fixed-height-scrollable__inner">
+        {children}
+      </div>
     </div>
   );
 };

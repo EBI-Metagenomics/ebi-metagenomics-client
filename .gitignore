@@ -8,7 +8,8 @@ cypress/screenshots/
 
 # IDE (Webstorm) files
 *.iml
-*.idea
+.idea/*
+!.idea/runConfigurations
 .vscode
 
 # Merged fixture file

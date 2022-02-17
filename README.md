@@ -2,8 +2,8 @@
 [![codecov](https://codecov.io/gh/EBI-Metagenomics/ebi-metagenomics-client/branch/new-client/graph/badge.svg?token=WyXvRIQvq8)](https://codecov.io/gh/EBI-Metagenomics/ebi-metagenomics-client)
 
 # ebi-metagenomics-client
-
-This is the source ocode for the future version of the Mgnify website
+[React](https://reactjs.org)-based web frontend for 
+[MGnify, the EBI metagenomics resource](https://www.ebi.ac.uk/metagenomics). 
 
 #### Requirements:
 
@@ -11,21 +11,33 @@ This is the source ocode for the future version of the Mgnify website
 
 #### How to setup your project?
 
-Export the following env variables in env-config.sh file. Adjust exports if need depending on whether you are in your dev or
+Export the following env variables in env-config.sh file. 
+Adjust exports if need depending on whether you are in your dev or
 prod environment.
 
-```
+```bash
 source env-config.sh
 ```
+
+If you are using [Webstorm](https://www.jetbrains.com/webstorm/), 
+there are run configurations to import in `.idea/runConfigurations`. 
 
 ##### Run `npm install` in the project's main directory.
 
 Serve with own server, or use built-in dev system by calling 'npm run server:watch'' in main directory.
 
-```
-export DEPLOYMENT_SUBFOLDER=“/metagenomics”;
+```bash
 npm install
+npm run start --watch
+```
 
-npm run watch
+#### Integration tests
+Start the frontend as above, then use the Cypress test suite:
+```bash
+npm test
+```
 
+Or for a single test file e.g.:
+```bash
+cypress run --spec cypress/integration/index.js
 ```

@@ -3,7 +3,7 @@
   overflow-y: scroll;
 }
 .latest-studies-section article.vf-summary {
-  margin-bottom: 0;
+  margin-bottom: 1rem;
 }
 @media (max-width: 1023px) {
   .latest-studies-section {
