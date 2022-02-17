@@ -9,7 +9,7 @@ describe('About page', { retries: 3 }, function() {
             cy.get(`.mg-main-menu`).contains('About').click();
         });
         it('Contains all the about sections', function() {
-            const content = '.vf-content';
+            const content = '.about-page';
             cy.get(content).contains('The MGnify resource');
             cy.get(content).contains('Staying informed');
             cy.get(content).contains('Cite us');
