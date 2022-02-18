@@ -1,7 +1,7 @@
 .mg-main-menu {
   position: sticky;
   top: 0;
-  z-index: 1500;
+  z-index: 2000;
   display: flex;
   border-bottom: 1px solid gray;
   background-color: rgba(255, 255, 255, 0.95);
