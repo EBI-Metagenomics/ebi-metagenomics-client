@@ -87,19 +87,21 @@ const BrowseSamples: React.FC = () => {
 
   return (
     <section className="mg-browse-section">
-      <BiomeSelector
-        onSelect={async (biome) => {
-          await setHasData(false);
-          setQueryParameters({
-            ...queryParameters,
-            biome,
-            page: 1,
-          });
-          await samplesList;
-          setHasData(true);
-        }}
-        initialValue={queryParameters.biome as string}
-      />
+      <div>
+        <BiomeSelector
+          onSelect={async (biome) => {
+            await setHasData(false);
+            setQueryParameters({
+              ...queryParameters,
+              biome,
+              page: 1,
+            });
+            await samplesList;
+            setHasData(true);
+          }}
+          initialValue={queryParameters.biome as string}
+        />
+      </div>
       <div style={{ height: '2rem' }} />
       {hasData && (
         <EMGTable
