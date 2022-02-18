@@ -30,12 +30,15 @@ const DataAnalysesTypeRow: React.FC<{
   if (error) return <FetchError error={error} />;
   return (
     <tr className="vf-table__row">
-      <td className="vf-table__cell" style={{ textAlign: 'right' }}>
+      <td
+        className="vf-table__cell vf-u-type__text-body--3"
+        style={{ textAlign: 'right' }}
+      >
         <Link to={link} className="mg-link">
           {data?.hitCount || '...'}
         </Link>
       </td>
-      <td className="vf-table__cell">
+      <td className="vf-table__cell vf-u-type__text-body--3">
         <Link to={link} className="mg-link">
           {label}
         </Link>
@@ -58,7 +61,10 @@ const DataTypeRow: React.FC<{
   if (error) return <FetchError error={error} />;
   return (
     <tr className="vf-table__row">
-      <td className="vf-table__cell" style={{ textAlign: 'right' }}>
+      <td
+        className="vf-table__cell vf-u-type__text-body--3"
+        style={{ textAlign: 'right' }}
+      >
         {loading ? (
           <Loading size="small" />
         ) : (
@@ -67,7 +73,7 @@ const DataTypeRow: React.FC<{
           </Link>
         )}
       </td>
-      <td className="vf-table__cell">
+      <td className="vf-table__cell vf-u-type__text-body--3">
         <Link to={link} className="mg-link">
           {label}
         </Link>
@@ -98,7 +104,10 @@ const EMGAPIDataTypeRow: React.FC<{
   if (error) return <FetchError error={error} />;
   return (
     <tr className="vf-table__row">
-      <td className="vf-table__cell" style={{ textAlign: 'right' }}>
+      <td
+        className="vf-table__cell vf-u-type__text-body--3"
+        style={{ textAlign: 'right' }}
+      >
         {loading ? (
           <Loading size="small" />
         ) : (
@@ -107,7 +116,7 @@ const EMGAPIDataTypeRow: React.FC<{
           </Link>
         )}
       </td>
-      <td className="vf-table__cell">
+      <td className="vf-table__cell vf-u-type__text-body--3">
         <Link to={link} className="mg-link">
           {label}
         </Link>

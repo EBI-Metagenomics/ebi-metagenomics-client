@@ -233,25 +233,25 @@ const EMGTable: React.FC<EMGTableProps> = ({
         >
           {(Title || showTextFilter || downloadURL) && (
             <caption className="vf-table__caption mg-table-caption">
-              <div>
-                <div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-end' }}>
                   {ExtraBarComponent}
                   {showTextFilter && (
                     <TextInputDebounced namespace={namespace} />
                   )}
                   {downloadURL && (
-                    <>
+                    <div>
                       {' '}
                       <a
                         href={downloadURL}
                         className="vf-button vf-button--secondary vf-button--sm"
-                        style={{ whiteSpace: 'nowrap' }}
+                        style={{ whiteSpace: 'nowrap', marginBottom: '8px' }}
                         download
                       >
                         <span className="icon icon-common icon-download" />{' '}
                         Download
                       </a>
-                    </>
+                    </div>
                   )}
                 </div>
                 {Title}

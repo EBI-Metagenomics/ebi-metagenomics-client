@@ -66,7 +66,17 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
 
   if (searchData?.[location.pathname].error) return null;
 
-  if (!facetData) return null;
+  if (!facetData)
+    return (
+      <LoadingOverlay loading={searchData?.[location.pathname].loading}>
+        <fieldset className="vf-form__fieldset vf-stack vf-stack--200">
+          <legend className="vf-form__legend">{header}</legend>
+          <p className="vf-form__helper">
+            Displayed data is not filterable by {header}
+          </p>
+        </fieldset>
+      </LoadingOverlay>
+    );
 
   const handleSelection = (event): void => {
     const { value, checked: isChecked } = event.target as HTMLInputElement;
