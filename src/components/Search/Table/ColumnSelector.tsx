@@ -58,7 +58,7 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
       <button
         type="button"
         className="vf-button vf-button--sm vf-button--secondary"
-        style={{ whiteSpace: 'nowrap' }}
+        style={{ whiteSpace: 'nowrap', marginBottom: '8px' }}
         onClick={() => setIsOpen(true)}
       >
         <span className="icon icon-common icon-columns" />

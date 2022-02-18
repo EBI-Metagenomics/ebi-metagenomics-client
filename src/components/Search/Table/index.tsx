@@ -244,7 +244,7 @@ const SearchTable: React.FC = () => {
             <Tooltip content="CSV download limited to 100 results.">
               <div
                 className="vf-button vf-button--sm mg-button-disabled"
-                style={{ whiteSpace: 'nowrap' }}
+                style={{ whiteSpace: 'nowrap', marginBottom: '8px' }}
               >
                 <span className="icon icon-common icon-download" /> Download
               </div>
