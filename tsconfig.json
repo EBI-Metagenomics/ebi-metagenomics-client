@@ -6,6 +6,7 @@
       "*": ["*", "src/*", "public/*"]
     },
     "sourceMap": true,
+    "sourceRoot": "/",
     "module": "es2020",
     "target": "es6",
     "lib": ["es2019", "dom", "esnext"],

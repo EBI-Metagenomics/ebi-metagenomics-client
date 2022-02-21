@@ -7,6 +7,7 @@ import App from './App';
 
 Sentry.init({
   dsn: config.sentryDsn,
+  environment: config.sentryEnv,
   integrations: [new Integrations.BrowserTracing()],
   tracesSampleRate: 1.0,
 });
