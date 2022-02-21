@@ -83,14 +83,16 @@ export const useQueryParametersState: (
 
   // Pushes the new URL(including the new parameter value) into history
   const setParametersInURL: (newState: QueryState) => void = (newState) => {
-    if (JSON.stringify(newState) === JSON.stringify(currentState)) return;
     const parametersToChange = new URLSearchParams(location.search);
 
     let changed = false;
     Object.entries(initialState).forEach(([parameter, defaultValue]) => {
       const newValue =
         parameter in newState ? newState[parameter] : defaultValue;
-      if (newState[parameter] !== currentState[parameter]) {
+      if (
+        newState[parameter] !== currentState[parameter] ||
+        newState[parameter] !== parametersToChange.get(parameter)
+      ) {
         parametersToChange.set(parameter, String(newValue));
         if (newValue === defaultValue) {
           parametersToChange.delete(parameter);

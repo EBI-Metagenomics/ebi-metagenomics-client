@@ -10,8 +10,20 @@ const TextSearch: React.FC = () => {
   useEffect(() => {
     setSearchTerms(queryParameters.query as string);
   }, [queryParameters.query]);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setQueryParameters({
+      ...queryParameters,
+      query: searchTerms,
+    });
+  };
+
   return (
-    <div className="vf-form vf-form--search vf-sidebar vf-sidebar--end mg-text-search">
+    <form
+      className="vf-form vf-form--search vf-sidebar vf-sidebar--end mg-text-search"
+      onSubmit={onSubmit}
+    >
       <div className="vf-sidebar__inner">
         <div className="vf-form__item | vf-search__item">
           <input
@@ -27,14 +39,9 @@ const TextSearch: React.FC = () => {
         </div>
         <div className="vf-form__item | vf-search__item">
           <button
-            type="button"
+            type="submit"
             className="vf-search__button | vf-button vf-button--primary mg-text-search-button"
-            onClick={() => {
-              setQueryParameters({
-                ...queryParameters,
-                query: searchTerms,
-              });
-            }}
+            onClick={onSubmit}
           >
             <span className="vf-button__text">Search </span>
             <span className="icon icon-common icon-search" />
@@ -51,7 +58,7 @@ const TextSearch: React.FC = () => {
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
