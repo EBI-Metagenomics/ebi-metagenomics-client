@@ -139,4 +139,14 @@ describe('Assembly page', function() {
                 .should('not.exist');
         });
     });
+    context('Legacy assemblies redirection', function() {
+        const legacyAccession = 'ERZ1111';
+        const redirectUrl = 'assemblies/' + legacyAccession;
+
+        it('Should refresh the url and add a callout', function() {
+            openPage(redirectUrl);
+            cy.contains('Assembly ' + accession).should('be.visible');
+            cy.get(".callout").contains("The assembly " + legacyAccession + " has been re-assigned the accession " + accession);
+        });
+    });
 });
