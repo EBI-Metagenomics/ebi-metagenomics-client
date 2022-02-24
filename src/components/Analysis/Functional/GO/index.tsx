@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import { MGnifyDatum } from 'hooks/data/useData';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import GOBarChart from './BarChart';
 import GOPieChart from './PieChart';
 
@@ -17,9 +17,7 @@ const tabs = [
 
 const GO: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
-  const [queryParameters] = useQueryParametersState({
-    chart: '',
-  });
+  const [chart] = useQueryParamState('chart', '');
   const { data, loading, error } = useMGnifyData(
     `analyses/${overviewData.id}/go-slim`
   );
@@ -79,7 +77,7 @@ const GO: React.FC = () => {
           />
           <div className="vf-tabs-content">
             <div className="vf-grid vf-grid__col-3">
-              {queryParameters.chart === 'bar' && dataBundles && (
+              {chart === 'bar' && dataBundles && (
                 <>
                   <GOBarChart
                     title="Biological process"
@@ -104,7 +102,7 @@ const GO: React.FC = () => {
                   />
                 </>
               )}
-              {queryParameters.chart === 'pie' && dataBundles && (
+              {chart === 'pie' && dataBundles && (
                 <>
                   <GOPieChart
                     title="Biological process"

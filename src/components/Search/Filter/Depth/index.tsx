@@ -1,42 +1,32 @@
-import React, { useEffect, useState, useContext, memo } from 'react';
-
-import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
+import React, { memo, useEffect, useState } from 'react';
 
 import Slider from 'components/UI/Slider';
 import Switch from 'components/UI/Switch';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const MIN = 0;
 const MAX = 2000;
 
 const DepthFilter: React.FC = () => {
-  const { queryParameters, setQueryParameters } =
-    useContext(SearchQueryContext);
-  const [enabled, setEnabled] = useState(!!queryParameters.depth);
+  const [depth, setDepth] = useQueryParamState('depth', '');
+  const [enabled, setEnabled] = useState(!!depth);
   const [range, setRange] = useState(
-    (queryParameters.depth as string).split(',').filter(Boolean).map(Number)
+    (depth as string).split(',').filter(Boolean).map(Number)
   );
   useEffect(() => {
-    const newRange = (queryParameters.depth as string)
-      .split(',')
-      .filter(Boolean)
-      .map(Number);
+    const newRange = (depth as string).split(',').filter(Boolean).map(Number);
     setRange(newRange);
-  }, [queryParameters.depth]);
+  }, [depth]);
 
   const handleSwitch = (isEnabled: boolean): void => {
     setEnabled(isEnabled);
     if (!isEnabled) {
-      setQueryParameters({
-        ...queryParameters,
-        depth: '',
-      });
+      setDepth('');
     }
   };
   const handleSlider = ({ min, max }): void => {
-    setQueryParameters({
-      ...queryParameters,
-      depth: `${min},${max}`,
-    });
+    setRange([min, max]);
+    setDepth(`${min},${max}`);
   };
   return (
     <fieldset className="vf-form__fieldset vf-stack vf-stack--200 mg-depth-filter">

@@ -52,7 +52,8 @@
     "react-twitter-embed": "4.0.4",
     "react-use": "^17.3.2",
     "textarea-sequence": "3.5.1",
-    "universal-cookie": "4.0.4"
+    "universal-cookie": "4.0.4",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@cypress/code-coverage": "3.9.12",

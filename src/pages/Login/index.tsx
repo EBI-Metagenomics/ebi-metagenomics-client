@@ -6,18 +6,16 @@ import OutterCard from 'components/UI/OutterCard';
 
 import UserContext from 'pages/Login/UserContext';
 import useAuthentication from 'hooks/useAuthentication';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 
 import enaUserImg from 'public/images/ico_ena_user.jpg';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const Login: React.FC = () => {
   const userRef = useRef(null);
   const passwordRef = useRef(null);
   const { username, isAuthenticated } = useContext(UserContext);
   const { login, logout, loginError, loading, error } = useAuthentication();
-  const [{ from }] = useQueryParametersState({
-    from: '',
-  });
+  const [from] = useQueryParamState('from', '');
   const navigate = useNavigate();
   if (isAuthenticated) {
     if (from === 'private-request') {

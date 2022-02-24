@@ -8,29 +8,25 @@ import TruncatedText from 'components/UI/TextTruncated';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const initialPageSize = 10;
 const FlagshipTable: React.FC = () => {
   const accession = useURLAccession();
-  const [queryParameters] = useQueryParametersState(
-    {
-      'flagship-page': 1,
-      'flagship-page_size': initialPageSize,
-      'flagship-order': '',
-    },
-    {
-      'flagship-page': Number,
-      'flagship-page_size': Number,
-    }
+  const [flagshipPage] = useQueryParamState('flagship-page', 1, Number);
+  const [flagshipPageSize] = useQueryParamState(
+    'flagship-page_size',
+    initialPageSize,
+    Number
   );
+  const [flagshipOrder] = useQueryParamState('flagship-order', '');
   const { data, loading, error, isStale } = useMGnifyData(
     `super-studies/${accession}/flagship-studies`,
     {
-      page: queryParameters['flagship-page'] as number,
-      ordering: queryParameters['flagship-order'] as string,
-      page_size: queryParameters['flagship-page_size'] as number,
+      page: flagshipPage as number,
+      ordering: flagshipOrder as string,
+      page_size: flagshipPageSize as number,
     }
   );
   if (loading && !isStale) return <Loading size="small" />;
@@ -86,7 +82,7 @@ const FlagshipTable: React.FC = () => {
       <EMGTable
         cols={columns}
         data={data as MGnifyResponseList}
-        initialPage={(queryParameters['flagship-page'] as number) - 1}
+        initialPage={(flagshipPage as number) - 1}
         initialPageSize={initialPageSize}
         className="mg-anlyses-table"
         loading={loading}

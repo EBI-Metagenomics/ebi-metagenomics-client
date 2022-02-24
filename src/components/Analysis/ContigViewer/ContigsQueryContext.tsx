@@ -1,6 +1,4 @@
 import React from 'react';
-import { QueryState } from 'hooks/useQueryParamState';
-import { noop } from 'lodash-es';
 
 const ContigsQueryContext = React.createContext({
   contigsQueryData: {
@@ -8,8 +6,6 @@ const ContigsQueryContext = React.createContext({
     loading: false,
     error: null,
   },
-  queryParameters: {} as QueryState,
-  setQueryParameters: noop as (s: QueryState) => void,
 });
 
 export default ContigsQueryContext;

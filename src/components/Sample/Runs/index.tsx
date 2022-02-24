@@ -7,29 +7,25 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const initialPageSize = 10;
 
 const AssociatedRuns: React.FC = () => {
   const accession = useURLAccession();
-  const [queryParameters] = useQueryParametersState(
-    {
-      'runs-page': 1,
-      'runs-page_size': initialPageSize,
-      'runs-order': '',
-    },
-    {
-      'runs-page': Number,
-      'runs-page_size': Number,
-    }
+  const [runsPage] = useQueryParamState('runs-page', 1, Number);
+  const [runsPageSize] = useQueryParamState(
+    'runs-page_size',
+    initialPageSize,
+    Number
   );
+  const [runsOrder] = useQueryParamState('runs-order', '');
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
     `samples/${accession}/runs`,
     {
-      page: queryParameters['runs-page'] as number,
-      ordering: queryParameters['runs-order'] as string,
-      page_size: queryParameters['runs-page_size'] as number,
+      page: runsPage as number,
+      ordering: runsOrder as string,
+      page_size: runsPageSize as number,
     }
   );
   if (loading && !isStale) return <Loading size="small" />;
@@ -66,7 +62,7 @@ const AssociatedRuns: React.FC = () => {
     <EMGTable
       cols={columns}
       data={data as MGnifyResponseList}
-      initialPage={(queryParameters['runs-page'] as number) - 1}
+      initialPage={(runsPage as number) - 1}
       initialPageSize={initialPageSize}
       className="mg-runs-table"
       loading={loading}

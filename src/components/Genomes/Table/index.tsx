@@ -7,30 +7,26 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
 import { getSimpleTaxLineage } from 'utils/taxon';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const initialPageSize = 10;
 const GenomesTable: React.FC = () => {
   const accession = useURLAccession();
-  const [queryParameters] = useQueryParametersState(
-    {
-      'genomes-page': 1,
-      'genomes-page_size': initialPageSize,
-      'genomes-order': '',
-    },
-    {
-      'genomes-page': Number,
-      'genomes-page_size': Number,
-    }
+  const [genomesPage] = useQueryParamState('genomes-page', 1, Number);
+  const [genomesPageSize] = useQueryParamState(
+    'genomes-page_size',
+    initialPageSize,
+    Number
   );
+  const [genomesOrder] = useQueryParamState('genomes-order', '');
   const { data, loading, error, isStale } = useMGnifyData(
     `genome-catalogues/${accession}/genomes`,
     {
-      page: queryParameters['genomes-page'] as number,
-      ordering: queryParameters['genomes-order'] as string,
-      page_size: queryParameters['genomes-page_size'] as number,
+      page: genomesPage as number,
+      ordering: genomesOrder as string,
+      page_size: genomesPageSize as number,
     }
   );
   if (loading && !isStale) return <Loading size="small" />;
@@ -97,7 +93,7 @@ const GenomesTable: React.FC = () => {
     <EMGTable
       cols={columns}
       data={data as MGnifyResponseList}
-      initialPage={(queryParameters['genomes-page'] as number) - 1}
+      initialPage={(genomesPage as number) - 1}
       initialPageSize={initialPageSize}
       className="mg-anlyses-table"
       loading={loading}

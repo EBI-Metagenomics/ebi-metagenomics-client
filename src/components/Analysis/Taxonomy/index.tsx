@@ -5,10 +5,10 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import useMGnifyData from 'hooks/data/useMGnifyData';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import UserContext from 'pages/Login/UserContext';
-import PhylumCharts from './PhylumCharts';
 
+import PhylumCharts from './PhylumCharts';
 import './style.css';
 
 const tabs = [
@@ -27,9 +27,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/taxonomy/overview`
   );
-  const [queryParameters] = useQueryParametersState({
-    [PARAMETER_NAME]: PARAMETER_DEFAULT,
-  });
+  const [type] = useQueryParamState(PARAMETER_NAME, PARAMETER_DEFAULT);
   const datum = data?.data as Record<string, unknown>;
 
   const enableSSU = datum?.taxonomy_ssu_count > 0 || datum?.taxonomy_count > 0;
@@ -145,7 +143,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
         defaultValue={PARAMETER_DEFAULT}
       />
       <div className="vf-tabs-content">
-        {queryParameters[PARAMETER_NAME] === 'krona' ? (
+        {type === 'krona' ? (
           <object
             className="krona_chart"
             data={`${config.api}analyses/${accession}/krona${taxResults}?collapse=false`}
@@ -156,7 +154,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
           <PhylumCharts
             accession={accession}
             category={taxResults}
-            chartType={String(queryParameters[PARAMETER_NAME])}
+            chartType={String(type)}
           />
         )}
       </div>

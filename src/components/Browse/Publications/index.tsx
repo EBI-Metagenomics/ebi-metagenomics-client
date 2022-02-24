@@ -7,22 +7,14 @@ import EMGTable from 'components/UI/EMGTable';
 import ExtLink from 'components/UI/ExtLink';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import Loading from 'components/UI/Loading';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const BrowsePublications: React.FC = () => {
-  const [queryParameters] = useQueryParametersState(
-    {
-      page: 1,
-      order: '',
-      page_size: 25,
-      search: '',
-    },
-    {
-      page: Number,
-      page_size: Number,
-    }
-  );
+  const [page] = useQueryParamState('page', 1, Number);
+  const [order] = useQueryParamState('order', '');
+  const [pageSize] = useQueryParamState('page_size', 25, Number);
+  const [search] = useQueryParamState('search', '');
   const [hasData, setHasData] = useState(false);
   const {
     data: publicationsList,
@@ -30,10 +22,10 @@ const BrowsePublications: React.FC = () => {
     isStale,
     downloadURL,
   } = useMGnifyData('publications', {
-    page: queryParameters.page as number,
-    ordering: queryParameters.order as string,
-    page_size: queryParameters.page_size as number,
-    search: (queryParameters.search as string) || undefined,
+    page,
+    ordering: order,
+    page_size: pageSize,
+    search: (search as string) || undefined,
   });
 
   const columns = React.useMemo(
@@ -90,7 +82,7 @@ const BrowsePublications: React.FC = () => {
           cols={columns}
           data={publicationsList as MGnifyResponseList}
           Title={`Publications (${publicationsList.meta.pagination.count})`}
-          initialPage={(queryParameters.page as number) - 1}
+          initialPage={(page as number) - 1}
           sortable
           loading={loading}
           isStale={isStale}

@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import ExtLink from 'components/UI/ExtLink';
 import InfoBanner from 'components/UI/InfoBanner';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import InterProTab from './InterPro';
 import GOTab from './GO';
 import PfamTab from './Pfam';
@@ -23,9 +23,7 @@ const tabs = [
 const FunctionalAnalysis: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
 
-  const [queryParameters] = useQueryParametersState({
-    [PARAMETER_NAME]: '',
-  });
+  const [type] = useQueryParamState(PARAMETER_NAME, PARAMETER_DEFAULT);
   // const accession=overviewData.id;
   const version = Number(overviewData.attributes['pipeline-version']);
   const longReadExperiment =
@@ -81,10 +79,10 @@ const FunctionalAnalysis: React.FC = () => {
         defaultValue={PARAMETER_DEFAULT}
       />
       <div className="vf-tabs-content">
-        {queryParameters[PARAMETER_NAME] === 'interpro' && <InterProTab />}
-        {queryParameters[PARAMETER_NAME] === 'go' && <GOTab />}
-        {queryParameters[PARAMETER_NAME] === 'pfam' && <PfamTab />}
-        {queryParameters[PARAMETER_NAME] === 'ko' && <KOTab />}
+        {type === 'interpro' && <InterProTab />}
+        {type === 'go' && <GOTab />}
+        {type === 'pfam' && <PfamTab />}
+        {type === 'ko' && <KOTab />}
       </div>
     </div>
   );

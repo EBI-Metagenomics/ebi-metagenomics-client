@@ -7,24 +7,17 @@ import EMGTable from 'components/UI/EMGTable';
 import BiomeSelector from 'components/UI/BiomeSelector';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
 import Loading from 'components/UI/Loading';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const BrowseStudies: React.FC = () => {
-  const [queryParameters, setQueryParameters] = useQueryParametersState(
-    {
-      page: 1,
-      order: '',
-      biome: 'root',
-      page_size: 25,
-      search: '',
-    },
-    {
-      page: Number,
-      page_size: Number,
-    }
-  );
+  const [page, setPage] = useQueryParamState('page', 1, Number);
+  const [order] = useQueryParamState('order', '');
+  const [biome, setBiome] = useQueryParamState('biome', 'root');
+  const [pageSize] = useQueryParamState('page_size', 25, Number);
+  const [search] = useQueryParamState('search', '');
+
   const [hasData, setHasData] = useState(false);
   const {
     data: studiesList,
@@ -32,11 +25,11 @@ const BrowseStudies: React.FC = () => {
     isStale,
     downloadURL,
   } = useMGnifyData('studies', {
-    page: queryParameters.page as number,
-    ordering: queryParameters.order as string,
-    lineage: queryParameters.biome as string,
-    page_size: queryParameters.page_size as number,
-    search: (queryParameters.search as string) || undefined,
+    page,
+    ordering: order,
+    lineage: biome,
+    page_size: pageSize,
+    search: search || undefined,
   });
 
   const columns = React.useMemo(
@@ -88,17 +81,14 @@ const BrowseStudies: React.FC = () => {
     <section className="mg-browse-section">
       <div>
         <BiomeSelector
-          onSelect={async (biome) => {
+          onSelect={async (biomeSelected) => {
             await setHasData(false);
-            setQueryParameters({
-              ...queryParameters,
-              biome,
-              page: 1,
-            });
+            setBiome(biomeSelected);
+            setPage(1);
             await studiesList;
             setHasData(true);
           }}
-          initialValue={queryParameters.biome as string}
+          initialValue={biome}
         />
       </div>
       <div style={{ height: '2rem' }} />
@@ -107,7 +97,7 @@ const BrowseStudies: React.FC = () => {
           cols={columns}
           data={studiesList as MGnifyResponseList}
           Title={`Studies (${studiesList.meta.pagination.count})`}
-          initialPage={(queryParameters.page as number) - 1}
+          initialPage={(page as number) - 1}
           sortable
           loading={loading}
           isStale={isStale}

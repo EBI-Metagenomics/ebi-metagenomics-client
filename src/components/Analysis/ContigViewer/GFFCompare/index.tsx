@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import {
   db,
@@ -9,10 +9,9 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import PlainTable from 'components/UI/PlainTable';
 import FileUploaderButton from 'components/UI/FileUploaderButton';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
-import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
 import { Browser } from 'igv';
 import EMGModal from 'components/UI/EMGModal';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 type GFFCompareProps = {
   igvBrowser: Browser;
@@ -22,22 +21,19 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [uploadError, setUploadError] = useState(null);
 
-  const [comparisonQueryParams, setComparisonQueryParams] =
-    useQueryParametersState(
-      { gff_comparison_id: null },
-      { gff_comparison_id: Number }
-    );
-
-  const { setQueryParameters, queryParameters } =
-    useContext(ContigsQueryContext);
+  const [gffComparisonId, setGffComparisonId] = useQueryParamState(
+    'gff_comparison_id',
+    null,
+    Number
+  );
 
   const gffs = useLiveQuery(() => db.gffs.toArray());
 
   useEffect(() => {
-    if (comparisonQueryParams.gff_comparison_id) {
-      db.gffs.get(comparisonQueryParams.gff_comparison_id).then((gff) => {
+    if (gffComparisonId) {
+      db.gffs.get(gffComparisonId).then((gff) => {
         if (gff === undefined) {
-          setComparisonQueryParams({ gff_comparison_id: null });
+          setGffComparisonId(null);
         } else {
           igvBrowser.removeTrackByName(gff.name);
           igvBrowser.loadTrack({
@@ -51,7 +47,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
         }
       });
     }
-  }, [comparisonQueryParams, igvBrowser, setComparisonQueryParams]);
+  }, [gffComparisonId, igvBrowser, setGffComparisonId]);
 
   const columns = useMemo(() => {
     return [
@@ -65,10 +61,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
             type="button"
             onClick={async () => {
               const gff = await db.gffs.get(row.original.id);
-              setQueryParameters({
-                ...queryParameters,
-                gff_comparison_id: gff.id,
-              });
+              setGffComparisonId(gff.id);
               setIsOpen(false);
             }}
           >
@@ -105,7 +98,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [comparisonQueryParams, setComparisonQueryParams]);
+  }, [gffComparisonId]);
 
   async function addGff(gffFile): Promise<void> {
     if (!gffFile) return;

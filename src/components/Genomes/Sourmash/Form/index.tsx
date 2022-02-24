@@ -4,16 +4,14 @@ import 'mgnify-sourmash-component';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import useMgnifySourmashSearch from 'hooks/data/useMgnifySourmashSearch';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 type SourmashFormProps = {
   catalogueID: string;
 };
 const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
   const sourmash = useRef(null);
-  const [queryParameters, setQueryParameters] = useQueryParametersState({
-    job_id: '',
-  });
+  const [jobId, setJobId] = useQueryParamState('job_id', '');
   const [shouldSearch, setShouldSearch] = useState(false);
   const [{ signatures, errors }, setSourmashState] = useState({
     signatures: null,
@@ -56,10 +54,7 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
   useEffect(() => {
     if (!loading && !error && data) {
       // The signatures were succesfully sent and now we have job_id
-      setQueryParameters({
-        ...queryParameters,
-        job_id: (data.data as Record<string, string>).job_id,
-      });
+      setJobId((data.data as Record<string, string>).job_id);
       setShouldSearch(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,7 +72,7 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
       errors: null,
     });
   };
-  if (queryParameters.job_id) {
+  if (jobId) {
     return null;
   }
   return (

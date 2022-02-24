@@ -1,45 +1,32 @@
-import React, { useEffect, useState, useContext, memo } from 'react';
-
-import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
+import React, { useEffect, useState, memo } from 'react';
 
 import Slider from 'components/UI/Slider';
 import Switch from 'components/UI/Switch';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const MIN = -20;
 const MAX = 100;
 
 const TemperatureFilter: React.FC = () => {
-  const { queryParameters, setQueryParameters } =
-    useContext(SearchQueryContext);
-  const [enabled, setEnabled] = useState(!!queryParameters.temperature);
+  const [temperature, setTemperature] = useQueryParamState('temperature', '');
+  const [enabled, setEnabled] = useState(!!temperature);
   const [range, setRange] = useState(
-    (queryParameters.temperature as string)
-      .split(',')
-      .filter(Boolean)
-      .map(Number)
+    temperature.split(',').filter(Boolean).map(Number)
   );
   useEffect(() => {
-    const newRange = (queryParameters.temperature as string)
-      .split(',')
-      .filter(Boolean)
-      .map(Number);
+    const newRange = temperature.split(',').filter(Boolean).map(Number);
     setRange(newRange);
-  }, [queryParameters.temperature]);
+  }, [temperature]);
 
   const handleSwitch = (isEnabled: boolean): void => {
     setEnabled(isEnabled);
     if (!isEnabled) {
-      setQueryParameters({
-        ...queryParameters,
-        temperature: '',
-      });
+      setTemperature('');
     }
   };
   const handleSlider = ({ min, max }): void => {
-    setQueryParameters({
-      ...queryParameters,
-      temperature: `${min},${max}`,
-    });
+    setRange([min, max]);
+    setTemperature(`${min},${max}`);
   };
   return (
     <fieldset className="vf-form__fieldset vf-stack vf-stack--200 mg-temperature-filter">

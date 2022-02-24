@@ -1,45 +1,36 @@
-import React, { useEffect, useState, useContext, memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 import Slider from 'components/UI/Slider';
 import Switch from 'components/UI/Switch';
-import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const MIN = 500;
 const MAX = 10e6;
 
 const ContigLengthFilter: React.FC = () => {
-  const { queryParameters, setQueryParameters } =
-    useContext(ContigsQueryContext);
-  const [enabled, setEnabled] = useState(!!queryParameters.contig_length);
+  const [contigLength, setContigLength] = useQueryParamState(
+    'contig_length',
+    ''
+  );
+  const [enabled, setEnabled] = useState(!!contigLength);
 
   const [range, setRange] = useState(
-    (queryParameters.contig_length as string)
-      .split(',')
-      .filter(Boolean)
-      .map(Number)
+    contigLength.split(',').filter(Boolean).map(Number)
   );
   useEffect(() => {
-    const newRange = (queryParameters.contig_length as string)
-      .split(',')
-      .filter(Boolean)
-      .map(Number);
+    const newRange = contigLength.split(',').filter(Boolean).map(Number);
     setRange(newRange);
-  }, [queryParameters.contig_length]);
+  }, [contigLength]);
 
   const handleSwitch = (isEnabled: boolean): void => {
     setEnabled(isEnabled);
     if (!isEnabled) {
-      setQueryParameters({
-        ...queryParameters,
-        contig_length: '',
-      });
+      setContigLength('');
     }
   };
   const handleSlider = ({ min, max }): void => {
-    setQueryParameters({
-      ...queryParameters,
-      contig_length: `${min},${max}`,
-    });
+    setRange([min, max]);
+    setContigLength(`${min},${max}`);
   };
   return (
     <fieldset className="vf-form__fieldset vf-stack vf-stack--200 mg-contig-length-filter">

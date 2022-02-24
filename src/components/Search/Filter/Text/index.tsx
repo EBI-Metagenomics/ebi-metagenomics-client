@@ -1,22 +1,20 @@
-import React, { useEffect, useState, useContext } from 'react';
-import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
+import React, { useEffect, useState } from 'react';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { clearParams } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
 
 const TextSearch: React.FC = () => {
-  const { queryParameters, setQueryParameters } =
-    useContext(SearchQueryContext);
-  const [searchTerms, setSearchTerms] = useState(
-    queryParameters.query as string
+  const [query, setQuery, { actionDispatcher }] = useQueryParamState(
+    'query',
+    ''
   );
+  const [searchTerms, setSearchTerms] = useState(query as string);
   useEffect(() => {
-    setSearchTerms(queryParameters.query as string);
-  }, [queryParameters.query]);
+    setSearchTerms(query as string);
+  }, [query]);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setQueryParameters({
-      ...queryParameters,
-      query: searchTerms,
-    });
+    setQuery(searchTerms);
   };
 
   return (
@@ -50,7 +48,7 @@ const TextSearch: React.FC = () => {
             type="button"
             className="vf-search__button | vf-button vf-button--tertiary mg-text-search-clear"
             onClick={() => {
-              setQueryParameters({});
+              actionDispatcher(clearParams({}));
             }}
           >
             <span className="vf-button__text">Clear All </span>

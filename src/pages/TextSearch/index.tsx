@@ -1,6 +1,8 @@
 import React, { useContext, useMemo } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
+import { some } from 'lodash-es';
+
 import MultipleOptionFilter from 'components/Search/Filter/MultipleOption';
 import HierarchyMultipleOptionFilter from 'components/Search/Filter/HierarchyMultipleOption';
 import TemperatureFilter from 'components/Search/Filter/Temperature';
@@ -9,9 +11,10 @@ import Tabs from 'components/UI/Tabs';
 import TextSearch from 'components/Search/Filter/Text';
 import SearchTable from 'components/Search/Table';
 import useEBISearchData from 'hooks/data/useEBISearchData';
-import { QueryState, useQueryParametersState } from 'hooks/useQueryParamState';
-import SearchQueryContext from './SearchQueryContext';
 
+import { Param } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import SearchQueryContext from './SearchQueryContext';
 import './style.css';
 
 const PAGE_SIZE = 25;
@@ -24,32 +27,40 @@ const formatToFacet = (facetName: string, strValue: string): string =>
     .map((v) => `${facetName}:${v}`)
     .join(',');
 
-const getFacets = (facetNames: string[], queryParameters: QueryState): string =>
-  facetNames
-    .map((name) => formatToFacet(name, queryParameters[name] as string))
+const getFacets = (facetQueryParams: Param[]): string => {
+  return facetQueryParams
+    .map((queryParam) =>
+      queryParam === undefined
+        ? ''
+        : formatToFacet(queryParam.name, queryParam.value as string)
+    )
     .filter(Boolean)
     .join(',');
+};
 
-const getSamplesQuery = (
-  names: string[],
-  queryParameters: QueryState,
-  defaultValue: string
-): string => {
-  const query = names
-    .map((name) => {
-      switch (name) {
+const getRangeStringFromQueryParam = (queryParam: Param) => {
+  const newRange = (queryParam.value as string)
+    .split(',')
+    .filter(Boolean)
+    .map(Number);
+  return newRange.length === 2
+    ? `${queryParam.name}:[${Math.min(...newRange)} TO ${Math.max(
+        ...newRange
+      )}]`
+    : '';
+};
+
+const joinQueries = (queryParams: Param[], defaultValue: string) => {
+  if (!queryParams.length || some(queryParams, (q) => q === undefined))
+    return defaultValue;
+  const query = queryParams
+    .map((param) => {
+      switch (param.name) {
         case 'query':
-          return queryParameters[name];
+          return param.value;
         case 'temperature':
         case 'depth': {
-          const newRange = (queryParameters[name] as string)
-            .split(',')
-            .filter(Boolean)
-            .map(Number);
-
-          return newRange.length === 2
-            ? `${name}:[${Math.min(...newRange)} TO ${Math.max(...newRange)}]`
-            : '';
+          return getRangeStringFromQueryParam(param);
         }
         default:
           return '';
@@ -91,29 +102,44 @@ const tabs = [
 ];
 
 const TextSearchPage: React.FC = () => {
-  const [queryParameters, setQueryParameters] = useQueryParametersState({
-    query: '',
-    centre_name: '',
-    biome: '',
-    temperature: '',
-    depth: '',
-    experiment_type: '',
-    sequencing_method: '',
-    location_name: '',
-    disease_status: '',
-    phenotype: '',
-    organism: '',
-    pipeline_version: '',
-    GO: '',
-    INTERPRO: '',
-  });
+  const [, , { param: queryParam }] = useQueryParamState('query', '');
+  const [, , { param: centreNameParam }] = useQueryParamState(
+    'centre_name',
+    ''
+  );
+  const [, , { param: biomeParam }] = useQueryParamState('biome', '');
+  const [, , { param: temperatureParam }] = useQueryParamState(
+    'temperature',
+    ''
+  );
+  const [, , { param: depthParam }] = useQueryParamState('depth', '');
+  const [, , { param: experimentTypeParam }] = useQueryParamState(
+    'experiment_type',
+    ''
+  );
+  const [, , { param: sequencingMethodParam }] = useQueryParamState(
+    'sequencing_method',
+    ''
+  );
+  const [, , { param: locationNameParam }] = useQueryParamState(
+    'location_name',
+    ''
+  );
+  const [, , { param: diseaseStatusParam }] = useQueryParamState(
+    'disease_status',
+    ''
+  );
+  const [, , { param: phenotypeParam }] = useQueryParamState('phenotype', '');
+  const [, , { param: organismParam }] = useQueryParamState('organism', '');
+  const [, , { param: pipelineVersionParam }] = useQueryParamState(
+    'pipeline_version',
+    ''
+  );
+  const [, , { param: goParam }] = useQueryParamState('GO', '');
+  const [, , { param: interproParam }] = useQueryParamState('INTERPRO', '');
 
   const searchDataStudies = useEBISearchData('metagenomics_projects', {
-    query: getSamplesQuery(
-      ['query'],
-      queryParameters,
-      'domain_source:metagenomics_projects'
-    ),
+    query: joinQueries([queryParam], 'domain_source:metagenomics_projects'),
     size: PAGE_SIZE,
     /* eslint-disable max-len */
     fields:
@@ -121,34 +147,29 @@ const TextSearchPage: React.FC = () => {
     /* eslint-enable max-len */
     facetcount: 10,
     facetsdepth: FACET_DEPTH,
-    facets: getFacets(['centre_name', 'biome'], queryParameters),
+    facets: getFacets([centreNameParam, biomeParam]),
   });
   const searchDataSamples = useEBISearchData('metagenomics_samples', {
-    query: getSamplesQuery(
-      ['query', 'temperature', 'depth'],
-      queryParameters,
+    query: joinQueries(
+      [queryParam, temperatureParam, depthParam],
       'domain_source:metagenomics_samples'
     ),
     size: PAGE_SIZE,
     fields: 'METAGENOMICS_PROJECTS,name,description',
     facetcount: 10,
     facetsdepth: FACET_DEPTH,
-    facets: getFacets(
-      [
-        'biome',
-        'experiment_type',
-        'location_name',
-        'disease_status',
-        'sequencing_method',
-        'phenotype',
-      ],
-      queryParameters
-    ),
+    facets: getFacets([
+      biomeParam,
+      experimentTypeParam,
+      locationNameParam,
+      diseaseStatusParam,
+      sequencingMethodParam,
+      phenotypeParam,
+    ]),
   });
   const searchDataAnalyses = useEBISearchData('metagenomics_analyses', {
-    query: getSamplesQuery(
-      ['query', 'temperature', 'depth'],
-      queryParameters,
+    query: joinQueries(
+      [queryParam, temperatureParam, depthParam],
       'domain_source:metagenomics_analyses'
     ),
     size: PAGE_SIZE,
@@ -158,17 +179,14 @@ const TextSearchPage: React.FC = () => {
     /* eslint-enable max-len */
     facetcount: 10,
     facetsdepth: FACET_DEPTH,
-    facets: getFacets(
-      [
-        'biome',
-        'organism',
-        'pipeline_version',
-        'experiment_type',
-        'GO',
-        'INTERPRO',
-      ],
-      queryParameters
-    ),
+    facets: getFacets([
+      biomeParam,
+      organismParam,
+      pipelineVersionParam,
+      experimentTypeParam,
+      goParam,
+      interproParam,
+    ]),
   });
   const context = useMemo(
     () => ({
@@ -177,16 +195,8 @@ const TextSearchPage: React.FC = () => {
         '/search/samples': searchDataSamples,
         '/search/analyses': searchDataAnalyses,
       },
-      queryParameters,
-      setQueryParameters,
     }),
-    [
-      searchDataStudies,
-      searchDataSamples,
-      searchDataAnalyses,
-      queryParameters,
-      setQueryParameters,
-    ]
+    [searchDataStudies, searchDataSamples, searchDataAnalyses]
   );
 
   return (

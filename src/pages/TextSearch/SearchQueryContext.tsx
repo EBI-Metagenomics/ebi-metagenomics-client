@@ -1,6 +1,4 @@
 import React from 'react';
-import { QueryState } from 'hooks/useQueryParamState';
-import { noop } from 'lodash-es';
 
 const SearchQueryContext = React.createContext({
   searchData: {
@@ -20,8 +18,6 @@ const SearchQueryContext = React.createContext({
       error: null,
     },
   },
-  queryParameters: {} as QueryState,
-  setQueryParameters: noop as (s: QueryState) => void,
 });
 
 export default SearchQueryContext;
