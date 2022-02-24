@@ -21,7 +21,7 @@ const useQueryParamState: <S>(
   parameter: string,
   defaultValue: S,
   serializer?: (stringified: string) => S | string
-) => [string | S, (s: S) => void, StateExtras] = (
+) => [S | string, (s: S) => void, StateExtras] = (
   parameter,
   defaultValue,
   serializer = String
@@ -29,8 +29,7 @@ const useQueryParamState: <S>(
   const { state, dispatch } = useQueryParamsStore();
   const { params } = state;
 
-  const value = (params[parameter]?.value ||
-    defaultValue) as typeof defaultValue;
+  const value = serializer(params[parameter]?.value) || defaultValue;
   const [subscriber] = useState(() => uuidv4());
 
   useEffectOnce(() => {
@@ -48,7 +47,7 @@ const useQueryParamState: <S>(
   });
 
   const setter = (newValue) => {
-    if (newValue === value) return;
+    if ((newValue as string) === value) return;
     dispatch(updateParam({ name: parameter, value: newValue }));
   };
 

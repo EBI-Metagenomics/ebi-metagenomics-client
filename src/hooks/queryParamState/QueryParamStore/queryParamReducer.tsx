@@ -43,7 +43,7 @@ export type Param = {
   name: string;
   defaultValue: unknown;
   serializer: (str: string) => unknown;
-  value: unknown;
+  value: string;
   subscribers: SubscriberType[];
 };
 
