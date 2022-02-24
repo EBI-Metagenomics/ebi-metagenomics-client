@@ -139,6 +139,10 @@ jobs:
           ls /usr/share/nginx/html/metagenomics
           echo "=== web index ==="
           curl --silent http://localhost:9000/metagenomics/
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
       - name: 🧹 - ESlint
         run: |
           npm run eslint
@@ -160,6 +164,18 @@ jobs:
           echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"basename\": \"\/ebi-metagenomics-client\"}" > "$(pwd)/config.private.json"
           npm run clean
           npm run build
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      - name: Sentry Release
+        uses: getsentry/action-release@v1.0.0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: dev
       - name: 🚀 - Deploy Site
         if: github.ref == 'refs/heads/new-client'
         uses: JamesIves/github-pages-deploy-action@3.7.1
