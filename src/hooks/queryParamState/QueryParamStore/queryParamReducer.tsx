@@ -97,6 +97,9 @@ export const queryParamsReducer = (
   action: ParamActions
 ): GlobalState => {
   if (action.type === ActionTypes.Subscribe) {
+    // A component has mounted that needs access to a global-state parameter.
+    // Either add the component do the param's subscribers, or create it
+    // in global store.
     const payload = action.payload as ParamPayload[ActionTypes.Subscribe];
     const nextParam =
       state.params[payload.name] ||
@@ -115,6 +118,12 @@ export const queryParamsReducer = (
   }
 
   if (action.type === ActionTypes.CreateFromURL) {
+    // A page has been loaded with URL search parameters.
+    // Register the parameter's value in the global store, so that components
+    // can subscribe to it.
+    // Subscribers will initially be empty, but they will almost always be used
+    // by components on the page (if a URL was copy-pasted), and cleared up
+    // later anyway.
     const payload = action.payload as ParamPayload[ActionTypes.CreateFromURL];
     return {
       ...state,
@@ -132,6 +141,8 @@ export const queryParamsReducer = (
   }
 
   if (action.type === ActionTypes.Update) {
+    // Usually when a subscribing component wants to update a param in the
+    // global store.
     const payload = action.payload as ParamPayload[ActionTypes.Update];
     return {
       ...state,
@@ -146,6 +157,7 @@ export const queryParamsReducer = (
   }
 
   if (action.type === ActionTypes.Unsubscribe) {
+    // A component is unmounted, and stops listening to the param.
     const payload = action.payload as ParamPayload[ActionTypes.Unsubscribe];
     const nextSubscribers = state.params[
       action.payload.name
@@ -162,6 +174,8 @@ export const queryParamsReducer = (
         },
       };
     }
+    // Remove the param from global store if there are now no components
+    // subscribing to it.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { [payload.name]: _, ...remaining } = state.params;
     return {
@@ -170,6 +184,9 @@ export const queryParamsReducer = (
     };
   }
   if (action.type === ActionTypes.Clear) {
+    // Clear all params from the global store.
+    // A bit nuclear, but useful for a "clear" action on pages with many
+    // stateful components.
     return { ...state, params: {} };
   }
   return state;
