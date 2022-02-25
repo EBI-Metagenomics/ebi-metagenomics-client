@@ -35,12 +35,6 @@ describe('Login process', function() {
             cy.get(loginModal).find('.form-forgotten a').contains('Forgot your password?');
         });
 
-        it('Should close on click (via close button)', function() {
-            openModal();
-            cy.get(loginModal).find('.form-actions-no-box a').contains('Cancel').click();
-            cy.get(loginModal).should('be.hidden');
-        });
-
         it('Should close on click (via cancel button)', function() {
             openModal();
             cy.get(loginModal).find('.close-button').click();
