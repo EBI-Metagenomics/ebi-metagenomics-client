@@ -3,11 +3,22 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './style.css';
 
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
+import useQueryParamsStore from 'hooks/queryParamState/QueryParamStore/useQueryParamsStore';
+import { createParamFromURL } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
 
 const HeroHeader: React.FC = () => {
   const searchBox = useRef<HTMLInputElement>();
   const location = useLocation();
   const navigate = useNavigate();
+  const { dispatch } = useQueryParamsStore();
+  const setSearchQuery = (query: string) => {
+    dispatch(
+      createParamFromURL({
+        name: 'query',
+        value: query,
+      })
+    );
+  };
   return (
     <section className="vf-hero vf-hero--400 | vf-u-fullbleed">
       <div className="vf-hero__content | vf-box | vf-stack vf-stack--400">
@@ -33,8 +44,8 @@ const HeroHeader: React.FC = () => {
             onSubmit={async (e) => {
               e.preventDefault();
               const searchText = searchBox.current.value;
-              const searchParams = new URLSearchParams({ query: searchText });
-              await navigate(`/search/studies?${searchParams.toString()}`);
+              setSearchQuery(searchText);
+              await navigate('/search/studies');
               searchBox.current.value = '';
               searchBox.current.blur();
             }}
@@ -68,21 +79,24 @@ const HeroHeader: React.FC = () => {
               <p className="vf-text-body--5">
                 Example searches:{' '}
                 <Link
-                  to="/search/studies?query=tara%20oceans"
+                  to="/search/studies"
+                  onClick={() => setSearchQuery('tara oceans')}
                   className="vf-link"
                 >
                   Tara oceans
                 </Link>
                 ,{' '}
                 <Link
-                  to="/search/studies?query=MGYS00000410"
+                  to="/search/studies"
+                  onClick={() => setSearchQuery('MGYS00000410')}
                   className="vf-link"
                 >
                   MGYS00000410
                 </Link>
                 ,{' '}
                 <Link
-                  to="/search/studies?query=human%20gut"
+                  to="/search/studies"
+                  onClick={() => setSearchQuery('human gut')}
                   className="vf-link"
                 >
                   Human Gut
