@@ -112,19 +112,19 @@ module.exports = function (env, options) {
           },
         ],
       }),
-      isEnvProduction &&
-        new SentryCliPlugin({
-          include: '.',
-          project: 'embl-ebi-4r',
-          org: 'embl-ebi-mit',
-          ignoreFile: '.sentrycliignore',
-          ignore: ['node_modules', 'webpack.config.js'],
-          configFile: 'sentry.properties',
-          authToken: process.env.SENTRY_AUTH_TOKEN,
-          deploy: {
-            env: config.sentryEnv,
-          },
-        }),
+      // isEnvProduction &&
+      //   new SentryCliPlugin({
+      //     include: '.',
+      //     project: 'embl-ebi-4r',
+      //     org: 'embl-ebi-mit',
+      //     ignoreFile: '.sentrycliignore',
+      //     ignore: ['node_modules', 'webpack.config.js'],
+      //     configFile: 'sentry.properties',
+      //     authToken: process.env.SENTRY_AUTH_TOKEN,
+      //     deploy: {
+      //       env: config.sentryEnv,
+      //     },
+      //   }),
       isEnvProduction &&
         new MiniCssExtractPlugin({
           filename: 'css/[name].[contenthash:8].css',
