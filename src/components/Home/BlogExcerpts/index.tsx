@@ -11,6 +11,16 @@ import Twitter from 'components/Twitter';
 const removeHTMLTags = (text: string): string => {
   return text.replace(/&lt;.+?&gt;/g, '').trim();
 };
+const absolutifyProtocolRelativeURL = (
+  url: string,
+  upgradeHttps = false
+): string => {
+  // Fix URLs for Safari.
+  if (url.startsWith('//')) {
+    return (upgradeHttps ? 'https:' : window.location.protocol) + url;
+  }
+  return url;
+};
 const BlogExcerpt: React.FC<{
   title: string;
   header: string;
@@ -20,10 +30,10 @@ const BlogExcerpt: React.FC<{
 }> = ({ title, header, image, excerpt, url }) => {
   return (
     <InnerCard
-      image={image}
+      image={absolutifyProtocolRelativeURL(image, true)}
       title={header}
       label={removeHTMLTags(excerpt)}
-      to={url}
+      to={absolutifyProtocolRelativeURL(url, true)}
       externalLink
       className="vf-card--striped vf-u-grid__col--span-3--xs vf-u-grid__col--span-1--md"
       badge={title}

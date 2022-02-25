@@ -2,9 +2,6 @@
   display: flex;
   justify-content: center;
   align-content: center;
-  height: -webkit-fill-available;
-  height: -moz-available;
-  height: stretch;
 }
 .mg-twitter-timeline > div {
   align-self: center;
