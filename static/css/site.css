@@ -1252,3 +1252,36 @@ path.link {
 .overflow-x-scroll {
     overflow-x: scroll;
 }
+
+.beta-site-banner {
+    background-color: #fffadc;
+    margin: 16px 0;
+    padding: 8px;
+}
+
+.beta-site-badge {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    border: 2px solid;
+    display: inline-flex;
+    letter-spacing: .05em;
+    padding: 4px 8px;
+    text-decoration: none;
+    text-transform: uppercase;
+    background-color: #3b6fb6;
+    border-color: #3b6fb6;
+    color: #fff;
+    margin-right: 1rem;
+}
+
+.beta-site-link {
+    color: rgb(59, 111, 182);
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    padding: 8px;
+    border-bottom: none;
+}
