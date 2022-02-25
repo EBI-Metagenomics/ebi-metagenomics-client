@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
-import { debounce } from 'lodash-es';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
+import React, { useEffect, useState } from 'react';
 import './style.css';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { useDebounce } from 'react-use';
 
 type TextInputDebouncedProps = {
   namespace: string;
@@ -11,27 +11,29 @@ const TextInputDebounced: React.FC<TextInputDebouncedProps> = ({
   namespace,
   placeholder = 'Enter your search terms',
 }) => {
-  const [queryParameters, setQueryParameters] = useQueryParametersState({
-    [`${namespace}search`]: '',
-  });
-  const [value, setValue] = useState(
-    (queryParameters[`${namespace}search`] as string) || ''
+  const [searchParam, setSearchParam] = useQueryParamState(
+    `${namespace}search`,
+    ''
+  );
+  const [value, setValue] = useState(searchParam || '');
+
+  const [debouncedValue, setDebouncedValue] = React.useState('');
+
+  useDebounce(
+    () => {
+      setDebouncedValue(value);
+    },
+    300,
+    [value]
   );
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debounced = useCallback(
-    debounce((v: string): void => {
-      setQueryParameters({
-        ...queryParameters,
-        [`${namespace}search`]: v,
-      });
-    }, 300),
-    []
-  );
+  useEffect(() => {
+    setSearchParam(debouncedValue);
+  }, [debouncedValue, setSearchParam]);
+
   const handleOnChange = (event): void => {
     const v = event.target.value;
     setValue(v);
-    debounced(v);
   };
   return (
     <div className="vf-form__item mg-textsearch">

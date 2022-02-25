@@ -20,7 +20,6 @@ import UserContext from 'pages/Login/UserContext';
 import igv from 'igv';
 
 import ContigsTable from 'components/Analysis/ContigViewer/Table';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
 import { find } from 'lodash-es';
 import GFFCompare from 'components/Analysis/ContigViewer/GFFCompare';
@@ -31,6 +30,7 @@ import ContigTextFilter from 'components/Analysis/ContigViewer/Filter/ContigText
 // eslint-disable-next-line max-len
 import ContigAnnotationTypeFilter from 'components/Analysis/ContigViewer/Filter/ContigAnnotationType';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 type ContigProps = {
   contig: MGnifyDatum;
@@ -126,41 +126,49 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 const ContigsViewer: React.FC = () => {
   const accession = useURLAccession();
 
-  const [queryParameters, setQueryParameters] = useQueryParametersState({
-    contigs_page_cursor: '',
-    selected_contig: '',
-    gff_comparison_id: '',
-    contig_length: '',
-    cog_category_search: '',
-    kegg_ortholog_search: '',
-    go_term_search: '',
-    pfam_search: '',
-    interpro_search: '',
-    antismash_search: '',
-    annotation_type: '',
-    contigs_search: '',
-  });
+  const [contigsPageCursorParam] = useQueryParamState(
+    'contigs_page_cursor',
+    ''
+  );
+  const [selectedContigParam, setSelectedContigParam] = useQueryParamState(
+    'selected_contig',
+    ''
+  );
+  useQueryParamState('gff_comparison_id', '');
+  const [contigLengthParam] = useQueryParamState('contig_length', '');
+  const [cogCategorySearchParam] = useQueryParamState(
+    'cog_category_search',
+    ''
+  );
+  const [keggOrthologSearchParam] = useQueryParamState(
+    'kegg_otholog_search',
+    ''
+  );
+  const [goTermSearchParam] = useQueryParamState('go_term_search', '');
+  const [pfamSearchParam] = useQueryParamState('pfam_search', '');
+  const [interproSearchParam] = useQueryParamState('interpro_search', '');
+  const [antismashSearchParam] = useQueryParamState('antismash_search', '');
+  const [annotationTypeParam] = useQueryParamState('annotation_type', '');
+  const [contigsSearchParam] = useQueryParamState('contigs_search_param', '');
+
   const lengthRange = useMemo(() => {
-    return (queryParameters.contig_length as string)
-      .split(',')
-      .filter(Boolean)
-      .map(Number);
-  }, [queryParameters.contig_length]);
+    return (contigLengthParam as string).split(',').filter(Boolean).map(Number);
+  }, [contigLengthParam]);
 
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/contigs`,
     {
-      cursor: queryParameters.contigs_page_cursor as string,
-      search: queryParameters.contigs_search as string,
+      cursor: contigsPageCursorParam,
+      search: contigsSearchParam,
       gt: lengthRange[0],
       lt: lengthRange[1],
-      cog: queryParameters.cog_category_search as string,
-      kegg: queryParameters.kegg_ortholog_search as string,
-      go: queryParameters.go_term_search as string,
-      pfam: queryParameters.pfam_search as string,
-      interpro: queryParameters.interpro_search as string,
-      antismash: queryParameters.antismash_search as string,
-      'facet[]': queryParameters.annotation_type as string,
+      cog: cogCategorySearchParam,
+      kegg: keggOrthologSearchParam,
+      go: goTermSearchParam,
+      pfam: pfamSearchParam,
+      interpro: interproSearchParam,
+      antismash: antismashSearchParam,
+      'facet[]': annotationTypeParam,
     },
     {}
   );
@@ -168,10 +176,8 @@ const ContigsViewer: React.FC = () => {
   const context = useMemo(
     () => ({
       contigsQueryData: { data, loading, error },
-      queryParameters,
-      setQueryParameters,
     }),
-    [data, error, loading, queryParameters, setQueryParameters]
+    [data, error, loading]
   );
 
   const contig = useMemo(() => {
@@ -179,8 +185,7 @@ const ContigsViewer: React.FC = () => {
     if (!data) return null;
 
     const selectedContigId =
-      queryParameters.selected_contig ||
-      data.data?.[0]?.attributes?.['contig-id'];
+      selectedContigParam || data.data?.[0]?.attributes?.['contig-id'];
 
     if (selectedContigId) {
       selectedContig = find(data.data, (c: KeyValue) => {
@@ -191,30 +196,21 @@ const ContigsViewer: React.FC = () => {
       }
     }
     return null;
-  }, [data, queryParameters]);
+  }, [data, selectedContigParam]);
 
   useEffect(() => {
     // If a new contig is autoselected (e.g. page change), put it in URL
-    if (
-      contig &&
-      contig.attributes['contig-id'] !== queryParameters.selected_contig
-    ) {
-      setQueryParameters({
-        ...queryParameters,
-        selectedContig: contig.attributes['contig-id'],
-      });
+    if (contig && contig.attributes['contig-id'] !== selectedContigParam) {
+      setSelectedContigParam(contig.attributes['contig-id']);
     }
   });
 
   useEffect(() => {
     // If the contig in URL isnt in the data-page, remove the bad ID from URL
-    if (queryParameters.selected_contig && data && !contig) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { selected_contig: notInPageContigId, ...otherQueryParams } =
-        queryParameters;
-      setQueryParameters(otherQueryParams);
+    if (setSelectedContigParam && data && !contig) {
+      setSelectedContigParam('');
     }
-  }, [data, contig, queryParameters, setQueryParameters]);
+  }, [data, contig, setSelectedContigParam]);
 
   if (error) return <FetchError error={error} />;
   return (

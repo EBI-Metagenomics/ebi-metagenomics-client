@@ -2,7 +2,7 @@ import React from 'react';
 import { Row } from 'react-table';
 
 import EMGTable from 'components/UI/EMGTable';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import { TaxDatum } from '../PhylumCharts';
 
 const sortFunction = (order) => (a: TaxDatum, b: TaxDatum) => {
@@ -38,7 +38,7 @@ const PhylumTable: React.FC<PhylumTableProps> = ({
   onMouseEnterRow = () => null,
   onMouseLeaveRow = () => null,
 }) => {
-  const [{ order }] = useQueryParametersState({ order: '' });
+  const [order] = useQueryParamState('order', '');
 
   const columns = [
     {

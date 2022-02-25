@@ -1,18 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, {
-  useRef,
+  MouseEventHandler,
   useEffect,
   useMemo,
+  useRef,
   useState,
-  MouseEventHandler,
 } from 'react';
-import { Column, usePagination, useSortBy, useTable, Row } from 'react-table';
+import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
 
 import Loading from 'components/UI/Loading';
 import TextInputDebounced from 'components/UI/TextInputDebounced';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
-import { MGnifyResponse, MGnifyDatum } from 'hooks/data/useData';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
+import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import PaginationButton from './PaginationButton';
 
 import './style.css';
@@ -110,17 +110,12 @@ const EMGTable: React.FC<EMGTableProps> = ({
   onMouseEnterRow = () => null,
   onMouseLeaveRow = () => null,
 }) => {
-  const [queryParameters, setQueryParameters] = useQueryParametersState(
-    {
-      [`${namespace}page`]: 1,
-      [`${namespace}order`]: '',
-      [`${namespace}page_size`]: initialPageSize,
-      [`${namespace}search`]: initialPageSize,
-    },
-    {
-      [`${namespace}page`]: Number,
-      [`${namespace}page_size`]: Number,
-    }
+  const [page, setPage] = useQueryParamState(`${namespace}page`, 1, Number);
+  const [ordering, setOrdering] = useQueryParamState(`${namespace}order`, '');
+  const [pageSizeSelected, setPageSizeSelected] = useQueryParamState(
+    `${namespace}page_size`,
+    initialPageSize,
+    Number
   );
   const {
     getTableProps,
@@ -142,7 +137,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
       data: (data as MGnifyResponse)?.data || data,
       initialState: {
         pageIndex: initialPage,
-        pageSize: queryParameters[`${namespace}page_size`],
+        pageSize: pageSizeSelected,
       },
       pageCount:
         initialPageCount ||
@@ -158,55 +153,40 @@ const EMGTable: React.FC<EMGTableProps> = ({
   const [isChangingPage, setChangingPage] = useState(false);
 
   useEffect(() => {
-    if (
-      showPagination &&
-      queryParameters[`${namespace}page`] !== pageIndex + 1
-    ) {
-      setQueryParameters({
-        ...queryParameters,
-        [`${namespace}page`]: pageIndex + 1,
-      });
+    if (showPagination && page !== pageIndex + 1) {
+      setPage(pageIndex + 1);
       if (tableRef.current && isChangingPage) {
         tableRef.current.scrollIntoView();
         setChangingPage(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showPagination, setQueryParameters, pageIndex]);
+  }, [showPagination, setPage, pageIndex]);
 
   useEffect(() => {
-    if (
-      showPagination &&
-      queryParameters[`${namespace}page_size`] !== pageSize
-    ) {
-      setQueryParameters({
-        ...queryParameters,
-        [`${namespace}page_size`]: pageSize,
-      });
+    if (showPagination && pageSizeSelected !== pageSize) {
+      setPageSizeSelected(pageSize);
       if (tableRef.current && isChangingPage) {
         tableRef.current.scrollIntoView();
         setChangingPage(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showPagination, setQueryParameters, pageSize]);
+  }, [showPagination, setPageSizeSelected, pageSize]);
 
   useEffect(() => {
     if (sortable) {
       const order = getOrderingQueryParamFromSortedColumn(sortBy);
-      if (order === queryParameters[`${namespace}order`]) return;
-      setQueryParameters({
-        ...queryParameters,
-        [`${namespace}order`]: order,
-        [`${namespace}page`]: 1,
-      });
+      if (order === ordering) return;
+      setOrdering(order);
+      setPage(1);
       if (tableRef.current && isChangingPage) {
         tableRef.current.scrollIntoView();
         setChangingPage(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showPagination, setQueryParameters, sortBy, sortable]);
+  }, [showPagination, setOrdering, setPage, sortBy, sortable]);
 
   const paginationRanges = useMemo(
     () => getPaginationRanges(pageIndex, pageCount),
@@ -348,7 +328,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
             Page Size:
             <select
               className="vf-form__select"
-              value={queryParameters[`${namespace}page_size`] as number}
+              value={pageSizeSelected as number}
               onBlur={changeSizeAndScroll}
               onChange={changeSizeAndScroll}
             >

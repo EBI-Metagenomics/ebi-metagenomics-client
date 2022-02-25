@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import 'mgnify-sourmash-component';
 
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import useInterval from 'hooks/useInterval';
 import useMgnifySourmashStatus from 'hooks/data/useMgnifySourmashStatus';
-// import SearchStorage from 'utils/SearchStorage';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import SourmashResultsTable from './Table';
 
 const INTERVAL_TIME = 1000;
@@ -20,16 +19,14 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({
   catalogueID,
   addToStorage,
 }) => {
-  const [queryParameters, setQueryParameters] = useQueryParametersState({
-    job_id: '',
-  });
+  const [jobId, setJobId] = useQueryParamState('job_id', '');
   const [count, setCount] = useState(-1);
   const [shouldCheck, setShouldCheck] = useState(false);
   const [jobRetrieved, setJobRetrieved] = useState(false);
   const [job, setJob] = useState(null);
 
   useInterval(() => {
-    if (!queryParameters.job_id || jobRetrieved) return;
+    if (!jobId || jobRetrieved) return;
     if (count % COUNT_TO === 0) {
       setShouldCheck(true);
     }
@@ -38,7 +35,7 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({
   const { data, error, loading } = useMgnifySourmashStatus(
     shouldCheck && !jobRetrieved ? `status` : '',
     catalogueID,
-    queryParameters.job_id as string
+    jobId
   );
   useEffect(() => {
     if (!loading && !error && data) {
@@ -50,7 +47,7 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({
         )
       ) {
         setJobRetrieved(true);
-        addToStorage(queryParameters.job_id as string);
+        addToStorage(jobId);
       }
       setJob(data.data);
       setCount(0);
@@ -64,15 +61,12 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({
     setShouldCheck(true);
     setJobRetrieved(false);
     setCount(-1);
-  }, [queryParameters.job_id]);
+  }, [jobId]);
 
   const handleNewSearch = (): void => {
-    setQueryParameters({
-      ...queryParameters,
-      job_id: '',
-    });
+    setJobId('');
   };
-  if (!queryParameters.job_id) return null;
+  if (!jobId) return null;
   return (
     <section>
       <div className="vf-stack">
@@ -88,7 +82,7 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({
           <h5>Job Information</h5>
           <dl className="vf-list vf-list--definition">
             <dt>Job ID</dt>
-            <dd>{queryParameters.job_id}</dd>
+            <dd>{jobId}</dd>
             <dt>Status</dt>
             <dd>
               <span>{jobRetrieved ? 'FINISH' : 'Retrieving'}</span>{' '}

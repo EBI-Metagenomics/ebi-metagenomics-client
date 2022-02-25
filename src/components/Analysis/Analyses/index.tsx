@@ -8,8 +8,8 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList, MGnifyDatum } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const initialPageSize = 10;
 type AssociatedAnaysesProps = {
@@ -18,24 +18,21 @@ type AssociatedAnaysesProps = {
 
 const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const accession = useURLAccession();
-  const [queryParameters] = useQueryParametersState(
-    {
-      'analyses-page': 1,
-      'analyses-page_size': initialPageSize,
-      'analyses-order': '',
-    },
-    {
-      'analyses-page': Number,
-      'analyses-page_size': Number,
-    }
+  const [analysesPage] = useQueryParamState('analyses-page', 1, Number);
+  const [analysesPageSize] = useQueryParamState(
+    'analyses-page_size',
+    initialPageSize,
+    Number
   );
+  const [analysesOrder] = useQueryParamState('analyses-order', '');
+
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
     `${rootEndpoint}/${accession}/analyses`,
     {
       include: 'sample',
-      page: queryParameters['analyses-page'] as number,
-      ordering: queryParameters['analyses-order'] as string,
-      page_size: queryParameters['analyses-page_size'] as number,
+      page: analysesPage,
+      ordering: analysesOrder,
+      page_size: analysesPageSize,
     }
   );
   if (loading && !isStale) return <Loading size="small" />;
@@ -126,7 +123,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       cols={columns}
       data={data as MGnifyResponseList}
       Title="Analyses"
-      initialPage={(queryParameters['analyses-page'] as number) - 1}
+      initialPage={(analysesPage as number) - 1}
       initialPageSize={initialPageSize}
       className="mg-anlyses-table"
       loading={loading}

@@ -7,29 +7,25 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const initialPageSize = 10;
 const RelatedTable: React.FC = () => {
   const accession = useURLAccession();
-  const [queryParameters] = useQueryParametersState(
-    {
-      'related-page': 1,
-      'related-page_size': initialPageSize,
-      'related-order': '',
-    },
-    {
-      'related-page': Number,
-      'related-page_size': Number,
-    }
+  const [relatedPage] = useQueryParamState('related-page', 1, Number);
+  const [relatedPageSize] = useQueryParamState(
+    'related-page_size',
+    initialPageSize,
+    Number
   );
+  const [relatedOrder] = useQueryParamState('related-order', '');
   const { data, loading, error, isStale } = useMGnifyData(
     `super-studies/${accession}/related-studies`,
     {
-      page: queryParameters['related-page'] as number,
-      ordering: queryParameters['related-order'] as string,
-      page_size: queryParameters['related-page_size'] as number,
+      page: relatedPage as number,
+      ordering: relatedOrder as string,
+      page_size: relatedPageSize as number,
     }
   );
   if (loading && !isStale) return <Loading size="small" />;
@@ -84,7 +80,7 @@ const RelatedTable: React.FC = () => {
       <EMGTable
         cols={columns}
         data={data as MGnifyResponseList}
-        initialPage={(queryParameters['related-page'] as number) - 1}
+        initialPage={(relatedPage as number) - 1}
         initialPageSize={initialPageSize}
         className="mg-anlyses-table"
         loading={loading}

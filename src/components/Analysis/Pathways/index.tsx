@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import ExtLink from 'components/UI/ExtLink';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import KeggModule from './KeggModule';
 import AntiSMASH from './AntiSMASH';
 import GenomeProperties from './GenomeProperties';
@@ -17,9 +17,7 @@ const tabs = [
 ];
 
 const PathwaysSubPage: React.FC = () => {
-  const [queryParameters] = useQueryParametersState({
-    [PARAMETER_NAME]: '',
-  });
+  const [type] = useQueryParamState(PARAMETER_NAME, PARAMETER_DEFAULT);
   return (
     <div>
       <p>
@@ -45,11 +43,9 @@ const PathwaysSubPage: React.FC = () => {
         defaultValue={PARAMETER_DEFAULT}
       />
       <div className="vf-tabs-content">
-        {queryParameters[PARAMETER_NAME] === 'kegg-modules' && <KeggModule />}
-        {queryParameters[PARAMETER_NAME] === 'genome-properties' && (
-          <GenomeProperties />
-        )}
-        {queryParameters[PARAMETER_NAME] === 'antismash' && <AntiSMASH />}
+        {type === 'kegg-modules' && <KeggModule />}
+        {type === 'genome-properties' && <GenomeProperties />}
+        {type === 'antismash' && <AntiSMASH />}
       </div>
     </div>
   );

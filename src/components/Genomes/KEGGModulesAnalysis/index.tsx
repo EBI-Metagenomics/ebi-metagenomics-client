@@ -9,9 +9,9 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import useDefaultGenomeConfig from 'hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 addExportMenu(Highcharts);
 
@@ -22,25 +22,22 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const accession = useURLAccession();
-  const [queryParameters] = useQueryParametersState(
-    {
-      'keggmod-page': 1,
-      'keggmod-page_size': initialPageSize,
-      'keggmod-order': '',
-    },
-    {
-      'keggmod-page': Number,
-      'keggmod-page_size': Number,
-    }
+
+  const [keggmodPage] = useQueryParamState('keggmod-page', 1, Number);
+  const [keggmodPageSize] = useQueryParamState(
+    'keggmod-page_size',
+    initialPageSize,
+    Number
   );
+  const [keggmodOrder] = useQueryParamState('keggmod-order', '');
 
   const { columns, options } = useDefaultGenomeConfig();
   const { data, loading, isStale, error } = useMGnifyData(
     `genomes/${accession}/kegg-module`,
     {
-      page: queryParameters['keggmod-page'] as number,
-      ordering: queryParameters['keggmod-order'] as string,
-      page_size: queryParameters['keggmod-page_size'] as number,
+      page: keggmodPage,
+      ordering: keggmodOrder,
+      page_size: keggmodPageSize,
     }
   );
 
@@ -123,7 +120,7 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
         data={data as MGnifyResponseList}
         Title={`All ${data.meta.pagination.count} KEGG modules`}
         loading={loading}
-        initialPage={(queryParameters['keggmod-page'] as number) - 1}
+        initialPage={(keggmodPage as number) - 1}
         initialPageSize={initialPageSize}
         namespace="keggmod-"
         isStale={isStale}

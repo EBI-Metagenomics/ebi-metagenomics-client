@@ -9,6 +9,7 @@
   "googleMapsKey": "XX",
   "sentryDsn": "https://7cb28af2cf254e70ae5eb72733f745e3@o1128655.ingest.sentry.io/6171583",
   "sentryEnv": "dev",
+  "sentryTransactionRate": 0.05,
   "featureFlags": {
     "contigIgvGffUploader": true
   },

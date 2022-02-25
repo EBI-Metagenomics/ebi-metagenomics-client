@@ -7,8 +7,8 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import InfoBanner from 'src/components/UI/InfoBanner';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const initialPageSize = 10;
 
@@ -24,23 +24,19 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
   rootEndpoint,
 }) => {
   const accession = useURLAccession();
-  const [queryParameters] = useQueryParametersState(
-    {
-      'assembly-page': 1,
-      'assembly-page_size': initialPageSize,
-      'assembly-order': '',
-    },
-    {
-      'assembly-page': Number,
-      'assembly-page_size': Number,
-    }
+  const [assemblyPage] = useQueryParamState('assembly-page', 1, Number);
+  const [assemblyPageSize] = useQueryParamState(
+    'assembly-page_size',
+    initialPageSize,
+    Number
   );
+  const [assemblyOrder] = useQueryParamState('assembly-order', '');
   const url = getURLByEndpoint(rootEndpoint, accession);
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(url, {
     sample_accession: rootEndpoint === 'samples' ? accession : undefined,
-    page: queryParameters['assembly-page'] as number,
-    ordering: queryParameters['assembly-order'] as string,
-    page_size: queryParameters['assembly-page_size'] as number,
+    page: assemblyPage as number,
+    ordering: assemblyOrder as string,
+    page_size: assemblyPageSize as number,
   });
   if (loading && !isStale) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
@@ -80,7 +76,7 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
     <EMGTable
       cols={columns}
       data={data as MGnifyResponseList}
-      initialPage={(queryParameters['assembly-page'] as number) - 1}
+      initialPage={(assemblyPage as number) - 1}
       initialPageSize={initialPageSize}
       className="mg-assembly-table"
       loading={loading}

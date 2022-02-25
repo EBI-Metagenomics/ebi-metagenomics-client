@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 type HistoryProps = {
   jobs: Map<string, { time: number }>;
@@ -10,9 +10,7 @@ const SourmashHistory: React.FC<HistoryProps> = ({
   jobs,
   removeFromStorage,
 }) => {
-  const [queryParameters, setQueryParameters] = useQueryParametersState({
-    job_id: '',
-  });
+  const [, setJobId] = useQueryParamState('job_id', '');
   return (
     <section>
       <details>
@@ -28,25 +26,20 @@ const SourmashHistory: React.FC<HistoryProps> = ({
               "We can't find any previous search jobs in this browser."
             ) : (
               <ul>
-                {Array.from(jobs.keys()).map((jobID) => (
-                  <li key={jobID}>
+                {Array.from(jobs.keys()).map((j) => (
+                  <li key={j}>
                     <button
                       type="button"
                       className="vf-button vf-button--link mg-button-as-link"
-                      onClick={() =>
-                        setQueryParameters({
-                          ...queryParameters,
-                          job_id: jobID,
-                        })
-                      }
+                      onClick={() => setJobId(j)}
                     >
-                      {jobID}
+                      {j}
                     </button>
                     <button
                       type="button"
                       className="vf-button--outline vf-button--sm "
                       onClick={() => {
-                        removeFromStorage(jobID);
+                        removeFromStorage(j);
                       }}
                     >
                       Remove

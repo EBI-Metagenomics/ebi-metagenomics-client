@@ -6,22 +6,14 @@ import { Link } from 'react-router-dom';
 import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
 import Loading from 'components/UI/Loading';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
-const BrowseSamples: React.FC = () => {
-  const [queryParameters] = useQueryParametersState(
-    {
-      page: 1,
-      order: '',
-      page_size: 25,
-    },
-    {
-      page: Number,
-      page_size: Number,
-    }
-  );
+const BrowseGenomes: React.FC = () => {
+  const [page] = useQueryParamState('page', 1, Number);
+  const [order] = useQueryParamState('order', '');
+  const [pageSize] = useQueryParamState('page_size', 25, Number);
   const [hasData, setHasData] = useState(false);
   const {
     data: genomesList,
@@ -29,9 +21,9 @@ const BrowseSamples: React.FC = () => {
     isStale,
     downloadURL,
   } = useMGnifyData('genome-catalogues', {
-    page: queryParameters.page as number,
-    ordering: queryParameters.order as string,
-    page_size: queryParameters.page_size as number,
+    page,
+    ordering: order,
+    page_size: pageSize,
   });
 
   const columns = React.useMemo(
@@ -103,7 +95,7 @@ const BrowseSamples: React.FC = () => {
         <EMGTable
           cols={columns}
           data={genomesList as MGnifyResponseList}
-          initialPage={(queryParameters.page as number) - 1}
+          initialPage={(page as number) - 1}
           sortable
           loading={loading}
           isStale={isStale}
@@ -114,4 +106,4 @@ const BrowseSamples: React.FC = () => {
   );
 };
 
-export default BrowseSamples;
+export default BrowseGenomes;

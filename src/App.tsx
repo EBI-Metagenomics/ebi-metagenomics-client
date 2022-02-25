@@ -20,6 +20,7 @@ import './styles/biomes.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/toast.css';
 import { ToastContainer } from 'react-toastify';
+import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -61,47 +62,50 @@ const App: React.FC = () => {
     }),
     [config, details, user.isAuthenticated, user.username]
   );
+
   return (
     <BrowserRouter basename={config.basename}>
       <UserContext.Provider value={value}>
-        <LoginMonitor />
-        <ToastContainer />
-        <EBIHeader />
-        <HeroHeader />
-        <MainMenu />
-        <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
-          <ErrorBoundary>
-            <Suspense fallback={<Loading size="large" />}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/help" element={<Help />} />
-                <Route path="/search/*" element={<TextSearch />} />
-                <Route path="/sequence-search" element={<SequenceSearch />} />
-                <Route path="/browse/*" element={<Browse />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/submit" element={<Submit />} />
-                <Route path="/studies/*" element={<Study />} />
-                <Route path="/super-studies/*" element={<SuperStudy />} />
-                <Route path="/samples/*" element={<Sample />} />
-                <Route path="/publications/*" element={<Publication />} />
-                <Route
-                  path="/genome-catalogues/*"
-                  element={<GenomeCatalogue />}
-                />
-                <Route path="/genomes/*" element={<Genome />} />
-                <Route path="/runs/*" element={<Run />} />
-                <Route path="/assemblies/*" element={<Assembly />} />
-                <Route path="/pipelines/*" element={<Pipelines />} />
-                <Route path="/analyses/*" element={<Analysis />} />
-                <Route path="/mydata" element={<MyData />} />
-              </Routes>
-            </Suspense>
-          </ErrorBoundary>
-        </div>
-        <ElixirBanner />
-        <EBIFooter />
-        <CookieBanner />
+        <QueryParamsProvider>
+          <LoginMonitor />
+          <ToastContainer />
+          <EBIHeader />
+          <HeroHeader />
+          <MainMenu />
+          <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
+            <ErrorBoundary>
+              <Suspense fallback={<Loading size="large" />}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/help" element={<Help />} />
+                  <Route path="/search/*" element={<TextSearch />} />
+                  <Route path="/sequence-search" element={<SequenceSearch />} />
+                  <Route path="/browse/*" element={<Browse />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/submit" element={<Submit />} />
+                  <Route path="/studies/*" element={<Study />} />
+                  <Route path="/super-studies/*" element={<SuperStudy />} />
+                  <Route path="/samples/*" element={<Sample />} />
+                  <Route path="/publications/*" element={<Publication />} />
+                  <Route
+                    path="/genome-catalogues/*"
+                    element={<GenomeCatalogue />}
+                  />
+                  <Route path="/genomes/*" element={<Genome />} />
+                  <Route path="/runs/*" element={<Run />} />
+                  <Route path="/assemblies/*" element={<Assembly />} />
+                  <Route path="/pipelines/*" element={<Pipelines />} />
+                  <Route path="/analyses/*" element={<Analysis />} />
+                  <Route path="/mydata" element={<MyData />} />
+                </Routes>
+              </Suspense>
+            </ErrorBoundary>
+          </div>
+          <ElixirBanner />
+          <EBIFooter />
+          <CookieBanner />
+        </QueryParamsProvider>
       </UserContext.Provider>
     </BrowserRouter>
   );

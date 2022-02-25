@@ -8,6 +8,7 @@ import useEBISearchData from 'hooks/data/useEBISearchData';
 import 'styles/filters.css';
 import Loading from 'src/components/UI/Loading';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const location2endpoint = {
   '/search/studies': 'metagenomics_projects',
@@ -29,11 +30,9 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   sortFn = undefined,
 }) => {
   const location = useLocation();
-  const { searchData, queryParameters, setQueryParameters } =
-    useContext(SearchQueryContext);
-  const [selected, setSelected] = useState(
-    (queryParameters[facetName] as string).split(',').filter(Boolean)
-  );
+  const { searchData } = useContext(SearchQueryContext);
+  const [facet, setFacet] = useQueryParamState(facetName, '');
+  const [selected, setSelected] = useState(facet.split(',').filter(Boolean));
   const [textFilter, setTextFilter] = useState('');
   const [sizeToLoad, setSizeToLoad] = useState(0);
   const { data, loading } = useEBISearchData(
@@ -47,10 +46,8 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   );
 
   useEffect(() => {
-    setSelected(
-      (queryParameters[facetName] as string).split(',').filter(Boolean)
-    );
-  }, [queryParameters, facetName]);
+    setSelected(facet.split(',').filter(Boolean));
+  }, [facet]);
 
   const [facetData, facetSize] = useMemo(() => {
     const tmpFacet = (
@@ -73,6 +70,19 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
           <legend className="vf-form__legend">{header}</legend>
           <p className="vf-form__helper">
             Displayed data is not filterable by {header}
+            {!!facet && (
+              <button
+                className="vf-button vf-button--sm vf-button--link"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setFacet('');
+                }}
+              >
+                <span className="icon icon-common icon-times-circle" /> Clear{' '}
+                {header} filter
+              </button>
+            )}
           </p>
         </fieldset>
       </LoadingOverlay>
@@ -86,10 +96,7 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
     } else {
       newSelected = selected.filter((s) => s !== value);
     }
-    setQueryParameters({
-      ...queryParameters,
-      [facetName]: newSelected.sort().join(','),
-    });
+    setFacet(newSelected.sort().join(','));
   };
 
   return (

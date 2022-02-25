@@ -3,16 +3,14 @@ import InnerCard from 'components/UI/InnerCard';
 import OutterCard from 'components/UI/OutterCard';
 import EMGModal from 'components/UI/EMGModal';
 import UserContext from 'pages/Login/UserContext';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { Link } from 'react-router-dom';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import LatestStudies from './LatestStudies';
 import MailForm from './MailForm';
 import PrivateRequest from './Private';
 
 const SearchBy: React.FC = () => {
-  const [{ show }] = useQueryParametersState({
-    show: '',
-  });
+  const [show] = useQueryParamState('show', '');
   const { isAuthenticated } = useContext(UserContext);
   const [modal, setModal] = useState({
     show:

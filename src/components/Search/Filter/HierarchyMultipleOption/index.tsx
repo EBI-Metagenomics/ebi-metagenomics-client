@@ -6,6 +6,7 @@ import LoadingOverlay from 'components/UI/LoadingOverlay';
 
 import 'styles/filters.css';
 import './style.css';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 interface OptionDataType {
   value: string;
@@ -109,16 +110,14 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   header,
 }) => {
   const location = useLocation();
-  const { searchData, queryParameters, setQueryParameters } =
-    useContext(SearchQueryContext);
+  const { searchData } = useContext(SearchQueryContext);
+  const [facet, setFacet] = useQueryParamState(facetName, '');
   const [selected, setSelected] = useState(
-    (queryParameters[facetName] as string).split(',').filter(Boolean)
+    (facet as string).split(',').filter(Boolean)
   );
   useEffect(() => {
-    setSelected(
-      (queryParameters[facetName] as string).split(',').filter(Boolean)
-    );
-  }, [queryParameters, facetName]);
+    setSelected(facet.split(',').filter(Boolean));
+  }, [facet]);
 
   const facetData = useMemo(
     () =>
@@ -137,6 +136,19 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
           <legend className="vf-form__legend">{header}</legend>
           <p className="vf-form__helper">
             Displayed data is not filterable by {header}
+            {!!facet && (
+              <button
+                className="vf-button vf-button--sm vf-button--link"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setFacet('');
+                }}
+              >
+                <span className="icon icon-common icon-times-circle" /> Clear{' '}
+                {header} filter
+              </button>
+            )}
           </p>
         </fieldset>
       </LoadingOverlay>
@@ -150,10 +162,7 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
     } else {
       newSelected = selected.filter((s) => s !== value);
     }
-    setQueryParameters({
-      ...queryParameters,
-      [facetName]: newSelected.sort().join(','),
-    });
+    setFacet(newSelected.sort().join(','));
   };
 
   return (

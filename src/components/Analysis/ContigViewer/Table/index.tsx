@@ -10,6 +10,7 @@ import './style.css';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import CursorPagination from 'components/UI/EMGTable/CursorPagination';
 import TruncatedText from 'components/UI/TextTruncated';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 type ContigFeatureProps = {
   annotationType: string;
@@ -63,9 +64,13 @@ const ContigFeatureFlag: React.FC<ContigFeatureProps> = ({
 };
 
 const ContigsTable: React.FC = () => {
-  const { contigsQueryData, setQueryParameters, queryParameters } =
-    useContext(ContigsQueryContext);
+  const { contigsQueryData } = useContext(ContigsQueryContext);
   const { data, loading, error } = contigsQueryData || {};
+  const [, setSelectedContig] = useQueryParamState('selected_contig', '');
+  const [, setContigsPageCursor] = useQueryParamState(
+    'contigs_page_cursor',
+    ''
+  );
 
   const contigsColumns = useMemo(() => {
     return [
@@ -77,12 +82,7 @@ const ContigsTable: React.FC = () => {
           <button
             className="vf-button vf-button--link vf-button--sm contig-id-button"
             type="button"
-            onClick={() =>
-              setQueryParameters({
-                ...queryParameters,
-                selected_contig: cell.value,
-              })
-            }
+            onClick={() => setSelectedContig(cell.value)}
           >
             <TruncatedText text={cell.value} withTooltip maxLength={32} />
             <ArrowForLink />
@@ -119,7 +119,7 @@ const ContigsTable: React.FC = () => {
         },
       },
     ];
-  }, [queryParameters, setQueryParameters]);
+  }, [setSelectedContig]);
 
   if (error || !data) return <FetchError error={error} />;
 
@@ -138,12 +138,7 @@ const ContigsTable: React.FC = () => {
       />
       <CursorPagination
         paginationLinks={data.links}
-        handleCursor={(cursor) =>
-          setQueryParameters({
-            ...queryParameters,
-            contigs_page_cursor: cursor,
-          })
-        }
+        handleCursor={(cursor) => setContigsPageCursor(cursor)}
       />
     </div>
   );

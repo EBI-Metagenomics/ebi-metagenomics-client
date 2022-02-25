@@ -3,12 +3,12 @@ import { Row } from 'react-table';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import EMGTable from 'components/UI/EMGTable';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import ExtLink from 'components/UI/ExtLink';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import InterProMatchesChart from './InterProMatchesChart';
 import InterProQCChart from './QCChart';
 
@@ -18,23 +18,15 @@ const InterPro: React.FC = () => {
   const [total, setTotal] = useState(-1);
   const [colorMap, setColorMap] = useState(new Map());
   const [selectedName, setSelectedName] = useState(null);
-  const [queryParameters] = useQueryParametersState(
-    {
-      page: 1,
-      page_size: PAGE_SIZE,
-      order: '',
-    },
-    {
-      page: Number,
-      page_size: Number,
-    }
-  );
+  const [page] = useQueryParamState('page', 1, Number);
+  const [pageSize] = useQueryParamState('page_size', PAGE_SIZE, Number);
+  const [order] = useQueryParamState('order', '');
   const { data, loading, error, isStale } = useMGnifyData(
     `analyses/${overviewData.id}/interpro-identifiers`,
     {
-      page: queryParameters.page as number,
-      ordering: queryParameters.order as string,
-      page_size: queryParameters.page_size as number,
+      page: page as number,
+      ordering: order as string,
+      page_size: pageSize as number,
     }
   );
   const columns = [
@@ -124,7 +116,7 @@ const InterPro: React.FC = () => {
             cols={columns}
             data={data}
             initialPageSize={PAGE_SIZE}
-            initialPage={(queryParameters.page as number) - 1}
+            initialPage={(page as number) - 1}
             className="mg-anlyses-table"
             loading={loading}
             isStale={isStale}

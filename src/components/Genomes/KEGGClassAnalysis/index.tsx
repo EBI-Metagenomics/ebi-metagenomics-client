@@ -9,9 +9,9 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import useDefaultGenomeConfig from 'hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 addExportMenu(Highcharts);
 
@@ -22,25 +22,22 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const accession = useURLAccession();
-  const [queryParameters] = useQueryParametersState(
-    {
-      'kegg-page': 1,
-      'kegg-page_size': initialPageSize,
-      'kegg-order': '',
-    },
-    {
-      'kegg-page': Number,
-      'kegg-page_size': Number,
-    }
+
+  const [keggPage] = useQueryParamState('kegg-page', 1, Number);
+  const [keggPageSize] = useQueryParamState(
+    'kegg-page_size',
+    initialPageSize,
+    Number
   );
+  const [keggOrder] = useQueryParamState('kegg-order', '');
 
   const { columns, options } = useDefaultGenomeConfig();
   const { data, loading, isStale, error } = useMGnifyData(
     `genomes/${accession}/kegg-class`,
     {
-      page: queryParameters['kegg-page'] as number,
-      ordering: queryParameters['kegg-order'] as string,
-      page_size: queryParameters['kegg-page_size'] as number,
+      page: keggPage,
+      ordering: keggOrder,
+      page_size: keggPageSize,
     }
   );
 
@@ -126,7 +123,7 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
         data={data as MGnifyResponseList}
         Title={`All ${data.meta.pagination.count} KEGG classes`}
         loading={loading}
-        initialPage={(queryParameters['kegg-page'] as number) - 1}
+        initialPage={(keggPage as number) - 1}
         initialPageSize={initialPageSize}
         namespace="kegg-"
         isStale={isStale}

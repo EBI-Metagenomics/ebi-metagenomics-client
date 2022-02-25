@@ -9,7 +9,7 @@ Sentry.init({
   dsn: config.sentryDsn,
   environment: config.sentryEnv,
   integrations: [new Integrations.BrowserTracing()],
-  tracesSampleRate: 1.0,
+  tracesSampleRate: config.sentryTransactionRate,
 });
 
 ReactDOM.render(<App />, document.getElementById('root'));

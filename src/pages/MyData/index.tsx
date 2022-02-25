@@ -6,30 +6,24 @@ import InfoBanner from 'components/UI/InfoBanner';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import { getBiomeIcon } from 'utils/biomes';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const MyData: React.FC = () => {
   const { isAuthenticated } = useContext(UserContext);
-  const [queryParameters] = useQueryParametersState(
-    {
-      page: 1,
-      order: '',
-      page_size: 25,
-    },
-    {
-      page: Number,
-      page_size: Number,
-    }
-  );
+
+  const [page] = useQueryParamState('page', 1, Number);
+  const [order] = useQueryParamState('order', '');
+  const [pageSize] = useQueryParamState('page_size', 25, Number);
+
   const { data, loading, isStale, error, downloadURL } = useMGnifyData(
     isAuthenticated ? 'mydata' : null,
     {
-      page: queryParameters.page as number,
-      ordering: queryParameters.order as string,
-      page_size: queryParameters.page_size as number,
+      page,
+      ordering: order,
+      page_size: pageSize,
     }
   );
   const columns = React.useMemo(
@@ -97,7 +91,7 @@ const MyData: React.FC = () => {
       <EMGTable
         cols={columns}
         data={data as MGnifyResponseList}
-        initialPage={(queryParameters.page as number) - 1}
+        initialPage={(page as number) - 1}
         sortable
         loading={loading}
         isStale={isStale}

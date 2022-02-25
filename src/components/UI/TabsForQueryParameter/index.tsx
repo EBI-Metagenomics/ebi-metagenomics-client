@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 type TabsProps = {
   tabs: Array<{
@@ -14,21 +14,16 @@ const TabsForQueryParameter: React.FC<TabsProps> = ({
   queryParameter,
   defaultValue,
 }) => {
-  const [queryParameters, setQueryParameters] = useQueryParametersState({
-    [queryParameter]: '',
-    page: 1,
-  });
+  const [tabQp, setTabQp] = useQueryParamState(queryParameter, defaultValue);
+  const [, setPage] = useQueryParamState('page', 1, Number);
+
   useEffect(() => {
-    if (queryParameters[queryParameter] === '') {
-      setQueryParameters({
-        ...queryParameters,
-        [queryParameter]: defaultValue,
-        page: 1,
-      });
+    if (tabQp === '') {
+      setTabQp(defaultValue);
+      setPage(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryParameters, queryParameter]);
-  const value = queryParameters[queryParameter];
+  }, [tabQp, queryParameter]);
 
   return (
     <div className="vf-tabs mg-search-tabs">
@@ -38,15 +33,12 @@ const TabsForQueryParameter: React.FC<TabsProps> = ({
             <button
               type="button"
               className={`vf-tabs__link mg-button-as-tab ${
-                to === value ? 'is-active' : ''
+                to === tabQp ? 'is-active' : ''
               }`}
-              onClick={() =>
-                setQueryParameters({
-                  ...queryParameters,
-                  [queryParameter]: to,
-                  page: 1,
-                })
-              }
+              onClick={() => {
+                setTabQp(to);
+                setPage(1);
+              }}
             >
               {typeof Label === 'string' ? Label : <Label />}
             </button>

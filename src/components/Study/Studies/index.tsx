@@ -8,8 +8,8 @@ import TruncatedText from 'components/UI/TextTruncated';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
-import { useQueryParametersState } from 'hooks/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const initialPageSize = 10;
 
@@ -20,23 +20,20 @@ const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
   rootEndpoint,
 }) => {
   const accession = useURLAccession();
-  const [queryParameters] = useQueryParametersState(
-    {
-      'studies-page': 1,
-      'studies-page_size': initialPageSize,
-      'studies-order': '',
-    },
-    {
-      'studies-page': Number,
-      'studies-page_size': Number,
-    }
+
+  const [studiesPage] = useQueryParamState('studies-page', 1, Number);
+  const [studiesPageSize] = useQueryParamState(
+    'studies-page_size',
+    initialPageSize,
+    Number
   );
+  const [studiesOrder] = useQueryParamState('studies-order', '');
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
     `${rootEndpoint}/${accession}/studies`,
     {
-      page: queryParameters['studies-page'] as number,
-      ordering: queryParameters['studies-order'] as string,
-      page_size: queryParameters['studies-page_size'] as number,
+      page: studiesPage as number,
+      ordering: studiesOrder as string,
+      page_size: studiesPageSize as number,
     }
   );
   if (loading && !isStale) return <Loading size="small" />;
@@ -90,7 +87,7 @@ const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
     <EMGTable
       cols={columns}
       data={data as MGnifyResponseList}
-      initialPage={(queryParameters['studies-page'] as number) - 1}
+      initialPage={(studiesPage as number) - 1}
       initialPageSize={initialPageSize}
       className="mg-studies-table"
       loading={loading}
