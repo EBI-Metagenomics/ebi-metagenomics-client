@@ -149,7 +149,7 @@ const ContigsViewer: React.FC = () => {
   const [interproSearchParam] = useQueryParamState('interpro_search', '');
   const [antismashSearchParam] = useQueryParamState('antismash_search', '');
   const [annotationTypeParam] = useQueryParamState('annotation_type', '');
-  const [contigsSearchParam] = useQueryParamState('contigs_search_param', '');
+  const [contigsSearchParam] = useQueryParamState('contigs_search', '');
 
   const lengthRange = useMemo(() => {
     return (contigLengthParam as string).split(',').filter(Boolean).map(Number);

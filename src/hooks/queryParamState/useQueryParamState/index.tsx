@@ -29,7 +29,9 @@ const useQueryParamState: <S>(
   const { state, dispatch } = useQueryParamsStore();
   const { params } = state;
 
-  const value = serializer(params[parameter]?.value) || defaultValue;
+  const rawValue = params[parameter]?.value || defaultValue;
+  const value =
+    rawValue === undefined ? rawValue : serializer(rawValue as string);
   const [subscriber] = useState(() => uuidv4());
 
   useEffectOnce(() => {

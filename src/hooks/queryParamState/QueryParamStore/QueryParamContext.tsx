@@ -1,13 +1,13 @@
-import React, { Dispatch, useEffect } from 'react';
+import React, { Dispatch } from 'react';
 import {
   createParamFromURL,
   GlobalState,
   ParamActions,
   queryParamsReducer,
 } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { mapValues, omitBy } from 'lodash-es';
-import { useEffectOnce } from 'react-use';
+import { useDebounce, useEffectOnce } from 'react-use';
 
 export const initialParamsState = {
   params: {},
@@ -29,20 +29,28 @@ const QueryParamsProvider: React.FC = ({ children }) => {
     queryParamsReducer,
     initialParamsState
   );
-  const [urlParams, setUrlParams] = useSearchParams();
+  const [urlParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  useEffect(() => {
-    const newParams = new URLSearchParams(
-      mapValues(
-        omitBy(
-          state.params,
-          (parm) => parm.value === parm.defaultValue || parm.value === undefined
-        ),
-        'value'
-      ) as Record<string, string>
-    );
-    setUrlParams(newParams);
-  }, [setUrlParams, state.params]);
+  useDebounce(
+    () => {
+      const newParams = new URLSearchParams(
+        mapValues(
+          omitBy(
+            state.params,
+            (parm) =>
+              parm.value === parm.defaultValue || parm.value === undefined
+          ),
+          'value'
+        ) as Record<string, string>
+      );
+      location.search = newParams.toString();
+      navigate(location);
+    },
+    50,
+    [state.params]
+  );
 
   useEffectOnce(() => {
     urlParams.forEach((value, name) => {
