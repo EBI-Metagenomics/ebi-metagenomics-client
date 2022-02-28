@@ -778,6 +778,11 @@ a.ext:hover, a.ext:active, a.ext:focus {
     background-color: white;
 }
 
+.masthead-black-bar::before {
+    /*Ugly override for VF2’s VF1 compatability CSS, which is only loaded for the login modal*/
+    min-height: 0 !important;
+}
+
 span.pub-title {
     font-weight: bold;
 }
