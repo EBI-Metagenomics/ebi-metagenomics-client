@@ -51,7 +51,7 @@ export let Util = {
     fillLoginModalForm: function() {
         cy.get(Util.usernameInput).type(Util.username);
         cy.get(Util.passwordInput).type(Util.password);
-        cy.get(Util.loginModal).find('button[name=\'submit\']').click();
+        cy.get(Util.loginModal).find('input[name=\'submit\']').click();
     },
     login: function() {
         cy.get(Util.loginButton).click();
