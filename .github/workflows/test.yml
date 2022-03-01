@@ -44,7 +44,6 @@ jobs:
               run: |
                   python -V
                   pip -V
-                  pip install "git+git://github.com/EBI-Metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
                   pip install "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
                   ls -l
 

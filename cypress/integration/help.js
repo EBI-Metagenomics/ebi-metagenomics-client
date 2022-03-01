@@ -26,7 +26,7 @@ describe('Help page', function() {
             cy.contains('Sequence search').should('be.visible');
         });
         it('Links in help text should be valid', function() {
-            cy.get('#main-content-area a').each(($el) => {
+            cy.get('#main-content-area a').not('.beta-site-link').each(($el) => {
                 isValidLink($el);
             });
         });
