@@ -212,24 +212,30 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
           )),
       },
       {
-        name: 'Unambiguous peptides',
-        Value: attributes.unambiguous,
+        name: 'Unique peptide-to-protein mapping',
+        Value: attributes.unique_peptide_to_protein_mapping,
       },
       {
-        name: attributes.unambiguous === 'True' ? 'List of peptides' : '',
+        name:
+          attributes.unique_peptide_to_protein_mapping === 'True'
+            ? 'List of peptides'
+            : '',
         Value:
-          attributes.unambiguous === 'True'
+          attributes.unique_peptide_to_protein_mapping === 'True'
             ? () => <MultipleField value={attributes.unambiguous_sequences} />
             : () => <div />,
       },
       {
-        name: 'Ambiguous peptides',
-        Value: attributes.ambiguous,
+        name: 'Ambiguous peptide-to-protein mapping',
+        Value: attributes.ambiguous_peptide_to_protein_mapping,
       },
       {
-        name: attributes.ambiguous === 'True' ? 'List of peptides' : '',
+        name:
+          attributes.ambiguous_peptide_to_protein_mapping === 'True'
+            ? 'List of peptides'
+            : '',
         Value:
-          attributes.ambiguous === 'True'
+          attributes.ambiguous_peptide_to_protein_mapping === 'True'
             ? () => <MultipleField value={attributes.ambiguous_sequences} />
             : () => <div />,
       },

@@ -34,7 +34,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
       db.gffs.get(gffComparisonId).then((gff) => {
         if (gff === undefined) {
           setGffComparisonId(null);
-        } else {
+        } else if (igvBrowser) {
           igvBrowser.removeTrackByName(gff.name);
           igvBrowser.loadTrack({
             name: gff.name,
