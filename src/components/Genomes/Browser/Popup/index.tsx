@@ -200,7 +200,7 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
     title: 'Metaproteomics',
     data: [
       {
-        name: 'Pride ID',
+        name: 'PRIDE Dataset',
         Value:
           attributes.pride_id &&
           (() => (
@@ -213,7 +213,10 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
       },
       {
         name: 'Unique peptide-to-protein mapping',
-        Value: attributes.unique_peptide_to_protein_mapping,
+        Value:
+          attributes.unique_peptide_to_protein_mapping === 'True'
+            ? () => <div />
+            : 'None',
       },
       {
         name:
@@ -227,7 +230,10 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
       },
       {
         name: 'Ambiguous peptide-to-protein mapping',
-        Value: attributes.ambiguous_peptide_to_protein_mapping,
+        Value:
+          attributes.ambiguous_peptide_to_protein_mapping === 'True'
+            ? () => <div />
+            : 'None',
       },
       {
         name:
