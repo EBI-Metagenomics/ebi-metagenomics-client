@@ -59,7 +59,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
               <ul className="vf-list">
                 <li>
                   <ExtLink
-                    href={`${config.enaURL}/${data.attributes['secondary-accession']}`}
+                    href={`${config.enaURL}${data.attributes['secondary-accession']}`}
                   >
                     ENA website ({data.attributes['secondary-accession']})
                   </ExtLink>
