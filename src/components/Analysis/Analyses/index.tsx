@@ -122,7 +122,12 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
     <EMGTable
       cols={columns}
       data={data as MGnifyResponseList}
-      Title="Analyses"
+      Title={
+        <div>
+          Analyses
+          <span className="mg-number">{data.meta?.pagination?.count || 1}</span>
+        </div>
+      }
       initialPage={(analysesPage as number) - 1}
       initialPageSize={initialPageSize}
       className="mg-anlyses-table"
