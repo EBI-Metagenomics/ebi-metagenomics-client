@@ -44,7 +44,7 @@ jobs:
               run: |
                   python -V
                   pip -V
-                  pip install "git+git://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+                  pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
                   ls -l
 
             - name: 💾 - Setting MySQL
