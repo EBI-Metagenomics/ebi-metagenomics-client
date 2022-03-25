@@ -6,7 +6,7 @@ import Tooltip from 'components/UI/Tooltip';
 
 import InfoBanner from 'components/UI/InfoBanner';
 import FileUploaderButton from 'components/UI/FileUploaderButton';
-import BigsiResults from './Results';
+import CobsResults from './Results';
 
 import example1 from './examples/human-gut-v2-0.txt';
 import example2 from './examples/marine-v1-0.txt';
@@ -24,11 +24,11 @@ const examples = {
   'human-oral-v1-0': example4,
 };
 
-type BigsyProps = {
+type CobsProps = {
   catalogueName: string;
   catalogueID: string;
 };
-const BigsiSearch: React.FC<BigsyProps> = ({ catalogueName, catalogueID }) => {
+const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
   const textareaSeq = useRef(null);
   const [shouldSearch, setShouldSearch] = useState(false);
   const [kmers, setKmers] = useState(KMERS_DEFAULT);
@@ -87,9 +87,7 @@ const BigsiSearch: React.FC<BigsyProps> = ({ catalogueName, catalogueID }) => {
         <h3>Search DNA fragments in the {catalogueName} catalogue</h3>
         <p>
           This is a{' '}
-          <ExtLink href="https://www.nature.com/articles/s41587-018-0010-1">
-            BIGSI-based
-          </ExtLink>{' '}
+          <ExtLink href="https://arxiv.org/abs/1905.09624">COBS-based</ExtLink>{' '}
           search engine designed to query short sequence fragments (50-5,000 bp
           in length) against representative genomes from the catalogue.
         </p>
@@ -222,7 +220,7 @@ const BigsiSearch: React.FC<BigsyProps> = ({ catalogueName, catalogueID }) => {
         </section>
 
         {shouldSearch && (
-          <BigsiResults
+          <CobsResults
             sequence={textareaSeq.current.sequence}
             threshold={kmers}
             cataloguesFilter={catalogueID}
@@ -241,4 +239,4 @@ const BigsiSearch: React.FC<BigsyProps> = ({ catalogueName, catalogueID }) => {
   );
 };
 
-export default BigsiSearch;
+export default CobsSearch;

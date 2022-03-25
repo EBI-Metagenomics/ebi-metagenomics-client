@@ -1,16 +1,35 @@
 import { useContext } from 'react';
 
 import useData, {
-  MGnifyResponseGenericObj,
+  ErrorFromFetch,
+  KeyValue,
   ResponseFormat,
 } from 'hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
 
-const useMgnifyBigsiSearch: (
+export interface CobsResponse {
+  data: {
+    data: {
+      errors?: {
+        [fieldName: string]: string;
+      };
+      results: [
+        {
+          cobs: KeyValue;
+          mgnify: KeyValue;
+        }
+      ];
+    };
+  };
+  error: ErrorFromFetch | null;
+  loading: boolean;
+}
+
+const useMgnifyCobsSearch: (
   sequence: string,
   threshold: number,
   cataloguesFilter: string
-) => MGnifyResponseGenericObj = (sequence, threshold, cataloguesFilter) => {
+) => CobsResponse = (sequence, threshold, cataloguesFilter) => {
   const { config } = useContext(UserContext);
   const formData = new FormData();
   formData.append('seq', sequence);
@@ -27,7 +46,7 @@ const useMgnifyBigsiSearch: (
       body: formData,
     }
   );
-  return data as MGnifyResponseGenericObj;
+  return data as unknown as CobsResponse;
 };
 
-export default useMgnifyBigsiSearch;
+export default useMgnifyCobsSearch;

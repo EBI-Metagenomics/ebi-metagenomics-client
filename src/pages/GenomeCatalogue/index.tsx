@@ -9,7 +9,7 @@ import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import GenomesTable from 'components/Genomes/Table';
 import PhyloTree from 'components/Genomes/PhyloTree';
-import BigsiSearch from 'components/Genomes/Bigsi';
+import CobsSearch from 'components/Genomes/Cobs';
 import SourmashSearch from 'components/Genomes/Sourmash';
 import RouteForHash from 'components/Nav/RouteForHash';
 
@@ -48,7 +48,7 @@ const GenomePage: React.FC = () => {
             <PhyloTree />
           </RouteForHash>
           <RouteForHash hash="#genome-search-tab">
-            <BigsiSearch
+            <CobsSearch
               catalogueName={genomeData.attributes.name as string}
               catalogueID={genomeData.id}
             />
