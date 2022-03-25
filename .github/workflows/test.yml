@@ -28,10 +28,10 @@ jobs:
             - name: 📣 - Announce git branch name
               run: |
                   echo ${GIT_BRANCH_NAME}
-            - name: 🐍 - Set up Python 3.6
+            - name: 🐍 - Set up Python 3.8.6
               uses: actions/setup-python@v2
               with:
-                  python-version: 3.6
+                  python-version: 3.8.6
             - name: 📜 - Set up JS Node 14
               uses: actions/setup-node@v1
               with:
