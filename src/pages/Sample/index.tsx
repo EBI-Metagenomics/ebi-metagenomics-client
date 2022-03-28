@@ -13,6 +13,7 @@ import AssociatedAssemblies from 'components/Assembly/Assemblies';
 import RouteForHash from 'components/Nav/RouteForHash';
 import KeyValueList from 'components/UI/KeyValueList';
 import AnnotationMetadata from 'components/Sample/AnnotationMetadata';
+import ClearingHouseMetadata from 'components/Sample/ClearingHouseMetadata';
 
 const tabs = [
   { label: 'Sample metadata', to: '#' },
@@ -47,6 +48,7 @@ const SamplePage: React.FC = () => {
                     }[]) || []
                   }
                 />
+                <ClearingHouseMetadata sampleAccession={accession} />
                 <AnnotationMetadata sampleAccession={accession} />
               </RouteForHash>
               <RouteForHash hash="#studies">
