@@ -5,7 +5,7 @@
   "homepage": "https://github.com/EBI-Metagenomics/ebi-metagenomics-client#readme",
   "main": "src/index.tsx",
   "scripts": {
-    "test": "cypress run --spec 'cypress/integration/index.js,cypress/integration/about.js,cypress/integration/help.js,cypress/integration/search.js'",
+    "test": "cypress run --spec 'cypress/integration/index.js,cypress/integration/about.js,cypress/integration/help.js,cypress/integration/sample.js,cypress/integration/search.js'",
     "test:open": "cypress open",
     "clean": "rimraf dist coverage .nyc_output",
     "coverage:instrument": "nyc instrument dist coverage/instrumented",

@@ -89,6 +89,7 @@ type EMGTableProps = {
   ExtraBarComponent?: React.ReactNode;
   onMouseEnterRow?: (row: Row) => void;
   onMouseLeaveRow?: (row: Row) => void;
+  dataCy?: string;
 };
 
 const EMGTable: React.FC<EMGTableProps> = ({
@@ -109,6 +110,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
   ExtraBarComponent = null,
   onMouseEnterRow = () => null,
   onMouseLeaveRow = () => null,
+  dataCy,
 }) => {
   const [page, setPage] = useQueryParamState(`${namespace}page`, 1, Number);
   const [ordering, setOrdering] = useQueryParamState(`${namespace}order`, '');
@@ -204,7 +206,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
   if (loading && !isStale) return <Loading size="small" />;
 
   return (
-    <section>
+    <section data-cy={dataCy}>
       <LoadingOverlay loading={loading && isStale}>
         <table
           {...getTableProps}

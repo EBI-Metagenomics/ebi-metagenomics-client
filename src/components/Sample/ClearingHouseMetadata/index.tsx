@@ -32,7 +32,10 @@ const ClearingHouseMetadata: React.FC<{ sampleAccession: string }> = ({
 
   if (anyMetadata)
     return (
-      <div className="vf-box vf-box-theme--primary vf-box--easy">
+      <div
+        className="vf-box vf-box-theme--primary vf-box--easy"
+        id="cdch-sample-metadata"
+      >
         <h6 className="vf-box__heading">
           Additional metadata from Elixir’s Contextual Data Clearing House
         </h6>

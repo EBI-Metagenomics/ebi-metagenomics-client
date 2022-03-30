@@ -23,9 +23,11 @@ const SampleOverview: React.FC<SampleOverviewProps> = ({ data }) => {
               data?.attributes?.['last-update'] as string
             ).toDateString()}
           </h4>
-          <Box label="Description">{data.attributes['sample-desc']}</Box>
+          <Box label="Description" dataCy="sample-description">
+            {data.attributes['sample-desc']}
+          </Box>
           <Box label="External links">
-            <ul>
+            <ul data-cy="sample-external-links">
               <li>
                 <ExtLink href={ENA_VIEW_URL + data.attributes.accession}>
                   ENA website ({data.attributes.accession})

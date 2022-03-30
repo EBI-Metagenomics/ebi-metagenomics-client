@@ -48,7 +48,6 @@ jobs:
           pip install --user --upgrade pip setuptools
           python -V
           pip -V
-          pip install "git+https://github.com/EBI-Metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
           pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
           ls -l
 
@@ -154,6 +153,7 @@ jobs:
             cypress/integration/about.js
             cypress/integration/help.js
             cypress/integration/search.js
+            cypress/integration/sample.js
       - name: 📉 - Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:

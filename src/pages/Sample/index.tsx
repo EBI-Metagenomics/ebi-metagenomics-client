@@ -41,6 +41,7 @@ const SamplePage: React.FC = () => {
             <div className="vf-stack vf-stack--200">
               <RouteForHash hash="" isDefault>
                 <KeyValueList
+                  dataCy="sample-metadata"
                   list={
                     (sampleData?.attributes?.['sample-metadata'] as {
                       key: string;
