@@ -23,7 +23,7 @@ jobs:
         env: # Or as an environment variable
           MAPS_KEY: ${{ secrets.GOOGLE_MAPS_DEV_KEY }}
         run: |
-          echo "{\"googleMapsKey\": \"$MAPS_KEY\"}" > "$(pwd)/config.private.json"
+          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\"}" > "$(pwd)/config.private.json"
       - name: 🌎 - Setup NginX
         run: |
           sudo chmod 777 /var/log/nginx/*
@@ -62,69 +62,69 @@ jobs:
           mysql -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
           for SQL_FIXTURE in ci/emg_sql_fixtures/*.sql; do echo "SQL >>>> $SQL_FIXTURE"; mysql -uroot -proot --database=emg < "$SQL_FIXTURE"; done
           mysql -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
-      # - name: 🪜 - Setting up Fixtures
-      #   run: |
-      #       source ci/create_download_files.sh
-      #       ls -lh ~/results
+       - name: 🪜 - Setting up Fixtures
+         run: |
+             source ci/create_download_files.sh
+             ls -lh ~/results
 
-      #       emgcli import_taxonomy ERR1022502 ~/results --pipeline 4.0
-      #       emgcli import_qc ERR1022502 ~/results --pipeline 4.0
-      #       emgcli import_summary ERR1022502 ~/results .ipr --pipeline 4.0
-      #       emgcli import_summary ERR1022502 ~/results .go_slim --pipeline 4.0
-      #       emgcli import_summary ERR1022502 ~/results .go --pipeline 4.0
+             emgcli import_taxonomy ERR1022502 ~/results --pipeline 4.0
+             emgcli import_qc ERR1022502 ~/results --pipeline 4.0
+             emgcli import_summary ERR1022502 ~/results .ipr --pipeline 4.0
+             emgcli import_summary ERR1022502 ~/results .go_slim --pipeline 4.0
+             emgcli import_summary ERR1022502 ~/results .go --pipeline 4.0
 
-      #       emgcli import_taxonomy ERR1022502 ~/results --pipeline 2.0
-      #       emgcli import_qc ERR1022502 ~/results --pipeline 2.0
-      #       emgcli import_summary ERR1022502 ~/results .ipr --pipeline 2.0
-      #       emgcli import_summary ERR1022502 ~/results .go_slim --pipeline 2.0
-      #       emgcli import_summary ERR1022502 ~/results .go --pipeline 2.0
+             emgcli import_taxonomy ERR1022502 ~/results --pipeline 2.0
+             emgcli import_qc ERR1022502 ~/results --pipeline 2.0
+             emgcli import_summary ERR1022502 ~/results .ipr --pipeline 2.0
+             emgcli import_summary ERR1022502 ~/results .go_slim --pipeline 2.0
+             emgcli import_summary ERR1022502 ~/results .go --pipeline 2.0
 
-      #       emgcli import_taxonomy ERR867655 ~/results --pipeline 4.0
-      #       emgcli import_qc ERR867655 ~/results --pipeline 4.0
-      #       emgcli import_summary ERR867655 ~/results .ipr --pipeline 4.0
-      #       emgcli import_summary ERR867655 ~/results .go_slim --pipeline 4.0
-      #       emgcli import_summary ERR867655 ~/results .go --pipeline 4.0
+             emgcli import_taxonomy ERR867655 ~/results --pipeline 4.0
+             emgcli import_qc ERR867655 ~/results --pipeline 4.0
+             emgcli import_summary ERR867655 ~/results .ipr --pipeline 4.0
+             emgcli import_summary ERR867655 ~/results .go_slim --pipeline 4.0
+             emgcli import_summary ERR867655 ~/results .go --pipeline 4.0
 
-      #       emgcli import_taxonomy ERP104236 ~/results --pipeline 4.0
-      #       emgcli import_qc ERP104236 ~/results --pipeline 4.0
-      #       emgcli import_summary ERP104236 ~/results .ipr --pipeline 4.0
-      #       emgcli import_summary ERP104236 ~/results .go_slim --pipeline 4.0
-      #       emgcli import_summary ERP104236 ~/results .go --pipeline 4.0
+             emgcli import_taxonomy ERP104236 ~/results --pipeline 4.0
+             emgcli import_qc ERP104236 ~/results --pipeline 4.0
+             emgcli import_summary ERP104236 ~/results .ipr --pipeline 4.0
+             emgcli import_summary ERP104236 ~/results .go_slim --pipeline 4.0
+             emgcli import_summary ERP104236 ~/results .go --pipeline 4.0
 
-      #       emgcli import_taxonomy ERZ477576 ~/results --pipeline 5.0
-      #       emgcli import_qc ERZ477576 ~/results --pipeline 5.0
-      #       emgcli import_contigs ERZ477576 ~/results --pipeline 5.0
-      #       emgcli import_summary ERZ477576 ~/results .ipr --pipeline 5.0
-      #       emgcli import_summary ERZ477576 ~/results .go --pipeline 5.0
+             emgcli import_taxonomy ERZ477576 ~/results --pipeline 5.0
+             emgcli import_qc ERZ477576 ~/results --pipeline 5.0
+             emgcli import_contigs ERZ477576 ~/results --pipeline 5.0
+             emgcli import_summary ERZ477576 ~/results .ipr --pipeline 5.0
+             emgcli import_summary ERZ477576 ~/results .go --pipeline 5.0
 
-      #       emgcli import_summary ERZ477576 ~/results .go_slim --pipeline 5.0
-      #       emgcli import_summary ERZ477576 ~/results .pfam --pipeline 5.0
-      #       emgcli import_summary ERZ477576 ~/results .gprops --pipeline 5.0
-      #       emgcli import_summary ERZ477576 ~/results .antismash --pipeline 5.0
+             emgcli import_summary ERZ477576 ~/results .go_slim --pipeline 5.0
+             emgcli import_summary ERZ477576 ~/results .pfam --pipeline 5.0
+             emgcli import_summary ERZ477576 ~/results .gprops --pipeline 5.0
+             emgcli import_summary ERZ477576 ~/results .antismash --pipeline 5.0
 
-      #       emgcli import_kegg_modules ${{ github.workspace }}/ci/fixtures/kegg_module_orthology.json
-      #       emgcli import_kegg_classes ${{ github.workspace }}/ci/fixtures/kegg_class_orthology.json
-      #       emgcli import_cog_descriptions ${{ github.workspace }}/ci/fixtures/cog.csv
-      #       emgcli import_genomes ${{ github.workspace }}/ci/emg_api_datafiles/genomes/ 1.0
+             emgcli import_kegg_modules ${{ github.workspace }}/ci/fixtures/kegg_module_orthology.json
+             emgcli import_kegg_classes ${{ github.workspace }}/ci/fixtures/kegg_class_orthology.json
+             emgcli import_cog_descriptions ${{ github.workspace }}/ci/fixtures/cog.csv
+             emgcli import_genomes ${{ github.workspace }}/ci/emg_api_datafiles/genomes/ 1.0
 
-      #       git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
+             git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
 
-      #       mysql -uroot -proot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
-      # - name: 🔬 - Start EMG API
-      #   run: |
-      #       export PYTHONPATH="$PYTHONPATH:${{ github.workspace }}/emgapi/tests/"
-      #       echo $PYTHONPATH
-      #       emgcli collectstatic --noinput
-      #       emgcli check --deploy
-      #       cd emgapi
-      #       export GUNICORN_CMD_ARGS="--bind 127.0.0.1:8000 --workers=1 --daemon -p emg.pid --error-logfile error.log --access-logfile access.log"
-      #       emgdeploy emgcli.wsgi:application
-      #       ps aux | grep emgdeploy
-      #       cd ..
-      #       echo "nginx"
-      #       curl --silent http://localhost:9000/metagenomics/api/v1/
-      #       echo "\ngunicorn v1/"
-      #       curl --silent http://localhost:8000/v1/
+             mysql -uroot -proot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
+       - name: 🔬 - Start EMG API
+         run: |
+             export PYTHONPATH="$PYTHONPATH:${{ github.workspace }}/emgapi/tests/"
+             echo $PYTHONPATH
+             emgcli collectstatic --noinput
+             emgcli check --deploy
+             cd emgapi
+             export GUNICORN_CMD_ARGS="--bind 127.0.0.1:8000 --workers=1 --daemon -p emg.pid --error-logfile error.log --access-logfile access.log"
+             emgdeploy emgcli.wsgi:application
+             ps aux | grep emgdeploy
+             cd ..
+             echo "nginx"
+             curl --silent http://localhost:9000/metagenomics/api/v1/
+             echo "\ngunicorn v1/"
+             curl --silent http://localhost:8000/v1/
 
       # TODO: ⚠️ the json genereted is not understood by codecov
       - name: 🔧 - Install
