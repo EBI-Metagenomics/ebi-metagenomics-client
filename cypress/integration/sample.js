@@ -321,8 +321,7 @@ describe('Sample page', function() {
     //
     context('Contextual Data Clearing House Metadata', function() {
         it('Should display Contextual Data Clearing House Metadata', function() {
-            const projectId = 'ERS949427';
-            const origPage = 'samples/' + projectId;
+            const origPage = 'samples/' + sampleId;
             // cy.intercept('**/contextual_data_clearing_house_metadata', cy.fixture('contextualDataClearingHouseSampleMetadata.json'))
             // cy.intercept('GET', '**/contextual_data_clearing_house_metadata', { fixture: 'contextualDataClearingHouseSampleMetadata.json' })
             openPage(origPage);
