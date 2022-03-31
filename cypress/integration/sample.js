@@ -325,7 +325,7 @@ describe('Sample page', function() {
             // cy.intercept('**/contextual_data_clearing_house_metadata', cy.fixture('contextualDataClearingHouseSampleMetadata.json'))
             // cy.intercept('GET', '**/contextual_data_clearing_house_metadata', { fixture: 'contextualDataClearingHouseSampleMetadata.json' })
             openPage(origPage);
-            waitForPageLoad(projectId);
+            waitForPageLoad(sampleId);
             cy.get('#cdch-sample-metadata').then(($el) => {
                 const text = Cypress.$($el).text();
                 expect(text).to.contain('Additional metadata for this sample')
