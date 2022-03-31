@@ -32,6 +32,7 @@ emg:
     title: 'EBI Metagenomics API'
     description: 'Is a free resource to visualise and discover metagenomic datasets. For more details go to http://www.ebi.ac.uk/metagenomics/'
   allowed_host: ['localhost', '127.0.0.1', 'localhost:9000', '127.0.0.1:9000']
+  cors_origin_allow_all: true
   slack:
     token: '{SLACK_TOKEN}'
     channel: 'metagenomics-test'
