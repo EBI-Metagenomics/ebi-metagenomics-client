@@ -112,12 +112,18 @@ function waitForPageLoad(projectId) {
 describe('Sample page', function() {
     context('General', function() {
         before(function() {
-            openPage(origPage);
-            waitForPageLoad(sampleId);
+            openPage('');
+            cy.intercept('GET', '**/samples**', { fixture: 'sample/samplesList.json' })
+            cy.intercept('GET', `**/samples/${sampleId}`, { fixture: 'sample/sampleDetail.json' })
+            cy.intercept('GET', '**/contextual_data_clearing_house_metadata', { fixture: 'sample/contextualDataClearingHouseSampleMetadata.json' })
+            cy.intercept('GET', '**/studies_publications_annotations_existence', { fixture: 'sample/epmcStudiesPublicationsAnnotationsExistence.json' })
+
+            cy.get(`.mg-main-menu`).contains('Browse data').click();
+            cy.get(`.mg-search-tabs`).contains('Samples').click();
+            cy.get(`.mg-table`).contains(sampleId).click();
         });
 
         it('Verify elements are present', function() {
-            const colSelector = '.vf-content';
             cy.get('h2').should('contain', sampleId);
             cy.get('h3').should('contain', 'Sample ASSDL1');
             
@@ -318,7 +324,7 @@ describe('Sample page', function() {
             const projectId = 'ERS949427';
             const origPage = 'samples/' + projectId;
             // cy.intercept('**/contextual_data_clearing_house_metadata', cy.fixture('contextualDataClearingHouseSampleMetadata.json'))
-            cy.intercept('GET', '**/contextual_data_clearing_house_metadata', { fixture: 'contextualDataClearingHouseSampleMetadata.json' })
+            // cy.intercept('GET', '**/contextual_data_clearing_house_metadata', { fixture: 'contextualDataClearingHouseSampleMetadata.json' })
             openPage(origPage);
             waitForPageLoad(projectId);
             cy.get('#cdch-sample-metadata').then(($el) => {
@@ -334,14 +340,14 @@ describe('Sample page', function() {
         })
     })
 
-    context('Error handling', function() {
-        it('Should display error message if invalid accession passed in URL', function() {
-            const sampleId = 'ERS14747971323123';
-            const origPage = 'samples/' + sampleId;
-            openPage(origPage);
-            cy.get('h3').should('contain', 'Error Fetching Data');
-            cy.contains('Status: 404');
-            cy.contains('The response from the server was not OK');
-        });
-    });
+    // context('Error handling', function() {
+    //     it('Should display error message if invalid accession passed in URL', function() {
+    //         const sampleId = 'ERS14747971323123';
+    //         const origPage = 'samples/' + sampleId;
+    //         openPage(origPage);
+    //         cy.get('h3').should('contain', 'Error Fetching Data');
+    //         cy.contains('Status: 404');
+    //         cy.contains('The response from the server was not OK');
+    //     });
+    // });
 });

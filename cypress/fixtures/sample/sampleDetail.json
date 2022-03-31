@@ -1,0 +1,146 @@
+{
+  "data": {
+    "type": "samples",
+    "id": "ERS434640",
+    "attributes": {
+      "sample-metadata": [
+        {
+          "key": "investigation type",
+          "value": "metagenome",
+          "unit": null
+        },
+        {
+          "key": "project name",
+          "value": "Microbial Community of Mobilong Acid Sulfate Soil depth profile using Metagenomics",
+          "unit": null
+        },
+        {
+          "key": "geographic location (longitude)",
+          "value": "+139.274772",
+          "unit": "DD"
+        },
+        {
+          "key": "geographic location (country and/or sea,region)",
+          "value": "Australia",
+          "unit": null
+        },
+        {
+          "key": "collection date",
+          "value": "01/02/2013",
+          "unit": null
+        },
+        {
+          "key": "environment (biome)",
+          "value": "Grassland",
+          "unit": null
+        },
+        {
+          "key": "environment (feature)",
+          "value": "Farmland",
+          "unit": null
+        },
+        {
+          "key": "environment (material)",
+          "value": "Clay",
+          "unit": null
+        },
+        {
+          "key": "environmental package",
+          "value": "soil",
+          "unit": null
+        },
+        {
+          "key": "sequencing method",
+          "value": "Illumina Miseq",
+          "unit": null
+        },
+        {
+          "key": "depth",
+          "value": "0.25",
+          "unit": "m"
+        },
+        {
+          "key": "geographic location (elevation)",
+          "value": "50",
+          "unit": "m"
+        },
+        {
+          "key": "geographic location (latitude)",
+          "value": "-35.105875",
+          "unit": "DD"
+        },
+        {
+          "key": "NCBI sample classification",
+          "value": "410658",
+          "unit": null
+        },
+        {
+          "key": "instrument model",
+          "value": "Illumina MiSeq",
+          "unit": null
+        },
+        {
+          "key": "ENA checklist",
+          "value": "GSC MIxS soil (ERC000022)",
+          "unit": null
+        }
+      ],
+      "longitude": 139.2748,
+      "biosample": "SAMEA2464834",
+      "latitude": -35.1059,
+      "accession": "ERS434640",
+      "analysis-completed": "2014-04-25",
+      "collection-date": "2013-02-01",
+      "geo-loc-name": "Australia",
+      "sample-desc": "ASS depth profile",
+      "environment-biome": "Grassland",
+      "environment-feature": "Farmland",
+      "environment-material": "Clay",
+      "sample-name": "ASSDL1",
+      "sample-alias": "ASS depth profile",
+      "host-tax-id": null,
+      "species": null,
+      "last-update": "2016-03-15T00:05:04"
+    },
+    "relationships": {
+      "studies": {
+        "links": {
+          "related": "http://127.0.0.1:8000/v1/samples/ERS434640/studies"
+        },
+        "data": [
+          {
+            "type": "studies",
+            "id": "MGYS00000369",
+            "links": {
+              "self": "http://127.0.0.1:8000/v1/studies/MGYS00000369"
+            }
+          },
+          {
+            "type": "studies",
+            "id": "MGYS00002011",
+            "links": {
+              "self": "http://127.0.0.1:8000/v1/studies/MGYS00002011"
+            }
+          }
+        ]
+      },
+      "runs": {
+        "links": {
+          "related": "http://127.0.0.1:8000/v1/samples/ERS434640/runs"
+        }
+      },
+      "biome": {
+        "data": {
+          "type": "biomes",
+          "id": "root:Environmental:Terrestrial:Soil:Grasslands"
+        },
+        "links": {
+          "related": "http://127.0.0.1:8000/v1/biomes/root:Environmental:Terrestrial:Soil:Grasslands"
+        }
+      }
+    },
+    "links": {
+      "self": "http://127.0.0.1:8000/v1/samples/ERS434640"
+    }
+  }
+}
