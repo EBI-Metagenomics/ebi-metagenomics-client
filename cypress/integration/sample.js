@@ -110,19 +110,19 @@ function waitForPageLoad(projectId) {
 }
 
 describe('Sample page', function() {
+    beforeEach(function() {
+        openPage('');
+        cy.intercept('GET', '**/api/v1/samples?**', { fixture: 'sample/samplesList.json' })
+        cy.intercept('GET', `**/api/v1/samples/${sampleId}`, { fixture: 'sample/sampleDetail.json' })
+        cy.intercept('GET', '**/api/v1/**/contextual_data_clearing_house_metadata', { fixture: 'sample/contextualDataClearingHouseSampleMetadata.json' })
+        cy.intercept('GET', '**/api/v1/**/studies_publications_annotations_existence', { fixture: 'sample/epmcStudiesPublicationsAnnotationsExistence.json' })
+
+        cy.get(`.mg-main-menu`).contains('Browse data').click();
+        cy.get(`.mg-search-tabs`).contains('Samples').click();
+        cy.get(`.mg-table`).contains(sampleId).click();
+    });
+
     context('General', function() {
-        before(function() {
-            openPage('');
-            cy.intercept('GET', '**/api/v1/samples?**', { fixture: 'sample/samplesList.json' })
-            cy.intercept('GET', `**/api/v1/samples/${sampleId}`, { fixture: 'sample/sampleDetail.json' })
-            cy.intercept('GET', '**/api/v1/**/contextual_data_clearing_house_metadata', { fixture: 'sample/contextualDataClearingHouseSampleMetadata.json' })
-            cy.intercept('GET', '**/api/v1/**/studies_publications_annotations_existence', { fixture: 'sample/epmcStudiesPublicationsAnnotationsExistence.json' })
-
-            cy.get(`.mg-main-menu`).contains('Browse data').click();
-            cy.get(`.mg-search-tabs`).contains('Samples').click();
-            cy.get(`.mg-table`).contains(sampleId).click();
-        });
-
         it('Verify elements are present', function() {
             cy.get('h2').should('contain', sampleId);
             cy.get('h3').should('contain', 'Sample ASSDL1');
@@ -320,18 +320,7 @@ describe('Sample page', function() {
     // });
     //
     context('Contextual Data Clearing House Metadata', function() {
-        before(function() {
-            cy.intercept('GET', `**/api/v1/samples/${sampleId}`, { fixture: 'sample/sampleDetail.json' })
-            cy.intercept('GET', '**/api/v1/**/contextual_data_clearing_house_metadata', { fixture: 'sample/contextualDataClearingHouseSampleMetadata.json' })
-            cy.intercept('GET', '**/api/v1/**/studies_publications_annotations_existence', { fixture: 'sample/epmcStudiesPublicationsAnnotationsExistence.json' })
-        });
-
         it('Should display Contextual Data Clearing House Metadata', function() {
-            const origPage = 'samples/' + sampleId;
-            // cy.intercept('**/contextual_data_clearing_house_metadata', cy.fixture('contextualDataClearingHouseSampleMetadata.json'))
-            // cy.intercept('GET', '**/contextual_data_clearing_house_metadata', { fixture: 'contextualDataClearingHouseSampleMetadata.json' })
-            openPage(origPage);
-            waitForPageLoad(sampleId);
             cy.get('#cdch-sample-metadata').then(($el) => {
                 const text = Cypress.$($el).text();
                 expect(text).to.contain('Additional metadata for this sample')
