@@ -328,7 +328,8 @@ describe('Sample page', function() {
                 listToggle.click();
                 const listText = Cypress.$($el).text();
                 expect(listText).to.contain('BMI');
-                expect(listText).to.contain('Updated 20/11/2019');
+                expect(listText).to.contain('Updated');
+                expect(listText).to.contain('2019');
                 expect(listText).to.contain('author statement');
             });
         })
