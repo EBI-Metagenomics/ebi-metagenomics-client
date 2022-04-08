@@ -14,41 +14,19 @@ env:
   CYPRESS_WEBIN_PASSWORD: secret
 
 jobs:
-  build:
+  api:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-      - name: ⚙️ - Settings
-        env: # Or as an environment variable
-          MAPS_KEY: ${{ secrets.GOOGLE_MAPS_DEV_KEY }}
-        run: |
-          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\"}" > "$(pwd)/config.private.json"
-
-      - name: 🌎 - Setup NginX
-        run: |
-          sudo chmod 777 /var/log/nginx/*
-          sudo chmod 777 /var/run/*
-          sudo chmod 777 /var/run
-          sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
-          nginx -c "$(pwd)/ci/nginx.conf"
-
       - name: 🐍 - Set up Python 3.6
         uses: actions/setup-python@v2
         with:
           python-version: 3.6
-
-      - name: 📜 - Set up JS Node 14
-        uses: actions/setup-node@v1
-        with:
-          node-version: '14'
 
       - name: 💾 Start MongoDB
         uses: supercharge/mongodb-github-action@1.3.0
         with:
           mongodb-version: 4.0.6
 
-#       TODO: replace with a docker
       - name: 🔧🔬 - Install EMG API
         run: |
           pip install --user --upgrade pip setuptools
@@ -69,7 +47,6 @@ jobs:
           for SQL_FIXTURE in ci/emg_sql_fixtures/*.sql; do echo "SQL >>>> $SQL_FIXTURE"; mysql -uroot -proot --database=emg < "$SQL_FIXTURE"; done
           mysql -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
 
-#       TODO: replace with a TAR of mysqldb docker volume
       - name: 🪜 - Setting up Fixtures
         run: |
           source ci/create_download_files.sh
@@ -134,6 +111,30 @@ jobs:
           curl --silent http://localhost:9000/metagenomics/api/v1/
           echo "\ngunicorn v1/"
           curl --silent http://localhost:8000/v1/
+
+  test:
+    runs-on: ubuntu-latest
+    needs: api
+    steps:
+      - uses: actions/checkout@v2
+      - name: ⚙️ - Settings
+        env: # Or as an environment variable
+          MAPS_KEY: ${{ secrets.GOOGLE_MAPS_DEV_KEY }}
+        run: |
+          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\"}" > "$(pwd)/config.private.json"
+
+      - name: 🌎 - Setup NginX
+        run: |
+          sudo chmod 777 /var/log/nginx/*
+          sudo chmod 777 /var/run/*
+          sudo chmod 777 /var/run
+          sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
+          nginx -c "$(pwd)/ci/nginx.conf"
+
+      - name: 📜 - Set up JS Node 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
 
 #       TODO: ⚠️ the json generated is not understood by codecov
 #       TODO: fix 404s for nested URLs – nginx config problem?
