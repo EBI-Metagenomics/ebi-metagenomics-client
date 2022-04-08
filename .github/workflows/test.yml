@@ -108,8 +108,8 @@ jobs:
           emgdeploy emgcli.wsgi:application
           ps aux | grep emgdeploy
           cd ..
-          echo "nginx"
-          curl --silent http://localhost:9000/metagenomics/api/v1/
+#          echo "nginx"
+#          curl --silent http://localhost:9000/metagenomics/api/v1/
           echo "\ngunicorn v1/"
           curl --silent http://localhost:8000/v1/
 
