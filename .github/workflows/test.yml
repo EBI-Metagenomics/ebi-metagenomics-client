@@ -31,7 +31,8 @@ jobs:
       mongo:
         image: mongo:4.0.6
         ports:
-          - 27017
+          - 27017:27017
+        options: --health-cmd="mongo" --health-interval=10s --health-timeout=5s --health-retries=5
         volumes:
           - ${{ github.workspace }}/db/mongo:/data/db
 
@@ -47,6 +48,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.6
+          cache: 'pip'
 
       - uses: actions/cache@v3
         id: dbcache
@@ -54,18 +56,12 @@ jobs:
           path: ${{ github.workspace }}/db
           key: ${{ hashFiles('client-repo/ci/*') }}
 
-      - uses: actions/cache@v3
-        id: pipcache
-        with:
-          path: ${{ github.workspace }}/pip-cache
-          key: emgapi-pip-cache
-
       - name: 🔧🔬 - Install EMG API
         run: |
           pip install --user --upgrade pip setuptools
           python -V
           pip -V
-          pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli" --cache-dir ${{ github.workspace }}/pip-cache
+          pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
           ls -l
 
       - name: 🪜 - Setting up Fixtures
