@@ -54,12 +54,18 @@ jobs:
           path: ${{ github.workspace }}/db
           key: ${{ hashFiles('client-repo/ci/*') }}
 
+      - uses: actions/cache@v3
+        id: pipcache
+        with:
+          path: ${{ github.workspace }}/pip-cache
+          key: emgapi-pip-cache
+
       - name: 🔧🔬 - Install EMG API
         run: |
           pip install --user --upgrade pip setuptools
           python -V
           pip -V
-          pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+          pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli" --cache-dir ${{ github.workspace }}/pip-cache
           ls -l
 
       - name: 🪜 - Setting up Fixtures

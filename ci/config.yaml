@@ -4,22 +4,22 @@ emg:
       ENGINE: 'django.db.backends.mysql'
       NAME: 'emg'
       USER: 'root'
-      PASSWORD: 'root'
-      HOST: localhost
+      PASSWORD: ''
+      HOST: 127.0.0.1
       PORT: 3306
     ena_pro:
       ENGINE: 'django.db.backends.mysql'
       NAME: 'ena'
       USER: 'root'
-      PASSWORD: 'root'
-      HOST: localhost
+      PASSWORD: ''
+      HOST: 127.0.0.1
       PORT: 3306
     era_pro:
       ENGINE: 'django.db.backends.mysql'
       NAME: 'ena'
       USER: 'root'
-      PASSWORD: 'root'
-      HOST: localhost
+      PASSWORD: ''
+      HOST: 127.0.0.1
       PORT: 3306
   session_engine: 'django.contrib.sessions.backends.cached_db'
   auth_backends: ['test_utils.FakeEMGBackend',]
