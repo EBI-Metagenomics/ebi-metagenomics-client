@@ -154,7 +154,6 @@ jobs:
       - name: 🧪 - Testing
         uses: cypress-io/github-action@v2
         with:
-          working-directory: client-repo
           spec: |
             cypress/integration/index.js
             cypress/integration/about.js
