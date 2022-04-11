@@ -75,7 +75,7 @@ jobs:
           mysql --host 127.0.0.1 --port 3306 -uroot -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES'"
           emgcli migrate
           mysql --host 127.0.0.1 --port 3306 -uroot --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
-          for SQL_FIXTURE in ci/emg_sql_fixtures/*.sql; do echo "SQL >>>> $SQL_FIXTURE"; mysql -uroot -proot --database=emg < "$SQL_FIXTURE"; done
+          for SQL_FIXTURE in ci/emg_sql_fixtures/*.sql; do echo "SQL >>>> $SQL_FIXTURE"; mysql --host 127.0.0.1 --port 3306 -uroot --database=emg < "$SQL_FIXTURE"; done
           mysql --host 127.0.0.1 --port 3306 -uroot --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
           
           source ci/create_download_files.sh
