@@ -61,21 +61,21 @@ jobs:
         working-directory: client-repo
         run: |
           mysql --version
-          mysql -h localhost --protocol tcp -uroot -proot -e 'DROP DATABASE IF EXISTS emg;'
-          mysql -h localhost --protocol tcp -uroot -proot -e 'DROP DATABASE IF EXISTS ena;'
-          mysql -h localhost --protocol tcp -uroot -proot -e 'CREATE DATABASE emg;'
-          mysql -h localhost --protocol tcp -uroot -proot -e 'CREATE DATABASE ena;'
-          mysql -h localhost --protocol tcp -uroot -proot -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES'"
+          mysql -h 127.0.0.1 --protocol tcp -uroot -proot -e 'DROP DATABASE IF EXISTS emg;'
+          mysql -h 127.0.0.1 --protocol tcp -uroot -proot -e 'DROP DATABASE IF EXISTS ena;'
+          mysql -h 127.0.0.1 --protocol tcp -uroot -proot -e 'CREATE DATABASE emg;'
+          mysql -h 127.0.0.1 --protocol tcp -uroot -proot -e 'CREATE DATABASE ena;'
+          mysql -h 127.0.0.1 --protocol tcp -uroot -proot -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES'"
           emgcli migrate
-          mysql -h localhost --protocol tcp -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
+          mysql -h 127.0.0.1 --protocol tcp -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
           for SQL_FIXTURE in ci/emg_sql_fixtures/*.sql; do echo "SQL >>>> $SQL_FIXTURE"; mysql -uroot -proot --database=emg < "$SQL_FIXTURE"; done
-          mysql -h localhost --protocol tcp -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
+          mysql -h 127.0.0.1 --protocol tcp -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
           
           source ci/create_download_files.sh
           ls -lh ~/results
           source ci/import_test_db_entries.sh
           git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
-          mysql -h localhost --protocol tcp -uroot -proot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
+          mysql -h 127.0.0.1 --protocol tcp -uroot -proot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
 
       - name: ⚙️ - Settings
         working-directory: client-repo
