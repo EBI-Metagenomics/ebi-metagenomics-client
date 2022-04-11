@@ -33,7 +33,9 @@ jobs:
           - ${{ github.workspace }}/db/mongo:/data/db
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          path: client-repo
 
       - name: 🐍 - Set up Python 3.6
         uses: actions/setup-python@v2
@@ -44,7 +46,7 @@ jobs:
         id: dbcache
         with:
           path: ${{ github.workspace }}/db
-          key: ${{ hashFiles('ci/*') }}
+          key: ${{ hashFiles('client-repo/ci/*') }}
 
       - name: 🔧🔬 - Install EMG API
         run: |
@@ -56,6 +58,7 @@ jobs:
 
       - name: 🪜 - Setting up Fixtures
         if: steps.dbcache.outputs.cache-hit != 'true'
+        working-directory: client-repo
         run: |
           mysql --version
           mysql -uroot -proot -e 'DROP DATABASE IF EXISTS emg;'
@@ -75,6 +78,7 @@ jobs:
           mysql -uroot -proot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
 
       - name: ⚙️ - Settings
+        working-directory: client-repo
         env: # Or as an environment variable
           MAPS_KEY: ${{ secrets.GOOGLE_MAPS_DEV_KEY }}
         run: |
@@ -95,6 +99,7 @@ jobs:
           curl --silent http://localhost:8000/v1/
 
       - name: 🌎 - Setup NginX
+        working-directory: client-repo
         run: |
           sudo chmod 777 /var/log/nginx/*
           sudo chmod 777 /var/run/*
@@ -106,17 +111,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14'
-
-      - name: 🏦 Cache NPM dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: npm-
+          cache: 'npm'
 
 #       TODO: ⚠️ the json generated is not understood by codecov
 #       TODO: fix 404s for nested URLs – nginx config problem?
       - name: 🔧 - Install
+        working-directory: client-repo
         run: |
           npm ci
           npm run build
@@ -133,12 +133,14 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
       - name: 🧹 - ESlint
+        working-directory: client-repo
         run: |
           npm run eslint
 
       - name: 🧪 - Testing
         uses: cypress-io/github-action@v2
         with:
+          working-directory: client-repo
           spec: |
             cypress/integration/index.js
             cypress/integration/about.js
@@ -149,9 +151,11 @@ jobs:
       - name: 📉 - Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
+          working-directory: client-repo
           directory: ${{ github.workspace }}/coverage/
 
       - name: ⚙️ - Rebuild for deployment
+        working-directory: client-repo
         if: github.ref == 'refs/heads/new-client'
         run: |
           echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"basename\": \"\/ebi-metagenomics-client\"}" > "$(pwd)/config.private.json"
@@ -169,6 +173,7 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
+          working-directory: client-repo
           environment: dev
 
       - name: 🚀 - Deploy Site
@@ -177,7 +182,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: dist # The folder the action should deploy.
+          FOLDER: client-repo/dist # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
 
       - name: 📸 - Failed tests snapshots
@@ -185,7 +190,7 @@ jobs:
         if: failure()
         with:
           name: tests-snapshots
-          path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/cypress/screenshots/ # - name: 📊 - Coverage
+          path: /home/runner/work/ebi-metagenomics-client/client-repo/ebi-metagenomics-client/cypress/screenshots/ # - name: 📊 - Coverage
 
       - name: 🐞 - Error log
         if: failure()
