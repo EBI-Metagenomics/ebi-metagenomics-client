@@ -82,7 +82,6 @@ jobs:
           ls -lh ~/results
           sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/import_test_db_entries.sh
           source ci/import_test_db_entries.sh
-          git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
           mysql --host 127.0.0.1 --port 3306 -uroot --database=ena < ${{ github.workspace }}/client-repo/ci/ena_db.sql
 
       - name: ⚙️ - Settings
@@ -91,6 +90,13 @@ jobs:
           MAPS_KEY: ${{ secrets.GOOGLE_MAPS_DEV_KEY }}
         run: |
           echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\"}" > "$(pwd)/config.private.json"
+
+      - uses: actions/checkout@v3
+        name: 🔬 - Checkout EMG API
+        with:
+          repository: 'EBI-Metagenomics/emgapi'
+          ref: 'develop'
+          path: emgapi
 
       - name: 🔬 - Start EMG API
         run: |
