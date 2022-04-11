@@ -27,7 +27,7 @@ emg:
   prefix: "/metagenomics/api"
   mongodb:
     db: 'emg'
-    host: 'mongodb://localhost'
+    host: 'mongodb://127.0.0.1'
   documentation:
     title: 'EBI Metagenomics API'
     description: 'Is a free resource to visualise and discover metagenomic datasets. For more details go to http://www.ebi.ac.uk/metagenomics/'
