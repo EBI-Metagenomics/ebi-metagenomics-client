@@ -61,7 +61,7 @@ jobs:
         working-directory: client-repo
         run: |
           mysql --version
-          mysql -h lcaolhost --protocol tcp -uroot -proot -e 'DROP DATABASE IF EXISTS emg;'
+          mysql -h localhost --protocol tcp -uroot -proot -e 'DROP DATABASE IF EXISTS emg;'
           mysql -h localhost --protocol tcp -uroot -proot -e 'DROP DATABASE IF EXISTS ena;'
           mysql -h localhost --protocol tcp -uroot -proot -e 'CREATE DATABASE emg;'
           mysql -h localhost --protocol tcp -uroot -proot -e 'CREATE DATABASE ena;'
