@@ -56,7 +56,7 @@ jobs:
           pip install --user --upgrade pip setuptools
           python -V
           pip -V
-          pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli" --cache-dir
+          pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
           ls -l
 
       - name: 🪜 - Setting up Fixtures
