@@ -2,7 +2,7 @@ name: Testing
 
 on: [ push, pull_request ]
 env:
-  EMG_CONFIG: ${{ github.workspace }}/ci/config.yaml
+  EMG_CONFIG: ${{ github.workspace }}/client-repo/ci/config.yaml
   API_URL: http://localhost:9000/metagenomics/api/v1/
   SEARCH_URL: https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_
   DEPLOYMENT_SUBFOLDER: /metagenomics
@@ -25,8 +25,8 @@ jobs:
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
-#        volumes:
-#          - ${{ github.workspace }}/db/mysql:/var/lib/mysql
+        volumes:
+          - ${{ github.workspace }}/db/mysql:/var/lib/mysql
 
       mongo:
         image: mongo:4.0.6
@@ -81,7 +81,7 @@ jobs:
           ls -lh ~/results
           source ci/import_test_db_entries.sh
           git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
-          mysql --host 127.0.0.1 --port 3306 -uroot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
+          mysql --host 127.0.0.1 --port 3306 -uroot --database=ena < ${{ github.workspace }}/client-repo/ci/ena_db.sql
 
       - name: ⚙️ - Settings
         working-directory: client-repo
