@@ -164,10 +164,9 @@ jobs:
             cypress/integration/sample.js
 
       - name: 📉 - Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
-          working-directory: client-repo
-          directory: ${{ github.workspace }}/coverage/
+          directory: ${{ github.workspace }}/client-repo/coverage/
 
       - name: ⚙️ - Rebuild for deployment
         working-directory: client-repo
@@ -189,7 +188,7 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: dev
-          source-maps: './client-repo/dist/js'
+          sourcemaps: './client-repo/dist/js'
 
       - name: 🚀 - Deploy Site
         if: github.ref == 'refs/heads/new-client'
