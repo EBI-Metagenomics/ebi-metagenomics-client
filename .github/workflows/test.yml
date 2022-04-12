@@ -188,8 +188,8 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
-          working-directory: client-repo
           environment: dev
+          source-maps: './client-repo/dist/js'
 
       - name: 🚀 - Deploy Site
         if: github.ref == 'refs/heads/new-client'
@@ -205,7 +205,7 @@ jobs:
         if: failure()
         with:
           name: tests-snapshots
-          path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/client-repo/cypress/screenshots/ # - name: 📊 - Coverage
+          path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/client-rep/cypress/screenshots/ # - name: 📊 - Coverage
 
       - name: 🐞 - Error log
         if: failure()
