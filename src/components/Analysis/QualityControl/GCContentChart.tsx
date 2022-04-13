@@ -102,6 +102,7 @@ const GCContentChart: React.FC<GCContentChartProps> = ({ summaryData }) => {
       highcharts={Highcharts}
       options={options}
       ref={chartComponentRef}
+      containerProps={{ className: 'reads-gc-barchart' }}
     />
   );
 };

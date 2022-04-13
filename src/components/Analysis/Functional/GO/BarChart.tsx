@@ -13,6 +13,7 @@ type GOBarChartProps = {
   title: string;
   color: string;
   total: number;
+  containerId: string;
 };
 const GOBarChart: React.FC<GOBarChartProps> = ({
   categories,
@@ -20,6 +21,7 @@ const GOBarChart: React.FC<GOBarChartProps> = ({
   title,
   total,
   color,
+  containerId,
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const options: Record<string, unknown> = {
@@ -76,6 +78,7 @@ const GOBarChart: React.FC<GOBarChartProps> = ({
       highcharts={Highcharts}
       options={options}
       ref={chartComponentRef}
+      containerProps={{ id: containerId }}
     />
   );
 };

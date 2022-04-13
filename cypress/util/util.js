@@ -24,7 +24,10 @@ export let Util = {
         cy.get('table tr.sample').should('not.exist');
     },
     changeTab: function(tabName) {
-        cy.get('ul.tabs > li.tabs-title a[href=\'#' + tabName + '\']').click();
+        cy.get('a[href*=\'#' + tabName + '\'].vf-tabs__link').click();
+    },
+    changeSubTab: function(subTabName) {
+        cy.get('button.mg-button-as-tab').contains(subTabName).click();
     },
     stripWhitespace: function(str) {
         return str.replace(/\s/g, '');

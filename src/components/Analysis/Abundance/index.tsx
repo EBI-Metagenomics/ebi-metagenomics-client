@@ -11,7 +11,7 @@ const Abundance: React.FC = () => {
     (item) => item?.attributes?.['group-type'] === 'Statistics'
   );
   const { data, error, loading } = useData(
-    stats.links.self,
+    stats?.links?.self,
     ResponseFormat.TXT
   );
   if (!stats) return <p>No abundance found in the data</p>;

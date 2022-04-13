@@ -98,6 +98,7 @@ const NucleotidesHistogram: React.FC = () => {
       highcharts={Highcharts}
       options={options}
       ref={chartComponentRef}
+      containerProps={{ className: 'nucleotide-chart' }}
     />
   );
 };
