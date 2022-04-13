@@ -153,7 +153,7 @@ describe('Analysis page', function() {
         it('QC chart should display correctly', function() {
             // Verify graph via tooltip values
             const readsRemainingSeries =
-                '.qc-step-chart .highcharts-series-group .highcharts-series-1 > .highcharts-point';
+                '#qc-step-chart .highcharts-series-group .highcharts-series-1 > .highcharts-point';
             // Initial reads
             const series1 = readsRemainingSeries + ':nth-child(1)';
             hoverAndValidateTooltip(series1, 'Initial reads', 'Reads remaining: 213 741 460');
@@ -168,7 +168,7 @@ describe('Analysis page', function() {
 
             // Length filtering (reads filtered out)
             const filteredOutSeries =
-                '.qc-step-chart .highcharts-series-group .highcharts-series-0 > ' +
+                '#qc-step-chart .highcharts-series-group .highcharts-series-0 > ' +
                 '.highcharts-point:nth-child(3)';
             hoverAndValidateTooltip(filteredOutSeries, 'Length filtering',
                 'Reads filtered out: 33 411 452');
@@ -179,39 +179,39 @@ describe('Analysis page', function() {
                 'Reads remaining: 180 329 978');
 
             const readsAfterSampling =
-                '.qc-step-chart .highcharts-series-group .highcharts-series-2 > .highcharts-point';
+                '#qc-step-chart .highcharts-series-group .highcharts-series-2 > .highcharts-point';
             hoverAndValidateTooltip(readsAfterSampling + ':nth-child(5)',
                 'Reads subsampled for QC analysis',
                 'Reads after sampling: 1 997 827');
         });
         it('Reads length hist should be present', function() {
-            const series = '.reads-length-hist .highcharts-series-group .highcharts-markers ' +
+            const series = '#reads-length-hist .highcharts-series-group .highcharts-markers ' +
                 '.highcharts-point';
             cy.get(series).should('be.visible');
         });
         it('Reads length bar chart should be present', function() {
-            let series0 = '.reads-length-barchart svg .highcharts-series-0 > rect:nth-child(1)';
+            let series0 = '#reads-length-barchart svg .highcharts-series-0 > rect:nth-child(1)';
             hoverAndValidateTooltip(series0, 'Minimum', 'Minimum:');
             hoverAndValidateTooltip(series0, 'Minimum', '100');
-            let series1 = '.reads-length-barchart svg .highcharts-series-0 > rect:nth-child(2)';
+            let series1 = '#reads-length-barchart svg .highcharts-series-0 > rect:nth-child(2)';
             hoverAndValidateTooltip(series1, 'Average', 'Average:');
             hoverAndValidateTooltip(series1, 'Average', '100');
-            let series2 = '.reads-length-barchart svg .highcharts-series-0 > rect:nth-child(3)';
+            let series2 = '#reads-length-barchart svg .highcharts-series-0 > rect:nth-child(3)';
             hoverAndValidateTooltip(series2, 'Maximum', 'Maximum:');
             hoverAndValidateTooltip(series2, 'Maximum', '100');
         });
         it('Reads GC distribution chart should be present', function() {
-            const series = '.reads-gc-hist .highcharts-series-group .highcharts-markers';
+            const series = '#reads-gc-hist .highcharts-series-group .highcharts-markers';
             cy.get(series).should('be.visible');
         });
         it('Reads GC bar chart should be present', function() {
-            let series0 = '.reads-gc-barchart svg .highcharts-series-0 > rect:nth-child(1)';
+            let series0 = '#reads-gc-barchart svg .highcharts-series-0 > rect:nth-child(1)';
             hoverAndValidateTooltip(series0, 'Content', 'GC content: 44.51%');
-            let series1 = '.reads-gc-barchart svg .highcharts-series-1 > rect:nth-child(1)';
+            let series1 = '#reads-gc-barchart svg .highcharts-series-1 > rect:nth-child(1)';
             hoverAndValidateTooltip(series1, 'Content', 'AT content: 55.49%');
         });
         it('Nucleotide position hist chart should be present', function() {
-            const series = '.nucleotide-chart .highcharts-series-2 .highcharts-point';
+            const series = '#nucleotide-chart .highcharts-series-2 .highcharts-point';
             cy.get(series).should('be.visible');
         });
     });
