@@ -49,6 +49,15 @@ const SamplePage: React.FC = () => {
                     }[]) || []
                   }
                 />
+                {!(sampleData?.attributes?.['sample-metadata'] as [])
+                  .length && (
+                  <div className="vf-box">
+                    <h3 className="vf-box__heading">
+                      <span className="icon icon-common icon-info" /> No
+                      metadata to be displayed.
+                    </h3>
+                  </div>
+                )}
                 <ClearingHouseMetadata sampleAccession={accession} />
                 <AnnotationMetadata sampleAccession={accession} />
               </RouteForHash>

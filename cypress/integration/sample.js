@@ -151,7 +151,7 @@ describe('Sample page', function() {
 
     //TODO: enable table test
 
-    // let table;
+    let table;
     // context('Study table', function() {
     //     beforeEach(function() {
     //         openPage('');
@@ -277,49 +277,48 @@ describe('Sample page', function() {
     //     });
     // });
     //
-    // context('Metadata display', function() {
-    //     it('Info message should be displayed if no metadata available for display', function() {
-    //         const projectId = 'ERS1474797';
-    //         const origPage = 'samples/' + projectId;
-    //         openPage(origPage);
-    //         waitForPageLoad(projectId);
-    //         table = new GenericTableHandler('#runs-section', 1);
-    //         cy.get('#sample-metadata').contains('No metadata to be displayed.');
-    //     });
-    //
-    //     it('Should display metadata fields correctly', function() {
-    //         const projectId = 'ERS949427';
-    //         const origPage = 'samples/' + projectId;
-    //         openPage(origPage);
-    //         waitForPageLoad(projectId);
-    //         cy.get('#sample-metadata').then(($el) => {
-    //             const text = Cypress.$($el).text();
-    //             expect(text).to.contain('Collection date:\n                2014-11-17');
-    //             expect(text)
-    //                 .to
-    //                 .contain('ENA checklist:\n                GSC MIxS plant associated (ERC000020)');
-    //             expect(text)
-    //                 .to
-    //                 .contain('Geographic location (region and locality):\n                Cologne');
-    //             expect(text).to.contain('Host common name:\n                Thale cress');
-    //             expect(text).to.contain('Host taxid:\n                3702');
-    //             expect(text).to.contain('Instrument model:\n                Illumina MiSeq');
-    //             expect(text).to.contain('Investigation type:\n                metagenome');
-    //             expect(text).to.contain('NCBI sample classification:\n                1297885');
-    //             expect(text).to.contain('Plant product:\n                clay');
-    //             expect(text)
-    //                 .to
-    //                 .contain(
-    //                     'Plant-associated environmental package:\n                plant-associated');
-    //             expect(text)
-    //                 .to
-    //                 .contain(
-    //                     'Project name:\n                ena-STUDY-MPIPZ-29-10-2015-07:38:39:510-31');
-    //             expect(text).to.contain('Sequencing method:\n                MiSeq');
-    //         });
-    //     });
-    // });
-    //
+    context('Metadata display', function() {
+        it('Info message should be displayed if no metadata available for display', function() {
+            const projectId = 'ERS1474797';
+            const origPage = 'samples/' + projectId;
+            openPage(origPage);
+            waitForPageLoad(projectId);
+            cy.get('#tab-default').contains('No metadata to be displayed.');
+        });
+
+        it('Should display metadata fields correctly', function() {
+            const projectId = 'ERS949427';
+            const origPage = 'samples/' + projectId;
+            openPage(origPage);
+            waitForPageLoad(projectId);
+            cy.get('[data-cy=sample-metadata]').then(($el) => {
+                const text = Cypress.$($el).text();
+                expect(text).to.contain('collection date:2014');
+                expect(text)
+                    .to
+                    .contain('ENA checklist:GSC MIxS plant associated (ERC000020)');
+                expect(text)
+                    .to
+                    .contain('geographic location (region and locality):Cologne');
+                expect(text).to.contain('host common name:Thale cress');
+                expect(text).to.contain('host taxid:3702');
+                expect(text).to.contain('instrument model:Illumina MiSeq');
+                expect(text).to.contain('investigation type:metagenome');
+                expect(text).to.contain('NCBI sample classification:1297885');
+                expect(text).to.contain('plant product:clay');
+                expect(text)
+                    .to
+                    .contain(
+                        'plant-associated environmental package:plant-associated');
+                expect(text)
+                    .to
+                    .contain(
+                        'project name:ena-STUDY-MPIPZ-29-10-2015-07:38:39:510-31');
+                expect(text).to.contain('sequencing method:MiSeq');
+            });
+        });
+    });
+
     context('Contextual Data Clearing House Metadata', function() {
         it('Should display Contextual Data Clearing House Metadata', function() {
             cy.get('#cdch-sample-metadata').then(($el) => {

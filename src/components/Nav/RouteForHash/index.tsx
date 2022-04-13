@@ -20,7 +20,7 @@ const RouteForHash: React.FC<PropsType> = ({
 
   if (location.hash === hash) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <div id={`tab-${hash.slice(1)}`}>{children}</div>;
+    return <div id={`tab-${hash.slice(1) || 'default'}`}>{children}</div>;
   }
   return null;
 };
