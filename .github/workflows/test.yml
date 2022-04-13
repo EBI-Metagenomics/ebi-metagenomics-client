@@ -163,6 +163,7 @@ jobs:
             cypress/integration/search.js
             cypress/integration/sample.js
             cypress/integration/analysis.js
+            cypress/integration/analysis_v5.js
 
       - name: 📉 - Upload coverage to Codecov
         uses: codecov/codecov-action@v2
