@@ -52,7 +52,9 @@ jobs:
       - uses: actions/cache@v3
         id: dbcache
         with:
-          path: ${{ github.workspace }}/db
+          path: |
+            ${{ github.workspace }}/db
+            !${{ github.workspace }}/db/mongo/diagnostic.data
           key: ${{ hashFiles('client-repo/ci/*') }}
 
       - name: 🔧🔬 - Install EMG API
