@@ -231,3 +231,6 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_CHANNEL: '#metagenomics-notify'
           MSG_MINIMAL: Actions URL
+
+      - name: 🔓 - Set DB cache directory perms
+        run: sudo chmod -R 777 ${{ github.workspace }}/db || echo 'No DB dir to cache'
