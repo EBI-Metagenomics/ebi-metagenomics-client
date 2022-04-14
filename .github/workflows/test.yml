@@ -58,7 +58,7 @@ jobs:
           key: ${{ hashFiles('client-repo/ci/*') }}
 
       - name: 💼 - Place cached fixtures
-        if: steps.dbcache.outputs.cache-hit === 'true'
+        if: steps.dbcache.outputs.cache-hit == 'true'
         run: |
           sudo cp -r ${{ github.workspace }}/db-cache ${{ github.workspace }}/db
 
