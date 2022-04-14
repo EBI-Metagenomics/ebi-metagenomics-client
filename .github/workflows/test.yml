@@ -217,7 +217,7 @@ jobs:
         if: failure()
         with:
           name: tests-snapshots
-          path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/client-rep/cypress/screenshots/ # - name: 📊 - Coverage
+          path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/client-repo/cypress/screenshots/ # - name: 📊 - Coverage
 
       - name: 🐞 - Error log
         if: failure()
