@@ -244,3 +244,4 @@ jobs:
         run: |
           sudo chmod -R 777 ${{ github.workspace }}/db || echo 'No DB dir to cache'
           sudo cp -r ${{ github.workspace }}/db ${{ github.workspace }}/db-cache
+          sudo rm -rf ${{ github.workspace }}/db-cache/mongo/diagnostic.data
