@@ -53,9 +53,14 @@ jobs:
         id: dbcache
         with:
           path: |
-            ${{ github.workspace }}/db
-            !${{ github.workspace }}/db/mongo/diagnostic.data
+            ${{ github.workspace }}/db-cache
+            !${{ github.workspace }}/db-cache/mongo/diagnostic.data
           key: ${{ hashFiles('client-repo/ci/*') }}
+
+      - name: 💼 - Place cached fixtures
+        if: steps.dbcache.outputs.cache-hit === 'true'
+        run: |
+          sudo cp -r ${{ github.workspace }}/db-cache ${{ github.workspace }}/db
 
       - name: 🔧🔬 - Install EMG API
         run: |
@@ -235,5 +240,7 @@ jobs:
           SLACK_CHANNEL: '#metagenomics-notify'
           MSG_MINIMAL: Actions URL
 
-      - name: 🔓 - Set DB cache directory perms
-        run: sudo chmod -R 777 ${{ github.workspace }}/db || echo 'No DB dir to cache'
+      - name: 💼 - Place DB fixtures for caching
+        run: |
+          sudo chmod -R 777 ${{ github.workspace }}/db || echo 'No DB dir to cache'
+          sudo cp -r ${{ github.workspace }}/db ${{ github.workspace }}/db-cache
