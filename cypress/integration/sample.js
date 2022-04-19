@@ -1,4 +1,4 @@
-import {openPage, datatype, login} from '../util/util';
+import { openPage, datatype, login, changeTab } from '../util/util';
 import Config from '../util/config';
 import GenericTableHandler from '../util/genericTable';
 
@@ -40,28 +40,7 @@ const studyTableColumn = {
             ' drought in 2007-2009 caused the acidification of acid sulfate' +
             ' soils in wetland and' +
             ' former floodplain soils, which pose threats to terrestrial and' +
-            ' coastal ecosystems even' +
-            ' after the recovery of surface flows and ground water levels.' +
-            ' Drying and subsequent' +
-            ' oxidation of ASS materials caused soil pH to drop to less than' +
-            ' 4 (forming sulfuric' +
-            ' materials) in some areas, triggering environmental problems such' +
-            ' as land degradation,' +
-            ' loss of native plants and animals, and release of heavy metals' +
-            ' and metalloids into' +
-            ' ground water, rivers and wetlands. ' +
-            'To understand this microbially-mediated oxidation' +
-            ' process, microbial communities were studied within an acidified acid sulfate soil' +
-            ' profile, to identify key microorganisms involved in' +
-            ' soil acidification. Six soil layers' +
-            ' were sampled from a soil profile according to soil morphology at the most acidic' +
-            ' locationin the field. Total DNA from soil samples' +
-            ' was extracted using MO-BIO PowerMax?' +
-            ' Soil DNA Isolation Kit and sequenced by Illumina Miseq (250PE) by The Ramaciotti' +
-            ' Centre, NSW, Australia, prepared with a Nextera' +
-            ' DNA Sample Preparation Kit. There were' +
-            ' five steps of non-specific amplification involved in Nextera-Miseq sequencing for' +
-            ' obtaining enough DNA for sequencing.'],
+            ' coastal ecosystems even'],
         type: datatype.STR,
         sortable: false
     },
@@ -71,7 +50,7 @@ const studyTableColumn = {
         sortable: false
     },
     last_update: {
-        data: ['15-Nov-2017', '15-Mar-2016'],
+        data: ['15/11/2017', '15/03/2016'],
         type: datatype.DATE,
         sortable: false
     }
@@ -111,16 +90,16 @@ function waitForPageLoad(projectId) {
 
 describe('Sample page', function() {
     beforeEach(function() {
-        openPage('');
+        openPage(origPage);
         // TODO: an integration test using samples from local API
-        cy.intercept('GET', '**/v1/samples?**', { fixture: 'sample/samplesList.json' })
-        cy.intercept('GET', `**/v1/samples/${sampleId}`, { fixture: 'sample/sampleDetail.json' })
+        // cy.intercept('GET', '**/v1/samples?**', { fixture: 'sample/samplesList.json' })
+        // cy.intercept('GET', `**/v1/samples/${sampleId}`, { fixture: 'sample/sampleDetail.json' })
         cy.intercept('GET', '**/v1/**/contextual_data_clearing_house_metadata', { fixture: 'sample/contextualDataClearingHouseSampleMetadata.json' })
         cy.intercept('GET', '**/v1/**/studies_publications_annotations_existence', { fixture: 'sample/epmcStudiesPublicationsAnnotationsExistence.json' })
 
-        cy.get(`.mg-main-menu`).contains('Browse data').click();
-        cy.get(`.mg-search-tabs`).contains('Samples').click();
-        cy.get(`.mg-table`).contains(sampleId).click();
+        // cy.get(`.mg-main-menu`).contains('Browse data').click();
+        // cy.get(`.mg-search-tabs`).contains('Samples').click();
+        // cy.get(`.mg-table`).contains(sampleId).click();
     });
 
     context('General', function() {
@@ -152,40 +131,37 @@ describe('Sample page', function() {
     //TODO: enable table test
 
     let table;
-    // context('Study table', function() {
-    //     beforeEach(function() {
-    //         openPage('');
-    //         openPage(origPage);
-    //         waitForPageLoad(sampleId);
-    //         table = new GenericTableHandler('associated-studies', studiesTableDefaultSize);
-    //     });
-    //
-    //     it('Should be toggleable', function() {
-    //         table.testTableHiding();
-    //     });
-    //
-    //     it('Studies table should contain correct number of results', function() {
-    //         // Login to view private data.
-    //         table.checkLoadedCorrectly(1, 2, 2, studyTableColumn);
-    //     });
-    //
-    //     it('Studies table download link should be valid', function() {
-    //         const url = Config.API_URL + 'samples/' + sampleId
-    //             + '/studies?ordering=&format=csv';
-    //         table.testDownloadLink(url);
-    //     });
-    // });
-    //
-    // context('Runs table', function() {
-    //     beforeEach(function() {
-    //         openPage('samples/' + studyIdAnalysis);
-    //         waitForPageLoad(studyIdAnalysis);
-    //         table = new GenericTableHandler('#runs-section', 20);
-    //     });
-    //
-    //     it('Runs table should respond to ordering', function() {
-    //         table.testSorting(20, runTableColumns);
-    //     });
+    context('Study table', function() {
+        beforeEach(function() {
+            // openPage('');
+            // openPage(origPage);
+            waitForPageLoad(sampleId);
+            changeTab('studies');
+            table = new GenericTableHandler('[data-cy="associated-studies"]', studiesTableDefaultSize);
+        });
+
+        it('Studies table should contain correct number of results', function() {
+            table.checkLoadedCorrectly(1, 2, 2, studyTableColumn, false);
+        });
+
+        it('Studies table download link should be valid', function() {
+            const url = Config.API_URL + 'samples/' + sampleId
+                + '/studies?ordering=&format=csv';
+            table.testDownloadLink(url);
+        });
+    });
+
+    context('Runs table', function() {
+        beforeEach(function() {
+            openPage('samples/' + studyIdAnalysis);
+            changeTab('runs')
+            waitForPageLoad(studyIdAnalysis);
+            table = new GenericTableHandler('.mg-runs-table', 10);
+        });
+
+        it('Runs table should respond to ordering', function() {
+            table.testSorting(10, runTableColumns);
+        });
     //
     //     it('Runs table should respond to filtering', function() {
     //         table.testFiltering('SRR1138702', [
@@ -203,7 +179,7 @@ describe('Sample page', function() {
     //             '&format=csv'
     //         );
     //     });
-    // });
+    });
     //
     // context('Runs table with >1 analysis per run', function() {
     //     beforeEach(function() {

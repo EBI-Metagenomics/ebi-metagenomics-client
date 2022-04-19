@@ -33,7 +33,7 @@ const AssociatedRuns: React.FC = () => {
 
   const columns = [
     {
-      id: 'run',
+      id: 'accession',
       Header: 'Run ID',
       accessor: 'id',
       Cell: ({ cell }) => <Link to={`/runs/${cell.value}`}>{cell.value}</Link>,
@@ -41,18 +41,22 @@ const AssociatedRuns: React.FC = () => {
     {
       Header: 'Experiment type',
       accessor: 'attributes.experiment-type',
+      disableSortBy: true,
     },
     {
       Header: 'Instrument model',
       accessor: 'attributes.instrument-model',
+      disableSortBy: true,
     },
     {
       Header: 'Instrument platform',
       accessor: 'attributes.instrument-platform',
+      disableSortBy: true,
     },
     {
       Header: 'Pipeline versions',
       accessor: 'relationships.pipelines.data',
+      disableSortBy: true,
       Cell: ({ cell }) =>
         (cell.value as { id: string }[]).map(({ id }) => id).join(', '),
     },
@@ -67,6 +71,7 @@ const AssociatedRuns: React.FC = () => {
       className="mg-runs-table"
       loading={loading}
       isStale={isStale}
+      sortable
       namespace="runs-"
       downloadURL={downloadURL}
     />

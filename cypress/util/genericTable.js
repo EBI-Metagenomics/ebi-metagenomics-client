@@ -2,17 +2,15 @@ import {datatype} from './util';
 import config from './config';
 
 class GenericTableHandler {
-    constructor(parentId, defaultPageSize, hasLoadingGif, expectedElements) {
+    constructor(parentId, defaultPageSize, expectedElements) {
         this.parentId = parentId;
         this.defaultPageSize = defaultPageSize;
-        this.hasLoadingGif = (typeof hasLoadingGif !== 'undefined') ? hasLoadingGif : true;
         if (expectedElements) {
             this.elementsInTable = (expectedElements > defaultPageSize) ?
                                    defaultPageSize : expectedElements;
         } else {
             this.elementsInTable = defaultPageSize;
         }
-        this.waitForLoadingIconHidden();
         this.waitForTableLoad(this.elementsInTable);
     }
 
@@ -22,11 +20,13 @@ class GenericTableHandler {
         this.getPageSizeSelector().should('have.value', pageSize.toString());
     }
 
-    checkLoadedCorrectly(currentPage, pageSize, expectedResults, columnOrdering) {
+    checkLoadedCorrectly(currentPage, pageSize, expectedResults, columnOrdering, expectPagination = true) {
         this.waitForTableLoad(this.elementsInTable);
-        this.getPageInfoSpan('#totalResults').should('contain', expectedResults);
-        this.getPageInfoSpan('#maxPage').should('contain', Math.ceil(expectedResults / pageSize));
-        this.getPageInfoSpan('#currentPage').should('contain', currentPage);
+        if (expectPagination) {
+            this.getPageInfoSpan('#totalResults').should('contain', expectedResults);
+            this.getPageInfoSpan('#maxPage').should('contain', Math.ceil(expectedResults / pageSize));
+            this.getPageInfoSpan('#currentPage').should('contain', currentPage);
+        }
         let firstRowData = [];
         let lastRowData = [];
         for (let column in columnOrdering) {
@@ -45,7 +45,7 @@ class GenericTableHandler {
         const that = this;
         if (!clientSide) {
             cy.server();
-            cy.route(config.API_URL + '**').as('apiCall');
+            cy.intercept(config.API_URL + '**').as('apiCall');
         }
         let i = 0;
         for (let header in tests) {
@@ -63,7 +63,7 @@ class GenericTableHandler {
 
                     this.waitForTableLoad(pageSize);
                     this.getHeader(i2).then(($el) => {
-                        const asc = Cypress.$($el).hasClass('sort-asc');
+                        const asc = Cypress.$($el.find('span i')).hasClass('icon-sort-up');
                         cy.log(Cypress.$($el));
                         cy.log('Should be ' + (asc ? 'ascending' : 'descending'));
                         that.checkOrdering(i2, type, asc);
@@ -84,15 +84,8 @@ class GenericTableHandler {
     }
 
     waitForTableLoad(pageSize) {
-        this.waitForLoadingIconHidden();
-        cy.get(this.getTableSelector() + '> tbody > tr', {timeout: 20000})
+        cy.get(this.getTableSelector() + ' tbody > tr', {timeout: 20000})
             .should('have.length', pageSize);
-    }
-
-    waitForLoadingIconHidden() {
-        if (this.hasLoadingGif) {
-            this.getLoadingIcon().should('be.hidden');
-        }
     }
 
     checkOrdering(index, type, gte) {
@@ -182,15 +175,6 @@ class GenericTableHandler {
         });
     }
 
-    testTableHiding() {
-        const headerSelector = this.parentId + ' .expand-button';
-        this.getTableElem().should('be.visible');
-        cy.get(headerSelector).click();
-        this.getTableElem().should('be.hidden');
-        cy.get(headerSelector).click();
-        this.getTableElem().should('be.visible');
-    }
-
     checkRowData(rowIndex, data) {
         for (let column in data) {
             if (data.hasOwnProperty(column)) {
@@ -215,10 +199,6 @@ class GenericTableHandler {
         return cy.get(this.parentId + ' div.row > div.pagesize > label > span > span' + spanId);
     }
 
-    getLoadingIcon() {
-        return cy.get(this.parentId + ' img.loading-gif-medium', {timeout: 100000});
-    }
-
     getFilterInput() {
         return cy.get(this.parentId + ' input.table-filter');
     }
@@ -236,7 +216,7 @@ class GenericTableHandler {
     getRowColumnSelector(rowIndex, columnIndex) {
         rowIndex = parseInt(rowIndex);
         columnIndex = parseInt(columnIndex);
-        return this.getTableSelector() + '> tbody > tr:nth-child(' + (rowIndex + 1) +
+        return this.getTableSelector() + ' tbody > tr:nth-child(' + (rowIndex + 1) +
             ') td:nth-child(' + (columnIndex + 1) + ')';
     }
 
@@ -271,7 +251,7 @@ class GenericTableHandler {
     }
 
     getDownloadLink() {
-        return cy.get(this.parentId + ' div.row.columns > a.download-link');
+        return cy.get(this.parentId + ' a[download]');
     }
 
     getTableElem() {
