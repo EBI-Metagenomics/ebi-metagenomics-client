@@ -49,18 +49,18 @@ jobs:
         with:
           python-version: 3.6
 
-      - uses: actions/cache@v3
-        id: dbcache
-        with:
-          path: |
-            ${{ github.workspace }}/db-cache
-            !${{ github.workspace }}/db-cache/mongo/diagnostic.data
-          key: ${{ hashFiles('client-repo/ci/*') }}
+#      - uses: actions/cache@v3
+#        id: dbcache
+#        with:
+#          path: |
+#            ${{ github.workspace }}/db-cache
+#            !${{ github.workspace }}/db-cache/mongo/diagnostic.data
+#          key: ${{ hashFiles('client-repo/ci/*') }}
 
-      - name: 💼 - Place cached fixtures
-        if: steps.dbcache.outputs.cache-hit == 'true'
-        run: |
-          sudo cp -r ${{ github.workspace }}/db-cache ${{ github.workspace }}/db
+#      - name: 💼 - Place cached fixtures
+#        if: steps.dbcache.outputs.cache-hit == 'true'
+#        run: |
+#          sudo cp -r ${{ github.workspace }}/db-cache ${{ github.workspace }}/db
 
       - name: 🔧🔬 - Install EMG API
         run: |
@@ -71,7 +71,7 @@ jobs:
           ls -l
 
       - name: 🪜 - Setting up Fixtures
-        if: steps.dbcache.outputs.cache-hit != 'true'
+#        if: steps.dbcache.outputs.cache-hit != 'true'
         working-directory: client-repo
         run: |
           mysql --version
@@ -240,8 +240,8 @@ jobs:
           SLACK_CHANNEL: '#metagenomics-notify'
           MSG_MINIMAL: Actions URL
 
-      - name: 💼 - Place DB fixtures for caching
-        run: |
-          sudo chmod -R 777 ${{ github.workspace }}/db || echo 'No DB dir to cache'
-          sudo cp -r ${{ github.workspace }}/db ${{ github.workspace }}/db-cache
-          sudo rm -rf ${{ github.workspace }}/db-cache/mongo/diagnostic.data
+#      - name: 💼 - Place DB fixtures for caching
+#        run: |
+#          sudo chmod -R 777 ${{ github.workspace }}/db || echo 'No DB dir to cache'
+#          sudo cp -r ${{ github.workspace }}/db ${{ github.workspace }}/db-cache
+#          sudo rm -rf ${{ github.workspace }}/db-cache/mongo/diagnostic.data
