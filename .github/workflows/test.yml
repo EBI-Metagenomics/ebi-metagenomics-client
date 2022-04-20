@@ -164,6 +164,7 @@ jobs:
         with:
           working-directory: client-repo
           browser: chrome
+          env: LANG=en_GB.utf8,LC_TIME=en_GB.utf8
           spec: |
             cypress/integration/index.js
             cypress/integration/about.js
