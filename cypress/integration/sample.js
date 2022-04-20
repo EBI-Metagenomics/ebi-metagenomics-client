@@ -159,7 +159,7 @@ describe('Sample page', function() {
             table = new GenericTableHandler('.mg-runs-table', 10);
         });
 
-        it.only('Runs table should respond to ordering', function() {
+        it('Runs table should respond to ordering', function() {
             table.testSorting(10, runTableColumns);
         });
 
