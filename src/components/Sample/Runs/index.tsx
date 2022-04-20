@@ -20,12 +20,14 @@ const AssociatedRuns: React.FC = () => {
     Number
   );
   const [runsOrder] = useQueryParamState('runs-order', '');
+  const [runsFilter] = useQueryParamState('runs-search', '');
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
     `samples/${accession}/runs`,
     {
       page: runsPage as number,
       ordering: runsOrder as string,
       page_size: runsPageSize as number,
+      search: runsFilter as string,
     }
   );
   if (loading && !isStale) return <Loading size="small" />;
@@ -72,6 +74,7 @@ const AssociatedRuns: React.FC = () => {
       loading={loading}
       isStale={isStale}
       sortable
+      showTextFilter
       namespace="runs-"
       downloadURL={downloadURL}
     />
