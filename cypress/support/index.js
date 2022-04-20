@@ -30,4 +30,11 @@ Cypress.on('test:before:run', () => {
   });
 });
 
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // Do not fail tests for bad Google Maps key
+  if (err.message.includes('InvalidKeyMapError')) {
+    return false
+  }
+})
+
 // import "cypress-real-events/support";
