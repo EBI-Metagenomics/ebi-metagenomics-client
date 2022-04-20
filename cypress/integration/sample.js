@@ -162,23 +162,18 @@ describe('Sample page', function() {
         it('Runs table should respond to ordering', function() {
             table.testSorting(10, runTableColumns);
         });
-    //
-    //     it('Runs table should respond to filtering', function() {
-    //         table.testFiltering('SRR1138702', [
-    //             ['SRR1138702', 'metatranscriptomic', 'Illumina HiSeq 2000', 'ILLUMINA', '2.0']
-    //         ]);
-    //     });
-    //
-    //     it('Should be toggleable', function() {
-    //         table.testTableHiding();
-    //     });
-    //
-    //     it('Runs table download link should be valid', function() {
-    //         table.testDownloadLink(
-    //             Config.API_URL + 'runs?ordering=accession&sample_accession=' + studyIdAnalysis +
-    //             '&format=csv'
-    //         );
-    //     });
+
+        it('Runs table should respond to filtering', function() {
+            table.testFiltering('SRR1138702', [
+                ['SRR1138702', 'metatranscriptomic', 'Illumina HiSeq 2000', 'ILLUMINA', '2.0']
+            ]);
+        });
+
+        it('Runs table download link should be valid', function() {
+            table.testDownloadLink(
+                Config.API_URL + 'samples/' + studyIdAnalysis +'/runs?search=&format=csv'
+            );
+        });
     });
     //
     // context('Runs table with >1 analysis per run', function() {

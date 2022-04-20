@@ -200,7 +200,7 @@ class GenericTableHandler {
     }
 
     getFilterInput() {
-        return cy.get(this.parentId + ' input.table-filter');
+        return cy.get(this.parentId + ' .mg-textsearch input[type=search]');
     }
 
     getColumnSelector(columnIndex) {
