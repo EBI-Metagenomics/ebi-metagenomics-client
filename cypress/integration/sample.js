@@ -159,7 +159,7 @@ describe('Sample page', function() {
             table = new GenericTableHandler('.mg-runs-table', 10);
         });
 
-        it('Runs table should respond to ordering', function() {
+        it.only('Runs table should respond to ordering', function() {
             table.testSorting(10, runTableColumns);
         });
 
@@ -175,79 +175,76 @@ describe('Sample page', function() {
             );
         });
     });
-    //
-    // context('Runs table with >1 analysis per run', function() {
-    //     beforeEach(function() {
-    //         const sampleID = 'ERS853149';
-    //         const origPage = 'samples/' + sampleID;
-    //         openPage(origPage);
-    //         waitForPageLoad(sampleID);
-    //         table = new GenericTableHandler('#runs-section', 1);
-    //     });
-    //
-    //     it('Runs table should display both pipeline versions for a run', function() {
-    //         table.checkRowData(0, ['ERR1022502', 'metatranscriptomic', '', '', '2.0, 4.0']);
-    //     });
-    // });
-    //
-    // const assembliesTableColumns = {
-    //     accession: {
-    //         data: ['ERZ477903', 'ERZ477905'],
-    //         type: datatype.STR,
-    //         sortable: true
-    //     },
-    //     experiment_type: {
-    //         data: ['assembly', 'assembly'],
-    //         type: datatype.STR,
-    //         sortable: false
-    //     },
-    //     wgs_id: {
-    //         data: ['ODAJ01', 'ODAI01'],
-    //         type: datatype.STR,
-    //         sortable: false
-    //     },
-    //     legacy_id: {
-    //         data: ['GCA_900230525', 'GCA_900230525'],
-    //         type: datatype.STR,
-    //         sortable: false
-    //     },
-    //     pipeline_versions: {
-    //         data: ['4.0', '4.0'],
-    //         type: datatype.STR,
-    //         sortable: false
-    //     }
-    // };
-    //
-    // context('Assemblies table', function() {
-    //     const sampleId = 'SRS429585';
-    //     beforeEach(function() {
-    //         openPage('samples/' + sampleId);
-    //         waitForPageLoad(sampleId);
-    //         table = new GenericTableHandler('#assemblies-section', 3);
-    //     });
-    //
-    //     it('Assemblies table should respond to ordering', function() {
-    //         table.testSorting(3, assembliesTableColumns);
-    //     });
-    //
-    //     it('Assemblies table should respond to filtering', function() {
-    //         table.testFiltering('ERZ477905', [
-    //             ['ERZ477905', 'assembly', 'ODAI01', 'GCA_900230535', '4.0']
-    //         ]);
-    //     });
-    //
-    //     it('Should be toggleable', function() {
-    //         table.testTableHiding();
-    //     });
-    //
-    //     it('Assemblies table download link should be valid', function() {
-    //         table.testDownloadLink(
-    //             Config.API_URL + 'assemblies?ordering=accession&sample_accession=' + sampleId +
-    //             '&format=csv'
-    //         );
-    //     });
-    // });
-    //
+
+    context('Runs table with >1 analysis per run', function() {
+        beforeEach(function() {
+            const sampleID = 'ERS853149';
+            const origPage = 'samples/' + sampleID;
+            openPage(origPage);
+            changeTab('runs')
+            waitForPageLoad(sampleID);
+            table = new GenericTableHandler('.mg-runs-table', 1);
+        });
+
+        it('Runs table should display both pipeline versions for a run', function() {
+            table.checkRowData(0, ['ERR1022502', 'metatranscriptomic', '', '', '2.0, 4.0']);
+        });
+    });
+
+    const assembliesTableColumns = {
+        accession: {
+            data: ['ERZ477903', 'ERZ477905'],
+            type: datatype.STR,
+            sortable: true
+        },
+        experiment_type: {
+            data: ['assembly', 'assembly'],
+            type: datatype.STR,
+            sortable: false
+        },
+        wgs_id: {
+            data: ['ODAJ01', 'ODAI01'],
+            type: datatype.STR,
+            sortable: false
+        },
+        legacy_id: {
+            data: ['GCA_900230525', 'GCA_900230525'],
+            type: datatype.STR,
+            sortable: false
+        },
+        pipeline_versions: {
+            data: ['4.0', '4.0'],
+            type: datatype.STR,
+            sortable: false
+        }
+    };
+
+    context('Assemblies table', function() {
+        const sampleId = 'SRS429585';
+        beforeEach(function() {
+            openPage('samples/' + sampleId);
+            waitForPageLoad(sampleId);
+            changeTab('assemblies')
+            table = new GenericTableHandler('.mg-assembly-table', 3);
+        });
+
+        it('Assemblies table should respond to ordering', function() {
+            table.testSorting(3, assembliesTableColumns);
+        });
+
+        it('Assemblies table should respond to filtering', function() {
+            table.testFiltering('ERZ477905', [
+                ['ERZ477905', 'assembly', 'ODAI01', 'GCA_900230535', '4.0']
+            ]);
+        });
+
+        it('Assemblies table download link should be valid', function() {
+            table.testDownloadLink(
+                Config.API_URL + 'assemblies?sample_accession=SRS429585&search=&format=csv'
+            );
+        });
+    });
+
     context('Metadata display', function() {
         it('Info message should be displayed if no metadata available for display', function() {
             const projectId = 'ERS1474797';
@@ -306,14 +303,14 @@ describe('Sample page', function() {
         })
     })
 
-    // context('Error handling', function() {
-    //     it('Should display error message if invalid accession passed in URL', function() {
-    //         const sampleId = 'ERS14747971323123';
-    //         const origPage = 'samples/' + sampleId;
-    //         openPage(origPage);
-    //         cy.get('h3').should('contain', 'Error Fetching Data');
-    //         cy.contains('Status: 404');
-    //         cy.contains('The response from the server was not OK');
-    //     });
-    // });
+    context('Error handling', function() {
+        it('Should display error message if invalid accession passed in URL', function() {
+            const sampleId = 'ERS14747971323123';
+            const origPage = 'samples/' + sampleId;
+            openPage(origPage);
+            cy.get('h3').should('contain', 'Error Fetching Data');
+            cy.contains('Status: 404');
+            cy.contains('The response from the server was not OK');
+        });
+    });
 });
