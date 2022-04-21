@@ -23,9 +23,9 @@ class GenericTableHandler {
     checkLoadedCorrectly(currentPage, pageSize, expectedResults, columnOrdering, expectPagination = true) {
         this.waitForTableLoad(this.elementsInTable);
         if (expectPagination) {
-            this.getPageInfoSpan('#totalResults').should('contain', expectedResults);
-            this.getPageInfoSpan('#maxPage').should('contain', Math.ceil(expectedResults / pageSize));
-            this.getPageInfoSpan('#currentPage').should('contain', currentPage);
+            cy.get(this.parentId + ' caption .mg-number').should('contain', expectedResults);
+            cy.get(this.parentId + ' .vf-pagination__item:not(.vf-pagination__item--next-page):last').should('contain', Math.ceil(expectedResults / pageSize))
+            cy.get(this.parentId + ' [data-cy="current-page"]').should('contain', currentPage)
         }
         let firstRowData = [];
         let lastRowData = [];
@@ -150,7 +150,7 @@ class GenericTableHandler {
                 } else {
                     pageNumber = pageNum;
                 }
-                this.getPageInfoSpan('#currentPage').should('contain', pageNumber.toString());
+                cy.get(this.parentId + ' [data-cy="current-page"]').should('contain', pageNumber.toString());
                 this.checkRowData(0, pageData);
             }
         }
@@ -247,7 +247,7 @@ class GenericTableHandler {
         //         str = ' div.pagination > ul.pagination > li:nth-child(' +
         //             (buttonIndex + 2) + ')';
         // }
-        return cy.get(this.parentId + ' div.pagination > ul.pagination').contains(buttonIndex);
+        return cy.get(this.parentId + ' nav.vf-pagination > ul.vf-pagination__list').contains(buttonIndex);
     }
 
     getDownloadLink() {

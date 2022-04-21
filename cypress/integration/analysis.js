@@ -1,5 +1,6 @@
 import {openPage, changeTab, isValidLink, datatype, waitForPageLoad, changeSubTab} from '../util/util';
 import ClientSideTableHandler from '../util/clientSideTable';
+import GenericTableHandler from '../util/genericTable';
 
 const origPage = 'analyses/MGYA00011845';
 
@@ -81,28 +82,26 @@ describe('Analysis page', function() {
             cy.get('.krona_chart').should('be.visible');
         });
 
-        // FIXME: deeplinks are not completed
-        //       fix tests when they are completed.
-        // it('Should resolve hash links correctly (krona)', function() {
-        //     openPage('analyses/MGYA00136035#krona');
-        //     waitForPageLoad('Analysis MGYA00136035');
-        //     cy.get('.krona_chart').should('be.visible');
-        // });
-        // it('Should resolve hash links correctly (pie)', function() {
-        //     openPage('analyses/MGYA00136035#pie');
-        //     waitForPageLoad('Analysis MGYA00136035');
-        //     cy.get('#domain-composition-pie').should('be.visible');
-        // });
-        // it('Should resolve hash links correctly (column)', function() {
-        //     openPage('analyses/MGYA00136035#column');
-        //     waitForPageLoad('Analysis MGYA00136035');
-        //     cy.get('#domain-composition-column').should('be.visible');
-        // });
-        // it('Should resolve hash links correctly (stacked-column)', function() {
-        //     openPage('analyses/MGYA00136035#stacked-column');
-        //     waitForPageLoad('Analysis MGYA00136035');
-        //     cy.get('#phylum-composition-stacked-column').should('be.visible');
-        // });
+        it('Should resolve hash links correctly (krona)', function() {
+            openPage('analyses/MGYA00136035?type=krona#taxonomic');
+            waitForPageLoad('Analysis MGYA00136035');
+            cy.get('.krona_chart').should('be.visible');
+        });
+        it('Should resolve hash links correctly (pie)', function() {
+            openPage('analyses/MGYA00136035?type=pie#taxonomic');
+            waitForPageLoad('Analysis MGYA00136035');
+            cy.get('#domain-composition-pie').should('be.visible');
+        });
+        it('Should resolve hash links correctly (column)', function() {
+            openPage('analyses/MGYA00136035?type=column#taxonomic');
+            waitForPageLoad('Analysis MGYA00136035');
+            cy.get('#domain-composition-column').should('be.visible');
+        });
+        it('Should resolve hash links correctly (stacked-column)', function() {
+            openPage('analyses/MGYA00136035?type=stacked-column#taxonomic');
+            waitForPageLoad('Analysis MGYA00136035');
+            cy.get('#phylum-composition-stacked-column').should('be.visible');
+        });
 
         it('Should resolve hash links correctly (download)', function() {
             openPage('analyses/MGYA00011845#download');
@@ -219,45 +218,45 @@ describe('Analysis page', function() {
     let taxonomyTable;
     let taxonomyTableColumns = {
         index: {
-            data: [1, 25],
+            data: [1, 34],
             type: datatype.NUM,
             sortable: true
         },
         phylum: {
-            data: ['Proteobacteria', 'Candidatus_Omnitrophica'],
+            data: ['Acidobacteria', 'Verrucomicrobia'],
             type: datatype.STR,
             sortable: true
         },
         domain: {
-            data: ['Bacteria', 'Bacteria'],
+            data: ['Bacteria', 'Eukaryota'],
             type: datatype.STR,
             sortable: true
         },
         unitsOTUS: {
-            data: [29061, 3],
+            data: [29061, 1],
             type: datatype.NUM,
             sortable: true
         },
         percentage: {
-            data: [67.54, 0.01],
+            data: [67.54, 0.00],
             type: datatype.NUM,
             sortable: true
         }
     };
-    let taxonomyTablePagination = [
-        {
-            index: 1,
-            data: ['1', 'Proteobacteria', 'Bacteria', '29061', '67.54']
-        }, {
-            index: 2,
-            data: ['26', 'Gemmatimonadetes', 'Bacteria', '2', '0.00'],
-            pageSize: 9
-        }, {
-            index: 'First',
-            data: ['1', 'Proteobacteria', 'Bacteria', '29061', '67.54'],
-            pageNum: 1
-        }
-    ];
+    // let taxonomyTablePagination = [
+    //     {
+    //         index: 1,
+    //         data: ['1', 'Proteobacteria', 'Bacteria', '29061', '67.54']
+    //     }, {
+    //         index: 2,
+    //         data: ['26', 'Gemmatimonadetes', 'Bacteria', '2', '0.00'],
+    //         pageSize: 9
+    //     }, {
+    //         index: 'First',
+    //         data: ['1', 'Proteobacteria', 'Bacteria', '29061', '67.54'],
+    //         pageNum: 1
+    //     }
+    // ];
     context('Taxonomy analysis tab (SSU only)', function() {
         before(function() {
             openPage('analyses/MGYA00136035#taxonomic');
@@ -307,17 +306,27 @@ describe('Analysis page', function() {
                 expect(Cypress.$($label).text()).to.contain('Proteobacteria: 67.54 %');
             });
         });
-        // TODO table tests
+        // TODO check whether pagination is really needed here (currently off so not testing)
         it.skip('Taxonomy pie chart table pagination', function() {
             changeSubTab('Pie');
-            taxonomyTable = new ClientSideTableHandler('#pie .phylum-table', 25, false);
-            taxonomyTable.testPagination(25, taxonomyTablePagination);
+            taxonomyTable = new ClientSideTableHandler('[data-cy="phylum-pie"] .phylum-table', 25, false);
+            // taxonomyTable.testPagination(25, taxonomyTablePagination);
         });
-        // TODO table tests
-        it.skip('Taxonomy pie chart table ordering', function() {
+        it.skip('Taxonomy column chart table pagination', function() {
+            changeSubTab('Column');
+            taxonomyTable = new ClientSideTableHandler('#column .phylum-table', 25, false);
+            // taxonomyTable.testPagination(25, taxonomyTablePagination);
+        });
+        it.skip('Taxonomy stacked-column chart table pagination', function() {
+            changeSubTab('Stacked Column');
+            taxonomyTable = new ClientSideTableHandler('#stacked-column .phylum-table', 25,
+              false);
+            // taxonomyTable.testPagination(25, taxonomyTablePagination);
+        });
+        it('Taxonomy pie chart table ordering', function() {
             changeSubTab('Pie');
-            taxonomyTable = new ClientSideTableHandler('#pie .phylum-table', 25, false);
-            taxonomyTable.testSorting(25, taxonomyTableColumns);
+            taxonomyTable = new ClientSideTableHandler('[data-cy="phylum-pie"] .phylum-table', 34, false);
+            taxonomyTable.testSorting(34, taxonomyTableColumns);
         });
         it('Should load taxonomy bar charts', function() {
             changeSubTab('Column');
@@ -328,17 +337,11 @@ describe('Analysis page', function() {
             cy.get('#phylum-composition-column svg .highcharts-point')
                 .should('have.length', 10);
         });
-        // TODO table tests
-        it.skip('Taxonomy column chart table pagination', function() {
+
+        it('Taxonomy column chart table ordering', function() {
             changeSubTab('Column');
-            taxonomyTable = new ClientSideTableHandler('#column .phylum-table', 25, false);
-            taxonomyTable.testPagination(25, taxonomyTablePagination);
-        });
-        // TODO table tests
-        it.skip('Taxonomy column chart table ordering', function() {
-            changeSubTab('Column');
-            taxonomyTable = new ClientSideTableHandler('#column .phylum-table', 25, false);
-            taxonomyTable.testSorting(25, taxonomyTableColumns);
+            taxonomyTable = new ClientSideTableHandler('[data-cy="phylum-column"] .phylum-table', 34, false);
+            taxonomyTable.testSorting(34, taxonomyTableColumns);
         });
         it('Should load taxonomy stacked bar charts', function() {
             changeSubTab('Stacked Column');
@@ -350,19 +353,11 @@ describe('Analysis page', function() {
                     expect(Cypress.$($label).text()).to.contain('29 061');
                 });
         });
-        // TODO table tests
-        it.skip('Taxonomy stacked-column chart table pagination', function() {
+
+        it('Taxonomy stacked-column chart table ordering', function() {
             changeSubTab('Stacked Column');
-            taxonomyTable = new ClientSideTableHandler('#stacked-column .phylum-table', 25,
-                false);
-            taxonomyTable.testPagination(25, taxonomyTablePagination);
-        });
-        // TODO table tests
-        it.skip('Taxonomy stacked-column chart table ordering', function() {
-            changeSubTab('Stacked Column');
-            taxonomyTable = new ClientSideTableHandler('#stacked-column .phylum-table', 25,
-                false);
-            taxonomyTable.testSorting(25, taxonomyTableColumns);
+            taxonomyTable = new ClientSideTableHandler('[data-cy="phylum-stacked-column"] .phylum-table', 34, false);
+            taxonomyTable.testSorting(34, taxonomyTableColumns);
         });
     });
 
@@ -418,6 +413,8 @@ describe('Analysis page', function() {
             cy.intercept('GET', '**/analyses/MGYA00141547/**').as('analysisQuery');
             cy.intercept('GET', '**/analyses/MGYA00141547/interpro-identifiers',
               {fixture: 'interproIdentifiersPage1.json'});
+            cy.intercept('GET', '**/analyses/MGYA00141547/interpro-identifiers?page=1',
+              {fixture: 'interproIdentifiersPage1.json'});
             cy.intercept('GET', '**/analyses/MGYA00141547/interpro-identifiers?page=2',
               {fixture: 'interproIdentifiersPage2.json'});
             openPage('analyses/MGYA00141547#functional');
@@ -450,39 +447,26 @@ describe('Analysis page', function() {
                 'Predicted CDS with InterProScan match', '12 488 689');
         });
         it('Should load interpro matches pie chart correctly', function() {
-            cy.contains('Total: 9182157 InterPro matches').should('be.visible');
+            cy.contains('Total: 2571357 InterPro matches').should('be.visible');
             hoverAndValidateTooltip(
                 '#interpro-pie-chart .highcharts-series-group .highcharts-series-0 ' +
                 '.highcharts-color-0',
-                'Ferritin-related', '337 346 pCDS matched (3.67%)');
+                'Ferritin-related', '337 346 pCDS matched (13.12%)');
             hoverAndValidateTooltip(
                 '#interpro-pie-chart .highcharts-series-group .highcharts-series-0 ' +
                 '.highcharts-color-1',
-                'Immunoglobulin-like fold', '201 381 pCDS matched (2.19%)');
+                'Immunoglobulin-like fold', '201 381 pCDS matched (7.83%)');
             hoverAndValidateTooltip(
                 '#interpro-pie-chart .highcharts-series-group .highcharts-series-0 ' +
                 '.highcharts-color-10',
                 'Other', '7 710 556 pCDS matched (83.97%)');
         });
-        // TODO table tests
-        it.skip('Toggling rows in table should toggle series visibility in chart', function() {
-            let interproTable = new ClientSideTableHandler('#interpro-table', 25, false);
-            const firstPieSeries = '#interpro-pie-chart .highcharts-series-group ' +
-                                   '.highcharts-series-0 .highcharts-color-0';
-            cy.get(firstPieSeries).should('be.visible');
-            cy.get(interproTable.getTableSelector() + ' tbody tr:first').click();
-            cy.get(firstPieSeries).should('be.hidden');
-            cy.get(interproTable.getTableSelector() + ' tbody tr:first').click();
-            cy.get(firstPieSeries).should('be.visible');
-        });
         const interproMatchCols = {
             index: {
-                data: ['1', '25'],
-                type: datatype.INT,
-                sortable: true
+                data: ['', '']
             },
             entry_name: {
-                data: ['Ferritin-related', 'ATPase, F0 complex, subunit A'],
+                data: ['Ferritin-related', 'ATP synthase, F0 complex, subunit A'],
                 type: datatype.STR,
                 sortable: true
             },
@@ -502,59 +486,57 @@ describe('Analysis page', function() {
                 sortable: true
             }
         };
-        // TODO table tests
-        it.skip('Should load interpro matches table correctly', function() {
+        it('Should load interpro matches table correctly', function() {
             cy.contains('Total: 2571357 InterPro matches').should('be.visible');
-            let interproTable = new ClientSideTableHandler('#interpro-table', 25, false);
-            interproTable.checkLoadedCorrectly(1, 25, 50, interproMatchCols);
+            let interproTable = new ClientSideTableHandler('[data-cy="interpro-table"]', 25, false);
+            interproTable.checkLoadedCorrectly(1, 25, 10587, interproMatchCols);
         });
-        // TODO table tests
-        it.skip('Interpro match pagination should work', function() {
-            let interproTable = new ClientSideTableHandler('#interpro-table', 25, false);
+        it('Interpro match pagination should work', function() {
+            let interproTable = new GenericTableHandler('[data-cy="interpro-table"]', 25, false);
             interproTable.testPagination(25, [
                 {
                     index: 1,
-                    data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12']
+                    data: ['', 'Ferritin-related', 'IPR012347', '337346', '13.12']
                 }, {
                     index: 2,
                     data: [
-                        '26',
-                        'ATPase, V0 complex, c/d subunit',
-                        'IPR002843',
-                        '1507',
-                        '0.06']
+                        '',
+                        'Serglycin',
+                        'IPR007455',
+                        '53714',
+                        '2.09'],
                 }, {
                     index: 'Previous',
-                    data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12'],
+                    data: ['', 'Ferritin-related', 'IPR012347', '337346', '13.12'],
                     pageNum: 1
                 }, {
                     index: 'Next',
                     data: [
-                        '26',
-                        'ATPase, V0 complex, c/d subunit',
-                        'IPR002843',
-                        '1507',
-                        '0.06'],
+                        '',
+                        'Serglycin',
+                        'IPR007455',
+                        '53714',
+                        '2.09'],
                     pageNum: 2
                 }, {
-                    index: 'First',
-                    data: ['1', 'Ferritin-related', 'IPR012347', '337346', '13.12'],
+                    index: 1,
+                    data: ['', 'Ferritin-related', 'IPR012347', '337346', '13.12'],
                     pageNum: 1
                 }, {
-                    index: 'Last',
+                    index: 424,
                     data: [
-                        '26',
-                        'ATPase, V0 complex, c/d subunit',
-                        'IPR002843',
-                        '1507',
-                        '0.06'],
+                        '',
+                        'Photosystem I PsaA/PsaB, conserved site',
+                        'IPR020586',
+                        '1',
+                        '0.00'],
                     pageNum: 2,
                     pageSize: 25
                 }]);
         });
-        // TODO table tests
+        // TODO backend ordering is not supported for this endpoint currently
         it.skip('Interpro match sorting should work', function() {
-            let interproTable = new ClientSideTableHandler('#interpro-table', 25, false);
+            let interproTable = new ClientSideTableHandler('[data-cy="interpro-table"]', 25, false);
             interproTable.testSorting(25, interproMatchCols);
         });
     });
@@ -625,20 +607,4 @@ describe('Analysis page', function() {
             cy.contains('Error Fetching Data', {timeout: 40000});
         });
     });
-
-    // FIXME: enable and fix after deeplinking routing is fixed for inner-inner tabs
-    // context('Embedded tabs', function() {
-    //     it('Deep linking to embedded tabs should work', function() {
-    //         openPage(origPage + '#pie');
-    //         cy.get('#taxonomic').should('be.visible');
-    //         cy.get('#overview').should('be.hidden');
-    //         cy.get('#qc').should('be.hidden');
-    //         cy.get('#functional').should('be.hidden');
-    //         cy.get('#download').should('be.hidden');
-    //         cy.get('#pie').should('be.visible');
-    //         cy.get('#krona').should('be.hidden');
-    //         cy.get('#column').should('be.hidden');
-    //         cy.get('#stacked-column').should('be.hidden');
-    //     });
-    // });
 });
