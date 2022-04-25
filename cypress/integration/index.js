@@ -53,6 +53,15 @@ describe('Home page', function() {
             cy.get('footer.vf-footer .vf-footer__notice').contains('EMBL-EBI is');
             cy.get('footer.vf-footer').contains('Copyright');
         });
+
+    });
+
+    context('Cookie banner check', function() {
+        before(function() {
+            cy.clearCookie('cookies-accepted');
+            openPage(origPage);
+        });
+
         it('has Cookie banner"', function() {
             cy.get('.mg-cookie-banner .vf-banner__text').contains('This website');
             cy.get('.mg-cookie-banner .vf-button').contains('Accept');
@@ -60,6 +69,7 @@ describe('Home page', function() {
             cy.get('.mg-cookie-banner').should('not.exist');
         });
     });
+
     context('Check for elements', function() {
         before(function() {
             openPage(origPage);

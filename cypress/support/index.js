@@ -37,7 +37,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
   }
 });
 
-before(() => {
+beforeEach(() => {
   cy.setCookie('cookies-accepted', 'true');
 });
 
