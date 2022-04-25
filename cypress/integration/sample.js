@@ -91,15 +91,8 @@ function waitForPageLoad(projectId) {
 describe('Sample page', function() {
     beforeEach(function() {
         openPage(origPage);
-        // TODO: an integration test using samples from local API
-        // cy.intercept('GET', '**/v1/samples?**', { fixture: 'sample/samplesList.json' })
-        // cy.intercept('GET', `**/v1/samples/${sampleId}`, { fixture: 'sample/sampleDetail.json' })
         cy.intercept('GET', '**/v1/**/contextual_data_clearing_house_metadata', { fixture: 'sample/contextualDataClearingHouseSampleMetadata.json' })
         cy.intercept('GET', '**/v1/**/studies_publications_annotations_existence', { fixture: 'sample/epmcStudiesPublicationsAnnotationsExistence.json' })
-
-        // cy.get(`.mg-main-menu`).contains('Browse data').click();
-        // cy.get(`.mg-search-tabs`).contains('Samples').click();
-        // cy.get(`.mg-table`).contains(sampleId).click();
     });
 
     context('General', function() {

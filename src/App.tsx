@@ -1,8 +1,7 @@
-import React, { Suspense, lazy, useState, useEffect, useMemo } from 'react';
+import React, { Suspense, lazy, useState, useMemo } from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 
-import mergePrivateConfig from 'utils/config';
-import initialConfig from 'config.json';
+import config from 'utils/config';
 import EBIHeader from 'components/UI/EBIHeader';
 import HeroHeader from 'components/UI/HeroHeader';
 import EBIFooter from 'components/UI/EBIFooter';
@@ -46,11 +45,11 @@ const App: React.FC = () => {
     username: null,
     isAuthenticated: false,
   });
-  const [config, setConfig] = useState(initialConfig);
+  // const [config, setConfig] = useState(initialConfig);
   const [details, setDetails] = useState(null);
-  useEffect(() => {
-    mergePrivateConfig(setConfig);
-  }, []);
+  // useEffect(() => {
+  //   mergePrivateConfig(setConfig);
+  // }, []);
   const value = useMemo(
     () => ({
       username: user.username,
@@ -60,7 +59,7 @@ const App: React.FC = () => {
       setDetails,
       config,
     }),
-    [config, details, user.isAuthenticated, user.username]
+    [details, user.isAuthenticated, user.username]
   );
 
   return (
