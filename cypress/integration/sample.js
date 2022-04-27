@@ -58,12 +58,12 @@ const studyTableColumn = {
 
 const runTableColumns = {
     accession: {
-        data: ['SRR873610', 'SRR873464'],
+        data: ['SRR1138702', 'SRR873464'],
         type: datatype.STR,
         sortable: true
     },
     experiment_type: {
-        data: ['metagenomic', 'metatranscriptomic'],
+        data: ['metatranscriptomic', 'metatranscriptomic'],
         type: datatype.STR,
         sortable: false
     },

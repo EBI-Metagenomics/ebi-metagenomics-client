@@ -44,8 +44,7 @@ class GenericTableHandler {
     testSorting(pageSize, tests, clientSide) {
         const that = this;
         if (!clientSide) {
-            cy.server();
-            cy.intercept(config.API_URL + '**').as('apiCall');
+            cy.intercept(config.API_URL + '**/*ordering=*').as('apiCall');
         }
         let i = 0;
         for (let header in tests) {
@@ -94,7 +93,7 @@ class GenericTableHandler {
             let txt = $el.text();
             let txt2 = Cypress.$(selector).last().text();
             if (!gte) {
-                txt = [txt2, txt2 = txt][0]; // Swap variables
+                [txt, txt2] = [txt2, txt]; // Swap variables
             }
             if (type === datatype.STR || !type) {
                 txt = txt.toLowerCase();
