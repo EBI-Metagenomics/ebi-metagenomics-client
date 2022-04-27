@@ -20,12 +20,18 @@ const useAuthentication = (): AuthenticationFunctions => {
     username: null,
     password: null,
     csrfmiddlewaretoken: null,
+    next: '/metagenomics/mydata',
   });
   const {
     data: dataLogin,
     loading: loadingLogin,
     rawResponse: rawResponseLogin,
-  } = useMgnifyLogin(form.username, form.password, form.csrfmiddlewaretoken);
+  } = useMgnifyLogin(
+    form.username,
+    form.password,
+    form.csrfmiddlewaretoken,
+    form.next
+  );
 
   useEffect(() => {
     if (!loadingLogin) {
@@ -55,6 +61,7 @@ const useAuthentication = (): AuthenticationFunctions => {
     ).value;
     setLoginError('');
     setForm({
+      ...form,
       username,
       password,
       csrfmiddlewaretoken,
