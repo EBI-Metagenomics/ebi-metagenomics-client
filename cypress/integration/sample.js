@@ -1,4 +1,4 @@
-import { openPage, datatype, login, changeTab } from '../util/util';
+import { openPage, datatype, login, changeTab, isValidLink } from '../util/util';
 import Config from '../util/config';
 import GenericTableHandler from '../util/genericTable';
 
@@ -282,7 +282,7 @@ describe('Sample page', function() {
         });
     });
 
-    context('Contextual Data Clearing House Metadata', function() {
+    context.only('Contextual Data Clearing House Metadata', function() {
         it('Should display Contextual Data Clearing House Metadata', function() {
             cy.get('#cdch-sample-metadata').then(($el) => {
                 const text = Cypress.$($el).text();
@@ -291,9 +291,15 @@ describe('Sample page', function() {
                 listToggle.click();
                 const listText = Cypress.$($el).text();
                 expect(listText).to.contain('BMI');
-                expect(listText).to.contain('Updated');
-                expect(listText).to.contain('2019');
-                expect(listText).to.contain('author statement');
+
+                const tooltipIcon = cy.get('#cdch-sample-metadata span.tooltip-icon').first();
+                tooltipIcon.click();
+                cy.contains('div.tippy-content', 'Updated');
+                cy.contains('div.tippy-content', '2019');
+                cy.contains('div.tippy-content', 'author statement');
+                cy.get('div.tippy-content a.link-in-tooltip').each(($el) => {
+                    isValidLink($el);
+                });
             });
         })
     })

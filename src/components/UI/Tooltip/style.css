@@ -1,0 +1,11 @@
+span.tooltip-icon {
+    color: var(--vf-color__text--secondary, #373a36);
+}
+
+a.link-in-tooltip {
+    text-decoration: none;
+    font-weight: bold;
+}
+a.link-in-tooltip,a.link-in-tooltip:visited,a.link-in-tooltip:hover,a.link-in-tooltip:active {
+    color: white !important;
+}

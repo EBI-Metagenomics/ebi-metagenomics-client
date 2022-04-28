@@ -4,6 +4,7 @@ import Loading from 'components/UI/Loading';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import ExtLink from 'components/UI/ExtLink';
 import KeyValueList from 'components/UI/KeyValueList';
+import Tooltip from 'components/UI/Tooltip';
 
 type Curation = {
   attributePost: string;
@@ -53,27 +54,42 @@ const ClearingHouseMetadata: React.FC<{ sampleAccession: string }> = ({
             <div className="vf-box__text">
               <KeyValueList
                 list={curationsData.map((curation: Curation) => {
-                  const evidences = curation.assertionEvidences
-                    .map((evidence) => evidence.label || evidence.identifier)
-                    .join(', ');
+                  const evidences = curation.assertionEvidences.map(
+                    (evidence) => (
+                      <ExtLink
+                        className="link-in-tooltip"
+                        href={`https://evidenceontology.org/term/${evidence.identifier.replace(
+                          '_',
+                          ':'
+                        )}/`}
+                      >
+                        {evidence.label}
+                      </ExtLink>
+                    )
+                  );
                   return {
                     key: curation.attributePost,
                     value: () => (
                       <div>
                         <span className="vf-text-body">
                           {curation.valuePost}
-                        </span>
-                        <br />
-                        <span className="vf-text-body vf-text-body--5">
-                          Updated{' '}
-                          {new Date(
-                            curation.updatedTimestamp
-                          ).toLocaleDateString()}
-                          .{' '}
-                        </span>
-                        <span className="vf-text-body vf-text-body--5">
-                          Evidence: {evidences}.
-                        </span>
+                        </span>{' '}
+                        <Tooltip
+                          content={
+                            <>
+                              Updated{' '}
+                              {new Date(
+                                curation.updatedTimestamp
+                              ).toLocaleDateString()}
+                              .
+                              <br />
+                              Evidence: {evidences}.
+                            </>
+                          }
+                          interactive
+                        >
+                          <span className="icon icon-common icon-info tooltip-icon" />
+                        </Tooltip>
                       </div>
                     ),
                   };
