@@ -282,7 +282,7 @@ describe('Sample page', function() {
         });
     });
 
-    context.only('Contextual Data Clearing House Metadata', function() {
+    context('Contextual Data Clearing House Metadata', function() {
         it('Should display Contextual Data Clearing House Metadata', function() {
             cy.get('#cdch-sample-metadata').then(($el) => {
                 const text = Cypress.$($el).text();
