@@ -25,6 +25,7 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
 }) => {
   const accession = useURLAccession();
   const [assemblyPage] = useQueryParamState('assembly-page', 1, Number);
+  const [assemblyFilter] = useQueryParamState('assembly-search', '');
   const [assemblyPageSize] = useQueryParamState(
     'assembly-page_size',
     initialPageSize,
@@ -37,15 +38,17 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
     page: assemblyPage as number,
     ordering: assemblyOrder as string,
     page_size: assemblyPageSize as number,
+    search: assemblyFilter as string,
   });
   if (loading && !isStale) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
-  if (!(data.data as MGnifyDatum[]).length)
+  if (!(data.data as MGnifyDatum[]).length && !assemblyFilter)
     return <InfoBanner type="info" title="No associated assemblies found." />;
 
   const columns = [
     {
       Header: 'Assembly ID',
+      id: 'accession',
       accessor: 'id',
       Cell: ({ cell }) => (
         <Link to={`/assemblies/${cell.value}`}>{cell.value}</Link>
@@ -54,18 +57,22 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
     {
       Header: 'Experiment type',
       accessor: 'attributes.experiment-type',
+      disableSortBy: true,
     },
     {
       Header: 'WGS ID',
       accessor: 'attributes.wgs-accession',
+      disableSortBy: true,
     },
     {
       Header: 'Legacy ID',
       accessor: 'attributes.legacy-accession',
+      disableSortBy: true,
     },
     {
       Header: 'Pipeline versions',
       accessor: 'relationships.pipelines.data',
+      disableSortBy: true,
       Cell: ({ cell }) =>
         (cell.value as { id: string }[]).map(({ id }) => id).join(', '),
     },
@@ -81,6 +88,8 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
       className="mg-assembly-table"
       loading={loading}
       isStale={isStale}
+      sortable
+      showTextFilter
       namespace="assembly-"
       showPagination={showPagination}
       downloadURL={downloadURL}

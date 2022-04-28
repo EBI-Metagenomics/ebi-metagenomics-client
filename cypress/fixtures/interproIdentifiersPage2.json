@@ -1,8 +1,8 @@
 {
   "links": {
     "first": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=1",
-    "last": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=11",
-    "next": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=3",
+    "last": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=2",
+    "next": null,
     "prev": "http://localhost:9000/metagenomics/api/v1/analyses/MGYA00141547/interpro-identifiers?page=1"
   },
   "data": [
@@ -486,7 +486,7 @@
     "pagination": {
       "page": 2,
       "pages": 2,
-      "count": 25
+      "count": 50
     }
   }
 }

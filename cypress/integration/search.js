@@ -13,39 +13,39 @@ const PAGE_SIZE = 25;
 
 
 function routeWithTextQuery() {
-    cy.route('GET',
+    cy.intercept('GET',
         '**/ebisearch/ws/rest/metagenomics_projects?**query=Test**',
-        'fixture:projectsTextQuery').as('textQueryProjects');
+        {fixture: 'projectsTextQuery'}).as('textQueryProjects');
 
-    cy.route('GET',
+    cy.intercept('GET',
         '**/ebisearch/ws/rest/metagenomics_samples?**query=Test**',
-        'fixture:samplesTextQuery').as('textQuerySamples');
+        {fixture: 'samplesTextQuery'}).as('textQuerySamples');
 
-    cy.route('GET',
+    cy.intercept('GET',
         '**/ebisearch/ws/rest/metagenomics_analyses?**query=Test**',
-        'fixture:analysesTextQuery').as('textQueryAnalyses');
+        {fixture: 'analysesTextQuery'}).as('textQueryAnalyses');
 }
 
-function routeWithBiomeFilter(biome) {
+function interceptWithBiomeFilter(biome) {
     let biomeParam = 'biome:' + biome;
-    cy.route('GET',
+    cy.intercept('GET',
         '**/ebisearch/ws/rest/metagenomics_projects?**' + biomeParam + '**',
-        'fixture:projectsBiomeFilter').as('biomeQueryProjects');
+        {fixture: 'search/projectsBiomeFilter.json'}).as('biomeQueryProjects');
 
-    cy.route('GET',
+    cy.intercept('GET',
         '**/ebisearch/ws/rest/metagenomics_samples?**' + biomeParam + '**',
-        'fixture:samplesBiomeFilter').as('biomeQuerySamples');
+        {fixture: 'search/samplesBiomeFilter.json'}).as('biomeQuerySamples');
 
-    cy.route('GET',
+    cy.intercept('GET',
         '**/ebisearch/ws/rest/metagenomics_analyses?**' + biomeParam + '**',
-        'fixture:analysesBiomeFilter').as('biomeQueryAnalyses');
+        {fixture: 'search/analysesBiomeFilter.json'}).as('biomeQueryAnalyses');
 }
 
 function routeWithCenterName(center) {
     let centerParam = 'centre_name:' + center;
-    cy.route('GET',
+    cy.intercept('GET',
         '**/ebisearch/ws/rest/metagenomics_projects?**' + centerParam + '**',
-        'fixture:projectsCenterFilter').as('centerQueryProjects');
+        {fixture: 'projectsCenterFilter'}).as('centerQueryProjects');
 }
 
 function testCheckboxNumberIsReflectedInTable(labelFor) {
@@ -99,7 +99,6 @@ describe('Search page', function() {
             cy.get(`.mg-main-menu`).contains('Text search').click();
         });
 
-
         it('Correct number of results.', function() {
             waitForSearchResults(rowSelector, PAGE_SIZE);
             checkNumberOfResultsDecreaseAfterAction(()=>{
@@ -110,13 +109,13 @@ describe('Search page', function() {
 
         it('Biome filters should restrict results', function() {
             const biome = 'Environmental';
-            routeWithBiomeFilter(biome);
+            interceptWithBiomeFilter(biome);
             testCheckboxNumberIsReflectedInTable(biome);
         });
 
         it('Biome expanded filters should restrict results', function() {
             const biome = 'Environmental/Air';
-            routeWithBiomeFilter(biome);
+            interceptWithBiomeFilter(biome);
             cy.get(`.mg-expander`).first().click()
             testCheckboxNumberIsReflectedInTable(biome);
         });
@@ -131,11 +130,11 @@ describe('Search page', function() {
 
         it('Clear button should reset search', function() {
             const biome = 'Environmental/Air';
-            routeWithBiomeFilter(biome);
+            interceptWithBiomeFilter(biome);
             cy.get(`.mg-expander`).first().click()
             const studyTable = new GenericTableHandler('.mg-search-result', PAGE_SIZE, false);
             cy.get(`label[for='${biome}']`).click();
-            studyTable.waitForTableLoad(3);
+            studyTable.waitForTableLoad(25);
         });
     });
 
@@ -180,7 +179,7 @@ describe('Search page', function() {
 
         it('Biome filters should restrict results', function() {
             const biome = 'Environmental';
-            routeWithBiomeFilter(biome);
+            interceptWithBiomeFilter(biome);
             testCheckboxNumberIsReflectedInTable(biome);
         });
         it('Experiment type filters should restrict results', function() {
@@ -223,12 +222,12 @@ describe('Search page', function() {
         });
         it('Organism filters should restrict results', function() {
             const organism = 'Bacteria';
-            routeWithBiomeFilter(organism);
+            interceptWithBiomeFilter(organism);
             testCheckboxNumberIsReflectedInTable(organism);
         });
         it('Biome filters should restrict results', function() {
             const biome = 'Environmental';
-            routeWithBiomeFilter(biome);
+            interceptWithBiomeFilter(biome);
             testCheckboxNumberIsReflectedInTable(biome);
         });
         it('Experiment type filters should restrict results', function() {
@@ -255,13 +254,13 @@ describe('Search page', function() {
 
 
     function setupDefaultSliderRouting() {
-        cy.route('GET',
+        cy.intercept('GET',
             '**/ebisearch/ws/rest/metagenomics_samples?**query=temperature:**[**-20**to**110**]**',
-            'fixture:samplesTempSliderDefaultQuery').as('tempSliderSamples');
+            {fixture: 'samplesTempSliderDefaultQueyr'}).as('tempSliderSamples');
 
-        cy.route('GET',
+        cy.intercept('GET',
             '**/ebisearch/ws/rest/metagenomics_analyses?**query=temperature:**[**-20**to**110**]**',
-            'fixture:analysesTempSliderDefaultQuery').as('tempSliderAnalyses');
+            {fixture: 'analysesTempSliderDefaultQuery'}).as('tempSliderAnalyses');
     }
 
 });

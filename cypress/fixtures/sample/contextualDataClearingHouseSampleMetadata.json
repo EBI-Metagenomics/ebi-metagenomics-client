@@ -1,0 +1,152 @@
+{
+  "data":
+  [
+    {
+      "id": "1211fc3d-380d-476e-a122-727c2be4fd73",
+      "recordType": "sample",
+      "recordId": "ERS235564",
+      "attributePost": "Age",
+      "valuePost": "71.0",
+      "attributeDelete": false,
+      "assertionMethod": "manual assertion",
+      "assertionEvidences":
+      [
+        {
+          "identifier": "ECO_0000204",
+          "shortForm": null,
+          "label": "author statement"
+        }
+      ],
+      "providerName": "EMG",
+      "submittedTimestamp": "2019-11-20T12:18:36.864+0000",
+      "updatedTimestamp": "2019-11-20T12:18:36.864+0000",
+      "suppressed": false
+    },
+    {
+      "id": "bcd3bab4-cd47-4789-816c-2f8a52ef253e",
+      "recordType": "sample",
+      "recordId": "ERS235564",
+      "attributePost": "Age group",
+      "valuePost": "Elderly",
+      "attributeDelete": false,
+      "assertionMethod": "manual assertion",
+      "assertionEvidences":
+      [
+        {
+          "identifier": "ECO_0000204",
+          "shortForm": null,
+          "label": "author statement"
+        }
+      ],
+      "providerName": "EMG",
+      "submittedTimestamp": "2019-11-20T12:18:36.909+0000",
+      "updatedTimestamp": "2019-11-20T12:18:36.909+0000",
+      "suppressed": false
+    },
+    {
+      "id": "5abca63c-bb8e-48f9-9fc7-d9a428a1e2f1",
+      "recordType": "sample",
+      "recordId": "ERS235564",
+      "attributePost": "BMI",
+      "valuePost": "25.5",
+      "attributeDelete": false,
+      "assertionMethod": "manual assertion",
+      "assertionEvidences":
+      [
+        {
+          "identifier": "ECO_0000204",
+          "shortForm": null,
+          "label": "author statement"
+        }
+      ],
+      "providerName": "EMG",
+      "submittedTimestamp": "2019-11-20T12:18:36.957+0000",
+      "updatedTimestamp": "2019-11-20T12:18:36.957+0000",
+      "suppressed": false
+    },
+    {
+      "id": "d68aaa31-3258-47eb-b3cc-45db8282da9d",
+      "recordType": "sample",
+      "recordId": "ERS235564",
+      "attributePost": "Continent",
+      "valuePost": "Europe",
+      "attributeDelete": false,
+      "assertionMethod": "manual assertion",
+      "assertionEvidences":
+      [
+        {
+          "identifier": "ECO_0000204",
+          "shortForm": null,
+          "label": "author statement"
+        }
+      ],
+      "providerName": "EMG",
+      "submittedTimestamp": "2019-11-20T12:18:37.002+0000",
+      "updatedTimestamp": "2019-11-20T12:18:37.002+0000",
+      "suppressed": false
+    },
+    {
+      "id": "5a2481a5-8919-4cdc-b3e1-0762db03f0b7",
+      "recordType": "sample",
+      "recordId": "ERS235564",
+      "attributePost": "Country",
+      "valuePost": "Sweden",
+      "attributeDelete": false,
+      "assertionMethod": "manual assertion",
+      "assertionEvidences":
+      [
+        {
+          "identifier": "ECO_0000204",
+          "shortForm": null,
+          "label": "author statement"
+        }
+      ],
+      "providerName": "EMG",
+      "submittedTimestamp": "2019-11-20T12:18:37.072+0000",
+      "updatedTimestamp": "2019-11-20T12:18:37.072+0000",
+      "suppressed": false
+    },
+    {
+      "id": "1a6ecea3-db23-4640-8c7c-fd50880d0903",
+      "recordType": "sample",
+      "recordId": "ERS235564",
+      "attributePost": "Gender",
+      "valuePost": "Female",
+      "attributeDelete": false,
+      "assertionMethod": "manual assertion",
+      "assertionEvidences":
+      [
+        {
+          "identifier": "ECO_0000204",
+          "shortForm": null,
+          "label": "author statement"
+        }
+      ],
+      "providerName": "EMG",
+      "submittedTimestamp": "2019-11-20T12:18:37.120+0000",
+      "updatedTimestamp": "2019-11-20T12:18:37.120+0000",
+      "suppressed": false
+    },
+    {
+      "id": "a046002d-0388-456d-9dc0-38b5f76c44ec",
+      "recordType": "sample",
+      "recordId": "ERS235564",
+      "attributePost": "Lifestyle",
+      "valuePost": "Urban",
+      "attributeDelete": false,
+      "assertionMethod": "manual assertion",
+      "assertionEvidences":
+      [
+        {
+          "identifier": "ECO_0000204",
+          "shortForm": null,
+          "label": "author statement"
+        }
+      ],
+      "providerName": "EMG",
+      "submittedTimestamp": "2019-11-20T12:18:37.169+0000",
+      "updatedTimestamp": "2019-11-20T12:18:37.169+0000",
+      "suppressed": false
+    }
+  ]
+}

@@ -13,7 +13,10 @@ const PaginationButton: React.FC<PaginationButtonProps> = ({
 }) => {
   if (currentPageIndex === pageIndex) {
     return (
-      <li className="vf-pagination__item vf-pagination__item--is-active">
+      <li
+        className="vf-pagination__item vf-pagination__item--is-active"
+        data-cy="current-page"
+      >
         <span className="vf-pagination__label" aria-current="page">
           <span className="vf-u-sr-only">Page </span>
           {currentPageIndex + 1}

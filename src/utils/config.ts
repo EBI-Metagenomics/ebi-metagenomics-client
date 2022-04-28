@@ -1,4 +1,5 @@
 import config from 'config.json';
+import privateConfig from 'config.private.json';
 
 export type ConfigType = {
   api: string;
@@ -14,10 +15,4 @@ export type ConfigType = {
   jupyterLabURL: string;
 };
 
-const mergePrivateConfig = (callback: (x: ConfigType) => void): void => {
-  import('config.private.json')
-    .then((privateConfig) => callback({ ...config, ...privateConfig.default }))
-    .catch(() => callback(config));
-};
-
-export default mergePrivateConfig;
+export default { ...config, ...(privateConfig || {}) };

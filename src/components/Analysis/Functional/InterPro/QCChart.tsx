@@ -100,6 +100,7 @@ const InterProQCChart: React.FC = () => {
       highcharts={Highcharts}
       options={options}
       ref={chartComponentRef}
+      containerProps={{ id: 'seqfeat-chart' }}
     />
   );
 };

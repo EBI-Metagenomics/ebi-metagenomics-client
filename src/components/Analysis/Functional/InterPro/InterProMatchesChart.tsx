@@ -102,6 +102,7 @@ const InterProMatchesChart: React.FC<InterProMatchesChartProps> = ({
         highcharts={Highcharts}
         options={options}
         ref={chartComponentRef}
+        containerProps={{ id: 'interpro-pie-chart' }}
       />
       {processed < total && (
         <sup>

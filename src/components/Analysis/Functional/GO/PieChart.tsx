@@ -12,12 +12,14 @@ type GOPieChartProps = {
   series: Array<number>;
   title: string;
   total: number;
+  containerId: string;
 };
 const GOPieChart: React.FC<GOPieChartProps> = ({
   categories,
   series,
   title,
   total,
+  containerId,
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const pieSeries = categories.slice(0, 10).map((name, i) => ({
@@ -85,6 +87,7 @@ const GOPieChart: React.FC<GOPieChartProps> = ({
       highcharts={Highcharts}
       options={options}
       ref={chartComponentRef}
+      containerProps={{ id: containerId }}
     />
   );
 };

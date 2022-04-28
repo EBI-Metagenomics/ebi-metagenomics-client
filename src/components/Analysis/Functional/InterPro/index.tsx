@@ -34,6 +34,7 @@ const InterPro: React.FC = () => {
       id: 'color',
       Header: '',
       accessor: 'attributes.accession',
+      disableSortBy: true,
       Cell: ({ cell }) => (
         <div
           style={{
@@ -115,6 +116,16 @@ const InterPro: React.FC = () => {
           <EMGTable
             cols={columns}
             data={data}
+            Title={
+              <div>
+                <h6>
+                  InterPro entries
+                  <span className="mg-number">
+                    {data.meta?.pagination?.count || 1}
+                  </span>
+                </h6>
+              </div>
+            }
             initialPageSize={PAGE_SIZE}
             initialPage={(page as number) - 1}
             className="mg-anlyses-table"
@@ -123,6 +134,7 @@ const InterPro: React.FC = () => {
             onMouseEnterRow={handleMouseEnterRow}
             onMouseLeaveRow={handleMouseLeaveRow}
             showPagination
+            dataCy="interpro-table"
           />
         )}
       </div>

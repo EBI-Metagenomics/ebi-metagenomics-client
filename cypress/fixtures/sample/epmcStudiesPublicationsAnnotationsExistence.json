@@ -1,0 +1,9 @@
+{
+  "data": {
+    "query_possible": true,
+    "study_has_annotations": {
+      "MGYS00000369": false,
+      "MGYS00002011": true
+    }
+  }
+}

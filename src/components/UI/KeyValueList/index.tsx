@@ -2,15 +2,17 @@ import React from 'react';
 
 type KeyValueProps = {
   list: { key: string; value: string | React.ElementType }[];
+  dataCy?: string;
 };
 
-const KeyValueList: React.FC<KeyValueProps> = ({ list }) => (
+const KeyValueList: React.FC<KeyValueProps> = ({ list, dataCy }) => (
   <div
     className="vf-grid vf-grid__col-2"
     style={{
       gridTemplateColumns: '1fr 2fr',
       rowGap: '0.5rem',
     }}
+    data-cy={dataCy}
   >
     {list.map(({ key, value: Value }) => (
       <React.Fragment key={key}>

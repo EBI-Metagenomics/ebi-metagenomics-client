@@ -114,6 +114,7 @@ const ContigsDistribution: React.FC<ContigsHistogramProps> = ({
       highcharts={Highcharts}
       options={options}
       ref={chartComponentRef}
+      containerProps={{ id: 'reads-gc-hist' }}
     />
   );
 };

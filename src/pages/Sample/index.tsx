@@ -13,6 +13,7 @@ import AssociatedAssemblies from 'components/Assembly/Assemblies';
 import RouteForHash from 'components/Nav/RouteForHash';
 import KeyValueList from 'components/UI/KeyValueList';
 import AnnotationMetadata from 'components/Sample/AnnotationMetadata';
+import ClearingHouseMetadata from 'components/Sample/ClearingHouseMetadata';
 
 const tabs = [
   { label: 'Sample metadata', to: '#' },
@@ -40,6 +41,7 @@ const SamplePage: React.FC = () => {
             <div className="vf-stack vf-stack--200">
               <RouteForHash hash="" isDefault>
                 <KeyValueList
+                  dataCy="sample-metadata"
                   list={
                     (sampleData?.attributes?.['sample-metadata'] as {
                       key: string;
@@ -47,6 +49,16 @@ const SamplePage: React.FC = () => {
                     }[]) || []
                   }
                 />
+                {!(sampleData?.attributes?.['sample-metadata'] as [])
+                  .length && (
+                  <div className="vf-box">
+                    <h3 className="vf-box__heading">
+                      <span className="icon icon-common icon-info" /> No
+                      metadata to be displayed.
+                    </h3>
+                  </div>
+                )}
+                <ClearingHouseMetadata sampleAccession={accession} />
                 <AnnotationMetadata sampleAccession={accession} />
               </RouteForHash>
               <RouteForHash hash="#studies">

@@ -2,17 +2,15 @@ import {datatype} from './util';
 import config from './config';
 
 class GenericTableHandler {
-    constructor(parentId, defaultPageSize, hasLoadingGif, expectedElements) {
+    constructor(parentId, defaultPageSize, expectedElements) {
         this.parentId = parentId;
         this.defaultPageSize = defaultPageSize;
-        this.hasLoadingGif = (typeof hasLoadingGif !== 'undefined') ? hasLoadingGif : true;
         if (expectedElements) {
             this.elementsInTable = (expectedElements > defaultPageSize) ?
                                    defaultPageSize : expectedElements;
         } else {
             this.elementsInTable = defaultPageSize;
         }
-        this.waitForLoadingIconHidden();
         this.waitForTableLoad(this.elementsInTable);
     }
 
@@ -22,11 +20,13 @@ class GenericTableHandler {
         this.getPageSizeSelector().should('have.value', pageSize.toString());
     }
 
-    checkLoadedCorrectly(currentPage, pageSize, expectedResults, columnOrdering) {
+    checkLoadedCorrectly(currentPage, pageSize, expectedResults, columnOrdering, expectPagination = true) {
         this.waitForTableLoad(this.elementsInTable);
-        this.getPageInfoSpan('#totalResults').should('contain', expectedResults);
-        this.getPageInfoSpan('#maxPage').should('contain', Math.ceil(expectedResults / pageSize));
-        this.getPageInfoSpan('#currentPage').should('contain', currentPage);
+        if (expectPagination) {
+            cy.get(this.parentId + ' caption .mg-number').should('contain', expectedResults);
+            cy.get(this.parentId + ' .vf-pagination__item:not(.vf-pagination__item--next-page):last').should('contain', Math.ceil(expectedResults / pageSize))
+            cy.get(this.parentId + ' [data-cy="current-page"]').should('contain', currentPage)
+        }
         let firstRowData = [];
         let lastRowData = [];
         for (let column in columnOrdering) {
@@ -44,8 +44,7 @@ class GenericTableHandler {
     testSorting(pageSize, tests, clientSide) {
         const that = this;
         if (!clientSide) {
-            cy.server();
-            cy.route(config.API_URL + '**').as('apiCall');
+            cy.intercept(config.API_URL + '**/*ordering=*').as('apiCall');
         }
         let i = 0;
         for (let header in tests) {
@@ -63,7 +62,7 @@ class GenericTableHandler {
 
                     this.waitForTableLoad(pageSize);
                     this.getHeader(i2).then(($el) => {
-                        const asc = Cypress.$($el).hasClass('sort-asc');
+                        const asc = Cypress.$($el.find('span i')).hasClass('icon-sort-up');
                         cy.log(Cypress.$($el));
                         cy.log('Should be ' + (asc ? 'ascending' : 'descending'));
                         that.checkOrdering(i2, type, asc);
@@ -84,15 +83,8 @@ class GenericTableHandler {
     }
 
     waitForTableLoad(pageSize) {
-        this.waitForLoadingIconHidden();
-        cy.get(this.getTableSelector() + '> tbody > tr', {timeout: 20000})
+        cy.get(this.getTableSelector() + ' tbody > tr', {timeout: 20000})
             .should('have.length', pageSize);
-    }
-
-    waitForLoadingIconHidden() {
-        if (this.hasLoadingGif) {
-            this.getLoadingIcon().should('be.hidden');
-        }
     }
 
     checkOrdering(index, type, gte) {
@@ -101,7 +93,7 @@ class GenericTableHandler {
             let txt = $el.text();
             let txt2 = Cypress.$(selector).last().text();
             if (!gte) {
-                txt = [txt2, txt2 = txt][0]; // Swap variables
+                [txt, txt2] = [txt2, txt]; // Swap variables
             }
             if (type === datatype.STR || !type) {
                 txt = txt.toLowerCase();
@@ -157,7 +149,7 @@ class GenericTableHandler {
                 } else {
                     pageNumber = pageNum;
                 }
-                this.getPageInfoSpan('#currentPage').should('contain', pageNumber.toString());
+                cy.get(this.parentId + ' [data-cy="current-page"]').should('contain', pageNumber.toString());
                 this.checkRowData(0, pageData);
             }
         }
@@ -180,15 +172,6 @@ class GenericTableHandler {
                     .replace('ordering=&', '')
                 );
         });
-    }
-
-    testTableHiding() {
-        const headerSelector = this.parentId + ' .expand-button';
-        this.getTableElem().should('be.visible');
-        cy.get(headerSelector).click();
-        this.getTableElem().should('be.hidden');
-        cy.get(headerSelector).click();
-        this.getTableElem().should('be.visible');
     }
 
     checkRowData(rowIndex, data) {
@@ -215,12 +198,8 @@ class GenericTableHandler {
         return cy.get(this.parentId + ' div.row > div.pagesize > label > span > span' + spanId);
     }
 
-    getLoadingIcon() {
-        return cy.get(this.parentId + ' img.loading-gif-medium', {timeout: 100000});
-    }
-
     getFilterInput() {
-        return cy.get(this.parentId + ' input.table-filter');
+        return cy.get(this.parentId + ' .mg-textsearch input[type=search]');
     }
 
     getColumnSelector(columnIndex) {
@@ -236,7 +215,7 @@ class GenericTableHandler {
     getRowColumnSelector(rowIndex, columnIndex) {
         rowIndex = parseInt(rowIndex);
         columnIndex = parseInt(columnIndex);
-        return this.getTableSelector() + '> tbody > tr:nth-child(' + (rowIndex + 1) +
+        return this.getTableSelector() + ' tbody > tr:nth-child(' + (rowIndex + 1) +
             ') td:nth-child(' + (columnIndex + 1) + ')';
     }
 
@@ -267,11 +246,11 @@ class GenericTableHandler {
         //         str = ' div.pagination > ul.pagination > li:nth-child(' +
         //             (buttonIndex + 2) + ')';
         // }
-        return cy.get(this.parentId + ' div.pagination > ul.pagination').contains(buttonIndex);
+        return cy.get(this.parentId + ' nav.vf-pagination > ul.vf-pagination__list').contains(buttonIndex);
     }
 
     getDownloadLink() {
-        return cy.get(this.parentId + ' div.row.columns > a.download-link');
+        return cy.get(this.parentId + ' a[download]');
     }
 
     getTableElem() {
