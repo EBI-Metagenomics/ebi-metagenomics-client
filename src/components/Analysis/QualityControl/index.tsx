@@ -33,7 +33,7 @@ const QualityControl: React.FC = () => {
   const units = isAssembly ? 'contigs' : 'reads';
 
   return (
-    <div className="vf-stack vf-stack--200">
+    <div className="vf-stack vf-stack--200" data-cy="run-qc-chart">
       <p>
         The chart below shows the number of {units} which pass the quality
         control steps in the pipeline. Paired-end sequences may have been

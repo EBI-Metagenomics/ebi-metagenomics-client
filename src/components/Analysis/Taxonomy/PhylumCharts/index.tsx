@@ -116,7 +116,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
     (e) => e.name === selectedRow?.lineage
   );
   return (
-    <div className="vf-stack">
+    <div className="vf-stack" data-cy={`phylum-${chartType.replace(' ', '-')}`}>
       <div
         className={`vf-grid ${
           includesDomainCharts && chartType !== 'stacked-column'
@@ -125,42 +125,52 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
         }`}
       >
         {chartType === 'pie' && includesDomainCharts && (
-          <PhylumPie
-            clusteredData={clusteredDataTop}
-            selectedValue={selectedCategory >= 0 ? selectedCategory : null}
-            title="Domain composition"
-          />
+          <div id="domain-composition-pie">
+            <PhylumPie
+              clusteredData={clusteredDataTop}
+              selectedValue={selectedCategory >= 0 ? selectedCategory : null}
+              title="Domain composition"
+            />
+          </div>
         )}
         {chartType === 'pie' && (
-          <PhylumPie
-            clusteredData={clusteredData}
-            title="Phylum composition"
-            selectedValue={selectedRow ? selectedRow.i - 1 : null}
-            showTotal
-            showLegend
-          />
+          <div id="phylum-composition-pie">
+            <PhylumPie
+              clusteredData={clusteredData}
+              title="Phylum composition"
+              selectedValue={selectedRow ? selectedRow.i - 1 : null}
+              showTotal
+              showLegend
+            />
+          </div>
         )}
         {chartType === 'column' && includesDomainCharts && (
-          <PhylumColumn
-            clusteredData={clusteredDataTop}
-            selectedValue={selectedCategory >= 0 ? selectedCategory : null}
-            title="Domain composition"
-          />
+          <div id="domain-composition-column">
+            <PhylumColumn
+              clusteredData={clusteredDataTop}
+              selectedValue={selectedCategory >= 0 ? selectedCategory : null}
+              title="Domain composition"
+            />
+          </div>
         )}
         {chartType === 'column' && (
-          <PhylumColumn
-            clusteredData={clusteredData}
-            title="Phylum composition (top 10)"
-            selectedValue={selectedRow ? selectedRow.i - 1 : null}
-            showTotal
-          />
+          <div id="phylum-composition-column">
+            <PhylumColumn
+              clusteredData={clusteredData}
+              title="Phylum composition (top 10)"
+              selectedValue={selectedRow ? selectedRow.i - 1 : null}
+              showTotal
+            />
+          </div>
         )}
         {chartType === 'stacked-column' && (
-          <PhylumStackedColumn
-            clusteredData={clusteredData}
-            title="Phylum composition (top 10)"
-            selectedValue={selectedRow ? selectedRow.i - 1 : null}
-          />
+          <div id="phylum-composition-stacked-column">
+            <PhylumStackedColumn
+              clusteredData={clusteredData}
+              title="Phylum composition (top 10)"
+              selectedValue={selectedRow ? selectedRow.i - 1 : null}
+            />
+          </div>
         )}
       </div>
       <div>

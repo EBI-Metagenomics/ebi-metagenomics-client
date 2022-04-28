@@ -105,6 +105,7 @@ const QualityControlChart: React.FC<QualityControlProps> = ({
       highcharts={Highcharts}
       options={options}
       ref={chartComponentRef}
+      containerProps={{ id: 'qc-step-chart' }}
     />
   );
 };

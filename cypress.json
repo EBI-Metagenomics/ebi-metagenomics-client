@@ -1,8 +1,8 @@
 {
   "projectId": "8vc1o6",
   "chromeWebSecurity": false,
-  "viewportWidth": 1680,
-  "viewportHeight": 1050,
+  "viewportWidth": 1200,
+  "viewportHeight": 900,
   "video": false,
   "videoCompression": false,
   "watchForFileChanges": false,

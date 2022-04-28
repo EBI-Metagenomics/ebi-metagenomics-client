@@ -97,6 +97,7 @@ const SeqLengthChart: React.FC<SeqLengthChartProps> = ({ summaryData }) => {
       highcharts={Highcharts}
       options={options}
       ref={chartComponentRef}
+      containerProps={{ id: 'reads-length-barchart' }}
     />
   );
 };

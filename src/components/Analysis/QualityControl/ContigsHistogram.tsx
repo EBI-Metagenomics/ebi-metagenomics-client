@@ -119,6 +119,7 @@ const ContigsHistogram: React.FC<ContigsHistogramProps> = ({ summaryData }) => {
       highcharts={Highcharts}
       options={options}
       ref={chartComponentRef}
+      containerProps={{ id: 'reads-length-hist' }}
     />
   );
 };

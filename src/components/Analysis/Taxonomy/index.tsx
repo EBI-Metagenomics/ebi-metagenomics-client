@@ -67,6 +67,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
       <div>
         {(enableSSU || enableLSU) && (
           <fieldset
+            data-cy="ssu-lsu-btns"
             className="vf-form__fieldset vf-stack vf-stack--400 mg-fieldbox"
             style={{
               width: '15rem',
@@ -77,7 +78,9 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
               <input
                 type="radio"
                 id="smallrRNA"
+                data-cy="ssu-btn"
                 name="tax-results"
+                disabled={!enableSSU}
                 value="/ssu"
                 checked={taxResults === '/ssu'}
                 onChange={handleTaxChange}
@@ -88,7 +91,9 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
               <input
                 type="radio"
                 id="largerRNA"
+                data-cy="lsu-btn"
                 name="tax-results"
+                disabled={!enableLSU}
                 value="/lsu"
                 checked={taxResults === '/lsu'}
                 onChange={handleTaxChange}
@@ -146,6 +151,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
         {type === 'krona' ? (
           <object
             className="krona_chart"
+            data-cy="krona-chart"
             data={`${config.api}analyses/${accession}/krona${taxResults}?collapse=false`}
             type="text/html"
             title="Interactive Krona chart"

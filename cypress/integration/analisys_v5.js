@@ -13,9 +13,9 @@ import {openPage, changeTab, waitForPageLoad, checkChartTooltip} from '../util/u
  */
 function verifyTabIsVisible(tabId) {
     // Verify correct tab button is active
-    cy.get('[href=\'' + tabId + '\']').should('have.class', 'is-active');
+    cy.get('[href*=\'' + tabId + '\']').should('have.class', 'is-active');
     // Verify tab content is active
-    cy.get(tabId).should('have.class', 'is-active');
+    cy.get(`#tab-${tabId.slice(1)}`).should('be.visible');
 }
 
 describe('Analysis V5', () => {
@@ -36,8 +36,8 @@ describe('Analysis V5', () => {
         it('Should have 7 tabs', () => {
             openPage(pageUrl);
             waitForPageLoad('Analysis ' + analysisId);
-            cy.get('#analysis-tabs li').should('have.length', 7);
-            cy.get('#analysis-tabs li').each(($li) => {
+            cy.get('.mg-search-tabs .vf-tabs__link').should('have.length', 7);
+            cy.get('.mg-search-tabs .vf-tabs__link').each(($li) => {
                 expect($li.text().replace('\n', '').trim()).to.be.oneOf(tabs);
             });
         });
@@ -82,13 +82,17 @@ describe('Analysis V5', () => {
         });
 
         it('Sections should be expandable', () => {
-            cy.get('#overview > div:nth-child(1) .box').should('be.visible');
-            cy.get('#overview > div:nth-child(1) > h4 > a').click();
-            cy.get('#overview > div:nth-child(1) .box').should('be.hidden');
+            cy.get('#tab-overview details').should('have.attr', 'open', 'open');
 
-            cy.get('#overview > div:nth-child(2) .box').should('be.visible');
-            cy.get('#overview > div:nth-child(2) > h4 > a').click();
-            cy.get('#overview > div:nth-child(2) .box').should('be.hidden');
+            cy.get('#tab-overview details:nth-child(1) > summary').click();
+            cy.get('#tab-overview details:nth-child(1)').should('not.have.attr', 'open');
+            cy.get('#tab-overview details:nth-child(1) > summary').click();
+            cy.get('#tab-overview details:nth-child(1)').should('have.attr', 'open', 'open');
+
+            cy.get('#tab-overview details:nth-child(2) > summary').click();
+            cy.get('#tab-overview details:nth-child(2)').should('not.have.attr', 'open', 'closed');
+            cy.get('#tab-overview details:nth-child(2) > summary').click();
+            cy.get('#tab-overview details:nth-child(2)').should('have.attr', 'open', 'open');
         });
     });
 
@@ -171,7 +175,7 @@ describe('Analysis V5', () => {
         });
 
         it('Should load [Nucleotide position histogram] chart', () => {
-            const series = '#nucleotide .highcharts-series-group .highcharts-area-series';
+            const series = '#nucleotide-chart .highcharts-series-group .highcharts-area-series';
             cy.get(series).should('be.visible');
         });
     });
@@ -188,8 +192,8 @@ describe('Analysis V5', () => {
         it('Should have 4 inner tabs', () => {
             openPage(pageUrl);
             waitForPageLoad('Analysis ' + analysisId);
-            cy.get('#functional-analysis-tabs li').should('have.length', 4);
-            cy.get('#functional-analysis-tabs li').each(($li) => {
+            cy.get('.mg-button-as-tab').should('have.length', 4);
+            cy.get('.mg-button-as-tab').each(($li) => {
                 expect($li.text().replace('\n', '').trim()).to.be.oneOf(tabs);
             });
         });
@@ -206,8 +210,8 @@ describe('Analysis V5', () => {
             const assemblyId = 'MGYA00141547XXXX';
             const origPage = 'analyses/' + assemblyId;
             openPage(origPage);
-            cy.contains('Error: 404');
-            cy.contains('Could not retrieve analysis: ' + assemblyId);
+            cy.contains('Status: 404');
+            cy.contains('Error Fetching Data');
         });
     });
 });

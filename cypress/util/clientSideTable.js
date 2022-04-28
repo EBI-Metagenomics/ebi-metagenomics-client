@@ -7,9 +7,9 @@ const GenericTableHandler = require('./genericTable');
 class ClientSideTableHandler extends GenericTableHandler {
     checkLoadedCorrectly(currentPage, pageSize, expectedResults, columnOrdering) {
         this.waitForTableLoad(pageSize);
-        this.getPageInfoSpan('#totalResults').should('contain', expectedResults);
-        this.getPageInfoSpan('#maxPage').should('contain', Math.ceil(expectedResults / pageSize));
-        this.getPageInfoSpan('#currentPage').should('contain', currentPage);
+        cy.get(this.parentId + ' caption .mg-number').should('contain', expectedResults);
+        cy.get(this.parentId + '[data-cy="interpro-table"] .vf-pagination__item:not(.vf-pagination__item--next-page):last').should('contain', Math.ceil(expectedResults / pageSize))
+        cy.get(this.parentId + '[data-cy="interpro-table"] [data-cy="current-page"]').should('contain', currentPage)
         let firstRowData = [];
         let lastRowData = [];
         for (let column in columnOrdering) {
@@ -35,7 +35,8 @@ class ClientSideTableHandler extends GenericTableHandler {
                     this.getHeader(i2).click();
                     this.waitForTableLoad(pageSize);
                     this.getHeader(i2).then(($el) => {
-                        const asc = Cypress.$($el).hasClass('tablesorter-headerAsc');
+                        const asc = Cypress.$($el.find('span i')).hasClass('icon-sort-up');
+
                         cy.log(Cypress.$($el));
                         cy.log('Should be ' + (asc ? 'ascending' : 'descending'));
                         that.checkOrdering(i2, type, asc);
@@ -51,8 +52,7 @@ class ClientSideTableHandler extends GenericTableHandler {
     }
 
     waitForTableLoad(pageSize) {
-        this.waitForLoadingIconHidden();
-        cy.get(this.getTableSelector() + '> tbody > tr:visible', {timeout: 20000})
+        cy.get(this.getTableSelector() + ' tbody > tr:visible', {timeout: 20000})
             .should('have.length', pageSize);
     }
 
@@ -93,7 +93,7 @@ class ClientSideTableHandler extends GenericTableHandler {
                 } else {
                     pageNumber = index;
                 }
-                this.getPageInfoSpan('#currentPage').should('contain', pageNumber.toString());
+                cy.get(this.parentId + '[data-cy="interpro-table"] [data-cy="current-page"]').should('contain', pageNumber)
                 this.checkRowData(0, pageNumber, pageSize, pageData);
             }
         }
@@ -104,7 +104,8 @@ class ClientSideTableHandler extends GenericTableHandler {
             if (data.hasOwnProperty(column)) {
                 const txt = data[column];
                 const selector = this.getRowColumnSelector(
-                    rowIndex + (Math.max(0, (page - 1)) * pageSize),
+                    // rowIndex + (Math.max(0, (page - 1)) * pageSize),
+                  rowIndex,
                     column);
                 if (txt.length > 0) {
                     cy.get(selector, {timeout: 40000})
