@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import useMgnifyBigsiSearch from 'hooks/data/useMgnifyBigsiSearch';
+import useMgnifyCobsSearch from 'hooks/data/useMgnifyCobsSearch';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
@@ -18,25 +18,44 @@ const Results: React.FC<ResultsProps> = ({
   threshold,
   cataloguesFilter,
 }) => {
-  const { data, loading, error } = useMgnifyBigsiSearch(
+  const { data, loading, error } = useMgnifyCobsSearch(
     sequence,
     threshold,
     cataloguesFilter
   );
   if (loading) return <Loading />;
   if (error) return <FetchError error={error} />;
-
+  if (data?.data?.errors) {
+    return (
+      <div
+        className="vf-box vf-box-theme--primary vf-box--easy"
+        style={{
+          backgroundColor: 'lemonchiffon',
+        }}
+      >
+        <h3 className="vf-box__heading">
+          <span className="icon icon-common icon-exclamation-triangle" />
+          Error with your search
+        </h3>
+        {Object.entries(data.data.errors).map(([field, err]) => (
+          <p className="vf-box__text">
+            {field}: {err}
+          </p>
+        ))}
+      </div>
+    );
+  }
   const columns = [
     {
       Header: 'Genome accession',
-      accessor: 'mgnify.id',
+      accessor: 'cobs.genome',
       Cell: ({ cell }) => (
         <Link to={`/genomes/${cell.value}`}>{cell.value}</Link>
       ),
     },
     {
       Header: 'Taxonomic assignment',
-      accessor: 'mgnify.attributes.taxon-lineage',
+      accessor: 'mgnify.taxon_lineage',
       Cell: ({ cell }) => (
         <>
           {getSimpleTaxLineage(cell.value, true)}{' '}
@@ -50,53 +69,45 @@ const Results: React.FC<ResultsProps> = ({
     },
     {
       Header: 'Genome length',
-      accessor: 'mgnify.attributes.length',
+      accessor: 'mgnify.length',
     },
     {
       Header: 'Num. contigs',
-      accessor: 'mgnify.attributes.num-contigs',
+      accessor: 'mgnify.num_contigs',
     },
     {
       Header: 'Genome completeness',
-      accessor: 'mgnify.attributes.completeness',
+      accessor: 'mgnify.completeness',
     },
     {
       Header: 'Genome contamination',
-      accessor: 'mgnify.attributes.contamination',
+      accessor: 'mgnify.contamination',
     },
     {
       Header: 'Geographic origin',
-      accessor: 'mgnify.attributes.geographic-origin',
+      accessor: 'mgnify.geographic_origin',
     },
     {
       Header: 'Num. K-mers in query',
-      accessor: 'bigsi.num_kmers',
+      accessor: 'cobs.num_kmers',
     },
     {
       Header: 'Num. K-mers found in genome',
-      accessor: 'bigsi.num_kmers_found',
+      accessor: 'cobs.num_kmers_found',
     },
     {
       Header: '% K-mers found',
-      accessor: 'bigsi.percent_kmers_found',
-    },
-    {
-      Header: 'BLAST score (log p)',
-      accessor: (result) => ({
-        score: result.bigsi.score,
-        pvalue: result.bigsi.log_pvalue,
-      }),
-      Cell: ({ cell }) => `${cell.value.score} (${cell.value.pvalue})`,
+      accessor: 'cobs.percent_kmers_found',
     },
   ];
   if (!data) return null;
 
   return (
     <section>
-      <h3>BIGSI Results</h3>
+      <h3>COBS Results</h3>
       <EMGTable
         cols={columns}
-        data={data.results as Record<string, unknown>[]}
+        data={data.data.results as Record<string, unknown>[]}
         initialPageSize={100}
         className="mg-anlyses-table"
         loading={loading}
