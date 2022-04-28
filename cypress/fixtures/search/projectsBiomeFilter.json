@@ -1,0 +1,4862 @@
+{
+  "hitCount": 4782,
+  "entries": [
+    {
+      "id": "MGYS00005629",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB30838"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00575012",
+          "MGYA00575007",
+          "MGYA00575010",
+          "MGYA00575011",
+          "MGYA00575009",
+          "MGYA00575008"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS3193162",
+          "ERS3193158",
+          "ERS3193159",
+          "ERS3193161",
+          "ERS3193160",
+          "ERS3193157"
+        ],
+        "biome_name": [
+          "Coral reef"
+        ],
+        "centre_name": [
+          "SVERIGES LANTBRUKSUNIVERSITET"
+        ],
+        "description": [
+          "Coral reefs face increased environmental threats from anthropomorphic climate change and pollution, from agriculture, industries and tourism. They are economically vital for many people worldwide, and harbour a fantastically diverse ecosystem, being the home for many species of fish and algae. Surprisingly little is known about the microbial communities living in and in the surrounding of coral reefs. The objectives of this project is to characterise the community composition and function of bacteria living in the water and the upper sediment layer in close proximity of coral reefs. In this project we sequenced 3 water samples and 3 sediment samples out of the coast of Kenya, at 3 distinct location: Mombasa, Malindi and Kisite."
+        ],
+        "name": [
+          "a take on the impact of pollution on coastal bacterial communities"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00004668",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA393823"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00365935",
+          "MGYA00365923",
+          "MGYA00365910",
+          "MGYA00365905",
+          "MGYA00365933",
+          "MGYA00365922",
+          "MGYA00365931",
+          "MGYA00365914",
+          "MGYA00365907",
+          "MGYA00365938",
+          "MGYA00365939",
+          "MGYA00365918",
+          "MGYA00365919",
+          "MGYA00365888",
+          "MGYA00365889",
+          "MGYA00365886",
+          "MGYA00365887",
+          "MGYA00365884",
+          "MGYA00365885",
+          "MGYA00365882",
+          "MGYA00365883",
+          "MGYA00365880",
+          "MGYA00365881",
+          "MGYA00365904",
+          "MGYA00365911",
+          "MGYA00365903",
+          "MGYA00365936",
+          "MGYA00365915",
+          "MGYA00365902",
+          "MGYA00365932",
+          "MGYA00365928",
+          "MGYA00365897",
+          "MGYA00365900",
+          "MGYA00365929",
+          "MGYA00365906",
+          "MGYA00365912",
+          "MGYA00365937",
+          "MGYA00365916",
+          "MGYA00365899",
+          "MGYA00365898",
+          "MGYA00365927",
+          "MGYA00365926",
+          "MGYA00365921",
+          "MGYA00365920",
+          "MGYA00365909",
+          "MGYA00365908",
+          "MGYA00365891",
+          "MGYA00365890",
+          "MGYA00365893",
+          "MGYA00365892",
+          "MGYA00365895",
+          "MGYA00365894",
+          "MGYA00365901",
+          "MGYA00365896",
+          "MGYA00365913",
+          "MGYA00365925",
+          "MGYA00365934",
+          "MGYA00365924",
+          "MGYA00365917",
+          "MGYA00365942",
+          "MGYA00365941",
+          "MGYA00365930",
+          "MGYA00365944",
+          "MGYA00365940",
+          "MGYA00365943",
+          "MGYA00365945"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS2354767",
+          "SRS2354766",
+          "SRS2354765",
+          "SRS2354764",
+          "SRS2354769",
+          "SRS2354768"
+        ],
+        "biome_name": [
+          "Lake"
+        ],
+        "centre_name": [
+          "University Tuebingen"
+        ],
+        "description": [
+          "General marine and freshwater sediment community in low iron environment; Distribution, abundance and activity of iron metabolizers"
+        ],
+        "name": [
+          "Marine (Aarhus) and freshwater (Lake Constance) sediment Raw sequence reads"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00004607",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA295549"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00364398"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS1067504"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "IISER Bhopal"
+        ],
+        "description": [
+          "Cape Comorin is a site located at the southern-most point of the Indian Peninsula, where the Bay of Bengal, Arabian Sea and the Indian Ocean meet. This study aims to explore the microbial diversity present in the ocean water at this site."
+        ],
+        "name": [
+          "Assessing the microbial diversity in Cape Comorin ocean water"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000960",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA251917"
+        ],
+        "METAGENOMICS_ANALYSES": [],
+        "METAGENOMICS_SAMPLES": [],
+        "biome_name": [
+          "Oil-contaminated"
+        ],
+        "centre_name": [
+          "Chinese Academy of Sciences"
+        ],
+        "description": [
+          "Diversity of microbial communities in oil contaminated soils from six oilfields in China"
+        ],
+        "name": [
+          "Oil contaminated soils Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00001482",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB6608"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00216208",
+          "MGYA00216205",
+          "MGYA00216204",
+          "MGYA00216207",
+          "MGYA00216206",
+          "MGYA00216201",
+          "MGYA00216200",
+          "MGYA00216203",
+          "MGYA00216202",
+          "MGYA00216199"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS488769",
+          "ERS492699",
+          "ERS492012",
+          "ERS493670",
+          "ERS494431",
+          "ERS493752",
+          "ERS493636",
+          "ERS494518",
+          "ERS492357",
+          "ERS494519",
+          "ERS491874",
+          "ERS491938",
+          "ERS494394",
+          "ERS492177",
+          "ERS491913",
+          "ERS489074",
+          "ERS491836",
+          "ERS493788",
+          "ERS492888",
+          "ERS492863",
+          "ERS494374",
+          "ERS493822",
+          "ERS494332",
+          "ERS494445",
+          "ERS492642",
+          "ERS490542",
+          "ERS490885",
+          "ERS491044",
+          "ERS493705",
+          "ERS492680",
+          "ERS488920",
+          "ERS488849",
+          "ERS491001",
+          "ERS492205",
+          "ERS1092158",
+          "ERS490928",
+          "ERS489529",
+          "ERS492145",
+          "ERS492321",
+          "ERS489043",
+          "ERS490659",
+          "ERS489585",
+          "ERS492926",
+          "ERS491095",
+          "ERS492778",
+          "ERS491980",
+          "ERS492733",
+          "ERS492814"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "GSC"
+        ],
+        "description": [
+          "Metatranscriptome sequencing from  different depths to retain small cell size (Bacteria Organisms). The RNA was extracted and submitted to high throughput sequencing."
+        ],
+        "name": [
+          "Metatranscriptome sequencing of Tara Oceans DNA samples corresponding to size fractions for  prokaryotes."
+        ]
+      }
+    },
+    {
+      "id": "MGYS00003655",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB26730"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00250104",
+          "MGYA00250105",
+          "MGYA00250106",
+          "MGYA00250107",
+          "MGYA00250101",
+          "MGYA00250102",
+          "MGYA00250103",
+          "MGYA00250110",
+          "MGYA00250108",
+          "MGYA00250109"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS1254553",
+          "SRS1254552",
+          "SRS1254551",
+          "SRS1254545",
+          "SRS1254544",
+          "SRS1254543",
+          "SRS1254542",
+          "SRS1254556",
+          "SRS1254557",
+          "SRS1254555"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "centre_name": [
+          "EMG"
+        ],
+        "description": [
+          "The marine sediment metagenome Third Party Annotation (TPA) assembly was derived from the primary whole genome shotgun (WGS) data set: PRJNA308531.  This project includes samples from the following biomes: Environmental, Aquatic, Marine, Sediment."
+        ],
+        "name": [
+          "EMG produced TPA metagenomics assembly of the Baltic marine sediment metagenome (marine sediment metagenome) data set."
+        ]
+      }
+    },
+    {
+      "id": "MGYS00001592",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB9004"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00103750",
+          "MGYA00103743",
+          "MGYA00103738",
+          "MGYA00103739",
+          "MGYA00103718",
+          "MGYA00103719",
+          "MGYA00103756",
+          "MGYA00103742",
+          "MGYA00103732",
+          "MGYA00103733",
+          "MGYA00103730",
+          "MGYA00103731",
+          "MGYA00103736",
+          "MGYA00103737",
+          "MGYA00103734",
+          "MGYA00103735",
+          "MGYA00103740",
+          "MGYA00103755",
+          "MGYA00103747",
+          "MGYA00103746",
+          "MGYA00103751",
+          "MGYA00103745",
+          "MGYA00103768",
+          "MGYA00103744",
+          "MGYA00103769",
+          "MGYA00103758",
+          "MGYA00103759",
+          "MGYA00103761",
+          "MGYA00103760",
+          "MGYA00103763",
+          "MGYA00103762",
+          "MGYA00103765",
+          "MGYA00103764",
+          "MGYA00103752",
+          "MGYA00103766",
+          "MGYA00103725",
+          "MGYA00103724",
+          "MGYA00103727",
+          "MGYA00103726",
+          "MGYA00103721",
+          "MGYA00103720",
+          "MGYA00103723",
+          "MGYA00103722",
+          "MGYA00103749",
+          "MGYA00103748",
+          "MGYA00103729",
+          "MGYA00103728",
+          "MGYA00103741",
+          "MGYA00103757",
+          "MGYA00103753",
+          "MGYA00103767",
+          "MGYA00103754"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS697120",
+          "ERS697121",
+          "ERS696547",
+          "ERS696560",
+          "ERS696570",
+          "ERS696571",
+          "ERS696558",
+          "ERS696573",
+          "ERS696574",
+          "ERS696575",
+          "ERS696576",
+          "ERS696552",
+          "ERS696553",
+          "ERS696550",
+          "ERS696551",
+          "ERS696556",
+          "ERS696557",
+          "ERS696554",
+          "ERS696555",
+          "ERS697115",
+          "ERS697114",
+          "ERS697117",
+          "ERS697116",
+          "ERS697111",
+          "ERS697110",
+          "ERS697113",
+          "ERS697112",
+          "ERS697119",
+          "ERS697118",
+          "ERS697122",
+          "ERS696572",
+          "ERS696559",
+          "ERS696549",
+          "ERS696548",
+          "ERS696569",
+          "ERS696568",
+          "ERS696567",
+          "ERS696566",
+          "ERS696565",
+          "ERS696564",
+          "ERS696563",
+          "ERS696562",
+          "ERS696561",
+          "ERS697123",
+          "ERS697106",
+          "ERS697107",
+          "ERS697104",
+          "ERS697105",
+          "ERS697103",
+          "ERS696546",
+          "ERS697108",
+          "ERS697109"
+        ],
+        "biome_name": [
+          "Groundwater"
+        ],
+        "centre_name": [
+          "VTT"
+        ],
+        "description": [
+          "Uncultured archaeal communities in anoxic, saline groundwater were characterized using 16S rRNA and rDNA targeted 454 amplicon sequencing."
+        ],
+        "name": [
+          "Uncultured archaeal communities in anoxic, saline groundwater were characterized using 16S rRNA and rDNA targeted 454 amplicon sequencing."
+        ]
+      }
+    },
+    {
+      "id": "MGYS00003348",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB26546"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00238010",
+          "MGYA00238011",
+          "MGYA00238012",
+          "MGYA00238013",
+          "MGYA00238014",
+          "MGYA00238015",
+          "MGYA00238016",
+          "MGYA00238017",
+          "MGYA00238018",
+          "MGYA00238019",
+          "MGYA00237992",
+          "MGYA00237993",
+          "MGYA00237994",
+          "MGYA00237995",
+          "MGYA00237996",
+          "MGYA00237997",
+          "MGYA00237998",
+          "MGYA00237999",
+          "MGYA00238021",
+          "MGYA00238020",
+          "MGYA00238023",
+          "MGYA00238022",
+          "MGYA00238003",
+          "MGYA00238002",
+          "MGYA00238001",
+          "MGYA00238000",
+          "MGYA00238007",
+          "MGYA00238006",
+          "MGYA00238005",
+          "MGYA00238004",
+          "MGYA00238009",
+          "MGYA00238008"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS1593802"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "EMG"
+        ],
+        "description": [
+          "The marine metagenome Third Party Annotation (TPA) assembly was derived from the primary whole genome shotgun (WGS) data set: PRJNA329906.  This project includes samples from the following biomes: Environmental, Aquatic, Marine."
+        ],
+        "name": [
+          "EMG produced TPA metagenomics assembly of the Marine microbial communities from expanding oxygen minimum zones in Line P, North Pacific Ocean - Fosmid plate 9 metagenome (marine metagenome) data set."
+        ]
+      }
+    },
+    {
+      "id": "MGYS00004547",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB25599"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00363596",
+          "MGYA00363597",
+          "MGYA00363598",
+          "MGYA00363599"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS1546720",
+          "ERS1546719"
+        ],
+        "biome_name": [
+          "Hypersaline"
+        ],
+        "centre_name": [
+          "PROIMI"
+        ],
+        "description": [
+          "Atacama region in Chile is one of the most arid locations in the world. Extreme conditions in the area include: high UV irradiation, hypersalinity, drastic temperature changes, and desiccation. Hypersaline lakes can be found in this environment, and therein, bacterial communities thrive in microbial mats and other structures. WGS metagenomics allows to analyze the genes in the environment and infer functional and taxonomic diversity, and also their influence in the biogeochemical setting. In the datasets from this project, two microbial mats from lakes Brava and Tebenquiche, in Atacama region in Chile, were analyzed."
+        ],
+        "name": [
+          "Metagenomics of Brava and Tebenquiche lakes microbial mats"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00003175",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA486858"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00217863",
+          "MGYA00217843",
+          "MGYA00217835",
+          "MGYA00217864",
+          "MGYA00217862",
+          "MGYA00217837",
+          "MGYA00217860",
+          "MGYA00217861",
+          "MGYA00217840",
+          "MGYA00217841",
+          "MGYA00217842",
+          "MGYA00217836",
+          "MGYA00217844",
+          "MGYA00217845",
+          "MGYA00217846",
+          "MGYA00217847",
+          "MGYA00217848",
+          "MGYA00217849",
+          "MGYA00217853",
+          "MGYA00217852",
+          "MGYA00217851",
+          "MGYA00217850",
+          "MGYA00217857",
+          "MGYA00217856",
+          "MGYA00217855",
+          "MGYA00217854",
+          "MGYA00217859",
+          "MGYA00217858",
+          "MGYA00217839",
+          "MGYA00217838"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS3704037",
+          "SRS3704036",
+          "SRS3704035",
+          "SRS3704039",
+          "SRS3704038",
+          "SRS3704042",
+          "SRS3704043",
+          "SRS3704040",
+          "SRS3704041",
+          "SRS3704044"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "centre_name": [
+          "South China Sea Institute of Oceanology, Chinese Academy of Sciences"
+        ],
+        "description": [
+          "Bacterioplankton metacommunity structure across thermal effluent gradients"
+        ],
+        "name": [
+          "aquatic bacterial metagenome Raw sequence reads"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00004649",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA388358"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00365253",
+          "MGYA00365252",
+          "MGYA00365250",
+          "MGYA00365251",
+          "MGYA00365240",
+          "MGYA00365241",
+          "MGYA00365242",
+          "MGYA00365243",
+          "MGYA00365244",
+          "MGYA00365245",
+          "MGYA00365246",
+          "MGYA00365247",
+          "MGYA00365248",
+          "MGYA00365249",
+          "MGYA00365239"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS2288673",
+          "SRS2288672",
+          "SRS2288671",
+          "SRS2288670",
+          "SRS2288668",
+          "SRS2288669",
+          "SRS2288675",
+          "SRS2288674",
+          "SRS2288664",
+          "SRS2288665",
+          "SRS2288666",
+          "SRS2288667",
+          "SRS2288678",
+          "SRS2288677",
+          "SRS2288676"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "centre_name": [
+          "University of Alaska Fairbanks"
+        ],
+        "description": [
+          "The fate of oil and oil spill response chemicals in the Arctic is of critical importance as marine shipping and oil exploration are increasing due to receding sea ice cover. Using indigenous Arctic marine organisms in freshly collected seawater, we identified of bacterial taxa that increase in relative abundance in response to both oil and Corexit in Arctic seawater, suggesting that some taxa biodegrade components of both oil and dispersant. We then paried these microbial analyses with the chemical loss of oil and the surfactant components of Corexit 9500. These results allow for the first comparison between Arctic and temperate environments in regards to the fate of Corexit and the microbes involved in biodegrading dispersants and oil."
+        ],
+        "name": [
+          "Arctic Microbial response to oil and Corexit"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00004205",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA242711"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00356839",
+          "MGYA00356838",
+          "MGYA00356840",
+          "MGYA00356841",
+          "MGYA00356842",
+          "MGYA00356843"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS582881"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "Hong Kong University of Science And Technology"
+        ],
+        "description": [
+          "16S pyro-sequencing of samples from multiple places in Red Sea"
+        ],
+        "name": [
+          "Microbial community of Red Sea (16S amplicon) Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00004044",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJDB5962"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00356041",
+          "MGYA00356042",
+          "MGYA00356043",
+          "MGYA00356044",
+          "MGYA00356045",
+          "MGYA00356046",
+          "MGYA00356047",
+          "MGYA00356048",
+          "MGYA00356049"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "DRS059053",
+          "DRS059052",
+          "DRS059055",
+          "DRS059054",
+          "DRS059057",
+          "DRS059056",
+          "DRS059059",
+          "DRS059058",
+          "DRS059060"
+        ],
+        "biome_name": [
+          "Coastal"
+        ],
+        "centre_name": [
+          "KAKEN"
+        ],
+        "description": [
+          "16S rRNA gene sequencing project for a time-series nine seawater samples from the 5 m depth at the entrance of Osaka Bay, Japan every 3 hours over a period of 24 h."
+        ],
+        "name": [
+          "16S rRNA Analysis of Osaka Bay Microbiomes"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000652",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA234366"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00067423",
+          "MGYA00067422",
+          "MGYA00067421",
+          "MGYA00067420",
+          "MGYA00067427",
+          "MGYA00067426",
+          "MGYA00067425",
+          "MGYA00067424",
+          "MGYA00067429",
+          "MGYA00067428",
+          "MGYA00067388",
+          "MGYA00067389",
+          "MGYA00067386",
+          "MGYA00067387",
+          "MGYA00067384",
+          "MGYA00067385",
+          "MGYA00067383",
+          "MGYA00067399",
+          "MGYA00067398",
+          "MGYA00067391",
+          "MGYA00067390",
+          "MGYA00067393",
+          "MGYA00067392",
+          "MGYA00067395",
+          "MGYA00067394",
+          "MGYA00067397",
+          "MGYA00067396",
+          "MGYA00067490",
+          "MGYA00067418",
+          "MGYA00067419",
+          "MGYA00067416",
+          "MGYA00067417",
+          "MGYA00067414",
+          "MGYA00067415",
+          "MGYA00067412",
+          "MGYA00067413",
+          "MGYA00067410",
+          "MGYA00067411",
+          "MGYA00067478",
+          "MGYA00067479",
+          "MGYA00067474",
+          "MGYA00067475",
+          "MGYA00067476",
+          "MGYA00067477",
+          "MGYA00067470",
+          "MGYA00067471",
+          "MGYA00067472",
+          "MGYA00067473",
+          "MGYA00067481",
+          "MGYA00067480",
+          "MGYA00067483",
+          "MGYA00067482",
+          "MGYA00067485",
+          "MGYA00067484",
+          "MGYA00067487",
+          "MGYA00067486",
+          "MGYA00067489",
+          "MGYA00067488",
+          "MGYA00067409",
+          "MGYA00067408",
+          "MGYA00067401",
+          "MGYA00067400",
+          "MGYA00067403",
+          "MGYA00067402",
+          "MGYA00067405",
+          "MGYA00067404",
+          "MGYA00067407",
+          "MGYA00067406",
+          "MGYA00067469",
+          "MGYA00067468",
+          "MGYA00067467",
+          "MGYA00067466",
+          "MGYA00067465",
+          "MGYA00067464",
+          "MGYA00067463",
+          "MGYA00067462",
+          "MGYA00067461",
+          "MGYA00067460",
+          "MGYA00067458",
+          "MGYA00067459",
+          "MGYA00067452",
+          "MGYA00067453",
+          "MGYA00067450",
+          "MGYA00067451",
+          "MGYA00067456",
+          "MGYA00067457",
+          "MGYA00067454",
+          "MGYA00067455",
+          "MGYA00067445",
+          "MGYA00067444",
+          "MGYA00067447",
+          "MGYA00067446",
+          "MGYA00067441",
+          "MGYA00067440",
+          "MGYA00067443",
+          "MGYA00067442",
+          "MGYA00067449",
+          "MGYA00067448",
+          "MGYA00067430",
+          "MGYA00067431",
+          "MGYA00067432",
+          "MGYA00067433",
+          "MGYA00067434",
+          "MGYA00067435",
+          "MGYA00067436",
+          "MGYA00067437",
+          "MGYA00067438",
+          "MGYA00067439"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS533943",
+          "SRS533942",
+          "SRS533941",
+          "SRS533940",
+          "SRS533947",
+          "SRS533946",
+          "SRS533945",
+          "SRS533944",
+          "SRS533949",
+          "SRS533948",
+          "SRS534018",
+          "SRS534019",
+          "SRS534010",
+          "SRS534011",
+          "SRS534012",
+          "SRS534013",
+          "SRS534014",
+          "SRS534015",
+          "SRS534016",
+          "SRS534017",
+          "SRS533954",
+          "SRS533955",
+          "SRS533956",
+          "SRS533957",
+          "SRS533950",
+          "SRS533951",
+          "SRS533952",
+          "SRS533953",
+          "SRS533958",
+          "SRS533959",
+          "SRS534022",
+          "SRS533994",
+          "SRS533995",
+          "SRS533996",
+          "SRS533997",
+          "SRS533998",
+          "SRS534028",
+          "SRS533929",
+          "SRS533932",
+          "SRS533933",
+          "SRS533930",
+          "SRS533931",
+          "SRS533936",
+          "SRS533937",
+          "SRS533934",
+          "SRS533935",
+          "SRS533938",
+          "SRS533939",
+          "SRS533989",
+          "SRS533988",
+          "SRS533987",
+          "SRS533986",
+          "SRS533985",
+          "SRS533984",
+          "SRS533983",
+          "SRS533982",
+          "SRS533981",
+          "SRS533980",
+          "SRS534020",
+          "SRS534021",
+          "SRS533991",
+          "SRS533992",
+          "SRS533993",
+          "SRS534025",
+          "SRS534024",
+          "SRS534027",
+          "SRS534026",
+          "SRS534029",
+          "SRS533999",
+          "SRS534023",
+          "SRS533969",
+          "SRS533968",
+          "SRS533965",
+          "SRS533964",
+          "SRS533967",
+          "SRS533966",
+          "SRS533961",
+          "SRS533960",
+          "SRS533963",
+          "SRS533962",
+          "SRS534032",
+          "SRS534033",
+          "SRS534030",
+          "SRS534031",
+          "SRS534036",
+          "SRS534034",
+          "SRS534035",
+          "SRS533978",
+          "SRS533979",
+          "SRS533976",
+          "SRS533977",
+          "SRS533974",
+          "SRS533975",
+          "SRS533972",
+          "SRS533973",
+          "SRS533970",
+          "SRS533971",
+          "SRS533990",
+          "SRS534007",
+          "SRS534006",
+          "SRS534005",
+          "SRS534004",
+          "SRS534003",
+          "SRS534002",
+          "SRS534001",
+          "SRS534000",
+          "SRS534009",
+          "SRS534008"
+        ],
+        "biome_name": [
+          "Soil"
+        ],
+        "centre_name": [
+          "INGEBI-CONICET"
+        ],
+        "description": [
+          "Barcoded amplicon sequencing targeting V4 regions of 16S gene from uncultured soil bacteria."
+        ],
+        "name": [
+          "Bacterial diversity in agricultural soils"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00001869",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB15043"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00132770",
+          "MGYA00579274",
+          "MGYA00579272",
+          "MGYA00579273",
+          "MGYA00579270",
+          "MGYA00579271",
+          "MGYA00151146",
+          "MGYA00151147",
+          "MGYA00151144",
+          "MGYA00151145",
+          "MGYA00151148",
+          "MGYA00151149",
+          "MGYA00132769",
+          "MGYA00132768",
+          "MGYA00132765",
+          "MGYA00132764",
+          "MGYA00132767",
+          "MGYA00132766",
+          "MGYA00132763",
+          "MGYA00132762",
+          "MGYA00579267",
+          "MGYA00579266",
+          "MGYA00579269",
+          "MGYA00579268",
+          "MGYA00151151",
+          "MGYA00151150",
+          "MGYA00151152"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS1800278",
+          "ERS1800274",
+          "ERS1800275",
+          "ERS1800276",
+          "ERS1800277",
+          "ERS1800270",
+          "ERS1800271",
+          "ERS1800272",
+          "ERS1800273"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "centre_name": [
+          "CIIMAR - Interdisciplinary Centre of Marine and Environmental Research"
+        ],
+        "description": [
+          "One of the main concerns about the Arctic Ocean has been the changing sea ice regime with a reduction in the summer sea ice extent and a shift in dominance from thicker, perennial multiyear ice towards thinner, first-year ice. As the dietary basis of marine food webs and central players of biogeochemical cycles, microbial communities play an irreplaceable role when evaluating the ecological impact of the Arctics thinner ice regime. During the Norwegian young sea Ice cruise 2015 (N-ICE2015), that took place in drifting pack ice north of Svalbard between January-June 2015, seawater was collected, at 5, 20 or 50, 250 m depth in 9th March, 27th April and 16th June, together with physical and biogeochemical data. Through the massively parallel sequencing of environmental DNA (metagenomics) we expect to get a snapshot of the Arctics microbiome structure, key functions and dynamic through the dark-light transition."
+        ],
+        "name": [
+          "Shotgun Metagenomic Sequencing of the Arctic Ocean during Winter-Spring Transition"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00001388",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB7017"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00095054",
+          "MGYA00095055",
+          "MGYA00095057",
+          "MGYA00095056",
+          "MGYA00095046",
+          "MGYA00095047",
+          "MGYA00095053",
+          "MGYA00095052",
+          "MGYA00095051",
+          "MGYA00095050",
+          "MGYA00095048",
+          "MGYA00095049"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS529627",
+          "ERS529626"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "centre_name": [
+          "Center of Applied Geosciences"
+        ],
+        "description": [
+          "Ribosomal tag pyrosequencing of DNA and RNA reveals  'rare' taxa with high protein synthesis potential in the sediment of a hypersaline lake in Western Australia"
+        ],
+        "name": [
+          "Ribosomal tag pyrosequencing of DNA and RNA reveals  'rare' taxa with high protein synthesis potential in the sediment of a hypersaline lake in Western Australia"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00004108",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB13564"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00356509",
+          "MGYA00356512",
+          "MGYA00356510",
+          "MGYA00356511"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS1118380",
+          "ERS1118381",
+          "ERS1118379",
+          "ERS1118378"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "centre_name": [
+          "School of Biological Sciences, The University of Hong Kong"
+        ],
+        "description": [
+          "DNA from 4 SCS sediments have been extracted and amplified by 21f/958r & Arch347F/Arch806R primer pairs (for archaeal 16S rRNA gene). The archaeal communities of these 4 samples were obtained."
+        ],
+        "name": [
+          "MiSeq 16S rRNA gene (archaeal 16S rRNA gene) sequences of 4 SCS sediments"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00003228",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB26136"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00237667",
+          "MGYA00593735"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS1589272"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "EMG"
+        ],
+        "description": [
+          "The marine metagenome Third Party Annotation (TPA) assembly was derived from the primary whole genome shotgun (WGS) data set: PRJNA329988.  This project includes samples from the following biomes: Environmental, Aquatic, Marine."
+        ],
+        "name": [
+          "EMG produced TPA metagenomics assembly of the Marine microbial communities from South of Eden, South Pacific Ocean - MP1434 metagenome (marine metagenome) data set."
+        ]
+      }
+    },
+    {
+      "id": "MGYS00001864",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB21491"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00524216",
+          "MGYA00524217",
+          "MGYA00524214",
+          "MGYA00524215",
+          "MGYA00524212",
+          "MGYA00524213",
+          "MGYA00524210",
+          "MGYA00524211",
+          "MGYA00524218",
+          "MGYA00524219",
+          "MGYA00524966",
+          "MGYA00524967",
+          "MGYA00132228",
+          "MGYA00132229",
+          "MGYA00132220",
+          "MGYA00132221",
+          "MGYA00132222",
+          "MGYA00132223",
+          "MGYA00132224",
+          "MGYA00132225",
+          "MGYA00132226",
+          "MGYA00132227",
+          "MGYA00132688",
+          "MGYA00132689",
+          "MGYA00132682",
+          "MGYA00132683",
+          "MGYA00132680",
+          "MGYA00132681",
+          "MGYA00132686",
+          "MGYA00132687",
+          "MGYA00132684",
+          "MGYA00132685",
+          "MGYA00524784",
+          "MGYA00524785",
+          "MGYA00524786",
+          "MGYA00524787",
+          "MGYA00524780",
+          "MGYA00524781",
+          "MGYA00524782",
+          "MGYA00524783",
+          "MGYA00524788",
+          "MGYA00524789",
+          "MGYA00132350",
+          "MGYA00132351",
+          "MGYA00132352",
+          "MGYA00132353",
+          "MGYA00132354",
+          "MGYA00132355",
+          "MGYA00132356",
+          "MGYA00132357",
+          "MGYA00132358",
+          "MGYA00132359",
+          "MGYA00525235",
+          "MGYA00525234",
+          "MGYA00525233",
+          "MGYA00525232",
+          "MGYA00573061",
+          "MGYA00573060",
+          "MGYA00573063",
+          "MGYA00573062",
+          "MGYA00573065",
+          "MGYA00573064",
+          "MGYA00573067",
+          "MGYA00573066",
+          "MGYA00573069",
+          "MGYA00573068",
+          "MGYA00138509",
+          "MGYA00138721",
+          "MGYA00573089",
+          "MGYA00573088",
+          "MGYA00573087",
+          "MGYA00573086",
+          "MGYA00573085",
+          "MGYA00573084",
+          "MGYA00573083",
+          "MGYA00573082",
+          "MGYA00573081",
+          "MGYA00573080",
+          "MGYA00523019",
+          "MGYA00523018",
+          "MGYA00523017",
+          "MGYA00523016",
+          "MGYA00524201",
+          "MGYA00524200",
+          "MGYA00524203",
+          "MGYA00524202",
+          "MGYA00524205",
+          "MGYA00524204",
+          "MGYA00524207",
+          "MGYA00524206",
+          "MGYA00524209",
+          "MGYA00524208",
+          "MGYA00523275",
+          "MGYA00523274",
+          "MGYA00523277",
+          "MGYA00523276",
+          "MGYA00523271",
+          "MGYA00523270",
+          "MGYA00523273",
+          "MGYA00523272",
+          "MGYA00523279",
+          "MGYA00523278",
+          "MGYA00524976",
+          "MGYA00524379",
+          "MGYA00524378",
+          "MGYA00132239",
+          "MGYA00132238",
+          "MGYA00132233",
+          "MGYA00132232",
+          "MGYA00132231",
+          "MGYA00132230",
+          "MGYA00132237",
+          "MGYA00132236",
+          "MGYA00132235",
+          "MGYA00132234",
+          "MGYA00132695",
+          "MGYA00132694",
+          "MGYA00132697",
+          "MGYA00132696",
+          "MGYA00132691",
+          "MGYA00132690",
+          "MGYA00132693",
+          "MGYA00132692",
+          "MGYA00132699",
+          "MGYA00132698",
+          "MGYA00524797",
+          "MGYA00524796",
+          "MGYA00524795",
+          "MGYA00524794",
+          "MGYA00524793",
+          "MGYA00572931",
+          "MGYA00524791",
+          "MGYA00524790",
+          "MGYA00572938",
+          "MGYA00572939",
+          "MGYA00524799",
+          "MGYA00524798",
+          "MGYA00132343",
+          "MGYA00132342",
+          "MGYA00132341",
+          "MGYA00132340",
+          "MGYA00132347",
+          "MGYA00132346",
+          "MGYA00132345",
+          "MGYA00132344",
+          "MGYA00132349",
+          "MGYA00132348",
+          "MGYA00523469",
+          "MGYA00523200",
+          "MGYA00523201",
+          "MGYA00523202",
+          "MGYA00523203",
+          "MGYA00523204",
+          "MGYA00523205",
+          "MGYA00523206",
+          "MGYA00523207",
+          "MGYA00524947",
+          "MGYA00524948",
+          "MGYA00524949",
+          "MGYA00132596",
+          "MGYA00132597",
+          "MGYA00132594",
+          "MGYA00132595",
+          "MGYA00132592",
+          "MGYA00132593",
+          "MGYA00132590",
+          "MGYA00132591",
+          "MGYA00132598",
+          "MGYA00132599",
+          "MGYA00132206",
+          "MGYA00132207",
+          "MGYA00132204",
+          "MGYA00132205",
+          "MGYA00132202",
+          "MGYA00132203",
+          "MGYA00132200",
+          "MGYA00132201",
+          "MGYA00132208",
+          "MGYA00132209",
+          "MGYA00524387",
+          "MGYA00524098",
+          "MGYA00524099",
+          "MGYA00524090",
+          "MGYA00524091",
+          "MGYA00524092",
+          "MGYA00524093",
+          "MGYA00524094",
+          "MGYA00524095",
+          "MGYA00524096",
+          "MGYA00524097",
+          "MGYA00572927",
+          "MGYA00572926",
+          "MGYA00572925",
+          "MGYA00572924",
+          "MGYA00572923",
+          "MGYA00572922",
+          "MGYA00572921",
+          "MGYA00572920",
+          "MGYA00572929",
+          "MGYA00572928",
+          "MGYA00524525",
+          "MGYA00132378",
+          "MGYA00132379",
+          "MGYA00132376",
+          "MGYA00132377",
+          "MGYA00132374",
+          "MGYA00132375",
+          "MGYA00132372",
+          "MGYA00132373",
+          "MGYA00132370",
+          "MGYA00132371",
+          "MGYA00132578",
+          "MGYA00132579",
+          "MGYA00132574",
+          "MGYA00132575",
+          "MGYA00132576",
+          "MGYA00132577",
+          "MGYA00132570",
+          "MGYA00132571",
+          "MGYA00132572",
+          "MGYA00132573",
+          "MGYA00138512",
+          "MGYA00524386",
+          "MGYA00523474",
+          "MGYA00523473",
+          "MGYA00523472",
+          "MGYA00523471",
+          "MGYA00523470",
+          "MGYA00524880",
+          "MGYA00524951",
+          "MGYA00524950",
+          "MGYA00524319",
+          "MGYA00524318",
+          "MGYA00524313",
+          "MGYA00524312",
+          "MGYA00524311",
+          "MGYA00524310",
+          "MGYA00524317",
+          "MGYA00524316",
+          "MGYA00524315",
+          "MGYA00524314",
+          "MGYA00132581",
+          "MGYA00132580",
+          "MGYA00132583",
+          "MGYA00132582",
+          "MGYA00132585",
+          "MGYA00132584",
+          "MGYA00132587",
+          "MGYA00132586",
+          "MGYA00132589",
+          "MGYA00132588",
+          "MGYA00132211",
+          "MGYA00132210",
+          "MGYA00132213",
+          "MGYA00132212",
+          "MGYA00132215",
+          "MGYA00132214",
+          "MGYA00132217",
+          "MGYA00132216",
+          "MGYA00132219",
+          "MGYA00132218",
+          "MGYA00524089",
+          "MGYA00524088",
+          "MGYA00524083",
+          "MGYA00524082",
+          "MGYA00524081",
+          "MGYA00524080",
+          "MGYA00524087",
+          "MGYA00524086",
+          "MGYA00524085",
+          "MGYA00524084",
+          "MGYA00572912",
+          "MGYA00572913",
+          "MGYA00572910",
+          "MGYA00572911",
+          "MGYA00572916",
+          "MGYA00572917",
+          "MGYA00572914",
+          "MGYA00572915",
+          "MGYA00572918",
+          "MGYA00572919",
+          "MGYA00132369",
+          "MGYA00132368",
+          "MGYA00132361",
+          "MGYA00132360",
+          "MGYA00132363",
+          "MGYA00132362",
+          "MGYA00132365",
+          "MGYA00132364",
+          "MGYA00132367",
+          "MGYA00132366",
+          "MGYA00132569",
+          "MGYA00132568",
+          "MGYA00132567",
+          "MGYA00132566",
+          "MGYA00132565",
+          "MGYA00132564",
+          "MGYA00132563",
+          "MGYA00132562",
+          "MGYA00132561",
+          "MGYA00132560",
+          "MGYA00524621",
+          "MGYA00524620",
+          "MGYA00523190",
+          "MGYA00523191",
+          "MGYA00523192",
+          "MGYA00523193",
+          "MGYA00523194",
+          "MGYA00523195",
+          "MGYA00523196",
+          "MGYA00523197",
+          "MGYA00523198",
+          "MGYA00523199",
+          "MGYA00138605",
+          "MGYA00523048",
+          "MGYA00523998",
+          "MGYA00523999",
+          "MGYA00523990",
+          "MGYA00523991",
+          "MGYA00523992",
+          "MGYA00523993",
+          "MGYA00523994",
+          "MGYA00523995",
+          "MGYA00523996",
+          "MGYA00523997",
+          "MGYA00524326",
+          "MGYA00524325",
+          "MGYA00524320",
+          "MGYA00525121",
+          "MGYA00525120",
+          "MGYA00132488",
+          "MGYA00132489",
+          "MGYA00132480",
+          "MGYA00132481",
+          "MGYA00132482",
+          "MGYA00132483",
+          "MGYA00132484",
+          "MGYA00132485",
+          "MGYA00132486",
+          "MGYA00132487",
+          "MGYA00572909",
+          "MGYA00572908",
+          "MGYA00572905",
+          "MGYA00572904",
+          "MGYA00572907",
+          "MGYA00572906",
+          "MGYA00572901",
+          "MGYA00572900",
+          "MGYA00572903",
+          "MGYA00572902",
+          "MGYA00525056",
+          "MGYA00525055",
+          "MGYA00524058",
+          "MGYA00524059",
+          "MGYA00524054",
+          "MGYA00524055",
+          "MGYA00524056",
+          "MGYA00524057",
+          "MGYA00524050",
+          "MGYA00524051",
+          "MGYA00524052",
+          "MGYA00524053",
+          "MGYA00132394",
+          "MGYA00132395",
+          "MGYA00132396",
+          "MGYA00132397",
+          "MGYA00132390",
+          "MGYA00132391",
+          "MGYA00132392",
+          "MGYA00132393",
+          "MGYA00132398",
+          "MGYA00132399",
+          "MGYA00132558",
+          "MGYA00132559",
+          "MGYA00132552",
+          "MGYA00132553",
+          "MGYA00132550",
+          "MGYA00132551",
+          "MGYA00132556",
+          "MGYA00132557",
+          "MGYA00132554",
+          "MGYA00132555",
+          "MGYA00524618",
+          "MGYA00524619",
+          "MGYA00524617",
+          "MGYA00132541",
+          "MGYA00523183",
+          "MGYA00523182",
+          "MGYA00523181",
+          "MGYA00523180",
+          "MGYA00523187",
+          "MGYA00523186",
+          "MGYA00523185",
+          "MGYA00523184",
+          "MGYA00523189",
+          "MGYA00523188",
+          "MGYA00138618",
+          "MGYA00523051",
+          "MGYA00523989",
+          "MGYA00523988",
+          "MGYA00523983",
+          "MGYA00523982",
+          "MGYA00523981",
+          "MGYA00523980",
+          "MGYA00523987",
+          "MGYA00523986",
+          "MGYA00523985",
+          "MGYA00523984",
+          "MGYA00525119",
+          "MGYA00132499",
+          "MGYA00132498",
+          "MGYA00132493",
+          "MGYA00132492",
+          "MGYA00132491",
+          "MGYA00132490",
+          "MGYA00132497",
+          "MGYA00132496",
+          "MGYA00132495",
+          "MGYA00132494",
+          "MGYA00132663",
+          "MGYA00572978",
+          "MGYA00572979",
+          "MGYA00572970",
+          "MGYA00572971",
+          "MGYA00572972",
+          "MGYA00572973",
+          "MGYA00572974",
+          "MGYA00572975",
+          "MGYA00572976",
+          "MGYA00572977",
+          "MGYA00524049",
+          "MGYA00524048",
+          "MGYA00524047",
+          "MGYA00524046",
+          "MGYA00524045",
+          "MGYA00524044",
+          "MGYA00524043",
+          "MGYA00524042",
+          "MGYA00524041",
+          "MGYA00524040",
+          "MGYA00132387",
+          "MGYA00132386",
+          "MGYA00132385",
+          "MGYA00132384",
+          "MGYA00132383",
+          "MGYA00132382",
+          "MGYA00132381",
+          "MGYA00132380",
+          "MGYA00132389",
+          "MGYA00132388",
+          "MGYA00132545",
+          "MGYA00132544",
+          "MGYA00132547",
+          "MGYA00132546",
+          "MGYA00524199",
+          "MGYA00132540",
+          "MGYA00132543",
+          "MGYA00132542",
+          "MGYA00132549",
+          "MGYA00132548",
+          "MGYA00572804",
+          "MGYA00572805",
+          "MGYA00572806",
+          "MGYA00572807",
+          "MGYA00572800",
+          "MGYA00572801",
+          "MGYA00572802",
+          "MGYA00572803",
+          "MGYA00572808",
+          "MGYA00572809",
+          "MGYA00573121",
+          "MGYA00132662",
+          "MGYA00138598",
+          "MGYA00523428",
+          "MGYA00523429",
+          "MGYA00523420",
+          "MGYA00523421",
+          "MGYA00523422",
+          "MGYA00523423",
+          "MGYA00523424",
+          "MGYA00523425",
+          "MGYA00523426",
+          "MGYA00523427",
+          "MGYA00132718",
+          "MGYA00132719",
+          "MGYA00132710",
+          "MGYA00132711",
+          "MGYA00132712",
+          "MGYA00132713",
+          "MGYA00132714",
+          "MGYA00132715",
+          "MGYA00132716",
+          "MGYA00132717",
+          "MGYA00524458",
+          "MGYA00524459",
+          "MGYA00132624",
+          "MGYA00132625",
+          "MGYA00132626",
+          "MGYA00132627",
+          "MGYA00523958",
+          "MGYA00523959",
+          "MGYA00132622",
+          "MGYA00132623",
+          "MGYA00523954",
+          "MGYA00523955",
+          "MGYA00523956",
+          "MGYA00523957",
+          "MGYA00132628",
+          "MGYA00132629",
+          "MGYA00523953",
+          "MGYA00572969",
+          "MGYA00572968",
+          "MGYA00572963",
+          "MGYA00572962",
+          "MGYA00572961",
+          "MGYA00572960",
+          "MGYA00572967",
+          "MGYA00572966",
+          "MGYA00572965",
+          "MGYA00572964",
+          "MGYA00524078",
+          "MGYA00524079",
+          "MGYA00524072",
+          "MGYA00524073",
+          "MGYA00524070",
+          "MGYA00524071",
+          "MGYA00524076",
+          "MGYA00524077",
+          "MGYA00524074",
+          "MGYA00524075",
+          "MGYA00132530",
+          "MGYA00132531",
+          "MGYA00132532",
+          "MGYA00132533",
+          "MGYA00132534",
+          "MGYA00132535",
+          "MGYA00132536",
+          "MGYA00132537",
+          "MGYA00132538",
+          "MGYA00132539",
+          "MGYA00572817",
+          "MGYA00572816",
+          "MGYA00572815",
+          "MGYA00572814",
+          "MGYA00572813",
+          "MGYA00572812",
+          "MGYA00572811",
+          "MGYA00572810",
+          "MGYA00572819",
+          "MGYA00572818",
+          "MGYA00132448",
+          "MGYA00132449",
+          "MGYA00132444",
+          "MGYA00132445",
+          "MGYA00132446",
+          "MGYA00132447",
+          "MGYA00132440",
+          "MGYA00132441",
+          "MGYA00132442",
+          "MGYA00132443",
+          "MGYA00138561",
+          "MGYA00523432",
+          "MGYA00523431",
+          "MGYA00523430",
+          "MGYA00138634",
+          "MGYA00132709",
+          "MGYA00132708",
+          "MGYA00132703",
+          "MGYA00132702",
+          "MGYA00132701",
+          "MGYA00132700",
+          "MGYA00132707",
+          "MGYA00132706",
+          "MGYA00132705",
+          "MGYA00132704",
+          "MGYA00524281",
+          "MGYA00524280",
+          "MGYA00524283",
+          "MGYA00524282",
+          "MGYA00132637",
+          "MGYA00132636",
+          "MGYA00132635",
+          "MGYA00132634",
+          "MGYA00132633",
+          "MGYA00132632",
+          "MGYA00132631",
+          "MGYA00132630",
+          "MGYA00132639",
+          "MGYA00132638",
+          "MGYA00572956",
+          "MGYA00572957",
+          "MGYA00572954",
+          "MGYA00572955",
+          "MGYA00572952",
+          "MGYA00572953",
+          "MGYA00572950",
+          "MGYA00572951",
+          "MGYA00572958",
+          "MGYA00572959",
+          "MGYA00524065",
+          "MGYA00524064",
+          "MGYA00524067",
+          "MGYA00524066",
+          "MGYA00524061",
+          "MGYA00524060",
+          "MGYA00524063",
+          "MGYA00524062",
+          "MGYA00524069",
+          "MGYA00524068",
+          "MGYA00132523",
+          "MGYA00132522",
+          "MGYA00132521",
+          "MGYA00132520",
+          "MGYA00132527",
+          "MGYA00132526",
+          "MGYA00132525",
+          "MGYA00132524",
+          "MGYA00132529",
+          "MGYA00132528",
+          "MGYA00572822",
+          "MGYA00572823",
+          "MGYA00572820",
+          "MGYA00572821",
+          "MGYA00572826",
+          "MGYA00572827",
+          "MGYA00572824",
+          "MGYA00572825",
+          "MGYA00572828",
+          "MGYA00572829",
+          "MGYA00132459",
+          "MGYA00132458",
+          "MGYA00132457",
+          "MGYA00132456",
+          "MGYA00132455",
+          "MGYA00132454",
+          "MGYA00132453",
+          "MGYA00132452",
+          "MGYA00132451",
+          "MGYA00132450",
+          "MGYA00523978",
+          "MGYA00523979",
+          "MGYA00523970",
+          "MGYA00132609",
+          "MGYA00573014",
+          "MGYA00573015",
+          "MGYA00573016",
+          "MGYA00573017",
+          "MGYA00573010",
+          "MGYA00573011",
+          "MGYA00573012",
+          "MGYA00573013",
+          "MGYA00573018",
+          "MGYA00573019",
+          "MGYA00523406",
+          "MGYA00523407",
+          "MGYA00523404",
+          "MGYA00523405",
+          "MGYA00523402",
+          "MGYA00523403",
+          "MGYA00523400",
+          "MGYA00523401",
+          "MGYA00132198",
+          "MGYA00523408",
+          "MGYA00523409",
+          "MGYA00132199",
+          "MGYA00573120",
+          "MGYA00572949",
+          "MGYA00572948",
+          "MGYA00523397",
+          "MGYA00523398",
+          "MGYA00523399",
+          "MGYA00524872",
+          "MGYA00524873",
+          "MGYA00524870",
+          "MGYA00524871",
+          "MGYA00524876",
+          "MGYA00524877",
+          "MGYA00524874",
+          "MGYA00524875",
+          "MGYA00524878",
+          "MGYA00524879",
+          "MGYA00524476",
+          "MGYA00524477",
+          "MGYA00524474",
+          "MGYA00524475",
+          "MGYA00524472",
+          "MGYA00524473",
+          "MGYA00524470",
+          "MGYA00524471",
+          "MGYA00524478",
+          "MGYA00524479",
+          "MGYA00524279",
+          "MGYA00132602",
+          "MGYA00132603",
+          "MGYA00132600",
+          "MGYA00132601",
+          "MGYA00132606",
+          "MGYA00132607",
+          "MGYA00132604",
+          "MGYA00132605",
+          "MGYA00523972",
+          "MGYA00523973",
+          "MGYA00132608",
+          "MGYA00523971",
+          "MGYA00523976",
+          "MGYA00523977",
+          "MGYA00523974",
+          "MGYA00523975",
+          "MGYA00132516",
+          "MGYA00132517",
+          "MGYA00572941",
+          "MGYA00572940",
+          "MGYA00572943",
+          "MGYA00572942",
+          "MGYA00572945",
+          "MGYA00572944",
+          "MGYA00572947",
+          "MGYA00572946",
+          "MGYA00132192",
+          "MGYA00132193",
+          "MGYA00132190",
+          "MGYA00132191",
+          "MGYA00132196",
+          "MGYA00132197",
+          "MGYA00132194",
+          "MGYA00132195",
+          "MGYA00524010",
+          "MGYA00524011",
+          "MGYA00524012",
+          "MGYA00524013",
+          "MGYA00524014",
+          "MGYA00524015",
+          "MGYA00524016",
+          "MGYA00524017",
+          "MGYA00524018",
+          "MGYA00524019",
+          "MGYA00524380",
+          "MGYA00524381",
+          "MGYA00524382",
+          "MGYA00524383",
+          "MGYA00524384",
+          "MGYA00524385",
+          "MGYA00132518",
+          "MGYA00132519",
+          "MGYA00524388",
+          "MGYA00524389",
+          "MGYA00132514",
+          "MGYA00132515",
+          "MGYA00132512",
+          "MGYA00132513",
+          "MGYA00132510",
+          "MGYA00132511",
+          "MGYA00132288",
+          "MGYA00132289",
+          "MGYA00132286",
+          "MGYA00132287",
+          "MGYA00132284",
+          "MGYA00132285",
+          "MGYA00132282",
+          "MGYA00132283",
+          "MGYA00132280",
+          "MGYA00132281",
+          "MGYA00572839",
+          "MGYA00572838",
+          "MGYA00572835",
+          "MGYA00572834",
+          "MGYA00572837",
+          "MGYA00572836",
+          "MGYA00572831",
+          "MGYA00572830",
+          "MGYA00572833",
+          "MGYA00572832",
+          "MGYA00524128",
+          "MGYA00524129",
+          "MGYA00524124",
+          "MGYA00524125",
+          "MGYA00524126",
+          "MGYA00524127",
+          "MGYA00524120",
+          "MGYA00524121",
+          "MGYA00524122",
+          "MGYA00524123",
+          "MGYA00132468",
+          "MGYA00132469",
+          "MGYA00132462",
+          "MGYA00132463",
+          "MGYA00132460",
+          "MGYA00132461",
+          "MGYA00132466",
+          "MGYA00132467",
+          "MGYA00132464",
+          "MGYA00132465",
+          "MGYA00572934",
+          "MGYA00572935",
+          "MGYA00572936",
+          "MGYA00572937",
+          "MGYA00572930",
+          "MGYA00524792",
+          "MGYA00572932",
+          "MGYA00572933",
+          "MGYA00573007",
+          "MGYA00573006",
+          "MGYA00573005",
+          "MGYA00573004",
+          "MGYA00573003",
+          "MGYA00573002",
+          "MGYA00573001",
+          "MGYA00573000",
+          "MGYA00573009",
+          "MGYA00573008",
+          "MGYA00523411",
+          "MGYA00523410",
+          "MGYA00523413",
+          "MGYA00523412",
+          "MGYA00523415",
+          "MGYA00523414",
+          "MGYA00523417",
+          "MGYA00523416",
+          "MGYA00523419",
+          "MGYA00523418",
+          "MGYA00138652",
+          "MGYA00132721",
+          "MGYA00132720",
+          "MGYA00132723",
+          "MGYA00132722",
+          "MGYA00132725",
+          "MGYA00132724",
+          "MGYA00132727",
+          "MGYA00132726",
+          "MGYA00132728",
+          "MGYA00524869",
+          "MGYA00524461",
+          "MGYA00524460",
+          "MGYA00524463",
+          "MGYA00524462",
+          "MGYA00524465",
+          "MGYA00524464",
+          "MGYA00524467",
+          "MGYA00524466",
+          "MGYA00524469",
+          "MGYA00524468",
+          "MGYA00132619",
+          "MGYA00524262",
+          "MGYA00524261",
+          "MGYA00524260",
+          "MGYA00132615",
+          "MGYA00132614",
+          "MGYA00132617",
+          "MGYA00132616",
+          "MGYA00132611",
+          "MGYA00132610",
+          "MGYA00132613",
+          "MGYA00132612",
+          "MGYA00523965",
+          "MGYA00523964",
+          "MGYA00523967",
+          "MGYA00523966",
+          "MGYA00523961",
+          "MGYA00523960",
+          "MGYA00523963",
+          "MGYA00523962",
+          "MGYA00523969",
+          "MGYA00523968",
+          "MGYA00525026",
+          "MGYA00525024",
+          "MGYA00525025",
+          "MGYA00525023",
+          "MGYA00132189",
+          "MGYA00132188",
+          "MGYA00524003",
+          "MGYA00524002",
+          "MGYA00524001",
+          "MGYA00524000",
+          "MGYA00524007",
+          "MGYA00524006",
+          "MGYA00524005",
+          "MGYA00524004",
+          "MGYA00524009",
+          "MGYA00524008",
+          "MGYA00132509",
+          "MGYA00132508",
+          "MGYA00132501",
+          "MGYA00132500",
+          "MGYA00132503",
+          "MGYA00132502",
+          "MGYA00132505",
+          "MGYA00132504",
+          "MGYA00132507",
+          "MGYA00132506",
+          "MGYA00132299",
+          "MGYA00132298",
+          "MGYA00132291",
+          "MGYA00132290",
+          "MGYA00132293",
+          "MGYA00132292",
+          "MGYA00132295",
+          "MGYA00132294",
+          "MGYA00132297",
+          "MGYA00132296",
+          "MGYA00572848",
+          "MGYA00572849",
+          "MGYA00572840",
+          "MGYA00572841",
+          "MGYA00572842",
+          "MGYA00572843",
+          "MGYA00572844",
+          "MGYA00572845",
+          "MGYA00572846",
+          "MGYA00572847",
+          "MGYA00524131",
+          "MGYA00524130",
+          "MGYA00524485",
+          "MGYA00524484",
+          "MGYA00524483",
+          "MGYA00524482",
+          "MGYA00524481",
+          "MGYA00524480",
+          "MGYA00132475",
+          "MGYA00132474",
+          "MGYA00132477",
+          "MGYA00132476",
+          "MGYA00132471",
+          "MGYA00132470",
+          "MGYA00132473",
+          "MGYA00132472",
+          "MGYA00132479",
+          "MGYA00132478",
+          "MGYA00572998",
+          "MGYA00572999",
+          "MGYA00572992",
+          "MGYA00572993",
+          "MGYA00572990",
+          "MGYA00572991",
+          "MGYA00572996",
+          "MGYA00572997",
+          "MGYA00572994",
+          "MGYA00572995",
+          "MGYA00522956",
+          "MGYA00132620",
+          "MGYA00132621",
+          "MGYA00573032",
+          "MGYA00573033",
+          "MGYA00573030",
+          "MGYA00573031",
+          "MGYA00573036",
+          "MGYA00573037",
+          "MGYA00573034",
+          "MGYA00573035",
+          "MGYA00573038",
+          "MGYA00573039",
+          "MGYA00523172",
+          "MGYA00523173",
+          "MGYA00523170",
+          "MGYA00523171",
+          "MGYA00523176",
+          "MGYA00523177",
+          "MGYA00523174",
+          "MGYA00523175",
+          "MGYA00523178",
+          "MGYA00523179",
+          "MGYA00573108",
+          "MGYA00573109",
+          "MGYA00573106",
+          "MGYA00573107",
+          "MGYA00573104",
+          "MGYA00573105",
+          "MGYA00573102",
+          "MGYA00573103",
+          "MGYA00573100",
+          "MGYA00573101",
+          "MGYA00524810",
+          "MGYA00524811",
+          "MGYA00524812",
+          "MGYA00523288",
+          "MGYA00523289",
+          "MGYA00523280",
+          "MGYA00523281",
+          "MGYA00523282",
+          "MGYA00523283",
+          "MGYA00523284",
+          "MGYA00523285",
+          "MGYA00523286",
+          "MGYA00523287",
+          "MGYA00132668",
+          "MGYA00132669",
+          "MGYA00524256",
+          "MGYA00524257",
+          "MGYA00132660",
+          "MGYA00132661",
+          "MGYA00524258",
+          "MGYA00524259",
+          "MGYA00132664",
+          "MGYA00132665",
+          "MGYA00132666",
+          "MGYA00132667",
+          "MGYA00524038",
+          "MGYA00524039",
+          "MGYA00524036",
+          "MGYA00524037",
+          "MGYA00524034",
+          "MGYA00524035",
+          "MGYA00524032",
+          "MGYA00524033",
+          "MGYA00524030",
+          "MGYA00524031",
+          "MGYA00132264",
+          "MGYA00132265",
+          "MGYA00132266",
+          "MGYA00132267",
+          "MGYA00132260",
+          "MGYA00132261",
+          "MGYA00132262",
+          "MGYA00132263",
+          "MGYA00132268",
+          "MGYA00132269",
+          "MGYA00572859",
+          "MGYA00572858",
+          "MGYA00572853",
+          "MGYA00572852",
+          "MGYA00572851",
+          "MGYA00572850",
+          "MGYA00572857",
+          "MGYA00572856",
+          "MGYA00572855",
+          "MGYA00572854",
+          "MGYA00524108",
+          "MGYA00524109",
+          "MGYA00524102",
+          "MGYA00524103",
+          "MGYA00524100",
+          "MGYA00524101",
+          "MGYA00524106",
+          "MGYA00524107",
+          "MGYA00524104",
+          "MGYA00524105",
+          "MGYA00132400",
+          "MGYA00132401",
+          "MGYA00132402",
+          "MGYA00132403",
+          "MGYA00132404",
+          "MGYA00132405",
+          "MGYA00132406",
+          "MGYA00132407",
+          "MGYA00132408",
+          "MGYA00132409",
+          "MGYA00572985",
+          "MGYA00572984",
+          "MGYA00572987",
+          "MGYA00572986",
+          "MGYA00572981",
+          "MGYA00572980",
+          "MGYA00572983",
+          "MGYA00572982",
+          "MGYA00572989",
+          "MGYA00572988",
+          "MGYA00132318",
+          "MGYA00132319",
+          "MGYA00132314",
+          "MGYA00132315",
+          "MGYA00132316",
+          "MGYA00132317",
+          "MGYA00132310",
+          "MGYA00132311",
+          "MGYA00132312",
+          "MGYA00132313",
+          "MGYA00573029",
+          "MGYA00573028",
+          "MGYA00573025",
+          "MGYA00573024",
+          "MGYA00573027",
+          "MGYA00573026",
+          "MGYA00573021",
+          "MGYA00573020",
+          "MGYA00573023",
+          "MGYA00573022",
+          "MGYA00138672",
+          "MGYA00573119",
+          "MGYA00573118",
+          "MGYA00573111",
+          "MGYA00573110",
+          "MGYA00573113",
+          "MGYA00573112",
+          "MGYA00573115",
+          "MGYA00573117",
+          "MGYA00573116",
+          "MGYA00523169",
+          "MGYA00523168",
+          "MGYA00524809",
+          "MGYA00524808",
+          "MGYA00524803",
+          "MGYA00524802",
+          "MGYA00524801",
+          "MGYA00524800",
+          "MGYA00524807",
+          "MGYA00524806",
+          "MGYA00524805",
+          "MGYA00524804",
+          "MGYA00523290",
+          "MGYA00132679",
+          "MGYA00132678",
+          "MGYA00132673",
+          "MGYA00132672",
+          "MGYA00132671",
+          "MGYA00132670",
+          "MGYA00132677",
+          "MGYA00132676",
+          "MGYA00132675",
+          "MGYA00132674",
+          "MGYA00524029",
+          "MGYA00524028",
+          "MGYA00524021",
+          "MGYA00524020",
+          "MGYA00524023",
+          "MGYA00524022",
+          "MGYA00524025",
+          "MGYA00524024",
+          "MGYA00524027",
+          "MGYA00524026",
+          "MGYA00132277",
+          "MGYA00132276",
+          "MGYA00132275",
+          "MGYA00132274",
+          "MGYA00132273",
+          "MGYA00132272",
+          "MGYA00132271",
+          "MGYA00132270",
+          "MGYA00132279",
+          "MGYA00132278",
+          "MGYA00572866",
+          "MGYA00572867",
+          "MGYA00572864",
+          "MGYA00572865",
+          "MGYA00572862",
+          "MGYA00572863",
+          "MGYA00572860",
+          "MGYA00572861",
+          "MGYA00572868",
+          "MGYA00572869",
+          "MGYA00524115",
+          "MGYA00524114",
+          "MGYA00524117",
+          "MGYA00524116",
+          "MGYA00524111",
+          "MGYA00524110",
+          "MGYA00524113",
+          "MGYA00524112",
+          "MGYA00524119",
+          "MGYA00524118",
+          "MGYA00132413",
+          "MGYA00132412",
+          "MGYA00132411",
+          "MGYA00132410",
+          "MGYA00132417",
+          "MGYA00132416",
+          "MGYA00132415",
+          "MGYA00132414",
+          "MGYA00132419",
+          "MGYA00132418",
+          "MGYA00132309",
+          "MGYA00132308",
+          "MGYA00132307",
+          "MGYA00132306",
+          "MGYA00132305",
+          "MGYA00132304",
+          "MGYA00132303",
+          "MGYA00132302",
+          "MGYA00132301",
+          "MGYA00132300",
+          "MGYA00572888",
+          "MGYA00572889",
+          "MGYA00572884",
+          "MGYA00572885",
+          "MGYA00572886",
+          "MGYA00572887",
+          "MGYA00572880",
+          "MGYA00572881",
+          "MGYA00572882",
+          "MGYA00572883",
+          "MGYA00573058",
+          "MGYA00573059",
+          "MGYA00573050",
+          "MGYA00573051",
+          "MGYA00573052",
+          "MGYA00573053",
+          "MGYA00573054",
+          "MGYA00573055",
+          "MGYA00573056",
+          "MGYA00573057",
+          "MGYA00523024",
+          "MGYA00523025",
+          "MGYA00523026",
+          "MGYA00523027",
+          "MGYA00523020",
+          "MGYA00523021",
+          "MGYA00523022",
+          "MGYA00523023",
+          "MGYA00523028",
+          "MGYA00523029",
+          "MGYA00132646",
+          "MGYA00132647",
+          "MGYA00132644",
+          "MGYA00132645",
+          "MGYA00132642",
+          "MGYA00132643",
+          "MGYA00132640",
+          "MGYA00132641",
+          "MGYA00132648",
+          "MGYA00132649",
+          "MGYA00524584",
+          "MGYA00524585",
+          "MGYA00524582",
+          "MGYA00524583",
+          "MGYA00524580",
+          "MGYA00524581",
+          "MGYA00524344",
+          "MGYA00524345",
+          "MGYA00524346",
+          "MGYA00524347",
+          "MGYA00524340",
+          "MGYA00524341",
+          "MGYA00524342",
+          "MGYA00524343",
+          "MGYA00524348",
+          "MGYA00524349",
+          "MGYA00132242",
+          "MGYA00132243",
+          "MGYA00132240",
+          "MGYA00132241",
+          "MGYA00132246",
+          "MGYA00132247",
+          "MGYA00132244",
+          "MGYA00132245",
+          "MGYA00132248",
+          "MGYA00132249",
+          "MGYA00572871",
+          "MGYA00572870",
+          "MGYA00572873",
+          "MGYA00572872",
+          "MGYA00572875",
+          "MGYA00572874",
+          "MGYA00572877",
+          "MGYA00572876",
+          "MGYA00572879",
+          "MGYA00572878",
+          "MGYA00132428",
+          "MGYA00132429",
+          "MGYA00132426",
+          "MGYA00132427",
+          "MGYA00132424",
+          "MGYA00132425",
+          "MGYA00132422",
+          "MGYA00132423",
+          "MGYA00132420",
+          "MGYA00132421",
+          "MGYA00524768",
+          "MGYA00524507",
+          "MGYA00524766",
+          "MGYA00524767",
+          "MGYA00524765",
+          "MGYA00524568",
+          "MGYA00524569",
+          "MGYA00524567",
+          "MGYA00132338",
+          "MGYA00132339",
+          "MGYA00132332",
+          "MGYA00132333",
+          "MGYA00132330",
+          "MGYA00132331",
+          "MGYA00132336",
+          "MGYA00132337",
+          "MGYA00132334",
+          "MGYA00132335",
+          "MGYA00572899",
+          "MGYA00572898",
+          "MGYA00572897",
+          "MGYA00572896",
+          "MGYA00572895",
+          "MGYA00572894",
+          "MGYA00572893",
+          "MGYA00572892",
+          "MGYA00572891",
+          "MGYA00572890",
+          "MGYA00573049",
+          "MGYA00573048",
+          "MGYA00573043",
+          "MGYA00573042",
+          "MGYA00573041",
+          "MGYA00573040",
+          "MGYA00573047",
+          "MGYA00573046",
+          "MGYA00573045",
+          "MGYA00573044",
+          "MGYA00523037",
+          "MGYA00523036",
+          "MGYA00523035",
+          "MGYA00523034",
+          "MGYA00523033",
+          "MGYA00523032",
+          "MGYA00523031",
+          "MGYA00523030",
+          "MGYA00523039",
+          "MGYA00523038",
+          "MGYA00524769",
+          "MGYA00132651",
+          "MGYA00132650",
+          "MGYA00132653",
+          "MGYA00132652",
+          "MGYA00132655",
+          "MGYA00132654",
+          "MGYA00132657",
+          "MGYA00132656",
+          "MGYA00132659",
+          "MGYA00132658",
+          "MGYA00524353",
+          "MGYA00524352",
+          "MGYA00524351",
+          "MGYA00524350",
+          "MGYA00132259",
+          "MGYA00132258",
+          "MGYA00132255",
+          "MGYA00132254",
+          "MGYA00132257",
+          "MGYA00132256",
+          "MGYA00132251",
+          "MGYA00132250",
+          "MGYA00132253",
+          "MGYA00132252",
+          "MGYA00132618",
+          "MGYA00525175",
+          "MGYA00525176",
+          "MGYA00132439",
+          "MGYA00132438",
+          "MGYA00132431",
+          "MGYA00132430",
+          "MGYA00132433",
+          "MGYA00132432",
+          "MGYA00132435",
+          "MGYA00132434",
+          "MGYA00132437",
+          "MGYA00132436",
+          "MGYA00572799",
+          "MGYA00524779",
+          "MGYA00524778",
+          "MGYA00524771",
+          "MGYA00524770",
+          "MGYA00524773",
+          "MGYA00524772",
+          "MGYA00524775",
+          "MGYA00524774",
+          "MGYA00524777",
+          "MGYA00524776",
+          "MGYA00524579",
+          "MGYA00524578",
+          "MGYA00524577",
+          "MGYA00524576",
+          "MGYA00524575",
+          "MGYA00524574",
+          "MGYA00524573",
+          "MGYA00524572",
+          "MGYA00524571",
+          "MGYA00524570",
+          "MGYA00132325",
+          "MGYA00132324",
+          "MGYA00132327",
+          "MGYA00132326",
+          "MGYA00132321",
+          "MGYA00132320",
+          "MGYA00132323",
+          "MGYA00132322",
+          "MGYA00132329",
+          "MGYA00132328",
+          "MGYA00573076",
+          "MGYA00573077",
+          "MGYA00573074",
+          "MGYA00573075",
+          "MGYA00573072",
+          "MGYA00573073",
+          "MGYA00573070",
+          "MGYA00573071",
+          "MGYA00573078",
+          "MGYA00573079",
+          "MGYA00132187",
+          "MGYA00573098",
+          "MGYA00573099",
+          "MGYA00573094",
+          "MGYA00573095",
+          "MGYA00573096",
+          "MGYA00573097",
+          "MGYA00573090",
+          "MGYA00573091",
+          "MGYA00573092",
+          "MGYA00573093"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS1798515",
+          "ERS1798514",
+          "ERS1798517",
+          "ERS1798606",
+          "ERS1798511",
+          "ERS1798510",
+          "ERS1798513",
+          "ERS1798512",
+          "ERS1798601",
+          "ERS1798519",
+          "ERS1798518",
+          "ERS1798600",
+          "ERS1798516",
+          "ERS1798603",
+          "ERS1799140",
+          "ERS1798602",
+          "ERS1799223",
+          "ERS1798588",
+          "ERS1798589",
+          "ERS1798586",
+          "ERS1798587",
+          "ERS1798584",
+          "ERS1798585",
+          "ERS1798582",
+          "ERS1798583",
+          "ERS1798580",
+          "ERS1798581",
+          "ERS1799068",
+          "ERS1798750",
+          "ERS1798946",
+          "ERS1799219",
+          "ERS1799218",
+          "ERS1798947",
+          "ERS1799215",
+          "ERS1799214",
+          "ERS1799217",
+          "ERS1799216",
+          "ERS1799211",
+          "ERS1799210",
+          "ERS1799213",
+          "ERS1799212",
+          "ERS1799354",
+          "ERS1799355",
+          "ERS1799356",
+          "ERS1799350",
+          "ERS1799352",
+          "ERS1799353",
+          "ERS1799358",
+          "ERS1799272",
+          "ERS1799315",
+          "ERS1799122",
+          "ERS1799297",
+          "ERS1799138",
+          "ERS1799139",
+          "ERS1799110",
+          "ERS1799085",
+          "ERS1799130",
+          "ERS1799131",
+          "ERS1799132",
+          "ERS1799133",
+          "ERS1799134",
+          "ERS1799135",
+          "ERS1799136",
+          "ERS1799137",
+          "ERS1798991",
+          "ERS1798859",
+          "ERS1798993",
+          "ERS1799296",
+          "ERS1798995",
+          "ERS1798948",
+          "ERS1798997",
+          "ERS1798996",
+          "ERS1798850",
+          "ERS1798851",
+          "ERS1798852",
+          "ERS1798853",
+          "ERS1798854",
+          "ERS1798855",
+          "ERS1798856",
+          "ERS1798857",
+          "ERS1799082",
+          "ERS1799128",
+          "ERS1799189",
+          "ERS1799188",
+          "ERS1799185",
+          "ERS1799184",
+          "ERS1799187",
+          "ERS1799186",
+          "ERS1799181",
+          "ERS1799180",
+          "ERS1799183",
+          "ERS1799182",
+          "ERS1799286",
+          "ERS1799287",
+          "ERS1799123",
+          "ERS1799284",
+          "ERS1799089",
+          "ERS1799285",
+          "ERS1799008",
+          "ERS1799009",
+          "ERS1799004",
+          "ERS1799005",
+          "ERS1799006",
+          "ERS1799000",
+          "ERS1799001",
+          "ERS1799002",
+          "ERS1799003",
+          "ERS1798630",
+          "ERS1798631",
+          "ERS1798632",
+          "ERS1798633",
+          "ERS1798928",
+          "ERS1798635",
+          "ERS1798636",
+          "ERS1798637",
+          "ERS1798638",
+          "ERS1798639",
+          "ERS1799281",
+          "ERS1798920",
+          "ERS1798921",
+          "ERS1798922",
+          "ERS1798923",
+          "ERS1799094",
+          "ERS1798793",
+          "ERS1798792",
+          "ERS1798791",
+          "ERS1798790",
+          "ERS1798797",
+          "ERS1798796",
+          "ERS1798795",
+          "ERS1798794",
+          "ERS1798799",
+          "ERS1798798",
+          "ERS1799288",
+          "ERS1799178",
+          "ERS1799289",
+          "ERS1798758",
+          "ERS1798704",
+          "ERS1798705",
+          "ERS1798706",
+          "ERS1798707",
+          "ERS1798700",
+          "ERS1798701",
+          "ERS1798702",
+          "ERS1798703",
+          "ERS1798708",
+          "ERS1798709",
+          "ERS1799310",
+          "ERS1799311",
+          "ERS1799312",
+          "ERS1799313",
+          "ERS1798568",
+          "ERS1798569",
+          "ERS1799316",
+          "ERS1799317",
+          "ERS1798564",
+          "ERS1798565",
+          "ERS1798566",
+          "ERS1798567",
+          "ERS1798560",
+          "ERS1798561",
+          "ERS1798562",
+          "ERS1798563",
+          "ERS1799264",
+          "ERS1799265",
+          "ERS1799266",
+          "ERS1799267",
+          "ERS1799260",
+          "ERS1799261",
+          "ERS1799262",
+          "ERS1799263",
+          "ERS1798894",
+          "ERS1798895",
+          "ERS1798896",
+          "ERS1798897",
+          "ERS1798890",
+          "ERS1798891",
+          "ERS1798892",
+          "ERS1798893",
+          "ERS1798898",
+          "ERS1798899",
+          "ERS1799293",
+          "ERS1799078",
+          "ERS1799268",
+          "ERS1799269",
+          "ERS1799048",
+          "ERS1799049",
+          "ERS1799040",
+          "ERS1799041",
+          "ERS1799042",
+          "ERS1799043",
+          "ERS1799044",
+          "ERS1799045",
+          "ERS1799046",
+          "ERS1799047",
+          "ERS1798968",
+          "ERS1799162",
+          "ERS1799161",
+          "ERS1799160",
+          "ERS1799167",
+          "ERS1799166",
+          "ERS1799165",
+          "ERS1799164",
+          "ERS1798960",
+          "ERS1798961",
+          "ERS1798962",
+          "ERS1798963",
+          "ERS1798964",
+          "ERS1798965",
+          "ERS1798966",
+          "ERS1798967",
+          "ERS1798803",
+          "ERS1798802",
+          "ERS1798801",
+          "ERS1798800",
+          "ERS1798807",
+          "ERS1798806",
+          "ERS1798805",
+          "ERS1798804",
+          "ERS1798809",
+          "ERS1798808",
+          "ERS1799029",
+          "ERS1798696",
+          "ERS1798697",
+          "ERS1798694",
+          "ERS1798695",
+          "ERS1798692",
+          "ERS1798693",
+          "ERS1798690",
+          "ERS1798691",
+          "ERS1799170",
+          "ERS1798698",
+          "ERS1798699",
+          "ERS1798742",
+          "ERS1798760",
+          "ERS1798488",
+          "ERS1799328",
+          "ERS1798740",
+          "ERS1798741",
+          "ERS1798669",
+          "ERS1798743",
+          "ERS1798744",
+          "ERS1798745",
+          "ERS1798746",
+          "ERS1798747",
+          "ERS1798748",
+          "ERS1798749",
+          "ERS1798661",
+          "ERS1798660",
+          "ERS1798667",
+          "ERS1798666",
+          "ERS1798665",
+          "ERS1798664",
+          "ERS1799325",
+          "ERS1799324",
+          "ERS1799327",
+          "ERS1799326",
+          "ERS1799321",
+          "ERS1798755",
+          "ERS1799320",
+          "ERS1798754",
+          "ERS1799323",
+          "ERS1799322",
+          "ERS1798599",
+          "ERS1798618",
+          "ERS1798595",
+          "ERS1798594",
+          "ERS1798597",
+          "ERS1798596",
+          "ERS1798591",
+          "ERS1798590",
+          "ERS1798593",
+          "ERS1798592",
+          "ERS1798616",
+          "ERS1799159",
+          "ERS1798617",
+          "ERS1798900",
+          "ERS1799220",
+          "ERS1799221",
+          "ERS1799349",
+          "ERS1798615",
+          "ERS1799224",
+          "ERS1799225",
+          "ERS1799226",
+          "ERS1799227",
+          "ERS1799228",
+          "ERS1798906",
+          "ERS1799341",
+          "ERS1799340",
+          "ERS1799345",
+          "ERS1798613",
+          "ERS1798759",
+          "ERS1798611",
+          "ERS1799069",
+          "ERS1799151",
+          "ERS1799157",
+          "ERS1798528",
+          "ERS1798529",
+          "ERS1798520",
+          "ERS1798521",
+          "ERS1798522",
+          "ERS1798523",
+          "ERS1798524",
+          "ERS1798525",
+          "ERS1798526",
+          "ERS1798527",
+          "ERS1799084",
+          "ERS1798933",
+          "ERS1799086",
+          "ERS1799087",
+          "ERS1799080",
+          "ERS1799081",
+          "ERS1799129",
+          "ERS1798626",
+          "ERS1799127",
+          "ERS1799126",
+          "ERS1799125",
+          "ERS1799124",
+          "ERS1799088",
+          "ERS1798931",
+          "ERS1799121",
+          "ERS1799120",
+          "ERS1798624",
+          "ERS1798849",
+          "ERS1798848",
+          "ERS1798847",
+          "ERS1798846",
+          "ERS1798845",
+          "ERS1798622",
+          "ERS1799163",
+          "ERS1798620",
+          "ERS1799083",
+          "ERS1798830",
+          "ERS1799013",
+          "ERS1799012",
+          "ERS1799158",
+          "ERS1799010",
+          "ERS1799017",
+          "ERS1799016",
+          "ERS1799015",
+          "ERS1799014",
+          "ERS1799152",
+          "ERS1799153",
+          "ERS1799150",
+          "ERS1799018",
+          "ERS1799156",
+          "ERS1799169",
+          "ERS1799154",
+          "ERS1799155",
+          "ERS1798627",
+          "ERS1798932",
+          "ERS1798625",
+          "ERS1798930",
+          "ERS1798623",
+          "ERS1798936",
+          "ERS1798621",
+          "ERS1798934",
+          "ERS1798939",
+          "ERS1798938",
+          "ERS1798629",
+          "ERS1798628",
+          "ERS1799283",
+          "ERS1798910",
+          "ERS1799280",
+          "ERS1798490",
+          "ERS1798491",
+          "ERS1798492",
+          "ERS1798493",
+          "ERS1798494",
+          "ERS1798495",
+          "ERS1798496",
+          "ERS1798497",
+          "ERS1798498",
+          "ERS1798712",
+          "ERS1798711",
+          "ERS1798710",
+          "ERS1798717",
+          "ERS1798716",
+          "ERS1798715",
+          "ERS1798714",
+          "ERS1798652",
+          "ERS1798653",
+          "ERS1798650",
+          "ERS1798651",
+          "ERS1798656",
+          "ERS1798657",
+          "ERS1798654",
+          "ERS1798655",
+          "ERS1798658",
+          "ERS1798659",
+          "ERS1798994",
+          "ERS1798573",
+          "ERS1798572",
+          "ERS1798571",
+          "ERS1798479",
+          "ERS1798577",
+          "ERS1798576",
+          "ERS1798575",
+          "ERS1798574",
+          "ERS1798579",
+          "ERS1798578",
+          "ERS1799309",
+          "ERS1799308",
+          "ERS1798999",
+          "ERS1798998",
+          "ERS1799229",
+          "ERS1798889",
+          "ERS1798888",
+          "ERS1798883",
+          "ERS1798882",
+          "ERS1798881",
+          "ERS1798880",
+          "ERS1798887",
+          "ERS1798886",
+          "ERS1798885",
+          "ERS1798884",
+          "ERS1799059",
+          "ERS1799058",
+          "ERS1799056",
+          "ERS1799055",
+          "ERS1799054",
+          "ERS1799053",
+          "ERS1799051",
+          "ERS1799050",
+          "ERS1799116",
+          "ERS1799117",
+          "ERS1799114",
+          "ERS1799115",
+          "ERS1799112",
+          "ERS1799113",
+          "ERS1798979",
+          "ERS1798978",
+          "ERS1798977",
+          "ERS1798976",
+          "ERS1798975",
+          "ERS1798973",
+          "ERS1798972",
+          "ERS1799118",
+          "ERS1798970",
+          "ERS1798876",
+          "ERS1798877",
+          "ERS1798874",
+          "ERS1798875",
+          "ERS1798872",
+          "ERS1798873",
+          "ERS1798870",
+          "ERS1798871",
+          "ERS1799209",
+          "ERS1798878",
+          "ERS1798879",
+          "ERS1799207",
+          "ERS1798685",
+          "ERS1798684",
+          "ERS1798687",
+          "ERS1798686",
+          "ERS1798681",
+          "ERS1798680",
+          "ERS1798683",
+          "ERS1798682",
+          "ERS1798689",
+          "ERS1798719",
+          "ERS1799028",
+          "ERS1798718",
+          "ERS1799022",
+          "ERS1799023",
+          "ERS1799026",
+          "ERS1799027",
+          "ERS1799025",
+          "ERS1798757",
+          "ERS1798756",
+          "ERS1798908",
+          "ERS1798909",
+          "ERS1798753",
+          "ERS1798752",
+          "ERS1798751",
+          "ERS1798619",
+          "ERS1798902",
+          "ERS1798903",
+          "ERS1798614",
+          "ERS1798901",
+          "ERS1798612",
+          "ERS1798907",
+          "ERS1798610",
+          "ERS1798905",
+          "ERS1798713",
+          "ERS1798499",
+          "ERS1799237",
+          "ERS1799235",
+          "ERS1799234",
+          "ERS1799111",
+          "ERS1799338",
+          "ERS1799230",
+          "ERS1798722",
+          "ERS1798723",
+          "ERS1798720",
+          "ERS1798721",
+          "ERS1798726",
+          "ERS1798727",
+          "ERS1798724",
+          "ERS1798725",
+          "ERS1798728",
+          "ERS1798729",
+          "ERS1799334",
+          "ERS1799205",
+          "ERS1799236",
+          "ERS1798548",
+          "ERS1798549",
+          "ERS1799233",
+          "ERS1799232",
+          "ERS1799231",
+          "ERS1799339",
+          "ERS1798542",
+          "ERS1798543",
+          "ERS1798540",
+          "ERS1798541",
+          "ERS1798546",
+          "ERS1798547",
+          "ERS1798544",
+          "ERS1798545",
+          "ERS1799146",
+          "ERS1798668",
+          "ERS1799330",
+          "ERS1799448",
+          "ERS1799238",
+          "ERS1798663",
+          "ERS1798539",
+          "ERS1798538",
+          "ERS1798537",
+          "ERS1798536",
+          "ERS1798535",
+          "ERS1798534",
+          "ERS1798533",
+          "ERS1798532",
+          "ERS1798531",
+          "ERS1798530",
+          "ERS1799307",
+          "ERS1799306",
+          "ERS1799440",
+          "ERS1798478",
+          "ERS1799441",
+          "ERS1799242",
+          "ERS1799243",
+          "ERS1799240",
+          "ERS1798570",
+          "ERS1799246",
+          "ERS1799247",
+          "ERS1799244",
+          "ERS1799245",
+          "ERS1799303",
+          "ERS1799248",
+          "ERS1799443",
+          "ERS1799302",
+          "ERS1799301",
+          "ERS1799300",
+          "ERS1799437",
+          "ERS1799066",
+          "ERS1799148",
+          "ERS1799064",
+          "ERS1799065",
+          "ERS1799063",
+          "ERS1799061",
+          "ERS1799141",
+          "ERS1798634",
+          "ERS1799143",
+          "ERS1799142",
+          "ERS1799145",
+          "ERS1799144",
+          "ERS1799147",
+          "ERS1798929",
+          "ERS1798829",
+          "ERS1798828",
+          "ERS1798944",
+          "ERS1798945",
+          "ERS1798942",
+          "ERS1798943",
+          "ERS1798940",
+          "ERS1798821",
+          "ERS1798820",
+          "ERS1798823",
+          "ERS1798822",
+          "ERS1798825",
+          "ERS1798824",
+          "ERS1798827",
+          "ERS1798826",
+          "ERS1799099",
+          "ERS1799098",
+          "ERS1799093",
+          "ERS1799092",
+          "ERS1799091",
+          "ERS1799090",
+          "ERS1799097",
+          "ERS1799096",
+          "ERS1799095",
+          "ERS1799179",
+          "ERS1799119",
+          "ERS1799439",
+          "ERS1799438",
+          "ERS1799175",
+          "ERS1799336",
+          "ERS1799305",
+          "ERS1798487",
+          "ERS1798486",
+          "ERS1798485",
+          "ERS1798484",
+          "ERS1798483",
+          "ERS1798482",
+          "ERS1798768",
+          "ERS1798769",
+          "ERS1798766",
+          "ERS1798767",
+          "ERS1798764",
+          "ERS1798765",
+          "ERS1798762",
+          "ERS1798763",
+          "ERS1798489",
+          "ERS1798761",
+          "ERS1798641",
+          "ERS1798640",
+          "ERS1798643",
+          "ERS1798642",
+          "ERS1798645",
+          "ERS1798644",
+          "ERS1798647",
+          "ERS1798646",
+          "ERS1798649",
+          "ERS1798648",
+          "ERS1799337",
+          "ERS1799304",
+          "ERS1798506",
+          "ERS1798507",
+          "ERS1798504",
+          "ERS1798505",
+          "ERS1798502",
+          "ERS1798503",
+          "ERS1798500",
+          "ERS1798501",
+          "ERS1798508",
+          "ERS1798509",
+          "ERS1799239",
+          "ERS1798951",
+          "ERS1799105",
+          "ERS1799104",
+          "ERS1798952",
+          "ERS1799106",
+          "ERS1799335",
+          "ERS1799101",
+          "ERS1799100",
+          "ERS1799103",
+          "ERS1799208",
+          "ERS1799444",
+          "ERS1799206",
+          "ERS1798810",
+          "ERS1799204",
+          "ERS1799102",
+          "ERS1799202",
+          "ERS1799203",
+          "ERS1799200",
+          "ERS1799201",
+          "ERS1799364",
+          "ERS1799333",
+          "ERS1799295",
+          "ERS1799446",
+          "ERS1799294",
+          "ERS1798904",
+          "ERS1798982",
+          "ERS1798983",
+          "ERS1799107",
+          "ERS1798981",
+          "ERS1798986",
+          "ERS1798987",
+          "ERS1798984",
+          "ERS1798985",
+          "ERS1799291",
+          "ERS1798989",
+          "ERS1799109",
+          "ERS1799108",
+          "ERS1798598",
+          "ERS1798865",
+          "ERS1798864",
+          "ERS1798867",
+          "ERS1798866",
+          "ERS1798861",
+          "ERS1798860",
+          "ERS1798863",
+          "ERS1798862",
+          "ERS1799292",
+          "ERS1798869",
+          "ERS1798868",
+          "ERS1799331",
+          "ERS1799241",
+          "ERS1799198",
+          "ERS1799199",
+          "ERS1799196",
+          "ERS1799197",
+          "ERS1799194",
+          "ERS1799195",
+          "ERS1799192",
+          "ERS1799193",
+          "ERS1799190",
+          "ERS1799191",
+          "ERS1799299",
+          "ERS1799279",
+          "ERS1799298",
+          "ERS1799039",
+          "ERS1799038",
+          "ERS1799278",
+          "ERS1799031",
+          "ERS1799033",
+          "ERS1799035",
+          "ERS1799034",
+          "ERS1799037",
+          "ERS1799036",
+          "ERS1798919",
+          "ERS1798918",
+          "ERS1799249",
+          "ERS1798609",
+          "ERS1798608",
+          "ERS1798607",
+          "ERS1798605",
+          "ERS1798604",
+          "ERS1798913",
+          "ERS1798912",
+          "ERS1798915",
+          "ERS1798914",
+          "ERS1798917",
+          "ERS1798916",
+          "ERS1799273",
+          "ERS1798858",
+          "ERS1799290",
+          "ERS1799442",
+          "ERS1799271",
+          "ERS1799270",
+          "ERS1798788",
+          "ERS1798789",
+          "ERS1798784",
+          "ERS1798785",
+          "ERS1798786",
+          "ERS1798787",
+          "ERS1798780",
+          "ERS1798781",
+          "ERS1798782",
+          "ERS1798783",
+          "ERS1799282",
+          "ERS1799275",
+          "ERS1799222",
+          "ERS1799274",
+          "ERS1798481",
+          "ERS1798731",
+          "ERS1798730",
+          "ERS1798733",
+          "ERS1798732",
+          "ERS1798735",
+          "ERS1798734",
+          "ERS1798737",
+          "ERS1798736",
+          "ERS1798739",
+          "ERS1798738",
+          "ERS1798559",
+          "ERS1798558",
+          "ERS1799329",
+          "ERS1798480",
+          "ERS1798551",
+          "ERS1798550",
+          "ERS1798553",
+          "ERS1798552",
+          "ERS1798555",
+          "ERS1798554",
+          "ERS1798557",
+          "ERS1798556",
+          "ERS1799348",
+          "ERS1798688",
+          "ERS1799343",
+          "ERS1799342",
+          "ERS1799277",
+          "ERS1799251",
+          "ERS1799250",
+          "ERS1799253",
+          "ERS1799252",
+          "ERS1799255",
+          "ERS1799254",
+          "ERS1799257",
+          "ERS1799256",
+          "ERS1799259",
+          "ERS1799258",
+          "ERS1799344",
+          "ERS1799276",
+          "ERS1799168",
+          "ERS1798662",
+          "ERS1799075",
+          "ERS1799074",
+          "ERS1799077",
+          "ERS1799076",
+          "ERS1799071",
+          "ERS1799070",
+          "ERS1799073",
+          "ERS1799072",
+          "ERS1799174",
+          "ERS1799314",
+          "ERS1799176",
+          "ERS1799177",
+          "ERS1799079",
+          "ERS1799171",
+          "ERS1799172",
+          "ERS1799173",
+          "ERS1798954",
+          "ERS1798956",
+          "ERS1798818",
+          "ERS1798819",
+          "ERS1798675",
+          "ERS1798814",
+          "ERS1798815",
+          "ERS1798816",
+          "ERS1798817",
+          "ERS1798959",
+          "ERS1798811",
+          "ERS1798812",
+          "ERS1798813",
+          "ERS1799318",
+          "ERS1799319",
+          "ERS1799149",
+          "ERS1798779",
+          "ERS1798778",
+          "ERS1799067",
+          "ERS1798775",
+          "ERS1798774",
+          "ERS1798777",
+          "ERS1798776",
+          "ERS1798771",
+          "ERS1798770",
+          "ERS1798773",
+          "ERS1798772",
+          "ERS1798674",
+          "ERS1798911",
+          "ERS1798676",
+          "ERS1798677",
+          "ERS1798670",
+          "ERS1798671",
+          "ERS1798672",
+          "ERS1798673",
+          "ERS1798678",
+          "ERS1798679"
+        ],
+        "biome_name": [
+          "Forest soil"
+        ],
+        "centre_name": [
+          "UNIVERSITY OF BRITISH COLUMBIA"
+        ],
+        "description": [
+          "Dataset includes 16S rRNA sequences from soil RNA and DNA extractions, metatranscriptomes and geochemical data related to ecological gradients and climactic variability in the Pacific temperate rainforest."
+        ],
+        "name": [
+          "Assembly and activity of microbial communities in the Pacific temperate rainforest"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000336",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA76185"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00001773"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS269169"
+        ],
+        "biome_name": [
+          "Biofilm"
+        ],
+        "centre_name": [
+          "UC Berkeley / U Michigan"
+        ],
+        "description": [
+          "Richmond Mine acid mine drainage biofilm samples datasets (2006-2010). This project describes a population genomic study focused on determining the evolutionary rates in natural populations, and to correlate human disturbance to major evolutionary divergence events. Biofilm samples from acid mine drainage were taken in the period 2006-2010 at four locations in the Richmond Mine (Iron Mt., CA). Community genomic DNA was extracted and sequenced by either 454 or Illumina sequencing."
+        ],
+        "name": [
+          "Richmond Mine AMD Biofilm Samples Metagenome"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00005368",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA330364"
+        ],
+        "METAGENOMICS_ANALYSES": [],
+        "METAGENOMICS_SAMPLES": [],
+        "biome_name": [
+          "Brackish"
+        ],
+        "centre_name": [
+          "DOE Joint Genome Institute"
+        ],
+        "description": [],
+        "name": [
+          "Marine microbial communities from expanding oxygen minimum zones in Line P, North Pacific Ocean - fosmids plate 2 metagenome"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00003170",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA483099"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00217624",
+          "MGYA00217625",
+          "MGYA00217626",
+          "MGYA00217627",
+          "MGYA00217620",
+          "MGYA00217621",
+          "MGYA00217622",
+          "MGYA00217623",
+          "MGYA00217628",
+          "MGYA00217629",
+          "MGYA00217619",
+          "MGYA00217618",
+          "MGYA00217615",
+          "MGYA00217614",
+          "MGYA00217617",
+          "MGYA00217616",
+          "MGYA00217637",
+          "MGYA00217636",
+          "MGYA00217635",
+          "MGYA00217634",
+          "MGYA00217633",
+          "MGYA00217632",
+          "MGYA00217631",
+          "MGYA00217630",
+          "MGYA00217639",
+          "MGYA00217638",
+          "MGYA00217642",
+          "MGYA00217643",
+          "MGYA00217640",
+          "MGYA00217641"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS3600870",
+          "SRS3600871",
+          "SRS3600872",
+          "SRS3600873",
+          "SRS3600874",
+          "SRS3600876",
+          "SRS3600877",
+          "SRS3600856",
+          "SRS3600857",
+          "SRS3600854",
+          "SRS3600855",
+          "SRS3600852",
+          "SRS3600853",
+          "SRS3600850",
+          "SRS3600851",
+          "SRS3600858",
+          "SRS3600859",
+          "SRS3600869",
+          "SRS3600868",
+          "SRS3600867",
+          "SRS3600866",
+          "SRS3600865",
+          "SRS3600864",
+          "SRS3600863",
+          "SRS3600862",
+          "SRS3600861",
+          "SRS3600860",
+          "SRS3600847",
+          "SRS3600849",
+          "SRS3600848"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "centre_name": [
+          "UP Marine Science Institute"
+        ],
+        "description": [
+          "V4-V5 sequences from sediments in Bolinao, Philippines"
+        ],
+        "name": [
+          "16S_Sediment_Bolinao"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00003126",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA368621"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00215130",
+          "MGYA00215120",
+          "MGYA00215131",
+          "MGYA00215134",
+          "MGYA00215121",
+          "MGYA00215119",
+          "MGYA00215123",
+          "MGYA00215122",
+          "MGYA00215125",
+          "MGYA00215124",
+          "MGYA00215127",
+          "MGYA00215126",
+          "MGYA00215129",
+          "MGYA00215128",
+          "MGYA00215132",
+          "MGYA00215135",
+          "MGYA00215133"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS2250756",
+          "SRS2158947",
+          "SRS2312214",
+          "SRS2312221",
+          "SRS2312232",
+          "SRS2312231",
+          "SRS2312230",
+          "SRS2312228",
+          "SRS2312229",
+          "SRS2306928",
+          "SRS2312224",
+          "SRS2312225",
+          "SRS2312213",
+          "SRS2312227",
+          "SRS2312226",
+          "SRS2250739",
+          "SRS2312216"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "Moscow State University"
+        ],
+        "description": [
+          "Phototrophic picoeukaryotes are important constituents of marine ecosystems. The aim of this study was to determine the molecular diversity and community structure of phototrophic picoeukaryotes in the water and ice of the White Sea in different seasons."
+        ],
+        "name": [
+          "White sea picoplankton Metagenome"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00003008",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA264989"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00213194",
+          "MGYA00213195",
+          "MGYA00213198",
+          "MGYA00213192",
+          "MGYA00213201",
+          "MGYA00213200",
+          "MGYA00213193",
+          "MGYA00213189",
+          "MGYA00213188",
+          "MGYA00213190",
+          "MGYA00213191",
+          "MGYA00213199",
+          "MGYA00213196",
+          "MGYA00213197",
+          "MGYA00213183",
+          "MGYA00213182",
+          "MGYA00213185",
+          "MGYA00213184",
+          "MGYA00213187",
+          "MGYA00213186"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "SRS731718",
+          "SRS731723",
+          "SRS731722",
+          "SRS731721",
+          "SRS731720",
+          "SRS731725",
+          "SRS731724",
+          "SRS731717"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "centre_name": [
+          "Marine Biological Laboratory"
+        ],
+        "description": [
+          "We propose to apply 454-based tag pyrosequencing to investigate how microbial communities change with depth, lithology, and porewater geochemistry in the sediment that underlies one of the highest productivity regions in the world ocean. To accomplish this goal, we propose to analyze extracted DNA from 16 samples taken in high resolution in conjunction with detailed porewater geochemistry. This dataset will provide an unprecedented insight into the microbial ecology of a highly productive open ocean site (35 cm/k.y) to a sediment depth of 750 m and an age of 2.1 Ma. We anticipate that through this use of next-generation sequencing technology in combination with biogeochemical and cell count data sets collected during IODP expedition 323, we will obtain significant insight into this previously uncharted ecosystem."
+        ],
+        "name": [
+          "Marine subseafloor sediment Targeted Locus (Loci)"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00003812",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB15611"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00311560",
+          "MGYA00311562",
+          "MGYA00311548",
+          "MGYA00311549",
+          "MGYA00311563",
+          "MGYA00311544",
+          "MGYA00311545",
+          "MGYA00311546",
+          "MGYA00311547",
+          "MGYA00311540",
+          "MGYA00311541",
+          "MGYA00311542",
+          "MGYA00311543",
+          "MGYA00311561",
+          "MGYA00311539",
+          "MGYA00311538",
+          "MGYA00311535",
+          "MGYA00311534",
+          "MGYA00311537",
+          "MGYA00311536",
+          "MGYA00311559",
+          "MGYA00311558",
+          "MGYA00311557",
+          "MGYA00311556",
+          "MGYA00311555",
+          "MGYA00311554",
+          "MGYA00311553",
+          "MGYA00311552",
+          "MGYA00311551",
+          "MGYA00311550"
+        ],
+        "METAGENOMICS_SAMPLES": [
+          "ERS1375758",
+          "ERS1375761",
+          "ERS1375760",
+          "ERS1375745",
+          "ERS1375744",
+          "ERS1375747",
+          "ERS1375746",
+          "ERS1375741",
+          "ERS1375740",
+          "ERS1375743",
+          "ERS1375742",
+          "ERS1375738",
+          "ERS1375749",
+          "ERS1375748",
+          "ERS1375739",
+          "ERS1375759",
+          "ERS1375756",
+          "ERS1375757",
+          "ERS1375754",
+          "ERS1375755",
+          "ERS1375752",
+          "ERS1375753",
+          "ERS1375750",
+          "ERS1375751",
+          "ERS1375734",
+          "ERS1375735",
+          "ERS1375736",
+          "ERS1375737",
+          "ERS1375732",
+          "ERS1375733"
+        ],
+        "biome_name": [
+          "Oil-contaminated"
+        ],
+        "centre_name": [
+          "UCSDMI"
+        ],
+        "description": [
+          "Antarctic Clean Up Project. Microcosms constructed at Brazilian Antarctic Station. Comandante Ferraz using diesel-oil contaminated soil. The contamination was caused by a blast and fire at the station in Ferbruary of 2012"
+        ],
+        "name": [
+          "Jurelivicius Antarctic cleanup"
+        ]
+      }
+    }
+  ],
+  "facets": [
+    {
+      "id": "domain_source",
+      "label": "Source",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "MGnify (Projects)",
+          "value": "metagenomics_projects",
+          "count": 4782
+        }
+      ]
+    },
+    {
+      "id": "biome",
+      "label": "Biome",
+      "total": 2,
+      "facetValues": [
+        {
+          "label": "Environmental",
+          "value": "Environmental",
+          "count": 4782,
+          "children": [
+            {
+              "label": "Aquatic",
+              "value": "Aquatic",
+              "count": 3596,
+              "children": [
+                {
+                  "label": "Marine",
+                  "value": "Marine",
+                  "count": 2516,
+                  "children": [
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 382
+                    },
+                    {
+                      "label": "Oceanic",
+                      "value": "Oceanic",
+                      "count": 340
+                    },
+                    {
+                      "label": "Intertidal zone",
+                      "value": "Intertidal zone",
+                      "count": 296
+                    },
+                    {
+                      "label": "Coastal",
+                      "value": "Coastal",
+                      "count": 216
+                    },
+                    {
+                      "label": "Hydrothermal vents",
+                      "value": "Hydrothermal vents",
+                      "count": 60
+                    },
+                    {
+                      "label": "Cold seeps",
+                      "value": "Cold seeps",
+                      "count": 28
+                    },
+                    {
+                      "label": "Pelagic",
+                      "value": "Pelagic",
+                      "count": 26
+                    },
+                    {
+                      "label": "Brackish",
+                      "value": "Brackish",
+                      "count": 24
+                    },
+                    {
+                      "label": "Marginal Sea",
+                      "value": "Marginal Sea",
+                      "count": 22
+                    },
+                    {
+                      "label": "Oil-contaminated sediment",
+                      "value": "Oil-contaminated sediment",
+                      "count": 20
+                    }
+                  ]
+                },
+                {
+                  "label": "Freshwater",
+                  "value": "Freshwater",
+                  "count": 612,
+                  "children": [
+                    {
+                      "label": "Groundwater",
+                      "value": "Groundwater",
+                      "count": 108
+                    },
+                    {
+                      "label": "Lotic",
+                      "value": "Lotic",
+                      "count": 100
+                    },
+                    {
+                      "label": "Lake",
+                      "value": "Lake",
+                      "count": 98
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 90
+                    },
+                    {
+                      "label": "Lentic",
+                      "value": "Lentic",
+                      "count": 64,
+                      "children": [
+                        {
+                          "label": "Brackish",
+                          "value": "Brackish",
+                          "count": 38
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Ice",
+                      "value": "Ice",
+                      "count": 46
+                    },
+                    {
+                      "label": "Wetlands",
+                      "value": "Wetlands",
+                      "count": 30
+                    },
+                    {
+                      "label": "Pond",
+                      "value": "Pond",
+                      "count": 22
+                    },
+                    {
+                      "label": "Drinking water",
+                      "value": "Drinking water",
+                      "count": 16
+                    },
+                    {
+                      "label": "Storm water",
+                      "value": "Storm water",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Thermal springs",
+                  "value": "Thermal springs",
+                  "count": 142,
+                  "children": [
+                    {
+                      "label": "Hot (42-90C)",
+                      "value": "Hot (42-90C)",
+                      "count": 108
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 14
+                    },
+                    {
+                      "label": "Near-boiling (>90C)",
+                      "value": "Near-boiling (>90C)",
+                      "count": 8
+                    }
+                  ]
+                },
+                {
+                  "label": "Estuary",
+                  "value": "Estuary",
+                  "count": 118,
+                  "children": [
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 50
+                    }
+                  ]
+                },
+                {
+                  "label": "Non-marine Saline and Alkaline",
+                  "value": "Non-marine Saline and Alkaline",
+                  "count": 68,
+                  "children": [
+                    {
+                      "label": "Hypersaline",
+                      "value": "Hypersaline",
+                      "count": 28
+                    },
+                    {
+                      "label": "Salt crystallizer pond",
+                      "value": "Salt crystallizer pond",
+                      "count": 20
+                    },
+                    {
+                      "label": "Alkaline",
+                      "value": "Alkaline",
+                      "count": 14
+                    },
+                    {
+                      "label": "Saline",
+                      "value": "Saline",
+                      "count": 4
+                    }
+                  ]
+                },
+                {
+                  "label": "Sediment",
+                  "value": "Sediment",
+                  "count": 62
+                },
+                {
+                  "label": "Lentic",
+                  "value": "Lentic",
+                  "count": 42
+                },
+                {
+                  "label": "Aquaculture",
+                  "value": "Aquaculture",
+                  "count": 8
+                }
+              ]
+            },
+            {
+              "label": "Terrestrial",
+              "value": "Terrestrial",
+              "count": 1136,
+              "children": [
+                {
+                  "label": "Soil",
+                  "value": "Soil",
+                  "count": 1104,
+                  "children": [
+                    {
+                      "label": "Agricultural",
+                      "value": "Agricultural",
+                      "count": 108
+                    },
+                    {
+                      "label": "Forest soil",
+                      "value": "Forest soil",
+                      "count": 86
+                    },
+                    {
+                      "label": "Grasslands",
+                      "value": "Grasslands",
+                      "count": 46
+                    },
+                    {
+                      "label": "Contaminated",
+                      "value": "Contaminated",
+                      "count": 42
+                    },
+                    {
+                      "label": "Desert",
+                      "value": "Desert",
+                      "count": 40
+                    },
+                    {
+                      "label": "Wetlands",
+                      "value": "Wetlands",
+                      "count": 34
+                    },
+                    {
+                      "label": "Permafrost",
+                      "value": "Permafrost",
+                      "count": 34
+                    },
+                    {
+                      "label": "Oil-contaminated",
+                      "value": "Oil-contaminated",
+                      "count": 24
+                    },
+                    {
+                      "label": "Loam",
+                      "value": "Loam",
+                      "count": 22
+                    },
+                    {
+                      "label": "Tropical rainforest",
+                      "value": "Tropical rainforest",
+                      "count": 22
+                    }
+                  ]
+                },
+                {
+                  "label": "Deep subsurface",
+                  "value": "Deep subsurface",
+                  "count": 10
+                },
+                {
+                  "label": "Volcanic",
+                  "value": "Volcanic",
+                  "count": 6
+                },
+                {
+                  "label": "Geologic",
+                  "value": "Geologic",
+                  "count": 6
+                },
+                {
+                  "label": "Rock-dwelling (subaerial biofilm)",
+                  "value": "Rock-dwelling (subaerial biofilm)",
+                  "count": 6
+                },
+                {
+                  "label": "Oil reservoir",
+                  "value": "Oil reservoir",
+                  "count": 2
+                },
+                {
+                  "label": "Agricultural field",
+                  "value": "Agricultural field",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Air",
+              "value": "Air",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "label": "Host-associated",
+          "value": "Host-associated",
+          "count": 2660,
+          "children": [
+            {
+              "label": "Human",
+              "value": "Human",
+              "count": 1162,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 928,
+                  "children": [
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 566
+                    },
+                    {
+                      "label": "Oral",
+                      "value": "Oral",
+                      "count": 260
+                    },
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 10
+                    },
+                    {
+                      "label": "Hindgut",
+                      "value": "Hindgut",
+                      "count": 4
+                    }
+                  ]
+                },
+                {
+                  "label": "Skin",
+                  "value": "Skin",
+                  "count": 64,
+                  "children": [
+                    {
+                      "label": "Naris",
+                      "value": "Naris",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 56,
+                  "children": [
+                    {
+                      "label": "Pulmonary system",
+                      "value": "Pulmonary system",
+                      "count": 28
+                    },
+                    {
+                      "label": "Nasopharyngeal",
+                      "value": "Nasopharyngeal",
+                      "count": 20
+                    }
+                  ]
+                },
+                {
+                  "label": "Reproductive system",
+                  "value": "Reproductive system",
+                  "count": 38,
+                  "children": [
+                    {
+                      "label": "Vagina",
+                      "value": "Vagina",
+                      "count": 34
+                    },
+                    {
+                      "label": "Female",
+                      "value": "Female",
+                      "count": 4
+                    }
+                  ]
+                },
+                {
+                  "label": "Circulatory system",
+                  "value": "Circulatory system",
+                  "count": 18,
+                  "children": [
+                    {
+                      "label": "Blood",
+                      "value": "Blood",
+                      "count": 6
+                    }
+                  ]
+                },
+                {
+                  "label": "Excretory system",
+                  "value": "Excretory system",
+                  "count": 2,
+                  "children": [
+                    {
+                      "label": "Urethra",
+                      "value": "Urethra",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Lympathic system",
+                  "value": "Lympathic system",
+                  "count": 2,
+                  "children": [
+                    {
+                      "label": "Lymph nodes",
+                      "value": "Lymph nodes",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Milk",
+                  "value": "Milk",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Mammals",
+              "value": "Mammals",
+              "count": 630,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 524,
+                  "children": [
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 178
+                    },
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 154
+                    },
+                    {
+                      "label": "Stomach",
+                      "value": "Stomach",
+                      "count": 74
+                    },
+                    {
+                      "label": "Foregut",
+                      "value": "Foregut",
+                      "count": 20
+                    },
+                    {
+                      "label": "Midgut",
+                      "value": "Midgut",
+                      "count": 14
+                    },
+                    {
+                      "label": "Oral cavity",
+                      "value": "Oral cavity",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Gastrointestinal tract",
+                  "value": "Gastrointestinal tract",
+                  "count": 28,
+                  "children": [
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 20
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 26,
+                  "children": [
+                    {
+                      "label": "Nasopharyngeal",
+                      "value": "Nasopharyngeal",
+                      "count": 8
+                    },
+                    {
+                      "label": "Pulmonary system",
+                      "value": "Pulmonary system",
+                      "count": 4
+                    }
+                  ]
+                },
+                {
+                  "label": "Skin",
+                  "value": "Skin",
+                  "count": 4
+                },
+                {
+                  "label": "Nervous system",
+                  "value": "Nervous system",
+                  "count": 2,
+                  "children": [
+                    {
+                      "label": "Brain",
+                      "value": "Brain",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Milk",
+                  "value": "Milk",
+                  "count": 2
+                },
+                {
+                  "label": "Excretory system",
+                  "value": "Excretory system",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Plants",
+              "value": "Plants",
+              "count": 432,
+              "children": [
+                {
+                  "label": "Rhizosphere",
+                  "value": "Rhizosphere",
+                  "count": 242,
+                  "children": [
+                    {
+                      "label": "Soil",
+                      "value": "Soil",
+                      "count": 70
+                    },
+                    {
+                      "label": "Forest soil",
+                      "value": "Forest soil",
+                      "count": 14
+                    },
+                    {
+                      "label": "Epiphytes",
+                      "value": "Epiphytes",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Root",
+                  "value": "Root",
+                  "count": 34
+                },
+                {
+                  "label": "Phylloplane",
+                  "value": "Phylloplane",
+                  "count": 30,
+                  "children": [
+                    {
+                      "label": "Endophytes",
+                      "value": "Endophytes",
+                      "count": 6
+                    }
+                  ]
+                },
+                {
+                  "label": "Rhizoplane",
+                  "value": "Rhizoplane",
+                  "count": 8,
+                  "children": [
+                    {
+                      "label": "Endophytes",
+                      "value": "Endophytes",
+                      "count": 6
+                    },
+                    {
+                      "label": "Soil",
+                      "value": "Soil",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Rhizome",
+                  "value": "Rhizome",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Birds",
+              "value": "Birds",
+              "count": 104,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 84,
+                  "children": [
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 26
+                    },
+                    {
+                      "label": "Digestive tube",
+                      "value": "Digestive tube",
+                      "count": 24
+                    },
+                    {
+                      "label": "Ceca",
+                      "value": "Ceca",
+                      "count": 20
+                    },
+                    {
+                      "label": "Crop",
+                      "value": "Crop",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 4
+                }
+              ]
+            },
+            {
+              "label": "Insecta",
+              "value": "Insecta",
+              "count": 56,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 24
+                }
+              ]
+            },
+            {
+              "label": "Arthropoda",
+              "value": "Arthropoda",
+              "count": 38,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 28,
+                  "children": [
+                    {
+                      "label": "Gut",
+                      "value": "Gut",
+                      "count": 16
+                    },
+                    {
+                      "label": "Oral",
+                      "value": "Oral",
+                      "count": 6
+                    },
+                    {
+                      "label": "Hindgut",
+                      "value": "Hindgut",
+                      "count": 4
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 4,
+                  "children": [
+                    {
+                      "label": "Gills",
+                      "value": "Gills",
+                      "count": 4
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Porifera",
+              "value": "Porifera",
+              "count": 38
+            },
+            {
+              "label": "Fish",
+              "value": "Fish",
+              "count": 36,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 22,
+                  "children": [
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 8
+                    },
+                    {
+                      "label": "Foregut",
+                      "value": "Foregut",
+                      "count": 8
+                    }
+                  ]
+                },
+                {
+                  "label": "Skin",
+                  "value": "Skin",
+                  "count": 4
+                }
+              ]
+            },
+            {
+              "label": "Animal",
+              "value": "Animal",
+              "count": 34,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 26,
+                  "children": [
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 12
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Invertebrates",
+              "value": "Invertebrates",
+              "count": 28,
+              "children": [
+                {
+                  "label": "Cnidaria",
+                  "value": "Cnidaria",
+                  "count": 24,
+                  "children": [
+                    {
+                      "label": "Coral",
+                      "value": "Coral",
+                      "count": 22
+                    }
+                  ]
+                },
+                {
+                  "label": "Echinodermata",
+                  "value": "Echinodermata",
+                  "count": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Engineered",
+          "value": "Engineered",
+          "count": 1166,
+          "children": [
+            {
+              "label": "Wastewater",
+              "value": "Wastewater",
+              "count": 362,
+              "children": [
+                {
+                  "label": "Activated Sludge",
+                  "value": "Activated Sludge",
+                  "count": 160
+                },
+                {
+                  "label": "Water and sludge",
+                  "value": "Water and sludge",
+                  "count": 60
+                },
+                {
+                  "label": "Industrial wastewater",
+                  "value": "Industrial wastewater",
+                  "count": 48,
+                  "children": [
+                    {
+                      "label": "Agricultural wastewater",
+                      "value": "Agricultural wastewater",
+                      "count": 8
+                    },
+                    {
+                      "label": "Petrochemical",
+                      "value": "Petrochemical",
+                      "count": 4
+                    },
+                    {
+                      "label": "Mine water",
+                      "value": "Mine water",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Nutrient removal",
+                  "value": "Nutrient removal",
+                  "count": 22,
+                  "children": [
+                    {
+                      "label": "Dissolved organics (anaerobic)",
+                      "value": "Dissolved organics (anaerobic)",
+                      "count": 12
+                    },
+                    {
+                      "label": "Biological phosphorus removal",
+                      "value": "Biological phosphorus removal",
+                      "count": 6
+                    },
+                    {
+                      "label": "Nitrogen removal",
+                      "value": "Nitrogen removal",
+                      "count": 2
+                    },
+                    {
+                      "label": "Dissolved organics (aerobic)",
+                      "value": "Dissolved organics (aerobic)",
+                      "count": 2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Bioreactor",
+              "value": "Bioreactor",
+              "count": 290,
+              "children": [
+                {
+                  "label": "Continuous culture",
+                  "value": "Continuous culture",
+                  "count": 56,
+                  "children": [
+                    {
+                      "label": "Marine sediment inoculum",
+                      "value": "Marine sediment inoculum",
+                      "count": 12
+                    },
+                    {
+                      "label": "Marine intertidal flat sediment inoculum",
+                      "value": "Marine intertidal flat sediment inoculum",
+                      "count": 10
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Food production",
+              "value": "Food production",
+              "count": 168,
+              "children": [
+                {
+                  "label": "Dairy products",
+                  "value": "Dairy products",
+                  "count": 68
+                },
+                {
+                  "label": "Fermented beverages",
+                  "value": "Fermented beverages",
+                  "count": 36
+                },
+                {
+                  "label": "Fermented vegetables",
+                  "value": "Fermented vegetables",
+                  "count": 20
+                },
+                {
+                  "label": "Fermented seafood",
+                  "value": "Fermented seafood",
+                  "count": 6
+                },
+                {
+                  "label": "Silage fermentation",
+                  "value": "Silage fermentation",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Solid waste",
+              "value": "Solid waste",
+              "count": 80,
+              "children": [
+                {
+                  "label": "Composting",
+                  "value": "Composting",
+                  "count": 74,
+                  "children": [
+                    {
+                      "label": "Bioreactor",
+                      "value": "Bioreactor",
+                      "count": 4
+                    },
+                    {
+                      "label": "Grass",
+                      "value": "Grass",
+                      "count": 2
+                    },
+                    {
+                      "label": "Wood",
+                      "value": "Wood",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Solid animal waste",
+                  "value": "Solid animal waste",
+                  "count": 2
+                },
+                {
+                  "label": "Landfill",
+                  "value": "Landfill",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Modeled",
+              "value": "Modeled",
+              "count": 64,
+              "children": [
+                {
+                  "label": "Simulated communities (microbial mixture)",
+                  "value": "Simulated communities (microbial mixture)",
+                  "count": 28
+                },
+                {
+                  "label": "Simulated communities (sequence read mixture)",
+                  "value": "Simulated communities (sequence read mixture)",
+                  "count": 16
+                },
+                {
+                  "label": "Simulated communities (DNA mixture)",
+                  "value": "Simulated communities (DNA mixture)",
+                  "count": 12
+                }
+              ]
+            },
+            {
+              "label": "Lab enrichment",
+              "value": "Lab enrichment",
+              "count": 58,
+              "children": [
+                {
+                  "label": "Defined media",
+                  "value": "Defined media",
+                  "count": 38,
+                  "children": [
+                    {
+                      "label": "Marine media",
+                      "value": "Marine media",
+                      "count": 8
+                    },
+                    {
+                      "label": "Anaerobic media",
+                      "value": "Anaerobic media",
+                      "count": 2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Biogas plant",
+              "value": "Biogas plant",
+              "count": 52,
+              "children": [
+                {
+                  "label": "Wet fermentation",
+                  "value": "Wet fermentation",
+                  "count": 24
+                }
+              ]
+            },
+            {
+              "label": "Built environment",
+              "value": "Built environment",
+              "count": 28
+            },
+            {
+              "label": "Bioremediation",
+              "value": "Bioremediation",
+              "count": 20,
+              "children": [
+                {
+                  "label": "Hydrocarbon",
+                  "value": "Hydrocarbon",
+                  "count": 6,
+                  "children": [
+                    {
+                      "label": "Benzene",
+                      "value": "Benzene",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Terephthalate",
+                  "value": "Terephthalate",
+                  "count": 4,
+                  "children": [
+                    {
+                      "label": "Wastewater",
+                      "value": "Wastewater",
+                      "count": 4
+                    }
+                  ]
+                },
+                {
+                  "label": "Persistent organic pollutants (POP)",
+                  "value": "Persistent organic pollutants (POP)",
+                  "count": 4
+                }
+              ]
+            },
+            {
+              "label": "Biotransformation",
+              "value": "Biotransformation",
+              "count": 16,
+              "children": [
+                {
+                  "label": "Mixed alcohol bioreactor",
+                  "value": "Mixed alcohol bioreactor",
+                  "count": 6
+                },
+                {
+                  "label": "Microbial enhanced oil recovery",
+                  "value": "Microbial enhanced oil recovery",
+                  "count": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Mixed",
+          "value": "Mixed",
+          "count": 88
+        }
+      ]
+    },
+    {
+      "id": "centre_name",
+      "label": "Centre name",
+      "total": 924,
+      "facetValues": [
+        {
+          "label": "EMG",
+          "value": "EMG",
+          "count": 916
+        },
+        {
+          "label": "DOE Joint Genome Institute",
+          "value": "DOE Joint Genome Institute",
+          "count": 202
+        },
+        {
+          "label": "UCSDMI",
+          "value": "UCSDMI",
+          "count": 106
+        },
+        {
+          "label": "EMBL-EBI",
+          "value": "EMBL-EBI",
+          "count": 72
+        },
+        {
+          "label": "MBL",
+          "value": "MBL",
+          "count": 62
+        },
+        {
+          "label": "Marine Biological Laboratory",
+          "value": "Marine Biological Laboratory",
+          "count": 50
+        },
+        {
+          "label": "Ocean University of China",
+          "value": "Ocean University of China",
+          "count": 36
+        },
+        {
+          "label": "Shandong University",
+          "value": "Shandong University",
+          "count": 34
+        },
+        {
+          "label": "GSC",
+          "value": "GSC",
+          "count": 26
+        },
+        {
+          "label": "Polar Research Institute of China",
+          "value": "Polar Research Institute of China",
+          "count": 20
+        }
+      ]
+    }
+  ]
+}

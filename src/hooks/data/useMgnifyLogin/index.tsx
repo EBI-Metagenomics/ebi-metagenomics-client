@@ -5,13 +5,15 @@ import UserContext from 'pages/Login/UserContext';
 const useMgnifyLogin: (
   username: string,
   password: string,
-  csrfmiddlewaretoken: string
-) => HTMLDataResponse = (username, password, csrfmiddlewaretoken) => {
+  csrfmiddlewaretoken: string,
+  next: string
+) => HTMLDataResponse = (username, password, csrfmiddlewaretoken, next) => {
   const { config } = useContext(UserContext);
   const formData = new FormData();
   formData.append('username', username);
   formData.append('password', password);
   formData.append('csrfmiddlewaretoken', csrfmiddlewaretoken);
+  formData.append('next', next);
 
   const data = useData(
     username ? `${config.api.replace('v1/', '')}http-auth/login/` : null,

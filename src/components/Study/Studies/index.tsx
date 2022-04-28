@@ -95,6 +95,7 @@ const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
       namespace="studies-"
       showPagination={showPagination}
       downloadURL={downloadURL}
+      dataCy="associated-studies"
     />
   );
 };

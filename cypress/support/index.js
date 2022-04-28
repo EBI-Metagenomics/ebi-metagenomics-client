@@ -20,3 +20,25 @@ import './commands';
 // require('./commands')
 
 import '@cypress/code-coverage/support'
+
+Cypress.on('test:before:run', () => {
+  Cypress.automation('remote:debugger:protocol', {
+    command: 'Emulation.setLocaleOverride',
+    params: {
+      locale: 'en-GB'
+    }
+  });
+});
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // Do not fail tests for bad Google Maps key
+  if (err.message.includes('InvalidKeyMapError')) {
+    return false;
+  }
+});
+
+beforeEach(() => {
+  cy.setCookie('cookies-accepted', 'true');
+});
+
+// import "cypress-real-events/support";

@@ -17,7 +17,7 @@ const tabs = [
 
 const GO: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
-  const [chart] = useQueryParamState('chart', tabs[0].to);
+  const [chart] = useQueryParamState('chart', 'bar');
   const { data, loading, error } = useMGnifyData(
     `analyses/${overviewData.id}/go-slim`
   );
@@ -78,13 +78,14 @@ const GO: React.FC = () => {
           <div className="vf-tabs-content">
             <div className="vf-grid vf-grid__col-3">
               {chart === 'bar' && dataBundles && (
-                <>
+                <div id="go-slim-bar-charts">
                   <GOBarChart
                     title="Biological process"
                     series={dataBundles.biological_process.series}
                     categories={dataBundles.biological_process.categories}
                     total={dataBundles.biological_process.total}
                     color={TAXONOMY_COLOURS[0]}
+                    containerId="biological-process-bar-chart"
                   />
                   <GOBarChart
                     title="Molecular Function"
@@ -92,6 +93,7 @@ const GO: React.FC = () => {
                     categories={dataBundles.molecular_function.categories}
                     total={dataBundles.molecular_function.total}
                     color={TAXONOMY_COLOURS[3]}
+                    containerId="molecular-function-bar-chart"
                   />
                   <GOBarChart
                     title="Cellular Component"
@@ -99,30 +101,34 @@ const GO: React.FC = () => {
                     categories={dataBundles.cellular_component.categories}
                     total={dataBundles.cellular_component.total}
                     color={TAXONOMY_COLOURS[4]}
+                    containerId="cellular-component-bar-chart"
                   />
-                </>
+                </div>
               )}
               {chart === 'pie' && dataBundles && (
-                <>
+                <div id="go-slim-pie-charts">
                   <GOPieChart
                     title="Biological process"
                     series={dataBundles.biological_process.series}
                     categories={dataBundles.biological_process.categories}
                     total={dataBundles.biological_process.total}
+                    containerId="biological-process-pie-chart"
                   />
                   <GOPieChart
                     title="Molecular Function"
                     series={dataBundles.molecular_function.series}
                     categories={dataBundles.molecular_function.categories}
                     total={dataBundles.molecular_function.total}
+                    containerId="molecular-function-pie-chart"
                   />
                   <GOPieChart
                     title="Cellular Component"
                     series={dataBundles.cellular_component.series}
                     categories={dataBundles.cellular_component.categories}
                     total={dataBundles.cellular_component.total}
+                    containerId="cellular-component-pie-chart"
                   />
-                </>
+                </div>
               )}
             </div>
           </div>

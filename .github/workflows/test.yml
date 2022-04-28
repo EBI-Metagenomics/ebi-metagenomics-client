@@ -1,8 +1,8 @@
 name: Testing
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 env:
-  EMG_CONFIG: ${{ github.workspace }}/ci/config.yaml
+  EMG_CONFIG: ${{ github.workspace }}/client-repo/ci/config.yaml
   API_URL: http://localhost:9000/metagenomics/api/v1/
   SEARCH_URL: https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_
   DEPLOYMENT_SUBFOLDER: /metagenomics
@@ -14,121 +14,131 @@ env:
   CYPRESS_WEBIN_PASSWORD: secret
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:5.6
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+        volumes:
+          - ${{ github.workspace }}/db/mysql:/var/lib/mysql
+
+      mongo:
+        image: mongo:4.0.6
+        ports:
+          - 27017:27017
+        options: --health-cmd="mongo" --health-interval=10s --health-timeout=5s --health-retries=5
+        volumes:
+          - ${{ github.workspace }}/db/mongo:/data/db
+
     steps:
-      - uses: actions/checkout@v2
+      - name: verify mysql
+        run: mysql --host 127.0.0.1 --port 3306 -uroot -e "SHOW DATABASES"
+
+      - uses: actions/checkout@v3
+        with:
+          path: client-repo
+
+      - name: 🐍 - Set up Python 3.6
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+
+#      - uses: actions/cache@v3
+#        id: dbcache
+#        with:
+#          path: |
+#            ${{ github.workspace }}/db-cache
+#            !${{ github.workspace }}/db-cache/mongo/diagnostic.data
+#          key: ${{ hashFiles('client-repo/ci/*') }}
+
+#      - name: 💼 - Place cached fixtures
+#        if: steps.dbcache.outputs.cache-hit == 'true'
+#        run: |
+#          sudo cp -r ${{ github.workspace }}/db-cache ${{ github.workspace }}/db
+
+      - name: 🔧🔬 - Install EMG API
+        run: |
+          pip install --user --upgrade pip setuptools
+          python -V
+          pip -V
+          pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+          ls -l
+
+      - name: 🪜 - Setting up Fixtures
+#        if: steps.dbcache.outputs.cache-hit != 'true'
+        working-directory: client-repo
+        run: |
+          mysql --version
+          mysql --host 127.0.0.1 --port 3306 -uroot -e 'DROP DATABASE IF EXISTS emg;'
+          mysql --host 127.0.0.1 --port 3306 -uroot -e 'DROP DATABASE IF EXISTS ena;'
+          mysql --host 127.0.0.1 --port 3306 -uroot -e 'CREATE DATABASE emg;'
+          mysql --host 127.0.0.1 --port 3306 -uroot -e 'CREATE DATABASE ena;'
+          mysql --host 127.0.0.1 --port 3306 -uroot -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES'"
+          emgcli migrate
+          mysql --host 127.0.0.1 --port 3306 -uroot --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
+          for SQL_FIXTURE in ci/emg_sql_fixtures/*.sql; do echo "SQL >>>> $SQL_FIXTURE"; mysql --host 127.0.0.1 --port 3306 -uroot --database=emg < "$SQL_FIXTURE"; done
+          mysql --host 127.0.0.1 --port 3306 -uroot --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
+          
+          source ci/create_download_files.sh
+          ls -lh ~/results
+          sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/import_test_db_entries.sh
+          source ci/import_test_db_entries.sh
+          mysql --host 127.0.0.1 --port 3306 -uroot --database=ena < ${{ github.workspace }}/client-repo/ci/ena_db.sql
+
       - name: ⚙️ - Settings
+        working-directory: client-repo
         env: # Or as an environment variable
           MAPS_KEY: ${{ secrets.GOOGLE_MAPS_DEV_KEY }}
         run: |
-          echo "{\"googleMapsKey\": \"$MAPS_KEY\"}" > "$(pwd)/config.private.json"
+          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\"}" > "$(pwd)/config.private.json"
+
+      - uses: actions/checkout@v3
+        name: 🔬 - Checkout EMG API
+        with:
+          repository: 'EBI-Metagenomics/emgapi'
+          ref: 'develop'
+          path: emgapi
+
+      - name: 🔬 - Start EMG API
+        run: |
+          export PYTHONPATH="$PYTHONPATH:${{ github.workspace }}/emgapi/tests/"
+          echo $PYTHONPATH
+          emgcli collectstatic --noinput
+          emgcli check --deploy
+          cd emgapi
+          export GUNICORN_CMD_ARGS="--bind 127.0.0.1:8000 --workers=1 --daemon -p emg.pid --error-logfile error.log --access-logfile access.log"
+          emgdeploy emgcli.wsgi:application
+          ps aux | grep emgdeploy
+          cd ..
+          echo "\ngunicorn v1/"
+          curl --silent http://localhost:8000/v1/
+
       - name: 🌎 - Setup NginX
+        working-directory: client-repo
         run: |
           sudo chmod 777 /var/log/nginx/*
           sudo chmod 777 /var/run/*
           sudo chmod 777 /var/run
           sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
           nginx -c "$(pwd)/ci/nginx.conf"
-      - name: 🐍 - Set up Python 3.6
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.6
+
       - name: 📜 - Set up JS Node 14
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '14'
-      - name: 💾 Start MongoDB
-        uses: supercharge/mongodb-github-action@1.3.0
-        with:
-          mongodb-version: 4.0.6
-      - name: 🔧🔬 - Install EMG API
-        run: |
-          pip install --user --upgrade pip setuptools
-          python -V
-          pip -V
-          pip install "git+https://github.com/EBI-Metagenomics/django-rest-framework-json-api@develop#egg=djangorestframework-jsonapi"
-          pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
-          ls -l
+          cache: 'npm'
+          cache-dependency-path: client-repo/package-lock.json
 
-      - name: 💾 - Setting MySQL
-        run: |
-          sudo systemctl start mysql
-          mysql --version
-          mysql -uroot -proot -e 'CREATE DATABASE emg;'
-          mysql -uroot -proot -e 'CREATE DATABASE ena;'
-          mysql -uroot -proot -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES'"
-          emgcli migrate
-          mysql -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
-          for SQL_FIXTURE in ci/emg_sql_fixtures/*.sql; do echo "SQL >>>> $SQL_FIXTURE"; mysql -uroot -proot --database=emg < "$SQL_FIXTURE"; done
-          mysql -uroot -proot --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
-      # - name: 🪜 - Setting up Fixtures
-      #   run: |
-      #       source ci/create_download_files.sh
-      #       ls -lh ~/results
-
-      #       emgcli import_taxonomy ERR1022502 ~/results --pipeline 4.0
-      #       emgcli import_qc ERR1022502 ~/results --pipeline 4.0
-      #       emgcli import_summary ERR1022502 ~/results .ipr --pipeline 4.0
-      #       emgcli import_summary ERR1022502 ~/results .go_slim --pipeline 4.0
-      #       emgcli import_summary ERR1022502 ~/results .go --pipeline 4.0
-
-      #       emgcli import_taxonomy ERR1022502 ~/results --pipeline 2.0
-      #       emgcli import_qc ERR1022502 ~/results --pipeline 2.0
-      #       emgcli import_summary ERR1022502 ~/results .ipr --pipeline 2.0
-      #       emgcli import_summary ERR1022502 ~/results .go_slim --pipeline 2.0
-      #       emgcli import_summary ERR1022502 ~/results .go --pipeline 2.0
-
-      #       emgcli import_taxonomy ERR867655 ~/results --pipeline 4.0
-      #       emgcli import_qc ERR867655 ~/results --pipeline 4.0
-      #       emgcli import_summary ERR867655 ~/results .ipr --pipeline 4.0
-      #       emgcli import_summary ERR867655 ~/results .go_slim --pipeline 4.0
-      #       emgcli import_summary ERR867655 ~/results .go --pipeline 4.0
-
-      #       emgcli import_taxonomy ERP104236 ~/results --pipeline 4.0
-      #       emgcli import_qc ERP104236 ~/results --pipeline 4.0
-      #       emgcli import_summary ERP104236 ~/results .ipr --pipeline 4.0
-      #       emgcli import_summary ERP104236 ~/results .go_slim --pipeline 4.0
-      #       emgcli import_summary ERP104236 ~/results .go --pipeline 4.0
-
-      #       emgcli import_taxonomy ERZ477576 ~/results --pipeline 5.0
-      #       emgcli import_qc ERZ477576 ~/results --pipeline 5.0
-      #       emgcli import_contigs ERZ477576 ~/results --pipeline 5.0
-      #       emgcli import_summary ERZ477576 ~/results .ipr --pipeline 5.0
-      #       emgcli import_summary ERZ477576 ~/results .go --pipeline 5.0
-
-      #       emgcli import_summary ERZ477576 ~/results .go_slim --pipeline 5.0
-      #       emgcli import_summary ERZ477576 ~/results .pfam --pipeline 5.0
-      #       emgcli import_summary ERZ477576 ~/results .gprops --pipeline 5.0
-      #       emgcli import_summary ERZ477576 ~/results .antismash --pipeline 5.0
-
-      #       emgcli import_kegg_modules ${{ github.workspace }}/ci/fixtures/kegg_module_orthology.json
-      #       emgcli import_kegg_classes ${{ github.workspace }}/ci/fixtures/kegg_class_orthology.json
-      #       emgcli import_cog_descriptions ${{ github.workspace }}/ci/fixtures/cog.csv
-      #       emgcli import_genomes ${{ github.workspace }}/ci/emg_api_datafiles/genomes/ 1.0
-
-      #       git clone --single-branch --branch develop https://github.com/EBI-Metagenomics/emgapi.git
-
-      #       mysql -uroot -proot --database=ena < ${{ github.workspace }}/ci/ena_db.sql
-      # - name: 🔬 - Start EMG API
-      #   run: |
-      #       export PYTHONPATH="$PYTHONPATH:${{ github.workspace }}/emgapi/tests/"
-      #       echo $PYTHONPATH
-      #       emgcli collectstatic --noinput
-      #       emgcli check --deploy
-      #       cd emgapi
-      #       export GUNICORN_CMD_ARGS="--bind 127.0.0.1:8000 --workers=1 --daemon -p emg.pid --error-logfile error.log --access-logfile access.log"
-      #       emgdeploy emgcli.wsgi:application
-      #       ps aux | grep emgdeploy
-      #       cd ..
-      #       echo "nginx"
-      #       curl --silent http://localhost:9000/metagenomics/api/v1/
-      #       echo "\ngunicorn v1/"
-      #       curl --silent http://localhost:8000/v1/
-
-      # TODO: ⚠️ the json genereted is not understood by codecov
+#       TODO: ⚠️ the json generated is not understood by codecov
+#       TODO: fix 404s for nested URLs – nginx config problem?
       - name: 🔧 - Install
+        working-directory: client-repo
         run: |
           npm ci
           npm run build
@@ -143,22 +153,33 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+
       - name: 🧹 - ESlint
+        working-directory: client-repo
         run: |
           npm run eslint
+
       - name: 🧪 - Testing
         uses: cypress-io/github-action@v2
         with:
+          working-directory: client-repo
+          browser: chrome
           spec: |
             cypress/integration/index.js
             cypress/integration/about.js
             cypress/integration/help.js
             cypress/integration/search.js
+            cypress/integration/sample.js
+            cypress/integration/analysis.js
+            cypress/integration/analysis_v5.js
+
       - name: 📉 - Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
-          directory: ${{ github.workspace }}/coverage/
+          directory: ${{ github.workspace }}/client-repo/coverage/
+
       - name: ⚙️ - Rebuild for deployment
+        working-directory: client-repo
         if: github.ref == 'refs/heads/new-client'
         run: |
           echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"basename\": \"\/ebi-metagenomics-client\"}" > "$(pwd)/config.private.json"
@@ -168,39 +189,46 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-      - name: Sentry Release
-        uses: getsentry/action-release@v1.0.0
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        with:
-          environment: dev
+
+#      TODO: enable sentry when https://github.com/getsentry/action-release/issues/83 is resolved
+#      - name: Sentry Release
+#        uses: getsentry/action-release@v1.1.6
+#        working-directory: 'client-repo'
+#        env:
+#          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+#          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+#          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+#          SENTRY_LOG_LEVEL: 'info'
+#        with:
+#          environment: dev
+#          sourcemaps: './dist/js'
+#          version: ${{ github.sha }}
+
+
       - name: 🚀 - Deploy Site
         if: github.ref == 'refs/heads/new-client'
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: dist # The folder the action should deploy.
+          FOLDER: client-repo/dist # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
+
       - name: 📸 - Failed tests snapshots
         uses: actions/upload-artifact@v2
         if: failure()
         with:
           name: tests-snapshots
-          path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/cypress/screenshots/ # - name: 📊 - Coverage
+          path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/client-repo/cypress/screenshots/ # - name: 📊 - Coverage
+
       - name: 🐞 - Error log
         if: failure()
         run: |
-          echo "API error log"
-          cat emgapi/error.log
-          echo "API access log"
-          cat emgapi/access.log
           echo "NGINX error log"
           cat /var/log/nginx/error.log
           echo "NGINX access log"
           cat /var/log/nginx/access.log
+
       - name: 📮 - Slack Notification
         uses: rtCamp/action-slack-notify@v2
         continue-on-error: true
@@ -213,3 +241,9 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_CHANNEL: '#metagenomics-notify'
           MSG_MINIMAL: Actions URL
+
+#      - name: 💼 - Place DB fixtures for caching
+#        run: |
+#          sudo chmod -R 777 ${{ github.workspace }}/db || echo 'No DB dir to cache'
+#          sudo cp -r ${{ github.workspace }}/db ${{ github.workspace }}/db-cache
+#          sudo rm -rf ${{ github.workspace }}/db-cache/mongo/diagnostic.data

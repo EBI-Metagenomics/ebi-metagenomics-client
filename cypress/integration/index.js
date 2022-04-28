@@ -53,6 +53,15 @@ describe('Home page', function() {
             cy.get('footer.vf-footer .vf-footer__notice').contains('EMBL-EBI is');
             cy.get('footer.vf-footer').contains('Copyright');
         });
+
+    });
+
+    context('Cookie banner check', function() {
+        before(function() {
+            cy.clearCookie('cookies-accepted');
+            openPage(origPage);
+        });
+
         it('has Cookie banner"', function() {
             cy.get('.mg-cookie-banner .vf-banner__text').contains('This website');
             cy.get('.mg-cookie-banner .vf-button').contains('Accept');
@@ -60,6 +69,7 @@ describe('Home page', function() {
             cy.get('.mg-cookie-banner').should('not.exist');
         });
     });
+
     context('Check for elements', function() {
         before(function() {
             openPage(origPage);
@@ -127,7 +137,7 @@ describe('Home page', function() {
         });
 
         it('Click to view specific study', function() {
-            cy.get('.latest-studies-section > .fixed-height-scrollable__inner > .study', {timeout: 5000}).should('have.length', parseInt(20));
+            cy.get('.latest-studies-section > .fixed-height-scrollable__inner > .study', {timeout: 30000}).should('have.length', parseInt(20));
             // cy.get('.latest-studies-section').contains('View more').first().click();
             // cy.contains('Study');
             // cy.title().should('include', 'Study');
