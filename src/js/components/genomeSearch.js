@@ -1,5 +1,5 @@
 /**
- * BIGSI genome search
+ * COBS genome search
  */
 require('../commons');
 const util = require('../util');
@@ -62,8 +62,7 @@ module.exports = Backbone.View.extend({
                 {sortBy: 'a', name: 'Geographic origin'},
                 {sortBy: 'a', name: 'Num. K-mers in query'},
                 {sortBy: 'a', name: 'Num. K-mers found in genome'},
-                {sortBy: 'a', name: '% K-mers found'},
-                {sortBy: 'a', name: 'BLAST score (log p)'}
+                {sortBy: 'a', name: '% K-mers found'}
             ],
             initPageSize: DEFAULT_PAGE_SIZE,
             textFilter: false
@@ -155,20 +154,19 @@ module.exports = Backbone.View.extend({
                 catalogues_filter: that.catalogue_id
             }
         }).done((response) => {
-            const data = response.results.map((d) => {
-                const accession = d.bigsi['sample_name'];
+            const data = response.data.results.map((d) => {
+                const accession = d.cobs['genome'];
                 return [
                     '<a href="/metagenomics/genomes/' + accession + '">' + accession + '</a>',
-                    util.getSimpleTaxLineage(d.mgnify.attributes['taxon-lineage'], true, true),
-                    d.mgnify.attributes['length'],
-                    d.mgnify.attributes['num-contigs'],
-                    d.mgnify.attributes['completeness'],
-                    d.mgnify.attributes['contamination'],
-                    d.mgnify.attributes['geographic-origin'],
-                    d.bigsi['num_kmers'],
-                    d.bigsi['num_kmers_found'],
-                    d.bigsi['percent_kmers_found'],
-                    `${d.bigsi['score']} (${d.bigsi['log_pvalue']})`
+                    util.getSimpleTaxLineage(d.mgnify['taxon_lineage'], true, true),
+                    d.mgnify['length'],
+                    d.mgnify['num_contigs'],
+                    d.mgnify['completeness'],
+                    d.mgnify['contamination'],
+                    d.mgnify['geographic_origin'],
+                    d.cobs['num_kmers'],
+                    d.cobs['num_kmers_found'],
+                    d.cobs['percent_kmers_found']
                 ];
             });
 
