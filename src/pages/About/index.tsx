@@ -5,9 +5,10 @@ import './style.css';
 
 import emblImg from 'images/funding/embl_logo.png';
 import bbsrcImg from 'images/funding/BBSRC.png';
-import excelerateImg from 'images/funding/excelerate_whitebackground.png';
 import holofoodImg from 'images/funding/holofood.png';
-import innovateImg from 'images/funding/innovate-uk-logo.png';
+import atlantecoImg from 'images/funding/atlanteco.png';
+import findingPhenoImg from 'images/funding/finding-pheno.png';
+import oescLifeImg from 'images/funding/eosc-life.png';
 
 const AboutPage: React.FC = () => {
   return (
@@ -43,18 +44,20 @@ const AboutPage: React.FC = () => {
       <div className="vf-grid">
         <p>
           MGnify currently receives funding support from: the European Union’s
-          Horizon 2020 Research and Innovation programme (817729 and 824087);
-          the Biotechnology and Biological Sciences Research Council
-          (BB/R015228/1, BB/S009043/1 and BB/N018354/1); ELIXIR, the research
-          infrastructure for Life-Science data; and European Molecular Biology
-          Laboratory (EMBL) core funds.
+          Horizon 2020 Research and Innovation programme (817729, 862923, and
+          952914) and Research Infrastructures programme (824087); the
+          Biotechnology and Biological Sciences Research Council (BB/S009043/1,
+          BB/T000902/1, BB/V01868X/1, and BB/W002965/1); ELIXIR, the research
+          infrastructure for Life-Science data; EMBL – FNR (CORE International);
+          and European Molecular Biology Laboratory (EMBL) core funds.
         </p>
-        <div className="vf-grid vf-grid__col-2 mg-about-logos">
+        <div className="vf-grid vf-grid__col-4 mg-about-logos">
           <img src={emblImg} alt="embl logo" />
           <img src={bbsrcImg} alt="bbsrc logo" />
-          <img src={excelerateImg} alt="excelerate logo" />
-          <img src={innovateImg} alt="innovate logo" />
+          <img src={findingPhenoImg} alt="findingpheno logo" />
+          <img src={atlantecoImg} alt="atlanteco logo" />
           <img src={holofoodImg} alt="holofood logo" />
+          <img src={oescLifeImg} alt="eosc-life logo" />
         </div>
       </div>
     </section>
