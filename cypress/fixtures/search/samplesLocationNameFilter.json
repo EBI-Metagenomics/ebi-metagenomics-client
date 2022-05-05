@@ -1,0 +1,795 @@
+{
+  "hitCount": 15928,
+  "entries": [
+    {
+      "id": "ERS658878",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005233"
+        ],
+        "name": [
+          "7-116959-1-4"
+        ],
+        "description": [
+          "Feces"
+        ]
+      }
+    },
+    {
+      "id": "ERS658854",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005233"
+        ],
+        "name": [
+          "7-116894"
+        ],
+        "description": [
+          "Feces"
+        ]
+      }
+    },
+    {
+      "id": "ERS1311462",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005184"
+        ],
+        "name": [
+          "4140C2"
+        ],
+        "description": [
+          "Discovery cohort"
+        ]
+      }
+    },
+    {
+      "id": "ERS1311703",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005184"
+        ],
+        "name": [
+          "5344C2"
+        ],
+        "description": [
+          "Discovery cohort"
+        ]
+      }
+    },
+    {
+      "id": "ERS1310560",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005184"
+        ],
+        "name": [
+          "5078C2"
+        ],
+        "description": [
+          "Replication cohort"
+        ]
+      }
+    },
+    {
+      "id": "ERS1311397",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005184"
+        ],
+        "name": [
+          "3628C2"
+        ],
+        "description": [
+          "Discovery cohort"
+        ]
+      }
+    },
+    {
+      "id": "ERS2625918",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002684"
+        ],
+        "name": [
+          "98_shef_16S"
+        ],
+        "description": [
+          "Microbial community assembly in lake sediments"
+        ]
+      }
+    },
+    {
+      "id": "ERS1311365",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005184"
+        ],
+        "name": [
+          "3549C2"
+        ],
+        "description": [
+          "Discovery cohort"
+        ]
+      }
+    },
+    {
+      "id": "ERS1542987",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001450"
+        ],
+        "name": [
+          "Broadway&8th"
+        ],
+        "description": [
+          "Broadway&8th"
+        ]
+      }
+    },
+    {
+      "id": "ERS951380",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001068"
+        ],
+        "name": [
+          "Healthy human oral 16S rRNA V3-V4"
+        ],
+        "description": [
+          "16S V3-V4 human oral from tongue dorsum, supragingival plaque, and saliva of healthy subjects."
+        ]
+      }
+    },
+    {
+      "id": "ERS1288170",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001370"
+        ],
+        "name": [
+          "RockGI-2"
+        ],
+        "description": [
+          "rock-sample"
+        ]
+      }
+    },
+    {
+      "id": "ERS1311688",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005184"
+        ],
+        "name": [
+          "5321C2"
+        ],
+        "description": [
+          "Discovery cohort"
+        ]
+      }
+    },
+    {
+      "id": "ERS1039771",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001368"
+        ],
+        "name": [
+          "JW010"
+        ],
+        "description": [
+          "soil DNA pyrotag sequencing"
+        ]
+      }
+    },
+    {
+      "id": "ERS1542999",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001450"
+        ],
+        "name": [
+          "Broadway&8th"
+        ],
+        "description": [
+          "Broadway&8th"
+        ]
+      }
+    },
+    {
+      "id": "ERS658790",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005233"
+        ],
+        "name": [
+          "7-095884-1-4"
+        ],
+        "description": [
+          "Feces"
+        ]
+      }
+    },
+    {
+      "id": "ERS2520901",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005847",
+          "MGYS00005846"
+        ],
+        "name": [
+          "CAN-22b_3"
+        ],
+        "description": [
+          "This sample has been submitted by Centre for Genomic Epidemiology, National Food Institute, Technical University of Denmark (DTU), Denmark on 2018-05-31; wastewater metagenome"
+        ]
+      }
+    },
+    {
+      "id": "ERS945718",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001669"
+        ],
+        "name": [
+          "L216"
+        ],
+        "description": [
+          "bacterioplankton"
+        ]
+      }
+    },
+    {
+      "id": "ERS1310899",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005184"
+        ],
+        "name": [
+          "1679C2"
+        ],
+        "description": [
+          "Discovery cohort"
+        ]
+      }
+    },
+    {
+      "id": "ERS634913",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001175",
+          "MGYS00005619"
+        ],
+        "name": [
+          "P7C0"
+        ],
+        "description": [
+          "P7C0"
+        ]
+      }
+    },
+    {
+      "id": "ERS951327",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001068"
+        ],
+        "name": [
+          "Healthy human oral 16S rRNA V3-V4"
+        ],
+        "description": [
+          "16S V3-V4 human oral from tongue dorsum, supragingival plaque, and saliva of healthy subjects."
+        ]
+      }
+    },
+    {
+      "id": "ERS1040167",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001368"
+        ],
+        "name": [
+          "ESL142"
+        ],
+        "description": [
+          "soil DNA pyrotag sequencing"
+        ]
+      }
+    },
+    {
+      "id": "ERS919322",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000596"
+        ],
+        "name": [
+          "10317.000014682"
+        ],
+        "description": [
+          "American Gut Project Stool sample"
+        ]
+      }
+    },
+    {
+      "id": "ERS945938",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001669"
+        ],
+        "name": [
+          "R366"
+        ],
+        "description": [
+          "bacterioplankton"
+        ]
+      }
+    },
+    {
+      "id": "ERS945778",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001669"
+        ],
+        "name": [
+          "L279"
+        ],
+        "description": [
+          "bacterioplankton"
+        ]
+      }
+    },
+    {
+      "id": "ERS1798744",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001864"
+        ],
+        "name": [
+          "BIOMES1214"
+        ],
+        "description": [
+          "T1-1-20_04/16/2016_RNA"
+        ]
+      }
+    }
+  ],
+  "facets": [
+    {
+      "id": "domain_source",
+      "label": "Source",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "MGnify (Samples)",
+          "value": "metagenomics_samples",
+          "count": 15928
+        }
+      ]
+    },
+    {
+      "id": "biome",
+      "label": "Biome",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "Host-associated",
+          "value": "Host-associated",
+          "count": 10578,
+          "children": [
+            {
+              "label": "Human",
+              "value": "Human",
+              "count": 4516,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 4334,
+                  "children": [
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 3640
+                    },
+                    {
+                      "label": "Oral",
+                      "value": "Oral",
+                      "count": 694
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Plants",
+              "value": "Plants",
+              "count": 3244,
+              "children": [
+                {
+                  "label": "Rhizosphere",
+                  "value": "Rhizosphere",
+                  "count": 2876,
+                  "children": [
+                    {
+                      "label": "Forest soil",
+                      "value": "Forest soil",
+                      "count": 2108
+                    },
+                    {
+                      "label": "Soil",
+                      "value": "Soil",
+                      "count": 766
+                    }
+                  ]
+                },
+                {
+                  "label": "Root",
+                  "value": "Root",
+                  "count": 58
+                }
+              ]
+            },
+            {
+              "label": "Fish",
+              "value": "Fish",
+              "count": 1740
+            },
+            {
+              "label": "Mammals",
+              "value": "Mammals",
+              "count": 1078,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 1076,
+                  "children": [
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 1074
+                    },
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Excretory system",
+                  "value": "Excretory system",
+                  "count": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Environmental",
+          "value": "Environmental",
+          "count": 5298,
+          "children": [
+            {
+              "label": "Aquatic",
+              "value": "Aquatic",
+              "count": 2858,
+              "children": [
+                {
+                  "label": "Freshwater",
+                  "value": "Freshwater",
+                  "count": 2568,
+                  "children": [
+                    {
+                      "label": "Lentic",
+                      "value": "Lentic",
+                      "count": 1170
+                    },
+                    {
+                      "label": "Groundwater",
+                      "value": "Groundwater",
+                      "count": 1094
+                    },
+                    {
+                      "label": "Lake",
+                      "value": "Lake",
+                      "count": 240
+                    }
+                  ]
+                },
+                {
+                  "label": "Marine",
+                  "value": "Marine",
+                  "count": 276,
+                  "children": [
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 64
+                    }
+                  ]
+                },
+                {
+                  "label": "Estuary",
+                  "value": "Estuary",
+                  "count": 10,
+                  "children": [
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Sediment",
+                  "value": "Sediment",
+                  "count": 4
+                }
+              ]
+            },
+            {
+              "label": "Terrestrial",
+              "value": "Terrestrial",
+              "count": 2440,
+              "children": [
+                {
+                  "label": "Soil",
+                  "value": "Soil",
+                  "count": 2440,
+                  "children": [
+                    {
+                      "label": "Forest soil",
+                      "value": "Forest soil",
+                      "count": 1816
+                    },
+                    {
+                      "label": "Clay",
+                      "value": "Clay",
+                      "count": 268
+                    },
+                    {
+                      "label": "Crop",
+                      "value": "Crop",
+                      "count": 92
+                    },
+                    {
+                      "label": "Oil-contaminated",
+                      "value": "Oil-contaminated",
+                      "count": 82
+                    },
+                    {
+                      "label": "Grasslands",
+                      "value": "Grasslands",
+                      "count": 52
+                    },
+                    {
+                      "label": "Permafrost",
+                      "value": "Permafrost",
+                      "count": 50
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Engineered",
+          "value": "Engineered",
+          "count": 52,
+          "children": [
+            {
+              "label": "Wastewater",
+              "value": "Wastewater",
+              "count": 44,
+              "children": [
+                {
+                  "label": "Water and sludge",
+                  "value": "Water and sludge",
+                  "count": 30
+                },
+                {
+                  "label": "Activated Sludge",
+                  "value": "Activated Sludge",
+                  "count": 4
+                }
+              ]
+            },
+            {
+              "label": "Bioremediation",
+              "value": "Bioremediation",
+              "count": 8,
+              "children": [
+                {
+                  "label": "Terephthalate",
+                  "value": "Terephthalate",
+                  "count": 8,
+                  "children": [
+                    {
+                      "label": "Wastewater",
+                      "value": "Wastewater",
+                      "count": 8
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "experiment_type",
+      "label": "Experiment type",
+      "total": 5,
+      "facetValues": [
+        {
+          "label": "Amplicon",
+          "value": "amplicon",
+          "count": 14764
+        },
+        {
+          "label": "Metagenomic",
+          "value": "metagenomic",
+          "count": 970
+        },
+        {
+          "label": "Metabarcoding",
+          "value": "metabarcoding",
+          "count": 508
+        },
+        {
+          "label": "Assembly",
+          "value": "assembly",
+          "count": 320
+        },
+        {
+          "label": "Metatranscriptomic",
+          "value": "metatranscriptomic",
+          "count": 20
+        }
+      ]
+    },
+    {
+      "id": "sequencing_method",
+      "label": "Sequencing method",
+      "total": 22,
+      "facetValues": [
+        {
+          "label": "MiSeq",
+          "value": "MiSeq",
+          "count": 3126
+        },
+        {
+          "label": "454",
+          "value": "454",
+          "count": 2114
+        },
+        {
+          "label": "Illumina MiSeq2500 250bp-PE",
+          "value": "Illumina MiSeq2500 250bp-PE",
+          "count": 1662
+        },
+        {
+          "label": "Illumina",
+          "value": "Illumina",
+          "count": 1436
+        },
+        {
+          "label": "Amplicon sequencing (2x300bp, MiSeq)",
+          "value": "Amplicon sequencing (2x300bp, MiSeq)",
+          "count": 1120
+        },
+        {
+          "label": "Illumina 16S",
+          "value": "Illumina 16S",
+          "count": 1074
+        },
+        {
+          "label": "Amplicon-based",
+          "value": "amplicon-based",
+          "count": 766
+        },
+        {
+          "label": "Illumina MiSeq",
+          "value": "Illumina MiSeq",
+          "count": 412
+        },
+        {
+          "label": "Illumina HiSeq",
+          "value": "Illumina HiSeq",
+          "count": 382
+        },
+        {
+          "label": "Miseq",
+          "value": "Miseq",
+          "count": 302
+        }
+      ]
+    },
+    {
+      "id": "location_name",
+      "label": "Location name",
+      "total": 3132,
+      "facetValues": [
+        {
+          "label": "USA",
+          "value": "USA",
+          "count": 74262
+        },
+        {
+          "label": "GAZ:United States of America",
+          "value": "GAZ:United States of America",
+          "count": 26716
+        },
+        {
+          "label": "United Kingdom",
+          "value": "United Kingdom",
+          "count": 17428
+        },
+        {
+          "label": "Canada",
+          "value": "Canada",
+          "count": 15928
+        },
+        {
+          "label": "China",
+          "value": "China",
+          "count": 14886
+        },
+        {
+          "label": "Denmark",
+          "value": "Denmark",
+          "count": 10672
+        },
+        {
+          "label": "Australia",
+          "value": "Australia",
+          "count": 8810
+        },
+        {
+          "label": "Germany",
+          "value": "Germany",
+          "count": 8138
+        },
+        {
+          "label": "Japan",
+          "value": "Japan",
+          "count": 7630
+        },
+        {
+          "label": "Pacific Ocean",
+          "value": "Pacific Ocean",
+          "count": 6642
+        }
+      ]
+    }
+  ]
+}

@@ -41,11 +41,11 @@ function interceptWithBiomeFilter(biome) {
         {fixture: 'search/analysesBiomeFilter.json'}).as('biomeQueryAnalyses');
 }
 
-function routeWithCenterName(center) {
-    let centerParam = 'centre_name:' + center;
+function interceptWithFilter(value, param, fixture, searchType = 'projects') {
+    let filterString = `${param}:${value}`;
     cy.intercept('GET',
-        '**/ebisearch/ws/rest/metagenomics_projects?**' + centerParam + '**',
-        {fixture: 'projectsCenterFilter'}).as('centerQueryProjects');
+        `**/ebisearch/ws/rest/metagenomics_${searchType}?**${filterString}**`,
+        {fixture: fixture}).as(`${param}Query${searchType}`);
 }
 
 function testCheckboxNumberIsReflectedInTable(labelFor) {
@@ -101,9 +101,23 @@ describe('Search page', function() {
 
         it('Correct number of results.', function() {
             waitForSearchResults(rowSelector, PAGE_SIZE);
+
+            cy.intercept('GET',
+              `**/ebisearch/ws/rest/metagenomics_projects?**query=Test**`,
+              {fixture: 'search/projectsTestQuery'}).as(`testQueryProjects`);
+
+            cy.intercept('GET',
+              `**/ebisearch/ws/rest/metagenomics_samples?**query=Test**`,
+              {fixture: 'search/samplesTestQuery'}).as(`testQuerySamples`);
+
+            cy.intercept('GET',
+              `**/ebisearch/ws/rest/metagenomics_analyses?**query=Test**`,
+              {fixture: 'search/analysesTestQuery'}).as(`testQueryAnalyses`);
+
             checkNumberOfResultsDecreaseAfterAction(()=>{
+
                 cy.get('.mg-text-search-textfield').type('Test');
-                cy.get('.mg-text-search').contains('Search').click();        
+                cy.get('.mg-text-search').contains('Search').click();
             });
         });
 
@@ -122,7 +136,7 @@ describe('Search page', function() {
 
         it('Centre name filters should restrict results', function() {
             const centerName = 'EMG';
-            routeWithCenterName(centerName);
+            interceptWithFilter(centerName, 'center_name', 'search/projectsCenterFilter');
             cy.get(`label[for='${centerName}']`).click();
             waitForSearchResults(rowSelector, PAGE_SIZE);
             cy.get('.mg-search-result tbody tr td:last-child').contains(centerName);
@@ -165,6 +179,18 @@ describe('Search page', function() {
 
         it('Correct number of results.', function() {
             waitForSearchResults(rowSelector, PAGE_SIZE);
+            cy.intercept('GET',
+              `**/ebisearch/ws/rest/metagenomics_projects?**query=Test**`,
+              {fixture: 'search/projectsTestQuery'}).as(`testQueryProjects`);
+
+            cy.intercept('GET',
+              `**/ebisearch/ws/rest/metagenomics_samples?**query=Test**`,
+              {fixture: 'search/samplesTestQuery'}).as(`testQuerySamples`);
+
+            cy.intercept('GET',
+              `**/ebisearch/ws/rest/metagenomics_analyses?**query=Test**`,
+              {fixture: 'search/analysesTestQuery'}).as(`testQueryAnalyses`);
+
             checkNumberOfResultsDecreaseAfterAction(()=>{
                 cy.get('.mg-text-search-textfield').type('Test');
                 cy.get('.mg-text-search').contains('Search').click();        
@@ -184,17 +210,18 @@ describe('Search page', function() {
         });
         it('Experiment type filters should restrict results', function() {
             const experimentType = 'amplicon';
-            routeWithCenterName(experimentType);
+            interceptWithFilter(experimentType, 'experiment_type', 'search/samplesExperimentTypeFilter', 'samples');
+            interceptWithFilter(experimentType, 'experiment_type', 'search/analysesExperimentTypeFilter', 'analyses');
             testCheckboxNumberIsReflectedInTable(experimentType);
         });
         it('sequencing method filters should restrict results', function() {
             const method = 'illumina';
-            routeWithCenterName(method);
+            interceptWithFilter(method, 'sequencing_method', 'search/samplesSequencingMethodFilter', 'samples');
             testCheckboxNumberIsReflectedInTable(method);
         });
         it('Location name filters should restrict results', function() {
             const location = 'Canada';
-            routeWithCenterName(location);
+            interceptWithFilter(location, 'location_name', 'search/samplesLocationNameFilter', 'samples');
             testCheckboxNumberIsReflectedInTable(location);
         });
     });
@@ -208,6 +235,18 @@ describe('Search page', function() {
 
 
         it('Correct number of results.', function() {
+            cy.intercept('GET',
+              `**/ebisearch/ws/rest/metagenomics_projects?**query=Test**`,
+              {fixture: 'search/projectsTestQuery'}).as(`testQueryProjects`);
+
+            cy.intercept('GET',
+              `**/ebisearch/ws/rest/metagenomics_samples?**query=Test**`,
+              {fixture: 'search/samplesTestQuery'}).as(`testQuerySamples`);
+
+            cy.intercept('GET',
+              `**/ebisearch/ws/rest/metagenomics_analyses?**query=Test**`,
+              {fixture: 'search/analysesTestQuery'}).as(`testQueryAnalyses`);
+
             waitForSearchResults(rowSelector, PAGE_SIZE);
             checkNumberOfResultsDecreaseAfterAction(()=>{
                 cy.get('.mg-text-search-textfield').type('Test');
@@ -222,7 +261,7 @@ describe('Search page', function() {
         });
         it('Organism filters should restrict results', function() {
             const organism = 'Bacteria';
-            interceptWithBiomeFilter(organism);
+            interceptWithFilter(organism, 'organism', 'search/analysesOrganismFilter.json', 'analyses');
             testCheckboxNumberIsReflectedInTable(organism);
         });
         it('Biome filters should restrict results', function() {
@@ -232,22 +271,22 @@ describe('Search page', function() {
         });
         it('Experiment type filters should restrict results', function() {
             const experimentType = 'amplicon';
-            routeWithCenterName(experimentType);
+            interceptWithFilter(experimentType, 'experiment_type', 'search/analysesExperimentTypeFilter', 'analyses');
             testCheckboxNumberIsReflectedInTable(experimentType);
         });
         it('Pipeline filters should restrict results', function() {
             const version = '4.1';
-            routeWithCenterName(version);
+            interceptWithFilter(version, 'pipeline_version', 'search/analysesPipelineVersionFilter', 'analyses');
             testCheckboxNumberIsReflectedInTable(version);
         });
         it('GO filters should restrict results', function() {
             const go = 'GO:0003677';
-            routeWithCenterName(go);
+            interceptWithFilter(go, 'GO', 'search/analysesGoFilter', 'analyses');
             testCheckboxNumberIsReflectedInTable(go);
         });
         it('InterPro filters should restrict results', function() {
             const ipro = 'IPR013785';
-            routeWithCenterName(ipro);
+            interceptWithFilter(ipro, 'INTERPRO', 'search/analysesInterproFilter', 'analyses');
             testCheckboxNumberIsReflectedInTable(ipro);
         });
     });

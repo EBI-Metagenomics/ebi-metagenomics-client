@@ -1,0 +1,845 @@
+{
+  "hitCount": 2238,
+  "entries": [
+    {
+      "id": "ERS2620067",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005060"
+        ],
+        "name": [
+          "3B_2 Taxonomy ID:410658"
+        ],
+        "description": [
+          "3B_2"
+        ]
+      }
+    },
+    {
+      "id": "ERS2967392",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005058"
+        ],
+        "name": [
+          "MN.EFF_W55.READ2 Taxonomy ID:256318"
+        ],
+        "description": [
+          "MN.EFF_W55.READ2"
+        ]
+      }
+    },
+    {
+      "id": "ERS2702591",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00003720"
+        ],
+        "name": [
+          "TCM_D0 Taxonomy ID:256318"
+        ],
+        "description": [
+          "TCM_D0"
+        ]
+      }
+    },
+    {
+      "id": "ERS2765125",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005063"
+        ],
+        "name": [
+          "MN.EFF.RNA.READ1.W4 Taxonomy ID:256318"
+        ],
+        "description": [
+          "MN.EFF.RNA.READ1.W4"
+        ]
+      }
+    },
+    {
+      "id": "ERS2485945",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005075"
+        ],
+        "name": [
+          "PRPO.20141013.AMC.PLANKTON.2-DNA1 Taxonomy ID:449393"
+        ],
+        "description": [
+          "PRPO.20141013.AMC.PLANKTON.2-DNA1"
+        ]
+      }
+    },
+    {
+      "id": "ERS667899",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001363"
+        ],
+        "name": [
+          "Erophorum vaginatum microbiome from the Sphagnum bog"
+        ],
+        "description": [
+          "Austria, Styria, Rotmoos, MS2 plot"
+        ]
+      }
+    },
+    {
+      "id": "ERS2102706",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00003724"
+        ],
+        "name": [
+          "W56.TG1.16S Taxonomy ID:527639"
+        ],
+        "description": [
+          "W56.TG1.16S"
+        ]
+      }
+    },
+    {
+      "id": "ERS2765098",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005063"
+        ],
+        "name": [
+          "FR.INF.RNA.READ2.W23 Taxonomy ID:256318"
+        ],
+        "description": [
+          "FR.INF.RNA.READ2.W23"
+        ]
+      }
+    },
+    {
+      "id": "ERS2754403",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005062"
+        ],
+        "name": [
+          "TG.NFC.RNA.READ2.W31 Taxonomy ID:256318"
+        ],
+        "description": [
+          "TG.NFC.RNA.READ2.W31"
+        ]
+      }
+    },
+    {
+      "id": "ERS2620110",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005060"
+        ],
+        "name": [
+          "1B_1 Taxonomy ID:410658"
+        ],
+        "description": [
+          "1B_1"
+        ]
+      }
+    },
+    {
+      "id": "ERS606492",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000437"
+        ],
+        "name": [
+          "R1-0_S9_L001_R1_001"
+        ],
+        "description": [
+          "Biochar-soilDNA illumina18s"
+        ]
+      }
+    },
+    {
+      "id": "ERS2001073",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005065"
+        ],
+        "name": [
+          "B1:R2 Taxonomy ID:1218275"
+        ],
+        "description": [
+          "B1:R2"
+        ]
+      }
+    },
+    {
+      "id": "ERS2967395",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005058"
+        ],
+        "name": [
+          "FD.EFF_W65.READ1 Taxonomy ID:256318"
+        ],
+        "description": [
+          "FD.EFF_W65.READ1"
+        ]
+      }
+    },
+    {
+      "id": "ERS2764861",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005057"
+        ],
+        "name": [
+          "MN.DNF_W79.READ1 Taxonomy ID:256318"
+        ],
+        "description": [
+          "MN.DNF_W79.READ1"
+        ]
+      }
+    },
+    {
+      "id": "ERS2702585",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00003720"
+        ],
+        "name": [
+          "Inocolum Taxonomy ID:256318"
+        ],
+        "description": [
+          "Inocolum"
+        ]
+      }
+    },
+    {
+      "id": "ERS2620087",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005060"
+        ],
+        "name": [
+          "18B_1 Taxonomy ID:410658"
+        ],
+        "description": [
+          "18B_1"
+        ]
+      }
+    },
+    {
+      "id": "ERS2765046",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005063"
+        ],
+        "name": [
+          "TE.EFF.RNA2.READ1.W8 Taxonomy ID:256318"
+        ],
+        "description": [
+          "TE.EFF.RNA2.READ1.W8"
+        ]
+      }
+    },
+    {
+      "id": "ERS2620049",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005060"
+        ],
+        "name": [
+          "7A_1 Taxonomy ID:410658"
+        ],
+        "description": [
+          "7A_1"
+        ]
+      }
+    },
+    {
+      "id": "ERS2461703",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005047"
+        ],
+        "name": [
+          "mgs158280"
+        ],
+        "description": [
+          "AHG1"
+        ]
+      }
+    },
+    {
+      "id": "ERS2766238",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00003732"
+        ],
+        "name": [
+          "uc_M58_CUL Taxonomy ID:256318"
+        ],
+        "description": [
+          "uc_M58_CUL"
+        ]
+      }
+    },
+    {
+      "id": "ERS2620124",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005060"
+        ],
+        "name": [
+          "24B_2 Taxonomy ID:410658"
+        ],
+        "description": [
+          "24B_2"
+        ]
+      }
+    },
+    {
+      "id": "ERS2086330",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002253"
+        ],
+        "name": [
+          "6"
+        ],
+        "description": [
+          "TCSTR samples"
+        ]
+      }
+    },
+    {
+      "id": "ERS606494",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000437"
+        ],
+        "name": [
+          "R1-2_S10_L001_R1_001"
+        ],
+        "description": [
+          "Biochar-soilDNA illumina18s"
+        ]
+      }
+    },
+    {
+      "id": "ERS2766227",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00003732"
+        ],
+        "name": [
+          "M37_CUL Taxonomy ID:256318"
+        ],
+        "description": [
+          "M37_CUL"
+        ]
+      }
+    },
+    {
+      "id": "ERS2102668",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00003729"
+        ],
+        "name": [
+          "LSU_32_B Taxonomy ID:655179"
+        ],
+        "description": [
+          "LSU_32_B"
+        ]
+      }
+    }
+  ],
+  "facets": [
+    {
+      "id": "domain_source",
+      "label": "Source",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "MGnify (Samples)",
+          "value": "metagenomics_samples",
+          "count": 2238
+        }
+      ]
+    },
+    {
+      "id": "biome",
+      "label": "Biome",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "Engineered",
+          "value": "Engineered",
+          "count": 1074,
+          "children": [
+            {
+              "label": "Bioreactor",
+              "value": "Bioreactor",
+              "count": 418
+            },
+            {
+              "label": "Wastewater",
+              "value": "Wastewater",
+              "count": 398,
+              "children": [
+                {
+                  "label": "Water and sludge",
+                  "value": "Water and sludge",
+                  "count": 200
+                }
+              ]
+            },
+            {
+              "label": "Lab enrichment",
+              "value": "Lab enrichment",
+              "count": 224,
+              "children": [
+                {
+                  "label": "Defined media",
+                  "value": "Defined media",
+                  "count": 4
+                }
+              ]
+            },
+            {
+              "label": "Biogas plant",
+              "value": "Biogas plant",
+              "count": 24,
+              "children": [
+                {
+                  "label": "Wet fermentation",
+                  "value": "Wet fermentation",
+                  "count": 24
+                }
+              ]
+            },
+            {
+              "label": "Modeled",
+              "value": "Modeled",
+              "count": 6,
+              "children": [
+                {
+                  "label": "Simulated communities (sequence read mixture)",
+                  "value": "Simulated communities (sequence read mixture)",
+                  "count": 6
+                }
+              ]
+            },
+            {
+              "label": "Bioremediation",
+              "value": "Bioremediation",
+              "count": 4,
+              "children": [
+                {
+                  "label": "Hydrocarbon",
+                  "value": "Hydrocarbon",
+                  "count": 4,
+                  "children": [
+                    {
+                      "label": "Benzene",
+                      "value": "Benzene",
+                      "count": 4
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Host-associated",
+          "value": "Host-associated",
+          "count": 646,
+          "children": [
+            {
+              "label": "Plants",
+              "value": "Plants",
+              "count": 236,
+              "children": [
+                {
+                  "label": "Rhizosphere",
+                  "value": "Rhizosphere",
+                  "count": 216
+                },
+                {
+                  "label": "Phylloplane",
+                  "value": "Phylloplane",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Mammals",
+              "value": "Mammals",
+              "count": 194,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 118,
+                  "children": [
+                    {
+                      "label": "Midgut",
+                      "value": "Midgut",
+                      "count": 16
+                    },
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 6
+                    },
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Nervous system",
+                  "value": "Nervous system",
+                  "count": 28,
+                  "children": [
+                    {
+                      "label": "Brain",
+                      "value": "Brain",
+                      "count": 28
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Human",
+              "value": "Human",
+              "count": 178,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 178,
+                  "children": [
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 74
+                    },
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 54
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Birds",
+              "value": "Birds",
+              "count": 22,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 22,
+                  "children": [
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 16
+                    },
+                    {
+                      "label": "Ceca",
+                      "value": "Ceca",
+                      "count": 6
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Arthropoda",
+              "value": "Arthropoda",
+              "count": 8,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 8,
+                  "children": [
+                    {
+                      "label": "Gut",
+                      "value": "Gut",
+                      "count": 8
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Insecta",
+              "value": "Insecta",
+              "count": 8,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 8
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Environmental",
+          "value": "Environmental",
+          "count": 518,
+          "children": [
+            {
+              "label": "Aquatic",
+              "value": "Aquatic",
+              "count": 206,
+              "children": [
+                {
+                  "label": "Freshwater",
+                  "value": "Freshwater",
+                  "count": 166,
+                  "children": [
+                    {
+                      "label": "Wetlands",
+                      "value": "Wetlands",
+                      "count": 96
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 44
+                    },
+                    {
+                      "label": "Groundwater",
+                      "value": "Groundwater",
+                      "count": 22
+                    },
+                    {
+                      "label": "Lentic",
+                      "value": "Lentic",
+                      "count": 4
+                    }
+                  ]
+                },
+                {
+                  "label": "Marine",
+                  "value": "Marine",
+                  "count": 16,
+                  "children": [
+                    {
+                      "label": "Oceanic",
+                      "value": "Oceanic",
+                      "count": 12
+                    },
+                    {
+                      "label": "Coastal",
+                      "value": "Coastal",
+                      "count": 2
+                    },
+                    {
+                      "label": "Intertidal zone",
+                      "value": "Intertidal zone",
+                      "count": 2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Terrestrial",
+              "value": "Terrestrial",
+              "count": 194,
+              "children": [
+                {
+                  "label": "Soil",
+                  "value": "Soil",
+                  "count": 194
+                }
+              ]
+            },
+            {
+              "label": "Air",
+              "value": "Air",
+              "count": 118
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "experiment_type",
+      "label": "Experiment type",
+      "total": 4,
+      "facetValues": [
+        {
+          "label": "Amplicon",
+          "value": "amplicon",
+          "count": 992
+        },
+        {
+          "label": "Metagenomic",
+          "value": "metagenomic",
+          "count": 828
+        },
+        {
+          "label": "Metatranscriptomic",
+          "value": "metatranscriptomic",
+          "count": 426
+        },
+        {
+          "label": "Assembly",
+          "value": "assembly",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "sequencing_method",
+      "label": "Sequencing method",
+      "total": 332,
+      "facetValues": [
+        {
+          "label": "Illumina",
+          "value": "Illumina",
+          "count": 37992
+        },
+        {
+          "label": "Illumina MiSeq",
+          "value": "Illumina MiSeq",
+          "count": 27586
+        },
+        {
+          "label": "Illumina Miseq",
+          "value": "Illumina Miseq",
+          "count": 11828
+        },
+        {
+          "label": "Pyrosequencing",
+          "value": "pyrosequencing",
+          "count": 9822
+        },
+        {
+          "label": "454",
+          "value": "454",
+          "count": 6082
+        },
+        {
+          "label": "Ion torrent PGM",
+          "value": "Ion torrent PGM",
+          "count": 5844
+        },
+        {
+          "label": "MiSeq",
+          "value": "MiSeq",
+          "count": 5708
+        },
+        {
+          "label": "Illumina",
+          "value": "illumina",
+          "count": 2238
+        },
+        {
+          "label": "454 Titanium",
+          "value": "454 Titanium",
+          "count": 2226
+        },
+        {
+          "label": "Ion torrent",
+          "value": "Ion torrent",
+          "count": 2220
+        }
+      ]
+    },
+    {
+      "id": "location_name",
+      "label": "Location name",
+      "total": 20,
+      "facetValues": [
+        {
+          "label": "Switzerland",
+          "value": "Switzerland",
+          "count": 658
+        },
+        {
+          "label": "USA",
+          "value": "USA",
+          "count": 630
+        },
+        {
+          "label": "Japan",
+          "value": "Japan",
+          "count": 220
+        },
+        {
+          "label": "China",
+          "value": "China",
+          "count": 144
+        },
+        {
+          "label": "Australia",
+          "value": "Australia",
+          "count": 122
+        },
+        {
+          "label": "Austria",
+          "value": "Austria",
+          "count": 96
+        },
+        {
+          "label": "Kenya",
+          "value": "Kenya",
+          "count": 94
+        },
+        {
+          "label": "Italy",
+          "value": "Italy",
+          "count": 78
+        },
+        {
+          "label": "India",
+          "value": "India",
+          "count": 70
+        },
+        {
+          "label": "Styria, Pürgschachen Moor",
+          "value": "Styria, Pürgschachen Moor",
+          "count": 50
+        }
+      ]
+    }
+  ]
+}

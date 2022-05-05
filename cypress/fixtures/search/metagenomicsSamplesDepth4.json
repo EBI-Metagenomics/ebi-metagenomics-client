@@ -2,377 +2,381 @@
   "hitCount": 661121,
   "entries": [
     {
-      "id": "SRS578618",
+      "id": "SRS2338009",
       "source": "metagenomics_samples",
       "fields": {
         "METAGENOMICS_PROJECTS": [
-          "MGYS00000868"
+          "MGYS00005514"
         ],
         "name": [
-          "PR1_000_MINERAL"
+          "fec_d180_D8_t4_J3407"
         ],
         "description": [
-          "PR1_000_MINERAL"
+          "Maternal and environmental influence on the developing lamb microbiome in the first year of life."
         ]
       }
     },
     {
-      "id": "SRS2291803",
+      "id": "ERS194092",
       "source": "metagenomics_samples",
       "fields": {
         "METAGENOMICS_PROJECTS": [
-          "MGYS00005176"
+          "MGYS00000516"
         ],
         "name": [
-          "7091ID51"
+          "Mice cecum samples (tissue/content)"
         ],
         "description": [
-          "Initial"
+          "Mouse cecum mucosa and content sample from 121 mice belonging to 8 geographical regions in europe, 121 from mucosa and 80 from content"
         ]
       }
     },
     {
-      "id": "ERS850513",
+      "id": "ERS658878",
       "source": "metagenomics_samples",
       "fields": {
         "METAGENOMICS_PROJECTS": [
-          "MGYS00005158"
+          "MGYS00005233"
         ],
         "name": [
-          "180.34.3w"
+          "7-116959-1-4"
         ],
         "description": [
-          "180.34.3w"
+          "Feces"
         ]
       }
     },
     {
-      "id": "SRS2834361",
+      "id": "SRS3293408",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005513"
+        ],
+        "name": [
+          "CPR_CP.AQ033"
+        ],
+        "description": [
+          "CPR_CP.AQ033"
+        ]
+      }
+    },
+    {
+      "id": "ERS537298",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00000427",
+          "MGYS00005321"
+        ],
+        "name": [
+          "SZAXPI019845-88"
+        ],
+        "description": [
+          "Stool sample from China"
+        ]
+      }
+    },
+    {
+      "id": "ERS614323",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001609",
+          "MGYS00002304"
+        ],
+        "name": [
+          "Metagenomes and metatranscriptomes from the diffuse hydrothermal vents of Axial Seamount from 2013"
+        ],
+        "description": [
+          "Metagenomes and metatranscriptomes from the diffuse hydrothermal vents of Axial Seamount from 2013"
+        ]
+      }
+    },
+    {
+      "id": "ERS1266380",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00003869"
+        ],
+        "name": [
+          "epilimnetic water sample ME26Sep00EB2R1"
+        ],
+        "description": [
+          "epilimnetic water sample ME26Sep00EB2R1"
+        ]
+      }
+    },
+    {
+      "id": "SRS741786",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005384",
+          "MGYS00005383"
+        ],
+        "name": [
+          "MG100426"
+        ],
+        "description": [
+          "SampleMG100426"
+        ]
+      }
+    },
+    {
+      "id": "ERS1086474",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005142"
+        ],
+        "name": [
+          "StL.TW36.2.d246.infant.fecal"
+        ],
+        "description": [
+          "Human fecal bacterial V4-16S rRNA"
+        ]
+      }
+    },
+    {
+      "id": "SRS2590411",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005192"
+        ],
+        "name": [
+          "46_3"
+        ],
+        "description": [
+          "46_3"
+        ]
+      }
+    },
+    {
+      "id": "SRS966504",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005850"
+        ],
+        "name": [
+          "SI027_S3_100m_HRpyrotags"
+        ],
+        "description": [
+          "pyrotag of the V6-V9 hypervarriable region of the small subunit rRNA gene, water was collected with Go-Flows on a line, biomass was collected onto a 0.22 ÂµM steriex filter"
+        ]
+      }
+    },
+    {
+      "id": "SRS2329889",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005294"
+        ],
+        "name": [
+          "S0365"
+        ],
+        "description": [
+          "This sample has been submitted by pda|sbiller on 2018-05-02; marine metagenome"
+        ]
+      }
+    },
+    {
+      "id": "ERS760354",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001724"
+        ],
+        "name": [
+          "Tokaj2 Leaf"
+        ],
+        "description": [
+          "Tokaj wine region, Babits, Leaf sample"
+        ]
+      }
+    },
+    {
+      "id": "ERS2027275",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005260"
+        ],
+        "name": [
+          "Sample_328"
+        ],
+        "description": [
+          "16S amplicons"
+        ]
+      }
+    },
+    {
+      "id": "SRS2829283",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005197"
+        ],
+        "name": [
+          "SLL29150204"
+        ],
+        "description": [
+          "This sample has been submitted by pda|jrcwill123 on 2019-01-02; human oral metagenome"
+        ]
+      }
+    },
+    {
+      "id": "ERS2585870",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00006006"
+        ],
+        "name": [
+          "qiita_sid_11358:11358.1621"
+        ],
+        "description": [
+          "Here, we examine the microbiome profile of 955 stool, hand, and environmental samples collected longitudinally for over a year from the Hadza hunter-gatherers of Tanzania. The data reveal annual cyclic reconfiguration of the microbiome, in which some taxa become undetectable only to reappear in a subsequent season."
+        ]
+      }
+    },
+    {
+      "id": "SRS3271973",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005255"
+        ],
+        "name": [
+          "S270_R2"
+        ],
+        "description": [
+          "S270_R2"
+        ]
+      }
+    },
+    {
+      "id": "SRS2463031",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005196"
+        ],
+        "name": [
+          "4001901168"
+        ],
+        "description": [
+          "4022"
+        ]
+      }
+    },
+    {
+      "id": "SRS3749236",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005222"
+        ],
+        "name": [
+          "Chicago.D.2_2S_HiSeq"
+        ],
+        "description": [
+          "This sample has been submitted by pda|jholm on 2018-09-07; human metagenome"
+        ]
+      }
+    },
+    {
+      "id": "ERS1380148",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00003937"
+        ],
+        "name": [
+          "qiita_sid_1883:1883.2009.318.Crump.Artic.LTREB.main.lane3.NoIndex"
+        ],
+        "description": [
+          "stream epilithon bottom"
+        ]
+      }
+    },
+    {
+      "id": "ERS1048699",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001325"
+        ],
+        "name": [
+          "Bread wheat"
+        ],
+        "description": [
+          "Nutrient_solution"
+        ]
+      }
+    },
+    {
+      "id": "SRS1055331",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00005535"
+        ],
+        "name": [
+          "Ba.S903C17bApr13"
+        ],
+        "description": [
+          "This sample has been submitted by pda|kittelmanns on 2016-08-26; gut metagenome"
+        ]
+      }
+    },
+    {
+      "id": "SRS2422981",
       "source": "metagenomics_samples",
       "fields": {
         "METAGENOMICS_PROJECTS": [
           "MGYS00003194"
         ],
         "name": [
-          "102.100.100/35187"
+          "102.100.100/34740"
         ],
         "description": [
-          "102.100.100/35187"
+          "102.100.100/34740"
         ]
       }
     },
     {
-      "id": "SRS3588640",
+      "id": "SRS2629151",
       "source": "metagenomics_samples",
       "fields": {
         "METAGENOMICS_PROJECTS": [
-          "MGYS00005181"
+          "MGYS00005574",
+          "MGYS00005573"
         ],
         "name": [
-          "Turnbaugh_2009_PM4.CL.30308"
+          "1F-104"
         ],
         "description": [
-          "Turnbaugh_2009_PM4.CL.30308"
+          "This sample has been submitted by pda|vineetks on 2019-01-01; human skin metagenome"
         ]
       }
     },
     {
-      "id": "SRS2463103",
+      "id": "ERS1479306",
       "source": "metagenomics_samples",
       "fields": {
         "METAGENOMICS_PROJECTS": [
-          "MGYS00005196"
+          "MGYS00003505"
         ],
         "name": [
-          "4004601248"
+          "780.CH.Mfec.AMER5.Target.M1.Diet1.AMERdiet.AdLib.d4"
         ],
         "description": [
-          "4098"
-        ]
-      }
-    },
-    {
-      "id": "SRS2785672",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00005143"
-        ],
-        "name": [
-          "PP19H14124R00"
-        ],
-        "description": [
-          "P1-9.H14.Supra_24B.R00"
-        ]
-      }
-    },
-    {
-      "id": "ERS430793",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00002359"
-        ],
-        "name": [
-          "A2_rpoB2"
-        ],
-        "description": [
-          "A2_rpoB2"
-        ]
-      }
-    },
-    {
-      "id": "SRS2462104",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00005196"
-        ],
-        "name": [
-          "1060301338"
-        ],
-        "description": [
-          "1438"
-        ]
-      }
-    },
-    {
-      "id": "DRS072201",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00005528"
-        ],
-        "name": [
-          "SAMD00128220"
-        ],
-        "description": [
-          "16S amplicon analysis of tongue microbiota of a Japanese community-dwelling elderly adult HY71815224"
-        ]
-      }
-    },
-    {
-      "id": "SRS659496",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00000998"
-        ],
-        "name": [
-          "PB-WheatMaizeChopped+N Plot2 Bed3"
-        ],
-        "description": [
-          "Long-term experimental site Permanent beds with chopped crop residues with nitrogen fertilization Plot2 Bed3"
-        ]
-      }
-    },
-    {
-      "id": "ERS1075948",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00000629"
-        ],
-        "name": [
-          "Treatment_E4.G-(t14)"
-        ],
-        "description": [
-          "Treatment_E4.G-(t14)"
-        ]
-      }
-    },
-    {
-      "id": "SRS1784262",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00005505"
-        ],
-        "name": [
-          "GP0779"
-        ],
-        "description": [
-          "GP0779"
-        ]
-      }
-    },
-    {
-      "id": "SRS2288512",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00005176"
-        ],
-        "name": [
-          "7045ID27B"
-        ],
-        "description": [
-          "Initial"
-        ]
-      }
-    },
-    {
-      "id": "ERS439582",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00005147"
-        ],
-        "name": [
-          "Bgmal40.s5.khich"
-        ],
-        "description": [
-          "human gut metagenome"
-        ]
-      }
-    },
-    {
-      "id": "ERS1447692",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00001502"
-        ],
-        "name": [
-          "10483.recip.538.WT.PD4.D21"
-        ],
-        "description": [
-          "Role of Gut Microbiota in Pathophysiology of Parkinson''s Disease"
-        ]
-      }
-    },
-    {
-      "id": "SRS3642156",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00003174"
-        ],
-        "name": [
-          "SKA4_72"
-        ],
-        "description": [
-          "sub_sulfate"
-        ]
-      }
-    },
-    {
-      "id": "SRS652533",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00000992"
-        ],
-        "name": [
-          "201107UF15"
-        ],
-        "description": [
-          "201107UF15"
-        ]
-      }
-    },
-    {
-      "id": "ERS1579703",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00002184"
-        ],
-        "name": [
-          "550.L6S21.s.6.sequence"
-        ],
-        "description": [
-          "sample_1767 saliva"
-        ]
-      }
-    },
-    {
-      "id": "SRS1227783",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00005161"
-        ],
-        "name": [
-          "R713M104"
-        ],
-        "description": [
-          "This sample has been submitted by pda|fernand3 on 2015-12-30; soil metagenome"
-        ]
-      }
-    },
-    {
-      "id": "SRS825676",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00005241"
-        ],
-        "name": [
-          "NN762.16S"
-        ],
-        "description": [
-          "soil from Nutrient Network"
-        ]
-      }
-    },
-    {
-      "id": "DRS024260",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00002355"
-        ],
-        "name": [
-          "Salivary microbiome of a Japanese adult HY81828120"
-        ],
-        "description": [
-          "Salivary microbiome of a Japanese adult HY81828120"
-        ]
-      }
-    },
-    {
-      "id": "ERS756357",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00001607"
-        ],
-        "name": [
-          "Pacific oyster hemolymph microbiota from Texel"
-        ],
-        "description": [
-          "Pacific oyster (Crassostrea gigas) hemolymph microbiota; collected on Texel, 2012-08-24; sample taken after field deployment; treated with mix of ampiciline, gentamicine, tetracycline and kanamycine (100 µg/l seawater each) between 2012-06-11 and 2012-06-14; oyster from Texel, not translocated"
-        ]
-      }
-    },
-    {
-      "id": "SRS1723138",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00005162"
-        ],
-        "name": [
-          "1653.A"
-        ],
-        "description": [
-          "This sample has been submitted by pda|msmortensen on 2017-01-04; human nasopharyngeal metagenome"
-        ]
-      }
-    },
-    {
-      "id": "ERS914960",
-      "source": "metagenomics_samples",
-      "fields": {
-        "METAGENOMICS_PROJECTS": [
-          "MGYS00000596"
-        ],
-        "name": [
-          "10317.000001888"
-        ],
-        "description": [
-          "American Gut Project Stool sample"
+          "gut bacterial 16S V4"
         ]
       }
     }
@@ -1634,13 +1638,13 @@
           "count": 50
         },
         {
-          "label": "Id: DOID:8778 Crohn's disease",
-          "value": "id: DOID:8778 Crohn's disease",
+          "label": "Control non-asthmatic patient",
+          "value": "control non-asthmatic patient",
           "count": 44
         },
         {
-          "label": "Control non-asthmatic patient",
-          "value": "control non-asthmatic patient",
+          "label": "Id: DOID:8778 Crohn's disease",
+          "value": "id: DOID:8778 Crohn's disease",
           "count": 44
         }
       ]

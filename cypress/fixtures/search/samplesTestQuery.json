@@ -1,0 +1,655 @@
+{
+  "hitCount": 1410,
+  "entries": [
+    {
+      "id": "ERS782465",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001332"
+        ],
+        "name": [
+          "Test Brassicae"
+        ],
+        "description": [
+          "Test Brassicae"
+        ]
+      }
+    },
+    {
+      "id": "ERS782465",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001332"
+        ],
+        "name": [
+          "Test Brassicae"
+        ],
+        "description": [
+          "Test Brassicae"
+        ]
+      }
+    },
+    {
+      "id": "ERS782466",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001332"
+        ],
+        "name": [
+          "Test Brassicae"
+        ],
+        "description": [
+          "Test Brassicae"
+        ]
+      }
+    },
+    {
+      "id": "ERS782466",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00001332"
+        ],
+        "name": [
+          "Test Brassicae"
+        ],
+        "description": [
+          "Test Brassicae"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111468",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "99"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111417",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "48"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111465",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "96"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111395",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "26"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111422",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "53"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111449",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "80"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111419",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "50"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111464",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "95"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111432",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "63"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111452",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "83"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111463",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "94"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111470",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "101"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111370",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "1"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111398",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "29"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111472",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "103"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111427",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "58"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111382",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "13"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111469",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "100"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111428",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "59"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111377",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "8"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    },
+    {
+      "id": "ERS2111414",
+      "source": "metagenomics_samples",
+      "fields": {
+        "METAGENOMICS_PROJECTS": [
+          "MGYS00002178"
+        ],
+        "name": [
+          "45"
+        ],
+        "description": [
+          "PiGutNet Ring Test"
+        ]
+      }
+    }
+  ],
+  "facets": [
+    {
+      "id": "domain_source",
+      "label": "Source",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "MGnify (Samples)",
+          "value": "metagenomics_samples",
+          "count": 1410
+        }
+      ]
+    },
+    {
+      "id": "biome",
+      "label": "Biome",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "Host-associated",
+          "value": "Host-associated",
+          "count": 1146,
+          "children": [
+            {
+              "label": "Human",
+              "value": "Human",
+              "count": 932,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 932,
+                  "children": [
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 930
+                    },
+                    {
+                      "label": "Oral",
+                      "value": "Oral",
+                      "count": 2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Mammals",
+              "value": "Mammals",
+              "count": 210,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 210,
+                  "children": [
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 210
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Plants",
+              "value": "Plants",
+              "count": 4,
+              "children": [
+                {
+                  "label": "Phylloplane",
+                  "value": "Phylloplane",
+                  "count": 4
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Environmental",
+          "value": "Environmental",
+          "count": 256,
+          "children": [
+            {
+              "label": "Aquatic",
+              "value": "Aquatic",
+              "count": 206,
+              "children": [
+                {
+                  "label": "Sediment",
+                  "value": "Sediment",
+                  "count": 150
+                },
+                {
+                  "label": "Freshwater",
+                  "value": "Freshwater",
+                  "count": 50,
+                  "children": [
+                    {
+                      "label": "Lentic",
+                      "value": "Lentic",
+                      "count": 50
+                    }
+                  ]
+                },
+                {
+                  "label": "Marine",
+                  "value": "Marine",
+                  "count": 6,
+                  "children": [
+                    {
+                      "label": "Intertidal zone",
+                      "value": "Intertidal zone",
+                      "count": 2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Terrestrial",
+              "value": "Terrestrial",
+              "count": 50,
+              "children": [
+                {
+                  "label": "Soil",
+                  "value": "Soil",
+                  "count": 50,
+                  "children": [
+                    {
+                      "label": "Permafrost",
+                      "value": "Permafrost",
+                      "count": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Engineered",
+          "value": "Engineered",
+          "count": 8,
+          "children": [
+            {
+              "label": "Modeled",
+              "value": "Modeled",
+              "count": 4,
+              "children": [
+                {
+                  "label": "Simulated communities (DNA mixture)",
+                  "value": "Simulated communities (DNA mixture)",
+                  "count": 4
+                }
+              ]
+            },
+            {
+              "label": "Biotransformation",
+              "value": "Biotransformation",
+              "count": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "experiment_type",
+      "label": "Experiment type",
+      "total": 3,
+      "facetValues": [
+        {
+          "label": "Amplicon",
+          "value": "amplicon",
+          "count": 1348
+        },
+        {
+          "label": "Metagenomic",
+          "value": "metagenomic",
+          "count": 64
+        },
+        {
+          "label": "Assembly",
+          "value": "assembly",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "sequencing_method",
+      "label": "Sequencing method",
+      "total": 5,
+      "facetValues": [
+        {
+          "label": "Illumina",
+          "value": "Illumina",
+          "count": 48
+        },
+        {
+          "label": "MiSeq",
+          "value": "MiSeq",
+          "count": 4
+        },
+        {
+          "label": "2015-08",
+          "value": "2015-08",
+          "count": 2
+        },
+        {
+          "label": "Sequencing on Illumina HiSeq: 100 bp paired end",
+          "value": "Sequencing on Illumina HiSeq: 100 bp paired end",
+          "count": 2
+        },
+        {
+          "label": "Miseq",
+          "value": "miseq",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "location_name",
+      "label": "Location name",
+      "total": 9,
+      "facetValues": [
+        {
+          "label": "USA",
+          "value": "USA",
+          "count": 1072
+        },
+        {
+          "label": "Canada",
+          "value": "Canada",
+          "count": 52
+        },
+        {
+          "label": "USA:Wisconsin",
+          "value": "USA:Wisconsin",
+          "count": 24
+        },
+        {
+          "label": "USA:Mississippi",
+          "value": "USA:Mississippi",
+          "count": 24
+        },
+        {
+          "label": "USA: Michigan: Ann Arbor",
+          "value": "USA: Michigan: Ann Arbor",
+          "count": 6
+        },
+        {
+          "label": "Japan",
+          "value": "Japan",
+          "count": 4
+        },
+        {
+          "label": "Guangzhou",
+          "value": "Guangzhou",
+          "count": 2
+        },
+        {
+          "label": "USA: Miami, Florida",
+          "value": "USA: Miami, Florida",
+          "count": 2
+        },
+        {
+          "label": "North Sea",
+          "value": "North Sea",
+          "count": 2
+        }
+      ]
+    }
+  ]
+}
