@@ -21,12 +21,14 @@ const GenomesTable: React.FC = () => {
     Number
   );
   const [genomesOrder] = useQueryParamState('genomes-order', '');
+  const [genomeSearchParam] = useQueryParamState('genomes-search', '');
   const { data, loading, error, isStale } = useMGnifyData(
     `genome-catalogues/${accession}/genomes`,
     {
       page: genomesPage as number,
       ordering: genomesOrder as string,
       page_size: genomesPageSize as number,
+      search: genomeSearchParam as string,
     }
   );
   if (loading && !isStale) return <Loading size="small" />;
@@ -91,6 +93,7 @@ const GenomesTable: React.FC = () => {
 
   return (
     <EMGTable
+      Title="Species-level cluster representatives"
       cols={columns}
       data={data as MGnifyResponseList}
       initialPage={(genomesPage as number) - 1}
@@ -99,6 +102,7 @@ const GenomesTable: React.FC = () => {
       loading={loading}
       isStale={isStale}
       namespace="genomes-"
+      showTextFilter
       sortable
     />
   );
