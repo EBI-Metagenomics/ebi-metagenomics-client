@@ -16,6 +16,10 @@ type GenomeOverviewProps = {
   data: MGnifyDatum;
 };
 
+function notEmpty(listValue: unknown): boolean {
+  return !!listValue && listValue !== 'undefined' && listValue !== 'undefined%';
+}
+
 const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
   return (
     <section>
@@ -62,7 +66,7 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
                 ),
               },
               { key: 'N50', value: String(data.attributes['n-50']) },
-            ].filter(({ value }) => !!value)}
+            ].filter(({ value }) => notEmpty(value))}
           />
         </details>
         <details open>
@@ -79,7 +83,7 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
                 key: 'EggNog coverage',
                 value: `${data.attributes['eggnog-coverage']}%`,
               },
-            ].filter(({ value }) => !!value)}
+            ].filter(({ value }) => notEmpty(value))}
           />
         </details>
         <details open>
@@ -90,25 +94,17 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
             list={[
               {
                 key: 'Pan-genome size',
-                value: `${data.attributes['pangenome-size']}%`,
+                value: `${data.attributes['pangenome-size']}`,
               },
               {
                 key: 'Pan-genome core size',
-                value: `${data.attributes['pangenome-core-size']}%`,
+                value: `${data.attributes['pangenome-core-size']}`,
               },
               {
                 key: 'Pan-genome accessory size',
-                value: `${data.attributes['pangenome-accessory-size']}%`,
+                value: `${data.attributes['pangenome-accessory-size']}`,
               },
-              {
-                key: 'Pan-genome InterPro coverage',
-                value: `${data.attributes['pangenome-ipr-coverage']}%`,
-              },
-              {
-                key: 'Pan-genome EggNOG coverage',
-                value: `${data.attributes['pangenome-eggnog-coverage']}%`,
-              },
-            ].filter(({ value }) => !!value)}
+            ].filter(({ value }) => notEmpty(value))}
           />
         </details>
         <details open>
@@ -137,7 +133,7 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
                 key: 'ncRNA',
                 value: `${data.attributes['nc-rnas']}%`,
               },
-            ].filter(({ value }) => !!value)}
+            ].filter(({ value }) => notEmpty(value))}
           />
         </details>
         <details open>
@@ -279,7 +275,7 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
                     )
                   : null,
               },
-            ].filter(({ value }) => !!value)}
+            ].filter(({ value }) => notEmpty(value))}
           />
         </details>
       </div>

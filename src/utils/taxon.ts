@@ -5,7 +5,13 @@
  * @return {string}
  */
 export function cleanTaxLineage(lineage: string, replace = ''): string {
-  return lineage.replace(/;/g, '').replace(/[d|p|c|o|f|g|s]__/g, replace);
+  let cleaned = lineage
+    .replace(/;/g, '')
+    .replace(/[d|p|c|o|f|g|s]__/g, replace);
+  if (cleaned.startsWith(replace)) {
+    cleaned = cleaned.substring(replace.length).trimStart();
+  }
+  return cleaned;
 }
 
 /**
