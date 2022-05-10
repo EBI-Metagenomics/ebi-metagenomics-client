@@ -50,34 +50,8 @@ const HelpPage: React.FC = () => {
               </ExtLink>
               .
               <br />
-              Alternatively you can see a high level view of the pipelines{' '}
-              <Link to="/pipelines">HERE</Link>.
-            </p>
-          </div>
-        </article>
-
-        <article className="vf-card vf-card--brand vf-card--bordered">
-          <div className="vf-card__content | vf-stack vf-stack--400">
-            <h3 className="vf-card__heading">
-              <a href="https://hmmer-web-docs.readthedocs.io/en/latest/index.html">
-                <span className="icon icon-functional" data-icon="1" /> Sequence
-                search
-                <ArrowForLink />
-              </a>
-            </h3>
-            <p className="vf-card__text">
-              This allows protein sequence searches of representatives from our
-              non-redundant protein database using HMMER. Comprehensive
-              documentation on the HMMER web service, including API, is
-              available at{' '}
-              <ExtLink href="https://hmmer-web-docs.readthedocs.io/en/latest/index.html">
-                {' '}
-                HMMER Read the Docs site
-              </ExtLink>
-              . The options specifically associated with the MGnify sequence
-              search service are provided in the User Documentation above. The
-              complete protein databases is available for download and local
-              sequence searching below.
+              Alternatively you can see a high level{' '}
+              <Link to="/pipelines">view of the pipelines</Link>.
             </p>
           </div>
         </article>
@@ -114,6 +88,40 @@ const HelpPage: React.FC = () => {
         <article className="vf-card vf-card--brand vf-card--bordered">
           <div className="vf-card__content | vf-stack vf-stack--400">
             <h3 className="vf-card__heading">
+              <a href="https://hmmer-web-docs.readthedocs.io/en/latest/index.html">
+                <span className="icon icon-functional" data-icon="1" /> Sequence
+                search
+                <ArrowForLink />
+              </a>
+            </h3>
+            <p className="vf-card__text">
+              This allows protein sequence searches of representatives from our
+              non-redundant protein database using HMMER. Comprehensive
+              documentation on the HMMER web service, including API, is
+              available at{' '}
+              <ExtLink href="https://hmmer-web-docs.readthedocs.io/en/latest/index.html">
+                HMMER Read the Docs site
+              </ExtLink>
+              . The options specifically associated with the MGnify sequence
+              search service are provided in the User Documentation above. There
+              is a delay between releasing a new version of the protein database
+              for{' '}
+              <ExtLink
+                id="ftp-link"
+                title="MGnify protein database FTP"
+                href="http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/current_release"
+              >
+                download
+              </ExtLink>
+              , and implementing the new release in the MGnify sequence search.
+              Please ensure you are aware which version you are using.
+            </p>
+          </div>
+        </article>
+
+        <article className="vf-card vf-card--brand vf-card--bordered">
+          <div className="vf-card__content | vf-stack vf-stack--400">
+            <h3 className="vf-card__heading">
               <a href="http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/current_release/README.txt">
                 <span className="icon icon-functional" data-icon="=" />{' '}
                 Downloading our protein sequence database
@@ -123,27 +131,24 @@ const HelpPage: React.FC = () => {
             <p className="vf-card__text">
               The MGnify protein database is now so large, that we can not
               provide a service to allow a search against the complete
-              collection (currently over 1 billion sequences). Both the cluster
-              representatives and complete database are available for download
-              from{' '}
+              collection (currently over 2.4 billion sequences). The cluster
+              representatives, complete database and annotations are{' '}
               <ExtLink
                 id="ftp-link"
                 title="MGnify protein database FTP"
                 href="http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/current_release"
               >
-                here
+                available for download
               </ExtLink>
-              . We periodically update this dataset (approximately every 6
-              months), so please ensure you know the version you are using. Pfam
-              annotations and exact matches to UniProtKB are also provided.
-              Please view the{' '}
+              . We periodically update this dataset, so please ensure you know
+              the version you are using. Please view the{' '}
               <a
                 id="ftp-readme-link"
                 title="Protein database FTP readme"
                 href="http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/current_release/README.txt"
               >
                 README.txt
-              </a>
+              </a>{' '}
               for the complete list of files and their descriptions.
             </p>
           </div>
