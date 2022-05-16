@@ -46,7 +46,7 @@ const QueryParamsProvider: React.FC = ({ children }) => {
         ) as Record<string, string>
       );
       location.search = newParams.toString();
-      navigate(location);
+      navigate(location, { replace: true });
     },
     50,
     [state.params]
