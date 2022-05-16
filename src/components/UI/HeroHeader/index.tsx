@@ -1,10 +1,11 @@
 import React, { useRef } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './style.css';
 
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
 import useQueryParamsStore from 'hooks/queryParamState/QueryParamStore/useQueryParamsStore';
 import { createParamFromURL } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
+import Link from 'components/UI/Link';
 
 const HeroHeader: React.FC = () => {
   const searchBox = useRef<HTMLInputElement>();
@@ -80,7 +81,7 @@ const HeroHeader: React.FC = () => {
                 Example searches:{' '}
                 <Link
                   to="/search/studies"
-                  onClick={() => setSearchQuery('tara oceans')}
+                  state={{ query: 'tara oceans' }}
                   className="vf-link"
                 >
                   Tara oceans
@@ -88,7 +89,7 @@ const HeroHeader: React.FC = () => {
                 ,{' '}
                 <Link
                   to="/search/studies"
-                  onClick={() => setSearchQuery('MGYS00000410')}
+                  state={{ query: 'MGYS00000410' }}
                   className="vf-link"
                 >
                   MGYS00000410
@@ -96,7 +97,7 @@ const HeroHeader: React.FC = () => {
                 ,{' '}
                 <Link
                   to="/search/studies"
-                  onClick={() => setSearchQuery('human gut')}
+                  state={{ query: 'human gut' }}
                   className="vf-link"
                 >
                   Human Gut

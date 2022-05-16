@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import useEBISearchData from 'hooks/data/useEBISearchData';
 import FetchError from 'components/UI/FetchError';
 import './style.css';
 import useMGnifyData from 'hooks/data/useMGnifyData';
+import Link from 'components/UI/Link';
 
 const DataAnalysesTypeRow: React.FC<{
   type: string;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
@@ -8,6 +7,7 @@ import FetchError from 'components/UI/FetchError';
 import { getBiomeIcon } from 'utils/biomes';
 
 import './style.css';
+import Link from 'components/UI/Link';
 
 const Biome: React.FC<{ lineage: string; name: string; count: number }> = ({
   lineage,
@@ -17,7 +17,8 @@ const Biome: React.FC<{ lineage: string; name: string; count: number }> = ({
   return (
     <div>
       <Link
-        to={`/browse/studies?biome=${lineage}`}
+        to={{ pathname: '/browse/studies' }}
+        state={{ biome: lineage }}
         className="vf-grid vf-grid__col-1 mg-link"
         style={{ textAlign: 'center', gridRowGap: '0.2em' }}
       >
