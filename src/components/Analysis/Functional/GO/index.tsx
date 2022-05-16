@@ -76,9 +76,9 @@ const GO: React.FC = () => {
             defaultValue="bar"
           />
           <div className="vf-tabs-content">
-            <div className="vf-grid vf-grid__col-3">
-              {chart === 'bar' && dataBundles && (
-                <div id="go-slim-bar-charts">
+            {chart === 'bar' && dataBundles && (
+              <div id="go-slim-bar-charts">
+                <div className="vf-grid vf-grid__col-3">
                   <GOBarChart
                     title="Biological process"
                     series={dataBundles.biological_process.series}
@@ -104,9 +104,11 @@ const GO: React.FC = () => {
                     containerId="cellular-component-bar-chart"
                   />
                 </div>
-              )}
-              {chart === 'pie' && dataBundles && (
-                <div id="go-slim-pie-charts">
+              </div>
+            )}
+            {chart === 'pie' && dataBundles && (
+              <div id="go-slim-pie-charts">
+                <div className="vf-grid vf-grid__col-3">
                   <GOPieChart
                     title="Biological process"
                     series={dataBundles.biological_process.series}
@@ -129,8 +131,8 @@ const GO: React.FC = () => {
                     containerId="cellular-component-pie-chart"
                   />
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </>
       )}
