@@ -37,7 +37,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
   initialValue,
 }) => {
   const { data: biomes, loading } = useMGnifyData(
-    'biomes/root/children?depth_gte=1&depth_lte=4&page_size=100'
+    'biomes/root/children?depth_gte=1&depth_lte=4&page_size=200'
   );
   const [value, setValue] = useState<OptionProps | undefined>();
   const options = React.useMemo(() => {
