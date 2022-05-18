@@ -1,4 +1,3 @@
-'use strict';
 {
   //-----------------------------------------------------------------------------
   //
@@ -167,8 +166,6 @@ var rotationOffset = Math.PI / 2;
 var buffer;
 var bufferFactor = 0.1;
 
-let margin;
-
 // The maps are the small pie charts showing the current slice being viewed.
 //
 var mapBuffer = 10;
@@ -295,6 +292,14 @@ var image;
 var hiddenPattern;
 var loadingImage;
 var logoImage;
+
+// strict-mode fixes for custom JS
+var margin;
+var hueStopHsl;
+var detailsExpand;
+var detailsInfo;
+var nodeData;
+var lightnessFactor;
 
 function backingScale() {
   if ('devicePixelRatio' in window) {
@@ -4259,8 +4264,8 @@ function interpolateHue(hueStart, hueEnd, valueStart, valueEnd) {
   // colors in the hue spectrum
 
   hueStopPositions = [];
-  let hueStopHsl = [];
   hueStopText = [];
+  hueStopHsl = [];
 
   hueStopPositions.push(0);
   hueStopHsl.push(hslText(hueStart));
@@ -5135,9 +5140,7 @@ function setCallBacks() {
   snapshotButton.onclick = snapshot;
   snapshotButton.onmousedown = suppressEvent;
   detailsName = document.getElementById('detailsName');
-  let detailsExpand;
   detailsExpand = document.getElementById('detailsExpand');
-  let detailsInfo;
   detailsInfo = document.getElementById('detailsInfo');
   search = document.getElementById('search');
   search.onkeyup = onSearchChange;
@@ -5379,7 +5382,7 @@ function showData(indexData, indexAttribute, summary) {
     focusNode.name;
   dataWindow.document.title = title;
 
-  let nodeData = [];
+  nodeData = [];
 
   if (dataWindow && dataWindow.document && dataWindow.document.body != null) {
     //var loadImage = document.createElement('img');
@@ -5853,7 +5856,7 @@ function updateView() {
 
   maxDisplayDepth = maxDepth;
 
-  let lightnessFactor =
+  lightnessFactor =
     (lightnessMax - lightnessBase) / (maxDepth > 8 ? 8 : maxDepth);
   keys = 0;
 
