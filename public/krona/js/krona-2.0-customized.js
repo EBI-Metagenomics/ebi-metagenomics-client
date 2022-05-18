@@ -127,17 +127,17 @@ var selectedNode = 0; // the root of the current view
 var focusNode = 0; // a node chosen for more info (single-click)
 var highlightedNode = 0; // mouse hover node
 var highlightingHidden = false;
-var nodes = new Array();
+var nodes = [];
 var currentNodeID = 0; // to iterate while loading
 
-var nodeHistory = new Array();
+var nodeHistory = [];
 var nodeHistoryPosition = 0;
 
 var dataEnabled = false; // true when supplemental files are present
 
 // store non-Krona GET variables so they can be passed on to links
 //
-var getVariables = new Array();
+var getVariables = [];
 
 // selectedNodeLast is separate from the history, since we need to check
 // properties of the last node viewed when browsing through the history
@@ -166,6 +166,8 @@ var rotationOffset = Math.PI / 2;
 
 var buffer;
 var bufferFactor = 0.1;
+
+let margin;
 
 // The maps are the small pie charts showing the current slice being viewed.
 //
@@ -262,7 +264,7 @@ var fpsDisplay = document.getElementById('frameRate');
 
 // Arrays to translate xml attribute names into displayable attribute names
 //
-var attributes = new Array();
+var attributes = [];
 //
 var magnitudeIndex; // the index of attribute arrays used for magnitude
 var membersAssignedIndex;
@@ -283,7 +285,7 @@ var datasets = 1;
 var datasetNames;
 var datasetSelectSize = 30;
 var datasetAlpha = new Tween(0, 0);
-var datasetWidths = new Array();
+var datasetWidths = [];
 var datasetChanged;
 var datasetSelectWidth = 50;
 
@@ -1239,8 +1241,8 @@ function Node() {
       labelLeft = keyMinTextLeft;
     }
 
-    var lineX = new Array();
-    var lineY = new Array();
+    var lineX = [];
+    var lineY = [];
 
     var bendRadius;
     var keyAngle = Math.atan((textY - centerY) / (labelLeft - centerX));
@@ -1914,7 +1916,7 @@ function Node() {
   };
 
   this.getData = function (index, summary) {
-    var files = new Array();
+    var files = [];
 
     if (
       this.attributes[index] != null &&
@@ -1944,7 +1946,7 @@ function Node() {
     ) {
       list = this.attributes[index][currentDataset];
     } else {
-      list = new Array();
+      list = [];
     }
 
     if (summary) {
@@ -2330,6 +2332,7 @@ function Node() {
     this.maxDepth = this.depth;
     this.maxDepthCollapsed = this.depthCollapsed;
 
+    let i;
     for (i in this.children) {
       var child = this.children[i];
 
@@ -3455,7 +3458,7 @@ function clearSearch() {
 }
 
 function createSVG() {
-  svgNS = 'http://www.w3.org/2000/svg';
+  const svgNS = 'http://www.w3.org/2000/svg';
   var SVG = {};
   SVG.xlinkns = 'http://www.w3.org/1999/xlink';
 
@@ -4142,7 +4145,7 @@ function hide(object) {
 
 function showLink() {
   var urlHalves = String(document.location).split('?');
-  var newGetVariables = new Array();
+  var newGetVariables = [];
 
   newGetVariables.push(
     getGetString('dataset', currentDataset, false),
@@ -4255,9 +4258,9 @@ function interpolateHue(hueStart, hueEnd, valueStart, valueEnd) {
   // since the gradient will be RGB based, we need to add stops to hit all the
   // colors in the hue spectrum
 
-  hueStopPositions = new Array();
-  hueStopHsl = new Array();
-  hueStopText = new Array();
+  hueStopPositions = [];
+  let hueStopHsl = [];
+  hueStopText = [];
 
   hueStopPositions.push(0);
   hueStopHsl.push(hslText(hueStart));
@@ -4493,8 +4496,9 @@ function load() {
         break;
 
       case 'datasets':
-        datasetNames = new Array();
+        datasetNames = [];
         //
+        let j;
         for (j = getFirstChild(element); j; j = getNextSibling(j)) {
           datasetNames.push(j.firstChild.nodeValue);
         }
@@ -4525,6 +4529,7 @@ function load() {
   if (urlHalves[1]) {
     var vars = urlHalves[1].split('&');
 
+    let i;
     for (i = 0; i < vars.length; i++) {
       var pair = vars[i].split('=');
 
@@ -4604,7 +4609,7 @@ function loadTreeDOM(
   }
 
   if (hueName) {
-    newNode.hues = new Array();
+    newNode.hues = [];
   }
 
   for (var i = getFirstChild(domNode); i; i = getNextSibling(i)) {
@@ -4627,14 +4632,14 @@ function loadTreeDOM(
         var attributeName = i.tagName.toLowerCase();
         var index = attributeIndex(attributeName);
         //
-        newNode.attributes[index] = new Array();
+        newNode.attributes[index] = [];
         //
         for (var j = getFirstChild(i); j; j = getNextSibling(j)) {
           if (attributes[index] == undefined) {
             var x = 5;
           }
           if (attributes[index].list) {
-            newNode.attributes[index].push(new Array());
+            newNode.attributes[index].push([]);
 
             for (var k = getFirstChild(j); k; k = getNextSibling(k)) {
               newNode.attributes[index][
@@ -5130,7 +5135,9 @@ function setCallBacks() {
   snapshotButton.onclick = snapshot;
   snapshotButton.onmousedown = suppressEvent;
   detailsName = document.getElementById('detailsName');
+  let detailsExpand;
   detailsExpand = document.getElementById('detailsExpand');
+  let detailsInfo;
   detailsInfo = document.getElementById('detailsInfo');
   search = document.getElementById('search');
   search.onkeyup = onSearchChange;
@@ -5372,7 +5379,7 @@ function showData(indexData, indexAttribute, summary) {
     focusNode.name;
   dataWindow.document.title = title;
 
-  nodeData = new Array();
+  let nodeData = [];
 
   if (dataWindow && dataWindow.document && dataWindow.document.body != null) {
     //var loadImage = document.createElement('img');
@@ -5846,7 +5853,7 @@ function updateView() {
 
   maxDisplayDepth = maxDepth;
 
-  lightnessFactor =
+  let lightnessFactor =
     (lightnessMax - lightnessBase) / (maxDepth > 8 ? 8 : maxDepth);
   keys = 0;
 
