@@ -110,6 +110,10 @@ module.exports = function (env, options) {
             ),
             to: 'js/',
           },
+          {
+            from: path.resolve(__dirname, 'public', 'krona'),
+            to: '.',
+          },
         ],
       }),
       // isEnvProduction &&
