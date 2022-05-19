@@ -5,6 +5,7 @@ import './style.css';
 type PropertyDataType = { name: string; value: string | number };
 type GenomeBrowserPopupProps = {
   data: PropertyDataType[];
+  hasMetaProteomics: boolean;
 };
 type FormattedData = {
   name?: string;
@@ -74,7 +75,10 @@ const getProtLength = (attributes: {
   }
   return Math.ceil((end - start) / 3);
 };
-const formatData = (rawData: PropertyDataType[]): FormattedData => {
+const formatData = (
+  rawData: PropertyDataType[],
+  withMetaProteomics: boolean
+): FormattedData => {
   const attributes: {
     [name: string]: string | null;
   } = rawData.reduce((memo, el) => {
@@ -248,16 +252,27 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
     ],
   };
 
+  const properties = [functionalData, otherData];
+  if (withMetaProteomics) {
+    properties.push(metaproteomicData);
+  }
+
   return {
     name: attributes.id,
     gene: attributes.gene,
     product: attributes.product,
-    properties: [functionalData, otherData, metaproteomicData],
+    properties,
   };
 };
 
-const GenomeBrowserPopup: React.FC<GenomeBrowserPopupProps> = ({ data }) => {
-  const { name, gene, product, properties } = formatData(data);
+const GenomeBrowserPopup: React.FC<GenomeBrowserPopupProps> = ({
+  data,
+  hasMetaProteomics,
+}) => {
+  const { name, gene, product, properties } = formatData(
+    data,
+    hasMetaProteomics
+  );
   return (
     <>
       <table className="stack hover igv-popover-table">

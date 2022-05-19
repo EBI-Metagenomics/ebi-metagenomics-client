@@ -50,7 +50,9 @@ const GenomeBrowser: React.FC = () => {
     igv.createBrowser(divRef.current, options).then((browser) => {
       setLoading(false);
       browser.on('trackclick', (ignored, data) =>
-        ReactDOMServer.renderToString(<GenomeBrowserPopup data={data} />)
+        ReactDOMServer.renderToString(
+          <GenomeBrowserPopup data={data} hasMetaProteomics={false} />
+        )
       );
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

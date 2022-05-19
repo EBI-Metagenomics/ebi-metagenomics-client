@@ -39,6 +39,7 @@ type ContigProps = {
 const Contig: React.FC<ContigProps> = ({ contig }) => {
   const accession = useURLAccession();
   const { config } = useContext(UserContext);
+  const hasMetaProteomics = config?.featureFlags?.contigIgvGffUploader;
   const contigId = contig.attributes['contig-id'];
   const fastaURL = `${config.api}analyses/${contig.attributes.accession}/contigs/${contigId}`;
 
@@ -101,12 +102,25 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
       if (node === null) return;
       igv.createBrowser(node, options).then((browser) => {
         browser.on('trackclick', (ignored, trackData) =>
-          ReactDOMServer.renderToString(<GenomeBrowserPopup data={trackData} />)
+          ReactDOMServer.renderToString(
+            <GenomeBrowserPopup
+              data={trackData}
+              hasMetaProteomics={hasMetaProteomics}
+            />
+          )
         );
         setIgvBrowser(browser);
       });
     },
-    [fastaURL, displayName, config.api, accession, contigId, antiSMASH]
+    [
+      fastaURL,
+      displayName,
+      config.api,
+      accession,
+      contigId,
+      antiSMASH,
+      hasMetaProteomics,
+    ]
   );
 
   if (loading) return <Loading size="small" />;
@@ -116,9 +130,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   return (
     <div id="contig">
       <div ref={igvContainer} />
-      {config?.featureFlags?.contigIgvGffUploader && (
-        <GFFCompare igvBrowser={igvBrowser} />
-      )}
+      {hasMetaProteomics && <GFFCompare igvBrowser={igvBrowser} />}
     </div>
   );
 };
