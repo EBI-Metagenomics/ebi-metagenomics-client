@@ -127,11 +127,11 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
               },
               {
                 key: 'tRNAs',
-                value: `${data.attributes.trnas}%`,
+                value: `${data.attributes.trnas}`,
               },
               {
                 key: 'ncRNA',
-                value: `${data.attributes['nc-rnas']}%`,
+                value: `${data.attributes['nc-rnas']}`,
               },
             ].filter(({ value }) => notEmpty(value))}
           />
