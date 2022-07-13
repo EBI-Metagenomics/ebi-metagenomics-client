@@ -1,0 +1,5 @@
+EMERALD is an EMG-developed tool for detecting BCGs.
+It is not currently part of the analyses pipeline.
+It outputs GFF files.
+It is run in batch mode on a set of contigs, and the EMG webuploader reads these in in batches.
+The data in this folder is FAKE, but matches up with existing CI fixtures.

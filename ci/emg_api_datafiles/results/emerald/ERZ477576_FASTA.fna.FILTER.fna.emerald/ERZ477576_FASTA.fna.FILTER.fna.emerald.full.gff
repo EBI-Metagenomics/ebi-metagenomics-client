@@ -1,0 +1,6 @@
+##gff-version 3
+##note that this data is fake
+ERZ477576.100000-NODE-100000-length-611-cov-2.23921	EMERALDv0.2.3	CLUSTER	1	147	.	.	.	ID=ERZ477576.100000-NODE-100000-length-611-cov-2.23921_emrld_1;nearest_MiBIG=BGC0000656;nearest_MiBIG_class=Terpene;nearest_MiBIG_jaccardDistance=0.700;partial=00
+ERZ477576.100001-NODE-100001-length-611-cov-2.21763	EMERALDv0.2.3	CLUSTER	1	561	.	.	.	ID=ERZ477576.100001-NODE-100001-length-611-cov-2.21763_emrld_1;nearest_MiBIG=BGC0001085;nearest_MiBIG_class=NRP Terpene;nearest_MiBIG_jaccardDistance=0.724;partial=01
+ERZ477576.100002-NODE-100002-length-611-cov-2.21403	EMERALDv0.2.3	CLUSTER	166	609	.	.	.	ID=ERZ477576.100002-NODE-100002-length-611-cov-2.21403_emrld_1;nearest_MiBIG=BGC0000644;nearest_MiBIG_class=Terpene;nearest_MiBIG_jaccardDistance=0.562;partial=11
+ERZ477576.100003-NODE-100003-length-611-cov-2.20683	EMERALDv0.2.3	CLUSTER	1	609	.	.	.	ID=ERZ477576.100003-NODE-100003-length-611-cov-2.20683_emrld_1;nearest_MiBIG=BGC0000800;nearest_MiBIG_class=Saccharide;nearest_MiBIG_jaccardDistance=0.768;partial=00
