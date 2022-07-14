@@ -48,6 +48,9 @@ export type MGnifyDatum = {
     sample?: {
       data: RelationshipDatum;
     };
+    analyses?: {
+      data: RelationshipDatum;
+    };
     assemblies?: {
       data: Array<KeyValue>;
     };
