@@ -140,7 +140,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
               </p>
               <FileUploaderButton
                 onChange={(e) =>
-                  addGff((e.target as HTMLInputElement).files[0])
+                  addGff((e.target as unknown as HTMLInputElement).files[0])
                 }
                 accept=".gff,.gff3"
               />

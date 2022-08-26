@@ -249,6 +249,10 @@ const formatData = (
             ? () => <MultipleField value={attributes.ambiguous_sequences} />
             : () => <div />,
       },
+      {
+        name: 'Semi-quantitative expression spectrum count',
+        Value: attributes.semiquantitative_expression_spectrum_count,
+      },
     ],
   };
 
