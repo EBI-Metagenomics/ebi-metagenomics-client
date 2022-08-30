@@ -33,7 +33,7 @@ declare module 'igv' {
     on: (
       event: string,
       callback: (
-        ignored: boolean,
+        track: any,
         data: { name: string; value: string | number }[]
       ) => unknown
     ) => void;

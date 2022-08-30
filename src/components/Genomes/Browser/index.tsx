@@ -14,21 +14,21 @@ const GenomeBrowser: React.FC = () => {
 
   const tracks = [
     {
-      type: 'mgnify-annotation',
+      type: 'annotation',
       // name: downloadsModel.get('name'),
       url: `${config.api}genomes/${accession}/downloads/${accession}.gff`,
       format: 'gff3',
       label: 'Functional annotation',
-      displayMode: 'EXPANDED',
-      colorAttributes: [
-        ['Default', ''],
-        ['COG', 'COG'],
-        ['Product', 'product'],
-        ['Pfam', 'Pfam'],
-        ['KEGG', 'KEGG'],
-        ['InterPro', 'InterPro'],
-        ['eggNOG', 'eggNOG'],
-      ],
+      // displayMode: 'EXPANDED',
+      // colorAttributes: [
+      //   ['Default', ''],
+      //   ['COG', 'COG'],
+      //   ['Product', 'product'],
+      //   ['Pfam', 'Pfam'],
+      //   ['KEGG', 'KEGG'],
+      //   ['InterPro', 'InterPro'],
+      //   ['eggNOG', 'eggNOG'],
+      // ],
     },
   ];
   const options = {
@@ -49,7 +49,7 @@ const GenomeBrowser: React.FC = () => {
   useEffect(() => {
     igv.createBrowser(divRef.current, options).then((browser) => {
       setLoading(false);
-      browser.on('trackclick', (ignored, data) =>
+      browser.on('trackclick', (track, data) =>
         ReactDOMServer.renderToString(
           <GenomeBrowserPopup data={data} hasMetaProteomics={false} />
         )

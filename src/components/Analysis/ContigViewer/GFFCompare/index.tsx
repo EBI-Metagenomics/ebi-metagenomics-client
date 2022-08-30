@@ -6,6 +6,8 @@ import {
 } from 'components/Analysis/ContigViewer/GFFCompare/gff_db';
 import { useLiveQuery } from 'dexie-react-hooks';
 
+import './style.css';
+
 import ArrowForLink from 'components/UI/ArrowForLink';
 import PlainTable from 'components/UI/PlainTable';
 import FileUploaderButton from 'components/UI/FileUploaderButton';
@@ -15,6 +17,14 @@ import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 type GFFCompareProps = {
   igvBrowser: Browser;
+};
+
+const getGFFHeaderValue = (encodedGff, varName) => {
+  return atob(encodedGff).split(`${varName}=`)[1].split('\n')[0];
+};
+
+const colorScale = (number, max) => {
+  return `rgba(0,128,128,${0.3 + (0.7 * number) / max})`;
 };
 
 const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
@@ -27,6 +37,8 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
     Number
   );
 
+  const [colorBarMax, setColorBarMax] = useState(null);
+
   const gffs = useLiveQuery(() => db.gffs.toArray());
 
   useEffect(() => {
@@ -35,6 +47,13 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
         if (gff === undefined) {
           setGffComparisonId(null);
         } else if (igvBrowser) {
+          const parsedColorBarMax = parseFloat(
+            getGFFHeaderValue(
+              gff.encodedGFF,
+              'max_spectrum_count_value_in_study'
+            )
+          );
+          setColorBarMax(parsedColorBarMax);
           igvBrowser.removeTrackByName(gff.name);
           igvBrowser.loadTrack({
             name: gff.name,
@@ -43,6 +62,16 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
             format: 'gff3',
             filterTypes: [],
             removable: false,
+            displayMode: 'EXPANDED',
+            labelBy: 'pride_id',
+            color: (feature) => {
+              const colorBarNumber = parseFloat(
+                feature.getAttributeValue(
+                  'semiquantitative_expression_spectrum_count'
+                )
+              );
+              return colorScale(colorBarNumber, parsedColorBarMax);
+            },
           });
         }
       });
@@ -121,7 +150,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
       <EMGModal
         isOpen={modalIsOpen}
         onRequestClose={() => setIsOpen(false)}
-        contentLabel="Example Modal"
+        contentLabel="GFF comparison file picker modal"
       >
         <div className="vf-stack vf-stack--800">
           <h1>Compare a GFF to the contig</h1>
@@ -160,6 +189,22 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
           </div>
         </div>
       </EMGModal>
+      {!!gffComparisonId && !!igvBrowser && (
+        <div>
+          <p className="vf-text-body vf-text-body--2">
+            Semiquantitative expression spectrum count
+            <p className="vf-text-body vf-text-body--4">
+              Scaled against the maximum in this study
+            </p>
+          </p>
+
+          <div className="colorBarWrapper">
+            0
+            <div className="colorBar" />
+            {Math.round(colorBarMax)}
+          </div>
+        </div>
+      )}
       <button
         className="vf-button vf-button--secondary vf-button--sm"
         type="button"

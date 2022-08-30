@@ -63,22 +63,22 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
         tracks: [
           {
             name: displayName,
-            type: 'mgnify-annotation',
+            type: 'annotation',
             format: 'gff3',
             url: `${config.api}analyses/${accession}/contigs/${contigId}/annotations`,
             displayMode: 'EXPANDED',
             label: 'Functional annotation',
-            colorAttributes: [
-              ['Default', ''],
-              ['COG', 'COG'],
-              ['GO', 'GO'],
-              ['KEGG', 'KEGG'],
-              ['Pfam', 'Pfam'],
-              ['InterPro', 'InterPro'],
-            ],
-            colorBy: undefined,
-            defaultColour: undefined,
-            labelBy: undefined,
+            // colorAttributes: [
+            //   ['Default', ''],
+            //   ['COG', 'COG'],
+            //   ['GO', 'GO'],
+            //   ['KEGG', 'KEGG'],
+            //   ['Pfam', 'Pfam'],
+            //   ['InterPro', 'InterPro'],
+            // ],
+            // colorBy: undefined,
+            // defaultColour: undefined,
+            // labelBy: undefined,
           },
         ],
         showLegend: true,
@@ -86,22 +86,22 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
       };
       if (antiSMASH) {
         options.tracks.push({
-          colorAttributes: [],
+          // colorAttributes: [],
           name: undefined,
-          type: 'mgnify-annotation',
+          type: 'annotation',
           format: 'gff3',
           displayMode: 'EXPANDED',
           url: `${config.api}analyses/${accession}/contigs/${contigId}/annotations?antismash=True`,
           label: 'antiSMASH',
-          colorBy: 'as_type',
-          defaultColour: '#BEBEBE',
-          labelBy: 'as_gene_clusters',
+          // colorBy: 'as_type',
+          // defaultColour: '#BEBEBE',
+          // labelBy: 'as_gene_clusters',
         });
       }
 
       if (node === null) return;
       igv.createBrowser(node, options).then((browser) => {
-        browser.on('trackclick', (ignored, trackData) =>
+        browser.on('trackclick', (track, trackData) =>
           ReactDOMServer.renderToString(
             <GenomeBrowserPopup
               data={trackData}

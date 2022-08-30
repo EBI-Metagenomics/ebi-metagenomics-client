@@ -49,22 +49,26 @@ const MultipleField: React.FC<{
   );
 };
 
+const getProtLoc = (attributes: {
+  location?: string;
+}): { start: number; end: number } => {
+  if (attributes.location) {
+    const startEnd = attributes.location.split(':')[1];
+    return {
+      start: parseInt(startEnd.split('-')[0].replaceAll(',', ''), 10),
+      end: parseInt(startEnd.split('-')[1].replaceAll(',', ''), 10),
+    };
+  }
+  return undefined;
+};
+
 /**
  * Calculate the property length.
  * @return {int} the length or undefined
  */
-const getProtLength = (attributes: {
-  start?: string | number | null;
-  end?: string | number | null;
-}): number => {
-  const start =
-    typeof attributes.start === 'string'
-      ? parseInt(attributes.start, 10)
-      : attributes.start;
-  const end =
-    typeof attributes.end === 'string'
-      ? parseInt(attributes.end, 10)
-      : attributes.end;
+const getProtLength = (attributes: { location?: string }): number => {
+  if (!attributes.location) return undefined;
+  const { start, end } = getProtLoc(attributes);
   if (
     Number.isNaN(start) ||
     Number.isNaN(end) ||
@@ -82,8 +86,10 @@ const formatData = (
   const attributes: {
     [name: string]: string | null;
   } = rawData.reduce((memo, el) => {
-    // eslint-disable-next-line no-param-reassign
-    if (el.name) memo[el.name.toLowerCase()] = el.value;
+    if (el.name)
+      // eslint-disable-next-line no-param-reassign
+      memo[el.name.toLowerCase().replaceAll(':', '')] =
+        el.value === null ? null : String(el.value);
     return memo;
   }, {});
 
@@ -178,6 +184,7 @@ const formatData = (
       },
     ],
   };
+  const { start, end } = getProtLoc(attributes);
   const otherData = {
     title: 'Feature details',
     data: [
@@ -191,7 +198,7 @@ const formatData = (
       },
       {
         name: 'Start / End',
-        Value: `${attributes.start}/${attributes.end}`,
+        Value: `${start} / ${end}`,
       },
       {
         name: 'Protein length',
