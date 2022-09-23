@@ -30,6 +30,7 @@ declare module '*.txt' {
 
 declare module 'igv' {
   export type Browser = {
+    trackViews: any[];
     on: (
       event: string,
       callback: (
@@ -39,6 +40,7 @@ declare module 'igv' {
     ) => void;
     loadTrack: (trackConfig: unknown) => void;
     removeTrackByName: (trackName: string) => void;
+    findTracks: (attr: string, val: string) => any;
   };
   const igv: {
     createBrowser: (element: unknown, options: unknown) => Promise<Browser>;

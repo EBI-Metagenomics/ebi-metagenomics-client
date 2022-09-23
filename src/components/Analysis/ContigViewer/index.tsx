@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   useCallback,
   useContext,
@@ -22,7 +23,10 @@ import igv from 'igv';
 import ContigsTable from 'components/Analysis/ContigViewer/Table';
 import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
 import { find } from 'lodash-es';
-import GFFCompare from 'components/Analysis/ContigViewer/GFFCompare';
+import GFFCompare, {
+  colorScale,
+  getGFFHeaderValue,
+} from 'components/Analysis/ContigViewer/GFFCompare';
 import ReactDOMServer from 'react-dom/server';
 import GenomeBrowserPopup from 'components/Genomes/Browser/Popup';
 import ContigLengthFilter from 'components/Analysis/ContigViewer/Filter/ContigLength';
@@ -31,9 +35,100 @@ import ContigTextFilter from 'components/Analysis/ContigViewer/Filter/ContigText
 import ContigAnnotationTypeFilter from 'components/Analysis/ContigViewer/Filter/ContigAnnotationType';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import {
+  COLOUR_ABSENCE,
+  COLOUR_PRESENCE,
+  getAntiSMASHColour,
+  getCOGColour,
+} from 'components/Analysis/ContigViewer/mgnifyColours';
+import Select from 'react-select';
 
 type ContigProps = {
   contig: MGnifyDatum;
+};
+
+const annotationTrackCustomisations = (trackColorBy) => {
+  switch (trackColorBy) {
+    case 'cog':
+      return {
+        nameField: 'cog',
+        color: (feature) => getCOGColour(feature.getAttributeValue('cog')),
+      };
+    case 'kegg':
+      return {
+        nameField: 'kegg',
+        color: (feature) =>
+          !feature.getAttributeValue('kegg') ? COLOUR_ABSENCE : COLOUR_PRESENCE,
+      };
+    case 'pfam':
+      return {
+        nameField: 'pfam',
+        color: (feature) =>
+          !feature.getAttributeValue('pfam') ? COLOUR_ABSENCE : COLOUR_PRESENCE,
+      };
+    case 'interpro':
+      return {
+        nameField: 'interpro',
+        color: (feature) =>
+          !feature.getAttributeValue('interpro')
+            ? COLOUR_ABSENCE
+            : COLOUR_PRESENCE,
+      };
+    case 'go':
+      return {
+        nameField: 'go',
+        color: (feature) =>
+          !feature.getAttributeValue('go') ? COLOUR_ABSENCE : COLOUR_PRESENCE,
+      };
+    case 'antismash':
+      return {
+        nameField: 'as_type',
+        color: (feature) =>
+          getAntiSMASHColour(feature.getAttributeValue('as_type')),
+      };
+    default:
+      return null;
+  }
+};
+
+type AnnotationTrackColorPickerProps = {
+  trackView: any;
+  trackColorBys: Record<string, { label: string; value: string }>;
+  onChange: (event, action) => void;
+};
+
+const AnnotationTrackColorPicker: React.FC<AnnotationTrackColorPickerProps> = ({
+  trackView,
+  trackColorBys,
+  onChange,
+}) => {
+  return (
+    <div className="vf-stack vf-stack--200">
+      <label className="vf-form__label" htmlFor="biome-select">
+        {trackView.track.config.label} track colour
+      </label>
+      <Select
+        theme={(theme) => ({
+          ...theme,
+          borderRadius: 0,
+          border: '2px solid grey',
+        })}
+        placeholder={`Colour ${trackView.track.id} by...`}
+        value={trackColorBys[trackView.track.id]}
+        onChange={onChange}
+        name={`track-colour-${trackView.track.id}`}
+        inputId={`track-colour-${trackView.track.id}`}
+        options={[
+          { label: 'COG category', value: 'cog' },
+          { label: 'KEGG ortholog', value: 'kegg' },
+          { label: 'Pfam family existence', value: 'pfam' },
+          { label: 'InterPro existence', value: 'interpro' },
+          { label: 'GO (gene ontology) existence', value: 'go' },
+          { label: 'AntiSMASH cluster type', value: 'antismash' },
+        ]}
+      />
+    </div>
+  );
 };
 
 const Contig: React.FC<ContigProps> = ({ contig }) => {
@@ -48,6 +143,9 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   const antiSMASH = contig.attributes['has-antismash'];
   const displayName = contig.attributes['contig-name'];
   const [igvBrowser, setIgvBrowser] = useState(null);
+
+  const [trackColorBys, setTrackColorBys] = useState({});
+  // const [colorBarMax, setColorBarMax] = useState(null);
 
   const igvContainer = useCallback(
     (node) => {
@@ -68,6 +166,10 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
             url: `${config.api}analyses/${accession}/contigs/${contigId}/annotations`,
             displayMode: 'EXPANDED',
             label: 'Functional annotation',
+            // nameField: trackColorBys['Functional annotation']?.value,
+            // color: (feature) => {
+            //   return getCOGColour(feature.getAttributeValue('cog'));
+            // },
             // colorAttributes: [
             //   ['Default', ''],
             //   ['COG', 'COG'],
@@ -87,12 +189,14 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
       if (antiSMASH) {
         options.tracks.push({
           // colorAttributes: [],
-          name: undefined,
+          name: 'antiSMASH',
           type: 'annotation',
           format: 'gff3',
           displayMode: 'EXPANDED',
           url: `${config.api}analyses/${accession}/contigs/${contigId}/annotations?antismash=True`,
           label: 'antiSMASH',
+          // nameField: null,
+          // color: null,
           // colorBy: 'as_type',
           // defaultColour: '#BEBEBE',
           // labelBy: 'as_gene_clusters',
@@ -109,6 +213,26 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
             />
           )
         );
+        browser.on('trackorderchanged', () => {
+          browser.trackViews.forEach((trackView) => {
+            if (
+              trackView.track.type === 'annotation' &&
+              trackView.track.config.label === 'Metaproteomics'
+            ) {
+              setTrackColorBys({
+                ...trackColorBys,
+                [trackView.track.id]: {
+                  colorBarMax: parseFloat(
+                    getGFFHeaderValue(
+                      trackView.track.config.url.slice(37),
+                      'max_spectrum_count_value_in_study'
+                    )
+                  ),
+                },
+              });
+            }
+          });
+        });
         setIgvBrowser(browser);
       });
     },
@@ -123,13 +247,104 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
     ]
   );
 
+  useEffect(() => {
+    const tracksToRemove = [];
+    const tracksToAdd = [];
+    igvBrowser?.trackViews?.forEach((trackView) => {
+      if (trackView.track.type !== 'annotation') return;
+      const colorBy = trackColorBys[trackView.track.id];
+      if (colorBy) {
+        const newTrackConfig = {
+          ...trackView.track.config,
+          ...annotationTrackCustomisations(colorBy.value),
+        };
+        if (newTrackConfig.nameField !== trackView.track.config.nameField) {
+          // Prevent unnecessary track reloads
+          tracksToRemove.push(trackView.track.id);
+          tracksToAdd.push(newTrackConfig);
+        }
+      }
+      if (trackView.track.config.label === 'Metaproteomics') {
+        const cbMax = trackColorBys?.[trackView.track.id]?.colorBarMax;
+        const newTrackConfig = {
+          ...trackView.track.config,
+          nameField: 'pride_id',
+          color: cbMax
+            ? (feature) => {
+                const colorBarNumber = parseFloat(
+                  feature.getAttributeValue(
+                    'semiquantitative_expression_spectrum_count'
+                  )
+                );
+                return colorScale(colorBarNumber, cbMax);
+              }
+            : null,
+        };
+        if (newTrackConfig.nameField !== trackView.track.config.nameField) {
+          // Prevent unnecessary track reloads
+          tracksToRemove.push(trackView.track.id);
+          tracksToAdd.push(newTrackConfig);
+        }
+      }
+    });
+    tracksToRemove.forEach((track) => igvBrowser.removeTrackByName(track));
+    tracksToAdd.forEach((track) => igvBrowser.loadTrack(track));
+  }, [trackColorBys, igvBrowser]);
+
   if (loading) return <Loading size="small" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
 
   return (
-    <div id="contig">
+    <div id="contig" className="vf-stack vf-stack--600">
       <div ref={igvContainer} />
+
+      <div className="vf-grid vf-grid__col-3">
+        {igvBrowser?.trackViews?.map((trackView) => {
+          if (trackView.track.type !== 'annotation') return React.Fragment;
+          const isMetaProteomics =
+            trackView.track.config.label === 'Metaproteomics';
+
+          if (isMetaProteomics) {
+            if (!trackColorBys?.[trackView.track.id]?.colorBarMax)
+              return React.Fragment;
+            return (
+              <div key={trackView.track.id}>
+                <p className="vf-text-body vf-text-body--2">
+                  {trackView.track.config.label} track colour
+                </p>
+
+                <div className="colorBarWrapper">
+                  0
+                  <div className="colorBar" />
+                  {Math.round(trackColorBys[trackView.track.id].colorBarMax)}
+                </div>
+
+                <p className="vf-text-body vf-text-body--4">
+                  Semiquantitative expression spectrum count — scaled against
+                  the maximum in this study.
+                </p>
+              </div>
+            );
+          }
+          return (
+            <AnnotationTrackColorPicker
+              key={trackView.track.id}
+              trackView={trackView}
+              trackColorBys={trackColorBys}
+              onChange={(option, action) => {
+                if (action.action === 'select-option') {
+                  setTrackColorBys({
+                    ...trackColorBys,
+                    [trackView.track.id]: option,
+                  });
+                }
+              }}
+            />
+          );
+        })}
+      </div>
+
       {hasMetaProteomics && <GFFCompare igvBrowser={igvBrowser} />}
     </div>
   );
@@ -232,7 +447,7 @@ const ContigsViewer: React.FC = () => {
           <div className="vf-stack">
             <details open>
               <summary>
-                <b>Contig browser</b>
+                <h4>Contig browser</h4>
               </summary>
               <div className="contig-igv-container">
                 <LoadingOverlay loading={loading}>

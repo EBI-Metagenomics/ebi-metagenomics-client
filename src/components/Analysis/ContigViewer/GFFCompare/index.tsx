@@ -19,11 +19,15 @@ type GFFCompareProps = {
   igvBrowser: Browser;
 };
 
-const getGFFHeaderValue = (encodedGff, varName) => {
-  return atob(encodedGff).split(`${varName}=`)[1].split('\n')[0];
+export const getGFFHeaderValue = (encodedGff, varName) => {
+  try {
+    return atob(encodedGff).split(`${varName}=`)[1].split('\n')[0];
+  } catch (TypeError) {
+    return null;
+  }
 };
 
-const colorScale = (number, max) => {
+export const colorScale = (number, max) => {
   return `rgba(0,128,128,${0.3 + (0.7 * number) / max})`;
 };
 
@@ -37,8 +41,6 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
     Number
   );
 
-  const [colorBarMax, setColorBarMax] = useState(null);
-
   const gffs = useLiveQuery(() => db.gffs.toArray());
 
   useEffect(() => {
@@ -47,32 +49,21 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
         if (gff === undefined) {
           setGffComparisonId(null);
         } else if (igvBrowser) {
-          const parsedColorBarMax = parseFloat(
-            getGFFHeaderValue(
-              gff.encodedGFF,
-              'max_spectrum_count_value_in_study'
-            )
-          );
-          setColorBarMax(parsedColorBarMax);
-          igvBrowser.removeTrackByName(gff.name);
-          igvBrowser.loadTrack({
-            name: gff.name,
-            type: 'annotation',
-            url: `data:application/octet-stream;base64,${gff.encodedGFF}`,
-            format: 'gff3',
-            filterTypes: [],
-            removable: false,
-            displayMode: 'EXPANDED',
-            labelBy: 'pride_id',
-            color: (feature) => {
-              const colorBarNumber = parseFloat(
-                feature.getAttributeValue(
-                  'semiquantitative_expression_spectrum_count'
-                )
-              );
-              return colorScale(colorBarNumber, parsedColorBarMax);
-            },
-          });
+          const isMetaproteomics =
+            atob(gff.encodedGFF).indexOf('PeptideShaker') > -1;
+          if (igvBrowser.findTracks('name', gff.name).length === 0) {
+            igvBrowser.removeTrackByName(gff.name);
+            igvBrowser.loadTrack({
+              name: gff.name,
+              type: 'annotation',
+              url: `data:application/octet-stream;base64,${gff.encodedGFF}`,
+              format: 'gff3',
+              filterTypes: [],
+              removable: false,
+              displayMode: 'EXPANDED',
+              label: isMetaproteomics ? 'Metaproteomics' : 'Local GFF',
+            });
+          }
         }
       });
     }
@@ -189,22 +180,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
           </div>
         </div>
       </EMGModal>
-      {!!gffComparisonId && !!igvBrowser && (
-        <div>
-          <p className="vf-text-body vf-text-body--2">
-            Semiquantitative expression spectrum count
-            <p className="vf-text-body vf-text-body--4">
-              Scaled against the maximum in this study
-            </p>
-          </p>
 
-          <div className="colorBarWrapper">
-            0
-            <div className="colorBar" />
-            {Math.round(colorBarMax)}
-          </div>
-        </div>
-      )}
       <button
         className="vf-button vf-button--secondary vf-button--sm"
         type="button"
