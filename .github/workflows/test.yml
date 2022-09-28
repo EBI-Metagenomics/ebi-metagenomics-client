@@ -18,28 +18,13 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      mysql:
-        image: mysql:5.6
-        ports:
-          - 3306:3306
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
-        volumes:
-          - ${{ github.workspace }}/db/mysql:/var/lib/mysql
-
       mongo:
         image: mongo:4.0.6
         ports:
           - 27017:27017
         options: --health-cmd="mongo" --health-interval=10s --health-timeout=5s --health-retries=5
-        volumes:
-          - ${{ github.workspace }}/db/mongo:/data/db
 
     steps:
-      - name: verify mysql
-        run: mysql --host 127.0.0.1 --port 3306 -uroot -e "SHOW DATABASES"
-
       - uses: actions/checkout@v3
         with:
           path: client-repo
@@ -48,19 +33,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.6
-
-#      - uses: actions/cache@v3
-#        id: dbcache
-#        with:
-#          path: |
-#            ${{ github.workspace }}/db-cache
-#            !${{ github.workspace }}/db-cache/mongo/diagnostic.data
-#          key: ${{ hashFiles('client-repo/ci/*') }}
-
-#      - name: 💼 - Place cached fixtures
-#        if: steps.dbcache.outputs.cache-hit == 'true'
-#        run: |
-#          sudo cp -r ${{ github.workspace }}/db-cache ${{ github.workspace }}/db
 
       - name: 🔧🔬 - Install EMG API
         run: |
@@ -71,25 +43,12 @@ jobs:
           ls -l
 
       - name: 🪜 - Setting up Fixtures
-#        if: steps.dbcache.outputs.cache-hit != 'true'
         working-directory: client-repo
         run: |
-          mysql --version
-          mysql --host 127.0.0.1 --port 3306 -uroot -e 'DROP DATABASE IF EXISTS emg;'
-          mysql --host 127.0.0.1 --port 3306 -uroot -e 'DROP DATABASE IF EXISTS ena;'
-          mysql --host 127.0.0.1 --port 3306 -uroot -e 'CREATE DATABASE emg;'
-          mysql --host 127.0.0.1 --port 3306 -uroot -e 'CREATE DATABASE ena;'
-          mysql --host 127.0.0.1 --port 3306 -uroot -e "SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES'"
+          mongorestore --gzip --archive < ci/testdbs/emg-testdb.mongoarchive
           emgcli migrate
-          mysql --host 127.0.0.1 --port 3306 -uroot --database=emg -e "SET FOREIGN_KEY_CHECKS = 0;"
-          for SQL_FIXTURE in ci/emg_sql_fixtures/*.sql; do echo "SQL >>>> $SQL_FIXTURE"; mysql --host 127.0.0.1 --port 3306 -uroot --database=emg < "$SQL_FIXTURE"; done
-          mysql --host 127.0.0.1 --port 3306 -uroot --database=emg -e "SET FOREIGN_KEY_CHECKS = 1;"
-          
           source ci/create_download_files.sh
           ls -lh ~/results
-          sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/import_test_db_entries.sh
-          source ci/import_test_db_entries.sh
-          mysql --host 127.0.0.1 --port 3306 -uroot --database=ena < ${{ github.workspace }}/client-repo/ci/ena_db.sql
 
       - name: ⚙️ - Settings
         working-directory: client-repo
@@ -241,9 +200,3 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_CHANNEL: '#metagenomics-notify'
           MSG_MINIMAL: Actions URL
-
-#      - name: 💼 - Place DB fixtures for caching
-#        run: |
-#          sudo chmod -R 777 ${{ github.workspace }}/db || echo 'No DB dir to cache'
-#          sudo cp -r ${{ github.workspace }}/db ${{ github.workspace }}/db-cache
-#          sudo rm -rf ${{ github.workspace }}/db-cache/mongo/diagnostic.data
