@@ -1,0 +1,13 @@
+bp_count	94512544
+sequence_count	29114
+average_length	3246.292
+standard_deviation_length	10742.963
+length_min	500
+length_max	463587
+average_gc_content	44.196
+standard_deviation_gc_content	7.836
+average_gc_ratio	1.341
+standard_deviation_gc_ratio	0.459
+ambig_char_count	0
+ambig_sequence_count	0
+average_ambig_chars	0.000
