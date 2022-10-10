@@ -39,7 +39,7 @@ jobs:
           pip install --user --upgrade pip setuptools
           python -V
           pip -V
-          pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
+          pip install "git+https://github.com/EBI-metagenomics/emgapi@improve-local-dev#egg=emgcli"
           ls -l
 
       - name: 🪜 - Setting up Fixtures
@@ -47,8 +47,8 @@ jobs:
         run: |
           mongorestore --gzip --archive < ci/testdbs/emg-testdb.mongoarchive
           emgcli migrate
-          source ci/create_download_files.sh
-          ls -lh ~/results
+#          source ci/create_download_files.sh
+#          ls -lh ~/results
 
       - name: ⚙️ - Settings
         working-directory: client-repo
