@@ -61,7 +61,7 @@ jobs:
         name: 🔬 - Checkout EMG API
         with:
           repository: 'EBI-Metagenomics/emgapi'
-          ref: 'develop'
+          ref: 'improve-local-dev'
           path: emgapi
 
       - name: 🔬 - Start EMG API
