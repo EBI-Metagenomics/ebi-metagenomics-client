@@ -47,8 +47,8 @@ jobs:
         run: |
           sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/config.yaml
           cat ci/config.yaml
-          sudo chmod 777 ci/testdbs
-          sudo chmod 777 ci/testdbs/*.sqlite
+#          sudo chmod 777 ci/testdbs
+#          sudo chmod 777 ci/testdbs/*.sqlite
 
       - name: 🪜 - Setting up Fixtures
         working-directory: client-repo

@@ -2,13 +2,13 @@ emg:
   databases:
     default:
       ENGINE: 'django.db.backends.sqlite3'
-      NAME: '{GITHUB_WORKSPACE}/clientrepo/ci/testdbs/emg-testdb.sqlite'
+      NAME: '{GITHUB_WORKSPACE}/client-repo/ci/testdbs/emg-testdb.sqlite'
     ena_pro:
       ENGINE: 'django.db.backends.sqlite3'
-      NAME: '{GITHUB_WORKSPACE}/clientrepo/ci/testdbs/ena-testdb.sqlite'
+      NAME: '{GITHUB_WORKSPACE}/client-repo/ci/testdbs/ena-testdb.sqlite'
     era_pro:
       ENGINE: 'django.db.backends.sqlite3'
-      NAME: '{GITHUB_WORKSPACE}/clientrepo/ci/testdbs/ena-testdb.sqlite'
+      NAME: '{GITHUB_WORKSPACE}/client-repo/ci/testdbs/ena-testdb.sqlite'
   session_engine: 'django.contrib.sessions.backends.cached_db'
   auth_backends: ['test_utils.FakeEMGBackend',]
   secure_cookies: false
