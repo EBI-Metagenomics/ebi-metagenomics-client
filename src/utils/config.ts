@@ -13,6 +13,7 @@ export type ConfigType = {
     [feature: string]: boolean;
   };
   jupyterLabURL: string;
+  magsPipelineRepo: string;
 };
 
 export default { ...config, ...(privateConfig || {}) };
