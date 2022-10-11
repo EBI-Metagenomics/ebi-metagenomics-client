@@ -78,21 +78,13 @@ describe('Home page', function() {
             cy.contains('Or by selected biomes');
             // Check biome icons are loaded
             cy.get('.search-by-biomes-section span.biome_icon').then(($els) => {
-                expect($els).to.have.length(10);
+                expect($els).to.have.length(2);
             });
         });
 
         it('Select specific biomes', function() {
-            cy.get('.search-by-biomes-section').contains('Plants');
             cy.get('.search-by-biomes-section').contains('Human');
-            cy.get('.search-by-biomes-section').contains('Skin');
-            cy.get('.search-by-biomes-section').contains('Soil');
-            cy.get('.search-by-biomes-section').contains('Food production');
             cy.get('.search-by-biomes-section').contains('Digestive system');
-            cy.get('.search-by-biomes-section').contains('Digestive system');
-            cy.get('.search-by-biomes-section').contains('Aquatic');
-            cy.get('.search-by-biomes-section').contains('Marine');
-            cy.get('.search-by-biomes-section').contains('Wastewater');
         });
     });
 
@@ -137,7 +129,7 @@ describe('Home page', function() {
         });
 
         it('Click to view specific study', function() {
-            cy.get('.latest-studies-section > .fixed-height-scrollable__inner > .study', {timeout: 30000}).should('have.length', parseInt(20));
+            cy.get('.latest-studies-section > .fixed-height-scrollable__inner > .study', {timeout: 30000}).should('have.length', parseInt(1));
             // cy.get('.latest-studies-section').contains('View more').first().click();
             // cy.contains('Study');
             // cy.title().should('include', 'Study');

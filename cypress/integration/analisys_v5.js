@@ -20,7 +20,7 @@ function verifyTabIsVisible(tabId) {
 
 describe('Analysis V5', () => {
     context('Routing', () => {
-        const analysisId = 'MGYA00383254';
+        const analysisId = 'MGYA00000001';
         const pageUrl = 'analyses/' + analysisId;
 
         const tabs = [
@@ -62,7 +62,7 @@ describe('Analysis V5', () => {
     });
 
     context('Overview tab', () => {
-        const analysisId = 'MGYA00383254';
+        const analysisId = 'MGYA00000001';
         const pageUrl = 'analyses/' + analysisId;
         before(() => {
             openPage(pageUrl);
@@ -70,15 +70,15 @@ describe('Analysis V5', () => {
         });
 
         it('Should display assembly metadata', () => {
-            cy.contains('Study:').next().should('contain', 'MGYS00002008');
+            cy.contains('Study:').next().should('contain', 'MGYS00000001');
             // TODO: fix data import
             // cy.contains('Sample:').next().should('contain', 'ERS487899');
-            cy.contains('Assembly:').next().should('contain', 'ERZ477576');
+            cy.contains('Assembly:').next().should('contain', 'ERZ8153470');
             cy.contains('Pipeline version:').next().should('contain', '5.0');
 
             cy.contains('Experiment type:').next().should('contain', 'assembly');
-            cy.contains('Instrument model:').next().should('contain', 'Illumina HiSeq 2000');
-            cy.contains('Instrument platform:').next().should('contain', 'ILLUMINA');
+            cy.contains('Instrument model:').next().should('contain', 'BGISEQ-500');
+            cy.contains('Instrument platform:').next().should('contain', 'BGISEQ');
         });
 
         it('Sections should be expandable', () => {
@@ -97,7 +97,7 @@ describe('Analysis V5', () => {
     });
 
     context('QC tab', () => {
-        const analysisId = 'MGYA00383254';
+        const analysisId = 'MGYA00000001';
         const pageUrl = 'analyses/' + analysisId;
         before(() => {
             openPage(pageUrl);
@@ -181,7 +181,7 @@ describe('Analysis V5', () => {
     });
 
     context('Functional tab', () => {
-        const analysisId = 'MGYA00383254';
+        const analysisId = 'MGYA00000001';
         const pageUrl = 'analyses/' + analysisId + '#functional';
         const tabs = [
             'InterPro',

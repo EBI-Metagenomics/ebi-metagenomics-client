@@ -2,10 +2,10 @@ import { openPage, datatype, login, changeTab, isValidLink } from '../util/util'
 import Config from '../util/config';
 import GenericTableHandler from '../util/genericTable';
 
-const sampleId = 'ERS434640'; // accession with multiple associated studies
+const sampleId = 'SRS4579074';
 const origPage = 'samples/' + sampleId;
 
-const studyIdAnalysis = 'SRS429585'; // accession with multiple analyses / assemblies
+const studyIdAnalysis = 'MGYS00000001';
 
 const studiesTableDefaultSize = 2;
 
@@ -95,25 +95,25 @@ describe('Sample page', function() {
         cy.intercept('GET', '**/v1/**/studies_publications_annotations_existence', { fixture: 'sample/epmcStudiesPublicationsAnnotationsExistence.json' })
     });
 
-    context('General', function() {
+    context.only('General', function() {
         it('Verify elements are present', function() {
             cy.get('h2').should('contain', sampleId);
-            cy.get('h3').should('contain', 'Sample ASSDL1');
+            cy.get('h3').should('contain', 'Sample CL100042219_L01_29');
             
             const descOverview = '[data-cy=sample-description]';
             cy.get(descOverview).should('contain', 'Description');
-            cy.get(descOverview).should('contain', 'ASS depth profile');
+            cy.get(descOverview).should('contain', 'CL100042219_L01_29');
 
             cy.get('[data-cy=sample-metadata]')
                 .should('contain', 'collection date:')
-                .should('contain', '01/02/2013');
+                .should('contain', '2017-03-20');
         });
 
         it('External links should all be valid', function() {
             cy.get('[data-cy=sample-external-links] > li > a').each(($el) => {
                 const href = $el.attr('href');
                 if (href.includes('ena/browser')) {
-                    expect(href).to.equal('https://www.ebi.ac.uk/ena/browser/view/ERS434640');
+                    expect(href).to.equal('https://www.ebi.ac.uk/ena/browser/view/SRS4579074');
                 } else {
                     cy.request(href);
                 }
