@@ -57,8 +57,12 @@ const BrowseGenomes: React.FC = () => {
         accessor: 'attributes.version',
       },
       {
-        Header: 'Genomes count',
+        Header: 'Species count',
         accessor: 'attributes.genome-count',
+      },
+      {
+        Header: 'Total genomes count',
+        accessor: 'attributes.unclustered-genome-count',
       },
       {
         id: 'last_update',
