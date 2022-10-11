@@ -29,10 +29,10 @@ jobs:
         with:
           path: client-repo
 
-      - name: 🐍 - Set up Python 3.6
+      - name: 🐍 - Set up Python 3.8
         uses: actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: 3.8
 
       - name: 🔧🔬 - Install EMG API
         run: |
@@ -63,6 +63,12 @@ jobs:
           repository: 'EBI-Metagenomics/emgapi'
           ref: 'improve-local-dev'
           path: emgapi
+
+      - name: Set up db files for API
+        working-directory: client-repo
+        run: |
+          sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/config.yaml
+          cat ci/config.yaml
 
       - name: 🔬 - Start EMG API
         run: |
