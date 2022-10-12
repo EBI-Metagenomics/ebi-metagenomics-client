@@ -3,10 +3,12 @@ import React, { useRef, FormEvent } from 'react';
 type FileUploaderButtonProps = {
   onChange: (event: FormEvent) => void;
   accept?: string;
+  buttonClassName?: string;
 };
 const FileUploaderButton: React.FC<FileUploaderButtonProps> = ({
   onChange,
   accept,
+  buttonClassName = 'vf-button--primary vf-button--sm',
 }) => {
   const fileInput = useRef(null);
   return (
@@ -19,7 +21,7 @@ const FileUploaderButton: React.FC<FileUploaderButtonProps> = ({
         accept={accept}
       />
       <button
-        className="vf-button vf-button--primary vf-button--sm"
+        className={`vf-button ${buttonClassName}`}
         onClick={() => fileInput.current?.click()}
         type="button"
       >

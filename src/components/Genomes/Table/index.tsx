@@ -8,8 +8,9 @@ import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import { getBiomeIcon } from 'utils/biomes';
-import { getSimpleTaxLineage } from 'utils/taxon';
+import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import Tooltip from 'components/UI/Tooltip';
 
 const initialPageSize = 10;
 const GenomesTable: React.FC = () => {
@@ -80,7 +81,16 @@ const GenomesTable: React.FC = () => {
     {
       Header: 'Taxonomy',
       accessor: 'attributes.taxon-lineage',
-      Cell: ({ cell }) => getSimpleTaxLineage(cell.value, true),
+      Cell: ({ cell }) => (
+        <>
+          {getSimpleTaxLineage(cell.value, true)}{' '}
+          <Tooltip content={cleanTaxLineage(cell.value, ' > ')}>
+            <sup>
+              <span className="icon icon-common icon-info" />
+            </sup>
+          </Tooltip>
+        </>
+      ),
       disableSortBy: true,
     },
     {

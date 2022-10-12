@@ -11,7 +11,7 @@ import Tooltip from 'components/UI/Tooltip';
 type ResultsProps = {
   sequence: string;
   threshold: number;
-  cataloguesFilter: string;
+  cataloguesFilter: string[];
 };
 const Results: React.FC<ResultsProps> = ({
   sequence,
@@ -104,7 +104,7 @@ const Results: React.FC<ResultsProps> = ({
 
   return (
     <section>
-      <h3>COBS Results</h3>
+      <h5>COBS Results</h5>
       <EMGTable
         cols={columns}
         data={data.data.results as Record<string, unknown>[]}

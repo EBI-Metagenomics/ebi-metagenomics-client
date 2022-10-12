@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import 'textarea-sequence/dist/textarea-sequence';
 
 import ExtLink from 'components/UI/ExtLink';
@@ -6,8 +6,18 @@ import Tooltip from 'components/UI/Tooltip';
 
 import InfoBanner from 'components/UI/InfoBanner';
 import FileUploaderButton from 'components/UI/FileUploaderButton';
-import CobsResults from './Results';
+import Select, { MultiValue } from 'react-select';
+import { toast } from 'react-toastify';
 
+import {
+  reactSelectStyles,
+  reactSelectTheme,
+} from 'styles/react-select-styles';
+import useMGnifyData from 'hooks/data/useMGnifyData';
+
+import { MGnifyResponseList } from 'hooks/data/useData';
+
+import CobsResults from './Results';
 import example1 from './examples/human-gut-v2-0.txt';
 import example2 from './examples/marine-v1-0.txt';
 import example3 from './examples/cow-rumen-v1-0.txt';
@@ -25,10 +35,14 @@ const examples = {
 };
 
 type CobsProps = {
-  catalogueName: string;
-  catalogueID: string;
+  catalogueName?: string;
+  catalogueID?: string;
 };
+
+type SelectOptions = MultiValue<{ value: string; label: string }>;
+
 const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
+  const isSingleCatalogue = !!catalogueID;
   const textareaSeq = useRef(null);
   const [shouldSearch, setShouldSearch] = useState(false);
   const [kmers, setKmers] = useState(KMERS_DEFAULT);
@@ -44,6 +58,35 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
       setValid(textareaSeq.current.quill.valid);
     });
   }, []);
+
+  const { data: cataloguesList, loading: loadingCataloguesList } =
+    useMGnifyData('genome-catalogues');
+
+  const catalogueOptions = useMemo(() => {
+    if (!cataloguesList) return [];
+    return (cataloguesList as MGnifyResponseList).data.map((catalogue) => ({
+      label: catalogue.attributes.name,
+      value: catalogue.id,
+    }));
+  }, [cataloguesList]);
+
+  const [selectedCatalogues, setSelectedCatalogues] = useState<SelectOptions>(
+    []
+  );
+
+  useEffect(() => {
+    if (selectedCatalogues.length) return;
+    if (isSingleCatalogue)
+      setSelectedCatalogues([{ label: catalogueName, value: catalogueID }]);
+    else if (catalogueOptions)
+      setSelectedCatalogues(catalogueOptions as SelectOptions);
+  }, [
+    catalogueID,
+    catalogueName,
+    catalogueOptions,
+    isSingleCatalogue,
+    selectedCatalogues,
+  ]);
 
   const setSequence = (seq: string): void => {
     textareaSeq.current.quill.setText(seq);
@@ -81,49 +124,86 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
   const handleCleanup = (): void => {
     textareaSeq.current.cleanUp();
   };
+
+  const sayPasted = () =>
+    toast.success('Pasted your clipboard into textarea', {
+      position: 'bottom-left',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
   return (
-    <section id="genome-search">
+    <section id="genome-search" className="vf-stack vf-stack--400">
       <section>
-        <h3>Search DNA fragments in the {catalogueName} catalogue</h3>
-        <p>
+        {isSingleCatalogue && (
+          <h3>Search DNA fragments in the {catalogueName} catalogue</h3>
+        )}
+        {!isSingleCatalogue && <h3>Search DNA fragments across catalogues</h3>}
+        <p className="vf-text-body vf-text-body--3">
           This is a{' '}
           <ExtLink href="https://arxiv.org/abs/1905.09624">COBS-based</ExtLink>{' '}
           search engine designed to query short sequence fragments (50-5,000 bp
-          in length) against representative genomes from the catalogue.
+          in length) against representative genomes from the catalogue
+          {!isSingleCatalogue && 's'}.
         </p>
       </section>
+      {!isSingleCatalogue && (
+        <section>
+          <h5>Select catalogues to search against</h5>
+          <Select
+            theme={reactSelectTheme}
+            styles={reactSelectStyles}
+            placeholder="Select catalogues"
+            value={selectedCatalogues}
+            onChange={(options) => {
+              setSelectedCatalogues(options);
+            }}
+            // formatOptionLabel={OptionLabel}
+            isLoading={loadingCataloguesList}
+            isSearchable
+            name="biome"
+            inputId="biome-select"
+            isMulti
+            options={catalogueOptions as SelectOptions}
+          />
+        </section>
+      )}
       <section>
         <div>
           <h5>Enter a sequence</h5>
-          <p>You can use any of these methods to enter your sequence:</p>
-          <ul>
-            <li>Paste in your sequence in the area below.</li>
-            <li>
-              <label
-                htmlFor="sequence"
-                id="example-seq"
-                style={{ cursor: 'pointer' }}
-              >
-                Use the{' '}
-                <button
-                  type="button"
-                  className="vf-button vf-button--link mg-button-as-link"
-                  onClick={handleExampleClick}
-                >
-                  example.
-                </button>
-              </label>
-            </li>
-            <li>
-              <label htmlFor="fasta-file" style={{ cursor: 'pointer' }}>
-                Upload a fasta file{' '}
-                <FileUploaderButton
-                  onChange={handleFileLoad}
-                  accept=".fasta, .fna, .ffn, .frn, .fa, .txt"
-                />
-              </label>
-            </li>
-          </ul>
+          <div className="vf-grid vf-grid__col-3">
+            <button
+              type="button"
+              className="vf-button vf-button--sm vf-button--secondary"
+              onClick={(e) => {
+                e.preventDefault();
+                navigator.clipboard
+                  .readText()
+                  .then(setSequence)
+                  .then(sayPasted);
+              }}
+            >
+              Paste a sequence
+            </button>
+            <FileUploaderButton
+              onChange={handleFileLoad}
+              accept=".fasta, .fna, .ffn, .frn, .fa, .txt"
+              buttonClassName="vf-button--secondary vf-button--sm"
+            >
+              Upload a FASTA
+            </FileUploaderButton>
+            <button
+              type="button"
+              className="vf-button vf-button--sm vf-button--secondary"
+              onClick={handleExampleClick}
+            >
+              Use the example
+            </button>
+          </div>
         </div>
 
         <section>
@@ -223,7 +303,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
           <CobsResults
             sequence={textareaSeq.current.sequence}
             threshold={kmers}
-            cataloguesFilter={catalogueID}
+            cataloguesFilter={selectedCatalogues.map((c) => c.value)}
           />
         )}
 

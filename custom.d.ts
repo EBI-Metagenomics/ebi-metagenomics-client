@@ -63,6 +63,7 @@ interface TextareaSequenceProps
   height: string;
   single: 'true' | 'false';
 }
+
 interface MGnifySourmashComponentProps
   extends React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLElement>,

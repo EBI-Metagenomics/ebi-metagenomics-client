@@ -1,84 +1,25 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 
-import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
-import { getBiomeIcon } from 'utils/biomes';
-import Loading from 'components/UI/Loading';
+import CataloguesList from 'components/Browse/Genomes/CataloguesList';
+import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import GenomesTextSearch from 'components/Browse/Genomes/TextSearch';
+import CobsSearch from 'components/Genomes/Cobs';
+
+const PARAMETER_NAME = 'browse-by';
+const PARAMETER_DEFAULT = 'biome';
+const tabs = [
+  { label: 'Catalogues list', to: 'biome' },
+  { label: 'All genomes', to: 'search-all' },
+  { label: 'Gene search', to: 'gene-search' },
+  { label: 'MAG search', to: 'mag-search' },
+];
 
 const BrowseGenomes: React.FC = () => {
-  const [page] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
-  const [hasData, setHasData] = useState(false);
-  const {
-    data: genomesList,
-    loading,
-    isStale,
-    downloadURL,
-  } = useMGnifyData('genome-catalogues', {
-    page,
-    ordering: order,
-    page_size: pageSize,
-  });
+  const [browseBy] = useQueryParamState(PARAMETER_NAME, PARAMETER_DEFAULT);
 
-  const columns = React.useMemo(
-    () => [
-      {
-        id: 'biome',
-        Header: 'Biome',
-        accessor: (catalogue) => catalogue.relationships.biome.data?.id,
-        Cell: ({ cell }) => (
-          <span
-            className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
-            style={{ float: 'initial' }}
-          />
-        ),
-        disableSortBy: true,
-        className: 'mg-biome',
-      },
-      {
-        Header: 'Catalogue ID',
-        accessor: 'id',
-        Cell: ({ cell }) => (
-          <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
-        ),
-      },
-      {
-        Header: 'Catalogue name',
-        accessor: 'attributes.name',
-      },
-      {
-        Header: 'Catalogue version',
-        accessor: 'attributes.version',
-      },
-      {
-        Header: 'Species count',
-        accessor: 'attributes.genome-count',
-      },
-      {
-        Header: 'Total genomes count',
-        accessor: 'attributes.unclustered-genome-count',
-      },
-      {
-        id: 'last_update',
-        Header: 'Last Updated',
-        accessor: 'attributes.last-update',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
-      },
-    ],
-    []
-  );
-
-  useEffect(() => {
-    setHasData(!!genomesList);
-  }, [genomesList]);
-
-  if (!genomesList && loading) return <Loading />;
   return (
     <section className="mg-browse-section">
       <div>
@@ -92,20 +33,18 @@ const BrowseGenomes: React.FC = () => {
           </a>
           .
         </p>
-        <p>Select a catalogue in the table to browse or search its genomes.</p>
       </div>
-      <div style={{ height: '2rem' }} />
-      {hasData && (
-        <EMGTable
-          cols={columns}
-          data={genomesList as MGnifyResponseList}
-          initialPage={(page as number) - 1}
-          sortable
-          loading={loading}
-          isStale={isStale}
-          downloadURL={downloadURL}
-        />
-      )}
+      <TabsForQueryParameter
+        tabs={tabs}
+        queryParameter={PARAMETER_NAME}
+        defaultValue={PARAMETER_DEFAULT}
+      />
+      <div className="vf-tabs-content">
+        <div style={{ height: '1rem' }} />
+        {browseBy === 'biome' && <CataloguesList />}
+        {browseBy === 'search-all' && <GenomesTextSearch />}
+        {browseBy === 'gene-search' && <CobsSearch />}
+      </div>
     </section>
   );
 };
