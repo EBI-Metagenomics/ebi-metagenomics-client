@@ -5,13 +5,16 @@ import { getBiomeIcon } from 'utils/biomes';
 import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import EMGTable from 'components/UI/EMGTable';
-import { MGnifyResponseList } from 'hooks/data/useData';
+import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
+import BiomeSelector from 'components/UI/BiomeSelector';
+import { some } from 'lodash-es';
 
 const BrowseGenomesByCatalogue: React.FC = () => {
   const [page] = useQueryParamState('page', 1, Number);
   const [order] = useQueryParamState('order', '');
   const [pageSize] = useQueryParamState('page_size', 25, Number);
   const [hasData, setHasData] = useState(false);
+  const [biome, setBiome] = useQueryParamState('biome', 'root');
   const {
     data: genomesList,
     loading,
@@ -21,6 +24,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     page,
     ordering: order,
     page_size: pageSize,
+    lineage: biome,
   });
 
   const columns = React.useMemo(
@@ -75,12 +79,30 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     setHasData(!!genomesList);
   }, [genomesList]);
 
+  const isBiomeCatalogued = (lineage) => {
+    return some(genomesList.data, (catalogue) => {
+      return (catalogue as MGnifyDatum).relationships.biome.data.id.startsWith(
+        lineage
+      );
+    });
+  };
+
   if (!genomesList && loading) return <Loading />;
   return (
     <section className="mg-browse-section">
       <p className="vf-text-body vf-text-body--3">
         Select a catalogue in the table to browse or search its genomes.
       </p>
+      <BiomeSelector
+        onSelect={async (newBiome) => {
+          await setHasData(false);
+          setBiome(newBiome);
+          // await samplesList;
+          // setHasData(true);
+        }}
+        initialValue={biome}
+        lineageFilter={isBiomeCatalogued}
+      />
       {hasData && (
         <EMGTable
           cols={columns}

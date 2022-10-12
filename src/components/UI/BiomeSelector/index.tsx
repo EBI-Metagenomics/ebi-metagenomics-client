@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { groupBy, split, map, flatMap, find } from 'lodash-es';
+import { groupBy, split, map, flatMap, find, filter } from 'lodash-es';
 import Select from 'react-select';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList, MGnifyDatum } from 'hooks/data/useData';
@@ -15,6 +15,7 @@ import {
 type BiomeSelectorProps = {
   onSelect: (lineage: string) => void;
   initialValue?: string;
+  lineageFilter?: (lineage: string) => boolean;
 };
 
 type OptionProps = {
@@ -39,6 +40,7 @@ const OptionLabel: React.FC<OptionProps> = ({ value, label }) => (
 const BiomeSelector: React.FC<BiomeSelectorProps> = ({
   onSelect,
   initialValue,
+  lineageFilter = () => true,
 }) => {
   const { data: biomes, loading } = useMGnifyData(
     'biomes/root/children?depth_gte=1&depth_lte=4&page_size=200'
@@ -48,9 +50,12 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
     if (loading) {
       return [{ label: 'Loading...', value: 'root' }];
     }
-    const groupedLineages = groupBy(
+    const filteredBiomes = filter(
       (biomes as MGnifyResponseList).data,
-      (biome) => split(biome.id.replace('root:', ''), ':', 1).join(':')
+      (biome) => lineageFilter(biome.attributes.lineage as string)
+    );
+    const groupedLineages = groupBy(filteredBiomes, (biome) =>
+      split(biome.id.replace('root:', ''), ':', 1).join(':')
     );
     return map(groupedLineages, (childBiomes, lineageLabel) => ({
       label: lineageLabel,
@@ -68,7 +73,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
             `,
       })),
     }));
-  }, [biomes, loading]);
+  }, [biomes, loading, lineageFilter]);
 
   useEffect(() => {
     if (initialValue && options?.length && !loading) {
