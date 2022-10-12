@@ -27,6 +27,10 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     lineage: biome,
   });
 
+  const { data: allCatalogues } = useMGnifyData('genome-catalogues', {
+    page_size: 50,
+  });
+
   const columns = React.useMemo(
     () => [
       {
@@ -80,7 +84,8 @@ const BrowseGenomesByCatalogue: React.FC = () => {
   }, [genomesList]);
 
   const isBiomeCatalogued = (lineage) => {
-    return some(genomesList.data, (catalogue) => {
+    if (!allCatalogues.data) return true;
+    return some(allCatalogues.data, (catalogue) => {
       return (catalogue as MGnifyDatum).relationships.biome.data.id.startsWith(
         lineage
       );
