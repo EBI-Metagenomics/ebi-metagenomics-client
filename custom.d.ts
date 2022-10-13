@@ -62,6 +62,7 @@ interface TextareaSequenceProps
   > {
   height: string;
   single: 'true' | 'false';
+  alphabet: string;
 }
 
 interface MGnifySourmashComponentProps

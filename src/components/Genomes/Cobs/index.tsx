@@ -206,17 +206,18 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
           </div>
         </div>
 
-        <section>
+        <section className="vf-stack vf-stack--200">
           <div />
           <div>
             <textarea-sequence
               id="textareaID"
+              alphabet="dna"
               height="10em"
               min-sequence-length={MIN_BASES}
               single="true"
               ref={textareaSeq}
               className="mg-sequence"
-              disable-header-check
+              disable-header-check="true"
             />
           </div>
           <div className="row">
@@ -224,12 +225,8 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
               <Tooltip
                 content={`The minimum proportion of K-mers from the query that must be
               matched (default: ${KMERS_DEFAULT})`}
-              >
-                <sup>
-                  <span className="icon icon-common icon-info" />
-                </sup>
-              </Tooltip>{' '}
-              Threshold:
+              />
+              Threshold: <span className="icon icon-common icon-info" />
             </label>{' '}
             <input
               id="threshold"
@@ -246,28 +243,31 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
           {!valid && (
             <InfoBanner>
               <div>
-                <p>
-                  The sequence above has the following errors and can&apos;t be
-                  submitted.
+                <p className="vf-text-body vf-text-body--3">
+                  The query can’t be submitted because:
+                  <ul>
+                    {errors.tooShort && (
+                      <li className="vf-text-body vf-text-body--3">
+                        The sequence has to have at least {MIN_BASES}{' '}
+                        nucleotides
+                      </li>
+                    )}
+                    {errors.hasInvalidCharacters && (
+                      <li className="vf-text-body vf-text-body--3">
+                        The sequence has invalid characters
+                      </li>
+                    )}
+                    {errors.multipleSequences && (
+                      <li className="vf-text-body vf-text-body--3">
+                        There are multiple sequences and only 1 is supported
+                      </li>
+                    )}
+                  </ul>
                 </p>
-                <ul>
-                  {errors.tooShort && (
-                    <li>
-                      The sequence has to have at least {MIN_BASES} nucleotides
-                    </li>
-                  )}
-                  {errors.hasInvalidCharacters && (
-                    <li>The sequence has invalid characters</li>
-                  )}
-                  {errors.multipleSequences && (
-                    <li>
-                      There are multiple sequences and only 1 is supported
-                    </li>
-                  )}
-                </ul>
               </div>
             </InfoBanner>
           )}
+          <div />
           <div className="mg-right">
             {!valid && (
               <button
@@ -275,7 +275,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
                 className="vf-button vf-button--sm vf-button--tertiary mg-button"
                 onClick={handleCleanup}
               >
-                CleanUp Sequence
+                Clean sequence
               </button>
             )}
             {valid && (
