@@ -245,25 +245,24 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
               <div>
                 <p className="vf-text-body vf-text-body--3">
                   The query can’t be submitted because:
-                  <ul>
-                    {errors.tooShort && (
-                      <li className="vf-text-body vf-text-body--3">
-                        The sequence has to have at least {MIN_BASES}{' '}
-                        nucleotides
-                      </li>
-                    )}
-                    {errors.hasInvalidCharacters && (
-                      <li className="vf-text-body vf-text-body--3">
-                        The sequence has invalid characters
-                      </li>
-                    )}
-                    {errors.multipleSequences && (
-                      <li className="vf-text-body vf-text-body--3">
-                        There are multiple sequences and only 1 is supported
-                      </li>
-                    )}
-                  </ul>
                 </p>
+                <ul>
+                  {errors.tooShort && (
+                    <li className="vf-text-body vf-text-body--3">
+                      The sequence has to have at least {MIN_BASES} nucleotides
+                    </li>
+                  )}
+                  {errors.hasInvalidCharacters && (
+                    <li className="vf-text-body vf-text-body--3">
+                      The sequence has invalid characters
+                    </li>
+                  )}
+                  {errors.multipleSequences && (
+                    <li className="vf-text-body vf-text-body--3">
+                      There are multiple sequences and only 1 is supported
+                    </li>
+                  )}
+                </ul>
               </div>
             </InfoBanner>
           )}
