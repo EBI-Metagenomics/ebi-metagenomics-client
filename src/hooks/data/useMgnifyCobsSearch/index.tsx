@@ -34,7 +34,9 @@ const useMgnifyCobsSearch: (
   const formData = new FormData();
   formData.append('seq', sequence);
   formData.append('threshold', String(threshold));
-  formData.append('catalogues_filter', cataloguesFilter.join(','));
+  cataloguesFilter.forEach((catalogue) =>
+    formData.append('catalogues_filter', catalogue)
+  );
 
   const data = useData(
     sequence.length && String(threshold).length && cataloguesFilter.length
