@@ -14,16 +14,21 @@ const SourmashHistory: React.FC<HistoryProps> = ({
   return (
     <section>
       <details>
-        <summary>
-          <h4 style={{ display: 'inline', cursor: 'pointer' }}>
-            Search History
-          </h4>
-        </summary>
+        <summary>Search History</summary>
         <div>
-          <p>Here is a list of previous searches in this catalog:</p>
           <div className="genome-search-history">
             {jobs.size === 0 ? (
-              "We can't find any previous search jobs in this browser."
+              <div
+                className="vf-box vf-box-theme--primary vf-box--easy"
+                style={{
+                  backgroundColor: '#d1e3f6',
+                }}
+              >
+                <h3 className="vf-box__heading">
+                  <span className="icon icon-common icon-exclamation-triangle" />{' '}
+                  No previous search jobs found in your browser
+                </h3>
+              </div>
             ) : (
               <ul>
                 {Array.from(jobs.keys()).map((j) => (
@@ -49,8 +54,8 @@ const SourmashHistory: React.FC<HistoryProps> = ({
               </ul>
             )}
           </div>
-          <p className="small">
-            <b>Notice</b>: Results are only kept in our servers for 30 days.
+          <p className="vf-text-body vf-text-body--4">
+            Results are only kept in our servers for 30 days.
           </p>
         </div>
       </details>

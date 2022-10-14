@@ -7,6 +7,8 @@ import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import { getSimpleTaxLineage, cleanTaxLineage } from 'utils/taxon';
 import Tooltip from 'components/UI/Tooltip';
+import { getBiomeIcon } from 'utils/biomes';
+import { last, split } from 'lodash-es';
 
 type ResultsProps = {
   sequence: string;
@@ -47,14 +49,42 @@ const Results: React.FC<ResultsProps> = ({
   }
   const columns = [
     {
-      Header: 'Genome accession',
+      id: 'biome_id',
+      Header: 'Biome',
+      accessor: (genome) => decodeURI(last(split(genome.mgnify.biome, '/'))),
+      Cell: ({ cell }) => (
+        <span
+          className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
+          style={{ float: 'initial' }}
+        />
+      ),
+      disableSortBy: true,
+      className: 'mg-biome',
+    },
+    {
+      id: 'genome',
+      Header: 'Accession',
       accessor: 'cobs.genome',
       Cell: ({ cell }) => (
         <Link to={`/genomes/${cell.value}`}>{cell.value}</Link>
       ),
     },
     {
-      Header: 'Taxonomic assignment',
+      id: 'catalogue',
+      Header: 'Catalogue',
+      accessor: (genome) => last(split(genome.mgnify.catalogue, '/')),
+      Cell: ({ cell }) => (
+        <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
+      ),
+      disableSortBy: true,
+    },
+    {
+      Header: 'Type',
+      accessor: 'mgnify.type',
+      disableSortBy: true,
+    },
+    {
+      Header: 'Taxonomy',
       accessor: 'mgnify.taxon_lineage',
       Cell: ({ cell }) => (
         <>
@@ -66,33 +96,14 @@ const Results: React.FC<ResultsProps> = ({
           </Tooltip>
         </>
       ),
+      disableSortBy: true,
     },
     {
-      Header: 'Genome length',
-      accessor: 'mgnify.length',
-    },
-    {
-      Header: 'Num. contigs',
-      accessor: 'mgnify.num_contigs',
-    },
-    {
-      Header: 'Genome completeness',
-      accessor: 'mgnify.completeness',
-    },
-    {
-      Header: 'Genome contamination',
-      accessor: 'mgnify.contamination',
-    },
-    {
-      Header: 'Geographic origin',
-      accessor: 'mgnify.geographic_origin',
-    },
-    {
-      Header: 'Num. K-mers in query',
+      Header: 'K-mers in query',
       accessor: 'cobs.num_kmers',
     },
     {
-      Header: 'Num. K-mers found in genome',
+      Header: 'K-mers found in genome',
       accessor: 'cobs.num_kmers_found',
     },
     {

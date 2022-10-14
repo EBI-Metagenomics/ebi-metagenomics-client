@@ -8,12 +8,12 @@ import UserContext from 'pages/Login/UserContext';
 
 const useMgnifySourmashSearch: (
   endpoint: 'gather' | '',
-  catalog: string,
+  catalogues: string[],
   signatures: { [filename: string]: string }
-) => MGnifyResponseGenericObj = (endpoint, catalog, signatures) => {
+) => MGnifyResponseGenericObj = (endpoint, catalogues, signatures) => {
   const { config } = useContext(UserContext);
   const formdata = new FormData();
-  formdata.append('mag_catalog', catalog);
+  catalogues.forEach((cat) => formdata.append('mag_catalogues', cat));
   Object.entries(signatures || {}).forEach(([filename, signature]) => {
     formdata.append(
       'file_uploaded',
@@ -24,7 +24,7 @@ const useMgnifySourmashSearch: (
     );
   });
   const data = useData(
-    endpoint.length && catalog.length && Object.keys(signatures || {}).length
+    endpoint.length && catalogues.length && Object.keys(signatures || {}).length
       ? `${config.api}genomes-search/${endpoint}`
       : null,
     ResponseFormat.JSON,

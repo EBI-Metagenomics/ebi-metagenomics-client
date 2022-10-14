@@ -1,22 +1,13 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import 'textarea-sequence/dist/textarea-sequence';
 
-import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
 
 import InfoBanner from 'components/UI/InfoBanner';
 import FileUploaderButton from 'components/UI/FileUploaderButton';
-import Select, { MultiValue } from 'react-select';
+import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePicker';
+
 import { toast } from 'react-toastify';
-
-import {
-  reactSelectStyles,
-  reactSelectTheme,
-} from 'styles/react-select-styles';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-
-import { MGnifyResponseList } from 'hooks/data/useData';
-
 import CobsResults from './Results';
 import example1 from './examples/human-gut-v2-0.txt';
 import example2 from './examples/marine-v1-0.txt';
@@ -39,8 +30,6 @@ type CobsProps = {
   catalogueID?: string;
 };
 
-type SelectOptions = MultiValue<{ value: string; label: string }>;
-
 const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
   const isSingleCatalogue = !!catalogueID;
   const textareaSeq = useRef(null);
@@ -59,34 +48,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     });
   }, []);
 
-  const { data: cataloguesList, loading: loadingCataloguesList } =
-    useMGnifyData('genome-catalogues');
-
-  const catalogueOptions = useMemo(() => {
-    if (!cataloguesList) return [];
-    return (cataloguesList as MGnifyResponseList).data.map((catalogue) => ({
-      label: catalogue.attributes.name,
-      value: catalogue.id,
-    }));
-  }, [cataloguesList]);
-
-  const [selectedCatalogues, setSelectedCatalogues] = useState<SelectOptions>(
-    []
-  );
-
-  useEffect(() => {
-    if (selectedCatalogues.length) return;
-    if (isSingleCatalogue)
-      setSelectedCatalogues([{ label: catalogueName, value: catalogueID }]);
-    else if (catalogueOptions)
-      setSelectedCatalogues(catalogueOptions as SelectOptions);
-  }, [
-    catalogueID,
-    catalogueName,
-    catalogueOptions,
-    isSingleCatalogue,
-    selectedCatalogues,
-  ]);
+  const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
 
   const setSequence = (seq: string): void => {
     textareaSeq.current.quill.setText(seq);
@@ -138,40 +100,40 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
 
   return (
     <section id="genome-search" className="vf-stack vf-stack--400">
+      <div />
+      <div className="vf-sidebar vf-sidebar--end">
+        <div className="vf-sidebar__inner">
+          <div>
+            {isSingleCatalogue && (
+              <h3>Search DNA fragments in the {catalogueName} catalogue</h3>
+            )}
+            {!isSingleCatalogue && (
+              <h3>Search DNA fragments across catalogues</h3>
+            )}
+          </div>
+          <div className="vf-flag vf-flag--middle vf-flag--200 vf-flag--reversed">
+            <div className="vf-flag__body">
+              <span className="vf-text-body vf-text-body--4">
+                Powered by{' '}
+                <a href="https://github.com/iqbal-lab-org/cobs">COBS</a>.
+              </span>
+            </div>
+            <div className="vf-flag__media" />
+          </div>
+        </div>
+      </div>
       <section>
-        {isSingleCatalogue && (
-          <h3>Search DNA fragments in the {catalogueName} catalogue</h3>
-        )}
-        {!isSingleCatalogue && <h3>Search DNA fragments across catalogues</h3>}
         <p className="vf-text-body vf-text-body--3">
-          This is a{' '}
-          <ExtLink href="https://arxiv.org/abs/1905.09624">COBS-based</ExtLink>{' '}
-          search engine designed to query short sequence fragments (50-5,000 bp
-          in length) against representative genomes from the catalogue
+          This search engine is designed to query short sequence fragments
+          (50-5,000 bp in length) against representative genomes from the
+          catalogue
           {!isSingleCatalogue && 's'}.
         </p>
       </section>
-      {!isSingleCatalogue && (
-        <section>
-          <h5>Select catalogues to search against</h5>
-          <Select
-            theme={reactSelectTheme}
-            styles={reactSelectStyles}
-            placeholder="Select catalogues"
-            value={selectedCatalogues}
-            onChange={(options) => {
-              setSelectedCatalogues(options);
-            }}
-            // formatOptionLabel={OptionLabel}
-            isLoading={loadingCataloguesList}
-            isSearchable
-            name="biome"
-            inputId="biome-select"
-            isMulti
-            options={catalogueOptions as SelectOptions}
-          />
-        </section>
-      )}
+      <CataloguePicker
+        onChange={setSelectedCatalogues}
+        singleCatalogue={catalogueID}
+      />
       <section>
         <div>
           <h5>Enter a sequence</h5>
@@ -302,7 +264,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
           <CobsResults
             sequence={textareaSeq.current.sequence}
             threshold={kmers}
-            cataloguesFilter={selectedCatalogues.map((c) => c.value)}
+            cataloguesFilter={selectedCatalogues}
           />
         )}
 

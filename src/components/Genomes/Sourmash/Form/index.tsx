@@ -5,21 +5,25 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import useMgnifySourmashSearch from 'hooks/data/useMgnifySourmashSearch';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePicker';
 
 type SourmashFormProps = {
-  catalogueID: string;
+  catalogueID?: string;
 };
 const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
   const sourmash = useRef(null);
   const [jobId, setJobId] = useQueryParamState('job_id', '');
   const [shouldSearch, setShouldSearch] = useState(false);
+  const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([
+    catalogueID,
+  ]);
   const [{ signatures, errors }, setSourmashState] = useState({
     signatures: null,
     errors: null,
   });
   const { data, error, loading } = useMgnifySourmashSearch(
     shouldSearch ? 'gather' : '',
-    catalogueID,
+    selectedCatalogues,
     signatures
   );
 
@@ -76,13 +80,20 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
     return null;
   }
   return (
-    <section id="search-mag-section">
-      <mgnify-sourmash-component
-        id="sourmash"
-        ref={sourmash}
-        show_directory_checkbox
+    <section id="search-mag-section" className="vf-stack vf-stack--600">
+      <CataloguePicker
+        onChange={setSelectedCatalogues}
+        singleCatalogue={catalogueID}
       />
       <div>
+        <h5>Select your files</h5>
+        <mgnify-sourmash-component
+          id="sourmash"
+          ref={sourmash}
+          show_directory_checkbox
+        />
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <button
           id="search-button-mag"
           type="button"

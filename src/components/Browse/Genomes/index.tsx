@@ -7,6 +7,7 @@ import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import GenomesTextSearch from 'components/Browse/Genomes/TextSearch';
 import CobsSearch from 'components/Genomes/Cobs';
+import SourmashSearch from 'components/Genomes/Sourmash';
 
 const PARAMETER_NAME = 'browse-by';
 const PARAMETER_DEFAULT = 'biome';
@@ -44,6 +45,7 @@ const BrowseGenomes: React.FC = () => {
         {browseBy === 'biome' && <CataloguesList />}
         {browseBy === 'search-all' && <GenomesTextSearch />}
         {browseBy === 'gene-search' && <CobsSearch />}
+        {browseBy === 'mag-search' && <SourmashSearch />}
       </div>
     </section>
   );
