@@ -108,8 +108,20 @@ describe('Genome page', () => {
         });
     });
 
-    // context('Browse genome', () => {
-    // });
+    context('Browse genome', () => {
+        before(() => {
+            openPage('genomes/' + accessionValid + '#genome-browser');
+        });
+
+        it('Should load IGV', () => {
+            cy.get('h2').first().should('contain.text', `Genome ${accessionValid}`);
+            cy.get('.igv-track-label').should('contain.text', 'Functional annotation');
+            cy.get('.igv-search-input').type('{selectall}')
+            cy.get('.igv-search-input').type('MGYG000000001_1:1-1000');
+            cy.get('.igv-search-icon-container').click();
+            cy.get('.igv-windowsize-panel-container').should('contain.text', '1,000 bp');
+        });
+    });
 
     context('COG analysis', () => {
         before(() => {
