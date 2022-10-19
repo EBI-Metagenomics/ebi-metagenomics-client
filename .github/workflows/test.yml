@@ -127,20 +127,22 @@ jobs:
           npm run eslint
 
       - name: 🧪 - Testing
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         with:
           working-directory: client-repo
           browser: chrome
           spec: |
-            cypress/integration/index.js
-            cypress/integration/about.js
-            cypress/integration/help.js
-            cypress/integration/search.js
-            cypress/integration/sample.js
-            cypress/integration/analysis_v5.js
+            cypress/e2e/index.js
+            cypress/e2e/about.js
+            cypress/e2e/help.js
+            cypress/e2e/search.js
+            cypress/e2e/sample.js
+            cypress/e2e/analysis_v5.js
+            cypress/e2e/genome.js
+            cypress/e2e/genome_catalogue.js
 
       - name: 📉 - Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           directory: ${{ github.workspace }}/client-repo/coverage/
 

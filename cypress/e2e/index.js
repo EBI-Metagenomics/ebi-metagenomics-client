@@ -2,18 +2,11 @@ import {
     openPage,
     getBaseURL,
     waitForBiomesLoad,
-    waitForSearchResults,
-    setupDefaultSearchPageRouting,
     login
 } from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
 const origPage = '';
-const options = {timeout: 40000};
-
-function waitForStatsLoadingGif() {
-    cy.get('.loading-gif-large').should('be.hidden', {timeout: 20000});
-}
 
 function defaultLoginFieldsAreVisible(confidentialityText) {
     cy.get('input[name=\'analysis-type\']').should('be.visible');

@@ -1,5 +1,5 @@
 /* eslint-disable security/detect-object-injection */
-import {waitForPageLoad, openPage, datatype, checkChartTooltip} from '../util/util';
+import {waitForPageLoad, openPage, checkChartTooltip} from '../util/util';
 import ClientSideTableHandler from '../util/clientSideTable';
 
 

@@ -31,7 +31,7 @@ const GenomeBrowser: React.FC = () => {
         },
         tracks: [
           {
-            name: accession,
+            name: 'Functional annotation',
             type: 'annotation',
             format: 'gff3',
             url: `${config.api}genomes/${accession}/downloads/${accession}.gff`,
