@@ -89,7 +89,7 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   }
 
   return (
-    <div className="vf-stack vf-stack--200">
+    <div className="vf-stack vf-stack--200" data-cy="genome-cog-analysis">
       <HighchartsReact
         highcharts={Highcharts}
         options={options}

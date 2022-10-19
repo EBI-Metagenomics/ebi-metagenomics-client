@@ -28,13 +28,15 @@ export interface CobsResponse {
 const useMgnifyCobsSearch: (
   sequence: string,
   threshold: number,
-  cataloguesFilter: string
+  cataloguesFilter: string[]
 ) => CobsResponse = (sequence, threshold, cataloguesFilter) => {
   const { config } = useContext(UserContext);
   const formData = new FormData();
   formData.append('seq', sequence);
   formData.append('threshold', String(threshold));
-  formData.append('catalogues_filter', cataloguesFilter);
+  cataloguesFilter.forEach((catalogue) =>
+    formData.append('catalogues_filter', catalogue)
+  );
 
   const data = useData(
     sequence.length && String(threshold).length && cataloguesFilter.length

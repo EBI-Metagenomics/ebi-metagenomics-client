@@ -36,99 +36,12 @@ import ContigAnnotationTypeFilter from 'components/Analysis/ContigViewer/Filter/
 import LoadingOverlay from 'components/UI/LoadingOverlay';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import {
-  COLOUR_ABSENCE,
-  COLOUR_PRESENCE,
-  getAntiSMASHColour,
-  getCOGColour,
-} from 'components/Analysis/ContigViewer/mgnifyColours';
-import Select from 'react-select';
+  AnnotationTrackColorPicker,
+  annotationTrackCustomisations,
+} from 'components/IGV/TrackColourPicker';
 
 type ContigProps = {
   contig: MGnifyDatum;
-};
-
-const annotationTrackCustomisations = (trackColorBy) => {
-  switch (trackColorBy) {
-    case 'cog':
-      return {
-        nameField: 'cog',
-        color: (feature) => getCOGColour(feature.getAttributeValue('cog')),
-      };
-    case 'kegg':
-      return {
-        nameField: 'kegg',
-        color: (feature) =>
-          !feature.getAttributeValue('kegg') ? COLOUR_ABSENCE : COLOUR_PRESENCE,
-      };
-    case 'pfam':
-      return {
-        nameField: 'pfam',
-        color: (feature) =>
-          !feature.getAttributeValue('pfam') ? COLOUR_ABSENCE : COLOUR_PRESENCE,
-      };
-    case 'interpro':
-      return {
-        nameField: 'interpro',
-        color: (feature) =>
-          !feature.getAttributeValue('interpro')
-            ? COLOUR_ABSENCE
-            : COLOUR_PRESENCE,
-      };
-    case 'go':
-      return {
-        nameField: 'go',
-        color: (feature) =>
-          !feature.getAttributeValue('go') ? COLOUR_ABSENCE : COLOUR_PRESENCE,
-      };
-    case 'antismash':
-      return {
-        nameField: 'as_type',
-        color: (feature) =>
-          getAntiSMASHColour(feature.getAttributeValue('as_type')),
-      };
-    default:
-      return null;
-  }
-};
-
-type AnnotationTrackColorPickerProps = {
-  trackView: any;
-  trackColorBys: Record<string, { label: string; value: string }>;
-  onChange: (event, action) => void;
-};
-
-const AnnotationTrackColorPicker: React.FC<AnnotationTrackColorPickerProps> = ({
-  trackView,
-  trackColorBys,
-  onChange,
-}) => {
-  return (
-    <div className="vf-stack vf-stack--200">
-      <label className="vf-form__label" htmlFor="biome-select">
-        {trackView.track.config.label} track colour
-      </label>
-      <Select
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: 0,
-          border: '2px solid grey',
-        })}
-        placeholder={`Colour ${trackView.track.id} by...`}
-        value={trackColorBys[trackView.track.id]}
-        onChange={onChange}
-        name={`track-colour-${trackView.track.id}`}
-        inputId={`track-colour-${trackView.track.id}`}
-        options={[
-          { label: 'COG category', value: 'cog' },
-          { label: 'KEGG ortholog', value: 'kegg' },
-          { label: 'Pfam family existence', value: 'pfam' },
-          { label: 'InterPro existence', value: 'interpro' },
-          { label: 'GO (gene ontology) existence', value: 'go' },
-          { label: 'AntiSMASH cluster type', value: 'antismash' },
-        ]}
-      />
-    </div>
-  );
 };
 
 const Contig: React.FC<ContigProps> = ({ contig }) => {
@@ -166,21 +79,6 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
             url: `${config.api}analyses/${accession}/contigs/${contigId}/annotations`,
             displayMode: 'EXPANDED',
             label: 'Functional annotation',
-            // nameField: trackColorBys['Functional annotation']?.value,
-            // color: (feature) => {
-            //   return getCOGColour(feature.getAttributeValue('cog'));
-            // },
-            // colorAttributes: [
-            //   ['Default', ''],
-            //   ['COG', 'COG'],
-            //   ['GO', 'GO'],
-            //   ['KEGG', 'KEGG'],
-            //   ['Pfam', 'Pfam'],
-            //   ['InterPro', 'InterPro'],
-            // ],
-            // colorBy: undefined,
-            // defaultColour: undefined,
-            // labelBy: undefined,
           },
         ],
         showLegend: true,
@@ -188,18 +86,12 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
       };
       if (antiSMASH) {
         options.tracks.push({
-          // colorAttributes: [],
           name: 'antiSMASH',
           type: 'annotation',
           format: 'gff3',
           displayMode: 'EXPANDED',
           url: `${config.api}analyses/${accession}/contigs/${contigId}/annotations?antismash=True`,
           label: 'antiSMASH',
-          // nameField: null,
-          // color: null,
-          // colorBy: 'as_type',
-          // defaultColour: '#BEBEBE',
-          // labelBy: 'as_gene_clusters',
         });
       }
 
@@ -301,6 +193,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
       <div className="vf-grid vf-grid__col-3">
         {igvBrowser?.trackViews?.map((trackView) => {
+          const trackId = trackView.track.id;
           if (trackView.track.type !== 'annotation') return React.Fragment;
           const isMetaProteomics =
             trackView.track.config.label === 'Metaproteomics';
@@ -336,7 +229,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
                 if (action.action === 'select-option') {
                   setTrackColorBys({
                     ...trackColorBys,
-                    [trackView.track.id]: option,
+                    [trackId]: option,
                   });
                 }
               }}

@@ -22,7 +22,7 @@ function notEmpty(listValue: unknown): boolean {
 
 const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
   return (
-    <section>
+    <section id="overview">
       <div className="vf-stack">
         <details open>
           <summary>

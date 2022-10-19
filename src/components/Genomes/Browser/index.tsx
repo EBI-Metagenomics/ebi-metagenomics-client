@@ -1,66 +1,110 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import igv from 'igv';
 
 import UserContext from 'pages/Login/UserContext';
 import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
+import {
+  AnnotationTrackColorPicker,
+  annotationTrackCustomisations,
+} from 'components/IGV/TrackColourPicker';
 import GenomeBrowserPopup from './Popup';
 
 const GenomeBrowser: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const accession = useURLAccession();
   const { config } = useContext(UserContext);
+  const [igvBrowser, setIgvBrowser] = useState(null);
+  const [trackColorBys, setTrackColorBys] = useState({});
 
-  const tracks = [
-    {
-      type: 'annotation',
-      // name: downloadsModel.get('name'),
-      url: `${config.api}genomes/${accession}/downloads/${accession}.gff`,
-      format: 'gff3',
-      label: 'Functional annotation',
-      // displayMode: 'EXPANDED',
-      // colorAttributes: [
-      //   ['Default', ''],
-      //   ['COG', 'COG'],
-      //   ['Product', 'product'],
-      //   ['Pfam', 'Pfam'],
-      //   ['KEGG', 'KEGG'],
-      //   ['InterPro', 'InterPro'],
-      //   ['eggNOG', 'eggNOG'],
-      // ],
+  const igvContainer = useCallback(
+    (node) => {
+      const options = {
+        showChromosomeWidget: false,
+        showTrackLabelButton: true,
+        showTrackLabels: true,
+        showCenterGuide: false,
+        reference: {
+          indexURL: `${config.api}genomes/${accession}/downloads/${accession}.fna.fai`,
+          fastaURL: `${config.api}genomes/${accession}/downloads/${accession}.fna`,
+        },
+        tracks: [
+          {
+            name: 'Functional annotation',
+            type: 'annotation',
+            format: 'gff3',
+            url: `${config.api}genomes/${accession}/downloads/${accession}.gff`,
+            displayMode: 'EXPANDED',
+            label: 'Functional annotation',
+          },
+        ],
+        showLegend: true,
+        legendParent: '#contig',
+      };
+
+      if (node === null) return;
+      igv.createBrowser(node, options).then((browser) => {
+        browser.on('trackclick', (track, trackData) =>
+          ReactDOMServer.renderToString(
+            <GenomeBrowserPopup data={trackData} hasMetaProteomics={false} />
+          )
+        );
+
+        setIgvBrowser(browser);
+        setLoading(false);
+      });
     },
-  ];
-  const options = {
-    showChromosomeWidget: false,
-    showTrackLabelButton: true,
-    showTrackLabels: true,
-    showCenterGuide: false,
-    showAllChromosomes: true,
-    reference: {
-      fastaURL: `${config.api}genomes/${accession}/downloads/${accession}.fna`,
-      indexURL: `${config.api}genomes/${accession}/downloads/${accession}.fna.fai`,
-    },
-    tracks,
-    showLegend: true,
-    legendParent: '#genome-browser',
-  };
-  const divRef = useRef(null);
+    [config.api, accession]
+  );
+
   useEffect(() => {
-    igv.createBrowser(divRef.current, options).then((browser) => {
-      setLoading(false);
-      browser.on('trackclick', (track, data) =>
-        ReactDOMServer.renderToString(
-          <GenomeBrowserPopup data={data} hasMetaProteomics={false} />
-        )
-      );
+    const tracksToRemove = [];
+    const tracksToAdd = [];
+    igvBrowser?.trackViews?.forEach((trackView) => {
+      if (trackView.track.type !== 'annotation') return;
+      const colorBy = trackColorBys[trackView.track.id];
+      if (colorBy) {
+        const newTrackConfig = {
+          ...trackView.track.config,
+          ...annotationTrackCustomisations(colorBy.value),
+        };
+        if (newTrackConfig.nameField !== trackView.track.config.nameField) {
+          // Prevent unnecessary track reloads
+          tracksToRemove.push(trackView.track.id);
+          tracksToAdd.push(newTrackConfig);
+        }
+      }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    tracksToRemove.forEach((track) => igvBrowser.removeTrackByName(track));
+    tracksToAdd.forEach((track) => igvBrowser.loadTrack(track));
+  }, [trackColorBys, igvBrowser]);
+
   return (
     <div id="genome-browser">
       {loading && <Loading size="large" />}
-      <div className="genome-browser-container" ref={divRef} />
+      <div className="genome-browser-container" ref={igvContainer} />
+      <div className="vf-grid vf-grid__col-3">
+        {igvBrowser?.trackViews?.map((trackView) => {
+          const trackId = trackView.track.id;
+          if (trackView.track.type !== 'annotation') return React.Fragment;
+          return (
+            <AnnotationTrackColorPicker
+              key={trackView.track.id}
+              trackView={trackView}
+              trackColorBys={trackColorBys}
+              onChange={(option, action) => {
+                if (action.action === 'select-option') {
+                  setTrackColorBys({
+                    ...trackColorBys,
+                    [trackId]: option,
+                  });
+                }
+              }}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };

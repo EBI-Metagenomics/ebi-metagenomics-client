@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 import useMGnifyData from 'hooks/data/useMGnifyData';
@@ -12,6 +12,9 @@ import PhyloTree from 'components/Genomes/PhyloTree';
 import CobsSearch from 'components/Genomes/Cobs';
 import SourmashSearch from 'components/Genomes/Sourmash';
 import RouteForHash from 'components/Nav/RouteForHash';
+import ArrowForLink from 'components/UI/ArrowForLink';
+import UserContext from 'pages/Login/UserContext';
+import ExtLink from 'components/UI/ExtLink';
 
 const tabs = [
   { label: 'Genome list', to: '#' },
@@ -23,6 +26,7 @@ const tabs = [
 
 const GenomePage: React.FC = () => {
   const accession = useURLAccession();
+  const { config } = useContext(UserContext);
   const { data, loading, error } = useMGnifyData(
     `genome-catalogues/${accession}`
   );
@@ -33,11 +37,60 @@ const GenomePage: React.FC = () => {
   return (
     <section className="vf-content">
       <h2>{genomeData.attributes.name}</h2>
+
+      <section className="vf-card-container vf-card-container__col-4">
+        <div className="vf-card-container__inner">
+          <article className="vf-card vf-card--brand vf-card--bordered">
+            <div className="vf-card__content | vf-stack vf-stack--200">
+              <h3 className="vf-card__heading">
+                {genomeData.attributes['unclustered-genome-count']}
+              </h3>
+              <p className="vf-card__subheading">Total genomes</p>
+            </div>
+          </article>
+
+          <article className="vf-card vf-card--brand vf-card--bordered">
+            <div className="vf-card__content | vf-stack vf-stack--200">
+              <h3 className="vf-card__heading">
+                {genomeData.attributes['genome-count']}
+              </h3>
+              <p className="vf-card__subheading">Species-level clusters</p>
+            </div>
+          </article>
+
+          <article className="vf-card vf-card--brand vf-card--bordered">
+            <div className="vf-card__content | vf-stack vf-stack--200">
+              <h3 className="vf-card__heading">
+                <a href={genomeData.attributes['ftp-url'] as string}>
+                  FTP Site
+                  <ArrowForLink />
+                </a>
+              </h3>
+              <p className="vf-card__subheading">Download full catalogue</p>
+            </div>
+          </article>
+
+          <article className="vf-card vf-card--brand vf-card--bordered">
+            <div className="vf-card__content | vf-stack vf-stack--200">
+              <h3 className="vf-card__heading">
+                <ExtLink
+                  href={`${config.magsPipelineRepo}/releases/tag/${genomeData.attributes['pipeline-version-tag']}`}
+                >
+                  Pipeline {genomeData.attributes['pipeline-version-tag']}
+                </ExtLink>
+              </h3>
+              <p className="vf-card__subheading">View workflow & tools</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <div>
         <ReactMarkdown>
           {genomeData.attributes.description as string}
         </ReactMarkdown>
       </div>
+
       <Tabs tabs={tabs} />
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">

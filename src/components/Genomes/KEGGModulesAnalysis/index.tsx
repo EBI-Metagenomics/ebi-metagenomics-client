@@ -109,7 +109,10 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   }
 
   return (
-    <div className="vf-stack vf-stack--200">
+    <div
+      className="vf-stack vf-stack--200"
+      data-cy="genome-kegg-module-analysis"
+    >
       <HighchartsReact
         highcharts={Highcharts}
         options={options}
