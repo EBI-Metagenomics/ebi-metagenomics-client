@@ -47,16 +47,13 @@ jobs:
         run: |
           sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/config.yaml
           cat ci/config.yaml
-#          sudo chmod 777 ci/testdbs
-#          sudo chmod 777 ci/testdbs/*.sqlite
 
       - name: 🪜 - Setting up Fixtures
         working-directory: client-repo
         run: |
           mongorestore --gzip --archive < ci/testdbs/emg-testdb.mongoarchive
           emgcli migrate
-#          source ci/create_download_files.sh
-#          ls -lh ~/results
+          mv ci/emg_api_datafiles/results $GITHUB_WORKSPACE/results
 
       - name: ⚙️ - Settings
         working-directory: client-repo
