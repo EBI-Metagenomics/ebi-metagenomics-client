@@ -21,7 +21,7 @@ const GenomeBrowser: React.FC = () => {
   const igvContainer = useCallback(
     (node) => {
       const options = {
-        showChromosomeWidget: false,
+        showChromosomeWidget: true,
         showTrackLabelButton: true,
         showTrackLabels: true,
         showCenterGuide: false,

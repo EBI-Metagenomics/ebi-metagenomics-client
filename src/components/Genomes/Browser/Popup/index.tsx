@@ -49,7 +49,7 @@ const MultipleField: React.FC<{
   );
 };
 
-const getProtLoc = (attributes: {
+const getAnnotationLoc = (attributes: {
   location?: string;
 }): { start: number; end: number } => {
   if (attributes.location) {
@@ -66,9 +66,12 @@ const getProtLoc = (attributes: {
  * Calculate the property length.
  * @return {int} the length or undefined
  */
-const getProtLength = (attributes: { location?: string }): number => {
-  if (!attributes.location) return undefined;
-  const { start, end } = getProtLoc(attributes);
+const getProteinOrSequenceLength = (attributes: {
+  location?: string;
+  type?: string;
+}): number => {
+  if (!attributes.location || !attributes.type) return undefined;
+  const { start, end } = getAnnotationLoc(attributes);
   if (
     Number.isNaN(start) ||
     Number.isNaN(end) ||
@@ -77,8 +80,12 @@ const getProtLength = (attributes: { location?: string }): number => {
   ) {
     return undefined;
   }
-  return Math.ceil((end - start) / 3);
+  if (attributes.type === 'CDS') {
+    return Math.ceil((end - start) / 3);
+  }
+  return end - start;
 };
+
 const formatData = (
   rawData: PropertyDataType[],
   withMetaProteomics: boolean
@@ -194,7 +201,8 @@ const formatData = (
       },
     ],
   };
-  const { start, end } = getProtLoc(attributes);
+  const { start, end } = getAnnotationLoc(attributes);
+  const isProtein = attributes.type === 'CDS';
   const otherData = {
     title: 'Feature details',
     data: [
@@ -211,8 +219,8 @@ const formatData = (
         Value: `${start} / ${end}`,
       },
       {
-        name: 'Protein length',
-        Value: String(getProtLength(attributes)),
+        name: isProtein ? 'Protein length' : 'Sequence length',
+        Value: String(getProteinOrSequenceLength(attributes)),
       },
     ],
   };
