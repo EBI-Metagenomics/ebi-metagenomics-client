@@ -50,5 +50,5 @@ export function getAntiSMASHColour(kind) {
   return ANTISMASH_MAP_GK[kind] || ANTISMASH_MAP_GK.other;
 }
 
-export const COLOUR_PRESENCE = '#ff726e';
-export const COLOUR_ABSENCE = '#000096';
+export const COLOUR_PRESENCE = '#d32f2f';
+export const COLOUR_ABSENCE = '#a9abaa';

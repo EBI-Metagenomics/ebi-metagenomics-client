@@ -69,6 +69,14 @@ export const annotationTrackCustomisations = (trackColorBy) => {
           return as ? getAntiSMASHColour(as) : '#ddd';
         },
       };
+    case 'viphog':
+      return {
+        nameField: 'viphog',
+        color: (feature) =>
+          !maybeGetAttributeValue(feature, ['viphog', 'ViPhOG'])
+            ? COLOUR_ABSENCE
+            : COLOUR_PRESENCE,
+      };
     default:
       return null;
   }
@@ -104,6 +112,7 @@ export const AnnotationTrackColorPicker: React.FC<
           { label: 'InterPro existence', value: 'interpro' },
           { label: 'GO (gene ontology) existence', value: 'go' },
           { label: 'AntiSMASH cluster type', value: 'antismash' },
+          { label: 'ViPhOG existence', value: 'viphog' },
         ]}
       />
     </div>

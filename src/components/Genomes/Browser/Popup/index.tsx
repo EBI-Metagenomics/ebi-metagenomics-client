@@ -168,6 +168,16 @@ const formatData = (
           (antiSMASHLabels[attributes.as_type] || attributes.as_type),
       },
       {
+        name: 'ViPhOG',
+        Value:
+          attributes.viphog &&
+          (() => (
+            <ExtLink href="https://osf.io/2zd9r/">
+              {attributes.viphog} ({attributes.viphog_taxonomy})
+            </ExtLink>
+          )),
+      },
+      {
         // Notes are URL encoded during the GFF generation
         name: 'Notes',
         Value:
