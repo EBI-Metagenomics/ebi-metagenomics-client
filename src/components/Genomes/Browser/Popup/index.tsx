@@ -121,7 +121,7 @@ const formatData = (
           (() => (
             <MultipleField
               value={attributes.pfam}
-              url="https://pfam.xfam.org/family/"
+              url="https://www.ebi.ac.uk/interpro/entry/pfam/"
             />
           )),
       },
