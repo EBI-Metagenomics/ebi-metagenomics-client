@@ -102,8 +102,6 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         onSelect={async (newBiome) => {
           await setHasData(false);
           setBiome(newBiome);
-          // await samplesList;
-          // setHasData(true);
         }}
         initialValue={biome}
         lineageFilter={isBiomeCatalogued}
