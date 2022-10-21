@@ -58,7 +58,6 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   const [igvBrowser, setIgvBrowser] = useState(null);
 
   const [trackColorBys, setTrackColorBys] = useState({});
-  // const [colorBarMax, setColorBarMax] = useState(null);
 
   const igvContainer = useCallback(
     (node) => {
@@ -117,6 +116,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
                   colorBarMax: parseFloat(
                     getGFFHeaderValue(
                       trackView.track.config.url.slice(37),
+                      // = GFF data-url without the 'data:application/octet-stream;base64' (37 chars) prefix
                       'max_spectrum_count_value_in_study'
                     )
                   ),
