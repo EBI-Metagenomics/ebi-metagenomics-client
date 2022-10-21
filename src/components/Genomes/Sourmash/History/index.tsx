@@ -26,8 +26,13 @@ const SourmashHistory: React.FC<HistoryProps> = ({
               >
                 <h3 className="vf-box__heading">
                   <span className="icon icon-common icon-exclamation-triangle" />{' '}
-                  No previous search jobs found in your browser
+                  No search history found
                 </h3>
+                <p className="vf-box__text">
+                  Search jobs are stored in your web browser, so if you open
+                  this website in a different browser or computer, or clear your
+                  browser history, you won’t see old searches.
+                </p>
               </div>
             ) : (
               <ul>
