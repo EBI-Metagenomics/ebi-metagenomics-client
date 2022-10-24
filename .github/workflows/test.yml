@@ -39,7 +39,7 @@ jobs:
           pip install --user --upgrade pip setuptools
           python -V
           pip -V
-          pip install "git+https://github.com/EBI-metagenomics/emgapi@improve-local-dev#egg=emgcli"
+          pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
           ls -l
 
       - name: Set up db files for API
@@ -66,7 +66,7 @@ jobs:
         name: 🔬 - Checkout EMG API
         with:
           repository: 'EBI-Metagenomics/emgapi'
-          ref: 'improve-local-dev'
+          ref: 'develop'
           path: emgapi
 
       - name: 🔬 - Start EMG API
