@@ -11,3 +11,11 @@
 .mg-contig-filter.vf-form__legend {
     font-size: 1.2rem;
 }
+
+details summary {
+    cursor: pointer;
+}
+
+details summary > * {
+    display: inline;
+}

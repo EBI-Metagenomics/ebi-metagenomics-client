@@ -221,6 +221,16 @@ const HelpPage: React.FC = () => {
               </a>
             </h3>
             <p className="vf-card__text">
+              The{' '}
+              <ExtLink
+                title="service status page"
+                href="https://status.mgnify.org"
+              >
+                service status page
+              </ExtLink>{' '}
+              lists any known issues and outages.
+            </p>
+            <p className="vf-card__text">
               If neither the documentation nor our online materials answer your
               questions, please{' '}
               <ExtLink

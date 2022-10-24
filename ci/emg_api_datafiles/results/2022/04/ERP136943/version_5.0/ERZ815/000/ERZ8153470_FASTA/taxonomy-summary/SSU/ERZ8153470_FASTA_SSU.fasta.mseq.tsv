@@ -1,0 +1,27 @@
+# Constructed from biom file
+# OTU ID	SSU_rRNA	taxonomy	taxid
+5820	8.0	sk__Bacteria	2
+139786	1.0	sk__Bacteria;k__;p__Actinobacteria;c__Actinobacteria;o__Bifidobacteriales;f__Bifidobacteriaceae;g__Bifidobacterium	1678
+119415	1.0	sk__Bacteria;k__;p__Actinobacteria;c__Actinobacteria;o__Propionibacteriales;f__Propionibacteriaceae;g__Granulicoccus	448176
+193496	1.0	sk__Bacteria;k__;p__Bacteroidetes;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides	816
+116834	2.0	sk__Bacteria;k__;p__Bacteroidetes;c__Bacteroidia;o__Bacteroidales;f__Tannerellaceae;g__Parabacteroides	375288
+196428	3.0	sk__Bacteria;k__;p__Firmicutes	1239
+223828	1.0	sk__Bacteria;k__;p__Firmicutes;c__Clostridia;o__Clostridiales	186802
+26920	1.0	sk__Bacteria;k__;p__Firmicutes;c__Clostridia;o__Clostridiales;f__Clostridiaceae;g__Clostridium;s__Clostridium_sp._AT4	1720194
+84106	1.0	sk__Bacteria;k__;p__Firmicutes;c__Clostridia;o__Clostridiales;f__Lachnospiraceae	186803
+219656	1.0	sk__Bacteria;k__;p__Firmicutes;c__Clostridia;o__Clostridiales;f__Peptostreptococcaceae	186804
+219383	3.0	sk__Bacteria;k__;p__Firmicutes;c__Clostridia;o__Clostridiales;f__Ruminococcaceae	541000
+80439	2.0	sk__Bacteria;k__;p__Firmicutes;c__Clostridia;o__Clostridiales;f__Ruminococcaceae;g__Faecalibacterium	216851
+168640	1.0	sk__Bacteria;k__;p__Firmicutes;c__Negativicutes;o__Acidaminococcales;f__Acidaminococcaceae;g__Phascolarctobacterium	33024
+236454	2.0	sk__Bacteria;k__;p__Firmicutes;c__Negativicutes;o__Veillonellales;f__Veillonellaceae;g__Veillonella	29465
+61081	2.0	sk__Bacteria;k__;p__Fusobacteria;c__Fusobacteriia;o__Fusobacteriales;f__Fusobacteriaceae;g__Fusobacterium	848
+140615	1.0	sk__Bacteria;k__;p__Proteobacteria	1224
+165080	1.0	sk__Bacteria;k__;p__Proteobacteria;c__Betaproteobacteria;o__;f__;g__Candidatus_Profftella	1381133
+197704	3.0	sk__Bacteria;k__;p__Proteobacteria;c__Betaproteobacteria;o__Burkholderiales	80840
+75066	1.0	sk__Bacteria;k__;p__Proteobacteria;c__Betaproteobacteria;o__Burkholderiales;f__;g__Paucibacter	318147
+177358	1.0	sk__Bacteria;k__;p__Proteobacteria;c__Betaproteobacteria;o__Burkholderiales;f__Sutterellaceae	995019
+40276	2.0	sk__Bacteria;k__;p__Proteobacteria;c__Betaproteobacteria;o__Burkholderiales;f__Sutterellaceae;g__Parasutterella	577310
+130904	1.0	sk__Bacteria;k__;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales	91347
+120573	1.0	sk__Bacteria;k__;p__Proteobacteria;c__Gammaproteobacteria;o__Pasteurellales;f__Pasteurellaceae;g__Haemophilus	724
+212535	2.0	sk__Eukaryota;k__Fungi;p__Ascomycota;c__Saccharomycetes;o__Saccharomycetales;f__Saccharomycetaceae	4893
+104339	1.0	sk__Eukaryota;k__Viridiplantae;p__Streptophyta;c__Magnoliopsida;o__Fabales;f__Fabaceae	3803

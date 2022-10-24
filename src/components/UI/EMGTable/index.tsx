@@ -34,7 +34,8 @@ function getPaginationRanges(
   const adjacentPages = pageCount > 2 ? [Math.max(2, pageIndex - 2)] : [];
   for (
     let page = adjacentPages[0] + 1;
-    page < pageCount - 2 && adjacentPages.length < 5;
+    page < (pageCount > 6 ? pageCount - 2 : pageCount) &&
+    adjacentPages.length < 5;
     page += 1
   ) {
     adjacentPages.push(page);

@@ -49,22 +49,29 @@ const MultipleField: React.FC<{
   );
 };
 
+const getAnnotationLoc = (attributes: {
+  location?: string;
+}): { start: number; end: number } => {
+  if (attributes.location) {
+    const startEnd = attributes.location.split(':')[1];
+    return {
+      start: parseInt(startEnd.split('-')[0].replaceAll(',', ''), 10),
+      end: parseInt(startEnd.split('-')[1].replaceAll(',', ''), 10),
+    };
+  }
+  return undefined;
+};
+
 /**
  * Calculate the property length.
  * @return {int} the length or undefined
  */
-const getProtLength = (attributes: {
-  start?: string | number | null;
-  end?: string | number | null;
+const getProteinOrSequenceLength = (attributes: {
+  location?: string;
+  type?: string;
 }): number => {
-  const start =
-    typeof attributes.start === 'string'
-      ? parseInt(attributes.start, 10)
-      : attributes.start;
-  const end =
-    typeof attributes.end === 'string'
-      ? parseInt(attributes.end, 10)
-      : attributes.end;
+  if (!attributes.location || !attributes.type) return undefined;
+  const { start, end } = getAnnotationLoc(attributes);
   if (
     Number.isNaN(start) ||
     Number.isNaN(end) ||
@@ -73,8 +80,12 @@ const getProtLength = (attributes: {
   ) {
     return undefined;
   }
-  return Math.ceil((end - start) / 3);
+  if (attributes.type === 'CDS') {
+    return Math.ceil((end - start) / 3);
+  }
+  return end - start;
 };
+
 const formatData = (
   rawData: PropertyDataType[],
   withMetaProteomics: boolean
@@ -82,8 +93,10 @@ const formatData = (
   const attributes: {
     [name: string]: string | null;
   } = rawData.reduce((memo, el) => {
-    // eslint-disable-next-line no-param-reassign
-    if (el.name) memo[el.name.toLowerCase()] = el.value;
+    if (el.name)
+      // eslint-disable-next-line no-param-reassign
+      memo[el.name.toLowerCase().replaceAll(':', '')] =
+        el.value === null ? null : String(el.value);
     return memo;
   }, {});
 
@@ -108,7 +121,7 @@ const formatData = (
           (() => (
             <MultipleField
               value={attributes.pfam}
-              url="https://pfam.xfam.org/family/"
+              url="https://www.ebi.ac.uk/interpro/entry/pfam/"
             />
           )),
       },
@@ -162,6 +175,16 @@ const formatData = (
           (antiSMASHLabels[attributes.as_type] || attributes.as_type),
       },
       {
+        name: 'ViPhOG',
+        Value:
+          attributes.viphog &&
+          (() => (
+            <ExtLink href="https://osf.io/2zd9r/">
+              {attributes.viphog} ({attributes.viphog_taxonomy})
+            </ExtLink>
+          )),
+      },
+      {
         // Notes are URL encoded during the GFF generation
         name: 'Notes',
         Value:
@@ -178,6 +201,8 @@ const formatData = (
       },
     ],
   };
+  const { start, end } = getAnnotationLoc(attributes);
+  const isProtein = attributes.type === 'CDS';
   const otherData = {
     title: 'Feature details',
     data: [
@@ -191,11 +216,11 @@ const formatData = (
       },
       {
         name: 'Start / End',
-        Value: `${attributes.start}/${attributes.end}`,
+        Value: `${start} / ${end}`,
       },
       {
-        name: 'Protein length',
-        Value: String(getProtLength(attributes)),
+        name: isProtein ? 'Protein length' : 'Sequence length',
+        Value: String(getProteinOrSequenceLength(attributes)),
       },
     ],
   };
@@ -248,6 +273,10 @@ const formatData = (
           attributes.ambiguous_peptide_to_protein_mapping === 'True'
             ? () => <MultipleField value={attributes.ambiguous_sequences} />
             : () => <div />,
+      },
+      {
+        name: 'Semi-quantitative expression spectrum count',
+        Value: attributes.semiquantitative_expression_spectrum_count,
       },
     ],
   };

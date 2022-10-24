@@ -11,14 +11,10 @@ import SourmashResultsTable from './Table';
 const INTERVAL_TIME = 1000;
 const COUNT_TO = 5;
 type SourmashResultsProps = {
-  catalogueID: string;
   addToStorage: (jobID: string) => void;
 };
 
-const SourmashResults: React.FC<SourmashResultsProps> = ({
-  catalogueID,
-  addToStorage,
-}) => {
+const SourmashResults: React.FC<SourmashResultsProps> = ({ addToStorage }) => {
   const [jobId, setJobId] = useQueryParamState('job_id', '');
   const [count, setCount] = useState(-1);
   const [shouldCheck, setShouldCheck] = useState(false);
@@ -34,7 +30,6 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({
   }, INTERVAL_TIME);
   const { data, error, loading } = useMgnifySourmashStatus(
     shouldCheck && !jobRetrieved ? `status` : '',
-    catalogueID,
     jobId
   );
   useEffect(() => {
@@ -97,12 +92,12 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({
               {jobRetrieved &&
                 job?.signatures.some(({ status }) => status === 'SUCCESS') && (
                   <a
-                    className="vf-button vf-button--sm"
+                    className="vf-button vf-button--sm vf-button--link"
                     download={`${job.group_id}.tgz`}
                     href={job.results_url}
                   >
-                    <span className="icon icon-common icon-download" />
-                    Download all Results [.tgz]
+                    <span className="icon icon-common icon-download" /> Download
+                    all Results [.tgz]
                   </a>
                 )}
             </dd>

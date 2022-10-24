@@ -13,5 +13,6 @@
   "featureFlags": {
     "contigIgvGffUploader": true
   },
-  "jupyterLabURL": "https://shiny-portal.embl.de/shinyapps/app/06_mgnify-notebook-lab"
+  "jupyterLabURL": "https://shiny-portal.embl.de/shinyapps/app/06_mgnify-notebook-lab",
+  "magsPipelineRepo": "https://github.com/EBI-Metagenomics/genomes-pipeline"
 }

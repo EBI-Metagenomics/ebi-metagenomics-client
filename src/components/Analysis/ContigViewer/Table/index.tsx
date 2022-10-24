@@ -49,7 +49,7 @@ const ContigFeatureFlag: React.FC<ContigFeatureProps> = ({
     color += '55';
   }
   const tooltip = `${
-    present ? 'Has' : 'Does’t have'
+    present ? 'Has' : 'Doesn’t have'
   } ${annotationType} annotations`;
   return (
     <Tooltip content={tooltip}>

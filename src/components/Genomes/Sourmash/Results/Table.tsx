@@ -25,6 +25,17 @@ const SourmashResultsTable: React.FC<SourmashResultsTableProps> = ({
         accessor: 'filename',
       },
       {
+        Header: 'Catalogue',
+        accessor: 'catalogue',
+        Cell: ({ cell }) => {
+          return (
+            <span style={{ whiteSpace: 'nowrap' }}>
+              <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
+            </span>
+          );
+        },
+      },
+      {
         Header: 'Status',
         accessor: (r) => ({
           status: r.status,

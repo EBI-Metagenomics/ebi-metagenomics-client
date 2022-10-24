@@ -2,15 +2,20 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { groupBy, split, map, flatMap, find } from 'lodash-es';
+import { groupBy, split, map, flatMap, find, filter } from 'lodash-es';
 import Select from 'react-select';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList, MGnifyDatum } from 'hooks/data/useData';
 import { getBiomeIcon } from 'utils/biomes';
+import {
+  reactSelectStyles,
+  reactSelectTheme,
+} from 'styles/react-select-styles';
 
 type BiomeSelectorProps = {
   onSelect: (lineage: string) => void;
   initialValue?: string;
+  lineageFilter?: (lineage: string) => boolean;
 };
 
 type OptionProps = {
@@ -35,6 +40,7 @@ const OptionLabel: React.FC<OptionProps> = ({ value, label }) => (
 const BiomeSelector: React.FC<BiomeSelectorProps> = ({
   onSelect,
   initialValue,
+  lineageFilter = () => true,
 }) => {
   const { data: biomes, loading } = useMGnifyData(
     'biomes/root/children?depth_gte=1&depth_lte=4&page_size=200'
@@ -44,9 +50,12 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
     if (loading) {
       return [{ label: 'Loading...', value: 'root' }];
     }
-    const groupedLineages = groupBy(
+    const filteredBiomes = filter(
       (biomes as MGnifyResponseList).data,
-      (biome) => split(biome.id.replace('root:', ''), ':', 1).join(':')
+      (biome) => lineageFilter(biome.attributes.lineage as string)
+    );
+    const groupedLineages = groupBy(filteredBiomes, (biome) =>
+      split(biome.id.replace('root:', ''), ':', 1).join(':')
     );
     return map(groupedLineages, (childBiomes, lineageLabel) => ({
       label: lineageLabel,
@@ -64,7 +73,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
             `,
       })),
     }));
-  }, [biomes, loading]);
+  }, [biomes, loading, lineageFilter]);
 
   useEffect(() => {
     if (initialValue && options?.length && !loading) {
@@ -82,49 +91,8 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
         Filter biome
       </label>
       <Select
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: 0,
-          border: '2px solid grey',
-          colors: {
-            ...theme.colors,
-            primary: 'var(--vf-color--blue--dark)',
-            primary25: 'var(--vf-color--blue--light)',
-            primary50: 'var(--vf-color--blue--light)',
-            primary75: 'var(--vf-color--blue)',
-            neutral0: 'var(--vf-color--neutral--0)',
-            neutral5: 'var(--vf-color--neutral--100)',
-            neutral10: 'var(--vf-color--neutral--100)',
-            neutral20: 'var(--vf-color--neutral--200)',
-            neutral30: 'var(--vf-color--neutral--300)',
-            neutral40: 'var(--vf-color--neutral--400)',
-            neutral50: 'var(--vf-color--neutral--500)',
-            neutral60: 'var(--vf-color--neutral--600)',
-            neutral70: 'var(--vf-color--neutral--700)',
-            neutral80: 'var(--vf-color--neutral--800)',
-            neutral90: 'var(--vf-color--neutral--900)',
-            danger: 'var(--vf-color--red)',
-            dangerLight: 'var(--vf-color--red--light)',
-          },
-        })}
-        styles={{
-          control: (provided, state) => ({
-            ...provided,
-            border: state.isFocused
-              ? '2px solid var(--vf-color--grey--dark)'
-              : '2px solid var(--vf-color--grey)',
-            boxShadow: state.isFocused
-              ? '0 0 0 .0625rem var(--vf-color--grey--dark)'
-              : 'unset',
-            '&:hover': {
-              border: '2px solid var(--vf-color--grey--dark)',
-              boxShadow: '0 0 0 .0625rem var(--vf-color--grey--dark)',
-            },
-            color: state.isFocused
-              ? 'var(--vf-color--grey--dark)'
-              : 'var(--vf-color--grey)',
-          }),
-        }}
+        theme={reactSelectTheme}
+        styles={reactSelectStyles}
         placeholder="Filter by biome"
         value={value}
         onChange={(option, action) => {
