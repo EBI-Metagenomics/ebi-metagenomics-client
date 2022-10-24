@@ -46,7 +46,7 @@ const GenomesTextSearch: React.FC = () => {
       className: 'mg-biome',
     },
     {
-      id: 'genome',
+      id: 'accession',
       Header: 'Accession',
       accessor: 'id',
       Cell: ({ cell }) => (

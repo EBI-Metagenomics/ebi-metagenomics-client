@@ -34,11 +34,11 @@
     "@sentry/react": "^6.17.2",
     "@sentry/tracing": "^6.17.2",
     "@tippyjs/react": "4.2.6",
-    "dexie": "3.2.0",
+    "dexie": "3.2.2",
     "dexie-react-hooks": "1.1.1",
     "highcharts": "9.3.2",
     "highcharts-react-official": "3.1.0",
-    "igv": "^2.13.1",
+    "igv": "^2.13.3",
     "lodash-es": "4.17.21",
     "mgnify-sourmash-component": "0.2.4",
     "react": "17.0.2",
@@ -58,7 +58,7 @@
   "devDependencies": {
     "@cypress/code-coverage": "3.9.12",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
-    "@sentry/webpack-plugin": "^1.18.7",
+    "@sentry/webpack-plugin": "^1.19.1",
     "@types/google.maps": "3.47.2",
     "@types/lodash-es": "4.17.5",
     "@types/react": "17.0.38",
@@ -95,6 +95,6 @@
     "typescript": "4.5.4",
     "webpack": "5.65.0",
     "webpack-cli": "4.9.1",
-    "webpack-dev-server": "4.7.2"
+    "webpack-dev-server": "4.11.1"
   }
 }

@@ -143,18 +143,6 @@ jobs:
         with:
           directory: ${{ github.workspace }}/client-repo/coverage/
 
-      - name: ⚙️ - Rebuild for deployment
-        working-directory: client-repo
-        if: github.ref == 'refs/heads/develop'
-        run: |
-          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"basename\": \"\/ebi-metagenomics-client\"}" > "$(pwd)/config.private.json"
-          npm run clean
-          npm run build
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-
 #      TODO: enable sentry when https://github.com/getsentry/action-release/issues/83 is resolved
 #      - name: Sentry Release
 #        uses: getsentry/action-release@v1.1.6
@@ -168,16 +156,6 @@ jobs:
 #          environment: dev
 #          sourcemaps: './dist/js'
 #          version: ${{ github.sha }}
-
-
-      - name: 🚀 - Deploy Site
-        if: github.ref == 'refs/heads/develop'
-        uses: JamesIves/github-pages-deploy-action@3.7.1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: client-repo/dist # The folder the action should deploy.
-          CLEAN: true # Automatically remove deleted files from the deploy branch
 
       - name: 📸 - Failed tests snapshots
         uses: actions/upload-artifact@v3
