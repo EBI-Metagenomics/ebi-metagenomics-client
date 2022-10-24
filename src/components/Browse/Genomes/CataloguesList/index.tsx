@@ -47,11 +47,13 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         className: 'mg-biome',
       },
       {
-        Header: 'Catalogue ID',
+        id: 'catalogue_id',
+        Header: () => <span className="nowrap">Catalogue ID</span>,
         accessor: 'id',
         Cell: ({ cell }) => (
           <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
         ),
+        className: 'nowrap',
       },
       {
         Header: 'Catalogue name',
@@ -60,6 +62,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
       {
         Header: 'Catalogue version',
         accessor: 'attributes.version',
+        disableSortBy: true,
       },
       {
         Header: 'Species count',
