@@ -58,7 +58,7 @@
   "devDependencies": {
     "@cypress/code-coverage": "3.9.12",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
-    "@sentry/webpack-plugin": "^1.18.7",
+    "@sentry/webpack-plugin": "^1.19.1",
     "@types/google.maps": "3.47.2",
     "@types/lodash-es": "4.17.5",
     "@types/react": "17.0.38",
