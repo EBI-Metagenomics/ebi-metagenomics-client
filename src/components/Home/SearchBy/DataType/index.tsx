@@ -181,7 +181,7 @@ const DataType: React.FC = () => {
       link: '/browse/genomes',
       aggregator: (cataloguesData) =>
         cataloguesData?.data
-          ?.map((cat) => cat.attributes['genome-count'])
+          ?.map((cat) => cat.attributes['unclustered-genome-count'])
           ?.reduce((x, y) => x + y),
       labelRenderer: (cataloguesData) =>
         cataloguesData?.data
