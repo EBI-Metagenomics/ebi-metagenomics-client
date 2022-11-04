@@ -34,6 +34,16 @@ const ANTISMASH_MAP_GK = {
   other: '#BEBEBE',
 };
 
+const MIBIG_MAP = {
+  alkaloid: 'purple',
+  nrp: 'seagreen',
+  polyketide: 'sandybrown',
+  ripp: 'royalblue',
+  saccharide: 'burlywood',
+  terpene: 'deeppink',
+  other: 'midnightblue',
+};
+
 /**
  * Get the colour for the COG cateogry.
  * If the category is not mapped then use the R, this also
@@ -48,6 +58,10 @@ export function getCOGColour(cog) {
  */
 export function getAntiSMASHColour(kind) {
   return ANTISMASH_MAP_GK[kind] || ANTISMASH_MAP_GK.other;
+}
+
+export function getMiBIGColor(mibigClass) {
+  return MIBIG_MAP[mibigClass.toLowerCase().split()[0]] || '#BEBEBE';
 }
 
 export const COLOUR_PRESENCE = '#d32f2f';
