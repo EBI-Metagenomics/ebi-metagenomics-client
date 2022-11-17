@@ -7,7 +7,6 @@ import {
   getCOGColour,
   getMiBIGColor,
 } from 'components/Analysis/ContigViewer/mgnifyColours';
-import antiSMASH from 'components/Analysis/Pathways/AntiSMASH';
 import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
 
@@ -146,9 +145,7 @@ export const AnnotationTrackColorPicker: React.FC<
       {trackView.track.id === 'SanntiS annotation' && (
         <span className="vf-text-body vf-text-body--4">
           <Tooltip content="This tool is not part of the standard MGnify pipeline.">
-            <span>
-              Extra annotation track
-            </span>
+            <span>Extra annotation track</span>
           </Tooltip>{' '}
           provided by{' '}
           <ExtLink href="https://github.com/Finn-Lab/SanntiS">SanntiS</ExtLink>

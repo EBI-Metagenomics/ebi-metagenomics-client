@@ -22,7 +22,7 @@ import igv from 'igv';
 
 import ContigsTable from 'components/Analysis/ContigViewer/Table';
 import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
-import { find, uniqBy } from "lodash-es";
+import { find } from 'lodash-es';
 import GFFCompare, {
   colorScale,
   getGFFHeaderValue,
