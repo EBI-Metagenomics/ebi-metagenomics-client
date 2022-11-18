@@ -10,6 +10,7 @@ import UserContext from 'pages/Login/UserContext';
 
 import PhylumCharts from './PhylumCharts';
 import './style.css';
+import AnalysisContext from "pages/Analysis/AnalysisContext";
 
 const tabs = [
   { label: 'Krona', to: 'krona' },
@@ -27,6 +28,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/taxonomy/overview`
   );
+  const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
   const [type] = useQueryParamState(PARAMETER_NAME, PARAMETER_DEFAULT);
   const datum = data?.data as Record<string, unknown>;
 
@@ -161,6 +163,11 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
             accession={accession}
             category={taxResults}
             chartType={String(type)}
+            sequencesType={
+              analysisOverviewData.attributes['experiment-type'] === 'assembly'
+                ? 'contigs'
+                : 'reads'
+            }
           />
         )}
       </div>
