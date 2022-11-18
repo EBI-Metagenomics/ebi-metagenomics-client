@@ -51,6 +51,8 @@ jobs:
       - name: 🪜 - Setting up Fixtures
         working-directory: client-repo
         run: |
+          wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2204-x86_64-100.6.1.deb
+          sudo apt install ./mongodb-database-tools-ubuntu2204-x86_64-100.6.1.deb
           mongorestore --gzip --archive < ci/testdbs/emg-testdb.mongoarchive
           emgcli migrate
           mv ci/emg_api_datafiles/results $GITHUB_WORKSPACE/results
