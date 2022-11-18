@@ -8,9 +8,9 @@ import useMGnifyData from 'hooks/data/useMGnifyData';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import UserContext from 'pages/Login/UserContext';
 
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import PhylumCharts from './PhylumCharts';
 import './style.css';
-import AnalysisContext from "pages/Analysis/AnalysisContext";
 
 const tabs = [
   { label: 'Krona', to: 'krona' },
