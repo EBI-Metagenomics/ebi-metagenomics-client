@@ -82,7 +82,7 @@ export const annotationTrackCustomisations = (trackColorBy) => {
       };
     case 'mibig':
       return {
-        nameField: 'nearest_MiBIG',
+        nameField: 'nearest_MiBIG_class',
         color: (feature) => {
           const mibigClass = maybeGetAttributeValue(feature, [
             'nearest_MiBIG_class',
