@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ReactMarkdown from 'react-markdown';
+
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseObj } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
@@ -24,7 +26,9 @@ const SuperStudyPage: React.FC = () => {
           <div style={{ display: 'flex' }}>
             <div>
               <h3>{superStudyData.attributes.title}</h3>
-              <p>{superStudyData.attributes.description}</p>
+              <ReactMarkdown>
+                {superStudyData.attributes.description as string}
+              </ReactMarkdown>
             </div>
             <img
               src={superStudyData.attributes['image-url'] as string}
