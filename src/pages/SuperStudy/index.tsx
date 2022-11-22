@@ -9,6 +9,7 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import FlagshipTable from 'components/SuperStudy/Flagship';
 import RelatedTable from 'components/SuperStudy/Related';
+import SuperStudyGenomeCataloguesTable from 'components/SuperStudy/GenomeCatalogues';
 
 const SuperStudyPage: React.FC = () => {
   const accession = useURLAccession();
@@ -40,6 +41,7 @@ const SuperStudyPage: React.FC = () => {
           </div>
           <FlagshipTable />
           <RelatedTable />
+          <SuperStudyGenomeCataloguesTable />
         </div>
       </section>
     </section>
