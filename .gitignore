@@ -4,6 +4,7 @@ node_modules/
 # Cypress files
 cypress/videos/
 cypress/screenshots/
+cypress/downloads/
 
 
 # IDE (Webstorm) files

@@ -131,6 +131,7 @@ jobs:
           spec: |
             cypress/e2e/index.js
             cypress/e2e/about.js
+            cypress/e2e/browse.js
             cypress/e2e/help.js
             cypress/e2e/search.js
             cypress/e2e/sample.js
