@@ -1,0 +1,3 @@
+# Note: fake data for CI tests
+sequence_id	contig	virify_taxonomy	sequence_start	sequence_end	checkv_provirus	checkv_quality
+MGYG000000001_1-start-100-end-200	MGYG000000001_1	unclassified	100 200	Yes	Medium-quality

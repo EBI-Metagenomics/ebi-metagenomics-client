@@ -100,17 +100,20 @@ const trackColorOptionsForType = (trackType) => {
   switch (trackType) {
     case 'SanntiS annotation':
       return [{ label: 'MiBIG class', value: 'mibig' }];
+    case 'Viral annotation':
+      return [{ label: 'ViPhOG existence', value: 'viphog' }];
     case 'antiSMASH':
       return [{ label: 'AntiSMASH cluster type', value: 'antismash' }];
     case 'Functional annotation':
     default:
       return [
-        { label: 'COG category', value: 'cog' },
-        { label: 'KEGG ortholog', value: 'kegg' },
-        { label: 'Pfam family existence', value: 'pfam' },
-        { label: 'InterPro existence', value: 'interpro' },
-        { label: 'GO (gene ontology) existence', value: 'go' },
         { label: 'AntiSMASH cluster type', value: 'antismash' },
+        { label: 'COG category', value: 'cog' },
+        { label: 'GO (gene ontology) existence', value: 'go' },
+        { label: 'InterPro existence', value: 'interpro' },
+        { label: 'KEGG ortholog', value: 'kegg' },
+        { label: 'MiBIG class', value: 'mibig' },
+        { label: 'Pfam family existence', value: 'pfam' },
         { label: 'ViPhOG existence', value: 'viphog' },
       ];
   }
