@@ -65,6 +65,7 @@ type PieProps = {
   showLegend?: boolean;
   showTotal?: boolean;
   selectedValue?: number | null;
+  sequencesType?: string;
 };
 
 const PieChart: React.FC<PieProps> = ({
@@ -73,6 +74,7 @@ const PieChart: React.FC<PieProps> = ({
   selectedValue = null,
   showLegend = false,
   showTotal = false,
+  sequencesType = 'reads',
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   useEffect(() => {
@@ -124,7 +126,7 @@ const PieChart: React.FC<PieProps> = ({
     },
     series: [
       {
-        name: 'reads',
+        name: sequencesType,
         colorByPoint: true,
         data: groupedData,
       },
@@ -132,7 +134,7 @@ const PieChart: React.FC<PieProps> = ({
   };
   if (showTotal) {
     options.subtitle = {
-      text: `Total: ${sumData(clusteredData)} reads`,
+      text: `Total: ${sumData(clusteredData)} ${sequencesType}`,
     };
   }
 
