@@ -281,9 +281,34 @@ const formatData = (
     ],
   };
 
+  const bgcData = {
+    title: 'Biosynthetic Gene Cluster details',
+    data: [
+      {
+        name: 'Nearest MiBIG',
+        Value:
+          attributes.nearest_mibig &&
+          (() => (
+            <ExtLink
+              href={`https://mibig.secondarymetabolites.org/repository/${attributes.nearest_mibig}`}
+            >
+              {attributes.nearest_mibig}
+            </ExtLink>
+          )),
+      },
+      {
+        name: 'Nearest MiBIG Class',
+        Value: attributes.nearest_mibig_class,
+      },
+    ],
+  };
+
   const properties = [functionalData, otherData];
-  if (withMetaProteomics) {
+  if (withMetaProteomics && attributes.pride_id) {
     properties.push(metaproteomicData);
+  }
+  if (attributes.nearest_mibig) {
+    properties.push(bgcData);
   }
 
   return {

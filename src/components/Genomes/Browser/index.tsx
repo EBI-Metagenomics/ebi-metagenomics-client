@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  useMemo,
+} from 'react';
 import ReactDOMServer from 'react-dom/server';
 import igv from 'igv';
 
@@ -18,8 +24,15 @@ const GenomeBrowser: React.FC = () => {
   const [igvBrowser, setIgvBrowser] = useState(null);
   const [trackColorBys, setTrackColorBys] = useState({});
 
+  const virifyGffUrl = `${config.api}genomes/${accession}/downloads/${accession}_virify.gff`;
+
+  const hasVirify = useMemo(async () => {
+    const response = await fetch(virifyGffUrl, { method: 'HEAD' });
+    return response.ok;
+  }, [virifyGffUrl]);
+
   const igvContainer = useCallback(
-    (node) => {
+    async (node) => {
       const options = {
         showChromosomeWidget: true,
         showTrackLabelButton: true,
@@ -43,6 +56,19 @@ const GenomeBrowser: React.FC = () => {
         legendParent: '#contig',
       };
 
+      hasVirify.then((has) => {
+        if (has) {
+          options.tracks.push({
+            name: 'Viral annotation',
+            type: 'annotation',
+            format: 'gff3',
+            url: virifyGffUrl,
+            displayMode: 'EXPANDED',
+            label: 'Viral annotation',
+          });
+        }
+      });
+
       if (node === null) return;
       igv.createBrowser(node, options).then((browser) => {
         browser.on('trackclick', (track, trackData) =>
@@ -55,7 +81,7 @@ const GenomeBrowser: React.FC = () => {
         setLoading(false);
       });
     },
-    [config.api, accession]
+    [config.api, accession, hasVirify, virifyGffUrl]
   );
 
   useEffect(() => {
