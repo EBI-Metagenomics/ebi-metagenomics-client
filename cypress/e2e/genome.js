@@ -373,8 +373,12 @@ describe('Genome page', () => {
                 ['DNA sequence FASTA file index of the genome assembly of the species ' +
                  'representative',
                  '-', 'FAI', '/genomes/MGYG000000001/downloads/MGYG000000001.fna.fai'],
+                ['Genome GFF file with VIRify viral annotations', '-', 'GFF',
+                    '/genomes/MGYG000000001/downloads/MGYG000000001_virify.gff'],
                 ['Genome GFF file with various sequence annotations', '-', 'GFF',
                  '/genomes/MGYG000000001/downloads/MGYG000000001.gff'],
+                ['Genome TSV file with VIRify viral regions', '-', 'TSV',
+                 '/genomes/MGYG000000001/downloads/MGYG000000001_virify_metadata.tsv'],
                 ['InterProScan annotation of the protein coding sequences', '-', 'TSV',
                  '/genomes/MGYG000000001/downloads/MGYG000000001_InterProScan.tsv'],
                 ['eggNOG annotations of the protein coding sequences', '-', 'TSV',

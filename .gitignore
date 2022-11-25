@@ -6,7 +6,6 @@ cypress/videos/
 cypress/screenshots/
 cypress/downloads/
 
-
 # IDE (Webstorm) files
 *.iml
 .idea/*
