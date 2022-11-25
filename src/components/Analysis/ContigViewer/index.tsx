@@ -39,6 +39,7 @@ import {
   AnnotationTrackColorPicker,
   annotationTrackCustomisations,
 } from 'components/IGV/TrackColourPicker';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 
 type ContigProps = {
   contig: MGnifyDatum;
@@ -47,11 +48,17 @@ type ContigProps = {
 const Contig: React.FC<ContigProps> = ({ contig }) => {
   const accession = useURLAccession();
   const { config } = useContext(UserContext);
+  const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
   const hasMetaProteomics = config?.featureFlags?.contigIgvGffUploader;
   const contigId = contig.attributes['contig-id'];
   const fastaURL = `${config.api}analyses/${contig.attributes.accession}/contigs/${contigId}`;
 
   const { data, loading, error } = useData(fastaURL, ResponseFormat.TXT);
+
+  const assemblyId = analysisOverviewData.relationships.assembly.data.id;
+
+  const { data: extraAnnotations, loading: loadingExtraAnnotations } =
+    useMGnifyData(`assemblies/${assemblyId}/extra-annotations`);
 
   const antiSMASH = contig.attributes['has-antismash'];
   const displayName = contig.attributes['contig-name'];
@@ -91,6 +98,18 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
           displayMode: 'EXPANDED',
           url: `${config.api}analyses/${accession}/contigs/${contigId}/annotations?antismash=True`,
           label: 'antiSMASH',
+        });
+      }
+      if (extraAnnotations) {
+        (extraAnnotations.data as MGnifyDatum[]).forEach((anno) => {
+          options.tracks.push({
+            name: (anno.attributes.description as KeyValue).label as string,
+            type: 'annotation',
+            format: 'gff3',
+            displayMode: 'EXPANDED',
+            url: anno.links.self as string,
+            label: (anno.attributes.description as KeyValue).label as string,
+          });
         });
       }
 
@@ -135,6 +154,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
       accession,
       contigId,
       antiSMASH,
+      extraAnnotations,
       hasMetaProteomics,
     ]
   );
@@ -183,7 +203,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
     tracksToAdd.forEach((track) => igvBrowser.loadTrack(track));
   }, [trackColorBys, igvBrowser]);
 
-  if (loading) return <Loading size="small" />;
+  if (loading || loadingExtraAnnotations) return <Loading size="small" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
 
@@ -237,7 +257,6 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
           );
         })}
       </div>
-
       {hasMetaProteomics && <GFFCompare igvBrowser={igvBrowser} />}
     </div>
   );
@@ -261,7 +280,7 @@ const ContigsViewer: React.FC = () => {
     ''
   );
   const [keggOrthologSearchParam] = useQueryParamState(
-    'kegg_otholog_search',
+    'kegg_ortholog_search',
     ''
   );
   const [goTermSearchParam] = useQueryParamState('go_term_search', '');

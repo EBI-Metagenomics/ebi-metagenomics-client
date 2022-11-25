@@ -39,6 +39,7 @@ type StackedColumnChartProps = {
   title: string;
   showLegend?: boolean;
   selectedValue?: number | null;
+  sequencesType?: string;
 };
 
 const StackedColumnChart: React.FC<StackedColumnChartProps> = ({
@@ -46,6 +47,7 @@ const StackedColumnChart: React.FC<StackedColumnChartProps> = ({
   title,
   selectedValue = null,
   showLegend = false,
+  sequencesType = 'reads',
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   useEffect(() => {
@@ -77,7 +79,7 @@ const StackedColumnChart: React.FC<StackedColumnChartProps> = ({
       text: title,
     },
     subtitle: {
-      text: `Total: ${sum} reads`,
+      text: `Total: ${sum} ${sequencesType}`,
     },
     credits: {
       enabled: false,
@@ -88,7 +90,7 @@ const StackedColumnChart: React.FC<StackedColumnChartProps> = ({
         const perc = (100 * this.y) / sum;
         return (
           `${this.series.name}<br/>` +
-          `<b>${this.y}</b> reads (${perc.toFixed(2)}%)`
+          `<b>${this.y}</b> ${sequencesType} (${perc.toFixed(2)}%)`
         );
       },
       /* eslint-enable react/no-this-in-sfc */

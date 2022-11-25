@@ -1,0 +1,5 @@
+##gff-version 3
+##Note: fake data for CI tests
+MGYG000000001_1	ViPhOG26170	virify_high_confidence_viral_contig	100	200	.	+	.	ID=MGYG000000001_1;viphog=ViPhOG26170;viphog_taxonomy=Spounavirinae
+MGYG000000001_1	ViPhOG4936	virify_high_confidence_viral_contig	300	400	.	+	.	ID=MGYG000000001_1;viphog=ViPhOG4936;viphog_taxonomy=Nclasvirinae
+MGYG000000001_1	ViPhOG23517	virify_high_confidence_viral_contig	1000	2000	.	+	.	ID=MGYG000000001_1;viphog=ViPhOG23517;viphog_taxonomy=Tunavirinae

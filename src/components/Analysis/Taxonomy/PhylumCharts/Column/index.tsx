@@ -26,6 +26,7 @@ type ColumnChartProps = {
   showLegend?: boolean;
   showTotal?: boolean;
   selectedValue?: number | null;
+  sequencesType?: string;
 };
 
 const ColumnChart: React.FC<ColumnChartProps> = ({
@@ -34,6 +35,7 @@ const ColumnChart: React.FC<ColumnChartProps> = ({
   selectedValue = null,
   showLegend = false,
   showTotal = false,
+  sequencesType = 'reads',
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   useEffect(() => {
@@ -95,7 +97,9 @@ const ColumnChart: React.FC<ColumnChartProps> = ({
       /* eslint-disable react/no-this-in-sfc */
       formatter() {
         const perc = (100 * this.y) / total;
-        return `${this.x}<br/><b>${this.y}</b> reads (${perc.toFixed(2)}%)`;
+        return `${this.x}<br/><b>${this.y}</b> ${sequencesType} (${perc.toFixed(
+          2
+        )}%)`;
       },
       /* eslint-enable react/no-this-in-sfc */
     },
@@ -105,7 +109,7 @@ const ColumnChart: React.FC<ColumnChartProps> = ({
   };
   if (showTotal) {
     options.subtitle = {
-      text: `Total: ${sumData(clusteredData)} reads`,
+      text: `Total: ${sumData(clusteredData)} ${sequencesType}`,
     };
   }
 

@@ -184,11 +184,13 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
           </div>
           <div className="row">
             <label htmlFor="threshold">
+              Threshold:{' '}
               <Tooltip
                 content={`The minimum proportion of K-mers from the query that must be
               matched (default: ${KMERS_DEFAULT})`}
-              />
-              Threshold: <span className="icon icon-common icon-info" />
+              >
+                <span className="icon icon-common icon-info" />
+              </Tooltip>
             </label>{' '}
             <input
               id="threshold"
