@@ -1,0 +1,6 @@
+##gff-version 3
+##Note: fake data for CI tests
+##gff-version 3
+MGYG000000001_1	SanntiSv0.2.4.1	CLUSTER	100	200	.	+	.	ID=MGYG000000001_1_sanntis_1;nearest_MiBIG=BGC0000218;nearest_MiBIG_class=Polyketide;nearest_MiBIG_diceDistance=0.657;score=0.440;partial=00
+MGYG000000001_1	SanntiSv0.2.4.1	CLUSTER	300	400	.	+	.	ID=MGYG000000001_1_sanntis_2;nearest_MiBIG=BGC0000800;nearest_MiBIG_class=Saccharide;nearest_MiBIG_diceDistance=0.559;score=0.610;partial=00
+MGYG000000001_2	SanntiSv0.2.4.1	CLUSTER	1000	2000	.	+	.	ID=MGYG000000001_2_sanntis_1;nearest_MiBIG=BGC0000731;nearest_MiBIG_class=Saccharide;nearest_MiBIG_diceDistance=0.630;score=0.480;partial=00
