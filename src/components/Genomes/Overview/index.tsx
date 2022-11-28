@@ -17,7 +17,12 @@ type GenomeOverviewProps = {
 };
 
 function notEmpty(listValue: unknown): boolean {
-  return !!listValue && listValue !== 'undefined' && listValue !== 'undefined%';
+  return (
+    !!listValue &&
+    listValue !== 'null' &&
+    listValue !== 'undefined' &&
+    listValue !== 'undefined%'
+  );
 }
 
 const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
@@ -86,27 +91,29 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
             ].filter(({ value }) => notEmpty(value))}
           />
         </details>
-        <details open>
-          <summary>
-            <b>Pan-genome statistics</b>
-          </summary>
-          <KeyValueList
-            list={[
-              {
-                key: 'Pan-genome size',
-                value: `${data.attributes['pangenome-size']}`,
-              },
-              {
-                key: 'Pan-genome core size',
-                value: `${data.attributes['pangenome-core-size']}`,
-              },
-              {
-                key: 'Pan-genome accessory size',
-                value: `${data.attributes['pangenome-accessory-size']}`,
-              },
-            ].filter(({ value }) => notEmpty(value))}
-          />
-        </details>
+        {notEmpty(data.attributes['pangenome-size']) && (
+          <details open>
+            <summary>
+              <b>Pan-genome statistics</b>
+            </summary>
+            <KeyValueList
+              list={[
+                {
+                  key: 'Pan-genome size',
+                  value: `${data.attributes['pangenome-size']}`,
+                },
+                {
+                  key: 'Pan-genome core size',
+                  value: `${data.attributes['pangenome-core-size']}`,
+                },
+                {
+                  key: 'Pan-genome accessory size',
+                  value: `${data.attributes['pangenome-accessory-size']}`,
+                },
+              ].filter(({ value }) => notEmpty(value))}
+            />
+          </details>
+        )}
         <details open>
           <summary>
             <b>Genome RNA coverage</b>
