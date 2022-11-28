@@ -337,7 +337,7 @@ describe('Genome page', () => {
         });
     });
 
-    context('Downloads', () => {
+    context.only('Downloads', () => {
         before(() => {
             openPage('genomes/' + accessionValid + '#downloads');
         });
@@ -373,6 +373,8 @@ describe('Genome page', () => {
                 ['DNA sequence FASTA file index of the genome assembly of the species ' +
                  'representative',
                  '-', 'FAI', '/genomes/MGYG000000001/downloads/MGYG000000001.fna.fai'],
+                ['Genome GFF file with SanntiS SMBGC annotations', '-', 'GFF',
+                    '/genomes/MGYG000000001/downloads/MGYG000000001_sanntis.gff'],
                 ['Genome GFF file with VIRify viral annotations', '-', 'GFF',
                     '/genomes/MGYG000000001/downloads/MGYG000000001_virify.gff'],
                 ['Genome GFF file with various sequence annotations', '-', 'GFF',
