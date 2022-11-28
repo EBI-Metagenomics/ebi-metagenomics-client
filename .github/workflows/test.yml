@@ -140,6 +140,7 @@ jobs:
             cypress/e2e/analysis_v5.js
             cypress/e2e/genome.js
             cypress/e2e/genome_catalogue.js
+            cypress/e2e/super_study.js
 
       - name: 📉 - Upload coverage to Codecov
         uses: codecov/codecov-action@v3

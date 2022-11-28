@@ -68,6 +68,14 @@ describe('Browse page', function() {
         });
 
     });
+        //TODO list genome catalogues
+
+        //TODO list biomes
+
+        //TODO list publications
+
+        //TODO list samples
+
         // it('Should contain correct number of studies', function() {
         //     studiesTable.checkLoadedCorrectly(1, studiesTableDefaultSize, 124, studiesTableColumns);
         // });

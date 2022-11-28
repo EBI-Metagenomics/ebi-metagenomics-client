@@ -88,6 +88,7 @@ const FlagshipTable: React.FC = () => {
         loading={loading}
         isStale={isStale}
         namespace="flagship-"
+        dataCy="superStudyFlagshipTable"
       />
     </details>
   );

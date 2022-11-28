@@ -27,9 +27,11 @@ const SuperStudyPage: React.FC = () => {
           <div style={{ display: 'flex' }}>
             <div>
               <h3>{superStudyData.attributes.title}</h3>
-              <ReactMarkdown>
-                {superStudyData.attributes.description as string}
-              </ReactMarkdown>
+              <div data-cy="superStudyDescription">
+                <ReactMarkdown>
+                  {superStudyData.attributes.description as string}
+                </ReactMarkdown>
+              </div>
             </div>
             <img
               src={superStudyData.attributes['image-url'] as string}
@@ -37,6 +39,7 @@ const SuperStudyPage: React.FC = () => {
                 height: '6em',
               }}
               alt={`${superStudyData.attributes.title} logo`}
+              data-cy="superStudyLogo"
             />
           </div>
           <FlagshipTable />

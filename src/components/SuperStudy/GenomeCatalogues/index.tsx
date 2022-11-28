@@ -97,6 +97,7 @@ const SuperStudyGenomeCataloguesTable: React.FC = () => {
         loading={loading}
         isStale={isStale}
         namespace="catalogues-"
+        dataCy="superStudyCataloguesTable"
       />
     </details>
   );
