@@ -36,7 +36,7 @@
     "@tippyjs/react": "4.2.6",
     "dexie": "3.2.2",
     "dexie-react-hooks": "1.1.1",
-    "highcharts": "9.3.2",
+    "highcharts": "10.3.2",
     "highcharts-react-official": "3.1.0",
     "igv": "^2.13.3",
     "lodash-es": "4.17.21",
