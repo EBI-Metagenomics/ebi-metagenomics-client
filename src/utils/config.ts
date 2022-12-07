@@ -1,5 +1,6 @@
 import config from 'config.json';
 import privateConfig from 'config.private.json';
+import { merge } from 'lodash-es';
 
 export type ConfigType = {
   api: string;
@@ -12,8 +13,12 @@ export type ConfigType = {
   featureFlags?: {
     [feature: string]: boolean;
   };
+  matomo: {
+    baseUrl: string;
+    siteId: number;
+  };
   jupyterLabURL: string;
   magsPipelineRepo: string;
 };
 
-export default { ...config, ...(privateConfig || {}) };
+export default merge(config, privateConfig || {});
