@@ -31,6 +31,7 @@
   "dependencies": {
     "@googlemaps/markerclustererplus": "1.2.10",
     "@googlemaps/react-wrapper": "1.1.19",
+    "@jonkoops/matomo-tracker-react": "^0.7.0",
     "@sentry/react": "^6.17.2",
     "@sentry/tracing": "^6.17.2",
     "@tippyjs/react": "4.2.6",

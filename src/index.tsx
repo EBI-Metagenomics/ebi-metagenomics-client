@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
+import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';
 import config from 'config.json';
 import App from './App';
 
@@ -12,7 +13,14 @@ Sentry.init({
   tracesSampleRate: config.sentryTransactionRate,
 });
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const matomo = createInstance(config.matomo);
+
+ReactDOM.render(
+  <MatomoProvider value={matomo}>
+    <App />
+  </MatomoProvider>,
+  document.getElementById('root')
+);
 
 if (module.hot) {
   module.hot.accept();

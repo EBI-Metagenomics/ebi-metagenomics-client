@@ -20,6 +20,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './styles/toast.css';
 import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
+import Matomo from 'components/Analytics';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -45,11 +46,7 @@ const App: React.FC = () => {
     username: null,
     isAuthenticated: false,
   });
-  // const [config, setConfig] = useState(initialConfig);
   const [details, setDetails] = useState(null);
-  // useEffect(() => {
-  //   mergePrivateConfig(setConfig);
-  // }, []);
   const value = useMemo(
     () => ({
       username: user.username,
@@ -67,6 +64,7 @@ const App: React.FC = () => {
       <UserContext.Provider value={value}>
         <QueryParamsProvider>
           <LoginMonitor />
+          <Matomo />
           <ToastContainer />
           <EBIHeader />
           <HeroHeader />
