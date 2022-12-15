@@ -8,6 +8,7 @@ import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseList } from 'hooks/data/useData';
 import Loading from 'components/UI/Loading';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import ReactMarkdown from 'react-markdown';
 
 const BrowseSuperStudies: React.FC = () => {
   const [page] = useQueryParamState('page', 1, Number);
@@ -44,6 +45,9 @@ const BrowseSuperStudies: React.FC = () => {
         Header: 'Description',
         accessor: 'attributes.description',
         disableSortBy: true,
+        Cell: ({ cell }) => (
+          <ReactMarkdown>{cell.value as string}</ReactMarkdown>
+        ),
       },
     ],
     []
