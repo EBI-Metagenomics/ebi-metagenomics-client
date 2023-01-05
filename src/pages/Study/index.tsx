@@ -9,6 +9,7 @@ import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Study/Overview';
 import SummaryTab from 'components/Study/SummaryTab';
 import RouteForHash from 'components/Nav/RouteForHash';
+import useCanonicalAccessionRedirect from 'hooks/useCanonicalAccessionRedirect';
 
 const tabs = [
   { label: 'Overview', to: '#overview' },
@@ -20,6 +21,7 @@ const StudyPage: React.FC = () => {
   const { data, loading, error } = useMGnifyData(`studies/${accession}`, {
     include: 'publications',
   });
+  useCanonicalAccessionRedirect(data as MGnifyResponseObj);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
