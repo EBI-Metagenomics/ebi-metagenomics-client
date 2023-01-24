@@ -192,70 +192,78 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
           </div>
           <div className="vf-stack">
             <div>
-                <label className="vf-text-heading--4">
-                  Are your raw reads
-                </label>
-              </div>
-              <div>
-                <label>
-                  <input
-                    type="radio"
-                    name="raw-reads-type"
-                    value="ShortReads"
-                    checked={rawReadsType === 'ShortReads'}
-                    onChange={() => setRawType('ShortReads')}
-                  />
-                  short-reads (e.g. Illumina)
-                </label>
-              </div>
-              <div>
-                <label>
-                  <input
-                    type="radio"
-                    name="raw-reads-type"
-                    value="LongReads"
-                    checked={rawReadsType === 'LongReads'}
-                    onChange={() => setRawType('LongReads')}
-                  />
-                  long-reads (e.g. Oxford Nanopore, PacBio SMRT)
-                </label>
-              </div>
-              <div>
-                <label>
-                  <input
-                    type="radio"
-                    name="raw-reads-type"
-                    value="ShortAndLongReads"
-                    checked={rawReadsType === 'ShortAndLongReads'}
-                    onChange={() => setRawType('ShortAndLongReads')}
-                  />
-                  a combination of both short-reads and long-reads for the same sample
-                </label>
-              </div>
+              <label className="vf-text-heading--4">Are your raw reads</label>
+            </div>
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="raw-reads-type"
+                  value="ShortReads"
+                  checked={rawReadsType === 'ShortReads'}
+                  onChange={() => setRawType('ShortReads')}
+                />
+                short-reads (e.g. Illumina)
+              </label>
+            </div>
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="raw-reads-type"
+                  value="LongReads"
+                  checked={rawReadsType === 'LongReads'}
+                  onChange={() => setRawType('LongReads')}
+                />
+                long-reads (e.g. Oxford Nanopore, PacBio SMRT)
+              </label>
+            </div>
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="raw-reads-type"
+                  value="ShortAndLongReads"
+                  checked={rawReadsType === 'ShortAndLongReads'}
+                  onChange={() => setRawType('ShortAndLongReads')}
+                />
+                a combination of both short-reads and long-reads for the same
+                sample
+              </label>
+            </div>
           </div>
         </div>
         <div className="vf-grid">
           <label className="vf-text-heading--4">
             Comments / additional information
-            {(rawReadsType == "LongReads") ?
-                <p>
-                  Please provide details of the sequencing instrument and base-caller version.
-                </p>
-              : null
-            }
-            {(rawReadsType == "ShortAndLongReads") ?
-              <p>
-                Please provide details of the sequencing instrument and base-caller version used for long-reads.
-                If the long-reads and short-reads data are submitted into separate studies, please also provide the study/project ID(s) for the additional data.
+            {rawReadsType === 'LongReads' ? (
+              <p className="vf-text-body--3">
+                Please provide details of:
+                <ul>
+                  <li>the sequencing instrument</li>
+                  <li>the base-caller version</li>
+                </ul>
               </p>
-              : null
-            }
+            ) : null}
+            {rawReadsType === 'ShortAndLongReads' ? (
+              <p className="vf-text-body--3">
+                Please provide details of:
+                <ul>
+                  <li>the sequencing instrument for long-reads</li>
+                  <li>the base-caller version for long-reads</li>
+                  <li>
+                    the additional study/project IDs if the short- and
+                    long-reads were submitted separately
+                  </li>
+                </ul>
+              </p>
+            ) : null}
             <textarea
               className="vf-form__textarea"
               name="reason"
               onChange={(event) => setComments(event.target.value)}
-              value={comments}>
-            </textarea>
+              value={comments}
+            />
           </label>
         </div>
         <div>
