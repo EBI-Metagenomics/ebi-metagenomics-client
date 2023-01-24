@@ -85,7 +85,7 @@
     "eslint-plugin-react-hooks": "4.3.0",
     "html-webpack-plugin": "5.5.0",
     "husky": "7.0.4",
-    "mini-css-extract-plugin": "2.4.5",
+    "mini-css-extract-plugin": "2.7.2",
     "nyc": "15.1.0",
     "prettier": "2.5.1",
     "rimraf": "3.0.2",
