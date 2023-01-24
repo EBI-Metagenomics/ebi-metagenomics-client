@@ -8,15 +8,12 @@ import UserContext from 'pages/Login/UserContext';
 
 const useMgnifySourmashStatus: (
   endpoint: 'status' | '',
-  catalog: string,
   jobID: string
-) => MGnifyResponseGenericObj = (endpoint, catalog, jobID) => {
+) => MGnifyResponseGenericObj = (endpoint, jobID) => {
   const { config } = useContext(UserContext);
 
   const data = useData(
-    endpoint.length && catalog.length
-      ? `${config.api}genomes-search/${endpoint}/${jobID}`
-      : null,
+    endpoint.length ? `${config.api}genomes-search/${endpoint}/${jobID}` : null,
     ResponseFormat.JSON,
     {
       method: 'GET',

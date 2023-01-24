@@ -1,0 +1,3 @@
+##gff-version 3
+ERZ8153470.1-NODE-1-length-463587-cov-24.019008	EMERALDv0.2.3	CLUSTER	859	27749	.	.	.	ID=ERZ8153470.1-NODE-1-length-463587-cov-24.019008_emrld_1;nearest_MiBIG=BGC0000868;nearest_MiBIG_class=Other;nearest_MiBIG_jaccardDistance=0.711;partial=10
+ERZ8153470.1-NODE-1-length-463587-cov-24.019008	EMERALDv0.2.3	CLUSTER	293	32010	.	.	.	ID=ERZ8153470.1-NODE-1-length-463587-cov-24.019008_emrld_2;nearest_MiBIG=BGC0000784;nearest_MiBIG_class=Saccharide;nearest_MiBIG_jaccardDistance=0.794;partial=10

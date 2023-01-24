@@ -6,6 +6,8 @@ import {
 } from 'components/Analysis/ContigViewer/GFFCompare/gff_db';
 import { useLiveQuery } from 'dexie-react-hooks';
 
+import './style.css';
+
 import ArrowForLink from 'components/UI/ArrowForLink';
 import PlainTable from 'components/UI/PlainTable';
 import FileUploaderButton from 'components/UI/FileUploaderButton';
@@ -15,6 +17,18 @@ import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 type GFFCompareProps = {
   igvBrowser: Browser;
+};
+
+export const getGFFHeaderValue = (encodedGff, varName) => {
+  try {
+    return atob(encodedGff).split(`${varName}=`)[1].split('\n')[0];
+  } catch (TypeError) {
+    return null;
+  }
+};
+
+export const colorScale = (number, max) => {
+  return `rgba(0,128,128,${0.3 + (0.7 * number) / max})`;
 };
 
 const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
@@ -35,15 +49,21 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
         if (gff === undefined) {
           setGffComparisonId(null);
         } else if (igvBrowser) {
-          igvBrowser.removeTrackByName(gff.name);
-          igvBrowser.loadTrack({
-            name: gff.name,
-            type: 'annotation',
-            url: `data:application/octet-stream;base64,${gff.encodedGFF}`,
-            format: 'gff3',
-            filterTypes: [],
-            removable: false,
-          });
+          const isMetaproteomics =
+            atob(gff.encodedGFF).indexOf('PeptideShaker') > -1;
+          if (igvBrowser.findTracks('name', gff.name).length === 0) {
+            igvBrowser.removeTrackByName(gff.name);
+            igvBrowser.loadTrack({
+              name: gff.name,
+              type: 'annotation',
+              url: `data:application/octet-stream;base64,${gff.encodedGFF}`,
+              format: 'gff3',
+              filterTypes: [],
+              removable: false,
+              displayMode: 'EXPANDED',
+              label: isMetaproteomics ? 'Metaproteomics' : 'Local GFF',
+            });
+          }
         }
       });
     }
@@ -121,7 +141,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
       <EMGModal
         isOpen={modalIsOpen}
         onRequestClose={() => setIsOpen(false)}
-        contentLabel="Example Modal"
+        contentLabel="GFF comparison file picker modal"
       >
         <div className="vf-stack vf-stack--800">
           <h1>Compare a GFF to the contig</h1>
@@ -140,7 +160,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
               </p>
               <FileUploaderButton
                 onChange={(e) =>
-                  addGff((e.target as HTMLInputElement).files[0])
+                  addGff((e.target as unknown as HTMLInputElement).files[0])
                 }
                 accept=".gff,.gff3"
               />
@@ -160,6 +180,7 @@ const GFFCompare: React.FC<GFFCompareProps> = ({ igvBrowser }) => {
           </div>
         </div>
       </EMGModal>
+
       <button
         className="vf-button vf-button--secondary vf-button--sm"
         type="button"

@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import 'textarea-sequence/dist/textarea-sequence';
 
-import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
 
 import InfoBanner from 'components/UI/InfoBanner';
 import FileUploaderButton from 'components/UI/FileUploaderButton';
-import CobsResults from './Results';
+import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePicker';
 
+import { toast } from 'react-toastify';
+import CobsResults from './Results';
 import example1 from './examples/human-gut-v2-0.txt';
 import example2 from './examples/marine-v1-0.txt';
 import example3 from './examples/cow-rumen-v1-0.txt';
@@ -25,10 +26,12 @@ const examples = {
 };
 
 type CobsProps = {
-  catalogueName: string;
-  catalogueID: string;
+  catalogueName?: string;
+  catalogueID?: string;
 };
+
 const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
+  const isSingleCatalogue = !!catalogueID;
   const textareaSeq = useRef(null);
   const [shouldSearch, setShouldSearch] = useState(false);
   const [kmers, setKmers] = useState(KMERS_DEFAULT);
@@ -44,6 +47,8 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
       setValid(textareaSeq.current.quill.valid);
     });
   }, []);
+
+  const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
 
   const setSequence = (seq: string): void => {
     textareaSeq.current.quill.setText(seq);
@@ -81,75 +86,111 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
   const handleCleanup = (): void => {
     textareaSeq.current.cleanUp();
   };
+
+  const sayPasted = () =>
+    toast.success('Pasted your clipboard into textarea', {
+      position: 'bottom-left',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
   return (
-    <section id="genome-search">
+    <section id="genome-search" className="vf-stack vf-stack--400">
+      <div />
+      <div className="vf-sidebar vf-sidebar--end">
+        <div className="vf-sidebar__inner">
+          <div>
+            {isSingleCatalogue && (
+              <h3>Search DNA fragments in the {catalogueName} catalogue</h3>
+            )}
+            {!isSingleCatalogue && (
+              <h3>Search DNA fragments across catalogues</h3>
+            )}
+          </div>
+          <div className="vf-flag vf-flag--middle vf-flag--200 vf-flag--reversed">
+            <div className="vf-flag__body">
+              <span className="vf-text-body vf-text-body--4">
+                Powered by{' '}
+                <a href="https://github.com/iqbal-lab-org/cobs">COBS</a>.
+              </span>
+            </div>
+            <div className="vf-flag__media" />
+          </div>
+        </div>
+      </div>
       <section>
-        <h3>Search DNA fragments in the {catalogueName} catalogue</h3>
-        <p>
-          This is a{' '}
-          <ExtLink href="https://arxiv.org/abs/1905.09624">COBS-based</ExtLink>{' '}
-          search engine designed to query short sequence fragments (50-5,000 bp
-          in length) against representative genomes from the catalogue.
+        <p className="vf-text-body vf-text-body--3">
+          This search engine is designed to query short sequence fragments
+          (50-5,000 bp in length) against representative genomes from the
+          catalogue
+          {!isSingleCatalogue && 's'}.
         </p>
       </section>
+      <CataloguePicker
+        onChange={setSelectedCatalogues}
+        singleCatalogue={catalogueID}
+      />
       <section>
         <div>
           <h5>Enter a sequence</h5>
-          <p>You can use any of these methods to enter your sequence:</p>
-          <ul>
-            <li>Paste in your sequence in the area below.</li>
-            <li>
-              <label
-                htmlFor="sequence"
-                id="example-seq"
-                style={{ cursor: 'pointer' }}
-              >
-                Use the{' '}
-                <button
-                  type="button"
-                  className="vf-button vf-button--link mg-button-as-link"
-                  onClick={handleExampleClick}
-                >
-                  example.
-                </button>
-              </label>
-            </li>
-            <li>
-              <label htmlFor="fasta-file" style={{ cursor: 'pointer' }}>
-                Upload a fasta file{' '}
-                <FileUploaderButton
-                  onChange={handleFileLoad}
-                  accept=".fasta, .fna, .ffn, .frn, .fa, .txt"
-                />
-              </label>
-            </li>
-          </ul>
+          <div className="vf-grid vf-grid__col-3">
+            <button
+              type="button"
+              className="vf-button vf-button--sm vf-button--secondary"
+              onClick={(e) => {
+                e.preventDefault();
+                navigator.clipboard
+                  .readText()
+                  .then(setSequence)
+                  .then(sayPasted);
+              }}
+            >
+              Paste a sequence
+            </button>
+            <FileUploaderButton
+              onChange={handleFileLoad}
+              accept=".fasta, .fna, .ffn, .frn, .fa, .txt"
+              buttonClassName="vf-button--secondary vf-button--sm"
+            >
+              Upload a FASTA
+            </FileUploaderButton>
+            <button
+              type="button"
+              className="vf-button vf-button--sm vf-button--secondary"
+              onClick={handleExampleClick}
+            >
+              Use the example
+            </button>
+          </div>
         </div>
 
-        <section>
+        <section className="vf-stack vf-stack--200">
           <div />
           <div>
             <textarea-sequence
               id="textareaID"
+              alphabet="dna"
               height="10em"
               min-sequence-length={MIN_BASES}
               single="true"
               ref={textareaSeq}
               className="mg-sequence"
-              disable-header-check
+              disable-header-check="true"
             />
           </div>
           <div className="row">
             <label htmlFor="threshold">
+              Threshold:{' '}
               <Tooltip
                 content={`The minimum proportion of K-mers from the query that must be
               matched (default: ${KMERS_DEFAULT})`}
               >
-                <sup>
-                  <span className="icon icon-common icon-info" />
-                </sup>
-              </Tooltip>{' '}
-              Threshold:
+                <span className="icon icon-common icon-info" />
+              </Tooltip>
             </label>{' '}
             <input
               id="threshold"
@@ -166,21 +207,22 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
           {!valid && (
             <InfoBanner>
               <div>
-                <p>
-                  The sequence above has the following errors and can&apos;t be
-                  submitted.
+                <p className="vf-text-body vf-text-body--3">
+                  The query can’t be submitted because:
                 </p>
                 <ul>
                   {errors.tooShort && (
-                    <li>
+                    <li className="vf-text-body vf-text-body--3">
                       The sequence has to have at least {MIN_BASES} nucleotides
                     </li>
                   )}
                   {errors.hasInvalidCharacters && (
-                    <li>The sequence has invalid characters</li>
+                    <li className="vf-text-body vf-text-body--3">
+                      The sequence has invalid characters
+                    </li>
                   )}
                   {errors.multipleSequences && (
-                    <li>
+                    <li className="vf-text-body vf-text-body--3">
                       There are multiple sequences and only 1 is supported
                     </li>
                   )}
@@ -188,6 +230,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
               </div>
             </InfoBanner>
           )}
+          <div />
           <div className="mg-right">
             {!valid && (
               <button
@@ -195,7 +238,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
                 className="vf-button vf-button--sm vf-button--tertiary mg-button"
                 onClick={handleCleanup}
               >
-                CleanUp Sequence
+                Clean sequence
               </button>
             )}
             {valid && (
@@ -223,7 +266,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
           <CobsResults
             sequence={textareaSeq.current.sequence}
             threshold={kmers}
-            cataloguesFilter={catalogueID}
+            cataloguesFilter={selectedCatalogues}
           />
         )}
 

@@ -24,11 +24,22 @@ const RunPage: React.FC = () => {
   const details = [
     {
       key: 'Study',
-      value: () => (
-        <Link to={`/studies/${runData.relationships.study.data.id}`}>
-          {runData.relationships.study.data.id}
-        </Link>
-      ),
+      value: () => {
+        if (!runData.relationships.study.data) {
+          return (
+            <ExtLink
+              href={`${ENA_VIEW_URL}${runData.attributes['ena-study-accession']}`}
+            >
+              {runData.attributes['ena-study-accession']}
+            </ExtLink>
+          );
+        }
+        return (
+          <Link to={`/studies/${runData.relationships.study.data.id}`}>
+            {runData.relationships.study.data.id}
+          </Link>
+        );
+      },
     },
     {
       key: 'Sample',
@@ -65,9 +76,11 @@ const RunPage: React.FC = () => {
           <Box label="Description">
             <KeyValueList list={details} />
           </Box>
-          <Box label="Associated analyses">
-            <AssociatedAnalyses rootEndpoint="runs" />
-          </Box>
+          {runData.relationships.analyses.data && (
+            <Box label="Associated analyses">
+              <AssociatedAnalyses rootEndpoint="runs" />
+            </Box>
+          )}
           <Box label="Associated assemblies">
             <AssociatedAssemblies rootEndpoint="runs" />
           </Box>

@@ -10,6 +10,7 @@ import { getBiomeIcon } from 'utils/biomes';
 import UserContext from 'pages/Login/UserContext';
 import { PublicationAnnotationsPopupBadge } from 'components/Publications/EuropePMCAnnotations';
 import ProgrammaticAccessBox from 'components/UI/ProgrammaticAccess';
+import { ENA_VIEW_URL } from 'utils/urls';
 
 type StudyOverviewProps = {
   data: MGnifyDatum;
@@ -22,13 +23,25 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
   return (
     <section>
       <div className="vf-grid">
-        <div>
+        <div className="vf-stack vf-stack--200">
+          <div />
           <h4>
             Last updated:{' '}
             {new Date(
               data?.attributes?.['last-update'] as string
             ).toDateString()}
           </h4>
+          <Box label="External links">
+            <ul data-cy="study-external-links">
+              <li>
+                <ExtLink
+                  href={ENA_VIEW_URL + data.attributes['secondary-accession']}
+                >
+                  ENA website ({data.attributes['secondary-accession']})
+                </ExtLink>
+              </li>
+            </ul>
+          </Box>
           <Box label="Classification">
             <div
               className={`biome_icon icon_sm ${getBiomeIcon(lineage)}`}

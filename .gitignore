@@ -4,7 +4,7 @@ node_modules/
 # Cypress files
 cypress/videos/
 cypress/screenshots/
-
+cypress/downloads/
 
 # IDE (Webstorm) files
 *.iml
@@ -29,3 +29,4 @@ config
 config.private.json
 
 .sha1.sha1
+/npm-debug.log

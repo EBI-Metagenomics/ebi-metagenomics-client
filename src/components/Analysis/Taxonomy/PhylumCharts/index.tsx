@@ -90,11 +90,13 @@ type PhylumChartsProps = {
   accession: string;
   category: string;
   chartType: string;
+  sequencesType: string;
 };
 const PhylumCharts: React.FC<PhylumChartsProps> = ({
   accession,
   category,
   chartType,
+  sequencesType,
 }) => {
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/taxonomy${category}`
@@ -130,6 +132,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
               clusteredData={clusteredDataTop}
               selectedValue={selectedCategory >= 0 ? selectedCategory : null}
               title="Domain composition"
+              sequencesType={sequencesType}
             />
           </div>
         )}
@@ -139,6 +142,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
               clusteredData={clusteredData}
               title="Phylum composition"
               selectedValue={selectedRow ? selectedRow.i - 1 : null}
+              sequencesType={sequencesType}
               showTotal
               showLegend
             />
@@ -150,6 +154,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
               clusteredData={clusteredDataTop}
               selectedValue={selectedCategory >= 0 ? selectedCategory : null}
               title="Domain composition"
+              sequencesType={sequencesType}
             />
           </div>
         )}
@@ -159,6 +164,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
               clusteredData={clusteredData}
               title="Phylum composition (top 10)"
               selectedValue={selectedRow ? selectedRow.i - 1 : null}
+              sequencesType={sequencesType}
               showTotal
             />
           </div>
@@ -169,6 +175,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
               clusteredData={clusteredData}
               title="Phylum composition (top 10)"
               selectedValue={selectedRow ? selectedRow.i - 1 : null}
+              sequencesType={sequencesType}
             />
           </div>
         )}

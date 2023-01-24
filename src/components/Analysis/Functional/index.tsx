@@ -41,8 +41,8 @@ const FunctionalAnalysis: React.FC = () => {
           <>
             ,{' '}
             <ExtLink
-              href="https://pfam.xfam.org/"
-              title="Pfam database webpage"
+              href="https://www.ebi.ac.uk/interpro/entry/pfam/"
+              title="InterPro protein families (Pfam)"
             >
               Pfam
             </ExtLink>

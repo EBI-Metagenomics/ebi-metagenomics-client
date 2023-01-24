@@ -5,4 +5,6 @@
 }
 .mg-twitter-timeline > div {
   align-self: center;
+  max-height: 500px;
+  overflow-y: scroll;
 }

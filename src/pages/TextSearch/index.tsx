@@ -103,6 +103,7 @@ const tabs = [
 
 const TextSearchPage: React.FC = () => {
   const [, , { param: queryParam }] = useQueryParamState('query', '');
+  const [pageParam] = useQueryParamState('page', 1, Number);
   const [pageSizeParam] = useQueryParamState('page_size', PAGE_SIZE, Number);
   const [, , { param: centreNameParam }] = useQueryParamState(
     'centre_name',
@@ -139,9 +140,14 @@ const TextSearchPage: React.FC = () => {
   const [, , { param: goParam }] = useQueryParamState('GO', '');
   const [, , { param: interproParam }] = useQueryParamState('INTERPRO', '');
 
+  const start = useMemo(() => {
+    return ((pageParam as number) - 1) * (pageSizeParam as number);
+  }, [pageParam, pageSizeParam]);
+
   const searchDataStudies = useEBISearchData('metagenomics_projects', {
     query: joinQueries([queryParam], 'domain_source:metagenomics_projects'),
     size: pageSizeParam,
+    start,
     /* eslint-disable max-len */
     fields:
       'ENA_PROJECT,METAGENOMICS_ANALYSES,METAGENOMICS_SAMPLES,biome_name,centre_name,description,name',
@@ -156,6 +162,7 @@ const TextSearchPage: React.FC = () => {
       'domain_source:metagenomics_samples'
     ),
     size: pageSizeParam,
+    start,
     fields: 'METAGENOMICS_PROJECTS,name,description',
     facetcount: 10,
     facetsdepth: FACET_DEPTH,
@@ -174,6 +181,7 @@ const TextSearchPage: React.FC = () => {
       'domain_source:metagenomics_analyses'
     ),
     size: pageSizeParam,
+    start,
     /* eslint-disable max-len */
     fields:
       'METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,pipeline_version,experiment_type,ASSEMBLY,ENA_RUN,ENA_WGS_SEQUENCE_SET',

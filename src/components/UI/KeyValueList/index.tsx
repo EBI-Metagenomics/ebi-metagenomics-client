@@ -16,8 +16,12 @@ const KeyValueList: React.FC<KeyValueProps> = ({ list, dataCy }) => (
   >
     {list.map(({ key, value: Value }) => (
       <React.Fragment key={key}>
-        <div style={{ textAlign: 'right' }}>{key}:</div>
-        <div>{typeof Value === 'string' ? Value : <Value />}</div>
+        <div style={{ textAlign: 'right' }} data-cy="kvl-key">
+          {key}:
+        </div>
+        <div data-cy="kvl-value">
+          {typeof Value === 'string' ? Value : <Value />}
+        </div>
       </React.Fragment>
     ))}
   </div>

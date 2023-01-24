@@ -36,6 +36,10 @@ const AboutPage: React.FC = () => {
         Follow us on Twitter using{' '}
         <a href="https://twitter.com/MGnifyDB">@MGnifyDB</a>
       </p>
+      <p>
+        Check the service status and incidents:{' '}
+        <a href="https://status.mgnify.org">status.mgnify.org</a>
+      </p>
       <h2>Cite us</h2>
       <MainPublication />
       <h2>Latest publications</h2>

@@ -30,15 +30,17 @@ declare module '*.txt' {
 
 declare module 'igv' {
   export type Browser = {
+    trackViews: any[];
     on: (
       event: string,
       callback: (
-        ignored: boolean,
+        track: any,
         data: { name: string; value: string | number }[]
       ) => unknown
     ) => void;
     loadTrack: (trackConfig: unknown) => void;
     removeTrackByName: (trackName: string) => void;
+    findTracks: (attr: string, val: string) => any;
   };
   const igv: {
     createBrowser: (element: unknown, options: unknown) => Promise<Browser>;
@@ -60,7 +62,9 @@ interface TextareaSequenceProps
   > {
   height: string;
   single: 'true' | 'false';
+  alphabet: string;
 }
+
 interface MGnifySourmashComponentProps
   extends React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLElement>,

@@ -5,11 +5,15 @@ const GenericTableHandler = require('./genericTable');
  * but pre-loaded to client side tables
  */
 class ClientSideTableHandler extends GenericTableHandler {
-    checkLoadedCorrectly(currentPage, pageSize, expectedResults, columnOrdering) {
+    checkLoadedCorrectly(currentPage, pageSize, expectedResults, columnOrdering, hasCaption=true) {
         this.waitForTableLoad(pageSize);
-        cy.get(this.parentId + ' caption .mg-number').should('contain', expectedResults);
-        cy.get(this.parentId + '[data-cy="interpro-table"] .vf-pagination__item:not(.vf-pagination__item--next-page):last').should('contain', Math.ceil(expectedResults / pageSize))
-        cy.get(this.parentId + '[data-cy="interpro-table"] [data-cy="current-page"]').should('contain', currentPage)
+        if (hasCaption) {
+            cy.get(this.parentId + ' caption .mg-number').should('contain', expectedResults);
+        }
+        if (expectedResults > pageSize) {
+            cy.get(this.parentId + `.vf-pagination__item:not(.vf-pagination__item--next-page):last`).should('contain', Math.ceil(expectedResults / pageSize))
+            cy.get(this.parentId + `[data-cy="current-page"]`).should('contain', currentPage)
+        }
         let firstRowData = [];
         let lastRowData = [];
         for (let column in columnOrdering) {
@@ -93,7 +97,7 @@ class ClientSideTableHandler extends GenericTableHandler {
                 } else {
                     pageNumber = index;
                 }
-                cy.get(this.parentId + '[data-cy="interpro-table"] [data-cy="current-page"]').should('contain', pageNumber)
+                cy.get(this.parentId + ' [data-cy="current-page"]').should('contain', pageNumber)
                 this.checkRowData(0, pageNumber, pageSize, pageData);
             }
         }
