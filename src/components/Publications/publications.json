@@ -1,13 +1,23 @@
 [
   {
+    "title": "MGnify: the microbiome sequence data analysis resource in 2023 ",
+    "journal": "Nucleic Acids Research",
+    "year": 2023,
+    "link": "https://academic.oup.com/nar/article/51/D1/D753/6880769",
+    "doi": "10.1093/nar/gkac1080",
+    "authors": "Richardson LJ, Allen B, Baldi G, Beracochea M, Bileschi M, Burdett T, Burgin J, Caballero-Pérez J, Cochrane G, Colwell L, Curtis T, Escobar-Zepeda A, Gurbich T, Kale V, Korobeynikov A, Raj S, Rogers AB, Sakharova E, Sanchez S, Wilkinson D and Finn RD ",
+    "recent": true,
+    "main": true
+  },
+  {
     "title": "MGnify: the microbiome analysis resource in 2020",
     "journal": "Nucleic Acids Research",
     "year": 2019,
     "link": "https://academic.oup.com/nar/article/48/D1/D570/5614179",
     "doi": "10.1093/nar/gkz1035",
     "authors": "Mitchell AL, Almeida A, Beracochea M, Boland M, Burgin J, Cochrane G, Crusoe MR, Kale V, Potter SC, Richardson LJ, Sakharova E, Scheremetjew M, Korobeynikov A, Shlemov A, Kunyavskaya O, Lapidus A and Finn RD",
-    "recent": true,
-    "main": true
+    "recent": false,
+    "main": false
   },
   {
     "title": "A new genomic blueprint of the human gut microbiota",
