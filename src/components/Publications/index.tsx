@@ -1,7 +1,7 @@
 import React, { ReactChild, ReactChildren, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import CoverImage from 'images/cover_main_publication.gif';
+import CoverImage from 'images/cover_main_publication.png';
 import publications from './publications.json';
 
 import './style.css';
