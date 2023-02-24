@@ -8,6 +8,7 @@ import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import GenomesTextSearch from 'components/Browse/Genomes/TextSearch';
 import CobsSearch from 'components/Genomes/Cobs';
 import SourmashSearch from 'components/Genomes/Sourmash';
+import { MainPublicationForResource } from 'components/Publications';
 
 const PARAMETER_NAME = 'browse-by';
 const PARAMETER_DEFAULT = 'biome';
@@ -46,6 +47,13 @@ const BrowseGenomes: React.FC = () => {
         {browseBy === 'search-all' && <GenomesTextSearch />}
         {browseBy === 'gene-search' && <CobsSearch />}
         {browseBy === 'mag-search' && <SourmashSearch />}
+      </div>
+      <hr className="vf-divider" />
+      <div className="vf-stack vf-stack--400">
+        <p className="vf-text-body vf-text-body--2">
+          If you use the MGnify Genomes resource, please cite:
+        </p>
+        <MainPublicationForResource resource="genomes" />
       </div>
     </section>
   );

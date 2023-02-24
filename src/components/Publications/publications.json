@@ -1,13 +1,23 @@
 [
   {
-    "title": "MGnify: the microbiome sequence data analysis resource in 2023 ",
+    "title": "MGnify: the microbiome sequence data analysis resource in 2023",
     "journal": "Nucleic Acids Research",
     "year": 2023,
     "link": "https://academic.oup.com/nar/article/51/D1/D753/6880769",
     "doi": "10.1093/nar/gkac1080",
     "authors": "Richardson LJ, Allen B, Baldi G, Beracochea M, Bileschi M, Burdett T, Burgin J, Caballero-Pérez J, Cochrane G, Colwell L, Curtis T, Escobar-Zepeda A, Gurbich T, Kale V, Korobeynikov A, Raj S, Rogers AB, Sakharova E, Sanchez S, Wilkinson D and Finn RD ",
     "recent": true,
-    "main": true
+    "isMainCitationFor": ["mgnify"]
+  },
+  {
+    "title": "MGnify Genomes: a resource for biome-specific microbial genome catalogues",
+    "journal": "Journal of Molecular Biology",
+    "year": 2023,
+    "link": "https://doi.org/10.1016/j.jmb.2023.168016",
+    "doi": "10.1016/j.jmb.2023.168016",
+    "authors": "Gurbich TA, Almeida A, Beracochea M, Burdett T, Burgin T, Cochrane G, Raj S, Richardson LJ, Rogers AB, Sakharova E, Salazar GA and Finn RD",
+    "recent": true,
+    "isMainCitationFor": ["genomes"]
   },
   {
     "title": "MGnify: the microbiome analysis resource in 2020",
@@ -15,9 +25,7 @@
     "year": 2019,
     "link": "https://academic.oup.com/nar/article/48/D1/D570/5614179",
     "doi": "10.1093/nar/gkz1035",
-    "authors": "Mitchell AL, Almeida A, Beracochea M, Boland M, Burgin J, Cochrane G, Crusoe MR, Kale V, Potter SC, Richardson LJ, Sakharova E, Scheremetjew M, Korobeynikov A, Shlemov A, Kunyavskaya O, Lapidus A and Finn RD",
-    "recent": false,
-    "main": false
+    "authors": "Mitchell AL, Almeida A, Beracochea M, Boland M, Burgin J, Cochrane G, Crusoe MR, Kale V, Potter SC, Richardson LJ, Sakharova E, Scheremetjew M, Korobeynikov A, Shlemov A, Kunyavskaya O, Lapidus A and Finn RD"
   },
   {
     "title": "A new genomic blueprint of the human gut microbiota",
@@ -34,8 +42,7 @@
     "year": 2019,
     "link": "https://www.nature.com/articles/s41587-018-0009-7",
     "doi": "10.1038/s41587-018-0009-7",
-    "authors": "Forster SC, Kumar N, Anonye BO, Almeida A, Viciani E, Stares MD, Dunn M, Mkandawire TT, Zhu A, Browne HP, Shao Y, Pike LJ, Louie T, Mitchell AL, Neville BA, Finn RD, Lawley TD",
-    "recent": true
+    "authors": "Forster SC, Kumar N, Anonye BO, Almeida A, Viciani E, Stares MD, Dunn M, Mkandawire TT, Zhu A, Browne HP, Shao Y, Pike LJ, Louie T, Mitchell AL, Neville BA, Finn RD, Lawley TD"
   },
   {
     "title": "Benchmarking taxonomic assignments based on 16S rRNA gene profiling of the microbiota from commonly sampled environments",
@@ -43,8 +50,7 @@
     "year": 2017,
     "link": "https://doi.org/10.1093/gigascience/giy054",
     "doi": "10.1093/gigascience/giy054",
-    "authors": "Almeida A, Mitchell AL, Tarkowska A, Finn RD.",
-    "recent": true
+    "authors": "Almeida A, Mitchell AL, Tarkowska A, Finn RD."
   },
   {
     "title": "EBI Metagenomics in 2017: enriching the analysis of microbial communities, from sequence reads to assemblies",

@@ -59,8 +59,29 @@ export const Publication: React.FC<{
     </section>
   );
 };
+export const MainPublicationForResource: React.FC<{
+  resource: string;
+}> = ({ resource }) => {
+  const publication = publications.filter(
+    (pub) => pub.isMainCitationFor && pub.isMainCitationFor.includes(resource)
+  )?.[0];
+  return (
+    <div>
+      {publication && (
+        <Publication
+          id={publication.id}
+          title={publication.title}
+          journal={publication.journal}
+          year={publication.year}
+          link={publication.link}
+          doi={publication.doi}
+          authors={publication.authors}
+        />
+      )}
+    </div>
+  );
+};
 export const MainPublication: React.FC = () => {
-  const publication = publications.filter((pub) => pub.main)?.[0];
   return (
     <div className="embl-grid | vf-content">
       <div className="vf-section-header mg-pub-section-header">
@@ -72,17 +93,7 @@ export const MainPublication: React.FC = () => {
       </div>
       <div>
         <p>To cite MGnify, please refer to the following publication:</p>
-        {publication && (
-          <Publication
-            id={publication.id}
-            title={publication.title}
-            journal={publication.journal}
-            year={publication.year}
-            link={publication.link}
-            doi={publication.doi}
-            authors={publication.authors}
-          />
-        )}
+        <MainPublicationForResource resource="mgnify" />
       </div>
     </div>
   );
