@@ -29,21 +29,23 @@ const HelpPage: React.FC = () => {
               </a>
             </h3>
             <p className="vf-card__text">
-              Full user documentation of the MGnify service is located at{' '}
+              Full user documentation of the MGnify service is located on{' '}
               <ExtLink
                 id="doc-link-2"
                 title="MGnify docs"
                 href="https://docs.mgnify.org/"
               >
-                Read the Docs
+                our documentation site
               </ExtLink>
               .
             </p>
             <p className="vf-card__text">
-              The text is searchable and may be downloaded in a variety of
-              formats. Users may also choose to view the documentation for
-              specific pipeline versions (accessed via the bottom left hand
-              corner of the page). Answers to many of the most commonly asked
+              Documentation for earlier pipeline version can be accessed via{' '}
+              <ExtLink href="https://emg-docs.readthedocs.io/en/v4.1/">
+                Read The Docs
+              </ExtLink>
+              and navigated using the version picked at the bottom left hand
+              corner of the page. Answers to many of the most commonly asked
               questions can be found under the{' '}
               <ExtLink href="https://docs.mgnify.org/src/docs/faqs.html">
                 FAQ
