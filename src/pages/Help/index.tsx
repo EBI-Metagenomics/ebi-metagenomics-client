@@ -22,7 +22,7 @@ const HelpPage: React.FC = () => {
         <article className="vf-card vf-card--brand vf-card--bordered">
           <div className="vf-card__content | vf-stack vf-stack--400">
             <h3 className="vf-card__heading">
-              <a href="https://emg-docs.readthedocs.io/en/latest/">
+              <a href="https://docs.mgnify.org/">
                 <span className="icon icon-generic" data-icon=";" /> User
                 documentation
                 <ArrowForLink />
@@ -33,7 +33,7 @@ const HelpPage: React.FC = () => {
               <ExtLink
                 id="doc-link-2"
                 title="MGnify docs"
-                href="https://emg-docs.readthedocs.io/en/latest/"
+                href="https://docs.mgnify.org/"
               >
                 Read the Docs
               </ExtLink>
@@ -45,7 +45,7 @@ const HelpPage: React.FC = () => {
               specific pipeline versions (accessed via the bottom left hand
               corner of the page). Answers to many of the most commonly asked
               questions can be found under the{' '}
-              <ExtLink href="https://emg-docs.readthedocs.io/en/latest/faqs.html">
+              <ExtLink href="https://docs.mgnify.org/src/docs/faqs.html">
                 FAQ
               </ExtLink>
               .
