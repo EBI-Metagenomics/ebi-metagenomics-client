@@ -18,7 +18,7 @@ import useData, {
 } from 'hooks/data/useData';
 import './style.css';
 import UserContext from 'pages/Login/UserContext';
-import igv from 'igv';
+import igv from 'igv/dist/igv.esm';
 
 import ContigsTable from 'components/Analysis/ContigViewer/Table';
 import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
@@ -40,10 +40,63 @@ import {
   annotationTrackCustomisations,
 } from 'components/IGV/TrackColourPicker';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import JSZip from 'jszip';
+import { ROCrate } from 'ro-crate';
 
 type ContigProps = {
   contig: MGnifyDatum;
 };
+
+function createROCrateTrack(
+  anno: MGnifyDatum,
+  options,
+  annotationType: string
+) {
+  fetch(anno.links.self as string, { method: 'GET' })
+    .then((response) => {
+      if (response.status === 200 || response.status === 0) {
+        return Promise.resolve(response.blob());
+      }
+      return Promise.reject(new Error(response.statusText));
+    })
+    .then(JSZip.loadAsync)
+    .then(async (crateZip) => {
+      const metadataJson = await crateZip
+        .file('ro-crate-metadata.json')
+        .async('string');
+
+      const metadata = JSON.parse(metadataJson);
+
+      const crate = new ROCrate(metadata, {
+        link: true,
+        array: true,
+      });
+      const tree = crate.getNormalizedTree();
+      let filePointer;
+      tree.hasPart.forEach((dataset) => {
+        if (
+          dataset['@type'].includes('File') &&
+          dataset.encodingFormat[0]['@value'].includes('gff')
+        ) {
+          filePointer = dataset['@id'];
+        }
+      });
+
+      const gff = await crateZip.file(filePointer).async('base64');
+      options.tracks.push({
+        name: annotationType,
+        type: 'annotation',
+        format: 'gff3',
+        displayMode: 'EXPANDED',
+        url: `data:application/octet-stream;base64,${gff}`,
+        label: annotationType,
+        crate: {
+          tree,
+          zip: crateZip,
+        },
+      });
+    });
+}
 
 const Contig: React.FC<ContigProps> = ({ contig }) => {
   const accession = useURLAccession();
@@ -65,6 +118,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   const [igvBrowser, setIgvBrowser] = useState(null);
 
   const [trackColorBys, setTrackColorBys] = useState({});
+  const [updatingTracks, setUpdatingTracks] = useState(true);
 
   const igvContainer = useCallback(
     (node) => {
@@ -85,6 +139,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
             url: `${config.api}analyses/${accession}/contigs/${contigId}/annotations`,
             displayMode: 'EXPANDED',
             label: 'Functional annotation',
+            crate: null,
           },
         ],
         showLegend: true,
@@ -98,18 +153,26 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
           displayMode: 'EXPANDED',
           url: `${config.api}analyses/${accession}/contigs/${contigId}/annotations?antismash=True`,
           label: 'antiSMASH',
+          crate: null,
         });
       }
       if (extraAnnotations) {
         (extraAnnotations.data as MGnifyDatum[]).forEach((anno) => {
-          options.tracks.push({
-            name: (anno.attributes.description as KeyValue).label as string,
-            type: 'annotation',
-            format: 'gff3',
-            displayMode: 'EXPANDED',
-            url: anno.links.self as string,
-            label: (anno.attributes.description as KeyValue).label as string,
-          });
+          const annotationType = (anno.attributes.description as KeyValue)
+            .label as string;
+          if (annotationType === 'Analysis RO Crate') {
+            createROCrateTrack(anno, options, annotationType);
+          } else {
+            options.tracks.push({
+              name: annotationType,
+              type: 'annotation',
+              format: 'gff3',
+              displayMode: 'EXPANDED',
+              url: anno.links.self as string,
+              label: annotationType,
+              crate: null,
+            });
+          }
         });
       }
 
@@ -160,103 +223,113 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   );
 
   useEffect(() => {
-    const tracksToRemove = [];
-    const tracksToAdd = [];
-    igvBrowser?.trackViews?.forEach((trackView) => {
-      if (trackView.track.type !== 'annotation') return;
-      const colorBy = trackColorBys[trackView.track.id];
-      if (colorBy) {
-        const newTrackConfig = {
-          ...trackView.track.config,
-          ...annotationTrackCustomisations(colorBy.value),
-        };
-        if (newTrackConfig.nameField !== trackView.track.config.nameField) {
-          // Prevent unnecessary track reloads
-          tracksToRemove.push(trackView.track.id);
-          tracksToAdd.push(newTrackConfig);
+    const updateTracks = async () => {
+      setUpdatingTracks(true);
+      const tracksToRemove = [];
+      const tracksToAdd = [];
+      igvBrowser?.trackViews?.forEach((trackView) => {
+        if (trackView.track.type !== 'annotation') return;
+        const colorBy = trackColorBys[trackView.track.id];
+        if (colorBy) {
+          const newTrackConfig = {
+            ...trackView.track.config,
+            ...annotationTrackCustomisations(colorBy.value),
+          };
+          if (newTrackConfig.nameField !== trackView.track.config.nameField) {
+            // Prevent unnecessary track reloads
+            tracksToRemove.push(trackView.track.id);
+            tracksToAdd.push(newTrackConfig);
+          }
         }
-      }
-      if (trackView.track.config.label === 'Metaproteomics') {
-        const cbMax = trackColorBys?.[trackView.track.id]?.colorBarMax;
-        const newTrackConfig = {
-          ...trackView.track.config,
-          nameField: 'pride_id',
-          color: cbMax
-            ? (feature) => {
-                const colorBarNumber = parseFloat(
-                  feature.getAttributeValue(
-                    'semiquantitative_expression_spectrum_count'
-                  )
-                );
-                return colorScale(colorBarNumber, cbMax);
-              }
-            : null,
-        };
-        if (newTrackConfig.nameField !== trackView.track.config.nameField) {
-          // Prevent unnecessary track reloads
-          tracksToRemove.push(trackView.track.id);
-          tracksToAdd.push(newTrackConfig);
+        if (trackView.track.config.label === 'Metaproteomics') {
+          const cbMax = trackColorBys?.[trackView.track.id]?.colorBarMax;
+          const newTrackConfig = {
+            ...trackView.track.config,
+            nameField: 'pride_id',
+            color: cbMax
+              ? (feature) => {
+                  const colorBarNumber = parseFloat(
+                    feature.getAttributeValue(
+                      'semiquantitative_expression_spectrum_count'
+                    )
+                  );
+                  return colorScale(colorBarNumber, cbMax);
+                }
+              : null,
+          };
+          if (newTrackConfig.nameField !== trackView.track.config.nameField) {
+            // Prevent unnecessary track reloads
+            tracksToRemove.push(trackView.track.id);
+            tracksToAdd.push(newTrackConfig);
+          }
         }
-      }
-    });
-    tracksToRemove.forEach((track) => igvBrowser.removeTrackByName(track));
-    tracksToAdd.forEach((track) => igvBrowser.loadTrack(track));
+      });
+      await Promise.all(
+        tracksToRemove.map(async (track) => igvBrowser.removeTrackByName(track))
+      );
+      await Promise.all(
+        tracksToAdd.map(async (track) => igvBrowser.loadTrack(track))
+      );
+      return igvBrowser?.trackViews;
+    };
+    updateTracks().then(() => setUpdatingTracks(false));
   }, [trackColorBys, igvBrowser]);
 
   if (loading || loadingExtraAnnotations) return <Loading size="small" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
-
   return (
     <div id="contig" className="vf-stack vf-stack--600">
       <div ref={igvContainer} />
+      {updatingTracks && <Loading size="small" />}
+      {!updatingTracks && (
+        <div className="vf-grid vf-grid__col-3">
+          {igvBrowser?.trackViews?.map((trackView) => {
+            const trackId = trackView.track.id;
+            if (trackView.track.type !== 'annotation') return React.Fragment;
+            const isMetaProteomics =
+              trackView.track.config.label === 'Metaproteomics';
 
-      <div className="vf-grid vf-grid__col-3">
-        {igvBrowser?.trackViews?.map((trackView) => {
-          const trackId = trackView.track.id;
-          if (trackView.track.type !== 'annotation') return React.Fragment;
-          const isMetaProteomics =
-            trackView.track.config.label === 'Metaproteomics';
+            if (isMetaProteomics) {
+              if (!trackColorBys?.[trackView.track.id]?.colorBarMax)
+                return React.Fragment;
+              return (
+                <div key={trackView.track.id}>
+                  <p className="vf-text-body vf-text-body--2">
+                    {trackView.track.config.label} track colour
+                  </p>
 
-          if (isMetaProteomics) {
-            if (!trackColorBys?.[trackView.track.id]?.colorBarMax)
-              return React.Fragment;
-            return (
-              <div key={trackView.track.id}>
-                <p className="vf-text-body vf-text-body--2">
-                  {trackView.track.config.label} track colour
-                </p>
+                  <div className="colorBarWrapper">
+                    0
+                    <div className="colorBar" />
+                    {Math.round(trackColorBys[trackView.track.id].colorBarMax)}
+                  </div>
 
-                <div className="colorBarWrapper">
-                  0
-                  <div className="colorBar" />
-                  {Math.round(trackColorBys[trackView.track.id].colorBarMax)}
+                  <p className="vf-text-body vf-text-body--4">
+                    Semiquantitative expression spectrum count — scaled against
+                    the maximum in this study.
+                  </p>
                 </div>
-
-                <p className="vf-text-body vf-text-body--4">
-                  Semiquantitative expression spectrum count — scaled against
-                  the maximum in this study.
-                </p>
-              </div>
+              );
+            }
+            return (
+              <AnnotationTrackColorPicker
+                key={trackId}
+                trackView={trackView}
+                trackColorBys={trackColorBys}
+                onChange={(option, action) => {
+                  if (action.action === 'select-option') {
+                    setTrackColorBys({
+                      ...trackColorBys,
+                      [trackId]: option,
+                    });
+                  }
+                }}
+              />
             );
-          }
-          return (
-            <AnnotationTrackColorPicker
-              key={trackView.track.id}
-              trackView={trackView}
-              trackColorBys={trackColorBys}
-              onChange={(option, action) => {
-                if (action.action === 'select-option') {
-                  setTrackColorBys({
-                    ...trackColorBys,
-                    [trackId]: option,
-                  });
-                }
-              }}
-            />
-          );
-        })}
-      </div>
+          })}
+        </div>
+      )}
       {hasMetaProteomics && <GFFCompare igvBrowser={igvBrowser} />}
     </div>
   );

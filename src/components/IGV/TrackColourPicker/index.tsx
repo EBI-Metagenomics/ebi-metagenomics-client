@@ -9,6 +9,7 @@ import {
 } from 'components/Analysis/ContigViewer/mgnifyColours';
 import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
+import ROCratePreview from 'components/IGV/ROCrateTrack';
 
 function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
   if (!feature || !feature.getAttributeValue) return null;
@@ -81,6 +82,8 @@ export const annotationTrackCustomisations = (trackColorBy) => {
             : COLOUR_PRESENCE,
       };
     case 'mibig':
+    case 'nearest_MiBIG_class':
+    case 'nearest_mibig_class':
       return {
         nameField: 'nearest_MiBIG_class',
         color: (feature) => {
@@ -92,12 +95,25 @@ export const annotationTrackCustomisations = (trackColorBy) => {
         },
       };
     default:
-      return null;
+      return {
+        nameField: trackColorBy,
+        color: (feature) =>
+          !maybeGetAttributeValue(feature, [trackColorBy])
+            ? COLOUR_ABSENCE
+            : COLOUR_PRESENCE,
+      };
   }
 };
 
-const trackColorOptionsForType = (trackType) => {
+const trackColorOptionsForType = (track) => {
+  const trackType = track.id;
+  const { crate } = track.config;
   switch (trackType) {
+    case 'Analysis RO Crate':
+      return crate.tree.variableMeasured.map((vm) => ({
+        label: vm.name[0]['@value'],
+        value: vm.value[0]['@value'],
+      }));
     case 'SanntiS annotation':
       return [{ label: 'MiBIG class', value: 'mibig' }];
     case 'Viral annotation':
@@ -124,12 +140,17 @@ type AnnotationTrackColorPickerProps = {
   trackColorBys: Record<string, { label: string; value: string }>;
   onChange: (event, action) => void;
 };
+
 export const AnnotationTrackColorPicker: React.FC<
   AnnotationTrackColorPickerProps
 > = ({ trackView, trackColorBys, onChange }) => {
   return (
     <div className="vf-stack vf-stack--200">
-      <label className="vf-form__label" htmlFor="biome-select">
+      {trackColorBys[trackView.track.id]?.value}
+      <label
+        className="vf-form__label"
+        htmlFor={`track-colour-${trackView.track.id}`}
+      >
         {trackView.track.config.label} track colour
       </label>
       <Select
@@ -143,7 +164,7 @@ export const AnnotationTrackColorPicker: React.FC<
         onChange={onChange}
         name={`track-colour-${trackView.track.id}`}
         inputId={`track-colour-${trackView.track.id}`}
-        options={trackColorOptionsForType(trackView.track.id)}
+        options={trackColorOptionsForType(trackView.track)}
       />
       {trackView.track.id === 'SanntiS annotation' && (
         <span className="vf-text-body vf-text-body--4">
@@ -154,6 +175,7 @@ export const AnnotationTrackColorPicker: React.FC<
           <ExtLink href="https://github.com/Finn-Lab/SanntiS">SanntiS</ExtLink>
         </span>
       )}
+      <ROCratePreview trackView={trackView} />
     </div>
   );
 };
