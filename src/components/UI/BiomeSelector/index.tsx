@@ -15,7 +15,6 @@ import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 type BiomeSelectorProps = {
   onSelect: (lineage: string) => void;
-  initialValue?: string;
   lineageFilter?: (lineage: string) => boolean;
 };
 
