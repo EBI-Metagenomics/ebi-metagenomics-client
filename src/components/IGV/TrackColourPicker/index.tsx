@@ -146,7 +146,6 @@ export const AnnotationTrackColorPicker: React.FC<
 > = ({ trackView, trackColorBys, onChange }) => {
   return (
     <div className="vf-stack vf-stack--200">
-      {trackColorBys[trackView.track.id]?.value}
       <label
         className="vf-form__label"
         htmlFor={`track-colour-${trackView.track.id}`}
