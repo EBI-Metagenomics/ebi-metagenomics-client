@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';
@@ -14,12 +14,14 @@ Sentry.init({
 });
 
 const matomo = createInstance(config.matomo);
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
 
-ReactDOM.render(
+root.render(
   <MatomoProvider value={matomo}>
     <App />
-  </MatomoProvider>,
-  document.getElementById('root')
+  </MatomoProvider>
 );
 
 if (module.hot) {

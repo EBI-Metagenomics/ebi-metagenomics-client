@@ -11,6 +11,7 @@ import {
   reactSelectStyles,
   reactSelectTheme,
 } from 'styles/react-select-styles';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 type BiomeSelectorProps = {
   onSelect: (lineage: string) => void;
@@ -39,12 +40,12 @@ const OptionLabel: React.FC<OptionProps> = ({ value, label }) => (
 
 const BiomeSelector: React.FC<BiomeSelectorProps> = ({
   onSelect,
-  initialValue,
   lineageFilter = () => true,
 }) => {
   const { data: biomes, loading } = useMGnifyData(
     'biomes/root/children?depth_gte=1&depth_lte=4&page_size=200'
   );
+  const [biomeQP, setBiomeQP] = useQueryParamState('biome', 'root');
   const [value, setValue] = useState<OptionProps | undefined>();
   const options = React.useMemo(() => {
     if (loading) {
@@ -76,14 +77,13 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
   }, [biomes, loading, lineageFilter]);
 
   useEffect(() => {
-    if (initialValue && options?.length && !loading) {
-      setValue(
-        find(flatMap(options, 'options'), (o) => {
-          return o.value.id === initialValue;
-        })
-      );
+    if (biomeQP && options?.length && !loading && !value) {
+      const optionForQueryParam = find(flatMap(options, 'options'), (o) => {
+        return o.value.id === biomeQP;
+      });
+      setValue(optionForQueryParam);
     }
-  }, [initialValue, options, loading]);
+  }, [options, loading, biomeQP, value]);
 
   return (
     <div style={{ flexGrow: 1, maxWidth: '320px' }}>
@@ -98,9 +98,10 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
         onChange={(option, action) => {
           if (action.action === 'select-option') {
             setValue(option);
-            onSelect(
-              typeof option.value === 'string' ? option.value : option.value.id
-            );
+            const biomeId =
+              typeof option.value === 'string' ? option.value : option.value.id;
+            onSelect(biomeId);
+            setBiomeQP(biomeId);
           }
         }}
         formatOptionLabel={OptionLabel}
