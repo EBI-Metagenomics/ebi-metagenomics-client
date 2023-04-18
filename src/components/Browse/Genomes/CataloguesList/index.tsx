@@ -14,7 +14,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
   const [order] = useQueryParamState('order', '');
   const [pageSize] = useQueryParamState('page_size', 25, Number);
   const [hasData, setHasData] = useState(false);
-  const [biome, setBiome] = useQueryParamState('biome', 'root');
+  const [biome] = useQueryParamState('biome', '');
   const {
     data: genomesList,
     loading,
@@ -102,11 +102,9 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         Select a catalogue in the table to browse or search its genomes.
       </p>
       <BiomeSelector
-        onSelect={async (newBiome) => {
+        onSelect={async () => {
           await setHasData(false);
-          setBiome(newBiome);
         }}
-        initialValue={biome}
         lineageFilter={isBiomeCatalogued}
       />
       {hasData && (

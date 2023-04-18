@@ -44,6 +44,15 @@ const AboutPage: React.FC = () => {
       <MainPublication />
       <h2>Latest publications</h2>
       <Publications />
+      <h2>MGnify logos</h2>
+      <p>
+        If you’d like to use the MGnify logo on your slides, posters or figures,
+        download our{' '}
+        <a href="http://ftp.ebi.ac.uk/pub/databases/metagenomics/media/media_pack.zip">
+          media pack (zip file)
+        </a>
+        .
+      </p>
       <h2>Funding</h2>
       <div className="vf-grid">
         <p>
