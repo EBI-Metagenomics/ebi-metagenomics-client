@@ -17,11 +17,11 @@ describe('About page', { retries: 3 }, function() {
         it('Clicking button should display / hide publications', function() {
             const citationDiv = '.mg-pub-section';
             const button = '.mg-pub-section button';
-            cy.get(`${citationDiv} article`).should('have.length', 4);
+            cy.get(`${citationDiv} article`).should('have.length', 3);
             cy.get(button).click();
-            cy.get(`${citationDiv} article`).should('have.length', 7);
+            cy.get(`${citationDiv} article`).should('have.length', 9);
             cy.get(button).click();
-            cy.get(`${citationDiv} article`).should('have.length', 4);
+            cy.get(`${citationDiv} article`).should('have.length', 3);
         });
     });
 });

@@ -14,7 +14,7 @@ import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 const BrowseSamples: React.FC = () => {
   const [page, setPage] = useQueryParamState('page', 1, Number);
   const [order] = useQueryParamState('order', '');
-  const [biome, setBiome] = useQueryParamState('biome', 'root');
+  const [biome] = useQueryParamState('biome', '');
   const [pageSize] = useQueryParamState('page_size', 25, Number);
   const [search] = useQueryParamState('search', '');
 
@@ -82,14 +82,12 @@ const BrowseSamples: React.FC = () => {
     <section className="mg-browse-section">
       <div>
         <BiomeSelector
-          onSelect={async (newBiome) => {
+          onSelect={async () => {
             await setHasData(false);
-            setBiome(newBiome);
             setPage(1);
             await samplesList;
             setHasData(true);
           }}
-          initialValue={biome}
         />
       </div>
       <div style={{ height: '2rem' }} />

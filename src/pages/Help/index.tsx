@@ -44,7 +44,7 @@ const HelpPage: React.FC = () => {
               <ExtLink href="https://emg-docs.readthedocs.io/en/v4.1/">
                 Read The Docs
               </ExtLink>
-              and navigated using the version picked at the bottom left hand
+              , and navigated using the version picked at the bottom left hand
               corner of the page. Answers to many of the most commonly asked
               questions can be found under the{' '}
               <ExtLink href="https://docs.mgnify.org/src/docs/faqs.html">

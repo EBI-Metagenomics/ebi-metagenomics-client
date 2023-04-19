@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from 'react';
 import ReactDOMServer from 'react-dom/server';
-import igv from 'igv';
+import igv from 'igv/dist/igv.esm';
 
 import UserContext from 'pages/Login/UserContext';
 import useURLAccession from 'hooks/useURLAccession';
