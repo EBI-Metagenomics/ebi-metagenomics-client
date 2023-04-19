@@ -94,10 +94,10 @@ jobs:
           sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
           nginx -c "$(pwd)/ci/nginx.conf"
 
-      - name: 📜 - Set up JS Node 14
+      - name: 📜 - Set up JS Node 16
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '16'
           cache: 'npm'
           cache-dependency-path: client-repo/package-lock.json
 
