@@ -11,6 +11,7 @@ import ExtLink from 'components/UI/ExtLink';
 import { Link } from 'react-router-dom';
 import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from 'utils/urls';
+import AssemblyExtraAnnotations from 'components/Assembly/AssemblyExtraAnnotations';
 
 const AssemblyPage: React.FC = () => {
   const accession = useURLAccession();
@@ -72,6 +73,13 @@ const AssemblyPage: React.FC = () => {
           </Box>
           <Box label="Associated analyses">
             <AssociatedAnalyses rootEndpoint="assemblies" />
+          </Box>
+          <Box label="Additional analyses">
+            <p>
+              Additional annotations produced by workflows run outside the scope
+              of MGnify’s versioned pipelines.
+            </p>
+            <AssemblyExtraAnnotations />
           </Box>
         </div>
       </section>
