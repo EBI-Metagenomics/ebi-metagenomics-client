@@ -1,0 +1,152 @@
+##gff-version 3
+##sequence-region MGYG000307531_1 1 241468
+##sequence-region MGYG000307531_2 1 230296
+##sequence-region MGYG000307531_3 1 183936
+##sequence-region MGYG000307531_4 1 100568
+##sequence-region MGYG000307531_5 1 97511
+##sequence-region MGYG000307531_6 1 95974
+##sequence-region MGYG000307531_7 1 89825
+##sequence-region MGYG000307531_8 1 87670
+##sequence-region MGYG000307531_9 1 86367
+##sequence-region MGYG000307531_10 1 84894
+##sequence-region MGYG000307531_11 1 81976
+##sequence-region MGYG000307531_12 1 81599
+##sequence-region MGYG000307531_13 1 81480
+##sequence-region MGYG000307531_14 1 81039
+##sequence-region MGYG000307531_15 1 80486
+##sequence-region MGYG000307531_16 1 78890
+##sequence-region MGYG000307531_17 1 78309
+##sequence-region MGYG000307531_18 1 74138
+##sequence-region MGYG000307531_19 1 66997
+##sequence-region MGYG000307531_20 1 66993
+##sequence-region MGYG000307531_21 1 64256
+##sequence-region MGYG000307531_22 1 62219
+##sequence-region MGYG000307531_23 1 60598
+##sequence-region MGYG000307531_24 1 60082
+##sequence-region MGYG000307531_25 1 56045
+##sequence-region MGYG000307531_26 1 54543
+##sequence-region MGYG000307531_27 1 53062
+##sequence-region MGYG000307531_28 1 52404
+##sequence-region MGYG000307531_29 1 48936
+##sequence-region MGYG000307531_30 1 48700
+##sequence-region MGYG000307531_31 1 46788
+##sequence-region MGYG000307531_32 1 46355
+##sequence-region MGYG000307531_33 1 43335
+##sequence-region MGYG000307531_34 1 41952
+##sequence-region MGYG000307531_35 1 33260
+##sequence-region MGYG000307531_36 1 32443
+##sequence-region MGYG000307531_37 1 32403
+##sequence-region MGYG000307531_38 1 31472
+##sequence-region MGYG000307531_39 1 31293
+##sequence-region MGYG000307531_40 1 27689
+##sequence-region MGYG000307531_41 1 26942
+##sequence-region MGYG000307531_42 1 26583
+##sequence-region MGYG000307531_43 1 25960
+##sequence-region MGYG000307531_44 1 25522
+##sequence-region MGYG000307531_45 1 24567
+##sequence-region MGYG000307531_46 1 23777
+##sequence-region MGYG000307531_47 1 23341
+##sequence-region MGYG000307531_48 1 23231
+##sequence-region MGYG000307531_49 1 20960
+##sequence-region MGYG000307531_50 1 20524
+##sequence-region MGYG000307531_51 1 20000
+##sequence-region MGYG000307531_52 1 19291
+##sequence-region MGYG000307531_53 1 19201
+##sequence-region MGYG000307531_54 1 18542
+##sequence-region MGYG000307531_55 1 18076
+##sequence-region MGYG000307531_56 1 17174
+##sequence-region MGYG000307531_57 1 15795
+##sequence-region MGYG000307531_58 1 15672
+##sequence-region MGYG000307531_59 1 14125
+##sequence-region MGYG000307531_60 1 13858
+##sequence-region MGYG000307531_61 1 13635
+##sequence-region MGYG000307531_62 1 13099
+##sequence-region MGYG000307531_63 1 12426
+##sequence-region MGYG000307531_64 1 12218
+##sequence-region MGYG000307531_65 1 10790
+##sequence-region MGYG000307531_66 1 10615
+##sequence-region MGYG000307531_67 1 10598
+##sequence-region MGYG000307531_68 1 10216
+##sequence-region MGYG000307531_69 1 10131
+##sequence-region MGYG000307531_70 1 10099
+##sequence-region MGYG000307531_71 1 9925
+##sequence-region MGYG000307531_72 1 9860
+##sequence-region MGYG000307531_73 1 9566
+##sequence-region MGYG000307531_74 1 9245
+##sequence-region MGYG000307531_75 1 8892
+##sequence-region MGYG000307531_76 1 8769
+##sequence-region MGYG000307531_77 1 8764
+##sequence-region MGYG000307531_78 1 8578
+##sequence-region MGYG000307531_79 1 8282
+##sequence-region MGYG000307531_80 1 8111
+##sequence-region MGYG000307531_81 1 8095
+##sequence-region MGYG000307531_82 1 7818
+##sequence-region MGYG000307531_83 1 7629
+##sequence-region MGYG000307531_84 1 7445
+##sequence-region MGYG000307531_85 1 7331
+##sequence-region MGYG000307531_86 1 7033
+##sequence-region MGYG000307531_87 1 6556
+##sequence-region MGYG000307531_88 1 6526
+##sequence-region MGYG000307531_89 1 6501
+##sequence-region MGYG000307531_90 1 6476
+##sequence-region MGYG000307531_91 1 6169
+##sequence-region MGYG000307531_92 1 5852
+##sequence-region MGYG000307531_93 1 5632
+##sequence-region MGYG000307531_94 1 5318
+##sequence-region MGYG000307531_95 1 4889
+##sequence-region MGYG000307531_96 1 4857
+##sequence-region MGYG000307531_97 1 4574
+##sequence-region MGYG000307531_98 1 4088
+##sequence-region MGYG000307531_99 1 3883
+##sequence-region MGYG000307531_100 1 3830
+##sequence-region MGYG000307531_101 1 3830
+##sequence-region MGYG000307531_102 1 3743
+##sequence-region MGYG000307531_103 1 3606
+##sequence-region MGYG000307531_104 1 3520
+##sequence-region MGYG000307531_105 1 3395
+##sequence-region MGYG000307531_106 1 3388
+##sequence-region MGYG000307531_107 1 3244
+##sequence-region MGYG000307531_108 1 3111
+##sequence-region MGYG000307531_109 1 3107
+##sequence-region MGYG000307531_110 1 2925
+##sequence-region MGYG000307531_111 1 2918
+##sequence-region MGYG000307531_112 1 2779
+##sequence-region MGYG000307531_113 1 2765
+##sequence-region MGYG000307531_114 1 2693
+##sequence-region MGYG000307531_115 1 2667
+##sequence-region MGYG000307531_116 1 2665
+##sequence-region MGYG000307531_117 1 2633
+##sequence-region MGYG000307531_118 1 2590
+##sequence-region MGYG000307531_119 1 2559
+##sequence-region MGYG000307531_120 1 2518
+MGYG000307531_2	VIRify	prophage	88715	169071	.	.	.	ID=MGYG000307531_2|prophage-88715:169071;gbkey=mobile_element;mobile_element_type=prophage;checkv_provirus=Yes;checkv_quality=Medium-quality;miuvig_quality=Genome-fragment;taxonomy=unclassified
+MGYG000307531_2	Prodigal:002006	CDS	102867	103118	.	+	0	ID=MGYG000307531_00332;viphog=ViPhOG6091;viphog_taxonomy=Peduovirinae
+MGYG000307531_2	Prodigal:002006	CDS	111982	112950	.	-	0	ID=MGYG000307531_00346;viphog=ViPhOG5769;viphog_taxonomy=Peduovirinae
+MGYG000307531_28	ISEScan	terminal_inverted_repeat_element	51365	51384	.	.	.	ID=TIR_1:iss_6
+MGYG000307531_28	PPR-meta	plasmid	1	52404	.	.	.	ID=plasmid_1;gbkey=mobile_element;mobile_element_type=plasmid
+MGYG000307531_28	ISEScan	terminal_inverted_repeat_element	52184	52203	.	.	.	ID=TIR_2:iss_6
+MGYG000307531_28	ISEScan	insertion_sequence	51365	52203	.	.	.	ID=iss_6;gbkey=mobile_element;mobile_element_type=ISNCY_with_TIR
+MGYG000307531_28	Prodigal:002006	CDS	51320	52258	.	+	0	ID=MGYG000307531_02347;mobileOG=mobileOG_000277106|replication/recombination/repair|NA
+MGYG000307531_40	ISEScan	terminal_inverted_repeat_element	3812	3838	.	.	.	ID=TIR_1:iss_8
+MGYG000307531_40	PPR-meta	plasmid	1	27689	.	.	.	ID=plasmid_2;gbkey=mobile_element;mobile_element_type=plasmid
+MGYG000307531_40	ISEScan	terminal_inverted_repeat_element	5562	5588	.	.	.	ID=TIR_2:iss_8
+MGYG000307531_40	ISEScan	insertion_sequence	3812	5588	.	.	.	ID=iss_8;gbkey=mobile_element;mobile_element_type=ISAS1_with_TIR
+MGYG000307531_42	ISEScan	terminal_inverted_repeat_element	10490	10506	.	.	.	ID=TIR_1:iss_9
+MGYG000307531_42	ISEScan	terminal_inverted_repeat_element	11305	11321	.	.	.	ID=TIR_2:iss_9
+MGYG000307531_42	ISEScan	insertion_sequence	10490	11321	.	.	.	ID=iss_9;gbkey=mobile_element;mobile_element_type=IS6_with_TIR
+MGYG000307531_48	ISEScan	terminal_inverted_repeat_element	14759	14787	.	.	.	ID=TIR_1:iss_10
+MGYG000307531_48	ISEScan	terminal_inverted_repeat_element	16017	16045	.	.	.	ID=TIR_2:iss_10
+MGYG000307531_48	ISEScan	insertion_sequence	14759	16045	.	.	.	ID=iss_10;gbkey=mobile_element;mobile_element_type=IS256_with_TIR
+MGYG000307531_49	ISEScan	terminal_inverted_repeat_element	2057	2075	.	.	.	ID=TIR_1:iss_12
+MGYG000307531_49	PPR-meta	plasmid	1	20960	.	.	.	ID=plasmid_3;gbkey=mobile_element;mobile_element_type=plasmid
+MGYG000307531_49	ISEScan	terminal_inverted_repeat_element	3790	3808	.	.	.	ID=TIR_2:iss_12
+MGYG000307531_49	ISEScan	insertion_sequence	2057	3808	.	.	.	ID=iss_12;gbkey=mobile_element;mobile_element_type=IS4_with_TIR
+MGYG000307531_88	PPR-meta	plasmid	1	6526	.	.	.	ID=plasmid_4;gbkey=mobile_element;mobile_element_type=plasmid
+MGYG000307531_89	PPR-meta	plasmid	1	6501	.	.	.	ID=plasmid_5;gbkey=mobile_element;mobile_element_type=plasmid
+MGYG000307531_93	PPR-meta	plasmid	1	5632	.	.	.	ID=plasmid_6;gbkey=mobile_element;mobile_element_type=plasmid
+MGYG000307531_95	PPR-meta	plasmid	1	4889	.	.	.	ID=plasmid_7;gbkey=mobile_element;mobile_element_type=plasmid
+MGYG000307531_97	PPR-meta	plasmid	1	4574	.	.	.	ID=plasmid_8;gbkey=mobile_element;mobile_element_type=plasmid
+MGYG000307531_100	PPR-meta	plasmid	1	3830	.	.	.	ID=plasmid_9;gbkey=mobile_element;mobile_element_type=plasmid
+MGYG000307531_101	PPR-meta	plasmid	1	3830	.	.	.	ID=plasmid_10;gbkey=mobile_element;mobile_element_type=plasmid
+MGYG000307531_112	PPR-meta	plasmid	1	2779	.	.	.	ID=plasmid_11;gbkey=mobile_element;mobile_element_type=plasmid
+MGYG000307531_120	PPR-meta	plasmid	1	2518	.	.	.	ID=plasmid_12;gbkey=mobile_element;mobile_element_type=plasmid

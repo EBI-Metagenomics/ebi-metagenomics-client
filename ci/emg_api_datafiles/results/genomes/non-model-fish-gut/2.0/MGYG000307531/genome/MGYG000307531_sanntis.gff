@@ -1,0 +1,5 @@
+##gff-version 3
+MGYG000307531_1	SanntiSv0.9.3.1	CLUSTER	103	31571	.	.	.	ID=MGYG000307531_1_sanntis_1;nearest_MiBIG=BGC0001651;nearest_MiBIG_class=Other;nearest_MiBIG_diceDistance=0.556;score=0.610;partial=10
+MGYG000307531_1	SanntiSv0.9.3.1	CLUSTER	77817	104301	.	.	.	ID=MGYG000307531_1_sanntis_2;nearest_MiBIG=BGC0000800;nearest_MiBIG_class=Saccharide;nearest_MiBIG_diceDistance=0.538;score=0.710;partial=00
+MGYG000307531_15	SanntiSv0.9.3.1	CLUSTER	70082	80458	.	.	.	ID=MGYG000307531_15_sanntis_1;nearest_MiBIG=BGC0000857;nearest_MiBIG_class=Other;nearest_MiBIG_diceDistance=0.268;score=0.920;partial=01
+MGYG000307531_20	SanntiSv0.9.3.1	CLUSTER	8627	28375	.	.	.	ID=MGYG000307531_20_sanntis_1;nearest_MiBIG=BGC0000837;nearest_MiBIG_class=Other;nearest_MiBIG_diceDistance=0.181;score=0.820;partial=00
