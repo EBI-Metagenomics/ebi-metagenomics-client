@@ -47,11 +47,7 @@ type ContigProps = {
   contig: MGnifyDatum;
 };
 
-function createROCrateTrack(
-  anno: MGnifyDatum,
-  options,
-  annotationType: string
-) {
+function createROCrateTrack(anno: MGnifyDatum, options) {
   fetch(anno.links.self as string, { method: 'GET' })
     .then((response) => {
       if (response.status === 200 || response.status === 0) {
@@ -66,7 +62,6 @@ function createROCrateTrack(
         .async('string');
 
       const metadata = JSON.parse(metadataJson);
-
       const crate = new ROCrate(metadata, {
         link: true,
         array: true,
@@ -81,15 +76,19 @@ function createROCrateTrack(
           filePointer = dataset['@id'];
         }
       });
-
+      let name = tree.name[0]['@value'];
+      const words = name.split(' ');
+      if (words.length > 2) {
+        name = `${words[0]} ${words[1]}…`;
+      }
       const gff = await crateZip.file(filePointer).async('base64');
       options.tracks.push({
-        name: annotationType,
+        name,
         type: 'annotation',
         format: 'gff3',
         displayMode: 'EXPANDED',
         url: `data:application/octet-stream;base64,${gff}`,
-        label: annotationType,
+        label: name,
         crate: {
           tree,
           zip: crateZip,
@@ -161,7 +160,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
           const annotationType = (anno.attributes.description as KeyValue)
             .label as string;
           if (annotationType === 'Analysis RO Crate') {
-            createROCrateTrack(anno, options, annotationType);
+            createROCrateTrack(anno, options);
           } else {
             options.tracks.push({
               name: annotationType,
