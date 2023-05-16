@@ -108,12 +108,13 @@ export const annotationTrackCustomisations = (trackColorBy) => {
 const trackColorOptionsForType = (track) => {
   const trackType = track.id;
   const { crate } = track.config;
+  if (crate) {
+    return crate.tree.variableMeasured.map((vm) => ({
+      label: vm.name[0]['@value'],
+      value: vm.value[0]['@value'],
+    }));
+  }
   switch (trackType) {
-    case 'Analysis RO Crate':
-      return crate.tree.variableMeasured.map((vm) => ({
-        label: vm.name[0]['@value'],
-        value: vm.value[0]['@value'],
-      }));
     case 'SanntiS annotation':
       return [{ label: 'MiBIG class', value: 'mibig' }];
     case 'Viral annotation':
