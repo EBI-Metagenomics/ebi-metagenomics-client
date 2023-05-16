@@ -76,11 +76,7 @@ function createROCrateTrack(anno: MGnifyDatum, options) {
           filePointer = dataset['@id'];
         }
       });
-      let name = tree.name[0]['@value'];
-      const words = name.split(' ');
-      if (words.length > 2) {
-        name = `${words[0]} ${words[1]}…`;
-      }
+      const name = tree.name[0]['@value'].split(' ')[0];
       const gff = await crateZip.file(filePointer).async('base64');
       options.tracks.push({
         name,
