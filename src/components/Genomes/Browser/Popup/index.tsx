@@ -337,7 +337,31 @@ const formatData = (
     ],
   };
 
+  const crisprData = {
+    title: 'CRISPR details',
+    data: [
+      {
+        name: 'sequence',
+        Value: attributes.sequence || attributes.dr,
+      },
+    ],
+  };
+  if (attributes.type === 'CRISPR') {
+    crisprData.data.push(
+      {
+        name: 'CRISPRCasFinder evidence level',
+        Value: attributes.evidence_level,
+      },
+      { name: 'Potential direction', Value: attributes.potential_direction },
+      { name: 'Number of spacers', Value: attributes.number_of_spacers },
+      { name: 'Direct repeat length', Value: attributes.dr_length }
+    );
+  }
+
   const properties = [functionalData, otherData];
+  if (attributes.source.toLowerCase().includes('crispr')) {
+    properties.push(crisprData);
+  }
   if (withMetaProteomics && attributes.pride_id) {
     properties.push(metaproteomicData);
   }
@@ -349,7 +373,7 @@ const formatData = (
   }
 
   return {
-    name: attributes.id,
+    name: attributes.id || attributes.name,
     gene: attributes.gene,
     product: attributes.product,
     properties,
