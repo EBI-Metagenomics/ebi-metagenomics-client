@@ -11,6 +11,11 @@
 
 #### How to setup your project?
 
+**MGnify-web**
+It is usually preferable to use the [mgnify-web parent repo](https://github.com/EBI-Metagenomics/mgnify-web) for development.
+The parent repo lets you work on the API and this client side-by-side.
+
+To work on the web client alone, you can connect to one of the remote MGnify APIs:
 Export the following env variables in env-config.sh file. 
 Adjust exports if need depending on whether you are in your dev or
 prod environment.
