@@ -14,6 +14,7 @@ import Loading from 'components/UI/Loading';
 import {
   AnnotationTrackColorPicker,
   annotationTrackCustomisations,
+  FORMAT,
 } from 'components/IGV/TrackColourPicker';
 import GenomeBrowserPopup from './Popup';
 
@@ -47,9 +48,11 @@ const GenomeBrowser: React.FC = () => {
             name: 'Functional annotation',
             type: 'annotation',
             format: 'gff3',
+            height: 120,
             url: `${config.api}genomes/${accession}/downloads/${accession}.gff`,
             displayMode: 'EXPANDED',
             label: 'Functional annotation',
+            searchable: true,
           },
         ],
         showLegend: true,
@@ -62,9 +65,11 @@ const GenomeBrowser: React.FC = () => {
             name: 'Viral annotation',
             type: 'annotation',
             format: 'gff3',
+            height: 120,
             url: virifyGffUrl,
             displayMode: 'EXPANDED',
             label: 'Viral annotation',
+            searchable: true,
           });
         }
       });
@@ -93,7 +98,7 @@ const GenomeBrowser: React.FC = () => {
       if (colorBy) {
         const newTrackConfig = {
           ...trackView.track.config,
-          ...annotationTrackCustomisations(colorBy.value),
+          ...annotationTrackCustomisations(colorBy.value, FORMAT.GENOME),
         };
         if (newTrackConfig.nameField !== trackView.track.config.nameField) {
           // Prevent unnecessary track reloads

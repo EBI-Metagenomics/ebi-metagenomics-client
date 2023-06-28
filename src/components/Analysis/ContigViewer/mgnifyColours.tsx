@@ -66,3 +66,34 @@ export function getMiBIGColor(mibigClass) {
 
 export const COLOUR_PRESENCE = '#d32f2f';
 export const COLOUR_ABSENCE = '#a9abaa';
+
+const CRISPR_MAP = {
+  CRISPR: COLOUR_PRESENCE,
+  CRISPRdr: '#ffb81c',
+  CRISPRspacer: '#734595',
+  LeftFLANK: '#e58f9e',
+  RightFLANK: '#e58f9e',
+};
+
+export function getCRISPRColour(featureType) {
+  return CRISPR_MAP[featureType] || COLOUR_ABSENCE;
+}
+
+const FEATURE_TYPE_MAP = {
+  CRISPR: CRISPR_MAP.CRISPRdr,
+  CDS: '#18974c',
+  ncRNA: '#6cc24a',
+  CLUSTER: '#3b6fb6',
+  prophage: '#d41645',
+  viral_sequence: '#d41645',
+  plasmid: '#734595',
+  integron: '#734595',
+  attC_site: '#734595',
+  insertion_sequence: '#734595',
+  terminal_inverted_repeat_element: '#734595',
+  conjugative_transposon: '#734595',
+};
+
+export function getFeatureTypeColour(featureType) {
+  return FEATURE_TYPE_MAP[featureType] || COLOUR_ABSENCE;
+}

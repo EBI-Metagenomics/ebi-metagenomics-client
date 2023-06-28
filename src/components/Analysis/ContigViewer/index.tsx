@@ -38,6 +38,7 @@ import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import {
   AnnotationTrackColorPicker,
   annotationTrackCustomisations,
+  FORMAT,
 } from 'components/IGV/TrackColourPicker';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import JSZip from 'jszip';
@@ -228,7 +229,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
         if (colorBy) {
           const newTrackConfig = {
             ...trackView.track.config,
-            ...annotationTrackCustomisations(colorBy.value),
+            ...annotationTrackCustomisations(colorBy.value, FORMAT.ASSEMBLY_V5),
           };
           if (newTrackConfig.nameField !== trackView.track.config.nameField) {
             // Prevent unnecessary track reloads

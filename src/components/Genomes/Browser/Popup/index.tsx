@@ -303,16 +303,77 @@ const formatData = (
     ],
   };
 
+  const amrData = {
+    title: 'Anti-microbial resistance',
+    data: [
+      {
+        name: 'AMRFinderPlus gene symbol',
+        Value: attributes.amrfinderplus_gene_symbol,
+      },
+      {
+        name: 'AMRFinderPlus sequence name',
+        Value: attributes.amrfinderplus_sequence_name,
+      },
+      {
+        name: 'AMRFinderPlus scope',
+        Value: attributes.amrfinderplus_scope,
+      },
+      {
+        name: 'Element type',
+        Value: attributes.element_type,
+      },
+      {
+        name: 'Element subtype',
+        Value: attributes.element_subtype,
+      },
+      {
+        name: 'Drug class',
+        Value: attributes.drug_class,
+      },
+      {
+        name: 'Drug subclass',
+        Value: attributes.drug_subclass,
+      },
+    ],
+  };
+
+  const crisprData = {
+    title: 'CRISPR details',
+    data: [
+      {
+        name: 'sequence',
+        Value: attributes.sequence || attributes.dr,
+      },
+    ],
+  };
+  if (attributes.type === 'CRISPR') {
+    crisprData.data.push(
+      {
+        name: 'CRISPRCasFinder evidence level',
+        Value: attributes.evidence_level,
+      },
+      { name: 'Potential direction', Value: attributes.potential_direction },
+      { name: 'Number of spacers', Value: attributes.number_of_spacers },
+      { name: 'Direct repeat length', Value: attributes.dr_length }
+    );
+  }
+
   const properties = [functionalData, otherData];
+  if (attributes.source.toLowerCase().includes('crispr')) {
+    properties.push(crisprData);
+  }
   if (withMetaProteomics && attributes.pride_id) {
     properties.push(metaproteomicData);
   }
   if (attributes.nearest_mibig) {
     properties.push(bgcData);
   }
+  if (attributes.amrfinderplus_gene_symbol) {
+    properties.push(amrData);
+  }
 
   return {
-    name: attributes.id,
+    name: attributes.id || attributes.name,
     gene: attributes.gene,
     product: attributes.product,
     properties,

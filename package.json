@@ -1,6 +1,6 @@
 {
   "name": "mgportalv2",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Web Client for the Mgnify service at EBI",
   "homepage": "https://github.com/EBI-Metagenomics/ebi-metagenomics-client#readme",
   "main": "src/index.tsx",
@@ -39,7 +39,7 @@
     "dexie-react-hooks": "1.1.1",
     "highcharts": "9.3.2",
     "highcharts-react-official": "3.1.0",
-    "igv": "^2.15.3",
+    "igv": "^2.15.8",
     "jszip": "^3.10.1",
     "lodash-es": "4.17.21",
     "mgnify-sourmash-component": "0.2.4",

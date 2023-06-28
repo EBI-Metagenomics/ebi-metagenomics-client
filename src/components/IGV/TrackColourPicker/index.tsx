@@ -5,11 +5,15 @@ import {
   COLOUR_PRESENCE,
   getAntiSMASHColour,
   getCOGColour,
+  getCRISPRColour,
+  getFeatureTypeColour,
   getMiBIGColor,
 } from 'components/Analysis/ContigViewer/mgnifyColours';
 import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
 import ROCratePreview from 'components/IGV/ROCrateTrack';
+import { useEffectOnce } from 'react-use';
+import { find } from 'lodash-es';
 
 function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
   if (!feature || !feature.getAttributeValue) return null;
@@ -23,11 +27,16 @@ function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
   return null;
 }
 
-export const annotationTrackCustomisations = (trackColorBy) => {
+export const FORMAT = {
+  GENOME: 'GENOME',
+  ASSEMBLY_V5: 'ASSEMBLY_V5',
+};
+
+export const annotationTrackCustomisations = (trackColorBy, format) => {
   switch (trackColorBy) {
     case 'cog':
       return {
-        nameField: 'COG',
+        nameField: format === FORMAT.GENOME ? 'COG' : 'cog',
         color: (feature) => {
           const cog = maybeGetAttributeValue(feature, ['cog', 'COG']);
           return cog ? getCOGColour(cog) : '#ddd';
@@ -35,7 +44,7 @@ export const annotationTrackCustomisations = (trackColorBy) => {
       };
     case 'kegg':
       return {
-        nameField: 'kegg',
+        nameField: format === FORMAT.GENOME ? 'KEGG' : 'kegg',
         color: (feature) =>
           !maybeGetAttributeValue(feature, ['kegg', 'KEGG'])
             ? COLOUR_ABSENCE
@@ -43,7 +52,7 @@ export const annotationTrackCustomisations = (trackColorBy) => {
       };
     case 'pfam':
       return {
-        nameField: 'pfam',
+        nameField: format === FORMAT.GENOME ? 'Pfam' : 'pfam',
         color: (feature) =>
           !maybeGetAttributeValue(feature, ['pfam', 'Pfam'])
             ? COLOUR_ABSENCE
@@ -51,7 +60,7 @@ export const annotationTrackCustomisations = (trackColorBy) => {
       };
     case 'interpro':
       return {
-        nameField: 'interpro',
+        nameField: format === FORMAT.GENOME ? 'InterPro' : 'interpro',
         color: (feature) =>
           !maybeGetAttributeValue(feature, ['interpro', 'InterPro'])
             ? COLOUR_ABSENCE
@@ -59,7 +68,7 @@ export const annotationTrackCustomisations = (trackColorBy) => {
       };
     case 'go':
       return {
-        nameField: 'go',
+        nameField: format === FORMAT.GENOME ? 'GO' : 'go',
         color: (feature) =>
           !maybeGetAttributeValue(feature, ['go', 'GO'])
             ? COLOUR_ABSENCE
@@ -94,6 +103,26 @@ export const annotationTrackCustomisations = (trackColorBy) => {
           return mibigClass ? getMiBIGColor(mibigClass) : '#ddd';
         },
       };
+    case 'amr':
+      return {
+        nameField: 'AMRFinderPlus_gene_symbol',
+        color: (feature) =>
+          !maybeGetAttributeValue(feature, [
+            'amrfinderplus_gene_symbol',
+            'AMRFinderPlus_gene_symbol',
+          ])
+            ? COLOUR_ABSENCE
+            : COLOUR_PRESENCE,
+      };
+    case 'crispr':
+      return {
+        color: (feature) => getCRISPRColour(feature.type),
+      };
+    case 'type':
+      return {
+        nameField: 'ID',
+        color: (feature) => getFeatureTypeColour(feature.type),
+      };
     default:
       return {
         nameField: trackColorBy,
@@ -109,30 +138,59 @@ const trackColorOptionsForType = (track) => {
   const trackType = track.id;
   const { crate } = track.config;
   if (crate) {
-    return crate.tree.variableMeasured.map((vm) => ({
+    const options = crate.tree.variableMeasured.map((vm) => ({
       label: vm.name[0]['@value'],
       value: vm.value[0]['@value'],
     }));
+    if (options.length) {
+      return { options, default: options[0].value };
+    }
+    return { options };
   }
   switch (trackType) {
     case 'SanntiS annotation':
-      return [{ label: 'MiBIG class', value: 'mibig' }];
+      return {
+        options: [{ label: 'MiBIG class', value: 'mibig' }],
+        default: 'mibig',
+      };
     case 'Viral annotation':
-      return [{ label: 'ViPhOG existence', value: 'viphog' }];
+      return {
+        options: [{ label: 'ViPhOG existence', value: 'viphog' }],
+        default: 'viphog',
+      };
     case 'antiSMASH':
-      return [{ label: 'AntiSMASH cluster type', value: 'antismash' }];
+      return {
+        options: [{ label: 'AntiSMASH cluster type', value: 'antismash' }],
+        default: 'antismash',
+      };
     case 'Functional annotation':
     default:
-      return [
-        { label: 'AntiSMASH cluster type', value: 'antismash' },
-        { label: 'COG category', value: 'cog' },
-        { label: 'GO (gene ontology) existence', value: 'go' },
-        { label: 'InterPro existence', value: 'interpro' },
-        { label: 'KEGG ortholog', value: 'kegg' },
-        { label: 'MiBIG class', value: 'mibig' },
-        { label: 'Pfam family existence', value: 'pfam' },
-        { label: 'ViPhOG existence', value: 'viphog' },
-      ];
+      return {
+        options: [
+          { label: 'Feature type', value: 'type' },
+          {
+            label: 'Protein function annotations',
+            options: [
+              { label: 'COG category', value: 'cog' },
+              { label: 'GO (gene ontology) existence', value: 'go' },
+              { label: 'InterPro existence', value: 'interpro' },
+              { label: 'KEGG ortholog', value: 'kegg' },
+              { label: 'Pfam family existence', value: 'pfam' },
+              { label: 'AMR existence', value: 'amr' },
+            ],
+          },
+          {
+            label: 'Other features',
+            options: [
+              { label: 'AntiSMASH cluster type', value: 'antismash' },
+              { label: 'MiBIG class', value: 'mibig' },
+              { label: 'ViPhOG existence', value: 'viphog' },
+              { label: 'CRISPR component', value: 'crispr' },
+            ],
+          },
+        ],
+        default: 'type',
+      };
   }
 };
 
@@ -145,6 +203,18 @@ type AnnotationTrackColorPickerProps = {
 export const AnnotationTrackColorPicker: React.FC<
   AnnotationTrackColorPickerProps
 > = ({ trackView, trackColorBys, onChange }) => {
+  const { options, default: defaultValue } = trackColorOptionsForType(
+    trackView.track
+  );
+  const existingSelection = trackColorBys[trackView.track.id];
+  useEffectOnce(() => {
+    if (!existingSelection) {
+      //   First mount of selector widget and no config already set.
+      //   Set to predefined default.
+      const defaultOption = find(options, (o) => o.value === defaultValue);
+      onChange(defaultOption, { action: 'select-option' });
+    }
+  });
   return (
     <div className="vf-stack vf-stack--200">
       <label
@@ -164,7 +234,7 @@ export const AnnotationTrackColorPicker: React.FC<
         onChange={onChange}
         name={`track-colour-${trackView.track.id}`}
         inputId={`track-colour-${trackView.track.id}`}
-        options={trackColorOptionsForType(trackView.track)}
+        options={options}
       />
       {trackView.track.id === 'SanntiS annotation' && (
         <span className="vf-text-body vf-text-body--4">
