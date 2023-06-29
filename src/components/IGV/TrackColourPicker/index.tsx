@@ -116,6 +116,7 @@ export const annotationTrackCustomisations = (trackColorBy, format) => {
       };
     case 'crispr':
       return {
+        nameField: '_crispr_', // will default to ID, but must change to trigger re-render
         color: (feature) => getCRISPRColour(feature.type),
       };
     case 'type':
