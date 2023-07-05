@@ -5,14 +5,15 @@ import { ROCrate } from 'ro-crate/index';
 
 type ROCratePreviewProps = {
   crateUrl: string;
+  // trackView: any;
 };
 
 const ROCratePreview: React.FC<ROCratePreviewProps> = ({ crateUrl }) => {
   const [cratePreview, setCratePreview] = useState('');
   const [crateModalOpen, setCrateModalOpen] = useState(false);
-  const [track, setTrack] = useState<any>(null);
+  const [trackView, setTrackView] = useState<any>(null);
 
-  function createROCrateTrack() {
+  useEffect(() => {
     fetch(crateUrl as string, { method: 'GET' })
       .then((response) => {
         if (response.status === 200 || response.status === 0) {
@@ -22,7 +23,6 @@ const ROCratePreview: React.FC<ROCratePreviewProps> = ({ crateUrl }) => {
       })
       .then(JSZip.loadAsync)
       .then(async (crateZip) => {
-        // alert(123);
         const metadataJson = await crateZip
           .file('ro-crate-metadata.json')
           .async('string');
@@ -44,7 +44,7 @@ const ROCratePreview: React.FC<ROCratePreviewProps> = ({ crateUrl }) => {
         });
         const name = tree.name[0]['@value'].split(' ')[0];
         const gff = await crateZip.file(filePointer).async('base64');
-        const trackProperties = {
+        const trackViewOptions = {
           name,
           type: 'annotation',
           format: 'gff3',
@@ -56,31 +56,19 @@ const ROCratePreview: React.FC<ROCratePreviewProps> = ({ crateUrl }) => {
             zip: crateZip,
           },
         };
-        setTrack(trackProperties);
+        setTrackView(trackViewOptions);
+        if (trackViewOptions.crate) {
+          trackViewOptions.crate.zip
+            .file('ro-crate-preview.html')
+            .async('string')
+            .then(setCratePreview);
+        }
       });
-  }
-
-  function extractCrateHtmlForPreview() {
-    if (!track?.crate) {
-      return;
-    }
-    track.crate.zip
-      .file('ro-crate-preview.html')
-      .async('string')
-      .then(setCratePreview);
-  }
-
-  useEffect(() => {
-    createROCrateTrack();
   }, [crateUrl]);
 
-  useEffect(() => {
-    extractCrateHtmlForPreview();
-  }, [track]);
-
-  if (!cratePreview.length) {
-    return null;
-  }
+  // if (!cratePreview.length) {
+  //   return null;
+  // }
 
   return (
     <>

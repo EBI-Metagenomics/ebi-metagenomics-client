@@ -12,6 +12,7 @@ import {
 import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
 import ROCratePreview from 'components/IGV/ROCrateTrack';
+import TempROCratePreview from 'components/IGV/TempROCratePreview';
 import { useEffectOnce } from 'react-use';
 import { find } from 'lodash-es';
 
@@ -246,7 +247,9 @@ export const AnnotationTrackColorPicker: React.FC<
           <ExtLink href="https://github.com/Finn-Lab/SanntiS">SanntiS</ExtLink>
         </span>
       )}
-      <ROCratePreview trackView={trackView} />
+      {trackView.track._name === 'Analysis RO Crate' && (
+        <ROCratePreview crateUrl={trackView.track.url} />
+      )}
     </div>
   );
 };

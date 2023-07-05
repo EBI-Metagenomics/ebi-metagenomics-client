@@ -41,58 +41,10 @@ import {
   FORMAT,
 } from 'components/IGV/TrackColourPicker';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import JSZip from 'jszip';
-import { ROCrate } from 'ro-crate';
 
 type ContigProps = {
   contig: MGnifyDatum;
 };
-
-function createROCrateTrack(anno: MGnifyDatum, options) {
-  fetch(anno.links.self as string, { method: 'GET' })
-    .then((response) => {
-      if (response.status === 200 || response.status === 0) {
-        return Promise.resolve(response.blob());
-      }
-      return Promise.reject(new Error(response.statusText));
-    })
-    .then(JSZip.loadAsync)
-    .then(async (crateZip) => {
-      const metadataJson = await crateZip
-        .file('ro-crate-metadata.json')
-        .async('string');
-
-      const metadata = JSON.parse(metadataJson);
-      const crate = new ROCrate(metadata, {
-        link: true,
-        array: true,
-      });
-      const tree = crate.getNormalizedTree();
-      let filePointer;
-      tree.hasPart.forEach((dataset) => {
-        if (
-          dataset['@type'].includes('File') &&
-          dataset.encodingFormat[0]['@value'].includes('gff')
-        ) {
-          filePointer = dataset['@id'];
-        }
-      });
-      const name = tree.name[0]['@value'].split(' ')[0];
-      const gff = await crateZip.file(filePointer).async('base64');
-      options.tracks.push({
-        name,
-        type: 'annotation',
-        format: 'gff3',
-        displayMode: 'EXPANDED',
-        url: `data:application/octet-stream;base64,${gff}`,
-        label: name,
-        crate: {
-          tree,
-          zip: crateZip,
-        },
-      });
-    });
-}
 
 const Contig: React.FC<ContigProps> = ({ contig }) => {
   const accession = useURLAccession();
@@ -156,19 +108,15 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
         (extraAnnotations.data as MGnifyDatum[]).forEach((anno) => {
           const annotationType = (anno.attributes.description as KeyValue)
             .label as string;
-          if (annotationType === 'Analysis RO Crate') {
-            createROCrateTrack(anno, options);
-          } else {
-            options.tracks.push({
-              name: annotationType,
-              type: 'annotation',
-              format: 'gff3',
-              displayMode: 'EXPANDED',
-              url: anno.links.self as string,
-              label: annotationType,
-              crate: null,
-            });
-          }
+          options.tracks.push({
+            name: annotationType,
+            type: 'annotation',
+            format: 'gff3',
+            displayMode: 'EXPANDED',
+            url: anno.links.self as string,
+            label: annotationType,
+            crate: null,
+          });
         });
       }
 
