@@ -1,0 +1,108 @@
+import { useEffect, useState } from 'react';
+import JSZip from 'jszip';
+import { ROCrate } from 'ro-crate/index';
+
+function useROCrate(crateUrl) {
+  const [trackProperties, setTrackProperties] = useState(null);
+  const [trackPropertiesURL, setTrackPropertiesURL] = useState(null);
+  const [trackCrate, setTrackCrate] = useState(null);
+  const [previewHtml, setPreviewHtml] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(crateUrl);
+      if (response.status === 200 || response.status === 0) {
+        const blob = await response.blob();
+        const crateZip = await JSZip.loadAsync(blob);
+        const metadataJson = await crateZip
+          .file('ro-crate-metadata.json')
+          .async('string');
+
+        const metadata = JSON.parse(metadataJson);
+        const crate = new ROCrate(metadata, {
+          link: true,
+          array: true,
+        });
+        const tree = crate.getNormalizedTree();
+        let filePointer;
+        tree.hasPart.forEach((dataset) => {
+          if (
+            dataset['@type'].includes('File') &&
+            dataset.encodingFormat[0]['@value'].includes('gff')
+          ) {
+            filePointer = dataset['@id'];
+          }
+        });
+        const name = tree.name[0]['@value'].split(' ')[0];
+        const gff = await crateZip.file(filePointer).async('base64');
+        const trackAttributes = {
+          name,
+          type: 'annotation',
+          format: 'gff3',
+          displayMode: 'EXPANDED',
+          url: `data:application/octet-stream;base64,${gff}`,
+          label: name,
+          crate: {
+            tree,
+            zip: crateZip,
+          },
+        };
+        setTrackProperties(trackAttributes);
+        setTrackPropertiesURL(trackAttributes.url);
+        setTrackCrate(crate);
+
+        const previewHtmlContent = await crateZip
+          .file('ro-crate-preview.html')
+          .async('string');
+        console.log(
+          'confirmation that previewHtmlContent is not empty',
+          previewHtmlContent
+        );
+        console.log('before being set', previewHtml);
+        await setPreviewHtml(previewHtmlContent);
+        console.log('after being set', previewHtml);
+      } else {
+        throw new Error(response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching RO crate:', error);
+    }
+  };
+
+  const getTrackProperties = async () => {
+    if (!trackProperties) {
+      await fetchData();
+    }
+    return trackProperties;
+  };
+
+  const getTrackPropertiesURL = async () => {
+    if (!trackPropertiesURL) {
+      await fetchData();
+    }
+    return trackPropertiesURL;
+  };
+
+  const getTrackCrate = async () => {
+    if (!trackCrate) {
+      await fetchData();
+    }
+    return trackCrate;
+  };
+
+  const getPreviewHtml = async () => {
+    if (!previewHtml) {
+      await fetchData();
+    }
+    return previewHtml;
+  };
+
+  return {
+    getTrackProperties,
+    getTrackPropertiesURL,
+    getTrackCrate,
+    getPreviewHtml,
+  };
+}
+
+export default useROCrate;

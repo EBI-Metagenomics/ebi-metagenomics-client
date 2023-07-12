@@ -2,97 +2,65 @@ import React, { useEffect, useState } from 'react';
 import EMGModal from 'components/UI/EMGModal';
 import JSZip from 'jszip';
 import { ROCrate } from 'ro-crate/index';
+import useROCrate from 'hooks/useROCrate';
 
 type ROCratePreviewProps = {
   crateUrl: string;
+  useButtonVariant?: boolean;
 };
 
-const ROCratePreview: React.FC<ROCratePreviewProps> = ({ crateUrl }) => {
+const ROCratePreview: React.FC<ROCratePreviewProps> = ({
+  crateUrl,
+  useButtonVariant,
+}) => {
   const [cratePreview, setCratePreview] = useState('');
   const [crateModalOpen, setCrateModalOpen] = useState(false);
   const [track, setTrack] = useState<any>(null);
+  const [temp, setTemp] = useState('fff');
+  const { getPreviewHtml } = useROCrate(crateUrl);
 
-  function createROCrateTrack() {
-    fetch(crateUrl as string, { method: 'GET' })
-      .then((response) => {
-        if (response.status === 200 || response.status === 0) {
-          return Promise.resolve(response.blob());
-        }
-        return Promise.reject(new Error(response.statusText));
-      })
-      .then(JSZip.loadAsync)
-      .then(async (crateZip) => {
-        // alert(123);
-        const metadataJson = await crateZip
-          .file('ro-crate-metadata.json')
-          .async('string');
-
-        const metadata = JSON.parse(metadataJson);
-        const crate = new ROCrate(metadata, {
-          link: true,
-          array: true,
-        });
-        const tree = crate.getNormalizedTree();
-        let filePointer;
-        tree.hasPart.forEach((dataset) => {
-          if (
-            dataset['@type'].includes('File') &&
-            dataset.encodingFormat[0]['@value'].includes('gff')
-          ) {
-            filePointer = dataset['@id'];
-          }
-        });
-        const name = tree.name[0]['@value'].split(' ')[0];
-        const gff = await crateZip.file(filePointer).async('base64');
-        const trackProperties = {
-          name,
-          type: 'annotation',
-          format: 'gff3',
-          displayMode: 'EXPANDED',
-          url: `data:application/octet-stream;base64,${gff}`,
-          label: name,
-          crate: {
-            tree,
-            zip: crateZip,
-          },
-        };
-        setTrack(trackProperties);
-      });
+  function populateCratePreview() {
+    getPreviewHtml().then((previewHtml) => {
+      setCratePreview(previewHtml);
+      setCrateModalOpen(true);
+    });
   }
 
-  function extractCrateHtmlForPreview() {
-    if (!track?.crate) {
-      return;
-    }
-    track.crate.zip
-      .file('ro-crate-preview.html')
-      .async('string')
-      .then(setCratePreview);
-  }
-
-  useEffect(() => {
-    createROCrateTrack();
-  }, [crateUrl]);
-
-  useEffect(() => {
-    extractCrateHtmlForPreview();
-  }, [track]);
-
-  if (!cratePreview.length) {
-    return null;
-  }
+  // async function populateCratePreview() {
+  //   try {
+  //     const previewHtml = await getPreviewHtml();
+  //     await setCratePreview(previewHtml);
+  //     setCrateModalOpen(true);
+  //   } catch (error) {
+  //     // Handle any errors that occurred during the asynchronous operations
+  //     console.error(error);
+  //   }
+  // }
 
   return (
     <>
       <span className="vf-text-body vf-text-body--4">
+        {/*<button*/}
+        {/*  className="vf-button vf-button--link mg-button-as-link"*/}
+        {/*  // onClick={() => setCrateModalOpen(true)}*/}
+        {/*  onClick={() => populateCratePreview()}*/}
+        {/*  type="button"*/}
+        {/*>*/}
+        {/*  Browse the RO-Crate*/}
+        {/*</button>{' '}*/}
         <button
-          className="vf-button vf-button--link mg-button-as-link"
-          onClick={() => setCrateModalOpen(true)}
+          className={`vf-button ${
+            useButtonVariant
+              ? 'vf-button--secondary vf-button--sm'
+              : 'vf-button--link mg-button-as-link'
+          }`}
+          // onClick={() => setCrateModalOpen(true)}
+          onClick={() => populateCratePreview()}
           type="button"
         >
           Browse the RO-Crate
-        </button>{' '}
-        providing this track
+        </button>
+        {/*providing this track*/}
       </span>
       <EMGModal
         isOpen={crateModalOpen}

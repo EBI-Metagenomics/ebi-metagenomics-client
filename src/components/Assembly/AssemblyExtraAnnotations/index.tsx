@@ -8,6 +8,7 @@ import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import InfoBanner from 'src/components/UI/InfoBanner';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import ROCratePreview from 'components/IGV/ROCrateTrack';
 
 const initialPageSize = 10;
 
@@ -54,14 +55,20 @@ const AssemblyExtraAnnotations: React.FC = () => {
         Header: 'Action',
         accessor: 'links.self',
         Cell: ({ cell }) => (
-          <a
-            href={cell.value}
-            className="vf-button vf-button--link"
-            style={{ whiteSpace: 'nowrap' }}
-            download
-          >
-            <span className="icon icon-common icon-download" /> Download
-          </a>
+          <>
+            {cell.row.original.attributes.description.label ===
+              'Analysis RO Crate' && (
+              <ROCratePreview crateUrl={cell.value} useButtonVariant />
+            )}
+            <a
+              href={cell.value}
+              className="vf-button vf-button--sm vf-buteTtton--link"
+              style={{ whiteSpace: 'nowrap' }}
+              download
+            >
+              <span className="icon icon-common icon-download" /> Download
+            </a>
+          </>
         ),
       },
     ],
