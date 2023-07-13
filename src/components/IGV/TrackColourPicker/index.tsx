@@ -12,7 +12,6 @@ import {
 import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
 import ROCratePreview from 'components/IGV/ROCrateTrack';
-import TempROCratePreview from 'components/IGV/TempROCratePreview';
 import { useEffectOnce } from 'react-use';
 import { find } from 'lodash-es';
 
