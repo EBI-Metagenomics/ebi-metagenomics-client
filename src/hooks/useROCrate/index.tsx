@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import JSZip from 'jszip';
 import { ROCrate } from 'ro-crate/index';
 
 function useROCrate(crateUrl) {
-  const [trackProperties, setTrackProperties] = useState(null);
-  const [trackPropertiesURL, setTrackPropertiesURL] = useState(null);
-  const [trackCrate, setTrackCrate] = useState(null);
-  const [previewHtml, setPreviewHtml] = useState(null);
+  const trackProperties = useRef(null);
+  const trackPropertiesURL = useRef(null);
+  const trackCrate = useRef(null);
+  const previewHtml = useRef(null);
 
   const fetchData = async () => {
     try {
@@ -47,20 +47,14 @@ function useROCrate(crateUrl) {
             zip: crateZip,
           },
         };
-        setTrackProperties(trackAttributes);
-        setTrackPropertiesURL(trackAttributes.url);
-        setTrackCrate(crate);
+        trackProperties.current = trackAttributes;
+        trackPropertiesURL.current = trackAttributes.url;
+        trackCrate.current = crate;
 
         const previewHtmlContent = await crateZip
           .file('ro-crate-preview.html')
           .async('string');
-        console.log(
-          'confirmation that previewHtmlContent is not empty',
-          previewHtmlContent
-        );
-        console.log('before being set', previewHtml);
-        await setPreviewHtml(previewHtmlContent);
-        console.log('after being set', previewHtml);
+        previewHtml.current = previewHtmlContent;
       } else {
         throw new Error(response.statusText);
       }
@@ -70,31 +64,31 @@ function useROCrate(crateUrl) {
   };
 
   const getTrackProperties = async () => {
-    if (!trackProperties) {
+    if (!trackProperties.current) {
       await fetchData();
     }
-    return trackProperties;
+    return trackProperties.current;
   };
 
   const getTrackPropertiesURL = async () => {
-    if (!trackPropertiesURL) {
+    if (!trackPropertiesURL.current) {
       await fetchData();
     }
-    return trackPropertiesURL;
+    return trackPropertiesURL.current;
   };
 
   const getTrackCrate = async () => {
-    if (!trackCrate) {
+    if (!trackCrate.current) {
       await fetchData();
     }
-    return trackCrate;
+    return trackCrate.current;
   };
 
   const getPreviewHtml = async () => {
-    if (!previewHtml) {
+    if (!previewHtml.current) {
       await fetchData();
     }
-    return previewHtml;
+    return previewHtml.current;
   };
 
   return {

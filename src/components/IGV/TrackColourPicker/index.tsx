@@ -247,6 +247,7 @@ export const AnnotationTrackColorPicker: React.FC<
           <ExtLink href="https://github.com/Finn-Lab/SanntiS">SanntiS</ExtLink>
         </span>
       )}
+      {/*<ROCratePreview crateUrl={trackView.track.url} />*/}
       {trackView.track._name === 'Analysis RO Crate' && (
         <ROCratePreview crateUrl={trackView.track.url} />
       )}

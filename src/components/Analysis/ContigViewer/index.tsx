@@ -4,6 +4,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
@@ -69,16 +70,21 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   const [trackColorBys, setTrackColorBys] = useState({});
   const [updatingTracks, setUpdatingTracks] = useState(true);
 
-  const [currentCrateUrl, setCurrentCreateUrl] = useState('');
+  const currentCrateUrl = useRef(null);
 
-  const { getTrackProperties } = useROCrate(currentCrateUrl);
+  const { getTrackProperties } = useROCrate(currentCrateUrl.current);
 
   async function buildTrackBasedOnAnnotationType(annotationType, crateUrl) {
-    await setCurrentCreateUrl(crateUrl);
-    console.log('currentCrateUrl', currentCrateUrl);
+    currentCrateUrl.current = crateUrl;
     if (annotationType === 'Analysis RO Crate') {
-      const trackProperties = await getTrackProperties();
-      return trackProperties || {};
+      console.log('analysis crate url', crateUrl);
+      // console.log('initial', crateUrl);
+      // console.log('before', currentCrateUrl.current);
+      // currentCrateUrl.current = crateUrl;
+      // console.log('after', currentCrateUrl.current);
+      // const trackProperties = await getTrackProperties();
+      // return trackProperties || {};
+      // return {};
     }
     return {
       name: annotationType,
@@ -129,13 +135,14 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
       }
       if (extraAnnotations) {
         (extraAnnotations.data as MGnifyDatum[]).forEach((anno) => {
+          // console.log('anno link', anno.links.self);
           const annotationType = (anno.attributes.description as KeyValue)
             .label as string;
           buildTrackBasedOnAnnotationType(
             annotationType,
             anno.links.self as string
           ).then((trackProperties) => {
-            console.log('track props', trackProperties);
+            // console.log('trackProperties received', trackProperties);
             options.tracks.push(trackProperties);
           });
           // buildTrackBasedOnAnnotationType('', '')
