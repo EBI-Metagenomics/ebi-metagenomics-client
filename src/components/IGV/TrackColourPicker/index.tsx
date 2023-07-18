@@ -14,6 +14,7 @@ import Tooltip from 'components/UI/Tooltip';
 import ROCratePreview from 'components/IGV/ROCrateTrack';
 import { useEffectOnce } from 'react-use';
 import { find } from 'lodash-es';
+import { TrackView } from "utils/trackView";
 
 function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
   if (!feature || !feature.getAttributeValue) return null;
@@ -196,7 +197,8 @@ const trackColorOptionsForType = (track) => {
 };
 
 type AnnotationTrackColorPickerProps = {
-  trackView: any;
+  // trackView: Record<string, { id: string, config: object }>;
+  trackView: TrackView;
   trackColorBys: Record<string, { label: string; value: string }>;
   onChange: (event, action) => void;
 };
