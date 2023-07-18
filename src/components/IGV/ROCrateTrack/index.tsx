@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import EMGModal from 'components/UI/EMGModal';
 import useROCrate from 'hooks/useROCrate';
 
@@ -13,7 +13,6 @@ const ROCratePreview: React.FC<ROCratePreviewProps> = ({
 }) => {
   const [cratePreview, setCratePreview] = useState('');
   const [crateModalOpen, setCrateModalOpen] = useState(false);
-  const [track, setTrack] = useState<any>(null);
   const { getPreviewHtml } = useROCrate(crateUrl);
 
   function populateCratePreview() {
@@ -29,7 +28,7 @@ const ROCratePreview: React.FC<ROCratePreviewProps> = ({
         <button
           className={`vf-button ${
             useButtonVariant
-              ? 'vf-button--secondary vf-button--sm'
+              ? 'vf-button--sm vf-button--secondary'
               : 'vf-button--link mg-button-as-link'
           }`}
           onClick={() => populateCratePreview()}

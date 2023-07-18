@@ -70,28 +70,25 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   const [trackColorBys, setTrackColorBys] = useState({});
   const [updatingTracks, setUpdatingTracks] = useState(true);
 
-  const currentCrateUrl = useRef(null);
+  const currentAnnotationUrl = useRef(null);
 
-  const { getTrackProperties } = useROCrate(currentCrateUrl.current);
+  const { getTrackProperties } = useROCrate(currentAnnotationUrl.current);
 
-  async function buildTrackBasedOnAnnotationType(annotationType, crateUrl) {
-    currentCrateUrl.current = crateUrl;
+  async function buildTrackBasedOnAnnotationType(
+    annotationType,
+    annotationUrl
+  ) {
+    currentAnnotationUrl.current = annotationUrl;
     if (annotationType === 'Analysis RO Crate') {
-      console.log('analysis crate url', crateUrl);
-      // console.log('initial', crateUrl);
-      // console.log('before', currentCrateUrl.current);
-      // currentCrateUrl.current = crateUrl;
-      // console.log('after', currentCrateUrl.current);
-      // const trackProperties = await getTrackProperties();
-      // return trackProperties || {};
-      // return {};
+      const trackProperties = await getTrackProperties(annotationUrl);
+      return trackProperties || {};
     }
     return {
       name: annotationType,
       type: 'annotation',
       format: 'gff3',
       displayMode: 'EXPANDED',
-      url: crateUrl,
+      url: annotationUrl,
       label: annotationType,
       crate: null,
     };
@@ -135,32 +132,14 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
       }
       if (extraAnnotations) {
         (extraAnnotations.data as MGnifyDatum[]).forEach((anno) => {
-          // console.log('anno link', anno.links.self);
           const annotationType = (anno.attributes.description as KeyValue)
             .label as string;
           buildTrackBasedOnAnnotationType(
             annotationType,
             anno.links.self as string
           ).then((trackProperties) => {
-            // console.log('trackProperties received', trackProperties);
             options.tracks.push(trackProperties);
           });
-          // buildTrackBasedOnAnnotationType('', '')
-          // options.tracks.push(
-          //   buildTrackBasedOnAnnotationType(
-          //     annotationType,
-          //     anno.links.self as string
-          //   )
-          // );
-          // options.tracks.push({
-          //   name: annotationType,
-          //   type: 'annotation',
-          //   format: 'gff3',
-          //   displayMode: 'EXPANDED',
-          //   url: anno.links.self as string,
-          //   label: annotationType,
-          //   crate: null,
-          // });
         });
       }
 

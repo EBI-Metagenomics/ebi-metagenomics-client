@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import JSZip from 'jszip';
-import { ROCrate } from 'ro-crate/index';
+import { ROCrate } from 'ro-crate';
 
 function useROCrate(crateUrl) {
   const trackProperties = useRef(null);
@@ -8,7 +8,7 @@ function useROCrate(crateUrl) {
   const trackCrate = useRef(null);
   const previewHtml = useRef(null);
 
-  const fetchData = async () => {
+  const extractDetailsFromCrateZip = async () => {
     try {
       const response = await fetch(crateUrl);
       if (response.status === 200 || response.status === 0) {
@@ -40,6 +40,7 @@ function useROCrate(crateUrl) {
           type: 'annotation',
           format: 'gff3',
           displayMode: 'EXPANDED',
+          initialCrateUrl: crateUrl,
           url: `data:application/octet-stream;base64,${gff}`,
           label: name,
           crate: {
@@ -51,10 +52,9 @@ function useROCrate(crateUrl) {
         trackPropertiesURL.current = trackAttributes.url;
         trackCrate.current = crate;
 
-        const previewHtmlContent = await crateZip
+        previewHtml.current = await crateZip
           .file('ro-crate-preview.html')
           .async('string');
-        previewHtml.current = previewHtmlContent;
       } else {
         throw new Error(response.statusText);
       }
@@ -63,30 +63,31 @@ function useROCrate(crateUrl) {
     }
   };
 
-  const getTrackProperties = async () => {
+  const getTrackProperties = async (givenCrateUrl) => {
+    crateUrl = givenCrateUrl;
     if (!trackProperties.current) {
-      await fetchData();
+      await extractDetailsFromCrateZip();
     }
     return trackProperties.current;
   };
 
   const getTrackPropertiesURL = async () => {
     if (!trackPropertiesURL.current) {
-      await fetchData();
+      await extractDetailsFromCrateZip();
     }
     return trackPropertiesURL.current;
   };
 
   const getTrackCrate = async () => {
     if (!trackCrate.current) {
-      await fetchData();
+      await extractDetailsFromCrateZip();
     }
     return trackCrate.current;
   };
 
   const getPreviewHtml = async () => {
     if (!previewHtml.current) {
-      await fetchData();
+      await extractDetailsFromCrateZip();
     }
     return previewHtml.current;
   };

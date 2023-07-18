@@ -62,7 +62,7 @@ const AssemblyExtraAnnotations: React.FC = () => {
             )}
             <a
               href={cell.value}
-              className="vf-button vf-button--sm vf-buteTtton--link"
+              className="vf-button vf-button--sm vf-button--secondary"
               style={{ whiteSpace: 'nowrap' }}
               download
             >
