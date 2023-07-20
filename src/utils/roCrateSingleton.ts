@@ -1,14 +1,13 @@
-import { useRef } from 'react';
 import JSZip from 'jszip';
 import { ROCrate } from 'ro-crate';
 
-function useROCrate(crateUrl) {
-  const trackProperties = useRef(null);
-  const trackPropertiesURL = useRef(null);
-  const trackCrate = useRef(null);
-  const previewHtml = useRef(null);
+const RoCrateSingleton = (() => {
+  let trackProperties = null;
+  let trackPropertiesURL = null;
+  let trackCrate = null;
+  let previewHtml = null;
 
-  const extractDetailsFromCrateZip = async () => {
+  const extractDetailsFromCrateZip = async (crateUrl) => {
     try {
       const response = await fetch(crateUrl);
       if (response.status === 200 || response.status === 0) {
@@ -48,48 +47,48 @@ function useROCrate(crateUrl) {
             zip: crateZip,
           },
         };
-        trackProperties.current = trackAttributes;
-        trackPropertiesURL.current = trackAttributes.url;
-        trackCrate.current = crate;
+        trackProperties = trackAttributes;
+        trackPropertiesURL = trackAttributes.url;
+        trackCrate = crate;
 
-        previewHtml.current = await crateZip
+        previewHtml = await crateZip
           .file('ro-crate-preview.html')
           .async('string');
       } else {
         throw new Error(response.statusText);
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error fetching RO crate:', error);
     }
   };
 
-  const getTrackProperties = async (givenCrateUrl) => {
-    crateUrl = givenCrateUrl;
-    if (!trackProperties.current) {
-      await extractDetailsFromCrateZip();
+  const getTrackProperties = async (crateUrl) => {
+    if (!trackProperties) {
+      await extractDetailsFromCrateZip(crateUrl);
     }
-    return trackProperties.current;
+    return trackProperties;
   };
 
-  const getTrackPropertiesURL = async () => {
-    if (!trackPropertiesURL.current) {
-      await extractDetailsFromCrateZip();
+  const getTrackPropertiesURL = async (crateUrl) => {
+    if (!trackPropertiesURL) {
+      await extractDetailsFromCrateZip(crateUrl);
     }
-    return trackPropertiesURL.current;
+    return trackPropertiesURL;
   };
 
-  const getTrackCrate = async () => {
-    if (!trackCrate.current) {
-      await extractDetailsFromCrateZip();
+  const getTrackCrate = async (crateUrl) => {
+    if (!trackCrate) {
+      await extractDetailsFromCrateZip(crateUrl);
     }
-    return trackCrate.current;
+    return trackCrate;
   };
 
-  const getPreviewHtml = async () => {
-    if (!previewHtml.current) {
-      await extractDetailsFromCrateZip();
+  const getPreviewHtml = async (crateUrl) => {
+    if (!previewHtml) {
+      await extractDetailsFromCrateZip(crateUrl);
     }
-    return previewHtml.current;
+    return previewHtml;
   };
 
   return {
@@ -98,6 +97,6 @@ function useROCrate(crateUrl) {
     getTrackCrate,
     getPreviewHtml,
   };
-}
+})();
 
-export default useROCrate;
+export default RoCrateSingleton;

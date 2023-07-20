@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import EMGModal from 'components/UI/EMGModal';
-import useROCrate from 'hooks/useROCrate';
+import RoCrateSingleton from 'utils/roCrateSingleton';
 
 type ROCratePreviewProps = {
   crateUrl: string;
@@ -13,10 +13,9 @@ const ROCratePreview: React.FC<ROCratePreviewProps> = ({
 }) => {
   const [cratePreview, setCratePreview] = useState('');
   const [crateModalOpen, setCrateModalOpen] = useState(false);
-  const { getPreviewHtml } = useROCrate(crateUrl);
 
   function populateCratePreview() {
-    getPreviewHtml().then((previewHtml) => {
+    RoCrateSingleton.getPreviewHtml(crateUrl).then((previewHtml) => {
       setCratePreview(previewHtml);
       setCrateModalOpen(true);
     });

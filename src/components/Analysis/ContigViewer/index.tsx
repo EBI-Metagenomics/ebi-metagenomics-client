@@ -42,7 +42,7 @@ import {
   FORMAT,
 } from 'components/IGV/TrackColourPicker';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import useROCrate from 'hooks/useROCrate';
+import roCrateSingleton from 'utils/roCrateSingleton';
 
 type ContigProps = {
   contig: MGnifyDatum;
@@ -72,15 +72,14 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
   const currentAnnotationUrl = useRef(null);
 
-  const { getTrackProperties } = useROCrate(currentAnnotationUrl.current);
-
   async function buildTrackBasedOnAnnotationType(
     annotationType,
     annotationUrl
   ) {
     currentAnnotationUrl.current = annotationUrl;
     if (annotationType === 'Analysis RO Crate') {
-      const trackProperties = await getTrackProperties(annotationUrl);
+      const trackProperties =
+        roCrateSingleton.getTrackProperties(annotationUrl);
       return trackProperties || {};
     }
     return {
