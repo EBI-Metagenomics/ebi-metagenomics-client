@@ -6,7 +6,7 @@ import InnerCard from 'components/UI/InnerCard';
 import useBlogData from 'hooks/data/useBlogData';
 
 import UserContext from 'pages/Login/UserContext';
-import Twitter from 'components/Twitter';
+import ArrowForLink from 'components/UI/ArrowForLink';
 
 const removeHTMLTags = (text: string): string => {
   return text.replace(/&lt;.+?&gt;/g, '').trim();
@@ -50,9 +50,6 @@ const BlogExcerpts: React.FC = () => {
   const blogClass =
     'vf-grid vf-grid__col-3 | vf-card-container | ' +
     'vf-u-fullbleed vf-u-background-color-ui--grey--light';
-  const twitterClass =
-    'vf-card vf-card--brand vf-card--bordered ' +
-    'vf-u-grid__col--span-3--xs vf-u-grid__col--span-1--md';
   return (
     <div>
       <div className={blogClass}>
@@ -74,8 +71,22 @@ const BlogExcerpts: React.FC = () => {
             url={data.tools.url}
           />
         )}
-        <article className={twitterClass}>
-          <Twitter />
+        <article className="vf-card vf-card vf-card--bordered">
+          <div className="vf-card__content | vf-stack vf-stack--400">
+            <h3 className="vf-card__heading">
+              <a
+                href="https://www.twitter.com/MGnifyDB"
+                className="vf-card__link"
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                @MGnifyDB on Twitter <ArrowForLink />
+              </a>
+            </h3>
+            <p className="vf-card__text">
+              Follow for the latest updates including service news, training,
+              and events.
+            </p>
+          </div>
         </article>
         <div
           className="vf-grid__col--span-2 mg-right"
