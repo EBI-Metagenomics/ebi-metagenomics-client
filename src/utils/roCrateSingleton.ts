@@ -6,8 +6,10 @@ const RoCrateSingleton = (() => {
   let trackPropertiesURL = null;
   let trackCrate = null;
   let previewHtml = null;
+  let currentCrateUrl = null;
 
   const extractDetailsFromCrateZip = async (crateUrl) => {
+    currentCrateUrl = crateUrl;
     try {
       const response = await fetch(crateUrl);
       if (response.status === 200 || response.status === 0) {
@@ -85,7 +87,7 @@ const RoCrateSingleton = (() => {
   };
 
   const getPreviewHtml = async (crateUrl) => {
-    if (!previewHtml) {
+    if (!previewHtml || currentCrateUrl !== crateUrl) {
       await extractDetailsFromCrateZip(crateUrl);
     }
     return previewHtml;
