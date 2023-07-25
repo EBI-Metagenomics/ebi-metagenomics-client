@@ -7,6 +7,13 @@ const RoCrateSingleton = (() => {
   let trackCrate = null;
   let previewHtml = null;
   let currentCrateUrl = null;
+  let specifiedCrateFolder = null;
+
+  const determineFilePath = (fileName) => {
+    return specifiedCrateFolder
+      ? `${specifiedCrateFolder}/${fileName}`
+      : fileName;
+  };
 
   const extractDetailsFromCrateZip = async (crateUrl) => {
     currentCrateUrl = crateUrl;
@@ -16,7 +23,7 @@ const RoCrateSingleton = (() => {
         const blob = await response.blob();
         const crateZip = await JSZip.loadAsync(blob);
         const metadataJson = await crateZip
-          .file('ro-crate-metadata.json')
+          .file(determineFilePath('ro-crate-metadata.json'))
           .async('string');
 
         const metadata = JSON.parse(metadataJson);
@@ -31,11 +38,16 @@ const RoCrateSingleton = (() => {
             dataset['@type'].includes('File') &&
             dataset.encodingFormat[0]['@value'].includes('gff')
           ) {
+            console.log('dataset', dataset);
             filePointer = dataset['@id'];
           }
         });
         const name = tree.name[0]['@value'].split(' ')[0];
-        const gff = await crateZip.file(filePointer).async('base64');
+        console.log('path', determineFilePath(filePointer));
+        console.log('crateZip', crateZip);
+        const gff = await crateZip
+          .file(determineFilePath(filePointer))
+          .async('base64');
         const trackAttributes = {
           name,
           type: 'annotation',
@@ -52,9 +64,8 @@ const RoCrateSingleton = (() => {
         trackProperties = trackAttributes;
         trackPropertiesURL = trackAttributes.url;
         trackCrate = crate;
-
         previewHtml = await crateZip
-          .file('ro-crate-preview.html')
+          .file(determineFilePath('ro-crate-preview.html'))
           .async('string');
       } else {
         throw new Error(response.statusText);
@@ -86,7 +97,8 @@ const RoCrateSingleton = (() => {
     return trackCrate;
   };
 
-  const getPreviewHtml = async (crateUrl) => {
+  const getPreviewHtml = async (crateUrl, specificCrateFolder = null) => {
+    specifiedCrateFolder = specificCrateFolder;
     if (!previewHtml || currentCrateUrl !== crateUrl) {
       await extractDetailsFromCrateZip(crateUrl);
     }

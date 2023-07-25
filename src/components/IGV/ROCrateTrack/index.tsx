@@ -5,21 +5,27 @@ import RoCrateSingleton from 'utils/roCrateSingleton';
 type ROCratePreviewProps = {
   crateUrl: string;
   useButtonVariant?: boolean;
+  specificCrateFolder?: string;
 };
 
 const ROCratePreview: React.FC<ROCratePreviewProps> = ({
   crateUrl,
   useButtonVariant,
+  specificCrateFolder,
 }) => {
   const [cratePreview, setCratePreview] = useState('');
   const [crateModalOpen, setCrateModalOpen] = useState(false);
 
   function populateCratePreview() {
-    RoCrateSingleton.getPreviewHtml(crateUrl).then((previewHtml) => {
-      setCratePreview(previewHtml);
-      setCrateModalOpen(true);
-    });
+    RoCrateSingleton.getPreviewHtml(crateUrl, specificCrateFolder).then(
+      (previewHtml) => {
+        setCratePreview(previewHtml);
+        setCrateModalOpen(true);
+      }
+    );
   }
+
+  // alert(crateUrl);
 
   return (
     <>
