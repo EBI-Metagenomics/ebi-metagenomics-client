@@ -96,7 +96,6 @@ const RunPage: React.FC = () => {
               namespace="runs"
               entityName="run"
             />
-            {/*<ExtraAnnotations entityName="assembly" />*/}
           </Box>
         </div>
       </section>

@@ -38,13 +38,10 @@ const RoCrateSingleton = (() => {
             dataset['@type'].includes('File') &&
             dataset.encodingFormat[0]['@value'].includes('gff')
           ) {
-            console.log('dataset', dataset);
             filePointer = dataset['@id'];
           }
         });
         const name = tree.name[0]['@value'].split(' ')[0];
-        console.log('path', determineFilePath(filePointer));
-        console.log('crateZip', crateZip);
         const gff = await crateZip
           .file(determineFilePath(filePointer))
           .async('base64');
