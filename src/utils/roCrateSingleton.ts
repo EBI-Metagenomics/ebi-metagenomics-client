@@ -5,6 +5,7 @@ const RoCrateSingleton = (() => {
   let trackProperties = null;
   let trackPropertiesURL = null;
   let trackCrate = null;
+  let trackCrateZip = null;
   let previewHtml = null;
   let currentCrateUrl = null;
   let specifiedCrateFolder = null;
@@ -22,45 +23,16 @@ const RoCrateSingleton = (() => {
       if (response.status === 200 || response.status === 0) {
         const blob = await response.blob();
         const crateZip = await JSZip.loadAsync(blob);
+        trackCrateZip = crateZip;
         const metadataJson = await crateZip
           .file(determineFilePath('ro-crate-metadata.json'))
           .async('string');
 
         const metadata = JSON.parse(metadataJson);
-        const crate = new ROCrate(metadata, {
+        trackCrate = new ROCrate(metadata, {
           link: true,
           array: true,
         });
-        const tree = crate.getNormalizedTree();
-        let filePointer;
-        tree.hasPart.forEach((dataset) => {
-          if (
-            dataset['@type'].includes('File') &&
-            dataset.encodingFormat[0]['@value'].includes('gff')
-          ) {
-            filePointer = dataset['@id'];
-          }
-        });
-        const name = tree.name[0]['@value'].split(' ')[0];
-        const gff = await crateZip
-          .file(determineFilePath(filePointer))
-          .async('base64');
-        const trackAttributes = {
-          name,
-          type: 'annotation',
-          format: 'gff3',
-          displayMode: 'EXPANDED',
-          initialCrateUrl: crateUrl,
-          url: `data:application/octet-stream;base64,${gff}`,
-          label: name,
-          crate: {
-            tree,
-            zip: crateZip,
-          },
-        };
-        trackProperties = trackAttributes;
-        trackPropertiesURL = trackAttributes.url;
-        trackCrate = crate;
         previewHtml = await crateZip
           .file(determineFilePath('ro-crate-preview.html'))
           .async('string');
@@ -74,8 +46,37 @@ const RoCrateSingleton = (() => {
   };
 
   const getTrackProperties = async (crateUrl) => {
-    if (!trackProperties) {
+    if (!trackProperties || currentCrateUrl !== crateUrl) {
       await extractDetailsFromCrateZip(crateUrl);
+      const tree = trackCrate.getNormalizedTree();
+      let filePointer;
+      tree.hasPart.forEach((dataset) => {
+        if (
+          dataset['@type'].includes('File') &&
+          dataset.encodingFormat[0]['@value'].includes('gff')
+        ) {
+          filePointer = dataset['@id'];
+        }
+      });
+      const name = tree.name[0]['@value'].split(' ')[0];
+      const gff = await trackCrateZip
+        .file(determineFilePath(filePointer))
+        .async('base64');
+      const trackAttributes = {
+        name,
+        type: 'annotation',
+        format: 'gff3',
+        displayMode: 'EXPANDED',
+        initialCrateUrl: crateUrl,
+        url: `data:application/octet-stream;base64,${gff}`,
+        label: name,
+        crate: {
+          tree,
+          zip: trackCrateZip,
+        },
+      };
+      trackProperties = trackAttributes;
+      trackPropertiesURL = trackAttributes.url;
     }
     return trackProperties;
   };
@@ -83,6 +84,7 @@ const RoCrateSingleton = (() => {
   const getTrackPropertiesURL = async (crateUrl) => {
     if (!trackPropertiesURL) {
       await extractDetailsFromCrateZip(crateUrl);
+      await getTrackProperties(crateUrl);
     }
     return trackPropertiesURL;
   };
