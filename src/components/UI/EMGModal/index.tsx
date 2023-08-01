@@ -1,8 +1,9 @@
-import React, { ReactChild, ReactChildren, useEffect, useRef } from 'react';
+import React, { ReactChild, ReactChildren } from 'react';
 
 import Modal from 'react-modal';
 
 import './style.css';
+import roCrateSingleton from 'utils/roCrateSingleton';
 
 Modal.setAppElement('#root');
 
@@ -31,6 +32,7 @@ type ModalProps = {
   contentLabel: string;
   children: ReactChild | ReactChild[] | ReactChildren | ReactChildren[];
   iframeRef?: React.RefObject<HTMLIFrameElement>;
+  crateUrl?: string;
 };
 const EMGModal: React.FC<ModalProps> = ({
   isOpen,
@@ -38,31 +40,8 @@ const EMGModal: React.FC<ModalProps> = ({
   contentLabel,
   children,
   iframeRef,
+  crateUrl,
 }) => {
-  // useEffect(() => {
-  //   React.Children.forEach(children, (child) => {
-  //     // Access the props of each child component
-  //     if (React.isValidElement(child)) {
-  //       console.log('child', child);
-  //       console.log(child.props.srcDoc);
-  //       // console.log(child.ref.current);
-  //       // eslint-disable-next-line no-param-reassign
-  //       // child.props.srcDoc = '<h1>Hello</h1>';
-  //       // console.log(child['ref']);
-  //     }
-  //   });
-  // }, [children]);
-
-  // useEffect(() => {
-  //   // const iframe = document.getElementById('iframe');
-  //   console.log(children);
-  //   const newObj = children;
-  //   console.log(newObj.props);
-  //   // if (iframe) {
-  //   //   console.log(iframe);
-  //   // }
-  // }, [children]);
-
   return (
     <Modal
       isOpen={isOpen}
@@ -71,38 +50,26 @@ const EMGModal: React.FC<ModalProps> = ({
       style={modalStyle}
       onAfterOpen={() => {
         if (iframeRef && iframeRef.current) {
-          // console.log('iframeRef', iframeRef);
-          // console.log('iframeRef.current', iframeRef.current);
-          // console.log(
-          //   'iframeRef.current.contentWindow',
-          //   iframeRef.current.contentWindow
-          // );
-          // console.log(
-          //   'iframeRef.current.contentWindow.document',
-          //   iframeRef.current.contentWindow.document
-          // );
-          // console.log(
-          //   'iframeRef.current.contentWindow.document.body',
-          //   iframeRef.current.contentWindow.document.body
-          // );
-          // console.log(
-          //   'iframeRef.current.contentWindow.document.body.innerHTML',
-          //   iframeRef.current.contentWindow.document.body.innerHTML
-          // );
-
-          // eslint-disable-next-line no-param-reassign
-          iframeRef.current.contentWindow.document.onload = () => {
-            const iframePage2Anchor =
-              iframeRef.current.contentWindow.document.getElementById(
-                'page2Anchor'
-              );
-            iframePage2Anchor.addEventListener('click', (e) => {
-              e.preventDefault();
-              alert('iframePage2Anchor clicked');
-            });
-          };
-          console.log('current doc', document);
-          console.log(iframeRef.current.contentWindow.document);
+          iframeRef.current.contentWindow.document.addEventListener(
+            'DOMContentLoaded',
+            (event) => {
+              alert('doc loaded');
+              const iframePage2Anchor =
+                iframeRef.current.contentWindow.document.getElementById(
+                  'page2Anchor'
+                );
+              iframePage2Anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+                roCrateSingleton
+                  .getPage2Html(crateUrl, 'motus')
+                  .then((page2Html) => {
+                    // eslint-disable-next-line no-param-reassign
+                    iframeRef.current.contentDocument.body.innerHTML =
+                      page2Html;
+                  });
+              });
+            }
+          );
         }
       }}
     >

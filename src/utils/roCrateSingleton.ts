@@ -7,6 +7,7 @@ const RoCrateSingleton = (() => {
   let trackCrate = null;
   let trackCrateZip = null;
   let previewHtml = null;
+  let page2Html = null;
   let currentCrateUrl = null;
   let specifiedCrateFolder = null;
 
@@ -35,6 +36,10 @@ const RoCrateSingleton = (() => {
         });
         previewHtml = await crateZip
           .file(determineFilePath('ro-crate-preview.html'))
+          .async('string');
+
+        page2Html = await crateZip
+          .file(determineFilePath('page2.html'))
           .async('string');
       } else {
         throw new Error(response.statusText);
@@ -104,11 +109,20 @@ const RoCrateSingleton = (() => {
     return previewHtml;
   };
 
+  const getPage2Html = async (crateUrl, specificCrateFolder = null) => {
+    specifiedCrateFolder = specificCrateFolder;
+    if (!page2Html || currentCrateUrl !== crateUrl) {
+      await extractDetailsFromCrateZip(crateUrl);
+    }
+    return page2Html;
+  };
+
   return {
     getTrackProperties,
     getTrackPropertiesURL,
     getTrackCrate,
     getPreviewHtml,
+    getPage2Html,
   };
 })();
 

@@ -8,6 +8,8 @@ type ROCratePreviewProps = {
   specificCrateFolder?: string;
 };
 
+type IframeNode = HTMLIFrameElement & Node;
+
 const ROCratePreview: React.FC<ROCratePreviewProps> = ({
   crateUrl,
   useButtonVariant,
@@ -15,13 +17,31 @@ const ROCratePreview: React.FC<ROCratePreviewProps> = ({
 }) => {
   const [cratePreview, setCratePreview] = useState('');
   const [crateModalOpen, setCrateModalOpen] = useState(false);
+  // const myIframe = useRef<HTMLIFrameElement>(null);
   const myIframe = useRef<HTMLIFrameElement>(null);
+  const [btnClicked, setBtnClicked] = useState(false);
 
   useEffect(() => {
-    const iframe = myIframe.current as any;
+    // alert('taking effect');
+    const iframe = myIframe.current;
+    if (!iframe) {
+      return;
+    }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    iframe?.contentWindow?.document.onload = () => {
+      alert('iframe loaded');
+    };
+
+    console.log(iframe);
+
+    // const iframe = document.getElementById('iframe') as HTMLIFrameElement;
+
+    // alert('iframe found');
 
     // Define the MutationObserver callback function
     const handleMutation = (mutationsList: MutationRecord[]) => {
+      console.log('list of mutations', mutationsList);
       // eslint-disable-next-line no-restricted-syntax
       for (const mutation of mutationsList) {
         console.log('mutation', mutation);
@@ -42,21 +62,28 @@ const ROCratePreview: React.FC<ROCratePreviewProps> = ({
     const observer = new MutationObserver(handleMutation);
     console.log(observer);
     (window as any).observer = observer;
-
-    // Observe the 'src' attribute of the iframe
-    if (iframe) {
-      observer.observe(iframe, {
-        attributes: true,
-        // attributeFilter: ['srcDoc'],
-      });
-    }
+    console.log(observer);
+    const iframeContentDocument = iframe.contentDocument;
+    observer.observe(iframeContentDocument, {
+      attributes: true,
+      // attributeFilter: ['srcDoc'],
+    });
+    // if (iframe) {
+    //   observer.observe(iframe, {
+    //     attributes: true,
+    //     // attributeFilter: ['srcDoc'],
+    //   });
+    // } else {
+    //   alert('none');
+    // }
     // observer.observe(iframe, { attributes: true, attributeFilter: ['src'] });
 
     // Clean up the observer when the component is unmounted
     return () => observer.disconnect();
-  }, [myIframe.current]);
+  }, [btnClicked]);
 
   function populateCratePreview() {
+    setBtnClicked(true);
     RoCrateSingleton.getPreviewHtml(crateUrl, specificCrateFolder).then(
       (previewHtml) => {
         setCratePreview(previewHtml);
@@ -64,8 +91,6 @@ const ROCratePreview: React.FC<ROCratePreviewProps> = ({
       }
     );
   }
-
-  // alert(crateUrl);
 
   return (
     <>
@@ -93,7 +118,7 @@ const ROCratePreview: React.FC<ROCratePreviewProps> = ({
         <iframe
           id="iframe"
           ref={myIframe}
-          srcDoc={`<!DOCTYPE html><html><head></head><body><a href="/fake.html" id="page2Anchor">HEllo</a></body></html>`}
+          srcDoc={cratePreview}
           title="RO-Crate Preview"
           width="100%"
           height="100%"
