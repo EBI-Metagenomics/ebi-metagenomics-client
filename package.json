@@ -1,6 +1,6 @@
 {
   "name": "mgportalv2",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "Web Client for the Mgnify service at EBI",
   "homepage": "https://github.com/EBI-Metagenomics/ebi-metagenomics-client#readme",
   "main": "src/index.tsx",
