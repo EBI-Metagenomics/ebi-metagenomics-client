@@ -9,6 +9,8 @@ import useURLAccession from 'hooks/useURLAccession';
 import InfoBanner from 'src/components/UI/InfoBanner';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import ROCratePreview from 'components/IGV/ROCrateTrack';
+import EMGModal from 'components/UI/EMGModal';
+import ROCrateModal from 'components/UI/ROCrateModal';
 
 type ExtraAnnotationsProps = {
   annotationsPageProp: string;
@@ -68,11 +70,17 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({
           <>
             {cell.row.original.attributes.description.label ===
               'Analysis RO Crate' && (
-              <ROCratePreview
-                crateUrl={cell.value}
+              <ROCrateModal
+                contentLabel="RO-Crate preview modal"
                 useButtonVariant
+                crateUrl={cell.value}
                 specificCrateFolder={`motus_${accession}`}
               />
+              // <ROCratePreview
+              //   crateUrl={cell.value}
+              //   useButtonVariant
+              //   specificCrateFolder={`motus_${accession}`}
+              // />
             )}
             <a
               href={cell.value}

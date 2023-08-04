@@ -11,6 +11,14 @@ const RoCrateSingleton = (() => {
   let currentCrateUrl = null;
   let specifiedCrateFolder = null;
 
+  // const determineFilePath = (fileName) => {
+  //   console.log('files', trackCrateZip.files);
+  //   return specifiedCrateFolder &&
+  //     trackCrateZip.files[`${specifiedCrateFolder}/ro-crate-preview.html`]
+  //     ? `${specifiedCrateFolder}/${fileName}`
+  //     : fileName;
+  // };
+
   const determineFilePath = (fileName) => {
     return specifiedCrateFolder
       ? `${specifiedCrateFolder}/${fileName}`
@@ -25,22 +33,23 @@ const RoCrateSingleton = (() => {
         const blob = await response.blob();
         const crateZip = await JSZip.loadAsync(blob);
         trackCrateZip = crateZip;
-        const metadataJson = await crateZip
-          .file(determineFilePath('ro-crate-metadata.json'))
-          .async('string');
+        // const metadataJson = await crateZip
+        //   .file(determineFilePath('ro-crate-metadata.json'))
+        //   .async('string');
 
-        const metadata = JSON.parse(metadataJson);
+        // const metadata = JSON.parse(metadataJson);
+        const metadata = JSON.parse('{}');
         trackCrate = new ROCrate(metadata, {
           link: true,
           array: true,
         });
-        previewHtml = await crateZip
-          .file(determineFilePath('ro-crate-preview.html'))
-          .async('string');
+        // previewHtml = await crateZip
+        //   .file(determineFilePath('ro-crate-preview.html'))
+        //   .async('string');
 
-        page2Html = await crateZip
-          .file(determineFilePath('page2.html'))
-          .async('string');
+        // page2Html = await crateZip
+        //   .file(determineFilePath('page2.html'))
+        //   .async('string');
       } else {
         throw new Error(response.statusText);
       }
@@ -106,7 +115,33 @@ const RoCrateSingleton = (() => {
     if (!previewHtml || currentCrateUrl !== crateUrl) {
       await extractDetailsFromCrateZip(crateUrl);
     }
+    console.log('trackCrateZip', trackCrateZip);
+    console.log(determineFilePath('ro-crate-preview.html'));
+    // return previewHtml;
+    previewHtml = trackCrateZip
+      .file(determineFilePath('ro-crate-preview.html'))
+      .async('string');
     return previewHtml;
+  };
+
+  const getHtmlContent = async (
+    fileName,
+    crateUrl,
+    specificCrateFolder = null
+  ) => {
+    console.log('fileName', fileName);
+    console.log('trackCrateZip', trackCrateZip);
+    specifiedCrateFolder = specificCrateFolder;
+    console.log('specifiedCrateFolder', specifiedCrateFolder);
+    if (!previewHtml || currentCrateUrl !== crateUrl) {
+      await extractDetailsFromCrateZip(crateUrl);
+    }
+    return (
+      trackCrateZip
+        // .file(determineFilePath('krona_SSU.html'))
+        .file(determineFilePath(fileName))
+        .async('string')
+    );
   };
 
   const getPage2Html = async (crateUrl, specificCrateFolder = null) => {
@@ -122,6 +157,7 @@ const RoCrateSingleton = (() => {
     getTrackPropertiesURL,
     getTrackCrate,
     getPreviewHtml,
+    getHtmlContent,
     getPage2Html,
   };
 })();
