@@ -12,6 +12,7 @@ import useURLAccession from 'hooks/useURLAccession';
 import useDefaultGenomeConfig from 'hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import VerticalBarChart from 'src/components/VegaCharts/VerticalBar';
 
 addExportMenu(Highcharts);
 
@@ -40,7 +41,7 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
       page_size: keggPageSize,
     }
   );
-
+  const accession1 = `genomes/${accession}/kegg-class`;
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
@@ -117,6 +118,16 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
         highcharts={Highcharts}
         options={options}
         ref={chartComponentRef}
+      />
+      <h3>Vega</h3>
+      <VerticalBarChart
+        ChartTitle="Top KEGG brite categories"
+        accession={accession1}
+        y="genome-count"
+        x="class-id"
+        tooltipKey="description"
+        tooltipKeyField="name"
+        tooltipVal="Genome Count"
       />
       <EMGTable
         cols={columns}

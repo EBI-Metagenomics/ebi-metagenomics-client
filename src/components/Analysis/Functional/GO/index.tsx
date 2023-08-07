@@ -7,6 +7,7 @@ import FetchError from 'components/UI/FetchError';
 import { MGnifyDatum } from 'hooks/data/useData';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import GOBar from 'src/components/VegaCharts/GOBar';
 import GOBarChart from './BarChart';
 import GOPieChart from './PieChart';
 
@@ -104,6 +105,9 @@ const GO: React.FC = () => {
                     containerId="cellular-component-bar-chart"
                   />
                 </div>
+
+                <h3>Vega</h3>
+                <GOBar />
               </div>
             )}
             {chart === 'pie' && dataBundles && (

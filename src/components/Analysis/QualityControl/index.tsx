@@ -4,6 +4,7 @@ import useMGnifyData from 'hooks/data/useMGnifyData';
 import Loading from 'components/UI/Loading';
 import { ResponseFormat } from 'hooks/data/useData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import NucleotideHistogram from 'src/components/VegaCharts/NucleotidesHistogram';
 import QualityControlChart from './QCChart';
 import ContigsHistogram from './ContigsHistogram';
 import NucleotidesHistogram from './NucleotidesHistogram';
@@ -68,6 +69,8 @@ const QualityControl: React.FC = () => {
             from the beginning of each {unit} up to the first 500 base pairs.
           </p>
           <NucleotidesHistogram />
+          <h3>Vega</h3>
+          <NucleotideHistogram />
         </>
       )}
     </div>

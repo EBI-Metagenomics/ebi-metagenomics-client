@@ -12,6 +12,7 @@ import useURLAccession from 'hooks/useURLAccession';
 import useDefaultGenomeConfig from 'hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import VerticalBarChart from 'src/components/VegaCharts/VerticalBar';
 
 addExportMenu(Highcharts);
 
@@ -40,7 +41,7 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
       page_size: keggmodPageSize,
     }
   );
-
+  const accession1 = `genomes/${accession}/kegg-module`;
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
@@ -118,6 +119,16 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
         options={options}
         ref={chartComponentRef}
       />
+      <h3>Vega</h3>
+      <VerticalBarChart
+        ChartTitle="Top KEGG modules"
+        accession={accession1}
+        y="genome-count"
+        x="name"
+        tooltipKey="Description"
+        tooltipVal="Genome Count"
+      />
+
       <EMGTable
         cols={columns}
         data={data as MGnifyResponseList}
