@@ -14,6 +14,7 @@ import SeqLengthChart from './SeqLengthChart';
 import GCContentChart from './GCContentChart';
 
 import './style.css';
+import VegaQC from '../../VegaCharts/QCChart';
 
 const QualityControl: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
@@ -43,6 +44,8 @@ const QualityControl: React.FC = () => {
         number given by ENA.
       </p>
       <QualityControlChart summaryData={summaryData} />
+      <h3>Vega</h3>
+      <VegaQC summaryData={summaryData} />
       {summaryData && Number(analysisData.attributes['pipeline-version']) > 2 && (
         <>
           <p>

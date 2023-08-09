@@ -1,5 +1,4 @@
 import { NonNormalizedSpec } from 'vega-lite/build/src/spec';
-import { container } from 'webpack';
 
 const VConcat2ChartSeqLength: NonNormalizedSpec = {
   width: 500,
@@ -56,7 +55,7 @@ const VConcat2ChartGCDistribution = (type: string): NonNormalizedSpec => {
       {
         width: 500,
         height: 30,
-        mark: { type: 'bar', tooltip: true },
+        mark: { type: 'bar' },
         encoding: {
           x: {
             field: 'value',
@@ -72,6 +71,10 @@ const VConcat2ChartGCDistribution = (type: string): NonNormalizedSpec => {
             scale: { range: ['#3f72bf', '#723fbf'] },
           },
           order: { field: 'order', type: 'ordinal' },
+          tooltip: [
+            { field: 'content_type', title: 'Content Type' },
+            { field: 'value', title: 'Percentage (%)' },
+          ],
         },
       },
       {

@@ -68,7 +68,8 @@ const QCStdDevChart: React.FC<QCStdDevProps> = ({ accession, type }) => {
       legend: {
         orient: 'bottom',
         title: null,
-        labelFontSize: 12,
+        labelFontSize: 13,
+        labelFontWeight: 'bold',
         symbolType: 'circle',
       },
       scale: { bandPaddingInner: 0.1 },
