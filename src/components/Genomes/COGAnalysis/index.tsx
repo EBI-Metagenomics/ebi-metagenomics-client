@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import * as Highcharts from 'highcharts';
 import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
@@ -11,7 +11,6 @@ import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import useDefaultGenomeConfig from 'hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
-import { VegaLite, VisualizationSpec } from 'react-vega';
 import VerticalBarChart from 'src/components/VegaCharts/VerticalBar';
 
 addExportMenu(Highcharts);
@@ -26,8 +25,6 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
     page_size: 100,
   });
   const accession1 = `genomes/${accession}/cogs`;
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
@@ -43,7 +40,6 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
     },
     {}
   );
-  console.log(accession1);
   const genomeSeries = (data.data as MGnifyDatum[]).map((d) => {
     const c = Number(d.attributes['genome-count']);
     total += c;
@@ -92,11 +88,6 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
       stack: 'pangenome',
     });
   }
-
-  const handleLoaded = () => {
-    setIsLoading(false);
-    setIsLoaded(true);
-  };
 
   return (
     <div className="vf-stack vf-stack--200" data-cy="genome-cog-analysis">

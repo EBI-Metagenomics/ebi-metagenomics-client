@@ -2,6 +2,7 @@ import { Transform } from 'vega-lite/build/src/transform';
 
 const ChartTransforms: Transform[] = [
   {
+    // Filter the data to only include the fields we want
     filter: {
       field: 'key',
       oneOf: [
@@ -14,7 +15,9 @@ const ChartTransforms: Transform[] = [
       ],
     },
   },
+  // Pivot the data
   { pivot: 'key', value: 'value' },
+  // Calculate the lower and upper bounds for the standard deviation (sequence length and GC content)
   {
     calculate: 'datum.average_length - datum.standard_deviation_length',
     as: 'lower_bound_seq-length',
@@ -31,10 +34,11 @@ const ChartTransforms: Transform[] = [
     calculate: 'datum.average_gc_content + datum.standard_deviation_gc_content',
     as: 'upper_bound_gc-distribution',
   },
+  // Calculate the AT and GC content
   { calculate: '100 - datum.average_gc_content', as: 'AT Content' },
   { calculate: 'datum.average_gc_content', as: 'GC Content' },
   {
-    fold: ['GC Content', 'AT Content'],
+    fold: ['GC Content', 'AT Content'], // fold the columns into a single column (for stacked bar chart)
     as: ['content_type', 'value'],
   },
 ];

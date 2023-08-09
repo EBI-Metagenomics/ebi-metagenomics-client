@@ -4,8 +4,9 @@ import Loading from 'components/UI/Loading';
 import { VegaLite, VisualizationSpec } from 'react-vega';
 import config from 'src/utils/config';
 
-import './styles.css';
+import './styles.css'; // styles for the slider
 
+// Props for the VerticalBarChart component
 interface VerticalBarChartProps {
   ChartTitle: string;
   titleX?: string;
@@ -33,9 +34,10 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
   lAngle = -20,
   maxSlider = 30,
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // loading state for the Loading component
+  const [isLoaded, setIsLoaded] = useState(false); // loaded state for the slider to appear after the chart is loaded
 
+  // Vega-Lite spec contains the data, transforms(data wrangling), and encoding(visual graphics)
   const spec: VisualizationSpec = {
     $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
     height: 300,
@@ -43,20 +45,23 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
     title: ChartTitle,
 
     data: {
-      url: `${config.api}${accession}`,
-      format: { type: 'json', property: 'data' },
+      url: `${config.api}${accession}`, // data access via URL
+      format: { type: 'json', property: 'data' }, // format of the data
     },
     transform: [
+      // Filter the data to only include the fields we want, rename the fields
       { calculate: 'datum.attributes.name', as: 'name' },
       { calculate: 'datum.attributes.accession', as: 'id' },
       { calculate: `datum.attributes['${x}']`, as: `${x}` },
       { calculate: `datum.attributes['${y}']`, as: `${y}` },
       { calculate: 'datum.attributes.description', as: 'description' },
-      { window: [{ op: 'rank', as: 'rank' }] },
-      { filter: 'datum.rank <= Input' },
+      { window: [{ op: 'rank', as: 'rank' }] }, // rank the data (sorts)
+      { filter: 'datum.rank <= Input' }, // filter the data based on the slider input
     ],
-    mark: 'bar',
+    mark: 'bar', // type of mark
+    // encoding for the visual graphics
     encoding: {
+      // encode the x and y axis -> type of data, field, axis title, etc.
       x: {
         field: `${x}`,
         type: 'ordinal',
@@ -76,10 +81,11 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
         axis: { title: titleY, tickCount: 4 },
       },
       tooltip: [
-        { field: tooltipKeyField, title: tooltipKey },
+        { field: tooltipKeyField, title: tooltipKey }, // tooltip
         { field: `${y}`, title: tooltipVal },
       ],
       fill: {
+        // color for the bar, changes color on hover
         condition: {
           test: { param: 'hover', empty: false },
           value: '#95CEFF',
@@ -89,16 +95,17 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
     },
     params: [
       {
-        name: 'hover',
+        name: 'hover', // parameter for the hover selection
         select: { type: 'point', on: 'mouseover', clear: 'mouseout' },
       },
       {
-        name: 'Input',
+        name: 'Input', // parameter for the slider
         value: 10,
         bind: { input: 'range', min: 5, max: maxSlider, step: 1 },
       },
     ],
 
+    // configuration for the visual graphics (axis, legend, title, etc.)
     config: {
       view: { stroke: 'transparent' },
       axis: {
@@ -121,7 +128,7 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
       scale: { bandPaddingInner: 0.5 },
     },
   };
-  console.log(spec.data);
+
   const handleLoaded = () => {
     setIsLoading(false);
     setIsLoaded(true);
@@ -136,6 +143,7 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
         style={{ width: '100%', height: '100%' }}
         onNewView={handleLoaded}
       />
+      {/* The slider is hidden until the chart is loaded */}
       {isLoaded && (
         <style>
           {`

@@ -23,12 +23,12 @@ const NucleotideHistogram: React.FC = () => {
       format: { type: 'tsv' },
     },
     transform: [
-      { fold: ['A', 'T', 'C', 'G', 'N'] },
+      { fold: ['A', 'T', 'C', 'G', 'N'] }, // fold the columns into a single column
       {
-        calculate: "{'A':4, 'T':3, 'C':2, 'G':1, 'N':0}[datum.key]",
+        calculate: "{'A':4, 'T':3, 'C':2, 'G':1, 'N':0}[datum.key]", // assign a value to each nucleotide for sorting
         as: 'order',
       },
-      { calculate: 'datum.pos * 1', as: 'pos' },
+      { calculate: 'datum.pos * 1', as: 'pos' }, // convert the position to a number
     ],
     encoding: {
       x: {
@@ -51,12 +51,12 @@ const NucleotideHistogram: React.FC = () => {
         mark: { type: 'area', line: {} },
         params: [
           {
-            name: 'nuc',
+            name: 'nuc', // nucleotide selection from the legend
             select: { type: 'point', fields: ['key'] },
             bind: 'legend',
           },
         ],
-        transform: [{ filter: { param: 'nuc', empty: true } }],
+        transform: [{ filter: { param: 'nuc', empty: true } }], // filter the data based on the selection
         encoding: {
           x: {
             field: 'pos',
@@ -85,19 +85,20 @@ const NucleotideHistogram: React.FC = () => {
             type: 'ordinal',
             title: 'Shift+Click for nucleotide multi-selection',
           },
-          order: { field: 'order', type: 'ordinal' },
+          order: { field: 'order', type: 'ordinal' }, // sort the nucleotides
           opacity: { value: 0.7 },
         },
       },
       {
+        // Rule for the hover and zoom (clearly shows the nucleotide position)
         mark: 'rule',
         params: [
           {
-            name: 'hover',
+            name: 'hover', // Hover functionality
             select: { type: 'point', on: 'mousemove', nearest: true },
           },
           {
-            name: 'zoom',
+            name: 'zoom', // Zoom functionality
             bind: 'scales',
             select: {
               type: 'interval',

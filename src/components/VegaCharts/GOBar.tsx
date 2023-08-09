@@ -20,10 +20,10 @@ const GOBar: React.FC = () => {
     params: [
       {
         name: 'hover',
-        select: { type: 'point', on: 'mouseover', clear: 'mouseout' },
+        select: { type: 'point', on: 'mouseover', clear: 'mouseout' }, // hover functionality
       },
       {
-        name: 'Input',
+        name: 'Input', // slider functionality
         value: 15,
         bind: { input: 'range', min: 10, max: 43, step: 1 },
       },
@@ -33,6 +33,7 @@ const GOBar: React.FC = () => {
       { calculate: 'datum.attributes.description', as: 'description' },
       { calculate: 'datum.attributes.count', as: 'annotations' },
     ],
+    // Using hconcat to create 3 charts in one row
     hconcat: [
       {
         title: 'Biological Process',
@@ -62,6 +63,7 @@ const GOBar: React.FC = () => {
             value: '#ABD3DB',
           },
         },
+        // Filter the data to only show the annotations wrt the slider value
         transform: [
           {
             filter: "datum.lineage === 'biological_process'",
@@ -78,6 +80,7 @@ const GOBar: React.FC = () => {
           x: { field: 'annotations', type: 'quantitative' },
           y: { field: 'description', type: 'nominal', sort: '-x' },
           fill: {
+            // Change the colour of the bar when hovered over
             condition: {
               test: { param: 'hover', empty: false },
               value: '#78aeae',

@@ -5,11 +5,11 @@ import { VegaLite, VisualizationSpec } from 'react-vega';
 import config from 'src/utils/config';
 import { NonNormalizedSpec } from 'vega-lite/build/src/spec';
 import {
-  VConcat2ChartSeqLength,
-  VConcat2ChartGCDistribution,
-} from './QC-chart-components/VConcat2';
-import VConcat1Chart from './QC-chart-components/VConcat1';
+  VConcatGCDistribution,
+  VConcatSeqLength,
+} from './QC-chart-components/VConcatBottom';
 import ChartTransforms from './QC-chart-components/transforms';
+import VConcatTop from './QC-chart-components/VConcatTop';
 
 interface QCStdDevProps {
   accession: string;
@@ -19,16 +19,17 @@ interface QCStdDevProps {
 const QCStdDevChart: React.FC<QCStdDevProps> = ({ accession, type }) => {
   const [isLoading, setIsLoading] = useState(true);
 
-  let VConcat2Chart: NonNormalizedSpec | null = null;
-  let XScaleDomainMin;
-  let XScaleDomainMax;
+  let VConcatBottom: NonNormalizedSpec | null = null;
+  let XScaleDomainMin: number;
+  let XScaleDomainMax: number;
+  // Conditional rendering of the Bottom Chart -> Seq length, GC distribution charts
   if (type === 'seq-length') {
     XScaleDomainMin = 0;
-    VConcat2Chart = VConcat2ChartSeqLength;
+    VConcatBottom = VConcatSeqLength;
   } else if (type === 'gc-distribution') {
     XScaleDomainMin = 0;
     XScaleDomainMax = 100;
-    VConcat2Chart = VConcat2ChartGCDistribution(type);
+    VConcatBottom = VConcatGCDistribution(type);
   }
 
   const spec: VisualizationSpec = {
@@ -40,17 +41,11 @@ const QCStdDevChart: React.FC<QCStdDevProps> = ({ accession, type }) => {
       url: `${config.api}${accession}/summary`,
       format: { type: 'tsv' },
     },
-
+    // Moved tranforms and vconcat charts to QC-chart-components for better readability
     transform: ChartTransforms,
     vconcat: [
-      VConcat1Chart(
-        type,
-        accession,
-        config.api,
-        XScaleDomainMin,
-        XScaleDomainMax
-      ),
-      VConcat2Chart,
+      VConcatTop(type, accession, config.api, XScaleDomainMin, XScaleDomainMax),
+      VConcatBottom,
     ],
     config: {
       view: { stroke: 'transparent' },

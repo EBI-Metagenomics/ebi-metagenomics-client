@@ -21,6 +21,8 @@ const InterProBar: React.FC = () => {
       url: `${config.api}analyses/${overviewData.id}`,
       format: { type: 'json', property: 'data.attributes.analysis-summary' },
     },
+    // Transforming the data directly to the format we need for the chart
+    // (i.e. pre-process data with the prefixes - 'Reads' or 'Contigs')
     transform: [
       {
         calculate: `datum.key === 'Reads with predicted CDS' ? '${prefix} with predicted CDS' :
@@ -43,18 +45,19 @@ const InterProBar: React.FC = () => {
         type: 'quantitative',
         scale: {
           type: 'log',
-          base: 2,
+          base: 2, // Using log2 scale
         },
         axis: {
           title: 'Count (note the logarithmic scale)',
           tickCount: 10,
-          format: '.2s',
+          format: '.2s', // Using SI prefix notation for the tick labels
         },
       },
       y: {
         field: 'description',
         type: 'nominal',
         axis: { title: null },
+        // Sorting the labels in the order we want
         sort: [
           `${prefix} with predicted CDS`,
           `${prefix} with predicted RNA`,
@@ -75,6 +78,7 @@ const InterProBar: React.FC = () => {
         value: '#058DC7',
       },
     },
+    // Adding the hover functionality
     params: [
       {
         name: 'hover',

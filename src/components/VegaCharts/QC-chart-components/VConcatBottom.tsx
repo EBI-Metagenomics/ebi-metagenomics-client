@@ -1,6 +1,6 @@
 import { NonNormalizedSpec } from 'vega-lite/build/src/spec';
 
-const VConcat2ChartSeqLength: NonNormalizedSpec = {
+const VConcatSeqLength: NonNormalizedSpec = {
   width: 500,
   height: 80,
   data: {
@@ -10,16 +10,17 @@ const VConcat2ChartSeqLength: NonNormalizedSpec = {
     {
       filter: {
         field: 'key',
-        oneOf: ['length_min', 'average_length', 'length_max'],
+        oneOf: ['length_min', 'average_length', 'length_max'], // filter the data to only include the fields we want
       },
     },
     {
+      // make the key more descriptive(used for labelling the bars)
       calculate:
         "if(datum.key == 'length_min', 'Minimum', datum.key == 'average_length' ? 'Average' : 'Maximum')",
       as: 'label',
     },
   ],
-
+  // Bar chart for the sequence length (min, avg, max)
   mark: { type: 'bar' },
 
   encoding: {
@@ -49,9 +50,10 @@ const VConcat2ChartSeqLength: NonNormalizedSpec = {
   },
 };
 
-const VConcat2ChartGCDistribution = (type: string): NonNormalizedSpec => {
+const VConcatGCDistribution = (type: string): NonNormalizedSpec => {
   return {
     layer: [
+      // Layered chart for the bar chart and error band (GC Content % distribution)
       {
         width: 500,
         height: 30,
@@ -105,4 +107,4 @@ const VConcat2ChartGCDistribution = (type: string): NonNormalizedSpec => {
   };
 };
 
-export { VConcat2ChartSeqLength, VConcat2ChartGCDistribution };
+export { VConcatSeqLength, VConcatGCDistribution };

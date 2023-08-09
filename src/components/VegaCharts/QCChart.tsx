@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { VegaLite, VisualizationSpec } from 'react-vega';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
@@ -45,6 +45,7 @@ const QCChart: React.FC<QualityControlProps> = ({ summaryData }) => {
   if (summaryData) filtered[4] = remaining[3] - remaining[4] - subsampled[4];
   const [isLoading, setIsLoading] = useState(true);
 
+  // Defining the steps for the QC chart (y-axis labels)
   const steps = [
     `Initial ${unit}`,
     'Trimming',
@@ -53,8 +54,10 @@ const QCChart: React.FC<QualityControlProps> = ({ summaryData }) => {
     `${capUnit} subsampled for QC analysis`,
   ];
 
+  // Creating an array of objects for the chart data - {name, Remaining, Filtered, Subsampled, sno}
   const DataArray = [];
   for (let index = 0; index < 5; index++) {
+    // for each step
     const stepObject = {
       name: steps[index],
       Remaining: remaining[index],
@@ -73,7 +76,7 @@ const QCChart: React.FC<QualityControlProps> = ({ summaryData }) => {
     width: 'container',
     params: [
       {
-        name: 'hover',
+        name: 'hover', // hover functionality
         select: { type: 'point', fields: ['name'], on: 'mouseover' },
       },
     ],
@@ -116,6 +119,7 @@ const QCChart: React.FC<QualityControlProps> = ({ summaryData }) => {
         value: 1,
       },
     },
+    // Using fold transform to be able to stack the bars for the different types of sequences
     transform: [
       { fold: ['Remaining', 'Filtered', 'Subsampled'], as: ['field', 'value'] },
     ],

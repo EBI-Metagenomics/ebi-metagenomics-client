@@ -1,6 +1,6 @@
 import { NonNormalizedSpec } from 'vega-lite/build/src/spec';
 
-const VConcat1Chart = (
+const VConcatTop = (
   type: string,
   accession: string,
   api: string,
@@ -10,6 +10,7 @@ const VConcat1Chart = (
   let ChartTitle: string;
   let standardDeviation: string;
   let Mean: string;
+  // Conditional rendering of the chart title and the standard deviation and mean values
   if (type === 'seq-length') {
     ChartTitle = 'Contigs length histogram';
     standardDeviation = 'standard_deviation_length';
@@ -20,6 +21,7 @@ const VConcat1Chart = (
     Mean = 'average_gc_content';
   }
   return {
+    // Layering the error band(standard dev) and the histogram
     layer: [
       {
         title: {
@@ -84,4 +86,4 @@ const VConcat1Chart = (
   };
 };
 
-export default VConcat1Chart;
+export default VConcatTop;
