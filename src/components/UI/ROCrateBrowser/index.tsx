@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Modal from 'react-modal';
 import './style.css';
 import RoCrateSingleton from 'utils/roCrateSingleton';
@@ -25,14 +25,12 @@ const modalStyle = {
 };
 
 type ModalProps = {
-  contentLabel: string;
   crateUrl?: string;
   specificCrateFolder?: string;
   useButtonVariant?: boolean;
 };
 
-const ROCrateModal: React.FC<ModalProps> = ({
-  contentLabel,
+const ROCrateBrowser: React.FC<ModalProps> = ({
   crateUrl,
   specificCrateFolder,
   useButtonVariant,
@@ -55,8 +53,14 @@ const ROCrateModal: React.FC<ModalProps> = ({
   }
 
   const handleIframeMessage = (event: MessageEvent) => {
-    console.log('target', typeof event.data);
-    if (!event.data.includes('multiqc') && !event.data.includes('krona')) {
+    if (typeof event.data !== 'string') {
+      return;
+    }
+    if (
+      !event.data.includes('multiqc') &&
+      !event.data.includes('krona') &&
+      !event.data.includes('ro-crate-preview')
+    ) {
       return;
     }
     RoCrateSingleton.getHtmlContent(event.data, crateUrl).then(
@@ -80,7 +84,7 @@ const ROCrateModal: React.FC<ModalProps> = ({
           onClick={() => handleButtonClick()}
           type="button"
         >
-          Browse the RO-Crate from here
+          Browse the RO-Crate
         </button>
         {!useButtonVariant && <span> providing this track</span>}
       </span>
@@ -90,11 +94,11 @@ const ROCrateModal: React.FC<ModalProps> = ({
           window.removeEventListener('message', handleIframeMessage);
           setCrateModalOpen(false);
         }}
-        contentLabel={contentLabel}
         style={modalStyle}
         onAfterOpen={() => {
           window.addEventListener('message', handleIframeMessage);
         }}
+        contentLabel="RO-Crate preview modal"
       >
         <div className="emg-modal-close">
           <button
@@ -121,4 +125,4 @@ const ROCrateModal: React.FC<ModalProps> = ({
   );
 };
 
-export default ROCrateModal;
+export default ROCrateBrowser;

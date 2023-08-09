@@ -32,19 +32,14 @@ const RoCrateSingleton = (() => {
         const blob = await response.blob();
         const crateZip = await JSZip.loadAsync(blob);
         trackCrateZip = crateZip;
-        // const metadataJson = await crateZip
-        //   .file(determineFilePath('ro-crate-metadata.json'))
-        //   .async('string');
-
-        // const metadata = JSON.parse(metadataJson);
-        const metadata = JSON.parse('{}');
+        const metadataJson = await crateZip
+          .file(determineFilePath('ro-crate-metadata.json'))
+          .async('string');
+        const metadata = JSON.parse(metadataJson);
         trackCrate = new ROCrate(metadata, {
           link: true,
           array: true,
         });
-        // previewHtml = await crateZip
-        //   .file(determineFilePath('ro-crate-preview.html'))
-        //   .async('string');
       } else {
         throw new Error(response.statusText);
       }
@@ -55,7 +50,7 @@ const RoCrateSingleton = (() => {
   };
 
   const getTrackProperties = async (crateUrl) => {
-    if (!trackProperties || currentCrateUrl !== crateUrl) {
+    if (!trackProperties || currentCrateUrl !== crateUrl || !trackCrate) {
       await extractDetailsFromCrateZip(crateUrl);
       const tree = trackCrate.getNormalizedTree();
       let filePointer;
@@ -110,7 +105,6 @@ const RoCrateSingleton = (() => {
     if (!previewHtml || currentCrateUrl !== crateUrl) {
       await extractDetailsFromCrateZip(crateUrl);
     }
-    // return previewHtml;
     previewHtml = trackCrateZip
       .file(determineFilePath('ro-crate-preview.html'))
       .async('string');
@@ -126,12 +120,7 @@ const RoCrateSingleton = (() => {
     if (!previewHtml || currentCrateUrl !== crateUrl) {
       await extractDetailsFromCrateZip(crateUrl);
     }
-    return (
-      trackCrateZip
-        // .file(determineFilePath('krona_SSU.html'))
-        .file(determineFilePath(fileName))
-        .async('string')
-    );
+    return trackCrateZip.file(determineFilePath(fileName)).async('string');
   };
 
   return {

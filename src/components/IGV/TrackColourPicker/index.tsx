@@ -11,10 +11,10 @@ import {
 } from 'components/Analysis/ContigViewer/mgnifyColours';
 import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
-import ROCratePreview from 'components/IGV/ROCrateTrack';
 import { useEffectOnce } from 'react-use';
 import { find } from 'lodash-es';
 import { TrackView } from 'utils/trackView';
+import ROCrateBrowser from 'components/UI/ROCrateBrowser';
 
 function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
   if (!feature || !feature.getAttributeValue) return null;
@@ -249,7 +249,7 @@ export const AnnotationTrackColorPicker: React.FC<
         </span>
       )}
       {trackView.track.config.crate && (
-        <ROCratePreview crateUrl={trackView.track.config.initialCrateUrl} />
+        <ROCrateBrowser crateUrl={trackView.track.config.initialCrateUrl} />
       )}
     </div>
   );

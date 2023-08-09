@@ -78,8 +78,9 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   ) {
     currentAnnotationUrl.current = annotationUrl;
     if (annotationType === 'Analysis RO Crate') {
-      const trackProperties =
-        roCrateSingleton.getTrackProperties(annotationUrl);
+      const trackProperties = await roCrateSingleton.getTrackProperties(
+        annotationUrl
+      );
       return trackProperties || {};
     }
     return {
