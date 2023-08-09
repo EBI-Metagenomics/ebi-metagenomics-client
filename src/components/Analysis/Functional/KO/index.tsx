@@ -10,7 +10,7 @@ const PfamTab: React.FC = () => {
   return (
     <div className="vf-stack">
       <KOBarChart />
-      <h3>Vega</h3>
+
       <VerticalBarChart
         ChartTitle="KO Entries vs Matches"
         accession={accession}

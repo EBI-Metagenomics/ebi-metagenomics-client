@@ -105,7 +105,6 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
         options={options}
         ref={chartComponentRef}
       />
-      <h3>Vega</h3>
       <VerticalBarChart
         ChartTitle="Top COG categories"
         accession={accession1}

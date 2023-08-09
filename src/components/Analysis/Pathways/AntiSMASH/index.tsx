@@ -14,6 +14,7 @@ const KOTab: React.FC = () => {
         ChartTitle="Top AntiSMASH gene clusters"
         accession={accession}
         tooltipKey="AntiSMASH gene cluster"
+        lAngle={0}
       />
       <AntiSMASHTable />
     </div>

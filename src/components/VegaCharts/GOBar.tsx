@@ -146,6 +146,7 @@ const GOBar: React.FC = () => {
   return (
     <>
       {isLoading && <Loading size="large" />}
+      <h3>Vega</h3>
       <VegaLite
         spec={spec}
         style={{ width: '100%' }}

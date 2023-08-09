@@ -106,7 +106,6 @@ const GO: React.FC = () => {
                   />
                 </div>
 
-                <h3>Vega</h3>
                 <GOBar />
               </div>
             )}

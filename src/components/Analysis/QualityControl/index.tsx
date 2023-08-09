@@ -5,6 +5,7 @@ import Loading from 'components/UI/Loading';
 import { ResponseFormat } from 'hooks/data/useData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import NucleotideHistogram from 'src/components/VegaCharts/NucleotidesHistogram';
+import QCStdDevChart from 'src/components/VegaCharts/QCStdDevChart';
 import QualityControlChart from './QCChart';
 import ContigsHistogram from './ContigsHistogram';
 import NucleotidesHistogram from './NucleotidesHistogram';
@@ -63,13 +64,27 @@ const QualityControl: React.FC = () => {
               <GCContentChart summaryData={summaryData} />
             </div>
           </div>
+
+          <div className="vf-grid vf-grid__col-2">
+            <div className="vf-stack">
+              <QCStdDevChart
+                accession={`analyses/${accession}`}
+                type="seq-length"
+              />
+            </div>
+            <div className="vf-stack">
+              <QCStdDevChart
+                accession={`analyses/${accession}`}
+                type="gc-distribution"
+              />
+            </div>
+          </div>
           <p>
             The graph below show the relative abundance of nucletotides (A, C,
             G, T, or ambiguous base &quot;N&quot;) at each position starting
             from the beginning of each {unit} up to the first 500 base pairs.
           </p>
           <NucleotidesHistogram />
-          <h3>Vega</h3>
           <NucleotideHistogram />
         </>
       )}

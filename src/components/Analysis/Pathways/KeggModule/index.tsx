@@ -10,7 +10,7 @@ const KOTab: React.FC = () => {
   return (
     <div className="vf-stack">
       <KeggBarChart />
-      <h3>Vega</h3>
+
       <VerticalBarChart
         ChartTitle="KEGG Module Categories"
         accession={accession}

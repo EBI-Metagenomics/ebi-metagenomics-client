@@ -66,7 +66,7 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
           labelPadding: 15,
           labelAngle: lAngle,
           labelAlign: 'center',
-          labelLimit: 23,
+          // labelLimit: 23,
         },
         title: titleX,
       },
@@ -130,6 +130,7 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
   return (
     <>
       {isLoading && <Loading size="large" />}
+      <h3>Vega</h3>
       <VegaLite
         spec={spec}
         style={{ width: '100%', height: '100%' }}

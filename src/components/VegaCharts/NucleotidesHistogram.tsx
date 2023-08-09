@@ -47,6 +47,7 @@ const NucleotideHistogram: React.FC = () => {
     },
     layer: [
       {
+        width: 'container',
         mark: { type: 'area', line: {} },
         params: [
           {
@@ -145,6 +146,7 @@ const NucleotideHistogram: React.FC = () => {
   return (
     <>
       {isLoading && <Loading size="large" />}
+      <h3>Vega</h3>
       <VegaLite
         spec={spec}
         style={{ width: '100%' }}

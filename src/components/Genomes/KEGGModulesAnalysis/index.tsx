@@ -119,7 +119,6 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
         options={options}
         ref={chartComponentRef}
       />
-      <h3>Vega</h3>
       <VerticalBarChart
         ChartTitle="Top KEGG modules"
         accession={accession1}
