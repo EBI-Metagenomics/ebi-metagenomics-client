@@ -29,7 +29,6 @@ const TextSearch = lazy(() => import('./pages/TextSearch'));
 const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
 const Browse = lazy(() => import('./pages/Browse'));
 const Login = lazy(() => import('./pages/Login'));
-const Submit = lazy(() => import('./pages/Submit'));
 const Study = lazy(() => import('./pages/Study'));
 const Sample = lazy(() => import('./pages/Sample'));
 const SuperStudy = lazy(() => import('./pages/SuperStudy'));
@@ -80,7 +79,6 @@ const App: React.FC = () => {
                   <Route path="/sequence-search" element={<SequenceSearch />} />
                   <Route path="/browse/*" element={<Browse />} />
                   <Route path="/login" element={<Login />} />
-                  <Route path="/submit" element={<Submit />} />
                   <Route path="/studies/*" element={<Study />} />
                   <Route path="/super-studies/*" element={<SuperStudy />} />
                   <Route path="/samples/*" element={<Sample />} />
