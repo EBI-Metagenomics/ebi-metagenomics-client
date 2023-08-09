@@ -63,44 +63,64 @@ const AnnotationSuperGroup: React.FC<{
             >
               {g.annotations.map((anno) => (
                 <React.Fragment key={anno.annotation_text}>
-                  {anno.mentions.map((mention) => (
-                    <AccordionContentPanel key={mention.id}>
-                      <div className="publication-epmc-mention">
-                        <div className="vf-sidebar vf-sidebar--end">
-                          <div className="vf-sidebar__inner">
-                            <div>
-                              <p>
-                                Mentioned in the{' '}
-                                {mention.section.split(' (')[0]} section:
-                              </p>
-                            </div>
-                            <div>
-                              <ExtLink href={mention.id}>
-                                View on Europe PMC
-                              </ExtLink>
-                              &nbsp;&nbsp;
-                              {mention.tags.map((tag) => (
-                                <ExtLink href={tag.uri} key={tag.name}>
-                                  Definition of ‘{tag.name}’&nbsp;&nbsp;
-                                </ExtLink>
-                              ))}
+                  {anno.mentions.map((mention) => {
+                    const hasFullText = !!mention.section;
+                    // Some articles do not have section/context info due to licensing
+                    return (
+                      <AccordionContentPanel key={mention.id}>
+                        <div className="publication-epmc-mention">
+                          <div className="vf-sidebar vf-sidebar--end">
+                            <div className="vf-sidebar__inner">
+                              <div>
+                                {hasFullText && (
+                                  <p>
+                                    Mentioned in the{' '}
+                                    {mention.section.split(' (')[0]} section:
+                                  </p>
+                                )}
+                              </div>
+                              <div>
+                                {hasFullText && (
+                                  <ExtLink href={mention.id}>
+                                    View on Europe PMC
+                                  </ExtLink>
+                                )}
+                                &nbsp;&nbsp;
+                                {mention.tags.map((tag) => (
+                                  <ExtLink href={tag.uri} key={tag.name}>
+                                    Definition of ‘{tag.name}’&nbsp;&nbsp;
+                                  </ExtLink>
+                                ))}
+                              </div>
                             </div>
                           </div>
+                          {hasFullText && (
+                            <p>
+                              <span className="publications-epmc-annotation-prefix">
+                                &hellip;{mention.prefix}
+                              </span>
+                              <span className="publications-epmc-annotation-match">
+                                <ExtLink href={mention.id}>
+                                  {mention.exact}
+                                </ExtLink>
+                              </span>
+                              <span className="publications-epmc-annotation-prefix">
+                                {mention.postfix}&hellip;
+                              </span>
+                            </p>
+                          )}
+                          {!hasFullText && (
+                            <p>
+                              <span className="publications-epmc-annotation-prefix">
+                                Full-text context of annotations is not
+                                available for this article.
+                              </span>
+                            </p>
+                          )}
                         </div>
-                        <p>
-                          <span className="publications-epmc-annotation-prefix">
-                            &hellip;{mention.prefix}
-                          </span>
-                          <span className="publications-epmc-annotation-match">
-                            <ExtLink href={mention.id}>{mention.exact}</ExtLink>
-                          </span>
-                          <span className="publications-epmc-annotation-prefix">
-                            {mention.postfix}&hellip;
-                          </span>
-                        </p>
-                      </div>
-                    </AccordionContentPanel>
-                  ))}
+                      </AccordionContentPanel>
+                    );
+                  })}
                 </React.Fragment>
               ))}
             </AccordionList>
