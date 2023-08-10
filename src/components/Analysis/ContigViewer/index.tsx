@@ -34,7 +34,6 @@ import ContigLengthFilter from 'components/Analysis/ContigViewer/Filter/ContigLe
 import ContigTextFilter from 'components/Analysis/ContigViewer/Filter/ContigText';
 // eslint-disable-next-line max-len
 import ContigAnnotationTypeFilter from 'components/Analysis/ContigViewer/Filter/ContigAnnotationType';
-import LoadingOverlay from 'components/UI/LoadingOverlay';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import {
   AnnotationTrackColorPicker,
@@ -242,9 +241,11 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
     updateTracks().then(() => setUpdatingTracks(false));
   }, [trackColorBys, igvBrowser]);
 
-  if (loading || loadingExtraAnnotations) return <Loading size="small" />;
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  if (loading || loadingExtraAnnotations) return <></>;
   if (error) return <FetchError error={error} />;
-  if (!data) return <Loading />;
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  if (!data) return <></>;
   return (
     <div id="contig" className="vf-stack vf-stack--600">
       <div ref={igvContainer} />
@@ -402,24 +403,8 @@ const ContigsViewer: React.FC = () => {
                 <h4>Contig browser</h4>
               </summary>
               <div className="contig-igv-container">
-                <LoadingOverlay loading={loading}>
-                  {!!contig && <Contig contig={contig} />}
-                  {!contig && (
-                    <div
-                      className="vf-box vf-box-theme--primary vf-box--easy"
-                      style={{
-                        backgroundColor: '#d1e3f6',
-                        margin: '8px auto',
-                      }}
-                    >
-                      <h3 className="vf-box__heading">No contig selected</h3>
-                      <p className="vf-box__text">
-                        Select a contig from the table to load the interactive
-                        annotation viewer
-                      </p>
-                    </div>
-                  )}
-                </LoadingOverlay>
+                {!!contig && <Contig contig={contig} />}
+                {!contig && <Loading size="small" />}
               </div>
             </details>
           </div>
