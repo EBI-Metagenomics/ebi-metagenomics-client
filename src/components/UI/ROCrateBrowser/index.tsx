@@ -39,10 +39,6 @@ const ROCrateBrowser: React.FC<ModalProps> = ({
   const [crateModalOpen, setCrateModalOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const checkIfLinkisRelative = (link: string) => {
-    return link.startsWith('http');
-  };
-
   function handleButtonClick() {
     RoCrateSingleton.getHtmlContent('ro-crate-preview.html', crateUrl).then(
       (previewHtml) => {
@@ -76,7 +72,7 @@ const ROCrateBrowser: React.FC<ModalProps> = ({
     <>
       <span className="vf-text-body vf-text-body--4">
         <button
-          className={`vf-button ${
+          className={`ro-crate-browser-button vf-button ${
             useButtonVariant
               ? 'vf-button--sm vf-button--secondary'
               : 'vf-button--link mg-button-as-link'
@@ -106,7 +102,7 @@ const ROCrateBrowser: React.FC<ModalProps> = ({
               window.removeEventListener('message', handleIframeMessage);
               setCrateModalOpen(false);
             }}
-            className="vf-button vf-button--link"
+            className="modal-close-button vf-button vf-button--link"
             type="button"
           >
             <i className="icon icon-common icon-times" />
@@ -114,7 +110,6 @@ const ROCrateBrowser: React.FC<ModalProps> = ({
         </div>
         <iframe
           ref={iframeRef}
-          id="iframe"
           srcDoc={cratePreview}
           title="RO-Crate Preview"
           width="100%"

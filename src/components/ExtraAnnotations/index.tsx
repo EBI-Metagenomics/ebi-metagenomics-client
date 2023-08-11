@@ -26,7 +26,6 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({
   entityName,
 }) => {
   const accession = useURLAccession();
-  // const accession = 'ERZ8153470';
   const [annotationsPage] = useQueryParamState(annotationsPageProp, 1, Number);
   const [annotationsPageSize] = useQueryParamState(
     annotationsPageSizeProp,
