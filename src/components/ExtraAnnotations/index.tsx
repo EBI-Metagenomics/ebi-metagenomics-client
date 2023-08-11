@@ -71,11 +71,7 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
           <>
             {cell.row.original.attributes.description.label ===
               'Analysis RO Crate' && (
-              <ROCrateBrowser
-                useButtonVariant
-                crateUrl={cell.value}
-                specificCrateFolder={`motus_${accession}`}
-              />
+              <ROCrateBrowser useButtonVariant crateUrl={cell.value} />
             )}
             <a
               href={cell.value}
