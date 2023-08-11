@@ -28,7 +28,6 @@ const tryToBrowseAnRoCrate = (location, verifyIframeContents) => {
   cy.get("iframe").should("be.visible");
   cy.get("iframe").then($iframe => {
     verifyIframeContents($iframe);
-    cy.wait(1000);
     cy.get(".modal-close-button").click();
   });
 };
@@ -41,9 +40,7 @@ const verifyMotusCrateIframeContents = ($iframe) => {
   cy.wrap($iframe.contents().find("a:contains(\"multiqc\")"))
     .should("not.be.empty")
     .then(($multiqcAnchor) => {
-      cy.wait(1000);
       $multiqcAnchor[0].click();
-      cy.wait(1000);
       cy.wrap($iframe.contents().find("a:contains(\"Home\")")).should("not.be.empty");
     });
 }
