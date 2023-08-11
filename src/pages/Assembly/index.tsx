@@ -79,12 +79,7 @@ const AssemblyPage: React.FC = () => {
               Additional annotations produced by workflows run outside the scope
               of MGnify’s versioned pipelines.
             </p>
-            <ExtraAnnotations
-              annotationsPageProp="assembly-annotations-page"
-              annotationsPageSizeProp="assembly-annotations-page_size"
-              namespace="assemblies"
-              entityName="assembly"
-            />
+            <ExtraAnnotations namespace="assemblies" />
           </Box>
         </div>
       </section>

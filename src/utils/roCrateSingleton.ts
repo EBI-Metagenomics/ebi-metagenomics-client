@@ -6,17 +6,8 @@ const RoCrateSingleton = (() => {
   let trackPropertiesURL = null;
   let trackCrate = null;
   let trackCrateZip = null;
-  let previewHtml = null;
   let currentCrateUrl = null;
   let specifiedCrateFolder = null;
-
-  // const determineFilePath = (fileName) => {
-  //   console.log('files', trackCrateZip.files);
-  //   return specifiedCrateFolder &&
-  //     trackCrateZip.files[`${specifiedCrateFolder}/ro-crate-preview.html`]
-  //     ? `${specifiedCrateFolder}/${fileName}`
-  //     : fileName;
-  // };
 
   const determineFilePath = (fileName) => {
     return specifiedCrateFolder
@@ -28,7 +19,7 @@ const RoCrateSingleton = (() => {
     currentCrateUrl = crateUrl;
     try {
       const response = await fetch(crateUrl);
-      if (response.status === 200 || response.status === 0) {
+      if (response.status === 200) {
         const blob = await response.blob();
         const crateZip = await JSZip.loadAsync(blob);
         trackCrateZip = crateZip;
@@ -100,24 +91,13 @@ const RoCrateSingleton = (() => {
     return trackCrate;
   };
 
-  const getPreviewHtml = async (crateUrl, specificCrateFolder = null) => {
-    specifiedCrateFolder = specificCrateFolder;
-    if (!previewHtml || currentCrateUrl !== crateUrl) {
-      await extractDetailsFromCrateZip(crateUrl);
-    }
-    previewHtml = trackCrateZip
-      .file(determineFilePath('ro-crate-preview.html'))
-      .async('string');
-    return previewHtml;
-  };
-
   const getHtmlContent = async (
     fileName,
     crateUrl,
     specificCrateFolder = null
   ) => {
     specifiedCrateFolder = specificCrateFolder;
-    if (!previewHtml || currentCrateUrl !== crateUrl) {
+    if (currentCrateUrl !== crateUrl) {
       await extractDetailsFromCrateZip(crateUrl);
     }
     return trackCrateZip.file(determineFilePath(fileName)).async('string');
@@ -127,7 +107,6 @@ const RoCrateSingleton = (() => {
     getTrackProperties,
     getTrackPropertiesURL,
     getTrackCrate,
-    getPreviewHtml,
     getHtmlContent,
   };
 })();

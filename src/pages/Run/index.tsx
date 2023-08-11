@@ -90,12 +90,7 @@ const RunPage: React.FC = () => {
               Additional annotations produced by workflows run outside the scope
               of MGnify’s versioned pipelines.
             </p>
-            <ExtraAnnotations
-              annotationsPageProp="run-annotations-page"
-              annotationsPageSizeProp="run-annotations-page_size"
-              namespace="runs"
-              entityName="run"
-            />
+            <ExtraAnnotations namespace="runs" />
           </Box>
         </div>
       </section>

@@ -11,25 +11,28 @@ import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import ROCrateBrowser from 'components/UI/ROCrateBrowser';
 
 type ExtraAnnotationsProps = {
-  annotationsPageProp: string;
-  annotationsPageSizeProp: string;
   namespace: string;
-  entityName: string;
 };
 
 const initialPageSize = 10;
 
-const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({
-  annotationsPageProp,
-  annotationsPageSizeProp,
-  namespace,
-  entityName,
-}) => {
+const singularise = (str: string) => {
+  const lastTwoChars = str.slice(-2);
+  const singularForm =
+    lastTwoChars === 'es' ? `${str.slice(0, -2)}y` : str.slice(0, -1);
+  return singularForm;
+};
+
+const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
+  const singularNamespace = singularise(namespace);
   const accession = useURLAccession();
-  // const accession = 'ERZ8153470';
-  const [annotationsPage] = useQueryParamState(annotationsPageProp, 1, Number);
+  const [annotationsPage] = useQueryParamState(
+    `${singularNamespace}-annotations-page`,
+    1,
+    Number
+  );
   const [annotationsPageSize] = useQueryParamState(
-    annotationsPageSizeProp,
+    `${singularNamespace}-annotations-page-size`,
     initialPageSize,
     Number
   );
@@ -95,7 +98,7 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({
     return (
       <InfoBanner
         type="info"
-        title={`The ${entityName} has no additional annotations.`}
+        title={`The ${singularNamespace} has no additional annotations.`}
       />
     );
 

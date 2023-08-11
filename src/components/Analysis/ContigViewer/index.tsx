@@ -241,11 +241,9 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
     updateTracks().then(() => setUpdatingTracks(false));
   }, [trackColorBys, igvBrowser]);
 
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  if (loading || loadingExtraAnnotations) return <></>;
+  if (loading || loadingExtraAnnotations) return null;
   if (error) return <FetchError error={error} />;
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  if (!data) return <></>;
+  if (!data) return null;
   return (
     <div id="contig" className="vf-stack vf-stack--600">
       <div ref={igvContainer} />
