@@ -68,7 +68,7 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
         Header: 'Action',
         accessor: 'links.self',
         Cell: ({ cell }) => (
-          <>
+          <span className="vf-text-body vf-text-body--4">
             {cell.row.original.attributes.description.label ===
               'Analysis RO Crate' && (
               <ROCrateBrowser useButtonVariant crateUrl={cell.value} />
@@ -81,7 +81,7 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
             >
               <span className="icon icon-common icon-download" /> Download
             </a>
-          </>
+          </span>
         ),
       },
     ],

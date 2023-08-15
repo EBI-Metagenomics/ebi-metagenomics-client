@@ -79,8 +79,9 @@ const ROCrateBrowser: React.FC<ModalProps> = ({
           }`}
           onClick={() => handleButtonClick()}
           type="button"
+          style={{ whiteSpace: 'nowrap' }}
         >
-          Browse the RO-Crate
+          Browse&nbsp;RO-Crate
         </button>
         {!useButtonVariant && <span> providing this track</span>}
       </span>
