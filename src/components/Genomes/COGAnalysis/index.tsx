@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import * as Highcharts from 'highcharts';
 import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
@@ -101,8 +101,9 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
         accession={accession1}
         y="genome-count"
         x="name"
-        tooltipKey="COG"
-        tooltipVal="Genome-Count"
+        tooltipKey1="COG"
+        tooltipVal1="description"
+        tooltipKey3="Genome Count"
         lAngle={null}
       />
       <EMGTable

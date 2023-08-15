@@ -34,6 +34,14 @@ const ChartTransforms: Transform[] = [
     calculate: 'datum.average_gc_content + datum.standard_deviation_gc_content',
     as: 'upper_bound_gc-distribution',
   },
+  {
+    calculate: "'± ' + datum.standard_deviation_gc_content",
+    as: 'std_dev_text_gc-distribution',
+  },
+  {
+    calculate: "'± ' + datum.standard_deviation_length",
+    as: 'std_dev_text_seq-length',
+  },
   // Calculate the AT and GC content
   { calculate: '100 - datum.average_gc_content', as: 'AT Content' },
   { calculate: 'datum.average_gc_content', as: 'GC Content' },

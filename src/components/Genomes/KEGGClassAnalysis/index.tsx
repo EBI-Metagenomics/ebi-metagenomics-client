@@ -124,9 +124,9 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
         accession={accession1}
         y="genome-count"
         x="class-id"
-        tooltipKey="description"
-        tooltipKeyField="name"
-        tooltipVal="Genome Count"
+        tooltipKey1="Description"
+        tooltipVal1="name"
+        tooltipKey3="Genome Count"
       />
       <EMGTable
         cols={columns}

@@ -12,9 +12,11 @@ const PfamTab: React.FC = () => {
       <BarChart />
 
       <VerticalBarChart
-        ChartTitle="Pfam Entries vs Matches"
+        ChartTitle="Top Pfam Entries"
         accession={accession}
-        tooltipKey="Pfam Entry"
+        tooltipKey1="Pfam Entry"
+        tooltipVal1="description"
+        tooltipKey3="Count"
       />
       <PfamTable />
     </div>

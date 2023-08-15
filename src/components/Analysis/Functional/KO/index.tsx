@@ -12,9 +12,11 @@ const PfamTab: React.FC = () => {
       <KOBarChart />
 
       <VerticalBarChart
-        ChartTitle="KO Entries vs Matches"
+        ChartTitle="Top KO Entries"
         accession={accession}
-        tooltipKey="KEGG Class"
+        tooltipKey1="KEGG Class"
+        tooltipVal1="description"
+        tooltipKey3="Count"
       />
       <KOTable />
     </div>

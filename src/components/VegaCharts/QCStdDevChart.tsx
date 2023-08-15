@@ -4,10 +4,7 @@ import Loading from 'components/UI/Loading';
 import { VegaLite, VisualizationSpec } from 'react-vega';
 import config from 'src/utils/config';
 import { NonNormalizedSpec } from 'vega-lite/build/src/spec';
-import {
-  VConcatGCDistribution,
-  VConcatSeqLength,
-} from './QC-chart-components/VConcatBottom';
+import VConcatBottom from './QC-chart-components/VConcatBottom';
 import ChartTransforms from './QC-chart-components/transforms';
 import VConcatTop from './QC-chart-components/VConcatTop';
 
@@ -19,17 +16,15 @@ interface QCStdDevProps {
 const QCStdDevChart: React.FC<QCStdDevProps> = ({ accession, type }) => {
   const [isLoading, setIsLoading] = useState(true);
 
-  let VConcatBottom: NonNormalizedSpec | null = null;
+  // let VConcatBottom: NonNormalizedSpec | null = null;
   let XScaleDomainMin: number;
   let XScaleDomainMax: number;
   // Conditional rendering of the Bottom Chart -> Seq length, GC distribution charts
   if (type === 'seq-length') {
     XScaleDomainMin = 0;
-    VConcatBottom = VConcatSeqLength;
   } else if (type === 'gc-distribution') {
     XScaleDomainMin = 0;
     XScaleDomainMax = 100;
-    VConcatBottom = VConcatGCDistribution(type);
   }
 
   const spec: VisualizationSpec = {
@@ -45,7 +40,7 @@ const QCStdDevChart: React.FC<QCStdDevProps> = ({ accession, type }) => {
     transform: ChartTransforms,
     vconcat: [
       VConcatTop(type, accession, config.api, XScaleDomainMin, XScaleDomainMax),
-      VConcatBottom,
+      VConcatBottom(type),
     ],
     config: {
       view: { stroke: 'transparent' },
@@ -60,6 +55,7 @@ const QCStdDevChart: React.FC<QCStdDevProps> = ({ accession, type }) => {
         titleFontWeight: 'normal',
         titlePadding: 10,
       },
+
       legend: {
         orient: 'bottom',
         title: null,

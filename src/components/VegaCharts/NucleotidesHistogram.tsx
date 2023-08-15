@@ -48,7 +48,7 @@ const NucleotideHistogram: React.FC = () => {
     layer: [
       {
         width: 'container',
-        mark: { type: 'area', line: {} },
+        mark: { type: 'area', line: { size: 2 } },
         params: [
           {
             name: 'nuc', // nucleotide selection from the legend
@@ -95,7 +95,13 @@ const NucleotideHistogram: React.FC = () => {
         params: [
           {
             name: 'hover', // Hover functionality
-            select: { type: 'point', on: 'mousemove', nearest: true },
+            select: {
+              type: 'point',
+              on: 'mousemove',
+
+              clear: 'mouseout',
+              nearest: true,
+            },
           },
           {
             name: 'zoom', // Zoom functionality

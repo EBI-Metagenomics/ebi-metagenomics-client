@@ -120,12 +120,13 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
         ref={chartComponentRef}
       />
       <VerticalBarChart
-        ChartTitle="Top KEGG modules"
+        ChartTitle="Top KEGG module categories"
         accession={accession1}
         y="genome-count"
         x="name"
-        tooltipKey="Description"
-        tooltipVal="Genome Count"
+        tooltipKey1="Description"
+        tooltipVal1="description"
+        tooltipKey3="Genome Count"
       />
 
       <EMGTable

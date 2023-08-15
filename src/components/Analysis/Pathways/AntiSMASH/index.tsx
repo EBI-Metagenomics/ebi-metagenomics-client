@@ -13,7 +13,10 @@ const KOTab: React.FC = () => {
       <VerticalBarChart
         ChartTitle="Top AntiSMASH gene clusters"
         accession={accession}
-        tooltipKey="AntiSMASH gene cluster"
+        tooltipKey1="AntiSMASH gene cluster"
+        tooltipVal1="description"
+        tooltipKey2="Count"
+        tooltipVal2="count"
         lAngle={0}
       />
       <AntiSMASHTable />

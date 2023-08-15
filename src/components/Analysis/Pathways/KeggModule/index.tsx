@@ -14,12 +14,18 @@ const KOTab: React.FC = () => {
       <VerticalBarChart
         ChartTitle="KEGG Module Categories"
         accession={accession}
-        tooltipKey="KEGG Module"
-        tooltipVal="Completeness"
+        tooltipKey1="Class ID"
+        tooltipVal1="id"
+        tooltipKey2="KEGG Module"
+        tooltipVal2="description"
+        tooltipKey3="Completeness (%)"
         y="completeness"
+        sliderValue={250}
         maxSlider={250}
         titleY="Completeness (%)"
-        lAngle={-65}
+        lAngle={-75}
+        paddingLabel={30}
+        overlapLabels
       />
       <KeggTable />
     </div>

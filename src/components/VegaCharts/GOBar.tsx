@@ -68,7 +68,10 @@ const GOBar: React.FC = () => {
           {
             filter: "datum.lineage === 'biological_process'",
           },
-          { window: [{ op: 'rank', as: 'rank' }] },
+          {
+            sort: [{ field: 'annotations', order: 'descending' }],
+            window: [{ op: 'rank', field: 'annotations', as: 'rank' }],
+          },
           { filter: 'datum.rank <= Input' },
         ],
       },
@@ -90,7 +93,10 @@ const GOBar: React.FC = () => {
         },
         transform: [
           { filter: "datum.lineage === 'molecular_function'" },
-          { window: [{ op: 'rank', as: 'rank' }] },
+          {
+            sort: [{ field: 'annotations', order: 'descending' }],
+            window: [{ op: 'rank', field: 'annotations', as: 'rank' }],
+          },
           { filter: 'datum.rank <= Input' },
         ],
       },
@@ -111,7 +117,10 @@ const GOBar: React.FC = () => {
         },
         transform: [
           { filter: "datum.lineage === 'cellular_component'" },
-          { window: [{ op: 'rank', as: 'rank' }] },
+          {
+            sort: [{ field: 'annotations', order: 'descending' }],
+            window: [{ op: 'rank', field: 'annotations', as: 'rank' }],
+          },
           { filter: 'datum.rank <= Input' },
         ],
       },

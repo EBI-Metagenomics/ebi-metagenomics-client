@@ -12,13 +12,18 @@ interface VerticalBarChartProps {
   titleX?: string;
   titleY?: string;
   accession: string;
-  tooltipVal?: string;
-  tooltipKeyField?: string;
-  tooltipKey: string;
+  tooltipKey1?: string;
+  tooltipVal1?: string;
+  tooltipKey2?: string;
+  tooltipVal2?: string;
+  tooltipKey3?: string;
   y?: string;
   x?: string;
   lAngle?: number;
+  paddingLabel?: number;
   maxSlider?: number;
+  sliderValue?: number;
+  overlapLabels?: boolean;
 }
 
 const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
@@ -26,13 +31,18 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
   titleX = null,
   titleY = 'Number of Matches',
   accession,
-  tooltipVal = 'count',
-  tooltipKeyField = 'description',
-  tooltipKey,
+  tooltipKey1 = null,
+  tooltipKey2 = null,
+  tooltipKey3 = 'Count',
+  tooltipVal1 = null,
+  tooltipVal2 = null,
   y = 'count',
   x = 'accession',
   lAngle = -20,
+  paddingLabel = 5,
   maxSlider = 30,
+  sliderValue = 10,
+  overlapLabels = false,
 }) => {
   const [isLoading, setIsLoading] = useState(true); // loading state for the Loading component
   const [isLoaded, setIsLoaded] = useState(false); // loaded state for the slider to appear after the chart is loaded
@@ -68,10 +78,11 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
         sort: { field: `${y}`, order: 'descending' },
         axis: {
           labelBaseline: 'line-top',
-          labelPadding: 15,
+          labelPadding: paddingLabel,
           labelAngle: lAngle,
           labelAlign: 'center',
-          // labelLimit: 23,
+          labelOverlap: overlapLabels,
+          labelSeparation: 2,
         },
         title: titleX,
       },
@@ -81,8 +92,9 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
         axis: { title: titleY, tickCount: 4 },
       },
       tooltip: [
-        { field: tooltipKeyField, title: tooltipKey }, // tooltip
-        { field: `${y}`, title: tooltipVal },
+        { field: tooltipVal1, title: tooltipKey1 }, // tooltip
+        { field: tooltipVal2, title: tooltipKey2 },
+        { field: `${y}`, title: tooltipKey3 },
       ],
       fill: {
         // color for the bar, changes color on hover
@@ -100,7 +112,7 @@ const VerticalBarChart: React.FC<VerticalBarChartProps> = ({
       },
       {
         name: 'Input', // parameter for the slider
-        value: 10,
+        value: sliderValue,
         bind: { input: 'range', min: 5, max: maxSlider, step: 1 },
       },
     ],
