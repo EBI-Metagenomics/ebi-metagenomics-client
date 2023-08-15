@@ -40,7 +40,7 @@ const verifyMotusCrateIframeContents = ($iframe) => {
   cy.wrap($iframe.contents().find("a:contains(\"multiqc\")"))
     .should("not.be.empty")
     .then(($multiqcAnchor) => {
-      $multiqcAnchor[0].click();
+      $multiqcAnchor.click();
       cy.wrap($iframe.contents().find("a:contains(\"Home\")")).should("not.be.empty");
     });
 }
