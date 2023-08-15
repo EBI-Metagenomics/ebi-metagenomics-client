@@ -84,7 +84,20 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
   const igvContainer = useCallback(
     (node) => {
-      // alert('called back');
+      // remove igvContainer dom element from the dom, if it exists
+      // debugger;
+
+      // if (igvBrowser) {
+      //   igv.removeAllBrowsers();
+      //   return;
+      //   // igv.removeBrowser(igvBrowser);
+      // }
+
+      // if (document.getElementsByClassName('igv-container').length > 0) {
+      //   document.getElementsByClassName('igv-container')[0].remove();
+      // }
+
+      alert('called back');
       const options = {
         showChromosomeWidget: false,
         showTrackLabelButton: true,
@@ -166,17 +179,28 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
           });
         });
         setIgvBrowser(browser);
+        const myObj = {
+          fastaURL,
+          displayName,
+          accession,
+          contigId,
+          antiSMASH,
+          extraAnnotations,
+          hasMetaProteomics,
+        };
+        console.log('fastaURL');
+        console.log(fastaURL);
       });
     },
     [
       fastaURL,
-      displayName,
-      config.api,
-      accession,
-      contigId,
-      antiSMASH,
-      extraAnnotations,
-      hasMetaProteomics,
+      // displayName,
+      // config.api,
+      // accession,
+      // contigId,
+      // antiSMASH,
+      // extraAnnotations,
+      // hasMetaProteomics,
     ]
   );
 
@@ -187,6 +211,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
     <div id="contig" className="vf-stack vf-stack--600">
       <div ref={igvContainer} />
       {/* {!updatingTracks && <TrackViews trackViews={igvBrowser.trackViews} />} */}
+      {/* {igvBrowser && <TrackViews igvBrowser={igvBrowser} />} */}
       <TrackViews igvBrowser={igvBrowser} />
       {hasMetaProteomics && <GFFCompare igvBrowser={igvBrowser} />}
     </div>

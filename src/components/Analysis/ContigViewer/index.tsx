@@ -111,6 +111,8 @@ const ContigsViewer: React.FC = () => {
     }
   }, [data, contig, setSelectedContigParam]);
 
+  // alert('Contig viewer component is renderring');
+
   if (error) return <FetchError error={error} />;
   return (
     <div className="vf-stack vf-stack--800">

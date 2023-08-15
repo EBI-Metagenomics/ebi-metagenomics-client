@@ -14,9 +14,11 @@ type TrackViewsProps = {
 const TrackViews: React.FC<TrackViewsProps> = ({ igvBrowser }) => {
   const [trackColorBys, setTrackColorBys] = useState({});
   const [updatingTracks, setUpdatingTracks] = useState(true);
+  // console.log('trackColorBys', trackColorBys);
+  // console.log('igvBrowser', igvBrowser);
   useEffect(() => {
     const updateTracks = async () => {
-      alert('updateTracks');
+      // alert('updateTracks');
       setUpdatingTracks(true);
       const tracksToRemove = [];
       const tracksToAdd = [];
@@ -25,7 +27,7 @@ const TrackViews: React.FC<TrackViewsProps> = ({ igvBrowser }) => {
         const colorBy = trackColorBys[trackView.track.id];
         if (colorBy) {
           // alert('colorBy');
-          console.log('colorBy', colorBy);
+          // console.log('colorBy', colorBy);
           const newTrackConfig = {
             ...trackView.track.config,
             ...annotationTrackCustomisations(colorBy.value, FORMAT.ASSEMBLY_V5),

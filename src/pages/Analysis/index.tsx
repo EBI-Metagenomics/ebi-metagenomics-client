@@ -70,6 +70,7 @@ const AnalysisPage: React.FC = () => {
   const linkToOtherAnalyses = isAssembly(analysisData)
     ? `/assemblies/${analysisData?.relationships?.assembly?.data?.id}`
     : `/runs/${analysisData?.relationships?.run?.data?.id}`;
+  // alert('analysis page is renderring');
   return (
     <section className="vf-content">
       <h2>Analysis {accession}</h2>
