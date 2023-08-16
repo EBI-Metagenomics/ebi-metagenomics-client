@@ -26,13 +26,11 @@ const modalStyle = {
 
 type ModalProps = {
   crateUrl?: string;
-  specificCrateFolder?: string;
   useButtonVariant?: boolean;
 };
 
 const ROCrateBrowser: React.FC<ModalProps> = ({
   crateUrl,
-  specificCrateFolder,
   useButtonVariant,
 }) => {
   const [cratePreview, setCratePreview] = useState('');

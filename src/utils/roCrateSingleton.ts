@@ -7,13 +7,6 @@ const RoCrateSingleton = (() => {
   let trackCrate = null;
   let trackCrateZip = null;
   let currentCrateUrl = null;
-  let specifiedCrateFolder = null;
-
-  const determineFilePath = (fileName) => {
-    return specifiedCrateFolder
-      ? `${specifiedCrateFolder}/${fileName}`
-      : fileName;
-  };
 
   const extractDetailsFromCrateZip = async (crateUrl) => {
     currentCrateUrl = crateUrl;
@@ -24,7 +17,7 @@ const RoCrateSingleton = (() => {
         const crateZip = await JSZip.loadAsync(blob);
         trackCrateZip = crateZip;
         const metadataJson = await crateZip
-          .file(determineFilePath('ro-crate-metadata.json'))
+          .file('ro-crate-metadata.json')
           .async('string');
         const metadata = JSON.parse(metadataJson);
         trackCrate = new ROCrate(metadata, {
@@ -54,9 +47,7 @@ const RoCrateSingleton = (() => {
         }
       });
       const name = tree.name[0]['@value'].split(' ')[0];
-      const gff = await trackCrateZip
-        .file(determineFilePath(filePointer))
-        .async('base64');
+      const gff = await trackCrateZip.file(filePointer).async('base64');
       const trackAttributes = {
         name,
         type: 'annotation',
@@ -91,16 +82,11 @@ const RoCrateSingleton = (() => {
     return trackCrate;
   };
 
-  const getHtmlContent = async (
-    fileName,
-    crateUrl,
-    specificCrateFolder = null
-  ) => {
-    specifiedCrateFolder = specificCrateFolder;
+  const getHtmlContent = async (fileName, crateUrl) => {
     if (currentCrateUrl !== crateUrl) {
       await extractDetailsFromCrateZip(crateUrl);
     }
-    return trackCrateZip.file(determineFilePath(fileName)).async('string');
+    return trackCrateZip.file(fileName).async('string');
   };
 
   return {
