@@ -4,6 +4,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
@@ -33,7 +34,6 @@ import ContigLengthFilter from 'components/Analysis/ContigViewer/Filter/ContigLe
 import ContigTextFilter from 'components/Analysis/ContigViewer/Filter/ContigText';
 // eslint-disable-next-line max-len
 import ContigAnnotationTypeFilter from 'components/Analysis/ContigViewer/Filter/ContigAnnotationType';
-import LoadingOverlay from 'components/UI/LoadingOverlay';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import {
   AnnotationTrackColorPicker,
@@ -41,58 +41,11 @@ import {
   FORMAT,
 } from 'components/IGV/TrackColourPicker';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import JSZip from 'jszip';
-import { ROCrate } from 'ro-crate';
+import roCrateSingleton from 'utils/roCrateSingleton';
 
 type ContigProps = {
   contig: MGnifyDatum;
 };
-
-function createROCrateTrack(anno: MGnifyDatum, options) {
-  fetch(anno.links.self as string, { method: 'GET' })
-    .then((response) => {
-      if (response.status === 200 || response.status === 0) {
-        return Promise.resolve(response.blob());
-      }
-      return Promise.reject(new Error(response.statusText));
-    })
-    .then(JSZip.loadAsync)
-    .then(async (crateZip) => {
-      const metadataJson = await crateZip
-        .file('ro-crate-metadata.json')
-        .async('string');
-
-      const metadata = JSON.parse(metadataJson);
-      const crate = new ROCrate(metadata, {
-        link: true,
-        array: true,
-      });
-      const tree = crate.getNormalizedTree();
-      let filePointer;
-      tree.hasPart.forEach((dataset) => {
-        if (
-          dataset['@type'].includes('File') &&
-          dataset.encodingFormat[0]['@value'].includes('gff')
-        ) {
-          filePointer = dataset['@id'];
-        }
-      });
-      const name = tree.name[0]['@value'].split(' ')[0];
-      const gff = await crateZip.file(filePointer).async('base64');
-      options.tracks.push({
-        name,
-        type: 'annotation',
-        format: 'gff3',
-        displayMode: 'EXPANDED',
-        url: `data:application/octet-stream;base64,${gff}`,
-        label: name,
-        crate: {
-          tree,
-          zip: crateZip,
-        },
-      });
-    });
-}
 
 const Contig: React.FC<ContigProps> = ({ contig }) => {
   const accession = useURLAccession();
@@ -115,6 +68,30 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
   const [trackColorBys, setTrackColorBys] = useState({});
   const [updatingTracks, setUpdatingTracks] = useState(true);
+
+  const currentAnnotationUrl = useRef(null);
+
+  async function buildTrackBasedOnAnnotationType(
+    annotationType,
+    annotationUrl
+  ) {
+    currentAnnotationUrl.current = annotationUrl;
+    if (annotationType === 'Analysis RO Crate') {
+      const trackProperties = await roCrateSingleton.getTrackProperties(
+        annotationUrl
+      );
+      return trackProperties || {};
+    }
+    return {
+      name: annotationType,
+      type: 'annotation',
+      format: 'gff3',
+      displayMode: 'EXPANDED',
+      url: annotationUrl,
+      label: annotationType,
+      crate: null,
+    };
+  }
 
   const igvContainer = useCallback(
     (node) => {
@@ -156,19 +133,12 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
         (extraAnnotations.data as MGnifyDatum[]).forEach((anno) => {
           const annotationType = (anno.attributes.description as KeyValue)
             .label as string;
-          if (annotationType === 'Analysis RO Crate') {
-            createROCrateTrack(anno, options);
-          } else {
-            options.tracks.push({
-              name: annotationType,
-              type: 'annotation',
-              format: 'gff3',
-              displayMode: 'EXPANDED',
-              url: anno.links.self as string,
-              label: annotationType,
-              crate: null,
-            });
-          }
+          buildTrackBasedOnAnnotationType(
+            annotationType,
+            anno.links.self as string
+          ).then((trackProperties) => {
+            options.tracks.push(trackProperties);
+          });
         });
       }
 
@@ -271,9 +241,9 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
     updateTracks().then(() => setUpdatingTracks(false));
   }, [trackColorBys, igvBrowser]);
 
-  if (loading || loadingExtraAnnotations) return <Loading size="small" />;
+  if (loading || loadingExtraAnnotations) return null;
   if (error) return <FetchError error={error} />;
-  if (!data) return <Loading />;
+  if (!data) return null;
   return (
     <div id="contig" className="vf-stack vf-stack--600">
       <div ref={igvContainer} />
@@ -431,24 +401,8 @@ const ContigsViewer: React.FC = () => {
                 <h4>Contig browser</h4>
               </summary>
               <div className="contig-igv-container">
-                <LoadingOverlay loading={loading}>
-                  {!!contig && <Contig contig={contig} />}
-                  {!contig && (
-                    <div
-                      className="vf-box vf-box-theme--primary vf-box--easy"
-                      style={{
-                        backgroundColor: '#d1e3f6',
-                        margin: '8px auto',
-                      }}
-                    >
-                      <h3 className="vf-box__heading">No contig selected</h3>
-                      <p className="vf-box__text">
-                        Select a contig from the table to load the interactive
-                        annotation viewer
-                      </p>
-                    </div>
-                  )}
-                </LoadingOverlay>
+                {!!contig && <Contig contig={contig} />}
+                {!contig && <Loading size="small" />}
               </div>
             </details>
           </div>

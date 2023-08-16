@@ -11,9 +11,10 @@ import {
 } from 'components/Analysis/ContigViewer/mgnifyColours';
 import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
-import ROCratePreview from 'components/IGV/ROCrateTrack';
 import { useEffectOnce } from 'react-use';
 import { find } from 'lodash-es';
+import { TrackView } from 'utils/trackView';
+import ROCrateBrowser from 'components/UI/ROCrateBrowser';
 
 function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
   if (!feature || !feature.getAttributeValue) return null;
@@ -196,7 +197,8 @@ const trackColorOptionsForType = (track) => {
 };
 
 type AnnotationTrackColorPickerProps = {
-  trackView: any;
+  // trackView: Record<string, { id: string, config: object }>;
+  trackView: TrackView;
   trackColorBys: Record<string, { label: string; value: string }>;
   onChange: (event, action) => void;
 };
@@ -246,7 +248,9 @@ export const AnnotationTrackColorPicker: React.FC<
           <ExtLink href="https://github.com/Finn-Lab/SanntiS">SanntiS</ExtLink>
         </span>
       )}
-      <ROCratePreview trackView={trackView} />
+      {trackView.track.config.crate && (
+        <ROCrateBrowser crateUrl={trackView.track.config.initialCrateUrl} />
+      )}
     </div>
   );
 };
