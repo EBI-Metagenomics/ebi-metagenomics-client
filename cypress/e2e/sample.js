@@ -102,7 +102,7 @@ describe('Sample page', function() {
             
             const descOverview = '[data-cy=sample-description]';
             cy.get(descOverview).should('contain', 'Description');
-            cy.get(descOverview).should('contain', 'CL100042219_L01_29');
+            cy.get(descOverview).should('contain', 'GSC:MIxS');
 
             cy.get('[data-cy=sample-metadata]')
                 .should('contain', 'collection date:')

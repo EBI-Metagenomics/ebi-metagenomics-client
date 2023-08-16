@@ -57,6 +57,7 @@ const ClearingHouseMetadata: React.FC<{ sampleAccession: string }> = ({
                   const evidences = curation.assertionEvidences.map(
                     (evidence) => (
                       <ExtLink
+                        key={curation.attributePost}
                         className="link-in-tooltip"
                         href={`https://evidenceontology.org/term/${evidence.identifier.replace(
                           '_',
