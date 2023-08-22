@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import AssociatedAssemblies from 'components/Assembly/Assemblies';
 import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from 'utils/urls';
+import ExtraAnnotations from 'components/ExtraAnnotations';
 
 const RunPage: React.FC = () => {
   const accession = useURLAccession();
@@ -83,6 +84,13 @@ const RunPage: React.FC = () => {
           )}
           <Box label="Associated assemblies">
             <AssociatedAssemblies rootEndpoint="runs" />
+          </Box>
+          <Box label="Additional analyses">
+            <p>
+              Additional annotations produced by workflows run outside the scope
+              of MGnify’s versioned pipelines.
+            </p>
+            <ExtraAnnotations namespace="runs" />
           </Box>
         </div>
       </section>

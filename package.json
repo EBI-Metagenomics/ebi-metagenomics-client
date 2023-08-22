@@ -1,6 +1,6 @@
 {
   "name": "mgportalv2",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "description": "Web Client for the Mgnify service at EBI",
   "homepage": "https://github.com/EBI-Metagenomics/ebi-metagenomics-client#readme",
   "main": "src/index.tsx",
@@ -32,6 +32,7 @@
     "@googlemaps/markerclustererplus": "1.2.10",
     "@googlemaps/react-wrapper": "1.1.19",
     "@jonkoops/matomo-tracker-react": "^0.7.0",
+    "@react-hooks-library/core": "^0.5.1",
     "@sentry/react": "^6.17.2",
     "@sentry/tracing": "^6.17.2",
     "@tippyjs/react": "4.2.6",

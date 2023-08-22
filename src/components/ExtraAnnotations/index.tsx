@@ -8,26 +8,40 @@ import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import InfoBanner from 'src/components/UI/InfoBanner';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import ROCrateBrowser from 'components/UI/ROCrateBrowser';
+
+type ExtraAnnotationsProps = {
+  namespace: string;
+};
 
 const initialPageSize = 10;
 
-const AssemblyExtraAnnotations: React.FC = () => {
+const singularise = (str: string) => {
+  const lastTwoChars = str.slice(-2);
+  const singularForm =
+    lastTwoChars === 'es' ? `${str.slice(0, -2)}y` : str.slice(0, -1);
+  return singularForm;
+};
+
+const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
+  const singularNamespace = singularise(namespace);
   const accession = useURLAccession();
-  const [assemblyAnnotationsPage] = useQueryParamState(
-    'assembly-annotations-page',
+  const [annotationsPage] = useQueryParamState(
+    `${singularNamespace}-annotations-page`,
     1,
     Number
   );
-  const [assemblyAnnotationsPageSize] = useQueryParamState(
-    'assembly-annotations-page_size',
+  const [annotationsPageSize] = useQueryParamState(
+    `${singularNamespace}-annotations-page-size`,
     initialPageSize,
     Number
   );
+
   const { data, loading, isStale, error } = useMGnifyData(
-    `assemblies/${accession}/extra-annotations`,
+    `${namespace}/${accession}/extra-annotations`,
     {
-      page: assemblyAnnotationsPage,
-      page_size: assemblyAnnotationsPageSize,
+      page: annotationsPage,
+      page_size: annotationsPageSize,
     }
   );
 
@@ -54,14 +68,20 @@ const AssemblyExtraAnnotations: React.FC = () => {
         Header: 'Action',
         accessor: 'links.self',
         Cell: ({ cell }) => (
-          <a
-            href={cell.value}
-            className="vf-button vf-button--link"
-            style={{ whiteSpace: 'nowrap' }}
-            download
-          >
-            <span className="icon icon-common icon-download" /> Download
-          </a>
+          <>
+            {cell.row.original.attributes.description.label ===
+              'Analysis RO Crate' && (
+              <ROCrateBrowser useButtonVariant crateUrl={cell.value} />
+            )}
+            <a
+              href={cell.value}
+              className="vf-button vf-button--sm vf-button--secondary"
+              style={{ whiteSpace: 'nowrap' }}
+              download
+            >
+              <span className="icon icon-common icon-download" /> Download
+            </a>
+          </>
         ),
       },
     ],
@@ -72,8 +92,12 @@ const AssemblyExtraAnnotations: React.FC = () => {
   if (error || !data) return <FetchError error={error} />;
   if (!(data.data as MGnifyDatum[]).length)
     return (
-      <InfoBanner type="info" title="Assembly has no additional annotations." />
+      <InfoBanner
+        type="info"
+        title={`The ${singularNamespace} has no additional annotations.`}
+      />
     );
+
   const showPagination = (data.meta?.pagination?.count || 1) > initialPageSize;
 
   return (
@@ -86,15 +110,15 @@ const AssemblyExtraAnnotations: React.FC = () => {
       }
       cols={columns}
       data={data as MGnifyResponseList}
-      initialPage={(assemblyAnnotationsPage as number) - 1}
+      initialPage={(annotationsPage as number) - 1}
       initialPageSize={initialPageSize}
-      className="mg-assembly-table"
+      className={`mg-${namespace}-table`}
       loading={loading}
       isStale={isStale}
-      namespace="assembly-annotations-"
+      namespace={namespace}
       showPagination={showPagination}
     />
   );
 };
 
-export default AssemblyExtraAnnotations;
+export default ExtraAnnotations;
