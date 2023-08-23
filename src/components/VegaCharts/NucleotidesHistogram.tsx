@@ -34,7 +34,7 @@ const NucleotideHistogram: React.FC = () => {
       x: {
         field: 'pos',
         type: 'quantitative',
-        scale: { domain: [1, 500] },
+        scale: { domainMax: { expr: "data('source_0')[0].MaxVal" } },
       },
       tooltip: [
         { field: 'pos', title: 'Position' },
