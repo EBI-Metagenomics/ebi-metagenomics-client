@@ -1,0 +1,498 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.0/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "mOTUs data for run SRR5787994",
+      "datePublished": "2023-08-21",
+      "description": "mOTUs data for run SRR5787994",
+      "creator": {
+        "@type": "Person",
+        "name": "MotusCratePreparer"
+      },
+      "hasPart": []
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "_temp",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "./SRR5787994.tar.gz",
+          "@type": "File",
+          "name": "SRR5787994.tar.gz",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/",
+      "@type": "Dataset",
+      "name": "SRR5787994",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/SRR5787994.fasta",
+          "@type": "File",
+          "name": "SRR5787994.fasta",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/cmsearch/",
+      "@type": "Dataset",
+      "name": "cmsearch",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/cmsearch/SRR5787994_matched_seqs_with_coords_deoverlap.tbl",
+          "@type": "File",
+          "name": "SRR5787994_matched_seqs_with_coords_deoverlap.tbl",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/SRR5787994_matched_seqs_with_coords.tbl",
+          "@type": "File",
+          "name": "SRR5787994_matched_seqs_with_coords.tbl",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/cmsearch/sequence-categorisation/",
+      "@type": "Dataset",
+      "name": "sequence-categorisation",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/SRR5787994_LSU_rRNA_archaea.RF02540.fa",
+          "@type": "File",
+          "name": "SRR5787994_LSU_rRNA_archaea.RF02540.fa",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/SRR5787994_SSU_rRNA_archaea.RF01959.fa",
+          "@type": "File",
+          "name": "SRR5787994_SSU_rRNA_archaea.RF01959.fa",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/SRR5787994_SSU_rRNA_bacteria.RF00177.fa",
+          "@type": "File",
+          "name": "SRR5787994_SSU_rRNA_bacteria.RF00177.fa",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/SRR5787994_SSU_rRNA_eukarya.RF01960.fa",
+          "@type": "File",
+          "name": "SRR5787994_SSU_rRNA_eukarya.RF01960.fa",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/SRR5787994_LSU.fasta",
+          "@type": "File",
+          "name": "SRR5787994_LSU.fasta",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/SRR5787994_5_8S.fa",
+          "@type": "File",
+          "name": "SRR5787994_5_8S.fa",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/SRR5787994_LSU_rRNA_bacteria.RF02541.fa",
+          "@type": "File",
+          "name": "SRR5787994_LSU_rRNA_bacteria.RF02541.fa",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/SRR5787994_LSU_rRNA_eukarya.RF02543.fa",
+          "@type": "File",
+          "name": "SRR5787994_LSU_rRNA_eukarya.RF02543.fa",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/SRR5787994_SSU.fasta",
+          "@type": "File",
+          "name": "SRR5787994_SSU.fasta",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/cmsearch/sequence-categorisation/ncRNA/",
+      "@type": "Dataset",
+      "name": "ncRNA",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/ncRNA/SRR5787994_RNaseP_bact_a.fasta",
+          "@type": "File",
+          "name": "SRR5787994_RNaseP_bact_a.fasta",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/ncRNA/SRR5787994_tRNA.fasta",
+          "@type": "File",
+          "name": "SRR5787994_tRNA.fasta",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/ncRNA/SRR5787994_Bacteria_small_SRP.fasta",
+          "@type": "File",
+          "name": "SRR5787994_Bacteria_small_SRP.fasta",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/ncRNA/SRR5787994_alpha_tmRNA.fasta",
+          "@type": "File",
+          "name": "SRR5787994_alpha_tmRNA.fasta",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/ncRNA/SRR5787994_tRNA-Sec.fasta",
+          "@type": "File",
+          "name": "SRR5787994_tRNA-Sec.fasta",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/ncRNA/SRR5787994_tmRNA.fasta",
+          "@type": "File",
+          "name": "SRR5787994_tmRNA.fasta",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/cmsearch/sequence-categorisation/ncRNA/SRR5787994_cyano_tmRNA.fasta",
+          "@type": "File",
+          "name": "SRR5787994_cyano_tmRNA.fasta",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/mOTUs/",
+      "@type": "Dataset",
+      "name": "mOTUs",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/mOTUs/SRR5787994_merged.fastq.motus",
+          "@type": "File",
+          "name": "SRR5787994_merged.fastq.motus",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/mOTUs/SRR5787994_merged_motus.log",
+          "@type": "File",
+          "name": "SRR5787994_merged_motus.log",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/mOTUs/SRR5787994_merged.fastq.tsv",
+          "@type": "File",
+          "name": "SRR5787994_merged.fastq.tsv",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/taxonomy/",
+      "@type": "Dataset",
+      "name": "taxonomy",
+      "datePublished": "2023-08-21",
+      "hasPart": []
+    },
+    {
+      "@id": "SRR5787994/taxonomy/SSU/",
+      "@type": "Dataset",
+      "name": "SSU",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/taxonomy/SSU/SRR5787994_SSU.notaxid.tsv",
+          "@type": "File",
+          "name": "SRR5787994_SSU.notaxid.tsv",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/taxonomy/SSU/SRR5787994_SSU.tsv",
+          "@type": "File",
+          "name": "SRR5787994_SSU.tsv",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/taxonomy/SSU/SRR5787994_SSU.txt",
+          "@type": "File",
+          "name": "SRR5787994_SSU.txt",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/taxonomy/SSU/krona.html",
+          "@type": "File",
+          "name": "krona.html",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/taxonomy/LSU/",
+      "@type": "Dataset",
+      "name": "LSU",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/taxonomy/LSU/SRR5787994_LSU.tsv",
+          "@type": "File",
+          "name": "SRR5787994_LSU.tsv",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/taxonomy/LSU/SRR5787994_LSU.txt",
+          "@type": "File",
+          "name": "SRR5787994_LSU.txt",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/taxonomy/LSU/SRR5787994_LSU.notaxid.tsv",
+          "@type": "File",
+          "name": "SRR5787994_LSU.notaxid.tsv",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/taxonomy/LSU/krona.html",
+          "@type": "File",
+          "name": "krona.html",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/qc/",
+      "@type": "Dataset",
+      "name": "qc",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/qc/SRR5787994_fastp_2.fastq.gz",
+          "@type": "File",
+          "name": "SRR5787994_fastp_2.fastq.gz",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/SRR5787994_fastp_1.fastq.gz",
+          "@type": "File",
+          "name": "SRR5787994_fastp_1.fastq.gz",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/qc_summary",
+          "@type": "File",
+          "name": "qc_summary",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/qc/statistics/",
+      "@type": "Dataset",
+      "name": "statistics",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/qc/statistics/GC-distribution.out.full_bin",
+          "@type": "File",
+          "name": "GC-distribution.out.full_bin",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/statistics/GC-distribution.out.full_pcbin",
+          "@type": "File",
+          "name": "GC-distribution.out.full_pcbin",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/statistics/seq-length.out.full_pcbin",
+          "@type": "File",
+          "name": "seq-length.out.full_pcbin",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/statistics/seq-length.out.full_bin",
+          "@type": "File",
+          "name": "seq-length.out.full_bin",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/statistics/summary.out",
+          "@type": "File",
+          "name": "summary.out",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/statistics/nucleotide-distribution.out.full",
+          "@type": "File",
+          "name": "nucleotide-distribution.out.full",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/statistics/GC-distribution.out.full",
+          "@type": "File",
+          "name": "GC-distribution.out.full",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/statistics/seq-length.out.full",
+          "@type": "File",
+          "name": "seq-length.out.full",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/qc/multiqc/",
+      "@type": "Dataset",
+      "name": "multiqc",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/qc/multiqc/multiqc_report.html",
+          "@type": "File",
+          "name": "multiqc_report.html",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/qc/multiqc/multiqc_data/",
+      "@type": "Dataset",
+      "name": "multiqc_data",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/qc/multiqc/multiqc_data/multiqc_citations.txt",
+          "@type": "File",
+          "name": "multiqc_citations.txt",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/multiqc/multiqc_data/multiqc.log",
+          "@type": "File",
+          "name": "multiqc.log",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/multiqc/multiqc_data/multiqc_general_stats.txt",
+          "@type": "File",
+          "name": "multiqc_general_stats.txt",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/multiqc/multiqc_data/multiqc_sources.txt",
+          "@type": "File",
+          "name": "multiqc_sources.txt",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/multiqc/multiqc_data/multiqc_fastp.txt",
+          "@type": "File",
+          "name": "multiqc_fastp.txt",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/multiqc/multiqc_data/motus.txt",
+          "@type": "File",
+          "name": "motus.txt",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/multiqc/multiqc_data/multiqc_data.json",
+          "@type": "File",
+          "name": "multiqc_data.json",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/qc/decontamination/",
+      "@type": "Dataset",
+      "name": "decontamination",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/qc/decontamination/decontamination_output_report.txt",
+          "@type": "File",
+          "name": "decontamination_output_report.txt",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/decontamination/SRR5787994_clean_1.fastq.gz",
+          "@type": "File",
+          "name": "SRR5787994_clean_1.fastq.gz",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/decontamination/SRR5787994_clean_2.fastq.gz",
+          "@type": "File",
+          "name": "SRR5787994_clean_2.fastq.gz",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/qc/fastp/",
+      "@type": "Dataset",
+      "name": "fastp",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/qc/fastp/SRR5787994_qc_fastp.html",
+          "@type": "File",
+          "name": "SRR5787994_qc_fastp.html",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/fastp/SRR5787994_qc_fastp.json",
+          "@type": "File",
+          "name": "SRR5787994_qc_fastp.json",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    },
+    {
+      "@id": "SRR5787994/qc/seqprep/",
+      "@type": "Dataset",
+      "name": "seqprep",
+      "datePublished": "2023-08-21",
+      "hasPart": [
+        {
+          "@id": "SRR5787994/qc/seqprep/SRR5787994_reverse_unmerged.fastq.gz",
+          "@type": "File",
+          "name": "SRR5787994_reverse_unmerged.fastq.gz",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/seqprep/SRR5787994_merged.fastq.gz",
+          "@type": "File",
+          "name": "SRR5787994_merged.fastq.gz",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/seqprep/seqprep_output_report.txt",
+          "@type": "File",
+          "name": "seqprep_output_report.txt",
+          "datePublished": "2023-08-21"
+        },
+        {
+          "@id": "SRR5787994/qc/seqprep/SRR5787994_forward_unmerged.fastq.gz",
+          "@type": "File",
+          "name": "SRR5787994_forward_unmerged.fastq.gz",
+          "datePublished": "2023-08-21"
+        }
+      ]
+    }
+  ]
+}

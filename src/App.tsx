@@ -45,6 +45,7 @@ const App: React.FC = () => {
   const [user, setUser] = useState({
     username: null,
     isAuthenticated: false,
+    token: null,
   });
   const [details, setDetails] = useState(null);
   const value = useMemo(
@@ -55,6 +56,7 @@ const App: React.FC = () => {
       setUser,
       setDetails,
       config,
+      token: user.token,
     }),
     [details, user.isAuthenticated, user.username]
   );

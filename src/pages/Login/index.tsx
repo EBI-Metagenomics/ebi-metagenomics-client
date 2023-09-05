@@ -10,10 +10,20 @@ import useAuthentication from 'hooks/useAuthentication';
 import enaUserImg from 'public/images/ico_ena_user.jpg';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
+import axios from 'axios';
+import { useToken } from 'hooks/useToken';
+import { useUser } from 'hooks/useUser';
+
 const Login: React.FC = () => {
+  const [token, setToken] = useToken();
+  const user = useUser();
+  const { username } = user || {};
+  const { config } = useContext(UserContext);
   const userRef = useRef(null);
   const passwordRef = useRef(null);
-  const { username, isAuthenticated } = useContext(UserContext);
+  const [loginErrorMessage, setLoginError] = React.useState(null);
+  // const { username, isAuthenticated } = useContext(UserContext);
+  const { isAuthenticated } = useContext(UserContext);
   const { login, logout, loginError, loading, error } = useAuthentication();
   const [from] = useQueryParamState('from', '');
   const navigate = useNavigate();
@@ -42,7 +52,32 @@ const Login: React.FC = () => {
   if (error) return <FetchError error={error} />;
   const handleSubmit = (event: FormEvent): void => {
     event.preventDefault();
-    login(userRef.current.value, passwordRef.current.value);
+    // login(userRef.current.value, passwordRef.current.value);
+    // const response = await axios.post(`${config.api}utils/token/obtain`, {
+    //   username: userRef.current.value,
+    //   password: passwordRef.current.value,
+    // });
+
+    axios
+      .post(`${config.api}utils/token/obtain`, {
+        username: userRef.current.value,
+        password: passwordRef.current.value,
+      })
+      .then((response) => {
+        console.log('response', response.data.data);
+        const receivedToken = response.data.data.token;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        setToken(receivedToken) as unknown as void;
+
+        console.log('user', user);
+        console.log(isAuthenticated);
+      })
+      .catch((err) => {
+        // record errors
+        console.log('errors', err);
+        setLoginError(err.response.data.errors.non_field_errors[0]);
+      });
   };
   return (
     <div className="vf-grid vf-grid__col-2">
@@ -80,6 +115,14 @@ const Login: React.FC = () => {
               required
             />
           </div>
+
+          {/* Conditionally display login error message */}
+          {loginErrorMessage && (
+            <p className="vf-form__helper vf-form__helper--error">
+              {loginErrorMessage}
+            </p>
+          )}
+
           <br />
           <div className="form-actions-no-box">
             <button

@@ -33,19 +33,19 @@ const useAuthentication = (): AuthenticationFunctions => {
     form.next
   );
 
-  useEffect(() => {
-    if (!loadingLogin) {
-      if (rawResponseLogin?.type === 'opaqueredirect') {
-        setUser({ username: form.username, isAuthenticated: true });
-        setLoginError('');
-      } else if (dataLogin) {
-        setLoginError(
-          (dataLogin.querySelector('.text-error') as HTMLElement)?.innerText ||
-            ''
-        );
-      }
-    }
-  }, [dataLogin, loadingLogin, form.username, rawResponseLogin?.type, setUser]);
+  // useEffect(() => {
+  //   if (!loadingLogin) {
+  //     if (rawResponseLogin?.type === 'opaqueredirect') {
+  //       setUser({ username: form.username, isAuthenticated: true });
+  //       setLoginError('');
+  //     } else if (dataLogin) {
+  //       setLoginError(
+  //         (dataLogin.querySelector('.text-error') as HTMLElement)?.innerText ||
+  //           ''
+  //       );
+  //     }
+  //   }
+  // }, [dataLogin, loadingLogin, form.username, rawResponseLogin?.type, setUser]);
 
   const [shouldLogout, setShouldLogout] = useState(false);
   const { loading: loadingLogout, rawResponse } = useMgnifyLogout(shouldLogout);
@@ -70,7 +70,7 @@ const useAuthentication = (): AuthenticationFunctions => {
 
   const logout = (): void => {
     setShouldLogout(true);
-    setUser({ username: null, isAuthenticated: false });
+    // setUser({ username: null, isAuthenticated: false });
   };
 
   return {
