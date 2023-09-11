@@ -21,6 +21,8 @@ import './styles/toast.css';
 import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
+import { AuthProvider } from 'pages/Login/AuthContext';
+import PersistLogin from 'components/PersistLogin';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -64,6 +66,7 @@ const App: React.FC = () => {
   return (
     <BrowserRouter basename={config.basename}>
       <UserContext.Provider value={value}>
+        {/* <AuthProvider> */}
         <QueryParamsProvider>
           <LoginMonitor />
           <Matomo />
@@ -96,7 +99,9 @@ const App: React.FC = () => {
                   <Route path="/assemblies/*" element={<Assembly />} />
                   <Route path="/pipelines/*" element={<Pipelines />} />
                   <Route path="/analyses/*" element={<Analysis />} />
-                  <Route path="/mydata" element={<MyData />} />
+                  <Route element={<PersistLogin />}>
+                    <Route path="/mydata" element={<MyData />} />
+                  </Route>
                 </Routes>
               </Suspense>
             </ErrorBoundary>
@@ -106,6 +111,7 @@ const App: React.FC = () => {
           <CookieBanner />
         </QueryParamsProvider>
       </UserContext.Provider>
+      {/* </AuthProvider> */}
     </BrowserRouter>
   );
 };
