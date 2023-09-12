@@ -21,7 +21,6 @@ describe("RO-Crate Browser", () => {
 const tryToBrowseAnRoCrate = (location, verifyIframeContents) => {
   cy.visit(location);
   const roCrateBrowserButton = ".ro-crate-browser-button";
-  // cy.get(".ro-crate-browser-button").should("exist");
   cy.get(roCrateBrowserButton).should("exist");
   cy.wait(1000);
   cy.get(roCrateBrowserButton).last().click();
