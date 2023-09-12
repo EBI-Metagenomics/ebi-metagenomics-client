@@ -26,7 +26,6 @@ const modalStyle = {
 
 type ModalProps = {
   crateUrl?: string;
-  specificCrateFolder?: string;
   useButtonVariant?: boolean;
 };
 
