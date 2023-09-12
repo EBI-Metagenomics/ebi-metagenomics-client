@@ -1,25 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-import UserContext from 'pages/Login/UserContext';
-import InfoBanner from 'components/UI/InfoBanner';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
+import useProtectedApiCall from 'hooks/useProtectedApiCall';
 import { MGnifyResponseList } from 'hooks/data/useData';
 
 const MyData: React.FC = () => {
-  const { isAuthenticated } = useContext(UserContext);
-
   const [page] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
 
-  const axiosPrivate = useAxiosPrivate();
+  const protectedAxios = useProtectedApiCall();
   const [myData, setMyData] = useState<MGnifyResponseList | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isStale] = useState<boolean>(false);
@@ -32,7 +25,7 @@ const MyData: React.FC = () => {
 
     const getMyData = async () => {
       try {
-        const response = await axiosPrivate.get('/mydata', {
+        const response = await protectedAxios.get('/mydata', {
           signal: controller.signal,
         });
         if (isMounted) {
@@ -54,7 +47,7 @@ const MyData: React.FC = () => {
       isMounted = false;
       controller.abort();
     };
-  }, [axiosPrivate]);
+  }, [protectedAxios]);
 
   const columns = React.useMemo(
     () => [
@@ -100,19 +93,6 @@ const MyData: React.FC = () => {
     ],
     []
   );
-
-  if (!isAuthenticated) {
-    return (
-      <InfoBanner title="Error" type="error">
-        <div>
-          <b>You are not logged in.</b>
-          <p>
-            Click <Link to="/login">here to login</Link> and view your data.
-          </p>
-        </div>
-      </InfoBanner>
-    );
-  }
   if (loading && (!isStale || !myData)) return <Loading size="large" />;
   if (error) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

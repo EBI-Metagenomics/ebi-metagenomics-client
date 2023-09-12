@@ -9,7 +9,6 @@ import ElixirBanner from 'components/UI/ElixirBanner';
 import CookieBanner from 'components/UI/CookieBanner';
 import MainMenu from 'components/Nav/MainMenu';
 import Loading from 'components/UI/Loading';
-import LoginMonitor from 'components/Login/Monitor';
 import ErrorBoundary from 'components/ErrorBoundary';
 import MyData from 'pages/MyData';
 import UserContext from 'pages/Login/UserContext';
@@ -21,7 +20,6 @@ import './styles/toast.css';
 import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
-import { AuthProvider } from 'pages/Login/AuthContext';
 import PersistLogin from 'components/PersistLogin';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -60,15 +58,13 @@ const App: React.FC = () => {
       config,
       token: user.token,
     }),
-    [details, user.isAuthenticated, user.username]
+    [details, user.isAuthenticated, user.token, user.username]
   );
 
   return (
     <BrowserRouter basename={config.basename}>
       <UserContext.Provider value={value}>
-        {/* <AuthProvider> */}
         <QueryParamsProvider>
-          <LoginMonitor />
           <Matomo />
           <ToastContainer />
           <EBIHeader />
@@ -84,7 +80,6 @@ const App: React.FC = () => {
                   <Route path="/search/*" element={<TextSearch />} />
                   <Route path="/sequence-search" element={<SequenceSearch />} />
                   <Route path="/browse/*" element={<Browse />} />
-                  <Route path="/login" element={<Login />} />
                   <Route path="/submit" element={<Submit />} />
                   <Route path="/studies/*" element={<Study />} />
                   <Route path="/super-studies/*" element={<SuperStudy />} />
@@ -99,8 +94,9 @@ const App: React.FC = () => {
                   <Route path="/assemblies/*" element={<Assembly />} />
                   <Route path="/pipelines/*" element={<Pipelines />} />
                   <Route path="/analyses/*" element={<Analysis />} />
+                  <Route path="/mydata" element={<MyData />} />
                   <Route element={<PersistLogin />}>
-                    <Route path="/mydata" element={<MyData />} />
+                    <Route path="/login" element={<Login />} />
                   </Route>
                 </Routes>
               </Suspense>
@@ -111,7 +107,6 @@ const App: React.FC = () => {
           <CookieBanner />
         </QueryParamsProvider>
       </UserContext.Provider>
-      {/* </AuthProvider> */}
     </BrowserRouter>
   );
 };
