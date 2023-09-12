@@ -4,7 +4,6 @@ import OutterCard from 'components/UI/OutterCard';
 import EMGModal from 'components/UI/EMGModal';
 import UserContext from 'pages/Login/UserContext';
 import { Link, useLocation } from 'react-router-dom';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import LatestStudies from './LatestStudies';
 import MailForm from './MailForm';
 import PrivateRequest from './Private';
@@ -12,8 +11,6 @@ import PrivateRequest from './Private';
 const SearchBy: React.FC = () => {
   const show = useLocation().search.split('=')[1];
   const { isAuthenticated } = useContext(UserContext);
-  const location = useLocation();
-  console.log('private request', location);
   const [modal, setModal] = useState({
     show:
       isAuthenticated &&

@@ -32,7 +32,6 @@ type ModalProps = {
 
 const ROCrateBrowser: React.FC<ModalProps> = ({
   crateUrl,
-  specificCrateFolder,
   useButtonVariant,
 }) => {
   const [cratePreview, setCratePreview] = useState('');

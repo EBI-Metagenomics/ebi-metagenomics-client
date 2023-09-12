@@ -5,16 +5,16 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const useProtectedApiCall = () => {
   const verifyAuthToken = useAuthTokenVerifier();
-  const token = localStorage.getItem('token');
+  const authToken = localStorage.getItem('token');
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    console.log('protected', location);
     const requestInterceptor = protectedAxios.interceptors.request.use(
       (config) => {
         if (!config.headers.Authorization) {
-          config.headers.Authorization = `Bearer ${token}`;
+          // eslint-disable-next-line no-param-reassign
+          config.headers.Authorization = `Bearer ${authToken}`;
         }
         return config;
       },
@@ -36,7 +36,7 @@ const useProtectedApiCall = () => {
       protectedAxios.interceptors.request.eject(requestInterceptor);
       protectedAxios.interceptors.response.eject(responseInterceptor);
     };
-  }, [token, verifyAuthToken]);
+  }, [authToken, verifyAuthToken]);
 
   return protectedAxios;
 };

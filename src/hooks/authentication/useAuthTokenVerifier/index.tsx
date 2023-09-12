@@ -1,11 +1,8 @@
 import axios from 'utils/axios';
 import useAuthToken from 'hooks/authentication/useAuthToken';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 const useAuthTokenVerifier = () => {
   const [authToken, setAuthToken] = useAuthToken();
-  const navigate = useNavigate();
-  const location = useLocation();
   return async () => {
     try {
       const response = await axios.post('/utils/token/verify', {
@@ -18,7 +15,6 @@ const useAuthTokenVerifier = () => {
     } catch (error) {
       localStorage.removeItem('token');
       localStorage.removeItem('username');
-      // navigate('/login', { state: { from: location }, replace: true });
     }
   };
 };

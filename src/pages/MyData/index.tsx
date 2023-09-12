@@ -32,10 +32,9 @@ const MyData: React.FC = () => {
           setMyData(response.data.data);
           setLoading(false);
         }
-      } catch (error) {
-        console.error('my data error', error);
+      } catch (apiError) {
         if (isMounted) {
-          setError(error);
+          setError(apiError);
           setLoading(false);
         }
       }
