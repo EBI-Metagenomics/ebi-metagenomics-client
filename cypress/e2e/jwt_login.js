@@ -9,9 +9,7 @@ describe('JWT Login', () => {
   });
 
   it('should log in successfully with valid credentials and the login should be persisted', () => {
-    cy.get('#id_username').type(username);
-    cy.get('#id_password').type(password);
-    cy.get('#submit-id-submit').click();
+    logUserIn();
     cy.window().its('localStorage.token').should('exist');
     cy.contains(`You are logged in as ${username}`).should('be.visible');
     cy.reload();
@@ -22,39 +20,25 @@ describe('JWT Login', () => {
     cy.get('#id_username').type('invalid_username');
     cy.get('#id_password').type('invalid_password');
     cy.get('#submit-id-submit').click();
-
     cy.get('.vf-form__helper--error').should('be.visible');
   });
 
   it('should redirect to login when accessing an auth-protected route, then back to the original page after login', () => {
     cy.visit(myDataPageUrl);
-
     cy.url().should('eq', loginUrl);
-
     cy.get('#id_username').type(username);
     cy.get('#id_password').type(password);
     cy.get('#submit-id-submit').click();
-
     cy.url().should('eq', myDataPageUrl);
   });
 
   it('should allow users to resume their private data submission after login', () => {
-    // Visit the page
     cy.visit(homePageUrl);
-
-    // Find and click the anchor tag with the text "Submit and/or Request"
     cy.contains('a', 'Submit and/or Request').click();
-
-    // Ensure that the user is redirected to the login page
-    cy.url().should('eq', loginUrl); // Replace with the expected login page URL
-
-    // Log in with valid credentials
+    cy.url().should('eq', loginUrl);
     logUserIn();
-
-    // Check if the user is redirected back to the home page
-    cy.url().should('eq', homePageUrl); // Replace with the expected URL of the home page
-
-    cy.get('.ReactModal__Content--after-open').should('be.visible'); // Replace '.modal' with the actual selector for your React modal
+    cy.url().should('eq', homePageUrl);
+    cy.get('.ReactModal__Content--after-open').should('be.visible');
   });
 
   const logUserIn = () => {
@@ -62,26 +46,4 @@ describe('JWT Login', () => {
     cy.get('#id_password').type(password);
     cy.get('#submit-id-submit').click();
   }
-
-
-
-
-
-  // it('should redirect to the desired destination after login', () => {
-  //   // Simulate a desired destination in the query parameter
-  //   cy.visit('/login?from=private-request'); // Replace with the desired destination
-  //
-  //   cy.get('#id_username').type('your_username'); // Replace with a valid username
-  //   cy.get('#id_password').type('your_password'); // Replace with a valid password
-  //   cy.get('button[type="submit"]').click();
-  //
-  //   // Check if the user is redirected to the desired destination
-  //   cy.url().should('eq', '/private-request'); // Replace with the expected destination URL
-  // });
-  //
-  // it('should focus on the username input field on page load', () => {
-  //   cy.focused().should('have.attr', 'id', 'id_username');
-  // });
-
-  // Add more test cases as needed...
 });
