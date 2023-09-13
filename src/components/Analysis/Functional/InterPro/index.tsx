@@ -9,6 +9,7 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import ExtLink from 'components/UI/ExtLink';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import InterProBar from 'src/components/VegaCharts/InterproBar';
 import InterProMatchesChart from './InterProMatchesChart';
 import InterProQCChart from './QCChart';
 
@@ -91,6 +92,7 @@ const InterPro: React.FC = () => {
     <div className="vf-stack">
       <div>
         <InterProQCChart />
+        <InterProBar />
       </div>
       <h5>InterPro match summary</h5>
       <div className="vf-grid mg-grid-30-70">

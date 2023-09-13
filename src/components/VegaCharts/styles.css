@@ -1,0 +1,30 @@
+/* This file includes css for the slider being used in the Bar Charts */
+.vega-bind input[type="range"] {
+    -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    background-color: #ccc;
+    border-radius: 5px;
+    height: 5px;
+  }
+  
+  .vega-bind input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #7cb5ec;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0);
+    cursor: pointer;
+  }
+
+  .vega-bind span {
+    color: #666;
+    padding-top: 10px;
+    padding: 5px;
+  }
+  
+  .vega-bindings {
+    display: none;
+  }

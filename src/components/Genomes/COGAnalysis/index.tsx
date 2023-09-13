@@ -11,6 +11,7 @@ import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import useDefaultGenomeConfig from 'hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
+import VerticalBarChart from 'src/components/VegaCharts/VerticalBar';
 
 addExportMenu(Highcharts);
 
@@ -23,7 +24,7 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   const { data, loading, error } = useMGnifyData(`genomes/${accession}/cogs`, {
     page_size: 100,
   });
-
+  const accession1 = `genomes/${accession}/cogs`;
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
@@ -94,6 +95,16 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
         highcharts={Highcharts}
         options={options}
         ref={chartComponentRef}
+      />
+      <VerticalBarChart
+        ChartTitle="Top COG categories"
+        accession={accession1}
+        y="genome-count"
+        x="name"
+        tooltipKey1="COG"
+        tooltipVal1="description"
+        tooltipKey3="Genome Count"
+        lAngle={null}
       />
       <EMGTable
         cols={columns}

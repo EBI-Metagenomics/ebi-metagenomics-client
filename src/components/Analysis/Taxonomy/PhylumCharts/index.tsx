@@ -6,6 +6,7 @@ import FetchError from 'components/UI/FetchError';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum } from 'hooks/data/useData';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
+import TaxBar from 'src/components/VegaCharts/TaxBar';
 import PhylumTable from '../PhylumTable';
 import PhylumPie from './Pie';
 import PhylumColumn from './Column';
@@ -156,6 +157,12 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
               title="Domain composition"
               sequencesType={sequencesType}
             />
+            <TaxBar
+              ChartTitle="Domain composition"
+              clusteredData={clusteredDataTop}
+              sequencesType={sequencesType}
+              title="Domain"
+            />
           </div>
         )}
         {chartType === 'column' && (
@@ -166,6 +173,12 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
               selectedValue={selectedRow ? selectedRow.i - 1 : null}
               sequencesType={sequencesType}
               showTotal
+            />
+            <TaxBar
+              ChartTitle="Phylum composition (top 10)"
+              clusteredData={clusteredData}
+              sequencesType={sequencesType}
+              title="Phylum"
             />
           </div>
         )}

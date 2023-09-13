@@ -23,6 +23,17 @@ const GOBarChart: React.FC<GOBarChartProps> = ({
   color,
   containerId,
 }) => {
+  // Sort the data in descending order based on the series values
+  const sortedData = series
+    .map((value, index) => ({
+      category: categories[index],
+      value,
+    }))
+    .sort((a, b) => b.value - a.value); // Sort in descending order
+
+  const sortedCategories = sortedData.map((data) => data.category);
+  const sortedSeries = sortedData.map((data) => data.value);
+
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const options: Record<string, unknown> = {
     chart: {
@@ -44,7 +55,7 @@ const GOBarChart: React.FC<GOBarChartProps> = ({
       },
     },
     xAxis: {
-      categories,
+      categories: sortedCategories,
     },
     plotOptions: {
       series: {
@@ -68,7 +79,7 @@ const GOBarChart: React.FC<GOBarChartProps> = ({
     series: [
       {
         name: 'annotations',
-        data: series,
+        data: sortedSeries,
         color,
       },
     ],
@@ -82,4 +93,5 @@ const GOBarChart: React.FC<GOBarChartProps> = ({
     />
   );
 };
+
 export default GOBarChart;
