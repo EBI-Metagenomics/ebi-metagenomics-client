@@ -1,4 +1,6 @@
 const loginUrl = 'http://localhost:9000/metagenomics/login';
+const homePageUrl = 'http://localhost:9000/metagenomics';
+const myDataPageUrl = 'http://localhost:9000/metagenomics/mydata';
 const username = 'webin-66688';
 const password = 'DEBSzfWkQL64S@4';
 describe('JWT Login', () => {
@@ -25,22 +27,42 @@ describe('JWT Login', () => {
   });
 
   it('should redirect to login when accessing an auth-protected route, then back to the original page after login', () => {
-    cy.visit('http://localhost:9000/metagenomics/mydata');
+    cy.visit(myDataPageUrl);
+
+    cy.url().should('eq', loginUrl);
+
+    cy.get('#id_username').type(username);
+    cy.get('#id_password').type(password);
+    cy.get('#submit-id-submit').click();
+
+    cy.url().should('eq', myDataPageUrl);
+  });
+
+  it('should allow users to resume their private data submission after login', () => {
+    // Visit the page
+    cy.visit(homePageUrl);
+
+    // Find and click the anchor tag with the text "Submit and/or Request"
+    cy.contains('a', 'Submit and/or Request').click();
 
     // Ensure that the user is redirected to the login page
     cy.url().should('eq', loginUrl); // Replace with the expected login page URL
 
-    cy.get('#id_username').type(username); // Replace with a valid username
-    cy.get('#id_password').type(password); // Replace with a valid password
-    cy.get('#submit-id-submit').click();
+    // Log in with valid credentials
+    logUserIn();
 
-    cy.url().should('eq', 'http://localhost:9000/metagenomics/mydata'); // Replace with the expected URL of the protected route
+    // Check if the user is redirected back to the home page
+    cy.url().should('eq', homePageUrl); // Replace with the expected URL of the home page
+
+    cy.get('.ReactModal__Content--after-open').should('be.visible'); // Replace '.modal' with the actual selector for your React modal
   });
 
-  // it('should allow users to resume their private data submission after login', () => {
-  //   cy.visit('http://localhost:9000/metagenomics');
-  //
-  // }
+  const logUserIn = () => {
+    cy.get('#id_username').type(username);
+    cy.get('#id_password').type(password);
+    cy.get('#submit-id-submit').click();
+  }
+
 
 
 
