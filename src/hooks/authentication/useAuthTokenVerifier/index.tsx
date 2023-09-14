@@ -13,8 +13,9 @@ const useAuthTokenVerifier = () => {
       // @ts-ignore
       setAuthToken(accessToken);
     } catch (error) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('username');
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      setAuthToken(null);
     }
   };
 };
