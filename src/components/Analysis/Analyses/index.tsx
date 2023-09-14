@@ -25,8 +25,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
     Number
   );
   const [analysesOrder] = useQueryParamState('analyses-order', '');
-
-  const { data, loading, error, isStale, downloadURL } = useMGnifyData(
+  const { data, error, isStale, downloadURL } = useMGnifyData(
     `${rootEndpoint}/${accession}/analyses`,
     {
       include: 'sample',
@@ -35,7 +34,8 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       page_size: analysesPageSize,
     }
   );
-  if (loading && !isStale) return <Loading size="small" />;
+  const loading = !data;
+  if (loading) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
 
   if (!(data.data as MGnifyDatum[]).length) return null;
@@ -118,6 +118,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
     },
   ];
   const showPagination = (data.meta?.pagination?.count || 1) > initialPageSize;
+  console.log('loading', loading);
   return (
     <EMGTable
       cols={columns}
