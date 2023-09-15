@@ -8,13 +8,9 @@ const useAuthTokenVerifier = () => {
       const response = await axios.post('/utils/token/verify', {
         token: authToken,
       });
-      const accessToken = response.data.data.token as string;
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      const accessToken = response.data.data.token;
       setAuthToken(accessToken);
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       setAuthToken(null);
     }
   };

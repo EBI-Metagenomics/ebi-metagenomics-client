@@ -1,3 +1,4 @@
+import {openPage} from '../util/util';
 const loginUrl = 'http://localhost:9000/metagenomics/login';
 const homePageUrl = 'http://localhost:9000/metagenomics';
 const myDataPageUrl = 'http://localhost:9000/metagenomics/mydata';
@@ -5,7 +6,7 @@ const username = 'webin-66688';
 const password = 'DEBSzfWkQL64S@4';
 describe('JWT Login', () => {
   beforeEach(() => {
-    cy.visit(loginUrl);
+    openPage('login');
   });
 
   it('should log in successfully with valid credentials and the login should be persisted', () => {
@@ -24,7 +25,7 @@ describe('JWT Login', () => {
   });
 
   it('should redirect to login when accessing an auth-protected route, then back to the original page after login', () => {
-    cy.visit(myDataPageUrl);
+    openPage('mydata');
     cy.url().should('eq', loginUrl);
     cy.get('#id_username').type(username);
     cy.get('#id_password').type(password);
@@ -33,7 +34,7 @@ describe('JWT Login', () => {
   });
 
   it('should allow users to resume their private data submission after login', () => {
-    cy.visit(homePageUrl);
+    openPage('');
     cy.contains('a', 'Submit and/or Request').click();
     cy.url().should('eq', loginUrl);
     logUserIn();
