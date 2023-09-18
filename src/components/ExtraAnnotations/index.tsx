@@ -37,7 +37,7 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
     Number
   );
 
-  const { data, loading, isStale, error } = useMGnifyData(
+  const { data, isStale, error } = useMGnifyData(
     `${namespace}/${accession}/extra-annotations`,
     {
       page: annotationsPage,
@@ -88,7 +88,8 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
     []
   );
 
-  if (loading && !isStale) return <Loading size="small" />;
+  const loading = !data;
+  if (loading) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
   if (!(data.data as MGnifyDatum[]).length)
     return (
