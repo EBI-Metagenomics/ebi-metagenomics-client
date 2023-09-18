@@ -20,7 +20,7 @@ const RelatedTable: React.FC = () => {
     Number
   );
   const [relatedOrder] = useQueryParamState('related-order', '');
-  const { data, loading, error, isStale } = useMGnifyData(
+  const { data, error, isStale } = useMGnifyData(
     `super-studies/${accession}/related-studies`,
     {
       page: relatedPage as number,
@@ -28,7 +28,8 @@ const RelatedTable: React.FC = () => {
       page_size: relatedPageSize as number,
     }
   );
-  if (loading && !isStale) return <Loading size="small" />;
+  const loading = !data;
+  if (loading) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
 
   const columns = [
