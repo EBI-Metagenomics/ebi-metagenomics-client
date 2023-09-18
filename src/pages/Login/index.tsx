@@ -10,7 +10,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import OutterCard from 'components/UI/OutterCard';
 import UserContext from 'pages/Login/UserContext';
 import enaUserImg from 'public/images/ico_ena_user.jpg';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import useAuthToken from 'hooks/authentication/useAuthToken';
 import axios from 'utils/axios';
 
@@ -27,7 +26,6 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const { isAuthenticated } = useContext(UserContext);
-  const [from] = useQueryParamState('from', '');
   const navigate = useNavigate();
   const location = useLocation();
   const [desiredDestination, setDesiredDestination] = useState('');

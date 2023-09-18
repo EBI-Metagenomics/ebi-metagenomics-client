@@ -36,9 +36,9 @@ describe('JWT Login', () => {
   it('should allow users to resume their private data submission after login', () => {
     openPage('');
     cy.contains('a', 'Submit and/or Request').click();
-    cy.url().should('eq', loginUrl);
+    cy.url().should('eq', (`${loginUrl}?from=private-request`));
     logUserIn();
-    cy.url().should('eq', homePageUrl);
+    cy.url().should('eq', (`${homePageUrl}?from=private-request`));
     cy.get('.ReactModal__Content--after-open').should('be.visible');
   });
 
