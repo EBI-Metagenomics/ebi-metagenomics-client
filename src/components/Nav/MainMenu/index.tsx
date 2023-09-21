@@ -11,7 +11,10 @@ import EMGModal from 'components/UI/EMGModal';
 
 const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'Overview', path: '/' },
-  { label: 'Submit data', path: '/submit' },
+  {
+    label: 'Submit data',
+    path: 'https://www.ebi.ac.uk/ena/submit/webin/accountInfo',
+  },
   { label: 'Text search', path: '/search' },
   { label: 'Sequence search' },
   { label: 'Browse data', path: '/browse' },
