@@ -131,7 +131,6 @@ jobs:
           working-directory: client-repo
           browser: chrome
           spec: |
-#            cypress/e2e/index.js
             cypress/e2e/about.js
             cypress/e2e/browse.js
             cypress/e2e/help.js
