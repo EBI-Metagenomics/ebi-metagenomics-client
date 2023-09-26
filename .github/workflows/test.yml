@@ -64,7 +64,7 @@ jobs:
         run: |
           echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\"}" > "$(pwd)/config.private.json"
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: 🔬 - Checkout EMG API
         with:
           repository: 'EBI-Metagenomics/emgapi'
@@ -126,7 +126,7 @@ jobs:
           npm run eslint
 
       - name: 🧪 - Testing
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v6
         with:
           working-directory: client-repo
           browser: chrome
