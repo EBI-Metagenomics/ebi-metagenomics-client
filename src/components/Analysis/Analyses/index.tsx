@@ -10,6 +10,8 @@ import { MGnifyResponseList, MGnifyDatum } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import { getBiomeIcon } from 'utils/biomes';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import InfoBanner from 'components/UI/InfoBanner';
+import { singularise } from 'utils/strings';
 
 const initialPageSize = 10;
 type AssociatedAnaysesProps = {
@@ -18,6 +20,7 @@ type AssociatedAnaysesProps = {
 
 const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const accession = useURLAccession();
+  const singularNamespace = singularise(rootEndpoint);
   const [analysesPage] = useQueryParamState('analyses-page', 1, Number);
   const [analysesPageSize] = useQueryParamState(
     'analyses-page_size',
@@ -38,7 +41,13 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   if (loading) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
 
-  if (!(data.data as MGnifyDatum[]).length) return null;
+  if (!(data.data as MGnifyDatum[]).length)
+    return (
+      <InfoBanner
+        type="info"
+        title={`The ${singularNamespace} has no analyses.`}
+      />
+    );
 
   const samples = {};
   (data.included || [])

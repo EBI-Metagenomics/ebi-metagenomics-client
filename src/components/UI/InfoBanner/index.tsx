@@ -15,7 +15,7 @@ const InfoBanner: React.FC<InfoBannerProps> = ({ type, title, children }) => {
     >
       <div className="vf-banner__content">
         {(title || type) && (
-          <h3 className="vf-box__heading">
+          <h4 className="vf-box__heading vf-text-heading--5">
             {type === 'info' && <span className="icon icon-common icon-info" />}
             {type === 'error' && (
               <span className="icon icon-common icon-bolt" />
@@ -24,7 +24,7 @@ const InfoBanner: React.FC<InfoBannerProps> = ({ type, title, children }) => {
               <span className="icon icon-common icon-exclamation-triangle" />
             )}{' '}
             {title || ''}
-          </h3>
+          </h4>
         )}
       </div>
       <div className="vf-banner__content">{children}</div>

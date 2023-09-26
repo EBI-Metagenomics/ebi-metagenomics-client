@@ -9,19 +9,13 @@ import useURLAccession from 'hooks/useURLAccession';
 import InfoBanner from 'src/components/UI/InfoBanner';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import ROCrateBrowser from 'components/UI/ROCrateBrowser';
+import { singularise } from 'utils/strings';
 
 type ExtraAnnotationsProps = {
   namespace: string;
 };
 
 const initialPageSize = 10;
-
-const singularise = (str: string) => {
-  const lastTwoChars = str.slice(-2);
-  const singularForm =
-    lastTwoChars === 'es' ? `${str.slice(0, -2)}y` : str.slice(0, -1);
-  return singularForm;
-};
 
 const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
   const singularNamespace = singularise(namespace);

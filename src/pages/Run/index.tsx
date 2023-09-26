@@ -77,11 +77,9 @@ const RunPage: React.FC = () => {
           <Box label="Description">
             <KeyValueList list={details} />
           </Box>
-          {runData.relationships.analyses.data && (
-            <Box label="Associated analyses">
-              <AssociatedAnalyses rootEndpoint="runs" />
-            </Box>
-          )}
+          <Box label="Associated analyses">
+            <AssociatedAnalyses rootEndpoint="runs" />
+          </Box>
           <Box label="Associated assemblies">
             <AssociatedAssemblies rootEndpoint="runs" />
           </Box>
