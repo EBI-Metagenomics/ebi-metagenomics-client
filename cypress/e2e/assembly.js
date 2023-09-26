@@ -35,10 +35,9 @@ const assemblyTableColumns = {
 
 let assembliesTable;
 
-describe('Assembly page', function() {
+describe.skip('Assembly page', function() {
     before(function() {
-        cy.server();
-        cy.route('https://www.ebi.ac.uk/ena/portal/api/search?' +
+        cy.intercept('https://www.ebi.ac.uk/ena/portal/api/search?' +
                  'result=assembly&format=json&query=accession=GCA_900217105', [{
                 'accession': 'GCA_900217105',
                 'version': '1X',
@@ -72,8 +71,7 @@ describe('Assembly page', function() {
     });
     context('Click actions', function() {
         before(function() {
-            cy.server();
-            cy.route('GET',
+            cy.intercept('GET',
                 '**/' + accession + '/analyses**')
                 .as('analyses');
             openPage(origPage);
@@ -119,8 +117,7 @@ describe('Assembly page', function() {
         });
         it('Should display non-hyperlink sample breadcrumbs if assembly contains > 1 sample',
             function() {
-                cy.server();
-                cy.route('GET', '**/assemblies/' + accession, 'fixture:assemblyMultipleSamples');
+                cy.intercept('GET', '**/assemblies/' + accession, 'fixture:assemblyMultipleSamples');
                 openPage(origPage);
                 cy.contains('Multiple samples');
             });
@@ -132,8 +129,7 @@ describe('Assembly page', function() {
                 .should('be.visible');
         });
         it('Should generate non-link text if page does not exist', function() {
-            cy.server();
-            cy.route('GET', '**/assemblies/' + accession, 'fixture:assemblyNoEnaLink');
+            cy.intercept('GET', '**/assemblies/' + accession, 'fixture:assemblyNoEnaLink');
             openPage(origPage);
             cy.get('a[href=\'https://www.ebi.ac.uk/ena/browser/view/GCA_900217105\']')
                 .should('not.exist');

@@ -64,7 +64,7 @@ jobs:
         run: |
           echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\"}" > "$(pwd)/config.private.json"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         name: 🔬 - Checkout EMG API
         with:
           repository: 'EBI-Metagenomics/emgapi'
@@ -94,10 +94,10 @@ jobs:
           sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
           nginx -c "$(pwd)/ci/nginx.conf"
 
-      - name: 📜 - Set up JS Node 20
+      - name: 📜 - Set up JS Node 16
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '16'
           cache: 'npm'
           cache-dependency-path: client-repo/package-lock.json
 
@@ -126,20 +126,10 @@ jobs:
           npm run eslint
 
       - name: 🧪 - Testing
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v4
         with:
           working-directory: client-repo
           browser: chrome
-          spec: |
-            cypress/e2e/about.js
-            cypress/e2e/browse.js
-            cypress/e2e/help.js
-            cypress/e2e/search.js
-            cypress/e2e/sample.js
-            cypress/e2e/analysis_v5.js
-            cypress/e2e/genome.js
-            cypress/e2e/genome_catalogue.js
-            cypress/e2e/super_study.js
 
       - name: 📉 - Upload coverage to Codecov
         uses: codecov/codecov-action@v3

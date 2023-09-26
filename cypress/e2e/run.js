@@ -51,7 +51,7 @@ const assemliesTableColumns = {
 
 let analysesTable;
 
-describe('Run page', function() {
+describe.skip('Run page', function() {
     context('Elements load correctly', function() {
         before(function() {
             openPage(origPage);

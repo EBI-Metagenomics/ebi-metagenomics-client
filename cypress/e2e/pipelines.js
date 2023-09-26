@@ -11,7 +11,7 @@ const pipelineTitles = [
     'Pipeline v.1.0 (09-Dec-2009)'
 ];
 
-describe('Pipelines page', function() {
+describe.skip('Pipelines page', function() {
     before(function() {
         openPage(origPage);
     });

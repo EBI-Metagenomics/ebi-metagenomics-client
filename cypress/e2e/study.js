@@ -44,7 +44,7 @@ const analysisTableColumns = {
 
 let table;
 
-describe('Study page', function() {
+describe.skip('Study page', function() {
     context('General', function() {
         before(function() {
             openPage(origPage);

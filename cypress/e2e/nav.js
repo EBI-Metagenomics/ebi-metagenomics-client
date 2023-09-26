@@ -8,7 +8,7 @@ const origPage = 'overview';
 /**
  * Check all links in navbar towards other pages of the site are functional
  */
-describe('Navbar test', function() {
+describe.skip('Navbar test', function() {
     for (let dest = 1; dest < navNames.length; dest++) {
         const destPage = navNames[dest];
         context(origPage + '->' + destPage, function() {
@@ -29,7 +29,7 @@ describe('Navbar test', function() {
  * Check that search redirects correctly and passes parameter via URL
  */
 const testQuery = 'testQuery';
-describe('Search bar redirection', function() {
+describe.skip('Search bar redirection', function() {
     context(origPage + ' - Search redirects correctly', function() {
         it('Navbar search re-directed correctly.', function() {
             openPage(origPage);
@@ -64,7 +64,7 @@ const pagesBreadcrumbs = {
     'submit': ['']
 };
 
-describe('Validate breadcrumb links are valid.', function() {
+describe.skip('Validate breadcrumb links are valid.', function() {
     for (let page in pagesBreadcrumbs) {
         if (pagesBreadcrumbs.hasOwnProperty((page))) {
             context(page + ' page.', function() {
@@ -89,7 +89,7 @@ describe('Validate breadcrumb links are valid.', function() {
     }
 });
 
-describe('External link to HMMER sequence search redirects correctly', function() {
+describe.skip('External link to HMMER sequence search redirects correctly', function() {
     it('Navbar link to sequence search is valid.', function() {
         openPage('overview');
         cy.get('#sequence-search-nav > a ').then(($link) => {

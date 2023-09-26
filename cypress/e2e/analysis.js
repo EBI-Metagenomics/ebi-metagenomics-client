@@ -47,7 +47,7 @@ function checkV4FunctionalTabs() {
 /**
  * Verify number of results responds to selector
  */
-describe('Analysis page', function() {
+describe.skip('Analysis page', function() {
     context('General', function() {
         it('Should display overview if no deeplink is provided', function() {
             openPage(origPage);

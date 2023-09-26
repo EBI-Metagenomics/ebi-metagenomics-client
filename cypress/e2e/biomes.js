@@ -29,7 +29,7 @@ const biomesTableColumns = {
 
 let biomesTable;
 
-describe('Biomes page', function() {
+describe.skip('Biomes page', function() {
     context('General', function() {
         beforeEach(function() {
             openPage(origPage);
