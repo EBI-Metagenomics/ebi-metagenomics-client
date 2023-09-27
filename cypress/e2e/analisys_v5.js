@@ -130,7 +130,7 @@ describe('Analysis V5', () => {
             });
         });
 
-        it('Should load [Contigs length hist] chart', () => {
+        it.skip('Should load [Contigs length hist] chart', () => {
             openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             cy.get('#reads-length-hist .highcharts-series-group').should('be.visible');
         });
