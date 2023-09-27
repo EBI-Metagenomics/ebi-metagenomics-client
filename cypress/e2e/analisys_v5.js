@@ -1,4 +1,4 @@
-import {openPage, changeTab, waitForPageLoad, checkChartTooltip} from '../util/util';
+import {openPage, waitForPageLoad, openAndWait, openWaitAndChangeTab, checkChartTooltip} from '../util/util';
 
 /**
  * Fixtures:
@@ -64,12 +64,8 @@ describe('Analysis V5', () => {
     context('Overview tab', () => {
         const analysisId = 'MGYA00000001';
         const pageUrl = 'analyses/' + analysisId;
-        before(() => {
-            openPage(pageUrl);
-            waitForPageLoad('Analysis ' + analysisId);
-        });
-
         it('Should display assembly metadata', () => {
+            openAndWait(pageUrl, 'Analysis ' + analysisId);
             cy.contains('Study:').next().should('contain', 'MGYS00000001');
             // TODO: fix data import
             // cy.contains('Sample:').next().should('contain', 'ERS487899');
@@ -82,6 +78,7 @@ describe('Analysis V5', () => {
         });
 
         it('Sections should be expandable', () => {
+            openAndWait(pageUrl, 'Analysis ' + analysisId);
             cy.get('#tab-overview details').should('have.attr', 'open', 'open');
 
             cy.get('#tab-overview details:nth-child(1) > summary').click();
@@ -99,13 +96,8 @@ describe('Analysis V5', () => {
     context('QC tab', () => {
         const analysisId = 'MGYA00000001';
         const pageUrl = 'analyses/' + analysisId;
-        before(() => {
-            openPage(pageUrl);
-            waitForPageLoad('Analysis ' + analysisId);
-            changeTab('qc');
-        });
-
         it('Should load [Number of of contigs per QC] chart', () => {
+            openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             cy.get('#qc-step-chart .highcharts-series-1 > rect.highcharts-point')
                .should('have.length', 6); // there is one empty
 
@@ -139,10 +131,12 @@ describe('Analysis V5', () => {
         });
 
         it('Should load [Contigs length hist] chart', () => {
+            openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             cy.get('#reads-length-hist .highcharts-series-group').should('be.visible');
         });
 
         it('Should load [Contigs length bar] chart', () => {
+            openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             cy.get('#reads-length-barchart g.highcharts-xaxis-labels > text:nth-child(1)')
               .should('contain', 'Minimum');
             cy.get('#reads-length-barchart g.highcharts-xaxis-labels > text:nth-child(2)')
@@ -158,10 +152,12 @@ describe('Analysis V5', () => {
         });
 
         it('Should load [Contigs GC distribution] chart', () => {
+            openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             cy.get('#reads-gc-hist .highcharts-series-group').should('be.visible');
         });
 
         it('Should load [Contigs GC distribution] chart', () => {
+            openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             cy.get('#reads-gc-barchart g.highcharts-xaxis-labels > text:nth-child(1)')
               .should('contain', 'Content');
             checkChartTooltip(
@@ -175,6 +171,7 @@ describe('Analysis V5', () => {
         });
 
         it('Should load [Nucleotide position histogram] chart', () => {
+            openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             const series = '#nucleotide-chart .highcharts-series-group .highcharts-area-series';
             cy.get(series).should('be.visible');
         });
