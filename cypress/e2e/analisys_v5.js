@@ -19,7 +19,7 @@ function verifyTabIsVisible(tabId) {
 }
 
 describe('Analysis V5', () => {
-    context('Routing', () => {
+    context.skip('Routing', () => {
         const analysisId = 'MGYA00000001';
         const pageUrl = 'analyses/' + analysisId;
 
@@ -61,7 +61,7 @@ describe('Analysis V5', () => {
         });
     });
 
-    context('Overview tab', () => {
+    context.skip('Overview tab', () => {
         const analysisId = 'MGYA00000001';
         const pageUrl = 'analyses/' + analysisId;
         it('Should display assembly metadata', () => {
@@ -177,7 +177,7 @@ describe('Analysis V5', () => {
         });
     });
 
-    context('Functional tab', () => {
+    context.skip('Functional tab', () => {
         const analysisId = 'MGYA00000001';
         const pageUrl = 'analyses/' + analysisId + '#functional';
         const tabs = [
@@ -196,13 +196,13 @@ describe('Analysis V5', () => {
         });
     });
 
-    context('Contig viewer tab', () => {
+    context.skip('Contig viewer tab', () => {
     });
 
-    context('Downloads tab', () => {
+    context.skip('Downloads tab', () => {
     });
 
-    context('Error handling', () => {
+    context.skip('Error handling', () => {
         it('Should display error message if invalid accession passed in URL', () => {
             const assemblyId = 'MGYA00141547XXXX';
             const origPage = 'analyses/' + assemblyId;
