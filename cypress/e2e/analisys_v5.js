@@ -130,12 +130,12 @@ describe('Analysis V5', () => {
             });
         });
 
-        it.skip('Should load [Contigs length hist] chart', () => {
+        it('Should load [Contigs length hist] chart', () => {
             openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             cy.get('#reads-length-hist .highcharts-series-group').should('be.visible');
         });
 
-        it.skip('Should load [Contigs length bar] chart', () => {
+        it('Should load [Contigs length bar] chart', () => {
             openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             cy.get('#reads-length-barchart g.highcharts-xaxis-labels > text:nth-child(1)')
               .should('contain', 'Minimum');
@@ -151,12 +151,12 @@ describe('Analysis V5', () => {
             );
         });
 
-        it.skip('Should load [Contigs GC distribution] chart', () => {
+        it('Should load [Contigs GC distribution] chart', () => {
             openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             cy.get('#reads-gc-hist .highcharts-series-group').should('be.visible');
         });
 
-        it.skip('Should load [Contigs GC distribution] chart', () => {
+        it('Should load [Contigs GC distribution] chart', () => {
             openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             cy.get('#reads-gc-barchart g.highcharts-xaxis-labels > text:nth-child(1)')
               .should('contain', 'Content');
@@ -170,7 +170,7 @@ describe('Analysis V5', () => {
             );
         });
 
-        it.skip('Should load [Nucleotide position histogram] chart', () => {
+        it('Should load [Nucleotide position histogram] chart', () => {
             openWaitAndChangeTab(pageUrl, 'Analysis ' + analysisId, 'qc');
             const series = '#nucleotide-chart .highcharts-series-group .highcharts-area-series';
             cy.get(series).should('be.visible');
