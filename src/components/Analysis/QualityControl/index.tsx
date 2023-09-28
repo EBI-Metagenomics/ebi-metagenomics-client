@@ -32,6 +32,8 @@ const QualityControl: React.FC = () => {
   const unit = isAssembly ? 'contig' : 'read';
   const units = isAssembly ? 'contigs' : 'reads';
 
+  console.log('sumary data', summaryData);
+
   return (
     <div className="vf-stack vf-stack--200" data-cy="run-qc-chart">
       <p>
@@ -41,7 +43,17 @@ const QualityControl: React.FC = () => {
         number given by ENA.
       </p>
       <QualityControlChart summaryData={summaryData} />
+      <h1>Summary data: {summaryData?.bp_count}</h1>
       <h1>{analysisData.attributes['pipeline-version']}</h1>
+      <h1>
+        Numbered version: {Number(analysisData.attributes['pipeline-version'])}
+      </h1>
+      <h1>
+        Condition check:{' '}
+        {summaryData && Number(analysisData.attributes['pipeline-version']) > 2
+          ? 'TRUE'
+          : 'False'}
+      </h1>
       {/* {summaryData && Number(analysisData.attributes['pipeline-version']) > 2 && ( */}
       {summaryData && (
         <>
