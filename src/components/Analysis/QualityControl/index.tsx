@@ -41,8 +41,10 @@ const QualityControl: React.FC = () => {
         number given by ENA.
       </p>
       <QualityControlChart summaryData={summaryData} />
-      {summaryData && Number(analysisData.attributes['pipeline-version']) > 2 && (
+      {/* {summaryData && Number(analysisData.attributes['pipeline-version']) > 2 && ( */}
+      {summaryData && (
         <>
+          <h1>{analysisData.attributes['pipeline-version']}</h1>
           <p>
             The histograms below show the distributions of sequence lengths
             (left) and percentage GC content (right) for the sequences having
