@@ -21,7 +21,7 @@ const FlagshipTable: React.FC = () => {
     Number
   );
   const [flagshipOrder] = useQueryParamState('flagship-order', '');
-  const { data, loading, error, isStale } = useMGnifyData(
+  const { data, error, isStale } = useMGnifyData(
     `super-studies/${accession}/flagship-studies`,
     {
       page: flagshipPage as number,
@@ -29,7 +29,8 @@ const FlagshipTable: React.FC = () => {
       page_size: flagshipPageSize as number,
     }
   );
-  if (loading && !isStale) return <Loading size="small" />;
+  const loading = !data;
+  if (loading) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
 
   const columns = [

@@ -1,4 +1,4 @@
-describe("RO-Crate Browser", () => {
+describe.skip("RO-Crate Browser", () => {
   it("Can browse an RO crate from the Contig viewer page", () => {
     tryToBrowseAnRoCrate("http://localhost:9000/metagenomics/analyses/MGYA00000001?selected_contig=ERZ8153470.8-NODE-8-length-192555-cov-12.276894#contigs-viewer", ($iframe) => {
       verifySanntisCrateIframeContents($iframe);

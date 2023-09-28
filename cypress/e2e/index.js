@@ -18,11 +18,8 @@ function defaultLoginFieldsAreVisible(confidentialityText) {
 describe('Home page', function() {
 
     context('Minimal checks', function() {
-        before(function() {
-            openPage(origPage);
-        });
-
         it('has EBI header"', function() {
+            openPage(origPage);
             cy.get('.ebi-header-footer .global-nav .where.ebi').contains('EMBL-EBI');
             cy.get('.ebi-header-footer .embl-bar').should('be.hidden', 'Six sites');
             cy.get('.ebi-header-footer .global-nav #embl-selector button').click();
@@ -35,6 +32,7 @@ describe('Home page', function() {
             cy.get('.ebi-header-footer .embl-bar').should('be.hidden', 'Six sites');
         });
         it('has EBI header search"', function() {
+            openPage(origPage);
             cy.get('.ebi-header-footer .global-nav .where.ebi').contains('EMBL-EBI');
             cy.get('.ebi-header-footer .search-bar').should('be.hidden', '#global-searchbox');
             cy.get('.ebi-header-footer .search-toggle').click();
@@ -43,6 +41,7 @@ describe('Home page', function() {
             cy.get('.ebi-header-footer .search-bar').should('be.hidden', '#global-searchbox');
         });
         it('has EBI footer"', function() {
+            openPage(origPage);
             cy.get('footer.vf-footer .vf-footer__notice').contains('EMBL-EBI is');
             cy.get('footer.vf-footer').contains('Copyright');
         });
@@ -50,12 +49,9 @@ describe('Home page', function() {
     });
 
     context('Cookie banner check', function() {
-        before(function() {
+        it('has Cookie banner"', function() {
             cy.clearCookie('cookies-accepted');
             openPage(origPage);
-        });
-
-        it('has Cookie banner"', function() {
             cy.get('.mg-cookie-banner .vf-banner__text').contains('This website');
             cy.get('.mg-cookie-banner .vf-button').contains('Accept');
             cy.get('.mg-cookie-banner .vf-button').click();
@@ -64,10 +60,8 @@ describe('Home page', function() {
     });
 
     context('Check for elements', function() {
-        before(function() {
-            openPage(origPage);
-        });
         it('Browse by selected biomes"', function() {
+            openPage(origPage);
             cy.contains('Or by selected biomes');
             // Check biome icons are loaded
             cy.get('.search-by-biomes-section span.biome_icon').then(($els) => {
@@ -76,6 +70,7 @@ describe('Home page', function() {
         });
 
         it('Select specific biomes', function() {
+            openPage(origPage);
             cy.get('.search-by-biomes-section').contains('Human');
             cy.get('.search-by-biomes-section').contains('Digestive system');
         });
@@ -107,21 +102,20 @@ describe('Home page', function() {
         });
     });
     context('Latest studies', function() {
-        beforeEach(function() {
-            openPage(origPage);
-        });
-
         it('Check for elements"', function() {
+            openPage(origPage);
             cy.get('.request-by-section').contains('Latest studies');
         });
 
         it('Click to view all studies', function() {
+            openPage(origPage);
             cy.contains('View all studies').click();
             // cy.contains('Studies list');
             // cy.title().should('include', 'Browse');
         });
 
         it('Click to view specific study', function() {
+            openPage(origPage);
             cy.get('.latest-studies-section > .fixed-height-scrollable__inner > .study', {timeout: 30000}).should('have.length', parseInt(1));
             // cy.get('.latest-studies-section').contains('View more').first().click();
             // cy.contains('Study');
@@ -129,19 +123,19 @@ describe('Home page', function() {
         });
     });
     context('CTA section', function() {
-        beforeEach(function() {
-            openPage(origPage);
-        });
         it('should have Search By btns', function() {
+            openPage(origPage);
             cy.get('.search-by-section').should('contain', 'Text search');
             cy.get('.search-by-section').should('contain', 'Sequence search');
         });
         it('should have Requests btns', function() {
+            openPage(origPage);
             cy.get('.request-by-section').should('contain', 'Submit and');
             cy.get('.request-by-section').should('contain', 'Request');
         });
 
         it('Text search btn should link to text search page', function() {
+            openPage(origPage);
             cy.contains('Text search').click();
             cy.get('h2').should('contain', 'Text Search');
         });
