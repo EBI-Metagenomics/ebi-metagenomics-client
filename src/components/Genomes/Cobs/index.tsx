@@ -46,16 +46,10 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     textareaSeq.current.quill.setText(seq);
   };
 
-  const slugifyString = (str: string): string => {
-    const lowerCaseStr = str.toLowerCase();
-    const replacedSpaces = lowerCaseStr.replace(/ /g, '-');
-    return replacedSpaces.replace(/\./g, '-');
-  };
-
   const getAccessionFromFirstGenome = async (): Promise<string> => {
-    const genomeName = slugifyString(catalogueName as string);
+    const pathParts = window.location.pathname.split('/');
+    const genomeName = pathParts[pathParts.length - 1];
     const url = `${config.api}genome-catalogues/${genomeName}/genomes?page=1&ordering=accession&page_size=1`;
-
     try {
       const response = await axios.get(url);
       return response.data.data[0].attributes.accession;
