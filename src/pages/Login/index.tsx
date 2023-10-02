@@ -42,22 +42,12 @@ const Login: React.FC = () => {
   if (error) return <FetchError error={error} />;
   const handleSubmit = (event: FormEvent): void => {
     event.preventDefault();
-
-    login(userRef.current.value, passwordRef.current.value)
-      .then(() => {
-        if (document.getElementById('login-form')) {
-          alert('Login failed. Please check your credentials.');
-        }
-      })
-      .catch(() => {
-        // console.error('Login error:', error);
-      });
+    login(userRef.current.value, passwordRef.current.value);
   };
-
   return (
     <div className="vf-grid vf-grid__col-2">
       <div className="vf-form vf-stack vf-stack--400">
-        <form id="login-form" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="vf-form__item">
             <label htmlFor="id_username" className="vf-form__label">
               Webin-ID:
@@ -90,6 +80,14 @@ const Login: React.FC = () => {
               required
             />
           </div>
+          {loginError && (
+            <p
+              className="vf-form__helper vf-form__helper--error"
+              aria-live="assertive"
+            >
+              {loginError}
+            </p>
+          )}
           <br />
           <div className="form-actions-no-box">
             <button

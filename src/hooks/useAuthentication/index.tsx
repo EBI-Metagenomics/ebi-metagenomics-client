@@ -41,7 +41,7 @@ const useAuthentication = (): AuthenticationFunctions => {
       } else if (dataLogin) {
         setLoginError(
           (dataLogin.querySelector('.text-error') as HTMLElement)?.innerText ||
-            ''
+            'Sorry, unrecognised Webin-ID or password.'
         );
       }
     }
@@ -53,28 +53,18 @@ const useAuthentication = (): AuthenticationFunctions => {
     setShouldLogout(false);
   }, [rawResponse]);
 
-  const login = async (username: string, password: string): Promise<void> => {
-    return new Promise<void>(async (resolve, reject) => {
-      try {
-        const csrfmiddlewaretoken = (
-          data.querySelector(
-            'input[name="csrfmiddlewaretoken"]'
-          ) as HTMLInputElement
-        ).value;
-
-        // Assuming these are asynchronous operations
-        await setLoginError('');
-        await setForm({
-          ...form,
-          username,
-          password,
-          csrfmiddlewaretoken,
-        });
-
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
+  const login = (username: string, password: string): void => {
+    const csrfmiddlewaretoken = (
+      data.querySelector(
+        'input[name="csrfmiddlewaretoken"]'
+      ) as HTMLInputElement
+    ).value;
+    setLoginError('');
+    setForm({
+      ...form,
+      username,
+      password,
+      csrfmiddlewaretoken,
     });
   };
 
