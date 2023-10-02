@@ -42,12 +42,22 @@ const Login: React.FC = () => {
   if (error) return <FetchError error={error} />;
   const handleSubmit = (event: FormEvent): void => {
     event.preventDefault();
-    login(userRef.current.value, passwordRef.current.value);
+
+    login(userRef.current.value, passwordRef.current.value)
+      .then(() => {
+        if (document.getElementById('login-form')) {
+          alert('Login failed. Please check your credentials.');
+        }
+      })
+      .catch(() => {
+        // console.error('Login error:', error);
+      });
   };
+
   return (
     <div className="vf-grid vf-grid__col-2">
       <div className="vf-form vf-stack vf-stack--400">
-        <form onSubmit={handleSubmit}>
+        <form id="login-form" onSubmit={handleSubmit}>
           <div className="vf-form__item">
             <label htmlFor="id_username" className="vf-form__label">
               Webin-ID:
