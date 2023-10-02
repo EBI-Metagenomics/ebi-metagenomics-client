@@ -115,7 +115,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
       const response = await axios.get(url);
       return response.data.data[0].attributes.accession;
     } catch (responseErrors) {
-      console.error('Error:', responseErrors);
+      return '';
     }
   };
 
@@ -123,13 +123,13 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     fastaUrl: string
   ): Promise<string> => {
     try {
-      const config = {
+      const headersConfig = {
         headers: {
           Range: 'bytes=0-499', // Fixed Range header value
         },
       };
 
-      const response = await axios.get(fastaUrl, config);
+      const response = await axios.get(fastaUrl, headersConfig);
       // Extract the DNA sequence from the data and get the first 50 characters
       const { data } = response;
       const lines = data.split('\n');
@@ -137,10 +137,9 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
         const sequence = lines[1];
         return sequence.substring(0, 50);
       }
-      console.error('Invalid data format'); // Handle error if data format is unexpected
       return '';
     } catch (responseErrors) {
-      console.error('Error:', responseErrors);
+      return '';
     }
   };
 
