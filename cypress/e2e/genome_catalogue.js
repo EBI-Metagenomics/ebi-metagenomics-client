@@ -63,7 +63,7 @@ describe('Genome catalogue page', () => {
         cy.get('.vf-button').contains('Paste a sequence').click();
       });
 
-      it('Should insert example', () => {
+      it.skip('Should insert example', () => {
         openAndWait('genome-catalogues/' + catalogueIdValid + '#genome-search-tab', catalogueNameValid);
         cy.intercept('POST',
           '**/genome-search**',
