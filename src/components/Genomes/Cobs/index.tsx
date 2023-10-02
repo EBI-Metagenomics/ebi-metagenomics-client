@@ -101,14 +101,14 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
       progress: undefined,
     });
 
-  const hypenateString = (str: string): string => {
+  const slugifyString = (str: string): string => {
     const lowerCaseStr = str.toLowerCase();
     const replacedSpaces = lowerCaseStr.replace(/ /g, '-');
     return replacedSpaces.replace(/\./g, '-');
   };
 
   const getAccessionFromFirstGenome = async (): Promise<string> => {
-    const genomeName = hypenateString(catalogueName as string);
+    const genomeName = slugifyString(catalogueName as string);
     const url = `${config.api}genome-catalogues/${genomeName}/genomes?page=1&ordering=accession&page_size=1`;
 
     try {
@@ -125,17 +125,16 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     try {
       const headersConfig = {
         headers: {
-          Range: 'bytes=0-499', // Fixed Range header value
+          Range: 'bytes=0-499',
         },
       };
 
       const response = await axios.get(fastaUrl, headersConfig);
-      // Extract the DNA sequence from the data and get the first 50 characters
       const { data } = response;
       const lines = data.split('\n');
       if (lines.length >= 2) {
         const sequence = lines[1];
-        return sequence.substring(0, 50);
+        return sequence.substring(0, 500);
       }
       return '';
     } catch (responseErrors) {
@@ -153,7 +152,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
       textareaSeq.current.quill.setText(firstFiftySequenceChars);
     };
     buildSequence();
-  }, [catalogueName]);
+  }, [catalogueName, config.api, getAccessionFromFirstGenome]);
 
   return (
     <section id="genome-search" className="vf-stack vf-stack--400">
