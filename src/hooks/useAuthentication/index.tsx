@@ -41,7 +41,7 @@ const useAuthentication = (): AuthenticationFunctions => {
       } else if (dataLogin) {
         setLoginError(
           (dataLogin.querySelector('.text-error') as HTMLElement)?.innerText ||
-            ''
+            'Sorry, unrecognised Webin-ID or password.'
         );
       }
     }

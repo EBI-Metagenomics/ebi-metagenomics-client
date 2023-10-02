@@ -80,6 +80,14 @@ const Login: React.FC = () => {
               required
             />
           </div>
+          {loginError && (
+            <p
+              className="vf-form__helper vf-form__helper--error"
+              aria-live="assertive"
+            >
+              {loginError}
+            </p>
+          )}
           <br />
           <div className="form-actions-no-box">
             <button
