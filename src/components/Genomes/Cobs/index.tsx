@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import 'textarea-sequence/dist/textarea-sequence';
 
 import Tooltip from 'components/UI/Tooltip';
@@ -8,6 +8,8 @@ import FileUploaderButton from 'components/UI/FileUploaderButton';
 import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePicker';
 
 import { toast } from 'react-toastify';
+import axios from 'axios';
+import UserContext from 'pages/Login/UserContext';
 import CobsResults from './Results';
 import example1 from './examples/human-gut-v2-0.txt';
 import example2 from './examples/marine-v1-0.txt';
@@ -31,6 +33,7 @@ type CobsProps = {
 };
 
 const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
+  const { config } = useContext(UserContext);
   const isSingleCatalogue = !!catalogueID;
   const textareaSeq = useRef(null);
   const [shouldSearch, setShouldSearch] = useState(false);
@@ -97,6 +100,61 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
       draggable: true,
       progress: undefined,
     });
+
+  const hypenateString = (str: string): string => {
+    const lowerCaseStr = str.toLowerCase();
+    const replacedSpaces = lowerCaseStr.replace(/ /g, '-');
+    return replacedSpaces.replace(/\./g, '-');
+  };
+
+  const getAccessionFromFirstGenome = async (): Promise<string> => {
+    const genomeName = hypenateString(catalogueName as string);
+    const url = `${config.api}genome-catalogues/${genomeName}/genomes?page=1&ordering=accession&page_size=1`;
+
+    try {
+      const response = await axios.get(url);
+      return response.data.data[0].attributes.accession;
+    } catch (responseErrors) {
+      console.error('Error:', responseErrors);
+    }
+  };
+
+  const getSequenceCharsFromFastaFile = async (
+    fastaUrl: string
+  ): Promise<string> => {
+    try {
+      const config = {
+        headers: {
+          Range: 'bytes=0-499', // Fixed Range header value
+        },
+      };
+
+      const response = await axios.get(fastaUrl, config);
+      // Extract the DNA sequence from the data and get the first 50 characters
+      const { data } = response;
+      const lines = data.split('\n');
+      if (lines.length >= 2) {
+        const sequence = lines[1];
+        return sequence.substring(0, 50);
+      }
+      console.error('Invalid data format'); // Handle error if data format is unexpected
+      return '';
+    } catch (responseErrors) {
+      console.error('Error:', responseErrors);
+    }
+  };
+
+  useEffect(() => {
+    const buildSequence = async () => {
+      const myAccession = await getAccessionFromFirstGenome();
+      const fastaUrl = `${config.api}genomes/${myAccession}/downloads/${myAccession}.fna`;
+      const firstFiftySequenceChars = await getSequenceCharsFromFastaFile(
+        fastaUrl
+      );
+      textareaSeq.current.quill.setText(firstFiftySequenceChars);
+    };
+    buildSequence();
+  }, [catalogueName]);
 
   return (
     <section id="genome-search" className="vf-stack vf-stack--400">
