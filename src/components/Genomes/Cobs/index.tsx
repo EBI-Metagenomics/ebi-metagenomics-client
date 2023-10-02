@@ -11,21 +11,10 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import UserContext from 'pages/Login/UserContext';
 import CobsResults from './Results';
-import example1 from './examples/human-gut-v2-0.txt';
-import example2 from './examples/marine-v1-0.txt';
-import example3 from './examples/cow-rumen-v1-0.txt';
-import example4 from './examples/human-oral-v1-0.txt';
 import './style.css';
 
 const KMERS_DEFAULT = 0.4;
 const MIN_BASES = 50;
-
-const examples = {
-  'human-gut-v2-0': example1,
-  'marine-v1-0': example2,
-  'rumen-v1-0': example3,
-  'human-oral-v1-0': example4,
-};
 
 type CobsProps = {
   catalogueName?: string;
@@ -56,50 +45,6 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
   const setSequence = (seq: string): void => {
     textareaSeq.current.quill.setText(seq);
   };
-
-  const handleExampleClick = (): void => {
-    if (catalogueID in examples) setSequence(examples[catalogueID]);
-    else setSequence(example1);
-  };
-
-  const handleKmersChange = (event): void => {
-    setKmers(Math.min(1, Math.max(0, Number(event.target.value))));
-  };
-  const handleClear = (): void => {
-    setSequence('');
-    setKmers(KMERS_DEFAULT);
-    setShouldSearch(false);
-  };
-
-  const handleFileLoad = (event): void => {
-    const { files } = event.target;
-    const reader = new FileReader();
-
-    reader.addEventListener(
-      'load',
-      () => setSequence(reader.result as string),
-      false
-    );
-
-    if (files && files.length) {
-      reader.readAsText(files[0]);
-    }
-  };
-
-  const handleCleanup = (): void => {
-    textareaSeq.current.cleanUp();
-  };
-
-  const sayPasted = () =>
-    toast.success('Pasted your clipboard into textarea', {
-      position: 'bottom-left',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
 
   const slugifyString = (str: string): string => {
     const lowerCaseStr = str.toLowerCase();
@@ -142,17 +87,69 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     }
   };
 
-  useEffect(() => {
-    const buildSequence = async () => {
-      const myAccession = await getAccessionFromFirstGenome();
-      const fastaUrl = `${config.api}genomes/${myAccession}/downloads/${myAccession}.fna`;
-      const firstFiftySequenceChars = await getSequenceCharsFromFastaFile(
-        fastaUrl
-      );
-      textareaSeq.current.quill.setText(firstFiftySequenceChars);
-    };
-    buildSequence();
-  }, [catalogueName, config.api, getAccessionFromFirstGenome]);
+  const buildExampleSequence = async () => {
+    const myAccession = await getAccessionFromFirstGenome();
+    const fastaUrl = `${config.api}genomes/${myAccession}/downloads/${myAccession}.fna`;
+    const firstFiftySequenceChars = await getSequenceCharsFromFastaFile(
+      fastaUrl
+    );
+    textareaSeq.current.quill.setText(firstFiftySequenceChars);
+  };
+
+  const handleExampleClick = (): void => {
+    buildExampleSequence();
+  };
+
+  const handleKmersChange = (event): void => {
+    setKmers(Math.min(1, Math.max(0, Number(event.target.value))));
+  };
+  const handleClear = (): void => {
+    setSequence('');
+    setKmers(KMERS_DEFAULT);
+    setShouldSearch(false);
+  };
+
+  const handleFileLoad = (event): void => {
+    const { files } = event.target;
+    const reader = new FileReader();
+
+    reader.addEventListener(
+      'load',
+      () => setSequence(reader.result as string),
+      false
+    );
+
+    if (files && files.length) {
+      reader.readAsText(files[0]);
+    }
+  };
+
+  const handleCleanup = (): void => {
+    textareaSeq.current.cleanUp();
+  };
+
+  const sayPasted = () =>
+    toast.success('Pasted your clipboard into textarea', {
+      position: 'bottom-left',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  // useEffect(() => {
+  //   const buildSequence = async () => {
+  //     const myAccession = await getAccessionFromFirstGenome();
+  //     const fastaUrl = `${config.api}genomes/${myAccession}/downloads/${myAccession}.fna`;
+  //     const firstFiftySequenceChars = await getSequenceCharsFromFastaFile(
+  //       fastaUrl
+  //     );
+  //     textareaSeq.current.quill.setText(firstFiftySequenceChars);
+  //   };
+  //   buildSequence();
+  // }, [catalogueName, config.api, getAccessionFromFirstGenome]);
 
   return (
     <section id="genome-search" className="vf-stack vf-stack--400">
