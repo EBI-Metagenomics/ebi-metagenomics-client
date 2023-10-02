@@ -139,18 +139,6 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
       progress: undefined,
     });
 
-  // useEffect(() => {
-  //   const buildSequence = async () => {
-  //     const myAccession = await getAccessionFromFirstGenome();
-  //     const fastaUrl = `${config.api}genomes/${myAccession}/downloads/${myAccession}.fna`;
-  //     const firstFiftySequenceChars = await getSequenceCharsFromFastaFile(
-  //       fastaUrl
-  //     );
-  //     textareaSeq.current.quill.setText(firstFiftySequenceChars);
-  //   };
-  //   buildSequence();
-  // }, [catalogueName, config.api, getAccessionFromFirstGenome]);
-
   return (
     <section id="genome-search" className="vf-stack vf-stack--400">
       <div />
