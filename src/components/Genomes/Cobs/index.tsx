@@ -10,7 +10,6 @@ import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePic
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import UserContext from 'pages/Login/UserContext';
-import login from 'pages/Login';
 import CobsResults from './Results';
 import './style.css';
 
