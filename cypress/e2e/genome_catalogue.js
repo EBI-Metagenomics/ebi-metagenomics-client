@@ -63,14 +63,14 @@ describe('Genome catalogue page', () => {
         cy.get('.vf-button').contains('Paste a sequence').click();
       });
 
-      it.skip('Should insert example', () => {
+      it('Should insert example', () => {
         openAndWait('genome-catalogues/' + catalogueIdValid + '#genome-search-tab', catalogueNameValid);
         cy.intercept('POST',
           '**/genome-search**',
           {fixture: 'genomeSearch'}).as('genomeSearch');
 
         cy.get('.vf-button').contains('Use the example').click();
-        cy.get('.ql-editor').should('contain.text', '>GUT_GENOME119949_7');
+        cy.get('.ql-editor').should('contain.text', '>MGYG000000001_1');
         cy.get('#search-button').click();
         cy.get('h5').should('contain.text', 'COBS Results');
         cy.get('.mg-table tbody tr').should('have.length', 1);
