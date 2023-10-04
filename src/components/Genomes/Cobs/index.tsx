@@ -10,6 +10,7 @@ import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePic
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import UserContext from 'pages/Login/UserContext';
+import login from 'pages/Login';
 import CobsResults from './Results';
 import './style.css';
 
@@ -46,10 +47,9 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     textareaSeq.current.quill.setText(seq);
   };
 
-  const getAccessionFromFirstGenome = async (): Promise<string> => {
-    const pathParts = window.location.pathname.split('/');
-    const genomeName = pathParts[pathParts.length - 1];
-    const url = `${config.api}genome-catalogues/${genomeName}/genomes?page=1&ordering=accession&page_size=1`;
+  const getAccessionFromCataloguesFirstGenome = async (): Promise<string> => {
+    const genomeCatalogueSlug = catalogueID || selectedCatalogues[0];
+    const url = `${config.api}genome-catalogues/${genomeCatalogueSlug}/genomes?page=1&ordering=accession&page_size=1`;
     try {
       const response = await axios.get(url);
       return response.data.data[0].attributes.accession;
@@ -70,19 +70,14 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
 
       const response = await axios.get(fastaUrl, headersConfig);
       const { data } = response;
-      const lines = data.split('\n');
-      if (lines.length >= 2) {
-        const sequence = lines[1];
-        return sequence.substring(0, 500);
-      }
-      return '';
+      return data.substring(0, 500);
     } catch (responseErrors) {
       return '';
     }
   };
 
   const buildExampleSequence = async () => {
-    const myAccession = await getAccessionFromFirstGenome();
+    const myAccession = await getAccessionFromCataloguesFirstGenome();
     const fastaUrl = `${config.api}genomes/${myAccession}/downloads/${myAccession}.fna`;
     const firstFiftySequenceChars = await getSequenceCharsFromFastaFile(
       fastaUrl
