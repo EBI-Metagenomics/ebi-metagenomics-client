@@ -18,6 +18,7 @@ import './App.css';
 import './styles/biomes.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/toast.css';
+import './styles/search.css';
 import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
