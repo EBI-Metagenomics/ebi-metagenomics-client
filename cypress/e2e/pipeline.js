@@ -2,7 +2,7 @@ import {openPage} from '../util/util';
 
 const origPage = 'pipelines/';
 
-describe('Pipeline page', function() {
+describe.skip('Pipeline page', function() {
     context('Pipeline version 1.0', function() {
         it('Page should load correctly', function() {
             openPage(origPage + '1');

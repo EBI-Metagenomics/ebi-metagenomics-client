@@ -1,0 +1,20 @@
+.search-buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    overflow: hidden;
+}
+
+.slide-in-hidden {
+    visibility: hidden;
+    transform: translateX(100%);
+}
+
+.slide-in-shown {
+    visibility: visible;
+    transform: translate(0);
+}
+
+.slide-in-button {
+    transition: transform 0.2s;
+}

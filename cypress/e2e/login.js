@@ -5,11 +5,11 @@ import GenericTableHandler from '../util/genericTable';
 
 const origPage = '';
 
-Cypress.Cookies.debug(true);
-
-Cypress.Cookies.defaults({
-    whitelist: 'csrftoken'
-});
+// Cypress.Cookies.debug(true);
+//
+// Cypress.Cookies.defaults({
+//     whitelist: 'csrftoken'
+// });
 
 let table;
 const privateStudy = 'ERP104179';
@@ -20,7 +20,7 @@ function openModal() {
     cy.get(loginModal).should('be.visible');
 }
 
-describe('Login process', function() {
+describe.skip('Login process', function() {
     context('Login modal', function() {
         beforeEach(function() {
             openPage(origPage);

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import 'textarea-sequence/dist/textarea-sequence';
 
 import Tooltip from 'components/UI/Tooltip';
@@ -8,22 +8,13 @@ import FileUploaderButton from 'components/UI/FileUploaderButton';
 import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePicker';
 
 import { toast } from 'react-toastify';
+import axios from 'axios';
+import UserContext from 'pages/Login/UserContext';
 import CobsResults from './Results';
-import example1 from './examples/human-gut-v2-0.txt';
-import example2 from './examples/marine-v1-0.txt';
-import example3 from './examples/cow-rumen-v1-0.txt';
-import example4 from './examples/human-oral-v1-0.txt';
 import './style.css';
 
 const KMERS_DEFAULT = 0.4;
 const MIN_BASES = 50;
-
-const examples = {
-  'human-gut-v2-0': example1,
-  'marine-v1-0': example2,
-  'rumen-v1-0': example3,
-  'human-oral-v1-0': example4,
-};
 
 type CobsProps = {
   catalogueName?: string;
@@ -31,6 +22,7 @@ type CobsProps = {
 };
 
 const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
+  const { config } = useContext(UserContext);
   const isSingleCatalogue = !!catalogueID;
   const textareaSeq = useRef(null);
   const [shouldSearch, setShouldSearch] = useState(false);
@@ -54,9 +46,46 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     textareaSeq.current.quill.setText(seq);
   };
 
+  const getAccessionFromCataloguesFirstGenome = async (): Promise<string> => {
+    const genomeCatalogueSlug = catalogueID || selectedCatalogues[0];
+    const url = `${config.api}genome-catalogues/${genomeCatalogueSlug}/genomes?page=1&ordering=accession&page_size=1`;
+    try {
+      const response = await axios.get(url);
+      return response.data.data[0].attributes.accession;
+    } catch (responseErrors) {
+      return '';
+    }
+  };
+
+  const getSequenceCharsFromFastaFile = async (
+    fastaUrl: string
+  ): Promise<string> => {
+    try {
+      const headersConfig = {
+        headers: {
+          Range: 'bytes=0-499',
+        },
+      };
+
+      const response = await axios.get(fastaUrl, headersConfig);
+      const { data } = response;
+      return data.substring(0, 500);
+    } catch (responseErrors) {
+      return '';
+    }
+  };
+
+  const buildExampleSequence = async () => {
+    const myAccession = await getAccessionFromCataloguesFirstGenome();
+    const fastaUrl = `${config.api}genomes/${myAccession}/downloads/${myAccession}.fna`;
+    const firstFiftySequenceChars = await getSequenceCharsFromFastaFile(
+      fastaUrl
+    );
+    textareaSeq.current.quill.setText(firstFiftySequenceChars);
+  };
+
   const handleExampleClick = (): void => {
-    if (catalogueID in examples) setSequence(examples[catalogueID]);
-    else setSequence(example1);
+    buildExampleSequence();
   };
 
   const handleKmersChange = (event): void => {

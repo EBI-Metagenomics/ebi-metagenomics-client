@@ -1,5 +1,5 @@
 /* eslint-disable security/detect-object-injection */
-import {waitForPageLoad, openPage, checkChartTooltip} from '../util/util';
+import {openPage, openAndWait, checkChartTooltip} from '../util/util';
 import ClientSideTableHandler from '../util/clientSideTable';
 
 
@@ -8,12 +8,8 @@ describe('Genome page', () => {
     const accessionInvalid = 'MGYG999999999';
 
     context('Overview', () => {
-        before(() => {
-            openPage('genomes/' + accessionValid);
-            waitForPageLoad('Genome ' + accessionValid);
-        });
-
         it('Should have the proper content', () => {
+            openAndWait('genomes/' + accessionValid);
             const assertSection = (anchorIdx, anchorText, valuesArray) => {
                 cy.get(`#overview > div > details:nth-child(${anchorIdx}) > summary`)
                   .contains(anchorText)
@@ -96,6 +92,7 @@ describe('Genome page', () => {
         });
 
         it('Sections should be collapsable', () => {
+            openAndWait('genomes/' + accessionValid);
             for (let idx = 1; idx < 6; idx++) {
                 const sectionSelector = `#overview > div > details:nth-child(${idx})`;
                 const sectionToggleSelector = `#overview > div > details:nth-child(${idx}) > summary`;
@@ -338,10 +335,8 @@ describe('Genome page', () => {
     });
 
     context.only('Downloads', () => {
-        before(() => {
-            openPage('genomes/' + accessionValid + '#downloads');
-        });
         it('Should have 2 sections', () => {
+            openPage('genomes/' + accessionValid + '#downloads');
             cy.get('section table .vf-table__caption').first().should('contain', 'Genome analysis');
             // cy.get('section table .vf-table__caption').last().should('contain', 'Pan-genome analysis');
         });
@@ -365,6 +360,7 @@ describe('Genome page', () => {
             });
         };
         it('Genome analysis', () => {
+            openPage('genomes/' + accessionValid + '#downloads');
             const data = [
                 ['All predicted CDS', '-', 'FASTA',
                  '/genomes/MGYG000000001/downloads/MGYG000000001.faa'],
@@ -393,6 +389,7 @@ describe('Genome page', () => {
             });
         });
         it('Pan-genome analysis', () => {
+            openPage('genomes/' + accessionValid + '#downloads');
             const data = [
                 ['List of core genes in the entire pangenome', '-', 'TAB',
                     '/genomes/MGYG000000001/downloads/core_genes.txt'],

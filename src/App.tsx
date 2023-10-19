@@ -17,6 +17,7 @@ import './App.css';
 import './styles/biomes.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/toast.css';
+import './styles/search.css';
 import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
@@ -29,7 +30,6 @@ const TextSearch = lazy(() => import('./pages/TextSearch'));
 const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
 const Browse = lazy(() => import('./pages/Browse'));
 const Login = lazy(() => import('./pages/Login'));
-const Submit = lazy(() => import('./pages/Submit'));
 const Study = lazy(() => import('./pages/Study'));
 const Sample = lazy(() => import('./pages/Sample'));
 const SuperStudy = lazy(() => import('./pages/SuperStudy'));
@@ -58,7 +58,7 @@ const App: React.FC = () => {
       config,
       token: user.token,
     }),
-    [details, user.isAuthenticated, user.token, user.username]
+    [details, user.isAuthenticated, user.username]
   );
 
   return (
@@ -80,7 +80,6 @@ const App: React.FC = () => {
                   <Route path="/search/*" element={<TextSearch />} />
                   <Route path="/sequence-search" element={<SequenceSearch />} />
                   <Route path="/browse/*" element={<Browse />} />
-                  <Route path="/submit" element={<Submit />} />
                   <Route path="/studies/*" element={<Study />} />
                   <Route path="/super-studies/*" element={<SuperStudy />} />
                   <Route path="/samples/*" element={<Sample />} />

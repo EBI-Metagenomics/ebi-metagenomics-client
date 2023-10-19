@@ -1,6 +1,6 @@
 {
   "name": "mgportalv2",
-  "version": "2.0.11",
+  "version": "2.0.18",
   "description": "Web Client for the Mgnify service at EBI",
   "homepage": "https://github.com/EBI-Metagenomics/ebi-metagenomics-client#readme",
   "main": "src/index.tsx",
@@ -36,7 +36,7 @@
     "@sentry/react": "^6.17.2",
     "@sentry/tracing": "^6.17.2",
     "@tippyjs/react": "4.2.6",
-    "axios": "^1.5.0",
+    "axios": "^1.5.1",
     "dexie": "3.2.2",
     "dexie-react-hooks": "1.1.1",
     "highcharts": "9.3.2",
@@ -61,7 +61,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@cypress/code-coverage": "3.9.12",
+    "@cypress/code-coverage": "3.12.1",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
     "@sentry/webpack-plugin": "^1.19.1",
     "@types/google.maps": "3.47.2",
@@ -76,7 +76,7 @@
     "copy-webpack-plugin": "10.2.0",
     "css-loader": "6.5.1",
     "css-minimizer-webpack-plugin": "3.3.1",
-    "cypress": "^10.10.0",
+    "cypress": "^12.2.0",
     "eslint": "^8.6.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-google": "^0.14.0",
