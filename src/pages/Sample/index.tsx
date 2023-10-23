@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseObj } from 'hooks/data/useData';
@@ -14,6 +14,8 @@ import RouteForHash from 'components/Nav/RouteForHash';
 import KeyValueList from 'components/UI/KeyValueList';
 import AnnotationMetadata from 'components/Sample/AnnotationMetadata';
 import ClearingHouseMetadata from 'components/Sample/ClearingHouseMetadata';
+import axios from 'axios';
+import cheerio from 'cheerio';
 
 const tabs = [
   { label: 'Sample metadata', to: '#' },
@@ -25,10 +27,134 @@ const tabs = [
 const SamplePage: React.FC = () => {
   const accession = useURLAccession();
   const { data, loading, error } = useMGnifyData(`samples/${accession}`);
+  // const [eezData, setEezData] = React.useState([]);
+  const [eezData, setEezData] = React.useState({
+    eezInfoText: '',
+    eezBadgeColor: '',
+    abdInfoText: '',
+    absBadgeColor: '',
+  });
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const { data: sampleData } = data as MGnifyResponseObj;
+
+  const fetchAbsCountries = async () => {
+    try {
+      // Send an HTTP GET request to the URL
+      const response = await axios.get(
+        'https://treaties.un.org/Pages/ViewDetails.aspx?src=TREATY&mtdsg_no=XXVII-8-b&chapter=27&clang=_en'
+      );
+
+      // Load the HTML content into Cheerio
+      const $ = cheerio.load(response.data);
+
+      // Find the table containing the list of countries
+      // const table = $('table.rgMasterTable');
+      const table = $(
+        '#ctl00_ctl00_ContentPlaceHolder1_ContentPlaceHolderInnerPage_tblgrid'
+      );
+
+      // Initialize an empty array to store the country names
+      const countries: string[] = [];
+
+      // Loop through the rows of the table
+      table.find('tr').each((index, row) => {
+        // get the first td of the row
+        // const firstTd = $(row).find('td').first();
+
+        // Find the column containing the country name
+        // const countryCell = $(row).find('td.rgSorted');
+        const countryCell = $(row).find('td').first();
+
+        // Check if the country cell is found and not empty
+        if (countryCell.text().trim() !== '') {
+          // Extract the text content of the cell and remove leading/trailing whitespace
+          const countryName = countryCell.text().trim();
+
+          // Append the country name to the array
+          countries.push(countryName);
+        }
+      });
+
+      // Print the list of countries
+      countries.forEach((country, index) => {
+        console.log(`${index + 1}. ${country}`);
+      });
+    } catch (error) {
+      console.error('Failed to retrieve the web page:', error);
+    }
+  };
+
+  const determineIfEezHasAbsObligations = (eezName) => {
+    // TODO determine from API
+    fetchAbsCountries();
+    return eezName.includes('Brazil');
+  };
+  const fetchEezData = () => {
+    const eezMetadata = {
+      eezInfoPrefix:
+        'Based on the sample coordinates, this sample originates from the',
+      eezInfoText: '',
+      eezName: '',
+      hasAbsObligations: false,
+      abdInfoText: '',
+      eezBadgeColor: '',
+      absBadgeColor: '',
+    };
+    if (!sampleData.attributes.latitude || !sampleData.attributes.longitude) {
+      eezMetadata.eezInfoText =
+        'This sample does not have coordinates, so no information concerning ABS requirements can be provided at this point.';
+      eezMetadata.eezBadgeColor = 'tertiary';
+      setEezData(eezMetadata);
+      return;
+    }
+    axios
+      .get(
+        `https://marineregions.org/rest/getGazetteerRecordsByLatLong.json/${sampleData.attributes.latitude}/${sampleData.attributes.longitude}/?typeID=70&offset=0`
+        // `https://marineregions.org/rest/getGazetteerRecordsByLatLong.json/${22.65269}/${
+        //   sampleData.attributes.longitude
+        // }/?typeID=70&offset=0`
+      )
+      .then((response) => {
+        eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} ${response.data[0].preferredGazetteerName}`;
+        eezMetadata.eezName = response.data[0].preferredGazetteerName;
+        eezMetadata.eezBadgeColor = 'primary';
+        const eezHasAbsObligations = determineIfEezHasAbsObligations(
+          response.data[0].preferredGazetteerName
+        );
+        eezMetadata.hasAbsObligations = eezHasAbsObligations;
+        eezMetadata.abdInfoText = eezHasAbsObligations
+          ? 'This EEZ has ABS obligations '
+          : 'This EEZ does not have ABS obligations';
+        eezMetadata.absBadgeColor = eezHasAbsObligations
+          ? 'secondary'
+          : 'tertiary';
+        setEezData(eezMetadata);
+        sampleData.attributes.mrgid = response.data[0].MRGID;
+      })
+      .catch((err) => {
+        if (err.response.status === 404) {
+          eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} a region outside of an EEZ. Therefore, there are no ABS obligations`;
+          setEezData(eezMetadata);
+        }
+
+        console.log(err.response.status);
+      });
+    //   -14.655138, 47.535895
+    // -4.452528, 55.993399
+  };
+  // alert(!eezData.eezInfoText);
+  // if (!eezData.eezInfoText) {
+  //   fetchEezData();
+  // }
+  // if (
+  //   sampleData.attributes.latitude &&
+  //   sampleData.attributes.longitude &&
+  //   !eezData.length
+  // ) {
+  //   fetchEezData();
+  // }
   return (
     <section className="vf-content">
       <h2>Sample overview ({accession})</h2>
@@ -49,6 +175,30 @@ const SamplePage: React.FC = () => {
                     }[]) || []
                   }
                 />
+
+                {/* {eezData && ( */}
+                {/*  <div */}
+                {/*    className="vf-grid vf-grid__col-2" */}
+                {/*    style={{ */}
+                {/*      gridTemplateColumns: '1fr 2fr', */}
+                {/*      rowGap: '0.5rem', */}
+                {/*    }} */}
+                {/*  > */}
+                {/*    {eezData.map((item) => ( */}
+                {/*      <React.Fragment key={item.gazetteer_record_id}> */}
+                {/*        <div style={{ textAlign: 'right' }} data-cy="kvl-key"> */}
+                {/*          EEZ: */}
+                {/*        </div> */}
+                {/*        <div data-cy="kvl-key"> */}
+                {/*          <span className="vf-badge vf-badge--primary"> */}
+                {/*            {item?.preferredGazetteerName} */}
+                {/*          </span> */}
+                {/*          /!* {item?.preferredGazetteerName} *!/ */}
+                {/*        </div> */}
+                {/*      </React.Fragment> */}
+                {/*    ))} */}
+                {/*  </div> */}
+                {/* )} */}
                 {!(sampleData?.attributes?.['sample-metadata'] as [])
                   .length && (
                   <div className="vf-box">
@@ -74,6 +224,106 @@ const SamplePage: React.FC = () => {
           </section>
         </div>
       </section>
+
+      {eezData.eezInfoText && (
+        <div className="vf-box vf-box-theme--primary vf-box--easy">
+          <h6 className="vf-box__heading">EEZ Metadata</h6>
+          <p className="vf-box__text">
+            <aside className="vf-article-meta-information">
+              <div className="vf-meta__details">
+                <p>
+                  <span
+                    className={`vf-badge vf-badge--${eezData.eezBadgeColor}`}
+                  >
+                    <abbr title="Exclusive Economic Zone" className="eez-abbr">
+                      EEZ Info
+                    </abbr>
+                  </span>
+                  {/* <br /> */}
+                  &nbsp; {eezData.eezInfoText}
+                </p>
+              </div>
+              <div className="vf-meta__details">
+                <p>
+                  <span
+                    className={`vf-badge vf-badge--${eezData.absBadgeColor}`}
+                  >
+                    <abbr
+                      title="Access and Benefit Sharing"
+                      className="eez-abbr"
+                    >
+                      ABS Info
+                    </abbr>
+                  </span>
+                  &nbsp; {eezData.abdInfoText}
+                </p>
+              </div>
+              <details className="vf-details">
+                <summary className="vf-details--summary">More info</summary>
+                The current system for determining the EEZ is based on the shape
+                map obtained from X on Y(date). The list of EEZ countries with
+                an ABS and Digital Sequence Information (DSI) obligations was
+                obtained from ABSint on N(date).This information is only
+                supposed to be guidance and you are advised to independently
+                verify your ABS obligations.
+                <br /> <br />
+                Exclusive Economic Zone (EEZ): The United Nations Convention on
+                the Law of the Sea (UNCLOS) defines an Exclusive Economic Zone
+                (EEZ) as generally extending 200 nautical miles from shore,
+                within which the coastal state has the right to explore and
+                exploit, and the responsibility to conserve and manage, both
+                living and non-living resources. The EEZ is linked to
+                jurisdiction. The Ocean Biodiversity Information System (OBIS)
+                provides further clarification on the EEZ borders as well as
+                coastal, marine, and terrestrial waters.
+              </details>
+            </aside>
+          </p>
+        </div>
+      )}
+
+      {/* <section className="vf-grid"> */}
+      {/*  {eezData && ( */}
+      {/*    <aside className="vf-article-meta-information"> */}
+      {/*      <div className="vf-meta__details"> */}
+      {/*        <p> */}
+      {/*          <span className="vf-badge vf-badge--primary"> */}
+      {/*            EEZ Info */}
+      {/*            /!* {eezData[0]?.preferredGazetteerName} *!/ */}
+      {/*          </span> */}
+      {/*          /!* <br /> *!/ */}
+      {/*          &nbsp; Based on the sample coordinates, this sample originates */}
+      {/*          from the <strong>{eezData[0]?.preferredGazetteerName}</strong> */}
+      {/*        </p> */}
+      {/*      </div> */}
+      {/*      <div className="vf-meta__details"> */}
+      {/*        <p> */}
+      {/*          <span className="vf-badge vf-badge--secondary">ABS Info</span> */}
+      {/*          &nbsp; This EEZ has ABS obligations */}
+      {/*        </p> */}
+      {/*      </div> */}
+      {/*      <details className="vf-details"> */}
+      {/*        <summary className="vf-details--summary">More info</summary> */}
+      {/*        The current system for determining the EEZ is based on the shape */}
+      {/*        map obtained from X on Y(date). The list of EEZ countries with an */}
+      {/*        ABS and Digital Sequence Information (DSI) obligations was */}
+      {/*        obtained from ABSint on N(date).This information is only supposed */}
+      {/*        to be guidance and you are advised to independently verify your */}
+      {/*        ABS obligations. */}
+      {/*        <br /> <br /> */}
+      {/*        Exclusive Economic Zone (EEZ): The United Nations Convention on */}
+      {/*        the Law of the Sea (UNCLOS) defines an Exclusive Economic Zone */}
+      {/*        (EEZ) as generally extending 200 nautical miles from shore, within */}
+      {/*        which the coastal state has the right to explore and exploit, and */}
+      {/*        the responsibility to conserve and manage, both living and */}
+      {/*        non-living resources. The EEZ is linked to jurisdiction. The Ocean */}
+      {/*        Biodiversity Information System (OBIS) provides further */}
+      {/*        clarification on the EEZ borders as well as coastal, marine, and */}
+      {/*        terrestrial waters. */}
+      {/*      </details> */}
+      {/*    </aside> */}
+      {/*  )} */}
+      {/* </section> */}
     </section>
   );
 };

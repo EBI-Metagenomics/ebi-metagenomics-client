@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
+// import N3 from 'rdf-parser-n3';
+import axios from 'axios';
 
 import MarkerClusterer from '@googlemaps/markerclustererplus';
 
@@ -46,10 +48,90 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
 
   const markers = useRef({});
 
+  const fetchPolygonCoordinates = async () => {
+    try {
+      const response = await axios.get(
+        `https://marineregions.org/rest/getGazetteerGeometries.ttl/${samples[0].attributes.mrgid}/`
+        // `https://marineregions.org/rest/getGazetteerGeometries.ttl/${8348}/`
+        // `https://marineregions.org/rest/getGazetteerGeometries.ttl/${8337}/`
+      );
+      const rdfData = response.data as unknown as string;
+      let polygonCoordinatesString = rdfData.substring(
+        rdfData.indexOf('POLYGON') + 8,
+        rdfData.length - 3
+      );
+      polygonCoordinatesString = rdfData.substring(
+        rdfData.indexOf('((') + 2,
+        rdfData.indexOf('))')
+      );
+
+      // const internalCoordinates = [];
+
+      const coordinatesArray = [];
+      const internalCoordinates = [];
+
+      const pairs = polygonCoordinatesString.split(',');
+
+      // const sub = str.substring(str.indexOf('(') + 1, str.indexOf(')'));
+
+      for (let i = 0; i < pairs.length; i++) {
+        const pair = pairs[i];
+        // if (pair.includes('(') || pair.includes(')')) {
+        if (pair.includes('(')) {
+          console.log('i', pair);
+          // find index of pair in polygonCoordinatesString
+          const indexOfPair = polygonCoordinatesString.indexOf(pair);
+          const indexOfPairEnd = polygonCoordinatesString.indexOf(`${pair})`);
+          // console.log('indexOfPairEnd', indexOfPairEnd);
+          const internalCoordinatesString = polygonCoordinatesString.substring(
+            polygonCoordinatesString.indexOf(pair),
+            // polygonCoordinatesString.indexOf(')')
+            indexOfPairEnd + pair.length
+          );
+
+          // const internalCoordinatesString = polygonCoordinatesString.substring(
+          //   pair.indexOf('(') + 1,
+          //   pair.indexOf(')')
+          // );
+          internalCoordinates.push(internalCoordinatesString);
+          // make i skip to the end of the internal coordinates
+          i += internalCoordinatesString.split(' ').length - 1;
+
+          // continue;
+          // coordinatesArray.push(null);
+        } else {
+          const [lng, lat] = pair.trim().split(' ').map(parseFloat);
+          coordinatesArray.push({ lat, lng });
+        }
+      }
+
+      // .filter((pair) => pair !== null);
+      // console.log('internal', internalCoordinates);
+      // console.log(coordinatesArray);
+      return coordinatesArray;
+    } catch (error) {
+      console.error('Error fetching or parsing data:', error);
+    }
+  };
+
+  const drawPolygon = (coordinates) => {
+    if (!theMap) return;
+    const polygon = new google.maps.Polygon({
+      paths: coordinates,
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#0000FF',
+      fillOpacity: 0.35,
+    });
+    polygon.setMap(theMap);
+  };
+
   useEffect(() => {
     if (theMap === null) {
       const tmpMap = new google.maps.Map(ref.current, {
-        maxZoom: 10,
+        // zoom: 0.1,
+        maxZoom: 5,
         minZoom: 2,
       });
       setTheMap(tmpMap);
@@ -119,6 +201,16 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
       );
 
       theMap.fitBounds(newBoundary.current);
+
+      if (
+        samples[0].relationships.biome.data.id.includes(
+          'root:Environmental:Aquatic'
+        )
+      ) {
+        fetchPolygonCoordinates().then((coordinates) => {
+          drawPolygon(coordinates);
+        });
+      }
     }
   }, [theMap, samples]);
 
