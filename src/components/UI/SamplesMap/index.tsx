@@ -48,6 +48,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
 
   const markers = useRef({});
 
+  // eslint-disable-next-line consistent-return
   const fetchPolygonCoordinates = async () => {
     try {
       const response = await axios.get(
@@ -71,7 +72,6 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
       for (let i = 0; i < pairs.length; i++) {
         const pair = pairs[i];
         if (pair.includes('(')) {
-          console.log('i', pair);
           const indexOfPairEnd = polygonCoordinatesString.indexOf(`${pair})`);
           const internalCoordinatesString = polygonCoordinatesString.substring(
             polygonCoordinatesString.indexOf(pair),
@@ -88,6 +88,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
 
       return coordinatesArray;
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Error fetching or parsing data:', err);
     }
   };

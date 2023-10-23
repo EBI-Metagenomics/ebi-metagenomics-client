@@ -38,28 +38,28 @@ const SamplePage: React.FC = () => {
   if (!data) return <Loading />;
   const { data: sampleData } = data as MGnifyResponseObj;
 
-  const fetchAbsCountries = async () => {
-    try {
-      const response = await axios.get(
-        'https://treaties.un.org/Pages/ViewDetails.aspx?src=TREATY&mtdsg_no=XXVII-8-b&chapter=27&clang=_en'
-      );
-      const $ = cheerio.load(response.data);
-      const table = $(
-        '#ctl00_ctl00_ContentPlaceHolder1_ContentPlaceHolderInnerPage_tblgrid'
-      );
-      const countries: string[] = [];
-      table.find('tr').each((index, row) => {
-        const countryCell = $(row).find('td').first();
-        if (countryCell.text().trim() !== '') {
-          const countryName = countryCell.text().trim();
-          countries.push(countryName);
-        }
-      });
-      countries.forEach((country, index) => {});
-    } catch (err) {
-      console.error('Failed to retrieve the web page:', err);
-    }
-  };
+  // const fetchAbsCountries = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       'https://treaties.un.org/Pages/ViewDetails.aspx?src=TREATY&mtdsg_no=XXVII-8-b&chapter=27&clang=_en'
+  //     );
+  //     const $ = cheerio.load(response.data);
+  //     const table = $(
+  //       '#ctl00_ctl00_ContentPlaceHolder1_ContentPlaceHolderInnerPage_tblgrid'
+  //     );
+  //     const countries: string[] = [];
+  //     table.find('tr').each((index, row) => {
+  //       const countryCell = $(row).find('td').first();
+  //       if (countryCell.text().trim() !== '') {
+  //         const countryName = countryCell.text().trim();
+  //         countries.push(countryName);
+  //       }
+  //     });
+  //     countries.forEach((country, index) => {});
+  //   } catch (err) {
+  //     console.error('Failed to retrieve the web page:', err);
+  //   }
+  // };
 
   const determineIfEezHasAbsObligations = (eezName) => {
     // TODO determine from API
