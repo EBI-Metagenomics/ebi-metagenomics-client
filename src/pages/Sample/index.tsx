@@ -112,6 +112,9 @@ const SamplePage: React.FC = () => {
         }
       });
   };
+  if (!eezData.eezInfoText) {
+    fetchEezData();
+  }
   return (
     <section className="vf-content">
       <h2>Sample overview ({accession})</h2>
