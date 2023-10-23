@@ -52,8 +52,6 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
     try {
       const response = await axios.get(
         `https://marineregions.org/rest/getGazetteerGeometries.ttl/${samples[0].attributes.mrgid}/`
-        // `https://marineregions.org/rest/getGazetteerGeometries.ttl/${8348}/`
-        // `https://marineregions.org/rest/getGazetteerGeometries.ttl/${8337}/`
       );
       const rdfData = response.data as unknown as string;
       let polygonCoordinatesString = rdfData.substring(
@@ -65,52 +63,32 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
         rdfData.indexOf('))')
       );
 
-      // const internalCoordinates = [];
-
       const coordinatesArray = [];
       const internalCoordinates = [];
 
       const pairs = polygonCoordinatesString.split(',');
 
-      // const sub = str.substring(str.indexOf('(') + 1, str.indexOf(')'));
-
       for (let i = 0; i < pairs.length; i++) {
         const pair = pairs[i];
-        // if (pair.includes('(') || pair.includes(')')) {
         if (pair.includes('(')) {
           console.log('i', pair);
-          // find index of pair in polygonCoordinatesString
-          const indexOfPair = polygonCoordinatesString.indexOf(pair);
           const indexOfPairEnd = polygonCoordinatesString.indexOf(`${pair})`);
-          // console.log('indexOfPairEnd', indexOfPairEnd);
           const internalCoordinatesString = polygonCoordinatesString.substring(
             polygonCoordinatesString.indexOf(pair),
-            // polygonCoordinatesString.indexOf(')')
             indexOfPairEnd + pair.length
           );
 
-          // const internalCoordinatesString = polygonCoordinatesString.substring(
-          //   pair.indexOf('(') + 1,
-          //   pair.indexOf(')')
-          // );
           internalCoordinates.push(internalCoordinatesString);
-          // make i skip to the end of the internal coordinates
           i += internalCoordinatesString.split(' ').length - 1;
-
-          // continue;
-          // coordinatesArray.push(null);
         } else {
           const [lng, lat] = pair.trim().split(' ').map(parseFloat);
           coordinatesArray.push({ lat, lng });
         }
       }
 
-      // .filter((pair) => pair !== null);
-      // console.log('internal', internalCoordinates);
-      // console.log(coordinatesArray);
       return coordinatesArray;
-    } catch (error) {
-      console.error('Error fetching or parsing data:', error);
+    } catch (err) {
+      console.error('Error fetching or parsing data:', err);
     }
   };
 
