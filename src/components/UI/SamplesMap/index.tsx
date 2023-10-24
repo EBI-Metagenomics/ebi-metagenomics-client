@@ -182,7 +182,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
       theMap.fitBounds(newBoundary.current);
 
       if (
-        samples[0].relationships.biome.data.id.includes(
+        samples[0]?.relationships?.biome?.data?.id?.includes(
           'root:Environmental:Aquatic'
         )
       ) {

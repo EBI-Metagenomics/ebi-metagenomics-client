@@ -30,9 +30,10 @@ const SamplePage: React.FC = () => {
   const [eezData, setEezData] = React.useState({
     eezInfoText: '',
     eezBadgeColor: '',
-    abdInfoText: '',
+    absInfoText: '',
     absBadgeColor: '',
   });
+  const [fetchEezDataCalled, setFetchEezDataCalled] = React.useState(false);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
@@ -61,26 +62,44 @@ const SamplePage: React.FC = () => {
   //   }
   // };
 
+  const fetchAbsCountries = async () => {
+    axios.get('http://127.0.0.1:8000/v1/scrape-countries').then((response) => {
+      console.log(response.data);
+    });
+  };
+
   const determineIfEezHasAbsObligations = (eezName) => {
     // TODO determine from API
     // fetchAbsCountries();
     return eezName.includes('Brazil');
   };
   const fetchEezData = () => {
+    // fetchAbsCountries();
     const eezMetadata = {
       eezInfoPrefix:
         'Based on the sample coordinates, this sample originates from the',
       eezInfoText: '',
       eezName: '',
       hasAbsObligations: false,
-      abdInfoText: '',
+      absInfoText: '',
       eezBadgeColor: '',
       absBadgeColor: '',
     };
     if (!sampleData.attributes.latitude || !sampleData.attributes.longitude) {
       eezMetadata.eezInfoText =
-        'This sample does not have coordinates, so no information concerning ABS requirements can be provided at this point.';
+        'This sample does not have coordinates, so no information concerning EEZ and ABS requirements can be provided at this point.';
       eezMetadata.eezBadgeColor = 'tertiary';
+      setEezData(eezMetadata);
+      return;
+    }
+    if (
+      !sampleData?.relationships?.biome?.data?.id.includes(
+        'root:Environmental:Aquatic'
+      )
+    ) {
+      eezMetadata.absInfoText =
+        'The sample is from an environment which is currently not covered in the biomes that MGnify currently reports ABS requirements.';
+      eezMetadata.absBadgeColor = 'tertiary';
       setEezData(eezMetadata);
       return;
     }
@@ -96,7 +115,7 @@ const SamplePage: React.FC = () => {
           response.data[0].preferredGazetteerName
         );
         eezMetadata.hasAbsObligations = eezHasAbsObligations;
-        eezMetadata.abdInfoText = eezHasAbsObligations
+        eezMetadata.absInfoText = eezHasAbsObligations
           ? 'This EEZ has ABS obligations '
           : 'This EEZ does not have ABS obligations';
         eezMetadata.absBadgeColor = eezHasAbsObligations
@@ -108,12 +127,17 @@ const SamplePage: React.FC = () => {
       .catch((err) => {
         if (err.response.status === 404) {
           eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} a region outside of an EEZ. Therefore, there are no ABS obligations`;
+          eezMetadata.eezBadgeColor = 'tertiary';
           setEezData(eezMetadata);
         }
       });
   };
-  if (!eezData.eezInfoText) {
+
+  if (!fetchEezDataCalled) {
     fetchEezData();
+    if (eezData.eezInfoText || eezData.absInfoText) {
+      setFetchEezDataCalled(true);
+    }
   }
   return (
     <section className="vf-content">
@@ -161,47 +185,56 @@ const SamplePage: React.FC = () => {
         </div>
       </section>
 
-      {eezData.eezInfoText && (
+      {(eezData.eezInfoText || eezData.absInfoText) && (
         <div className="vf-box vf-box-theme--primary vf-box--easy">
           <h6 className="vf-box__heading">EEZ Metadata</h6>
           <p className="vf-box__text">
             <aside className="vf-article-meta-information">
-              <div className="vf-meta__details">
-                <p>
-                  <span
-                    className={`vf-badge vf-badge--${eezData.eezBadgeColor}`}
-                  >
-                    <abbr title="Exclusive Economic Zone" className="eez-abbr">
-                      EEZ Info
-                    </abbr>
-                  </span>
-                  {/* <br /> */}
-                  &nbsp; {eezData.eezInfoText}
-                </p>
-              </div>
-              <div className="vf-meta__details">
-                <p>
-                  <span
-                    className={`vf-badge vf-badge--${eezData.absBadgeColor}`}
-                  >
-                    <abbr
-                      title="Access and Benefit Sharing"
-                      className="eez-abbr"
+              {eezData.eezInfoText && (
+                <div className="vf-meta__details">
+                  <p>
+                    <span
+                      className={`vf-badge vf-badge--${eezData.eezBadgeColor}`}
                     >
-                      ABS Info
-                    </abbr>
-                  </span>
-                  &nbsp; {eezData.abdInfoText}
-                </p>
-              </div>
+                      <abbr
+                        title="Exclusive Economic Zone"
+                        className="eez-abbr"
+                      >
+                        EEZ Info
+                      </abbr>
+                    </span>
+                    &nbsp; {eezData.eezInfoText}
+                  </p>
+                </div>
+              )}
+              {eezData.absInfoText && (
+                <div className="vf-meta__details">
+                  <p>
+                    <span
+                      className={`vf-badge vf-badge--${eezData.absBadgeColor}`}
+                    >
+                      <abbr
+                        title="Access and Benefit Sharing"
+                        className="eez-abbr"
+                      >
+                        ABS Info
+                      </abbr>
+                    </span>
+                    &nbsp; {eezData.absInfoText}
+                  </p>
+                </div>
+              )}
               <details className="vf-details">
                 <summary className="vf-details--summary">More info</summary>
-                The current system for determining the EEZ is based on the shape
-                map obtained from X on Y(date). The list of EEZ countries with
-                an ABS and Digital Sequence Information (DSI) obligations was
-                obtained from ABSint on N(date).This information is only
-                supposed to be guidance and you are advised to independently
-                verify your ABS obligations.
+                The current system for determining the EEZ is based on
+                information retrieved from{' '}
+                <a href="https://marineregions.org/gazetteer.php?p=webservices&type=rest#/getGazetteerRecordsByLatLong">
+                  The Marine Regions getGazetteerRecordsByLatLong
+                </a>{' '}
+                APIs. The list of EEZ countries with an ABS and Digital Sequence
+                Information (DSI) obligations was obtained from ABSint on
+                N(date).This information is only supposed to be guidance and you
+                are advised to independently verify your ABS obligations.
                 <br /> <br />
                 Exclusive Economic Zone (EEZ): The United Nations Convention on
                 the Law of the Sea (UNCLOS) defines an Exclusive Economic Zone
