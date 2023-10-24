@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
-// import N3 from 'rdf-parser-n3';
 import axios from 'axios';
 
 import MarkerClusterer from '@googlemaps/markerclustererplus';
@@ -8,13 +7,13 @@ import MarkerClusterer from '@googlemaps/markerclustererplus';
 import { MGnifyDatum } from 'hooks/data/useData';
 
 import './style.css';
+import LoadingDots from 'components/UI/LoadingDots';
 
 // TODO: make the link play nicer with react-router
 const MarkerPopup: React.FC<{ sample: MGnifyDatum }> = ({ sample }) => (
   <div className="vf-box vf-box--easy">
     <h3 className="vf-box__heading">
       <a href={`../samples/${sample.id}`}>{sample.id}</a>
-      {/* <Link to="/search/studies">{sample.id}</Link> */}
     </h3>
     <p className="vf-box__text">{sample.attributes['sample-desc']}</p>
   </div>
@@ -45,8 +44,8 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
   const sampleInfoWindow = useRef(new google.maps.InfoWindow());
   const clusterInfoWindow = useRef(new google.maps.InfoWindow());
   const newBoundary = useRef(new google.maps.LatLngBounds());
-
   const markers = useRef({});
+  const [markingEezRegions, setMarkingEezRegions] = useState(false);
 
   // eslint-disable-next-line consistent-return
   const fetchPolygonCoordinates = async () => {
@@ -85,11 +84,9 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
           coordinatesArray.push({ lat, lng });
         }
       }
-
       return coordinatesArray;
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('Error fetching or parsing data:', err);
+      // markingEezRegions.current = false;
     }
   };
 
@@ -182,18 +179,31 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
       theMap.fitBounds(newBoundary.current);
 
       if (
+        samples[0]?.attributes?.mrgid &&
         samples[0]?.relationships?.biome?.data?.id?.includes(
           'root:Environmental:Aquatic'
         )
       ) {
+        setMarkingEezRegions(true);
         fetchPolygonCoordinates().then((coordinates) => {
           drawPolygon(coordinates);
+          setMarkingEezRegions(false);
         });
       }
     }
   }, [theMap, samples]);
 
-  return <div ref={ref} id="map" style={{ height: '100%' }} />;
+  return (
+    <>
+      {markingEezRegions && (
+        <span>
+          Marking EEZ regions
+          <LoadingDots />
+        </span>
+      )}
+      <div ref={ref} id="map" style={{ height: '100%' }} />
+    </>
+  );
 };
 
 export default SamplesMap;

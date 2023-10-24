@@ -47,7 +47,6 @@
     "lodash-es": "4.17.21",
     "mgnify-sourmash-component": "0.2.4",
     "process": "^0.11.10",
-    "rdf-parser-n3": "^1.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "8.0.6",
