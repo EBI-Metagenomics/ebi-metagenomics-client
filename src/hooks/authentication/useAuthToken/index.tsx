@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import UserContext from 'pages/Login/UserContext';
+import axios from 'axios';
 
 type AuthToken = string | null;
 const getUserDetailsFromToken = (token: string) => {
@@ -12,7 +13,20 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
   const [authToken, setAuthTokenInternally] = useState<string | null>(() => {
     return localStorage.getItem('token');
   });
-  const { setUser } = useContext(UserContext);
+  const { setUser, setDetails } = useContext(UserContext);
+
+  const getUserDetailsFromAccountApi = () => {
+    axios
+      .get('http://127.0.0.1:8000/v1/utils/myaccounts', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((response) => {
+        setDetails(response.data.data);
+      });
+  };
 
   const setAuthToken = (newToken: AuthToken) => {
     if (!newToken) {
@@ -23,17 +37,19 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
         token: '',
         isAuthenticated: false,
       });
+      setDetails(null);
       return;
     }
     localStorage.setItem('token', newToken as string);
     setAuthTokenInternally(newToken);
-    const userDetails = getUserDetailsFromToken(newToken as string);
-    localStorage.setItem('username', userDetails.username);
+    const userDetailsFromToken = getUserDetailsFromToken(newToken as string);
+    localStorage.setItem('username', userDetailsFromToken.username);
     setUser({
-      username: userDetails.username,
+      username: userDetailsFromToken.username,
       token: newToken,
       isAuthenticated: true,
     });
+    getUserDetailsFromAccountApi();
   };
 
   return [authToken, setAuthToken];

@@ -5,19 +5,20 @@ const BASE_URL = 'http://localhost:8000/v1';
 export default axios.create({
   baseURL: BASE_URL,
 });
+// export const protectedAxios = axios.create({
+//   baseURL: BASE_URL,
+//   headers: {
+//     'Content-Type': 'application/json',
+//     Authorization: `Bearer ${localStorage.getItem('token')}`,
+//   },
+// });
+
 export const protectedAxios = axios.create({
   baseURL: BASE_URL,
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    ...(localStorage.getItem('token') && {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    }),
+  },
 });
-
-export const makeDynamicAxiosCall = (
-  url: string,
-  method: string,
-  data: any
-) => {
-  return axios({
-    method,
-    url,
-    data,
-  });
-};

@@ -35,6 +35,8 @@ export const getEmailsFromDetails = (details: UserDetails): string[] =>
 export const getDetailsByWebin = (
   details: UserDetails,
   webin: string
-): UserDetail => details.find(({ id }) => id === webin);
+): UserDetail => {
+  return details.find(({ id }) => id.toLowerCase() === webin.toLowerCase());
+};
 
 export default UserContext;
