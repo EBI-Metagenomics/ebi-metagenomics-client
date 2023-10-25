@@ -6,7 +6,7 @@ const LoadingDots = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setDots((prevDots) => (prevDots.length === 3 ? '' : `${prevDots}.`));
-    }, 500);
+    }, 200);
 
     return () => clearInterval(interval);
   }, []);

@@ -17,6 +17,8 @@ import ClearingHouseMetadata from 'components/Sample/ClearingHouseMetadata';
 import axios from 'axios';
 import cheerio from 'cheerio';
 
+// const lookup = require('country-code-lookup');
+
 const tabs = [
   { label: 'Sample metadata', to: '#' },
   { label: 'Associated studies', to: '#studies' },
@@ -84,6 +86,7 @@ const SamplePage: React.FC = () => {
       absInfoText: '',
       eezBadgeColor: '',
       absBadgeColor: '',
+      absStatus: '',
     };
     if (!sampleData.attributes.latitude || !sampleData.attributes.longitude) {
       eezMetadata.eezInfoText =

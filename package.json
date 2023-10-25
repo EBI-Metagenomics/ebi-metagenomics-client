@@ -38,6 +38,7 @@
     "@tippyjs/react": "4.2.6",
     "axios": "^1.5.1",
     "cheerio": "^1.0.0-rc.12",
+    "coordinate_to_country": "^1.1.0",
     "dexie": "3.2.2",
     "dexie-react-hooks": "1.1.1",
     "highcharts": "9.3.2",
