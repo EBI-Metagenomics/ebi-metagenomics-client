@@ -9,3 +9,15 @@ export const protectedAxios = axios.create({
   baseURL: BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
+
+export const makeDynamicAxiosCall = (
+  url: string,
+  method: string,
+  data: any
+) => {
+  return axios({
+    method,
+    url,
+    data,
+  });
+};

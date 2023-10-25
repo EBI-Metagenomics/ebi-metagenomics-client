@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { protectedAxios } from 'utils/axios';
+import { makeDynamicAxiosCall, protectedAxios } from 'utils/axios';
 
 export enum ResponseFormat {
   JSON,
@@ -222,8 +222,20 @@ async function fetchData(
   let data = null;
 
   try {
+    console.log('check out fetch ooptions', fetchOptions);
     // response = await fetch(url, fetchOptions);
-    response = await protectedAxios.get(url);
+    if (fetchOptions.method === 'POST') {
+      response = await protectedAxios.post(url, fetchOptions.body, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    } else {
+      response = await protectedAxios.get(url);
+    }
+    makeDynamicAxiosCall(url, fetchOptions.method, {});
+    // response = await protectedAxios.get(url);
+    // response = await protectedAxios.post(url);
     data = prepareResponseDataBasedOnFormat(response, format, updateState);
     updateState({
       data,

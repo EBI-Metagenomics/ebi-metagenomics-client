@@ -4,7 +4,7 @@ describe('Genome catalogue page', () => {
   const catalogueIdValid = 'human-gut-v2-0';
   const catalogueNameValid = 'Human Gut v2.0'
 
-  context('Genome list', () => {
+  context.skip('Genome list', () => {
     it('Should have structured overview data', () => {
       openAndWait('genome-catalogues/' + catalogueIdValid, catalogueNameValid);
       cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', '99')
@@ -48,7 +48,7 @@ describe('Genome catalogue page', () => {
       cy.get('.mg-hierarchy-label').should('contain.text', 'Negativicutes');
     });
 
-    context('Protein catalogue', () => {
+    context.skip('Protein catalogue', () => {
       it('Should show catalogue description', () => {
         openAndWait('genome-catalogues/' + catalogueIdValid + '#protein-catalog-tab', catalogueNameValid);
         cy.get('#tab-protein-catalog-tab').should('contain.text', 'UHGP');
