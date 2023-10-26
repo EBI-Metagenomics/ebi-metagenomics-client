@@ -3167,7 +3167,7 @@ value="&harr;" title="Expand this wedge to become the new focus of the chart"/><
   //	document.getElementById('options').style.fontSize = '9pt';
   position = addOptionElement(
     position,
-    '<a style="margin:2px" target="_blank" href="https://github.com/marbl/Krona/wiki"><img style="vertical-align:middle;width:108px;height:30px;" src="' +
+    '<a style="margin:2px" target="_blank" href="https://github.com/marbl/Krona/wiki"><img style="vertical-align:middle;" src="' +
       logoImage +
       '" alt="Logo of Krona"/></a><input type="button" id="back" value="&larr;" title="Go back (Shortcut: &larr;)"/>\
 <input type="button" id="forward" value="&rarr;" title="Go forward (Shortcut: &rarr;)"/> \
