@@ -1,4 +1,4 @@
-import { protectedAxios } from 'utils/axios';
+import protectedAxios from 'utils/protectedAxios';
 import { useEffect } from 'react';
 import useAuthTokenVerifier from 'hooks/authentication/useAuthTokenVerifier';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -12,6 +12,7 @@ const useProtectedApiCall = () => {
   useEffect(() => {
     const requestInterceptor = protectedAxios.interceptors.request.use(
       (config) => {
+        // TODO also check base URL here
         if (!config.headers.Authorization) {
           // eslint-disable-next-line no-param-reassign
           config.headers.Authorization = `Bearer ${authToken}`;

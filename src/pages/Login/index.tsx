@@ -11,7 +11,7 @@ import OutterCard from 'components/UI/OutterCard';
 import UserContext from 'pages/Login/UserContext';
 import enaUserImg from 'public/images/ico_ena_user.jpg';
 import useAuthToken from 'hooks/authentication/useAuthToken';
-import axios from 'utils/axios';
+import axios from 'utils/protectedAxios';
 
 const Login: React.FC = () => {
   const [, setAuthToken] = useAuthToken();

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { protectedAxios } from 'utils/axios';
+import protectedAxios from 'utils/protectedAxios';
 
 export enum ResponseFormat {
   JSON,

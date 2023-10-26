@@ -69,7 +69,7 @@ describe('Super Study page', function() {
             const origPage = 'super-studies/' + superStudyId;
             openPage(origPage);
             cy.contains('Error Fetching Data');
-            cy.contains('Status: 404');
+            cy.contains('404');
         });
     });
 });
