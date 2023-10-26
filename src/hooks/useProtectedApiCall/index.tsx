@@ -37,7 +37,7 @@ const useProtectedApiCall = () => {
       protectedAxios.interceptors.request.eject(requestInterceptor);
       protectedAxios.interceptors.response.eject(responseInterceptor);
     };
-  }, [authToken, verifyAuthToken]);
+  }, [authToken, verifyAuthToken, location, navigate]);
 
   return protectedAxios;
 };

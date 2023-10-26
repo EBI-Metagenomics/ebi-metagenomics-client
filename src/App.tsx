@@ -58,7 +58,7 @@ const App: React.FC = () => {
       config,
       token: user.token,
     }),
-    [details, user.isAuthenticated, user.username]
+    [details, user.isAuthenticated, user.username, user.token]
   );
 
   return (

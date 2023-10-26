@@ -11,6 +11,7 @@ const protectedAxios = axios.create({
 protectedAxios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token && config.url.startsWith(BASE_URL)) {
+    // eslint-disable-next-line no-param-reassign
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

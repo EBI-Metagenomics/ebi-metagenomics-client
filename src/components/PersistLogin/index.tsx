@@ -20,7 +20,7 @@ const PersistLogin = () => {
       }
     };
     verifyToken();
-  }, []);
+  }, [verifyAuthToken]);
 
   return <Outlet />;
 
