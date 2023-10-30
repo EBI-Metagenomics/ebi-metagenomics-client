@@ -3165,6 +3165,7 @@ value="&harr;" title="Expand this wedge to become the new focus of the chart"/><
   }
 
   //	document.getElementById('options').style.fontSize = '9pt';
+  unskewLogos();
   position = addOptionElement(
     position,
     '<a style="margin:2px" target="_blank" href="https://github.com/marbl/Krona/wiki"><img style="vertical-align:middle;width:108px;height:30px;" src="' +
@@ -5581,6 +5582,16 @@ x="0" y="0" width="' +
   );
 }
 
+function unskewLogos() {
+  var srcPattern = /^https:\/\/(www\.|wwwdev\.|wwwint\.)?ebi\.ac\.uk/;
+  var imgElements = document.querySelectorAll('img[src^="https://"]');
+  imgElements.forEach(function (img) {
+    if (srcPattern.test(img.getAttribute('src'))) {
+      img.style.removeProperty('height');
+      img.style.removeProperty('width');
+    }
+  });
+}
 function svgText(text, x, y, anchor, bold, color) {
   if (typeof anchor == 'undefined') {
     anchor = 'start';
