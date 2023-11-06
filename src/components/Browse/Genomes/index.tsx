@@ -24,7 +24,7 @@ const BrowseGenomes: React.FC = () => {
 
   return (
     <section className="mg-browse-section">
-      <div>
+      <div className="vf-stack vf-stack--400">
         <p>
           Genome catalogues are biome-specific collections of
           metagenomic-assembled and isolate genomes. The latest version of each
@@ -35,6 +35,11 @@ const BrowseGenomes: React.FC = () => {
           </a>
           .
         </p>
+        <MainPublicationForResource
+          resource="genomes"
+          citationPretext="If you use the MGnify Genomes resource, please cite:"
+        />
+        <div />
       </div>
       <TabsForQueryParameter
         tabs={tabs}
@@ -49,12 +54,6 @@ const BrowseGenomes: React.FC = () => {
         {browseBy === 'mag-search' && <SourmashSearch />}
       </div>
       <hr className="vf-divider" />
-      <div className="vf-stack vf-stack--400">
-        <p className="vf-text-body vf-text-body--2">
-          If you use the MGnify Genomes resource, please cite:
-        </p>
-        <MainPublicationForResource resource="genomes" />
-      </div>
     </section>
   );
 };
