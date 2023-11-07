@@ -5,7 +5,7 @@ const AbsStatusDictionary = {
     badgeText: 'ABS LAWS',
   },
   2: {
-    text: 'will have ABS obligations',
+    text: 'will have ABS obligations in the future',
     color: 'tertiary',
     badgeText: 'UPCOMING',
   },
@@ -29,7 +29,7 @@ const AbsStatusDictionary = {
 export const displayAbsInfo = (eezData: EezMetadata) => {
   if (eezData.hasMultipleSovereigns) {
     let htmlOutput =
-      ' <p>\n This EEZ falls within the jurisdiction of multiple sovereigns:\n</p>';
+      ' <p>\n This EEZ falls within the sovereignty of multiple nations:\n</p>';
     // eslint-disable-next-line array-callback-return
     eezData.sovereigns.map((sovereign: Sov) => {
       const info = AbsStatusDictionary[sovereign.absStatus];
@@ -46,7 +46,7 @@ export const displayAbsInfo = (eezData: EezMetadata) => {
                         ${info.badgeText}
                       </abbr>
                     </span>
-                    &nbsp;  ${sovereign.name} ${info.text}
+                    ${sovereign.name} ${info.text}
                   </p>
                 </div>`;
     });
@@ -71,7 +71,7 @@ export const displayAbsInfo = (eezData: EezMetadata) => {
                 </div>`;
 };
 
-export type Sov = { name: string; absStatus: string };
+export type Sov = { name: string; absStatus: number };
 
 export type SovereignsArray = Sov[];
 

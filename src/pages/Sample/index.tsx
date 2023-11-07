@@ -47,14 +47,14 @@ const SamplePage: React.FC = () => {
 
     const sovereigns: SovereignsArray = [];
 
-    // const sovereigns = [
+    // const sovereigns: SovereignsArray = [
     //   {
     //     name: 'Brazil',
     //     absStatus: 1,
     //   },
     //   {
     //     name: 'France',
-    //     absStatus: 4,
+    //     absStatus: 2,
     //   },
     //   {
     //     name: 'United Kingdom',
