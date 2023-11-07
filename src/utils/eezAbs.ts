@@ -1,27 +1,22 @@
-const AbsStatusDictionary = {
+const absInfoDictionary = {
   1: {
-    text: 'has ABS obligations',
-    color: 'secondary',
+    suffixText: 'has ABS obligations',
     badgeText: 'ABS LAWS',
   },
   2: {
-    text: 'will have ABS obligations in the future',
-    color: 'tertiary',
+    suffixText: 'will have ABS obligations in the future',
     badgeText: 'UPCOMING',
   },
   3: {
-    text: 'has no ABS obligations',
-    color: 'tertiary',
+    suffixText: 'has no ABS obligations',
     badgeText: 'NO ABS',
   },
   4: {
-    text: 'has unclear ABS obligations',
-    color: 'tertiary',
+    suffixText: 'has unclear ABS obligations',
     badgeText: 'UNCLEAR',
   },
   5: {
-    text: 'has ABS obligations but revision in progress',
-    color: 'tertiary',
+    suffixText: 'has ABS obligations but revision in progress',
     badgeText: 'IN REVISION',
   },
 };
@@ -31,41 +26,47 @@ export const displayAbsInfo = (eezData: EezMetadata) => {
     let htmlOutput = ` <p>\n This EEZ falls within the sovereignty of ${eezData.sovereigns.length} nations:\n</p>`;
     // eslint-disable-next-line array-callback-return
     eezData.sovereigns.map((sovereign: Sov) => {
-      const info = AbsStatusDictionary[sovereign.absStatus];
+      const absInfo = absInfoDictionary[sovereign.absStatus];
       htmlOutput += ` <div class="vf-meta__details">
                   <p>
                   ${sovereign.name}:
                     <span
-                      class="vf-badge vf-badge--${info.color}"
+                      class="vf-badge vf-badge--${
+                        sovereign.absStatus === 1 ? 'secondary' : 'tertiary'
+                      }"
                     >
                       <abbr
                         title="Access and Benefit Sharing"
                         class="eez-abbr"
                       >
-                        ${info.badgeText}
+                        ${absInfo.badgeText}
                       </abbr>
                     </span>
-                    ${sovereign.name} ${info.text}
+                    ${sovereign.name} ${absInfo.suffixText}
                   </p>
                 </div>`;
     });
     return htmlOutput;
   }
   const sovereign = eezData.sovereigns[0];
-  const info = AbsStatusDictionary[sovereign.absStatus];
+  const absInfo = absInfoDictionary[sovereign.absStatus];
   return ` <div class="vf-meta__details">
                   <p>
                     <span
-                      class="vf-badge vf-badge--${info.color}"
+                      class="vf-badge vf-badge--${
+                        sovereign.absStatus === 1 ? 'secondary' : 'tertiary'
+                      }"
                     >
                       <abbr
                         title="Access and Benefit Sharing"
                         class="eez-abbr"
                       >
-                       ${info.badgeText}
+                       ${absInfo.badgeText}
                       </abbr>
                     </span>
-                  This EEZ is under the sovereignty of ${sovereign.name}. ${sovereign.name} ${info.text}
+                  This EEZ is under the sovereignty of ${sovereign.name}. ${
+    sovereign.name
+  } ${absInfo.suffixText}
                   </p>
                 </div>`;
 };
