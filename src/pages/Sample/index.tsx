@@ -1,5 +1,4 @@
-import React from 'react';
-
+import React, { useState } from 'react';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseObj } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
@@ -15,9 +14,13 @@ import KeyValueList from 'components/UI/KeyValueList';
 import AnnotationMetadata from 'components/Sample/AnnotationMetadata';
 import ClearingHouseMetadata from 'components/Sample/ClearingHouseMetadata';
 import axios from 'axios';
-import cheerio from 'cheerio';
-
-// const lookup = require('country-code-lookup');
+import marineRegionsEezData from 'public/data/marine-regions-eez-data.json';
+import {
+  displayAbsInfo,
+  EezMetadata,
+  defaultEezMetadata,
+  SovereignsArray,
+} from 'utils/eezAbs';
 
 const tabs = [
   { label: 'Sample metadata', to: '#' },
@@ -29,11 +32,8 @@ const tabs = [
 const SamplePage: React.FC = () => {
   const accession = useURLAccession();
   const { data, loading, error } = useMGnifyData(`samples/${accession}`);
-  const [eezData, setEezData] = React.useState({
-    eezInfoText: '',
-    eezBadgeColor: '',
-    absInfoText: '',
-    absBadgeColor: '',
+  const [eezData, setEezData] = useState<EezMetadata>({
+    ...defaultEezMetadata,
   });
   const [fetchEezDataCalled, setFetchEezDataCalled] = React.useState(false);
   if (loading) return <Loading size="large" />;
@@ -41,68 +41,59 @@ const SamplePage: React.FC = () => {
   if (!data) return <Loading />;
   const { data: sampleData } = data as MGnifyResponseObj;
 
-  // const fetchAbsCountries = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       'https://treaties.un.org/Pages/ViewDetails.aspx?src=TREATY&mtdsg_no=XXVII-8-b&chapter=27&clang=_en'
-  //     );
-  //     const $ = cheerio.load(response.data);
-  //     const table = $(
-  //       '#ctl00_ctl00_ContentPlaceHolder1_ContentPlaceHolderInnerPage_tblgrid'
-  //     );
-  //     const countries: string[] = [];
-  //     table.find('tr').each((index, row) => {
-  //       const countryCell = $(row).find('td').first();
-  //       if (countryCell.text().trim() !== '') {
-  //         const countryName = countryCell.text().trim();
-  //         countries.push(countryName);
-  //       }
-  //     });
-  //     countries.forEach((country, index) => {});
-  //   } catch (err) {
-  //     console.error('Failed to retrieve the web page:', err);
-  //   }
-  // };
+  const fetchSovereignsAbsInfo = (mrgId: number) => {
+    const matchingEez = marineRegionsEezData.find((eez) => eez.MRGID === mrgId);
 
-  const fetchAbsCountries = async () => {
-    axios.get('http://127.0.0.1:8000/v1/scrape-countries').then((response) => {
-      console.log(response.data);
-    });
+    const sovereigns: SovereignsArray = [];
+
+    // const sovereigns = [
+    //   {
+    //     name: 'Brazil',
+    //     absStatus: 1,
+    //   },
+    //   {
+    //     name: 'France',
+    //     absStatus: 4,
+    //   },
+    //   {
+    //     name: 'United Kingdom',
+    //     absStatus: 5,
+    //   },
+    // ];
+
+    const maxPossibleNumberOfSovereigns = 3;
+    for (let i = 1; i <= maxPossibleNumberOfSovereigns; i++) {
+      if (!matchingEez[`SOVEREIGN${i}`]) break;
+      const sovereign: { name: string; absStatus: string } = {
+        name: matchingEez[`SOVEREIGN${i}`],
+        absStatus: matchingEez[`SOVEREIGN${i}_ABS_STATUS`],
+      };
+      sovereigns.push(sovereign);
+    }
+    return sovereigns;
   };
 
-  const determineIfEezHasAbsObligations = (eezName) => {
-    // TODO determine from API
-    // fetchAbsCountries();
-    return eezName.includes('Brazil');
-  };
   const fetchEezData = () => {
-    // fetchAbsCountries();
-    const eezMetadata = {
+    const eezMetadata: EezMetadata = {
+      ...defaultEezMetadata,
       eezInfoPrefix:
         'Based on the sample coordinates, this sample originates from the',
-      eezInfoText: '',
-      eezName: '',
-      hasAbsObligations: false,
-      absInfoText: '',
-      eezBadgeColor: '',
-      absBadgeColor: '',
-      absStatus: '',
     };
-    if (!sampleData.attributes.latitude || !sampleData.attributes.longitude) {
-      eezMetadata.eezInfoText =
-        'This sample does not have coordinates, so no information concerning EEZ and ABS requirements can be provided at this point.';
-      eezMetadata.eezBadgeColor = 'tertiary';
-      setEezData(eezMetadata);
-      return;
-    }
     if (
       !sampleData?.relationships?.biome?.data?.id.includes(
         'root:Environmental:Aquatic'
       )
     ) {
-      eezMetadata.absInfoText =
+      eezMetadata.eezInfoText =
         'The sample is from an environment which is currently not covered in the biomes that MGnify currently reports ABS requirements.';
-      eezMetadata.absBadgeColor = 'tertiary';
+      eezMetadata.eezBadgeColor = 'tertiary';
+      setEezData(eezMetadata);
+      return;
+    }
+    if (!sampleData.attributes.latitude || !sampleData.attributes.longitude) {
+      eezMetadata.eezInfoText =
+        'This sample does not have coordinates, so no information concerning EEZ and ABS requirements can be provided at this point.';
+      eezMetadata.eezBadgeColor = 'tertiary';
       setEezData(eezMetadata);
       return;
     }
@@ -114,16 +105,11 @@ const SamplePage: React.FC = () => {
         eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} ${response.data[0].preferredGazetteerName}`;
         eezMetadata.eezName = response.data[0].preferredGazetteerName;
         eezMetadata.eezBadgeColor = 'primary';
-        const eezHasAbsObligations = determineIfEezHasAbsObligations(
-          response.data[0].preferredGazetteerName
-        );
-        eezMetadata.hasAbsObligations = eezHasAbsObligations;
-        eezMetadata.absInfoText = eezHasAbsObligations
-          ? 'This EEZ has ABS obligations '
-          : 'This EEZ does not have ABS obligations';
-        eezMetadata.absBadgeColor = eezHasAbsObligations
-          ? 'secondary'
-          : 'tertiary';
+        eezMetadata.sovereigns = fetchSovereignsAbsInfo(response.data[0].MRGID);
+        eezMetadata.hasMultipleSovereigns =
+          eezMetadata.sovereigns.filter((sovereign) => sovereign.name).length >
+          1;
+        eezMetadata.qualifiesForAbsCheck = eezMetadata.sovereigns.length > 0;
         setEezData(eezMetadata);
         sampleData.attributes.mrgid = response.data[0].MRGID;
       })
@@ -138,7 +124,7 @@ const SamplePage: React.FC = () => {
 
   if (!fetchEezDataCalled) {
     fetchEezData();
-    if (eezData.eezInfoText || eezData.absInfoText) {
+    if (eezData.eezInfoText) {
       setFetchEezDataCalled(true);
     }
   }
@@ -188,7 +174,7 @@ const SamplePage: React.FC = () => {
         </div>
       </section>
 
-      {(eezData.eezInfoText || eezData.absInfoText) && (
+      {eezData.eezInfoText && (
         <div className="vf-box vf-box-theme--primary vf-box--easy">
           <h6 className="vf-box__heading">EEZ Metadata</h6>
           <p className="vf-box__text">
@@ -210,22 +196,12 @@ const SamplePage: React.FC = () => {
                   </p>
                 </div>
               )}
-              {eezData.absInfoText && (
-                <div className="vf-meta__details">
-                  <p>
-                    <span
-                      className={`vf-badge vf-badge--${eezData.absBadgeColor}`}
-                    >
-                      <abbr
-                        title="Access and Benefit Sharing"
-                        className="eez-abbr"
-                      >
-                        ABS Info
-                      </abbr>
-                    </span>
-                    &nbsp; {eezData.absInfoText}
-                  </p>
-                </div>
+              {eezData.qualifiesForAbsCheck && (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: displayAbsInfo(eezData),
+                  }}
+                />
               )}
               <details className="vf-details">
                 <summary className="vf-details--summary">More info</summary>
