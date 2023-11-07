@@ -20,6 +20,7 @@ import {
   EezMetadata,
   defaultEezMetadata,
   SovereignsArray,
+  Sov,
 } from 'utils/eezAbs';
 
 const tabs = [
@@ -64,7 +65,7 @@ const SamplePage: React.FC = () => {
     const maxPossibleNumberOfSovereigns = 3;
     for (let i = 1; i <= maxPossibleNumberOfSovereigns; i++) {
       if (!matchingEez[`SOVEREIGN${i}`]) break;
-      const sovereign: { name: string; absStatus: string } = {
+      const sovereign: Sov = {
         name: matchingEez[`SOVEREIGN${i}`],
         absStatus: matchingEez[`SOVEREIGN${i}_ABS_STATUS`],
       };

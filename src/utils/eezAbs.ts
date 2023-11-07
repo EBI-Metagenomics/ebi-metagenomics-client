@@ -26,12 +26,12 @@ const AbsStatusDictionary = {
   },
 };
 
-export const displayAbsInfo = (eezData: any) => {
+export const displayAbsInfo = (eezData: EezMetadata) => {
   if (eezData.hasMultipleSovereigns) {
     let htmlOutput =
       ' <p>\n This EEZ falls within the jurisdiction of multiple sovereigns:\n</p>';
     // eslint-disable-next-line array-callback-return
-    eezData.sovereigns.map((sovereign: any) => {
+    eezData.sovereigns.map((sovereign: Sov) => {
       const info = AbsStatusDictionary[sovereign.absStatus];
       htmlOutput += ` <div class="vf-meta__details">
                   <p>
@@ -71,7 +71,9 @@ export const displayAbsInfo = (eezData: any) => {
                 </div>`;
 };
 
-export type SovereignsArray = { name: string; absStatus: string }[];
+export type Sov = { name: string; absStatus: string };
+
+export type SovereignsArray = Sov[];
 
 export type EezMetadata = {
   eezInfoPrefix?: string;
