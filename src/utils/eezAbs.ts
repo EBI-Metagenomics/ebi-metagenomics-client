@@ -28,8 +28,7 @@ const AbsStatusDictionary = {
 
 export const displayAbsInfo = (eezData: EezMetadata) => {
   if (eezData.hasMultipleSovereigns) {
-    let htmlOutput =
-      ' <p>\n This EEZ falls within the sovereignty of multiple nations:\n</p>';
+    let htmlOutput = ` <p>\n This EEZ falls within the sovereignty of ${eezData.sovereigns.length} nations:\n</p>`;
     // eslint-disable-next-line array-callback-return
     eezData.sovereigns.map((sovereign: Sov) => {
       const info = AbsStatusDictionary[sovereign.absStatus];
