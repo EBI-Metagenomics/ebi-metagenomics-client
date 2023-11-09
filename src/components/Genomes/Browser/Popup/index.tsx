@@ -237,7 +237,7 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
           )),
       },
       {
-        name: 'Unique peptide-to-protein mapping',
+        name: 'Unique peptide-to-protein mappings',
         Value:
           attributes.unique_peptide_to_protein_mapping === 'True'
             ? () => <div />
@@ -254,7 +254,7 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
             : () => <div />,
       },
       {
-        name: 'Ambiguous peptide-to-protein mapping',
+        name: 'Ambiguous peptide-to-protein mappings',
         Value:
           attributes.ambiguous_peptide_to_protein_mapping === 'True'
             ? () => <div />
