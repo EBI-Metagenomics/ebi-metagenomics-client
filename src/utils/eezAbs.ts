@@ -8,7 +8,7 @@ const absInfoDictionary = {
     badgeText: 'UPCOMING',
   },
   3: {
-    suffixText: 'has no ABS obligations',
+    suffixText: 'does not have ABS obligations',
     badgeText: 'NO ABS',
   },
   4: {
@@ -16,7 +16,7 @@ const absInfoDictionary = {
     badgeText: 'UNCLEAR',
   },
   5: {
-    suffixText: 'has ABS obligations but revision in progress',
+    suffixText: 'has ABS obligations but revision is in progress',
     badgeText: 'IN REVISION',
   },
 };
