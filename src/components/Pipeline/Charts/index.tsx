@@ -7,6 +7,22 @@ import RawImg from 'images/pipeline/version_5/pipeline_v5.0_raw.png';
 import './style.css';
 import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
+import ExtLink from 'components/UI/ExtLink';
+
+const WorkflowHubLink: React.FC<{ name: string; link: string }> = ({
+  name,
+  link,
+}) => {
+  return (
+    <div className="mg-workflowhub">
+      <p className="vf-text-body vf-text-body--2">
+        The workflow definition for this pipeline is available on WorkflowHub:
+        <br />
+        <ExtLink href={link}>{name}</ExtLink>
+      </p>
+    </div>
+  );
+};
 
 type TableProps = {
   onHoverStep?: (step: number) => void;
@@ -472,6 +488,10 @@ export const PipelineChart5: React.FC = () => (
     <RouteForHash hash="" isDefault>
       <div>
         <h4>Amplicon analysis pipeline</h4>
+        <WorkflowHubLink
+          name="MGnify - amplicon analysis pipeline"
+          link="https://workflowhub.eu/workflows/361?version=1"
+        />
         <img
           src={AmpliconImg}
           alt="Amplicon flow diagram"
@@ -482,6 +502,10 @@ export const PipelineChart5: React.FC = () => (
     <RouteForHash hash="#raw">
       <div>
         <h4>Raw reads analysis pipeline</h4>
+        <WorkflowHubLink
+          name="MGnify - raw-reads analysis pipeline"
+          link="https://workflowhub.eu/workflows/362?version=1"
+        />
         <img
           src={RawImg}
           alt="Raw reads flow diagram"
@@ -492,6 +516,10 @@ export const PipelineChart5: React.FC = () => (
     <RouteForHash hash="#assembly">
       <div>
         <h4>Assembly analysis pipeline</h4>
+        <WorkflowHubLink
+          name="MGnify - assembly analysis pipeline"
+          link="https://workflowhub.eu/workflows/360?version=2"
+        />
         <img
           src={AssemblyImg}
           alt="Assembly flow diagram"

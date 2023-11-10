@@ -125,6 +125,15 @@ export const annotationTrackCustomisations = (trackColorBy, format) => {
         nameField: 'ID',
         color: (feature) => getFeatureTypeColour(feature.type),
       };
+    case 'Unique_peptide_to_protein_mapping':
+    case 'Ambiguous_peptide_to_protein_mapping':
+      return {
+        nameField: trackColorBy,
+        color: (feature) =>
+          maybeGetAttributeValue(feature, [trackColorBy]) === 'True'
+            ? COLOUR_PRESENCE
+            : COLOUR_ABSENCE,
+      };
     default:
       return {
         nameField: trackColorBy,
@@ -140,7 +149,7 @@ const trackColorOptionsForType = (track) => {
   const trackType = track.id;
   const { crate } = track.config;
   if (crate) {
-    const options = crate.tree.variableMeasured.map((vm) => ({
+    const options = crate.schema.variableMeasured.map((vm) => ({
       label: vm.name[0]['@value'],
       value: vm.value[0]['@value'],
     }));
@@ -249,7 +258,7 @@ export const AnnotationTrackColorPicker: React.FC<
         </span>
       )}
       {trackView.track.config.crate && (
-        <ROCrateBrowser crateUrl={trackView.track.config.initialCrateUrl} />
+        <ROCrateBrowser crateUrl={trackView.track.config.initialCrateURL} />
       )}
     </div>
   );

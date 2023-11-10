@@ -11,6 +11,8 @@ import ArrowForLink from 'components/UI/ArrowForLink';
 import CursorPagination from 'components/UI/EMGTable/CursorPagination';
 import TruncatedText from 'components/UI/TextTruncated';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import { useCrates } from 'hooks/genomeViewer/CrateStore/useCrates';
 
 type ContigFeatureProps = {
   annotationType: string;
@@ -72,8 +74,14 @@ const ContigsTable: React.FC = () => {
     ''
   );
 
+  const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
+  const assemblyId = analysisOverviewData.relationships.assembly.data.id;
+  const { crates, loading: loadingCrates } = useCrates(
+    `assemblies/${assemblyId}/extra-annotations`
+  );
+
   const contigsColumns = useMemo(() => {
-    return [
+    const cols = [
       {
         id: 'contig_id',
         Header: 'Name',
@@ -84,7 +92,7 @@ const ContigsTable: React.FC = () => {
             type="button"
             onClick={() => setSelectedContig(cell.value)}
           >
-            <TruncatedText text={cell.value} withTooltip maxLength={32} />
+            <TruncatedText text={cell.value} withTooltip maxLength={24} />
             <ArrowForLink />
           </button>
         ),
@@ -119,7 +127,25 @@ const ContigsTable: React.FC = () => {
         },
       },
     ];
-  }, [setSelectedContig]);
+    if (crates) {
+      cols.push({
+        id: 'crates',
+        Header: 'RO-Crates',
+        accessor: (contig) => contig.attributes['contig-id'],
+        Cell: ({ cell }) => {
+          const crateFlags = crates.map((crate) => (
+            <ContigFeatureFlag
+              key={crate.url}
+              annotationType={crate.track.label.substring(0)}
+              present={crate.asciigff.indexOf(cell.value) >= 0}
+            />
+          ));
+          return <div className="emg-contig-feature-flags">{crateFlags}</div>;
+        },
+      });
+    }
+    return cols;
+  }, [setSelectedContig, crates]);
 
   if (error || !data) return <FetchError error={error} />;
 
@@ -133,7 +159,7 @@ const ContigsTable: React.FC = () => {
         initialPage={0}
         className="mg-contigs-table"
         namespace="contigs_"
-        isStale={loading}
+        isStale={loading || loadingCrates}
         showTextFilter
       />
       <CursorPagination

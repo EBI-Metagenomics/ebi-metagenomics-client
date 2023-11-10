@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
@@ -9,6 +8,7 @@ import { MGnifyResponseList } from 'hooks/data/useData';
 import { getBiomeIcon } from 'utils/biomes';
 import Loading from 'components/UI/Loading';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import Link from 'components/UI/Link';
 
 const BrowseBiomes: React.FC = () => {
   const [page] = useQueryParamState('page', 1, Number);
@@ -49,7 +49,7 @@ const BrowseBiomes: React.FC = () => {
         }),
         Cell: ({ cell }) => (
           <>
-            <Link to={`/browse/studies?biome=${cell.value.lineage}`}>
+            <Link to="/browse/studies" state={{ biome: cell.value.lineage }}>
               {cell.value.name}
             </Link>
             <br />

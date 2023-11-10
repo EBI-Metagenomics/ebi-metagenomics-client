@@ -18,7 +18,7 @@
 #pca .rChart {
   float: left;
   width: 33%; /*height:500px;*/
-  border: 0px red solid;
+  border: 0 red solid;
 }
 
 #stack .rChart {
@@ -65,7 +65,7 @@
 .block_container {
   width: 300%; /*was 1109px*/
   float: left;
-  border: 0px red solid;
+  border: 0 red solid;
 }
 
 section.highlight-step-0 .step0,
@@ -98,7 +98,7 @@ section.highlight-step-5 .step5,
   /*was margin-top:57px;*/
   padding-top: 56px;
   height: 139px;
-  border: 0px black solid;
+  border: 0 black solid;
 }
 
 .first_branch {
@@ -160,7 +160,7 @@ section.highlight-step-5 .step5,
 
 .block-ar {
   padding: 2px;
-  border: 0px #b4d0f3 solid;
+  border: 0 #b4d0f3 solid;
   color: grey;
   display: inline-block;
 }
@@ -266,7 +266,7 @@ section.highlight-step-5 .step5,
   position: relative;
   background: grey;
   padding: 2px;
-  width: 0px;
+  width: 0;
   margin-left: 2px;
   margin-right: 2px;
 }
@@ -274,15 +274,13 @@ section.highlight-step-5 .step5,
 .arrow_pip:after {
   left: 100%;
   top: 50%;
-  border: solid rgba(0, 0, 0, 0);
   content: ' ';
   height: 0;
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-color: rgba(24, 33, 38, 0);
+  border: 5px solid rgba(24, 33, 38, 0);
   border-left-color: grey;
-  border-width: 5px;
   margin-top: -5px;
 }
 
@@ -297,14 +295,12 @@ section.highlight-step-5 .step5,
 
 .rotate_t {
   -ms-transform: rotate(45deg); /* IE 9 */
-  -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
   transform: rotate(45deg);
   margin-bottom: 12px;
 }
 
 .rotate_f {
   -ms-transform: rotate(-45deg); /* IE 9 */
-  -webkit-transform: rotate(-45deg); /* Chrome, Safari, Opera */
   transform: rotate(-45deg); /*margin-left: -22px;*/
   margin-bottom: -12px;
   margin-right: 6px; /*for alignment*/
@@ -314,4 +310,10 @@ table .highlight {
   background-color: #0f6d99 !important;
   color: White;
   transition: all 0.5s ease;
+}
+
+.mg-workflowhub {
+  border-left: 5px solid #18974c;
+  padding: 8px;
+  background-color: #f3f3f3;
 }

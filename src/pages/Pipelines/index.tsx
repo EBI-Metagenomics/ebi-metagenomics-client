@@ -34,6 +34,10 @@ const Pipelines: React.FC = () => {
           <ExtLink href="https://github.com/EBI-Metagenomics/pipeline-v5">
             MGnify v5.0 CWL repository
           </ExtLink>
+          . Workflows are also available on{' '}
+          <ExtLink href="https://workflowhub.eu/projects/9/workflows?filter%5Bworkflow_type%5D=cwl">
+            WorkflowHub
+          </ExtLink>
           . All databases are available from an{' '}
           <ExtLink href="https://ftp.ebi.ac.uk/pub/databases/metagenomics/pipeline-5.0/ref-dbs">
             FTP link

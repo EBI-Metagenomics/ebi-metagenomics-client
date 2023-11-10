@@ -61,22 +61,26 @@ export const Publication: React.FC<{
 };
 export const MainPublicationForResource: React.FC<{
   resource: string;
-}> = ({ resource }) => {
+  citationPretext: string;
+}> = ({ resource, citationPretext }) => {
   const publication = publications.filter(
     (pub) => pub.isMainCitationFor && pub.isMainCitationFor.includes(resource)
   )?.[0];
   return (
-    <div>
+    <div className="mg-main-pub-resource">
       {publication && (
-        <Publication
-          id={publication.id}
-          title={publication.title}
-          journal={publication.journal}
-          year={publication.year}
-          link={publication.link}
-          doi={publication.doi}
-          authors={publication.authors}
-        />
+        <>
+          <p className="vf-text-body vf-text-body--3">{citationPretext}</p>
+          <Publication
+            id={publication.id}
+            title={publication.title}
+            journal={publication.journal}
+            year={publication.year}
+            link={publication.link}
+            doi={publication.doi}
+            authors={publication.authors}
+          />
+        </>
       )}
     </div>
   );
@@ -92,8 +96,10 @@ export const MainPublication: React.FC = () => {
         />
       </div>
       <div>
-        <p>To cite MGnify, please refer to the following publication:</p>
-        <MainPublicationForResource resource="mgnify" />
+        <MainPublicationForResource
+          resource="mgnify"
+          citationPretext="To cite MGnify, please refer to the following publication:"
+        />
       </div>
     </div>
   );

@@ -24,3 +24,9 @@
     text-align: right;
   }
 }
+
+.mg-main-pub-resource {
+  border-left: 5px solid #18974c;
+  padding: 8px;
+  background-color: #f3f3f3;
+}
