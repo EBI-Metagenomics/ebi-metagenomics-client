@@ -77,9 +77,7 @@ const GenomeBrowser: React.FC = () => {
       if (node === null) return;
       igv.createBrowser(node, options).then((browser) => {
         browser.on('trackclick', (track, trackData) =>
-          ReactDOMServer.renderToString(
-            <GenomeBrowserPopup data={trackData} hasMetaProteomics={false} />
-          )
+          ReactDOMServer.renderToString(<GenomeBrowserPopup data={trackData} />)
         );
 
         setIgvBrowser(browser);

@@ -4,7 +4,6 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 
@@ -24,10 +23,6 @@ import igv from 'igv/dist/igv.esm';
 import ContigsTable from 'components/Analysis/ContigViewer/Table';
 import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
 import { find } from 'lodash-es';
-import GFFCompare, {
-  colorScale,
-  getGFFHeaderValue,
-} from 'components/Analysis/ContigViewer/GFFCompare';
 import ReactDOMServer from 'react-dom/server';
 import GenomeBrowserPopup from 'components/Genomes/Browser/Popup';
 import ContigLengthFilter from 'components/Analysis/ContigViewer/Filter/ContigLength';
@@ -41,7 +36,8 @@ import {
   FORMAT,
 } from 'components/IGV/TrackColourPicker';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import roCrateSingleton from 'utils/roCrateSingleton';
+import { useCrates } from 'hooks/genomeViewer/CrateStore/useCrates';
+import { Track } from 'utils/trackView';
 
 type ContigProps = {
   contig: MGnifyDatum;
@@ -51,7 +47,6 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   const accession = useURLAccession();
   const { config } = useContext(UserContext);
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
-  const hasMetaProteomics = config?.featureFlags?.contigIgvGffUploader;
   const contigId = contig.attributes['contig-id'];
   const fastaURL = `${config.api}analyses/${contig.attributes.accession}/contigs/${contigId}`;
 
@@ -59,8 +54,9 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
   const assemblyId = analysisOverviewData.relationships.assembly.data.id;
 
-  const { data: extraAnnotations, loading: loadingExtraAnnotations } =
-    useMGnifyData(`assemblies/${assemblyId}/extra-annotations`);
+  const { crates, loading: loadingCrates } = useCrates(
+    `assemblies/${assemblyId}/extra-annotations`
+  );
 
   const antiSMASH = contig.attributes['has-antismash'];
   const displayName = contig.attributes['contig-name'];
@@ -68,30 +64,6 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
   const [trackColorBys, setTrackColorBys] = useState({});
   const [updatingTracks, setUpdatingTracks] = useState(true);
-
-  const currentAnnotationUrl = useRef(null);
-
-  async function buildTrackBasedOnAnnotationType(
-    annotationType,
-    annotationUrl
-  ) {
-    currentAnnotationUrl.current = annotationUrl;
-    if (annotationType === 'Analysis RO Crate') {
-      const trackProperties = await roCrateSingleton.getTrackProperties(
-        annotationUrl
-      );
-      return trackProperties || {};
-    }
-    return {
-      name: annotationType,
-      type: 'annotation',
-      format: 'gff3',
-      displayMode: 'EXPANDED',
-      url: annotationUrl,
-      label: annotationType,
-      crate: null,
-    };
-  }
 
   const igvContainer = useCallback(
     (node) => {
@@ -114,7 +86,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
             label: 'Functional annotation',
             crate: null,
           },
-        ],
+        ] as Track[],
         showLegend: true,
         legendParent: '#contig',
       };
@@ -129,63 +101,21 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
           crate: null,
         });
       }
-      if (extraAnnotations) {
-        (extraAnnotations.data as MGnifyDatum[]).forEach((anno) => {
-          const annotationType = (anno.attributes.description as KeyValue)
-            .label as string;
-          buildTrackBasedOnAnnotationType(
-            annotationType,
-            anno.links.self as string
-          ).then((trackProperties) => {
-            options.tracks.push(trackProperties);
-          });
+      if (crates) {
+        crates.forEach((crate) => {
+          options.tracks.push(crate.track);
         });
       }
 
       if (node === null) return;
       igv.createBrowser(node, options).then((browser) => {
         browser.on('trackclick', (track, trackData) =>
-          ReactDOMServer.renderToString(
-            <GenomeBrowserPopup
-              data={trackData}
-              hasMetaProteomics={hasMetaProteomics}
-            />
-          )
+          ReactDOMServer.renderToString(<GenomeBrowserPopup data={trackData} />)
         );
-        browser.on('trackorderchanged', () => {
-          browser.trackViews.forEach((trackView) => {
-            if (
-              trackView.track.type === 'annotation' &&
-              trackView.track.config.label === 'Metaproteomics'
-            ) {
-              setTrackColorBys({
-                ...trackColorBys,
-                [trackView.track.id]: {
-                  colorBarMax: parseFloat(
-                    getGFFHeaderValue(
-                      trackView.track.config.url.slice(37),
-                      // = GFF data-url without the 'data:application/octet-stream;base64' (37 chars) prefix
-                      'max_spectrum_count_value_in_study'
-                    )
-                  ),
-                },
-              });
-            }
-          });
-        });
         setIgvBrowser(browser);
       });
     },
-    [
-      fastaURL,
-      displayName,
-      config.api,
-      accession,
-      contigId,
-      antiSMASH,
-      extraAnnotations,
-      hasMetaProteomics,
-    ]
+    [fastaURL, displayName, config.api, accession, contigId, antiSMASH, crates]
   );
 
   useEffect(() => {
@@ -207,28 +137,6 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
             tracksToAdd.push(newTrackConfig);
           }
         }
-        if (trackView.track.config.label === 'Metaproteomics') {
-          const cbMax = trackColorBys?.[trackView.track.id]?.colorBarMax;
-          const newTrackConfig = {
-            ...trackView.track.config,
-            nameField: 'pride_id',
-            color: cbMax
-              ? (feature) => {
-                  const colorBarNumber = parseFloat(
-                    feature.getAttributeValue(
-                      'semiquantitative_expression_spectrum_count'
-                    )
-                  );
-                  return colorScale(colorBarNumber, cbMax);
-                }
-              : null,
-          };
-          if (newTrackConfig.nameField !== trackView.track.config.nameField) {
-            // Prevent unnecessary track reloads
-            tracksToRemove.push(trackView.track.id);
-            tracksToAdd.push(newTrackConfig);
-          }
-        }
       });
       await Promise.all(
         tracksToRemove.map(async (track) => igvBrowser.removeTrackByName(track))
@@ -241,7 +149,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
     updateTracks().then(() => setUpdatingTracks(false));
   }, [trackColorBys, igvBrowser]);
 
-  if (loading || loadingExtraAnnotations) return null;
+  if (loading || loadingCrates) return null;
   if (error) return <FetchError error={error} />;
   if (!data) return null;
   return (
@@ -253,31 +161,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
           {igvBrowser?.trackViews?.map((trackView) => {
             const trackId = trackView.track.id;
             if (trackView.track.type !== 'annotation') return React.Fragment;
-            const isMetaProteomics =
-              trackView.track.config.label === 'Metaproteomics';
 
-            if (isMetaProteomics) {
-              if (!trackColorBys?.[trackView.track.id]?.colorBarMax)
-                return React.Fragment;
-              return (
-                <div key={trackView.track.id}>
-                  <p className="vf-text-body vf-text-body--2">
-                    {trackView.track.config.label} track colour
-                  </p>
-
-                  <div className="colorBarWrapper">
-                    0
-                    <div className="colorBar" />
-                    {Math.round(trackColorBys[trackView.track.id].colorBarMax)}
-                  </div>
-
-                  <p className="vf-text-body vf-text-body--4">
-                    Semiquantitative expression spectrum count — scaled against
-                    the maximum in this study.
-                  </p>
-                </div>
-              );
-            }
             return (
               <AnnotationTrackColorPicker
                 key={trackId}
@@ -296,7 +180,6 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
           })}
         </div>
       )}
-      {hasMetaProteomics && <GFFCompare igvBrowser={igvBrowser} />}
     </div>
   );
 };
