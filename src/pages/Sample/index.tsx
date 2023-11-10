@@ -116,7 +116,7 @@ const SamplePage: React.FC = () => {
       })
       .catch((err) => {
         if (err.response.status === 404) {
-          eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} a region outside of an EEZ. Therefore, there are no ABS obligations`;
+          eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} a region outside of an EEZ. Therefore, there are no ABS obligations.`;
           eezMetadata.eezBadgeColor = 'tertiary';
           setEezData(eezMetadata);
         }
