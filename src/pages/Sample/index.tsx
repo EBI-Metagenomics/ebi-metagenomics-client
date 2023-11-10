@@ -86,7 +86,7 @@ const SamplePage: React.FC = () => {
       )
     ) {
       eezMetadata.eezInfoText =
-        'The sample is from an environment which is currently not covered in the biomes that MGnify currently reports ABS requirements.';
+        'The sample is from a biome for which MGnify does not currently report ABS requirements.';
       eezMetadata.eezBadgeColor = 'tertiary';
       setEezData(eezMetadata);
       return;
