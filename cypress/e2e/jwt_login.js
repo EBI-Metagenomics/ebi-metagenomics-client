@@ -2,7 +2,7 @@ import {openPage} from '../util/util';
 const loginUrl = 'http://localhost:9000/metagenomics/login';
 const homePageUrl = 'http://localhost:9000/metagenomics';
 const myDataPageUrl = 'http://localhost:9000/metagenomics/mydata';
-const username = 'Webin-000';
+const username = 'webin-000';
 // const username = 'webin-47029';
 const password = 'secret';
 // const password = 'ws2017';
