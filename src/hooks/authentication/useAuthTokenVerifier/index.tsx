@@ -1,4 +1,4 @@
-import axios from 'utils/protectedAxios';
+import protectedAxios from 'utils/protectedAxios';
 import useAuthToken from 'hooks/authentication/useAuthToken';
 import UserContext from 'pages/Login/UserContext';
 import { useContext } from 'react';
@@ -8,7 +8,7 @@ const useAuthTokenVerifier = () => {
   const { setDetails } = useContext(UserContext);
   return async () => {
     try {
-      const response = await axios.post('/utils/token/verify', {
+      const response = await protectedAxios.post('/utils/token/verify', {
         token: authToken,
       });
       const accessToken = response.data.data.token;
