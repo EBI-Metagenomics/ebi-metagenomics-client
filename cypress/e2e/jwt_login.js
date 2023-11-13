@@ -2,9 +2,9 @@ import {openPage} from '../util/util';
 const loginUrl = 'http://localhost:9000/metagenomics/login';
 const homePageUrl = 'http://localhost:9000/metagenomics';
 const myDataPageUrl = 'http://localhost:9000/metagenomics/mydata';
-const username = 'webin-66688';
+const username = 'Webin-000';
 // const username = 'webin-47029';
-const password = 'DEBSzfWkQL64S@4';
+const password = 'secret';
 // const password = 'ws2017';
 describe('JWT Login', () => {
   beforeEach(() => {
