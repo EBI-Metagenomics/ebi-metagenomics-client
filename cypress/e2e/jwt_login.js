@@ -16,7 +16,7 @@ describe('JWT Login', () => {
     cy.window().its('localStorage.token').should('exist');
     cy.contains(`You are logged in as ${username.toLowerCase()}`).should('be.visible');
     cy.reload();
-    cy.contains(`You are logged in as ${username}`).should('be.visible');
+    cy.contains(`You are logged in as ${username.toLowerCase()}`).should('be.visible');
   });
 
   it('should display an error message for invalid credentials', () => {
