@@ -2,7 +2,7 @@ import {openPage} from '../util/util';
 const loginUrl = 'http://localhost:9000/metagenomics/login';
 const homePageUrl = 'http://localhost:9000/metagenomics';
 const myDataPageUrl = 'http://localhost:9000/metagenomics/mydata';
-const username = 'webin-000';
+const username = 'Webin-000';
 // const username = 'webin-47029';
 const password = 'secret';
 // const password = 'ws2017';
@@ -14,7 +14,7 @@ describe('JWT Login', () => {
   it('should log in successfully with valid credentials and the login should be persisted', () => {
     logUserIn();
     cy.window().its('localStorage.token').should('exist');
-    cy.contains(`You are logged in as ${username}`).should('be.visible');
+    cy.contains(`You are logged in as ${username.toLowerCase()}`).should('be.visible');
     cy.reload();
     cy.contains(`You are logged in as ${username}`).should('be.visible');
   });
