@@ -8,11 +8,10 @@ const protectedAxios = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  // withCredentials: true,
 });
 protectedAxios.interceptors.request.use((conf) => {
   const token = localStorage.getItem('token');
-  if (token && conf.url.startsWith(BASE_URL)) {
+  if (token && (conf.url.startsWith(BASE_URL) || conf.url.startsWith('/'))) {
     // eslint-disable-next-line no-param-reassign
     conf.headers.Authorization = `Bearer ${token}`;
   }

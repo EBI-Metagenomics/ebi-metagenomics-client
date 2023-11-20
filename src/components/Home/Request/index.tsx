@@ -3,19 +3,22 @@ import InnerCard from 'components/UI/InnerCard';
 import OutterCard from 'components/UI/OutterCard';
 import EMGModal from 'components/UI/EMGModal';
 import UserContext from 'pages/Login/UserContext';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import LatestStudies from './LatestStudies';
 import MailForm from './MailForm';
 import PrivateRequest from './Private';
 
 const SearchBy: React.FC = () => {
-  const show = useLocation().search.split('=')[1];
+  const [searchParams] = useSearchParams();
+  const fromQueryParamValue = searchParams.get('from');
   const { isAuthenticated } = useContext(UserContext);
   const [modal, setModal] = useState({
     show:
       isAuthenticated &&
-      ['public-request', 'private-request'].includes(show as string),
-    isPublic: show === 'public-request',
+      ['public-request', 'private-request'].includes(
+        fromQueryParamValue as string
+      ),
+    isPublic: fromQueryParamValue === 'public-request',
   });
   return (
     <>

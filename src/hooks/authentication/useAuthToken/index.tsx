@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import UserContext from 'pages/Login/UserContext';
-import axios from 'axios';
+import protectedAxios from 'utils/protectedAxios';
 
 type AuthToken = string | null;
 const getUserDetailsFromToken = (token: string) => {
@@ -16,16 +16,9 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
   const { setUser, setDetails } = useContext(UserContext);
 
   const getUserDetailsFromAccountApi = () => {
-    axios
-      .get('http://127.0.0.1:8000/v1/utils/myaccounts', {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
-      .then((response) => {
-        setDetails(response.data.data);
-      });
+    protectedAxios.get('/utils/myaccounts').then((response) => {
+      setDetails(response.data.data);
+    });
   };
 
   const setAuthToken = (newToken: AuthToken) => {
