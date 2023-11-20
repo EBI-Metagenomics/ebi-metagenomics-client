@@ -113,3 +113,8 @@ pre.vf-code-example__pre > button {
 .nowrap {
   white-space: nowrap;
 }
+
+.eez-abbr {
+    cursor: help;
+    text-decoration: none;
+}
