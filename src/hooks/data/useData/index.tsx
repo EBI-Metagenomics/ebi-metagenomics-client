@@ -154,7 +154,6 @@ const prepareResponseDataBasedOnFormat = (
   switch (format) {
     case ResponseFormat.HTML:
       try {
-        // const html = await response.text();
         const html = response.data;
         const el = document.createElement('html');
         el.innerHTML = html;
@@ -169,7 +168,6 @@ const prepareResponseDataBasedOnFormat = (
           isStale: false,
           rawResponse: response,
         });
-        // return;
       }
       break;
     case ResponseFormat.TSV:
@@ -189,12 +187,10 @@ const prepareResponseDataBasedOnFormat = (
           isStale: false,
           rawResponse: response,
         });
-        // return;
       }
       break;
     default:
       try {
-        // data = await response.json();
         data = response.data;
       } catch (error) {
         updateState({
@@ -206,7 +202,6 @@ const prepareResponseDataBasedOnFormat = (
           isStale: false,
           rawResponse: response,
         });
-        // return;
       }
   }
   return data;
