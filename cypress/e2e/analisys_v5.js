@@ -207,7 +207,7 @@ describe('Analysis V5', () => {
             const assemblyId = 'MGYA00141547XXXX';
             const origPage = 'analyses/' + assemblyId;
             openPage(origPage);
-            cy.contains('Status: 404');
+            cy.contains('status code 404');
             cy.contains('Error Fetching Data');
         });
     });

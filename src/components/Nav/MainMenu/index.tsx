@@ -1,4 +1,10 @@
-import React, { useLayoutEffect, useRef, useState, useContext } from 'react';
+import React, {
+  useLayoutEffect,
+  useRef,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import UserContext from 'pages/Login/UserContext';
 
@@ -8,6 +14,7 @@ import './style.css';
 import ExtLink from 'components/UI/ExtLink';
 import { useMedia } from 'react-use';
 import EMGModal from 'components/UI/EMGModal';
+import useAuthTokenVerifier from 'hooks/authentication/useAuthTokenVerifier';
 
 const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'Overview', path: '/' },
@@ -30,6 +37,10 @@ const START_MARGIN = -7;
 const Nav: React.FC = () => {
   const location = useLocation();
   const { isAuthenticated } = useContext(UserContext);
+  const verifyAuthToken = useAuthTokenVerifier();
+  useEffect(() => {
+    verifyAuthToken();
+  }, []);
   return (
     <nav className="vf-navigation vf-navigation--main | vf-cluster vf-u-fullbleed">
       <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
@@ -66,6 +77,10 @@ const Nav: React.FC = () => {
 
 const MobileNav: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const verifyAuthToken = useAuthTokenVerifier();
+  useEffect(() => {
+    verifyAuthToken();
+  }, []);
   return (
     <div>
       <EMGModal
@@ -95,6 +110,10 @@ const MainMenu: React.FC = () => {
     marginLeft: isSmall ? 0 : `${START_MARGIN}rem`,
     opacity: isSmall ? 1 : 0,
   });
+  const verifyAuthToken = useAuthTokenVerifier();
+  useEffect(() => {
+    verifyAuthToken();
+  }, []);
   useLayoutEffect(() => {
     const onScroll = (): void => {
       if (isSmall) return;

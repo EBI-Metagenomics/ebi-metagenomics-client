@@ -9,7 +9,6 @@ import ElixirBanner from 'components/UI/ElixirBanner';
 import CookieBanner from 'components/UI/CookieBanner';
 import MainMenu from 'components/Nav/MainMenu';
 import Loading from 'components/UI/Loading';
-import LoginMonitor from 'components/Login/Monitor';
 import ErrorBoundary from 'components/ErrorBoundary';
 import MyData from 'pages/MyData';
 import UserContext from 'pages/Login/UserContext';
@@ -22,6 +21,7 @@ import './styles/search.css';
 import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
+import PersistLogin from 'components/PersistLogin';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -45,6 +45,7 @@ const App: React.FC = () => {
   const [user, setUser] = useState({
     username: null,
     isAuthenticated: false,
+    token: null,
   });
   const [details, setDetails] = useState(null);
   const value = useMemo(
@@ -55,15 +56,15 @@ const App: React.FC = () => {
       setUser,
       setDetails,
       config,
+      token: user.token,
     }),
-    [details, user.isAuthenticated, user.username]
+    [details, user.isAuthenticated, user.username, user.token]
   );
 
   return (
     <BrowserRouter basename={config.basename}>
       <UserContext.Provider value={value}>
         <QueryParamsProvider>
-          <LoginMonitor />
           <Matomo />
           <ToastContainer />
           <EBIHeader />
@@ -79,7 +80,6 @@ const App: React.FC = () => {
                   <Route path="/search/*" element={<TextSearch />} />
                   <Route path="/sequence-search" element={<SequenceSearch />} />
                   <Route path="/browse/*" element={<Browse />} />
-                  <Route path="/login" element={<Login />} />
                   <Route path="/studies/*" element={<Study />} />
                   <Route path="/super-studies/*" element={<SuperStudy />} />
                   <Route path="/samples/*" element={<Sample />} />
@@ -94,6 +94,9 @@ const App: React.FC = () => {
                   <Route path="/pipelines/*" element={<Pipelines />} />
                   <Route path="/analyses/*" element={<Analysis />} />
                   <Route path="/mydata" element={<MyData />} />
+                  <Route element={<PersistLogin />}>
+                    <Route path="/login" element={<Login />} />
+                  </Route>
                 </Routes>
               </Suspense>
             </ErrorBoundary>

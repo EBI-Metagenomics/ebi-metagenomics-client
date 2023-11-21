@@ -1,51 +1,102 @@
-import React, { useContext, useRef, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Loading from 'components/UI/Loading';
-import FetchError from 'components/UI/FetchError';
+import React, {
+  useContext,
+  useRef,
+  FormEvent,
+  useState,
+  useEffect,
+  useMemo,
+} from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import OutterCard from 'components/UI/OutterCard';
-
 import UserContext from 'pages/Login/UserContext';
-import useAuthentication from 'hooks/useAuthentication';
-
 import enaUserImg from 'public/images/ico_ena_user.jpg';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useAuthToken from 'hooks/authentication/useAuthToken';
+import axios from 'utils/protectedAxios';
 
 const Login: React.FC = () => {
-  const userRef = useRef(null);
+  const [, setAuthToken] = useAuthToken();
+
+  const usernameRef = useRef(null);
   const passwordRef = useRef(null);
-  const { username, isAuthenticated } = useContext(UserContext);
-  const { login, logout, loginError, loading, error } = useAuthentication();
-  const [from] = useQueryParamState('from', '');
+  const loginErrorsContainerRef = useRef(null);
+
+  const loggedInUsername = localStorage.getItem('username');
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errMsg, setErrMsg] = useState('');
+  const { isAuthenticated } = useContext(UserContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [desiredDestination, setDesiredDestination] = useState('');
+
+  useMemo(() => {
+    const possibleDesiredDestinations = {
+      '?from=private-request': '/?from=private-request',
+      '?from=public-request': '/?from=public-request',
+    };
+    if (possibleDesiredDestinations[location.search]) {
+      setDesiredDestination(possibleDesiredDestinations[location.search]);
+      return;
+    }
+    if (location?.state?.from?.pathname) {
+      setDesiredDestination(location.state.from.pathname + location.search);
+    }
+  }, [location]);
+
+  const handleLogout = async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setAuthToken(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+  };
+
+  useEffect(() => {
+    usernameRef.current?.focus();
+  }, []);
+
   if (isAuthenticated) {
-    if (from === 'private-request') {
-      navigate('/?show=private-request');
-      return null;
-    }
-    if (from === 'public-request') {
-      navigate('/?show=public-request');
-      return null;
-    }
     return (
       <div className="vf-stack vf-stack--400">
         <div>
-          You are logged in as <b>{username}</b>
+          You are logged in as <b>{loggedInUsername}</b>
         </div>
-        <button type="button" className="vf-button" onClick={logout}>
+        <button type="button" className="vf-button" onClick={handleLogout}>
           Logout
         </button>
       </div>
     );
   }
 
-  if (loading) return <Loading />;
-  if (error) return <FetchError error={error} />;
-  const handleSubmit = (event: FormEvent): void => {
+  const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
-    login(userRef.current.value, passwordRef.current.value);
+    try {
+      const response = await axios.post(`/utils/token/obtain`, {
+        username: usernameRef.current.value,
+        password: passwordRef.current.value,
+      });
+      const accessToken = response.data.data.token;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      setAuthToken(accessToken) as unknown as void;
+      setUsername('');
+      setPassword('');
+      navigate(desiredDestination, {
+        replace: true,
+      });
+    } catch (error) {
+      if (!error.response) {
+        setErrMsg('Network error');
+        return;
+      }
+      setErrMsg(error.response.data.errors.non_field_errors[0]);
+      loginErrorsContainerRef.current?.focus();
+    }
   };
+
   return (
-    <div className="vf-grid vf-grid__col-2">
+    <section className="vf-grid vf-grid__col-2">
       <div className="vf-form vf-stack vf-stack--400">
         <form onSubmit={handleSubmit}>
           <div className="vf-form__item">
@@ -60,7 +111,9 @@ const Login: React.FC = () => {
               autoCorrect="off"
               id="id_username"
               className="vf-form__input"
-              ref={userRef}
+              ref={usernameRef}
+              onChange={(e) => setUsername(e.target.value)}
+              value={username}
               required
             />
           </div>
@@ -74,20 +127,25 @@ const Login: React.FC = () => {
               maxLength={100}
               autoCapitalize="off"
               autoCorrect="off"
-              className="vf-form__input"
               id="id_password"
+              className="vf-form__input"
               ref={passwordRef}
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
               required
             />
           </div>
-          {loginError && (
+
+          {errMsg && (
             <p
+              ref={loginErrorsContainerRef}
               className="vf-form__helper vf-form__helper--error"
               aria-live="assertive"
             >
-              {loginError}
+              {errMsg}
             </p>
           )}
+
           <br />
           <div className="form-actions-no-box">
             <button
@@ -100,8 +158,6 @@ const Login: React.FC = () => {
             </button>
           </div>
         </form>
-        {/* {loadingLogin && <Loading />} */}
-        {loginError && <div className="vf-box">{loginError}</div>}
         <div className="form-forgotten">
           <a href="https://www.ebi.ac.uk/ena/submit/sra/#reset-password">
             Forgot your password?
@@ -127,7 +183,7 @@ const Login: React.FC = () => {
           Archive (ENA), you should simply use your ENA account to login.
         </p>
       </OutterCard>
-    </div>
+    </section>
   );
 };
 

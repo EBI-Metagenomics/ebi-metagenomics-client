@@ -4,6 +4,7 @@ import { noop } from 'lodash-es';
 type UserType = {
   username: null | string;
   isAuthenticated: boolean;
+  token: null | string;
 };
 export type UserDetail = {
   type: string;
@@ -25,6 +26,7 @@ const UserContext = React.createContext({
   config: null,
   setUser: noop as (u: UserType) => void,
   setDetails: noop as (details: UserDetails) => void,
+  token: null,
 });
 
 export const getEmailsFromDetails = (details: UserDetails): string[] =>
@@ -33,6 +35,8 @@ export const getEmailsFromDetails = (details: UserDetails): string[] =>
 export const getDetailsByWebin = (
   details: UserDetails,
   webin: string
-): UserDetail => details.find(({ id }) => id === webin);
+): UserDetail => {
+  return details.find(({ id }) => id.toLowerCase() === webin.toLowerCase());
+};
 
 export default UserContext;

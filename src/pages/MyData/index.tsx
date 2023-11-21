@@ -1,31 +1,53 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-import UserContext from 'pages/Login/UserContext';
-import InfoBanner from 'components/UI/InfoBanner';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
 import { getBiomeIcon } from 'utils/biomes';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
+import useProtectedApiCall from 'hooks/useProtectedApiCall';
+import { MGnifyResponseList } from 'hooks/data/useData';
+
 const MyData: React.FC = () => {
-  const { isAuthenticated } = useContext(UserContext);
-
   const [page] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
 
-  const { data, loading, isStale, error, downloadURL } = useMGnifyData(
-    isAuthenticated ? 'mydata' : null,
-    {
-      page,
-      ordering: order,
-      page_size: pageSize,
-    }
-  );
+  const protectedAxios = useProtectedApiCall();
+  const [myData, setMyData] = useState<MGnifyResponseList | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isStale] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [downloadURL] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getMyData = async () => {
+      try {
+        const response = await protectedAxios.get('/mydata', {
+          signal: controller.signal,
+        });
+        if (isMounted) {
+          setMyData(response.data.data);
+          setLoading(false);
+        }
+      } catch (apiError) {
+        if (isMounted) {
+          setError(apiError);
+          setLoading(false);
+        }
+      }
+    };
+
+    getMyData();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [protectedAxios]);
+
   const columns = React.useMemo(
     () => [
       {
@@ -70,27 +92,19 @@ const MyData: React.FC = () => {
     ],
     []
   );
-  if (!isAuthenticated) {
-    return (
-      <InfoBanner title="Error" type="error">
-        <div>
-          <b>You are not logged in.</b>
-          <p>
-            Click <Link to="/login">here to login</Link> and view your data.
-          </p>
-        </div>
-      </InfoBanner>
-    );
+  if (loading && (!isStale || !myData)) return <Loading size="large" />;
+  if (error) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return <FetchError error={error} />;
   }
-  if (loading && (!isStale || !data)) return <Loading size="large" />;
-  if (error) return <FetchError error={error} />;
 
   return (
     <section>
       <h4>My Studies</h4>
       <EMGTable
         cols={columns}
-        data={data as MGnifyResponseList}
+        data={myData as MGnifyResponseList}
         initialPage={(page as number) - 1}
         sortable
         loading={loading}

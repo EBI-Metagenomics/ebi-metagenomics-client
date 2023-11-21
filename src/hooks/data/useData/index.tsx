@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import protectedAxios from 'utils/protectedAxios';
 
 export enum ResponseFormat {
   JSON,
@@ -144,63 +145,16 @@ export interface HTMLDataResponse extends DataResponse {
 export interface MGnifyResponseGenericObj extends DataResponse {
   data: KeyValue;
 }
-
-async function fetchData(
-  url: string,
-  updateState: (DataResponse) => void,
-  format: ResponseFormat = ResponseFormat.JSON,
-  fetchOptions: RequestInit = {}
-): Promise<void> {
-  let response = null;
-  let data = null;
-
-  try {
-    response = await fetch(url, fetchOptions);
-  } catch (error) {
-    updateState({
-      error: {
-        error,
-        type: ErrorTypes.FetchError,
-      },
-      loading: false,
-      isStale: false,
-      rawResponse: response,
-    });
-    return;
-  }
-  if (!response.ok) {
-    updateState({
-      error: {
-        status: response.status,
-        response,
-        type: ErrorTypes.NotOK,
-      },
-      loading: false,
-      isStale: false,
-      rawResponse: response,
-    });
-    return;
-  }
+const prepareResponseDataBasedOnFormat = (
+  response: any,
+  format: ResponseFormat,
+  updateState: (DataResponse) => void
+): any => {
+  let data = {};
   switch (format) {
-    case ResponseFormat.JSON:
-      try {
-        data = await response.json();
-      } catch (error) {
-        updateState({
-          error: {
-            error,
-            type: ErrorTypes.JSONError,
-          },
-          loading: false,
-          isStale: false,
-          rawResponse: response,
-        });
-        return;
-      }
-      break;
     case ResponseFormat.HTML:
       try {
-        const html = await response.text();
+        const html = response.data;
         const el = document.createElement('html');
         el.innerHTML = html;
         data = el;
@@ -214,12 +168,11 @@ async function fetchData(
           isStale: false,
           rawResponse: response,
         });
-        return;
       }
       break;
     case ResponseFormat.TSV:
       try {
-        const text = await response.text();
+        const text = response.data;
         data = text
           .split('\n')
           .filter(Boolean)
@@ -234,19 +187,66 @@ async function fetchData(
           isStale: false,
           rawResponse: response,
         });
-        return;
       }
       break;
     default:
-      data = await response.text();
+      try {
+        data = response.data;
+      } catch (error) {
+        updateState({
+          error: {
+            error,
+            type: ErrorTypes.JSONError,
+          },
+          loading: false,
+          isStale: false,
+          rawResponse: response,
+        });
+      }
   }
-  updateState({
-    data,
-    loading: false,
-    error: null,
-    isStale: false,
-    rawResponse: response,
-  });
+  return data;
+};
+
+async function fetchData(
+  url: string,
+  updateState: (DataResponse) => void,
+  format: ResponseFormat = ResponseFormat.JSON,
+  fetchOptions: RequestInit = {}
+): Promise<void> {
+  let response = null;
+  let data = null;
+
+  try {
+    if (fetchOptions.method === 'POST') {
+      response = await protectedAxios.post(url, fetchOptions.body, {
+        headers:
+          fetchOptions.headers ||
+          ({
+            'Content-Type': 'application/json',
+          } as any),
+      });
+    } else {
+      response = await protectedAxios.get(url);
+    }
+    data = prepareResponseDataBasedOnFormat(response, format, updateState);
+    updateState({
+      data,
+      loading: false,
+      error: null,
+      isStale: false,
+      rawResponse: response,
+    });
+  } catch (error) {
+    updateState({
+      error: {
+        error,
+        type: ErrorTypes.FetchError,
+      },
+      loading: false,
+      isStale: false,
+      rawResponse: response,
+    });
+  }
 }
 
 const EmptyResponse = {

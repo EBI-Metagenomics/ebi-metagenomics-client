@@ -46,6 +46,9 @@ const useMgnifyCobsSearch: (
     {
       method: 'POST',
       body: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     }
   );
   return data as unknown as CobsResponse;
