@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
+import axios from 'axios';
 
 import MarkerClusterer from '@googlemaps/markerclustererplus';
 
 import { MGnifyDatum } from 'hooks/data/useData';
 
 import './style.css';
+import LoadingDots from 'components/UI/LoadingDots';
 
 // TODO: make the link play nicer with react-router
 const MarkerPopup: React.FC<{ sample: MGnifyDatum }> = ({ sample }) => (
   <div className="vf-box vf-box--easy">
     <h3 className="vf-box__heading">
       <a href={`../samples/${sample.id}`}>{sample.id}</a>
-      {/* <Link to="/search/studies">{sample.id}</Link> */}
     </h3>
     <p className="vf-box__text">{sample.attributes['sample-desc']}</p>
   </div>
@@ -43,13 +44,70 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
   const sampleInfoWindow = useRef(new google.maps.InfoWindow());
   const clusterInfoWindow = useRef(new google.maps.InfoWindow());
   const newBoundary = useRef(new google.maps.LatLngBounds());
-
   const markers = useRef({});
+  const [markingEezRegions, setMarkingEezRegions] = useState(false);
+
+  // eslint-disable-next-line consistent-return
+  const fetchPolygonCoordinates = async () => {
+    try {
+      const response = await axios.get(
+        `https://marineregions.org/rest/getGazetteerGeometries.ttl/${samples[0].attributes.mrgid}/`
+      );
+      const rdfData = response.data as unknown as string;
+      let polygonCoordinatesString = rdfData.substring(
+        rdfData.indexOf('POLYGON') + 8,
+        rdfData.length - 3
+      );
+      polygonCoordinatesString = rdfData.substring(
+        rdfData.indexOf('((') + 2,
+        rdfData.indexOf('))')
+      );
+
+      const coordinatesArray = [];
+      const internalCoordinates = [];
+
+      const pairs = polygonCoordinatesString.split(',');
+
+      for (let i = 0; i < pairs.length; i++) {
+        const pair = pairs[i];
+        if (pair.includes('(')) {
+          const indexOfPairEnd = polygonCoordinatesString.indexOf(`${pair})`);
+          const internalCoordinatesString = polygonCoordinatesString.substring(
+            polygonCoordinatesString.indexOf(pair),
+            indexOfPairEnd + pair.length
+          );
+
+          internalCoordinates.push(internalCoordinatesString);
+          i += internalCoordinatesString.split(' ').length - 1;
+        } else {
+          const [lng, lat] = pair.trim().split(' ').map(parseFloat);
+          coordinatesArray.push({ lat, lng });
+        }
+      }
+      return coordinatesArray;
+    } catch (err) {
+      // markingEezRegions.current = false;
+    }
+  };
+
+  const drawPolygon = (coordinates) => {
+    if (!theMap) return;
+    const polygon = new google.maps.Polygon({
+      paths: coordinates,
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#0000FF',
+      fillOpacity: 0.35,
+    });
+    polygon.setMap(theMap);
+  };
 
   useEffect(() => {
     if (theMap === null) {
       const tmpMap = new google.maps.Map(ref.current, {
-        maxZoom: 10,
+        // zoom: 0.1,
+        maxZoom: 5,
         minZoom: 2,
       });
       setTheMap(tmpMap);
@@ -119,10 +177,33 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
       );
 
       theMap.fitBounds(newBoundary.current);
+
+      if (
+        samples[0]?.attributes?.mrgid &&
+        samples[0]?.relationships?.biome?.data?.id?.includes(
+          'root:Environmental:Aquatic'
+        )
+      ) {
+        setMarkingEezRegions(true);
+        fetchPolygonCoordinates().then((coordinates) => {
+          drawPolygon(coordinates);
+          setMarkingEezRegions(false);
+        });
+      }
     }
   }, [theMap, samples]);
 
-  return <div ref={ref} id="map" style={{ height: '100%' }} />;
+  return (
+    <>
+      {markingEezRegions && (
+        <span>
+          Marking EEZ regions
+          <LoadingDots />
+        </span>
+      )}
+      <div ref={ref} id="map" style={{ height: '100%' }} />
+    </>
+  );
 };
 
 export default SamplesMap;
