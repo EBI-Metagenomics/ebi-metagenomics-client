@@ -54,11 +54,11 @@ const SamplePage: React.FC = () => {
     //   },
     //   {
     //     name: 'France',
-    //     absStatus: 2,
+    //     absStatus: 1,
     //   },
     //   {
     //     name: 'United Kingdom',
-    //     absStatus: 5,
+    //     absStatus: 3,
     //   },
     // ];
 
@@ -116,7 +116,9 @@ const SamplePage: React.FC = () => {
       })
       .catch((err) => {
         if (err.response.status === 404) {
-          eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} a region outside of an EEZ. Therefore, there are no ABS obligations.`;
+          eezMetadata.eezInfoPrefix =
+            'Based on the sample coordinates, this sample originates from ';
+          eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} a region beyond an EEZ. While this means there are no national ABS obligations under individual countries' jurisdiction, benefit-sharing obligations may still apply for the use of MGR in areas beyond national jurisdictions, as outlined in the BBNJ agreement. Although this agreement is not yet in force, its provisions, including obligations for MGR users, will apply retroactively once enacted.`;
           eezMetadata.eezBadgeColor = 'tertiary';
           setEezData(eezMetadata);
         }
