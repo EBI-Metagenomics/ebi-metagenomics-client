@@ -35,11 +35,15 @@ const GenomeBrowser: React.FC = () => {
   const resolveQueryParameters = (browser, optionTrackName) => {
     const currentUrl = new URL(window.location.href);
     const featureId = currentUrl.searchParams.get('feature-id');
+    const contigId = currentUrl.searchParams.get('contig-id');
     const selectedTrackColor = currentUrl.searchParams.get(
       'functional-annotation'
     );
     if (featureId) {
       browser.search(featureId);
+    }
+    if (contigId) {
+      browser.search(contigId);
     }
     if (selectedTrackColor) {
       const trackColorBy = {
@@ -118,8 +122,11 @@ const GenomeBrowser: React.FC = () => {
           ReactDOMServer.renderToString(<GenomeBrowserPopup data={trackData} />)
         );
         browser.on('locuschange', (referenceFrame) => {
-          const { locusSearchString } = referenceFrame[0];
-          updateQueryParams('feature-id', locusSearchString);
+          const { locusSearchString, start, end } = referenceFrame[0];
+          updateQueryParams(
+            'feature-id',
+            `${locusSearchString}:${start}-${end}`
+          );
         });
         setIgvBrowser(browser);
         setLoading(false);
