@@ -10,6 +10,7 @@ import FetchError from 'components/UI/FetchError';
 import FlagshipTable from 'components/SuperStudy/Flagship';
 import RelatedTable from 'components/SuperStudy/Related';
 import SuperStudyGenomeCataloguesTable from 'components/SuperStudy/GenomeCatalogues';
+import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
 const SuperStudyPage: React.FC = () => {
   const accession = useURLAccession();
@@ -18,8 +19,14 @@ const SuperStudyPage: React.FC = () => {
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const { data: superStudyData } = data as MGnifyResponseObj;
+  const breadcrumbs = [
+    { label: 'Home', url: '/' },
+    { label: 'Super Studies', url: '/browse/super-studies' },
+    { label: accession },
+  ];
   return (
     <section className="vf-content">
+      <Breadcrumbs links={breadcrumbs} />
       <h2>Super Study</h2>
 
       <section className="vf-grid">
