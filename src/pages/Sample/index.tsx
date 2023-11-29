@@ -118,7 +118,7 @@ const SamplePage: React.FC = () => {
         if (err.response.status === 404) {
           eezMetadata.eezInfoPrefix =
             'Based on the sample coordinates, this sample originates from ';
-          eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} a region beyond an EEZ. While this means there are no national ABS obligations under individual countries' jurisdiction, benefit-sharing obligations may still apply for the use of MGR in areas beyond national jurisdictions, as outlined in the <a href="https://www.un.org/bbnj/"> BBNJ agreement. </a> Although this agreement is not yet in force, its provisions, including obligations for MGR users, will apply retroactively once enacted.`;
+          eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} a region beyond an EEZ. While this means there are no national ABS obligations under individual countries' jurisdiction, benefit-sharing obligations may still apply for the use of Marine Genetic Resource (MGR) in areas beyond national jurisdictions, as outlined in the <a href="https://www.un.org/bbnj/"> BBNJ agreement. </a> Although this agreement is not yet in force, its provisions, including obligations for MGR users, will apply retroactively once enacted.`;
           eezMetadata.eezBadgeColor = 'tertiary';
           setEezData(eezMetadata);
         }
