@@ -54,11 +54,11 @@ const SamplePage: React.FC = () => {
     //   },
     //   {
     //     name: 'France',
-    //     absStatus: 2,
+    //     absStatus: 1,
     //   },
     //   {
     //     name: 'United Kingdom',
-    //     absStatus: 5,
+    //     absStatus: 3,
     //   },
     // ];
 
@@ -116,7 +116,9 @@ const SamplePage: React.FC = () => {
       })
       .catch((err) => {
         if (err.response.status === 404) {
-          eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} a region outside of an EEZ. Therefore, there are no ABS obligations.`;
+          eezMetadata.eezInfoPrefix =
+            'Based on the sample coordinates, this sample originates from ';
+          eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} a region beyond an EEZ. While this means there are no national ABS obligations under individual countries' jurisdiction, benefit-sharing obligations may still apply for the use of MGR in areas beyond national jurisdictions, as outlined in the <a href="https://www.un.org/bbnj/"> BBNJ agreement. </a> Although this agreement is not yet in force, its provisions, including obligations for MGR users, will apply retroactively once enacted.`;
           eezMetadata.eezBadgeColor = 'tertiary';
           setEezData(eezMetadata);
         }
@@ -193,7 +195,10 @@ const SamplePage: React.FC = () => {
                         EEZ Info
                       </abbr>
                     </span>
-                    &nbsp; {eezData.eezInfoText}
+                    &nbsp;
+                    <div
+                      dangerouslySetInnerHTML={{ __html: eezData.eezInfoText }}
+                    />
                   </p>
                 </div>
               )}
@@ -213,8 +218,9 @@ const SamplePage: React.FC = () => {
                 </a>{' '}
                 APIs. The list of EEZ countries with an ABS and Digital Sequence
                 Information (DSI) obligations was obtained from ABSint on
-                N(date).This information is only supposed to be guidance and you
-                are advised to independently verify your ABS obligations.
+                November 2023. This information is only supposed to be guidance
+                and you are advised to independently verify your ABS
+                obligations.
                 <br /> <br />
                 Exclusive Economic Zone (EEZ): The United Nations Convention on
                 the Law of the Sea (UNCLOS) defines an Exclusive Economic Zone
