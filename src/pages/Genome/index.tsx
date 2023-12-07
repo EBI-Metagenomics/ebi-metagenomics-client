@@ -41,6 +41,10 @@ const GenomePage: React.FC = () => {
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     {
+      label: 'Genomes',
+      url: '/browse/genomes',
+    },
+    {
       label: relatedCatalogue.data.id,
       url: `/genome-catalogues/${relatedCatalogue.data.id}`,
     },
