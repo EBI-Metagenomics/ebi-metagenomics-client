@@ -31,6 +31,9 @@ const useMgnifySourmashSearch: (
     {
       method: 'POST',
       body: formdata,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     }
   );
   return data as MGnifyResponseGenericObj;
