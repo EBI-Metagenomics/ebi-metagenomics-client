@@ -134,6 +134,14 @@ export const annotationTrackCustomisations = (trackColorBy, format) => {
             ? COLOUR_PRESENCE
             : COLOUR_ABSENCE,
       };
+    case 'ncrna':
+      return {
+        nameField: format === FORMAT.GENOME ? 'KEGG' : 'kegg',
+        color: (feature) =>
+          !maybeGetAttributeValue(feature, ['ncrna'])
+            ? COLOUR_ABSENCE
+            : COLOUR_PRESENCE,
+      };
     default:
       return {
         nameField: trackColorBy,
