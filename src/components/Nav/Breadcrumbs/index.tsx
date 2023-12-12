@@ -8,11 +8,7 @@ const Breadcrumbs = ({ links }) => {
           (
             link: {
               url: string;
-              label:
-                | boolean
-                | React.ReactChild
-                | React.ReactFragment
-                | React.ReactPortal;
+              label: string;
               index: React.Key;
             },
             index: React.Key
