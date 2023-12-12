@@ -14,7 +14,6 @@ const Breadcrumbs = ({ links }) => {
             index: React.Key
           ) => (
             <li className="vf-breadcrumbs__item">
-              {/* <h1>{link.url}</h1> */}
               {index === links.length - 1 ? (
                 <span className="vf-breadcrumbs__item vf-breadcrumbs__item--current">
                   {link.label}
@@ -23,7 +22,6 @@ const Breadcrumbs = ({ links }) => {
                 <a
                   className="vf-breadcrumbs__item"
                   href={`/metagenomics${link.url}`}
-                  key={index}
                 >
                   {link.label}
                 </a>
