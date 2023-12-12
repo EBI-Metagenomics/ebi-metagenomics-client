@@ -16,6 +16,11 @@ import {
   annotationTrackCustomisations,
   FORMAT,
 } from 'components/IGV/TrackColourPicker';
+import {
+  handleLocusChanges,
+  resolveQueryParameters,
+  updateQueryParams,
+} from 'utils/igvBrowserHelper';
 import GenomeBrowserPopup from './Popup';
 
 const GenomeBrowser: React.FC = () => {
@@ -32,37 +37,37 @@ const GenomeBrowser: React.FC = () => {
     return response.ok;
   }, [virifyGffUrl]);
 
-  const resolveQueryParameters = (browser, optionTrackName) => {
-    const currentUrl = new URL(window.location.href);
-    const featureId = currentUrl.searchParams.get('feature-id');
-    const contigId = currentUrl.searchParams.get('contig-id');
-    const selectedTrackColor = currentUrl.searchParams.get(
-      'functional-annotation'
-    );
-    if (featureId) {
-      browser.search(featureId);
-    }
-    if (contigId) {
-      browser.search(contigId);
-    }
-    if (selectedTrackColor) {
-      const trackColorBy = {
-        label: selectedTrackColor,
-        value: selectedTrackColor,
-      };
-      setTrackColorBys({
-        ...trackColorBys,
-        [optionTrackName]: trackColorBy,
-      });
-    }
-  };
+  // const resolveQueryParameters = (browser, optionTrackName) => {
+  //   const currentUrl = new URL(window.location.href);
+  //   const featureId = currentUrl.searchParams.get('feature-id');
+  //   const contigId = currentUrl.searchParams.get('contig-id');
+  //   const selectedTrackColor = currentUrl.searchParams.get(
+  //     'functional-annotation'
+  //   );
+  //   if (featureId) {
+  //     browser.search(featureId);
+  //   }
+  //   if (contigId) {
+  //     browser.search(contigId);
+  //   }
+  //   if (selectedTrackColor) {
+  //     const trackColorBy = {
+  //       label: selectedTrackColor,
+  //       value: selectedTrackColor,
+  //     };
+  //     setTrackColorBys({
+  //       ...trackColorBys,
+  //       [optionTrackName]: trackColorBy,
+  //     });
+  //   }
+  // };
 
-  const updateQueryParams = (key, value) => {
-    const currentUrl = new URL(window.location.href);
-    currentUrl.searchParams.set(key, value);
-    const updatedUrl = currentUrl.toString();
-    window.history.replaceState(null, null, updatedUrl);
-  };
+  // const updateQueryParams = (key, value) => {
+  //   const currentUrl = new URL(window.location.href);
+  //   currentUrl.searchParams.set(key, value);
+  //   const updatedUrl = currentUrl.toString();
+  //   window.history.replaceState(null, null, updatedUrl);
+  // };
 
   const handleColorChange = (option, action, trackId) => {
     if (action.action === 'select-option') {
@@ -121,16 +126,37 @@ const GenomeBrowser: React.FC = () => {
         browser.on('trackclick', (track, trackData) =>
           ReactDOMServer.renderToString(<GenomeBrowserPopup data={trackData} />)
         );
-        browser.on('locuschange', (referenceFrame) => {
-          const { locusSearchString, start, end } = referenceFrame[0];
-          updateQueryParams(
-            'feature-id',
-            `${locusSearchString}:${start}-${end}`
-          );
-        });
-        setIgvBrowser(browser);
-        setLoading(false);
-        resolveQueryParameters(browser, options.tracks[0].name);
+        handleLocusChanges(
+          browser,
+          setIgvBrowser,
+          (trackColorBy) => {
+            setTrackColorBys({
+              ...trackColorBys,
+              [options.tracks[0].name]: trackColorBy,
+            });
+          },
+          setLoading
+        );
+        // browser.on('locuschange', (referenceFrame) => {
+        //   const { locusSearchString, start, end } = referenceFrame[0];
+        //   updateQueryParams(
+        //     'feature-id',
+        //     `${locusSearchString}:${start}-${end}`
+        //   );
+        // });
+        // setIgvBrowser(browser);
+        // setLoading(false);
+        // const resolvedQueryParameters = resolveQueryParameters(browser);
+        // if (resolvedQueryParameters.selectedTrackColor) {
+        //   const trackColorBy = {
+        //     label: resolvedQueryParameters.selectedTrackColor,
+        //     value: resolvedQueryParameters.selectedTrackColor,
+        //   };
+        //   setTrackColorBys({
+        //     ...trackColorBys,
+        //     [options.tracks[0].name]: trackColorBy,
+        //   });
+        // }
       });
     },
     [config.api, accession, hasVirify, virifyGffUrl]

@@ -38,6 +38,10 @@ import {
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import { useCrates } from 'hooks/genomeViewer/CrateStore/useCrates';
 import { Track } from 'utils/trackView';
+import {
+  resolveQueryParameters,
+  updateQueryParams,
+} from 'utils/igvBrowserHelper';
 
 type ContigProps = {
   contig: MGnifyDatum;
@@ -108,11 +112,35 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
       }
 
       if (node === null) return;
+      // igv.createBrowser(node, options).then((browser) => {
+      //   browser.on('trackclick', (track, trackData) =>
+      //     ReactDOMServer.renderToString(<GenomeBrowserPopup data={trackData} />)
+      //   );
+      //   setIgvBrowser(browser);
+      // });
       igv.createBrowser(node, options).then((browser) => {
         browser.on('trackclick', (track, trackData) =>
           ReactDOMServer.renderToString(<GenomeBrowserPopup data={trackData} />)
         );
+        browser.on('locuschange', (referenceFrame) => {
+          const { locusSearchString, start, end } = referenceFrame[0];
+          updateQueryParams(
+            'feature-id',
+            `${locusSearchString}:${start}-${end}`
+          );
+        });
         setIgvBrowser(browser);
+        const resolvedQueryParameters = resolveQueryParameters(browser);
+        if (resolvedQueryParameters.selectedTrackColor) {
+          const trackColorBy = {
+            label: resolvedQueryParameters.selectedTrackColor,
+            value: resolvedQueryParameters.selectedTrackColor,
+          };
+          setTrackColorBys({
+            ...trackColorBys,
+            [options.tracks[0].name]: trackColorBy,
+          });
+        }
       });
     },
     [fastaURL, displayName, config.api, accession, contigId, antiSMASH, crates]
