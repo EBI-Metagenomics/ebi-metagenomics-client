@@ -22,6 +22,7 @@ import {
   SovereignsArray,
   Sov,
 } from 'utils/eezAbs';
+import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
 const tabs = [
   { label: 'Sample metadata', to: '#' },
@@ -131,8 +132,14 @@ const SamplePage: React.FC = () => {
       setFetchEezDataCalled(true);
     }
   }
+  const breadcrumbs = [
+    { label: 'Home', url: '/' },
+    { label: 'Samples', url: '/browse/samples' },
+    { label: accession },
+  ];
   return (
     <section className="vf-content">
+      <Breadcrumbs links={breadcrumbs} />
       <h2>Sample overview ({accession})</h2>
       <h3>Sample {sampleData.attributes['sample-name']}</h3>
       <section className="vf-grid">

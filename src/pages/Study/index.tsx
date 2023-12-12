@@ -10,6 +10,7 @@ import Overview from 'components/Study/Overview';
 import SummaryTab from 'components/Study/SummaryTab';
 import RouteForHash from 'components/Nav/RouteForHash';
 import useCanonicalAccessionRedirect from 'hooks/useCanonicalAccessionRedirect';
+import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
 const tabs = [
   { label: 'Overview', to: '#overview' },
@@ -26,8 +27,14 @@ const StudyPage: React.FC = () => {
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const { data: studyData, included } = data as MGnifyResponseObj;
+  const breadcrumbs = [
+    { label: 'Home', url: '/' },
+    { label: 'Studies', url: '/browse/studies' },
+    { label: accession },
+  ];
   return (
     <section className="vf-content">
+      <Breadcrumbs links={breadcrumbs} />
       <h2>Study {accession}</h2>
       <h3>{studyData.attributes['study-name']}</h3>
       <Tabs tabs={tabs} />
