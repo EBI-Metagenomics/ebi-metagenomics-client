@@ -36,6 +36,7 @@ const MultipleField: React.FC<{
 }> = ({ value, url, decodeValue, filterValue = () => true }) => {
   if (!value) return null;
   const parts = value.split(',').filter(filterValue);
+  if (!parts.length) return null;
   return (
     <ul className="vf-list">
       {parts.map((part) => {
