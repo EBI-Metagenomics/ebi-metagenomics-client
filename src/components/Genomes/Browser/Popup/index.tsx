@@ -32,9 +32,10 @@ const MultipleField: React.FC<{
   value: string;
   url?: string;
   decodeValue?: boolean;
-}> = ({ value, url, decodeValue }) => {
+  filterValue?: (value: string) => boolean;
+}> = ({ value, url, decodeValue, filterValue = () => true }) => {
   if (!value) return null;
-  const parts = value.split(',');
+  const parts = value.split(',').filter(filterValue);
   return (
     <ul className="vf-list">
       {parts.map((part) => {
@@ -106,11 +107,15 @@ const formatData = (
       {
         name: 'E.C Number',
         Value:
-          attributes.ecnumber &&
+          attributes.ec_number &&
           (() => (
             <MultipleField
-              value={attributes.ecnumber}
+              value={attributes.ec_number}
               url="https://enzyme.expasy.org/EC/"
+              filterValue={(ecNumber) => {
+                // https://en.wikipedia.org/wiki/Enzyme_Commission_number
+                return /[n\d-]+\.[n\d-]+\.[n\d-]+\.[n\d-]+/.test(ecNumber);
+              }}
             />
           )),
       },
@@ -122,6 +127,9 @@ const formatData = (
             <MultipleField
               value={attributes.pfam}
               url="https://www.ebi.ac.uk/interpro/entry/pfam/"
+              filterValue={(pfamAccession) => {
+                return pfamAccession.startsWith('PF');
+              }}
             />
           )),
       },
@@ -133,6 +141,9 @@ const formatData = (
             <MultipleField
               value={attributes.kegg}
               url="https://www.genome.jp/dbget-bin/www_bget?"
+              filterValue={(keggAccession) => {
+                return keggAccession.startsWith('ko:K');
+              }}
             />
           )),
       },
@@ -153,6 +164,9 @@ const formatData = (
             <MultipleField
               value={attributes.go}
               url="https://www.ebi.ac.uk/ols/search?q="
+              filterValue={(goAccession) => {
+                return goAccession.startsWith('GO:');
+              }}
             />
           )),
       },
@@ -163,7 +177,10 @@ const formatData = (
           (() => (
             <MultipleField
               value={attributes.interpro}
-              url="https://www.ebi.ac.uk/interpro/entry/InterPro/'"
+              url="https://www.ebi.ac.uk/interpro/entry/InterPro/"
+              filterValue={(ipsAccession) => {
+                return ipsAccession.startsWith('IPR');
+              }}
             />
           )),
       },
