@@ -31,9 +31,10 @@ const MultipleField: React.FC<{
   value: string;
   url?: string;
   decodeValue?: boolean;
-}> = ({ value, url, decodeValue }) => {
+  filterValue?: (value: string) => boolean;
+}> = ({ value, url, decodeValue, filterValue = () => true }) => {
   if (!value) return null;
-  const parts = value.split(',');
+  const parts = value.split(',').filter(filterValue);
   return (
     <ul className="vf-list">
       {parts.map((part) => {
@@ -95,6 +96,8 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
         el.value === null ? null : String(el.value);
     return memo;
   }, {});
+  // TODO: Implement using something similar to the TrackColourPicker.FORMAT to handle differences
+  const ecnumber = attributes.ec_number || attributes.ecnumber;
 
   const functionalData = {
     title: 'Functional annotation',
@@ -102,11 +105,15 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
       {
         name: 'E.C Number',
         Value:
-          attributes.ecnumber &&
+          ecnumber &&
           (() => (
             <MultipleField
-              value={attributes.ecnumber}
+              value={ecnumber}
               url="https://enzyme.expasy.org/EC/"
+              filterValue={(ecNumber) => {
+                // https://en.wikipedia.org/wiki/Enzyme_Commission_number
+                return /[n\d-]+\.[n\d-]+\.[n\d-]+\.[n\d-]+/.test(ecNumber);
+              }}
             />
           )),
       },
@@ -118,6 +125,9 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
             <MultipleField
               value={attributes.pfam}
               url="https://www.ebi.ac.uk/interpro/entry/pfam/"
+              filterValue={(pfamAccession) => {
+                return pfamAccession.startsWith('PF');
+              }}
             />
           )),
       },
@@ -129,6 +139,9 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
             <MultipleField
               value={attributes.kegg}
               url="https://www.genome.jp/dbget-bin/www_bget?"
+              filterValue={(keggAccession) => {
+                return keggAccession.startsWith('ko:K');
+              }}
             />
           )),
       },
@@ -149,6 +162,9 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
             <MultipleField
               value={attributes.go}
               url="https://www.ebi.ac.uk/ols/search?q="
+              filterValue={(goAccession) => {
+                return goAccession.startsWith('GO:');
+              }}
             />
           )),
       },
@@ -159,7 +175,10 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
           (() => (
             <MultipleField
               value={attributes.interpro}
-              url="https://www.ebi.ac.uk/interpro/entry/InterPro/'"
+              url="https://www.ebi.ac.uk/interpro/entry/InterPro/"
+              filterValue={(ipsAccession) => {
+                return ipsAccession.startsWith('IPR');
+              }}
             />
           )),
       },
