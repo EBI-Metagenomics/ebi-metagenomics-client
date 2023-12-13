@@ -36,7 +36,6 @@ const MultipleField: React.FC<{
 }> = ({ value, url, decodeValue, filterValue = () => true }) => {
   if (!value) return null;
   const parts = value.split(',').filter(filterValue);
-  if (!parts.length) return null;
   return (
     <ul className="vf-list">
       {parts.map((part) => {
@@ -101,6 +100,8 @@ const formatData = (
         el.value === null ? null : String(el.value);
     return memo;
   }, {});
+  // TODO: Implement using something similar to the TrackColourPicker.FORMAT to handle differences
+  const ecnumber = attributes.ec_number || attributes.ecnumber;
 
   const functionalData = {
     title: 'Functional annotation',
@@ -108,10 +109,10 @@ const formatData = (
       {
         name: 'E.C Number',
         Value:
-          attributes.ec_number &&
+          ecnumber &&
           (() => (
             <MultipleField
-              value={attributes.ec_number}
+              value={ecnumber}
               url="https://enzyme.expasy.org/EC/"
               filterValue={(ecNumber) => {
                 // https://en.wikipedia.org/wiki/Enzyme_Commission_number
