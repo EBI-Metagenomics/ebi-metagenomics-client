@@ -1,3 +1,6 @@
+import { Dispatch } from 'react';
+import { Browser } from 'igv';
+
 export const updateQueryParams = (key: string, value: string) => {
   const currentUrl = new URL(window.location.href);
   currentUrl.searchParams.set(key, value);
@@ -5,7 +8,7 @@ export const updateQueryParams = (key: string, value: string) => {
   window.history.replaceState(null, null, updatedUrl);
 };
 
-export const resolveQueryParameters = (browser) => {
+export const resolveQueryParameters = (browser: Browser) => {
   const currentUrl = new URL(window.location.href);
   const featureId = currentUrl.searchParams.get('feature-id');
   const contigId = currentUrl.searchParams.get('contig-id');
@@ -24,12 +27,13 @@ export const resolveQueryParameters = (browser) => {
     selectedTrackColor,
   };
 };
-
 export const handleLocusChanges = (
-  browser,
-  setIgvBrowser,
-  setTrackColorBys,
-  setLoading
+  browser: Browser,
+  setIgvBrowser: Dispatch<object>,
+  setTrackColorBys: Dispatch<object>,
+  setLoading: Dispatch<boolean> = () => {
+    return null;
+  }
 ) => {
   browser.on('locuschange', (referenceFrame) => {
     const { locusSearchString, start, end } = referenceFrame[0];
@@ -38,7 +42,6 @@ export const handleLocusChanges = (
   setIgvBrowser(browser);
   setLoading(false);
   const resolvedQueryParameters = resolveQueryParameters(browser);
-  console.log('resolvedQueryParameters', resolvedQueryParameters);
   if (resolvedQueryParameters.selectedTrackColor) {
     const trackColorBy = {
       label: resolvedQueryParameters.selectedTrackColor,

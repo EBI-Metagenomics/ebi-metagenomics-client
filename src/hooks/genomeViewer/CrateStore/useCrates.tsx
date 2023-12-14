@@ -140,10 +140,14 @@ export const useCrates = (associatedCratesUrl: string): Crates => {
       (data.data as MGnifyDatum[]).map((crateItem) =>
         getCrate(crateItem.links.self as string)
       )
-    ).then((newCrates) => {
-      setCrates(newCrates);
-      setIsLoading(false);
-    });
+    )
+      .then((newCrates) => {
+        setCrates(newCrates);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
   }, [data, loading]);
 
   return {
