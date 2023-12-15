@@ -7,10 +7,8 @@ const ElixirBanner: React.FC = () => {
         className="vf-banner-elixir vf-banner"
         data-vf-js-banner-elixir=""
         data-vf-js-banner-elixir-logo=""
-        data-vf-js-banner-elixir-name="Service Name"
-        data-vf-js-banner-elixir-description={
-          "A short description about this service's role and function"
-        }
+        data-vf-js-banner-elixir-name="MGnify"
+        data-vf-js-banner-elixir-description="The MGnify platform facilitates the assembly, analysis and archiving of microbiome-derived nucleic acid sequences. The platform provides access to taxonomic assignments and functional annotations for nearly half a million analyses covering metabarcoding, metatranscriptomic, and metagenomic datasets, which are derived from a wide range of different environments."
         data-vf-js-banner-elixir-link="default"
       >
         <div className="vf-flag vf-flag--middle vf-flag--400">
@@ -29,7 +27,13 @@ const ElixirBanner: React.FC = () => {
               </a>
             </h4>
             <p className="vf-banner__text">
-              Submit, analyse, discover and compare microbiome data
+              MGnify is an ELIXIR Core Data Resource{' '}
+              <a
+                className="vf-banner__link"
+                href="https://elixir-europe.org/platforms/data/core-data-resources"
+              >
+                Learn more
+              </a>
             </p>
           </div>
         </div>
