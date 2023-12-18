@@ -7,7 +7,11 @@ export const updateQueryParams = (key: string, value: string) => {
   const updatedUrl = currentUrl.toString();
   window.history.replaceState(null, null, updatedUrl);
 };
-export const updateLocusQueryParams = (locusSearchString, start, end) => {
+export const updateLocusQueryParams = (
+  locusSearchString: string,
+  start: string,
+  end: string
+) => {
   const currentUrl = new URL(window.location.href);
   const contigId = currentUrl.searchParams.get('contig_id');
   if (contigId) {
