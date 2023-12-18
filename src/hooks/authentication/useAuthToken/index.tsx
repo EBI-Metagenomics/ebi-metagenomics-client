@@ -11,7 +11,7 @@ const getUserDetailsFromToken = (token: string) => {
 
 const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
   const [authToken, setAuthTokenInternally] = useState<string | null>(() => {
-    return localStorage.getItem('token');
+    return localStorage.getItem('mgnify.token');
   });
   const { setUser, setDetails } = useContext(UserContext);
 
@@ -23,8 +23,8 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
 
   const setAuthToken = (newToken: AuthToken) => {
     if (!newToken) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('username');
+      localStorage.removeItem('mgnify.token');
+      localStorage.removeItem('mgnify.username');
       setUser({
         username: '',
         token: '',
@@ -33,10 +33,10 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
       setDetails(null);
       return;
     }
-    localStorage.setItem('token', newToken as string);
+    localStorage.setItem('mgnify.token', newToken as string);
     setAuthTokenInternally(newToken);
     const userDetailsFromToken = getUserDetailsFromToken(newToken as string);
-    localStorage.setItem('username', userDetailsFromToken.username);
+    localStorage.setItem('mgnify.username', userDetailsFromToken.username);
     setUser({
       username: userDetailsFromToken.username,
       token: newToken,
