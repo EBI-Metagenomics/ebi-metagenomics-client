@@ -7,11 +7,27 @@ export const updateQueryParams = (key: string, value: string) => {
   const updatedUrl = currentUrl.toString();
   window.history.replaceState(null, null, updatedUrl);
 };
+export const updateLocusQueryParams = (locusSearchString, start, end) => {
+  const currentUrl = new URL(window.location.href);
+  const contigId = currentUrl.searchParams.get('contig_id');
+  if (contigId) {
+    currentUrl.searchParams.set('contig_id', locusSearchString);
+    currentUrl.searchParams.set('start', start);
+    currentUrl.searchParams.set('end', end);
+  } else {
+    currentUrl.searchParams.set(
+      'feature-id',
+      `${locusSearchString}:${start}-${end}`
+    );
+  }
+  const updatedUrl = currentUrl.toString();
+  window.history.replaceState(null, null, updatedUrl);
+};
 
 export const resolveQueryParameters = (browser: Browser) => {
   const currentUrl = new URL(window.location.href);
   const featureId = currentUrl.searchParams.get('feature-id');
-  const contigId = currentUrl.searchParams.get('contig-id');
+  const contigId = currentUrl.searchParams.get('contig_id');
   const selectedTrackColor = currentUrl.searchParams.get(
     'functional-annotation'
   );
@@ -37,7 +53,7 @@ export const handleLocusChanges = (
 ) => {
   browser.on('locuschange', (referenceFrame) => {
     const { locusSearchString, start, end } = referenceFrame[0];
-    updateQueryParams('feature-id', `${locusSearchString}:${start}-${end}`);
+    updateLocusQueryParams(locusSearchString, start, end);
   });
   setIgvBrowser(browser);
   setLoading(false);
