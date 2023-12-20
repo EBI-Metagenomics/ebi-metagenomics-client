@@ -148,6 +148,7 @@ const MainMenu: React.FC = () => {
         style={{
           marginLeft: animationState.marginLeft,
           opacity: animationState.opacity,
+          display: isSmall ? 'block' : 'none',
         }}
         ref={imgRef}
       />

@@ -36,6 +36,7 @@
     "@sentry/react": "^6.17.2",
     "@sentry/tracing": "^6.17.2",
     "@tippyjs/react": "4.2.6",
+    "@visual-framework/vf-mega-menu": "^1.0.0-alpha.1",
     "axios": "^1.5.1",
     "dexie": "3.2.2",
     "dexie-react-hooks": "1.1.1",
