@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
-import { clearParams } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
-import ExtLink from 'components/UI/ExtLink';
+import React, { useRef, useState } from 'react';
 import ArrowForLink from 'components/UI/ArrowForLink';
+import Link from 'components/UI/Link';
+import { getDetailOrSearchURLForQuery } from 'utils/accessions';
+import { createParamFromURL } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
+import useQueryParamsStore from 'hooks/queryParamState/QueryParamStore/useQueryParamsStore';
+import { useNavigate } from 'react-router-dom';
 
 const MegaMenu: React.FC = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  const { dispatch } = useQueryParamsStore();
+
+  const navigate = useNavigate();
 
   const handleMouseEnter = (sectionId: string) => {
     setMenuVisible(true);
@@ -16,6 +23,29 @@ const MegaMenu: React.FC = () => {
     setMenuVisible(false);
     setActiveSection(null);
   };
+
+  const searchBox = useRef<HTMLInputElement>();
+  const [isAccessionLike, setIsAccessionLike] = useState(false);
+  const [nextURL, setNextURL] = useState('/search/studies');
+
+  const handleInput = () => {
+    if (!searchBox.current) return;
+    const accessionMatcherResults = getDetailOrSearchURLForQuery(
+      searchBox.current.value.trim()
+    );
+    setNextURL(accessionMatcherResults.nextURL);
+    setIsAccessionLike(accessionMatcherResults.isAccessionLike);
+  };
+
+  const setSearchQuery = (query: string) => {
+    dispatch(
+      createParamFromURL({
+        name: 'query',
+        value: query,
+      })
+    );
+  };
+
   return (
     <>
       <div className="vf-global-header vf-mega-menu" role="menubar">
@@ -26,7 +56,7 @@ const MegaMenu: React.FC = () => {
               <a
                 className="vf-navigation__link vf-mega-menu__link"
                 id="demo-topics-content-section"
-                href="/"
+                href="/metagenomics"
               >
                 Overview
               </a>
@@ -35,19 +65,24 @@ const MegaMenu: React.FC = () => {
               <a
                 className="vf-navigation__link vf-mega-menu__link"
                 id="demo-organization-content-section"
-                href="/orgfwfwfwanization"
+                href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo"
               >
                 Submit data &nbsp;
                 <span className="icon icon-common icon-external-link-alt" />
               </a>
             </li>
             <li className="vf-navigation__item">
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
                   activeSection === 'text-search-section' ? 'active' : ''
                 }`}
                 id="text-search-section"
-                href="Javascript:void(0)"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleMouseEnter('text-search-section');
+                }}
                 onMouseEnter={() => handleMouseEnter('text-search-section')}
               >
                 Text search
@@ -55,7 +90,7 @@ const MegaMenu: React.FC = () => {
             </li>
             <li className="vf-navigation__item">
               <a
-                href="http://www.embl.org/fwfwfwwf"
+                href="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
                 className="vf-navigation__link vf-mega-menu__link"
               >
                 Sequence search &nbsp;
@@ -102,7 +137,7 @@ const MegaMenu: React.FC = () => {
               <a
                 className="vf-navigation__link vf-mega-menu__link"
                 id="demo-search-content-section"
-                href="/search"
+                href="/metagenomics/login"
               >
                 Login
               </a>
@@ -134,32 +169,50 @@ const MegaMenu: React.FC = () => {
                     <nav className="vf-navigation vf-navigation--main">
                       <ul className="vf-navigation__list | vf-list | vf-cluster__inner | vf-stack vf-stack--200">
                         <li className="vf-navigation__item">
-                          <a href="/" className="vf-navigation__link">
+                          <a
+                            href="/"
+                            className="vf-navigation__link rotating-link"
+                          >
                             Super studies <ArrowForLink />
                           </a>
                         </li>
                         <li className="vf-navigation__item">
-                          <a href="/" className="vf-navigation__link">
+                          <a
+                            href="/"
+                            className="vf-navigation__link rotating-link"
+                          >
                             Studies <ArrowForLink />
                           </a>
                         </li>
                         <li className="vf-navigation__item">
-                          <a href="/" className="vf-navigation__link">
+                          <a
+                            href="/"
+                            className="vf-navigation__link rotating-link"
+                          >
                             Samples <ArrowForLink />
                           </a>
                         </li>
                         <li className="vf-navigation__item">
-                          <a href="/" className="vf-navigation__link">
+                          <a
+                            href="/"
+                            className="vf-navigation__link rotating-link"
+                          >
                             Publications <ArrowForLink />
                           </a>
                         </li>
                         <li className="vf-navigation__item">
-                          <a href="/" className="vf-navigation__link">
+                          <a
+                            href="/"
+                            className="vf-navigation__link rotating-link"
+                          >
                             Genomes <ArrowForLink />
                           </a>
                         </li>
                         <li className="vf-navigation__item">
-                          <a href="/" className="vf-navigation__link">
+                          <a
+                            href="/"
+                            className="vf-navigation__link rotating-link"
+                          >
                             Biomes <ArrowForLink />
                           </a>
                         </li>
@@ -186,34 +239,103 @@ const MegaMenu: React.FC = () => {
                   </p>
                 </div>
                 <div className="vf-section-content">
-                  <form className="vf-form vf-form--search vf-sidebar vf-sidebar--end mg-text-search">
+                  <form
+                    className="vf-form vf-form--search vf-form--search--mini | vf-sidebar vf-sidebar--end"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      const searchText = searchBox.current.value;
+                      if (!isAccessionLike) {
+                        setSearchQuery(searchText);
+                      }
+                      navigate(nextURL);
+                      searchBox.current.value = '';
+                      searchBox.current.blur();
+                    }}
+                  >
                     <div className="vf-sidebar__inner">
-                      <div className="vf-form__item | vf-search__item">
+                      <div className="vf-form__item">
+                        <label
+                          className="vf-form__label vf-u-sr-only | vf-search__label"
+                          htmlFor="searchitem"
+                        >
+                          Search
+                        </label>
                         <input
-                          type="text"
-                          placeholder="Enter your search terms"
-                          id="mg-text-search"
-                          className="vf-form__input | st-default-search-input mg-text-search-textfield"
+                          type="search"
+                          onChange={handleInput}
+                          placeholder="Search MGnify"
+                          ref={searchBox}
+                          className="vf-form__input"
                         />
                       </div>
-                      <div className="vf-form__item | vf-search__item">
+                      <div className="search-buttons-container">
                         <button
-                          type="submit"
-                          className="vf-search__button | vf-button vf-button--primary mg-text-search-button"
+                          type={isAccessionLike ? 'submit' : 'button'}
+                          className={`vf-search__button | vf-button vf-button--primary slide-in-button ${
+                            isAccessionLike
+                              ? 'slide-in-shown'
+                              : 'slide-in-hidden'
+                          }`}
                         >
-                          <span className="vf-button__text">Search </span>
-                          <span className="icon icon-common icon-search" />
+                          <span className="vf-button__text | vf-u-sr-only">
+                            Go
+                          </span>
+
+                          <span className="icon icon-common icon-arrow-circle-right" />
                         </button>
                         <button
-                          type="button"
-                          className="vf-search__button | vf-button vf-button--tertiary mg-text-search-clear"
+                          type={isAccessionLike ? 'button' : 'submit'}
+                          onClick={
+                            !isAccessionLike
+                              ? null
+                              : () => {
+                                  const searchText = searchBox.current.value;
+                                  setSearchQuery(searchText);
+                                  navigate('/search/submit');
+                                }
+                          }
+                          className={`vf-search__button | vf-button vf-button--${
+                            isAccessionLike ? 'secondary' : 'primary'
+                          }`}
                         >
-                          <span className="vf-button__text">Clear All </span>
-                          <span className="icon icon-common icon-times-circle" />
+                          <span className="vf-button__text | vf-u-sr-only">
+                            Search
+                          </span>
+
+                          <span className="icon icon-common icon-search" />
                         </button>
                       </div>
                     </div>
+                    <div style={{ padding: '0 4px' }}>
+                      <p className="vf-text-body--5">
+                        Example searches:{' '}
+                        <Link
+                          to="/search/studies"
+                          state={{ query: 'tara oceans' }}
+                          className="vf-link"
+                        >
+                          Tara oceans
+                        </Link>
+                        ,{' '}
+                        <Link
+                          to="/search/studies"
+                          state={{ query: 'MGYS00000410' }}
+                          className="vf-link"
+                        >
+                          MGYS00000410
+                        </Link>
+                        ,{' '}
+                        <Link
+                          to="/search/studies"
+                          state={{ query: 'human gut' }}
+                          className="vf-link"
+                        >
+                          Human Gut
+                        </Link>
+                      </p>
+                    </div>
                   </form>
+                  {/* <TextSearch /> */}
                   <div className="vf-section-header  vf-u-margin__top--800">
                     <h2
                       className="vf-section-header__heading"
@@ -224,18 +346,23 @@ const MegaMenu: React.FC = () => {
                   </div>
                   <ul className="vf-list vf-u-margin__bottom--800">
                     <li className="vf-list__item">
-                      <a href="/parago" className="vf-link">
-                        Studies <span className="mg-number">4600</span>
+                      <a href="/parago" className="vf-link rotating-link">
+                        Studies <ArrowForLink />
                       </a>
                     </li>
                     <li className="vf-list__item">
-                      <a href="/dd" className="vf-link">
-                        Samples <span className="mg-number">(4600)</span>
+                      <a href="/dd" className="vf-link rotating-link">
+                        Samples <ArrowForLink />
                       </a>
                     </li>
                     <li className="vf-list__item">
-                      <a href="/gg" className="vf-link">
-                        Publications <span className="mg-number">(4600)</span>
+                      <a href="/gg" className="vf-link rotating-link">
+                        Publications <ArrowForLink />
+                      </a>
+                    </li>
+                    <li className="vf-list__item">
+                      <a href="/gg" className="vf-link rotating-link">
+                        Go to the full search page <ArrowForLink />
                       </a>
                     </li>
                   </ul>
@@ -270,28 +397,28 @@ const MegaMenu: React.FC = () => {
                         </div>
                         <li className="vf-navigation__item">
                           <a
-                            href="JavaScript:Void(0);"
-                            className="vf-navigation__link"
+                            href="https://docs.mgnify.org/"
+                            className="vf-navigation__link rotating-link"
                           >
                             <span className="icon icon-generic" data-icon=";" />{' '}
-                            User documentation
+                            User docs
                             <ArrowForLink />
                           </a>
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="JavaScript:Void(0);"
-                            className="vf-navigation__link"
+                            href="https://shiny-portal.embl.de/shinyapps/app/06_mgnify-notebook-lab?jlpath=mgnify-examples/home.ipynb"
+                            className="vf-navigation__link rotating-link"
                           >
-                            <i className="icon icon-common icon-code" /> API
-                            access
+                            <i className="icon icon-common icon-code" />
+                            API access
                             <ArrowForLink />
                           </a>
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="JavaScript:Void(0);"
-                            className="vf-navigation__link"
+                            href="https://hmmer-web-docs.readthedocs.io/en/latest/index.html"
+                            className="vf-navigation__link rotating-link"
                           >
                             <span
                               className="icon icon-functional"
@@ -303,8 +430,8 @@ const MegaMenu: React.FC = () => {
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="JavaScript:Void(0);"
-                            className="vf-navigation__link"
+                            href="http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/current_release/README.txt"
+                            className="vf-navigation__link rotating-link"
                           >
                             <span
                               className="icon icon-functional"
@@ -327,38 +454,62 @@ const MegaMenu: React.FC = () => {
                         </div>
                         <li className="vf-navigation__item">
                           <a
-                            href="JavaScript:Void(0);"
+                            href="https://www.ebi.ac.uk/training/about"
                             className="vf-navigation__link"
+                            target="_blank"
+                            rel="noreferrer"
                           >
-                            Tutorial about the MGnify website
+                            About EMBL-EBI Training &nbsp;
+                            <span className="icon icon-common icon-external-link-alt" />
                           </a>
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="https://www.ebi.ac.uk/about/contact/support/metagenomics"
+                            href="https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-portal-quick-tour"
                             className="vf-navigation__link"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Tutorial about the MGnify website &nbsp;
+                            <span className="icon icon-common icon-external-link-alt" />
+                          </a>
+                        </li>
+                        <li className="vf-navigation__item">
+                          <a
+                            href="https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-portal-submitting-metagenomics-da"
+                            className="vf-navigation__link"
+                            target="_blank"
+                            rel="noreferrer"
                           >
                             Tutorial describing the data submission process
+                            &nbsp;
+                            <span className="icon icon-common icon-external-link-alt" />
                           </a>
                         </li>
 
                         <li className="vf-navigation__item">
                           <a
-                            href="https://www.ebi.ac.uk/about/contact/support/metagenomics"
+                            href="https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-analysing-and-exploring-metagenomics-data"
                             className="vf-navigation__link"
+                            target="_blank"
+                            rel="noreferrer"
                           >
                             A webinar explaining about Mgnify and the analysis
-                            you can perform
+                            you can perform &nbsp;
+                            <span className="icon icon-common icon-external-link-alt" />
                           </a>
                         </li>
 
                         <li className="vf-navigation__item">
                           <a
-                            href="https://www.ebi.ac.uk/about/contact/support/metagenomics"
+                            href="https://www.ebi.ac.uk/training/online/course/metagenomics-bioinformatics"
                             className="vf-navigation__link"
+                            target="_blank"
+                            rel="noreferrer"
                           >
                             Recorded materials from the Metagenomics
-                            Bioinformatics course run at EMBL-EBI in 2018
+                            Bioinformatics course run at EMBL-EBI in 2018 &nbsp;
+                            <span className="icon icon-common icon-external-link-alt" />
                           </a>
                         </li>
                       </ul>
@@ -375,18 +526,24 @@ const MegaMenu: React.FC = () => {
                         </div>
                         <li className="vf-navigation__item">
                           <a
-                            href="JavaScript:Void(0);"
+                            href="https://status.mgnify.org/"
                             className="vf-navigation__link"
+                            target="_blank"
+                            rel="noreferrer"
                           >
-                            Service status page
+                            Service status page &nbsp;
+                            <span className="icon icon-common icon-external-link-alt" />
                           </a>
                         </li>
                         <li className="vf-navigation__item">
                           <a
                             href="https://www.ebi.ac.uk/about/contact/support/metagenomics"
                             className="vf-navigation__link"
+                            target="_blank"
+                            rel="noreferrer"
                           >
-                            Support and feedback
+                            Support and feedback &nbsp;
+                            <span className="icon icon-common icon-external-link-alt" />
                           </a>
                         </li>
                       </ul>
