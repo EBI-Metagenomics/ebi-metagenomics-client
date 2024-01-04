@@ -133,6 +133,7 @@ const GenomeBrowser: React.FC = () => {
         resolveQueryParameters(browser, options.tracks[0].name);
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [config.api, accession, hasVirify, virifyGffUrl]
   );
 
