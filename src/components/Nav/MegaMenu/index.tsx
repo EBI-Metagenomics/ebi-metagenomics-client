@@ -1,12 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import Link from 'components/UI/Link';
 import { getDetailOrSearchURLForQuery } from 'utils/accessions';
 import { createParamFromURL } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
 import useQueryParamsStore from 'hooks/queryParamState/QueryParamStore/useQueryParamsStore';
 import { useNavigate } from 'react-router-dom';
+import UserContext from 'pages/Login/UserContext';
 
 const MegaMenu: React.FC = () => {
+  const { isAuthenticated } = useContext(UserContext);
   const [menuVisible, setMenuVisible] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
@@ -61,14 +63,25 @@ const MegaMenu: React.FC = () => {
                 Overview
               </a>
             </li>
+            {/* <li className="vf-navigation__item"> */}
+            {/*  <a */}
+            {/*    className="vf-navigation__link vf-mega-menu__link" */}
+            {/*    id="demo-organization-content-section" */}
+            {/*    href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo" */}
+            {/*  > */}
+            {/*    Submit data &nbsp; */}
+            {/*    <span className="icon icon-common icon-external-link-alt" /> */}
+            {/*  </a> */}
+            {/* </li> */}
             <li className="vf-navigation__item">
               <a
-                className="vf-navigation__link vf-mega-menu__link"
-                id="demo-organization-content-section"
-                href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo"
+                className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
+                  activeSection === 'submit-data-section' ? 'active' : ''
+                }`}
+                href="Javascript:void(0)"
+                onMouseEnter={() => handleMouseEnter('submit-data-section')}
               >
-                Submit data &nbsp;
-                <span className="icon icon-common icon-external-link-alt" />
+                Submit data
               </a>
             </li>
             <li className="vf-navigation__item">
@@ -133,15 +146,30 @@ const MegaMenu: React.FC = () => {
               </a>
             </li>
 
-            <li className="vf-navigation__item">
-              <a
-                className="vf-navigation__link vf-mega-menu__link"
-                id="demo-search-content-section"
-                href="/metagenomics/login"
-              >
-                Login
-              </a>
-            </li>
+            {isAuthenticated ? (
+              <li className="vf-navigation__item">
+                <a
+                  className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
+                    activeSection === 'login-section' ? 'active' : ''
+                  }`}
+                  id="login-section"
+                  href="Javascript:void(0)"
+                  onMouseEnter={() => handleMouseEnter('login-section')}
+                >
+                  My data
+                </a>
+              </li>
+            ) : (
+              <li className="vf-navigation__item">
+                <a
+                  className="vf-navigation__link vf-mega-menu__link"
+                  id="demo-search-content-section"
+                  href="/metagenomics/login"
+                >
+                  Login
+                </a>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
@@ -214,6 +242,46 @@ const MegaMenu: React.FC = () => {
                             className="vf-navigation__link rotating-link"
                           >
                             Biomes <ArrowForLink />
+                          </a>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+              </section>
+            </div>
+          )}
+          {activeSection === 'submit-data-section' && (
+            <div
+              className="vf-mega-menu__content__section"
+              id="browse-content-section"
+              role="menu"
+              onMouseLeave={handleMouseLeave}
+              aria-hidden={activeSection !== 'submit-data-section'}
+            >
+              <section className="vf-summary-container | embl-grid">
+                <div className="vf-section-header">
+                  <h2 className="vf-section-header__heading">Submit data</h2>
+                  <p className="vf-section-header__text">
+                    MGnify require data to be available in ENA before analysis.
+                    To submit to MGnify, please submit your sequences to ENA and
+                    grant MGnify permission to access metagenomic data in your
+                    Webin account
+                  </p>
+                </div>
+                <div className="vf-section-content | vf-grid vf-grid__col-3">
+                  <div>
+                    <nav className="vf-navigation vf-navigation--main">
+                      <ul className="vf-navigation__list | vf-list | vf-cluster__inner | vf-stack vf-stack--200">
+                        <li className="vf-navigation__item">
+                          <a
+                            target="_blank"
+                            href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo"
+                            className="vf-navigation__link rotating-link"
+                            rel="noreferrer"
+                          >
+                            ENA submission portal &nbsp;
+                            <span className="icon icon-common icon-external-link-alt" />
                           </a>
                         </li>
                       </ul>
@@ -544,6 +612,57 @@ const MegaMenu: React.FC = () => {
                           >
                             Support and feedback &nbsp;
                             <span className="icon icon-common icon-external-link-alt" />
+                          </a>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+              </section>
+            </div>
+          )}
+
+          {activeSection === 'login-section' && (
+            <div
+              className="vf-mega-menu__content__section"
+              id="browse-content-section"
+              role="menu"
+              onMouseLeave={handleMouseLeave}
+              aria-hidden={activeSection !== 'login-section'}
+            >
+              <section className="vf-summary-container | embl-grid">
+                <div className="vf-section-header">
+                  <h2 className="vf-section-header__heading">My Data</h2>
+                  <p className="vf-section-header__text">
+                    Access your data and Webin account information
+                  </p>
+                </div>
+                <div className="vf-section-content | vf-grid vf-grid__col-3">
+                  <div>
+                    <nav className="vf-navigation vf-navigation--main">
+                      <ul className="vf-navigation__list | vf-list | vf-cluster__inner | vf-stack vf-stack--200">
+                        <li className="vf-navigation__item">
+                          <a
+                            href="/metagenomics/mydata"
+                            className="vf-navigation__link rotating-link"
+                          >
+                            My studies
+                          </a>
+                        </li>
+                        <li className="vf-navigation__item">
+                          <a
+                            href="/metagenomics/login"
+                            className="vf-navigation__link rotating-link"
+                          >
+                            My account
+                          </a>
+                        </li>
+                        <li className="vf-navigation__item">
+                          <a
+                            href="/metagenomics/login"
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Logout
                           </a>
                         </li>
                       </ul>
