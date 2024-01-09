@@ -75,7 +75,7 @@ const ContigsTable: React.FC = () => {
   );
 
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
-  const assemblyId = analysisOverviewData.relationships.assembly.data.id;
+  const assemblyId = analysisOverviewData.relationships.assembly?.data?.id;
   const { crates, loading: loadingCrates } = useCrates(
     `assemblies/${assemblyId}/extra-annotations`
   );
