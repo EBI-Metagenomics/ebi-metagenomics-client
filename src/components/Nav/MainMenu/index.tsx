@@ -40,6 +40,7 @@ const Nav: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <nav className="vf-navigation vf-navigation--main | vf-cluster vf-u-fullbleed">
@@ -80,6 +81,7 @@ const MobileNav: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>
@@ -113,6 +115,7 @@ const MainMenu: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useLayoutEffect(() => {
     const onScroll = (): void => {

@@ -37,7 +37,17 @@ const GenomePage: React.FC = () => {
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const { data: genomeData } = data as MGnifyResponseObj;
-  const relatedCatalogue = genomeData.relationships.catalogue as any;
+  type RelatedCatalogue = {
+    data: {
+      id: string;
+      type: string;
+    };
+    links: {
+      related: string;
+    };
+  };
+  const relatedCatalogue = genomeData.relationships
+    .catalogue as RelatedCatalogue;
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     {
