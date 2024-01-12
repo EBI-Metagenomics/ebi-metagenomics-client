@@ -15,24 +15,25 @@ const initialColumnsState = {
     study_id: true,
     ena_id: true,
     biome: true,
-    name: false,
+    name: true,
     description: false,
-    samples: false,
-    analyses: false,
-    centre: true,
+    analyses: true,
+    centre: false,
   },
-  '/search/samples': {
-    sample_id: true,
-    mgnify_id: true,
-    sample_name: true,
-    sample_description: true,
-  },
+  // '/search/samples': {
+  //   sample_id: true,
+  //   mgnify_id: true,
+  //   sample_name: true,
+  //   sample_description: true,
+  // },
   '/search/analyses': {
     analyses_id: true,
     pipeline: true,
     sample_id: true,
     mgnify_id: true,
     experiment: true,
+    sample_name: true,
+    project_name: false,
     assembly: false,
     ena_run: false,
     ena_wgs: false,
@@ -54,11 +55,13 @@ const dataFor = {
         id: 'ena_id',
         Header: 'ENA accession',
         accessor: (study) => study?.fields?.ENA_PROJECT?.[0] || '',
-        Cell: ({ cell }) => (
-          <span>
-            <ExtLink href={ENA_VIEW_URL + cell.value}>{cell.value}</ExtLink>
-          </span>
-        ),
+        Cell: ({ cell }) => {
+          return cell.value === 'None' ? null : (
+            <span>
+              <ExtLink href={ENA_VIEW_URL + cell.value}>{cell.value}</ExtLink>
+            </span>
+          );
+        },
       },
       {
         id: 'biome',
@@ -78,14 +81,14 @@ const dataFor = {
         className: 'break-anywhere',
       },
       {
-        id: 'samples',
-        Header: 'Samples',
-        accessor: (study) => study?.fields?.METAGENOMICS_SAMPLES?.length,
-      },
-      {
         id: 'analyses',
         Header: 'Analyses',
         accessor: (study) => study?.fields?.METAGENOMICS_ANALYSES?.length,
+        Cell: ({ cell, row }) => (
+          <Link to={`/search/analyses?query=${row.original.id}`}>
+            {cell.value}
+          </Link>
+        ),
       },
       {
         id: 'centre',
@@ -94,43 +97,43 @@ const dataFor = {
       },
     ],
   },
-  '/search/samples': {
-    label: 'Samples',
-    columns: [
-      {
-        id: 'sample_id',
-        Header: 'Sample',
-        accessor: (sample) => sample.id,
-        Cell: ({ cell }) => (
-          <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
-        ),
-      },
-      {
-        id: 'mgnify_id',
-        Header: 'MGnify ID',
-        accessor: (sample) => sample?.fields?.METAGENOMICS_PROJECTS?.[0] || '',
-        Cell: ({ cell }) => (
-          <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
-        ),
-      },
-      {
-        id: 'sample_name',
-        Header: 'Name',
-        pathnames: ['/search/studies'],
-        accessor: (study) => study?.fields?.name?.[0],
-        Cell: ({ cell }) => <span>{cell.value}</span>,
-        className: 'break-anywhere',
-      },
-      {
-        id: 'sample_description',
-        Header: 'Description',
-        pathnames: ['/search/studies'],
-        accessor: (study) => study?.fields?.description?.[0],
-        Cell: ({ cell }) => <span>{cell.value}</span>,
-        className: 'break-anywhere',
-      },
-    ],
-  },
+  // '/search/samples': {
+  //   label: 'Samples',
+  //   columns: [
+  //     {
+  //       id: 'sample_id',
+  //       Header: 'Sample',
+  //       accessor: (sample) => sample.id,
+  //       Cell: ({ cell }) => (
+  //         <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
+  //       ),
+  //     },
+  //     {
+  //       id: 'mgnify_id',
+  //       Header: 'MGnify ID',
+  //       accessor: (sample) => sample?.fields?.METAGENOMICS_PROJECTS?.[0] || '',
+  //       Cell: ({ cell }) => (
+  //         <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
+  //       ),
+  //     },
+  //     {
+  //       id: 'sample_name',
+  //       Header: 'Name',
+  //       pathnames: ['/search/studies'],
+  //       accessor: (study) => study?.fields?.name?.[0],
+  //       Cell: ({ cell }) => <span>{cell.value}</span>,
+  //       className: 'break-anywhere',
+  //     },
+  //     {
+  //       id: 'sample_description',
+  //       Header: 'Description',
+  //       pathnames: ['/search/studies'],
+  //       accessor: (study) => study?.fields?.description?.[0],
+  //       Cell: ({ cell }) => <span>{cell.value}</span>,
+  //       className: 'break-anywhere',
+  //     },
+  //   ],
+  // },
   '/search/analyses': {
     label: 'Analyses',
     columns: [
@@ -163,13 +166,26 @@ const dataFor = {
         ),
       },
       {
+        id: 'sample_name',
+        Header: 'Name',
+        accessor: (study) => study?.fields?.name?.[0],
+        Cell: ({ cell }) => <span>{cell.value}</span>,
+        className: 'break-anywhere',
+      },
+      {
         id: 'mgnify_id',
-        Header: 'MGnify ID',
+        Header: 'Study ID',
         accessor: (analysis) =>
           analysis?.fields?.METAGENOMICS_PROJECTS?.[0] || '',
         Cell: ({ cell }) => (
           <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
         ),
+      },
+      {
+        id: 'name',
+        Header: 'Study name',
+        accessor: (analysis) => analysis?.fields?.study_name?.join(', '),
+        className: 'break-anywhere',
       },
       {
         id: 'experiment',

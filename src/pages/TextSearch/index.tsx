@@ -92,12 +92,10 @@ const tabs = [
     label: () => <TextSearchCount to="/search/studies" label="Studies" />,
   },
   {
-    to: '/search/samples',
-    label: () => <TextSearchCount to="/search/samples" label="Samples" />,
-  },
-  {
     to: '/search/analyses',
-    label: () => <TextSearchCount to="/search/analyses" label="Analyses" />,
+    label: () => (
+      <TextSearchCount to="/search/analyses" label="Sample analyses" />
+    ),
   },
 ];
 
@@ -148,33 +146,31 @@ const TextSearchPage: React.FC = () => {
     query: joinQueries([queryParam], 'domain_source:metagenomics_projects'),
     size: pageSizeParam,
     start,
-    /* eslint-disable max-len */
     fields:
-      'ENA_PROJECT,METAGENOMICS_ANALYSES,METAGENOMICS_SAMPLES,biome_name,centre_name,description,name',
-    /* eslint-enable max-len */
+      'ENA_PROJECT,METAGENOMICS_ANALYSES,biome_name,centre_name,description,name',
     facetcount: 10,
     facetsdepth: FACET_DEPTH,
     facets: getFacets([centreNameParam, biomeParam]),
   });
-  const searchDataSamples = useEBISearchData('metagenomics_samples', {
-    query: joinQueries(
-      [queryParam, temperatureParam, depthParam],
-      'domain_source:metagenomics_samples'
-    ),
-    size: pageSizeParam,
-    start,
-    fields: 'METAGENOMICS_PROJECTS,name,description',
-    facetcount: 10,
-    facetsdepth: FACET_DEPTH,
-    facets: getFacets([
-      biomeParam,
-      experimentTypeParam,
-      locationNameParam,
-      diseaseStatusParam,
-      sequencingMethodParam,
-      phenotypeParam,
-    ]),
-  });
+  // const searchDataSamples = useEBISearchData('metagenomics_samples', {
+  //   query: joinQueries(
+  //     [queryParam, temperatureParam, depthParam],
+  //     'domain_source:metagenomics_samples'
+  //   ),
+  //   size: pageSizeParam,
+  //   start,
+  //   fields: 'METAGENOMICS_PROJECTS,name,description',
+  //   facetcount: 10,
+  //   facetsdepth: FACET_DEPTH,
+  //   facets: getFacets([
+  //     biomeParam,
+  //     experimentTypeParam,
+  //     locationNameParam,
+  //     diseaseStatusParam,
+  //     sequencingMethodParam,
+  //     phenotypeParam,
+  //   ]),
+  // });
   const searchDataAnalyses = useEBISearchData('metagenomics_analyses', {
     query: joinQueries(
       [queryParam, temperatureParam, depthParam],
@@ -184,7 +180,7 @@ const TextSearchPage: React.FC = () => {
     start,
     /* eslint-disable max-len */
     fields:
-      'METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,pipeline_version,experiment_type,ASSEMBLY,ENA_RUN,ENA_WGS_SEQUENCE_SET',
+      'METAGENOMICS_PROJECTS,pipeline_version,experiment_type,sample_name,project_name,ENA_RUN,ENA_WGS_SEQUENCE_SET',
     /* eslint-enable max-len */
     facetcount: 10,
     facetsdepth: FACET_DEPTH,
@@ -201,11 +197,10 @@ const TextSearchPage: React.FC = () => {
     () => ({
       searchData: {
         '/search/studies': searchDataStudies,
-        '/search/samples': searchDataSamples,
         '/search/analyses': searchDataAnalyses,
       },
     }),
-    [searchDataStudies, searchDataSamples, searchDataAnalyses]
+    [searchDataStudies, searchDataAnalyses]
   );
 
   return (

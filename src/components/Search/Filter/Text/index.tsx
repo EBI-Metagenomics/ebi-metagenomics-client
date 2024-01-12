@@ -38,7 +38,7 @@ const TextSearch: React.FC = () => {
         <div className="vf-form__item | vf-search__item">
           <button
             type="submit"
-            className="vf-search__button | vf-button vf-button--primary mg-text-search-button"
+            className="vf-search__button | vf-button vf-button--primary mg-text-search-button vf-button--sm"
             onClick={onSubmit}
           >
             <span className="vf-button__text">Search </span>
@@ -46,7 +46,7 @@ const TextSearch: React.FC = () => {
           </button>
           <button
             type="button"
-            className="vf-search__button | vf-button vf-button--tertiary mg-text-search-clear"
+            className="vf-search__button | vf-button vf-button--tertiary mg-text-search-clear vf-button--sm"
             onClick={() => {
               actionDispatcher(clearParams({}));
             }}
