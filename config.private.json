@@ -1,3 +1,4 @@
 {
-  "api": "https://wwwint.ebi.ac.uk/metagenomics/api/v1/"
+  "api": "http://wwwint.ebi.ac.uk/metagenomics/api/v1/",
+  "googleMapsKey": "AIzaSyBUT4xxlaKgoU5m98wjvHkFZGIcWjpgJAU"
 }

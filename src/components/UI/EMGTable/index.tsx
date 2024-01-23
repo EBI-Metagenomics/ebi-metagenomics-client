@@ -13,9 +13,10 @@ import TextInputDebounced from 'components/UI/TextInputDebounced';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
 import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import PaginationButton from './PaginationButton';
 
 import './style.css';
+import DownloadButton from 'components/UI/DownloadButton';
+import PaginationButton from './PaginationButton';
 
 type PaginationRanges = {
   startingPages: number[];
@@ -205,7 +206,6 @@ const EMGTable: React.FC<EMGTableProps> = ({
   };
 
   if (loading && !isStale) return <Loading size="small" />;
-
   return (
     <section data-cy={dataCy}>
       <LoadingOverlay loading={loading && isStale}>
@@ -224,16 +224,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
                   )}
                   {downloadURL && (
                     <div>
-                      {' '}
-                      <a
-                        href={downloadURL}
-                        className="vf-button vf-button--secondary vf-button--sm"
-                        style={{ whiteSpace: 'nowrap', marginBottom: '8px' }}
-                        download
-                      >
-                        <span className="icon icon-common icon-download" />{' '}
-                        Download
-                      </a>
+                      <DownloadButton downloadLink={downloadURL} />
                     </div>
                   )}
                 </div>
