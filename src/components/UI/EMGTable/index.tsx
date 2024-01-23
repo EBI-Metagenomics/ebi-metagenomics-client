@@ -15,6 +15,7 @@ import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 import './style.css';
+// eslint-disable-next-line import/no-unresolved
 import DownloadButton from 'components/UI/DownloadButton';
 import PaginationButton from './PaginationButton';
 
