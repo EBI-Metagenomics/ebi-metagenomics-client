@@ -5,7 +5,6 @@ import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
-// eslint-disable-next-line import/no-unresolved
 import DownloadButton from 'components/UI/DownloadButton';
 
 type DownloadsProps = {
