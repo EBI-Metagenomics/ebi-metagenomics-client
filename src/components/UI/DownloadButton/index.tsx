@@ -20,7 +20,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ downloadLink }) => {
         const blob = new Blob([response.data], {
           type: response.headers['content-type'],
         });
-        const url = window.URL.createObjectURL(blob);
+        const url = URL.createObjectURL(blob);
         const a: HTMLAnchorElement = document.createElement('a');
         a.href = url;
         const filename = downloadLink.split('/').pop();
