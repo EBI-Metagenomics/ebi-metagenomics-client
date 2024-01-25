@@ -20,7 +20,7 @@ const Login: React.FC = () => {
   const passwordRef = useRef(null);
   const loginErrorsContainerRef = useRef(null);
 
-  const loggedInUsername = localStorage.getItem('username');
+  const loggedInUsername = localStorage.getItem('mgnify.username');
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -48,8 +48,8 @@ const Login: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     setAuthToken(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
+    localStorage.removeItem('mgnify.token');
+    localStorage.removeItem('mgnify.username');
   };
 
   useEffect(() => {
