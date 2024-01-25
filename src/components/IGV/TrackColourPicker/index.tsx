@@ -28,6 +28,15 @@ function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
   return null;
 }
 
+function maybeFeatureType(feature) {
+  if (feature.type === 'ncrna') {
+    console.log('type', feature);
+  }
+  if (!feature || !feature.getAttributeValue) return null;
+  // eslint-disable-next-line no-restricted-syntax
+  return feature.type === 'ncrna' || feature.type === 'ncRNA';
+}
+
 export const FORMAT = {
   GENOME: 'GENOME',
   ASSEMBLY_V5: 'ASSEMBLY_V5',
@@ -136,11 +145,9 @@ export const annotationTrackCustomisations = (trackColorBy, format) => {
       };
     case 'ncrna':
       return {
-        nameField: format === FORMAT.GENOME ? 'KEGG' : 'kegg',
+        nameField: format === FORMAT.GENOME ? 'ncRNA' : 'ncrna',
         color: (feature) =>
-          !maybeGetAttributeValue(feature, ['ncrna'])
-            ? COLOUR_ABSENCE
-            : COLOUR_PRESENCE,
+          maybeFeatureType(feature) ? COLOUR_PRESENCE : COLOUR_ABSENCE,
       };
     default:
       return {
@@ -205,6 +212,7 @@ const trackColorOptionsForType = (track) => {
               { label: 'MiBIG class', value: 'mibig' },
               { label: 'ViPhOG existence', value: 'viphog' },
               { label: 'CRISPR component', value: 'crispr' },
+              { label: 'ncRNA existence', value: 'ncrna' },
             ],
           },
         ],

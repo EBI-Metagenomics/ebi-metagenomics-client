@@ -42,8 +42,12 @@ const GenomeBrowser: React.FC = () => {
         ...trackColorBys,
         [trackId]: option,
       });
+      console.log('parent trackId', trackId);
+      console.log('parent option', option);
     }
-    updateQueryParams('functional-annotation', option.value);
+    if (option.value !== 'viphog') {
+      updateQueryParams('functional-annotation', option.value);
+    }
   };
 
   const igvContainer = useCallback(
@@ -105,6 +109,8 @@ const GenomeBrowser: React.FC = () => {
               ...trackColorBys,
               [options.tracks[0].name]: trackColorBy,
             });
+            console.log('child tracks', options.tracks[0].name);
+            console.log('child trackColorBy', trackColorBy);
           },
           setLoading
         );
@@ -124,11 +130,19 @@ const GenomeBrowser: React.FC = () => {
           ...trackView.track.config,
           ...annotationTrackCustomisations(colorBy.value, FORMAT.GENOME),
         };
-        if (newTrackConfig.nameField !== trackView.track.config.nameField) {
-          // Prevent unnecessary track reloads
-          tracksToRemove.push(trackView.track.id);
-          tracksToAdd.push(newTrackConfig);
-        }
+        console.log('newTrackConfig.nameField', newTrackConfig.nameField);
+        // check if track already added before adding it again:
+        let trackAlreadyAdded = false;
+        trackAlreadyAdded =
+          newTrackConfig.nameField === trackView.track.config.nameField;
+
+        tracksToAdd.push(newTrackConfig);
+        console.log('tracksToAdd', tracksToAdd);
+        // if (newTrackConfig.nameField !== trackView.track.config.nameField) {
+        //   // Prevent unnecessary track reloads
+        //   tracksToRemove.push(trackView.track.id);
+        //   tracksToAdd.push(newTrackConfig);
+        // }
       }
     });
     tracksToRemove.forEach((track) => igvBrowser.removeTrackByName(track));
