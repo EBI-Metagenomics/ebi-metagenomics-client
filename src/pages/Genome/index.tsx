@@ -5,7 +5,7 @@ import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import Overview from 'components/Genomes/Overview';
-import Downloads from 'components/Downloads';
+import Downloads from 'components/UI/Downloads';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseObj } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';

@@ -5,6 +5,7 @@ import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
+import DownloadButton from 'components/UI/DownloadButton';
 
 type DownloadsProps = {
   endpoint: string;
@@ -35,16 +36,7 @@ const Downloads: React.FC<DownloadsProps> = ({ endpoint, accession }) => {
       {
         Header: 'Action',
         accessor: 'links.self',
-        Cell: ({ cell }) => (
-          <a
-            href={cell.value}
-            className="vf-button vf-button--link"
-            style={{ whiteSpace: 'nowrap' }}
-            download
-          >
-            <span className="icon icon-common icon-download" /> Download
-          </a>
-        ),
+        Cell: ({ cell }) => <DownloadButton downloadLink={cell.value} />,
       },
     ],
     []
