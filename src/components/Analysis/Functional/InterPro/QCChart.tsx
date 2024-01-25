@@ -16,15 +16,15 @@ function getSeriesCategory(
   seqData: { key: string; value: string }[],
   category: string
 ) {
-  let series = seqData.find(({ key }) => key === category);
+  let series = seqData?.find(({ key }) => key === category);
   if (series !== undefined) {
     return series.value;
   }
-  series = seqData.find(({ key }) => key === `Contigs${category}`);
+  series = seqData?.find(({ key }) => key === `Contigs${category}`);
   if (series !== undefined) {
     return series.value;
   }
-  series = seqData.find(({ key }) => key === `Reads${category}`);
+  series = seqData?.find(({ key }) => key === `Reads${category}`);
   if (series !== undefined) {
     return series.value;
   }
@@ -34,6 +34,7 @@ function getSeriesCategory(
 const InterProQCChart: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+  console.log('overviewData', overviewData);
 
   const isAssembly = overviewData.attributes['experiment-type'] === 'assembly';
   const seqData = overviewData.attributes['analysis-summary'];
