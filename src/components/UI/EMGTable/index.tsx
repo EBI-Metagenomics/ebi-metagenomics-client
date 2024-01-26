@@ -15,10 +15,9 @@ import LoadingOverlay from 'components/UI/LoadingOverlay';
 import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
-import PaginationButton from './PaginationButton';
-import './style.css';
 import DownloadButton from 'components/UI/DownloadButton';
 import PaginationButton from './PaginationButton';
+import './style.css';
 
 type PaginationRanges = {
   startingPages: number[];
