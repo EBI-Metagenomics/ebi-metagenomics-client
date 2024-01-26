@@ -86,7 +86,7 @@ export let Util = {
         "start=0&" +
         "query=domain_source:metagenomics_analyses&" +
         "size=0&" +
-        "fields=id,name,description,biome_name,metagenomics_samples&" +
+        "fields=id,name,description,biome_name&" +
         "facetcount=0&" +
         "facetsdepth=5&" +
         `facets=experiment_type:${experimentType}`,
@@ -94,7 +94,7 @@ export let Util = {
     }
     // Basic page load
     cy.intercept("GET",
-      "**ebisearch/ws/rest/metagenomics_projects?format=json&start=0&query=domain_source:metagenomics_projects&size=25&fields=ENA_PROJECT,METAGENOMICS_ANALYSES,METAGENOMICS_SAMPLES,biome_name,centre_name,description,name&facetcount=10&facetsdepth=4&facets=",
+      "**ebisearch/ws/rest/metagenomics_projects?format=json&start=0&query=domain_source:metagenomics_projects&size=25&fields=ENA_PROJECT,METAGENOMICS_ANALYSES,biome_name,centre_name,description,name&facetcount=10&facetsdepth=4&facets=",
       {
         fixture: "search/metagenomicsProjectsDepth4.json"
       }).as("basicProjects");
@@ -105,33 +105,14 @@ export let Util = {
         "start=0",
         "query=domain_source:metagenomics_projects",
         "size=0",
-        "fields=id,name,description,biome_name,metagenomics_samples",
+        "fields=id,name,description,biome_name",
         "facetcount=0",
         "facetsdepth=5"
       ].join("&"),
       { fixture: "search/projectsInitFilters.json" }).as("basicProjectFilters");
 
     cy.intercept("GET",
-      "**ebisearch/ws/rest/metagenomics_samples?format=json&start=0&query=domain_source:metagenomics_samples&size=25&fields=METAGENOMICS_PROJECTS,name,description&facetcount=10&facetsdepth=4&facets=",
-      {
-        fixture: "search/metagenomicsSamplesDepth4.json"
-      }).as("basicSamples");
-
-
-    cy.intercept("GET",
-      "**/ebisearch/ws/rest/metagenomics_samples?format=json&" +
-      [
-        "start=0",
-        "query=domain_source:metagenomics_samples",
-        "size=0",
-        "fields=id,name,description,biome_name,metagenomics_samples",
-        "facetcount=0",
-        "facetsdepth=5"
-      ].join("&"),
-      { fixture: "search/samplesInitFilters.json" }).as("basicSampleFilters");
-
-    cy.intercept("GET",
-      "**ebisearch/ws/rest/metagenomics_analyses?format=json&start=0&query=domain_source:metagenomics_analyses&size=25&fields=METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,pipeline_version,experiment_type,ASSEMBLY,ENA_RUN,ENA_WGS_SEQUENCE_SET&facetcount=10&facetsdepth=4&facets=",
+      "**ebisearch/ws/rest/metagenomics_analyses?format=json&start=0&query=domain_source:metagenomics_analyses&size=25&fields=METAGENOMICS_PROJECTS,pipeline_version,experiment_type,sample_name,project_name,ENA_RUN,ANALYSIS,SRA-SAMPLE&facetcount=10&facetsdepth=4&facets=",
       {
         fixture: "search/metagenomicsAnalysesDepth4.json"
       }).as("basicAnalyses");
@@ -142,7 +123,7 @@ export let Util = {
         "start=0",
         "query=domain_source:metagenomics_analyses",
         "size=0",
-        "fields=id,name,description,biome_name,metagenomics_samples",
+        "fields=id,name,description,biome_name",
         "facetcount=0",
         "facetsdepth=5"
       ].join("&"),

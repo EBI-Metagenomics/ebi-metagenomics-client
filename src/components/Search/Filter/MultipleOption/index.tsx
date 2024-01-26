@@ -12,7 +12,6 @@ import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const location2endpoint = {
   '/search/studies': 'metagenomics_projects',
-  '/search/samples': 'metagenomics_samples',
   '/search/analyses': 'metagenomics_analyses',
 };
 const INCREMENT = 100;

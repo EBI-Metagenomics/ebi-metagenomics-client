@@ -36,6 +36,10 @@
   transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s;
 }
 
+.mg-logical-operator-switch:before {
+  content: 'all any';
+}
+
 .mg-switch:checked {
   background-color: var(--vf-theme--primary);
 }

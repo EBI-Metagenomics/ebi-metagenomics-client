@@ -8,6 +8,7 @@ import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 import { ENA_VIEW_URL } from 'utils/urls';
+import { uniq } from 'lodash-es';
 import ColumnSelector from './ColumnSelector';
 
 const initialColumnsState = {
@@ -20,12 +21,6 @@ const initialColumnsState = {
     analyses: true,
     centre: false,
   },
-  // '/search/samples': {
-  //   sample_id: true,
-  //   mgnify_id: true,
-  //   sample_name: true,
-  //   sample_description: true,
-  // },
   '/search/analyses': {
     analyses_id: true,
     pipeline: true,
@@ -36,7 +31,6 @@ const initialColumnsState = {
     project_name: false,
     assembly: false,
     ena_run: false,
-    ena_wgs: false,
   },
 };
 const dataFor = {
@@ -79,6 +73,7 @@ const dataFor = {
         Header: 'Description',
         accessor: (study) => study?.fields?.description?.join('. '),
         className: 'break-anywhere',
+        isFullWidth: true,
       },
       {
         id: 'analyses',
@@ -97,43 +92,6 @@ const dataFor = {
       },
     ],
   },
-  // '/search/samples': {
-  //   label: 'Samples',
-  //   columns: [
-  //     {
-  //       id: 'sample_id',
-  //       Header: 'Sample',
-  //       accessor: (sample) => sample.id,
-  //       Cell: ({ cell }) => (
-  //         <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
-  //       ),
-  //     },
-  //     {
-  //       id: 'mgnify_id',
-  //       Header: 'MGnify ID',
-  //       accessor: (sample) => sample?.fields?.METAGENOMICS_PROJECTS?.[0] || '',
-  //       Cell: ({ cell }) => (
-  //         <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
-  //       ),
-  //     },
-  //     {
-  //       id: 'sample_name',
-  //       Header: 'Name',
-  //       pathnames: ['/search/studies'],
-  //       accessor: (study) => study?.fields?.name?.[0],
-  //       Cell: ({ cell }) => <span>{cell.value}</span>,
-  //       className: 'break-anywhere',
-  //     },
-  //     {
-  //       id: 'sample_description',
-  //       Header: 'Description',
-  //       pathnames: ['/search/studies'],
-  //       accessor: (study) => study?.fields?.description?.[0],
-  //       Cell: ({ cell }) => <span>{cell.value}</span>,
-  //       className: 'break-anywhere',
-  //     },
-  //   ],
-  // },
   '/search/analyses': {
     label: 'Analyses',
     columns: [
@@ -160,7 +118,7 @@ const dataFor = {
       {
         id: 'sample_id',
         Header: 'Sample',
-        accessor: (analysis) => analysis?.fields?.METAGENOMICS_SAMPLES?.[0],
+        accessor: (analysis) => analysis?.fields?.['SRA-SAMPLE']?.[0],
         Cell: ({ cell }) => (
           <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
         ),
@@ -168,7 +126,7 @@ const dataFor = {
       {
         id: 'sample_name',
         Header: 'Name',
-        accessor: (study) => study?.fields?.name?.[0],
+        accessor: (study) => study?.fields?.sample_name?.[0],
         Cell: ({ cell }) => <span>{cell.value}</span>,
         className: 'break-anywhere',
       },
@@ -182,12 +140,6 @@ const dataFor = {
         ),
       },
       {
-        id: 'name',
-        Header: 'Study name',
-        accessor: (analysis) => analysis?.fields?.study_name?.join(', '),
-        className: 'break-anywhere',
-      },
-      {
         id: 'experiment',
         Header: 'Experiment type',
         accessor: (analysis) => analysis?.fields?.experiment_type?.[0],
@@ -195,17 +147,26 @@ const dataFor = {
       {
         id: 'assembly',
         Header: 'Assembly',
-        accessor: (analysis) => analysis?.fields?.ASSEMBLY?.[0],
+        accessor: (analysis) => analysis?.fields?.ANALYSIS?.[0],
+        Cell: ({ cell }) => (
+          <Link to={`/assemblies/${cell.value}`}>{cell.value}</Link>
+        ),
       },
       {
         id: 'ena_run',
         Header: 'ENA run',
         accessor: (analysis) => analysis?.fields?.ENA_RUN?.[0],
+        Cell: ({ cell }) => (
+          <Link to={`/runs/${cell.value}`}>{cell.value}</Link>
+        ),
       },
       {
-        id: 'ena_wgs',
-        Header: 'ENA WGS sequence set',
-        accessor: (analysis) => analysis?.fields?.ENA_WGS_SEQUENCE_SET?.[0],
+        id: 'project_name',
+        Header: 'Study name',
+        accessor: (analysis) => analysis?.fields?.project_name,
+        Cell: ({ cell }) => (cell.value ? uniq(cell.value).join(', ') : null),
+        className: 'break-anywhere',
+        isFullWidth: true,
       },
     ],
   },

@@ -10,6 +10,7 @@
 
 .mg-switch-and-slider {
   display: flex;
+  align-items: center;
 }
 .mg-switch-and-slider > *:last-child {
   flex-grow: 2;
