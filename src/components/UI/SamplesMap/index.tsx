@@ -191,6 +191,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theMap, samples]);
 
   return (

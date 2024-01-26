@@ -5,7 +5,7 @@ import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import Overview from 'components/Genomes/Overview';
-import Downloads from 'components/Downloads';
+import Downloads from 'components/UI/Downloads';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseObj } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
@@ -37,7 +37,17 @@ const GenomePage: React.FC = () => {
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const { data: genomeData } = data as MGnifyResponseObj;
-  const relatedCatalogue = genomeData.relationships.catalogue as any;
+  type RelatedCatalogue = {
+    data: {
+      id: string;
+      type: string;
+    };
+    links: {
+      related: string;
+    };
+  };
+  const relatedCatalogue = genomeData.relationships
+    .catalogue as RelatedCatalogue;
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     {

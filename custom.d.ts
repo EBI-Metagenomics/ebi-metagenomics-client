@@ -38,6 +38,7 @@ declare module 'igv' {
         data: { name: string; value: string | number }[]
       ) => unknown
     ) => void;
+    search: (searchTerm: string) => void;
     loadTrack: (trackConfig: unknown) => void;
     removeTrackByName: (trackName: string) => void;
     findTracks: (attr: string, val: string) => any;

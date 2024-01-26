@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import protectedAxios from 'utils/protectedAxios';
+import { AxiosResponse } from 'axios';
 
 export enum ResponseFormat {
   JSON,
@@ -146,10 +147,10 @@ export interface MGnifyResponseGenericObj extends DataResponse {
   data: KeyValue;
 }
 const prepareResponseDataBasedOnFormat = (
-  response: any,
+  response: AxiosResponse,
   format: ResponseFormat,
   updateState: (DataResponse) => void
-): any => {
+): object => {
   let data = {};
   switch (format) {
     case ResponseFormat.HTML:
@@ -223,7 +224,7 @@ async function fetchData(
           fetchOptions.headers ||
           ({
             'Content-Type': 'application/json',
-          } as any),
+          } as object),
       });
     } else {
       response = await protectedAxios.get(url);
