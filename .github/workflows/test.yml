@@ -25,7 +25,7 @@ jobs:
         options: --health-cmd="mongo" --health-interval=10s --health-timeout=5s --health-retries=5
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           path: client-repo
 
