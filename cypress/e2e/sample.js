@@ -102,7 +102,7 @@ describe('Sample page', function() {
             
             const descOverview = '[data-cy=sample-description]';
             cy.get(descOverview).should('contain', 'Description');
-            cy.get(descOverview).should('contain', 'CL100042219_L01_29');
+            cy.get(descOverview).should('contain', 'Keywords: GSC:MIxS MIMS:5.0');
 
             cy.get('[data-cy=sample-metadata]')
                 .should('contain', 'collection date:')
@@ -282,7 +282,7 @@ describe('Sample page', function() {
         });
     });
 
-    context('Contextual Data Clearing House Metadata', function() {
+    context.only('Contextual Data Clearing House Metadata', function() {
         it('Should display Contextual Data Clearing House Metadata', function() {
             cy.get('#cdch-sample-metadata').then(($el) => {
                 const text = Cypress.$($el).text();

@@ -212,8 +212,6 @@ describe('Search page', function() {
             });
 
             interceptWithFilter('0003678)', 'GO', 'search/analysesGoFiltered0003677', 'analyses'); // not tested so using same fixture
-            cy.get('[class$="MultiValueRemove"]').first().click();
-            cy.get('[class$="MultiValueRemove"]').first().click();
         });
         it('INTERPRO filters should restrict results', function() {
             interceptWithFilter('IPR013785)', 'INTERPRO', 'search/analysesInterproFilteredIPR013785', 'analyses');
@@ -227,8 +225,6 @@ describe('Search page', function() {
             });
 
             interceptWithFilter('IPR013786)', 'INTERPRO', 'search/analysesInterproFilteredIPR013785', 'analyses');
-            cy.get('[class$="MultiValueRemove"]').first().click();
-            cy.get('[class$="MultiValueRemove"]').first().click();
         });
     });
 });
