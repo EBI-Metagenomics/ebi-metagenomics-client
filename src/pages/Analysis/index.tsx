@@ -14,7 +14,7 @@ import FunctionalSubpage from 'components/Analysis/Functional';
 import PathwaysSubpage from 'components/Analysis/Pathways';
 import RouteForHash from 'components/Nav/RouteForHash';
 import { Link } from 'react-router-dom';
-import Downloads from 'components/UI/Downloads';
+import Downloads from 'components/Downloads';
 import Abundance from 'components/Analysis/Abundance';
 import AnalysisContext from './AnalysisContext';
 
