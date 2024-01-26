@@ -34,7 +34,6 @@ function getSeriesCategory(
 const InterProQCChart: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  console.log('overviewData', overviewData);
 
   const isAssembly = overviewData.attributes['experiment-type'] === 'assembly';
   const seqData = overviewData.attributes['analysis-summary'];
