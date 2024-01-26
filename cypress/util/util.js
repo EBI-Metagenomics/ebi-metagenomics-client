@@ -133,7 +133,7 @@ export let Util = {
 
   isValidLink: function($el, status) {
     const opts = {};
-    if (status != 200) {
+    if (status !== 200) {
       opts.failOnStatusCode = false;
     }
     opts.url = Cypress.$($el).attr("href");
@@ -146,7 +146,7 @@ export let Util = {
    * @param {string} selector Chart bar for the hover event
    * @param {Array} tooltip Array with the tooltip texts
    */
-  checkChartTooltip: function(selector, tooltip) {
+  checkChartTooltip: function(selector) {
     cy.get(selector)
       .first()
       .trigger("mouseover", { force: true })

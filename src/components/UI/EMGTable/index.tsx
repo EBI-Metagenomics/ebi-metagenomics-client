@@ -336,12 +336,12 @@ const EMGTable: React.FC<EMGTableProps> = ({
                               {...cell.getCellProps()}
                               colSpan={fullWidthColSpan}
                               className={`vf-table__cell vf-u-type__text-body--3 ${
-                                cell.column?.className || ""
+                                cell.column?.className || ''
                               }`}
                               style={{ ...(cell.column?.style || {}) }}
                             >
-                              <strong>{cell.render("Header")}:&nbsp;</strong>
-                              {cell.render("Cell")}
+                              <strong>{cell.render('Header')}:&nbsp;</strong>
+                              {cell.render('Cell')}
                             </td>
                           </tr>
                         </>
