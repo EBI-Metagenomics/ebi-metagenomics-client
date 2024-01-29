@@ -15,7 +15,6 @@ import LoadingOverlay from 'components/UI/LoadingOverlay';
 import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
-import DownloadButton from 'components/UI/DownloadButton';
 import PaginationButton from './PaginationButton';
 import './style.css';
 
