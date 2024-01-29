@@ -1,8 +1,6 @@
 import {
   openPage,
 } from '../util/util';
-const origPage = '';
-
 const megamenunavItems = [
   {
     id: 'submit-data-section',
@@ -51,7 +49,7 @@ const megamenunavItems = [
 ]
 describe('MegaMenu Component', () => {
   beforeEach(() => {
-    openPage(origPage);
+    openPage('');
   });
 
   it('should be able to access all links inside the MegaMenu', () => {
@@ -62,7 +60,6 @@ describe('MegaMenu Component', () => {
           cy.get(`#${item.contentId} a[href="${link}"]`).should('be.visible');
         });
       }
-
     });
   });
 
