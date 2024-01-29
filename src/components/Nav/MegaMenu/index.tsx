@@ -64,6 +64,7 @@ const MegaMenu: React.FC = () => {
               </a>
             </li>
             <li className="vf-navigation__item">
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a
                 id="submit-data-section"
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
@@ -103,6 +104,7 @@ const MegaMenu: React.FC = () => {
               </a>
             </li>
             <li className="vf-navigation__item">
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a
                 id="browse-section"
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
@@ -126,6 +128,7 @@ const MegaMenu: React.FC = () => {
             </li>
 
             <li className="vf-navigation__item">
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a
                 id="help-section"
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
@@ -140,6 +143,7 @@ const MegaMenu: React.FC = () => {
 
             {isAuthenticated ? (
               <li className="vf-navigation__item">
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <a
                   className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
                     activeSection === 'login-section' ? 'active' : ''
