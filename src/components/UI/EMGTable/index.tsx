@@ -13,9 +13,9 @@ import TextInputDebounced from 'components/UI/TextInputDebounced';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
 import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import PaginationButton from './PaginationButton';
 
 import './style.css';
+import PaginationButton from './PaginationButton';
 
 type PaginationRanges = {
   startingPages: number[];
@@ -205,7 +205,6 @@ const EMGTable: React.FC<EMGTableProps> = ({
   };
 
   if (loading && !isStale) return <Loading size="small" />;
-
   return (
     <section data-cy={dataCy}>
       <LoadingOverlay loading={loading && isStale}>

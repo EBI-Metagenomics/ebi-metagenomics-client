@@ -1,5 +1,5 @@
-import React, { Suspense, lazy, useState, useMemo } from 'react';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import React, { Suspense, lazy, useState, useMemo, useEffect } from 'react';
+import { Routes, Route, BrowserRouter, useLocation } from 'react-router-dom';
 
 import config from 'utils/config';
 import EBIHeader from 'components/UI/EBIHeader';
@@ -41,6 +41,15 @@ const Assembly = lazy(() => import('./pages/Assembly'));
 const Pipelines = lazy(() => import('./pages/Pipelines'));
 const Analysis = lazy(() => import('./pages/Analysis'));
 
+const ResetScroll = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
 const App: React.FC = () => {
   const [user, setUser] = useState({
     username: null,
@@ -72,6 +81,7 @@ const App: React.FC = () => {
           <MainMenu />
           <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
             <ErrorBoundary>
+              <ResetScroll />
               <Suspense fallback={<Loading size="large" />}>
                 <Routes>
                   <Route path="/" element={<Home />} />
