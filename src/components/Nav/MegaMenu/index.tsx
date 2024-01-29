@@ -98,6 +98,7 @@ const MegaMenu: React.FC = () => {
                 id="sequence-search-link"
                 href="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
                 className="vf-navigation__link vf-mega-menu__link"
+                onMouseEnter={() => setMenuVisible(false)}
               >
                 Sequence search &nbsp;
                 <span className="icon icon-common icon-external-link-alt" />
@@ -122,6 +123,7 @@ const MegaMenu: React.FC = () => {
                 id="about-link"
                 className="vf-navigation__link vf-mega-menu__link"
                 href="/metagenomics/about"
+                onMouseEnter={() => setMenuVisible(false)}
               >
                 About
               </a>
@@ -161,6 +163,7 @@ const MegaMenu: React.FC = () => {
                   id="login-link"
                   className="vf-navigation__link vf-mega-menu__link"
                   href="/metagenomics/login"
+                  onMouseEnter={() => setMenuVisible(false)}
                 >
                   Login
                 </a>
