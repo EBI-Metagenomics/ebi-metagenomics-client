@@ -63,22 +63,13 @@ const MegaMenu: React.FC = () => {
                 Overview
               </a>
             </li>
-            {/* <li className="vf-navigation__item"> */}
-            {/*  <a */}
-            {/*    className="vf-navigation__link vf-mega-menu__link" */}
-            {/*    id="demo-organization-content-section" */}
-            {/*    href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo" */}
-            {/*  > */}
-            {/*    Submit data &nbsp; */}
-            {/*    <span className="icon icon-common icon-external-link-alt" /> */}
-            {/*  </a> */}
-            {/* </li> */}
             <li className="vf-navigation__item">
               <a
+                id="submit-data-section"
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
                   activeSection === 'submit-data-section' ? 'active' : ''
                 }`}
-                href="Javascript:void(0)"
+                href="#"
                 onMouseEnter={() => handleMouseEnter('submit-data-section')}
               >
                 Submit data
@@ -87,10 +78,10 @@ const MegaMenu: React.FC = () => {
             <li className="vf-navigation__item">
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a
+                id="text-search-section"
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
                   activeSection === 'text-search-section' ? 'active' : ''
                 }`}
-                id="text-search-section"
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
@@ -103,6 +94,7 @@ const MegaMenu: React.FC = () => {
             </li>
             <li className="vf-navigation__item">
               <a
+                id="sequence-search-link"
                 href="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
                 className="vf-navigation__link vf-mega-menu__link"
               >
@@ -112,11 +104,11 @@ const MegaMenu: React.FC = () => {
             </li>
             <li className="vf-navigation__item">
               <a
+                id="browse-section"
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
                   activeSection === 'browse-section' ? 'active' : ''
                 }`}
-                id="browse-section"
-                href="Javascript:void(0)"
+                href="#"
                 onMouseEnter={() => handleMouseEnter('browse-section')}
               >
                 Browse data
@@ -125,9 +117,9 @@ const MegaMenu: React.FC = () => {
 
             <li className="vf-navigation__item">
               <a
+                id="about-link"
                 className="vf-navigation__link vf-mega-menu__link"
-                id="demo-search-content-section"
-                href="/search"
+                href="/metagenomics/about"
               >
                 About
               </a>
@@ -135,11 +127,11 @@ const MegaMenu: React.FC = () => {
 
             <li className="vf-navigation__item">
               <a
+                id="help-section"
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
                   activeSection === 'help-section' ? 'active' : ''
                 }`}
-                id="help-section"
-                href="Javascript:void(0)"
+                href="#"
                 onMouseEnter={() => handleMouseEnter('help-section')}
               >
                 Help
@@ -153,7 +145,7 @@ const MegaMenu: React.FC = () => {
                     activeSection === 'login-section' ? 'active' : ''
                   }`}
                   id="login-section"
-                  href="Javascript:void(0)"
+                  href="#"
                   onMouseEnter={() => handleMouseEnter('login-section')}
                 >
                   My data
@@ -162,8 +154,8 @@ const MegaMenu: React.FC = () => {
             ) : (
               <li className="vf-navigation__item">
                 <a
+                  id="login-link"
                   className="vf-navigation__link vf-mega-menu__link"
-                  id="demo-search-content-section"
                   href="/metagenomics/login"
                 >
                   Login
@@ -175,7 +167,7 @@ const MegaMenu: React.FC = () => {
       </div>
 
       {menuVisible && (
-        <div className="vf-mega-menu__content">
+        <div id="mega-menu-content" className="vf-mega-menu__content">
           {activeSection === 'browse-section' && (
             <div
               className="vf-mega-menu__content__section"
@@ -198,7 +190,7 @@ const MegaMenu: React.FC = () => {
                       <ul className="vf-navigation__list | vf-list | vf-cluster__inner | vf-stack vf-stack--200">
                         <li className="vf-navigation__item">
                           <a
-                            href="/"
+                            href="/metagenomics/browse/super-studies"
                             className="vf-navigation__link rotating-link"
                           >
                             Super studies <ArrowForLink />
@@ -206,7 +198,7 @@ const MegaMenu: React.FC = () => {
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="/"
+                            href="/metagenomics/browse/studies"
                             className="vf-navigation__link rotating-link"
                           >
                             Studies <ArrowForLink />
@@ -214,7 +206,7 @@ const MegaMenu: React.FC = () => {
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="/"
+                            href="/metagenomics/browse/samples"
                             className="vf-navigation__link rotating-link"
                           >
                             Samples <ArrowForLink />
@@ -222,7 +214,7 @@ const MegaMenu: React.FC = () => {
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="/"
+                            href="/metagenomics/browse/publications"
                             className="vf-navigation__link rotating-link"
                           >
                             Publications <ArrowForLink />
@@ -230,7 +222,7 @@ const MegaMenu: React.FC = () => {
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="/"
+                            href="/metagenomics/browse/genomes"
                             className="vf-navigation__link rotating-link"
                           >
                             Genomes <ArrowForLink />
@@ -238,7 +230,7 @@ const MegaMenu: React.FC = () => {
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="/"
+                            href="/metagenomics/browse/biomes"
                             className="vf-navigation__link rotating-link"
                           >
                             Biomes <ArrowForLink />
@@ -254,7 +246,7 @@ const MegaMenu: React.FC = () => {
           {activeSection === 'submit-data-section' && (
             <div
               className="vf-mega-menu__content__section"
-              id="browse-content-section"
+              id="submit-data-content-section"
               role="menu"
               onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'submit-data-section'}
@@ -294,7 +286,7 @@ const MegaMenu: React.FC = () => {
           {activeSection === 'text-search-section' && (
             <div
               className="vf-mega-menu__content__section"
-              id="demo-search-content-section"
+              id="text-search-content-section"
               role="menu"
               onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'text-search-section'}
@@ -414,22 +406,34 @@ const MegaMenu: React.FC = () => {
                   </div>
                   <ul className="vf-list vf-u-margin__bottom--800">
                     <li className="vf-list__item">
-                      <a href="/parago" className="vf-link rotating-link">
+                      <a
+                        href="/metagenomics/search/studies"
+                        className="vf-link rotating-link"
+                      >
                         Studies <ArrowForLink />
                       </a>
                     </li>
                     <li className="vf-list__item">
-                      <a href="/dd" className="vf-link rotating-link">
+                      <a
+                        href="/metagenomics/search/samples"
+                        className="vf-link rotating-link"
+                      >
                         Samples <ArrowForLink />
                       </a>
                     </li>
                     <li className="vf-list__item">
-                      <a href="/gg" className="vf-link rotating-link">
-                        Publications <ArrowForLink />
+                      <a
+                        href="/metagenomics/search/analyses"
+                        className="vf-link rotating-link"
+                      >
+                        Analyses <ArrowForLink />
                       </a>
                     </li>
                     <li className="vf-list__item">
-                      <a href="/gg" className="vf-link rotating-link">
+                      <a
+                        href="/metagenomics/search"
+                        className="vf-link rotating-link"
+                      >
                         Go to the full search page <ArrowForLink />
                       </a>
                     </li>
@@ -441,7 +445,7 @@ const MegaMenu: React.FC = () => {
           {activeSection === 'help-section' && (
             <div
               className="vf-mega-menu__content__section"
-              id="browse-content-section"
+              id="help-content-section"
               role="menu"
               onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'help-section'}
@@ -451,6 +455,10 @@ const MegaMenu: React.FC = () => {
                   <h2 className="vf-section-header__heading">Help</h2>
                   <p className="vf-section-header__text">
                     Find out more about MGnify
+                    <br />
+                    <a className="vf-link" href="/metagenomics/help">
+                      Go to the help page
+                    </a>
                   </p>
                 </div>
                 <div className="vf-section-content | vf-grid vf-grid__col-3">
@@ -625,7 +633,7 @@ const MegaMenu: React.FC = () => {
           {activeSection === 'login-section' && (
             <div
               className="vf-mega-menu__content__section"
-              id="browse-content-section"
+              id="login-content-section"
               role="menu"
               onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'login-section'}

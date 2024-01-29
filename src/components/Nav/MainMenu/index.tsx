@@ -152,7 +152,6 @@ const MainMenu: React.FC = () => {
         }}
         ref={imgRef}
       />
-      {/* {isSmall ? <MobileNav /> : <Nav />} */}
       {isSmall ? <MobileNav /> : <MegaMenu />}
     </div>
   );
