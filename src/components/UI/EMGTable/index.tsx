@@ -229,7 +229,16 @@ const EMGTable: React.FC<EMGTableProps> = ({
                   )}
                   {downloadURL && (
                     <div>
-                      <DownloadButton downloadLink={downloadURL} />
+                      {' '}
+                      <a
+                        href={downloadURL}
+                        className="vf-button vf-button--secondary vf-button--sm"
+                        style={{ whiteSpace: 'nowrap', marginBottom: '8px' }}
+                        download
+                      >
+                        <span className="icon icon-common icon-download" />{' '}
+                        Download
+                      </a>
                     </div>
                   )}
                 </div>
