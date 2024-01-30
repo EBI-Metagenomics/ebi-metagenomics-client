@@ -42,12 +42,8 @@ const GenomeBrowser: React.FC = () => {
         ...trackColorBys,
         [trackId]: option,
       });
-      console.log('parent trackId', trackId);
-      console.log('parent option', option);
     }
-    if (option.value !== 'viphog') {
-      updateQueryParams('functional-annotation', option.value);
-    }
+    updateQueryParams('functional-annotation', option.value);
   };
 
   const igvContainer = useCallback(
@@ -109,8 +105,6 @@ const GenomeBrowser: React.FC = () => {
               ...trackColorBys,
               [options.tracks[0].name]: trackColorBy,
             });
-            console.log('child tracks', options.tracks[0].name);
-            console.log('child trackColorBy', trackColorBy);
           },
           setLoading
         );
@@ -130,23 +124,22 @@ const GenomeBrowser: React.FC = () => {
           ...trackView.track.config,
           ...annotationTrackCustomisations(colorBy.value, FORMAT.GENOME),
         };
-        console.log('newTrackConfig.nameField', newTrackConfig.nameField);
-        // check if track already added before adding it again:
-        let trackAlreadyAdded = false;
-        trackAlreadyAdded =
-          newTrackConfig.nameField === trackView.track.config.nameField;
-
-        tracksToAdd.push(newTrackConfig);
-        console.log('tracksToAdd', tracksToAdd);
-        // if (newTrackConfig.nameField !== trackView.track.config.nameField) {
-        //   // Prevent unnecessary track reloads
-        //   tracksToRemove.push(trackView.track.id);
-        //   tracksToAdd.push(newTrackConfig);
-        // }
+        if (newTrackConfig.nameField !== trackView.track.config.nameField) {
+          // Prevent unnecessary track reloads
+          tracksToRemove.push(trackView.track.id);
+          tracksToAdd.push(newTrackConfig);
+        }
       }
     });
-    tracksToRemove.forEach((track) => igvBrowser.removeTrackByName(track));
-    tracksToAdd.forEach((track) => igvBrowser.loadTrack(track));
+    tracksToRemove.forEach((track) => {
+      // console.log('track to remove', track);
+      // if (track === 'Functional annotation') return;
+      igvBrowser.removeTrackByName(track);
+    });
+    tracksToAdd.forEach((track) => {
+      // console.log('track to add', track.nameField);
+      igvBrowser.loadTrack(track);
+    });
   }, [trackColorBys, igvBrowser]);
 
   return (

@@ -28,12 +28,8 @@ function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
   return null;
 }
 
-function maybeFeatureType(feature) {
-  if (feature.type === 'ncrna') {
-    console.log('type', feature);
-  }
+function determineNcRnaPresence(feature) {
   if (!feature || !feature.getAttributeValue) return null;
-  // eslint-disable-next-line no-restricted-syntax
   return feature.type === 'ncrna' || feature.type === 'ncRNA';
 }
 
@@ -147,7 +143,7 @@ export const annotationTrackCustomisations = (trackColorBy, format) => {
       return {
         nameField: format === FORMAT.GENOME ? 'ncRNA' : 'ncrna',
         color: (feature) =>
-          maybeFeatureType(feature) ? COLOUR_PRESENCE : COLOUR_ABSENCE,
+          determineNcRnaPresence(feature) ? COLOUR_PRESENCE : COLOUR_ABSENCE,
       };
     default:
       return {
@@ -236,7 +232,11 @@ export const AnnotationTrackColorPicker: React.FC<
   );
   const existingSelection = trackColorBys[trackView.track.id];
   useEffectOnce(() => {
-    if (!existingSelection) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const functionalAnnotationValueAlreadySet = urlParams.get(
+      'functional-annotation'
+    );
+    if (!existingSelection && !functionalAnnotationValueAlreadySet) {
       //   First mount of selector widget and no config already set.
       //   Set to predefined default.
       const defaultOption = find(options, (o) => o.value === defaultValue);
