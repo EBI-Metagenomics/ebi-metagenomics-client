@@ -60,7 +60,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
             <ul className="vf-list">
               {data.relationships.studies.data.map(({ id }) => (
                 <li key={id as string}>
-                  <Link to={`/studies/${id}`}>{id}</Link>
+                  <a href={`/metagenomics/studies/${id}`}>{id}</a>
                 </li>
               ))}
             </ul>
