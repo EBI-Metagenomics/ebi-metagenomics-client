@@ -29,7 +29,7 @@ function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
 }
 
 function determineNcRnaPresence(feature) {
-  if (!feature || !feature.getAttributeValue) return null;
+  if (!feature || !feature?.type) return null;
   return feature.type === 'ncrna' || feature.type === 'ncRNA';
 }
 

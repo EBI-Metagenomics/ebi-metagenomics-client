@@ -2,7 +2,6 @@ import { Dispatch } from 'react';
 import { Browser } from 'igv';
 
 export const updateQueryParams = (key: string, value: string) => {
-  if (value === 'viphog') return;
   const currentUrl = new URL(window.location.href);
   currentUrl.searchParams.set(key, value);
   const updatedUrl = currentUrl.toString();
