@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { Publication } from 'components/Publications';
 import AnalysesTable from 'components/Analysis/Analyses';
 import Box from 'components/UI/Box';
