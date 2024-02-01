@@ -273,6 +273,13 @@ const ContigsViewer: React.FC = () => {
     }
   }, [data, contig, setSelectedContigParam]);
 
+  const showContigOrLoader = () => {
+    if (!contig && !loading) return <p>No contig found</p>;
+    if (loading) return <Loading size="small" />;
+    if (error) return <FetchError error={error} />;
+    return <Contig contig={contig} />;
+  };
+
   if (error) return <FetchError error={error} />;
   return (
     <div className="vf-stack vf-stack--800">
@@ -283,10 +290,7 @@ const ContigsViewer: React.FC = () => {
               <summary>
                 <h4>Contig browser</h4>
               </summary>
-              <div className="contig-igv-container">
-                {!!contig && <Contig contig={contig} />}
-                {!contig && <Loading size="small" />}
-              </div>
+              <div className="contig-igv-container">{showContigOrLoader()}</div>
             </details>
           </div>
         </section>
