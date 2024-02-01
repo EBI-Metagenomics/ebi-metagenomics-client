@@ -43,7 +43,9 @@ const GenomeBrowser: React.FC = () => {
         [trackId]: option,
       });
     }
-    updateQueryParams('functional-annotation', option.value);
+    if (trackId === 'Functional annotation') {
+      updateQueryParams('functional-annotation', option.value);
+    }
   };
 
   const igvContainer = useCallback(
@@ -132,8 +134,12 @@ const GenomeBrowser: React.FC = () => {
         }
       }
     });
-    tracksToRemove.forEach((track) => igvBrowser.removeTrackByName(track));
-    tracksToAdd.forEach((track) => igvBrowser.loadTrack(track));
+    tracksToRemove.forEach((track) => {
+      igvBrowser.removeTrackByName(track);
+    });
+    tracksToAdd.forEach((track) => {
+      igvBrowser.loadTrack(track);
+    });
   }, [trackColorBys, igvBrowser]);
 
   return (
