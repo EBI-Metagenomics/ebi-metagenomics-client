@@ -32,6 +32,8 @@ export const resolveQueryParameters = (browser: Browser) => {
   const currentUrl = new URL(window.location.href);
   const featureId = currentUrl.searchParams.get('feature-id');
   const contigId = currentUrl.searchParams.get('contig_id');
+  const start = currentUrl.searchParams.get('start');
+  const end = currentUrl.searchParams.get('end');
   const selectedTrackColor = currentUrl.searchParams.get(
     'functional-annotation'
   );
@@ -39,7 +41,7 @@ export const resolveQueryParameters = (browser: Browser) => {
     browser.search(featureId);
   }
   if (contigId) {
-    browser.search(contigId);
+    browser.search(`${contigId}:${start}-${end}`);
   }
   return {
     featureId,
