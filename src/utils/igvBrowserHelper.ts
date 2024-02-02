@@ -14,6 +14,8 @@ export const updateLocusQueryParams = (
 ) => {
   const currentUrl = new URL(window.location.href);
   const contigId = currentUrl.searchParams.get('contig_id');
+  console.log('start', start);
+  console.log('end', end);
   if (contigId) {
     currentUrl.searchParams.set('contig_id', locusSearchString);
     currentUrl.searchParams.set('start', start);
@@ -32,6 +34,8 @@ export const resolveQueryParameters = (browser: Browser) => {
   const currentUrl = new URL(window.location.href);
   const featureId = currentUrl.searchParams.get('feature-id');
   const contigId = currentUrl.searchParams.get('contig_id');
+  const start = currentUrl.searchParams.get('start');
+  const end = currentUrl.searchParams.get('end');
   const selectedTrackColor = currentUrl.searchParams.get(
     'functional-annotation'
   );
@@ -39,7 +43,7 @@ export const resolveQueryParameters = (browser: Browser) => {
     browser.search(featureId);
   }
   if (contigId) {
-    browser.search(contigId);
+    browser.search(`${contigId}:${start}-${end}`);
   }
   return {
     featureId,
@@ -56,6 +60,7 @@ export const handleLocusChanges = (
   }
 ) => {
   browser.on('locuschange', (referenceFrame) => {
+    console.log('referenceFrame[0]', referenceFrame);
     const { locusSearchString, start, end } = referenceFrame[0];
     updateLocusQueryParams(locusSearchString, start, end);
   });
