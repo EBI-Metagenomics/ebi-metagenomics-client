@@ -14,8 +14,6 @@ export const updateLocusQueryParams = (
 ) => {
   const currentUrl = new URL(window.location.href);
   const contigId = currentUrl.searchParams.get('contig_id');
-  console.log('start', start);
-  console.log('end', end);
   if (contigId) {
     currentUrl.searchParams.set('contig_id', locusSearchString);
     currentUrl.searchParams.set('start', start);
@@ -60,7 +58,6 @@ export const handleLocusChanges = (
   }
 ) => {
   browser.on('locuschange', (referenceFrame) => {
-    console.log('referenceFrame[0]', referenceFrame);
     const { locusSearchString, start, end } = referenceFrame[0];
     updateLocusQueryParams(locusSearchString, start, end);
   });
