@@ -9,6 +9,12 @@ const origPage = '';
 const rowSelector = 'table tbody tr.vf-table__row';
 const PAGE_SIZE = 25;
 
+function goToSearchPage() {
+  openPage(origPage);
+  cy.get(`#text-search-section`).trigger('mouseover');
+  cy.get(`#text-search-content-section a[href="/metagenomics/search"]`).click();
+}
+
 function interceptWithFilter(value, param, fixture, searchType = 'projects') {
     let filterString = `${param}:${value}`;
     cy.intercept('GET',
@@ -82,8 +88,7 @@ describe('Search page', function() {
     context('Search Study Functionality', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
-            openPage(origPage);
-            cy.get(`.mg-main-menu`).contains('Text search').click();
+            goToSearchPage();
         });
 
         it('Correct number of results.', function() {
@@ -138,8 +143,7 @@ describe('Search page', function() {
     context('Clicking tabs should reflect on table', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
-            openPage(origPage);
-            cy.get(`.mg-main-menu`).contains('Text search').click();
+            goToSearchPage();
         });
         it('Changing tabs should update result view', function() {
             cy.get(`.mg-search-tabs li`).contains('Sample analyses').click();
@@ -152,9 +156,7 @@ describe('Search page', function() {
     context('Search Analyses Functionality', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
-            openPage(origPage);
-            cy.get(`.mg-main-menu`).contains('Text search').click();
-            cy.get(`.mg-search-tabs li`).contains('Sample analyses').click();
+            goToSearchPage();
         });
 
 

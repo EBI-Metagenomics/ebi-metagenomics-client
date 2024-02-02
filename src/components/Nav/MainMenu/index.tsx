@@ -15,6 +15,7 @@ import ExtLink from 'components/UI/ExtLink';
 import { useMedia } from 'react-use';
 import EMGModal from 'components/UI/EMGModal';
 import useAuthTokenVerifier from 'hooks/authentication/useAuthTokenVerifier';
+import MegaMenu from 'components/Nav/MegaMenu';
 
 const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'Overview', path: '/' },
@@ -150,10 +151,11 @@ const MainMenu: React.FC = () => {
         style={{
           marginLeft: animationState.marginLeft,
           opacity: animationState.opacity,
+          display: isSmall ? 'block' : 'none',
         }}
         ref={imgRef}
       />
-      {isSmall ? <MobileNav /> : <Nav />}
+      {isSmall ? <MobileNav /> : <MegaMenu />}
     </div>
   );
 };

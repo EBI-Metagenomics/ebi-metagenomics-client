@@ -136,7 +136,8 @@ describe('Home page', function() {
 
         it('Text search btn should link to text search page', function() {
             openPage(origPage);
-            cy.contains('Text search').click();
+            cy.get(`#text-search-section`).trigger('mouseover');
+            cy.get(`#text-search-content-section a[href="/metagenomics/search"]`).click();
             cy.get('h2').should('contain', 'Text Search');
         });
         // it('Sequence search btn should link to seq search page', function() {

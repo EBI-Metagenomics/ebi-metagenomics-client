@@ -17,7 +17,9 @@ describe('Help page', function() {
     context('General', function() {
         before(function() {
             openPage('');
-            cy.get(`.mg-main-menu`).contains('Help').click();
+            // mosueover to open menu
+            cy.get(`#help-section`).trigger('mouseover');
+            cy.get(`#help-content-section a[href="/metagenomics/help"]`).click();
         });
         it('Elements should be present', function() {
             cy.get('h2').then(($h2) => {
