@@ -9,10 +9,10 @@ const origPage = '';
 const rowSelector = 'table tbody tr.vf-table__row';
 const PAGE_SIZE = 25;
 
-function goToSearchPage() {
+function goToSearchPage(subpage="") {
   openPage(origPage);
   cy.get(`#text-search-section`).trigger('mouseover');
-  cy.get(`#text-search-content-section a[href="/metagenomics/search"]`).click();
+  cy.get(`#text-search-content-section a[href="/metagenomics/search${subpage}"]`).click();
 }
 
 function interceptWithFilter(value, param, fixture, searchType = 'projects') {
@@ -156,7 +156,7 @@ describe('Search page', function() {
     context('Search Analyses Functionality', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
-            goToSearchPage();
+            goToSearchPage("/analyses");
         });
 
 

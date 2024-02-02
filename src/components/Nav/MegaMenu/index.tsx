@@ -422,18 +422,10 @@ const MegaMenu: React.FC = () => {
                     </li>
                     <li className="vf-list__item">
                       <a
-                        href="/metagenomics/search/samples"
-                        className="vf-link rotating-link"
-                      >
-                        Samples <ArrowForLink />
-                      </a>
-                    </li>
-                    <li className="vf-list__item">
-                      <a
                         href="/metagenomics/search/analyses"
                         className="vf-link rotating-link"
                       >
-                        Analyses <ArrowForLink />
+                        Analysed samples <ArrowForLink />
                       </a>
                     </li>
                     <li className="vf-list__item">
