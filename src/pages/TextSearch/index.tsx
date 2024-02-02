@@ -14,6 +14,7 @@ import useEBISearchData from 'hooks/data/useEBISearchData';
 
 import { Param } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import FieldMultipleTextQuery from 'components/Search/Filter/FieldMultipleTextQuery';
 import SearchQueryContext from './SearchQueryContext';
 import './style.css';
 
@@ -62,6 +63,13 @@ const joinQueries = (queryParams: Param[], defaultValue: string) => {
         case 'depth': {
           return getRangeStringFromQueryParam(param);
         }
+        case 'INTERPRO':
+          if (!param.value) return '';
+          return `(${param.value.replaceAll('IPR', 'INTERPRO:IPR')})`;
+        case 'GO': {
+          if (!param.value) return '';
+          return `(${param.value})`;
+        }
         default:
           return '';
       }
@@ -92,12 +100,10 @@ const tabs = [
     label: () => <TextSearchCount to="/search/studies" label="Studies" />,
   },
   {
-    to: '/search/samples',
-    label: () => <TextSearchCount to="/search/samples" label="Samples" />,
-  },
-  {
     to: '/search/analyses',
-    label: () => <TextSearchCount to="/search/analyses" label="Analyses" />,
+    label: () => (
+      <TextSearchCount to="/search/analyses" label="Sample analyses" />
+    ),
   },
 ];
 
@@ -127,11 +133,6 @@ const TextSearchPage: React.FC = () => {
     'location_name',
     ''
   );
-  const [, , { param: diseaseStatusParam }] = useQueryParamState(
-    'disease_status',
-    ''
-  );
-  const [, , { param: phenotypeParam }] = useQueryParamState('phenotype', '');
   const [, , { param: organismParam }] = useQueryParamState('organism', '');
   const [, , { param: pipelineVersionParam }] = useQueryParamState(
     'pipeline_version',
@@ -148,43 +149,22 @@ const TextSearchPage: React.FC = () => {
     query: joinQueries([queryParam], 'domain_source:metagenomics_projects'),
     size: pageSizeParam,
     start,
-    /* eslint-disable max-len */
     fields:
-      'ENA_PROJECT,METAGENOMICS_ANALYSES,METAGENOMICS_SAMPLES,biome_name,centre_name,description,name',
-    /* eslint-enable max-len */
+      'ENA_PROJECT,METAGENOMICS_ANALYSES,biome_name,centre_name,description,name',
     facetcount: 10,
     facetsdepth: FACET_DEPTH,
     facets: getFacets([centreNameParam, biomeParam]),
   });
-  const searchDataSamples = useEBISearchData('metagenomics_samples', {
-    query: joinQueries(
-      [queryParam, temperatureParam, depthParam],
-      'domain_source:metagenomics_samples'
-    ),
-    size: pageSizeParam,
-    start,
-    fields: 'METAGENOMICS_PROJECTS,name,description',
-    facetcount: 10,
-    facetsdepth: FACET_DEPTH,
-    facets: getFacets([
-      biomeParam,
-      experimentTypeParam,
-      locationNameParam,
-      diseaseStatusParam,
-      sequencingMethodParam,
-      phenotypeParam,
-    ]),
-  });
   const searchDataAnalyses = useEBISearchData('metagenomics_analyses', {
     query: joinQueries(
-      [queryParam, temperatureParam, depthParam],
+      [queryParam, temperatureParam, depthParam, goParam, interproParam],
       'domain_source:metagenomics_analyses'
     ),
     size: pageSizeParam,
     start,
     /* eslint-disable max-len */
     fields:
-      'METAGENOMICS_PROJECTS,METAGENOMICS_SAMPLES,pipeline_version,experiment_type,ASSEMBLY,ENA_RUN,ENA_WGS_SEQUENCE_SET',
+      'METAGENOMICS_PROJECTS,pipeline_version,experiment_type,sample_name,project_name,ENA_RUN,ANALYSIS,SRA-SAMPLE',
     /* eslint-enable max-len */
     facetcount: 10,
     facetsdepth: FACET_DEPTH,
@@ -193,19 +173,18 @@ const TextSearchPage: React.FC = () => {
       organismParam,
       pipelineVersionParam,
       experimentTypeParam,
-      goParam,
-      interproParam,
+      locationNameParam,
+      sequencingMethodParam,
     ]),
   });
   const context = useMemo(
     () => ({
       searchData: {
         '/search/studies': searchDataStudies,
-        '/search/samples': searchDataSamples,
         '/search/analyses': searchDataAnalyses,
       },
     }),
-    [searchDataStudies, searchDataSamples, searchDataAnalyses]
+    [searchDataStudies, searchDataAnalyses]
   );
 
   return (
@@ -229,40 +208,6 @@ const TextSearchPage: React.FC = () => {
                       facetName="centre_name"
                       header="Centre Name"
                       includeTextFilter
-                    />
-                  </>
-                }
-              />
-              <Route
-                path="samples"
-                element={
-                  <>
-                    <TemperatureFilter />
-                    <DepthFilter />
-                    <HierarchyMultipleOptionFilter
-                      facetName="biome"
-                      header="Biome"
-                    />
-                    <MultipleOptionFilter
-                      facetName="experiment_type"
-                      header="Experiment type"
-                    />
-                    <MultipleOptionFilter
-                      facetName="sequencing_method"
-                      header="Sequencing method"
-                    />
-                    <MultipleOptionFilter
-                      facetName="location_name"
-                      header="Location name"
-                      includeTextFilter
-                    />
-                    <MultipleOptionFilter
-                      facetName="disease_status"
-                      header="Disease status"
-                    />
-                    <MultipleOptionFilter
-                      facetName="phenotype"
-                      header="Phenotype"
                     />
                   </>
                 }
@@ -293,14 +238,43 @@ const TextSearchPage: React.FC = () => {
                       header="Experiment type"
                     />
                     <MultipleOptionFilter
-                      facetName="GO"
-                      header="GO"
-                      includeTextFilter
+                      facetName="sequencing_method"
+                      header="Sequencing method"
                     />
                     <MultipleOptionFilter
-                      facetName="INTERPRO"
-                      header="InterPro"
+                      facetName="location_name"
+                      header="Location name"
                       includeTextFilter
+                    />
+                    <FieldMultipleTextQuery
+                      fieldName="GO"
+                      header="GO"
+                      example="E.g. GO:0003677"
+                      queryMatcher={/GO:\d+/g}
+                      queryMustInclude="GO:"
+                      explainer={
+                        <span>
+                          Annotations from the{' '}
+                          <a href="https://www.ebi.ac.uk/QuickGO/">
+                            Gene Ontology
+                          </a>
+                        </span>
+                      }
+                    />
+                    <FieldMultipleTextQuery
+                      fieldName="INTERPRO"
+                      header="InterPro"
+                      example="E.g. IPR013785"
+                      queryMatcher={/IPR\d+/g}
+                      queryMustInclude="IPR"
+                      explainer={
+                        <span>
+                          Annotations from{' '}
+                          <a href="https://www.ebi.ac.uk/interpro/entry/InterPro/">
+                            InterPro
+                          </a>
+                        </span>
+                      }
                     />
                   </>
                 }

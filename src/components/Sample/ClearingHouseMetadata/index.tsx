@@ -58,10 +58,7 @@ const ClearingHouseMetadata: React.FC<{ sampleAccession: string }> = ({
                     (evidence) => (
                       <ExtLink
                         className="link-in-tooltip"
-                        href={`https://evidenceontology.org/term/${evidence.identifier.replace(
-                          '_',
-                          ':'
-                        )}/`}
+                        href={`http://purl.obolibrary.org/obo/${evidence.identifier}`}
                       >
                         {evidence.label}
                       </ExtLink>

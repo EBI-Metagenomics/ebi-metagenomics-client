@@ -14,7 +14,7 @@ const DataAnalysesTypeRow: React.FC<{
   const { data, loading, error } = useEBISearchData('metagenomics_analyses', {
     query: 'domain_source:metagenomics_analyses',
     size: 0,
-    fields: 'id,name,description,biome_name,metagenomics_samples',
+    fields: 'id,name,description,biome_name',
     facetcount: 0,
     facetsdepth: 5,
     facets: `experiment_type:${type}`,
@@ -54,7 +54,7 @@ const DataTypeRow: React.FC<{
   const { data, loading, error } = useEBISearchData(endpoint, {
     query: `domain_source:${endpoint}`,
     size: 0,
-    fields: 'id,name,description,biome_name,metagenomics_samples',
+    fields: 'id,name,description,biome_name',
     facetcount: 0,
     facetsdepth: 5,
   });
@@ -163,11 +163,6 @@ const DataType: React.FC = () => {
       label: 'studies',
       endpoint: 'metagenomics_projects',
       link: '/search/studies',
-    },
-    {
-      label: 'samples',
-      endpoint: 'metagenomics_samples',
-      link: '/search/samples',
     },
     {
       label: 'analyses',

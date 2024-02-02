@@ -25,12 +25,12 @@ jobs:
         options: --health-cmd="mongo" --health-interval=10s --health-timeout=5s --health-retries=5
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           path: client-repo
 
       - name: 🐍 - Set up Python 3.9
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.9
 
@@ -64,7 +64,7 @@ jobs:
         run: |
           echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\"}" > "$(pwd)/config.private.json"
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: 🔬 - Checkout EMG API
         with:
           repository: 'EBI-Metagenomics/emgapi'
@@ -95,7 +95,7 @@ jobs:
           nginx -c "$(pwd)/ci/nginx.conf"
 
       - name: 📜 - Set up JS Node 16
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '16'
           cache: 'npm'
@@ -126,7 +126,7 @@ jobs:
           npm run eslint
 
       - name: 🧪 - Testing
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v6
         with:
           working-directory: client-repo
           browser: chrome
@@ -151,7 +151,7 @@ jobs:
 #          version: ${{ github.sha }}
 
       - name: 📸 - Failed tests snapshots
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: tests-snapshots

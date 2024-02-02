@@ -5,11 +5,13 @@ type SwitchProps = {
   id: string;
   isOn?: boolean;
   onChange?: (v: boolean) => void;
+  extraClass?: string;
 };
 const Switch: React.FC<SwitchProps> = ({
   id,
   onChange = (v) => v,
   isOn = false,
+  extraClass,
 }) => {
   const [value, setValue] = useState(isOn);
   useEffect(() => {
@@ -20,7 +22,7 @@ const Switch: React.FC<SwitchProps> = ({
   return (
     <div>
       <input
-        className="mg-switch"
+        className={`mg-switch ${extraClass}`}
         type="checkbox"
         id={id}
         checked={value}

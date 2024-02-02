@@ -14,7 +14,6 @@ const megamenunavItems = [
     contentId: 'text-search-content-section',
     links: [
       '/metagenomics/search/studies',
-      '/metagenomics/search/samples',
       '/metagenomics/search/analyses',
     ]
   },
