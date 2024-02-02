@@ -4,7 +4,7 @@ import React from 'react';
 const ArrowForLink: React.FC = () => (
   <svg
     aria-hidden="true"
-    className="vf-card__heading__icon | vf-icon vf-icon-arrow--inline-end"
+    className="vf-card__heading__icon | vf-icon vf-icon-arrow--inline-end arrow-icon"
     width="1em"
     height="1em"
     xmlns="http://www.w3.org/2000/svg"

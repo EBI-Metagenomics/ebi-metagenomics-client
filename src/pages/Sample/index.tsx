@@ -22,6 +22,8 @@ import {
   SovereignsArray,
   Sov,
 } from 'utils/eezAbs';
+import Breadcrumbs from 'components/Nav/Breadcrumbs';
+import HTMLRenderer from 'components/UI/HTMLRederer';
 
 const tabs = [
   { label: 'Sample metadata', to: '#' },
@@ -131,8 +133,14 @@ const SamplePage: React.FC = () => {
       setFetchEezDataCalled(true);
     }
   }
+  const breadcrumbs = [
+    { label: 'Home', url: '/' },
+    { label: 'Samples', url: '/browse/samples' },
+    { label: accession },
+  ];
   return (
     <section className="vf-content">
+      <Breadcrumbs links={breadcrumbs} />
       <h2>Sample overview ({accession})</h2>
       <h3>Sample {sampleData.attributes['sample-name']}</h3>
       <section className="vf-grid">
@@ -196,18 +204,12 @@ const SamplePage: React.FC = () => {
                       </abbr>
                     </span>
                     &nbsp;
-                    <div
-                      dangerouslySetInnerHTML={{ __html: eezData.eezInfoText }}
-                    />
+                    <HTMLRenderer htmlContent={eezData.eezInfoText} />
                   </p>
                 </div>
               )}
               {eezData.qualifiesForAbsCheck && (
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: displayAbsInfo(eezData),
-                  }}
-                />
+                <HTMLRenderer htmlContent={displayAbsInfo(eezData)} />
               )}
               <details className="vf-details">
                 <summary className="vf-details--summary">More info</summary>

@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from 'react';
 import ReactDOMServer from 'react-dom/server';
-import igv from 'igv/dist/igv.esm';
+import igv, { Browser } from 'igv/dist/igv.esm';
 
 import UserContext from 'pages/Login/UserContext';
 import useURLAccession from 'hooks/useURLAccession';
@@ -16,6 +16,7 @@ import {
   annotationTrackCustomisations,
   FORMAT,
 } from 'components/IGV/TrackColourPicker';
+import { handleLocusChanges, updateQueryParams } from 'utils/igvBrowserHelper';
 import GenomeBrowserPopup from './Popup';
 
 const GenomeBrowser: React.FC = () => {
@@ -31,6 +32,21 @@ const GenomeBrowser: React.FC = () => {
     const response = await fetch(virifyGffUrl, { method: 'HEAD' });
     return response.ok;
   }, [virifyGffUrl]);
+  const handleColorChange = (
+    option: { value: string },
+    action: { action: string },
+    trackId: string
+  ) => {
+    if (action.action === 'select-option') {
+      setTrackColorBys({
+        ...trackColorBys,
+        [trackId]: option,
+      });
+    }
+    if (trackId === 'Functional annotation') {
+      updateQueryParams('functional-annotation', option.value);
+    }
+  };
 
   const igvContainer = useCallback(
     async (node) => {
@@ -75,15 +91,28 @@ const GenomeBrowser: React.FC = () => {
       });
 
       if (node === null) return;
-      igv.createBrowser(node, options).then((browser) => {
-        browser.on('trackclick', (track, trackData) =>
-          ReactDOMServer.renderToString(<GenomeBrowserPopup data={trackData} />)
+      igv.createBrowser(node, options).then((browser: Browser) => {
+        browser.on(
+          'trackclick',
+          (track: any, trackData: { name: string; value: string | number }[]) =>
+            ReactDOMServer.renderToString(
+              <GenomeBrowserPopup data={trackData} />
+            )
         );
-
-        setIgvBrowser(browser);
-        setLoading(false);
+        handleLocusChanges(
+          browser,
+          setIgvBrowser,
+          (trackColorBy) => {
+            setTrackColorBys({
+              ...trackColorBys,
+              [options.tracks[0].name]: trackColorBy,
+            });
+          },
+          setLoading
+        );
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [config.api, accession, hasVirify, virifyGffUrl]
   );
 
@@ -105,8 +134,12 @@ const GenomeBrowser: React.FC = () => {
         }
       }
     });
-    tracksToRemove.forEach((track) => igvBrowser.removeTrackByName(track));
-    tracksToAdd.forEach((track) => igvBrowser.loadTrack(track));
+    tracksToRemove.forEach((track) => {
+      igvBrowser.removeTrackByName(track);
+    });
+    tracksToAdd.forEach((track) => {
+      igvBrowser.loadTrack(track);
+    });
   }, [trackColorBys, igvBrowser]);
 
   return (
@@ -123,12 +156,7 @@ const GenomeBrowser: React.FC = () => {
               trackView={trackView}
               trackColorBys={trackColorBys}
               onChange={(option, action) => {
-                if (action.action === 'select-option') {
-                  setTrackColorBys({
-                    ...trackColorBys,
-                    [trackId]: option,
-                  });
-                }
+                handleColorChange(option, action, trackId);
               }}
             />
           );

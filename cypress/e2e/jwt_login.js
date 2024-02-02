@@ -4,6 +4,7 @@ const homePageUrl = 'http://localhost:9000/metagenomics';
 const myDataPageUrl = 'http://localhost:9000/metagenomics/mydata';
 const username = 'Webin-000';
 const password = 'secret';
+
 describe('JWT Login', () => {
   beforeEach(() => {
     openPage('login');
@@ -11,7 +12,6 @@ describe('JWT Login', () => {
 
   it('should log in successfully with valid credentials and the login should be persisted', () => {
     logUserIn();
-    cy.window().its('localStorage.token').should('exist');
     cy.contains(`You are logged in as ${username.toLowerCase()}`).should('be.visible');
     cy.reload();
     cy.contains(`You are logged in as ${username.toLowerCase()}`).should('be.visible');

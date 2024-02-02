@@ -5,11 +5,12 @@ import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import Overview from 'components/Genomes/Overview';
-import Downloads from 'components/UI/Downloads';
+import Downloads from 'components/Downloads';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyResponseObj } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import { cleanTaxLineage } from 'utils/taxon';
+import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
 const COGAnalysis = lazy(() => import('components/Genomes/COGAnalysis'));
@@ -36,8 +37,32 @@ const GenomePage: React.FC = () => {
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const { data: genomeData } = data as MGnifyResponseObj;
+  type RelatedCatalogue = {
+    data: {
+      id: string;
+      type: string;
+    };
+    links: {
+      related: string;
+    };
+  };
+  const relatedCatalogue = genomeData.relationships
+    .catalogue as RelatedCatalogue;
+  const breadcrumbs = [
+    { label: 'Home', url: '/' },
+    {
+      label: 'Genomes',
+      url: '/browse/genomes',
+    },
+    {
+      label: relatedCatalogue.data.id,
+      url: `/genome-catalogues/${relatedCatalogue.data.id}`,
+    },
+    { label: accession },
+  ];
   return (
     <section className="vf-content">
+      <Breadcrumbs links={breadcrumbs} />
       <h2>Genome {accession}</h2>
       <p>
         <b>Type:</b> {genomeData.attributes.type}

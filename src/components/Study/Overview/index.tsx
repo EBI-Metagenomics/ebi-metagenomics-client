@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { Publication } from 'components/Publications';
 import AnalysesTable from 'components/Analysis/Analyses';
 import Box from 'components/UI/Box';
@@ -60,7 +59,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data, included }) => {
             <ul className="vf-list">
               {data.relationships.studies.data.map(({ id }) => (
                 <li key={id as string}>
-                  <Link to={`/studies/${id}`}>{id}</Link>
+                  <a href={`/metagenomics/studies/${id}`}>{id}</a>
                 </li>
               ))}
             </ul>

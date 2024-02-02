@@ -28,6 +28,11 @@ function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
   return null;
 }
 
+function determineNcRnaPresence(feature) {
+  if (!feature || !feature?.type) return null;
+  return feature.type === 'ncrna' || feature.type === 'ncRNA';
+}
+
 export const FORMAT = {
   GENOME: 'GENOME',
   ASSEMBLY_V5: 'ASSEMBLY_V5',
@@ -134,6 +139,12 @@ export const annotationTrackCustomisations = (trackColorBy, format) => {
             ? COLOUR_PRESENCE
             : COLOUR_ABSENCE,
       };
+    case 'ncrna':
+      return {
+        nameField: format === FORMAT.GENOME ? 'ncRNA' : 'ncrna',
+        color: (feature) =>
+          determineNcRnaPresence(feature) ? COLOUR_PRESENCE : COLOUR_ABSENCE,
+      };
     default:
       return {
         nameField: trackColorBy,
@@ -197,6 +208,7 @@ const trackColorOptionsForType = (track) => {
               { label: 'MiBIG class', value: 'mibig' },
               { label: 'ViPhOG existence', value: 'viphog' },
               { label: 'CRISPR component', value: 'crispr' },
+              { label: 'ncRNA existence', value: 'ncrna' },
             ],
           },
         ],
@@ -220,7 +232,11 @@ export const AnnotationTrackColorPicker: React.FC<
   );
   const existingSelection = trackColorBys[trackView.track.id];
   useEffectOnce(() => {
-    if (!existingSelection) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const functionalAnnotationValueAlreadySet = urlParams.get(
+      'functional-annotation'
+    );
+    if (!existingSelection && !functionalAnnotationValueAlreadySet) {
       //   First mount of selector widget and no config already set.
       //   Set to predefined default.
       const defaultOption = find(options, (o) => o.value === defaultValue);

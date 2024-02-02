@@ -1,0 +1,3977 @@
+{
+  "entries":
+  [
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR208343"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000318"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS198355"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Neandertal bone Vi33.16 metagenome",
+          "Neandertal bone Vi33.16 metagenome"
+        ],
+        "sample_name":
+        [
+          "Bone sample from Vindija Neandertal individual Vi33.16"
+        ]
+      },
+      "id": "MGYA00000561_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR911256"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000498"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS744932"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "2.0"
+        ],
+        "project_name":
+        [
+          "This a study of how variability of the soil environment affects the soil microbial function and diversity",
+          "This a study of how variability of the soil environment affects the soil microbial function and diversity"
+        ],
+        "sample_name":
+        [
+          "816"
+        ]
+      },
+      "id": "MGYA00007658_2.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "SRR035094"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000282"
+        ],
+        "SRA-SAMPLE":
+        [
+          "SRS010116"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Antarctica Aquatic Microbial Metagenome",
+          "Antarctica Aquatic Microbial Metagenome"
+        ],
+        "sample_name":
+        [
+          "Metagenome sequence SRA sample SRS010116"
+        ]
+      },
+      "id": "MGYA00000008_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR598974"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000410"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS488747"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "2.0"
+        ],
+        "project_name":
+        [
+          "Shotgun Sequencing of Tara Oceans DNA samples corresponding to size fractions for  prokaryotes.",
+          "Shotgun Sequencing of Tara Oceans DNA samples corresponding to size fractions for  prokaryotes."
+        ],
+        "sample_name":
+        [
+          "TARA_B100000035"
+        ]
+      },
+      "id": "MGYA00005067_2.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR260239"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000322"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS235603"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Gut metagenome in European women with normal, impaired and diabetic glucose control",
+          "Gut metagenome in European women with normal, impaired and diabetic glucose control"
+        ],
+        "sample_name":
+        [
+          "gut microbiome, anonymized sample 248"
+        ]
+      },
+      "id": "MGYA00001271_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR911322"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000498"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS744998"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "2.0"
+        ],
+        "project_name":
+        [
+          "This a study of how variability of the soil environment affects the soil microbial function and diversity",
+          "This a study of how variability of the soil environment affects the soil microbial function and diversity"
+        ],
+        "sample_name":
+        [
+          "1045"
+        ]
+      },
+      "id": "MGYA00007662_2.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR260240"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000322"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS235604"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Gut metagenome in European women with normal, impaired and diabetic glucose control",
+          "Gut metagenome in European women with normal, impaired and diabetic glucose control"
+        ],
+        "sample_name":
+        [
+          "gut microbiome, anonymized sample 258"
+        ]
+      },
+      "id": "MGYA00001272_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR522087"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000398"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS467258"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Gladstone Shading Experiment",
+          "Gladstone Shading Experiment"
+        ],
+        "sample_name":
+        [
+          "BRAEMBL-EnvironmentalMetagenomicsSamplesGladstone-15"
+        ]
+      },
+      "id": "MGYA00003135_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR911323"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000498"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS744999"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "2.0"
+        ],
+        "project_name":
+        [
+          "This a study of how variability of the soil environment affects the soil microbial function and diversity",
+          "This a study of how variability of the soil environment affects the soil microbial function and diversity"
+        ],
+        "sample_name":
+        [
+          "1053"
+        ]
+      },
+      "id": "MGYA00007663_2.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR589831"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000427"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS537366"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Gut and Oral Microbiome Dysbiosis in Rheumatoid Arthritis",
+          "Gut and Oral Microbiome Dysbiosis in Rheumatoid Arthritis"
+        ],
+        "sample_name":
+        [
+          "SZAXPI021279-20"
+        ]
+      },
+      "id": "MGYA00004167_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR260242"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000322"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS235606"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Gut metagenome in European women with normal, impaired and diabetic glucose control",
+          "Gut metagenome in European women with normal, impaired and diabetic glucose control"
+        ],
+        "sample_name":
+        [
+          "gut microbiome, anonymized sample 264"
+        ]
+      },
+      "id": "MGYA00001274_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR990522"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000522"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS823134"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "2.0"
+        ],
+        "project_name":
+        [
+          "Metagenomes of intestinal samples were obtained from wild type mice to determine the functional and taxonomic coverage by available cultivable bacteria isolated from mouse.",
+          "Metagenomes of intestinal samples were obtained from wild type mice to determine the functional and taxonomic coverage by available cultivable bacteria isolated from mouse."
+        ],
+        "sample_name":
+        [
+          "miBC"
+        ]
+      },
+      "id": "MGYA00010358_2.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR522090"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000398"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS467261"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Gladstone Shading Experiment",
+          "Gladstone Shading Experiment"
+        ],
+        "sample_name":
+        [
+          "BRAEMBL-EnvironmentalMetagenomicsSamplesGladstone-8"
+        ]
+      },
+      "id": "MGYA00003138_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR1163088"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000588"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS1003595"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "2.0"
+        ],
+        "project_name":
+        [
+          "Metagenomes and metatranscriptomes from the diffuse hydrothermal vents of Axial Seamount from 2014",
+          "Metagenomes and metatranscriptomes from the diffuse hydrothermal vents of Axial Seamount from 2014"
+        ],
+        "sample_name":
+        [
+          "FS906_Marker113_DNA"
+        ]
+      },
+      "id": "MGYA00012583_2.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR589835"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000427"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS537370"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Gut and Oral Microbiome Dysbiosis in Rheumatoid Arthritis",
+          "Gut and Oral Microbiome Dysbiosis in Rheumatoid Arthritis"
+        ],
+        "sample_name":
+        [
+          "SZAXPI021283-25"
+        ]
+      },
+      "id": "MGYA00004171_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR208364"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000318"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS198355"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Neandertal bone Vi33.16 metagenome",
+          "Neandertal bone Vi33.16 metagenome"
+        ],
+        "sample_name":
+        [
+          "Bone sample from Vindija Neandertal individual Vi33.16"
+        ]
+      },
+      "id": "MGYA00000582_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR476432"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000368"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS431329"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "metagenomic study targeting N cycling processes",
+          "metagenomic study targeting N cycling processes"
+        ],
+        "sample_name":
+        [
+          "sample24 (32X)"
+        ]
+      },
+      "id": "MGYA00002374_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR598788"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000523"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS542292"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "2.0"
+        ],
+        "project_name":
+        [
+          "Metagenomics of TB-associated sputum",
+          "Metagenomics of TB-associated sputum"
+        ],
+        "sample_name":
+        [
+          "TB Sputum metagenome"
+        ]
+      },
+      "id": "MGYA00010366_2.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR522093"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000398"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS467264"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Gladstone Shading Experiment",
+          "Gladstone Shading Experiment"
+        ],
+        "sample_name":
+        [
+          "BRAEMBL-EnvironmentalMetagenomicsSamplesGladstone-10"
+        ]
+      },
+      "id": "MGYA00003141_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR208374"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000318"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS198355"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Neandertal bone Vi33.16 metagenome",
+          "Neandertal bone Vi33.16 metagenome"
+        ],
+        "sample_name":
+        [
+          "Bone sample from Vindija Neandertal individual Vi33.16"
+        ]
+      },
+      "id": "MGYA00000592_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR476440"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000368"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS431305"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "metagenomic study targeting N cycling processes",
+          "metagenomic study targeting N cycling processes"
+        ],
+        "sample_name":
+        [
+          "sample32 (29X)"
+        ]
+      },
+      "id": "MGYA00002382_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR436057"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000341"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS407423"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Comparative metagenomic analysis of soil microbial communities varying in disease suppression potential",
+          "Comparative metagenomic analysis of soil microbial communities varying in disease suppression potential"
+        ],
+        "sample_name":
+        [
+          "Non-disease suppressive soil NonSupSoils7"
+        ]
+      },
+      "id": "MGYA00001811_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR260255"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000322"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS235619"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Gut metagenome in European women with normal, impaired and diabetic glucose control",
+          "Gut metagenome in European women with normal, impaired and diabetic glucose control"
+        ],
+        "sample_name":
+        [
+          "gut microbiome, anonymized sample 141"
+        ]
+      },
+      "id": "MGYA00001287_1.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR911225"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000498"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS744901"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "2.0"
+        ],
+        "project_name":
+        [
+          "This a study of how variability of the soil environment affects the soil microbial function and diversity",
+          "This a study of how variability of the soil environment affects the soil microbial function and diversity"
+        ],
+        "sample_name":
+        [
+          "718"
+        ]
+      },
+      "id": "MGYA00007674_2.0",
+      "source": "metagenomics_analyses"
+    },
+    {
+      "fields":
+      {
+        "ANALYSIS":
+        [],
+        "ENA_RUN":
+        [
+          "ERR208381"
+        ],
+        "METAGENOMICS_PROJECTS":
+        [
+          "MGYS00000318"
+        ],
+        "SRA-SAMPLE":
+        [
+          "ERS198355"
+        ],
+        "experiment_type":
+        [
+          "metagenomic"
+        ],
+        "pipeline_version":
+        [
+          "1.0"
+        ],
+        "project_name":
+        [
+          "Neandertal bone Vi33.16 metagenome",
+          "Neandertal bone Vi33.16 metagenome"
+        ],
+        "sample_name":
+        [
+          "Bone sample from Vindija Neandertal individual Vi33.16"
+        ]
+      },
+      "id": "MGYA00000599_1.0",
+      "source": "metagenomics_analyses"
+    }
+  ],
+  "facets":
+  [
+    {
+      "facetValues":
+      [
+        {
+          "children":
+          [
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 734,
+                      "label": "Large intestine",
+                      "value": "Large intestine"
+                    },
+                    {
+                      "count": 2,
+                      "label": "Oral",
+                      "value": "Oral"
+                    }
+                  ],
+                  "count": 736,
+                  "label": "Digestive system",
+                  "value": "Digestive system"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 25,
+                      "label": "Pulmonary system",
+                      "value": "Pulmonary system"
+                    }
+                  ],
+                  "count": 25,
+                  "label": "Respiratory system",
+                  "value": "Respiratory system"
+                },
+                {
+                  "count": 12,
+                  "label": "Skin",
+                  "value": "Skin"
+                }
+              ],
+              "count": 1516,
+              "label": "Human",
+              "value": "Human"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 240,
+                      "label": "Stomach",
+                      "value": "Stomach"
+                    },
+                    {
+                      "count": 136,
+                      "label": "Large intestine",
+                      "value": "Large intestine"
+                    },
+                    {
+                      "count": 4,
+                      "label": "Fecal",
+                      "value": "Fecal"
+                    }
+                  ],
+                  "count": 380,
+                  "label": "Digestive system",
+                  "value": "Digestive system"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 14,
+                      "label": "Brain",
+                      "value": "Brain"
+                    }
+                  ],
+                  "count": 14,
+                  "label": "Nervous system",
+                  "value": "Nervous system"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 3,
+                      "label": "Intestine",
+                      "value": "Intestine"
+                    }
+                  ],
+                  "count": 3,
+                  "label": "Gastrointestinal tract",
+                  "value": "Gastrointestinal tract"
+                }
+              ],
+              "count": 397,
+              "label": "Mammals",
+              "value": "Mammals"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 181,
+                      "label": "Soil",
+                      "value": "Soil"
+                    }
+                  ],
+                  "count": 199,
+                  "label": "Rhizosphere",
+                  "value": "Rhizosphere"
+                },
+                {
+                  "count": 3,
+                  "label": "Phylloplane",
+                  "value": "Phylloplane"
+                }
+              ],
+              "count": 251,
+              "label": "Plants",
+              "value": "Plants"
+            },
+            {
+              "count": 141,
+              "label": "Insecta",
+              "value": "Insecta"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 14,
+                      "label": "Gut",
+                      "value": "Gut"
+                    }
+                  ],
+                  "count": 14,
+                  "label": "Digestive system",
+                  "value": "Digestive system"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1,
+                      "label": "Gills",
+                      "value": "Gills"
+                    }
+                  ],
+                  "count": 1,
+                  "label": "Respiratory system",
+                  "value": "Respiratory system"
+                }
+              ],
+              "count": 16,
+              "label": "Arthropoda",
+              "value": "Arthropoda"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 12,
+                      "label": "Coral",
+                      "value": "Coral"
+                    }
+                  ],
+                  "count": 12,
+                  "label": "Cnidaria",
+                  "value": "Cnidaria"
+                }
+              ],
+              "count": 12,
+              "label": "Invertebrates",
+              "value": "Invertebrates"
+            },
+            {
+              "children":
+              [
+                {
+                  "count": 4,
+                  "label": "Digestive system",
+                  "value": "Digestive system"
+                }
+              ],
+              "count": 11,
+              "label": "Animal",
+              "value": "Animal"
+            },
+            {
+              "count": 11,
+              "label": "Porifera",
+              "value": "Porifera"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 8,
+                      "label": "Ceca",
+                      "value": "Ceca"
+                    }
+                  ],
+                  "count": 8,
+                  "label": "Digestive system",
+                  "value": "Digestive system"
+                }
+              ],
+              "count": 8,
+              "label": "Birds",
+              "value": "Birds"
+            },
+            {
+              "count": 2,
+              "label": "Annelida",
+              "value": "Annelida"
+            }
+          ],
+          "count": 2399,
+          "label": "Host-associated",
+          "value": "Host-associated"
+        },
+        {
+          "children":
+          [
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 248,
+                      "label": "Hydrothermal vents",
+                      "value": "Hydrothermal vents"
+                    },
+                    {
+                      "count": 197,
+                      "label": "Oceanic",
+                      "value": "Oceanic"
+                    },
+                    {
+                      "count": 52,
+                      "label": "Intertidal zone",
+                      "value": "Intertidal zone"
+                    },
+                    {
+                      "count": 12,
+                      "label": "Coastal",
+                      "value": "Coastal"
+                    },
+                    {
+                      "count": 4,
+                      "label": "Sediment",
+                      "value": "Sediment"
+                    },
+                    {
+                      "count": 1,
+                      "label": "Oil field",
+                      "value": "Oil field"
+                    }
+                  ],
+                  "count": 990,
+                  "label": "Marine",
+                  "value": "Marine"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 18,
+                      "label": "Sediment",
+                      "value": "Sediment"
+                    },
+                    {
+                      "count": 12,
+                      "label": "Lake",
+                      "value": "Lake"
+                    },
+                    {
+                      "count": 11,
+                      "label": "Ice",
+                      "value": "Ice"
+                    },
+                    {
+                      "count": 6,
+                      "label": "Lotic",
+                      "value": "Lotic"
+                    },
+                    {
+                      "count": 6,
+                      "label": "Lentic",
+                      "value": "Lentic"
+                    },
+                    {
+                      "count": 5,
+                      "label": "Groundwater",
+                      "value": "Groundwater"
+                    },
+                    {
+                      "count": 1,
+                      "label": "Storm water",
+                      "value": "Storm water"
+                    }
+                  ],
+                  "count": 81,
+                  "label": "Freshwater",
+                  "value": "Freshwater"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1,
+                      "label": "Hot (42-90C)",
+                      "value": "Hot (42-90C)"
+                    }
+                  ],
+                  "count": 3,
+                  "label": "Thermal springs",
+                  "value": "Thermal springs"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 2,
+                      "label": "Hypersaline",
+                      "value": "Hypersaline"
+                    }
+                  ],
+                  "count": 2,
+                  "label": "Non-marine Saline and Alkaline",
+                  "value": "Non-marine Saline and Alkaline"
+                }
+              ],
+              "count": 1140,
+              "label": "Aquatic",
+              "value": "Aquatic"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 54,
+                      "label": "Grasslands",
+                      "value": "Grasslands"
+                    },
+                    {
+                      "count": 52,
+                      "label": "Forest soil",
+                      "value": "Forest soil"
+                    },
+                    {
+                      "count": 19,
+                      "label": "Tropical rainforest",
+                      "value": "Tropical rainforest"
+                    },
+                    {
+                      "count": 5,
+                      "label": "Clay",
+                      "value": "Clay"
+                    },
+                    {
+                      "count": 4,
+                      "label": "Sand",
+                      "value": "Sand"
+                    },
+                    {
+                      "count": 2,
+                      "label": "Agricultural",
+                      "value": "Agricultural"
+                    },
+                    {
+                      "count": 1,
+                      "label": "Contaminated",
+                      "value": "Contaminated"
+                    }
+                  ],
+                  "count": 622,
+                  "label": "Soil",
+                  "value": "Soil"
+                },
+                {
+                  "count": 2,
+                  "label": "Rock-dwelling (subaerial biofilm)",
+                  "value": "Rock-dwelling (subaerial biofilm)"
+                }
+              ],
+              "count": 624,
+              "label": "Terrestrial",
+              "value": "Terrestrial"
+            },
+            {
+              "count": 2,
+              "label": "Air",
+              "value": "Air"
+            }
+          ],
+          "count": 1834,
+          "label": "Environmental",
+          "value": "Environmental"
+        },
+        {
+          "children":
+          [
+            {
+              "children":
+              [
+                {
+                  "count": 37,
+                  "label": "Simulated communities (microbial mixture)",
+                  "value": "Simulated communities (microbial mixture)"
+                },
+                {
+                  "count": 12,
+                  "label": "Simulated communities (sequence read mixture)",
+                  "value": "Simulated communities (sequence read mixture)"
+                },
+                {
+                  "count": 4,
+                  "label": "Simulated communities (DNA mixture)",
+                  "value": "Simulated communities (DNA mixture)"
+                }
+              ],
+              "count": 54,
+              "label": "Modeled",
+              "value": "Modeled"
+            },
+            {
+              "children":
+              [
+                {
+                  "count": 16,
+                  "label": "Water and sludge",
+                  "value": "Water and sludge"
+                }
+              ],
+              "count": 17,
+              "label": "Wastewater",
+              "value": "Wastewater"
+            },
+            {
+              "children":
+              [
+                {
+                  "count": 10,
+                  "label": "Fermented vegetables",
+                  "value": "Fermented vegetables"
+                },
+                {
+                  "count": 1,
+                  "label": "Dairy products",
+                  "value": "Dairy products"
+                }
+              ],
+              "count": 13,
+              "label": "Food production",
+              "value": "Food production"
+            },
+            {
+              "children":
+              [
+                {
+                  "count": 2,
+                  "label": "Wet fermentation",
+                  "value": "Wet fermentation"
+                }
+              ],
+              "count": 2,
+              "label": "Biogas plant",
+              "value": "Biogas plant"
+            },
+            {
+              "count": 1,
+              "label": "Bioreactor",
+              "value": "Bioreactor"
+            },
+            {
+              "count": 1,
+              "label": "Biotransformation",
+              "value": "Biotransformation"
+            }
+          ],
+          "count": 88,
+          "label": "Engineered",
+          "value": "Engineered"
+        }
+      ],
+      "id": "biome",
+      "label": "Biome",
+      "total": 1
+    },
+    {
+      "facetValues":
+      [
+        {
+          "count": 2598,
+          "label": "1.0",
+          "value": "1.0"
+        },
+        {
+          "count": 1723,
+          "label": "2.0",
+          "value": "2.0"
+        }
+      ],
+      "id": "pipeline_version",
+      "label": "Pipeline version",
+      "total": 2
+    },
+    {
+      "facetValues":
+      [
+        {
+          "children":
+          [
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 2046,
+                      "label": "Enterobacteriales",
+                      "value": "Enterobacteriales"
+                    },
+                    {
+                      "count": 1934,
+                      "label": "Alteromonadales",
+                      "value": "Alteromonadales"
+                    },
+                    {
+                      "count": 1906,
+                      "label": "Pseudomonadales",
+                      "value": "Pseudomonadales"
+                    },
+                    {
+                      "count": 1851,
+                      "label": "Xanthomonadales",
+                      "value": "Xanthomonadales"
+                    },
+                    {
+                      "count": 1340,
+                      "label": "Oceanospirillales",
+                      "value": "Oceanospirillales"
+                    },
+                    {
+                      "count": 1323,
+                      "label": "Aeromonadales",
+                      "value": "Aeromonadales"
+                    },
+                    {
+                      "count": 1295,
+                      "label": "Legionellales",
+                      "value": "Legionellales"
+                    },
+                    {
+                      "count": 1277,
+                      "label": "Pasteurellales",
+                      "value": "Pasteurellales"
+                    },
+                    {
+                      "count": 1210,
+                      "label": "Chromatiales",
+                      "value": "Chromatiales"
+                    },
+                    {
+                      "count": 1173,
+                      "label": "Vibrionales",
+                      "value": "Vibrionales"
+                    }
+                  ],
+                  "count": 3476,
+                  "label": "Gammaproteobacteria",
+                  "value": "Gammaproteobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 2860,
+                      "label": "Burkholderiales",
+                      "value": "Burkholderiales"
+                    },
+                    {
+                      "count": 1114,
+                      "label": "Rhodocyclales",
+                      "value": "Rhodocyclales"
+                    },
+                    {
+                      "count": 1020,
+                      "label": "Methylophilales",
+                      "value": "Methylophilales"
+                    },
+                    {
+                      "count": 868,
+                      "label": "Neisseriales",
+                      "value": "Neisseriales"
+                    },
+                    {
+                      "count": 817,
+                      "label": "SC-I-84",
+                      "value": "SC-I-84"
+                    },
+                    {
+                      "count": 660,
+                      "label": "A21b",
+                      "value": "A21b"
+                    },
+                    {
+                      "count": 639,
+                      "label": "Ellin6067",
+                      "value": "Ellin6067"
+                    },
+                    {
+                      "count": 637,
+                      "label": "MND1",
+                      "value": "MND1"
+                    },
+                    {
+                      "count": 594,
+                      "label": "Nitrosomonadales",
+                      "value": "Nitrosomonadales"
+                    },
+                    {
+                      "count": 554,
+                      "label": "SBla14",
+                      "value": "SBla14"
+                    }
+                  ],
+                  "count": 3366,
+                  "label": "Betaproteobacteria",
+                  "value": "Betaproteobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 2084,
+                      "label": "Rhizobiales",
+                      "value": "Rhizobiales"
+                    },
+                    {
+                      "count": 2037,
+                      "label": "Rickettsiales",
+                      "value": "Rickettsiales"
+                    },
+                    {
+                      "count": 1857,
+                      "label": "Sphingomonadales",
+                      "value": "Sphingomonadales"
+                    },
+                    {
+                      "count": 1814,
+                      "label": "Rhodospirillales",
+                      "value": "Rhodospirillales"
+                    },
+                    {
+                      "count": 1573,
+                      "label": "Rhodobacterales",
+                      "value": "Rhodobacterales"
+                    },
+                    {
+                      "count": 1211,
+                      "label": "Caulobacterales",
+                      "value": "Caulobacterales"
+                    },
+                    {
+                      "count": 708,
+                      "label": "Ellin329",
+                      "value": "Ellin329"
+                    },
+                    {
+                      "count": 677,
+                      "label": "BD7-3",
+                      "value": "BD7-3"
+                    },
+                    {
+                      "count": 615,
+                      "label": "Kiloniellales",
+                      "value": "Kiloniellales"
+                    },
+                    {
+                      "count": 448,
+                      "label": "RF32",
+                      "value": "RF32"
+                    }
+                  ],
+                  "count": 3238,
+                  "label": "Alphaproteobacteria",
+                  "value": "Alphaproteobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1616,
+                      "label": "Myxococcales",
+                      "value": "Myxococcales"
+                    },
+                    {
+                      "count": 1433,
+                      "label": "Desulfovibrionales",
+                      "value": "Desulfovibrionales"
+                    },
+                    {
+                      "count": 1051,
+                      "label": "Bdellovibrionales",
+                      "value": "Bdellovibrionales"
+                    },
+                    {
+                      "count": 1033,
+                      "label": "Desulfobacterales",
+                      "value": "Desulfobacterales"
+                    },
+                    {
+                      "count": 1013,
+                      "label": "Syntrophobacterales",
+                      "value": "Syntrophobacterales"
+                    },
+                    {
+                      "count": 848,
+                      "label": "Desulfuromonadales",
+                      "value": "Desulfuromonadales"
+                    },
+                    {
+                      "count": 762,
+                      "label": "Spirobacillales",
+                      "value": "Spirobacillales"
+                    },
+                    {
+                      "count": 688,
+                      "label": "Sva0853",
+                      "value": "Sva0853"
+                    },
+                    {
+                      "count": 585,
+                      "label": "NB1-j",
+                      "value": "NB1-j"
+                    },
+                    {
+                      "count": 495,
+                      "label": "MIZ46",
+                      "value": "MIZ46"
+                    }
+                  ],
+                  "count": 2852,
+                  "label": "Deltaproteobacteria",
+                  "value": "Deltaproteobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1232,
+                      "label": "Campylobacterales",
+                      "value": "Campylobacterales"
+                    },
+                    {
+                      "count": 237,
+                      "label": "Nautiliales",
+                      "value": "Nautiliales"
+                    }
+                  ],
+                  "count": 1242,
+                  "label": "Epsilonproteobacteria",
+                  "value": "Epsilonproteobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 480,
+                      "label": "Mariprofundales",
+                      "value": "Mariprofundales"
+                    }
+                  ],
+                  "count": 480,
+                  "label": "Zetaproteobacteria",
+                  "value": "Zetaproteobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 168,
+                      "label": "CV90",
+                      "value": "CV90"
+                    },
+                    {
+                      "count": 126,
+                      "label": "PHOS-HD29",
+                      "value": "PHOS-HD29"
+                    }
+                  ],
+                  "count": 226,
+                  "label": "TA18",
+                  "value": "TA18"
+                }
+              ],
+              "count": 4059,
+              "label": "Proteobacteria",
+              "value": "Proteobacteria"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 2584,
+                      "label": "Bacteroidales",
+                      "value": "Bacteroidales"
+                    }
+                  ],
+                  "count": 2592,
+                  "label": "Bacteroidia",
+                  "value": "Bacteroidia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1993,
+                      "label": "Flavobacteriales",
+                      "value": "Flavobacteriales"
+                    }
+                  ],
+                  "count": 2018,
+                  "label": "Flavobacteriia",
+                  "value": "Flavobacteriia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1776,
+                      "label": "Sphingobacteriales",
+                      "value": "Sphingobacteriales"
+                    }
+                  ],
+                  "count": 1776,
+                  "label": "Sphingobacteriia",
+                  "value": "Sphingobacteriia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 939,
+                      "label": "Saprospirales",
+                      "value": "Saprospirales"
+                    }
+                  ],
+                  "count": 939,
+                  "label": "Saprospirae",
+                  "value": "Saprospirae"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 891,
+                      "label": "Cytophagales",
+                      "value": "Cytophagales"
+                    }
+                  ],
+                  "count": 891,
+                  "label": "Cytophagia",
+                  "value": "Cytophagia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 475,
+                      "label": "Rhodothermales",
+                      "value": "Rhodothermales"
+                    }
+                  ],
+                  "count": 475,
+                  "label": "Rhodothermi",
+                  "value": "Rhodothermi"
+                },
+                {
+                  "count": 208,
+                  "label": "BME43",
+                  "value": "BME43"
+                },
+                {
+                  "count": 151,
+                  "label": "VC2_1_Bac22",
+                  "value": "VC2_1_Bac22"
+                },
+                {
+                  "count": 78,
+                  "label": "At12OctB3",
+                  "value": "At12OctB3"
+                },
+                {
+                  "count": 40,
+                  "label": "SM1A07",
+                  "value": "SM1A07"
+                }
+              ],
+              "count": 3585,
+              "label": "Bacteroidetes",
+              "value": "Bacteroidetes"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 3211,
+                      "label": "Actinomycetales",
+                      "value": "Actinomycetales"
+                    },
+                    {
+                      "count": 1106,
+                      "label": "Bifidobacteriales",
+                      "value": "Bifidobacteriales"
+                    },
+                    {
+                      "count": 184,
+                      "label": "Micrococcales",
+                      "value": "Micrococcales"
+                    },
+                    {
+                      "count": 160,
+                      "label": "WCHB1-81",
+                      "value": "WCHB1-81"
+                    },
+                    {
+                      "count": 6,
+                      "label": "Coriobacteriales",
+                      "value": "Coriobacteriales"
+                    }
+                  ],
+                  "count": 3417,
+                  "label": "Actinobacteria",
+                  "value": "Actinobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1701,
+                      "label": "Acidimicrobiales",
+                      "value": "Acidimicrobiales"
+                    }
+                  ],
+                  "count": 1701,
+                  "label": "Acidimicrobiia",
+                  "value": "Acidimicrobiia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1197,
+                      "label": "Solirubrobacterales",
+                      "value": "Solirubrobacterales"
+                    },
+                    {
+                      "count": 1071,
+                      "label": "Gaiellales",
+                      "value": "Gaiellales"
+                    }
+                  ],
+                  "count": 1403,
+                  "label": "Thermoleophilia",
+                  "value": "Thermoleophilia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 531,
+                      "label": "Coriobacteriales",
+                      "value": "Coriobacteriales"
+                    }
+                  ],
+                  "count": 531,
+                  "label": "Coriobacteriia",
+                  "value": "Coriobacteriia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 338,
+                      "label": "Nitriliruptorales",
+                      "value": "Nitriliruptorales"
+                    },
+                    {
+                      "count": 189,
+                      "label": "Euzebyales",
+                      "value": "Euzebyales"
+                    }
+                  ],
+                  "count": 446,
+                  "label": "Nitriliruptoria",
+                  "value": "Nitriliruptoria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 353,
+                      "label": "0319-7L14",
+                      "value": "0319-7L14"
+                    }
+                  ],
+                  "count": 381,
+                  "label": "MB-A2-108",
+                  "value": "MB-A2-108"
+                },
+                {
+                  "count": 280,
+                  "label": "OPB41",
+                  "value": "OPB41"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 206,
+                      "label": "Rubrobacterales",
+                      "value": "Rubrobacterales"
+                    }
+                  ],
+                  "count": 206,
+                  "label": "Rubrobacteria",
+                  "value": "Rubrobacteria"
+                },
+                {
+                  "count": 26,
+                  "label": "KIST-JJY010",
+                  "value": "KIST-JJY010"
+                }
+              ],
+              "count": 3543,
+              "label": "Actinobacteria",
+              "value": "Actinobacteria"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 2834,
+                      "label": "Clostridiales",
+                      "value": "Clostridiales"
+                    },
+                    {
+                      "count": 955,
+                      "label": "Coriobacteriales",
+                      "value": "Coriobacteriales"
+                    },
+                    {
+                      "count": 418,
+                      "label": "Thermoanaerobacterales",
+                      "value": "Thermoanaerobacterales"
+                    },
+                    {
+                      "count": 416,
+                      "label": "Natranaerobiales",
+                      "value": "Natranaerobiales"
+                    },
+                    {
+                      "count": 283,
+                      "label": "Halanaerobiales",
+                      "value": "Halanaerobiales"
+                    },
+                    {
+                      "count": 244,
+                      "label": "MBA08",
+                      "value": "MBA08"
+                    },
+                    {
+                      "count": 218,
+                      "label": "OPB54",
+                      "value": "OPB54"
+                    },
+                    {
+                      "count": 217,
+                      "label": "SHA-98",
+                      "value": "SHA-98"
+                    },
+                    {
+                      "count": 35,
+                      "label": "BSA2B-08",
+                      "value": "BSA2B-08"
+                    },
+                    {
+                      "count": 14,
+                      "label": "Desulforudales",
+                      "value": "Desulforudales"
+                    }
+                  ],
+                  "count": 2879,
+                  "label": "Clostridia",
+                  "value": "Clostridia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 2044,
+                      "label": "Bacillales",
+                      "value": "Bacillales"
+                    },
+                    {
+                      "count": 2030,
+                      "label": "Lactobacillales",
+                      "value": "Lactobacillales"
+                    },
+                    {
+                      "count": 1007,
+                      "label": "Gemellales",
+                      "value": "Gemellales"
+                    },
+                    {
+                      "count": 711,
+                      "label": "Turicibacterales",
+                      "value": "Turicibacterales"
+                    },
+                    {
+                      "count": 259,
+                      "label": "Exiguobacterales",
+                      "value": "Exiguobacterales"
+                    },
+                    {
+                      "count": 117,
+                      "label": "Haloplasmatales",
+                      "value": "Haloplasmatales"
+                    },
+                    {
+                      "count": 42,
+                      "label": "Herpetosiphonales",
+                      "value": "Herpetosiphonales"
+                    },
+                    {
+                      "count": 1,
+                      "label": "Thermicanales",
+                      "value": "Thermicanales"
+                    }
+                  ],
+                  "count": 2850,
+                  "label": "Bacilli",
+                  "value": "Bacilli"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1474,
+                      "label": "Erysipelotrichales",
+                      "value": "Erysipelotrichales"
+                    }
+                  ],
+                  "count": 1474,
+                  "label": "Erysipelotrichi",
+                  "value": "Erysipelotrichi"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 215,
+                      "label": "ML615J-28",
+                      "value": "ML615J-28"
+                    }
+                  ],
+                  "count": 218,
+                  "label": "RF3",
+                  "value": "RF3"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 87,
+                      "label": "Selemonadales",
+                      "value": "Selemonadales"
+                    }
+                  ],
+                  "count": 87,
+                  "label": "Negativicutes",
+                  "value": "Negativicutes"
+                },
+                {
+                  "count": 57,
+                  "label": "AHT28",
+                  "value": "AHT28"
+                },
+                {
+                  "count": 22,
+                  "label": "OPB54",
+                  "value": "OPB54"
+                },
+                {
+                  "count": 5,
+                  "label": "CK-1C4-19",
+                  "value": "CK-1C4-19"
+                }
+              ],
+              "count": 3384,
+              "label": "Firmicutes",
+              "value": "Firmicutes"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1536,
+                      "label": "Verrucomicrobiales",
+                      "value": "Verrucomicrobiales"
+                    }
+                  ],
+                  "count": 1536,
+                  "label": "Verrucomicrobiae",
+                  "value": "Verrucomicrobiae"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 721,
+                      "label": "Opitutales",
+                      "value": "Opitutales"
+                    },
+                    {
+                      "count": 686,
+                      "label": "Puniceicoccales",
+                      "value": "Puniceicoccales"
+                    },
+                    {
+                      "count": 289,
+                      "label": "Cerasicoccales",
+                      "value": "Cerasicoccales"
+                    },
+                    {
+                      "count": 174,
+                      "label": "Pelagicoccales",
+                      "value": "Pelagicoccales"
+                    },
+                    {
+                      "count": 108,
+                      "label": "HA64",
+                      "value": "HA64"
+                    }
+                  ],
+                  "count": 1306,
+                  "label": "Opitutae",
+                  "value": "Opitutae"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 936,
+                      "label": "Pedosphaerales",
+                      "value": "Pedosphaerales"
+                    },
+                    {
+                      "count": 437,
+                      "label": "Arctic97B-4",
+                      "value": "Arctic97B-4"
+                    }
+                  ],
+                  "count": 1248,
+                  "label": "Pedosphaerae",
+                  "value": "Pedosphaerae"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 662,
+                      "label": "WCHB1-41",
+                      "value": "WCHB1-41"
+                    },
+                    {
+                      "count": 361,
+                      "label": "R76-B128",
+                      "value": "R76-B128"
+                    },
+                    {
+                      "count": 301,
+                      "label": "LD1-PB3",
+                      "value": "LD1-PB3"
+                    },
+                    {
+                      "count": 115,
+                      "label": "MSBL3",
+                      "value": "MSBL3"
+                    },
+                    {
+                      "count": 84,
+                      "label": "SS1-B-03-39",
+                      "value": "SS1-B-03-39"
+                    }
+                  ],
+                  "count": 936,
+                  "label": "Verruco-5",
+                  "value": "Verruco-5"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 787,
+                      "label": "Chthoniobacterales",
+                      "value": "Chthoniobacterales"
+                    }
+                  ],
+                  "count": 787,
+                  "label": "Spartobacteria",
+                  "value": "Spartobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 215,
+                      "label": "Methylacidiphilales",
+                      "value": "Methylacidiphilales"
+                    },
+                    {
+                      "count": 206,
+                      "label": "S-BQ2-57",
+                      "value": "S-BQ2-57"
+                    }
+                  ],
+                  "count": 336,
+                  "label": "Methylacidiphilae",
+                  "value": "Methylacidiphilae"
+                }
+              ],
+              "count": 2538,
+              "label": "Verrucomicrobia",
+              "value": "Verrucomicrobia"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1205,
+                      "label": "Streptophyta",
+                      "value": "Streptophyta"
+                    },
+                    {
+                      "count": 964,
+                      "label": "Stramenopiles",
+                      "value": "Stramenopiles"
+                    },
+                    {
+                      "count": 742,
+                      "label": "Chlorophyta",
+                      "value": "Chlorophyta"
+                    },
+                    {
+                      "count": 667,
+                      "label": "Haptophyceae",
+                      "value": "Haptophyceae"
+                    },
+                    {
+                      "count": 410,
+                      "label": "Cryptophyta",
+                      "value": "Cryptophyta"
+                    },
+                    {
+                      "count": 252,
+                      "label": "Cercozoa",
+                      "value": "Cercozoa"
+                    },
+                    {
+                      "count": 141,
+                      "label": "Rhodophyta",
+                      "value": "Rhodophyta"
+                    },
+                    {
+                      "count": 90,
+                      "label": "Euglenozoa",
+                      "value": "Euglenozoa"
+                    },
+                    {
+                      "count": 37,
+                      "label": "CAB-I",
+                      "value": "CAB-I"
+                    },
+                    {
+                      "count": 33,
+                      "label": "Glaucocystophyceae",
+                      "value": "Glaucocystophyceae"
+                    }
+                  ],
+                  "count": 1830,
+                  "label": "Chloroplast",
+                  "value": "Chloroplast"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 768,
+                      "label": "Synechococcales",
+                      "value": "Synechococcales"
+                    },
+                    {
+                      "count": 562,
+                      "label": "Pseudanabaenales",
+                      "value": "Pseudanabaenales"
+                    }
+                  ],
+                  "count": 914,
+                  "label": "Synechococcophycideae",
+                  "value": "Synechococcophycideae"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 518,
+                      "label": "YS2",
+                      "value": "YS2"
+                    },
+                    {
+                      "count": 324,
+                      "label": "MLE1-12",
+                      "value": "MLE1-12"
+                    },
+                    {
+                      "count": 188,
+                      "label": "SM1D11",
+                      "value": "SM1D11"
+                    },
+                    {
+                      "count": 38,
+                      "label": "SM2F09",
+                      "value": "SM2F09"
+                    }
+                  ],
+                  "count": 847,
+                  "label": "4C0d-2",
+                  "value": "4C0d-2"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 564,
+                      "label": "Chroococcales",
+                      "value": "Chroococcales"
+                    },
+                    {
+                      "count": 343,
+                      "label": "Oscillatoriales",
+                      "value": "Oscillatoriales"
+                    }
+                  ],
+                  "count": 623,
+                  "label": "Oscillatoriophycideae",
+                  "value": "Oscillatoriophycideae"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 437,
+                      "label": "Nostocales",
+                      "value": "Nostocales"
+                    },
+                    {
+                      "count": 312,
+                      "label": "Stigonematales",
+                      "value": "Stigonematales"
+                    }
+                  ],
+                  "count": 542,
+                  "label": "Nostocophycideae",
+                  "value": "Nostocophycideae"
+                },
+                {
+                  "count": 392,
+                  "label": "ML635J-21",
+                  "value": "ML635J-21"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 172,
+                      "label": "Gloeobacterales",
+                      "value": "Gloeobacterales"
+                    }
+                  ],
+                  "count": 172,
+                  "label": "Gloeobacterophycideae",
+                  "value": "Gloeobacterophycideae"
+                },
+                {
+                  "count": 121,
+                  "label": "S15B-MN24",
+                  "value": "S15B-MN24"
+                }
+              ],
+              "count": 2311,
+              "label": "Cyanobacteria",
+              "value": "Cyanobacteria"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 560,
+                      "label": "SBR1031",
+                      "value": "SBR1031"
+                    },
+                    {
+                      "count": 448,
+                      "label": "Anaerolineales",
+                      "value": "Anaerolineales"
+                    },
+                    {
+                      "count": 440,
+                      "label": "EnvOPS12",
+                      "value": "envOPS12"
+                    },
+                    {
+                      "count": 427,
+                      "label": "Caldilineales",
+                      "value": "Caldilineales"
+                    },
+                    {
+                      "count": 367,
+                      "label": "GCA004",
+                      "value": "GCA004"
+                    },
+                    {
+                      "count": 318,
+                      "label": "H39",
+                      "value": "H39"
+                    },
+                    {
+                      "count": 299,
+                      "label": "SHA-20",
+                      "value": "SHA-20"
+                    },
+                    {
+                      "count": 257,
+                      "label": "DRC31",
+                      "value": "DRC31"
+                    },
+                    {
+                      "count": 256,
+                      "label": "S0208",
+                      "value": "S0208"
+                    },
+                    {
+                      "count": 224,
+                      "label": "SJA-15",
+                      "value": "SJA-15"
+                    }
+                  ],
+                  "count": 1139,
+                  "label": "Anaerolineae",
+                  "value": "Anaerolineae"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 419,
+                      "label": "Thermogemmatisporales",
+                      "value": "Thermogemmatisporales"
+                    },
+                    {
+                      "count": 243,
+                      "label": "TK10",
+                      "value": "TK10"
+                    },
+                    {
+                      "count": 218,
+                      "label": "Ktedonobacterales",
+                      "value": "Ktedonobacterales"
+                    },
+                    {
+                      "count": 162,
+                      "label": "JG30-KF-AS9",
+                      "value": "JG30-KF-AS9"
+                    },
+                    {
+                      "count": 150,
+                      "label": "B12-WMSP1",
+                      "value": "B12-WMSP1"
+                    },
+                    {
+                      "count": 111,
+                      "label": "Elev-1554",
+                      "value": "Elev-1554"
+                    },
+                    {
+                      "count": 11,
+                      "label": "B10-SB3A",
+                      "value": "B10-SB3A"
+                    }
+                  ],
+                  "count": 655,
+                  "label": "Ktedonobacteria",
+                  "value": "Ktedonobacteria"
+                },
+                {
+                  "count": 549,
+                  "label": "Ellin6529",
+                  "value": "Ellin6529"
+                },
+                {
+                  "count": 542,
+                  "label": "SAR202",
+                  "value": "SAR202"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 225,
+                      "label": "Mle1-48",
+                      "value": "mle1-48"
+                    },
+                    {
+                      "count": 187,
+                      "label": "S085",
+                      "value": "S085"
+                    },
+                    {
+                      "count": 49,
+                      "label": "TK18",
+                      "value": "TK18"
+                    }
+                  ],
+                  "count": 530,
+                  "label": "TK17",
+                  "value": "TK17"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 318,
+                      "label": "JG30-KF-CM45",
+                      "value": "JG30-KF-CM45"
+                    },
+                    {
+                      "count": 114,
+                      "label": "Ellin6537",
+                      "value": "Ellin6537"
+                    },
+                    {
+                      "count": 107,
+                      "label": "Sphaerobacterales",
+                      "value": "Sphaerobacterales"
+                    },
+                    {
+                      "count": 100,
+                      "label": "AKYG1722",
+                      "value": "AKYG1722"
+                    },
+                    {
+                      "count": 25,
+                      "label": "Thermomicrobiales",
+                      "value": "Thermomicrobiales"
+                    }
+                  ],
+                  "count": 449,
+                  "label": "Thermomicrobia",
+                  "value": "Thermomicrobia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 357,
+                      "label": "Roseiflexales",
+                      "value": "Roseiflexales"
+                    },
+                    {
+                      "count": 145,
+                      "label": "Chloroflexales",
+                      "value": "Chloroflexales"
+                    },
+                    {
+                      "count": 64,
+                      "label": "Herpetosiphonales",
+                      "value": "Herpetosiphonales"
+                    },
+                    {
+                      "count": 40,
+                      "label": "AKIW781",
+                      "value": "AKIW781"
+                    }
+                  ],
+                  "count": 445,
+                  "label": "Chloroflexi",
+                  "value": "Chloroflexi"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 271,
+                      "label": "Dehalococcoidales",
+                      "value": "Dehalococcoidales"
+                    },
+                    {
+                      "count": 163,
+                      "label": "GIF9",
+                      "value": "GIF9"
+                    },
+                    {
+                      "count": 82,
+                      "label": "FS117-23B-02",
+                      "value": "FS117-23B-02"
+                    }
+                  ],
+                  "count": 339,
+                  "label": "Dehalococcoidetes",
+                  "value": "Dehalococcoidetes"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 284,
+                      "label": "B07_WMSP1",
+                      "value": "B07_WMSP1"
+                    },
+                    {
+                      "count": 183,
+                      "label": "AKYG885",
+                      "value": "AKYG885"
+                    }
+                  ],
+                  "count": 328,
+                  "label": "Bljii12",
+                  "value": "Bljii12"
+                },
+                {
+                  "count": 231,
+                  "label": "S085",
+                  "value": "S085"
+                }
+              ],
+              "count": 1850,
+              "label": "Chloroflexi",
+              "value": "Chloroflexi"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1311,
+                      "label": "Pirellulales",
+                      "value": "Pirellulales"
+                    },
+                    {
+                      "count": 858,
+                      "label": "Planctomycetales",
+                      "value": "Planctomycetales"
+                    },
+                    {
+                      "count": 800,
+                      "label": "Gemmatales",
+                      "value": "Gemmatales"
+                    },
+                    {
+                      "count": 166,
+                      "label": "B97",
+                      "value": "B97"
+                    }
+                  ],
+                  "count": 1635,
+                  "label": "Planctomycetia",
+                  "value": "Planctomycetia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 825,
+                      "label": "Phycisphaerales",
+                      "value": "Phycisphaerales"
+                    },
+                    {
+                      "count": 290,
+                      "label": "WD2101",
+                      "value": "WD2101"
+                    },
+                    {
+                      "count": 143,
+                      "label": "MSBL9",
+                      "value": "MSBL9"
+                    },
+                    {
+                      "count": 127,
+                      "label": "CPla-3",
+                      "value": "CPla-3"
+                    },
+                    {
+                      "count": 99,
+                      "label": "CCM11a",
+                      "value": "CCM11a"
+                    },
+                    {
+                      "count": 90,
+                      "label": "SHA-43",
+                      "value": "SHA-43"
+                    },
+                    {
+                      "count": 82,
+                      "label": "AKAU3564",
+                      "value": "AKAU3564"
+                    },
+                    {
+                      "count": 69,
+                      "label": "Mle1-8",
+                      "value": "mle1-8"
+                    },
+                    {
+                      "count": 62,
+                      "label": "Pla1",
+                      "value": "Pla1"
+                    },
+                    {
+                      "count": 59,
+                      "label": "S-70",
+                      "value": "S-70"
+                    }
+                  ],
+                  "count": 1264,
+                  "label": "Phycisphaerae",
+                  "value": "Phycisphaerae"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 550,
+                      "label": "Agg27",
+                      "value": "agg27"
+                    },
+                    {
+                      "count": 457,
+                      "label": "CL500-15",
+                      "value": "CL500-15"
+                    }
+                  ],
+                  "count": 695,
+                  "label": "OM190",
+                  "value": "OM190"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 303,
+                      "label": "DH61",
+                      "value": "DH61"
+                    },
+                    {
+                      "count": 252,
+                      "label": "P04_C01",
+                      "value": "p04_C01"
+                    },
+                    {
+                      "count": 121,
+                      "label": "PeHg47",
+                      "value": "PeHg47"
+                    },
+                    {
+                      "count": 48,
+                      "label": "PHOS-HE93",
+                      "value": "PHOS-HE93"
+                    }
+                  ],
+                  "count": 474,
+                  "label": "VadinHA49",
+                  "value": "vadinHA49"
+                },
+                {
+                  "count": 443,
+                  "label": "BD7-11",
+                  "value": "BD7-11"
+                },
+                {
+                  "count": 425,
+                  "label": "Pla3",
+                  "value": "Pla3"
+                },
+                {
+                  "count": 327,
+                  "label": "Pla4",
+                  "value": "Pla4"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 207,
+                      "label": "D113",
+                      "value": "d113"
+                    },
+                    {
+                      "count": 174,
+                      "label": "MVS-107",
+                      "value": "MVS-107"
+                    },
+                    {
+                      "count": 95,
+                      "label": "Ucm1571",
+                      "value": "Ucm1571"
+                    }
+                  ],
+                  "count": 251,
+                  "label": "C6",
+                  "value": "C6"
+                },
+                {
+                  "count": 185,
+                  "label": "028H05-P-BN-P5",
+                  "value": "028H05-P-BN-P5"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 84,
+                      "label": "T8-B82",
+                      "value": "T8-B82"
+                    }
+                  ],
+                  "count": 117,
+                  "label": "ODP123",
+                  "value": "ODP123"
+                }
+              ],
+              "count": 1828,
+              "label": "Planctomycetes",
+              "value": "Planctomycetes"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1098,
+                      "label": "Iii1-15",
+                      "value": "iii1-15"
+                    },
+                    {
+                      "count": 407,
+                      "label": "CCU21",
+                      "value": "CCU21"
+                    },
+                    {
+                      "count": 171,
+                      "label": "BPC015",
+                      "value": "BPC015"
+                    }
+                  ],
+                  "count": 1156,
+                  "label": "Acidobacteria-6",
+                  "value": "Acidobacteria-6"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 907,
+                      "label": "Solibacterales",
+                      "value": "Solibacterales"
+                    },
+                    {
+                      "count": 42,
+                      "label": "JH-WHS99",
+                      "value": "JH-WHS99"
+                    }
+                  ],
+                  "count": 908,
+                  "label": "Solibacteres",
+                  "value": "Solibacteres"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 391,
+                      "label": "RB41",
+                      "value": "RB41"
+                    },
+                    {
+                      "count": 76,
+                      "label": "PK29",
+                      "value": "PK29"
+                    },
+                    {
+                      "count": 70,
+                      "label": "11-24",
+                      "value": "11-24"
+                    },
+                    {
+                      "count": 68,
+                      "label": "DS-100",
+                      "value": "DS-100"
+                    },
+                    {
+                      "count": 36,
+                      "label": "Ellin7246",
+                      "value": "Ellin7246"
+                    },
+                    {
+                      "count": 27,
+                      "label": "Chloracidobacterales",
+                      "value": "Chloracidobacterales"
+                    }
+                  ],
+                  "count": 697,
+                  "label": "Chloracidobacteria",
+                  "value": "Chloracidobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 653,
+                      "label": "Sva0725",
+                      "value": "Sva0725"
+                    }
+                  ],
+                  "count": 663,
+                  "label": "Sva0725",
+                  "value": "Sva0725"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 473,
+                      "label": "DS-18",
+                      "value": "DS-18"
+                    },
+                    {
+                      "count": 221,
+                      "label": "32-20",
+                      "value": "32-20"
+                    },
+                    {
+                      "count": 143,
+                      "label": "SJA-36",
+                      "value": "SJA-36"
+                    }
+                  ],
+                  "count": 532,
+                  "label": "Iii1-8",
+                  "value": "iii1-8"
+                },
+                {
+                  "count": 470,
+                  "label": "Acidobacteria-5",
+                  "value": "Acidobacteria-5"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 468,
+                      "label": "Acidobacteriales",
+                      "value": "Acidobacteriales"
+                    }
+                  ],
+                  "count": 468,
+                  "label": "Acidobacteriia",
+                  "value": "Acidobacteriia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 402,
+                      "label": "Acidobacteriales",
+                      "value": "Acidobacteriales"
+                    }
+                  ],
+                  "count": 402,
+                  "label": "Acidobacteria",
+                  "value": "Acidobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 352,
+                      "label": "Ellin6513",
+                      "value": "Ellin6513"
+                    },
+                    {
+                      "count": 57,
+                      "label": "E29",
+                      "value": "E29"
+                    },
+                    {
+                      "count": 9,
+                      "label": "HDB_SIOH1004",
+                      "value": "HDB_SIOH1004"
+                    }
+                  ],
+                  "count": 375,
+                  "label": "DA052",
+                  "value": "DA052"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 261,
+                      "label": "B110",
+                      "value": "B110"
+                    },
+                    {
+                      "count": 87,
+                      "label": "MVS-40",
+                      "value": "MVS-40"
+                    }
+                  ],
+                  "count": 344,
+                  "label": "BPC102",
+                  "value": "BPC102"
+                }
+              ],
+              "count": 1735,
+              "label": "Acidobacteria",
+              "value": "Acidobacteria"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 600,
+                      "label": "CW040",
+                      "value": "CW040"
+                    },
+                    {
+                      "count": 546,
+                      "label": "EW055",
+                      "value": "EW055"
+                    },
+                    {
+                      "count": 405,
+                      "label": "I025",
+                      "value": "I025"
+                    },
+                    {
+                      "count": 183,
+                      "label": "Blgi18",
+                      "value": "Blgi18"
+                    }
+                  ],
+                  "count": 1239,
+                  "label": "TM7-3",
+                  "value": "TM7-3"
+                },
+                {
+                  "count": 653,
+                  "label": "TM7-1",
+                  "value": "TM7-1"
+                },
+                {
+                  "count": 220,
+                  "label": "SC3",
+                  "value": "SC3"
+                },
+                {
+                  "count": 29,
+                  "label": "MJK10",
+                  "value": "MJK10"
+                }
+              ],
+              "count": 1618,
+              "label": "TM7",
+              "value": "TM7"
+            }
+          ],
+          "count": 4239,
+          "label": "Bacteria",
+          "value": "Bacteria"
+        },
+        {
+          "children":
+          [
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1021,
+                      "label": "E2",
+                      "value": "E2"
+                    },
+                    {
+                      "count": 85,
+                      "label": "Thermoplasmatales",
+                      "value": "Thermoplasmatales"
+                    }
+                  ],
+                  "count": 1060,
+                  "label": "Thermoplasmata",
+                  "value": "Thermoplasmata"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 650,
+                      "label": "Methanobacteriales",
+                      "value": "Methanobacteriales"
+                    }
+                  ],
+                  "count": 650,
+                  "label": "Methanobacteria",
+                  "value": "Methanobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 369,
+                      "label": "Methanosarcinales",
+                      "value": "Methanosarcinales"
+                    },
+                    {
+                      "count": 260,
+                      "label": "Methanomicrobiales",
+                      "value": "Methanomicrobiales"
+                    },
+                    {
+                      "count": 82,
+                      "label": "Methanocellales",
+                      "value": "Methanocellales"
+                    },
+                    {
+                      "count": 66,
+                      "label": "YC-E6",
+                      "value": "YC-E6"
+                    },
+                    {
+                      "count": 32,
+                      "label": "RCII",
+                      "value": "RCII"
+                    },
+                    {
+                      "count": 11,
+                      "label": "F99a103",
+                      "value": "F99a103"
+                    },
+                    {
+                      "count": 3,
+                      "label": "NRA6",
+                      "value": "NRA6"
+                    }
+                  ],
+                  "count": 450,
+                  "label": "Methanomicrobia",
+                  "value": "Methanomicrobia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 281,
+                      "label": "Methanococcales",
+                      "value": "Methanococcales"
+                    }
+                  ],
+                  "count": 299,
+                  "label": "Methanococci",
+                  "value": "Methanococci"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 232,
+                      "label": "Thermococcales",
+                      "value": "Thermococcales"
+                    }
+                  ],
+                  "count": 232,
+                  "label": "Thermococci",
+                  "value": "Thermococci"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 226,
+                      "label": "Archaeoglobales",
+                      "value": "Archaeoglobales"
+                    }
+                  ],
+                  "count": 226,
+                  "label": "Archaeoglobi",
+                  "value": "Archaeoglobi"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 166,
+                      "label": "YLA114",
+                      "value": "YLA114"
+                    },
+                    {
+                      "count": 149,
+                      "label": "WCHD3-30",
+                      "value": "WCHD3-30"
+                    }
+                  ],
+                  "count": 208,
+                  "label": "Parvarchaea",
+                  "value": "Parvarchaea"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 172,
+                      "label": "Halobacteriales",
+                      "value": "Halobacteriales"
+                    }
+                  ],
+                  "count": 172,
+                  "label": "Halobacteria",
+                  "value": "Halobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 109,
+                      "label": "104A5",
+                      "value": "104A5"
+                    },
+                    {
+                      "count": 81,
+                      "label": "ArcA07",
+                      "value": "ArcA07"
+                    },
+                    {
+                      "count": 49,
+                      "label": "DHVE3",
+                      "value": "DHVE3"
+                    },
+                    {
+                      "count": 23,
+                      "label": "HydGC-84-221A",
+                      "value": "HydGC-84-221A"
+                    }
+                  ],
+                  "count": 153,
+                  "label": "DSEG",
+                  "value": "DSEG"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 94,
+                      "label": "Methanopyrales",
+                      "value": "Methanopyrales"
+                    }
+                  ],
+                  "count": 94,
+                  "label": "Methanopyri",
+                  "value": "Methanopyri"
+                }
+              ],
+              "count": 1644,
+              "label": "Euryarchaeota",
+              "value": "Euryarchaeota"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 644,
+                      "label": "Cenarchaeales",
+                      "value": "Cenarchaeales"
+                    },
+                    {
+                      "count": 491,
+                      "label": "Nitrososphaerales",
+                      "value": "Nitrososphaerales"
+                    },
+                    {
+                      "count": 54,
+                      "label": "AK31",
+                      "value": "AK31"
+                    },
+                    {
+                      "count": 34,
+                      "label": "D-F10",
+                      "value": "D-F10"
+                    },
+                    {
+                      "count": 25,
+                      "label": "Nitrosocaldales",
+                      "value": "Nitrosocaldales"
+                    }
+                  ],
+                  "count": 1005,
+                  "label": "Thaumarchaeota",
+                  "value": "Thaumarchaeota"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 183,
+                      "label": "Thermoproteales",
+                      "value": "Thermoproteales"
+                    },
+                    {
+                      "count": 172,
+                      "label": "Desulfurococcales",
+                      "value": "Desulfurococcales"
+                    },
+                    {
+                      "count": 30,
+                      "label": "Sulfolobales",
+                      "value": "Sulfolobales"
+                    },
+                    {
+                      "count": 1,
+                      "label": "YNPFFA",
+                      "value": "YNPFFA"
+                    }
+                  ],
+                  "count": 265,
+                  "label": "Thermoprotei",
+                  "value": "Thermoprotei"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 185,
+                      "label": "PGrfC26",
+                      "value": "pGrfC26"
+                    },
+                    {
+                      "count": 97,
+                      "label": "B10",
+                      "value": "B10"
+                    }
+                  ],
+                  "count": 262,
+                  "label": "MCG",
+                  "value": "MCG"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 90,
+                      "label": "NRP-J",
+                      "value": "NRP-J"
+                    }
+                  ],
+                  "count": 219,
+                  "label": "MBGA",
+                  "value": "MBGA"
+                },
+                {
+                  "count": 156,
+                  "label": "MBGB",
+                  "value": "MBGB"
+                },
+                {
+                  "count": 65,
+                  "label": "MHVG",
+                  "value": "MHVG"
+                },
+                {
+                  "count": 53,
+                  "label": "THSCG",
+                  "value": "THSCG"
+                },
+                {
+                  "count": 38,
+                  "label": "AAG",
+                  "value": "AAG"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 20,
+                      "label": "Korarchaeotales",
+                      "value": "Korarchaeotales"
+                    },
+                    {
+                      "count": 13,
+                      "label": "PJP78",
+                      "value": "pJP78"
+                    }
+                  ],
+                  "count": 32,
+                  "label": "Korarchaeota",
+                  "value": "Korarchaeota"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 12,
+                      "label": "Caldiarchales",
+                      "value": "Caldiarchales"
+                    }
+                  ],
+                  "count": 19,
+                  "label": "Aigarchaeota",
+                  "value": "Aigarchaeota"
+                }
+              ],
+              "count": 1229,
+              "label": "Crenarchaeota",
+              "value": "Crenarchaeota"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 129,
+                      "label": "WCHD3-30",
+                      "value": "WCHD3-30"
+                    },
+                    {
+                      "count": 118,
+                      "label": "YLA114",
+                      "value": "YLA114"
+                    }
+                  ],
+                  "count": 162,
+                  "label": "Parvarchaea",
+                  "value": "Parvarchaea"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 37,
+                      "label": "PMC2A384",
+                      "value": "pMC2A384"
+                    },
+                    {
+                      "count": 23,
+                      "label": "Micrarchaeles",
+                      "value": "Micrarchaeles"
+                    }
+                  ],
+                  "count": 57,
+                  "label": "Micrarchaea",
+                  "value": "Micrarchaea"
+                }
+              ],
+              "count": 177,
+              "label": "Parvarchaeota",
+              "value": "Parvarchaeota"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 46,
+                      "label": "Nanoarchaeotales",
+                      "value": "Nanoarchaeotales"
+                    }
+                  ],
+                  "count": 46,
+                  "label": "Nanoarchaeoti",
+                  "value": "Nanoarchaeoti"
+                }
+              ],
+              "count": 46,
+              "label": "Nanoarchaeota",
+              "value": "Nanoarchaeota"
+            }
+          ],
+          "count": 2007,
+          "label": "Archaea",
+          "value": "Archaea"
+        },
+        {
+          "children":
+          [
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 6,
+                      "label": "Gammaproteobacteria",
+                      "value": "Gammaproteobacteria"
+                    },
+                    {
+                      "count": 5,
+                      "label": "Betaproteobacteria",
+                      "value": "Betaproteobacteria"
+                    },
+                    {
+                      "count": 4,
+                      "label": "Deltaproteobacteria",
+                      "value": "Deltaproteobacteria"
+                    },
+                    {
+                      "count": 3,
+                      "label": "Alphaproteobacteria",
+                      "value": "Alphaproteobacteria"
+                    },
+                    {
+                      "count": 1,
+                      "label": "Epsilonproteobacteria",
+                      "value": "Epsilonproteobacteria"
+                    }
+                  ],
+                  "count": 7,
+                  "label": "Proteobacteria",
+                  "value": "Proteobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 7,
+                      "label": "Bacilli",
+                      "value": "Bacilli"
+                    },
+                    {
+                      "count": 6,
+                      "label": "Erysipelotrichi",
+                      "value": "Erysipelotrichi"
+                    },
+                    {
+                      "count": 6,
+                      "label": "Clostridia",
+                      "value": "Clostridia"
+                    },
+                    {
+                      "count": 2,
+                      "label": "RF3",
+                      "value": "RF3"
+                    }
+                  ],
+                  "count": 7,
+                  "label": "Firmicutes",
+                  "value": "Firmicutes"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 6,
+                      "label": "Actinobacteria",
+                      "value": "Actinobacteria"
+                    }
+                  ],
+                  "count": 6,
+                  "label": "Actinobacteria",
+                  "value": "Actinobacteria"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 5,
+                      "label": "Verrucomicrobiae",
+                      "value": "Verrucomicrobiae"
+                    }
+                  ],
+                  "count": 5,
+                  "label": "Verrucomicrobia",
+                  "value": "Verrucomicrobia"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 5,
+                      "label": "Bacteroidia",
+                      "value": "Bacteroidia"
+                    }
+                  ],
+                  "count": 5,
+                  "label": "Bacteroidetes",
+                  "value": "Bacteroidetes"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 4,
+                      "label": "Mollicutes",
+                      "value": "Mollicutes"
+                    }
+                  ],
+                  "count": 4,
+                  "label": "Tenericutes",
+                  "value": "Tenericutes"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 3,
+                      "label": "TM7-3",
+                      "value": "TM7-3"
+                    }
+                  ],
+                  "count": 3,
+                  "label": "TM7",
+                  "value": "TM7"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1,
+                      "label": "Synergistia",
+                      "value": "Synergistia"
+                    }
+                  ],
+                  "count": 3,
+                  "label": "Synergistetes",
+                  "value": "Synergistetes"
+                },
+                {
+                  "children":
+                  [
+                    {
+                      "count": 1,
+                      "label": "4C0d-2",
+                      "value": "4C0d-2"
+                    },
+                    {
+                      "count": 1,
+                      "label": "Chloroplast",
+                      "value": "Chloroplast"
+                    }
+                  ],
+                  "count": 2,
+                  "label": "Cyanobacteria",
+                  "value": "Cyanobacteria"
+                }
+              ],
+              "count": 7,
+              "label": "Bacteria",
+              "value": "Bacteria"
+            },
+            {
+              "children":
+              [
+                {
+                  "children":
+                  [
+                    {
+                      "count": 3,
+                      "label": "Methanobacteria",
+                      "value": "Methanobacteria"
+                    }
+                  ],
+                  "count": 3,
+                  "label": "Euryarchaeota",
+                  "value": "Euryarchaeota"
+                }
+              ],
+              "count": 3,
+              "label": "Archaea",
+              "value": "Archaea"
+            }
+          ],
+          "count": 7,
+          "label": "Root",
+          "value": "Root"
+        }
+      ],
+      "id": "organism",
+      "label": "Organism",
+      "total": 1
+    },
+    {
+      "facetValues":
+      [
+        {
+          "count": 4321,
+          "label": "MGnify (Analyses)",
+          "value": "metagenomics_analyses"
+        }
+      ],
+      "id": "domain_source",
+      "label": "Source",
+      "total": 1
+    },
+    {
+      "facetValues":
+      [
+        {
+          "count": 3613,
+          "label": "Metagenomic",
+          "value": "metagenomic"
+        },
+        {
+          "count": 458,
+          "label": "Metatranscriptomic",
+          "value": "metatranscriptomic"
+        },
+        {
+          "count": 188,
+          "label": "Amplicon",
+          "value": "amplicon"
+        },
+        {
+          "count": 62,
+          "label": "Assembly",
+          "value": "assembly"
+        }
+      ],
+      "id": "experiment_type",
+      "label": "Experiment Type",
+      "total": 4
+    },
+    {
+      "facetValues":
+      [
+        {
+          "count": 608,
+          "label": "Illumina",
+          "value": "Illumina"
+        },
+        {
+          "count": 395,
+          "label": "Illumina_MiSeq",
+          "value": "Illumina_MiSeq"
+        },
+        {
+          "count": 183,
+          "label": "Illumina HiSeq Truseq sequencing",
+          "value": "Illumina HiSeq Truseq sequencing"
+        },
+        {
+          "count": 137,
+          "label": "Illumina HiSeq 1000, paired-end overlapping",
+          "value": "Illumina HiSeq 1000, paired-end overlapping"
+        },
+        {
+          "count": 93,
+          "label": "Pyrosequencing",
+          "value": "pyrosequencing"
+        },
+        {
+          "count": 76,
+          "label": "Paired-end overlapping reads",
+          "value": "paired-end overlapping reads"
+        },
+        {
+          "count": 58,
+          "label": "Illumina HiSeq 2500",
+          "value": "Illumina HiSeq 2500"
+        },
+        {
+          "count": 35,
+          "label": "Illumina Hi Seq",
+          "value": "Illumina Hi Seq"
+        },
+        {
+          "count": 35,
+          "label": "Illumina HiSeq",
+          "value": "Illumina HiSeq"
+        },
+        {
+          "count": 26,
+          "label": "WGS",
+          "value": "WGS"
+        }
+      ],
+      "id": "sequencing_method",
+      "label": "Sequencing method",
+      "total": 42
+    },
+    {
+      "facetValues":
+      [
+        {
+          "count": 486,
+          "label": "China",
+          "value": "China"
+        },
+        {
+          "count": 326,
+          "label": "Australia",
+          "value": "Australia"
+        },
+        {
+          "count": 282,
+          "label": "Croatia; Vindija Cave",
+          "value": "Croatia; Vindija Cave"
+        },
+        {
+          "count": 248,
+          "label": "Pacific Ocean",
+          "value": "Pacific Ocean"
+        },
+        {
+          "count": 240,
+          "label": "Brazil",
+          "value": "Brazil"
+        },
+        {
+          "count": 184,
+          "label": "India",
+          "value": "India"
+        },
+        {
+          "count": 177,
+          "label": "Netherlands",
+          "value": "Netherlands"
+        },
+        {
+          "count": 145,
+          "label": "Europe",
+          "value": "Europe"
+        },
+        {
+          "count": 137,
+          "label": "United Kingdom",
+          "value": "United Kingdom"
+        },
+        {
+          "count": 118,
+          "label": "GAZ:United States of America",
+          "value": "GAZ:United States of America"
+        }
+      ],
+      "id": "location_name",
+      "label": "Location name",
+      "total": 85
+    }
+  ],
+  "hitCount": 4321
+}

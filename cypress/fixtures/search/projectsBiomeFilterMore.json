@@ -1,0 +1,2216 @@
+{
+  "hitCount": 1819,
+  "entries": [
+    {
+      "id": "MGYS00000257",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB2064"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000241_1.0",
+          "MGYA00000242_1.0",
+          "MGYA00000243_1.0",
+          "MGYA00000244_1.0",
+          "MGYA00000245_1.0",
+          "MGYA00000246_1.0",
+          "MGYA00000247_1.0",
+          "MGYA00000248_1.0",
+          "MGYA00000249_1.0",
+          "MGYA00000250_1.0",
+          "MGYA00000251_1.0",
+          "MGYA00000252_1.0",
+          "MGYA00000253_1.0",
+          "MGYA00000254_1.0",
+          "MGYA00000255_1.0",
+          "MGYA00000256_1.0",
+          "MGYA00000257_1.0",
+          "MGYA00000258_1.0",
+          "MGYA00000259_1.0",
+          "MGYA00000260_1.0"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "centre_name": [
+          "Plymouth Marine Laboratory"
+        ],
+        "description": [
+          "Here we present a multi-omic study of the Bacterial and Archaeal diversity found at the L4 long-term marine observatory.  We have previously generated a six year time series from L4 that showed that the bacterial community shows strong seasonal structuring and diversity peaks every year on the winter solstice.  Here we further confirm this pattern by extending this study to include genes and transcripts generated for eight additional time points in 2008.  This data includes further 16S datasets as well as eight metagenomes (1.2 GB) and eight metatranscriptomes (157MB).  These time points cover three seasons (Jan, April and August) and include day and night (diel) publicSamples.  In addition, the August publicSamples (4) include 4 consecutive samplings within 24 hours at six hour intervals.  Using these data we test whether Archaea also show the same observed seasonal patterns and whether these patterns hold true at the gene (functional) level. Analysis of this combined data set allows five main conclusions to be drawn.  First, Archaea show evidence of following the same seasonal patterns as Bacteria, but have ~6% the richness.  Second, for both Bacteria and Archaea, we confirm that higher 16S diversity reflects higher diversity at the gene-level (including expressed genes) and this diversity also peaks at the winter solstice. Third, interestingly, detectable diversity appears to be higher at night, and this is of special potential relevance as there is more diversity in winter when nights are longer.  Fourth, despite the diversity of these communities, night and day publicSamples taken using Lagrangian (drift) sampling were successful in isolating the same community suggesting communities are more structured than is commonly believed. Finally, this data, as expected, contains a large proportion of orphan genes without known homologues.  When compared to the housekeeping genes identified through SEED subsystem classification, these unknown genes appear to be driving the differences between publicSamples across seasons.  This underscores the importance of determining the functions of more of these sequences in the future. In summary, this study further confirms the strong seasonal patterns characterizing both the bacterial and archaeal communities at this important marine site.  The finding that, despite the huge diversity of these communities, there are evident signs of predictable patterns and detectable stability over time provides compelling evidence that renewed efforts should be focused on finding deterministic patterns in even the most complex microbial communities. The Western Channel Observatory maintains more than 100 years of continual environmental monitoring, including oceanographic and biological measures. At PML we are committed to developing this outstanding time series to include the most up to date techniques available. Our aim is to provide an holistic ecologically relevant dataset that can be used to inform environmental models and help with prediction of the impact that climate change will have on the coastal seas of the United Kingdom. With further development and comparative publicStudies this information can help to inform on global marine environments. To this end we have been employing the latest in high-throughput sequencing technology to investigate the microbial diversity and community function in this ecosystem. The technologies applied include 16S rDNA tag-pyrosequencing to deep sequence microbial diversity, as well as total community metagenomics and metatranscriptomics. This initial study includes 16S rDNA tag sequencing data for bacteria and archaeal groups as well as metagenomics and metatranscriptomics all performed on the GS-flx titanium platform using techniques outlined in Gilbert et al (2009 – Environmental Microbiology) and Gilbert et al (2008 – PloS One.) We will continue to add to this repository to maintain the temporal analysis of this community."
+        ],
+        "name": [
+          "Western English Channel diurnal study"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000259",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA30701"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000262_1.0"
+        ],
+        "biome_name": [
+          "Glacier"
+        ],
+        "centre_name": [
+          "G2L (Goettingen Genomics Lab)"
+        ],
+        "description": [
+          "The largest part of the Earth's microbial biomass is stored in cold environments, which represent almost untapped reservoirs of novel species, processes, and genes. In this study, the first metagenomic survey of the metabolic potential and phylogenetic diversity of a microbial assemblage present in glacial ice is presented. DNA was isolated from glacial ice of the Northern Schneeferner, Germany. Pyrosequencing of this DNA yielded 1,076,539 reads (239.7 Mbp). The phylogenetic composition of the prokaryotic community was assessed by evaluation of a pyrosequencing-derived data set and sequencing of 16S rRNA genes. The Proteobacteria (mainly Betaproteobacteria), Bacteroidetes, and Actinobacteria  were the predominant phylogenetic groups. In addition, isolation  of psychrophilic microorganisms was performed, and 13 different  bacterial isolates were recovered. Analysis of the 16S rRNA gene sequences of the isolates revealed that all were affiliated to the predominant groups. As expected for microorganisms residing in a low-nutrient environment, a high metabolic versatility with respect to degradation of organic substrates was detected by analysis of the pyrosequencing-derived data set. The presence of autotrophic microorganisms was indicated by identification of genes typical for different ways of carbon fixation. In accordance  with the results of the phylogenetic samples, in which mainly  aerobic and facultative aerobic bacteria were detected, genes  typical for central metabolism of aerobes were found. Nevertheless, the capability of growth under anaerobic conditions was indicated by genes involved in dissimilatory nitrate/nitrite reduction. Numerous characteristics for metabolic adaptations associated with a psychrophilic lifestyle, such as formation of cryoprotectants and maintenance of membrane fluidity by the incorporation of unsaturated fatty acids, were detected. Thus, analysis of the glacial metagenome provided insights into the microbial life in frozen habitats on Earth, thereby possibly shedding light onto microbial life in analogous extraterrestrial environments."
+        ],
+        "name": [
+          "Glacier Metagenome"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000275",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "None"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000203_1.0"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "centre_name": [
+          "DIVISIÓN DE MICROBIO, Evolutionary Genomics Group, Universidad Miguel Hernández, Alicante, Spain."
+        ],
+        "description": [
+          "The Deep Chlorophyll Maximum (DCM) is a zone of maximal photosynthetic activity, generally located towards the base of the photic zone in lakes and oceans. The DCM in the Mediterranean is a seasonal phenomenon. The metagenome from a single sample of a mature Mediterranean DCM community has been 454 pyrosequenced both directly and after cloning in fosmids. The comparison between the two approaches revealed a bias in the fosmid libraries against low GC DNA and specifically against the two most dominant members of the community, Candidatus Pelagibacter and Prochlorococcus marinus subsp. pastoris, thus unexpectedly providing a feasible method to obtain large genomic fragments from other less prevalent members of this community. This study is the first to be carried out at this sequencing depth (ca. 600 Mbp combining direct and fosmid sequencing) at any DCM. Our results indicate a microbial community massively dominated by the high-light adapted P. marinus subsp. pastoris, Synechococcus sp. and the heterotroph Candidatus Pelagibacter. The sequences retrieved were remarkably similar to the existing genome of P. marinus subsp. pastoris with a nucleotide identity over 98%. Besides, we found a large number of cyanophages that could prey on this microbe although sequence conservation was much lower. The high abundance of phage sequences in the cellular size fraction indicated a remarkably high proportion of cells suffering phage lytic attack. In addition, several fosmids clearly belonging to Group II Euryarchaeota were retrieved and recruited many fragments from the total DNA sequencing suggesting that this group might be quite abundant in this habitat.\nWe have extracted metagenomic DNA from the pico-planktonic 5-0.2 μm size fraction (mostly prokaryotic cells) from a single sample obtained in mid October at 50 m depth and analyzed the DNA from this sample (without cloning or amplification) by 454 pyrosequencing (hereafter referred to as Direct Sequencing, DS). We also used 454 to sequence ca. 1152 randomly selected fosmid clones from a metagenomic fosmid library constructed from the same DNA sample. Here we compare the output from both methods and the picture of the microbial community that they provide."
+        ],
+        "name": [
+          "The Metagenome of the deep chlorophyll maximum in the Mediterranean studied by direct and fosmid library 454 pyrosequencing"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000282",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA33179"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000003_1.0",
+          "MGYA00000004_1.0",
+          "MGYA00000005_1.0",
+          "MGYA00000006_1.0",
+          "MGYA00000007_1.0",
+          "MGYA00000008_1.0",
+          "MGYA00000009_1.0",
+          "MGYA00000010_1.0",
+          "MGYA00000011_1.0",
+          "MGYA00000012_1.0",
+          "MGYA00000013_1.0",
+          "MGYA00000014_1.0",
+          "MGYA00000015_1.0",
+          "MGYA00000016_1.0",
+          "MGYA00000017_1.0",
+          "MGYA00000018_1.0",
+          "MGYA00000019_1.0",
+          "MGYA00000020_1.0"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "J. Craig Venter Institute"
+        ],
+        "description": [
+          "Microbial metagenome from a lake in Antarctica.\nMicrobial community isolated from an aquatic lake in Antarctica."
+        ],
+        "name": [
+          "Antarctica Aquatic Microbial Metagenome"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000288",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "None"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000291_1.0"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "centre_name": [
+          "CCME"
+        ],
+        "description": [
+          "This project describes a population genomic study focused on determining the evolutionary rates in natural populations, and to correlate human disturbance to major evolutionary divergence events. Biofilm samples from acid mine drainage were taken in the period 2006-2010 at four locations in the Richmond Mine (Iron Mt., CA). Community genomic DNA was extracted and sequenced by either 454 or Illumina sequencing."
+        ],
+        "name": [
+          "Brazos-Trinity Basin Sediment Metagenome: IODP Site 1320"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000289",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "None"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000292_1.0",
+          "MGYA00000293_1.0",
+          "MGYA00000294_1.0",
+          "MGYA00000295_1.0",
+          "MGYA00000296_1.0"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "centre_name": [
+          "CCGB"
+        ],
+        "description": [
+          "The subseafloor marine biosphere may be one of the largest reserviors of microbial biomass on Earth and has recently been the subject of debate in terms of the composition of its microbial inhabitants, particularly on sediments from the Peru Margin. A metagenomic analysis was made using whole genome amplification and pyrosequencing of sediments from Ocean Drilling Program Site 1229 on the Peru Margin to further explore the microbial diversity and overall community composition within this environment. A total of 61.9 Megabases of genetic material was sequenced from sediments at horizons 1, 16, 32 and 50 meters below seafloor. These depths include sediments from both primarily sulfate-reducing and also methane-generating regions of the sediment column. Many genes of the annotated genes, including those encoding ribosomal proteins, corresponded to those from the Chloroflexi and Euryarchaeota. However, analysis of the 16S small subunit ribosomal genes suggests that Crenarchaeota are the abundant microbial member. Quantitative PCR confirms that uncultivated Crenarchaeota are indeed a major microbial group in these subsurface samples. These findings show that the marine subsurface is a distinct microbial habitat and is different than environments previously studied by metagenomics, especially due to the predominance of uncultivated archaeal groups.\nA metagenomic analysis was made using whole genome amplification and pyrosequencing of sediments from Ocean Drilling Program Site 1229 on the Peru Margin to further explore the microbial diversity and overall community composition within this environment."
+        ],
+        "name": [
+          "Peru Margin Subseafloor Biosphere"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000291",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB2280"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000297_1.0",
+          "MGYA00000298_1.0"
+        ],
+        "biome_name": [
+          "Lentic"
+        ],
+        "centre_name": [
+          "UBP-CNRS"
+        ],
+        "description": [
+          "Viruses are known to be the most abundant biological entities in\n    aquatic environment, where they are (i) important top-down regulation factors for\n    microbial communities, (ii) known to interfere in major biogeochemical cycles, and\n    (iii) thought to be an important source of genetic diversity. Yet, diversity and\n    distribution of these viruses is still far from being understood, especially in\n    freshwater ecosystems. Metagenomic analysis of two different temperate freshwater\n    viral communities showed that most of the viral sequences were not similar to those\n    in the current databases. A deep sequencing (1.5 billion sequences) associated to a\n    large read size (400 bp) allowed us to assess, for the first time, the diversity in\n    the main viral families through direct phylogenetic analysis of specific marker\n    genes. The analysis of the major viral groups found in the two lakes shed light on a\n    great diversity, and retrieved previously unknown clades among single-stranded DNA\n    viruses (Microviridae, Circoviridae, Nanoviridae) and among Caudovirales. The\n    absence of lake-specific clade indicated that the new viruses identified were\n    ubiquitous, at least on a regional freshwater lake scale. Compared to the previously\n    published viromes, a significant genetic similarity between viral communities of\n    related environments was highlighted for the first time, despite the great\n    geographical distances separating these different communities. Thus, viruses appear\n    to be distributed worldwide, and are likely selected by the presence or absence of\n    their hosts. Gene richness analysis assessed through rarefaction curves showed an\n    extraordinary genetic diversity of viruses in each of the two lakes under study.\n    Such diversity was never retrieved previously, even in the last generation of\n    published viromes. The global virome is thereby a fantastic pool of unknown genes,\n    which remains partially sampled and understood."
+        ],
+        "name": [
+          "Viral metagenomic study of two freshwater Lakes"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000296",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA13694"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000001_1.0",
+          "MGYA00000002_1.0",
+          "MGYA00010409_2.0",
+          "MGYA00010410_2.0",
+          "MGYA00010411_2.0",
+          "MGYA00010412_2.0",
+          "MGYA00010413_2.0",
+          "MGYA00010414_2.0",
+          "MGYA00010415_2.0",
+          "MGYA00010416_2.0",
+          "MGYA00010417_2.0",
+          "MGYA00010418_2.0",
+          "MGYA00010419_2.0",
+          "MGYA00010420_2.0",
+          "MGYA00010421_2.0",
+          "MGYA00010422_2.0",
+          "MGYA00010423_2.0",
+          "MGYA00010424_2.0",
+          "MGYA00010425_2.0",
+          "MGYA00010426_2.0",
+          "MGYA00010427_2.0",
+          "MGYA00010428_2.0",
+          "MGYA00010429_2.0",
+          "MGYA00010430_2.0",
+          "MGYA00010431_2.0",
+          "MGYA00010432_2.0",
+          "MGYA00153161_4.1",
+          "MGYA00153162_4.1",
+          "MGYA00153163_4.1",
+          "MGYA00153164_4.1",
+          "MGYA00153165_4.1",
+          "MGYA00153166_4.1",
+          "MGYA00153167_4.1",
+          "MGYA00153168_4.1",
+          "MGYA00153169_4.1",
+          "MGYA00153170_4.1",
+          "MGYA00153171_4.1",
+          "MGYA00153172_4.1",
+          "MGYA00153173_4.1",
+          "MGYA00153174_4.1",
+          "MGYA00153175_4.1",
+          "MGYA00153176_4.1",
+          "MGYA00153177_4.1",
+          "MGYA00153178_4.1",
+          "MGYA00153179_4.1",
+          "MGYA00153180_4.1",
+          "MGYA00153181_4.1",
+          "MGYA00153182_4.1",
+          "MGYA00153183_4.1",
+          "MGYA00153184_4.1",
+          "MGYA00153185_4.1",
+          "MGYA00153186_4.1"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "JCVI"
+        ],
+        "description": [
+          "Collection of metagenomes obtained during the Global Ocean Sampling Expedition"
+        ],
+        "name": [
+          "Global Ocean Sampling Expedition"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000297",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB2859"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000021_1.0"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "EMBL"
+        ],
+        "description": [
+          "Polar winter waters are one of the least studied marine ecosystems with regard to microbial life and Thaumarchaeota are key microorganisms in this environment. We collected data on abundance and metabolic activity of Thaumarchaeota in Arctic and Antarctic waters in different seasons, including the wintertime. As previously observed, Arctic Thaumarchaeota grew throughout the winter, increasing their abundances one order of magnitude from January to March 2008. Yet, paradoxically, in situ single-cell measurements revealed an unexpected low metabolic activity for this group in both polar systems, i.e., less than 5% of archaeal cells taking up leucine or bicarbonate, inconsistent with known heterotrophic or autotrophic archaeal lifestyles. To resolve how archaea obtain energy and carbon for growth, we analyzed a metagenome collected during the Arctic winter, when the Thaumarchaeota population was at its maximum of abundance (18% of cell counts). Metagenomics and quantitative PCR showed that archaeal amoA genes were abundant in Arctic and Antarctic waters, indicating that polar Thaumarchaeota have the potential for ammonia oxidation.  The presence of a large number of archaeal genes involved in urea transport and degradation together with detectable uptake of 14C-labeled urea by the prokaryotic assemblage, suggest that the products of urea hydrolysis (NH3 and CO2) may be sources of both energy and carbon for polar ammonia oxidizing archaea. This hypothesis, consistent with the idea of polar archaea growing as nitrifiers but with apparent low incorporation of bicarbonate, would provide the molecular basis for the recurrent archaeal growth in polar winter waters."
+        ],
+        "name": [
+          "Arctic Winter marine ecosystem"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000298",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB2888"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000023_1.0",
+          "MGYA00000024_1.0",
+          "MGYA00000025_1.0",
+          "MGYA00000026_1.0",
+          "MGYA00000027_1.0",
+          "MGYA00000028_1.0",
+          "MGYA00000029_1.0",
+          "MGYA00000030_1.0"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "MPI-BREMEN"
+        ],
+        "description": [
+          "Phytoplankton blooms characterize temperate ocean margin zones in spring and contribute substantially to their high productivity. We investigated the bacterioplankton response to a diatom bloom in the North Sea and observed an as yet unseen dynamic succession of thriving populations at genus level resolution. Taxonomically distinct expressions of carbohydrate-active enzymes, transporters (in particular TonB-dependent transporters) and phosphate acquisition systems were found, indicating that distinct populations of Bacteroidetes, Gammaproteobacteria and Alphaproteobacteria acted like guilds specialized for successive algal-derived organic matter decomposition. Our results suggest that algal substrate availability and bacterial ecological niches determined the succession. A better understanding of such couplings between bacterioplankton and phytoplankton is needed to pave the way for predictive models of bacterioplankton bloom dynamics and thus more accurate global carbon turnover balances."
+        ],
+        "name": [
+          "Substrate-controlled succession of distinct marine bacterioplankton populations induced by a spring phytoplankton bloom"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000305",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB3125"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000421_1.0",
+          "MGYA00000422_1.0"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "GMGM"
+        ],
+        "description": [
+          "Micro-organisms which dwell in sediments have a crucial role in biogeochemical cycles and are thus expected to have a strong influence on the cycle of arsenic, a metalloid responsible for severe water pollution and presenting a major health risk for the populations. Nowadays, environmental genomics techniques allow to study the adaptive and cooperative strategies of microbial communities thriving in polluted environments.\nWe sequenced the sediment metagenomes from l'Estaque marina (Marseille, France), close to a former metallurgic industrial site highly polluted with arsenic, and from St Mandrier marina, near Toulon (France). The functional and taxonomic profiles of both metagenomes, along with those from four publicly available metagenomes used as control data sets, were obtained using the RAMMCAP workflow.\nThe biodiversity was higher in both harbour sediment communities in comparison to the controls. The order of Desulfobacterales represented 54.7% of the observed orders in l'Estaque and 31.7% in St Mandrier. Other orders were evenly distributed though the diversity was lower in the highly polluted site of l'Estaque than in St Mandrier.  \nThe Gene Ontology (GO) entries describing the functional profiles were compared with the controls in order to highlight the over-represented categories in the metagenomes of interest. We observed that categories related to arsenic resistance and oxidative stress were over-represented in l'Estaque. More importantly, the integration of metagenomic and physico-chemical data showed that in l'Estaque, dissimilatory sulphate reduction in the upper layer of sediment could increase arsenic diffusion to the water column and deeper layers, resulting in local detoxification of the sediment."
+        ],
+        "name": [
+          "Detoxification of arsenic mediated by microbial sulphate reduction in Mediterranean marine sediments"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000312",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB3383"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00000097_1.0",
+          "MGYA00000098_1.0",
+          "MGYA00000099_1.0",
+          "MGYA00000100_1.0"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "LNU"
+        ],
+        "description": [
+          "Microcosm experiments was done with water from the oxygen minimum zone (around 300-500 m depth) of the subtropical North Atlantic (latitude 17.71 , longitude -41.05) to study the response of mesopelagic prokaryotic communities to pulses of nutrients. Three different treatments and a control were established after prefiltering the seawater through 0.8 µm polycarbonate filters. Microcosms were amended either with thiosulfate (Na2S2O3), ammonium (NH4Cl) or pyruvate plus acetate (C3H3NaO3 and C2H3NaO3) and the control was not supplemented with any organic or inorganic compound. The treatments and the control were established in duplicate in 20 l carboys and held in the dark at in situ temperature for 110-140 h. At the end of the incubation the remaining water was collected through 0.22 µm polycarbonate filters for metatranscriptomic analysis"
+        ],
+        "name": [
+          "Metatranscriptomes from mesocosm experiments with added organic carbon (OM[ab] samples) and controls (C[ab] samples)."
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000320",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB1760"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00001026_1.0",
+          "MGYA00001027_1.0",
+          "MGYA00001028_1.0",
+          "MGYA00001029_1.0"
+        ],
+        "biome_name": [
+          "Salt marsh"
+        ],
+        "centre_name": [
+          "UW"
+        ],
+        "description": [
+          "Study of microbial populations that cycle the globally significant organic sulfur compounds dimethylsulfoniopropionate (DMSP) and dimethylsulfide (DMS) in coastal intertidal sediments."
+        ],
+        "name": [
+          "Making and breaking DMS by salt marsh microbes (Illumina HiSeq 100bp)"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000321",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB1929"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00001030_1.0",
+          "MGYA00001031_1.0",
+          "MGYA00001032_1.0",
+          "MGYA00001033_1.0"
+        ],
+        "biome_name": [
+          "Salt marsh"
+        ],
+        "centre_name": [
+          "UW"
+        ],
+        "description": [
+          "Study of microbial populations that cycle the globally significant organic sulfur compounds dimethylsulfoniopropionate (DMSP) and dimethylsulfide (DMS) in coastal intertidal sediments."
+        ],
+        "name": [
+          "Making and breaking DMS by salt marsh microbes (Illumina MiSeq 250bp)"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000324",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB1798"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00001149_1.0",
+          "MGYA00001313_1.0",
+          "MGYA00001314_1.0",
+          "MGYA00001315_1.0",
+          "MGYA00001316_1.0",
+          "MGYA00001317_1.0"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "LNU"
+        ],
+        "description": [
+          "The Baltic Sea is characterized by hyposaline surface waters, hypoxic and anoxic deep waters and sediments. These conditions, which in turn lead to a steep oxygen gradient, are particularly evident at Landsort Deep in the Baltic Proper. Given these substantial differences in environmental parameters at Landsort Deep, we performed a metagenomic census spanning surface to sediment to establish whether the microbial communities at this site are as stratified as the physical environment. We report strong stratification across a depth transect for both functional capacity and taxonomic affiliation, with functional capacity corresponding most closely to key environmental parameters of oxygen, salinity and temperature. We report similarities in functional capacity between the hypoxic community and hadal zone communities, underscoring the substantial degree of eutrophication in the Baltic Proper. Reconstruction of the nitrogen cycle at Landsort deep shows potential for syntrophy between archaeal ammonium oxidizers and bacterial denitrification at anoxic depths, while anaerobic ammonium oxidation genes are absent, despite substantial ammonium levels below the chemocline. Our census also reveals enrichment in genetic prerequisites for a copiotrophic lifestyle and resistance mechanisms reflecting adaptation to prevalent eutrophic conditions and the accumulation of environmental pollutants resulting from ongoing anthropogenic pressures in the Baltic Sea."
+        ],
+        "name": [
+          "A metagenomics transect into the deepest point of the Baltic Sea reveals clear stratification of microbial functional capacities"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000328",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB4150"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00001319_1.0",
+          "MGYA00001320_1.0"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "SZAD"
+        ],
+        "description": [
+          "The present project proposes to conduct a thorough investigation of the heterotrophic bacterial communities of different sites of the Gulf of Naples, encompassing different ecological conditions, in order to find microbiological indicators of ecological status."
+        ],
+        "name": [
+          "Marine microbial indicators in coastal areas: a metagenomic approach"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000336",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA76185"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00001773_1.0"
+        ],
+        "biome_name": [
+          "Biofilm"
+        ],
+        "centre_name": [
+          "UC Berkeley / U Michigan"
+        ],
+        "description": [
+          "Richmond Mine acid mine drainage biofilm samples datasets (2006-2010). This project describes a population genomic study focused on determining the evolutionary rates in natural populations, and to correlate human disturbance to major evolutionary divergence events. Biofilm samples from acid mine drainage were taken in the period 2006-2010 at four locations in the Richmond Mine (Iron Mt., CA). Community genomic DNA was extracted and sequenced by either 454 or Illumina sequencing."
+        ],
+        "name": [
+          "Richmond Mine AMD Biofilm Samples Metagenome"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000337",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB4844"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00001774_1.0",
+          "MGYA00001775_1.0",
+          "MGYA00001776_1.0",
+          "MGYA00001777_1.0",
+          "MGYA00001778_1.0",
+          "MGYA00001779_1.0",
+          "MGYA00001780_1.0",
+          "MGYA00001781_1.0",
+          "MGYA00001782_1.0"
+        ],
+        "biome_name": [
+          "Lake"
+        ],
+        "centre_name": [
+          "UU"
+        ],
+        "description": [
+          "Little is known about the diversity and structuring of freshwater microbial communities beyond the patterns revealed by tracing their distribution in the landscape with common taxonomic markers such as the ribosomal RNA. To address this gap in knowledge, metagenomes from temperate lakes were compared to selected marine metagenomes. Taxonomic analyses of rRNA genes in these freshwater metagenomes confirm the previously reported dominance of a limited subset of uncultured lineages of freshwater bacteria, whereas Archaea were rare. Diversification into marine and freshwater microbial lineages was also reflected in phylogenies of functional genes and there were also significant differences in functional beta-diversity. The pathways and functions that accounted for these differences are involved in osmoregulation, active transport, carbohydrate and amino acid metabolism. Moreover, predicted genes orthologous to active transporters and recalcitrant organic matter degradation were more common in microbial genomes from oligotrophic versus eutrophic lakes. This comparative metagenomic analysis allowed us to formulate a general hypothesis that oceanic- compared to freshwater-dwelling microorganisms, invest more in metabolism of amino acids and that strategies of carbohydrate metabolism differ significantly between marine and freshwater microbial communities."
+        ],
+        "name": [
+          "Comparative freshwater metagenomics of Swedish and American lakes"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000338",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB5246"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00001664_1.0"
+        ],
+        "biome_name": [
+          "bore hole"
+        ],
+        "centre_name": [
+          "CSIRO"
+        ],
+        "description": [
+          "In 2011, fluid samples were collected from the A7A oil well in the Tuna oil field (38°10' S, 148°25' E) in the Gippsland Basin, Australia. Chemical analyses of the water revealed the sample was pH 7.2, had a salinity of 2.7%, and contained 270 mg liter–1 calcium, 320 mg liter–1 magnesium, 1,200 mg liter–1 sulfate, and 1,170 mg liter–1 bicarbonate. The temperature in the reservoir was 102°C. One liter of formation water was filtered through a 0.2-M Polyvinylidene difluoride (PVDF) filter disc and subjected to genomic DNA extraction using a Meta-G-Nome DNA isolation kit (Epicenter Biotechnologies). The resultant DNA was sequenced using 100-bp paired-end Illumina HiSeq at the University of Western Sydney."
+        ],
+        "name": [
+          "Metagenome of a microbial consortium obtained from the Tuna oil field in the Gippsland Basin, Australia"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000342",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB5474"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00001668_1.0",
+          "MGYA00001813_1.0",
+          "MGYA00001814_1.0",
+          "MGYA00001815_1.0",
+          "MGYA00001816_1.0",
+          "MGYA00001817_1.0",
+          "MGYA00001818_1.0",
+          "MGYA00001819_1.0",
+          "MGYA00001820_1.0",
+          "MGYA00001821_1.0",
+          "MGYA00001822_1.0",
+          "MGYA00001823_1.0",
+          "MGYA00001824_1.0",
+          "MGYA00001825_1.0"
+        ],
+        "biome_name": [
+          "Freshwater"
+        ],
+        "centre_name": [
+          "CNRS and university of Rennes 1"
+        ],
+        "description": [
+          "A metatranscriptomic approach was used to study community gene expression in a naturally occurring iron-rich microbial mat. Total microbial community RNA was reversely transcribed and sequenced by pyrosequencing. Characterization of expressed gene sequences provided accurate and detailed information of the composition of the transcriptionally active community and revealed phylogenetic and functional stratifications within the mat. Comparison of 16S rRNA reads and delineation of OTUs showed significantly lower values of metatranscriptomic-based richness and diversity in the upper parts of the mat than in the deeper regions. Taxonomic affiliation of rRNA sequences and mRNA genome recruitments indicated that iron-oxidizing bacteria dominated the community in the upper layers of the mat. Surprisingly, type I methanothrophs contributed to the majority of the sequences in the deep layers of the mat. Analysis of mRNA expression patterns showed that genes encoding the three subunits of the particulate methane monooxygenase (pmoCAB) were the most highly expressed in our dataset. These results provide strong hints that iron-oxidation and methane-oxidation occur simultaneously in microbial mats and that both groups of microorganisms are major players in the functioning of this ecosystem."
+        ],
+        "name": [
+          "Unraveling the stratification of an iron-oxidizing microbial mat by metatranscriptomics"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000353",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB5960"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00001575_1.0",
+          "MGYA00001576_1.0"
+        ],
+        "biome_name": [
+          "Lotic"
+        ],
+        "centre_name": [
+          "European Commission, DG Joint Research Centre"
+        ],
+        "description": [
+          "Goal is to compare the metagenomes (composition and functional annotation) of the four different sites (clean, town, agricultural area and industrial area) in order to generate specific markers (genes, species ) characteristic for the three different \"pollution phenotypes\""
+        ],
+        "name": [
+          "Danube river water sampling at 4 different sites"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000355",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJNA50699"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00001909_1.0",
+          "MGYA00001910_1.0",
+          "MGYA00001911_1.0",
+          "MGYA00001912_1.0",
+          "MGYA00001913_1.0",
+          "MGYA00001914_1.0",
+          "MGYA00001915_1.0",
+          "MGYA00001916_1.0",
+          "MGYA00001917_1.0",
+          "MGYA00001918_1.0",
+          "MGYA00001919_1.0",
+          "MGYA00001920_1.0",
+          "MGYA00001921_1.0",
+          "MGYA00001922_1.0",
+          "MGYA00001923_1.0",
+          "MGYA00001924_1.0",
+          "MGYA00001925_1.0",
+          "MGYA00001926_1.0",
+          "MGYA00001927_1.0",
+          "MGYA00001928_1.0",
+          "MGYA00001929_1.0",
+          "MGYA00001930_1.0",
+          "MGYA00001931_1.0",
+          "MGYA00001932_1.0",
+          "MGYA00001933_1.0",
+          "MGYA00001934_1.0",
+          "MGYA00001935_1.0",
+          "MGYA00001936_1.0",
+          "MGYA00001937_1.0",
+          "MGYA00001938_1.0",
+          "MGYA00001939_1.0",
+          "MGYA00001940_1.0",
+          "MGYA00001941_1.0",
+          "MGYA00001942_1.0",
+          "MGYA00001943_1.0",
+          "MGYA00001944_1.0",
+          "MGYA00001945_1.0",
+          "MGYA00001946_1.0",
+          "MGYA00001947_1.0",
+          "MGYA00001948_1.0",
+          "MGYA00001949_1.0",
+          "MGYA00001950_1.0",
+          "MGYA00001951_1.0",
+          "MGYA00001952_1.0",
+          "MGYA00001953_1.0",
+          "MGYA00001954_1.0",
+          "MGYA00001955_1.0",
+          "MGYA00001956_1.0",
+          "MGYA00001957_1.0",
+          "MGYA00001958_1.0",
+          "MGYA00001959_1.0",
+          "MGYA00001960_1.0",
+          "MGYA00001961_1.0",
+          "MGYA00001962_1.0",
+          "MGYA00001963_1.0",
+          "MGYA00001964_1.0",
+          "MGYA00001965_1.0",
+          "MGYA00001966_1.0",
+          "MGYA00001967_1.0",
+          "MGYA00001968_1.0",
+          "MGYA00001969_1.0",
+          "MGYA00001970_1.0",
+          "MGYA00001971_1.0",
+          "MGYA00001972_1.0",
+          "MGYA00001973_1.0",
+          "MGYA00001974_1.0",
+          "MGYA00001975_1.0",
+          "MGYA00001976_1.0",
+          "MGYA00001977_1.0",
+          "MGYA00001978_1.0",
+          "MGYA00001979_1.0",
+          "MGYA00001980_1.0",
+          "MGYA00001981_1.0",
+          "MGYA00001982_1.0",
+          "MGYA00001983_1.0",
+          "MGYA00001984_1.0",
+          "MGYA00001985_1.0",
+          "MGYA00001986_1.0",
+          "MGYA00001987_1.0",
+          "MGYA00001988_1.0",
+          "MGYA00001989_1.0",
+          "MGYA00001990_1.0",
+          "MGYA00001991_1.0",
+          "MGYA00001992_1.0",
+          "MGYA00001993_1.0",
+          "MGYA00001994_1.0",
+          "MGYA00001995_1.0",
+          "MGYA00001996_1.0",
+          "MGYA00001997_1.0",
+          "MGYA00001998_1.0",
+          "MGYA00001999_1.0",
+          "MGYA00002000_1.0",
+          "MGYA00002001_1.0",
+          "MGYA00002002_1.0",
+          "MGYA00002003_1.0",
+          "MGYA00002004_1.0",
+          "MGYA00002005_1.0",
+          "MGYA00002006_1.0",
+          "MGYA00002007_1.0",
+          "MGYA00002008_1.0",
+          "MGYA00002009_1.0",
+          "MGYA00002010_1.0",
+          "MGYA00002011_1.0",
+          "MGYA00002012_1.0",
+          "MGYA00002013_1.0",
+          "MGYA00002014_1.0",
+          "MGYA00002015_1.0",
+          "MGYA00002016_1.0",
+          "MGYA00002017_1.0",
+          "MGYA00002018_1.0",
+          "MGYA00002019_1.0",
+          "MGYA00002020_1.0",
+          "MGYA00002021_1.0",
+          "MGYA00002022_1.0",
+          "MGYA00002023_1.0",
+          "MGYA00002024_1.0",
+          "MGYA00002025_1.0",
+          "MGYA00002026_1.0",
+          "MGYA00002027_1.0",
+          "MGYA00002028_1.0",
+          "MGYA00002029_1.0",
+          "MGYA00002030_1.0",
+          "MGYA00002031_1.0",
+          "MGYA00002032_1.0",
+          "MGYA00002033_1.0",
+          "MGYA00002177_1.0",
+          "MGYA00002178_1.0",
+          "MGYA00002179_1.0",
+          "MGYA00002180_1.0",
+          "MGYA00002181_1.0",
+          "MGYA00002182_1.0",
+          "MGYA00002183_1.0",
+          "MGYA00002184_1.0",
+          "MGYA00002185_1.0",
+          "MGYA00002186_1.0",
+          "MGYA00126329_3.0",
+          "MGYA00126330_3.0",
+          "MGYA00126331_3.0",
+          "MGYA00126332_3.0",
+          "MGYA00126333_3.0",
+          "MGYA00126334_3.0",
+          "MGYA00126335_3.0",
+          "MGYA00126336_3.0",
+          "MGYA00126337_3.0",
+          "MGYA00126338_3.0",
+          "MGYA00126339_3.0",
+          "MGYA00126340_3.0",
+          "MGYA00126341_3.0",
+          "MGYA00126342_3.0",
+          "MGYA00126343_3.0",
+          "MGYA00126344_3.0",
+          "MGYA00126345_3.0",
+          "MGYA00126346_3.0",
+          "MGYA00126347_3.0",
+          "MGYA00126348_3.0",
+          "MGYA00126349_3.0",
+          "MGYA00126350_3.0",
+          "MGYA00126351_3.0",
+          "MGYA00126352_3.0",
+          "MGYA00126353_3.0",
+          "MGYA00126354_3.0",
+          "MGYA00126355_3.0",
+          "MGYA00126356_3.0",
+          "MGYA00126357_3.0",
+          "MGYA00126358_3.0",
+          "MGYA00126359_3.0",
+          "MGYA00126360_3.0",
+          "MGYA00126361_3.0",
+          "MGYA00126362_3.0",
+          "MGYA00126363_3.0",
+          "MGYA00126364_3.0",
+          "MGYA00126365_3.0",
+          "MGYA00126366_3.0",
+          "MGYA00126367_3.0",
+          "MGYA00126368_3.0",
+          "MGYA00126369_3.0",
+          "MGYA00126370_3.0",
+          "MGYA00126371_3.0",
+          "MGYA00126372_3.0",
+          "MGYA00126373_3.0",
+          "MGYA00126374_3.0",
+          "MGYA00126375_3.0",
+          "MGYA00126376_3.0",
+          "MGYA00126377_3.0",
+          "MGYA00126378_3.0",
+          "MGYA00126379_3.0",
+          "MGYA00126380_3.0",
+          "MGYA00126381_3.0",
+          "MGYA00126382_3.0",
+          "MGYA00126383_3.0",
+          "MGYA00126384_3.0",
+          "MGYA00126385_3.0",
+          "MGYA00126386_3.0",
+          "MGYA00126387_3.0",
+          "MGYA00126388_3.0",
+          "MGYA00126389_3.0",
+          "MGYA00126390_3.0",
+          "MGYA00126391_3.0",
+          "MGYA00126392_3.0",
+          "MGYA00126393_3.0",
+          "MGYA00126394_3.0",
+          "MGYA00126395_3.0",
+          "MGYA00126396_3.0",
+          "MGYA00126397_3.0",
+          "MGYA00126398_3.0",
+          "MGYA00126399_3.0",
+          "MGYA00126400_3.0",
+          "MGYA00126401_3.0",
+          "MGYA00126402_3.0",
+          "MGYA00126403_3.0",
+          "MGYA00126404_3.0",
+          "MGYA00126405_3.0",
+          "MGYA00126406_3.0",
+          "MGYA00126407_3.0",
+          "MGYA00126408_3.0",
+          "MGYA00126409_3.0",
+          "MGYA00126410_3.0",
+          "MGYA00126411_3.0",
+          "MGYA00126412_3.0",
+          "MGYA00126413_3.0",
+          "MGYA00126414_3.0",
+          "MGYA00126415_3.0",
+          "MGYA00126416_3.0",
+          "MGYA00126417_3.0",
+          "MGYA00126418_3.0",
+          "MGYA00126419_3.0",
+          "MGYA00126420_3.0",
+          "MGYA00126421_3.0",
+          "MGYA00126422_3.0",
+          "MGYA00126423_3.0",
+          "MGYA00126424_3.0",
+          "MGYA00126425_3.0",
+          "MGYA00126426_3.0",
+          "MGYA00126427_3.0",
+          "MGYA00126428_3.0",
+          "MGYA00126429_3.0",
+          "MGYA00126430_3.0",
+          "MGYA00126431_3.0",
+          "MGYA00126432_3.0",
+          "MGYA00126433_3.0",
+          "MGYA00126434_3.0",
+          "MGYA00126435_3.0",
+          "MGYA00126436_3.0",
+          "MGYA00126437_3.0",
+          "MGYA00126438_3.0",
+          "MGYA00126439_3.0",
+          "MGYA00126440_3.0",
+          "MGYA00126441_3.0",
+          "MGYA00126442_3.0",
+          "MGYA00126443_3.0",
+          "MGYA00126444_3.0",
+          "MGYA00126445_3.0",
+          "MGYA00126446_3.0",
+          "MGYA00126447_3.0",
+          "MGYA00126448_3.0",
+          "MGYA00126449_3.0",
+          "MGYA00126450_3.0",
+          "MGYA00126451_3.0",
+          "MGYA00126452_3.0",
+          "MGYA00126453_3.0",
+          "MGYA00126454_3.0",
+          "MGYA00126455_3.0",
+          "MGYA00126456_3.0",
+          "MGYA00126457_3.0",
+          "MGYA00126458_3.0",
+          "MGYA00126459_3.0",
+          "MGYA00126460_3.0",
+          "MGYA00126461_3.0",
+          "MGYA00126462_3.0",
+          "MGYA00126463_3.0",
+          "MGYA00126464_3.0",
+          "MGYA00126465_3.0",
+          "MGYA00126466_3.0",
+          "MGYA00126467_3.0",
+          "MGYA00126468_3.0",
+          "MGYA00126469_3.0",
+          "MGYA00126470_3.0"
+        ],
+        "biome_name": [
+          "Oceanic"
+        ],
+        "centre_name": [
+          "JCVI"
+        ],
+        "description": [
+          "Microbial communities from a marine environment.\nSequences deposited into the Sequence Read Archive can be found using the Project data link."
+        ],
+        "name": [
+          "Southern Ocean Marine Metagenome"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000360",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB5293"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00002321_1.0",
+          "MGYA00002323_1.0",
+          "MGYA00002328_1.0",
+          "MGYA00002332_1.0",
+          "MGYA00002334_1.0",
+          "MGYA00002336_1.0",
+          "MGYA00002338_1.0",
+          "MGYA00002342_1.0",
+          "MGYA00011101_2.0",
+          "MGYA00011102_2.0",
+          "MGYA00011103_2.0",
+          "MGYA00011104_2.0",
+          "MGYA00011105_2.0",
+          "MGYA00011106_2.0",
+          "MGYA00011107_2.0",
+          "MGYA00011108_2.0",
+          "MGYA00011109_2.0",
+          "MGYA00011110_2.0",
+          "MGYA00011111_2.0",
+          "MGYA00011112_2.0",
+          "MGYA00011113_2.0",
+          "MGYA00011114_2.0",
+          "MGYA00011115_2.0",
+          "MGYA00011116_2.0",
+          "MGYA00011117_2.0",
+          "MGYA00011118_2.0",
+          "MGYA00011119_2.0",
+          "MGYA00011120_2.0",
+          "MGYA00011121_2.0",
+          "MGYA00011122_2.0",
+          "MGYA00011123_2.0",
+          "MGYA00011124_2.0",
+          "MGYA00011125_2.0",
+          "MGYA00011126_2.0",
+          "MGYA00011127_2.0"
+        ],
+        "biome_name": [
+          "Sediment"
+        ],
+        "centre_name": [
+          "MBL"
+        ],
+        "description": [
+          "This projects explores the functional diversity and activity of rocky subseafloor microbial communities in hydrothermal vent systems. Samples were collected in 2011 and 2012 from a number of low temperature diffuse fluid vents at Axial seamount, located in the northeast Pacific Ocean. Shotgun metagenomics and metatranscriptomics were performed on four diffuse vent samples.  Previous work at this site determined the taxonomic structure and distribution of microbial communities in venting fluids, but the contribution and mechanisms of the different redox driven metabolisms and the impact these reactions have on vent chemical signatures have not been fully characterized. This study helps to determine the genetic potential and expression patterns of the largely uncharacterized subseafloor microbial community and shows how these patterns change across the complicated biogeochemical gradients of hydrothermal vent systems."
+        ],
+        "name": [
+          "Metagenomes and metatranscriptomes from the diffuse hydrothermal vents of Axial Seamount, 2011-2012"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000366",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB5347"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00002227_1.0"
+        ],
+        "biome_name": [
+          "Lake"
+        ],
+        "centre_name": [
+          "CBMSO"
+        ],
+        "description": [
+          "Recent metagenomic studies have shown that our knowledge about viruses in nature is very scarce. We aimed to augment such knowledge by analyzing newly sequenced polar freshwater viral metagenomes (both arctic and antarctic..)Previously unexplored arctic viromes were dominated by ssDNA viruses with no known relatives in the databases. Arctic and antarctic viromes were shown to differ at the fine grain level, yet we were able to find a circular contig in both environments with very high similarity."
+        ],
+        "name": [
+          "Artic fresh water viromes (2)"
+        ]
+      }
+    },
+    {
+      "id": "MGYS00000371",
+      "source": "metagenomics_projects",
+      "fields": {
+        "ENA_PROJECT": [
+          "PRJEB4843"
+        ],
+        "METAGENOMICS_ANALYSES": [
+          "MGYA00002232_1.0",
+          "MGYA00002237_1.0",
+          "MGYA00002238_1.0",
+          "MGYA00002241_1.0",
+          "MGYA00002242_1.0",
+          "MGYA00002243_1.0"
+        ],
+        "biome_name": [
+          "Marine"
+        ],
+        "centre_name": [
+          "MPI BREMEN"
+        ],
+        "description": [
+          "Planktonic bacteria from marine pelagic coastal zones are much more diverse than in the open ocean and consist of members with distinct ecological niches. In this study we investigated bacterioplankton communities that were sampled during a diatom-dominated spring phytoplankton bloom near the North Sea island Helgoland (about 40?km off the German coast). Sequencing of total community RNA allowed simultaneous detection of the community composition via 16S ribosomal RNA analyses, and the expressed functional genes via messenger RNA analyses. As most prominent community members, Flavobacteria (Ulvibacter, Formosa, Polaribacter), Alphaproteobacteria (SAR11 clade and Rhodobacteraceae) and Gammaproteobacteria (Reinekea spp. and SAR92 clade) could be identified down to genus level, which was confirmed by 16S rRNA gene amplicon ('pyrotag') sequencing of the same samples. These samples were also sequenced in a metagenome approach, assembled and taxonomically classified. Mapping of the transcripts on the metagenomes allowed investigation of the expression profiles of the prominent taxa. Members of the Flavobacteria, Alphaproteobacteria and Gammaproteobacteria exhibited distinct expression profiles of uptake transporters and carbohydrate-active enzymes, indicating a specialization on different nutrients. Members of the flavobacterial genera Formosa and Polaribacter acted as major polymer degraders, whereas members of the alphaproteobacterial Rhodobacteraceae and the gammaproteobacterial Reinekea exhibited a less specialized behavior, enabling them to rapidly adapt to changing nutrient conditions. Complementary sequencing effort using 454 pyrosequencing and Illumina enabled a comprehensive picture of the dominant metabolic processes down to genus level. This helped to identify the strategies of how members of the bacterioplankton evade extinction in a seemingly homogenous habitat."
+        ],
+        "name": [
+          "Illumina and 454-based metatranscriptomic analyses of a diatom-induced bacterioplankton bloom in the North Sea"
+        ]
+      }
+    }
+  ],
+  "facets": [
+    {
+      "id": "domain_source",
+      "label": "Source",
+      "total": 1,
+      "facetValues": [
+        {
+          "label": "MGnify (Projects)",
+          "value": "metagenomics_projects",
+          "count": 1819
+        }
+      ]
+    },
+    {
+      "id": "biome",
+      "label": "Biome",
+      "total": 2,
+      "facetValues": [
+        {
+          "label": "Environmental",
+          "value": "Environmental",
+          "count": 2427,
+          "children": [
+            {
+              "label": "Aquatic",
+              "value": "Aquatic",
+              "count": 1819,
+              "children": [
+                {
+                  "label": "Marine",
+                  "value": "Marine",
+                  "count": 1257,
+                  "children": [
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 190
+                    },
+                    {
+                      "label": "Oceanic",
+                      "value": "Oceanic",
+                      "count": 170
+                    },
+                    {
+                      "label": "Intertidal zone",
+                      "value": "Intertidal zone",
+                      "count": 148
+                    },
+                    {
+                      "label": "Coastal",
+                      "value": "Coastal",
+                      "count": 108
+                    },
+                    {
+                      "label": "Hydrothermal vents",
+                      "value": "Hydrothermal vents",
+                      "count": 30
+                    },
+                    {
+                      "label": "Cold seeps",
+                      "value": "Cold seeps",
+                      "count": 14
+                    },
+                    {
+                      "label": "Pelagic",
+                      "value": "Pelagic",
+                      "count": 13
+                    },
+                    {
+                      "label": "Brackish",
+                      "value": "Brackish",
+                      "count": 12
+                    },
+                    {
+                      "label": "Marginal Sea",
+                      "value": "Marginal Sea",
+                      "count": 11
+                    },
+                    {
+                      "label": "Oil-contaminated sediment",
+                      "value": "Oil-contaminated sediment",
+                      "count": 10
+                    }
+                  ]
+                },
+                {
+                  "label": "Freshwater",
+                  "value": "Freshwater",
+                  "count": 318,
+                  "children": [
+                    {
+                      "label": "Groundwater",
+                      "value": "Groundwater",
+                      "count": 57
+                    },
+                    {
+                      "label": "Lake",
+                      "value": "Lake",
+                      "count": 51
+                    },
+                    {
+                      "label": "Lotic",
+                      "value": "Lotic",
+                      "count": 50
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 46
+                    },
+                    {
+                      "label": "Lentic",
+                      "value": "Lentic",
+                      "count": 33,
+                      "children": [
+                        {
+                          "label": "Brackish",
+                          "value": "Brackish",
+                          "count": 19
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Ice",
+                      "value": "Ice",
+                      "count": 23
+                    },
+                    {
+                      "label": "Wetlands",
+                      "value": "Wetlands",
+                      "count": 15
+                    },
+                    {
+                      "label": "Pond",
+                      "value": "Pond",
+                      "count": 11
+                    },
+                    {
+                      "label": "Drinking water",
+                      "value": "Drinking water",
+                      "count": 10
+                    },
+                    {
+                      "label": "Storm water",
+                      "value": "Storm water",
+                      "count": 3
+                    }
+                  ]
+                },
+                {
+                  "label": "Thermal springs",
+                  "value": "Thermal springs",
+                  "count": 70,
+                  "children": [
+                    {
+                      "label": "Hot (42-90C)",
+                      "value": "Hot (42-90C)",
+                      "count": 53
+                    },
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 7
+                    },
+                    {
+                      "label": "Near-boiling (>90C)",
+                      "value": "Near-boiling (>90C)",
+                      "count": 4
+                    }
+                  ]
+                },
+                {
+                  "label": "Estuary",
+                  "value": "Estuary",
+                  "count": 59,
+                  "children": [
+                    {
+                      "label": "Sediment",
+                      "value": "Sediment",
+                      "count": 25
+                    }
+                  ]
+                },
+                {
+                  "label": "Non-marine Saline and Alkaline",
+                  "value": "Non-marine Saline and Alkaline",
+                  "count": 43,
+                  "children": [
+                    {
+                      "label": "Hypersaline",
+                      "value": "Hypersaline",
+                      "count": 20
+                    },
+                    {
+                      "label": "Salt crystallizer pond",
+                      "value": "Salt crystallizer pond",
+                      "count": 11
+                    },
+                    {
+                      "label": "Alkaline",
+                      "value": "Alkaline",
+                      "count": 7
+                    },
+                    {
+                      "label": "Saline",
+                      "value": "Saline",
+                      "count": 3
+                    }
+                  ]
+                },
+                {
+                  "label": "Sediment",
+                  "value": "Sediment",
+                  "count": 31
+                },
+                {
+                  "label": "Lentic",
+                  "value": "Lentic",
+                  "count": 21
+                },
+                {
+                  "label": "Aquaculture",
+                  "value": "Aquaculture",
+                  "count": 5
+                }
+              ]
+            },
+            {
+              "label": "Terrestrial",
+              "value": "Terrestrial",
+              "count": 583,
+              "children": [
+                {
+                  "label": "Soil",
+                  "value": "Soil",
+                  "count": 567,
+                  "children": [
+                    {
+                      "label": "Agricultural",
+                      "value": "Agricultural",
+                      "count": 62
+                    },
+                    {
+                      "label": "Forest soil",
+                      "value": "Forest soil",
+                      "count": 43
+                    },
+                    {
+                      "label": "Grasslands",
+                      "value": "Grasslands",
+                      "count": 25
+                    },
+                    {
+                      "label": "Contaminated",
+                      "value": "Contaminated",
+                      "count": 21
+                    },
+                    {
+                      "label": "Desert",
+                      "value": "Desert",
+                      "count": 20
+                    },
+                    {
+                      "label": "Wetlands",
+                      "value": "Wetlands",
+                      "count": 17
+                    },
+                    {
+                      "label": "Permafrost",
+                      "value": "Permafrost",
+                      "count": 16
+                    },
+                    {
+                      "label": "Oil-contaminated",
+                      "value": "Oil-contaminated",
+                      "count": 13
+                    },
+                    {
+                      "label": "Tropical rainforest",
+                      "value": "Tropical rainforest",
+                      "count": 12
+                    },
+                    {
+                      "label": "Loam",
+                      "value": "Loam",
+                      "count": 11
+                    }
+                  ]
+                },
+                {
+                  "label": "Deep subsurface",
+                  "value": "Deep subsurface",
+                  "count": 5
+                },
+                {
+                  "label": "Geologic",
+                  "value": "Geologic",
+                  "count": 3
+                },
+                {
+                  "label": "Volcanic",
+                  "value": "Volcanic",
+                  "count": 3
+                },
+                {
+                  "label": "Rock-dwelling (subaerial biofilm)",
+                  "value": "Rock-dwelling (subaerial biofilm)",
+                  "count": 3
+                },
+                {
+                  "label": "Oil reservoir",
+                  "value": "Oil reservoir",
+                  "count": 1
+                },
+                {
+                  "label": "Agricultural field",
+                  "value": "Agricultural field",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Air",
+              "value": "Air",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "label": "Host-associated",
+          "value": "Host-associated",
+          "count": 1371,
+          "children": [
+            {
+              "label": "Human",
+              "value": "Human",
+              "count": 596,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 475,
+                  "children": [
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 289
+                    },
+                    {
+                      "label": "Oral",
+                      "value": "Oral",
+                      "count": 132
+                    },
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 6
+                    },
+                    {
+                      "label": "Hindgut",
+                      "value": "Hindgut",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Skin",
+                  "value": "Skin",
+                  "count": 33,
+                  "children": [
+                    {
+                      "label": "Naris",
+                      "value": "Naris",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 31,
+                  "children": [
+                    {
+                      "label": "Pulmonary system",
+                      "value": "Pulmonary system",
+                      "count": 14
+                    },
+                    {
+                      "label": "Nasopharyngeal",
+                      "value": "Nasopharyngeal",
+                      "count": 13
+                    }
+                  ]
+                },
+                {
+                  "label": "Reproductive system",
+                  "value": "Reproductive system",
+                  "count": 19,
+                  "children": [
+                    {
+                      "label": "Vagina",
+                      "value": "Vagina",
+                      "count": 17
+                    },
+                    {
+                      "label": "Female",
+                      "value": "Female",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Circulatory system",
+                  "value": "Circulatory system",
+                  "count": 9,
+                  "children": [
+                    {
+                      "label": "Blood",
+                      "value": "Blood",
+                      "count": 3
+                    }
+                  ]
+                },
+                {
+                  "label": "Lympathic system",
+                  "value": "Lympathic system",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Lymph nodes",
+                      "value": "Lymph nodes",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Excretory system",
+                  "value": "Excretory system",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Urethra",
+                      "value": "Urethra",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Milk",
+                  "value": "Milk",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Mammals",
+              "value": "Mammals",
+              "count": 322,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 266,
+                  "children": [
+                    {
+                      "label": "Large intestine",
+                      "value": "Large intestine",
+                      "count": 90
+                    },
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 78
+                    },
+                    {
+                      "label": "Stomach",
+                      "value": "Stomach",
+                      "count": 37
+                    },
+                    {
+                      "label": "Foregut",
+                      "value": "Foregut",
+                      "count": 11
+                    },
+                    {
+                      "label": "Midgut",
+                      "value": "Midgut",
+                      "count": 7
+                    },
+                    {
+                      "label": "Oral cavity",
+                      "value": "Oral cavity",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Gastrointestinal tract",
+                  "value": "Gastrointestinal tract",
+                  "count": 14,
+                  "children": [
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 10
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 13,
+                  "children": [
+                    {
+                      "label": "Nasopharyngeal",
+                      "value": "Nasopharyngeal",
+                      "count": 4
+                    },
+                    {
+                      "label": "Pulmonary system",
+                      "value": "Pulmonary system",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Skin",
+                  "value": "Skin",
+                  "count": 2
+                },
+                {
+                  "label": "Circulatory system",
+                  "value": "Circulatory system",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Blood",
+                      "value": "Blood",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Milk",
+                  "value": "Milk",
+                  "count": 1
+                },
+                {
+                  "label": "Excretory system",
+                  "value": "Excretory system",
+                  "count": 1
+                },
+                {
+                  "label": "Nervous system",
+                  "value": "Nervous system",
+                  "count": 1,
+                  "children": [
+                    {
+                      "label": "Brain",
+                      "value": "Brain",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Plants",
+              "value": "Plants",
+              "count": 221,
+              "children": [
+                {
+                  "label": "Rhizosphere",
+                  "value": "Rhizosphere",
+                  "count": 121,
+                  "children": [
+                    {
+                      "label": "Soil",
+                      "value": "Soil",
+                      "count": 35
+                    },
+                    {
+                      "label": "Forest soil",
+                      "value": "Forest soil",
+                      "count": 7
+                    },
+                    {
+                      "label": "Epiphytes",
+                      "value": "Epiphytes",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Root",
+                  "value": "Root",
+                  "count": 18
+                },
+                {
+                  "label": "Phylloplane",
+                  "value": "Phylloplane",
+                  "count": 17,
+                  "children": [
+                    {
+                      "label": "Endophytes",
+                      "value": "Endophytes",
+                      "count": 3
+                    }
+                  ]
+                },
+                {
+                  "label": "Rhizoplane",
+                  "value": "Rhizoplane",
+                  "count": 4,
+                  "children": [
+                    {
+                      "label": "Endophytes",
+                      "value": "Endophytes",
+                      "count": 3
+                    },
+                    {
+                      "label": "Soil",
+                      "value": "Soil",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Rhizome",
+                  "value": "Rhizome",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Birds",
+              "value": "Birds",
+              "count": 58,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 47,
+                  "children": [
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 14
+                    },
+                    {
+                      "label": "Digestive tube",
+                      "value": "Digestive tube",
+                      "count": 14
+                    },
+                    {
+                      "label": "Ceca",
+                      "value": "Ceca",
+                      "count": 11
+                    },
+                    {
+                      "label": "Crop",
+                      "value": "Crop",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Insecta",
+              "value": "Insecta",
+              "count": 31,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 15
+                }
+              ]
+            },
+            {
+              "label": "Porifera",
+              "value": "Porifera",
+              "count": 20
+            },
+            {
+              "label": "Fish",
+              "value": "Fish",
+              "count": 19,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 12,
+                  "children": [
+                    {
+                      "label": "Intestine",
+                      "value": "Intestine",
+                      "count": 5
+                    },
+                    {
+                      "label": "Foregut",
+                      "value": "Foregut",
+                      "count": 4
+                    }
+                  ]
+                },
+                {
+                  "label": "Skin",
+                  "value": "Skin",
+                  "count": 2
+                }
+              ]
+            },
+            {
+              "label": "Arthropoda",
+              "value": "Arthropoda",
+              "count": 19,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 14,
+                  "children": [
+                    {
+                      "label": "Gut",
+                      "value": "Gut",
+                      "count": 8
+                    },
+                    {
+                      "label": "Oral",
+                      "value": "Oral",
+                      "count": 3
+                    },
+                    {
+                      "label": "Hindgut",
+                      "value": "Hindgut",
+                      "count": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Respiratory system",
+                  "value": "Respiratory system",
+                  "count": 2,
+                  "children": [
+                    {
+                      "label": "Gills",
+                      "value": "Gills",
+                      "count": 2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Animal",
+              "value": "Animal",
+              "count": 17,
+              "children": [
+                {
+                  "label": "Digestive system",
+                  "value": "Digestive system",
+                  "count": 13,
+                  "children": [
+                    {
+                      "label": "Fecal",
+                      "value": "Fecal",
+                      "count": 6
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Invertebrates",
+              "value": "Invertebrates",
+              "count": 14,
+              "children": [
+                {
+                  "label": "Cnidaria",
+                  "value": "Cnidaria",
+                  "count": 12,
+                  "children": [
+                    {
+                      "label": "Coral",
+                      "value": "Coral",
+                      "count": 11
+                    }
+                  ]
+                },
+                {
+                  "label": "Echinodermata",
+                  "value": "Echinodermata",
+                  "count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Engineered",
+          "value": "Engineered",
+          "count": 593,
+          "children": [
+            {
+              "label": "Wastewater",
+              "value": "Wastewater",
+              "count": 184,
+              "children": [
+                {
+                  "label": "Activated Sludge",
+                  "value": "Activated Sludge",
+                  "count": 80
+                },
+                {
+                  "label": "Water and sludge",
+                  "value": "Water and sludge",
+                  "count": 33
+                },
+                {
+                  "label": "Industrial wastewater",
+                  "value": "Industrial wastewater",
+                  "count": 24,
+                  "children": [
+                    {
+                      "label": "Agricultural wastewater",
+                      "value": "Agricultural wastewater",
+                      "count": 4
+                    },
+                    {
+                      "label": "Petrochemical",
+                      "value": "Petrochemical",
+                      "count": 2
+                    },
+                    {
+                      "label": "Mine water",
+                      "value": "Mine water",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Nutrient removal",
+                  "value": "Nutrient removal",
+                  "count": 11,
+                  "children": [
+                    {
+                      "label": "Dissolved organics (anaerobic)",
+                      "value": "Dissolved organics (anaerobic)",
+                      "count": 6
+                    },
+                    {
+                      "label": "Biological phosphorus removal",
+                      "value": "Biological phosphorus removal",
+                      "count": 3
+                    },
+                    {
+                      "label": "Dissolved organics (aerobic)",
+                      "value": "Dissolved organics (aerobic)",
+                      "count": 1
+                    },
+                    {
+                      "label": "Nitrogen removal",
+                      "value": "Nitrogen removal",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Bioreactor",
+              "value": "Bioreactor",
+              "count": 145,
+              "children": [
+                {
+                  "label": "Continuous culture",
+                  "value": "Continuous culture",
+                  "count": 28,
+                  "children": [
+                    {
+                      "label": "Marine sediment inoculum",
+                      "value": "Marine sediment inoculum",
+                      "count": 6
+                    },
+                    {
+                      "label": "Marine intertidal flat sediment inoculum",
+                      "value": "Marine intertidal flat sediment inoculum",
+                      "count": 5
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Food production",
+              "value": "Food production",
+              "count": 84,
+              "children": [
+                {
+                  "label": "Dairy products",
+                  "value": "Dairy products",
+                  "count": 34
+                },
+                {
+                  "label": "Fermented beverages",
+                  "value": "Fermented beverages",
+                  "count": 18
+                },
+                {
+                  "label": "Fermented vegetables",
+                  "value": "Fermented vegetables",
+                  "count": 10
+                },
+                {
+                  "label": "Fermented seafood",
+                  "value": "Fermented seafood",
+                  "count": 3
+                },
+                {
+                  "label": "Silage fermentation",
+                  "value": "Silage fermentation",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Solid waste",
+              "value": "Solid waste",
+              "count": 42,
+              "children": [
+                {
+                  "label": "Composting",
+                  "value": "Composting",
+                  "count": 38,
+                  "children": [
+                    {
+                      "label": "Bioreactor",
+                      "value": "Bioreactor",
+                      "count": 2
+                    },
+                    {
+                      "label": "Wood",
+                      "value": "Wood",
+                      "count": 1
+                    },
+                    {
+                      "label": "Grass",
+                      "value": "Grass",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Landfill",
+                  "value": "Landfill",
+                  "count": 1
+                },
+                {
+                  "label": "Solid animal waste",
+                  "value": "Solid animal waste",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "label": "Modeled",
+              "value": "Modeled",
+              "count": 32,
+              "children": [
+                {
+                  "label": "Simulated communities (microbial mixture)",
+                  "value": "Simulated communities (microbial mixture)",
+                  "count": 14
+                },
+                {
+                  "label": "Simulated communities (sequence read mixture)",
+                  "value": "Simulated communities (sequence read mixture)",
+                  "count": 8
+                },
+                {
+                  "label": "Simulated communities (DNA mixture)",
+                  "value": "Simulated communities (DNA mixture)",
+                  "count": 6
+                }
+              ]
+            },
+            {
+              "label": "Lab enrichment",
+              "value": "Lab enrichment",
+              "count": 30,
+              "children": [
+                {
+                  "label": "Defined media",
+                  "value": "Defined media",
+                  "count": 20,
+                  "children": [
+                    {
+                      "label": "Marine media",
+                      "value": "Marine media",
+                      "count": 4
+                    },
+                    {
+                      "label": "Anaerobic media",
+                      "value": "Anaerobic media",
+                      "count": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Biogas plant",
+              "value": "Biogas plant",
+              "count": 28,
+              "children": [
+                {
+                  "label": "Wet fermentation",
+                  "value": "Wet fermentation",
+                  "count": 12
+                }
+              ]
+            },
+            {
+              "label": "Built environment",
+              "value": "Built environment",
+              "count": 14
+            },
+            {
+              "label": "Bioremediation",
+              "value": "Bioremediation",
+              "count": 10,
+              "children": [
+                {
+                  "label": "Hydrocarbon",
+                  "value": "Hydrocarbon",
+                  "count": 3,
+                  "children": [
+                    {
+                      "label": "Benzene",
+                      "value": "Benzene",
+                      "count": 1
+                    }
+                  ]
+                },
+                {
+                  "label": "Persistent organic pollutants (POP)",
+                  "value": "Persistent organic pollutants (POP)",
+                  "count": 2
+                },
+                {
+                  "label": "Terephthalate",
+                  "value": "Terephthalate",
+                  "count": 2,
+                  "children": [
+                    {
+                      "label": "Wastewater",
+                      "value": "Wastewater",
+                      "count": 2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Biotransformation",
+              "value": "Biotransformation",
+              "count": 8,
+              "children": [
+                {
+                  "label": "Mixed alcohol bioreactor",
+                  "value": "Mixed alcohol bioreactor",
+                  "count": 3
+                },
+                {
+                  "label": "Microbial enhanced oil recovery",
+                  "value": "Microbial enhanced oil recovery",
+                  "count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Mixed",
+          "value": "Mixed",
+          "count": 45
+        },
+        {
+          "label": "Root",
+          "value": "root",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "centre_name",
+      "label": "Centre name",
+      "total": 645,
+      "facetValues": [
+        {
+          "label": "EMG",
+          "value": "EMG",
+          "count": 440
+        },
+        {
+          "label": "DOE Joint Genome Institute",
+          "value": "DOE Joint Genome Institute",
+          "count": 93
+        },
+        {
+          "label": "MBL",
+          "value": "MBL",
+          "count": 31
+        },
+        {
+          "label": "EMBL-EBI",
+          "value": "EMBL-EBI",
+          "count": 29
+        },
+        {
+          "label": "Marine Biological Laboratory",
+          "value": "Marine Biological Laboratory",
+          "count": 25
+        },
+        {
+          "label": "UCSDMI",
+          "value": "UCSDMI",
+          "count": 24
+        },
+        {
+          "label": "Ocean University of China",
+          "value": "Ocean University of China",
+          "count": 18
+        },
+        {
+          "label": "Shandong University",
+          "value": "Shandong University",
+          "count": 14
+        },
+        {
+          "label": "GSC",
+          "value": "GSC",
+          "count": 12
+        },
+        {
+          "label": "UNIVERSIDAD DE BUENOS AIRES",
+          "value": "UNIVERSIDAD DE BUENOS AIRES",
+          "count": 10
+        }
+      ]
+    }
+  ]
+}

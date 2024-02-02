@@ -32,7 +32,9 @@ describe('Browse page', function() {
 
         it('Should have download button', function() {
             cy.contains('Download')
-              .should('have.attr', 'href');
+              .should('have.attr', 'href')
+              .and('include', 'super-studies')
+              .and('include', 'format=csv');
         });
 
     });

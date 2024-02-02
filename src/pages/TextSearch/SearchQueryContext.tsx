@@ -7,11 +7,6 @@ const SearchQueryContext = React.createContext({
       loading: false,
       error: null,
     },
-    '/search/samples': {
-      data: null,
-      loading: false,
-      error: null,
-    },
     '/search/analyses': {
       data: null,
       loading: false,

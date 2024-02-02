@@ -13,6 +13,7 @@ import AssociatedAssemblies from 'components/Assembly/Assemblies';
 import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from 'utils/urls';
 import ExtraAnnotations from 'components/ExtraAnnotations';
+import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
 const RunPage: React.FC = () => {
   const accession = useURLAccession();
@@ -69,8 +70,17 @@ const RunPage: React.FC = () => {
       value: String(runData.attributes['instrument-platform']),
     },
   ];
+  const breadcrumbs = [
+    { label: 'Home', url: '/' },
+    {
+      label: 'Associated sample',
+      url: `/samples/${runData.relationships.sample.data.id}`,
+    },
+    { label: runData.id },
+  ];
   return (
     <section className="vf-content">
+      <Breadcrumbs links={breadcrumbs} />
       <h2>Run: {runData?.id || ''}</h2>
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">

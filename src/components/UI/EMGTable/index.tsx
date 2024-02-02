@@ -6,17 +6,17 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
+import { filter } from 'lodash-es';
 
+import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
 import Loading from 'components/UI/Loading';
 import TextInputDebounced from 'components/UI/TextInputDebounced';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
 import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
-import './style.css';
-import DownloadButton from 'components/UI/DownloadButton';
 import PaginationButton from './PaginationButton';
+import './style.css';
 
 type PaginationRanges = {
   startingPages: number[];
@@ -205,6 +205,10 @@ const EMGTable: React.FC<EMGTableProps> = ({
     return setPageSize(+evt.target.value);
   };
 
+  const fullWidthColSpan = useMemo(() => {
+    return filter(cols, (col) => !col.isFullWidth).length;
+  }, [cols]);
+
   if (loading && !isStale) return <Loading size="small" />;
   return (
     <section data-cy={dataCy}>
@@ -224,7 +228,16 @@ const EMGTable: React.FC<EMGTableProps> = ({
                   )}
                   {downloadURL && (
                     <div>
-                      <DownloadButton downloadLink={downloadURL} />
+                      {' '}
+                      <a
+                        href={downloadURL}
+                        className="vf-button vf-button--secondary vf-button--sm"
+                        style={{ whiteSpace: 'nowrap', marginBottom: '8px' }}
+                        download
+                      >
+                        <span className="icon icon-common icon-download" />{' '}
+                        Download
+                      </a>
                     </div>
                   )}
                 </div>
@@ -238,33 +251,38 @@ const EMGTable: React.FC<EMGTableProps> = ({
                 {...headerGroup.getHeaderGroupProps()}
                 className="vf-table__row"
               >
-                {headerGroup.headers.map((column) => (
-                  <th
-                    {...(sortable && column.canSort
-                      ? column.getHeaderProps(column.getSortByToggleProps())
-                      : { key: column.id })}
-                    className="vf-table__heading"
-                  >
-                    {column.render('Header')}
-                    {sortable && column.canSort && (
-                      <>
-                        &nbsp;
-                        <span>
-                          {/* eslint-disable-next-line no-nested-ternary */}
-                          {column.isSorted ? (
-                            column.isSortedDesc ? (
-                              <i className="icon icon-common icon-sort-down" />
+                {headerGroup.headers.map((column) => {
+                  if (column.isFullWidth) {
+                    return null;
+                  }
+                  return (
+                    <th
+                      {...(sortable && column.canSort
+                        ? column.getHeaderProps(column.getSortByToggleProps())
+                        : { key: column.id })}
+                      className="vf-table__heading"
+                    >
+                      {column.render('Header')}
+                      {sortable && column.canSort && (
+                        <>
+                          &nbsp;
+                          <span>
+                            {/* eslint-disable-next-line no-nested-ternary */}
+                            {column.isSorted ? (
+                              column.isSortedDesc ? (
+                                <i className="icon icon-common icon-sort-down" />
+                              ) : (
+                                <i className="icon icon-common icon-sort-up" />
+                              )
                             ) : (
-                              <i className="icon icon-common icon-sort-up" />
-                            )
-                          ) : (
-                            <i className="icon icon-common icon-sort" />
-                          )}
-                        </span>
-                      </>
-                    )}
-                  </th>
-                ))}
+                              <i className="icon icon-common icon-sort" />
+                            )}
+                          </span>
+                        </>
+                      )}
+                    </th>
+                  );
+                })}
               </tr>
             ))}
           </thead>
@@ -272,31 +290,65 @@ const EMGTable: React.FC<EMGTableProps> = ({
             {rows.map((row) => {
               prepareRow(row);
               return (
-                <tr
-                  {...row.getRowProps()}
-                  className="vf-table__row"
-                  onMouseEnter={() => onMouseEnterRow(row)}
-                  onMouseLeave={() => onMouseLeaveRow(row)}
-                >
+                <React.Fragment key={row.id}>
+                  <tr
+                    {...row.getRowProps()}
+                    className="vf-table__row"
+                    onMouseEnter={() => onMouseEnterRow(row)}
+                    onMouseLeave={() => onMouseLeaveRow(row)}
+                  >
+                    {row.cells.map((cell) => {
+                      if (cell.column.isFullWidth) {
+                        return null;
+                      }
+                      return (
+                        <td
+                          {...cell.getCellProps()}
+                          colSpan={
+                            typeof cell.column?.colspan === 'function'
+                              ? cell.column.colspan(cell)
+                              : cell.column?.colspan
+                          }
+                          className={`vf-table__cell vf-u-type__text-body--3 ${
+                            cell.column?.className || ''
+                          }`}
+                          style={{ ...(cell.column?.style || {}) }}
+                        >
+                          {cell.render('Cell')}
+                        </td>
+                      );
+                    })}
+                  </tr>
                   {row.cells.map((cell) => {
-                    return (
-                      <td
-                        {...cell.getCellProps()}
-                        colSpan={
-                          typeof cell.column?.colspan === 'function'
-                            ? cell.column.colspan(cell)
-                            : cell.column?.colspan
-                        }
-                        className={`vf-table__cell vf-u-type__text-body--3 ${
-                          cell.column?.className || ''
-                        }`}
-                        style={{ ...(cell.column?.style || {}) }}
-                      >
-                        {cell.render('Cell')}
-                      </td>
-                    );
+                    if (cell.column.isFullWidth) {
+                      return (
+                        <>
+                          <tr className="vf-table__row" />
+                          {/* Empty row to maintain striping */}
+                          <tr
+                            {...row.getRowProps()}
+                            className="vf-table__row"
+                            onMouseEnter={() => onMouseEnterRow(row)}
+                            onMouseLeave={() => onMouseLeaveRow(row)}
+                          >
+                            <td
+                              {...cell.getCellProps()}
+                              colSpan={fullWidthColSpan}
+                              className={`vf-table__cell vf-u-type__text-body--3 ${
+                                cell.column?.className || ''
+                              }`}
+                              style={{ ...(cell.column?.style || {}) }}
+                            >
+                              <strong>{cell.render('Header')}:&nbsp;</strong>
+                              {cell.render('Cell')}
+                            </td>
+                          </tr>
+                        </>
+                      );
+                    }
+                    return null;
                   })}
-                </tr>
+                </React.Fragment>
               );
             })}
           </tbody>

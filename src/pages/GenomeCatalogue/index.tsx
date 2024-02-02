@@ -15,6 +15,7 @@ import RouteForHash from 'components/Nav/RouteForHash';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import UserContext from 'pages/Login/UserContext';
 import ExtLink from 'components/UI/ExtLink';
+import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
 const tabs = [
   { label: 'Genome list', to: '#' },
@@ -34,8 +35,14 @@ const GenomePage: React.FC = () => {
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const { data: genomeData } = data as MGnifyResponseObj;
+  const breadcrumbs = [
+    { label: 'Home', url: '/' },
+    { label: 'Genomes', url: '/browse/genomes' },
+    { label: genomeData.attributes.name as string },
+  ];
   return (
     <section className="vf-content">
+      <Breadcrumbs links={breadcrumbs} />
       <h2>{genomeData.attributes.name}</h2>
 
       <section className="vf-card-container vf-card-container__col-4">

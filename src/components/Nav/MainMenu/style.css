@@ -1,11 +1,22 @@
+.arrow-icon {
+  /*transition: transform 0.7s ease, scale 0.7s ease;*/
+  transition: transform 0.7s ease, scale 0.7s ease, margin-left 0.7s ease;
+  margin-left: 0.2em;
+}
+
+.rotating-link:hover .arrow-icon {
+  transform: rotateX(180deg) scale(1.5) translateX(0.5em);
+}
+
+
 .mg-main-menu {
   position: sticky;
   top: 0;
   z-index: 2000;
-  display: flex;
+  /*display: flex;*/
   border-bottom: 1px solid gray;
   background-color: rgba(255, 255, 255, 0.95);
-  padding-top: 0.3rem;
+  /*padding-top: 0.3rem;*/
 }
 @media (max-width: 768px) {
   .mg-main-menu {

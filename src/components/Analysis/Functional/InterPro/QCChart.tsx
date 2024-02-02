@@ -16,15 +16,15 @@ function getSeriesCategory(
   seqData: { key: string; value: string }[],
   category: string
 ) {
-  let series = seqData.find(({ key }) => key === category);
+  let series = seqData?.find(({ key }) => key === category);
   if (series !== undefined) {
     return series.value;
   }
-  series = seqData.find(({ key }) => key === `Contigs${category}`);
+  series = seqData?.find(({ key }) => key === `Contigs${category}`);
   if (series !== undefined) {
     return series.value;
   }
-  series = seqData.find(({ key }) => key === `Reads${category}`);
+  series = seqData?.find(({ key }) => key === `Reads${category}`);
   if (series !== undefined) {
     return series.value;
   }
