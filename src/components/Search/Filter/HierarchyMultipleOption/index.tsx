@@ -7,6 +7,7 @@ import LoadingOverlay from 'components/UI/LoadingOverlay';
 import 'styles/filters.css';
 import './style.css';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { remove } from 'lodash-es';
 
 interface OptionDataType {
   value: string;
@@ -119,13 +120,16 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
     setSelected(facet.split(',').filter(Boolean));
   }, [facet]);
 
-  const facetData = useMemo(
-    () =>
-      (searchData?.[location.pathname]?.data?.facets || []).filter(
-        (f) => f.id === facetName
-      )?.[0],
-    [location.pathname, searchData, facetName]
-  );
+  const facetData = useMemo(() => {
+    const cleanedFacetData = (
+      searchData?.[location.pathname]?.data?.facets || []
+    ).filter((f) => f.id === facetName)?.[0];
+    if (cleanedFacetData?.id === 'biome') {
+      // Do not show objects tagged to "root" biome.
+      remove(cleanedFacetData.facetValues, ['value', 'root']);
+    }
+    return cleanedFacetData;
+  }, [location.pathname, searchData, facetName]);
 
   if (searchData?.[location.pathname].error) return null;
 
