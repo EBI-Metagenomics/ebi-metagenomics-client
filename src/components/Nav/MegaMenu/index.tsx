@@ -50,9 +50,8 @@ const MegaMenu: React.FC = () => {
   };
 
   return (
-    <>
+    <div onMouseLeave={handleMouseLeave}>
       <div className="vf-global-header vf-mega-menu" role="menubar">
-        {/* <nav className="vf-navigation vf-navigation--global | vf-cluster"> */}
         <nav className="vf-navigation | vf-cluster">
           <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
             <li className="vf-navigation__item">
@@ -148,7 +147,7 @@ const MegaMenu: React.FC = () => {
                     activeSection === 'login-section' ? 'active' : ''
                   }`}
                   id="login-section"
-                  href="#"
+                  href="/metagenomics/mydata"
                   onMouseEnter={() => handleMouseEnter('login-section')}
                 >
                   My data
@@ -703,7 +702,7 @@ const MegaMenu: React.FC = () => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
