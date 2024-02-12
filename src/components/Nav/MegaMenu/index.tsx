@@ -23,8 +23,8 @@ const MegaMenu: React.FC = () => {
   };
 
   const handleMouseLeave = () => {
-    // setMenuVisible(false);
-    // setActiveSection(null);
+    setMenuVisible(false);
+    setActiveSection(null);
   };
 
   const searchBox = useRef<HTMLInputElement>();
