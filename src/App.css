@@ -118,3 +118,8 @@ pre.vf-code-example__pre > button {
     cursor: help;
     text-decoration: none;
 }
+
+#mgnify-mega-menu .vf-navigation__link:visited:hover {
+  color: #3b6fb6;
+  text-decoration: underline;
+}

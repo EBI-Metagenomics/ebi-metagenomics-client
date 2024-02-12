@@ -23,8 +23,8 @@ const MegaMenu: React.FC = () => {
   };
 
   const handleMouseLeave = () => {
-    setMenuVisible(false);
-    setActiveSection(null);
+    // setMenuVisible(false);
+    // setActiveSection(null);
   };
 
   const searchBox = useRef<HTMLInputElement>();
@@ -51,7 +51,11 @@ const MegaMenu: React.FC = () => {
 
   return (
     <div onMouseLeave={handleMouseLeave}>
-      <div className="vf-global-header vf-mega-menu" role="menubar">
+      <div
+        id="mgnify-mega-menu"
+        className="vf-global-header vf-mega-menu"
+        role="menubar"
+      >
         <nav className="vf-navigation | vf-cluster">
           <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
             <li className="vf-navigation__item">
