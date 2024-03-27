@@ -40,6 +40,16 @@ const EBIFooter: React.FC = () => {
                   Help &amp; Support
                 </a>
               </li>
+              <li className="vf-list__item">
+                <a href="//www.ebi.ac.uk/licencing" className="vf-list__link">
+                  Licensing
+                </a>
+              </li>
+              <li className="vf-list__item">
+                <a href="//www.ebi.ac.uk/long-term-data-preservation" className="vf-list__link">
+                  Long-term data preservation
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -240,7 +250,7 @@ const EBIFooter: React.FC = () => {
           </span>
         </p>
         <p className="vf-footer__legal">
-          <span className="vf-footer__legal-text">Copyright © EMBL 2021</span>
+          <span className="vf-footer__legal-text">Copyright © EMBL 2024</span>
           <span className="vf-footer__legal-text">
             EMBL-EBI is part of the
             <a className="vf-footer__link" href="//www.embl.org">
