@@ -46,8 +46,8 @@ const EBIFooter: React.FC = () => {
                 </a>
               </li>
               <li className="vf-list__item">
-                <a 
-                  href="//www.ebi.ac.uk/long-term-data-preservation" 
+                <a
+                  href="//www.ebi.ac.uk/long-term-data-preservation"
                   className="vf-list__link"
                 >
                   Long-term data preservation
