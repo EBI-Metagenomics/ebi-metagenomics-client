@@ -22,6 +22,8 @@ import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
 import PersistLogin from 'components/PersistLogin';
+import SearchPage from 'pages/Search';
+import Branchwater from 'pages/Branchwater';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -84,6 +86,8 @@ const App: React.FC = () => {
               <ResetScroll />
               <Suspense fallback={<Loading size="large" />}>
                 <Routes>
+                  <Route path="/search-landing" element={<SearchPage />} />
+                  <Route path="/branchwater-search" element={<Branchwater />} />
                   <Route path="/" element={<Home />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/help" element={<Help />} />

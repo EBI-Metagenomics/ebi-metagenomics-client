@@ -82,29 +82,28 @@ const MegaMenu: React.FC = () => {
                 Submit data
               </a>
             </li>
-            <li className="vf-navigation__item">
-              <a
-                id="text-search-section"
-                className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
-                  activeSection === 'text-search-section' ? 'active' : ''
-                }`}
-                href="/metagenomics/search"
-                onMouseEnter={() => handleMouseEnter('text-search-section')}
-              >
-                Text search
-              </a>
-            </li>
+            {/*<li className="vf-navigation__item">*/}
+            {/*  <a*/}
+            {/*    id="text-search-section"*/}
+            {/*    className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${*/}
+            {/*      activeSection === 'text-search-section' ? 'active' : ''*/}
+            {/*    }`}*/}
+            {/*    href="/metagenomics/search"*/}
+            {/*    onMouseEnter={() => handleMouseEnter('text-search-section')}*/}
+            {/*  >*/}
+            {/*    Text search*/}
+            {/*  </a>*/}
+            {/*</li>*/}
             <li className="vf-navigation__item">
               <a
                 id="sequence-search-link"
-                target="_blank"
-                href="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
+                href="/metagenomics/search-landing"
                 className="vf-navigation__link vf-mega-menu__link"
                 onMouseEnter={() => setMenuVisible(false)}
                 rel="noreferrer"
               >
-                Sequence search &nbsp;
-                <span className="icon icon-common icon-external-link-alt" />
+                Search page &nbsp;
+                {/*<span className="icon icon-common icon-external-link-alt" />*/}
               </a>
             </li>
             <li className="vf-navigation__item">
