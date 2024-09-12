@@ -16,6 +16,7 @@ import RouteForHash from 'components/Nav/RouteForHash';
 import { Link } from 'react-router-dom';
 import Downloads from 'components/Downloads';
 import Abundance from 'components/Analysis/Abundance';
+import useMGnifyV2Data from 'hooks/data/useMGnifyV2Data';
 import AnalysisContext from './AnalysisContext';
 
 const hasAbundance = (
@@ -35,19 +36,22 @@ const isAtleastVersion5 = (data: MGnifyDatum): boolean =>
 const isNotAmplicon = (data: MGnifyDatum): boolean =>
   data.attributes['experiment-type'] !== 'amplicon';
 
-const AnalysisPage: React.FC = () => {
+const V2AnalysisPage: React.FC = () => {
   const accession = useURLAccession();
-  const { data, loading, error } = useMGnifyData(`analyses/${accession}`, {
+  const { data, loading, error } = useMGnifyV2Data(`analyses/MGYA00779423`, {
+    //   const { data, loading, error } = useMGnifyData(`analyses/${accession}`, {
     include: 'downloads',
   });
   const value = useMemo(
-    () => ({ overviewData: data?.data, included: data?.included }),
+    () => ({ overviewData: data, included: data?.included }),
     [data]
   );
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const { data: analysisData, included } = data as MGnifyResponseObj;
+
+  // console.log('DATA', data);
 
   const tabs = [
     { label: 'Overview', to: '#overview' },
@@ -116,4 +120,4 @@ const AnalysisPage: React.FC = () => {
   );
 };
 
-export default AnalysisPage;
+export default V2AnalysisPage;

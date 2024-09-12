@@ -40,7 +40,8 @@ const useMGnifyV2Data: (
     Object.entries(parameters).filter(([, value]) => value !== undefined)
   );
   const allParameters = { ...defaultParameters, ...cleanedParameters };
-  let url = `${config.api}${endpoint}`;
+  // let url = `${config.api}${endpoint}`;
+  let url = `http://apiv2-dev.mgnify.org/api/v2/analyses/MGYA00779423`;
   if (Object.keys(allParameters).length > 0) {
     Object.entries(allParameters).forEach(([key, value], idx) => {
       let joinChar = idx === 0 ? '?' : '&';
