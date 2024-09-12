@@ -327,7 +327,7 @@ const MegaMenu: React.FC = () => {
                 <div className="vf-section-header">
                   <h2 className="vf-section-header__heading">Search MGnify</h2>
                   <p className="vf-section-header__text">
-                    Search for studies, samples abd publications
+                    Search for studies, samples and publications
                   </p>
                 </div>
                 <div className="vf-section-content">
