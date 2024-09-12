@@ -6,7 +6,7 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
-import InfoBanner from 'src/components/UI/InfoBanner';
+import InfoBanner from 'components/UI/InfoBanner';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import ROCrateBrowser from 'components/UI/ROCrateBrowser';
 import { singularise } from 'utils/strings';
