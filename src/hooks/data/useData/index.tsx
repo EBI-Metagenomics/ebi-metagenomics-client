@@ -124,6 +124,12 @@ export type TSVResponse = Array<string>[];
 
 export type FASTAResponse = Array<string>[];
 
+export type V2Obj = {
+  study_accession: string;
+  accession: string;
+  downloads: Array<string>;
+};
+
 export interface DataResponse {
   data:
     | null
@@ -133,7 +139,8 @@ export interface DataResponse {
     | HTMLHtmlElement
     | TSVResponse
     | FASTAResponse
-    | string;
+    | string
+    | V2Obj;
   error: ErrorFromFetch | null;
   loading: boolean;
   isStale: boolean;
