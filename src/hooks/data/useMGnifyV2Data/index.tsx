@@ -1,11 +1,12 @@
 import { useContext } from 'react';
 import useData, {
   DataResponse,
-  KeyValue,
+  KeyValue, MGnifyDatum, MGnifyResponse,
   ResponseFormat,
 } from 'hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
-import useDataV2 from 'hooks/data/useDataV2';
+import useDataV2, { V2Response } from 'hooks/data/useData/v2Index';
+// import useDataV2 from 'hooks/data/useDataV2';
 
 interface Download {
   alias: string;
@@ -16,11 +17,12 @@ interface Download {
   url: string;
 }
 
-interface MgnifyV2DataResponse extends DataResponse {
-  study_accession?: string;
-  accession?: string;
-  downloads?: Download[];
-  downloadURL?: string;
+// interface MgnifyV2DataResponse extends DataResponse {
+interface MgnifyV2DataResponse extends V2Response {
+  study_accession: string;
+  accession: string;
+  downloads: Download[];
+  // downloadURL?: string;
 }
 
 const useMGnifyV2Data: (
@@ -41,7 +43,8 @@ const useMGnifyV2Data: (
   );
   const allParameters = { ...defaultParameters, ...cleanedParameters };
   // let url = `${config.api}${endpoint}`;
-  let url = `http://apiv2-dev.mgnify.org/api/v2/analyses/MGYA00779423`;
+  // let url = `http://apiv2-dev.mgnify.org/api/v2/analyses/MGYA00779423`;
+  let url = `http://localhost:8000/v1/mgs-data`;
   if (Object.keys(allParameters).length > 0) {
     Object.entries(allParameters).forEach(([key, value], idx) => {
       let joinChar = idx === 0 ? '?' : '&';
@@ -68,15 +71,16 @@ const useMGnifyV2Data: (
 
   const data = useDataV2(url, format, fetchOptions);
 
-  const dataM = data as any;
+  // const dataM = data as MgnifyV2DataResponse;
+  const dataM = data;
 
   // Extract the study accession, accession, and downloads from the response data
-  if (dataM.data) {
-    console.log('DATAM DATA', dataM.data);
-    // dataM.study_accession = dataM.data.study_accession;
-    dataM.accession = dataM.data.accession;
-    dataM.downloads = dataM.data.downloads || [];
-  }
+  // if (dataM.data) {
+  //   console.log('DATAM DATA', dataM.data);
+  //   // dataM.study_accession = dataM.data.study_accession;
+  //   dataM.accession = dataM.data.accession;
+  //   dataM.downloads = dataM.data.downloads || [];
+  // }
 
   const parametersWithoutPagination = Object.entries(allParameters).filter(
     ([key]) => key.indexOf('page') === -1
@@ -87,7 +91,9 @@ const useMGnifyV2Data: (
     downloadURL += `?${parametersWithoutPagination
       .map(([key, value]) => `${key}=${value}`)
       .join('&')}`;
-  dataM.downloadURL = downloadURL;
+  // dataM.downloadURL = downloadURL;
+
+  console.log('V2 DATA M', dataM);
 
   return dataM;
 };

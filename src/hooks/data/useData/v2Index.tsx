@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import protectedAxios from 'utils/protectedAxios';
 import { AxiosResponse } from 'axios';
+// import { BlogResponse, ErrorTypes, FASTAResponse, MGnifyResponse, TSVResponse, V2Obj } from 'hooks/data/useData/index';
 
 export enum ResponseFormat {
   JSON,
@@ -22,6 +23,20 @@ export type KeyValue = {
   [key: string]: string | number | Record<string, unknown> | [];
 };
 
+export type MGnifyDatum = {
+  study_accession: string;
+  accession: string;
+  experiment_type: string;
+  instrument_model: string;
+  instrument_platform: string;
+  pipeline_version: string;
+  downloads: Download[];
+};
+
+export interface MGnifyV2ResponseObj {
+  data: MGnifyDatum;
+}
+
 export type Download = {
   alias: string;
   download_type: string;
@@ -37,11 +52,31 @@ export interface V2Response {
   downloads: Download[];
 }
 
+// export interface DataV2Response {
+//   data: V2Response | null;
+//   error: ErrorFromFetch | null;
+//   loading: boolean;
+//   isStale: boolean;
+//   rawResponse?: Response;
+// }
+
 export interface DataV2Response {
-  data: V2Response | null;
-  error: ErrorFromFetch | null;
-  loading: boolean;
-  isStale: boolean;
+  study_accession: string;
+  accession: string;
+  downloads: Download[];
+  // data:
+  //   | null
+  //   | KeyValue
+  //   | MGnifyResponse
+  //   | BlogResponse
+  //   | HTMLHtmlElement
+  //   | TSVResponse
+  //   | FASTAResponse
+  //   | string
+  //   | V2Response;
+  error?: ErrorFromFetch | null;
+  loading?: boolean;
+  isStale?: boolean;
   rawResponse?: Response;
 }
 
@@ -75,7 +110,8 @@ const prepareResponseDataBasedOnFormatV2 = (
           .map((line) => line.split('\t'));
         break;
       default:
-        data = response.data; // Assuming the response already fits the V2Response structure
+        // TODO: v2 should return the data directly
+        data = response.data.data; // Assuming the response already fits the V2Response structure
         break;
     }
   } catch (error) {
@@ -86,7 +122,8 @@ const prepareResponseDataBasedOnFormatV2 = (
       },
       loading: false,
       isStale: false,
-      rawResponse: response,
+      ...response,
+      // rawResponse: response,
     });
   }
   return data;
@@ -112,13 +149,17 @@ async function fetchDataV2(
     } else {
       response = await protectedAxios.get(url);
     }
-    const data = prepareResponseDataBasedOnFormatV2(response, format, updateState);
+    const data = prepareResponseDataBasedOnFormatV2(
+      response,
+      format,
+      updateState
+    );
     updateState({
-      data,
+      ...data,
       loading: false,
       error: null,
       isStale: false,
-      rawResponse: response,
+      // rawResponse: response,
     });
   } catch (error) {
     updateState({
@@ -134,7 +175,10 @@ async function fetchDataV2(
 }
 
 const EmptyResponseV2: DataV2Response = {
-  data: null,
+  accession: '',
+  downloads: [],
+  study_accession: '',
+  // data: null,
   loading: false,
   error: {
     type: ErrorTypes.NullURL,
@@ -145,7 +189,10 @@ const EmptyResponseV2: DataV2Response = {
 };
 
 const NewRequestV2: DataV2Response = {
-  data: null,
+  accession: '',
+  downloads: [],
+  study_accession: '',
+  // data: null,
   loading: true,
   error: null,
   isStale: false,
@@ -156,7 +203,11 @@ const useDataV2: (
   url: string,
   format?: ResponseFormat,
   fetchOptions?: RequestInit
-) => DataV2Response = (url, format = ResponseFormat.JSON, fetchOptions = {}) => {
+) => DataV2Response = (
+  url,
+  format = ResponseFormat.JSON,
+  fetchOptions = {}
+) => {
   const [state, setFullState] = useState(NewRequestV2);
   let isActive = true;
 
