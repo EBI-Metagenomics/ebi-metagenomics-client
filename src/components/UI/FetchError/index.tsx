@@ -11,9 +11,9 @@ const getHumanReadableErrorMessages = (error: ErrorFromFetch): string => {
   const errorStatusCode = error.error.response.status;
   switch (errorStatusCode) {
     case 404:
-      return 'The requested resource could not be found.';
+      return '404: The requested resource could not be found.';
     case 500:
-      return 'The server encountered an error.';
+      return '500: The server encountered an error.';
     default:
       return 'An error occurred.';
   }
