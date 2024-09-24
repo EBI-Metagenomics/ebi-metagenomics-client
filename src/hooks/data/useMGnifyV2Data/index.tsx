@@ -92,9 +92,6 @@ const useMGnifyV2Data: (
       .map(([key, value]) => `${key}=${value}`)
       .join('&')}`;
   // dataM.downloadURL = downloadURL;
-
-  console.log('V2 DATA M', dataM);
-
   return dataM;
 };
 

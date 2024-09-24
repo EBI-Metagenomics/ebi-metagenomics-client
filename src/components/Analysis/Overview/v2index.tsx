@@ -55,8 +55,6 @@ const HybridAnalysisDetails: React.FC<HybridAnalysisDetailsProps> = ({
 
 const AnalysisOverview: React.FC = () => {
   const { overviewData: data } = useContext(AnalysisContext);
-  console.log('OVERVIEW DARA', data);
-
   const isHybrid = false;
     // data.experiment_type === 'hybrid_assembly' &&
     // data?.experiment_type === 'hybrid_assembly' &&
@@ -74,43 +72,42 @@ const AnalysisOverview: React.FC = () => {
               {
                 key: 'Study',
                 value:
-                  data?.relationships?.study?.data?.id &&
+                  // data?.relationships?.study?.data?.id &&
+                  data?.study_accession &&
                   (() => (
-                    <Link to={`/studies/${data?.relationships.study.data.id}`}>
-                      {data?.relationships.study.data.id}
+                    <Link to={`/studies/${data?.study_accession}`}>
+                      {data?.study_accession}
                     </Link>
                   )),
               },
               {
                 key: 'Sample',
                 value:
-                  data?.relationships?.sample?.data?.id &&
+                  data?.sample_accession &&
                   (() => (
-                    <Link to={`/samples/${data?.relationships.sample.data.id}`}>
-                      {data?.relationships.sample.data.id}
+                    <Link to={`/samples/${data?.sample_accession}`}>
+                      {data?.sample_accession}
                     </Link>
                   )),
               },
               {
                 key: 'Assembly',
                 value:
-                  data?.relationships?.assembly?.data?.id &&
+                  data?.assembly_accession &&
                   isAssembly(data.experiment_type as string) &&
                   (() => (
-                    <Link
-                      to={`/assemblies/${data?.relationships.assembly.data.id}`}
-                    >
-                      {data?.relationships.assembly.data.id}
+                    <Link to={`/assemblies/${data?.assembly_accession}`}>
+                      {data?.assembly_accession}
                     </Link>
                   )),
               },
               {
                 key: 'Run',
                 value:
-                  data?.relationships?.run?.data?.id &&
+                  data?.run_accession &&
                   (() => (
-                    <Link to={`/runs/${data?.relationships.run.data.id}`}>
-                      {data?.relationships.run.data.id}
+                    <Link to={`/runs/${data?.run_accession}`}>
+                      {data?.run_accession}
                     </Link>
                   )),
               },
@@ -150,9 +147,7 @@ const AnalysisOverview: React.FC = () => {
             />
           )}
           {isHybrid && (
-            <HybridAnalysisDetails
-              assemblyId={data?.relationships?.assembly?.data?.id}
-            />
+            <HybridAnalysisDetails assemblyId={data?.assembly_accession} />
           )}
         </details>
       </div>

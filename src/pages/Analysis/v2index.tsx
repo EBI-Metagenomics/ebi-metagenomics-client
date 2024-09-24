@@ -7,7 +7,7 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Analysis/Overview/v2index';
-import QualityControl from 'components/Analysis/QualityControl';
+import QualityControl from 'components/Analysis/QualityControl/v2index';
 import ContigViewer from 'components/Analysis/ContigViewer';
 import TaxonomySubpage from 'components/Analysis/Taxonomy';
 import FunctionalSubpage from 'components/Analysis/Functional';
@@ -62,7 +62,7 @@ const V2AnalysisPage: React.FC = () => {
     () => ({ overviewData: data }),
     [data]
   );
-  console.log('this is value', value);
+  // console.log('this is value', value);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;

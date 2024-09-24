@@ -25,6 +25,9 @@ export type KeyValue = {
 
 export type MGnifyDatum = {
   study_accession: string;
+  run_accession: string;
+  sample_accession: string;
+  assembly_accession: string;
   accession: string;
   experiment_type: string;
   instrument_model: string;
