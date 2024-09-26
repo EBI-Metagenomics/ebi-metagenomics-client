@@ -3,11 +3,11 @@ import React, { useContext } from 'react';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 import Loading from 'components/UI/Loading';
 import { ResponseFormat } from 'hooks/data/useData';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import QualityControlChart from './QCChart';
-import ContigsHistogram from './ContigsHistogram';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import QualityControlChart from './V2QCChart';
+import ContigsHistogram from './V2ContigsHistogram';
 import NucleotidesHistogram from './NucleotidesHistogram';
-import ContigsDistribution from './ContigsDistribution';
+import ContigsDistribution from './V2ContigsDistribution';
 import SeqLengthChart from './SeqLengthChart';
 import GCContentChart from './GCContentChart';
 
@@ -15,6 +15,7 @@ import './style.css';
 
 const QualityControl: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
+  console.log('QC Analysis data ', analysisData);
   // const accession = analysisData?.id;
   const accession = analysisData?.accession;
   const { data, loading, error } = useMGnifyData(
@@ -42,7 +43,7 @@ const QualityControl: React.FC = () => {
         number given by ENA.
       </p>
       <QualityControlChart summaryData={summaryData} />
-      {summaryData && Number(analysisData.attributes['pipeline-version']) > 2 && (
+      {summaryData && Number(analysisData.pipeline_version) > 2 && (
         <>
           <p>
             The histograms below show the distributions of sequence lengths

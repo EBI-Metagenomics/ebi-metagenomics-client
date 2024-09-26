@@ -1,17 +1,16 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import { MGnifyDatum } from 'hooks/data/useData';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 
-type DownloadsProps = {
-  downloads: MGnifyDatum[];
-  loading: boolean;
-  error: any;
-};
+type DownloadsProps = {};
 
-const Downloads: React.FC<DownloadsProps> = ({ downloads, loading, error }) => {
+const Downloads: React.FC<DownloadsProps> = ({}) => {
+  const { overviewData } = useContext(AnalysisContext);
+  const downloads = overviewData?.downloads;
   const columns = useMemo(
     () => [
       {
@@ -45,28 +44,28 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads, loading, error }) => {
     []
   );
 
-  if (loading) return <Loading size="large" />;
-  if (error) return <FetchError error={error} />;
-  if (!downloads) return <Loading />;
+  // if (loading) return <Loading size="large" />;
+  // if (error) return <FetchError error={error} />;
+  // if (!downloads) return <Loading />;
 
   const categories = {};
 
   downloads.forEach((download) => {
-    if (!categories[download.attributes['group-type'] as string]) {
-      categories[download.attributes['group-type'] as string] = [];
+    if (!categories[download.download_type as string]) {
+      categories[download.download_type as string] = [];
     }
-    categories[download.attributes['group-type'] as string].push(download);
+    categories[download.download_type as string].push(download);
   });
 
   return (
     <div className="vf-stock">
-      {Object.entries(categories).map(([category, downloads]) => (
+      {Object.entries(categories).map(([category, downloadsList]) => (
         <section key={category}>
           <EMGTable
             cols={columns}
-            data={downloads as Array<MGnifyDatum>}
+            data={downloadsList as Array<MGnifyDatum>}
             Title={category}
-            loading={loading}
+            loading={false}
             showPagination={false}
           />
           <hr />

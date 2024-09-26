@@ -14,11 +14,11 @@ import FunctionalSubpage from 'components/Analysis/Functional';
 import PathwaysSubpage from 'components/Analysis/Pathways';
 import RouteForHash from 'components/Nav/RouteForHash';
 import { Link } from 'react-router-dom';
-import Downloads from 'components/Downloads';
+import Downloads from 'components/Downloads/v2index';
 import Abundance from 'components/Analysis/Abundance';
 import useMGnifyV2Data from 'hooks/data/useMGnifyV2Data';
-import AnalysisContext from './AnalysisContext';
 import V2AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import AnalysisContext from './AnalysisContext';
 
 // const hasAbundance = (
 //   includes: { attributes?: { 'group-type'?: string } }[]
@@ -137,7 +137,7 @@ const V2AnalysisPage: React.FC = () => {
               <PathwaysSubpage />
             </RouteForHash>
             <RouteForHash hash="#download">
-              <Downloads endpoint="analyses" accession={accession} />
+              <Downloads />
             </RouteForHash>
           </V2AnalysisContext.Provider>
         </div>
