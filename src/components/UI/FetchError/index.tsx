@@ -15,7 +15,7 @@ const getHumanReadableErrorMessages = (error: ErrorFromFetch): string => {
     case 500:
       return '500: The server encountered an error.';
     default:
-      return 'An error occurred.';
+      return `${errorStatusCode}: An error occurred.`;
   }
 };
 
