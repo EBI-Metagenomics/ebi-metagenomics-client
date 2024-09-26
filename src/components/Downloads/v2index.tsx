@@ -11,24 +11,28 @@ type DownloadsProps = {};
 const Downloads: React.FC<DownloadsProps> = ({}) => {
   const { overviewData } = useContext(AnalysisContext);
   const downloads = overviewData?.downloads;
+  console.log('downloads from here ', downloads);
   const columns = useMemo(
     () => [
       {
         Header: 'Name',
-        accessor: 'attributes.description.description',
+        accessor: 'long_description',
       },
-      {
-        Header: 'Compression',
-        accessor: 'attributes.file-format.compression',
-        Cell: ({ cell }) => (cell.value ? 'Yes' : '-'),
-      },
+      // TODO: check if compression is still a thing
+      // {
+      //   Header: 'Compression',
+      //   accessor: 'compression',
+      //   Cell: ({ cell }) => {
+      //     return cell.value ? 'Yes' : '-';
+      //   },
+      // },
       {
         Header: 'Format',
-        accessor: 'attributes.file-format.name',
+        accessor: 'file_type',
       },
       {
         Header: 'Action',
-        accessor: 'links.self',
+        accessor: 'url',
         Cell: ({ cell }) => (
           <a
             href={cell.value}
