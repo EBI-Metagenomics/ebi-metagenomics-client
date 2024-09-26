@@ -117,7 +117,13 @@ export type ErrorFromFetch = {
   status?: number;
   response?: Promise<Response>;
   type: ErrorTypes;
-  error?: unknown;
+  // error?: unknown | { message: string };
+  error?: {
+    message: string;
+    request: {
+      responseURL: string;
+    };
+  };
 };
 
 export type TSVResponse = Array<string>[];
