@@ -8,7 +8,7 @@ const refreshPage = (): void => {
 const getHumanReadableErrorMessages = (error: ErrorFromFetch): string => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const errorStatusCode = error.error.response.status;
+  const errorStatusCode = error.error.response?.status || error.error.code;
   switch (errorStatusCode) {
     case 404:
       return '404: The requested resource could not be found.';
@@ -36,7 +36,7 @@ const FetchError: React.FC<{ error: ErrorFromFetch }> = ({ error }) => {
         {error?.type === ErrorTypes.FetchError &&
           `There were problems with the request. ${getHumanReadableErrorMessages(
             error
-          )}.`}
+          )}`}
         {error?.type === ErrorTypes.NotOK &&
           `The response from the server was not OK [Status: ${error.status}].`}
         {error?.type === ErrorTypes.JSONError &&
@@ -44,7 +44,7 @@ const FetchError: React.FC<{ error: ErrorFromFetch }> = ({ error }) => {
       </p>
       <details className="vf-details" open>
         <summary className="vf-details--summary">Advanced</summary>
-        Request endpoint: {error.error.request.responseURL}
+        Request endpoint: {error.error.request.responseURL || error.error.config.url}
       </details>
       <div className="mg-right">
         <button
