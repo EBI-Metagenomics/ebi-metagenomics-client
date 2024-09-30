@@ -2,6 +2,7 @@ import {
   db,
   Crate,
   StorableCrate,
+  isOfflineCrate,
 } from 'hooks/genomeViewer/CrateStore/crate_db';
 import { useContext, useEffect, useState } from 'react';
 import useMGnifyData from 'hooks/data/useMGnifyData';
@@ -10,6 +11,7 @@ import { MGnifyDatum } from 'hooks/data/useData';
 import JSZip from 'jszip';
 import { ROCrate } from 'ro-crate';
 import { Track } from 'utils/trackView';
+import { useEffectOnce } from 'react-use';
 
 const extractSchema = async (crateZip: JSZip): Promise<object> => {
   const metadataJson = await crateZip
@@ -106,6 +108,14 @@ const getCrate = async (crateURL: string): Promise<Crate> => {
   return crate;
 };
 
+const getOfflineCrate = async (): Promise<Crate> => {
+  let crate: Crate = await db.crates.filter(isOfflineCrate).first();
+  if (crate) {
+    crate = await hydrateStorableCrate(crate);
+  }
+  return crate;
+};
+
 export const useCrate = (crateURL: string): Crate => {
   const [crate, setCrate] = useState(null);
 
@@ -153,5 +163,64 @@ export const useCrates = (associatedCratesUrl: string): Crates => {
   return {
     crates,
     loading: isLoading,
+  };
+};
+
+export const useOfflineCrate = () => {
+  const [crate, setCrate] = useState<Crate>();
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [error, setError] = useState(null);
+
+  useEffectOnce(() => {
+    getOfflineCrate().then(setCrate);
+  });
+
+  const uploadCrate = async (file: File) => {
+    setIsUploading(true);
+    setError(null);
+
+    try {
+      const fileReader = new FileReader();
+
+      fileReader.onload = async (event) => {
+        const zipBlob = new Blob([event.target.result]);
+        const crateZip = await JSZip.loadAsync(zipBlob);
+        const schema = await extractSchema(crateZip);
+        const gff = await extractGff(crateZip, schema);
+
+        const newCrate = {
+          url: `file:///${file.name}`,
+          zipBlob,
+          gff,
+          track: await getTrackProperties(schema, gff, `file:///${file.name}`),
+          schema,
+        };
+
+        await db.crates.put(newCrate);
+        const hydratedCrate = await hydrateStorableCrate(newCrate);
+        setCrate(hydratedCrate);
+        window.location.reload();
+      };
+
+      fileReader.readAsArrayBuffer(file);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const removeCrate = async () => {
+    await db.crates.filter(isOfflineCrate).delete();
+    setCrate(null);
+    window.location.reload();
+  };
+
+  return {
+    crate,
+    uploadCrate,
+    isUploading,
+    error,
+    removeCrate,
   };
 };
