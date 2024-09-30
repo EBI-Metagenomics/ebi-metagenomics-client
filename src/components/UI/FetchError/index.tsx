@@ -44,7 +44,8 @@ const FetchError: React.FC<{ error: ErrorFromFetch }> = ({ error }) => {
       </p>
       <details className="vf-details" open>
         <summary className="vf-details--summary">Advanced</summary>
-        Request endpoint: {error.error.request.responseURL || error.error.config.url}
+        Request endpoint:{' '}
+        {error.error.request.responseURL || error.error.config.url}
       </details>
       <div className="mg-right">
         <button
