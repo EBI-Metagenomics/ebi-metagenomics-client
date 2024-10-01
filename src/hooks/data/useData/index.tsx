@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import protectedAxios from 'utils/protectedAxios';
-import { AxiosResponse } from 'axios';
+import { all, AxiosResponse } from 'axios';
 
 export enum ResponseFormat {
   JSON,
@@ -234,6 +234,11 @@ async function fetchData(
       });
     } else {
       response = await protectedAxios.get(url);
+      if (url.includes('studies')) {
+        console.log(url, 'am about to end dis man whole career');
+        console.log('resp out here', response);
+      }
+
     }
     data = prepareResponseDataBasedOnFormat(response, format, updateState);
     updateState({
@@ -244,6 +249,11 @@ async function fetchData(
       rawResponse: response,
     });
   } catch (error) {
+    if (error.response.status === 401) {
+      localStorage.removeItem('mgnify.token');
+      localStorage.removeItem('mgnify.username');
+      window.location.reload();
+    }
     updateState({
       error: {
         error,
