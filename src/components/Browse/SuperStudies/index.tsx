@@ -4,10 +4,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseList } from '@/hooks/data/useData';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import ReactMarkdown from 'react-markdown';
 
 const BrowseSuperStudies: React.FC = () => {

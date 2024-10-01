@@ -3,8 +3,8 @@ import 'mgnify-sourmash-component';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useMgnifySourmashSearch from 'hooks/data/useMgnifySourmashSearch';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useMgnifySourmashSearch from '@/hooks/data/useMgnifySourmashSearch';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePicker';
 
 type SourmashFormProps = {
@@ -52,7 +52,7 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
         sourmashElement.removeEventListener('change', changedFiles);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [sourmash.current]);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
       setJobId((data.data as Record<string, string>).job_id);
       setShouldSearch(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [data, error, loading]);
 
   const handleSearch = (): void => {

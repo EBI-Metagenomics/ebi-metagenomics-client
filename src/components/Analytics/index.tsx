@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { useLocation } from 'react-router-dom';
-import config from 'utils/config';
+import config from '@/utils/config';
 
 const Matomo: React.FC = () => {
   const { trackPageView, enableLinkTracking } = useMatomo();

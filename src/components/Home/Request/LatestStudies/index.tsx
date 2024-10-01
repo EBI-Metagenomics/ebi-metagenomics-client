@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyDatum } from 'hooks/data/useData';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyDatum } from '@/hooks/data/useData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import TruncatedText from 'components/UI/TextTruncated';
-import { getBiomeIcon } from 'utils/biomes';
+import { getBiomeIcon } from '@/utils/biomes';
 
 import './style.css';
 import { useMedia } from 'react-use';

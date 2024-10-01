@@ -4,12 +4,12 @@ import AnalysesTable from 'components/Analysis/Analyses';
 import Box from 'components/UI/Box';
 import ExtLink from 'components/UI/ExtLink';
 import SamplesMapByStudy from 'components/UI/SamplesMap/ByStudy';
-import { MGnifyDatum } from 'hooks/data/useData';
-import { getBiomeIcon } from 'utils/biomes';
-import UserContext from 'pages/Login/UserContext';
+import { MGnifyDatum } from '@/hooks/data/useData';
+import { getBiomeIcon } from '@/utils/biomes';
+import UserContext from '@/pages/Login/UserContext';
 import { PublicationAnnotationsPopupBadge } from 'components/Publications/EuropePMCAnnotations';
 import ProgrammaticAccessBox from 'components/UI/ProgrammaticAccess';
-import { ENA_VIEW_URL } from 'utils/urls';
+import { ENA_VIEW_URL } from '@/utils/urls';
 
 type StudyOverviewProps = {
   data: MGnifyDatum;

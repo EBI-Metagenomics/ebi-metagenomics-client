@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseObj } from '@/hooks/data/useData';
+import useURLAccession from '@/hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
@@ -13,7 +13,7 @@ import CobsSearch from 'components/Genomes/Cobs';
 import SourmashSearch from 'components/Genomes/Sourmash';
 import RouteForHash from 'components/Nav/RouteForHash';
 import ArrowForLink from 'components/UI/ArrowForLink';
-import UserContext from 'pages/Login/UserContext';
+import UserContext from '@/pages/Login/UserContext';
 import ExtLink from 'components/UI/ExtLink';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 

@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import MarkerClusterer from '@googlemaps/markerclustererplus';
 
-import { MGnifyDatum } from 'hooks/data/useData';
+import { MGnifyDatum } from '@/hooks/data/useData';
 
 import './style.css';
 import LoadingDots from 'components/UI/LoadingDots';
@@ -191,7 +191,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
         });
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [theMap, samples]);
 
   return (

@@ -6,11 +6,11 @@ import { noop } from 'lodash-es';
 
 import FetchError from 'components/UI/FetchError';
 import Loading from 'components/UI/Loading';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import AnalysisContext from '@/pages/Analysis/AnalysisContext';
 import useInterProMatchesProvider, {
   InterProCountType,
-} from 'hooks/data/useInterProMatchesProvider';
-import { TAXONOMY_COLOURS } from 'utils/taxon';
+} from '@/hooks/data/useInterProMatchesProvider';
+import { TAXONOMY_COLOURS } from '@/utils/taxon';
 
 addExportMenu(Highcharts);
 
@@ -38,7 +38,7 @@ const InterProMatchesChart: React.FC<InterProMatchesChartProps> = ({
         onMatchesChange(matches);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [matches, loading]);
   useEffect(() => {
     if (chartComponentRef.current && selectedName !== null) {

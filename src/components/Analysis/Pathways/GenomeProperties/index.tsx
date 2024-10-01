@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import HierarchyNode, { Node } from 'components/UI/Hierarchy';
 
 import gpHierarchy from 'public/data/genome-properties-hierarchy.json';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import AnalysisContext from '@/pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import { MGnifyDatum } from 'hooks/data/useData';
+import { MGnifyDatum } from '@/hooks/data/useData';
 import ExtLink from 'components/UI/ExtLink';
 
 /**

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyDatum, ErrorFromFetch } from 'hooks/data/useData';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyDatum, ErrorFromFetch } from '@/hooks/data/useData';
 
 export type InterProCountType = {
   accession?: string;
@@ -63,13 +63,13 @@ const useInterProMatchesProvider = (
         setFetchedAllOrLimit(true);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [data, page, limit]);
   useEffect(() => {
     if (data?.links?.next && matches.length < limit) {
       setPage(page + 1);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [limit]);
   return {
     matches,

@@ -2,9 +2,9 @@ import React, { useState, useContext } from 'react';
 
 import { Wrapper } from '@googlemaps/react-wrapper';
 
-import useSamplesProvider from 'hooks/data/useSamplesProvider';
+import useSamplesProvider from '@/hooks/data/useSamplesProvider';
 
-import UserContext from 'pages/Login/UserContext';
+import UserContext from '@/pages/Login/UserContext';
 import SamplesMap from 'components/UI/SamplesMap';
 import render from '../render';
 import '../style.css';

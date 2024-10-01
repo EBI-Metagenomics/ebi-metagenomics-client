@@ -3,13 +3,13 @@ import React, { useMemo } from 'react';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
+import useURLAccession from '@/hooks/useURLAccession';
 import InfoBanner from 'components/UI/InfoBanner';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import ROCrateBrowser from 'components/UI/ROCrateBrowser';
-import { singularise } from 'utils/strings';
+import { singularise } from '@/utils/strings';
 
 type ExtraAnnotationsProps = {
   namespace: string;

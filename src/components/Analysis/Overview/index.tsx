@@ -1,8 +1,8 @@
 import React, { useContext, useMemo } from 'react';
 import KeyValueList from 'components/UI/KeyValueList';
 import { Link } from 'react-router-dom';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import useMGnifyData from 'hooks/data/useMGnifyData';
+import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
 
 function isAssembly(experimentType: string): boolean {
   return ['assembly', 'hybrid_assembly', 'long_reads_assembly'].includes(

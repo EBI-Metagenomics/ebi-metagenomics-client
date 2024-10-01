@@ -2,14 +2,14 @@ import {
   db,
   Crate,
   StorableCrate,
-} from 'hooks/genomeViewer/CrateStore/crate_db';
+} from '@/hooks/genomeViewer/CrateStore/crate_db';
 import { useContext, useEffect, useState } from 'react';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import UserContext from 'pages/Login/UserContext';
-import { MGnifyDatum } from 'hooks/data/useData';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import UserContext from '@/pages/Login/UserContext';
+import { MGnifyDatum } from '@/hooks/data/useData';
 import JSZip from 'jszip';
 import { ROCrate } from 'ro-crate';
-import { Track } from 'utils/trackView';
+import { Track } from '@/utils/trackView';
 
 const extractSchema = async (crateZip: JSZip): Promise<object> => {
   const metadataJson = await crateZip

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseObj } from '@/hooks/data/useData';
+import useURLAccession from '@/hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
@@ -21,7 +21,7 @@ import {
   defaultEezMetadata,
   SovereignsArray,
   Sov,
-} from 'utils/eezAbs';
+} from '@/utils/eezAbs';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import HTMLRenderer from 'components/UI/HTMLRederer';
 

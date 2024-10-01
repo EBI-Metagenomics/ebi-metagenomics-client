@@ -10,9 +10,9 @@ import './style.css';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import CursorPagination from 'components/UI/EMGTable/CursorPagination';
 import TruncatedText from 'components/UI/TextTruncated';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import { useCrates } from 'hooks/genomeViewer/CrateStore/useCrates';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import { useCrates } from '@/hooks/genomeViewer/CrateStore/useCrates';
 
 type ContigFeatureProps = {
   annotationType: string;

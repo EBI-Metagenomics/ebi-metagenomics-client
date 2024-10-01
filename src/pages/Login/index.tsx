@@ -7,11 +7,11 @@ import React, {
   useMemo,
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import OutterCard from 'components/UI/OutterCard';
-import UserContext from 'pages/Login/UserContext';
+import OutterCard from '@/components/UI/OutterCard';
+import UserContext from '@/pages/Login/UserContext';
 import enaUserImg from 'public/images/ico_ena_user.jpg';
-import useAuthToken from 'hooks/authentication/useAuthToken';
-import axios from 'utils/protectedAxios';
+import useAuthToken from '@/hooks/authentication/useAuthToken';
+import axios from '@/utils/protectedAxios';
 
 const Login: React.FC = () => {
   const [, setAuthToken] = useAuthToken();
@@ -72,7 +72,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
     try {
-      const response = await axios.post(`/utils/token/obtain`, {
+      const response = await axios.post(`/@/utils/token/obtain`, {
         username: usernameRef.current.value,
         password: passwordRef.current.value,
       });

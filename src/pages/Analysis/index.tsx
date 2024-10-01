@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyDatum, MGnifyResponseObj } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyDatum, MGnifyResponseObj } from '@/hooks/data/useData';
+import useURLAccession from '@/hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';

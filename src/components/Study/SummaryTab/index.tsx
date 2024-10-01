@@ -1,6 +1,6 @@
 import React from 'react';
 
-import useMGnifyData from 'hooks/data/useMGnifyData';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 

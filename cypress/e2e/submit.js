@@ -45,7 +45,7 @@ describe.skip('Submit page', function() {
     //         cy.server();
     //         cy.route({
     //             method: 'POST',
-    //             url: '**/utils/notify',
+    //             url: '**/@/utils/notify',
     //             status: 201,
     //             response: []
     //         }).as('sendMail');

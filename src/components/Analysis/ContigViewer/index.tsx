@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-@/hooks/exhaustive-deps */
 import React, {
   useCallback,
   useContext,
@@ -7,17 +7,17 @@ import React, {
   useState,
 } from 'react';
 
-import useURLAccession from 'hooks/useURLAccession';
-import useMGnifyData from 'hooks/data/useMGnifyData';
+import useURLAccession from '@/hooks/useURLAccession';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import useData, {
   KeyValue,
   MGnifyDatum,
   ResponseFormat,
-} from 'hooks/data/useData';
+} from '@/hooks/data/useData';
 import './style.css';
-import UserContext from 'pages/Login/UserContext';
+import UserContext from '@/pages/Login/UserContext';
 import igv from 'igv/dist/igv.esm';
 
 import ContigsTable from 'components/Analysis/ContigViewer/Table';
@@ -29,15 +29,15 @@ import ContigLengthFilter from 'components/Analysis/ContigViewer/Filter/ContigLe
 import ContigTextFilter from 'components/Analysis/ContigViewer/Filter/ContigText';
 // eslint-disable-next-line max-len
 import ContigAnnotationTypeFilter from 'components/Analysis/ContigViewer/Filter/ContigAnnotationType';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import {
   AnnotationTrackColorPicker,
   annotationTrackCustomisations,
   FORMAT,
 } from 'components/IGV/TrackColourPicker';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import { useCrates } from 'hooks/genomeViewer/CrateStore/useCrates';
-import { Track } from 'utils/trackView';
+import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import { useCrates } from '@/hooks/genomeViewer/CrateStore/useCrates';
+import { Track } from '@/utils/trackView';
 
 type ContigProps = {
   contig: MGnifyDatum;

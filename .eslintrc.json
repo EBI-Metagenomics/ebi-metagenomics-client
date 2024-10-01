@@ -19,6 +19,8 @@
   },
   "plugins": ["react", "@typescript-eslint", "react-hooks"],
   "rules": {
+    "react-@hooks/rules-of-hooks": "error", // Checks the rules of hooks
+    "react-@hooks/exhaustive-deps": "warn", // Checks effect dependencies
     "@typescript-eslint/no-use-before-define": ["error"],
     "@typescript-eslint/no-shadow": ["error"],
     "@typescript-eslint/explicit-function-return-type": "off",
@@ -35,8 +37,8 @@
       }
     ],
     "react/require-default-props": "off",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
+    "react-@/hooks/rules-of-hooks": "error",
+    "react-@/hooks/exhaustive-deps": "warn",
     "react/prop-types": "off",
     "no-use-before-define": "off",
     "react/function-component-definition": "off",

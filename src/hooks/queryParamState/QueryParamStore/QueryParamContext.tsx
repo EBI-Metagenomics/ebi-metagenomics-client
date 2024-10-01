@@ -4,7 +4,7 @@ import {
   GlobalState,
   ParamActions,
   queryParamsReducer,
-} from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
+} from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { mapValues, omitBy } from 'lodash-es';
 import { useDebounce, useEffectOnce } from 'react-use';

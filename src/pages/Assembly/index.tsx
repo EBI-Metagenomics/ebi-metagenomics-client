@@ -1,8 +1,8 @@
 import React from 'react';
 
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseObj } from '@/hooks/data/useData';
+import useURLAccession from '@/hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Box from 'components/UI/Box';
@@ -10,7 +10,7 @@ import KeyValueList from 'components/UI/KeyValueList';
 import ExtLink from 'components/UI/ExtLink';
 import { Link } from 'react-router-dom';
 import AssociatedAnalyses from 'components/Analysis/Analyses';
-import { ENA_VIEW_URL } from 'utils/urls';
+import { ENA_VIEW_URL } from '@/utils/urls';
 import ExtraAnnotations from 'components/ExtraAnnotations';
 
 const AssemblyPage: React.FC = () => {

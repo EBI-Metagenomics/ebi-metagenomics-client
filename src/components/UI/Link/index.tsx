@@ -6,8 +6,8 @@ import {
   LinkProps as DefaultLinkProps,
 } from 'react-router-dom';
 import React, { ForwardedRef } from 'react';
-import { createParamFromURL } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
-import useQueryParamsStore from 'hooks/queryParamState/QueryParamStore/useQueryParamsStore';
+import { createParamFromURL } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
+import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
 import { forEach } from 'lodash-es';
 
 const Link: React.FC<DefaultLinkProps> = React.forwardRef(

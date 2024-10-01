@@ -12,8 +12,8 @@ import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
 import Loading from 'components/UI/Loading';
 import TextInputDebounced from 'components/UI/TextInputDebounced';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
-import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { MGnifyDatum, MGnifyResponse } from '@/hooks/data/useData';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 import PaginationButton from './PaginationButton';
 import './style.css';
@@ -164,7 +164,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
         setChangingPage(false);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [showPagination, setPage, pageIndex]);
 
   useEffect(() => {
@@ -175,7 +175,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
         setChangingPage(false);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [showPagination, setPageSizeSelected, pageSize]);
 
   useEffect(() => {
@@ -189,7 +189,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
         setChangingPage(false);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [showPagination, setOrdering, setPage, sortBy, sortable]);
 
   const paginationRanges = useMemo(

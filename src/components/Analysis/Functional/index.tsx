@@ -5,8 +5,8 @@ import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import ExtLink from 'components/UI/ExtLink';
 import InfoBanner from 'components/UI/InfoBanner';
 
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import InterProTab from './InterPro';
 import GOTab from './GO';
 import PfamTab from './Pfam';

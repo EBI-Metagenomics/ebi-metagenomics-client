@@ -5,7 +5,7 @@ import {
 } from 'styles/react-select-styles';
 import React, { ReactElement, useEffect, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import Switch from 'components/UI/Switch';
 import { kebabCase } from 'lodash-es';
 

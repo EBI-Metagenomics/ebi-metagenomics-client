@@ -5,13 +5,13 @@ import { unescape } from 'lodash-es';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList, MGnifyDatum } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
-import { getBiomeIcon } from 'utils/biomes';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseList, MGnifyDatum } from '@/hooks/data/useData';
+import useURLAccession from '@/hooks/useURLAccession';
+import { getBiomeIcon } from '@/utils/biomes';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import InfoBanner from 'components/UI/InfoBanner';
-import { singularise } from 'utils/strings';
+import { singularise } from '@/utils/strings';
 
 const initialPageSize = 10;
 type AssociatedAnaysesProps = {

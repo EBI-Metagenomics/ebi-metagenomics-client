@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
-import UserContext from 'pages/Login/UserContext';
-import protectedAxios from 'utils/protectedAxios';
+import UserContext from '@/pages/Login/UserContext';
+import protectedAxios from '@/utils/protectedAxios';
 
 type AuthToken = string | null;
 const getUserDetailsFromToken = (token: string) => {
@@ -16,7 +16,7 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
   const { setUser, setDetails } = useContext(UserContext);
 
   const getUserDetailsFromAccountApi = () => {
-    protectedAxios.get('/utils/myaccounts').then((response) => {
+    protectedAxios.get('/@/utils/myaccounts').then((response) => {
       setDetails(response.data.data);
     });
   };
