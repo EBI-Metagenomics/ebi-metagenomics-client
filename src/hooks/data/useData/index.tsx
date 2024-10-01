@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import protectedAxios from 'utils/protectedAxios';
-import { all, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 export enum ResponseFormat {
   JSON,
@@ -234,11 +234,6 @@ async function fetchData(
       });
     } else {
       response = await protectedAxios.get(url);
-      if (url.includes('studies')) {
-        console.log(url, 'am about to end dis man whole career');
-        console.log('resp out here', response);
-      }
-
     }
     data = prepareResponseDataBasedOnFormat(response, format, updateState);
     updateState({
