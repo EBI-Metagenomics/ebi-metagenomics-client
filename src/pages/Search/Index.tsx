@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Branchwater from 'pages/Branchwater';
+import Cobs from 'components/Genomes/Cobs';
 
 const SearchPage: React.FC = () => {
   // State to manage the active tab
@@ -90,12 +92,12 @@ const SearchPage: React.FC = () => {
           <h2>Search by Nucleotide</h2>
           <details className="vf-details">
             <summary className="vf-details--summary">Search by MAG</summary>
-            Something small enough to escape casual notice.
+            <Branchwater />
           </details>
 
           <details className="vf-details">
-            <summary className="vf-details--summary">Sarch by Gene</summary>
-            Something small enough to escape casual notice.
+            <summary className="vf-details--summary">Search by Gene</summary>
+            <Cobs />
           </details>
         </section>
       </div>

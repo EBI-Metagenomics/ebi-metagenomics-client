@@ -71,6 +71,7 @@ const Branchwater = () => {
   const ref = useRef();
   const [showMgnifySourmash, setShowMgnifySourmash] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [targetDatabase, setTargetDatabase] = useState('MAGs');
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -82,13 +83,15 @@ const Branchwater = () => {
     // }
   };
 
-  const handleSearchClick = () => {
+  const handleSearchClick = (event) => {
+    event.preventDefault();
     setShowMgnifySourmash(true);
     // if (uploadedFile) {
     //   setShowMgnifySourmash(true);
     // } else {
     //   alert('Please upload a FASTA file first.');
     // }
+    console.log(`Searching in ${targetDatabase} database`);
   };
 
   const handleClearClick = () => {
@@ -104,34 +107,63 @@ const Branchwater = () => {
 
   return (
     <div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginBottom: '1em',
-        }}
-      >
-        <input id="file-upload" type="file" onChange={handleFileUpload} />
-        <button
-          className="vf-button vf-button--sm vf-button--primary mg-button"
-          onClick={handleSearchClick}
-        >
-          Search across Metagenomes
-        </button>
-        <button
-          className="vf-button vf-button--sm vf-button--primary mg-button"
-          onClick={handleSearchClick}
-        >
-          Search MAG Catalogues
-        </button>
-        <button
-          id="clear-button-mag"
-          type="button"
-          className="vf-button vf-button--sm vf-button--tertiary"
-          onClick={handleClearClick}
-        >
-          Clear
-        </button>
+      <div>
+        <form className="vf-stack vf-stack--400">
+          <div className="vf-form__item vf-stack">
+            <input id="file-upload" type="file" onChange={handleFileUpload} />
+
+            <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
+              <legend className="vf-form__legend">
+                Select target database
+              </legend>
+
+              <div className="vf-form__item vf-form__item--radio">
+                <input
+                  type="radio"
+                  name="targetDatabase"
+                  value="MAGs"
+                  id="1"
+                  className="vf-form__radio"
+                  checked={targetDatabase === 'MAGs'}
+                  onChange={() => setTargetDatabase('MAGs')}
+                />
+                <label htmlFor="1" className="vf-form__label">
+                  MAGs
+                </label>
+              </div>
+
+              <div className="vf-form__item vf-form__item--radio">
+                <input
+                  type="radio"
+                  name="targetDatabase"
+                  value="Metagenomes"
+                  id="2"
+                  className="vf-form__radio"
+                  checked={targetDatabase === 'Metagenomes'}
+                  onChange={() => setTargetDatabase('Metagenomes')}
+                />
+                <label htmlFor="2" className="vf-form__label">
+                  Metagenomes
+                </label>
+              </div>
+
+              <button
+                className="vf-button vf-button--sm vf-button--primary mg-button"
+                onClick={handleSearchClick}
+              >
+                Search
+              </button>
+              <button
+                id="clear-button-mag"
+                type="button"
+                className="vf-button vf-button--sm vf-button--tertiary"
+                onClick={handleClearClick}
+              >
+                Clear
+              </button>
+            </fieldset>
+          </div>
+        </form>
       </div>
 
       {showMgnifySourmash && (

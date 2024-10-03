@@ -5,6 +5,7 @@ import BlogExcerpts from 'components/Home/BlogExcerpts';
 import ExtLink from 'components/UI/ExtLink';
 import Publications, { MainPublication } from 'components/Publications';
 import './style.css';
+import SearchPage from 'pages/Search';
 
 const HomePage: React.FC = () => {
   return (
@@ -26,10 +27,12 @@ const HomePage: React.FC = () => {
         </div>
       </div>
       <div />
-      <div className="vf-grid vf-grid__col-2">
-        <SearchBy />
-        <Request />
-      </div>
+      <SearchPage />
+      {/*<div className="vf-grid vf-grid__col-2">*/}
+      {/*  /!*<SearchBy />*!/*/}
+      {/*  <SearchPage />*/}
+      {/*  <Request />*/}
+      {/*</div>*/}
       <hr />
       <BlogExcerpts />
       <h2>Latest publications</h2>
