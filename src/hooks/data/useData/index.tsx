@@ -114,11 +114,15 @@ export type BlogResponse = {
 };
 
 export type ErrorFromFetch = {
+  code?: string;
   status?: number;
   response?: Promise<Response>;
   type: ErrorTypes;
   // error?: unknown | { message: string };
   error?: {
+    config?: {
+      url?: string;
+    };
     message: string;
     request: {
       responseURL: string;
