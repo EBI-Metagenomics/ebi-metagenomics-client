@@ -36,8 +36,12 @@ import {
   FORMAT,
 } from 'components/IGV/TrackColourPicker';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import { useCrates } from 'hooks/genomeViewer/CrateStore/useCrates';
+import {
+  useCrates,
+  useOfflineCrate,
+} from 'hooks/genomeViewer/CrateStore/useCrates';
 import { Track } from 'utils/trackView';
+import ROCrateComparer from 'components/UI/ROCrateComparer';
 
 type ContigProps = {
   contig: MGnifyDatum;
@@ -57,6 +61,8 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   const { crates, loading: loadingCrates } = useCrates(
     `assemblies/${assemblyId}/extra-annotations`
   );
+
+  const { crate: offlineCrate } = useOfflineCrate();
 
   const antiSMASH = contig.attributes['has-antismash'];
   const displayName = contig.attributes['contig-name'];
@@ -106,6 +112,9 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
           options.tracks.push(crate.track);
         });
       }
+      if (offlineCrate) {
+        options.tracks.push(offlineCrate.track);
+      }
 
       if (node === null) return;
       igv.createBrowser(node, options).then((browser) => {
@@ -115,7 +124,16 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
         setIgvBrowser(browser);
       });
     },
-    [fastaURL, displayName, config.api, accession, contigId, antiSMASH, crates]
+    [
+      fastaURL,
+      displayName,
+      config.api,
+      accession,
+      contigId,
+      antiSMASH,
+      crates,
+      offlineCrate,
+    ]
   );
 
   useEffect(() => {
@@ -178,6 +196,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
               />
             );
           })}
+          <ROCrateComparer />
         </div>
       )}
     </div>
