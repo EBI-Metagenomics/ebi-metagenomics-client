@@ -247,7 +247,7 @@ async function fetchData(
     if (error.response.status === 401) {
       localStorage.removeItem('mgnify.token');
       localStorage.removeItem('mgnify.username');
-      alert('Your session has expired. Please log in again.');
+      localStorage.setItem('mgnify.sessionExpired', 'true');
       window.location.reload();
     }
     updateState({
