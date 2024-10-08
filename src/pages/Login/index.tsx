@@ -12,6 +12,7 @@ import UserContext from 'pages/Login/UserContext';
 import enaUserImg from 'public/images/ico_ena_user.jpg';
 import useAuthToken from 'hooks/authentication/useAuthToken';
 import axios from 'utils/protectedAxios';
+import Loading from 'components/UI/Loading';
 
 const Login: React.FC = () => {
   const [, setAuthToken] = useAuthToken();
@@ -25,6 +26,7 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errMsg, setErrMsg] = useState('');
+  const [loading, setLoading] = useState(false);
   const { isAuthenticated } = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -71,6 +73,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post(`/utils/token/obtain`, {
         username: usernameRef.current.value,
@@ -82,16 +85,21 @@ const Login: React.FC = () => {
       setAuthToken(accessToken) as unknown as void;
       setUsername('');
       setPassword('');
+      if (localStorage.getItem('mgnify.sessionExpired')) {
+        localStorage.removeItem('mgnify.sessionExpired');
+      }
       navigate(desiredDestination, {
         replace: true,
       });
     } catch (error) {
       if (!error.response) {
         setErrMsg('Network error');
-        return;
+      } else {
+        setErrMsg(error.response.data.errors.non_field_errors[0]);
       }
-      setErrMsg(error.response.data.errors.non_field_errors[0]);
       loginErrorsContainerRef.current?.focus();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -148,14 +156,18 @@ const Login: React.FC = () => {
 
           <br />
           <div className="form-actions-no-box">
-            <button
-              type="submit"
-              name="submit"
-              className="vf-button"
-              id="submit-id-submit"
-            >
-              Log in
-            </button>
+            {loading ? (
+              <Loading size="small" />
+            ) : (
+              <button
+                type="submit"
+                name="submit"
+                className="vf-button vf-button--primary"
+                id="submit-id-submit"
+              >
+                Log in
+              </button>
+            )}
           </div>
         </form>
         <div className="form-forgotten">

@@ -4,7 +4,6 @@ import Request from 'components/Home/Request';
 import BlogExcerpts from 'components/Home/BlogExcerpts';
 import Publications, { MainPublication } from 'components/Publications';
 import './style.css';
-import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
 
 const HomePage: React.FC = () => {
   return (
