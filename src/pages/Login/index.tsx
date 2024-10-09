@@ -85,9 +85,6 @@ const Login: React.FC = () => {
       setAuthToken(accessToken) as unknown as void;
       setUsername('');
       setPassword('');
-      if (localStorage.getItem('mgnify.sessionExpired')) {
-        localStorage.removeItem('mgnify.sessionExpired');
-      }
       navigate(desiredDestination, {
         replace: true,
       });
