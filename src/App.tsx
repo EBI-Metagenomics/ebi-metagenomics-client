@@ -22,6 +22,7 @@ import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
 import PersistLogin from 'components/PersistLogin';
+import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -79,6 +80,7 @@ const App: React.FC = () => {
           <EBIHeader />
           <HeroHeader />
           <MainMenu />
+          <SessionExpiryBanner />
           <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
             <ErrorBoundary>
               <ResetScroll />
