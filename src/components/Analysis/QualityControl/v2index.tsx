@@ -43,35 +43,6 @@ const QualityControl: React.FC = () => {
         number given by ENA.
       </p>
       <QualityControlChart summaryData={summaryData} />
-      {summaryData && Number(analysisData.pipeline_version) > 2 && (
-        <>
-          <p>
-            The histograms below show the distributions of sequence lengths
-            (left) and percentage GC content (right) for the sequences having
-            passed quality control. Note that for large files, the distributions
-            were compiled from a random subset of 2 million
-            {units}. The standard deviations are shown on each plot. The bar
-            chart underneath each graph indicates the minimum, mean and maximum
-            length and mean GC and AT content, respectively.
-          </p>
-          <div className="vf-grid vf-grid__col-2">
-            <div className="vf-stack">
-              <ContigsHistogram summaryData={summaryData} />
-              <SeqLengthChart summaryData={summaryData} />
-            </div>
-            <div className="vf-stack">
-              <ContigsDistribution summaryData={summaryData} />
-              <GCContentChart summaryData={summaryData} />
-            </div>
-          </div>
-          <p>
-            The graph below show the relative abundance of nucletotides (A, C,
-            G, T, or ambiguous base &quot;N&quot;) at each position starting
-            from the beginning of each {unit} up to the first 500 base pairs.
-          </p>
-          <NucleotidesHistogram />
-        </>
-      )}
     </div>
   );
 };
