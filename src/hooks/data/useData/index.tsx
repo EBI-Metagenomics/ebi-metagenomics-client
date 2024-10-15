@@ -248,6 +248,12 @@ async function fetchData(
       rawResponse: response,
     });
   } catch (error) {
+    if (error.response.status === 401) {
+      localStorage.removeItem('mgnify.token');
+      localStorage.removeItem('mgnify.username');
+      localStorage.setItem('mgnify.sessionExpired', 'true');
+      window.location.reload();
+    }
     updateState({
       error: {
         error,
