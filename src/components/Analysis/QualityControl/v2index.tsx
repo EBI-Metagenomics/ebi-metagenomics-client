@@ -15,7 +15,6 @@ import './style.css';
 
 const QualityControl: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
-  console.log('QC Analysis data ', analysisData);
   // const accession = analysisData?.id;
   const accession = analysisData?.accession;
   const { data, loading, error } = useMGnifyData(
@@ -24,6 +23,7 @@ const QualityControl: React.FC = () => {
     {},
     ResponseFormat.TSV
   );
+  console.log('data gotten back ', data);
   if (loading) return <Loading size="large" />;
   const summaryData =
     error || !data

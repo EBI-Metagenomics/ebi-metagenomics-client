@@ -13,7 +13,6 @@ type QualityControlProps = {
   } | null;
 };
 const QualityControlChart: React.FC<QualityControlProps> = ({
-  summaryData,
 }) => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
@@ -22,9 +21,9 @@ const QualityControlChart: React.FC<QualityControlProps> = ({
   const unit = isAssembly ? 'contigs' : 'reads';
   const capUnit = isAssembly ? 'Contigs' : 'Reads';
 
-  const remaining = [0, 0, 0, 0, 0];
-  const filtered = [0, 0, 0, 0, 0];
-  const subsampled = [0, 0, 0, 0, 0];
+  const remaining = [10, 20, 40, 50, 304];
+  const filtered = [30, 40, 304, 30, 50];
+  const subsampled = [450, 320, 430, 40, 40];
 
   const analysisSummary = {};
   (
@@ -36,20 +35,30 @@ const QualityControlChart: React.FC<QualityControlProps> = ({
     analysisSummary[key] = value;
   });
 
-  if (summaryData) subsampled[4] = Number(summaryData.sequence_count);
-  remaining[0] = Number(analysisSummary['Submitted nucleotide sequences']);
-  remaining[1] = Number(
-    analysisSummary['Nucleotide sequences after format-specific filtering']
-  );
-  remaining[2] = Number(
-    analysisSummary['Nucleotide sequences after length filtering']
-  );
-  remaining[3] = Number(
-    analysisSummary['Nucleotide sequences after undetermined bases filtering']
-  );
-  filtered[2] = remaining[1] - remaining[2];
-  filtered[1] = remaining[0] - remaining[1];
-  if (summaryData) filtered[4] = remaining[3] - remaining[4] - subsampled[4];
+  // console.log('V2 summary', summaryData);
+
+  const summaryData = {
+    total_reads_before_filtering: '16763944',
+    total_reads_after_filtering: '16034314',
+  };
+
+  // if (summaryData) subsampled[4] = Number(summaryData.sequence_count);
+  remaining[0] = Number(summaryData.total_reads_before_filtering);
+  remaining[1] = Number(summaryData.total_reads_after_filtering);
+  remaining[2] = Number(summaryData.total_reads_after_filtering);
+  remaining[3] = Number(summaryData.total_reads_after_filtering);
+  remaining[4] = Number(summaryData.total_reads_after_filtering);
+  filtered[2] = Number(summaryData.total_reads_after_filtering);
+  filtered[1] = Number(summaryData.total_reads_after_filtering);
+  // // remaining[2] = Number(
+  //   analysisSummary['Nucleotide sequences after length filtering']
+  // );
+  // remaining[3] = Number(
+  //   analysisSummary['Nucleotide sequences after undetermined bases filtering']
+  // );
+  // filtered[2] = remaining[1] - remaining[2];
+  // filtered[1] = remaining[0] - remaining[1];
+  // if (summaryData) filtered[4] = remaining[3] - remaining[4] - subsampled[4];
 
   const options = {
     chart: {
@@ -67,11 +76,9 @@ const QualityControlChart: React.FC<QualityControlProps> = ({
     },
     xAxis: {
       categories: [
-        `Initial ${unit}`,
-        'Trimming',
-        'Length filtering',
-        'Ambiguous base filtering',
-        `${capUnit} subsampled for QC analysis`,
+        'Total reads before filtering',
+        'Total reads after filtering',
+        'Total reads after filtering',
       ],
     },
     plotOptions: {
@@ -84,19 +91,14 @@ const QualityControlChart: React.FC<QualityControlProps> = ({
     },
     series: [
       {
-        name: `${capUnit} filtered out`,
-        data: filtered,
+        name: 'Total reads before filtering',
+        data: summaryData.total_reads_before_filtering,
         color: '#CCCCD3',
       },
       {
-        name: `${capUnit} remaining`,
-        data: remaining,
+        name: 'Total reads after filtering',
+        data: summaryData.total_reads_after_filtering,
         color: '#058DC7',
-      },
-      {
-        name: `${capUnit} after sampling`,
-        data: subsampled,
-        color: '#8dc7c7',
       },
     ],
   };
