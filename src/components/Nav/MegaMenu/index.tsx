@@ -102,7 +102,9 @@ const MegaMenu: React.FC = () => {
                   activeSection === 'submit-data-section' ? 'active' : ''
                 }`}
                 href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo"
-                onClick={(event) => handleMenuItemClick(event, 'submit-data-section')}
+                onClick={(event) =>
+                  handleMenuItemClick(event, 'submit-data-section')
+                }
                 rel="noreferrer"
               >
                 Submit data
@@ -142,7 +144,9 @@ const MegaMenu: React.FC = () => {
                   activeSection === 'browse-section' ? 'active' : ''
                 }`}
                 href="/metagenomics/browse"
-                onClick={(event) => handleMenuItemClick(event, 'browse-section')}
+                onClick={(event) =>
+                  handleMenuItemClick(event, 'browse-section')
+                }
               >
                 Browse data
               </a>
@@ -180,7 +184,9 @@ const MegaMenu: React.FC = () => {
                   }`}
                   id="login-section"
                   href="/metagenomics/mydata"
-                  onClick={(event) => handleMenuItemClick(event, 'login-section')}
+                  onClick={(event) =>
+                    handleMenuItemClick(event, 'login-section')
+                  }
                 >
                   My data
                 </a>
