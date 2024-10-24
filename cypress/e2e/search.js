@@ -11,10 +11,10 @@ const PAGE_SIZE = 25;
 
 function goToSearchPage(subpage="") {
   openPage(origPage);
-  cy.get(`#text-search-section`).trigger('mouseover');
+  cy.get(`#text-search-section`).trigger('click');
   cy.get(`#text-search-content-section a[href="/metagenomics/search${subpage}"]`).click();
 }
-
+conig
 function interceptWithFilter(value, param, fixture, searchType = 'projects') {
     let filterString = `${param}:${value}`;
     cy.intercept('GET',
