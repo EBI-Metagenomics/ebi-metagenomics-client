@@ -53,7 +53,7 @@ describe('MegaMenu Component', () => {
 
   it('should be able to access all links inside the MegaMenu', () => {
     megamenunavItems.forEach((item) => {
-      cy.get(`#${item.id}`).trigger('mouseover');
+      cy.get(`#${item.id}`).trigger('click');
       if (item.links) {
         item.links.forEach((link) => {
           cy.get(`#${item.contentId} a[href="${link}"]`).should('be.visible');
