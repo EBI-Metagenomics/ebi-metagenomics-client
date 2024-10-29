@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import Modal from 'react-modal';
 import './style.css';
-import RoCrateSingleton from 'utils/roCrateSingleton';
+import { useCrate } from 'hooks/genomeViewer/CrateStore/useCrates';
 
 Modal.setAppElement('#root');
 
@@ -26,48 +26,43 @@ const modalStyle = {
 
 type ModalProps = {
   crateUrl?: string;
-  specificCrateFolder?: string;
   useButtonVariant?: boolean;
 };
 
 const ROCrateBrowser: React.FC<ModalProps> = ({
   crateUrl,
-  specificCrateFolder,
   useButtonVariant,
 }) => {
   const [cratePreview, setCratePreview] = useState('');
   const [crateModalOpen, setCrateModalOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const crate = useCrate(crateUrl);
 
-  function handleButtonClick() {
-    RoCrateSingleton.getHtmlContent('ro-crate-preview.html', crateUrl).then(
-      (previewHtml) => {
-        setCratePreview(previewHtml);
-        setCrateModalOpen(true);
-      }
-    );
+  async function handleButtonClick() {
+    crate.getHtmlContent().then((previewHtml) => {
+      setCratePreview(previewHtml);
+      setCrateModalOpen(true);
+    });
   }
 
-  const handleIframeMessage = (event: MessageEvent) => {
+  const handleIframeMessage = async (event: MessageEvent) => {
     if (typeof event.data !== 'string') {
       return;
     }
     if (
+      // TODO: generalize with a custom event name
       !event.data.includes('multiqc') &&
       !event.data.includes('krona') &&
       !event.data.includes('ro-crate-preview')
     ) {
       return;
     }
-    RoCrateSingleton.getHtmlContent(event.data, crateUrl).then(
-      (htmlContent) => {
-        if (iframeRef.current) {
-          iframeRef.current.srcdoc = htmlContent;
-        }
+    crate.getHtmlContent(event.data).then((htmlContent) => {
+      if (iframeRef.current) {
+        iframeRef.current.srcdoc = htmlContent;
       }
-    );
+    });
   };
-
   return (
     <>
       <span className="vf-text-body vf-text-body--4">
@@ -77,7 +72,7 @@ const ROCrateBrowser: React.FC<ModalProps> = ({
               ? 'vf-button--sm vf-button--secondary'
               : 'vf-button--link mg-button-as-link'
           }`}
-          onClick={() => handleButtonClick()}
+          onClick={handleButtonClick}
           type="button"
         >
           Browse the RO-Crate

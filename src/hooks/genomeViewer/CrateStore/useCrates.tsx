@@ -27,7 +27,7 @@ const extractSchema = async (crateZip: JSZip): Promise<object> => {
   return trackCrate.getNormalizedTree();
 };
 
-const extractGff = async (
+const extractGffIfExists = async (
   crateZip: JSZip,
   schema: ROCrate
 ): Promise<string> => {
@@ -40,7 +40,7 @@ const extractGff = async (
       filePointer = dataset['@id'];
     }
   });
-  return crateZip.file(filePointer).async('base64');
+  return filePointer ? crateZip.file(filePointer).async('base64') : null;
 };
 
 const getTrackProperties = async (
@@ -85,13 +85,13 @@ const fetchAndStoreCrate = async (crateURL: string): Promise<Crate> => {
   const zipBlob = await crate.blob();
   const crateZip = await JSZip.loadAsync(zipBlob);
   const schema = await extractSchema(crateZip);
-  const gff = await extractGff(crateZip, schema);
+  const gff = await extractGffIfExists(crateZip, schema);
 
   const newCrate: StorableCrate = {
     url: crateURL,
     zipBlob,
     gff,
-    track: await getTrackProperties(schema, gff, crateURL),
+    track: gff ? await getTrackProperties(schema, gff, crateURL) : null,
     schema,
   };
   await db.crates.put(newCrate);
@@ -186,7 +186,7 @@ export const useOfflineCrate = () => {
         const zipBlob = new Blob([event.target.result]);
         const crateZip = await JSZip.loadAsync(zipBlob);
         const schema = await extractSchema(crateZip);
-        const gff = await extractGff(crateZip, schema);
+        const gff = await extractGffIfExists(crateZip, schema);
 
         const newCrate = {
           url: `file:///${file.name}`,
