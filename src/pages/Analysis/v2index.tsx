@@ -40,8 +40,9 @@ const isAssembly = (data: MGnifyDatum): boolean =>
 //   Number(data.attributes['pipeline-version']) >= 5;
 
 // TODO: find v2 counterpart
-// const isNotAmplicon = (data: MGnifyDatum): boolean =>
-//   data.attributes['experiment-type'] !== 'amplicon';
+const isNotAmplicon = (data: MGnifyV2ResponseObj): boolean => {
+  return data.experiment_type !== 'amplicon';
+};
 
 const V2AnalysisPage: React.FC = () => {
   const accession = useURLAccession();
@@ -53,10 +54,9 @@ const V2AnalysisPage: React.FC = () => {
   const loading = false;
   const error = null;
 
-  const data = useMGnifyV2Data(`analyses/MGYA00779423`, {
+  const data = useMGnifyV2Data(`analyses/${accession}`, {
     include: 'downloads',
   });
-  console.log('V2 INDEX data ', data);
   const value = useMemo(
     // () => ({ overviewData: data, included: data?.included }),
     () => ({ overviewData: data }),
@@ -75,11 +75,11 @@ const V2AnalysisPage: React.FC = () => {
   const tabs = [
     { label: 'Overview', to: '#overview' },
     { label: 'Quality control', to: '#qc' },
-    { label: 'Taxonomic analysis', to: '#taxonomic' },
     // TODO: find v2 counterpart
     // isNotAmplicon(analysisData)
-    //   ? { label: 'Functional analysis', to: '#functional' }
-    //   : null,
+    isNotAmplicon(data)
+      ? { label: 'Functional analysis', to: '#functional' }
+      : null,
 
     // TODO: find v2 counterpart
     // included && hasAbundance(included)
@@ -123,9 +123,6 @@ const V2AnalysisPage: React.FC = () => {
             </RouteForHash>
             <RouteForHash hash="#contigs-viewer">
               <ContigViewer />
-            </RouteForHash>
-            <RouteForHash hash="#taxonomic">
-              <TaxonomySubpage accession={accession} />
             </RouteForHash>
             <RouteForHash hash="#functional">
               <FunctionalSubpage />

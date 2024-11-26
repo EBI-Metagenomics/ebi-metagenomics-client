@@ -33,7 +33,6 @@ const useMGnifyData: (
   if (Object.keys(allParameters).length > 0) {
     Object.entries(allParameters).forEach(([key, value], idx) => {
       let joinChar = idx === 0 ? '?' : '&';
-      console.log('KEY', key);
       if (key.includes('[]')) {
         (value as string)
           .split(',')

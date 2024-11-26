@@ -63,20 +63,27 @@ export interface V2Response {
 //   rawResponse?: Response;
 // }
 
-export interface DataV2Response {
-  study_accession: string;
-  accession: string;
-  downloads: Download[];
-  // data:
-  //   | null
-  //   | KeyValue
-  //   | MGnifyResponse
-  //   | BlogResponse
-  //   | HTMLHtmlElement
-  //   | TSVResponse
-  //   | FASTAResponse
-  //   | string
-  //   | V2Response;
+// export interface DataV2Response {
+//   study_accession: string;
+//   accession: string;
+//   downloads: Download[];
+//   // data:
+//   //   | null
+//   //   | KeyValue
+//   //   | MGnifyResponse
+//   //   | BlogResponse
+//   //   | HTMLHtmlElement
+//   //   | TSVResponse
+//   //   | FASTAResponse
+//   //   | string
+//   //   | V2Response;
+//   error?: ErrorFromFetch | null;
+//   loading?: boolean;
+//   isStale?: boolean;
+//   rawResponse?: Response;
+// }
+
+export interface DataV2Response extends MGnifyDatum {
   error?: ErrorFromFetch | null;
   loading?: boolean;
   isStale?: boolean;
@@ -93,30 +100,12 @@ export type ErrorFromFetch = {
 // Prepare the response data based on the format specified
 const prepareResponseDataBasedOnFormatV2 = (
   response: AxiosResponse,
-  format: ResponseFormat,
   updateState: (DataV2Response) => void
 ): V2Response | null => {
   let data = null;
   try {
-    switch (format) {
-      case ResponseFormat.HTML:
-        const html = response.data;
-        const el = document.createElement('html');
-        el.innerHTML = html;
-        data = el;
-        break;
-      case ResponseFormat.TSV:
-        const text = response.data;
-        data = text
-          .split('\n')
-          .filter(Boolean)
-          .map((line) => line.split('\t'));
-        break;
-      default:
-        // TODO: v2 should return the data directly
-        data = response.data.data; // Assuming the response already fits the V2Response structure
-        break;
-    }
+    // TODO: v2 should return the data directly
+    data = response.data; // Assuming the response already fits the V2Response structure
   } catch (error) {
     updateState({
       error: {
@@ -135,7 +124,6 @@ const prepareResponseDataBasedOnFormatV2 = (
 async function fetchDataV2(
   url: string,
   updateState: (DataV2Response) => void,
-  format: ResponseFormat = ResponseFormat.JSON,
   fetchOptions: RequestInit = {}
 ): Promise<void> {
   let response = null;
@@ -154,9 +142,9 @@ async function fetchDataV2(
     }
     const data = prepareResponseDataBasedOnFormatV2(
       response,
-      format,
       updateState
     );
+    console.log('response from here ', response);
     updateState({
       ...data,
       loading: false,
@@ -228,7 +216,7 @@ const useDataV2: (
         loading: true,
         isStale: true,
       });
-      fetchDataV2(url, setPartialState, format, fetchOptions);
+      fetchDataV2(url, setPartialState, fetchOptions);
     } else {
       setFullState(EmptyResponseV2);
     }

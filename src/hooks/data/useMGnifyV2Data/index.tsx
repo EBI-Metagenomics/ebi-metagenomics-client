@@ -30,7 +30,8 @@ const useMGnifyV2Data: (
   parameters?: KeyValue,
   fetchOptions?: RequestInit,
   format?: ResponseFormat
-) => MgnifyV2DataResponse = (
+  // ) => MgnifyV2DataResponse = (
+) => MGnifyDatum = (
   endpoint,
   parameters = {},
   fetchOptions = {},
@@ -42,9 +43,10 @@ const useMGnifyV2Data: (
     Object.entries(parameters).filter(([, value]) => value !== undefined)
   );
   const allParameters = { ...defaultParameters, ...cleanedParameters };
-  // let url = `${config.api}${endpoint}`;
+  let url = `${config.v2Api}${endpoint}`;
   // let url = `http://apiv2-dev.mgnify.org/api/v2/analyses/MGYA00779423`;
-  let url = `http://localhost:8000/v1/mgs-data`;
+  // let url = `http://localhost:8004/v1/mgs-data`;
+  // let url = `http://localhost:8000/api/v2/analyses/MGYA00000001`;
   if (Object.keys(allParameters).length > 0) {
     Object.entries(allParameters).forEach(([key, value], idx) => {
       let joinChar = idx === 0 ? '?' : '&';
@@ -70,6 +72,7 @@ const useMGnifyV2Data: (
   // );
 
   const data = useDataV2(url, format, fetchOptions);
+  console.log('DATA from here ', data);
 
   // const dataM = data as MgnifyV2DataResponse;
   const dataM = data;
