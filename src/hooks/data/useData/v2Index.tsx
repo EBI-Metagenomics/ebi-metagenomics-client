@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import protectedAxios from 'utils/protectedAxios';
 import { AxiosResponse } from 'axios';
+import { createDefaultMGnifyDatum } from 'utils/mgnifyDatumUtils';
 // import { BlogResponse, ErrorTypes, FASTAResponse, MGnifyResponse, TSVResponse, V2Obj } from 'hooks/data/useData/index';
 
 export enum ResponseFormat {
@@ -166,10 +167,10 @@ async function fetchDataV2(
 }
 
 const EmptyResponseV2: DataV2Response = {
+  ...createDefaultMGnifyDatum(),
   accession: '',
   downloads: [],
   study_accession: '',
-  // data: null,
   loading: false,
   error: {
     type: ErrorTypes.NullURL,
@@ -180,6 +181,7 @@ const EmptyResponseV2: DataV2Response = {
 };
 
 const NewRequestV2: DataV2Response = {
+  ...createDefaultMGnifyDatum(),
   accession: '',
   downloads: [],
   study_accession: '',
