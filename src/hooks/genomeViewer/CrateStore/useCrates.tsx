@@ -85,18 +85,40 @@ const fetchAndStoreCrate = async (crateURL: string): Promise<Crate> => {
   const zipBlob = await crate.blob();
   const crateZip = await JSZip.loadAsync(zipBlob);
   const schema = await extractSchema(crateZip);
-  const gff = await extractGffIfExists(crateZip, schema);
-
+  let gff = null;
+  try {
+    gff = await extractGffIfExists(crateZip, schema);
+  } catch (Error) {
+    // Just here to prevent breakage
+  }
   const newCrate: StorableCrate = {
     url: crateURL,
     zipBlob,
-    gff,
     track: gff ? await getTrackProperties(schema, gff, crateURL) : null,
     schema,
+    gff,
   };
   await db.crates.put(newCrate);
   return hydrateStorableCrate(newCrate);
 };
+
+// const fetchAndStoreCrate = async (crateURL: string): Promise<Crate> => {
+//   const crate = await fetch(crateURL);
+//   const zipBlob = await crate.blob();
+//   const crateZip = await JSZip.loadAsync(zipBlob);
+//   const schema = await extractSchema(crateZip);
+//   const gff = await extractGffIfExists(crateZip, schema);
+//
+//   const newCrate: StorableCrate = {
+//     url: crateURL,
+//     zipBlob,
+//     gff,
+//     track: gff ? await getTrackProperties(schema, gff, crateURL) : null,
+//     schema,
+//   };
+//   await db.crates.put(newCrate);
+//   return hydrateStorableCrate(newCrate);
+// };
 
 const getCrate = async (crateURL: string): Promise<Crate> => {
   let crate: Crate = await db.crates.get({ url: crateURL });
