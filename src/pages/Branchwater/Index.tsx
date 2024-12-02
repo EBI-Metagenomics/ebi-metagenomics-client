@@ -1,8 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import render from 'components/UI/SamplesMap/render';
 import SamplesMap from 'components/UI/SamplesMap';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import config from 'utils/config';
+import 'mgnify-sourmash-component';
+import axios from 'axios';
 
 const sampleEntries = [
   {
@@ -73,6 +75,76 @@ const Branchwater = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [targetDatabase, setTargetDatabase] = useState('MAGs');
 
+  const sourmash = useRef(null);
+  const [{ signatures, errors }, setSourmashState] = useState({
+    signatures: null,
+    errors: null,
+  });
+  const [signature, setSignature] = useState(null);
+
+  useEffect(() => {
+    const handleSketched = (evt) => {
+      evt.preventDefault();
+      console.log('we be sketching not concerning what no body wanna say');
+      console.log('Sigs out here ', evt.detail.signature);
+      const sig = JSON.parse(evt.detail.signature)[0];
+
+      setSignature(sig);
+      console.log('sig', sig);
+      const data = {
+        signatures: JSON.stringify(sig),
+      };
+      // axios.post('http://localhost:8000/', data).then((res) => {
+      axios.post('http://branchwater-dev.mgnify.org/', data).then((res) => {
+        console.log('res', res);
+      });
+      // setIsButtonDisabled(false);
+    };
+
+    document.addEventListener('sketched', handleSketched);
+
+    return () => {
+      document.removeEventListener('sketched', handleSketched);
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   console.log('sourmash.current', sourmash.current);
+  //   let sourmashElement;
+  //   const sketchedAll = (event): void => {
+  //     console.log('sketched all');
+  //     setSourmashState({
+  //       signatures: event.detail.signatures,
+  //       errors: event.detail.errors,
+  //     });
+  //   };
+  //   const changedFiles = (): void => {
+  //     console.log('changed files');
+  //     setSourmashState({
+  //       signatures: null,
+  //       errors: null,
+  //     });
+  //   };
+  //   // eslint-disable-next-line prefer-const
+  //   sourmashElement = sourmash.current;
+  //   sourmashElement.addEventListener('sketchedall', sketchedAll);
+  //   sourmashElement.addEventListener('change', changedFiles);
+  //   sourmashElement.addEventListener('sketched', changedFiles);
+  //   // if (sourmash.current) {
+  //   //   sourmashElement = sourmash.current;
+  //   //   sourmashElement.addEventListener('sketchedall', sketchedAll);
+  //   //   sourmashElement.addEventListener('change', changedFiles);
+  //   //   sourmashElement.addEventListener('sketched', changedFiles);
+  //   // }
+  //   return () => {
+  //     if (sourmashElement) {
+  //       sourmashElement.removeEventListener('sketchedall', sketchedAll);
+  //       sourmashElement.removeEventListener('change', changedFiles);
+  //     }
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [sourmash.current]);
+
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     setShowMgnifySourmash(true);
@@ -111,6 +183,11 @@ const Branchwater = () => {
         <form className="vf-stack vf-stack--400">
           <div className="vf-form__item vf-stack">
             <input id="file-upload" type="file" onChange={handleFileUpload} />
+            <mgnify-sourmash-component
+              id="sourmash"
+              ref={sourmash}
+              show_directory_checkbox={false}
+            />
 
             <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
               <legend className="vf-form__legend">
