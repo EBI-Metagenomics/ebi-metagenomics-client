@@ -584,7 +584,7 @@ const MegaMenu: React.FC = () => {
                         </div>
                         <li className="vf-navigation__item">
                           <a
-                            href="https://www.ebi.ac.uk/training/about"
+                            href="https://www.ebi.ac.uk/training/services/mgnify"
                             className="vf-navigation__link"
                             target="_blank"
                             rel="noreferrer"
