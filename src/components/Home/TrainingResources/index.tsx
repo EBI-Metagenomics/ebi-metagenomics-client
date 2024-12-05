@@ -88,13 +88,13 @@ const TrainingCourses = () => {
           ),
         ]);
 
-        const [liveData, onDemandData] = await Promise.all([
+        const [liveResponseData, onDemandResponseData] = await Promise.all([
           liveResponse.json(),
           onDemandResponse.json(),
         ]);
 
-        setLiveData(liveData);
-        setOnDemandData(onDemandData);
+        setLiveData(liveResponseData);
+        setOnDemandData(onDemandResponseData);
       } catch (err) {
         setError('Failed to fetch training data. Please try again later.');
       } finally {
@@ -162,15 +162,15 @@ const TrainingCourses = () => {
                 {formatDesc(item.fields.description[0])}
               </div>
               <div className="vf-summary__location">
-                <div className="vf-u-margin__top--400"></div>
+                <div className="vf-u-margin__top--400" />
                 <span>{item.fields.status}</span> |{' '}
                 <span>
-                  <i className="icon icon-common icon-calendar-alt"></i>{' '}
+                  <i className="icon icon-common icon-calendar-alt" />
                   {item.fields.date_time_clean}
                 </span>
                 <span>
                   {' '}
-                  | <i className="icon icon-common icon-location"></i>{' '}
+                  | <i className="icon icon-common icon-location" />
                   {item.fields.venue === 'null' ? 'Online' : item.fields.venue}
                 </span>
               </div>
@@ -304,7 +304,7 @@ const TrainingCourses = () => {
             rel="noopener noreferrer"
           >
             View all MGnify training materials{' '}
-            <i className="icon icon-common icon-external-link-alt"></i>
+            <i className="icon icon-common icon-external-link-alt" />
           </a>
         </div>
       </div>
