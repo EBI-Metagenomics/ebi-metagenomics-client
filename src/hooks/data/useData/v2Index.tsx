@@ -141,10 +141,7 @@ async function fetchDataV2(
     } else {
       response = await protectedAxios.get(url);
     }
-    const data = prepareResponseDataBasedOnFormatV2(
-      response,
-      updateState
-    );
+    const data = prepareResponseDataBasedOnFormatV2(response, updateState);
     console.log('response from here ', response);
     updateState({
       ...data,
@@ -196,11 +193,8 @@ const useDataV2: (
   url: string,
   format?: ResponseFormat,
   fetchOptions?: RequestInit
-) => DataV2Response = (
-  url,
-  format = ResponseFormat.JSON,
-  fetchOptions = {}
-) => {
+  // ) => DataV2Response = (
+) => MGnifyDatum = (url, format = ResponseFormat.JSON, fetchOptions = {}) => {
   const [state, setFullState] = useState(NewRequestV2);
   let isActive = true;
 

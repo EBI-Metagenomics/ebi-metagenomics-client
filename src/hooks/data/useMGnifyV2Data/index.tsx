@@ -1,7 +1,9 @@
 import { useContext } from 'react';
 import useData, {
   DataResponse,
-  KeyValue, MGnifyDatum, MGnifyResponse,
+  KeyValue,
+  MGnifyDatum,
+  MGnifyResponse,
   ResponseFormat,
 } from 'hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
@@ -43,7 +45,7 @@ const useMGnifyV2Data: (
     Object.entries(parameters).filter(([, value]) => value !== undefined)
   );
   const allParameters = { ...defaultParameters, ...cleanedParameters };
-  let url = `${config.v2Api}${endpoint}`;
+  let url = `${config.api_v2}${endpoint}`;
   // let url = `http://apiv2-dev.mgnify.org/api/v2/analyses/MGYA00779423`;
   // let url = `http://localhost:8004/v1/mgs-data`;
   // let url = `http://localhost:8000/api/v2/analyses/MGYA00000001`;
