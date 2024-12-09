@@ -81,10 +81,10 @@ const TrainingCourses = () => {
       try {
         const [liveResponse, onDemandResponse] = await Promise.all([
           fetch(
-            'https://www.ebi.ac.uk/ebisearch/ws/rest/ebiweb_training_events?format=json&query=domain_source:ebiweb_training_events%20AND%20timeframe:upcoming&start=0&size=10&fieldurl=true&fields=title,description,start_date,end_date,date_time_clean,resource_training_page,type,training_type,url,venue,materials,status,timeframe,resource_training_page,course_image&facetcount=50&sort=start_date&facets=resource_training_page:MGnify'
+            'https://www.ebi.ac.uk/ebisearch/ws/rest/ebiweb_training_events?format=json&query=domain_source:ebiweb_training_events%20AND%20timeframe:upcoming&start=0&size=2&fieldurl=true&fields=title,description,start_date,end_date,date_time_clean,resource_training_page,type,training_type,url,venue,materials,status,timeframe,resource_training_page,course_image&facetcount=50&sort=start_date&facets=resource_training_page:MGnify'
           ),
           fetch(
-            'https://www.ebi.ac.uk/ebisearch/ws/rest/ebiweb_training_online?format=json&query=domain_source:ebiweb_training_online&start=0&size=10&fields=title,subtitle,description,type,url&sort=title&facets=resource_training_page:MGnify'
+            'https://www.ebi.ac.uk/ebisearch/ws/rest/ebiweb_training_online?format=json&query=domain_source:ebiweb_training_online&start=0&size=2&fields=title,subtitle,description,type,url&sort=title&facets=resource_training_page:MGnify'
           ),
         ]);
 
@@ -113,16 +113,12 @@ const TrainingCourses = () => {
   };
 
   const renderEmptyState = (type: 'live' | 'onDemand') => (
-    <div className="vf-grid vf-grid__col-1 vf-u-padding__top--800">
-      <div className="vf-content vf-u-background-color--grey--lightest vf-u-padding--400">
-        <h3 className="vf-text vf-text-heading--4">
+    // <div className="vf-grid vf-grid__col-1 vf-u-padding__top--800">
+    <div className="vf-grid">
+      <div className="vf-summary vf-summary--event">
+        <p className="vf-summary__text space">
           {type === 'live'
-            ? 'No upcoming live training sessions'
-            : 'No on-demand training content available'}
-        </h3>
-        <p className="vf-text">
-          {type === 'live'
-            ? 'There are currently no scheduled live training sessions. Please check back later for upcoming events.'
+            ? 'Currently there are no upcoming events - please see our on-demand training which includes materials from past courses.\n'
             : 'On-demand training materials are currently unavailable. Please check back later for new content.'}
         </p>
       </div>
@@ -252,7 +248,7 @@ const TrainingCourses = () => {
               aria-selected={activeTab === 'training__section--1'}
               aria-controls="training__section--1"
             >
-              Live training
+              On-demand training
             </a>
           </li>
           <li className="vf-tabs__item" role="presentation">
@@ -266,7 +262,7 @@ const TrainingCourses = () => {
               aria-selected={activeTab === 'training__section--2'}
               aria-controls="training__section--2"
             >
-              On-demand training
+              Live training
             </a>
           </li>
         </ul>
@@ -281,7 +277,17 @@ const TrainingCourses = () => {
             display: activeTab === 'training__section--1' ? 'block' : 'none',
           }}
         >
-          {renderLiveContent()}
+          {renderOnDemandContent()}
+          <a
+            id="view-all-on-demand-training-link"
+            href="https://www.ebi.ac.uk/training/services/mgnify/on-demand"
+            className="vf-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View all on-demand training{' '}
+            <i className="icon icon-common icon-external-link-alt" />
+          </a>
         </section>
         <section
           className="vf-tabs__section"
@@ -292,21 +298,17 @@ const TrainingCourses = () => {
             display: activeTab === 'training__section--2' ? 'block' : 'none',
           }}
         >
-          {renderOnDemandContent()}
-        </section>
-      </div>
-      <div className="vf-grid vf-u-margin__top--800">
-        <div className="vf-content">
+          {renderLiveContent()}
           <a
-            href="https://www.ebi.ac.uk/training/search-results?facets=resource_training_page:MGnify"
+            href="https://www.ebi.ac.uk/training/services/mgnify/live-events"
             className="vf-link"
             target="_blank"
             rel="noopener noreferrer"
           >
-            View all MGnify training materials{' '}
+            View all live training{' '}
             <i className="icon icon-common icon-external-link-alt" />
           </a>
-        </div>
+        </section>
       </div>
     </div>
   );
