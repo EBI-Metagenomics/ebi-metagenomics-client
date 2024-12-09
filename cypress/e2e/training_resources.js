@@ -10,8 +10,8 @@ describe('Training Courses Component', () => {
     it('should display and switch between tabs', () => {
       cy.get('.vf-tabs__list').should('be.visible');
       cy.get('.vf-tabs__link').should('have.length', 2);
-      cy.get('.vf-tabs__link').first().should('contain', 'Live training');
-      cy.get('.vf-tabs__link').last().should('contain', 'On-demand training');
+      cy.get('.vf-tabs__link').first().should('contain', 'On-demand training');
+      cy.get('.vf-tabs__link').last().should('contain', 'Live training');
 
       cy.get('.vf-tabs__link').last().click();
       cy.hash().should('eq', '#training__section--2');
@@ -26,8 +26,8 @@ describe('Training Courses Component', () => {
     // });
 
     it('should display training content when loaded', () => {
-      cy.get('.vf-tabs__link').last().click();
-      cy.get('#training__section--2').within(() => {
+      cy.get('.vf-tabs__link').first().click();
+      cy.get('#training__section--1').within(() => {
         cy.get('.vf-summary--event').should('have.length.at.least', 1);
         cy.get('.vf-summary__title').first().should('be.visible');
         cy.get('.vf-summary__text').first().should('be.visible');
@@ -38,13 +38,14 @@ describe('Training Courses Component', () => {
       cy.intercept('GET', '**/ebisearch/ws/rest/ebiweb_training_events*', { entries: [] }).as('emptyLive');
       cy.reload();
       cy.wait('@emptyLive');
-      cy.contains('No upcoming live training sessions').should('be.visible');
+      cy.get('.vf-tabs__link').last().click();
+      cy.contains('Currently there are no upcoming events').should('be.visible');
     });
 
     it('should have working "View all" link', () => {
-      cy.get('.vf-grid.vf-u-margin__top--800 a')
+      cy.get('#view-all-on-demand-training-link')
         .should('have.attr', 'href')
-        .and('include', '/training/search-results');
+        .and('include', '/training/services/mgnify/on-demand');
     });
 
     it('should maintain tab state on page refresh', () => {

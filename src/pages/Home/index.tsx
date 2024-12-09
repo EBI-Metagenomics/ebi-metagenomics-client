@@ -20,7 +20,7 @@ const HomePage: React.FC = () => {
       <Publications />
       <h2>How to cite</h2>
       <MainPublication />
-      <h2>Training resources</h2>
+      <h2>EMBL-EBI Training</h2>
       <TrainingResources />
     </section>
   );
