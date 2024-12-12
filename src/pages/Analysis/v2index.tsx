@@ -1,7 +1,5 @@
 import React, { useMemo } from 'react';
 
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyDatum, MGnifyV2ResponseObj } from 'hooks/data/useData/v2Index';
 import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
@@ -10,15 +8,16 @@ import Overview from 'components/Analysis/Overview/v2index';
 import QualityControl from 'components/Analysis/QualityControl/v2index';
 import ContigViewer from 'components/Analysis/ContigViewer';
 import TaxonomySubpage from 'components/Analysis/Taxonomy';
-import FunctionalSubpage from 'components/Analysis/Functional';
+import FunctionalSubpage from 'components/Analysis/Functional/v2index';
 import PathwaysSubpage from 'components/Analysis/Pathways';
 import RouteForHash from 'components/Nav/RouteForHash';
 import { Link } from 'react-router-dom';
 import Downloads from 'components/Downloads/v2index';
 import Abundance from 'components/Analysis/Abundance';
-import useMGnifyV2Data from 'hooks/data/useMGnifyV2Data';
 import V2AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-import AnalysisContext from './AnalysisContext';
+import useAnalysesDetail, {
+  AnalysesDetail,
+} from 'hooks/data/useAnalysesDetail';
 
 // const hasAbundance = (
 //   includes: { attributes?: { 'group-type'?: string } }[]
@@ -30,7 +29,7 @@ import AnalysisContext from './AnalysisContext';
 
 // TODO: find v2 counterpart
 
-const isAssembly = (data: MGnifyDatum): boolean =>
+const isAssembly = (data: AnalysesDetail): boolean =>
   ['assembly', 'hybrid_assembly'].includes(
     // data.attributes['experiment-type'] as string
     data.experiment_type as string
@@ -40,7 +39,7 @@ const isAssembly = (data: MGnifyDatum): boolean =>
 //   Number(data.attributes['pipeline-version']) >= 5;
 
 // TODO: find v2 counterpart
-const isNotAmplicon = (data: MGnifyV2ResponseObj): boolean => {
+const isNotAmplicon = (data: AnalysesDetail): boolean => {
   return data.experiment_type !== 'amplicon';
 };
 
@@ -51,12 +50,14 @@ const V2AnalysisPage: React.FC = () => {
   //   include: 'downloads',
   // });
 
-  const loading = false;
-  const error = null;
+  // const loading = false;
+  // const error = null;
 
-  const data = useMGnifyV2Data(`analyses/${accession}`, {
-    include: 'downloads',
-  });
+  // const data = useMGnifyV2Data(`analyses/${accession}`, {
+  //   include: 'downloads',
+  // });
+  // const { data } = useAnalysesDetail(accession);
+  const { data, loading, error } = useAnalysesDetail(accession);
   const value = useMemo(
     // () => ({ overviewData: data, included: data?.included }),
     () => ({ overviewData: data }),
@@ -75,6 +76,7 @@ const V2AnalysisPage: React.FC = () => {
   const tabs = [
     { label: 'Overview', to: '#overview' },
     { label: 'Quality control', to: '#qc' },
+    { label: 'Taxonomic analysis', to: '#taxonomic' },
     // TODO: find v2 counterpart
     // isNotAmplicon(analysisData)
     isNotAmplicon(data)
@@ -93,7 +95,7 @@ const V2AnalysisPage: React.FC = () => {
     // isAssembly(analysisData) && isAtleastVersion5(analysisData)
     //   ? { label: 'Contig Viewer', to: '#contigs-viewer' }
     //   : null,
-    { label: 'Download', to: '#download' }
+    { label: 'Download', to: '#download' },
   ].filter(Boolean);
   // TODO: find v2 counterpart
   // const linkToOtherAnalyses = isAssembly(analysisData)
@@ -123,6 +125,9 @@ const V2AnalysisPage: React.FC = () => {
             </RouteForHash>
             <RouteForHash hash="#contigs-viewer">
               <ContigViewer />
+            </RouteForHash>
+            <RouteForHash hash="#taxonomic">
+              <TaxonomySubpage accession={accession} />
             </RouteForHash>
             <RouteForHash hash="#functional">
               <FunctionalSubpage />
