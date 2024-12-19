@@ -9,8 +9,8 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import ExtLink from 'components/UI/ExtLink';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import InterProMatchesChart from './InterProMatchesChart';
-import InterProQCChart from './QCChart';
+import InterProMatchesChart from './v2InterProMatchesChart';
+import InterProQCChart from './v2QCChart';
 
 const PAGE_SIZE = 25;
 const InterPro: React.FC = () => {
