@@ -7,7 +7,7 @@ import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Analysis/Overview/v2index';
 import QualityControl from 'components/Analysis/QualityControl/v2index';
 import ContigViewer from 'components/Analysis/ContigViewer';
-import TaxonomySubpage from 'components/Analysis/Taxonomy';
+import TaxonomySubpage from 'components/Analysis/Taxonomy/v2index';
 import FunctionalSubpage from 'components/Analysis/Functional/v2index';
 import PathwaysSubpage from 'components/Analysis/Pathways';
 import RouteForHash from 'components/Nav/RouteForHash';
@@ -15,9 +15,8 @@ import { Link } from 'react-router-dom';
 import Downloads from 'components/Downloads/v2index';
 import Abundance from 'components/Analysis/Abundance';
 import V2AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-import useAnalysesDetail, {
-  AnalysesDetail,
-} from 'hooks/data/useAnalysesDetail';
+import useAnalysisDetail from 'hooks/data/useAnalysisDetail';
+import { AnalysisDetail } from 'interfaces';
 
 // const hasAbundance = (
 //   includes: { attributes?: { 'group-type'?: string } }[]
@@ -29,7 +28,7 @@ import useAnalysesDetail, {
 
 // TODO: find v2 counterpart
 
-const isAssembly = (data: AnalysesDetail): boolean =>
+const isAssembly = (data: AnalysisDetail): boolean =>
   ['assembly', 'hybrid_assembly'].includes(
     // data.attributes['experiment-type'] as string
     data.experiment_type as string
@@ -39,7 +38,7 @@ const isAssembly = (data: AnalysesDetail): boolean =>
 //   Number(data.attributes['pipeline-version']) >= 5;
 
 // TODO: find v2 counterpart
-const isNotAmplicon = (data: AnalysesDetail): boolean => {
+const isNotAmplicon = (data: AnalysisDetail): boolean => {
   return data.experiment_type !== 'amplicon';
 };
 
@@ -56,8 +55,8 @@ const V2AnalysisPage: React.FC = () => {
   // const data = useMGnifyV2Data(`analyses/${accession}`, {
   //   include: 'downloads',
   // });
-  // const { data } = useAnalysesDetail(accession);
-  const { data, loading, error } = useAnalysesDetail(accession);
+  // const { data } = useAnalysisDetail(accession);
+  const { data, loading, error } = useAnalysisDetail(accession);
   const value = useMemo(
     // () => ({ overviewData: data, included: data?.included }),
     () => ({ overviewData: data }),
