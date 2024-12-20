@@ -8,9 +8,7 @@ import InfoBanner from 'components/UI/InfoBanner';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import InterProTab from './InterPro/v2index';
-import GOTab from './GO';
-import PfamTab from './Pfam';
-import KOTab from './KO';
+import GOTab from './GO/index';
 
 const PARAMETER_NAME = 'type';
 const PARAMETER_DEFAULT = 'interpro';
@@ -82,9 +80,10 @@ const FunctionalAnalysis: React.FC = () => {
         queryParameter={PARAMETER_NAME}
         defaultValue={PARAMETER_DEFAULT}
       />
+      {/*<h1>{{ type }}</h1>*/}
       <div className="vf-tabs-content">
         {type === 'interpro' && <InterProTab />}
-        {/*{type === 'go' && <GOTab />}*/}
+        {type === 'go' && <GOTab />}
         {/*{type === 'pfam' && <PfamTab />}*/}
         {/*{type === 'ko' && <KOTab />}*/}
       </div>
