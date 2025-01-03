@@ -161,7 +161,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
             category={taxResults}
             chartType={String(type)}
             sequencesType={
-              analysisOverviewData.attributes['experiment-type'] === 'assembly'
+              analysisOverviewData.attributes['experiment-type'] === 'ASSEM'
                 ? 'contigs'
                 : 'reads'
             }

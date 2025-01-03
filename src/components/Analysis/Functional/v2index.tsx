@@ -29,7 +29,7 @@ const FunctionalAnalysis: React.FC = () => {
   // const accession = data.id;
   // const version = Number(overviewData.attributes['pipeline-version']);
   const version = Number(data.pipeline_version);
-  const longReadExperiment = data.experiment_type === 'long_reads_assembly';
+  const longReadExperiment = data.experiment_type === 'LRASS';
 
   return (
     <div className="vf-stack">

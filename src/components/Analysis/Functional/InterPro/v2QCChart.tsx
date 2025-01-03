@@ -35,7 +35,7 @@ const InterProQCChart: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
-  const isAssembly = analysisData.experiment_type === 'assembly';
+  const isAssembly = analysisData.experiment_type === 'ASSEM';
   const seqData = analysisData.analysis_summary;
   // TODO: remove mapping when https://www.ebi.ac.uk/panda/jira/browse/EMG-1672
   const categories = [

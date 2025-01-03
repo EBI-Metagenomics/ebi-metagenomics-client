@@ -22,7 +22,7 @@ const InterPro: React.FC = () => {
   const [pageSize] = useQueryParamState('page_size', PAGE_SIZE, Number);
   const [order] = useQueryParamState('order', '');
   const { data, loading, error, isStale } = useMGnifyData(
-    `analyses/${analysisData.id}/interpro-identifiers`,
+    `analyses/${analysisData.accession}/interpro-identifiers`,
     {
       page: page as number,
       ordering: order as string,

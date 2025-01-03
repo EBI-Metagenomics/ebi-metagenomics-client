@@ -38,7 +38,7 @@ const ContigsDistribution: React.FC<ContigsHistogramProps> = ({
     Number(y),
   ]);
 
-  const isAssembly = overviewData.experiment_type === 'assembly';
+  const isAssembly = overviewData.experiment_type === 'ASSEM';
   const unit = isAssembly ? 'contigs' : 'reads';
   const capUnit = isAssembly ? 'Contigs' : 'Reads';
 

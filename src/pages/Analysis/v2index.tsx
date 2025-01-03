@@ -11,107 +11,55 @@ import TaxonomySubpage from 'components/Analysis/Taxonomy/v2index';
 import FunctionalSubpage from 'components/Analysis/Functional/v2index';
 import PathwaysSubpage from 'components/Analysis/Pathways';
 import RouteForHash from 'components/Nav/RouteForHash';
-import { Link } from 'react-router-dom';
 import Downloads from 'components/Downloads/v2index';
 import Abundance from 'components/Analysis/Abundance';
 import V2AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-import useAnalysisDetail from 'hooks/data/useAnalysisDetail';
+import useAnalysisDetail from 'hooks/data/useAnalysisDetail/Index';
 import { AnalysisDetail } from 'interfaces';
-
-// const hasAbundance = (
-//   includes: { attributes?: { 'group-type'?: string } }[]
-// ): boolean => {
-//   return includes.some(
-//     (included) => included?.attributes?.['group-type'] === 'Statistics'
-//   );
-// };
 
 // TODO: find v2 counterpart
 
 const isAssembly = (data: AnalysisDetail): boolean =>
-  ['assembly', 'hybrid_assembly'].includes(
+  ['ASSEM', 'HYASS'].includes(
     // data.attributes['experiment-type'] as string
     data.experiment_type as string
   );
 // TODO: find v2 counterpart
-// const isAtleastVersion5 = (data: MGnifyDatum): boolean =>
-//   Number(data.attributes['pipeline-version']) >= 5;
+const isAtleastVersion5 = (data: AnalysisDetail): boolean =>
+  ['5.0', 'V6'].includes(data.pipeline_version);
 
 // TODO: find v2 counterpart
 const isNotAmplicon = (data: AnalysisDetail): boolean => {
-  return data.experiment_type !== 'amplicon';
+  return data.experiment_type !== 'AMPLI';
 };
 
 const V2AnalysisPage: React.FC = () => {
   const accession = useURLAccession();
-  // const { data, loading, error } = useMGnifyV2Data(`analyses/MGYA00779423`, {
-  //   //   const { data, loading, error } = useMGnifyData(`analyses/${accession}`, {
-  //   include: 'downloads',
-  // });
-
-  // const loading = false;
-  // const error = null;
-
-  // const data = useMGnifyV2Data(`analyses/${accession}`, {
-  //   include: 'downloads',
-  // });
-  // const { data } = useAnalysisDetail(accession);
   const { data, loading, error } = useAnalysisDetail(accession);
-  const value = useMemo(
-    // () => ({ overviewData: data, included: data?.included }),
-    () => ({ overviewData: data }),
-    [data]
-  );
+  const value = useMemo(() => ({ overviewData: data }), [data]);
   // console.log('this is value', value);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
-  // const { data: analysisData, included } = data as MGnifyV2ResponseObj;
-  // const { data: analysisData } = data as MGnifyV2ResponseObj;
   const analysisData = data;
-
-  // console.log('DATA', data);
-
   const tabs = [
     { label: 'Overview', to: '#overview' },
     { label: 'Quality control', to: '#qc' },
     { label: 'Taxonomic analysis', to: '#taxonomic' },
-    // TODO: find v2 counterpart
-    // isNotAmplicon(analysisData)
-    isNotAmplicon(data)
+    isNotAmplicon(analysisData)
       ? { label: 'Functional analysis', to: '#functional' }
       : null,
-
-    // TODO: find v2 counterpart
-    // included && hasAbundance(included)
-    //   ? { label: 'Abundance and comparison', to: '#abundance' }
-    //   : null,
-    // TODO: find v2 counterpart
-    // isAssembly(analysisData) && isAtleastVersion5(analysisData)
-    //   ? { label: 'Pathways/Systems', to: '#path-systems' }
-    //   : null,
-    // TODO: find v2 counterpart
-    // isAssembly(analysisData) && isAtleastVersion5(analysisData)
-    //   ? { label: 'Contig Viewer', to: '#contigs-viewer' }
-    //   : null,
+    isAssembly(analysisData) && isAtleastVersion5(analysisData)
+      ? { label: 'Pathways/Systems', to: '#path-systems' }
+      : null,
+    isAssembly(analysisData) && isAtleastVersion5(analysisData)
+      ? { label: 'Contig Viewer', to: '#contigs-viewer' }
+      : null,
     { label: 'Download', to: '#download' },
   ].filter(Boolean);
-  // TODO: find v2 counterpart
-  // const linkToOtherAnalyses = isAssembly(analysisData)
-  //   ? `/assemblies/${analysisData?.relationships?.assembly?.data?.id}`
-  //   : `/runs/${analysisData?.relationships?.run?.data?.id}`;
   return (
     <section className="vf-content">
       <h2>Analysis {accession}</h2>
-      {/*TODO: find v2 counterpart*/}
-      {/*{linkToOtherAnalyses && (*/}
-      {/*  <h4>*/}
-      {/*    <Link to={linkToOtherAnalyses}>*/}
-      {/*      <i className="icon icon-common icon-arrow-circle-left" /> Other*/}
-      {/*      Analyses*/}
-      {/*    </Link>*/}
-      {/*  </h4>*/}
-      {/*)}*/}
       <Tabs tabs={tabs} />
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">

@@ -26,7 +26,7 @@ const InterProMatchesChart: React.FC<InterProMatchesChartProps> = ({
 }) => {
   const { overviewData: data } = useContext(AnalysisContext);
   const { matches, total, loading, error, processed } =
-    useInterProMatchesProvider(data.id);
+    useInterProMatchesProvider(data.accession);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const [totalCount, setTotalCount] = useState(0);
   useEffect(() => {

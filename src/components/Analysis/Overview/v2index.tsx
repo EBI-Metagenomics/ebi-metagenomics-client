@@ -5,9 +5,8 @@ import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useMGnifyData from 'hooks/data/useMGnifyData';
 
 function isAssembly(experimentType: string): boolean {
-  return ['assembly', 'hybrid_assembly', 'long_reads_assembly'].includes(
-    experimentType
-  );
+  // return ['assembly', 'hybrid_assembly', 'long_reads_assembly'].includes(
+  return ['ASSEM', 'HYASS', 'LRASS'].includes(experimentType);
 }
 
 type Run = {
@@ -56,9 +55,9 @@ const HybridAnalysisDetails: React.FC<HybridAnalysisDetailsProps> = ({
 const AnalysisOverview: React.FC = () => {
   const { overviewData: data } = useContext(AnalysisContext);
   const isHybrid = false;
-    // data.experiment_type === 'hybrid_assembly' &&
-    // data?.experiment_type === 'hybrid_assembly' &&
-    // !!data?.relationships.assembly.data;
+  // data.experiment_type === 'hybrid_assembly' &&
+  // data?.experiment_type === 'hybrid_assembly' &&
+  // !!data?.relationships.assembly.data;
   return (
     <section>
       <div className="vf-stack">

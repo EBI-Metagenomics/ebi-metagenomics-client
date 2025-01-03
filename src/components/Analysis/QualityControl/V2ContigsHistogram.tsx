@@ -37,7 +37,7 @@ const ContigsHistogram: React.FC<ContigsHistogramProps> = ({ summaryData }) => {
   ]);
   const lengthMax = Math.max(...histData.map(([x]) => x));
 
-  const isAssembly = overviewData.experiment_type === 'assembly';
+  const isAssembly = overviewData.experiment_type === 'ASSEM';
   const unit = isAssembly ? 'contigs' : 'reads';
   const capUnit = isAssembly ? 'Contigs' : 'Reads';
 
