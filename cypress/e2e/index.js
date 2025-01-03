@@ -136,7 +136,7 @@ describe('Home page', function() {
 
         it('Text search btn should link to text search page', function() {
             openPage(origPage);
-            cy.get(`#text-search-section`).trigger('mouseover');
+            cy.get(`#text-search-section`).trigger('click');
             cy.get(`#text-search-content-section a[href="/metagenomics/search"]`).click();
             cy.get('h2').should('contain', 'Text Search');
         });
@@ -148,7 +148,7 @@ describe('Home page', function() {
 
     function testAnalysisTypeTooltip(tooltipDataAttr) {
         cy.get('[data-cy=\'' + tooltipDataAttr + '\']:visible')
-            .invoke('hover').invoke('mouseover').trigger('mouseover').trigger('hover')
+            .invoke('hover').invoke('click').trigger('click').trigger('hover')
             .then(($el) => {
                 const tooltipId = Cypress.$($el).parent().attr('data-toggle');
                 cy.get('#' + tooltipId).should('be.visible');

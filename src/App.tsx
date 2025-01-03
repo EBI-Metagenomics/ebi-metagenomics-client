@@ -23,6 +23,7 @@ import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryPara
 import Matomo from 'components/Analytics';
 import PersistLogin from 'components/PersistLogin';
 import V2AnalysisPage from 'pages/Analysis/v2index';
+import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -80,6 +81,7 @@ const App: React.FC = () => {
           <EBIHeader />
           <HeroHeader />
           <MainMenu />
+          <SessionExpiryBanner />
           <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
             <ErrorBoundary>
               <ResetScroll />
