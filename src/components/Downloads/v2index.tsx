@@ -1,31 +1,18 @@
 import React, { useContext, useMemo } from 'react';
 
-import Loading from 'components/UI/Loading';
-import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import { MGnifyDatum } from 'hooks/data/useData';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 
-type DownloadsProps = {};
-
-const Downloads: React.FC<DownloadsProps> = ({}) => {
+const Downloads: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
   const downloads = overviewData?.downloads;
-  console.log('downloads from here ', downloads);
   const columns = useMemo(
     () => [
       {
         Header: 'Name',
         accessor: 'long_description',
       },
-      // TODO: check if compression is still a thing
-      // {
-      //   Header: 'Compression',
-      //   accessor: 'compression',
-      //   Cell: ({ cell }) => {
-      //     return cell.value ? 'Yes' : '-';
-      //   },
-      // },
       {
         Header: 'Format',
         accessor: 'file_type',
@@ -47,11 +34,6 @@ const Downloads: React.FC<DownloadsProps> = ({}) => {
     ],
     []
   );
-
-  // if (loading) return <Loading size="large" />;
-  // if (error) return <FetchError error={error} />;
-  // if (!downloads) return <Loading />;
-
   const categories = {};
 
   downloads.forEach((download) => {
