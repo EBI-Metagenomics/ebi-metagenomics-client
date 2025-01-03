@@ -37,7 +37,6 @@ const V2AnalysisPage: React.FC = () => {
   const accession = useURLAccession();
   const { data, loading, error } = useAnalysisDetail(accession);
   const value = useMemo(() => ({ overviewData: data }), [data]);
-  // console.log('this is value', value);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
