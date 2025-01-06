@@ -20,15 +20,11 @@ import { AnalysisDetail } from 'interfaces';
 // TODO: find v2 counterpart
 
 const isAssembly = (data: AnalysisDetail): boolean =>
-  ['ASSEM', 'HYASS'].includes(
-    // data.attributes['experiment-type'] as string
-    data.experiment_type as string
-  );
-// TODO: find v2 counterpart
+  ['ASSEM', 'HYASS'].includes(data.experiment_type as string);
+
 const isAtleastVersion5 = (data: AnalysisDetail): boolean =>
   ['5.0', 'V6'].includes(data.pipeline_version);
 
-// TODO: find v2 counterpart
 const isNotAmplicon = (data: AnalysisDetail): boolean => {
   return data.experiment_type !== 'AMPLI';
 };
