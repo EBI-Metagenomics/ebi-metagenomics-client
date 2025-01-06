@@ -1,6 +1,6 @@
 {
   "name": "mgportalv2",
-  "version": "2.1.13",
+  "version": "2.1.14",
   "description": "Web Client for the Mgnify service at EBI",
   "homepage": "https://github.com/EBI-Metagenomics/ebi-metagenomics-client#readme",
   "main": "src/index.tsx",
@@ -50,6 +50,7 @@
     "react-dom": "18.2.0",
     "react-markdown": "8.0.6",
     "react-modal": "3.16.1",
+    "react-query": "^3.39.3",
     "react-router-dom": "6.10.0",
     "react-select": "5.7.2",
     "react-table": "^7.8.0",
