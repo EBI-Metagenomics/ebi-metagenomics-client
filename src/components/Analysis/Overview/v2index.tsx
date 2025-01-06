@@ -23,7 +23,6 @@ type HybridAnalysisDetailsProps = {
 const HybridAnalysisDetails: React.FC<HybridAnalysisDetailsProps> = ({
   assemblyId,
 }) => {
-  //TODO: may need updating when v2 endpoint exists
   const { loading: loadingRuns, data: runs } = useMGnifyData(
     `assemblies/${assemblyId}/runs`
   );
