@@ -1,10 +1,15 @@
-.mg-hierarchy-selector {
-  display: flex;
-  margin-bottom: 5px;
-  transition: all 0.4s ease-out;
-  height: 0;
-  opacity: 0;
-}
+/*NOTE*/
+/*This styling was commented out because it was causing biome filters not to appear
+when on the Feature/V2-Hooks-II.
+This was subsequently causing the search.js test not to pass in the pipeline
+*/
+/*.mg-hierarchy-selector {*/
+/*  display: flex;*/
+/*  margin-bottom: 5px;*/
+/*  transition: all 0.4s ease-out;*/
+/*  height: 0;*/
+/*  opacity: 0;*/
+/*}*/
 .mg-hierarchy-selector button,
 .mg-hierarchy-selector .mg-hierarchy-spacer {
   width: 1rem;
