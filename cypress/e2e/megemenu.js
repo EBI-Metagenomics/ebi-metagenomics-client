@@ -37,7 +37,7 @@ const megamenunavItems = [
       'https://shiny-portal.embl.de/shinyapps/app/06_mgnify-notebook-lab?jlpath=mgnify-examples/home.ipynb',
       'https://hmmer-web-docs.readthedocs.io/en/latest/index.html',
       'http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/current_release/README.txt',
-      'https://www.ebi.ac.uk/training/about',
+      'https://www.ebi.ac.uk/training/services/mgnify',
       'https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-portal-quick-tour',
       'https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-portal-submitting-metagenomics-da',
       'https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-analysing-and-exploring-metagenomics-data',
@@ -53,7 +53,7 @@ describe('MegaMenu Component', () => {
 
   it('should be able to access all links inside the MegaMenu', () => {
     megamenunavItems.forEach((item) => {
-      cy.get(`#${item.id}`).trigger('mouseover');
+      cy.get(`#${item.id}`).trigger('click');
       if (item.links) {
         item.links.forEach((link) => {
           cy.get(`#${item.contentId} a[href="${link}"]`).should('be.visible');

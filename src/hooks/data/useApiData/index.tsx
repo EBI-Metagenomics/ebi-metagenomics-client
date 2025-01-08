@@ -17,7 +17,12 @@ const useApiData = <T,>({ url, transformResponse }: FetchDataOptions<T>) => {
       if (!url) {
         setError({
           type: ErrorTypes.NullURL,
-          error: new Error('URL is null'),
+          error: {
+            message: 'URL is null',
+            request: {
+              responseURL: '',
+            },
+          },
         });
         setLoading(false);
         return;
