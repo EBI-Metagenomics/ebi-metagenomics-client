@@ -19,7 +19,7 @@ const GO: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
   const [chart] = useQueryParamState('chart', 'bar');
   const { data, loading, error } = useMGnifyData(
-    `analyses/${overviewData.id}/go-slim`
+    `analyses/${overviewData.id}/go_slims`
   );
   const [dataBundles, setDataBundles] = useState(null);
   useEffect(() => {

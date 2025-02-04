@@ -10,7 +10,7 @@ import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import PfamTab from 'components/Analysis/Functional/KO';
 import KOTab from 'components/Analysis/Functional/Pfam';
 import InterProTab from './InterPro/v2index';
-import GOTab from './GO/index';
+import GOTab from './GO/v2index';
 
 const PARAMETER_NAME = 'type';
 const PARAMETER_DEFAULT = 'interpro';

@@ -1,11 +1,7 @@
 import React, { useRef, useContext } from 'react';
 import * as Highcharts from 'highcharts';
-import addExportMenu from 'highcharts/modules/exporting';
-
 import HighchartsReact from 'highcharts-react-official';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-
-addExportMenu(Highcharts);
 
 /**
  * Get the series for a category.
