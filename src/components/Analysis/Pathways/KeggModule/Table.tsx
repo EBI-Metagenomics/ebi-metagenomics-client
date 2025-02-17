@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
-import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';

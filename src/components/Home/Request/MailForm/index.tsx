@@ -5,7 +5,7 @@ import UserContext, {
   UserDetail,
   getDetailsByWebin,
   getEmailsFromDetails,
-} from '@/pages/Login/UserContext';
+} from 'pages/Login/UserContext';
 import useMgnifyEmail from '@/hooks/data/useMgnifyEmail';
 import { ErrorTypes } from '@/hooks/data/useData';
 

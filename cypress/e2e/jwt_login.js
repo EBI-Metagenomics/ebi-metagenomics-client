@@ -1,4 +1,5 @@
-import {openPage} from '../util/util';
+import { openPage } from '../util/util';
+
 const loginUrl = 'http://localhost:9000/metagenomics/login';
 const homePageUrl = 'http://localhost:9000/metagenomics';
 const myDataPageUrl = 'http://localhost:9000/metagenomics/mydata';
@@ -46,5 +47,5 @@ describe('JWT Login', () => {
     cy.get('#id_username').type(username);
     cy.get('#id_password').type(password);
     cy.get('#submit-id-submit').click();
-  }
+  };
 });

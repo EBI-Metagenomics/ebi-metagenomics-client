@@ -1,8 +1,11 @@
 import Cookies from 'universal-cookie';
 import { useContext } from 'react';
 
-import useData, { HTMLDataResponse, ResponseFormat } from '@/hooks/data/useData';
-import UserContext from '@/pages/Login/UserContext';
+import useData, {
+  HTMLDataResponse,
+  ResponseFormat,
+} from '@/hooks/data/useData';
+import UserContext from 'pages/Login/UserContext';
 
 const useMgnifyEmail: (
   fromEmail: string,

@@ -1,6 +1,6 @@
 import protectedAxios from '@/utils/protectedAxios';
 import useAuthToken from '@/hooks/authentication/useAuthToken';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import { useContext } from 'react';
 
 const useAuthTokenVerifier = () => {

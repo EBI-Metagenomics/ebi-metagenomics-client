@@ -6,7 +6,7 @@ import { noop } from 'lodash-es';
 
 import FetchError from 'components/UI/FetchError';
 import Loading from 'components/UI/Loading';
-import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import useInterProMatchesProvider, {
   InterProCountType,
 } from '@/hooks/data/useInterProMatchesProvider';

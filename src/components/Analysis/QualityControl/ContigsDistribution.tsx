@@ -8,7 +8,7 @@ import FetchError from 'components/UI/FetchError';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { ResponseFormat, TSVResponse } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
-import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 
 addExportMenu(Highcharts);
 

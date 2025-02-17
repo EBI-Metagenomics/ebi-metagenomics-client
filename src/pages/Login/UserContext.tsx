@@ -36,7 +36,9 @@ export const getDetailsByWebin = (
   details: UserDetails,
   webin: string
 ): UserDetail => {
-  return details.find(({ id }) => id.toLowerCase() === webin.toLowerCase());
+  return details.find(
+    ({ id }) => id.toLowerCase() === webin.toLowerCase()
+  ) as UserDetail;
 };
 
 export default UserContext;

@@ -1,6 +1,9 @@
 import { useContext } from 'react';
-import useData, { HTMLDataResponse, ResponseFormat } from '@/hooks/data/useData';
-import UserContext from '@/pages/Login/UserContext';
+import useData, {
+  HTMLDataResponse,
+  ResponseFormat,
+} from '@/hooks/data/useData';
+import UserContext from 'pages/Login/UserContext';
 
 const useMgnifyForm: () => HTMLDataResponse = () => {
   const { config } = useContext(UserContext);

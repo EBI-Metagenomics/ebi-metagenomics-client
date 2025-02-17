@@ -3,7 +3,7 @@ import HierarchyNode, { Node } from 'components/UI/Hierarchy';
 
 import gpHierarchy from 'public/data/genome-properties-hierarchy.json';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
-import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import { MGnifyDatum } from '@/hooks/data/useData';

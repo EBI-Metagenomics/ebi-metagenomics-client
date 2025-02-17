@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OutterCard from '@/components/UI/OutterCard';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import enaUserImg from 'public/images/ico_ena_user.jpg';
 import useAuthToken from '@/hooks/authentication/useAuthToken';
 import axios from '@/utils/protectedAxios';

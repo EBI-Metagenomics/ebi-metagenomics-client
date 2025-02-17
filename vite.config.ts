@@ -1,27 +1,21 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+// import react from '@vitejs/plugin-react';
 import path from 'path';
 
-const pathAliasMap = {
-  '@/': '/src/',
-  'components/': '/src/components/',
-  'pages/': '/src/pages/',
-  'public/': '/public/',
-  'images/': '/images/',
-  '@/utils/': '/src/@/utils/',
-  '@/hooks/': '/src/@/hooks/',
-  'styles/': '/src/styles/',
-  'node_modules/': '/node_modules/',
-  '@views/': '/src/views/',
-  'config.json': path.resolve(__dirname, 'config.json'),
-  'config.private.json': path.resolve(__dirname, 'config.private.json'),
-};
-
 export default defineConfig({
-  plugins: [react()],
+  // plugins: [react()],
   resolve: {
     alias: {
-      ...pathAliasMap,
+      '@': path.resolve(__dirname, './src'),
+      src: path.resolve(__dirname, './src'),
+      components: path.resolve(__dirname, './src/components'),
+      pages: path.resolve(__dirname, './src/pages'),
+      styles: path.resolve(__dirname, './src/styles'),
+      utils: path.resolve(__dirname, './src/utils'),
+      hooks: path.resolve(__dirname, './src/hooks'),
+      images: path.resolve(__dirname, './public/images'),
+      '/config.json': path.resolve(__dirname, './config.json'),
+      '/config.private.json': path.resolve(__dirname, './config.private.json'),
     },
   },
   server: {

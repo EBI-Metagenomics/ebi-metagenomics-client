@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import useData, { DataResponse, KeyValue } from '@/hooks/data/useData';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 
 const getDownloadURL =
   (api: string, endpoint: string, parameters: KeyValue) => (total: number) => {

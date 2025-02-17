@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import useData, { DataResponse, BlogResponse } from '@/hooks/data/useData';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 
 interface BlogDataResponse extends DataResponse {
   data: BlogResponse;

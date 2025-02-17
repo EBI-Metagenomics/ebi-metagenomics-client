@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 
 const CookieBanner: React.FC = () => {
   const { config } = useContext(UserContext);

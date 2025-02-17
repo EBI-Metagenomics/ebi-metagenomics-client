@@ -17,7 +17,7 @@ import useData, {
   ResponseFormat,
 } from '@/hooks/data/useData';
 import './style.css';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import igv from 'igv/dist/igv.esm';
 
 import ContigsTable from 'components/Analysis/ContigViewer/Table';
@@ -35,7 +35,7 @@ import {
   annotationTrackCustomisations,
   FORMAT,
 } from 'components/IGV/TrackColourPicker';
-import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import { useCrates } from '@/hooks/genomeViewer/CrateStore/useCrates';
 import { Track } from '@/utils/trackView';
 

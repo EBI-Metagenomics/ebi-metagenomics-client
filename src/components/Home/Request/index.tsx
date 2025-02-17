@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import InnerCard from 'components/UI/InnerCard';
 import OutterCard from 'components/UI/OutterCard';
 import EMGModal from 'components/UI/EMGModal';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import { Link, useSearchParams } from 'react-router-dom';
 import LatestStudies from './LatestStudies';
 import MailForm from './MailForm';

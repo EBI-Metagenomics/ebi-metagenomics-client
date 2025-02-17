@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
 

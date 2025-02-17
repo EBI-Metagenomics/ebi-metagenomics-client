@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import { Wrapper } from '@googlemaps/react-wrapper';
 
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import SamplesMap from 'components/UI/SamplesMap';
 import { MGnifyDatum } from '@/hooks/data/useData';
 import render from '../render';

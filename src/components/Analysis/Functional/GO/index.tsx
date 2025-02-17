@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
-import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';

@@ -6,9 +6,9 @@ import FetchError from 'components/UI/FetchError';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 
-import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import PhylumCharts from './PhylumCharts';
 import './style.css';
 

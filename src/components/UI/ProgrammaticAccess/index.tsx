@@ -1,7 +1,7 @@
 import ExtLink from 'components/UI/ExtLink';
 import Box from 'components/UI/Box';
 import React, { useContext } from 'react';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import { toast } from 'react-toastify';
 import RLogo from 'images/r_logo.svg';
 import PythonLogo from 'images/py_logo.svg';

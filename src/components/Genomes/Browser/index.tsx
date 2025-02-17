@@ -8,7 +8,7 @@ import React, {
 import ReactDOMServer from 'react-dom/server';
 import igv, { Browser } from 'igv/dist/igv.esm';
 
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import useURLAccession from '@/hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import {
@@ -16,7 +16,10 @@ import {
   annotationTrackCustomisations,
   FORMAT,
 } from 'components/IGV/TrackColourPicker';
-import { handleLocusChanges, updateQueryParams } from '@/utils/igvBrowserHelper';
+import {
+  handleLocusChanges,
+  updateQueryParams,
+} from '@/utils/igvBrowserHelper';
 import GenomeBrowserPopup from './Popup';
 
 const GenomeBrowser: React.FC = () => {

@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import protectedAxios from '@/utils/protectedAxios';
 
 type AuthToken = string | null;

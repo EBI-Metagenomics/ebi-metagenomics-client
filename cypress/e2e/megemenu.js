@@ -1,12 +1,13 @@
 import {
-  openPage,
+  openPage
 } from '../util/util';
+
 const megamenunavItems = [
   {
     id: 'submit-data-section',
     contentId: 'submit-data-content-section',
     links: [
-      'https://www.ebi.ac.uk/ena/submit/webin/accountInfo',
+      'https://www.ebi.ac.uk/ena/submit/webin/accountInfo'
     ]
   },
   {
@@ -14,7 +15,7 @@ const megamenunavItems = [
     contentId: 'text-search-content-section',
     links: [
       '/metagenomics/search/studies',
-      '/metagenomics/search/analyses',
+      '/metagenomics/search/analyses'
     ]
   },
   {
@@ -26,8 +27,8 @@ const megamenunavItems = [
       '/metagenomics/browse/samples',
       '/metagenomics/browse/publications',
       '/metagenomics/browse/genomes',
-      '/metagenomics/browse/biomes',
-    ],
+      '/metagenomics/browse/biomes'
+    ]
   },
   {
     id: 'help-section',
@@ -43,9 +44,9 @@ const megamenunavItems = [
       'https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-analysing-and-exploring-metagenomics-data',
       'https://www.ebi.ac.uk/training/online/course/metagenomics-bioinformatics',
       'https://www.ebi.ac.uk/about/contact/support/metagenomics'
-    ],
-  },
-]
+    ]
+  }
+];
 describe('MegaMenu Component', () => {
   beforeEach(() => {
     openPage('');
@@ -61,5 +62,4 @@ describe('MegaMenu Component', () => {
       }
     });
   });
-
 });

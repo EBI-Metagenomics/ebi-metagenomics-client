@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import InnerCard from 'components/UI/InnerCard';
 import OutterCard from 'components/UI/OutterCard';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import DataType from './DataType';
 import Biomes from './Biomes';
 

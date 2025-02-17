@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Row } from 'react-table';
-import AnalysisContext from '@/pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
 import EMGTable from 'components/UI/EMGTable';
 import { TAXONOMY_COLOURS } from '@/utils/taxon';

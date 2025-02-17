@@ -1,7 +1,7 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import SearchQueryContext from '@/pages/TextSearch/SearchQueryContext';
+import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
 
 import 'styles/filters.css';

@@ -13,7 +13,7 @@ import CobsSearch from 'components/Genomes/Cobs';
 import SourmashSearch from 'components/Genomes/Sourmash';
 import RouteForHash from 'components/Nav/RouteForHash';
 import ArrowForLink from 'components/UI/ArrowForLink';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import ExtLink from 'components/UI/ExtLink';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 

@@ -5,7 +5,7 @@ import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
 import { createParamFromURL } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
 import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
 import { useNavigate } from 'react-router-dom';
-import UserContext from '@/pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import config from '@/utils/config';
 
 const MegaMenu: React.FC = () => {
