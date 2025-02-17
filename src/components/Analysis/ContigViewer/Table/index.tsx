@@ -10,9 +10,12 @@ import './style.css';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import CursorPagination from 'components/UI/EMGTable/CursorPagination';
 import TruncatedText from 'components/UI/TextTruncated';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import { useCrates } from '@/hooks/genomeViewer/CrateStore/useCrates';
+import {
+  useCrates,
+  useOfflineCrate,
+} from 'hooks/genomeViewer/CrateStore/useCrates';
 
 type ContigFeatureProps = {
   annotationType: string;
@@ -79,6 +82,16 @@ const ContigsTable: React.FC = () => {
   const { crates, loading: loadingCrates } = useCrates(
     `assemblies/${assemblyId}/extra-annotations`
   );
+  const { crate: offlineCrate, isUploading: loadingOfflineCrate } =
+    useOfflineCrate();
+
+  const allCrates = useMemo(() => {
+    const cratesIncludingOffline = [...crates] || [];
+    if (offlineCrate) {
+      cratesIncludingOffline.push(offlineCrate);
+    }
+    return cratesIncludingOffline;
+  }, [crates, offlineCrate]);
 
   const contigsColumns = useMemo(() => {
     const cols = [
@@ -127,13 +140,13 @@ const ContigsTable: React.FC = () => {
         },
       },
     ];
-    if (crates) {
+    if (allCrates) {
       cols.push({
         id: 'crates',
         Header: 'RO-Crates',
         accessor: (contig) => contig.attributes['contig-id'],
         Cell: ({ cell }) => {
-          const crateFlags = crates.map((crate) => (
+          const crateFlags = allCrates.map((crate) => (
             <ContigFeatureFlag
               key={crate.url}
               annotationType={crate.track.label.substring(0)}
@@ -145,7 +158,7 @@ const ContigsTable: React.FC = () => {
       });
     }
     return cols;
-  }, [setSelectedContig, crates]);
+  }, [setSelectedContig, allCrates]);
 
   if (error || !data) return <FetchError error={error} />;
 
@@ -159,7 +172,7 @@ const ContigsTable: React.FC = () => {
         initialPage={0}
         className="mg-contigs-table"
         namespace="contigs_"
-        isStale={loading || loadingCrates}
+        isStale={loading || loadingCrates || loadingOfflineCrate}
         showTextFilter
       />
       <CursorPagination

@@ -13,7 +13,6 @@ const render = (status: Status): ReactElement => {
         error={{
           status: 200,
           type: ErrorTypes.OtherError,
-          error: status,
         }}
       />
     );

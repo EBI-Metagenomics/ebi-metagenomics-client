@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import Link from 'components/UI/Link';
 import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
@@ -17,12 +17,16 @@ const MegaMenu: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleMouseEnter = (sectionId: string) => {
+  const handleMenuItemClick = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    sectionId: string
+  ) => {
+    e.preventDefault();
     setMenuVisible(true);
     setActiveSection(sectionId);
   };
 
-  const handleMouseLeave = () => {
+  const closeMegaMenu = () => {
     setMenuVisible(false);
     setActiveSection(null);
   };
@@ -48,9 +52,32 @@ const MegaMenu: React.FC = () => {
       })
     );
   };
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        closeMegaMenu();
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeMegaMenu();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
-    <div onMouseLeave={handleMouseLeave}>
+    // <div onMouseLeave={handleMouseLeave}>
+    <div ref={menuRef}>
       <div
         id="mgnify-mega-menu"
         className="vf-global-header vf-mega-menu"
@@ -63,7 +90,7 @@ const MegaMenu: React.FC = () => {
                 className="vf-navigation__link vf-mega-menu__link"
                 id="demo-topics-content-section"
                 href="/metagenomics"
-                onMouseEnter={() => setMenuVisible(false)}
+                onClick={() => setMenuVisible(false)}
               >
                 Overview
               </a>
@@ -74,9 +101,10 @@ const MegaMenu: React.FC = () => {
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
                   activeSection === 'submit-data-section' ? 'active' : ''
                 }`}
-                target="_blank"
                 href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo"
-                onMouseEnter={() => handleMouseEnter('submit-data-section')}
+                onClick={(event) =>
+                  handleMenuItemClick(event, 'submit-data-section')
+                }
                 rel="noreferrer"
               >
                 Submit data
@@ -89,7 +117,9 @@ const MegaMenu: React.FC = () => {
                   activeSection === 'text-search-section' ? 'active' : ''
                 }`}
                 href="/metagenomics/search"
-                onMouseEnter={() => handleMouseEnter('text-search-section')}
+                onClick={(event) =>
+                  handleMenuItemClick(event, 'text-search-section')
+                }
               >
                 Text search
               </a>
@@ -100,7 +130,7 @@ const MegaMenu: React.FC = () => {
                 target="_blank"
                 href="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
                 className="vf-navigation__link vf-mega-menu__link"
-                onMouseEnter={() => setMenuVisible(false)}
+                onClick={() => setMenuVisible(false)}
                 rel="noreferrer"
               >
                 Sequence search &nbsp;
@@ -114,7 +144,9 @@ const MegaMenu: React.FC = () => {
                   activeSection === 'browse-section' ? 'active' : ''
                 }`}
                 href="/metagenomics/browse"
-                onMouseEnter={() => handleMouseEnter('browse-section')}
+                onClick={(event) =>
+                  handleMenuItemClick(event, 'browse-section')
+                }
               >
                 Browse data
               </a>
@@ -125,7 +157,7 @@ const MegaMenu: React.FC = () => {
                 id="about-link"
                 className="vf-navigation__link vf-mega-menu__link"
                 href="/metagenomics/about"
-                onMouseEnter={() => setMenuVisible(false)}
+                onClick={() => setMenuVisible(false)}
               >
                 About
               </a>
@@ -138,7 +170,7 @@ const MegaMenu: React.FC = () => {
                   activeSection === 'help-section' ? 'active' : ''
                 }`}
                 href="/metagenomics/help"
-                onMouseEnter={() => handleMouseEnter('help-section')}
+                onClick={(event) => handleMenuItemClick(event, 'help-section')}
               >
                 Help
               </a>
@@ -152,7 +184,9 @@ const MegaMenu: React.FC = () => {
                   }`}
                   id="login-section"
                   href="/metagenomics/mydata"
-                  onMouseEnter={() => handleMouseEnter('login-section')}
+                  onClick={(event) =>
+                    handleMenuItemClick(event, 'login-section')
+                  }
                 >
                   My data
                 </a>
@@ -163,7 +197,7 @@ const MegaMenu: React.FC = () => {
                   id="login-link"
                   className="vf-navigation__link vf-mega-menu__link"
                   href="/metagenomics/login"
-                  onMouseEnter={() => setMenuVisible(false)}
+                  onClick={() => setMenuVisible(false)}
                 >
                   Login
                 </a>
@@ -180,7 +214,6 @@ const MegaMenu: React.FC = () => {
               className="vf-mega-menu__content__section"
               id="browse-content-section"
               role="menu"
-              onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'browse-section'}
             >
               <section className="vf-summary-container | embl-grid">
@@ -280,7 +313,6 @@ const MegaMenu: React.FC = () => {
               className="vf-mega-menu__content__section"
               id="submit-data-content-section"
               role="menu"
-              onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'submit-data-section'}
             >
               <section className="vf-summary-container | embl-grid">
@@ -320,14 +352,13 @@ const MegaMenu: React.FC = () => {
               className="vf-mega-menu__content__section"
               id="text-search-content-section"
               role="menu"
-              onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'text-search-section'}
             >
               <section className="vf-summary-container | embl-grid">
                 <div className="vf-section-header">
                   <h2 className="vf-section-header__heading">Search MGnify</h2>
                   <p className="vf-section-header__text">
-                    Search for studies, samples abd publications
+                    Search for studies, samples and publications
                   </p>
                 </div>
                 <div className="vf-section-content">
@@ -471,7 +502,6 @@ const MegaMenu: React.FC = () => {
               className="vf-mega-menu__content__section"
               id="help-content-section"
               role="menu"
-              onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'help-section'}
             >
               <section className="vf-summary-container | embl-grid">
@@ -554,7 +584,7 @@ const MegaMenu: React.FC = () => {
                         </div>
                         <li className="vf-navigation__item">
                           <a
-                            href="https://www.ebi.ac.uk/training/about"
+                            href="https://www.ebi.ac.uk/training/services/mgnify"
                             className="vf-navigation__link"
                             target="_blank"
                             rel="noreferrer"
@@ -659,7 +689,6 @@ const MegaMenu: React.FC = () => {
               className="vf-mega-menu__content__section"
               id="login-content-section"
               role="menu"
-              onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'login-section'}
             >
               <section className="vf-summary-container | embl-grid">

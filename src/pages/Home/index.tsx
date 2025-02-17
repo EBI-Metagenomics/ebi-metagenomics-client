@@ -4,6 +4,7 @@ import Request from 'components/Home/Request';
 import BlogExcerpts from 'components/Home/BlogExcerpts';
 import Publications, { MainPublication } from 'components/Publications';
 import './style.css';
+import TrainingResources from 'components/Home/TrainingResources';
 
 const HomePage: React.FC = () => {
   return (
@@ -19,6 +20,8 @@ const HomePage: React.FC = () => {
       <Publications />
       <h2>How to cite</h2>
       <MainPublication />
+      <h2>EMBL-EBI Training</h2>
+      <TrainingResources />
     </section>
   );
 };

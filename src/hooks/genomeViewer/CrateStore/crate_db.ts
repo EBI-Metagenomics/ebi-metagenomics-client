@@ -28,4 +28,8 @@ export class ROCrateDB extends Dexie {
   }
 }
 
+export const isOfflineCrate = (crate: StorableCrate): boolean => {
+  return crate.url.startsWith('file:///');
+};
+
 export const db = new ROCrateDB();
