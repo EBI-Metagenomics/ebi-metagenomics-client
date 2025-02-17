@@ -31,13 +31,11 @@ const useSamplesProvider = (
         setPage(page + 1);
       }
     }
-    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [data, page, limit]);
   useEffect(() => {
     if (data?.links?.next && samples.length < limit) {
       setPage(page + 1);
     }
-    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [limit]);
 
   return { samples, total, loading, error };

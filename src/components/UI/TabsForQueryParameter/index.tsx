@@ -22,7 +22,6 @@ const TabsForQueryParameter: React.FC<TabsProps> = ({
       setTabQp(defaultValue);
       setPage(1);
     }
-    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [tabQp, queryParameter]);
 
   return (

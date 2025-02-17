@@ -22,10 +22,11 @@
       "pages/*": ["src/pages/*"],
       "styles/*": ["src/styles/*"],
       "utils/*": ["src/utils/*"],
-      "hooks/*": ["src/hooks/*"]
+      "hooks/*": ["src/hooks/*"],
+      "images/*": ["public/images/*"]
     },
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src"],
+  "include": ["src", "src/types"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -38,7 +38,6 @@ const InterProMatchesChart: React.FC<InterProMatchesChartProps> = ({
         onMatchesChange(matches);
       }
     }
-    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [matches, loading]);
   useEffect(() => {
     if (chartComponentRef.current && selectedName !== null) {

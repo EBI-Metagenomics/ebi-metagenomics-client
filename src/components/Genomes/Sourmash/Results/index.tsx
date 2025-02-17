@@ -48,7 +48,6 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({ addToStorage }) => {
       setCount(0);
       setShouldCheck(false);
     }
-    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [data, error, loading]);
 
   useEffect(() => {

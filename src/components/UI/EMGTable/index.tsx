@@ -164,7 +164,6 @@ const EMGTable: React.FC<EMGTableProps> = ({
         setChangingPage(false);
       }
     }
-    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [showPagination, setPage, pageIndex]);
 
   useEffect(() => {
@@ -175,7 +174,6 @@ const EMGTable: React.FC<EMGTableProps> = ({
         setChangingPage(false);
       }
     }
-    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [showPagination, setPageSizeSelected, pageSize]);
 
   useEffect(() => {
@@ -189,7 +187,6 @@ const EMGTable: React.FC<EMGTableProps> = ({
         setChangingPage(false);
       }
     }
-    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [showPagination, setOrdering, setPage, sortBy, sortable]);
 
   const paginationRanges = useMemo(
