@@ -52,7 +52,6 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
         sourmashElement.removeEventListener('change', changedFiles);
       }
     };
-    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [sourmash.current]);
 
   useEffect(() => {
@@ -61,7 +60,6 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
       setJobId((data.data as Record<string, string>).job_id);
       setShouldSearch(false);
     }
-    // eslint-disable-next-line react-@/hooks/exhaustive-deps
   }, [data, error, loading]);
 
   const handleSearch = (): void => {
