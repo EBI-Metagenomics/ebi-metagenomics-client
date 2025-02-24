@@ -23,10 +23,15 @@
       "styles/*": ["src/styles/*"],
       "utils/*": ["src/utils/*"],
       "hooks/*": ["src/hooks/*"],
-      "images/*": ["public/images/*"]
+      "images/*": ["public/images/*"],
+      "data/*": ["public/data/*"]
     },
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src", "src/types"],
+  "include": [
+    "src",
+    "src/types",
+    "custom.d.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

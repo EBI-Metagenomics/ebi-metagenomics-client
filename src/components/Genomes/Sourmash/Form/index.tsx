@@ -11,12 +11,27 @@ type SourmashFormProps = {
   catalogueID?: string;
 };
 const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
-  const sourmash = useRef(null);
+  // const sourmash = useRef(null);
+  const sourmash = useRef<HTMLMgnifySourmashComponentElement | null>(null);
   const [jobId, setJobId] = useQueryParamState('job_id', '');
   const [shouldSearch, setShouldSearch] = useState(false);
-  const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([
-    catalogueID,
-  ]);
+  const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>(
+    catalogueID ? [catalogueID] : []
+  );
+  // const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([
+  //   catalogueID,
+  // ]);
+
+  // interface SourmashState {
+  //   signatures: { [filename: string]: string } | null;
+  //   errors: any | null;
+  // }
+  //
+  // const [{ signatures, errors }, setSourmashState] = useState<SourmashState>({
+  //   signatures: null,
+  //   errors: null,
+  // });
+
   const [{ signatures, errors }, setSourmashState] = useState({
     signatures: null,
     errors: null,
@@ -24,12 +39,23 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
   const { data, error, loading } = useMgnifySourmashSearch(
     shouldSearch ? 'gather' : '',
     selectedCatalogues,
-    signatures
+    signatures || {}
   );
 
   useEffect(() => {
-    let sourmashElement;
-    const sketchedAll = (event): void => {
+    let sourmashElement: {
+      addEventListener: (
+        arg0: string,
+        arg1: (event: { detail: { signatures: any; errors: any } }) => void
+      ) => void;
+      removeEventListener: (
+        arg0: string,
+        arg1: (event: { detail: { signatures: any; errors: any } }) => void
+      ) => void;
+    };
+    const sketchedAll = (event: {
+      detail: { signatures: any; errors: any };
+    }): void => {
       setSourmashState({
         signatures: event.detail.signatures,
         errors: event.detail.errors,

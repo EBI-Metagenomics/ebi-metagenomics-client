@@ -1,5 +1,6 @@
 import React from 'react';
 import { noop } from 'lodash-es';
+import { ConfigType } from 'utils/config';
 
 type UserType = {
   username: null | string;
@@ -23,7 +24,7 @@ const UserContext = React.createContext({
   username: null,
   isAuthenticated: false,
   details: null,
-  config: null,
+  config: {} as ConfigType,
   setUser: noop as (u: UserType) => void,
   setDetails: noop as (details: UserDetails) => void,
   token: null,

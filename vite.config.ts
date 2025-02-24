@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite';
-// import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
-  // plugins: [react()],
+  plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -14,6 +14,7 @@ export default defineConfig({
       utils: path.resolve(__dirname, './src/utils'),
       hooks: path.resolve(__dirname, './src/hooks'),
       images: path.resolve(__dirname, './public/images'),
+      data: path.resolve(__dirname, './public/data'),
       'config.json': path.resolve(__dirname, './config.json'),
       'config.private.json': path.resolve(__dirname, './config.private.json'),
     },

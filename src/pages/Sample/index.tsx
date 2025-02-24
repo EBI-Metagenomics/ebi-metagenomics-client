@@ -14,7 +14,7 @@ import KeyValueList from 'components/UI/KeyValueList';
 import AnnotationMetadata from 'components/Sample/AnnotationMetadata';
 import ClearingHouseMetadata from 'components/Sample/ClearingHouseMetadata';
 import axios from 'axios';
-import marineRegionsEezData from 'public/data/marine-regions-eez-data.json';
+import marineRegionsEezData from 'data/marine-regions-eez-data.json';
 import {
   displayAbsInfo,
   EezMetadata,
@@ -47,29 +47,20 @@ const SamplePage: React.FC = () => {
   const fetchSovereignsAbsInfo = (mrgId: number) => {
     const matchingEez = marineRegionsEezData.find((eez) => eez.MRGID === mrgId);
 
-    const sovereigns: SovereignsArray = [];
+    if (!matchingEez) {
+      return [];
+    }
 
-    // const sovereigns: SovereignsArray = [
-    //   {
-    //     name: 'Brazil',
-    //     absStatus: 1,
-    //   },
-    //   {
-    //     name: 'France',
-    //     absStatus: 1,
-    //   },
-    //   {
-    //     name: 'United Kingdom',
-    //     absStatus: 3,
-    //   },
-    // ];
+    const sovereigns: SovereignsArray = [];
 
     const maxPossibleNumberOfSovereigns = 3;
     for (let i = 1; i <= maxPossibleNumberOfSovereigns; i++) {
-      if (!matchingEez[`SOVEREIGN${i}`]) break;
+      const sovereignKey = `SOVEREIGN${i}` as keyof typeof matchingEez;
+      const statusKey = `SOVEREIGN${i}_ABS_STATUS` as keyof typeof matchingEez;
+      if (!matchingEez[sovereignKey]) break;
       const sovereign: Sov = {
-        name: matchingEez[`SOVEREIGN${i}`],
-        absStatus: matchingEez[`SOVEREIGN${i}_ABS_STATUS`],
+        name: matchingEez[sovereignKey] as string,
+        absStatus: matchingEez[statusKey] as number,
       };
       sovereigns.push(sovereign);
     }
@@ -168,8 +159,8 @@ const SamplePage: React.FC = () => {
                     </h3>
                   </div>
                 )}
-                <ClearingHouseMetadata sampleAccession={accession} />
-                <AnnotationMetadata sampleAccession={accession} />
+                <ClearingHouseMetadata sampleAccession={accession as string} />
+                <AnnotationMetadata sampleAccession={accession as string} />
               </RouteForHash>
               <RouteForHash hash="#studies">
                 <AssociatedStudies rootEndpoint="samples" />
