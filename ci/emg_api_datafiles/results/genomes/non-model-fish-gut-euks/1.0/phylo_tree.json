@@ -1,0 +1,32 @@
+{
+    "children": [
+        {
+            "countgen": 1,
+            "name": "d__Eukaryota",
+            "type": "d",
+            "children": [
+              {
+                "countgen": 1,
+                "name": "p__Chlorophyta",
+                "type": "p",
+                "children": [
+                  {
+                    "countgen": 1,
+                    "name": "c__Ulvophyceae",
+                    "type": "c",
+                    "children": [
+                      {
+                        "coungen": 1,
+                        "name": "MGYG010000001",
+                        "type": "genome"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+        }
+    ],
+    "name": "Domain",
+    "type": "root"
+}
