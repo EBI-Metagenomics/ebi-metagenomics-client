@@ -8,13 +8,22 @@ import React, {
 } from 'react';
 import { filter } from 'lodash-es';
 
-import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
+import {
+  Column,
+  Row,
+  usePagination,
+  useSortBy,
+  useTable,
+  useGroupBy,
+  useExpanded,
+} from 'react-table';
 import Loading from 'components/UI/Loading';
 import TextInputDebounced from 'components/UI/TextInputDebounced';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
 import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
+import { useEffectOnce } from 'react-use';
 import PaginationButton from './PaginationButton';
 import './style.css';
 
@@ -85,6 +94,8 @@ type EMGTableProps = {
   className?: string;
   namespace?: string;
   sortable?: boolean;
+  groupable?: boolean;
+  initialGroup?: string;
   loading?: boolean;
   isStale?: boolean;
   downloadURL?: string;
@@ -106,6 +117,8 @@ const EMGTable: React.FC<EMGTableProps> = ({
   showPagination = true,
   showTextFilter = false,
   sortable = false,
+  groupable = false,
+  initialGroup = '',
   loading = false,
   isStale = false,
   downloadURL = null,
@@ -142,6 +155,12 @@ const EMGTable: React.FC<EMGTableProps> = ({
       initialState: {
         pageIndex: initialPage,
         pageSize: pageSizeSelected,
+        ...(initialGroup
+          ? {
+              groupBy: [initialGroup],
+              expanded: {},
+            }
+          : {}),
       },
       pageCount:
         initialPageCount ||
@@ -150,11 +169,20 @@ const EMGTable: React.FC<EMGTableProps> = ({
       manualPagination: true,
       manualSortBy: true,
     },
+    useGroupBy,
     useSortBy,
+    useExpanded,
     usePagination
   );
   const tableRef = useRef(null);
   const [isChangingPage, setChangingPage] = useState(false);
+  useEffectOnce(() => {
+    if (initialGroup) {
+      rows.forEach((row: Row) => {
+        row.toggleRowExpanded(true);
+      });
+    }
+  });
 
   useEffect(() => {
     if (showPagination && page !== pageIndex + 1) {
@@ -257,7 +285,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
                   }
                   return (
                     <th
-                      {...(sortable && column.canSort
+                      {...(sortable && column.canSort && !groupable
                         ? column.getHeaderProps(column.getSortByToggleProps())
                         : { key: column.id })}
                       className="vf-table__heading"
@@ -266,7 +294,13 @@ const EMGTable: React.FC<EMGTableProps> = ({
                       {sortable && column.canSort && (
                         <>
                           &nbsp;
-                          <span>
+                          <span
+                            {...(groupable
+                              ? column.getHeaderProps(
+                                  column.getSortByToggleProps()
+                                )
+                              : {})}
+                          >
                             {/* eslint-disable-next-line no-nested-ternary */}
                             {column.isSorted ? (
                               column.isSortedDesc ? (
@@ -280,6 +314,16 @@ const EMGTable: React.FC<EMGTableProps> = ({
                           </span>
                         </>
                       )}
+                      &nbsp;
+                      {groupable && column.canGroupBy ? (
+                        <span {...column.getGroupByToggleProps()}>
+                          {column.isGrouped ? (
+                            <i className="icon icon-common icon-object-group" />
+                          ) : (
+                            <i className="icon icon-common icon-object-ungroup" />
+                          )}
+                        </span>
+                      ) : null}
                     </th>
                   );
                 })}
@@ -314,7 +358,25 @@ const EMGTable: React.FC<EMGTableProps> = ({
                           }`}
                           style={{ ...(cell.column?.style || {}) }}
                         >
-                          {cell.render('Cell')}
+                          {/* eslint-disable-next-line no-nested-ternary */}
+                          {cell.isGrouped ? (
+                            // If it's a grouped cell, add an expander and row count
+                            <>
+                              <span {...row.getToggleRowExpandedProps()}>
+                                {row.isExpanded ? (
+                                  <i className="icon icon-common icon-angle-double-down" />
+                                ) : (
+                                  <i className="icon icon-common icon-angle-double-right" />
+                                )}
+                              </span>{' '}
+                              {cell.render('Cell')} ({row.subRows.length})
+                            </>
+                          ) : // eslint-disable-next-line no-nested-ternary
+                          cell.isAggregated ? (
+                            cell.render('Aggregated')
+                          ) : cell.isPlaceholder ? null : (
+                            cell.render('Cell')
+                          )}
                         </td>
                       );
                     })}
