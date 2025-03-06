@@ -9,3 +9,938 @@
 .mg-analyses-taxonomy input[type='radio'] {
   cursor: pointer;
 }
+
+
+/* Enhanced styling for Taxonomy component */
+
+/* Main container */
+.vf-details {
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  background-color: white;
+}
+
+/* Summary styling */
+.vf-details--summary {
+  padding: 1rem 1.25rem;
+  background-color: #f8fafc;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
+}
+
+.vf-details--summary:hover {
+  background-color: #f1f5f9;
+}
+
+.vf-details--summary::-webkit-details-marker {
+  display: none;
+}
+
+.vf-details--summary::after {
+  content: '';
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(135deg);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid #64748b;
+  border-bottom: 2px solid #64748b;
+  transition: transform 0.3s ease;
+}
+
+.vf-details[open] .vf-details--summary::after {
+  transform: translateY(-30%) rotate(-45deg);
+}
+
+/* Content inside details */
+.vf-details p {
+  padding: 0 1.25rem;
+  margin: 1rem 0;
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+/* Table styling */
+.vf-table {
+  width: 95%;
+  margin: 1rem auto 1.5rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.vf-table__header {
+  background-color: #f1f5f9;
+}
+
+.vf-table__heading {
+  padding: 0.9rem 1rem;
+  font-weight: 600;
+  color: #475569;
+  text-align: left;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.vf-table__row {
+  transition: background-color 0.2s ease;
+}
+
+.vf-table__row:hover {
+  background-color: #f8fafc;
+}
+
+.vf-table__cell {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.vf-table__body tr:last-child .vf-table__cell {
+  border-bottom: none;
+}
+
+/* Amplicon cell styling */
+.vf-table__cell:first-child {
+  font-weight: 600;
+  color: #3182ce;
+}
+
+/* Button styling */
+.vf-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+}
+
+.vf-button--primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.vf-button--primary:hover {
+  background-color: #2563eb;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.vf-button--sm {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.65rem;
+}
+
+.vf-button__text {
+  margin-left: 0.25rem;
+}
+
+/* Icon styling */
+.icon-check-circle {
+  color: #4ade80 !important;
+}
+
+.icon-minus-circle {
+  color: #94a3b8 !important;
+}
+
+/* Read count styling - add visual indicator */
+.vf-table__cell:last-child {
+  font-weight: 600;
+  position: relative;
+}
+
+.vf-table__cell:last-child::after {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  bottom: 0.5rem;
+  height: 3px;
+  background-color: #3b82f6;
+  border-radius: 1.5px;
+  opacity: 0.4;
+}
+
+/* Adjusted width based on the actual value */
+.vf-table__row:first-child .vf-table__cell:last-child::after {
+  width: 95%; /* For larger count */
+}
+
+.vf-table__row:nth-child(2) .vf-table__cell:last-child::after {
+  width: 20%; /* For smaller count */
+}
+
+/* Animation for opening details */
+.vf-details[open] > :not(summary) {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Make "Not calculated" more subtle */
+.vf-table__cell div:not([class]) {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.65rem;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  color: #64748b;
+}
+
+/* Make the second details section special */
+/*.vf-details:last-child {*/
+.vf-details:last-child {
+  background-color: #f8fafc;
+  /*border-left: 4px solid #60a5fa;*/
+  border-left: 4px solid #18974c;
+}
+
+.vf-details:last-child .vf-details--summary {
+  background-color: #eff6ff;
+  color: #1e40af;
+}
+
+.vf-details:last-child .vf-details--summary:hover {
+  background-color: #dbeafe;
+}
+
+
+
+/*2nd taxonomy detail section*/
+
+/* Keep existing styles from the previous CSS */
+.vf-details {
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  background-color: white;
+}
+
+.vf-details--summary {
+  padding: 1rem 1.25rem;
+  background-color: #f8fafc;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
+}
+
+.vf-details--summary:hover {
+  background-color: #f1f5f9;
+}
+
+.vf-details--summary::-webkit-details-marker {
+  display: none;
+}
+
+.vf-details--summary::after {
+  content: '';
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(135deg);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid #64748b;
+  border-bottom: 2px solid #64748b;
+  transition: transform 0.3s ease;
+}
+
+.vf-details[open] .vf-details--summary::after {
+  transform: translateY(-30%) rotate(-45deg);
+}
+
+.vf-details p {
+  padding: 0 1.25rem;
+  margin: 1rem 0;
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+.vf-table {
+  width: 95%;
+  margin: 1rem auto 1.5rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.vf-table__header {
+  background-color: #f1f5f9;
+}
+
+.vf-table__heading {
+  padding: 0.9rem 1rem;
+  font-weight: 600;
+  color: #475569;
+  text-align: left;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.vf-table__row {
+  transition: background-color 0.2s ease;
+}
+
+.vf-table__row:hover {
+  background-color: #f8fafc;
+}
+
+.vf-table__cell {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.vf-table__body tr:last-child .vf-table__cell {
+  border-bottom: none;
+}
+
+.vf-table__cell:first-child {
+  font-weight: 600;
+  color: #3182ce;
+}
+
+.vf-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+}
+
+.vf-button--primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.vf-button--primary:hover {
+  background-color: #2563eb;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.vf-button--sm {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.65rem;
+}
+
+.vf-button__text {
+  margin-left: 0.25rem;
+}
+
+.icon-check-circle {
+  color: #4ade80 !important;
+}
+
+.icon-minus-circle {
+  color: #94a3b8 !important;
+}
+
+.vf-table__cell:last-child {
+  font-weight: 600;
+  position: relative;
+}
+
+.vf-table__cell:last-child::after {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  bottom: 0.5rem;
+  height: 3px;
+  background-color: #3b82f6;
+  border-radius: 1.5px;
+  opacity: 0.4;
+}
+
+.vf-table__row:first-child .vf-table__cell:last-child::after {
+  width: 95%;
+}
+
+.vf-table__row:nth-child(2) .vf-table__cell:last-child::after {
+  width: 20%;
+}
+
+.vf-details[open] > :not(summary) {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vf-table__cell div:not([class]) {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.65rem;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  color: #64748b;
+}
+
+/* New styles for the second details section with left nav and visualization card */
+
+/* Layout for the details content */
+.taxonomy-detail-with-nav {
+  background-color: #f8fafc;
+  /*border-left: 4px solid #3b82f6;*/
+  border-left: 4px solid #18974c;
+  margin-top: 2rem;
+}
+
+.taxonomy-detail-with-nav .vf-details--summary {
+  background-color: #eff6ff;
+  /*color: #1e40af;*/
+  color: #18974c;
+}
+
+.taxonomy-detail-with-nav .vf-details--summary:hover {
+  background-color: #dbeafe;
+}
+
+.taxonomy-detail-content {
+  display: flex;
+  min-height: 500px;
+  padding: 0;
+}
+
+/* Left navigation styling */
+.taxonomy-nav {
+  width: 250px;
+  min-width: 250px;
+  background-color: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+  padding: 1.5rem 0;
+}
+
+.taxonomy-nav-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.taxonomy-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 1.5rem;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  font-size: 0.95rem;
+}
+
+.taxonomy-nav-item:hover {
+  background-color: #f1f5f9;
+  /*color: #3b82f6;*/
+  color: #18974c;
+}
+
+.taxonomy-nav-item.active {
+  /*background-color: #eff6ff;*/
+  background-color: #8ed4ae;
+  /*color: #2563eb;*/
+  color: #18974c;
+  font-weight: 500;
+}
+
+.taxonomy-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  /*background-color: #3b82f6;*/
+  background-color: #18974c;
+}
+
+.taxonomy-nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  width: 24px;
+  height: 24px;
+}
+
+.taxonomy-nav-text {
+  flex: 1;
+}
+
+/* Right content area styling */
+.taxonomy-content-area {
+  flex: 1;
+  padding: 1.5rem;
+  background-color: white;
+}
+
+/* Visualization styling */
+.taxonomy-visualization {
+  min-height: 400px;
+}
+
+.taxonomy-visualization-title {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.taxonomy-placeholder {
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  border: 2px dashed #e2e8f0;
+}
+
+.taxonomy-chart-placeholder {
+  text-align: center;
+  padding: 2rem;
+}
+
+.taxonomy-chart-placeholder-text {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* Make sure the VisualisationCard fits properly */
+.vf-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .taxonomy-detail-content {
+    flex-direction: column;
+  }
+
+  .taxonomy-nav {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem 0;
+  }
+
+  .taxonomy-nav-list {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .taxonomy-nav-item {
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+  }
+
+  .taxonomy-nav-item.active::before {
+    width: 100%;
+    height: 3px;
+    top: auto;
+    bottom: -1px;
+    left: 0;
+  }
+
+  .taxonomy-content-area {
+    padding: 1rem;
+  }
+}
+
+
+/* Add these styles to your existing style.css file */
+
+/* Majority marker row styling */
+.majority-marker-row {
+  background-color: rgba(236, 253, 245, 0.4);
+}
+
+.majority-marker-row:hover {
+  background-color: rgba(236, 253, 245, 0.7) !important;
+}
+
+/* Marker name container with badge */
+.marker-name-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Majority marker badge */
+.majority-marker-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #f59e0b;
+  cursor: help;
+}
+
+.majority-marker-badge svg {
+  height: 16px;
+  width: 16px;
+}
+
+/* Marker region styling */
+.marker-region {
+  display: inline-block;
+  padding: 2px 8px;
+  background-color: #f0f9ff;
+  color: #0369a1;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.marker-region-empty {
+  background-color: #f1f5f9;
+  color: #94a3b8;
+}
+
+/* Not available styling */
+.not-available {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.65rem;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  color: #64748b;
+}
+
+/* Read count styling with bars */
+.read-count-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.read-count-value {
+  font-weight: 600;
+  color: #334155;
+}
+
+.read-count-bar-container {
+  height: 6px;
+  width: 100%;
+  background-color: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.read-count-bar {
+  height: 100%;
+  background-color: #3b82f6;
+  border-radius: 3px;
+}
+
+.majority-marker-bar {
+  background-color: #10b981;
+}
+
+/* Better button styling */
+.vf-button--primary {
+  background-color: #3b82f6;
+  transition: all 0.2s ease;
+}
+
+.vf-button--primary:hover {
+  background-color: #2563eb;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Animation for row highlight */
+@keyframes highlightRow {
+  0% {
+    background-color: rgba(236, 253, 245, 0.2);
+  }
+  50% {
+    background-color: rgba(236, 253, 245, 0.7);
+  }
+  100% {
+    background-color: rgba(236, 253, 245, 0.4);
+  }
+}
+
+.majority-marker-row {
+  animation: highlightRow 1.5s ease-in-out 1;
+}
+
+
+
+
+/*updated for groupeed data */
+
+/* Add these styles to your existing style.css file */
+
+/* N/A value styling */
+.na-value {
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Read count container and styling */
+.read-count-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.read-count-value {
+  font-weight: 600;
+  color: #334155;
+}
+
+/* Bar container and background */
+.read-count-bar-container {
+  position: relative;
+  height: 8px;
+  width: 100%;
+  background-color: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.read-count-bar-background {
+  height: 100%;
+  background-color: transparent;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Stacked bar container and segments */
+.stacked-bar-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.stacked-bar-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Colors for different organism types */
+.bacteria-bar {
+  background-color: #3b82f6; /* Blue */
+}
+
+.archaea-bar {
+  background-color: #f59e0b; /* Amber */
+}
+
+.eukarya-bar {
+  background-color: #10b981; /* Green */
+}
+
+.its-bar {
+  background-color: #8b5cf6; /* Purple */
+}
+
+/* Legend styling */
+.marker-legend {
+  margin: 16px 0 8px 24px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.marker-legend-title {
+  font-weight: 500;
+  color: #475569;
+  margin-right: 8px;
+}
+
+.marker-legend-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
+.marker-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.marker-legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.marker-legend-label {
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.bacteria-color {
+  background-color: #3b82f6;
+}
+
+.archaea-color {
+  background-color: #f59e0b;
+}
+
+.eukarya-color {
+  background-color: #10b981;
+}
+
+.its-color {
+  background-color: #8b5cf6;
+}
+
+/* Hover effects for stacked bars */
+.stacked-bar-segment:hover {
+  filter: brightness(1.1);
+  cursor: help;
+}
+
+/* Majority marker row styling */
+.majority-marker-row {
+  background-color: rgba(236, 253, 245, 0.4);
+}
+
+.majority-marker-row:hover {
+  background-color: rgba(236, 253, 245, 0.7) !important;
+}
+
+/* Marker name container with badge */
+.marker-name-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Majority marker badge */
+.majority-marker-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #f59e0b;
+  cursor: help;
+}
+
+.majority-marker-badge svg {
+  height: 16px;
+  width: 16px;
+}
+
+/* Enhanced table styles */
+.vf-table {
+  width: 95%;
+  margin: 1rem auto 0.5rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.vf-table__header {
+  background-color: #f1f5f9;
+}
+
+.vf-table__heading {
+  padding: 14px 16px;
+  font-weight: 600;
+  color: #475569;
+  text-align: left;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.vf-table__row {
+  transition: background-color 0.2s ease;
+}
+
+.vf-table__row:hover {
+  background-color: #f8fafc;
+}
+
+.vf-table__cell {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.vf-table__body tr:last-child .vf-table__cell {
+  border-bottom: none;
+}
+
+/* Animation for row highlight */
+@keyframes highlightRow {
+  0% {
+    background-color: rgba(236, 253, 245, 0.2);
+  }
+  50% {
+    background-color: rgba(236, 253, 245, 0.7);
+  }
+  100% {
+    background-color: rgba(236, 253, 245, 0.4);
+  }
+}
+
+.majority-marker-row {
+  animation: highlightRow 1.5s ease-in-out 1;
+}

@@ -45,6 +45,7 @@
     "igv": "^2.15.8",
     "jszip": "^3.10.1",
     "lodash-es": "4.17.21",
+    "lucide-react": "^0.476.0",
     "mgnify-sourmash-component": "0.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",

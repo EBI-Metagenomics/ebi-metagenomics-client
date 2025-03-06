@@ -40,7 +40,7 @@ const V2AnalysisPage: React.FC = () => {
   const tabs = [
     { label: 'Overview', to: '#overview' },
     { label: 'Quality control', to: '#qc' },
-    { label: 'Taxonomic analysis', to: '#taxonomic' },
+    { label: 'Taxonomy', to: '#taxonomic' },
     isNotAmplicon(analysisData)
       ? { label: 'Functional analysis', to: '#functional' }
       : null,
@@ -50,7 +50,7 @@ const V2AnalysisPage: React.FC = () => {
     isAssembly(analysisData) && isAtleastVersion5(analysisData)
       ? { label: 'Contig Viewer', to: '#contigs-viewer' }
       : null,
-    { label: 'Download', to: '#download' },
+    { label: 'ASV', to: '#download' },
   ].filter(Boolean);
   return (
     <section className="vf-content">
