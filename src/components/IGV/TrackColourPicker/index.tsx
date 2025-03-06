@@ -30,7 +30,8 @@ function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
 
 function determineNcRnaPresence(feature) {
   if (!feature || !feature?.type) return null;
-  return feature.type === 'ncrna' || feature.type === 'ncRNA';
+  const fType = feature.type.toString().toLowerCase();
+  return fType === 'ncrna' || fType === 'rrna';
 }
 
 export const FORMAT = {
@@ -208,7 +209,7 @@ const trackColorOptionsForType = (track) => {
               { label: 'MiBIG class', value: 'mibig' },
               { label: 'ViPhOG existence', value: 'viphog' },
               { label: 'CRISPR component', value: 'crispr' },
-              { label: 'ncRNA existence', value: 'ncrna' },
+              { label: 'ncRNA/rRNA existence', value: 'ncrna' },
             ],
           },
         ],
