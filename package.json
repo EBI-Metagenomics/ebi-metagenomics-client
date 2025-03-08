@@ -37,7 +37,7 @@
     "@sentry/tracing": "^6.17.2",
     "@tippyjs/react": "4.2.6",
     "@visual-framework/vf-banner-elixir": "^1.0.0-alpha.2",
-    "axios": "^1.5.1",
+    "axios": "^1.8.2",
     "dexie": "3.2.2",
     "dexie-react-hooks": "1.1.1",
     "highcharts": "9.3.2",
