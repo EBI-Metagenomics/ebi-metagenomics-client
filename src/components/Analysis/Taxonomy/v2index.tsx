@@ -1,11 +1,12 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useAnalysisAnnotationDetail from 'hooks/data/useAnalysisAnnotationDetail';
 import './style.css';
-import VisualisationCard from '../VisualisationCard';
+import DetailedVisualisationCard from '../VisualisationCards/DetailedVisualisationCard';
 import silvaLogo from 'images/silva-logo.png';
+import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
 
 // Sample data - you'd replace this with your actual data
 const runData = {
@@ -70,11 +71,56 @@ const runData = {
 type TaxonomicAnalysesProps = {
   accession: string;
 };
+
+const extractNavItems = (downloads, taxonomyKey) => {
+  const navItems = [];
+  downloads.filter((download) => {
+    if (download.download_group.includes(taxonomyKey)) {
+      // get everything after the last dot
+      const markerType = download.download_group.split('.').pop();
+      if (!navItems.some((item) => item.label === markerType)) {
+        navItems.push({
+          label: markerType,
+          id: `asv-${markerType.toLowerCase()}`,
+          contents: [download],
+        });
+      } else {
+        const index = navItems.findIndex((item) => item.label === markerType);
+        navItems[index].contents.push(download);
+      }
+    }
+    return false;
+  });
+
+  return navItems;
+};
+
 const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   const { data, loading, error } = useAnalysisAnnotationDetail(accession);
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
   const [activeNavItem, setActiveNavItem] = useState('asv-ssu');
   const [activeCategory, setActiveCategory] = useState('taxonomy-asv');
+  const [activeTab, setActiveTab] = useState('overview');
+  const [activeContent, setActiveContent] = useState(null);
+
+  const asvNavItems = extractNavItems(
+    analysisOverviewData.downloads,
+    'taxonomies.asv'
+  );
+
+  const uniqueAsvNavItems = asvNavItems.filter(
+    (item, index, self) => index === self.findIndex((t) => t.id === item.id)
+  );
+
+  const closedRefNavItems = extractNavItems(
+    analysisOverviewData.downloads,
+    'taxonomies.closed_reference'
+  );
+  // const uniqueClosedRefNavItems = closedRefNavItems.filter(
+  //   (item, index, self) => index === self.findIndex((t) => t.id === item.id)
+  // );
+
+  const uniqueClosedRefNavItems = closedRefNavItems;
 
   // Create refs for scrolling
   const visualizationRef = useRef(null);
@@ -82,9 +128,11 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   const closedRefDetailsRef = useRef(null);
 
   // Handle navigation item click
-  const handleNavItemClick = (item, category) => {
+  const handleNavItemClick = (item, category, content) => {
+    console.log('CLICKED ITEM ', content);
     setActiveNavItem(item);
     setActiveCategory(category);
+    setActiveContent(content);
   };
 
   // Handle view button click and scroll to appropriate visualization
@@ -1034,251 +1082,146 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
         </summary>
 
         <div className="taxonomy-detail-content">
-          {/* Left Navigation - Updated to match marker gene data */}
+          {/* Left Navigation */}
           <div className="taxonomy-nav">
             <details className="vf-details" open ref={asvDetailsRef}>
               <summary className="vf-details--summary" id="taxonomy-asv">
-                Taxonomy ASV
+                ASV Taxonomy
               </summary>
               <ul className="taxonomy-nav-list">
-                <li
-                  className={`taxonomy-nav-item ${
-                    activeNavItem === 'asv-ssu' &&
-                    activeCategory === 'taxonomy-asv'
-                      ? 'active'
-                      : ''
-                  }`}
-                  onClick={() => handleNavItemClick('asv-ssu', 'taxonomy-asv')}
-                  id="asv-ssu"
-                >
-                  <span className="taxonomy-nav-icon">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M7 10C7.55228 10 8 9.55228 8 9C8 8.44772 7.55228 8 7 8C6.44772 8 6 8.44772 6 9C6 9.55228 6.44772 10 7 10Z"
-                        fill="currentColor"
-                      />
-                      <path
-                        d="M7 16C7.55228 16 8 15.5523 8 15C8 14.4477 7.55228 14 7 14C6.44772 14 6 14.4477 6 15C6 15.5523 6.44772 16 7 16Z"
-                        fill="currentColor"
-                      />
-                      <path
-                        d="M13 10C13.5523 10 14 9.55228 14 9C14 8.44772 13.5523 8 13 8C12.4477 8 12 8.44772 12 9C12 9.55228 12.4477 10 13 10Z"
-                        fill="currentColor"
-                      />
-                      <path
-                        d="M13 16C13.5523 16 14 15.5523 14 15C14 14.4477 13.5523 14 13 14C12.4477 14 12 14.4477 12 15C12 15.5523 12.4477 16 13 16Z"
-                        fill="currentColor"
-                      />
-                      <path
-                        d="M19 10C19.5523 10 20 9.55228 20 9C20 8.44772 19.5523 8 19 8C18.4477 8 18 8.44772 18 9C18 9.55228 18.4477 10 19 10Z"
-                        fill="currentColor"
-                      />
-                      <path
-                        d="M19 16C19.5523 16 20 15.5523 20 15C20 14.4477 19.5523 14 19 14C18.4477 14 18 14.4477 18 15C18 15.5523 18.4477 16 19 16Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                  <span className="taxonomy-nav-text">SSU Analysis</span>
-                </li>
+                {uniqueAsvNavItems.map((analysis) => (
+                  <li
+                    key={analysis.id}
+                    className={`taxonomy-nav-item ${
+                      activeNavItem === `asv-${analysis.id}` &&
+                      activeCategory === 'taxonomy-asv'
+                        ? 'active'
+                        : ''
+                    }`}
+                    onClick={() =>
+                      handleNavItemClick(
+                        `asv-${analysis.id}`,
+                        'taxonomy-asv',
+                        analysis.contents
+                      )
+                    }
+                  >
+                    <span className="taxonomy-nav-icon">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5Z"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M7 10C7.55228 10 8 9.55228 8 9C8 8.44772 7.55228 8 7 8C6.44772 8 6 8.44772 6 9C6 9.55228 6.44772 10 7 10Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M7 16C7.55228 16 8 15.5523 8 15C8 14.4477 7.55228 14 7 14C6.44772 14 6 14.4477 6 15C6 15.5523 6.44772 16 7 16Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M13 10C13.5523 10 14 9.55228 14 9C14 8.44772 13.5523 8 13 8C12.4477 8 12 8.44772 12 9C12 9.55228 12.4477 10 13 10Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M13 16C13.5523 16 14 15.5523 14 15C14 14.4477 13.5523 14 13 14C12.4477 14 12 14.4477 12 15C12 15.5523 12.4477 16 13 16Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M19 10C19.5523 10 20 9.55228 20 9C20 8.44772 19.5523 8 19 8C18.4477 8 18 8.44772 18 9C18 9.55228 18.4477 10 19 10Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M19 16C19.5523 16 20 15.5523 20 15C20 14.4477 19.5523 14 19 14C18.4477 14 18 14.4477 18 15C18 15.5523 18.4477 16 19 16Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </span>
+                    <span className="taxonomy-nav-text">{analysis.label}</span>
+                  </li>
+                ))}
               </ul>
             </details>
 
             <details className="vf-details" open ref={closedRefDetailsRef}>
               <summary className="vf-details--summary" id="taxonomy-closed-ref">
-                Taxonomy Closed Reference
+                Closed Reference Taxonomy
               </summary>
               <ul className="taxonomy-nav-list">
-                <li
-                  className={`taxonomy-nav-item ${
-                    activeNavItem === 'closed-ref-ssu' &&
-                    activeCategory === 'taxonomy-closed-ref'
-                      ? 'active'
-                      : ''
-                  }`}
-                  onClick={() =>
-                    handleNavItemClick('closed-ref-ssu', 'taxonomy-closed-ref')
-                  }
-                  id="closed-ref-ssu"
-                >
-                  <span className="taxonomy-nav-icon">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M3 5H21V7H3V5Z" fill="currentColor" />
-                      <path d="M3 11H21V13H3V11Z" fill="currentColor" />
-                      <path d="M3 17H21V19H3V17Z" fill="currentColor" />
-                    </svg>
-                  </span>
-                  <span className="taxonomy-nav-text">SSU Analysis</span>
-                </li>
-                <li
-                  className={`taxonomy-nav-item ${
-                    activeNavItem === 'closed-ref-lsu' &&
-                    activeCategory === 'taxonomy-closed-ref'
-                      ? 'active'
-                      : ''
-                  }`}
-                  onClick={() =>
-                    handleNavItemClick('closed-ref-lsu', 'taxonomy-closed-ref')
-                  }
-                  id="closed-ref-lsu"
-                >
-                  <span className="taxonomy-nav-icon">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M3 5H21V7H3V5Z" fill="currentColor" />
-                      <path d="M3 11H21V13H3V11Z" fill="currentColor" />
-                      <path d="M3 17H21V19H3V17Z" fill="currentColor" />
-                    </svg>
-                  </span>
-                  <span className="taxonomy-nav-text">LSU Analysis</span>
-                </li>
-                <li
-                  className={`taxonomy-nav-item ${
-                    activeNavItem === 'closed-ref-its' &&
-                    activeCategory === 'taxonomy-closed-ref'
-                      ? 'active'
-                      : ''
-                  }`}
-                  onClick={() =>
-                    handleNavItemClick('closed-ref-its', 'taxonomy-closed-ref')
-                  }
-                  id="closed-ref-its"
-                >
-                  <span className="taxonomy-nav-icon">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M3 5H21V7H3V5Z" fill="currentColor" />
-                      <path d="M3 11H21V13H3V11Z" fill="currentColor" />
-                      <path d="M3 17H21V19H3V17Z" fill="currentColor" />
-                    </svg>
-                  </span>
-                  <span className="taxonomy-nav-text">ITS Analysis</span>
-                </li>
+                {uniqueClosedRefNavItems.map((analysis) => (
+                  <li
+                    key={analysis.id}
+                    className={`taxonomy-nav-item ${
+                      activeNavItem === `closed-ref-${analysis.id}` &&
+                      activeCategory === 'taxonomy-closed-ref'
+                        ? 'active'
+                        : ''
+                    }`}
+                    onClick={() =>
+                      handleNavItemClick(
+                        `closed-ref-${analysis.id}`,
+                        'taxonomy-closed-ref',
+                        analysis.contents
+                      )
+                    }
+                  >
+                    <span className="taxonomy-nav-icon">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M3 5H21V7H3V5Z" fill="currentColor" />
+                        <path d="M3 11H21V13H3V11Z" fill="currentColor" />
+                        <path d="M3 17H21V19H3V17Z" fill="currentColor" />
+                      </svg>
+                    </span>
+                    <span className="taxonomy-nav-text">{analysis.label}</span>
+                  </li>
+                ))}
               </ul>
             </details>
           </div>
 
-          {/* Right Content - Enhanced VisualisationCard */}
+          {/* Right Content - With Slim Visualization Cards */}
           <div className="taxonomy-content-area">
-            <VisualisationCard
-              ftpLink="ftp://example.org/data/taxonomic-analysis.dat"
-              onSearch={() => console.log('Search triggered')}
-              onDownload={() => console.log('Download triggered')}
-              onCopy={() => console.log('Copy triggered')}
-            >
-              <div className="taxonomy-visualization">
-                <h3 className="taxonomy-visualization-title">
-                  {getVisualizationTitle()}
-                </h3>
-
-                <p className="taxonomy-visualization-description">
-                  {getVisualizationDescription()}
-                </p>
-
-                <div className="taxonomy-visualization-content">
-                  {/* Enhanced visualization content */}
-                  <div className="taxonomy-placeholder">
-                    <div className="taxonomy-chart-placeholder">
-                      {activeNavItem === 'asv-ssu' && (
-                        <div className="chart-container asv-chart">
-                          <div
-                            className="chart-placeholder-circle bacteria"
-                            style={{ width: '15%' }}
-                            title="Bacteria: 16,203 reads"
-                          ></div>
-                          <div
-                            className="chart-placeholder-circle archaea"
-                            style={{ width: '5%' }}
-                            title="Archaea: 926 reads"
-                          ></div>
-                          <div
-                            className="chart-placeholder-circle eukarya"
-                            style={{ width: '80%' }}
-                            title="Eukarya: 218,735 reads"
-                          ></div>
-                          <div className="chart-placeholder-legend">
-                            ASV - SSU Analysis
-                          </div>
-                        </div>
-                      )}
-
-                      {activeNavItem === 'closed-ref-ssu' && (
-                        <div className="chart-container closed-ref-chart">
-                          <div
-                            className="chart-placeholder-circle bacteria"
-                            style={{ width: '15%' }}
-                            title="Bacteria: 16,203 reads"
-                          ></div>
-                          <div
-                            className="chart-placeholder-circle archaea"
-                            style={{ width: '5%' }}
-                            title="Archaea: 926 reads"
-                          ></div>
-                          <div
-                            className="chart-placeholder-circle eukarya"
-                            style={{ width: '80%' }}
-                            title="Eukarya: 218,735 reads"
-                          ></div>
-                          <div className="chart-placeholder-legend">
-                            Closed Reference - SSU Analysis
-                          </div>
-                        </div>
-                      )}
-
-                      {activeNavItem === 'closed-ref-lsu' && (
-                        <div className="chart-container closed-ref-chart">
-                          <div className="chart-placeholder-text">
-                            No LSU data available
-                          </div>
-                        </div>
-                      )}
-
-                      {activeNavItem === 'closed-ref-its' && (
-                        <div className="chart-container closed-ref-chart">
-                          <div
-                            className="chart-placeholder-circle its"
-                            style={{ width: '100%' }}
-                            title="ITS: 36 reads"
-                          ></div>
-                          <div className="chart-placeholder-legend">
-                            Closed Reference - ITS Analysis
-                          </div>
-                        </div>
-                      )}
+            {activeContent && activeContent.length > 0 ? (
+              activeContent.map((file, index) => (
+                <SlimVisualisationCard
+                  key={`${file.alias}-${index}`}
+                  fileData={file}
+                  onDownload={() => console.log('Download triggered', file.url)}
+                  onCopy={() => console.log('Copy triggered', file.url)}
+                >
+                  {file.long_description && (
+                    <div className="taxonomy-visualization">
+                      <div className="taxonomy-visualization-content">
+                        {/* If there's any additional content to show */}
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  )}
+                </SlimVisualisationCard>
+              ))
+            ) : (
+              <div className="no-content-message">
+                <p>
+                  Select an analysis type from the left navigation to view its
+                  details.
+                </p>
               </div>
-            </VisualisationCard>
+            )}
           </div>
         </div>
       </details>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import EMGModal from 'src/components/UI/EMGModal';
+import EMGModal from 'components/UI/EMGModal';
 import Tooltip from 'components/UI/Tooltip';
 
 interface VisualisationCardProps {
@@ -10,7 +10,7 @@ interface VisualisationCardProps {
   ftpLink?: string;
 }
 
-const VisualisationCard: React.FC<VisualisationCardProps> = ({
+const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
   children,
   onSearch,
   onDownload,
@@ -413,4 +413,4 @@ const VisualisationCard: React.FC<VisualisationCardProps> = ({
   );
 };
 
-export default VisualisationCard;
+export default DetailedVisualisationCard;

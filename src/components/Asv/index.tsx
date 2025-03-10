@@ -17,8 +17,6 @@ import V2AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useAnalysisDetail from 'hooks/data/useAnalysisDetail/Index';
 import { AnalysisDetail } from 'interfaces';
 
-// TODO: find v2 counterpart
-
 const isAssembly = (data: AnalysisDetail): boolean =>
   ['ASSEM', 'HYASS'].includes(data.experiment_type as string);
 
@@ -42,7 +40,7 @@ const V2AnalysisPage: React.FC = () => {
     { label: 'Quality control', to: '#qc' },
     { label: 'Taxonomy', to: '#taxonomic' },
     isNotAmplicon(analysisData)
-      ? { label: 'Functional analysis', to: '#functional' }
+      ? { label: 'Quality Control Statistics', to: '#functional' }
       : null,
     isAssembly(analysisData) && isAtleastVersion5(analysisData)
       ? { label: 'Pathways/Systems', to: '#path-systems' }
@@ -58,35 +56,15 @@ const V2AnalysisPage: React.FC = () => {
       <Tabs tabs={tabs} />
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
-          <V2AnalysisContext.Provider value={value}>
-            <RouteForHash hash="#overview" isDefault>
-              <Overview />
-            </RouteForHash>
-            <RouteForHash hash="#qc">
-              <QualityControl />
-            </RouteForHash>
-            <RouteForHash hash="#asv">
-              <h1>fionfwio</h1>
-            </RouteForHash>
-            <RouteForHash hash="#contigs-viewer">
-              <ContigViewer />
-            </RouteForHash>
-            <RouteForHash hash="#taxonomic">
-              <TaxonomySubpage accession={accession} />
-            </RouteForHash>
-            <RouteForHash hash="#functional">
-              <FunctionalSubpage />
-            </RouteForHash>
-            <RouteForHash hash="#abundance">
-              <Abundance />
-            </RouteForHash>
-            <RouteForHash hash="#path-systems">
-              <PathwaysSubpage />
-            </RouteForHash>
-            <RouteForHash hash="#download">
-              <Downloads />
-            </RouteForHash>
-          </V2AnalysisContext.Provider>
+          <RouteForHash hash="#overview" isDefault>
+            <Overview />
+          </RouteForHash>
+          <RouteForHash hash="#qc">
+            <QualityControl />
+          </RouteForHash>
+          <RouteForHash hash="#asv">
+            <h1>fionfwio</h1>
+          </RouteForHash>
         </div>
       </section>
     </section>
