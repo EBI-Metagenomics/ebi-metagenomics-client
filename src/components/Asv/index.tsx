@@ -1,47 +1,26 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 
 import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import Tabs from 'components/UI/Tabs';
-import Overview from 'components/Analysis/Overview/v2index';
-import QualityControl from 'components/Analysis/QualityControl/v2index';
-import ContigViewer from 'components/Analysis/ContigViewer';
-import TaxonomySubpage from 'components/Analysis/Taxonomy/v2index';
-import FunctionalSubpage from 'components/Analysis/Functional/v2index';
-import PathwaysSubpage from 'components/Analysis/Pathways';
-import RouteForHash from 'components/Nav/RouteForHash';
-import Downloads from 'components/Downloads/v2index';
-import Abundance from 'components/Analysis/Abundance';
-import V2AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useAnalysisDetail from 'hooks/data/useAnalysisDetail/Index';
-import { AnalysisDetail } from 'interfaces';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import ChimericProportions from 'components/Asv/ChimericProportions';
-import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-
-const isAssembly = (data: AnalysisDetail): boolean =>
-  ['ASSEM', 'HYASS'].includes(data.experiment_type as string);
-
-const isAtleastVersion5 = (data: AnalysisDetail): boolean =>
-  ['5.0', 'V6'].includes(data.pipeline_version);
-
-const isNotAmplicon = (data: AnalysisDetail): boolean => {
-  return data.experiment_type !== 'AMPLI';
-};
+import AsvDistribution from 'components/Asv/AsvDistribution';
 
 const Asv: React.FC = () => {
-  const { overviewData: analysisData } = useContext(AnalysisContext);
-  console.log('analysisData ', analysisData);
   const [activeTab, setActiveTab] = useState(() => {
     const { hash } = window.location;
     return hash === '#asv-distribution' ? 'asv-distribution' : 'qc-statistics';
   });
   const accession = useURLAccession();
   const { data, loading, error } = useAnalysisDetail(accession);
-  const value = useMemo(() => ({ overviewData: data }), [data]);
   const dada2StatsFile = data?.downloads.find(
     (file) => file.download_group === 'asv.stats' && file.file_type === 'tsv'
+  );
+  const asvDistributionFile = data?.downloads.find(
+    (file) =>
+      file.download_group === 'asv.distribution' && file.file_type === 'tsv'
   );
 
   if (loading) return <Loading size="large" />;
@@ -115,15 +94,15 @@ const Asv: React.FC = () => {
             display: activeTab === 'asv-distribution' ? 'block' : 'none',
           }}
         >
-          <a
-            href="https://www.ebi.ac.uk/training/services/mgnify/live-events"
-            className="vf-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View ASV Distribution{' '}
-            <i className="icon icon-common icon-external-link-alt" />
-          </a>
+          <DetailedVisualisationCard ftpLink={asvDistributionFile.url}>
+            <div className="vf-card__content | vf-stack vf-stack--400">
+              <h3 className="vf-card__heading">ASV Distribution </h3>
+              <p className="vf-card__subheading">With sub–heading</p>
+              <p className="vf-card__text">
+                <AsvDistribution fileUrl={asvDistributionFile.url} />
+              </p>
+            </div>
+          </DetailedVisualisationCard>
         </section>
 
         <section

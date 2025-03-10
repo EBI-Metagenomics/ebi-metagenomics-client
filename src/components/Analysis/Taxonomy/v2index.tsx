@@ -1,11 +1,6 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
-
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import React, { useContext, useRef, useState } from 'react';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-import useAnalysisAnnotationDetail from 'hooks/data/useAnalysisAnnotationDetail';
 import './style.css';
-import DetailedVisualisationCard from '../VisualisationCards/DetailedVisualisationCard';
-import silvaLogo from 'images/silva-logo.png';
 import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
 
 // Sample data - you'd replace this with your actual data
@@ -96,11 +91,9 @@ const extractNavItems = (downloads, taxonomyKey) => {
 };
 
 const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
-  const { data, loading, error } = useAnalysisAnnotationDetail(accession);
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
   const [activeNavItem, setActiveNavItem] = useState('asv-ssu');
   const [activeCategory, setActiveCategory] = useState('taxonomy-asv');
-  const [activeTab, setActiveTab] = useState('overview');
   const [activeContent, setActiveContent] = useState(null);
 
   const asvNavItems = extractNavItems(
@@ -112,32 +105,22 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
     (item, index, self) => index === self.findIndex((t) => t.id === item.id)
   );
 
-  const closedRefNavItems = extractNavItems(
+  const uniqueClosedRefNavItems = extractNavItems(
     analysisOverviewData.downloads,
     'taxonomies.closed_reference'
   );
-  // const uniqueClosedRefNavItems = closedRefNavItems.filter(
-  //   (item, index, self) => index === self.findIndex((t) => t.id === item.id)
-  // );
 
-  const uniqueClosedRefNavItems = closedRefNavItems;
-
-  // Create refs for scrolling
   const visualizationRef = useRef(null);
   const asvDetailsRef = useRef(null);
   const closedRefDetailsRef = useRef(null);
 
-  // Handle navigation item click
   const handleNavItemClick = (item, category, content) => {
-    console.log('CLICKED ITEM ', content);
     setActiveNavItem(item);
     setActiveCategory(category);
     setActiveContent(content);
   };
 
-  // Handle view button click and scroll to appropriate visualization
   const handleViewClick = (analysisType, markerType) => {
-    // Map the analysis type and marker type to a nav item ID
     let navItemId = '';
     let categoryId = '';
 
@@ -145,12 +128,10 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
       categoryId = 'taxonomy-asv';
       navItemId = `asv-${markerType.toLowerCase()}`;
 
-      // Make sure the ASV details panel is open
       if (asvDetailsRef.current) {
         asvDetailsRef.current.setAttribute('open', 'true');
       }
 
-      // Close the closed-ref details panel to focus on ASV
       if (closedRefDetailsRef.current) {
         closedRefDetailsRef.current.removeAttribute('open');
       }
@@ -158,22 +139,18 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
       categoryId = 'taxonomy-closed-ref';
       navItemId = `closed-ref-${markerType.toLowerCase()}`;
 
-      // Make sure the closed-ref details panel is open
       if (closedRefDetailsRef.current) {
         closedRefDetailsRef.current.setAttribute('open', 'true');
       }
 
-      // Close the ASV details panel to focus on closed-ref
       if (asvDetailsRef.current) {
         asvDetailsRef.current.removeAttribute('open');
       }
     }
 
-    // Set the active navigation item
     setActiveNavItem(navItemId);
     setActiveCategory(categoryId);
 
-    // Scroll to the visualization section
     if (visualizationRef.current) {
       visualizationRef.current.scrollIntoView({
         behavior: 'smooth',
@@ -182,7 +159,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
     }
   };
 
-  // Transform closed ref marker genes data into grouped structure
   const groupedClosedRefMarkerGenes = {
     SSU: {
       bacteria: runData.closed_ref_marker_genes['SSU - bacteria'] || {
@@ -252,7 +228,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
     },
   };
 
-  // Transform ASV marker genes data into grouped structure
   const groupedASVMarkerGenes = {
     SSU: {
       bacteria: runData.asv_marker_genes['SSU - bacteria'] || {
@@ -285,50 +260,11 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
     },
   };
 
-  // Calculate max read count for scaling bars in closed ref table
   const maxClosedRefReadCount = Math.max(
     groupedClosedRefMarkerGenes.SSU.total_read_count,
     groupedClosedRefMarkerGenes.LSU.total_read_count,
     groupedClosedRefMarkerGenes.ITS.total_read_count
   );
-
-  // Calculate max read count for scaling bars in ASV table
-  const maxASVReadCount = groupedASVMarkerGenes.SSU.total_read_count;
-
-  // Get visualization title based on active nav item
-  const getVisualizationTitle = () => {
-    switch (activeNavItem) {
-      case 'asv-ssu':
-        return 'ASV - SSU Analysis';
-      case 'closed-ref-ssu':
-        return 'Closed Reference - SSU Analysis';
-      case 'closed-ref-lsu':
-        return 'Closed Reference - LSU Analysis';
-      case 'closed-ref-its':
-        return 'Closed Reference - ITS Analysis';
-      default:
-        return 'Taxonomic Analysis';
-    }
-  };
-
-  // Get visualization description based on active nav item
-  const getVisualizationDescription = () => {
-    switch (activeNavItem) {
-      case 'asv-ssu':
-        return `Amplicon Sequence Variant (ASV) analysis for Small Subunit (SSU) ribosomal RNA. 
-                This visualization shows the taxonomic distribution of ${groupedASVMarkerGenes.SSU.total_read_count.toLocaleString()} reads.`;
-      case 'closed-ref-ssu':
-        return `Closed reference analysis for Small Subunit (SSU) ribosomal RNA. 
-                This visualization shows the taxonomic distribution of ${groupedClosedRefMarkerGenes.SSU.total_read_count.toLocaleString()} reads.`;
-      case 'closed-ref-lsu':
-        return 'Closed reference analysis for Large Subunit (LSU) ribosomal RNA.';
-      case 'closed-ref-its':
-        return `Closed reference analysis for Internal Transcribed Spacer (ITS). 
-                This visualization shows the taxonomic distribution of ${groupedClosedRefMarkerGenes.ITS.total_read_count.toLocaleString()} reads.`;
-      default:
-        return 'Taxonomic distribution of marker genes.';
-    }
-  };
 
   return (
     <div>
@@ -368,10 +304,8 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
           </defs>
         </svg>
 
-        {/* ASV Table Heading */}
         <h3 className="marker-table-heading">ASV Marker Genes</h3>
 
-        {/* ASV Marker Genes Table */}
         <table className="vf-table marker-gene-table">
           <thead className="vf-table__header">
             <tr className="vf-table__row">
@@ -397,7 +331,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
           </thead>
 
           <tbody className="vf-table__body">
-            {/* SSU Row */}
             <tr
               className={`vf-table__row ${
                 groupedASVMarkerGenes.SSU.has_majority
@@ -445,7 +378,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* Archaea column */}
               <td className="vf-table__cell">
                 {groupedASVMarkerGenes.SSU.archaea.read_count > 0 ? (
                   <span className="read-count-value archaea-count">
@@ -456,7 +388,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* Eukarya column */}
               <td className="vf-table__cell">
                 {groupedASVMarkerGenes.SSU.eukarya.read_count > 0 ? (
                   <span className="read-count-value eukarya-count">
@@ -467,7 +398,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* View button column */}
               <td className="vf-table__cell view-buttons-cell">
                 {groupedASVMarkerGenes.SSU.view_available &&
                 groupedASVMarkerGenes.SSU.total_read_count > 0 ? (
@@ -493,7 +423,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* Total Read Count column */}
               <td className="vf-table__cell">
                 <div className="read-count-container">
                   <span className="read-count-value">
@@ -565,10 +494,8 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
           </tbody>
         </table>
 
-        {/* Closed Reference Table Heading */}
         <h3 className="marker-table-heading">Closed Reference Marker Genes</h3>
 
-        {/* Closed Reference Marker Genes Table */}
         <table className="vf-table marker-gene-table">
           <thead className="vf-table__header">
             <tr className="vf-table__row">
@@ -594,7 +521,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
           </thead>
 
           <tbody className="vf-table__body">
-            {/* SSU Row */}
             <tr
               className={`vf-table__row ${
                 groupedClosedRefMarkerGenes.SSU.has_majority
@@ -631,7 +557,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 </div>
               </td>
 
-              {/* Bacteria column */}
               <td className="vf-table__cell">
                 {groupedClosedRefMarkerGenes.SSU.bacteria.read_count > 0 ? (
                   <span className="read-count-value bacteria-count">
@@ -642,7 +567,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* Archaea column */}
               <td className="vf-table__cell">
                 {groupedClosedRefMarkerGenes.SSU.archaea.read_count > 0 ? (
                   <span className="read-count-value archaea-count">
@@ -653,7 +577,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* Eukarya column */}
               <td className="vf-table__cell">
                 {groupedClosedRefMarkerGenes.SSU.eukarya.read_count > 0 ? (
                   <span className="read-count-value eukarya-count">
@@ -664,7 +587,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* View button column */}
               <td className="vf-table__cell view-buttons-cell">
                 {groupedClosedRefMarkerGenes.SSU.view_available &&
                 groupedClosedRefMarkerGenes.SSU.total_read_count > 0 ? (
@@ -690,7 +612,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* Total Read Count column */}
               <td className="vf-table__cell">
                 <div className="read-count-container">
                   <span className="read-count-value">
@@ -767,7 +688,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
               </td>
             </tr>
 
-            {/* LSU Row */}
             <tr
               className={`vf-table__row ${
                 groupedClosedRefMarkerGenes.LSU.has_majority
@@ -804,7 +724,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 </div>
               </td>
 
-              {/* Bacteria column */}
               <td className="vf-table__cell">
                 {groupedClosedRefMarkerGenes.LSU.bacteria.read_count > 0 ? (
                   <span className="read-count-value bacteria-count">
@@ -815,7 +734,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* Archaea column */}
               <td className="vf-table__cell">
                 {groupedClosedRefMarkerGenes.LSU.archaea.read_count > 0 ? (
                   <span className="read-count-value archaea-count">
@@ -826,7 +744,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* Eukarya column */}
               <td className="vf-table__cell">
                 {groupedClosedRefMarkerGenes.LSU.eukarya.read_count > 0 ? (
                   <span className="read-count-value eukarya-count">
@@ -837,7 +754,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* View button column */}
               <td className="vf-table__cell view-buttons-cell">
                 {groupedClosedRefMarkerGenes.LSU.view_available &&
                 groupedClosedRefMarkerGenes.LSU.total_read_count > 0 ? (
@@ -863,7 +779,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* Total Read Count column */}
               <td className="vf-table__cell">
                 <div className="read-count-container">
                   <span className="read-count-value">
@@ -940,7 +855,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
               </td>
             </tr>
 
-            {/* ITS Row */}
             <tr
               className={`vf-table__row ${
                 groupedClosedRefMarkerGenes.ITS.has_majority
@@ -977,7 +891,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 </div>
               </td>
 
-              {/* Organism columns (N/A for ITS) */}
               <td className="vf-table__cell">
                 <span className="na-value">N/A</span>
               </td>
@@ -988,7 +901,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 <span className="na-value">N/A</span>
               </td>
 
-              {/* View button column */}
               <td className="vf-table__cell view-buttons-cell">
                 {groupedClosedRefMarkerGenes.ITS.view_available &&
                 groupedClosedRefMarkerGenes.ITS.total_read_count > 0 ? (
@@ -1014,7 +926,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                 )}
               </td>
 
-              {/* Total Read Count column */}
               <td className="vf-table__cell">
                 <div className="read-count-container">
                   <span className="read-count-value">
@@ -1071,7 +982,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
         </div>
       </details>
 
-      {/* Analysis Visualization Section - Added ref for scrolling */}
       <details
         className="vf-details taxonomy-detail-with-nav"
         open
@@ -1082,7 +992,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
         </summary>
 
         <div className="taxonomy-detail-content">
-          {/* Left Navigation */}
           <div className="taxonomy-nav">
             <details className="vf-details" open ref={asvDetailsRef}>
               <summary className="vf-details--summary" id="taxonomy-asv">
@@ -1195,7 +1104,6 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
             </details>
           </div>
 
-          {/* Right Content - With Slim Visualization Cards */}
           <div className="taxonomy-content-area">
             {activeContent && activeContent.length > 0 ? (
               activeContent.map((file, index) => (
