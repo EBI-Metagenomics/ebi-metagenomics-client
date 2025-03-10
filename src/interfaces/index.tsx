@@ -1,4 +1,5 @@
 export interface Download {
+  download_group: string;
   alias: string;
   download_type: string;
   file_type: string;

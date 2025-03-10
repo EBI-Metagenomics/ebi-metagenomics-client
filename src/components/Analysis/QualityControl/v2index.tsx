@@ -8,12 +8,10 @@ import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/De
 
 const QualityControl: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
-  console.log('ANALYSIS DATA ', analysisData.downloads);
   const qcFile = analysisData.downloads.filter(
     (file) =>
       file.download_group === 'quality_control' && file.file_type === 'html'
   )[0];
-  console.log('QCF ', qcFile);
   const summaryData = analysisData.quality_control_summary;
 
   const isAssembly = analysisData?.experiment_type === 'ASSEM';

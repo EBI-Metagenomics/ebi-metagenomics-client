@@ -16,6 +16,7 @@ import Abundance from 'components/Analysis/Abundance';
 import V2AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useAnalysisDetail from 'hooks/data/useAnalysisDetail/Index';
 import { AnalysisDetail } from 'interfaces';
+import Asv from 'components/Asv';
 
 // TODO: find v2 counterpart
 
@@ -66,7 +67,7 @@ const V2AnalysisPage: React.FC = () => {
               <QualityControl />
             </RouteForHash>
             <RouteForHash hash="#asv">
-              <h1>fionfwio</h1>
+              <Asv />
             </RouteForHash>
             <RouteForHash hash="#contigs-viewer">
               <ContigViewer />
