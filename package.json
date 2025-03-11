@@ -58,6 +58,7 @@
     "react-toastify": "^9.1.2",
     "react-twitter-embed": "4.0.4",
     "react-use": "^17.4.0",
+    "recharts": "^2.15.1",
     "ro-crate": "^3.2.1",
     "textarea-sequence": "3.5.1",
     "universal-cookie": "4.0.4",
