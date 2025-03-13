@@ -13,14 +13,7 @@
 /* Enhanced styling for Taxonomy component */
 
 /* Main container */
-.vf-details {
-  margin-bottom: 1.5rem;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-  background-color: white;
-}
+
 
 /* Summary styling */
 .vf-details--summary {
@@ -57,16 +50,8 @@
   transition: transform 0.3s ease;
 }
 
-.vf-details[open] .vf-details--summary::after {
+.custom-vf-details[open] .vf-details--summary::after {
   transform: translateY(-30%) rotate(-45deg);
-}
-
-/* Content inside details */
-.vf-details p {
-  padding: 0 1.25rem;
-  margin: 1rem 0;
-  color: #4a5568;
-  line-height: 1.6;
 }
 
 /* Table styling */
@@ -163,12 +148,13 @@
 }
 
 /* Animation for opening details - DISABLED FOR TAXONOMY NAV to prevent layout issues */
-.vf-details[open] > :not(summary) {
+.custom-vf-details[open] > :not(summary) {
   animation: slideDown 0.3s ease-out;
 }
 
+
 /* SPECIAL HANDLING FOR TAXONOMY NAV - disable animation */
-.taxonomy-nav .vf-details[open] > :not(summary) {
+.taxonomy-nav .custom-vf-details[open] > :not(summary) {
   animation: none;
   flex: 1;
   min-height: 0;
@@ -178,7 +164,7 @@
 }
 
 /* Ensure details within nav behave correctly when closed */
-.taxonomy-nav .vf-details:not([open]) {
+.taxonomy-nav .custom-vf-details:not([open]) {
   max-height: 50px; /* Just enough for the summary */
 }
 
@@ -244,7 +230,7 @@
 }
 
 /* Make the details components take up available space */
-.taxonomy-nav .vf-details {
+.taxonomy-nav .custom-vf-details {
   margin-bottom: 16px;
   flex-shrink: 0;
   min-height: 0; /* Allow content to shrink if needed */

@@ -268,8 +268,10 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
 
   return (
     <div>
-      <details className="vf-details" open>
-        <summary className="vf-details--summary">Marker Gene Summary</summary>
+      <details className="vf-details custom-vf-details" open>
+        <summary className="vf-details--summary custom-vf-details--summary">
+          Marker Gene Summary
+        </summary>
         <p>
           The tables below show the marker genes that were identified and
           analysed.
@@ -987,14 +989,17 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
         open
         ref={visualizationRef}
       >
-        <summary className="vf-details--summary">
+        <summary className="vf-details--summary custom-vf-details--summary">
           Analysis Visualization
         </summary>
 
         <div className="taxonomy-detail-content">
           <div className="taxonomy-nav">
             <details className="vf-details" open ref={asvDetailsRef}>
-              <summary className="vf-details--summary" id="taxonomy-asv">
+              <summary
+                className="vf-details--summary custom-vf-details-summary"
+                id="taxonomy-asv"
+              >
                 ASV Taxonomy
               </summary>
               <ul className="taxonomy-nav-list">
@@ -1063,7 +1068,10 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
             </details>
 
             <details className="vf-details" open ref={closedRefDetailsRef}>
-              <summary className="vf-details--summary" id="taxonomy-closed-ref">
+              <summary
+                className="vf-details--summary custom-vf-details--summary"
+                id="taxonomy-closed-ref"
+              >
                 Closed Reference Taxonomy
               </summary>
               <ul className="taxonomy-nav-list">

@@ -19,19 +19,8 @@ const QualityControl: React.FC = () => {
 
   return (
     <div className="vf-stack vf-stack--200" data-cy="run-qc-chart">
-      {/* <VisualisationCards ftpLink="https://ftp.ebi.ac.uk/pub/databases/metagenomics/amplicon-pipeline-v6-results/test-example-2025/ERR4334351/qc/ERR4334351_multiqc_report.html"> */}
       <DetailedVisualisationCard ftpLink={qcFile.url}>
-        <div className="vf-card__content | vf-stack vf-stack--400">
-          <h3 className="vf-card__heading">Multi QC Report </h3>
-          <p className="vf-card__subheading">With sub–heading</p>
-          <p className="vf-card__text">
-            <iframe
-              className="multiqc-iframe"
-              // src="https://ftp.ebi.ac.uk/pub/databases/metagenomics/amplicon-pipeline-v6-results/test-example-2025/ERR4334351/qc/ERR4334351_multiqc_report.html"
-              src={qcFile.url}
-            />
-          </p>
-        </div>
+        <iframe className="multiqc-iframe" src={qcFile.url} />
       </DetailedVisualisationCard>
     </div>
   );
