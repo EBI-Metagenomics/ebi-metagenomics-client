@@ -2,15 +2,12 @@ import React, { useContext, useState } from 'react';
 import { Row } from 'react-table';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useMGnifyData from 'hooks/data/useMGnifyData';
-import EMGTable from 'components/UI/EMGTable';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
-
 import Loading from 'components/UI/Loading';
-import FetchError from 'components/UI/FetchError';
 import ExtLink from 'components/UI/ExtLink';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import InterProMatchesChart from './v2InterProMatchesChart';
-import InterProQCChart from './v2QCChart';
+import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import InterProTable from 'components/Analysis/Functional/InterPro/InterProTable';
 
 const PAGE_SIZE = 25;
 const InterPro: React.FC = () => {
@@ -89,55 +86,18 @@ const InterPro: React.FC = () => {
   const handleMouseLeaveRow = (): void => setSelectedName(null);
   return (
     <div className="vf-stack">
-      <div>
-        <InterProQCChart />
-      </div>
       <h5>InterPro match summary</h5>
-      <div className="vf-grid mg-grid-30-70">
-        <div>
-          <InterProMatchesChart
-            selectedName={selectedName}
-            onTotalChange={(newTotal) => setTotal(newTotal)}
-            onMatchesChange={(matches) => {
-              setColorMap(
-                new Map(
-                  matches.map(({ accession }, i) => [
-                    accession,
-                    TAXONOMY_COLOURS[i],
-                  ])
-                )
-              );
-            }}
-          />
+      <DetailedVisualisationCard>
+        <div className="vf-card__content | vf-stack vf-stack--400">
+          <h3 className="vf-card__heading">InterPro QC Summary </h3>
+          <p className="vf-card__subheading">Lorem Ipsum Delorim</p>
+          <p className="vf-card__text">
+            <InterProTable />
+          </p>
         </div>
-        {loading && !isStale && <Loading />}
-        {!loading && error && <FetchError error={error} />}
-        {data && !error && (
-          <EMGTable
-            cols={columns}
-            data={data}
-            Title={
-              <div>
-                <h6>
-                  InterPro entries
-                  <span className="mg-number">
-                    {data.meta?.pagination?.count || 1}
-                  </span>
-                </h6>
-              </div>
-            }
-            initialPageSize={PAGE_SIZE}
-            initialPage={(page as number) - 1}
-            className="mg-anlyses-table"
-            loading={loading}
-            isStale={isStale}
-            onMouseEnterRow={handleMouseEnterRow}
-            onMouseLeaveRow={handleMouseLeaveRow}
-            showPagination
-            dataCy="interpro-table"
-          />
-        )}
-      </div>
+      </DetailedVisualisationCard>
+
+      <div className="vf-grid mg-grid-30-70"></div>
     </div>
   );
 };

@@ -7,10 +7,11 @@ import InfoBanner from 'components/UI/InfoBanner';
 
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import PfamTab from 'components/Analysis/Functional/KO';
-import KOTab from 'components/Analysis/Functional/Pfam';
+// import PfamTab from 'components/Analysis/Functional/KO';
+import KOTab from 'components/Analysis/Functional/KO/v2Index';
 import InterProTab from './InterPro/v2index';
 import GOTab from './GO/v2index';
+import PfamTab from 'components/Analysis/Functional/Pfam/v2Index';
 
 const PARAMETER_NAME = 'type';
 const PARAMETER_DEFAULT = 'interpro';
@@ -78,15 +79,17 @@ const FunctionalAnalysis: React.FC = () => {
         </InfoBanner>
       )}
       <TabsForQueryParameter
-        tabs={version >= 5 ? tabs : tabs.slice(0, 2)}
+        tabs={version >= 5 ? tabs : tabs.slice(0, 4)}
         queryParameter={PARAMETER_NAME}
         defaultValue={PARAMETER_DEFAULT}
       />
       <div className="vf-tabs-content">
         {type === 'interpro' && <InterProTab />}
         {type === 'go' && <GOTab />}
-        {type === 'pfam' && <PfamTab />}
+        {/* <PfamTab /> */}
         {type === 'ko' && <KOTab />}
+        {type === 'pfam' && <PfamTab />}
+        {/* {type === 'ko' && <KOTab />} */}
       </div>
     </div>
   );
