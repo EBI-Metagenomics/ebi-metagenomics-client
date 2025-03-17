@@ -71,19 +71,17 @@ const AsvDistribution = ({ fileUrl }) => {
   const [error, setError] = useState(null);
   const [visibleCount, setVisibleCount] = useState(25);
 
-  // Helper function to parse TSV file with ASV data
   const parseAsvTsvFile = (tsvContent) => {
     const lines = tsvContent.trim().split('\n');
     const asvData = [];
 
-    // Process each line
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
 
-      // Split by whitespace or tab
       const parts = line.split(/\s+/);
 
-      // Process pairs of ASV ID and count
+      // TODO: Do away with nested loop and or if-elses
+
       for (let j = 0; j < parts.length - 1; j += 2) {
         if (j + 1 < parts.length) {
           const asvId = parts[j];
@@ -98,12 +96,9 @@ const AsvDistribution = ({ fileUrl }) => {
         }
       }
     }
-
-    // Sort by count in descending order
     return asvData.sort((a, b) => b.count - a.count);
   };
 
-  // Fetch data from TSV file
   useEffect(() => {
     const fetchData = async () => {
       if (!fileUrl) {
@@ -132,7 +127,6 @@ const AsvDistribution = ({ fileUrl }) => {
 
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching or parsing TSV file:', err);
         setError(
           'Failed to load data. Please check the file URL and try again.'
         );
@@ -159,7 +153,6 @@ const AsvDistribution = ({ fileUrl }) => {
     return <div style={styles.error}>{error}</div>;
   }
 
-  // Extract sample name from URL if possible
   const getSampleName = (url) => {
     const matches = url.match(/([^\/]+)(?=\.\w+$)/);
     return matches ? matches[0] : 'Sample';
@@ -167,7 +160,6 @@ const AsvDistribution = ({ fileUrl }) => {
 
   const sampleName = getSampleName(fileUrl);
 
-  // Take only the top N ASVs
   const maxVisible = Math.min(visibleCount, data.length);
   const visibleData = data.slice(0, maxVisible);
 

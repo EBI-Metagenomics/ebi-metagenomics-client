@@ -7,6 +7,7 @@ import useAnalysisDetail from 'hooks/data/useAnalysisDetail/Index';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import ChimericProportions from 'components/Asv/ChimericProportions';
 import AsvDistribution from 'components/Asv/AsvDistribution';
+import PrimerIdentification from 'components/PrimerIdentification';
 
 const Asv: React.FC = () => {
   const [activeTab, setActiveTab] = useState(() => {
@@ -40,6 +41,12 @@ const Asv: React.FC = () => {
     event.preventDefault();
     setActiveTab(tabId);
     window.history.pushState(null, '', `#${tabId}`);
+  };
+
+  const getSepcificFile = (group: string, type: string) => {
+    return data?.downloads.find(
+      (file) => file.download_group === group && file.file_type === type
+    );
   };
 
   return (
@@ -114,15 +121,9 @@ const Asv: React.FC = () => {
             display: activeTab === 'primer-identification' ? 'block' : 'none',
           }}
         >
-          <a
-            href="https://www.ebi.ac.uk/training/services/mgnify/live-events"
-            className="vf-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Primer Identification{' '}
-            <i className="icon icon-common icon-external-link-alt" />
-          </a>
+          <PrimerIdentification
+            downloadableFile={getSepcificFile('primer_identification', 'json')}
+          />
         </section>
       </div>
     </section>

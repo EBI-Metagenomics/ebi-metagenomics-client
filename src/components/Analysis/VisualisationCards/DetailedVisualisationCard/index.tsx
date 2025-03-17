@@ -48,7 +48,6 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
       navigator.clipboard
         .writeText(ftpLink)
         .then(() => {
-          console.log('FTP link copied to clipboard');
           setShowCopiedMessage(true);
           setTimeout(() => setShowCopiedMessage(false), 2000);
         })
@@ -410,6 +409,8 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
           `}
         </style>
       </article>
+
+      <br />
 
       <EMGModal
         isOpen={isModalOpen}
