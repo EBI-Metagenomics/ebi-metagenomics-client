@@ -15,7 +15,11 @@ const QualityControl: React.FC = () => {
   return (
     <div className="vf-stack vf-stack--200" data-cy="run-qc-chart">
       <DetailedVisualisationCard ftpLink={qcFile.url}>
-        <iframe className="multiqc-iframe" src={qcFile.url} />
+        <iframe
+          title="MultiQC iframe"
+          className="multiqc-iframe"
+          src={qcFile.url}
+        />
       </DetailedVisualisationCard>
     </div>
   );

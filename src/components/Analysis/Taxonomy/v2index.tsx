@@ -112,19 +112,22 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
         >
           {file.long_description && (
             <div className="taxonomy-visualization-content">
-              {/* Render any additional content for the detailed view */}
-              <iframe className="multiqc-iframe" src={file.url} />
+              <iframe
+                title={`${file.alias} iframe`}
+                className="multiqc-iframe"
+                src={file.url}
+              />
               <p>{file.long_description}</p>
             </div>
           )}
         </DetailedVisualisationCard>
       );
-    } else if (
+    }
+    if (
       file.file_type === 'mseq' ||
       file.file_type === 'tsv' ||
       !file.file_type
     ) {
-      // Default to SlimVisualisationCard for mseq, tsv, or if type is undefined
       return (
         <SlimVisualisationCard
           key={`${file.alias}-${index}`}
