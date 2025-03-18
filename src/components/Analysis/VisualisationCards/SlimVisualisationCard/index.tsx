@@ -69,9 +69,8 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
     }
   };
 
-  // Function to determine the file type color
   const getFileTypeColors = (fileType: string) => {
-    switch (fileType.toLowerCase()) {
+    switch (fileType?.toLowerCase()) {
       case 'tsv':
         return { bg: '#e9f7fe', color: '#0288d1' };
       case 'mseq':
