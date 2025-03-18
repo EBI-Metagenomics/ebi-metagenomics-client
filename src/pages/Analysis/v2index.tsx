@@ -60,7 +60,7 @@ const V2AnalysisPage: React.FC = () => {
     //   ? { label: 'Contig Viewer', to: '#contigs-viewer' }
     //   : null,
     // TODO: ASV  tab, i think is to be conditionally rendered based on if the analysis is an amplicon analysis
-    isAmplicon(analysisData) ? { label: 'ASV', to: '#asv' } : null,
+    // isAmplicon(analysisData) ? { label: 'ASV', to: '#asv' } : null,
     // { label: 'ASV', to: '#asv' },
   ].filter(Boolean);
   return (
@@ -83,11 +83,12 @@ const V2AnalysisPage: React.FC = () => {
               <ContigViewer />
             </RouteForHash>
             <RouteForHash hash="#taxonomic">
-              {isAssembly(analysisData) ? (
-                <AssemblyTaxonomy />
-              ) : (
-                <TaxonomySubpage accession={accession} />
-              )}
+              <AssemblyTaxonomy />
+              {/* {isAssembly(analysisData) ? ( */}
+              {/*   <AssemblyTaxonomy /> */}
+              {/* ) : ( */}
+              {/*   <TaxonomySubpage accession={accession} /> */}
+              {/* )} */}
               {/* <TaxonomySubpage accession={accession} /> */}
               {/* <AssemblyTaxonomy /> */}
             </RouteForHash>

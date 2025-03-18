@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import * as pako from 'pako';
 
 // Define pathway data interface
 interface KOPathway {
@@ -7,58 +8,84 @@ interface KOPathway {
   name: string;
   description: string;
   completeness: number;
-  matchingKO: number;
-  missingKOs: number;
+  matchingKO: string;
+  missingKOs: string;
 }
 
 const KOTab: React.FC = () => {
-  // Sample data from the image
-  const koPathwayData: KOPathway[] = [
-    {
-      classId: 'M00003',
-      name: 'Gluconeogenesis, oxaloacetate => fructose-6P',
-      description:
-        'Pathway modules; Carbohydrate metabolism; Central carbohydrate metabolism',
-      completeness: 100,
-      matchingKO: 10,
-      missingKOs: 0,
-    },
-    {
-      classId: 'M00005',
-      name: 'PRPP biosynthesis, ribose 5P => PRPP',
-      description:
-        'Pathway modules; Carbohydrate metabolism; Central carbohydrate metabolism',
-      completeness: 100,
-      matchingKO: 1,
-      missingKOs: 0,
-    },
-    {
-      classId: 'M00010',
-      name: 'Citrate cycle, first carbon oxidation, oxaloacetate => 2-oxoglutarate',
-      description:
-        'Pathway modules; Carbohydrate metabolism; Central carbohydrate metabolism',
-      completeness: 100,
-      matchingKO: 4,
-      missingKOs: 0,
-    },
-    {
-      classId: 'M00015',
-      name: 'Proline biosynthesis, glutamate => proline',
-      description:
-        'Pathway modules; Amino acid metabolism; Arginine and proline metabolism',
-      completeness: 100,
-      matchingKO: 3,
-      missingKOs: 0,
-    },
-    {
-      classId: 'M00016',
-      name: 'Lysine biosynthesis, succinyl-DAP pathway, aspartate => lysine',
-      description: 'Pathway modules; Amino acid metabolism; Lysine metabolism',
-      completeness: 100,
-      matchingKO: 9,
-      missingKOs: 0,
-    },
-  ];
+  const [koPathwayData, setKoPathwayData] = useState<KOPathway[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+
+        // Fetch the TSV file from the specified URL
+        const response = await fetch(
+          'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/assembly_summary_kegg_pathways.tsv.gz'
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch data: ${response.status} ${response.statusText}`
+          );
+        }
+
+        // Get the response as an ArrayBuffer to handle the gzip decompression
+        const arrayBuffer = await response.arrayBuffer();
+
+        // Decompress the gzipped content
+        const uint8Array = new Uint8Array(arrayBuffer);
+        let text;
+
+        try {
+          // Use pako for gzip decompression
+          const decompressed = pako.inflate(uint8Array);
+          text = new TextDecoder('utf-8').decode(decompressed);
+        } catch (decompressError) {
+          console.error('Error decompressing data:', decompressError);
+          // Fallback: try to interpret as plain text in case it's not actually compressed
+          text = new TextDecoder('utf-8').decode(uint8Array);
+        }
+
+        // Parse the TSV data
+        const lines = text.split('\n').filter((line) => line.trim() !== '');
+        const headers = lines[0].split('\t');
+
+        const parsedData = lines.slice(1).map((line) => {
+          const values = line.split('\t');
+          return {
+            classId: values[0], // module_accession
+            completeness: parseFloat(values[1]), // completeness
+            name: values[2], // pathway_name
+            description: values[3], // pathway_class
+            matchingKO: values[4] || '', // matching_ko
+            missingKOs: values[5] || '', // missing_ko
+          };
+        });
+
+        // Sort by completeness (descending) and then by name
+        const sortedData = parsedData.sort((a, b) => {
+          if (b.completeness !== a.completeness) {
+            return b.completeness - a.completeness;
+          }
+          return a.name.localeCompare(b.name);
+        });
+
+        // Take top pathways for display (can be adjusted)
+        setKoPathwayData(sortedData);
+        setIsLoading(false);
+      } catch (err) {
+        console.error('Error fetching KEGG pathway data:', err);
+        setError('Failed to load KEGG pathway data. Please try again later.');
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Group data by metabolism type for summary
   interface GroupedPathways {
@@ -66,7 +93,8 @@ const KOTab: React.FC = () => {
   }
 
   const groupedData = koPathwayData.reduce<GroupedPathways>((acc, pathway) => {
-    const metabolismType = pathway.description.split(';')[1].trim();
+    const metabolismType =
+      pathway.description.split(';')[1]?.trim() || 'Other metabolism';
     if (!acc[metabolismType]) {
       acc[metabolismType] = [];
     }
@@ -77,23 +105,58 @@ const KOTab: React.FC = () => {
   // Calculate summary statistics
   const totalPathways = koPathwayData.length;
   const totalMatchingKOs = koPathwayData.reduce(
-    (sum, pathway) => sum + pathway.matchingKO,
+    (sum, pathway) =>
+      sum +
+      (pathway.matchingKO
+        ? pathway.matchingKO.split(',').filter((k) => k).length
+        : 0),
     0
   );
   const completePathways = koPathwayData.filter(
     (pathway) => pathway.completeness === 100
   ).length;
 
-  // Get the color for metabolism type
   const getMetabolismColor = (metabolismType: string): string => {
     const colorMap: { [key: string]: string } = {
       'Carbohydrate metabolism': 'bg-blue-100 border-blue-300',
       'Amino acid metabolism': 'bg-green-100 border-green-300',
       'Nucleotide metabolism': 'bg-purple-100 border-purple-300',
       'Lipid metabolism': 'bg-orange-100 border-orange-300',
+      'Energy metabolism': 'bg-red-100 border-red-300',
+      'Metabolism of cofactors and vitamins': 'bg-yellow-100 border-yellow-300',
+      'Glycan metabolism': 'bg-pink-100 border-pink-300',
+      'Biosynthesis of terpenoids and polyketides':
+        'bg-indigo-100 border-indigo-300',
+      'Biosynthesis of other secondary metabolites':
+        'bg-teal-100 border-teal-300',
+      'Xenobiotics biodegradation': 'bg-amber-100 border-amber-300',
     };
     return colorMap[metabolismType] || 'bg-gray-100 border-gray-300';
   };
+
+  if (isLoading) {
+    return (
+      <div className="vf-stack vf-stack--400 flex justify-center items-center h-64">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <p className="mt-2">Loading KEGG pathway data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="vf-stack vf-stack--400">
+        <div className="bg-red-50 border border-red-200 p-6 rounded-lg shadow-sm">
+          <h1 className="vf-text vf-text--heading-l text-center mb-6 text-red-600">
+            Error Loading Data
+          </h1>
+          <p className="text-center">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="vf-stack vf-stack--400">
@@ -292,7 +355,7 @@ const KOTab: React.FC = () => {
                         Completeness
                       </th>
                       <th className="vf-table__heading text-center">
-                        Matching KO
+                        Matching KOs
                       </th>
                       <th className="vf-table__heading text-center">
                         Missing KOs
@@ -301,9 +364,9 @@ const KOTab: React.FC = () => {
                   </thead>
                   <tbody className="vf-table__body">
                     {koPathwayData.map((pathway) => {
-                      const metabolismType = pathway.description
-                        .split(';')[1]
-                        .trim();
+                      const metabolismType =
+                        pathway.description.split(';')[1]?.trim() ||
+                        'Other metabolism';
                       const rowColorClass = metabolismType.includes(
                         'Carbohydrate'
                       )
@@ -315,6 +378,13 @@ const KOTab: React.FC = () => {
                         : metabolismType.includes('Lipid')
                         ? 'hover:bg-orange-50'
                         : 'hover:bg-gray-50';
+
+                      const matchingKOCount = pathway.matchingKO
+                        ? pathway.matchingKO.split(',').filter((k) => k).length
+                        : 0;
+                      const missingKOCount = pathway.missingKOs
+                        ? pathway.missingKOs.split(',').filter((k) => k).length
+                        : 0;
 
                       return (
                         <tr
@@ -340,20 +410,40 @@ const KOTab: React.FC = () => {
                             <div className="inline-flex items-center">
                               <div className="w-16 bg-gray-200 rounded-full h-2">
                                 <div
-                                  className="bg-green-600 h-2 rounded-full"
+                                  className={`${
+                                    pathway.completeness === 100
+                                      ? 'bg-green-600'
+                                      : pathway.completeness >= 75
+                                      ? 'bg-green-500'
+                                      : pathway.completeness >= 50
+                                      ? 'bg-yellow-500'
+                                      : 'bg-red-500'
+                                  } h-2 rounded-full`}
                                   style={{ width: `${pathway.completeness}%` }}
                                 ></div>
                               </div>
                               <span className="ml-2 text-sm">
-                                {pathway.completeness}%
+                                {pathway.completeness.toFixed(1)}%
                               </span>
                             </div>
                           </td>
                           <td className="vf-table__cell text-center font-medium">
-                            {pathway.matchingKO}
+                            {matchingKOCount}
+                            <span className="text-xs text-gray-500 ml-1">
+                              {matchingKOCount > 0 &&
+                                pathway.matchingKO.length > 15 && (
+                                  <span title={pathway.matchingKO}>view</span>
+                                )}
+                            </span>
                           </td>
                           <td className="vf-table__cell text-center text-gray-500">
-                            {pathway.missingKOs}
+                            {missingKOCount}
+                            <span className="text-xs text-gray-500 ml-1">
+                              {missingKOCount > 0 &&
+                                pathway.missingKOs.length > 15 && (
+                                  <span title={pathway.missingKOs}>view</span>
+                                )}
+                            </span>
                           </td>
                         </tr>
                       );
