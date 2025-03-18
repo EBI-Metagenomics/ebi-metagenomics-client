@@ -181,7 +181,7 @@ const ClosedReferenceMarkerGeneTable: React.FC<
                               }%`,
                             }}
                             title={`Bacteria: ${groupedClosedRefMarkerGenes.SSU.bacteria.read_count.toLocaleString()} reads`}
-                          ></div>
+                          />
                         )}
                         {groupedClosedRefMarkerGenes.SSU.archaea.read_count >
                           0 && (
@@ -197,7 +197,7 @@ const ClosedReferenceMarkerGeneTable: React.FC<
                               }%`,
                             }}
                             title={`Archaea: ${groupedClosedRefMarkerGenes.SSU.archaea.read_count.toLocaleString()} reads`}
-                          ></div>
+                          />
                         )}
                         {groupedClosedRefMarkerGenes.SSU.eukarya.read_count >
                           0 && (
@@ -213,7 +213,7 @@ const ClosedReferenceMarkerGeneTable: React.FC<
                               }%`,
                             }}
                             title={`Eukarya: ${groupedClosedRefMarkerGenes.SSU.eukarya.read_count.toLocaleString()} reads`}
-                          ></div>
+                          />
                         )}
                       </div>
                     </div>
@@ -343,7 +343,7 @@ const ClosedReferenceMarkerGeneTable: React.FC<
                               }%`,
                             }}
                             title={`Bacteria: ${groupedClosedRefMarkerGenes.LSU.bacteria.read_count.toLocaleString()} reads`}
-                          ></div>
+                          />
                         )}
                         {groupedClosedRefMarkerGenes.LSU.archaea.read_count >
                           0 && (
@@ -359,7 +359,7 @@ const ClosedReferenceMarkerGeneTable: React.FC<
                               }%`,
                             }}
                             title={`Archaea: ${groupedClosedRefMarkerGenes.LSU.archaea.read_count.toLocaleString()} reads`}
-                          ></div>
+                          />
                         )}
                         {groupedClosedRefMarkerGenes.LSU.eukarya.read_count >
                           0 && (
@@ -375,7 +375,7 @@ const ClosedReferenceMarkerGeneTable: React.FC<
                               }%`,
                             }}
                             title={`Eukarya: ${groupedClosedRefMarkerGenes.LSU.eukarya.read_count.toLocaleString()} reads`}
-                          ></div>
+                          />
                         )}
                       </div>
                     </div>
@@ -490,15 +490,15 @@ const ClosedReferenceMarkerGeneTable: React.FC<
         <div className="marker-legend-title">Read count color legend:</div>
         <div className="marker-legend-items">
           <div className="marker-legend-item">
-            <div className="marker-legend-color bacteria-color"></div>
+            <div className="marker-legend-color bacteria-color" />
             <div className="marker-legend-label">Bacteria</div>
           </div>
           <div className="marker-legend-item">
-            <div className="marker-legend-color archaea-color"></div>
+            <div className="marker-legend-color archaea-color" />
             <div className="marker-legend-label">Archaea</div>
           </div>
           <div className="marker-legend-item">
-            <div className="marker-legend-color eukarya-color"></div>
+            <div className="marker-legend-color eukarya-color" />
             <div className="marker-legend-label">Eukarya</div>
           </div>
         </div>

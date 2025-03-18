@@ -11,6 +11,18 @@ const AsvMarkerGeneTable: React.FC<{
   maxAsvReadCount: number;
   handleViewClick: (analysisType: string, markerType: string) => void;
 }> = ({ asvAmplifiedRegions, maxAsvReadCount, handleViewClick }) => {
+  const getStackedBarSegmentClass = (markerGene: string): string => {
+    const markerTypes = {
+      '16S': 'bacteria',
+      '18S': 'eukarya',
+      ITS: 'its',
+    };
+
+    const type =
+      Object.keys(markerTypes).find((key) => markerGene.includes(key)) || 'its';
+    return `stacked-bar-segment ${markerTypes[type]}-bar`;
+  };
+
   return (
     <>
       <h3 className="marker-table-heading">ASV Marker Genes</h3>
@@ -99,18 +111,14 @@ const AsvMarkerGeneTable: React.FC<{
                         }}
                       >
                         <div
-                          className={`stacked-bar-segment ${
-                            region.marker_gene.includes('16S')
-                              ? 'bacteria-bar'
-                              : region.marker_gene.includes('18S')
-                              ? 'eukarya-bar'
-                              : 'its-bar'
-                          }`}
+                          className={getStackedBarSegmentClass(
+                            region.marker_gene
+                          )}
                           style={{ width: '100%' }}
                           title={`${
                             region.marker_gene
                           }: ${region.read_count.toLocaleString()} reads`}
-                        ></div>
+                        />
                       </div>
                     </div>
                   )}
