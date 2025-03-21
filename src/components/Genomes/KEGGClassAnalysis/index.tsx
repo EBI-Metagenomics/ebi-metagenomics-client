@@ -17,9 +17,7 @@ addExportMenu(Highcharts);
 
 const initialPageSize = 10;
 
-const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
-  includePangenomes = true,
-}) => {
+const KEGGClassAnalises: React.FC = () => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const accession = useURLAccession();
 
@@ -61,9 +59,6 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
     total += c;
     return c;
   });
-  const pangenomeSeries = (data.data as MGnifyDatum[]).map((d) => {
-    return d.attributes['pangenome-count'];
-  });
 
   columns[0] = {
     Header: 'Class ID',
@@ -93,23 +88,13 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   };
   options.series = [
     {
-      name: 'Genome',
+      name: accession,
       type: 'column',
       data: genomeSeries.slice(0, 10),
       colors: TAXONOMY_COLOURS,
       stack: 'genome',
     },
   ];
-
-  if (includePangenomes) {
-    options.series.push({
-      name: 'Pan-genome',
-      type: 'column',
-      data: pangenomeSeries.slice(0, 10),
-      colors: TAXONOMY_COLOURS,
-      stack: 'pangenome',
-    });
-  }
 
   return (
     <div className="vf-stack vf-stack--200" data-cy="genome-kegg-analysis">

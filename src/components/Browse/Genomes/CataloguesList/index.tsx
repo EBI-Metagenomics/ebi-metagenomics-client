@@ -9,6 +9,16 @@ import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
 import BiomeSelector from 'components/UI/BiomeSelector';
 import { some } from 'lodash-es';
 
+import prokaryotes from 'images/tax_icons/prokaryotes.svg';
+import eukaryotes from 'images/tax_icons/eukaryotes.svg';
+import viruses from 'images/tax_icons/viruses.svg';
+
+const iconForCatalogueType = {
+  prokaryotes,
+  eukaryotes,
+  viruses,
+};
+
 const BrowseGenomesByCatalogue: React.FC = () => {
   const [page] = useQueryParamState('page', 1, Number);
   const [order] = useQueryParamState('order', '');
@@ -37,7 +47,9 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         Header: 'Catalogue biome',
         accessor: 'attributes.catalogue-biome-label',
         aggregate: 'count',
-        Aggregated: ({ value }) => `${value} catalogues`,
+        Cell: ({ cell }) => (
+          <span style={{ whiteSpace: 'nowrap' }}>{cell.value}</span>
+        ),
       },
       {
         id: 'biome',
@@ -59,9 +71,22 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         Header: 'Type',
         accessor: 'attributes.catalogue-type',
         Cell: ({ cell }) => cell.value[0].toUpperCase() + cell.value.slice(1),
-        // Aggregated: ({ value }) => `${value} types`,
-        aggregate: (catTypes) =>
-          catTypes.map((catType) => `${catType.slice(0, 4)}.`).join(', '),
+        aggregate: (catTypes) => catTypes,
+        Aggregated: ({ value }) => (
+          <span>
+            {value.map((catType) => (
+              <img
+                key={catType}
+                src={iconForCatalogueType[catType]}
+                alt={catType}
+                width="30px"
+                style={{ marginRight: '8px' }}
+                title={catType}
+              />
+            ))}
+          </span>
+        ),
+        // catTypes.map((catType) => `${catType.slice(0, 4)}.`).join(', '),
         disableGroupBy: true,
       },
       {

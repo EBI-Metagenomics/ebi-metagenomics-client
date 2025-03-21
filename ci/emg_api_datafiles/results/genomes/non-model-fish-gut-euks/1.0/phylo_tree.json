@@ -12,13 +12,41 @@
                 "children": [
                   {
                     "countgen": 1,
-                    "name": "c__Ulvophyceae",
+                    "name": "c__Mamiellophyceae",
                     "type": "c",
                     "children": [
                       {
-                        "coungen": 1,
-                        "name": "MGYG010000001",
-                        "type": "genome"
+                        "countgen": 1,
+                        "name": "o__Mamiellales",
+                        "type": "o",
+                        "children": [
+                          {
+                            "countgen": 1,
+                            "name": "f__Mamiellaceae",
+                            "type": "f",
+                            "children": [
+                              {
+                                "countgen": 1,
+                                "name": "g__Micromonas",
+                                "type": "g",
+                                "children": [
+                                  {
+                                    "countgen": 1,
+                                    "name": "s__Micromonas commoda",
+                                    "type": "s",
+                                    "children": [
+                                      {
+                                        "coungen": 1,
+                                        "name": "MGYG010000004",
+                                        "type": "genome"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
                       }
                     ]
                   }

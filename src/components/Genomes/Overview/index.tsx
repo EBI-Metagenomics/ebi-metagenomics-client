@@ -20,6 +20,7 @@ function notEmpty(listValue: unknown): boolean {
   return (
     !!listValue &&
     listValue !== 'null' &&
+    listValue !== 'null%' &&
     listValue !== 'undefined' &&
     listValue !== 'undefined%'
   );
@@ -43,8 +44,14 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
                 value: `${data.attributes.contamination}%`,
               },
               {
-                key: 'Completeness',
+                key: data.attributes['busco-completeness']
+                  ? 'Completeness (EukCC)'
+                  : 'Completeness',
                 value: `${data.attributes.completeness}%`,
+              },
+              {
+                key: 'Completeness (BUSCO)',
+                value: `${data.attributes['busco-completeness']}%`,
               },
               {
                 key: 'Num. of contigs',
@@ -121,16 +128,28 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
           <KeyValueList
             list={[
               {
-                key: 'rRNA 5s total gene length coverage',
+                key: 'rRNA 5S total gene length coverage',
                 value: `${data.attributes['rna-5s']}%`,
               },
               {
-                key: 'rRNA 16s total gene length coverage',
+                key: 'rRNA 5.8S total gene length coverage',
+                value: `${data.attributes['rna-5-8s']}%`,
+              },
+              {
+                key: 'rRNA 16S total gene length coverage',
                 value: `${data.attributes['rna-16s']}%`,
               },
               {
-                key: 'rRNA 23s total gene length coverage',
+                key: 'rRNA 18S total gene length coverage',
+                value: `${data.attributes['rna-18s']}%`,
+              },
+              {
+                key: 'rRNA 23S total gene length coverage',
                 value: `${data.attributes['rna-23s']}%`,
+              },
+              {
+                key: 'rRNA 28S total gene length coverage',
+                value: `${data.attributes['rna-28s']}%`,
               },
               {
                 key: 'tRNAs',
