@@ -22,6 +22,7 @@ import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
 import PersistLogin from 'components/PersistLogin';
+import V2AnalysisPage from 'pages/Analysis/v2index';
 import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -105,6 +106,7 @@ const App: React.FC = () => {
                   <Route path="/assemblies/*" element={<Assembly />} />
                   <Route path="/pipelines/*" element={<Pipelines />} />
                   <Route path="/analyses/*" element={<Analysis />} />
+                  <Route path="/v2-analyses/*" element={<V2AnalysisPage />} />
                   <Route path="/mydata" element={<MyData />} />
                   <Route element={<PersistLogin />}>
                     <Route path="/login" element={<Login />} />

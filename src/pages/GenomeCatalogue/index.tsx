@@ -65,6 +65,21 @@ const GenomePage: React.FC = () => {
             </div>
           </article>
 
+          {!!genomeData.attributes['other-stats'] &&
+            Object.entries(genomeData.attributes['other-stats'] as object).map(
+              ([key, value]) => (
+                <article
+                  className="vf-card vf-card--brand vf-card--bordered"
+                  key={key}
+                >
+                  <div className="vf-card__content | vf-stack vf-stack--200">
+                    <h3 className="vf-card__heading">{value}</h3>
+                    <p className="vf-card__subheading">{key}</p>
+                  </div>
+                </article>
+              )
+            )}
+
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
               <h3 className="vf-card__heading">

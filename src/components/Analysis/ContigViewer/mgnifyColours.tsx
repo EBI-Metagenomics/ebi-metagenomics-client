@@ -83,6 +83,7 @@ const FEATURE_TYPE_MAP = {
   CRISPR: CRISPR_MAP.CRISPRdr,
   CDS: '#18974c',
   ncRNA: '#6cc24a',
+  rRNA: '#007b53',
   CLUSTER: '#3b6fb6',
   prophage: '#d41645',
   viral_sequence: '#d41645',
