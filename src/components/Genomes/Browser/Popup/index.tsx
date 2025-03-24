@@ -373,6 +373,31 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
     );
   }
 
+  const ncRnaData = {
+    title: 'ncRNA details',
+    data: [
+      {
+        name: 'Type',
+        Value: attributes.type,
+      },
+      {
+        name: 'ncRNA Class',
+        Value: attributes.ncrna_class || 'Unspecified',
+      },
+      {
+        name: 'Rfam accession',
+        Value:
+          attributes.rfam &&
+          (() => (
+            <MultipleField
+              value={attributes.rfam}
+              url="https://rfam.org/family/"
+            />
+          )),
+      },
+    ],
+  };
+
   const properties = [functionalData, otherData];
   if (attributes.source.toLowerCase().includes('crispr')) {
     properties.push(crisprData);
@@ -385,6 +410,12 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
   }
   if (attributes.amrfinderplus_gene_symbol) {
     properties.push(amrData);
+  }
+  if (
+    attributes.type.toLowerCase() === 'ncrna' ||
+    attributes.type.toLowerCase() === 'rrna'
+  ) {
+    properties.push(ncRnaData);
   }
 
   return {

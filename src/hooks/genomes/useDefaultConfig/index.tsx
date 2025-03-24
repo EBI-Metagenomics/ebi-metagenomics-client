@@ -26,10 +26,6 @@ const useGenomeDefaultConfig = (): DefaultConfigType => {
         Header: 'Genome Count',
         accessor: 'attributes.genome-count',
       },
-      {
-        Header: 'Pan-genome count',
-        accessor: 'attributes.pangenome-count',
-      },
     ],
     []
   );
