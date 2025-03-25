@@ -58,6 +58,7 @@ const HierarchyNode: React.FC<HierarchyNodeProps> = ({
   };
   return (
     <div
+      id="hierarchy-node"
       style={{
         marginLeft: `${depth * 0.5}rem`,
       }}
