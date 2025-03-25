@@ -1,10 +1,4 @@
-/*NOTE*/
-/*This styling was commented out because it was causing biome filters not to appear
-when on the Feature/V2-Hooks-II.
-This was subsequently causing the search.js test not to pass in the pipeline
-24-03-2024: this styling for the .mg-hierarchy-selector was reinstated to fix the pyhlumTree styling issue.
-*/
-.mg-hierarchy-selector {
+#hierarchy-node > .mg-hierarchy-selector {
   display: flex;
   margin-bottom: 5px;
   transition: all 0.4s ease-out;
@@ -30,7 +24,7 @@ This was subsequently causing the search.js test not to pass in the pipeline
   padding: 0.1rem;
 }
 
-.mg-hierarchy-selector.show {
+#hierarchy-node > .mg-hierarchy-selector.show {
   height: 1rem;
   opacity: 1;
 }
