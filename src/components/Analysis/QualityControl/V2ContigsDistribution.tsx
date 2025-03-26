@@ -1,6 +1,5 @@
 import React, { useContext, useRef } from 'react';
 import * as Highcharts from 'highcharts';
-import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 
 import Loading from 'components/UI/Loading';
@@ -9,8 +8,6 @@ import useMGnifyData from 'hooks/data/useMGnifyData';
 import { ResponseFormat, TSVResponse } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-
-addExportMenu(Highcharts);
 
 type ContigsHistogramProps = {
   summaryData: {

@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useContext, useState } from 'react';
 import * as Highcharts from 'highcharts';
-import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 import { noop } from 'lodash-es';
 
@@ -11,8 +10,6 @@ import useInterProMatchesProvider, {
   InterProCountType,
 } from 'hooks/data/useInterProMatchesProvider';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
-
-addExportMenu(Highcharts);
 
 type InterProMatchesChartProps = {
   selectedName?: string;

@@ -16,6 +16,7 @@ import Abundance from 'components/Analysis/Abundance';
 import V2AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useAnalysisDetail from 'hooks/data/useAnalysisDetail/Index';
 import { AnalysisDetail } from 'interfaces';
+import Asv from 'components/Asv';
 
 // TODO: find v2 counterpart
 
@@ -40,7 +41,7 @@ const V2AnalysisPage: React.FC = () => {
   const tabs = [
     { label: 'Overview', to: '#overview' },
     { label: 'Quality control', to: '#qc' },
-    { label: 'Taxonomic analysis', to: '#taxonomic' },
+    { label: 'Taxonomy', to: '#taxonomic' },
     isNotAmplicon(analysisData)
       ? { label: 'Functional analysis', to: '#functional' }
       : null,
@@ -50,7 +51,7 @@ const V2AnalysisPage: React.FC = () => {
     isAssembly(analysisData) && isAtleastVersion5(analysisData)
       ? { label: 'Contig Viewer', to: '#contigs-viewer' }
       : null,
-    { label: 'Download', to: '#download' },
+    { label: 'ASV', to: '#asv' },
   ].filter(Boolean);
   return (
     <section className="vf-content">
@@ -64,6 +65,9 @@ const V2AnalysisPage: React.FC = () => {
             </RouteForHash>
             <RouteForHash hash="#qc">
               <QualityControl />
+            </RouteForHash>
+            <RouteForHash hash="#asv">
+              <Asv />
             </RouteForHash>
             <RouteForHash hash="#contigs-viewer">
               <ContigViewer />

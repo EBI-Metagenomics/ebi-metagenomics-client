@@ -3,6 +3,8 @@ import KeyValueList from 'components/UI/KeyValueList';
 import { Link } from 'react-router-dom';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useMGnifyData from 'hooks/data/useMGnifyData';
+import '../style.css';
+import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 
 function isAssembly(experimentType: string): boolean {
   // return ['assembly', 'hybrid_assembly', 'long_reads_assembly'].includes(
@@ -58,97 +60,224 @@ const AnalysisOverview: React.FC = () => {
   // data.experiment_type === 'hybrid_assembly' &&
   // data?.experiment_type === 'hybrid_assembly' &&
   // !!data?.relationships.assembly.data;
+
+  const descriptionItems = [
+    {
+      key: 'Study',
+      value:
+        data?.study_accession &&
+        (() => (
+          <Link to={`/studies/${data?.study_accession}`}>
+            {data?.study_accession}
+          </Link>
+        )),
+      rawValue: data?.study_accession || '',
+    },
+    {
+      key: 'Sample',
+      value:
+        data?.sample_accession &&
+        (() => (
+          <Link to={`/samples/${data?.sample_accession}`}>
+            {data?.sample_accession}
+          </Link>
+        )),
+      rawValue: data?.sample_accession || '',
+    },
+    {
+      key: 'Assembly',
+      value:
+        data?.assembly_accession &&
+        isAssembly(data.experiment_type as string) &&
+        (() => (
+          <Link to={`/assemblies/${data?.assembly_accession}`}>
+            {data?.assembly_accession}
+          </Link>
+        )),
+      rawValue: data?.assembly_accession || '',
+    },
+    {
+      key: 'Run',
+      value:
+        data?.run_accession &&
+        (() => (
+          <Link to={`/runs/${data?.run_accession}`}>{data?.run_accession}</Link>
+        )),
+      rawValue: data?.run_accession || '',
+    },
+    {
+      key: 'Results folder',
+      value:
+        data?.results_dir &&
+        (() => (
+          <a href={data.run_accession} target="_blank" rel="noreferrer">
+            {data.results_dir}
+          </a>
+        )),
+      rawValue: data?.results_dir || '',
+    },
+  ];
+
+  const experimentDetailsItems = [
+    {
+      key: 'Experiment type',
+      value: data?.experiment_type as string,
+      rawValue: data?.experiment_type || '',
+    },
+    {
+      key: 'Instrument model',
+      value: data?.read_run?.instrument_model as string,
+      rawValue: data?.read_run?.instrument_model || '',
+    },
+    {
+      key: 'Instrument platform',
+      value: data?.read_run?.instrument_platform as string,
+      rawValue: data?.read_run?.instrument_platform || '',
+    },
+  ];
+
+  const pipelineInformationItems = [
+    {
+      key: 'Repository',
+      value: () => (
+        <a
+          href="https://github.com/EBI-Metagenomics/amplicon-pipeline"
+          target="_blank"
+          rel="noreferrer"
+        >
+          https://github.com/EBI-Metagenomics/amplicon-pipeline
+        </a>
+      ),
+      rawValue: 'https://github.com/EBI-Metagenomics/amplicon-pipeline',
+    },
+    {
+      key: 'Documentation',
+      value: () => (
+        <a
+          href="https://ebi-metagenomics.github.io/amplicon-pipeline/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          https://ebi-metagenomics.github.io/amplicon-pipeline/
+        </a>
+      ),
+      rawValue: 'https://ebi-metagenomics.github.io/amplicon-pipeline/',
+    },
+    {
+      key: 'Workflow hub link',
+      value: () => (
+        <a
+          href="https://workflowhub.eu/workflows/361?version=1"
+          target="_blank"
+          rel="noreferrer"
+        >
+          https://workflowhub.eu/workflows/361?version=1
+        </a>
+      ),
+      rawValue: 'https://workflowhub.eu/workflows/361?version=1',
+    },
+    {
+      key: 'Pipeline version',
+      value:
+        data?.pipeline_version &&
+        (() => (
+          <Link to={`/pipelines/${data?.pipeline_version}`}>
+            {data?.pipeline_version}
+          </Link>
+        )),
+      rawValue: data?.pipeline_version || '',
+    },
+  ];
+
+  const generateCsv = () => {
+    let csvContent = 'Category,Key,Value\n';
+    descriptionItems
+      .filter(({ value }) => !!value)
+      .forEach((item) => {
+        csvContent += `Description,${item.key},"${String(item.rawValue).replace(
+          /"/g,
+          '""'
+        )}"\n`;
+      });
+
+    experimentDetailsItems
+      .filter(({ value }) => !!value)
+      .forEach((item) => {
+        csvContent += `Experiment details,${item.key},"${String(
+          item.rawValue
+        ).replace(/"/g, '""')}"\n`;
+      });
+
+    pipelineInformationItems
+      .filter(({ value }) => !!value)
+      .forEach((item) => {
+        csvContent += `Pipeline information,${item.key},"${String(
+          item.rawValue
+        ).replace(/"/g, '""')}"\n`;
+      });
+
+    return csvContent;
+  };
+
+  const handleDownloadCsv = () => {
+    const csvContent = generateCsv();
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = `analysis_overview_${
+      data?.run_accession || 'data'
+    }.csv`;
+    downloadLink.style.display = 'none';
+    downloadLink.click();
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 100);
+  };
+
   return (
     <section>
       <div className="vf-stack">
-        <details open>
-          <summary>
-            <b>Description</b>
-          </summary>
-
-          <KeyValueList
-            list={[
-              {
-                key: 'Study',
-                value:
-                  // data?.relationships?.study?.data?.id &&
-                  data?.study_accession &&
-                  (() => (
-                    <Link to={`/studies/${data?.study_accession}`}>
-                      {data?.study_accession}
-                    </Link>
-                  )),
-              },
-              {
-                key: 'Sample',
-                value:
-                  data?.sample_accession &&
-                  (() => (
-                    <Link to={`/samples/${data?.sample_accession}`}>
-                      {data?.sample_accession}
-                    </Link>
-                  )),
-              },
-              {
-                key: 'Assembly',
-                value:
-                  data?.assembly_accession &&
-                  isAssembly(data.experiment_type as string) &&
-                  (() => (
-                    <Link to={`/assemblies/${data?.assembly_accession}`}>
-                      {data?.assembly_accession}
-                    </Link>
-                  )),
-              },
-              {
-                key: 'Run',
-                value:
-                  data?.run_accession &&
-                  (() => (
-                    <Link to={`/runs/${data?.run_accession}`}>
-                      {data?.run_accession}
-                    </Link>
-                  )),
-              },
-              {
-                key: 'Pipeline version',
-                value:
-                  data?.pipeline_version &&
-                  (() => (
-                    <Link to={`/pipelines/${data?.pipeline_version}`}>
-                      {data?.pipeline_version}
-                    </Link>
-                  )),
-              },
-            ].filter(({ value }) => !!value)}
-          />
-        </details>
-        <details open>
-          <summary>
-            <b>Experiment details</b>
-          </summary>
-          {!isHybrid && (
+        <DetailedVisualisationCard
+          title="Overview"
+          subheading="Analysis details"
+          showCopyButton={false}
+          showZoomButton={false}
+          onDownloadClick={handleDownloadCsv}
+        >
+          <details className="vf-details custom-vf-details" open>
+            <summary className="vf-details--summary custom-vf-details--summary">
+              <b>Description</b>
+            </summary>
+            <p>
+              <KeyValueList
+                list={descriptionItems.filter(({ value }) => !!value)}
+              />
+            </p>
+          </details>
+          <details className="vf-details custom-vf-details" open>
+            <summary className="vf-details--summary custom-vf-details--summary">
+              <b>Experiment details</b>
+            </summary>
+            {!isHybrid && (
+              <KeyValueList
+                list={experimentDetailsItems.filter(({ value }) => !!value)}
+              />
+            )}
+            {isHybrid && (
+              <HybridAnalysisDetails assemblyId={data?.assembly_accession} />
+            )}
+          </details>
+          <details className="vf-details custom-vf-details" open>
+            <summary className="vf-details--summary custom-vf-details--summary">
+              <b>Pipeline information</b>
+            </summary>
             <KeyValueList
-              list={[
-                {
-                  key: 'Experiment type',
-                  value: data?.experiment_type as string,
-                },
-                {
-                  key: 'Instrument model',
-                  value: data?.instrument_model as string,
-                },
-                {
-                  key: 'Instrument platform',
-                  value: data?.instrument_platform as string,
-                },
-              ].filter(({ value }) => !!value)}
+              list={pipelineInformationItems.filter(({ value }) => !!value)}
             />
-          )}
-          {isHybrid && (
-            <HybridAnalysisDetails assemblyId={data?.assembly_accession} />
-          )}
-        </details>
+          </details>
+        </DetailedVisualisationCard>
       </div>
     </section>
   );
