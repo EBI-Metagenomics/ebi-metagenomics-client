@@ -43,10 +43,15 @@ const KOTab: React.FC = () => {
   // const dataFileUrl = `${baseUrl}/new.tsv.gz`;
   // const indexFileUrl = `${baseUrl}/new.tsv.gz.gzi`;
 
+  // const dataFileUrl =
+  //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/large_assem_2.tsv.gz';
+  // const indexFileUrl =
+  //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/large_assem_2.tsv.gz.gzi';
+
   const dataFileUrl =
-    'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/large_assem_2.tsv.gz';
+    'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/ERZ1049444_summary_kegg_pathways.tsv.gz';
   const indexFileUrl =
-    'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/large_assem_2.tsv.gz.gzi';
+    'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/ERZ1049444_summary_kegg_pathways.tsv.gz.gzi';
 
   // Estimate for average bytes per record - adjust based on your data
   const avgBytesPerRecord = 100; // Rough estimate - should be tuned based on actual data
