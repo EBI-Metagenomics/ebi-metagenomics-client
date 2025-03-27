@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import 'src/components/Analysis/Taxonomy/style.css';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import { Download } from 'interfaces';
 
 const AssemblyTaxonomy: React.FC = () => {
-  const kronaUrl =
-    'https://www.ebi.ac.uk/metagenomics/api/v1/analyses/MGYA00779423/krona/ssu?collapse=false';
+  const { overviewData: analysisData } = useContext(AnalysisContext);
+  const kronaFile = analysisData.downloads.find(
+    (file: Download) =>
+      file.download_type === 'Taxonomic analysis' && file.file_type === 'html'
+  );
 
   return (
     <div className="vf-stack vf-stack--400">
@@ -15,7 +20,7 @@ const AssemblyTaxonomy: React.FC = () => {
           Taxonomic Analysis Visualization
         </summary>
 
-        <DetailedVisualisationCard ftpLink={kronaUrl}>
+        <DetailedVisualisationCard ftpLink={kronaFile.url}>
           <div className="vf-card__content | vf-stack vf-stack--400">
             <h3 className="vf-card__heading">Krona Taxonomy Visualization</h3>
             <p className="vf-card__subheading">
@@ -24,7 +29,7 @@ const AssemblyTaxonomy: React.FC = () => {
             <p className="vf-card__text">
               <iframe
                 className="krona-iframe"
-                src={kronaUrl}
+                src={kronaFile.url}
                 style={{ width: '100%', height: '700px', border: 'none' }}
                 title="Krona Taxonomy Visualization"
               />

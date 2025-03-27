@@ -10,7 +10,6 @@ const ChimericProportions = ({ fileUrl }) => {
     final_number_of_reads: 0,
   });
 
-  // Helper function to parse TSV file
   const parseTsvFile = (tsvContent) => {
     const lines = tsvContent.trim().split('\n');
     const stats = {
@@ -20,30 +19,24 @@ const ChimericProportions = ({ fileUrl }) => {
       final_number_of_reads: 0,
     };
 
-    // Process each line
+    // TODO: DO away with nested loop and or if-elses
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
 
-      // Check if the line contains a tab character (indicating key-value pair)
       if (line.includes('\t')) {
         const [key, value] = line.split('\t');
         const trimmedKey = key.trim();
         const numValue = parseFloat(value.trim());
-
-        // Only update if the key exists in our stats object and value is a valid number
         if (trimmedKey in stats && !isNaN(numValue)) {
           stats[trimmedKey] = numValue;
         }
       } else {
-        // If this is a key without value, check if next line exists as value
         if (i + 1 < lines.length) {
           const key = line;
           const value = parseFloat(lines[i + 1].trim());
-
-          // Only update if the key exists in our stats object and value is a valid number
           if (key in stats && !isNaN(value)) {
             stats[key] = value;
-            i++; // Skip the next line as we've used it as a value
+            i++;
           }
         }
       }
@@ -52,7 +45,6 @@ const ChimericProportions = ({ fileUrl }) => {
     return stats;
   };
 
-  // Fetch data from TSV file
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -82,7 +74,6 @@ const ChimericProportions = ({ fileUrl }) => {
     }
   }, [fileUrl]);
 
-  // Helper function to get color and message based on chimeric proportion
   const getChimericInfo = (proportion) => {
     const percent = proportion * 100;
     if (percent <= 25) {
@@ -102,7 +93,6 @@ const ChimericProportions = ({ fileUrl }) => {
     };
   };
 
-  // If still loading or there's an error, show appropriate message
   if (loading) {
     return <div className="p-4 text-center">Loading data...</div>;
   }
@@ -114,7 +104,6 @@ const ChimericProportions = ({ fileUrl }) => {
   const chimericValue = dada2Stats.proportion_chimeric;
   const chimericInfo = getChimericInfo(chimericValue);
 
-  // Calculate the read reduction percentage
   const readReductionPercent =
     dada2Stats.initial_number_of_reads > 0
       ? (
@@ -147,10 +136,8 @@ const ChimericProportions = ({ fileUrl }) => {
     },
   ];
 
-  // Calculate where the current value would fall on the gauge
   const gaugePosition = Math.min(Math.max(chimericValue * 100, 0), 100);
 
-  // Extract SRR ID from the URL for display purposes
   const getSrrId = (url) => {
     const matches = url.match(/SRR\d+/);
     return matches ? matches[0] : 'Sample';

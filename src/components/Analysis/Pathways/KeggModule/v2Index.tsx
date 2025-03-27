@@ -363,6 +363,13 @@ const KOTab: React.FC = () => {
             .join(' ')
         );
 
+        console.log(
+          'File header bytes (second block):',
+          Array.from(data.slice(90, 168))
+            .map((b) => b.toString(16).padStart(2, '0'))
+            .join(' ')
+        );
+
         // Look for gzip magic numbers in first 4KB
         const blockStarts = [];
         for (let i = 0; i < data.length - 1; i++) {
