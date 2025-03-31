@@ -1,11 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-import useMGnifyData from 'hooks/data/useMGnifyData';
 import { TAXONOMY_COLOURS } from 'utils/taxon';
-import Loading from 'components/UI/Loading';
-import ExtLink from 'components/UI/ExtLink';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import { BGZipService } from 'components/Analysis/BgZipService';
 
 // Define the interface for antiSMASH cluster data
 interface AntiSmashCluster {
@@ -15,55 +13,161 @@ interface AntiSmashCluster {
 }
 
 const AntiSmashSubpage: React.FC = () => {
-  const { overviewData: analysisData } = useContext(AnalysisContext);
+  const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
   const [colorMap] = useState(new Map());
   const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
 
-  // Sample data from the image
-  const antiSmashData: AntiSmashCluster[] = [
-    {
-      classId: 'terpene',
-      description: 'Terpene',
-      count: 62,
-    },
-    {
-      classId: 'bacteriocin',
-      description:
-        'Bacteriocin or other unspecified ribosomally synthesised and post-translationally modified peptide product (RiPP) cluster',
-      count: 11,
-    },
-    {
-      classId: 'arylpolyene',
-      description: 'Aryl polyene cluster',
-      count: 3,
-    },
-    {
-      classId: 't3pks',
-      description: 'Type III PKS',
-      count: 1,
-    },
-    {
-      classId: 't1pks',
-      description: 'Type I PKS (Polyketide synthase)',
-      count: 1,
-    },
-    {
-      classId: 'nrps',
-      description: 'Non-ribosomal peptide synthetase cluster',
-      count: 1,
-    },
-    {
-      classId: 'lassopeptide',
-      description: 'Lasso peptide cluster',
-      count: 1,
-    },
-  ];
+  const [bgzipService, setBgzipService] = useState<BGZipService | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
-  // Calculate total count
+  const [antiSmashData, setAntiSmashData] = useState<AntiSmashCluster[]>([]);
+
+  const [fileStats, setFileStats] = useState<{
+    totalSize: number;
+    totalBlocks: number;
+    totalRecords: number | null;
+  }>({
+    totalSize: 0,
+    totalBlocks: 0,
+    totalRecords: null,
+  });
+
+  const pageSize = 50;
+
+  const dataFile = analysisOverviewData.downloads.find(
+    (file) => file.alias.includes === 'antismash' && file.file_type === 'tsv.gz'
+  );
+
+  const dataFileUrl = dataFile?.url;
+  const indexFileUrl = `${dataFileUrl}.gzi`;
+
   const totalCount = antiSmashData.reduce(
     (sum, cluster) => sum + cluster.count,
     0
   );
+
+  // Parse antiSMASH data from TSV
+  const parseAntiSmashData = useCallback((text: string): AntiSmashCluster[] => {
+    const lines = text.split('\n').filter((line) => line.trim() !== '');
+    if (lines.length === 0) return [];
+
+    let headerLine = lines[0];
+    let dataLines = lines;
+
+    const rawHeaderLine = headerLine.toLowerCase();
+
+    // Check if the first line is a header
+    if (
+      !rawHeaderLine.includes('class_id') &&
+      !rawHeaderLine.includes('description') &&
+      !rawHeaderLine.includes('count')
+    ) {
+      headerLine = 'class_id\tdescription\tcount';
+    } else {
+      dataLines = lines.slice(1);
+    }
+
+    const headers = headerLine.split('\t');
+
+    const colIndices = {
+      classId: headers.findIndex((h) => h.includes('class_id')),
+      description: headers.findIndex((h) => h.includes('description')),
+      count: headers.findIndex((h) => h.includes('count')),
+    };
+
+    if (colIndices.classId === -1) colIndices.classId = 0;
+    if (colIndices.description === -1) colIndices.description = 1;
+    if (colIndices.count === -1) colIndices.count = 2;
+
+    return dataLines
+      .map((line) => {
+        const values = line.split('\t');
+        if (values.length < 3) return null; // Skip malformed lines
+
+        return {
+          classId: values[colIndices.classId] || '',
+          description: values[colIndices.description] || '',
+          count: parseInt(values[colIndices.count] || '0', 10),
+        };
+      })
+      .filter(Boolean) as AntiSmashCluster[];
+  }, []);
+
+  const loadPage = useCallback(
+    async (page: number) => {
+      if (!bgzipService) return;
+      try {
+        setIsLoading(true);
+        const rawData = await bgzipService.getPageData(page, pageSize);
+        const parsedData = parseAntiSmashData(rawData);
+
+        const sortedData = [...parsedData].sort((a, b) => b.count - a.count);
+
+        setAntiSmashData(sortedData);
+        setCurrentPage(page);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [bgzipService, parseAntiSmashData]
+  );
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages || isLoading) return;
+    loadPage(newPage);
+  };
+
+  useEffect(() => {
+    const service = new BGZipService(dataFileUrl, indexFileUrl, {
+      avgBytesPerRecord: 100,
+      onLog: (msg) => console.log(`[BGZip] ${msg}`),
+      onError: (msg) => console.error(`[BGZip Error] ${msg}`),
+    });
+
+    setBgzipService(service);
+
+    return () => {
+      service.dispose();
+    };
+  }, [dataFileUrl, indexFileUrl]);
+
+  useEffect(() => {
+    const initializeService = async () => {
+      if (!bgzipService) return;
+
+      try {
+        setIsLoading(true);
+
+        const success = await bgzipService.initialize();
+        if (!success) {
+          setError('Failed to initialize BGZip service');
+          setIsLoading(false);
+          return;
+        }
+
+        const stats = bgzipService.getFileStats();
+        setFileStats(stats);
+
+        // Calculate total pages
+        const pages = bgzipService.getTotalPages(pageSize);
+        setTotalPages(pages);
+
+        // Load first page
+        await loadPage(1);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+        setIsLoading(false);
+      }
+    };
+
+    initializeService();
+  }, [bgzipService, loadPage]);
 
   // Get unique color for each cluster type
   const getClusterColor = (classId: string): string => {
@@ -74,11 +178,60 @@ const AntiSmashSubpage: React.FC = () => {
     return colorMap.get(classId) || TAXONOMY_COLOURS[0];
   };
 
+  // Loading state
+  if (isLoading && antiSmashData.length === 0) {
+    return (
+      <div className="vf-stack vf-stack--400 flex justify-center items-center h-64">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <p className="mt-2">Loading antiSMASH cluster data...</p>
+          <p className="text-sm text-gray-500 mt-1">
+            Accessing data using BGZip index
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="vf-stack vf-stack--400">
+        <div className="bg-red-50 border border-red-200 p-6 rounded-lg shadow-sm">
+          <h1 className="vf-text vf-text--heading-l text-center mb-6 text-red-600">
+            Error Loading Data
+          </h1>
+          <p className="text-center">{error}</p>
+          <div className="mt-4 text-center">
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+              onClick={() => {
+                setError(null);
+                loadPage(1);
+              }}
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="vf-stack vf-stack--400">
       <h1 className="vf-text vf-text--heading-l">
         antiSMASH Secondary Metabolite Analysis
       </h1>
+
+      <div className="mb-4 text-sm text-gray-600 text-center">
+        <p>
+          Using BGZip indexed access ({fileStats.totalBlocks} blocks,{' '}
+          {(fileStats.totalSize / (1024 * 1024)).toFixed(2)} MB)
+          {fileStats.totalRecords &&
+            ` - Approximately ${fileStats.totalRecords} records`}
+        </p>
+      </div>
 
       <div className="flex flex-wrap gap-4 my-6">
         {/* Summary Cards */}
@@ -143,35 +296,39 @@ const AntiSmashSubpage: React.FC = () => {
           </div>
         </article>
 
-        <article className="vf-card vf-card--brand vf-card--bordered rounded-lg shadow-sm">
-          <div className="vf-card__content | vf-stack vf-stack--400">
-            <div className="flex items-center">
-              <span className="text-purple-500 mr-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                </svg>
-              </span>
-              <div>
-                <h3 className="vf-card__heading text-lg">
-                  <span className="vf-card__link text-2xl">
-                    {antiSmashData[0].count}
-                  </span>
-                </h3>
-                <p className="vf-card__text text-sm">Terpene Clusters</p>
+        {antiSmashData.length > 0 && (
+          <article className="vf-card vf-card--brand vf-card--bordered rounded-lg shadow-sm">
+            <div className="vf-card__content | vf-stack vf-stack--400">
+              <div className="flex items-center">
+                <span className="text-purple-500 mr-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                  </svg>
+                </span>
+                <div>
+                  <h3 className="vf-card__heading text-lg">
+                    <span className="vf-card__link text-2xl">
+                      {antiSmashData[0]?.count || 0}
+                    </span>
+                  </h3>
+                  <p className="vf-card__text text-sm">
+                    {antiSmashData[0]?.classId || ''} Clusters
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        </article>
+          </article>
+        )}
       </div>
 
       <details className="vf-details" open>
@@ -210,42 +367,44 @@ const AntiSmashSubpage: React.FC = () => {
             ))}
           </div>
 
-          <div className="my-6">
-            <div className="w-full bg-gray-100 rounded-lg h-8 relative">
-              {antiSmashData.map((cluster, index, arr) => {
-                const prevWidth = arr
-                  .slice(0, index)
-                  .reduce((sum, c) => sum + (c.count / totalCount) * 100, 0);
-                const width = (cluster.count / totalCount) * 100;
+          {totalCount > 0 && (
+            <div className="my-6">
+              <div className="w-full bg-gray-100 rounded-lg h-8 relative">
+                {antiSmashData.map((cluster, index, arr) => {
+                  const prevWidth = arr
+                    .slice(0, index)
+                    .reduce((sum, c) => sum + (c.count / totalCount) * 100, 0);
+                  const width = (cluster.count / totalCount) * 100;
 
-                return (
-                  <div
-                    key={cluster.classId}
-                    className="absolute top-0 bottom-0 border-r border-white last:border-r-0"
-                    style={{
-                      left: `${prevWidth}%`,
-                      width: `${width}%`,
-                      backgroundColor: getClusterColor(cluster.classId),
-                      opacity:
-                        selectedCluster === cluster.classId
-                          ? 1
-                          : selectedCluster
-                          ? 0.3
-                          : 0.8,
-                    }}
-                    onMouseEnter={() => setSelectedCluster(cluster.classId)}
-                    onMouseLeave={() => setSelectedCluster(null)}
-                    title={`${cluster.description}: ${
-                      cluster.count
-                    } (${width.toFixed(1)}%)`}
-                  />
-                );
-              })}
+                  return (
+                    <div
+                      key={cluster.classId}
+                      className="absolute top-0 bottom-0 border-r border-white last:border-r-0"
+                      style={{
+                        left: `${prevWidth}%`,
+                        width: `${width}%`,
+                        backgroundColor: getClusterColor(cluster.classId),
+                        opacity:
+                          selectedCluster === cluster.classId
+                            ? 1
+                            : selectedCluster
+                            ? 0.3
+                            : 0.8,
+                      }}
+                      onMouseEnter={() => setSelectedCluster(cluster.classId)}
+                      onMouseLeave={() => setSelectedCluster(null)}
+                      title={`${cluster.description}: ${
+                        cluster.count
+                      } (${width.toFixed(1)}%)`}
+                    />
+                  );
+                })}
+              </div>
+              <div className="text-xs text-gray-500 mt-2 text-center">
+                Relative distribution of secondary metabolite cluster types
+              </div>
             </div>
-            <div className="text-xs text-gray-500 mt-2 text-center">
-              Relative distribution of secondary metabolite cluster types
-            </div>
-          </div>
+          )}
         </div>
       </details>
 
@@ -291,12 +450,18 @@ const AntiSmashSubpage: React.FC = () => {
                         {cluster.count}
                       </td>
                       <td className="vf-table__cell text-right">
-                        {((cluster.count / totalCount) * 100).toFixed(1)}%
+                        {totalCount > 0
+                          ? ((cluster.count / totalCount) * 100).toFixed(1)
+                          : '0.0'}
+                        %
                         <div className="w-16 inline-block ml-2 bg-gray-200 rounded-full h-2">
                           <div
                             className="h-2 rounded-full"
                             style={{
-                              width: `${(cluster.count / totalCount) * 100}%`,
+                              width:
+                                totalCount > 0
+                                  ? `${(cluster.count / totalCount) * 100}%`
+                                  : '0%',
                               backgroundColor: getClusterColor(cluster.classId),
                             }}
                           />
@@ -304,21 +469,216 @@ const AntiSmashSubpage: React.FC = () => {
                       </td>
                     </tr>
                   ))}
+                  {antiSmashData.length === 0 && (
+                    <tr className="vf-table__row">
+                      <td
+                        colSpan={4}
+                        className="vf-table__cell text-center py-8 text-gray-500"
+                      >
+                        No antiSMASH clusters found
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
-                <tfoot className="vf-table__footer bg-gray-100">
-                  <tr className="vf-table__row">
-                    <td className="vf-table__cell" colSpan={2}>
-                      <strong>Total</strong>
-                    </td>
-                    <td className="vf-table__cell text-right">
-                      <strong>{totalCount}</strong>
-                    </td>
-                    <td className="vf-table__cell text-right">
-                      <strong>100%</strong>
-                    </td>
-                  </tr>
-                </tfoot>
+                {antiSmashData.length > 0 && (
+                  <tfoot className="vf-table__footer bg-gray-100">
+                    <tr className="vf-table__row">
+                      <td className="vf-table__cell" colSpan={2}>
+                        <strong>Total</strong>
+                      </td>
+                      <td className="vf-table__cell text-right">
+                        <strong>{totalCount}</strong>
+                      </td>
+                      <td className="vf-table__cell text-right">
+                        <strong>100%</strong>
+                      </td>
+                    </tr>
+                  </tfoot>
+                )}
               </table>
+            </div>
+
+            {/* Pagination controls */}
+            {totalPages > 1 && (
+              <div className="mt-4 flex justify-center">
+                <nav className="vf-pagination" aria-label="Pagination">
+                  <ul className="vf-pagination__list flex items-center gap-1">
+                    {/* First page button */}
+                    <li className="vf-pagination__item">
+                      <button
+                        onClick={() => handlePageChange(1)}
+                        disabled={currentPage === 1 || isLoading}
+                        className={`vf-pagination__link flex items-center ${
+                          currentPage === 1
+                            ? 'opacity-50 cursor-not-allowed'
+                            : ''
+                        }`}
+                        aria-label="Go to first page"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="11 17 6 12 11 7"></polyline>
+                          <polyline points="18 17 13 12 18 7"></polyline>
+                        </svg>
+                      </button>
+                    </li>
+
+                    {/* Previous page button */}
+                    <li className="vf-pagination__item vf-pagination__item--previous-page">
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1 || isLoading}
+                        className={`vf-pagination__link flex items-center ${
+                          currentPage === 1
+                            ? 'opacity-50 cursor-not-allowed'
+                            : ''
+                        }`}
+                      >
+                        <ArrowLeft size={16} className="mr-1" />
+                        Previous
+                      </button>
+                    </li>
+
+                    {/* Generate page numbers */}
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      // Logic to show pages around current page
+                      let pageNum;
+                      if (totalPages <= 5) {
+                        // If 5 or fewer pages, show all
+                        pageNum = i + 1;
+                      } else if (currentPage <= 3) {
+                        // If near start, show first 5
+                        pageNum = i + 1;
+                      } else if (currentPage >= totalPages - 2) {
+                        // If near end, show last 5
+                        pageNum = totalPages - 4 + i;
+                      } else {
+                        // Otherwise show 2 before and 2 after current
+                        pageNum = currentPage - 2 + i;
+                      }
+
+                      return (
+                        <li
+                          key={`page-${pageNum}`}
+                          className={`vf-pagination__item ${
+                            pageNum === currentPage
+                              ? 'vf-pagination__item--is-active'
+                              : ''
+                          }`}
+                        >
+                          {pageNum === currentPage ? (
+                            <span
+                              className="vf-pagination__label"
+                              aria-current="page"
+                            >
+                              {pageNum}
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handlePageChange(pageNum)}
+                              className="vf-pagination__link"
+                              disabled={isLoading}
+                            >
+                              {pageNum}
+                            </button>
+                          )}
+                        </li>
+                      );
+                    })}
+
+                    {/* Show ellipsis if needed */}
+                    {totalPages > 5 && (
+                      <>
+                        {currentPage < totalPages - 2 && (
+                          <li className="vf-pagination__item">
+                            <span className="vf-pagination__label">...</span>
+                          </li>
+                        )}
+
+                        {/* Always show the last page if not in view */}
+                        {currentPage < totalPages - 2 && (
+                          <li className="vf-pagination__item">
+                            <button
+                              onClick={() => handlePageChange(totalPages)}
+                              className="vf-pagination__link"
+                              disabled={isLoading}
+                            >
+                              {totalPages}
+                            </button>
+                          </li>
+                        )}
+                      </>
+                    )}
+
+                    {/* Next page button */}
+                    <li className="vf-pagination__item vf-pagination__item--next-page">
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages || isLoading}
+                        className={`vf-pagination__link flex items-center ${
+                          currentPage === totalPages
+                            ? 'opacity-50 cursor-not-allowed'
+                            : ''
+                        }`}
+                      >
+                        Next
+                        <ArrowRight size={16} className="ml-1" />
+                      </button>
+                    </li>
+
+                    {/* Last page button */}
+                    <li className="vf-pagination__item">
+                      <button
+                        onClick={() => handlePageChange(totalPages)}
+                        disabled={currentPage === totalPages || isLoading}
+                        className={`vf-pagination__link flex items-center ${
+                          currentPage === totalPages
+                            ? 'opacity-50 cursor-not-allowed'
+                            : ''
+                        }`}
+                        aria-label="Go to last page"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="13 17 18 12 13 7"></polyline>
+                          <polyline points="6 17 11 12 6 7"></polyline>
+                        </svg>
+                      </button>
+                    </li>
+
+                    {/* Loading indicator */}
+                    {isLoading && (
+                      <li className="vf-pagination__item ml-2">
+                        <span className="inline-block w-4 h-4 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></span>
+                      </li>
+                    )}
+                  </ul>
+                </nav>
+              </div>
+            )}
+
+            {/* Page status information */}
+            <div className="text-sm text-gray-500 mt-2 text-center">
+              Showing page {currentPage} of {totalPages} (
+              {isLoading ? 'Loading...' : `${antiSmashData.length} records`})
             </div>
 
             <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
