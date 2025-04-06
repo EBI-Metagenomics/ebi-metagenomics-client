@@ -18,12 +18,14 @@ type ProgrammaticAccessBoxProps = {
   apiPath: string;
   entityLabel: string;
   notebooks?: NotebookLinkProps[];
+  isApiV2?: boolean;
 };
 
 const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
   apiPath,
   entityLabel,
   notebooks,
+  isApiV2 = false,
 }) => {
   const { config } = useContext(UserContext);
   const sayCopied = () =>
@@ -36,7 +38,8 @@ const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
       draggable: true,
       progress: undefined,
     });
-  const apiUrl = `${config.api}${apiPath}`;
+  const root = isApiV2 ? config.api_v2 : config.api;
+  const apiUrl = `${root}${apiPath}`;
 
   return (
     <Box label="Programmatic access">

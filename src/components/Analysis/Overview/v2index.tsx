@@ -76,13 +76,13 @@ const AnalysisOverview: React.FC = () => {
     {
       key: 'Sample',
       value:
-        data?.sample_accession &&
+        data?.sample?.accession &&
         (() => (
-          <Link to={`/samples/${data?.sample_accession}`}>
-            {data?.sample_accession}
+          <Link to={`/samples/${data?.sample?.accession}`}>
+            {data?.sample?.accession}
           </Link>
         )),
-      rawValue: data?.sample_accession || '',
+      rawValue: data?.sample?.accession || '',
     },
     {
       key: 'Assembly',
@@ -90,8 +90,8 @@ const AnalysisOverview: React.FC = () => {
         data?.assembly_accession &&
         isAssembly(data.experiment_type as string) &&
         (() => (
-          <Link to={`/assemblies/${data?.assembly_accession}`}>
-            {data?.assembly_accession}
+          <Link to={`/assemblies/${data?.assembly?.accession}`}>
+            {data?.assembly?.accession}
           </Link>
         )),
       rawValue: data?.assembly_accession || '',
@@ -99,18 +99,18 @@ const AnalysisOverview: React.FC = () => {
     {
       key: 'Run',
       value:
-        data?.run_accession &&
+        data?.run?.accession &&
         (() => (
-          <Link to={`/runs/${data?.run_accession}`}>{data?.run_accession}</Link>
+          <Link to={`/runs/${data?.run?.accession}`}>{data?.run?.accession}</Link>
         )),
-      rawValue: data?.run_accession || '',
+      rawValue: data?.run?.accession || '',
     },
     {
       key: 'Results folder',
       value:
         data?.results_dir &&
         (() => (
-          <a href={data.run_accession} target="_blank" rel="noreferrer">
+          <a href={data.results_dir} target="_blank" rel="noreferrer">
             {data.results_dir}
           </a>
         )),

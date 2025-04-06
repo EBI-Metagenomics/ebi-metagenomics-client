@@ -5,15 +5,14 @@ import BlogExcerpts from 'components/Home/BlogExcerpts';
 import Publications, { MainPublication } from 'components/Publications';
 import './style.css';
 import TrainingResources from 'components/Home/TrainingResources';
+import EarlyAccessExplainer from 'components/Home/EarlyAccess/Explainer';
 
 const HomePage: React.FC = () => {
   return (
     <section className="vf-content vf-stack vf-stack--800">
       <div />
-      <div className="vf-grid vf-grid__col-2">
-        <SearchBy />
-        <Request />
-      </div>
+      <h2>MGnify V6 Early Data Release</h2>
+      <EarlyAccessExplainer />
       <hr />
       <BlogExcerpts />
       <h2>Latest publications</h2>

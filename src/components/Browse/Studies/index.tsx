@@ -4,32 +4,27 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
-import BiomeSelector from 'components/UI/BiomeSelector';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
 import { getBiomeIcon } from 'utils/biomes';
 import Loading from 'components/UI/Loading';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useStudiesList from 'hooks/data/useStudies';
+import BiomeSelector from 'components/UI/BiomeSelector';
 
 const BrowseStudies: React.FC = () => {
   const [page, setPage] = useQueryParamState('page', 1, Number);
   const [order] = useQueryParamState('order', '');
   const [biome] = useQueryParamState('biome', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
-  const [search] = useQueryParamState('search', '');
 
   const [hasData, setHasData] = useState(false);
+
   const {
     data: studiesList,
     loading,
-    isStale,
-    downloadURL,
-  } = useMGnifyData('studies', {
+    url: downloadURL,
+  } = useStudiesList({
     page,
-    ordering: order,
-    lineage: biome,
-    page_size: pageSize,
-    search: search || undefined,
+    order,
+    biome_lineage: biome,
   });
 
   const columns = React.useMemo(
@@ -37,7 +32,7 @@ const BrowseStudies: React.FC = () => {
       {
         id: 'biome',
         Header: 'Biome',
-        accessor: (study) => study.relationships.biomes.data?.[0]?.id,
+        accessor: (study) => study.biome?.lineage,
         Cell: ({ cell }) => (
           <span
             className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
@@ -48,26 +43,17 @@ const BrowseStudies: React.FC = () => {
         className: 'mg-biome',
       },
       {
-        id: 'study_id',
+        id: 'accession',
         Header: 'Accession',
-        accessor: 'attributes.accession',
+        accessor: 'accession',
         Cell: ({ cell }) => (
           <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
         ),
       },
       {
         Header: 'Study name',
-        accessor: 'attributes.study-name',
-      },
-      {
-        Header: 'Samples',
-        accessor: 'attributes.samples-count',
-      },
-      {
-        id: 'last_update',
-        Header: 'Last Updated',
-        accessor: 'attributes.last-update',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        accessor: 'title',
+        disableSortBy: true,
       },
     ],
     []
@@ -76,6 +62,7 @@ const BrowseStudies: React.FC = () => {
   useEffect(() => {
     setHasData(!!studiesList);
   }, [studiesList]);
+
   if (!studiesList && loading) return <Loading />;
   return (
     <section className="mg-browse-section">
@@ -93,13 +80,12 @@ const BrowseStudies: React.FC = () => {
       {hasData && (
         <EMGTable
           cols={columns}
-          data={studiesList as MGnifyResponseList}
-          Title={`Studies (${studiesList.meta.pagination.count})`}
+          data={studiesList}
+          Title={`Studies (${studiesList.count})`}
           initialPage={(page as number) - 1}
           sortable
           loading={loading}
-          isStale={isStale}
-          showTextFilter
+          // showTextFilter
           downloadURL={downloadURL}
         />
       )}

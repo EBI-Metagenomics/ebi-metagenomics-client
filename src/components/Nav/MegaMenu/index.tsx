@@ -95,35 +95,35 @@ const MegaMenu: React.FC = () => {
                 Overview
               </a>
             </li>
-            <li className="vf-navigation__item">
-              <a
-                id="submit-data-section"
-                className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
-                  activeSection === 'submit-data-section' ? 'active' : ''
-                }`}
-                href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo"
-                onClick={(event) =>
-                  handleMenuItemClick(event, 'submit-data-section')
-                }
-                rel="noreferrer"
-              >
-                Submit data
-              </a>
-            </li>
-            <li className="vf-navigation__item">
-              <a
-                id="text-search-section"
-                className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
-                  activeSection === 'text-search-section' ? 'active' : ''
-                }`}
-                href="/metagenomics/search"
-                onClick={(event) =>
-                  handleMenuItemClick(event, 'text-search-section')
-                }
-              >
-                Text search
-              </a>
-            </li>
+            {/* <li className="vf-navigation__item"> */}
+            {/*  <a */}
+            {/*    id="submit-data-section" */}
+            {/*    className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${ */}
+            {/*      activeSection === 'submit-data-section' ? 'active' : '' */}
+            {/*    }`} */}
+            {/*    href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo" */}
+            {/*    onClick={(event) => */}
+            {/*      handleMenuItemClick(event, 'submit-data-section') */}
+            {/*    } */}
+            {/*    rel="noreferrer" */}
+            {/*  > */}
+            {/*    Submit data */}
+            {/*  </a> */}
+            {/* </li> */}
+            {/* <li className="vf-navigation__item"> */}
+            {/*  <a */}
+            {/*    id="text-search-section" */}
+            {/*    className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${ */}
+            {/*      activeSection === 'text-search-section' ? 'active' : '' */}
+            {/*    }`} */}
+            {/*    href="/metagenomics/search" */}
+            {/*    onClick={(event) => */}
+            {/*      handleMenuItemClick(event, 'text-search-section') */}
+            {/*    } */}
+            {/*  > */}
+            {/*    Text search */}
+            {/*  </a> */}
+            {/* </li> */}
             <li className="vf-navigation__item">
               <a
                 id="sequence-search-link"
@@ -176,33 +176,33 @@ const MegaMenu: React.FC = () => {
               </a>
             </li>
 
-            {isAuthenticated ? (
-              <li className="vf-navigation__item">
-                <a
-                  className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
-                    activeSection === 'login-section' ? 'active' : ''
-                  }`}
-                  id="login-section"
-                  href="/metagenomics/mydata"
-                  onClick={(event) =>
-                    handleMenuItemClick(event, 'login-section')
-                  }
-                >
-                  My data
-                </a>
-              </li>
-            ) : (
-              <li className="vf-navigation__item">
-                <a
-                  id="login-link"
-                  className="vf-navigation__link vf-mega-menu__link"
-                  href="/metagenomics/login"
-                  onClick={() => setMenuVisible(false)}
-                >
-                  Login
-                </a>
-              </li>
-            )}
+            {/* {isAuthenticated ? ( */}
+            {/*  <li className="vf-navigation__item"> */}
+            {/*    <a */}
+            {/*      className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${ */}
+            {/*        activeSection === 'login-section' ? 'active' : '' */}
+            {/*      }`} */}
+            {/*      id="login-section" */}
+            {/*      href="/metagenomics/mydata" */}
+            {/*      onClick={(event) => */}
+            {/*        handleMenuItemClick(event, 'login-section') */}
+            {/*      } */}
+            {/*    > */}
+            {/*      My data */}
+            {/*    </a> */}
+            {/*  </li> */}
+            {/* ) : ( */}
+            {/*  <li className="vf-navigation__item"> */}
+            {/*    <a */}
+            {/*      id="login-link" */}
+            {/*      className="vf-navigation__link vf-mega-menu__link" */}
+            {/*      href="/metagenomics/login" */}
+            {/*      onClick={() => setMenuVisible(false)} */}
+            {/*    > */}
+            {/*      Login */}
+            {/*    </a> */}
+            {/*  </li> */}
+            {/* )} */}
           </ul>
         </nav>
       </div>
@@ -294,7 +294,7 @@ const MegaMenu: React.FC = () => {
                             id="api-link"
                             target="_blank"
                             className="vf-navigation__link"
-                            href={config.api}
+                            href={`${config.api_v2}docs`}
                             rel="noreferrer"
                           >
                             API &nbsp;

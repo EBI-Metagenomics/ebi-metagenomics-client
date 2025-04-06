@@ -51,7 +51,7 @@ const useApiData = <T,>({ url, transformResponse }: FetchDataOptions<T>) => {
     fetchData();
   }, [url, transformResponse]);
 
-  return { data, error, loading };
+  return { data, error, loading, url };
 };
 
 export default useApiData;

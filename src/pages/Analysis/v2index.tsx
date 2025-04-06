@@ -22,17 +22,17 @@ import AssemblyTaxonomy from 'components/Analysis/AssemblyTaxonomy';
 // TODO: find v2 counterpart
 
 const isAssembly = (data: AnalysisDetail): boolean =>
-  ['ASSEM', 'HYASS'].includes(data.experiment_type as string);
+  data.experiment_type.toLowerCase().endsWith('assembly');
 
 const isAtleastVersion5 = (data: AnalysisDetail): boolean =>
   ['5.0', 'V6'].includes(data.pipeline_version);
 
 const isNotAmplicon = (data: AnalysisDetail): boolean => {
-  return data.experiment_type !== 'AMPLI';
+  return data.experiment_type.toLowerCase() !== 'amplicon';
 };
 
 const isAmplicon = (data: AnalysisDetail): boolean => {
-  return data.experiment_type === 'AMPLI';
+  return data.experiment_type.toLowerCase() === 'amplicon';
 };
 
 const V2AnalysisPage: React.FC = () => {
@@ -47,21 +47,16 @@ const V2AnalysisPage: React.FC = () => {
     { label: 'Overview', to: '#overview' },
     { label: 'Quality control', to: '#qc' },
     { label: 'Taxonomy', to: '#taxonomic' },
-    { label: 'Functional analysis', to: '#functional' },
-    { label: 'Pathways/Systems', to: '#path-systems' },
-    { label: 'Contig Viewer', to: '#contigs-viewer' },
-    // isNotAmplicon(analysisData)
-    //   ? { label: 'Functional analysis', to: '#functional' }
-    //   : null,
-    // isAssembly(analysisData) && isAtleastVersion5(analysisData)
-    //   ? { label: 'Pathways/Systems', to: '#path-systems' }
-    //   : null,
-    // isAssembly(analysisData) && isAtleastVersion5(analysisData)
-    //   ? { label: 'Contig Viewer', to: '#contigs-viewer' }
-    //   : null,
-    // TODO: ASV  tab, i think is to be conditionally rendered based on if the analysis is an amplicon analysis
-    // isAmplicon(analysisData) ? { label: 'ASV', to: '#asv' } : null,
-    // { label: 'ASV', to: '#asv' },
+    isNotAmplicon(analysisData)
+      ? { label: 'Functional analysis', to: '#functional' }
+      : null,
+    isNotAmplicon(analysisData)
+      ? { label: 'Pathways/Systems', to: '#path-systems' }
+      : null,
+    isAssembly(analysisData)
+      ? { label: 'Contig Viewer', to: '#contigs-viewer' }
+      : null,
+    isAmplicon(analysisData) ? { label: 'ASV', to: '#asv' } : null,
   ].filter(Boolean);
   return (
     <section className="vf-content">
