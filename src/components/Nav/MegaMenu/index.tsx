@@ -294,7 +294,7 @@ const MegaMenu: React.FC = () => {
                             id="api-link"
                             target="_blank"
                             className="vf-navigation__link"
-                            href={`${config.api_v2}docs`}
+                            href={`${config.api_v2}`}
                             rel="noreferrer"
                           >
                             API &nbsp;
