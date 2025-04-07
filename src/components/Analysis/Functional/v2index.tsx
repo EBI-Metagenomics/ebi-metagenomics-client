@@ -9,9 +9,9 @@ import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 // import PfamTab from 'components/Analysis/Functional/KO';
 import KOTab from 'components/Analysis/Functional/KO/v2Index';
+import PfamTab from 'components/Analysis/Functional/Pfam/v2Index';
 import InterProTab from './InterPro/v2index';
 import GOTab from './GO/v2index';
-import PfamTab from 'components/Analysis/Functional/Pfam/v2Index';
 
 const PARAMETER_NAME = 'type';
 const PARAMETER_DEFAULT = 'interpro';

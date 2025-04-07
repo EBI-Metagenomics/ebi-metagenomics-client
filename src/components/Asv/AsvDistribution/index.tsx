@@ -87,10 +87,10 @@ const AsvDistribution = ({ fileUrl }) => {
           const asvId = parts[j];
           const count = parseInt(parts[j + 1], 10);
 
-          if (!isNaN(count)) {
+          if (!Number.isNaN(count)) {
             asvData.push({
               name: asvId,
-              count: count,
+              count,
             });
           }
         }
@@ -154,7 +154,7 @@ const AsvDistribution = ({ fileUrl }) => {
   }
 
   const getSampleName = (url) => {
-    const matches = url.match(/([^\/]+)(?=\.\w+$)/);
+    const matches = url.match(/([^/]+)(?=\.\w+$)/);
     return matches ? matches[0] : 'Sample';
   };
 
@@ -171,6 +171,7 @@ const AsvDistribution = ({ fileUrl }) => {
 
       <div style={styles.controls}>
         <button
+          type="button"
           style={{
             ...styles.button,
             opacity: visibleCount <= 25 ? 0.5 : 1,
@@ -182,6 +183,7 @@ const AsvDistribution = ({ fileUrl }) => {
           Show Fewer
         </button>
         <button
+          type="button"
           style={{
             ...styles.button,
             opacity: visibleCount >= data.length ? 0.5 : 1,

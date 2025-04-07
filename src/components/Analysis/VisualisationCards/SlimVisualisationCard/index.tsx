@@ -69,8 +69,8 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
     }
   };
 
-  const getFileTypeColors = (fileType: string) => {
-    switch (fileType?.toLowerCase()) {
+  const getFileTypeColors = (_fileType: string) => {
+    switch (_fileType?.toLowerCase()) {
       case 'tsv':
         return { bg: '#e9f7fe', color: '#0288d1' };
       case 'mseq':
@@ -212,7 +212,9 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
             }}
           >
             <Tooltip content="Download">
+              {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
               <button
+                type="submit"
                 onClick={handleDownload}
                 className="action-button"
                 style={{
@@ -275,7 +277,9 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
             </Tooltip>
 
             <Tooltip content="Copy link">
+              {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
               <button
+                type="button"
                 onClick={handleCopy}
                 className={`action-button ${showCopiedMessage ? 'copied' : ''}`}
                 style={{

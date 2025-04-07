@@ -7,7 +7,6 @@ import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Analysis/Overview/v2index';
 import QualityControl from 'components/Analysis/QualityControl/v2index';
 import ContigViewer from 'components/Analysis/ContigViewer';
-import TaxonomySubpage from 'components/Analysis/Taxonomy/v2index';
 import FunctionalSubpage from 'components/Analysis/Functional/v2index';
 import PathwaysSubpage from 'components/Analysis/Pathways/v2Index';
 import RouteForHash from 'components/Nav/RouteForHash';
@@ -23,9 +22,6 @@ import AssemblyTaxonomy from 'components/Analysis/AssemblyTaxonomy';
 
 const isAssembly = (data: AnalysisDetail): boolean =>
   data.experiment_type.toLowerCase().endsWith('assembly');
-
-const isAtleastVersion5 = (data: AnalysisDetail): boolean =>
-  ['5.0', 'V6'].includes(data.pipeline_version);
 
 const isNotAmplicon = (data: AnalysisDetail): boolean => {
   return data.experiment_type.toLowerCase() !== 'amplicon';

@@ -1,3 +1,4 @@
+// eslint-disable no-nested-ternary
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import { BGZipService } from 'components/Analysis/BgZipService';
@@ -239,7 +240,7 @@ const KOTab: React.FC = () => {
     return (
       <div className="vf-stack vf-stack--400 flex justify-center items-center h-64">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500" />
           <p className="mt-2">Loading KEGG pathway data...</p>
           <p className="text-sm text-gray-500 mt-1">
             Accessing data using BGZip index
@@ -260,6 +261,7 @@ const KOTab: React.FC = () => {
           <p className="text-center">{error}</p>
           <div className="mt-4 text-center">
             <button
+              type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
               onClick={() => {
                 setError(null);
@@ -298,6 +300,7 @@ const KOTab: React.FC = () => {
             aria-label="Pagination"
           >
             <button
+              type="submit"
               onClick={() => handlePageChange(1)}
               disabled={currentPage === 1 || isLoading}
               className={`relative inline-flex items-center px-2 py-2 rounded-l-md border ${
@@ -327,6 +330,7 @@ const KOTab: React.FC = () => {
               </svg>
             </button>
             <button
+              type="submit"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1 || isLoading}
               className={`relative inline-flex items-center px-2 py-2 border ${
@@ -354,11 +358,12 @@ const KOTab: React.FC = () => {
             <span className="relative inline-flex items-center px-4 py-2 border bg-white text-sm font-medium">
               Page {currentPage} of {totalPages}
               {isLoading && (
-                <span className="ml-2 inline-block w-4 h-4 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></span>
+                <span className="ml-2 inline-block w-4 h-4 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin" />
               )}
             </span>
 
             <button
+              type="submit"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages || isLoading}
               className={`relative inline-flex items-center px-2 py-2 border ${
@@ -383,6 +388,7 @@ const KOTab: React.FC = () => {
               </svg>
             </button>
             <button
+              type="submit"
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages || isLoading}
               className={`relative inline-flex items-center px-2 py-2 rounded-r-md border ${
@@ -431,11 +437,11 @@ const KOTab: React.FC = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                    <polyline points="10 9 9 9 8 9"></polyline>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                    <polyline points="10 9 9 9 8 9" />
                   </svg>
                 </span>
                 <div>
@@ -467,9 +473,9 @@ const KOTab: React.FC = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                    <polyline points="7 3 7 8 15 8"></polyline>
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                    <polyline points="17 21 17 13 7 13 7 21" />
+                    <polyline points="7 3 7 8 15 8" />
                   </svg>
                 </span>
                 <div>
@@ -499,8 +505,8 @@ const KOTab: React.FC = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <polyline points="9 11 12 14 22 4"></polyline>
-                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    <polyline points="9 11 12 14 22 4" />
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
                   </svg>
                 </span>
                 <div>
@@ -543,7 +549,7 @@ const KOTab: React.FC = () => {
                                 (pathways.length / totalPathways) * 100
                               }%`,
                             }}
-                          ></div>
+                          />
                         </div>
                         <span className="ml-3 whitespace-nowrap text-sm">
                           <strong>{pathways.length}</strong> pathways
@@ -673,7 +679,7 @@ const KOTab: React.FC = () => {
                                     : 'bg-red-500'
                                 } h-2 rounded-full`}
                                 style={{ width: `${pathway.completeness}%` }}
-                              ></div>
+                              />
                             </div>
                             <span className="ml-2 text-sm">
                               {pathway.completeness.toFixed(1)}%
@@ -728,6 +734,7 @@ const KOTab: React.FC = () => {
             aria-label="Pagination"
           >
             <button
+              type="submit"
               onClick={() => handlePageChange(1)}
               disabled={currentPage === 1 || isLoading}
               className={`relative inline-flex items-center px-2 py-2 rounded-l-md border ${
@@ -757,6 +764,7 @@ const KOTab: React.FC = () => {
               </svg>
             </button>
             <button
+              type="submit"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1 || isLoading}
               className={`relative inline-flex items-center px-2 py-2 border ${
@@ -784,11 +792,12 @@ const KOTab: React.FC = () => {
             <span className="relative inline-flex items-center px-4 py-2 border bg-white text-sm font-medium">
               Page {currentPage} of {totalPages}
               {isLoading && (
-                <span className="ml-2 inline-block w-4 h-4 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></span>
+                <span className="ml-2 inline-block w-4 h-4 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin" />
               )}
             </span>
 
             <button
+              type="submit"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages || isLoading}
               className={`relative inline-flex items-center px-2 py-2 border ${
@@ -813,6 +822,7 @@ const KOTab: React.FC = () => {
               </svg>
             </button>
             <button
+              type="submit"
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages || isLoading}
               className={`relative inline-flex items-center px-2 py-2 rounded-r-md border ${

@@ -27,17 +27,15 @@ const ChimericProportions = ({ fileUrl }) => {
         const [key, value] = line.split('\t');
         const trimmedKey = key.trim();
         const numValue = parseFloat(value.trim());
-        if (trimmedKey in stats && !isNaN(numValue)) {
+        if (trimmedKey in stats && !Number.isNaN(numValue)) {
           stats[trimmedKey] = numValue;
         }
-      } else {
-        if (i + 1 < lines.length) {
-          const key = line;
-          const value = parseFloat(lines[i + 1].trim());
-          if (key in stats && !isNaN(value)) {
-            stats[key] = value;
-            i++;
-          }
+      } else if (i + 1 < lines.length) {
+        const key = line;
+        const value = parseFloat(lines[i + 1].trim());
+        if (key in stats && !Number.isNaN(value)) {
+          stats[key] = value;
+          i++;
         }
       }
     }
@@ -156,7 +154,7 @@ const ChimericProportions = ({ fileUrl }) => {
           <div className="vf-grid vf-grid__col-2">
             {statsCards.map((stat, index) => (
               <article
-                key={index}
+                key={stat.label}
                 className="vf-card vf-card--brand vf-card--bordered"
                 style={
                   stat.isChimeric
@@ -168,15 +166,7 @@ const ChimericProportions = ({ fileUrl }) => {
                 }
               >
                 <div className="vf-card__content | vf-stack vf-stack--400">
-                  <h3 className="vf-card__heading">
-                    <a
-                      className="vf-card__link"
-                      href="JavaScript:Void(0);"
-                      style={stat.isChimeric ? { color: stat.color } : {}}
-                    >
-                      {stat.label}
-                    </a>
-                  </h3>
+                  <h3 className="vf-card__heading">{stat.label}</h3>
                   <p
                     className="vf-card__subheading"
                     style={stat.isChimeric ? { color: stat.color } : {}}
@@ -198,9 +188,8 @@ const ChimericProportions = ({ fileUrl }) => {
           >
             <div className="vf-card__content | vf-stack vf-stack--400">
               <h3 className="vf-card__heading">
-                <a
+                <span
                   className="vf-card__link"
-                  href="JavaScript:Void(0);"
                   style={{ color: chimericInfo.color }}
                 >
                   Chimeric Reads Thresholds
@@ -215,9 +204,9 @@ const ChimericProportions = ({ fileUrl }) => {
                       d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z"
                       fill="currentColor"
                       fillRule="nonzero"
-                    ></path>
+                    />
                   </svg>
-                </a>
+                </span>
               </h3>
 
               {/* Simple Threshold Gauge */}
@@ -225,12 +214,8 @@ const ChimericProportions = ({ fileUrl }) => {
                 <div className="relative h-4 rounded-full overflow-hidden bg-gray-100">
                   {/* Colored segments */}
                   <div className="absolute inset-0 flex">
-                    <div
-                      style={{ backgroundColor: '#86efac', width: '25%' }}
-                    ></div>
-                    <div
-                      style={{ backgroundColor: '#fca5a5', width: '75%' }}
-                    ></div>
+                    <div style={{ backgroundColor: '#86efac', width: '25%' }} />
+                    <div style={{ backgroundColor: '#fca5a5', width: '75%' }} />
                   </div>
 
                   {/* Marker for current value */}
@@ -240,7 +225,7 @@ const ChimericProportions = ({ fileUrl }) => {
                       left: `${gaugePosition}%`,
                       transform: 'translateX(-50%)',
                     }}
-                  ></div>
+                  />
                 </div>
 
                 {/* Gauge labels */}
@@ -259,7 +244,7 @@ const ChimericProportions = ({ fileUrl }) => {
                     <tbody>
                       <tr>
                         <td className="py-1 pr-2 w-8">
-                          <div className="w-4 h-4 border-2 rounded bg-green-50 border-green-200"></div>
+                          <div className="w-4 h-4 border-2 rounded bg-green-50 border-green-200" />
                         </td>
                         <td className="py-1 font-medium text-gray-700">
                           Expected
@@ -269,7 +254,7 @@ const ChimericProportions = ({ fileUrl }) => {
                       </tr>
                       <tr>
                         <td className="py-1 pr-2">
-                          <div className="w-4 h-4 border-2 rounded bg-red-50 border-red-200"></div>
+                          <div className="w-4 h-4 border-2 rounded bg-red-50 border-red-200" />
                         </td>
                         <td className="py-1 font-medium text-gray-700">High</td>
                         <td className="py-1 text-gray-600">{'>'} 25%</td>

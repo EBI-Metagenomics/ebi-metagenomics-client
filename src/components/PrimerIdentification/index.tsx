@@ -58,6 +58,7 @@ const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
           color = '#9333ea'; // purple
       }
       return (
+        // eslint-disable-next-line react/no-array-index-key
         <span key={index} style={{ color }}>
           {nucleotide}
         </span>
@@ -115,9 +116,9 @@ const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
               <h5>Forward Primers ({forwardPrimers.length})</h5>
             </div>
             <div className="primer-list">
-              {forwardPrimers.map((primer, index) => (
+              {forwardPrimers.map((primer) => (
                 <div
-                  key={`${data.id}-${primer.name}-${index}`}
+                  key={`${data.id}-${primer.name}`}
                   className="primer-card forward-card"
                 >
                   <div className="primer-card-header">
@@ -153,9 +154,9 @@ const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
               <h5>Reverse Primers ({reversePrimers.length})</h5>
             </div>
             <div className="primer-list">
-              {reversePrimers.map((primer, index) => (
+              {reversePrimers.map((primer) => (
                 <div
-                  key={`${data.id}-${primer.name}-${index}`}
+                  key={`${data.id}-${primer.name}`}
                   className="primer-card reverse-card"
                 >
                   <div className="primer-card-header">

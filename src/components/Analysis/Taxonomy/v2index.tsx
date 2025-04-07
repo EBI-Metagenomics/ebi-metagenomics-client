@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useContext, useRef, useState } from 'react';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import './style.css';
@@ -147,6 +149,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
         </SlimVisualisationCard>
       );
     }
+    return null;
   };
 
   const processClosedRefMarkerGenes = () => {
@@ -329,15 +332,15 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
           <div className="marker-legend-title">Read count color legend:</div>
           <div className="marker-legend-items">
             <div className="marker-legend-item">
-              <div className="marker-legend-color bacteria-color"></div>
+              <div className="marker-legend-color bacteria-color" />
               <div className="marker-legend-label">Bacteria</div>
             </div>
             <div className="marker-legend-item">
-              <div className="marker-legend-color archaea-color"></div>
+              <div className="marker-legend-color archaea-color" />
               <div className="marker-legend-label">Archaea</div>
             </div>
             <div className="marker-legend-item">
-              <div className="marker-legend-color eukarya-color"></div>
+              <div className="marker-legend-color eukarya-color" />
               <div className="marker-legend-label">Eukarya</div>
             </div>
           </div>
@@ -364,9 +367,10 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
               </summary>
               <ul className="taxonomy-nav-list">
                 {uniqueAsvNavItems.map((analysis) => (
-                  <li
+                  <button
+                    type="submit"
                     key={analysis.id}
-                    className={`taxonomy-nav-item ${
+                    className={`vf-button__text taxonomy-nav-item ${
                       activeNavItem === `asv-${analysis.id}` &&
                       activeCategory === 'taxonomy-asv'
                         ? 'active'
@@ -422,7 +426,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
                       </svg>
                     </span>
                     <span className="taxonomy-nav-text">{analysis.label}</span>
-                  </li>
+                  </button>
                 ))}
               </ul>
             </details>

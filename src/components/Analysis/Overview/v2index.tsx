@@ -101,7 +101,9 @@ const AnalysisOverview: React.FC = () => {
       value:
         data?.run?.accession &&
         (() => (
-          <Link to={`/runs/${data?.run?.accession}`}>{data?.run?.accession}</Link>
+          <Link to={`/runs/${data?.run?.accession}`}>
+            {data?.run?.accession}
+          </Link>
         )),
       rawValue: data?.run?.accession || '',
     },

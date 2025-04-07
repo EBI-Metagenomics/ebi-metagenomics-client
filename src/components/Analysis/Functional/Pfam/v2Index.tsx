@@ -160,7 +160,7 @@ const PfamTab = () => {
         <div className="vf-card__content | vf-stack vf-stack--400">
           <h3 className="vf-card__heading">KO Summary</h3>
           <p className="vf-card__subheading">Lorem Ipsum Delorim</p>
-          <p className="vf-card__text"></p>
+          <p className="vf-card__text" />
         </div>
       </DetailedVisualisationCard>
     </div>

@@ -1,4 +1,4 @@
-import { KeyValue } from "hooks/data/useData";
+import { KeyValue } from 'hooks/data/useData';
 
 export interface PaginatedList {
   items: unknown[];
@@ -25,7 +25,7 @@ export interface Download {
   url: string;
 }
 
-export interface Run extends EnaDerivedObject{
+export interface Run extends EnaDerivedObject {
   instrument_model: string | null;
   instrument_platform: string | null;
 }
@@ -68,7 +68,6 @@ export interface AnalysisDetailWithAnnotations extends AnalysisDetail {
     };
   };
 }
-
 
 export interface AnalysisList extends PaginatedList {
   items: Analysis[];

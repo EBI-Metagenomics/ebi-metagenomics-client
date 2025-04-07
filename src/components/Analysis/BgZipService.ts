@@ -1,3 +1,5 @@
+// eslint-disable no-bitwise
+
 // services/BGZipService.ts
 import * as pako from 'pako';
 
@@ -18,25 +20,24 @@ export interface BGZipServiceOptions {
   avgBytesPerRecord?: number;
   onLog?: (message: string) => void;
   onError?: (error: string) => void;
-}
-
-export interface BGZipServiceOptions {
-  avgBytesPerRecord?: number;
-  onLog?: (message: string) => void;
-  onError?: (error: string) => void;
   pageSize?: number; // Default page size
 }
 
 export class BGZipService {
   private gziIndex: GziBlock[] = [];
+
   private fileStats: FileStats = {
     totalSize: 0,
     totalBlocks: 0,
     totalRecords: null,
   };
+
   private isInitialized = false;
+
   private avgBytesPerRecord: number;
+
   private logger: (message: string) => void;
+
   private errorHandler: (error: string) => void;
 
   constructor(
@@ -234,7 +235,7 @@ export class BGZipService {
       }
     }
 
-    let blockIndices = this.getBlockIndicesForPage(page, pageSize);
+    const blockIndices = this.getBlockIndicesForPage(page, pageSize);
     console.log(page);
     // blockIndices = [2, 1];
     console.log('Block indices determined:', blockIndices);
@@ -273,9 +274,8 @@ export class BGZipService {
           'No data found for requested page, falling back to first page'
         );
         return this.getPageData(1, pageSize);
-      } else {
-        throw new Error('Failed to load data: No valid blocks found');
       }
+      throw new Error('Failed to load data: No valid blocks found');
     }
 
     return allText;
@@ -331,6 +331,7 @@ export class BGZipService {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private parseGziIndex(buffer: ArrayBuffer): GziBlock[] {
     const view = new DataView(buffer);
     const blocks: GziBlock[] = [];
@@ -394,9 +395,8 @@ export class BGZipService {
           console.log('Index correction succeeded!');
           indexIsValid = true;
           return correctedIndex;
-        } else {
-          console.log('Index correction failed, rebuilding index from scratch');
         }
+        console.log('Index correction failed, rebuilding index from scratch');
       } catch (e) {
         console.error('Error testing corrected index:', e);
       }
@@ -445,10 +445,12 @@ export class BGZipService {
       const endByte = Math.min(offset + CHUNK_SIZE - 1, contentLength - 1);
       console.log(`Scanning bytes ${offset}-${endByte}...`);
 
+      // eslint-disable-next-line no-await-in-loop
       const response = await fetch(this.dataFileUrl, {
         headers: { Range: `bytes=${offset}-${endByte}` },
       });
 
+      // eslint-disable-next-line no-await-in-loop
       const buffer = await response.arrayBuffer();
       const data = new Uint8Array(buffer);
       bytesScanned += data.length;
@@ -519,11 +521,11 @@ export class BGZipService {
     console.log('END RECORD ', endRecord);
 
     // Find block range for these records
-    let startBlockIndex = Math.max(
+    const startBlockIndex = Math.max(
       0,
       Math.floor(startRecord / recordsPerBlock)
     );
-    let endBlockIndex = Math.min(
+    const endBlockIndex = Math.min(
       this.gziIndex.length - 1,
       Math.ceil(endRecord / recordsPerBlock)
     );

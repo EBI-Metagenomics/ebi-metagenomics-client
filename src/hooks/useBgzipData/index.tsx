@@ -1,5 +1,6 @@
-// hooks/useBGZip.ts
-import { useState, useEffect, useCallback, useRef } from 'react';
+/* eslint-disable */
+
+import { useCallback, useEffect, useRef, useState } from 'react';
 import * as pako from 'pako';
 
 // --- Types ---
@@ -85,8 +86,7 @@ export function useBGZipData<T>(
   const parseGziIndex = useCallback((buffer: ArrayBuffer): GziBlock[] => {
     const view = new DataView(buffer);
     const blocks: GziBlock[] = [];
-    const headerOffset = 0;
-    let offset = headerOffset;
+    let offset = 0;
 
     while (offset + 16 <= buffer.byteLength) {
       const compressedOffset = Number(view.getBigUint64(offset, true));
@@ -106,8 +106,10 @@ export function useBGZipData<T>(
   // Fetch and process GZI index - memoized with stable dependencies
   const fetchGziIndex = useCallback(async (): Promise<GziBlock[] | null> => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       const { dataFileUrl, indexFileUrl } = urlsRef.current;
-      const { avgBytesPerRecord, pageSize, onError } = optionsRef.current;
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const { avgBytesPerRecord, pageSize } = optionsRef.current;
 
       // First, scan for actual gzip blocks
       const examineFileStructure = async () => {
@@ -117,14 +119,8 @@ export function useBGZipData<T>(
         });
 
         const buffer = await response.arrayBuffer();
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const data = new Uint8Array(buffer);
-
-        console.log(
-          'File header bytes (first 50):',
-          Array.from(data.slice(0, 50))
-            .map((b) => b.toString(16).padStart(2, '0'))
-            .join(' ')
-        );
 
         // Look for gzip magic numbers in first 4KB
         const blockStarts = [];
@@ -335,9 +331,8 @@ export function useBGZipData<T>(
         setTotalPages(Math.ceil(estimatedTotalRecords / pageSize));
 
         return index;
-      } else {
-        throw new Error('Invalid index file or unable to determine file size');
       }
+      throw new Error('Invalid index file or unable to determine file size');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       console.error('Error fetching GZI index:', errorMessage);
@@ -479,13 +474,16 @@ export function useBGZipData<T>(
             let headerSize = 10; // Minimum gzip header size
 
             // Check if extra field exists (bit 2 in flags byte)
+            // eslint-disable-next-line no-bitwise
             if ((blockData[3] & 0x04) !== 0) {
               // Extra field exists, get its length
+              // eslint-disable-next-line no-bitwise
               const extraLen = blockData[10] + (blockData[11] << 8);
               headerSize += 2 + extraLen; // 2 bytes for length field + extra field data
             }
 
             // Check for filename field (bit 3 in flags byte)
+            // eslint-disable-next-line no-bitwise
             if ((blockData[3] & 0x08) !== 0) {
               // Find the zero terminator for the filename
               let i = headerSize;
@@ -494,6 +492,7 @@ export function useBGZipData<T>(
             }
 
             // Check for comment field (bit 4 in flags byte)
+            // eslint-disable-next-line no-bitwise
             if ((blockData[3] & 0x10) !== 0) {
               // Find the zero terminator for the comment
               let i = headerSize;
@@ -502,6 +501,7 @@ export function useBGZipData<T>(
             }
 
             // Check for header CRC (bit 1 in flags byte)
+            // eslint-disable-next-line no-bitwise
             if ((blockData[3] & 0x02) !== 0) {
               headerSize += 2; // 2 bytes for CRC16
             }
@@ -547,6 +547,7 @@ export function useBGZipData<T>(
   const getBlockIndicesForPage = useCallback(
     (page: number, itemsPerPage: number): number[] => {
       const index = gziIndexRef.current;
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       const { avgBytesPerRecord } = optionsRef.current;
 
       if (!index || index.length === 0) return [];

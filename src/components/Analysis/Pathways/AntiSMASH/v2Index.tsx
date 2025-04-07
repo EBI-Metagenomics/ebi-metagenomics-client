@@ -183,7 +183,7 @@ const AntiSmashSubpage: React.FC = () => {
     return (
       <div className="vf-stack vf-stack--400 flex justify-center items-center h-64">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500" />
           <p className="mt-2">Loading antiSMASH cluster data...</p>
           <p className="text-sm text-gray-500 mt-1">
             Accessing data using BGZip index
@@ -204,6 +204,7 @@ const AntiSmashSubpage: React.FC = () => {
           <p className="text-center">{error}</p>
           <div className="mt-4 text-center">
             <button
+              type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
               onClick={() => {
                 setError(null);
@@ -250,7 +251,7 @@ const AntiSmashSubpage: React.FC = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"></path>
+                  <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18" />
                 </svg>
               </span>
               <div>
@@ -280,10 +281,10 @@ const AntiSmashSubpage: React.FC = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
               </span>
               <div>
@@ -312,7 +313,7 @@ const AntiSmashSubpage: React.FC = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                   </svg>
                 </span>
                 <div>
@@ -352,7 +353,7 @@ const AntiSmashSubpage: React.FC = () => {
                 <div
                   className="w-4 h-4 rounded-full mr-2"
                   style={{ backgroundColor: getClusterColor(cluster.classId) }}
-                ></div>
+                />
                 <span
                   className={`font-medium ${
                     selectedCluster === cluster.classId ? 'text-blue-600' : ''
@@ -506,6 +507,7 @@ const AntiSmashSubpage: React.FC = () => {
                     {/* First page button */}
                     <li className="vf-pagination__item">
                       <button
+                        type="submit"
                         onClick={() => handlePageChange(1)}
                         disabled={currentPage === 1 || isLoading}
                         className={`vf-pagination__link flex items-center ${
@@ -526,8 +528,8 @@ const AntiSmashSubpage: React.FC = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         >
-                          <polyline points="11 17 6 12 11 7"></polyline>
-                          <polyline points="18 17 13 12 18 7"></polyline>
+                          <polyline points="11 17 6 12 11 7" />
+                          <polyline points="18 17 13 12 18 7" />
                         </svg>
                       </button>
                     </li>
@@ -535,6 +537,7 @@ const AntiSmashSubpage: React.FC = () => {
                     {/* Previous page button */}
                     <li className="vf-pagination__item vf-pagination__item--previous-page">
                       <button
+                        type="submit"
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1 || isLoading}
                         className={`vf-pagination__link flex items-center ${
@@ -584,6 +587,7 @@ const AntiSmashSubpage: React.FC = () => {
                             </span>
                           ) : (
                             <button
+                              type="submit"
                               onClick={() => handlePageChange(pageNum)}
                               className="vf-pagination__link"
                               disabled={isLoading}
@@ -608,6 +612,7 @@ const AntiSmashSubpage: React.FC = () => {
                         {currentPage < totalPages - 2 && (
                           <li className="vf-pagination__item">
                             <button
+                              type="submit"
                               onClick={() => handlePageChange(totalPages)}
                               className="vf-pagination__link"
                               disabled={isLoading}
@@ -622,6 +627,7 @@ const AntiSmashSubpage: React.FC = () => {
                     {/* Next page button */}
                     <li className="vf-pagination__item vf-pagination__item--next-page">
                       <button
+                        type="submit"
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages || isLoading}
                         className={`vf-pagination__link flex items-center ${
@@ -638,6 +644,7 @@ const AntiSmashSubpage: React.FC = () => {
                     {/* Last page button */}
                     <li className="vf-pagination__item">
                       <button
+                        type="submit"
                         onClick={() => handlePageChange(totalPages)}
                         disabled={currentPage === totalPages || isLoading}
                         className={`vf-pagination__link flex items-center ${
@@ -658,8 +665,8 @@ const AntiSmashSubpage: React.FC = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         >
-                          <polyline points="13 17 18 12 13 7"></polyline>
-                          <polyline points="6 17 11 12 6 7"></polyline>
+                          <polyline points="13 17 18 12 13 7" />
+                          <polyline points="6 17 11 12 6 7" />
                         </svg>
                       </button>
                     </li>
@@ -667,7 +674,7 @@ const AntiSmashSubpage: React.FC = () => {
                     {/* Loading indicator */}
                     {isLoading && (
                       <li className="vf-pagination__item ml-2">
-                        <span className="inline-block w-4 h-4 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></span>
+                        <span className="inline-block w-4 h-4 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin" />
                       </li>
                     )}
                   </ul>

@@ -143,7 +143,9 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
           >
             {showZoomButton && (
               <Tooltip content="Zoom">
+                {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
                 <button
+                  type="button"
                   onClick={handleZoom}
                   className="action-button"
                   style={{
@@ -216,6 +218,7 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
 
             {showDownloadButton && (
               <Tooltip content="Download">
+                {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
                 <a
                   href={ftpLink}
                   download
@@ -293,6 +296,7 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
             {showCopyButton && ftpLink && (
               <Tooltip content="Copy link">
                 <button
+                  type="button"
                   onClick={handleCopy}
                   className={`action-button ${
                     showCopiedMessage ? 'copied' : ''

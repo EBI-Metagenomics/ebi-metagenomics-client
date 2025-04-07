@@ -476,7 +476,7 @@ const ClosedReferenceMarkerGeneTable: React.FC<
                         className="stacked-bar-segment its-bar"
                         style={{ width: '100%' }}
                         title={`ITS: ${groupedClosedRefMarkerGenes.ITS.total_read_count.toLocaleString()} reads`}
-                      ></div>
+                      />
                     </div>
                   </div>
                 )}

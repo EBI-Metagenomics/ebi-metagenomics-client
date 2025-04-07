@@ -1,6 +1,4 @@
 import React from 'react';
-import SearchBy from 'components/Home/SearchBy';
-import Request from 'components/Home/Request';
 import BlogExcerpts from 'components/Home/BlogExcerpts';
 import Publications, { MainPublication } from 'components/Publications';
 import './style.css';

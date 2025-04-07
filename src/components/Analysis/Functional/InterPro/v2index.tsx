@@ -97,7 +97,7 @@ const InterPro: React.FC = () => {
         </div>
       </DetailedVisualisationCard>
 
-      <div className="vf-grid mg-grid-30-70"></div>
+      <div className="vf-grid mg-grid-30-70" />
     </div>
   );
 };

@@ -24,12 +24,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
       <div className="vf-grid">
         <div className="vf-stack vf-stack--200">
           <div />
-          <h4>
-            Last updated:{' '}
-            {new Date(
-              data.updated_at
-            ).toDateString()}
-          </h4>
+          <h4>Last updated: {new Date(data.updated_at).toDateString()}</h4>
           <Box label="External links">
             <ul data-cy="study-external-links">
               <li>
