@@ -220,22 +220,21 @@ const MegaMenu: React.FC = () => {
                 <div className="vf-section-header">
                   <h2 className="vf-section-header__heading">Browse MGnify</h2>
                   <p className="vf-section-header__text">
-                    Browse MGnify by study, sample, publication, genome or
-                    biome.
+                    Browse MGnify’s analysed datasets.
                   </p>
                 </div>
                 <div className="vf-section-content | vf-grid vf-grid__col-3">
                   <div>
                     <nav className="vf-navigation vf-navigation--main">
                       <ul className="vf-navigation__list | vf-list | vf-cluster__inner | vf-stack vf-stack--200">
-                        <li className="vf-navigation__item">
-                          <a
-                            href={`${config.basename}/browse/super-studies`}
-                            className="vf-navigation__link rotating-link"
-                          >
-                            Super studies <ArrowForLink />
-                          </a>
-                        </li>
+                        {/* <li className="vf-navigation__item"> */}
+                        {/*  <a */}
+                        {/*    href={`${config.basename}/browse/super-studies`} */}
+                        {/*    className="vf-navigation__link rotating-link" */}
+                        {/*  > */}
+                        {/*    Super studies <ArrowForLink /> */}
+                        {/*  </a> */}
+                        {/* </li> */}
                         <li className="vf-navigation__item">
                           <a
                             href={`${config.basename}/browse/studies`}
@@ -244,38 +243,38 @@ const MegaMenu: React.FC = () => {
                             Studies <ArrowForLink />
                           </a>
                         </li>
-                        <li className="vf-navigation__item">
-                          <a
-                            href={`${config.basename}/browse/samples`}
-                            className="vf-navigation__link rotating-link"
-                          >
-                            Samples <ArrowForLink />
-                          </a>
-                        </li>
-                        <li className="vf-navigation__item">
-                          <a
-                            href={`${config.basename}/browse/publications`}
-                            className="vf-navigation__link rotating-link"
-                          >
-                            Publications <ArrowForLink />
-                          </a>
-                        </li>
-                        <li className="vf-navigation__item">
-                          <a
-                            href={`${config.basename}/browse/genomes`}
-                            className="vf-navigation__link rotating-link"
-                          >
-                            Genomes <ArrowForLink />
-                          </a>
-                        </li>
-                        <li className="vf-navigation__item">
-                          <a
-                            href={`${config.basename}/browse/biomes`}
-                            className="vf-navigation__link rotating-link"
-                          >
-                            Biomes <ArrowForLink />
-                          </a>
-                        </li>
+                        {/* <li className="vf-navigation__item"> */}
+                        {/*  <a */}
+                        {/*    href={`${config.basename}/browse/samples`} */}
+                        {/*    className="vf-navigation__link rotating-link" */}
+                        {/*  > */}
+                        {/*    Samples <ArrowForLink /> */}
+                        {/*  </a> */}
+                        {/* </li> */}
+                        {/* <li className="vf-navigation__item"> */}
+                        {/*  <a */}
+                        {/*    href={`${config.basename}/browse/publications`} */}
+                        {/*    className="vf-navigation__link rotating-link" */}
+                        {/*  > */}
+                        {/*    Publications <ArrowForLink /> */}
+                        {/*  </a> */}
+                        {/* </li> */}
+                        {/* <li className="vf-navigation__item"> */}
+                        {/*  <a */}
+                        {/*    href={`${config.basename}/browse/genomes`} */}
+                        {/*    className="vf-navigation__link rotating-link" */}
+                        {/*  > */}
+                        {/*    Genomes <ArrowForLink /> */}
+                        {/*  </a> */}
+                        {/* </li> */}
+                        {/* <li className="vf-navigation__item"> */}
+                        {/*  <a */}
+                        {/*    href={`${config.basename}/browse/biomes`} */}
+                        {/*    className="vf-navigation__link rotating-link" */}
+                        {/*  > */}
+                        {/*    Biomes <ArrowForLink /> */}
+                        {/*  </a> */}
+                        {/* </li> */}
                       </ul>
                     </nav>
                   </div>

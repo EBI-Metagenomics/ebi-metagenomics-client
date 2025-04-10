@@ -25,6 +25,7 @@ const BrowseStudies: React.FC = () => {
     page,
     order,
     biome_lineage: biome,
+    has_analyses_from_pipeline: 'V6',
   });
 
   const columns = React.useMemo(
@@ -54,6 +55,11 @@ const BrowseStudies: React.FC = () => {
         Header: 'Study name',
         accessor: 'title',
         disableSortBy: true,
+      },
+      {
+        Header: 'Last updated',
+        accessor: 'updated_at',
+        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
       },
     ],
     []

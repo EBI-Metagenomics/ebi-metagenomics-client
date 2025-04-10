@@ -1,4 +1,4 @@
 {
   "api": "https://wwwint.ebi.ac.uk/metagenomics/api/v1/",
-  "api_v2": "http://localhost:8000/api/v2/"
+  "api_v2": "http://localhost:8000/"
 }
