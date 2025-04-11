@@ -46,6 +46,14 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
     );
 
   const columns = [
+    {
+      id: 'analysis_id',
+      Header: 'Analysis accession',
+      accessor: (analysis: Analysis) => analysis.accession,
+      Cell: ({ cell }) => (
+        <Link to={`/v2-analyses/${cell.value}`}>{cell.value}</Link>
+      ),
+    },
     // {
     //   id: 'biome_id',
     //   Header: 'Biome',
@@ -63,9 +71,9 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       id: 'sample',
       Header: 'Sample accession',
       accessor: (analysis) => analysis?.sample?.accession,
-      Cell: ({ cell }) => (
-        <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
-      ),
+      // Cell: ({ cell }) => (
+      //   <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
+      // ),
     },
     // {
     //   id: 'description_id',
@@ -83,31 +91,27 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       }),
       Cell: ({ cell }) => (
         <>
-          {cell.value.assembly && (
-            <Link to={`/assemblies/${cell.value.assembly}`}>
-              {cell.value.assembly}
-            </Link>
-          )}
-          {cell.value.run && (
-            <Link to={`/runs/${cell.value.run}`}>{cell.value.run}</Link>
-          )}
+          {cell.value.assembly || cell.value.run}
+          {/* {cell.value.assembly && ( */}
+          {/*  <Link to={`/assemblies/${cell.value.assembly}`}> */}
+          {/*    {cell.value.assembly} */}
+          {/*  </Link> */}
+          {/* )} */}
+          {/* {cell.value.run && ( */}
+          {/*  <Link to={`/runs/${cell.value.run}`}>{cell.value.run}</Link> */}
+          {/* )} */}
         </>
       ),
     },
     {
       id: 'pipeline_id',
       Header: 'Pipeline version',
-      accessor: (analysis: Analysis) => analysis.pipeline_version,
+      accessor: (analysis: Analysis) =>
+        analysis.pipeline_version.toLowerCase().startsWith('v')
+          ? analysis.pipeline_version.slice(1)
+          : analysis.pipeline_version,
       Cell: ({ cell }) => (
         <Link to={`/pipelines/${cell.value}`}>{cell.value}</Link>
-      ),
-    },
-    {
-      id: 'analysis_id',
-      Header: 'Analysis accession',
-      accessor: (analysis: Analysis) => analysis.accession,
-      Cell: ({ cell }) => (
-        <Link to={`/v2-analyses/${cell.value}`}>{cell.value}</Link>
       ),
     },
   ];
