@@ -17,6 +17,7 @@ import useAnalysisDetail from 'hooks/data/useAnalysisDetail/Index';
 import { AnalysisDetail } from 'interfaces';
 import Asv from 'components/Asv';
 import AssemblyTaxonomy from 'components/Analysis/AssemblyTaxonomy';
+import Taxonomy from 'components/Analysis/Taxonomy/v2index';
 
 // TODO: find v2 counterpart
 
@@ -74,14 +75,11 @@ const V2AnalysisPage: React.FC = () => {
               <ContigViewer />
             </RouteForHash>
             <RouteForHash hash="#taxonomic">
-              <AssemblyTaxonomy />
-              {/* {isAssembly(analysisData) ? ( */}
-              {/*   <AssemblyTaxonomy /> */}
-              {/* ) : ( */}
-              {/*   <TaxonomySubpage accession={accession} /> */}
-              {/* )} */}
-              {/* <TaxonomySubpage accession={accession} /> */}
-              {/* <AssemblyTaxonomy /> */}
+              {isAssembly(analysisData) ? (
+                <AssemblyTaxonomy />
+              ) : (
+                <Taxonomy accession={accession} />
+              )}
             </RouteForHash>
             <RouteForHash hash="#functional">
               <FunctionalSubpage />
