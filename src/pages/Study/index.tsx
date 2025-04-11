@@ -44,7 +44,7 @@ const StudyPage: React.FC = () => {
             <Overview data={data} />
           </RouteForHash>
           <RouteForHash hash="#analysis">
-            <SummaryTab accession={accession} />
+            <SummaryTab downloads={data.downloads} />
           </RouteForHash>
         </div>
       </section>
