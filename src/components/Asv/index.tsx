@@ -104,7 +104,6 @@ const Asv: React.FC = () => {
           <DetailedVisualisationCard ftpLink={asvDistributionFile.url}>
             <div className="vf-card__content | vf-stack vf-stack--400">
               <h3 className="vf-card__heading">ASV Distribution </h3>
-              <p className="vf-card__subheading">With sub–heading</p>
               <p className="vf-card__text">
                 <AsvDistribution fileUrl={asvDistributionFile.url} />
               </p>
