@@ -75,13 +75,13 @@ const AnalysisOverview: React.FC = () => {
     },
     {
       key: 'Sample',
-      value:
-        data?.sample?.accession &&
-        (() => (
-          <Link to={`/samples/${data?.sample?.accession}`}>
-            {data?.sample?.accession}
-          </Link>
-        )),
+      value: data?.sample?.accession || '',
+      // data?.sample?.accession &&
+      // (() => (
+      //   <Link to={`/samples/${data?.sample?.accession}`}>
+      //     {data?.sample?.accession}
+      //   </Link>
+      // )),
       rawValue: data?.sample?.accession || '',
     },
     {
@@ -98,13 +98,13 @@ const AnalysisOverview: React.FC = () => {
     },
     {
       key: 'Run',
-      value:
-        data?.run?.accession &&
-        (() => (
-          <Link to={`/runs/${data?.run?.accession}`}>
-            {data?.run?.accession}
-          </Link>
-        )),
+      value: data?.run?.accession || '',
+      // data?.run?.accession &&
+      // (() => (
+      //   <Link to={`/runs/${data?.run?.accession}`}>
+      //     {data?.run?.accession}
+      //   </Link>
+      // )),
       rawValue: data?.run?.accession || '',
     },
     {
@@ -165,25 +165,25 @@ const AnalysisOverview: React.FC = () => {
       ),
       rawValue: 'https://ebi-metagenomics.github.io/amplicon-pipeline/',
     },
-    {
-      key: 'Workflow hub link',
-      value: () => (
-        <a
-          href="https://workflowhub.eu/workflows/361?version=1"
-          target="_blank"
-          rel="noreferrer"
-        >
-          https://workflowhub.eu/workflows/361?version=1
-        </a>
-      ),
-      rawValue: 'https://workflowhub.eu/workflows/361?version=1',
-    },
+    // {
+    //   key: 'Workflow hub link',
+    //   value: () => (
+    //     <a
+    //       href="https://workflowhub.eu/workflows/361?version=1"
+    //       target="_blank"
+    //       rel="noreferrer"
+    //     >
+    //       https://workflowhub.eu/workflows/361?version=1
+    //     </a>
+    //   ),
+    //   rawValue: 'https://workflowhub.eu/workflows/361?version=1',
+    // },
     {
       key: 'Pipeline version',
       value:
         data?.pipeline_version &&
         (() => (
-          <Link to={`/pipelines/${data?.pipeline_version}`}>
+          <Link to={`/pipelines/${data?.pipeline_version?.slice(1)}`}>
             {data?.pipeline_version}
           </Link>
         )),
