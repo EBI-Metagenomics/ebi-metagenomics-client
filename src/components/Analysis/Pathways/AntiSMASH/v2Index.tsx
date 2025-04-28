@@ -43,6 +43,8 @@ const AntiSmashSubpage: React.FC = () => {
 
   const dataFileUrl = dataFile?.url;
   const indexFileUrl = `${dataFileUrl}.gzi`;
+  console.log('dataFileUrl ', dataFileUrl);
+  console.log('indexFileUrl ', indexFileUrl);
 
   const totalCount = antiSmashData.reduce(
     (sum, cluster) => sum + cluster.count,
@@ -146,7 +148,7 @@ const AntiSmashSubpage: React.FC = () => {
 
         const success = await bgzipService.initialize();
         if (!success) {
-          setError('Failed to initialize BGZip service');
+          setError('Failed to initialize BGdffwfwfwwffwfZip service');
           setIsLoading(false);
           return;
         }

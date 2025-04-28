@@ -6,7 +6,7 @@ import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Analysis/Overview/v2index';
 import QualityControl from 'components/Analysis/QualityControl/v2index';
-import ContigViewer from 'components/Analysis/ContigViewer';
+import ContigViewer from 'components/Analysis/ContigViewer/v3Index';
 import FunctionalSubpage from 'components/Analysis/Functional/v2index';
 import PathwaysSubpage from 'components/Analysis/Pathways/v2Index';
 import RouteForHash from 'components/Nav/RouteForHash';
@@ -52,7 +52,7 @@ const V2AnalysisPage: React.FC = () => {
       : null,
     isAssembly(analysisData)
       ? { label: 'Contig Viewer', to: '#contigs-viewer' }
-      : null,
+      : { label: 'Contig Viewer', to: '#contigs-viewer' },
     isAmplicon(analysisData) ? { label: 'ASV', to: '#asv' } : null,
   ].filter(Boolean);
   return (

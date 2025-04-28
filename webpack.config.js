@@ -83,6 +83,10 @@ module.exports = function (env, options) {
         path.resolve(__dirname, 'public'),
         'node_modules',
       ],
+      alias: {
+        react: path.resolve('./node_modules/react'),
+        'react-dom': path.resolve('./node_modules/react-dom'),
+      },
     },
     output: {
       filename: 'mgnify_bundle.js',
