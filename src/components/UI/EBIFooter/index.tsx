@@ -268,6 +268,14 @@ const EBIFooter: React.FC = () => {
               Terms of use
             </a>
           </span>
+          <span className="vf-footer__legal-text">
+            <a
+              className="vf-footer__link"
+              href="https://www.ebi.ac.uk/data-protection/privacy-notice/embl-ebi-public-website"
+            >
+              Privacy Notice
+            </a>
+          </span>
         </p>
       </div>
     </footer>
