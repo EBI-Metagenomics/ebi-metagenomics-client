@@ -1,8 +1,10 @@
 import React from 'react';
 
-import AmpliconImg from 'images/pipeline/version_5/pipeline_v5.0_amplicon.png';
-import AssemblyImg from 'images/pipeline/version_5/pipeline_v5.0_assembly.png';
-import RawImg from 'images/pipeline/version_5/pipeline_v5.0_raw.png';
+import AmpliconImgV5 from 'images/pipeline/version_5/pipeline_v5.0_amplicon.png';
+import AssemblyImgV5 from 'images/pipeline/version_5/pipeline_v5.0_assembly.png';
+import RawImgV5 from 'images/pipeline/version_5/pipeline_v5.0_raw.png';
+
+import AmpliconImgV6 from 'images/pipeline/version_6/pipeline_v6.0_amplicon.png';
 
 import './style.css';
 import Tabs from 'components/UI/Tabs';
@@ -17,6 +19,21 @@ const WorkflowHubLink: React.FC<{ name: string; link: string }> = ({
     <div className="mg-workflowhub">
       <p className="vf-text-body vf-text-body--2">
         The workflow definition for this pipeline is available on WorkflowHub:
+        <br />
+        <ExtLink href={link}>{name}</ExtLink>
+      </p>
+    </div>
+  );
+};
+
+const GitHubLink: React.FC<{ name: string; link: string }> = ({
+  name,
+  link,
+}) => {
+  return (
+    <div className="mg-workflowhub">
+      <p className="vf-text-body vf-text-body--2">
+        The workflow definition for this pipeline is available on GitHub:
         <br />
         <ExtLink href={link}>{name}</ExtLink>
       </p>
@@ -493,7 +510,7 @@ export const PipelineChart5: React.FC = () => (
           link="https://workflowhub.eu/workflows/361?version=1"
         />
         <img
-          src={AmpliconImg}
+          src={AmpliconImgV5}
           alt="Amplicon flow diagram"
           style={{ maxHeight: '60vh' }}
         />
@@ -507,7 +524,7 @@ export const PipelineChart5: React.FC = () => (
           link="https://workflowhub.eu/workflows/362?version=1"
         />
         <img
-          src={RawImg}
+          src={RawImgV5}
           alt="Raw reads flow diagram"
           style={{ maxHeight: '60vh' }}
         />
@@ -521,10 +538,48 @@ export const PipelineChart5: React.FC = () => (
           link="https://workflowhub.eu/workflows/360?version=2"
         />
         <img
-          src={AssemblyImg}
+          src={AssemblyImgV5}
           alt="Assembly flow diagram"
           style={{ maxHeight: '60vh' }}
         />
+      </div>
+    </RouteForHash>
+  </section>
+);
+
+export const PipelineChart6: React.FC = () => (
+  <section>
+    <p>
+      This version of the MGnify analysis service offers specialised workflows
+      for three different data types: amplicon, raw
+      metagenomic/metatranscriptomic reads, and assembly.
+    </p>
+    <Tabs tabs={tabs} />
+
+    <RouteForHash hash="" isDefault>
+      <div>
+        <h4>Amplicon analysis pipeline</h4>
+        <GitHubLink
+          name="MGnify - amplicon analysis pipeline"
+          link="https://github.com/ebi-metagenomics/amplicon-pipeline"
+        />
+        <img
+          src={AmpliconImgV6}
+          alt="Amplicon flow diagram"
+          style={{ maxHeight: '60vh' }}
+        />
+      </div>
+    </RouteForHash>
+    <RouteForHash hash="#raw">
+      <div>
+        <h4>Raw reads analysis pipeline</h4>
+        <p>This pipeline is under integration</p>
+      </div>
+    </RouteForHash>
+    <RouteForHash hash="#assembly">
+      <div>
+        <h4>Assembly analysis pipeline</h4>
+        <p>This pipeline is under integration</p>
       </div>
     </RouteForHash>
   </section>

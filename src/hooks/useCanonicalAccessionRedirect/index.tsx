@@ -1,8 +1,11 @@
 import useURLAccession from '@/hooks/useURLAccession';
 import { MGnifyResponseObj } from '@/hooks/data/useData';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { EnaDerivedObject } from 'interfaces';
 
-const useCanonicalAccessionRedirect = (data: MGnifyResponseObj) => {
+const useCanonicalAccessionRedirect = (
+  data: MGnifyResponseObj | EnaDerivedObject
+) => {
   const urlAccession = useURLAccession();
   const navigate = useNavigate();
   const location = useLocation();
@@ -12,7 +15,9 @@ const useCanonicalAccessionRedirect = (data: MGnifyResponseObj) => {
   if (!data) return;
   if (!urlAccession) return;
 
-  const dataAccession = data.data.id;
+  const dataAccession =
+    (data as unknown as MGnifyResponseObj)?.data?.id ||
+    (data as EnaDerivedObject).accession;
 
   if (
     dataAccession &&

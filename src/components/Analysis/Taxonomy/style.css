@@ -9,3 +9,796 @@
 .mg-analyses-taxonomy input[type='radio'] {
   cursor: pointer;
 }
+
+/* Enhanced styling for Taxonomy component */
+
+/* Main container */
+
+
+/* Summary styling */
+.vf-details--summary {
+  padding: 1rem 1.25rem;
+  background-color: #f8fafc;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
+}
+
+.vf-details--summary:hover {
+  background-color: #f1f5f9;
+}
+
+.vf-details--summary::-webkit-details-marker {
+  display: none;
+}
+
+.vf-details--summary::after {
+  content: '';
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(135deg);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid #64748b;
+  border-bottom: 2px solid #64748b;
+  transition: transform 0.3s ease;
+}
+
+.custom-vf-details[open] .vf-details--summary::after {
+  transform: translateY(-30%) rotate(-45deg);
+}
+
+/* Table styling */
+.vf-table {
+  width: 95%;
+  margin: 1rem auto 0.5rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.vf-table__header {
+  background-color: #f1f5f9;
+}
+
+.vf-table__heading {
+  padding: 14px 16px;
+  font-weight: 600;
+  color: #475569;
+  text-align: left;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.vf-table__row {
+  transition: background-color 0.2s ease;
+}
+
+.vf-table__row:hover {
+  background-color: #f8fafc;
+}
+
+.vf-table__cell {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.vf-table__body tr:last-child .vf-table__cell {
+  border-bottom: none;
+}
+
+/* Amplicon cell styling */
+.vf-table__cell:first-child {
+  font-weight: 600;
+  color: #3182ce;
+}
+
+/* Button styling */
+.vf-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+}
+
+.vf-button--primary {
+  background-color: #10b981; /* Updated to a pleasant green */
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.vf-button--primary:hover {
+  background-color: #0d9669; /* Darker on hover */
+  box-shadow: 0 2px 4px rgba(13, 150, 105, 0.2);
+  transform: translateY(-1px);
+}
+
+.vf-button--sm {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.65rem;
+}
+
+.vf-button__text {
+  margin-left: 0.25rem;
+}
+
+/* Icon styling */
+.icon-check-circle {
+  color: #4ade80 !important;
+}
+
+.icon-minus-circle {
+  color: #94a3b8 !important;
+}
+
+/* Animation for opening details - DISABLED FOR TAXONOMY NAV to prevent layout issues */
+.custom-vf-details[open] > :not(summary) {
+  animation: slideDown 0.3s ease-out;
+}
+
+
+/* SPECIAL HANDLING FOR TAXONOMY NAV - disable animation */
+.taxonomy-nav .custom-vf-details[open] > :not(summary) {
+  animation: none;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Ensure details within nav behave correctly when closed */
+.taxonomy-nav .custom-vf-details:not([open]) {
+  max-height: 50px; /* Just enough for the summary */
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Make "Not calculated" more subtle */
+.vf-table__cell div:not([class]) {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.65rem;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  color: #64748b;
+}
+
+/* New styles for the second details section with left nav and visualization card */
+
+/* Layout for the details content */
+.taxonomy-detail-with-nav {
+  background-color: #f8fafc;
+  border-left: 4px solid #10b981; /* Updated green color */
+  margin-top: 2rem;
+}
+
+.taxonomy-detail-with-nav .vf-details--summary {
+  background-color: #ecfdf5; /* Light green background */
+  color: #047857; /* Darker green text */
+}
+
+.taxonomy-detail-with-nav .vf-details--summary:hover {
+  background-color: #d1fae5; /* Lighter green on hover */
+}
+
+/* Main layout container */
+.taxonomy-detail-content {
+  display: flex;
+  min-height: 500px; /* Minimum height for the content area */
+  max-height: 800px; /* Maximum height to prevent excessive stretching */
+  padding: 0;
+  overflow: hidden !important; /* Critical: prevent overflow */
+  height: 800px; /* Fixed height to prevent expanding */
+}
+
+/* Left navigation styling */
+.taxonomy-nav {
+  flex: 0 0 280px; /* Fixed width sidebar */
+  border-right: 1px solid #e4e4e4;
+  padding: 1rem 0;
+  height: 100%; /* Take full height of parent */
+  max-height: 100% !important; /* Must not exceed parent height */
+  overflow: hidden !important; /* Hide overflow from the nav container itself */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make the details components take up available space */
+.taxonomy-nav .custom-vf-details {
+  margin-bottom: 16px;
+  flex-shrink: 0;
+  min-height: 0; /* Allow content to shrink if needed */
+  max-height: calc(50% - 16px) !important; /* Each details takes ~half the height */
+  display: flex;
+  flex-direction: column;
+  border: none;
+  box-shadow: none;
+  overflow: hidden !important; /* Critical - prevent expansion */
+}
+
+/* Style for the details summary in nav */
+.taxonomy-nav .vf-details--summary {
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+/* Navigation list container - this is where we add scrolling */
+.taxonomy-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto !important; /* Add scrollbar when content overflows */
+  min-height: 0 !important; /* Critical for proper scrolling */
+  flex: 1 1 auto !important; /* Take up remaining space but allow shrinking */
+  max-height: 100% !important; /* Allow full height within parent */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* For Firefox */
+}
+
+/* Styling the scrollbar for webkit browsers */
+.taxonomy-nav-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.taxonomy-nav-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.taxonomy-nav-list::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+/* Navigation item styling */
+.taxonomy-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 1.5rem;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  font-size: 0.95rem;
+}
+
+.taxonomy-nav-item:hover {
+  background-color: #f1f5f9;
+  color: #10b981; /* Updated green color */
+}
+
+.taxonomy-nav-item.active {
+  background-color: #d1fae5; /* Light green background */
+  color: #047857; /* Darker green text */
+  font-weight: 500;
+}
+
+.taxonomy-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: #10b981; /* Updated green color */
+}
+
+.taxonomy-nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  width: 24px;
+  height: 24px;
+}
+
+.taxonomy-nav-text {
+  flex: 1;
+}
+
+/* Right content area styling */
+.taxonomy-content-area {
+  flex: 1; /* Take up remaining width */
+  padding: 1.5rem;
+  background-color: white;
+  overflow-y: auto !important; /* Add scrollbar when content overflows */
+  max-height: 100% !important; /* Full height within parent */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* For Firefox */
+}
+
+/* Styling the scrollbar for the content area */
+.taxonomy-content-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.taxonomy-content-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.taxonomy-content-area::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+/* Visualization styling */
+.taxonomy-visualization {
+  margin-top: 10px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.taxonomy-visualization-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.taxonomy-visualization-description {
+  color: #4b5563;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.no-content-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 1px dashed #d1d5db;
+  color: #6b7280;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* N/A value styling */
+.na-value {
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Read count values */
+.read-count-value {
+  font-weight: 600;
+  color: #334155;
+}
+
+.bacteria-count {
+  color: #3b82f6; /* Blue */
+}
+
+.archaea-count {
+  color: #f59e0b; /* Amber */
+}
+
+.eukarya-count {
+  color: #10b981; /* Green */
+}
+
+/* Read count container and styling */
+.read-count-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Bar container and background */
+.read-count-bar-container {
+  position: relative;
+  height: 8px;
+  width: 100%;
+  background-color: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.read-count-bar-background {
+  height: 100%;
+  background-color: transparent;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Stacked bar container and segments */
+.stacked-bar-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.stacked-bar-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Colors for different organism types */
+.bacteria-bar {
+  background-color: #3b82f6; /* Blue */
+}
+
+.archaea-bar {
+  background-color: #f59e0b; /* Amber */
+}
+
+.eukarya-bar {
+  background-color: #10b981; /* Green */
+}
+
+.its-bar {
+  background-color: #8b5cf6; /* Purple */
+}
+
+/* Hover effects for stacked bars */
+.stacked-bar-segment:hover {
+  filter: brightness(1.1);
+  cursor: help;
+}
+
+/* Legend styling */
+.marker-legend {
+  margin: 16px 0 16px 24px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.marker-legend-title {
+  font-weight: 500;
+  color: #475569;
+  margin-right: 8px;
+}
+
+.marker-legend-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
+.marker-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.marker-legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.marker-legend-label {
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.bacteria-color {
+  background-color: #3b82f6;
+}
+
+.archaea-color {
+  background-color: #f59e0b;
+}
+
+.eukarya-color {
+  background-color: #10b981;
+}
+
+.its-color {
+  background-color: #8b5cf6;
+}
+
+/* Majority marker row styling */
+.majority-marker-row {
+  background-color: rgba(209, 250, 229, 0.4); /* Updated lighter green */
+}
+
+.majority-marker-row:hover {
+  background-color: rgba(209, 250, 229, 0.7) !important; /* Updated green on hover */
+}
+
+/* Animation for row highlight */
+@keyframes highlightRow {
+  0% {
+    background-color: rgba(209, 250, 229, 0.2);
+  }
+  50% {
+    background-color: rgba(209, 250, 229, 0.7);
+  }
+  100% {
+    background-color: rgba(209, 250, 229, 0.4);
+  }
+}
+
+.majority-marker-row {
+  animation: highlightRow 1.5s ease-in-out 1;
+}
+
+/* Marker name container with badge */
+.marker-name-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Majority marker badge */
+.majority-marker-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #f59e0b;
+  cursor: help;
+}
+
+.majority-marker-badge svg {
+  height: 16px;
+  width: 16px;
+}
+
+/* Not available styling */
+.not-available {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.65rem;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  color: #64748b;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .taxonomy-detail-content {
+    flex-direction: column;
+    max-height: none;
+    height: auto;
+  }
+
+  .taxonomy-nav {
+    flex: 0 0 auto;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e4e4e4;
+    padding-right: 0;
+    margin-right: 0;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    max-height: 300px !important;
+  }
+
+  .taxonomy-content-area {
+    max-height: 500px;
+    padding: 1rem;
+  }
+
+  .taxonomy-nav-list {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0.5rem;
+    max-height: none !important;
+  }
+
+  .taxonomy-nav-item {
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+  }
+
+  .taxonomy-nav-item.active::before {
+    width: 100%;
+    height: 3px;
+    top: auto;
+    bottom: -1px;
+    left: 0;
+  }
+}
+
+/* Ensure the slim card has proper spacing and containment */
+.slim-card {
+  margin-bottom: 16px;
+  padding: 20px !important; /* Ensure sufficient padding */
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: visible !important;
+}
+
+/* Button content (SVG icons) */
+.action-button svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Copied message positioning */
+.copied-message {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(40, 167, 69, 0.9);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  animation: fadeInOut 2s ease;
+  z-index: 20;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Container for the URL */
+.url-link-container {
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  padding: 8px 12px;
+  background-color: #f8f8f8;
+  border-radius: 6px;
+  border: 1px solid #e4e4e4;
+  margin-bottom: 12px;
+}
+
+/* Style for the URL label */
+.url-link-container::before {
+  content: 'URL';
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  background-color: #f0f0f0;
+  padding: 0 6px;
+  font-size: 10px;
+  color: #666;
+  border-radius: 3px;
+}
+
+/* The actual URL link style */
+.url-link-container a {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #3B6FB6;
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Hover effect for URL */
+.url-link-container:hover {
+  background-color: #edf4f7;
+  border-color: #3B6FB6;
+}
+
+/* Add a visual indicator that text is truncated */
+.url-truncated::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 40px;
+  background: linear-gradient(to right, rgba(248, 248, 248, 0), rgba(248, 248, 248, 1) 70%);
+  pointer-events: none; /* Allows clicking through the gradient */
+}
+
+.url-truncated:hover::after {
+  background: linear-gradient(to right, rgba(237, 244, 247, 0), rgba(237, 244, 247, 1) 70%);
+}
+
+/* Fix for action buttons overflow */
+.card-actions {
+  flex-shrink: 0; /* Prevent buttons from shrinking */
+  z-index: 2; /* Ensure buttons appear above other content */
+  display: flex;
+  gap: 10px;
+  position: relative;
+  overflow: visible !important;
+}
+
+/* Individual button styling */
+.action-button {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative;
+  overflow: visible !important; /* Allow button effects to be visible */
+}
+
+/* Make header more responsive */
+.slim-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px; /* Add gap for when it wraps */
+  position: relative;
+  overflow: visible !important; /* Allow buttons to overflow */
+  width: 100%;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0;
+  max-width: calc(100% - 110px);
+  overflow: hidden;
+}
+
+.file-name {
+  max-width: 100%; /* Allow truncation within container */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Make sure card content doesn't overflow */
+.slim-card-content {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  width: 100%;
+}
+
+/* Responsive adjustments for slim cards */
+@media (max-width: 576px) {
+  .slim-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .card-actions {
+    align-self: flex-end;
+  }
+
+  .file-info {
+    max-width: 100%;
+    margin-bottom: 12px;
+  }
+}

@@ -49,15 +49,20 @@ const HeroHeader: React.FC = () => {
             <img src={MGnifyLogo} alt="MGnify Logo" style={{ height: '4em' }} />
           </Link>
         </h4>
+        <span className="vf-badge vf-badge--primary">
+          <i className="icon icon-common" data-icon="&#x45;" />
+          &nbsp;Early Data Release
+        </span>
 
         <p className="vf-hero__subheading">
           Submit, analyse, discover and compare microbiome data
         </p>
-        <div
-          className={`emg-header-search-wrapper ${
-            location.pathname !== '/' && 'hidden'
-          }`}
-        >
+        {/* <div */}
+        {/*  className={`emg-header-search-wrapper ${ */}
+        {/*    location.pathname !== '/' && 'hidden' */}
+        {/*  }`} */}
+        {/* > */}
+        <div className="emg-header-search-wrapper hidden">
           <form
             className="vf-form vf-form--search vf-form--search--mini | vf-sidebar vf-sidebar--end"
             onSubmit={async (e) => {

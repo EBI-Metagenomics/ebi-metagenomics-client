@@ -19,17 +19,17 @@ import MegaMenu from 'components/Nav/MegaMenu';
 
 const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'Overview', path: '/' },
-  {
-    label: 'Submit data',
-    path: 'https://www.ebi.ac.uk/ena/submit/webin/accountInfo',
-  },
-  { label: 'Text search', path: '/search' },
+  // {
+  //   label: 'Submit data',
+  //   path: 'https://www.ebi.ac.uk/ena/submit/webin/accountInfo',
+  // },
+  // { label: 'Text search', path: '/search' },
   { label: 'Sequence search' },
   { label: 'Browse data', path: '/browse' },
   { label: 'API' },
   { label: 'About', path: '/about' },
   { label: 'Help', path: '/help' },
-  { label: 'Login', path: '/login' },
+  // { label: 'Login', path: '/login' },
 ];
 
 const START_POS = 100;

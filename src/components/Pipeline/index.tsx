@@ -7,8 +7,17 @@ import {
   PipelineChart4,
   PipelineChart41,
   PipelineChart5,
+  PipelineChart6,
 } from './Charts';
-import { Table1, Table2, Table3, Table4, Table41, Table5 } from './Tables';
+import {
+  Table1,
+  Table2,
+  Table3,
+  Table4,
+  Table41,
+  Table5,
+  Table6,
+} from './Tables';
 
 type PipelineProps = {
   version: string;
@@ -37,6 +46,10 @@ const data = {
   5: {
     Chart: PipelineChart5,
     Table: Table5,
+  },
+  6: {
+    Chart: PipelineChart6,
+    Table: Table6,
   },
 };
 const Pipeline: React.FC<PipelineProps> = ({ version }) => {

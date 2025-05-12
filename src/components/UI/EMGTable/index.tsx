@@ -12,9 +12,10 @@ import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
 import Loading from 'components/UI/Loading';
 import TextInputDebounced from 'components/UI/TextInputDebounced';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
-import { MGnifyDatum, MGnifyResponse } from '@/hooks/data/useData';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
+import { PaginatedList } from 'interfaces';
+import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
 import PaginationButton from './PaginationButton';
 import './style.css';
 
@@ -42,7 +43,7 @@ function getPaginationRanges(
     adjacentPages.push(page);
   }
 
-  let endingPages = [];
+  let endingPages: number[] = [];
   if (pageCount > 7) {
     endingPages = [pageCount - 2, pageCount - 1];
   } else if (pageCount > 6) {
@@ -75,13 +76,17 @@ function getOrderingQueryParamFromSortedColumn(
 
 type EMGTableProps = {
   cols: Column[];
-  data: MGnifyResponse | Array<MGnifyDatum> | Record<string, unknown>[];
+  data:
+    | PaginatedList
+    | Record<string, unknown>[]
+    | MGnifyResponse
+    | Array<MGnifyDatum>;
   Title?: React.ReactNode;
   showPagination?: boolean;
   showTextFilter?: boolean;
   initialPage?: number;
-  initialPageSize?: number;
-  initialPageCount?: number;
+  expectedPageSize?: number;
+  initialPageSize?: number; // legacy
   className?: string;
   namespace?: string;
   sortable?: boolean;
@@ -99,8 +104,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
   data,
   Title,
   initialPage = 0,
-  initialPageSize = 25,
-  initialPageCount = null,
+  expectedPageSize = 100,
   className = '',
   namespace = '',
   showPagination = true,
@@ -116,11 +120,14 @@ const EMGTable: React.FC<EMGTableProps> = ({
 }) => {
   const [page, setPage] = useQueryParamState(`${namespace}page`, 1, Number);
   const [ordering, setOrdering] = useQueryParamState(`${namespace}order`, '');
-  const [pageSizeSelected, setPageSizeSelected] = useQueryParamState(
-    `${namespace}page_size`,
-    initialPageSize,
-    Number
-  );
+
+  const pageCount = useMemo(() => {
+    if (data && 'count' in data) {
+      return Math.ceil(data.count / expectedPageSize) || 1;
+    }
+    return (data as MGnifyResponse)?.meta?.pagination?.pages || 1;
+  }, [data, expectedPageSize]);
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -129,24 +136,21 @@ const EMGTable: React.FC<EMGTableProps> = ({
     prepareRow,
     canPreviousPage,
     canNextPage,
-    pageCount,
     gotoPage,
-    setPageSize,
     nextPage,
     previousPage,
-    state: { pageIndex, pageSize, sortBy },
+    state: { pageIndex, sortBy },
   } = useTable(
     {
       columns: cols,
-      data: (data as MGnifyResponse)?.data || data,
+      data:
+        (data as MGnifyResponse)?.data ||
+        (data as PaginatedList)?.items ||
+        data,
       initialState: {
         pageIndex: initialPage,
-        pageSize: pageSizeSelected,
       },
-      pageCount:
-        initialPageCount ||
-        (data as MGnifyResponse)?.meta?.pagination?.pages ||
-        1,
+      pageCount: pageCount || 1,
       manualPagination: true,
       manualSortBy: true,
     },
@@ -165,16 +169,6 @@ const EMGTable: React.FC<EMGTableProps> = ({
       }
     }
   }, [showPagination, setPage, pageIndex]);
-
-  useEffect(() => {
-    if (showPagination && pageSizeSelected !== pageSize) {
-      setPageSizeSelected(pageSize);
-      if (tableRef.current && isChangingPage) {
-        tableRef.current.scrollIntoView();
-        setChangingPage(false);
-      }
-    }
-  }, [showPagination, setPageSizeSelected, pageSize]);
 
   useEffect(() => {
     if (sortable) {
@@ -196,10 +190,6 @@ const EMGTable: React.FC<EMGTableProps> = ({
   const goToPageAndScroll = (pageNumber): MouseEventHandler => {
     setChangingPage(true);
     return gotoPage(pageNumber);
-  };
-  const changeSizeAndScroll = (evt): void => {
-    setChangingPage(true);
-    return setPageSize(+evt.target.value);
   };
 
   const fullWidthColSpan = useMemo(() => {
@@ -367,21 +357,6 @@ const EMGTable: React.FC<EMGTableProps> = ({
 
       {showPagination && (
         <section className="mg-table-footer">
-          <label className="vf-form__label">
-            Page Size:
-            <select
-              className="vf-form__select"
-              value={pageSizeSelected as number}
-              onBlur={changeSizeAndScroll}
-              onChange={changeSizeAndScroll}
-            >
-              {[10, 25, 50].map((pg) => (
-                <option key={pg} value={pg}>
-                  Show {pg}
-                </option>
-              ))}
-            </select>
-          </label>
           <nav className="vf-pagination" aria-label="Pagination">
             <ul className="vf-pagination__list">
               <li className="vf-pagination__item vf-pagination__item--previous-page">

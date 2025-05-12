@@ -20,6 +20,26 @@ const Pipelines: React.FC = () => {
 
       <h3>
         <span>
+          <Link to="/pipelines/6">Pipeline v.6.0</Link>
+        </span>{' '}
+        (01-Apr-2025)
+      </h3>
+
+      <ul>
+        <li>
+          Major upgrade. This version offers specialised workflows for three
+          different data types: amplicon, raw metagenomic/metatranscriptomic
+          reads, and assembly. Each workflow is defined in Nextflow and
+          available in individual repositories of the{' '}
+          <ExtLink href="https://github.com/EBI-Metagenomics/">
+            EBI-Metagenomics GitHub organisation
+          </ExtLink>
+          .
+        </li>
+      </ul>
+
+      <h3>
+        <span>
           <Link to="/pipelines/5">Pipeline v.5.0</Link>
         </span>{' '}
         (06-Nov-2019)
