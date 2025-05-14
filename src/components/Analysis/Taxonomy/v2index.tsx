@@ -153,7 +153,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   };
 
   const processClosedRefMarkerGenes = () => {
-    if (!analysisOverviewData.metadata?.marker_gene_summary?.closed_reference) {
+    if (!analysisOverviewData.metadata?.marker_gene_summary?.closed_reference?.marker_genes) {
       return {
         SSU: {
           bacteria: { read_count: 0, majority_marker: false },
@@ -181,7 +181,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
     }
 
     const closedRef =
-      analysisOverviewData.metadata.marker_gene_summary.closed_reference;
+      analysisOverviewData.metadata.marker_gene_summary.closed_reference.marker_genes;
 
     const ssuData = closedRef.SSU || {};
     const ssuBacteria = ssuData.Bacteria || {
@@ -258,7 +258,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   };
 
   const processAsvMarkerGenes = () => {
-    if (!analysisOverviewData.metadata?.marker_gene_summary?.asv) {
+    if (!analysisOverviewData.metadata?.marker_gene_summary?.asv?.amplified_regions) {
       return [];
     }
 
@@ -266,22 +266,11 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
       amplified_region: string;
       asv_count: number;
       read_count: number;
+      marker_gene: string;
     };
 
-    const asvData = analysisOverviewData.metadata.marker_gene_summary
-      .asv as Record<string, AsvMarkerData>;
-    const amplifiedRegions = [];
-
-    Object.entries(asvData).forEach(([markerGene, data]) => {
-      amplifiedRegions.push({
-        marker_gene: markerGene,
-        amplified_region: data.amplified_region,
-        asv_count: data.asv_count,
-        read_count: data.read_count,
-      });
-    });
-
-    return amplifiedRegions;
+    return analysisOverviewData.metadata.marker_gene_summary
+      .asv.amplified_regions as AsvMarkerData[];
   };
 
   const groupedClosedRefMarkerGenes = processClosedRefMarkerGenes();
@@ -329,7 +318,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
         />
 
         <div className="marker-legend">
-          <div className="marker-legend-title">Read count color legend:</div>
+          <div className="marker-legend-title">Read count colour legend:</div>
           <div className="marker-legend-items">
             <div className="marker-legend-item">
               <div className="marker-legend-color bacteria-color" />
