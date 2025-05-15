@@ -1,5 +1,5 @@
 import React from 'react';
-import { ErrorFromFetch, ErrorTypes } from 'hooks/data/useData';
+import { ErrorFromFetch, ErrorTypes } from '@/hooks/data/useData';
 
 const refreshPage = (): void => {
   window.location.reload();

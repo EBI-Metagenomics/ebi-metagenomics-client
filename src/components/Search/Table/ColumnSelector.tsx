@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import EMGModal from 'src/components/UI/EMGModal';
+import EMGModal from 'components/UI/EMGModal';
 
 type ColumnSelectorProps = {
   pathname: string;

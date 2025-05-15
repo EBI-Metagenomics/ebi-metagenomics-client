@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import { clearParams } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { clearParams } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
 
 const TextSearch: React.FC = () => {
   const [query, setQuery, { actionDispatcher }] = useQueryParamState(

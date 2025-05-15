@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import useAuthTokenVerifier from 'hooks/authentication/useAuthTokenVerifier';
+import useAuthTokenVerifier from '@/hooks/authentication/useAuthTokenVerifier';
 
 const PersistLogin = () => {
   const [, setIsLoading] = useState(true);
@@ -20,7 +20,6 @@ const PersistLogin = () => {
       }
     };
     verifyToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <Outlet />;

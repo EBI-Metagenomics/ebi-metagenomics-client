@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import HierarchyNode, { Node } from 'components/UI/Hierarchy';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import useURLAccession from 'hooks/useURLAccession';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import useURLAccession from '@/hooks/useURLAccession';
 
 const PhyloTree: React.FC = () => {
   const accession = useURLAccession();

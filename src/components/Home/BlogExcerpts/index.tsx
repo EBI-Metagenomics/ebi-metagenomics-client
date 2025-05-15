@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import InnerCard from 'components/UI/InnerCard';
-import useBlogData from 'hooks/data/useBlogData';
+import useBlogData from '@/hooks/data/useBlogData';
 
 import UserContext from 'pages/Login/UserContext';
 import ArrowForLink from 'components/UI/ArrowForLink';

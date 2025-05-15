@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { MGnifyDatum } from 'hooks/data/useData';
+import { MGnifyDatum } from '@/hooks/data/useData';
 import SamplesMap from 'components/UI/SamplesMap/BySamplesArray';
 import Box from 'components/UI/Box';
 import ExtLink from 'components/UI/ExtLink';
-import { getBiomeIcon } from 'utils/biomes';
-import { ENA_VIEW_URL } from 'utils/urls';
+import { getBiomeIcon } from '@/utils/biomes';
+import { ENA_VIEW_URL } from '@/utils/urls';
 
 type SampleOverviewProps = {
   data: MGnifyDatum;

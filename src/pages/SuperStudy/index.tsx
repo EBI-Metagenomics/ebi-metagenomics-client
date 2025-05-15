@@ -2,9 +2,9 @@ import React from 'react';
 
 import ReactMarkdown from 'react-markdown';
 
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseObj } from '@/hooks/data/useData';
+import useURLAccession from '@/hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import FlagshipTable from 'components/SuperStudy/Flagship';

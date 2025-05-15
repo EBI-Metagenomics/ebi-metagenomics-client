@@ -1,5 +1,5 @@
-import useURLAccession from 'hooks/useURLAccession';
-import { MGnifyResponseObj } from 'hooks/data/useData';
+import useURLAccession from '@/hooks/useURLAccession';
+import { MGnifyResponseObj } from '@/hooks/data/useData';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { EnaDerivedObject } from 'interfaces';
 

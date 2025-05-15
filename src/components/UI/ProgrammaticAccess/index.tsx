@@ -80,7 +80,7 @@ const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
             live examples that you can modify without downloading or installing
             any software.
           </p>
-          {notebooks.map((notebook) => {
+          {notebooks?.map((notebook) => {
             let jlLink = `${config.jupyterLabURL}?jlpath=${notebook.notebookPath}`;
             jlLink += Object.entries(notebook.notebookVars || {}).reduce(
               (vars, [varName, varVal]) => `${vars}&jlvar_${varName}=${varVal}`,
@@ -111,7 +111,7 @@ const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
               </button>
             );
           })}
-          {!notebooks.length && (
+          {!notebooks?.length && (
             <button
               className="vf-button vf-button--secondary vf-button--sm"
               type="button"

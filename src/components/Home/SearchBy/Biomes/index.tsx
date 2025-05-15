@@ -1,10 +1,10 @@
 import React from 'react';
 
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseList } from '@/hooks/data/useData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import { getBiomeIcon } from 'utils/biomes';
+import { getBiomeIcon } from '@/utils/biomes';
 
 import './style.css';
 import Link from 'components/UI/Link';

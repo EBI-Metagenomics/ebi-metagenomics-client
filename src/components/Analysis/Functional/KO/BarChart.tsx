@@ -5,10 +5,10 @@ import HighchartsReact from 'highcharts-react-official';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyDatum } from 'hooks/data/useData';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyDatum } from '@/hooks/data/useData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import { TAXONOMY_COLOURS } from 'utils/taxon';
+import { TAXONOMY_COLOURS } from '@/utils/taxon';
 
 addExportMenu(Highcharts);
 

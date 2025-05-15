@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { Row } from 'react-table';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import useMGnifyData from 'hooks/data/useMGnifyData';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
 import EMGTable from 'components/UI/EMGTable';
-import { TAXONOMY_COLOURS } from 'utils/taxon';
+import { TAXONOMY_COLOURS } from '@/utils/taxon';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import ExtLink from 'components/UI/ExtLink';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import InterProMatchesChart from './InterProMatchesChart';
 import InterProQCChart from './QCChart';
 

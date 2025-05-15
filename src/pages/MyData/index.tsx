@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import { getBiomeIcon } from 'utils/biomes';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { getBiomeIcon } from '@/utils/biomes';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
-import useProtectedApiCall from 'hooks/useProtectedApiCall';
-import { MGnifyResponseList } from 'hooks/data/useData';
+import useProtectedApiCall from '@/hooks/useProtectedApiCall';
+import { MGnifyResponseList } from '@/hooks/data/useData';
 
 const MyData: React.FC = () => {
   const [page] = useQueryParamState('page', 1, Number);

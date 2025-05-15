@@ -6,10 +6,10 @@ import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import Overview from 'components/Genomes/Overview';
 import Downloads from 'components/Downloads';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
-import { cleanTaxLineage } from 'utils/taxon';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseObj } from '@/hooks/data/useData';
+import useURLAccession from '@/hooks/useURLAccession';
+import { cleanTaxLineage } from '@/utils/taxon';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));

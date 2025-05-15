@@ -1,7 +1,10 @@
 import Cookies from 'universal-cookie';
 import { useContext } from 'react';
 
-import useData, { HTMLDataResponse, ResponseFormat } from 'hooks/data/useData';
+import useData, {
+  HTMLDataResponse,
+  ResponseFormat,
+} from '@/hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
 
 const useMgnifyEmail: (
@@ -15,7 +18,7 @@ const useMgnifyEmail: (
   const cookies = new Cookies();
 
   const data = useData(
-    fromEmail ? `${config.api}utils/notify` : null,
+    fromEmail ? `${config.api}@/utils/notify` : null,
     ResponseFormat.HTML,
     {
       method: 'POST',

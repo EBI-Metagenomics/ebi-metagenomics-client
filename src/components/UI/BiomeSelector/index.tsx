@@ -4,14 +4,14 @@ import React, { useEffect, useState } from 'react';
 
 import { groupBy, split, map, flatMap, find, filter } from 'lodash-es';
 import Select from 'react-select';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList, MGnifyDatum } from 'hooks/data/useData';
-import { getBiomeIcon } from 'utils/biomes';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseList, MGnifyDatum } from '@/hooks/data/useData';
+import { getBiomeIcon } from '@/utils/biomes';
 import {
   reactSelectStyles,
   reactSelectTheme,
 } from 'styles/react-select-styles';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 type BiomeSelectorProps = {
   onSelect: (lineage: string) => void;

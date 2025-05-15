@@ -7,7 +7,7 @@ import EMGTable from 'components/UI/EMGTable';
 import ExtLink from 'components/UI/ExtLink';
 import Tooltip from 'components/UI/Tooltip';
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
-import { ENA_VIEW_URL } from 'utils/urls';
+import { ENA_VIEW_URL } from '@/utils/urls';
 import { uniq } from 'lodash-es';
 import ColumnSelector from './ColumnSelector';
 

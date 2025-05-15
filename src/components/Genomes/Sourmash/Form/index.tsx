@@ -3,20 +3,35 @@ import 'mgnify-sourmash-component';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useMgnifySourmashSearch from 'hooks/data/useMgnifySourmashSearch';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useMgnifySourmashSearch from '@/hooks/data/useMgnifySourmashSearch';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePicker';
 
 type SourmashFormProps = {
   catalogueID?: string;
 };
 const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
-  const sourmash = useRef(null);
+  // const sourmash = useRef(null);
+  const sourmash = useRef<HTMLMgnifySourmashComponentElement | null>(null);
   const [jobId, setJobId] = useQueryParamState('job_id', '');
   const [shouldSearch, setShouldSearch] = useState(false);
-  const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([
-    catalogueID,
-  ]);
+  const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>(
+    catalogueID ? [catalogueID] : []
+  );
+  // const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([
+  //   catalogueID,
+  // ]);
+
+  // interface SourmashState {
+  //   signatures: { [filename: string]: string } | null;
+  //   errors: any | null;
+  // }
+  //
+  // const [{ signatures, errors }, setSourmashState] = useState<SourmashState>({
+  //   signatures: null,
+  //   errors: null,
+  // });
+
   const [{ signatures, errors }, setSourmashState] = useState({
     signatures: null,
     errors: null,
@@ -24,12 +39,23 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
   const { data, error, loading } = useMgnifySourmashSearch(
     shouldSearch ? 'gather' : '',
     selectedCatalogues,
-    signatures
+    signatures || {}
   );
 
   useEffect(() => {
-    let sourmashElement;
-    const sketchedAll = (event): void => {
+    let sourmashElement: {
+      addEventListener: (
+        arg0: string,
+        arg1: (event: { detail: { signatures: any; errors: any } }) => void
+      ) => void;
+      removeEventListener: (
+        arg0: string,
+        arg1: (event: { detail: { signatures: any; errors: any } }) => void
+      ) => void;
+    };
+    const sketchedAll = (event: {
+      detail: { signatures: any; errors: any };
+    }): void => {
       setSourmashState({
         signatures: event.detail.signatures,
         errors: event.detail.errors,
@@ -52,7 +78,6 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
         sourmashElement.removeEventListener('change', changedFiles);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourmash.current]);
 
   useEffect(() => {
@@ -61,7 +86,6 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
       setJobId((data.data as Record<string, string>).job_id);
       setShouldSearch(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, error, loading]);
 
   const handleSearch = (): void => {

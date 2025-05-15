@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import TruncatedText from 'components/UI/TextTruncated';
-import { getBiomeIcon } from 'utils/biomes';
+import { getBiomeIcon } from '@/utils/biomes';
 
 import './style.css';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
@@ -22,7 +22,7 @@ const LatestStudy: React.FC<LatestStudyProps> = ({
   abstract,
   lineage,
 }) => {
-  const icon = getBiomeIcon(lineage);
+  const icon = getBiomeIcon(lineage ?? '');
   return (
     <article className="vf-summary vf-summary--has-image study">
       <span className={`biome_icon icon_xs ${icon}`} />
@@ -65,17 +65,34 @@ const LatestStudies: React.FC = () => {
         heightPx={800}
       >
         {/* eslint-disable-next-line camelcase */}
-        {data.items.map(({ accession, updated_at, biome, title }) => (
-          <LatestStudy
-            key={accession}
-            id={accession}
-            name={title}
-            lineage={biome.lineage}
-            abstract={`Last updated on ${new Date(
-              updated_at
-            ).toLocaleDateString()} `}
-          />
-        ))}
+        {data.items.map(
+          ({
+            accession,
+            // eslint-disable-next-line camelcase
+            updated_at,
+            biome,
+            title,
+          }: {
+            // eslint-disable-next-line react/no-unused-prop-types
+            accession: string;
+            // eslint-disable-next-line react/no-unused-prop-types
+            updated_at: string;
+            // eslint-disable-next-line react/no-unused-prop-types
+            biome: { lineage: string };
+            // eslint-disable-next-line react/no-unused-prop-types
+            title: string;
+          }) => (
+            <LatestStudy
+              key={accession}
+              id={accession}
+              name={title}
+              lineage={biome.lineage}
+              abstract={`Last updated on ${new Date(
+                updated_at
+              ).toLocaleDateString()} `}
+            />
+          )
+        )}
       </FixedHeightScrollable>
     </section>
   );

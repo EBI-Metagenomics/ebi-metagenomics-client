@@ -1,5 +1,5 @@
 import React from 'react';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 type HistoryProps = {
   jobs: Map<string, { time: number }>;

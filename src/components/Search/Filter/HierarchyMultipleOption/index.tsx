@@ -6,7 +6,7 @@ import LoadingOverlay from 'components/UI/LoadingOverlay';
 
 import 'styles/filters.css';
 import './style.css';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import { remove } from 'lodash-es';
 
 interface OptionDataType {

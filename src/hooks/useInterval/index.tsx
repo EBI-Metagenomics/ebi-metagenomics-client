@@ -1,4 +1,4 @@
-// From https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+// From https://overreacted.io/making-setinterval-declarative-with-react-@/hooks/
 import { useEffect, useRef } from 'react';
 
 function useInterval(callback: () => void, delay: number): void {

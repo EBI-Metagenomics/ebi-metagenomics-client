@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 const TYPES = ['COG', 'KEGG', 'GO', 'Pfam', 'InterPro', 'antiSMASH'];
 

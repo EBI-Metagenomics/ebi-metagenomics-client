@@ -1,6 +1,6 @@
-import protectedAxios from 'utils/protectedAxios';
+import protectedAxios from '@/utils/protectedAxios';
 import { useEffect } from 'react';
-import useAuthTokenVerifier from 'hooks/authentication/useAuthTokenVerifier';
+import useAuthTokenVerifier from '@/hooks/authentication/useAuthTokenVerifier';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const useProtectedApiCall = () => {

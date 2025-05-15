@@ -4,8 +4,8 @@ import {
   reactSelectTheme,
 } from 'styles/react-select-styles';
 import React, { useEffect, useMemo, useState } from 'react';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseList } from '@/hooks/data/useData';
 
 type CataloguePickerProps = {
   onChange: (options) => void;

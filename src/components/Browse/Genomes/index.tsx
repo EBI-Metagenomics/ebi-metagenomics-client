@@ -4,7 +4,7 @@ import React from 'react';
 
 import CataloguesList from 'components/Browse/Genomes/CataloguesList';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import GenomesTextSearch from 'components/Browse/Genomes/TextSearch';
 import CobsSearch from 'components/Genomes/Cobs';
 import SourmashSearch from 'components/Genomes/Sourmash';

@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
 import BiomeSelector from 'components/UI/BiomeSelector';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
-import { getBiomeIcon } from 'utils/biomes';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseList } from '@/hooks/data/useData';
+import { getBiomeIcon } from '@/utils/biomes';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 const BrowseSamples: React.FC = () => {
   const [page, setPage] = useQueryParamState('page', 1, Number);

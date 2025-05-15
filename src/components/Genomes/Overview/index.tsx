@@ -1,8 +1,8 @@
 import React from 'react';
 import KeyValueList from 'components/UI/KeyValueList';
 import ExtLink from 'components/UI/ExtLink';
-import { MGnifyDatum } from 'hooks/data/useData';
-import { cleanTaxLineage } from 'utils/taxon';
+import { MGnifyDatum } from '@/hooks/data/useData';
+import { cleanTaxLineage } from '@/utils/taxon';
 import {
   ENA_VIEW_URL,
   IMG_URL,
@@ -10,7 +10,7 @@ import {
   NCBI_PROJECT_URL,
   NCBI_SAMPLE_URL,
   PATRIC_URL,
-} from 'utils/urls';
+} from '@/utils/urls';
 
 type GenomeOverviewProps = {
   data: MGnifyDatum;

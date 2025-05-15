@@ -1,5 +1,5 @@
 import { Dispatch, useState } from 'react';
-import useQueryParamsStore from 'hooks/queryParamState/QueryParamStore/useQueryParamsStore';
+import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
 import { useEffectOnce } from 'react-use';
 import {
   GlobalState,
@@ -8,7 +8,7 @@ import {
   subscribeToParam,
   unsubscribeFromParam,
   updateParam,
-} from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
+} from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
 import { v4 as uuidv4 } from 'uuid';
 
 type StateExtras = {

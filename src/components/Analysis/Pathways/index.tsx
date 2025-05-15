@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import ExtLink from 'components/UI/ExtLink';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import KeggModule from './KeggModule';
 import AntiSMASH from './AntiSMASH';
 import GenomeProperties from './GenomeProperties';

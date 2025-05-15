@@ -1,7 +1,7 @@
 import React from 'react';
 import FetchError from 'components/UI/FetchError';
 import Loading from 'components/UI/Loading';
-import useMGnifyData from 'hooks/data/useMGnifyData';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { pickBy } from 'lodash-es';
 import { Link } from 'react-router-dom';
 import ExtLink from 'components/UI/ExtLink';
