@@ -38,7 +38,9 @@ const InterProTableWithPagination = () => {
   const dataFile = analysisOverviewData.downloads.find(
     (file) => file.alias.includes === 'interpro' && file.file_type === 'tsv.gz'
   );
-  const dataFileUrl = dataFile?.url;
+  // const dataFileUrl = dataFile?.url;
+  const dataFileUrl =
+    'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/interpro/ERZ1049444_interpro_summary.tsv.gz';
   const indexFileUrl = `${dataFileUrl}.gzi`;
 
   const parseInterProData = useCallback((text: string): InterProDomain[] => {
@@ -91,12 +93,12 @@ const InterProTableWithPagination = () => {
         setIsLoading(true);
         console.log('local pageSize ', pageSize);
         const rawData = await bgzipService.getPageData(page, pageSize);
-        // const interProData = parseInterProData(rawData);
-        const interProData = await bgzipService.getPagedData(
-          page,
-          pageSize,
-          parseInterProData
-        );
+        const interProData = parseInterProData(rawData);
+        // const interProData = await bgzipService.getPagedData(
+        //   page,
+        //   pageSize,
+        //   parseInterProData
+        // );
         setInterProDomainData(interProData);
         setCurrentPage(page);
         setError(null);

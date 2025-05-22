@@ -37,7 +37,19 @@ const GO: React.FC = () => {
   const dataFile = analysisOverviewData.downloads.find(
     (file) => file.alias.includes === 'go' && file.file_type === 'tsv.gz'
   );
-  const dataFileUrl = dataFile?.url;
+  // const dataFileUrl = dataFile?.url;
+  // const dataFileUrl =
+  //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/go/ERZ1049444_go_summary.tsv.gz';
+
+  const dataFileUrl =
+    'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/interpro/ERZ1049444_interpro_summary.tsv.gz';
+
+  // const dataFileUrl =
+  //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/large_assem.tsv.gz';
+
+  // const dataFileUrl =
+  //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/pathways-and-systems/kegg/ERZ1049444_summary_kegg_pathways.tsv.gz';
+
   const indexFileUrl = `${dataFileUrl}.gzi`;
 
   const parseGOTermData = useCallback((text: string): GOTerm[] => {
@@ -50,12 +62,18 @@ const GO: React.FC = () => {
     const rawHeaderLine = headerLine.toLowerCase();
 
     if (
-      !rawHeaderLine.includes('go_id') &&
-      !rawHeaderLine.includes('go_name') &&
-      !rawHeaderLine.includes('count') &&
-      !rawHeaderLine.includes('category')
+      !rawHeaderLine.includes('go') &&
+      !rawHeaderLine.includes('term') &&
+      !rawHeaderLine.includes('category') &&
+      !rawHeaderLine.includes('count')
+
+      // !rawHeaderLine.includes('go_id') &&
+      // !rawHeaderLine.includes('go_name') &&
+      // !rawHeaderLine.includes('count') &&
+      // !rawHeaderLine.includes('category')
     ) {
-      headerLine = 'go_id\tgo_name\tcount\tcategory';
+      // headerLine = 'go_id\tgo_name\tcount\tcategory';
+      headerLine = 'go\tterm\tcategory\tcount';
     } else {
       dataLines = lines.slice(1);
     }
@@ -63,16 +81,27 @@ const GO: React.FC = () => {
     const headers = headerLine.split('\t');
 
     const colIndices = {
-      go_id: headers.findIndex((h) => h.includes('go_id')),
-      go_name: headers.findIndex((h) => h.includes('go_name')),
-      count: headers.findIndex((h) => h.includes('count')),
+      go: headers.findIndex((h) => h.includes('go')),
+      term: headers.findIndex((h) => h.includes('term')),
       category: headers.findIndex((h) => h.includes('category')),
+      count: headers.findIndex((h) => h.includes('count')),
+
+      // go_id: headers.findIndex((h) => h.includes('go_id')),
+      // go_name: headers.findIndex((h) => h.includes('go_name')),
+      // count: headers.findIndex((h) => h.includes('count')),
+      // category: headers.findIndex((h) => h.includes('category')),
     };
 
-    if (colIndices.go_id === -1) colIndices.go_id = 0;
-    if (colIndices.go_name === -1) colIndices.go_name = 1;
-    if (colIndices.count === -1) colIndices.count = 2;
+    // if (colIndices.go_id === -1) colIndices.go_id = 0;
+    if (colIndices.go === -1) colIndices.go = 0;
+    if (colIndices.term === -1) colIndices.term = 1;
     if (colIndices.category === -1) colIndices.category = 3;
+    if (colIndices.count === -1) colIndices.count = 2;
+
+    // if (colIndices.go_id === -1) colIndices.go_id = 0;
+    // if (colIndices.go_name === -1) colIndices.go_name = 1;
+    // if (colIndices.count === -1) colIndices.count = 2;
+    // if (colIndices.category === -1) colIndices.category = 3;
 
     return dataLines
       .map((line) => {
@@ -97,11 +126,19 @@ const GO: React.FC = () => {
         }
 
         return {
-          id: values[colIndices.go_id] || '',
-          name: values[colIndices.go_name] || '',
-          count: parseInt(values[colIndices.count] || '0', 10),
+          id: values[colIndices.go] || '',
+          name: values[colIndices.term] || '',
           category: categoryType,
+          count: parseInt(values[colIndices.count] || '0', 10),
         };
+
+        // return {
+        //   id: values[colIndices.go_id] || '',
+        //   name: values[colIndices.go_name] || '',
+        //
+        //   count: parseInt(values[colIndices.count] || '0', 10),
+        //   category: categoryType,
+        // };
       })
       .filter(Boolean) as GOTerm[];
   }, []);
@@ -357,10 +394,7 @@ const GO: React.FC = () => {
                 </thead>
                 <tbody className="vf-table__body">
                   {goTermData.map((term) => (
-                    <tr
-                      className="vf-table__row hover:bg-gray-50"
-                      key={term.id}
-                    >
+                    <tr className="vf-table__row hover:bg-gray-50">
                       <td className="vf-table__cell">
                         <a
                           href={`http://amigo.geneontology.org/amigo/term/${term.id}`}

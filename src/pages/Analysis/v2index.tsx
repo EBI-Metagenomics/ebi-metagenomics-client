@@ -44,16 +44,19 @@ const V2AnalysisPage: React.FC = () => {
     { label: 'Overview', to: '#overview' },
     { label: 'Quality control', to: '#qc' },
     { label: 'Taxonomy', to: '#taxonomic' },
-    isNotAmplicon(analysisData)
-      ? { label: 'Functional analysis', to: '#functional' }
-      : null,
-    isNotAmplicon(analysisData)
-      ? { label: 'Pathways/Systems', to: '#path-systems' }
-      : null,
-    isAssembly(analysisData)
-      ? { label: 'Contig Viewer', to: '#contigs-viewer' }
-      : null,
-    isAmplicon(analysisData) ? { label: 'ASV', to: '#asv' } : null,
+    { label: 'Functional analysis', to: '#functional' },
+    // isNotAmplicon(analysisData)
+    //   ? { label: 'Functional analysis', to: '#functional' }
+    //   : null,
+    // isNotAmplicon(analysisData)
+    //   ? { label: 'Pathways/Systems', to: '#path-systems' }
+    //   : null,
+    { label: 'Pathways/Systems', to: '#path-systems' },
+    { label: 'Contig Viewer', to: '#contigs-viewer' },
+    // isAssembly(analysisData)
+    //   ? { label: 'Contig Viewer', to: '#contigs-viewer' }
+    //   : null,
+    // isAmplicon(analysisData) ? { label: 'ASV', to: '#asv' } : null,
   ].filter(Boolean);
   return (
     <section className="vf-content">
@@ -75,11 +78,12 @@ const V2AnalysisPage: React.FC = () => {
               <ContigViewer />
             </RouteForHash>
             <RouteForHash hash="#taxonomic">
-              {isAssembly(analysisData) ? (
-                <AssemblyTaxonomy />
-              ) : (
-                <Taxonomy accession={accession} />
-              )}
+              <AssemblyTaxonomy />
+              {/*{isAssembly(analysisData) ? (*/}
+              {/*  <AssemblyTaxonomy />*/}
+              {/*) : (*/}
+              {/*  <Taxonomy accession={accession} />*/}
+              {/*)}*/}
             </RouteForHash>
             <RouteForHash hash="#functional">
               <FunctionalSubpage />
