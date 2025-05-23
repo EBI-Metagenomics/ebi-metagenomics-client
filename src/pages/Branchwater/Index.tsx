@@ -95,9 +95,35 @@ const Branchwater = () => {
         signatures: JSON.stringify(sig),
       };
       // axios.post('http://localhost:8000/', data).then((res) => {
-      axios.post('http://branchwater-dev.mgnify.org/', data).then((res) => {
-        console.log('res', res);
-      });
+      // axios.post('http://localhost:8000/', data).then((res) => {
+      //   console.log('res', res);
+      // });
+
+      // axios.post(
+      //   'http://localhost:8000/',
+      //   {
+      //     signatures: sig,
+      //   },
+      //   {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //   }
+      // );
+
+      // const sig = JSON.parse(evt.detail.signature)[0];
+      axios.post(
+        'http://localhost:8000/',
+        {
+          signatures: JSON.stringify(sig), // send as string!
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
       // setIsButtonDisabled(false);
     };
 
