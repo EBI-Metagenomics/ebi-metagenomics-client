@@ -74,6 +74,28 @@ const Branchwater = () => {
   const [showMgnifySourmash, setShowMgnifySourmash] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [targetDatabase, setTargetDatabase] = useState('MAGs');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Sorting state
+  const [sortField, setSortField] = useState('');
+  const [sortDirection, setSortDirection] = useState('asc');
+
+  // Filtering state
+  const [filters, setFilters] = useState({
+    acc: '',
+    assay_type: '',
+    bioproject: '',
+    cANI: '',
+    collection_date_sam: '',
+    containment: '',
+    geo_loc_name_country_calc: '',
+    organism: '',
+  });
 
   const sourmash = useRef(null);
   const [{ signatures, errors }, setSourmashState] = useState({
@@ -91,38 +113,7 @@ const Branchwater = () => {
 
       setSignature(sig);
       console.log('sig', sig);
-      const data = {
-        signatures: JSON.stringify(sig),
-      };
-      // axios.post('http://localhost:8000/', data).then((res) => {
-      // axios.post('http://localhost:8000/', data).then((res) => {
-      //   console.log('res', res);
-      // });
-
-      // axios.post(
-      //   'http://localhost:8000/',
-      //   {
-      //     signatures: sig,
-      //   },
-      //   {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //   }
-      // );
-
-      // const sig = JSON.parse(evt.detail.signature)[0];
-      axios.post(
-        'http://localhost:8000/',
-        {
-          signatures: JSON.stringify(sig), // send as string!
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      // Removed automatic axios request - will only search when button is clicked
 
       // setIsButtonDisabled(false);
     };
@@ -184,17 +175,149 @@ const Branchwater = () => {
   const handleSearchClick = (event) => {
     event.preventDefault();
     setShowMgnifySourmash(true);
-    // if (uploadedFile) {
-    //   setShowMgnifySourmash(true);
-    // } else {
-    //   alert('Please upload a FASTA file first.');
-    // }
     console.log(`Searching in ${targetDatabase} database`);
+
+    // If we already have a signature, trigger a search
+    if (signature) {
+      setIsLoading(true);
+      axios
+        .post(
+          'http://branchwater-dev.mgnify.org/',
+          {
+            signatures: JSON.stringify(signature),
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          console.log('Search results:', response.data);
+          setSearchResults(response.data);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching search results:', error);
+          setIsLoading(false);
+          // For testing, use sample data if the API call fails
+          setSearchResults(sampleEntries);
+        });
+    } else {
+      // If no signature yet, show a message or use sample data for testing
+      console.log(
+        'No signature available yet. Please upload and sketch a file first.'
+      );
+      // For testing purposes, we can use the sample data
+      setSearchResults(sampleEntries);
+    }
+  };
+
+  // Handle filter change
+  const handleFilterChange = (field, value) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [field]: value,
+    }));
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+
+  // Handle sort change
+  const handleSortChange = (field) => {
+    if (sortField === field) {
+      // If already sorting by this field, toggle direction
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // If sorting by a new field, set it and default to ascending
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  // Handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Apply filters to search results
+  const getFilteredResults = () => {
+    return searchResults.filter((item) => {
+      return Object.keys(filters).every((key) => {
+        if (!filters[key]) return true; // Skip empty filters
+
+        const itemValue = String(item[key] || '').toLowerCase();
+        const filterValue = filters[key].toLowerCase();
+
+        return itemValue.includes(filterValue);
+      });
+    });
+  };
+
+  // Apply sorting to filtered results
+  const getSortedResults = (filteredResults) => {
+    if (!sortField) return filteredResults;
+
+    return [...filteredResults].sort((a, b) => {
+      const aValue = a[sortField] || '';
+      const bValue = b[sortField] || '';
+
+      // Handle numeric values
+      if (!isNaN(aValue) && !isNaN(bValue)) {
+        return sortDirection === 'asc'
+          ? Number(aValue) - Number(bValue)
+          : Number(bValue) - Number(aValue);
+      }
+
+      // Handle string values
+      const comparison = String(aValue).localeCompare(String(bValue));
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+  };
+
+  // Get paginated results
+  const getPaginatedResults = (sortedResults) => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return sortedResults.slice(startIndex, startIndex + itemsPerPage);
+  };
+
+  // Calculate total pages
+  const getTotalPages = (filteredResults) => {
+    return Math.ceil(filteredResults.length / itemsPerPage);
+  };
+
+  // Process results for display
+  const processResults = () => {
+    const filteredResults = getFilteredResults();
+    const sortedResults = getSortedResults(filteredResults);
+    const paginatedResults = getPaginatedResults(sortedResults);
+    const totalPages = getTotalPages(filteredResults);
+
+    return {
+      filteredResults,
+      sortedResults,
+      paginatedResults,
+      totalPages,
+    };
   };
 
   const handleClearClick = () => {
     setShowMgnifySourmash(false);
     setUploadedFile(null);
+    setSearchResults([]);
+    setSignature(null);
+    setFilters({
+      acc: '',
+      assay_type: '',
+      bioproject: '',
+      cANI: '',
+      collection_date_sam: '',
+      containment: '',
+      geo_loc_name_country_calc: '',
+      organism: '',
+    });
+    setSortField('');
+    setSortDirection('asc');
+    setCurrentPage(1);
     const fileInput = document.getElementById(
       'file-upload'
     ) as HTMLInputElement;
@@ -212,12 +335,13 @@ const Branchwater = () => {
             <mgnify-sourmash-component
               id="sourmash"
               ref={sourmash}
+              ksize={21}
               show_directory_checkbox={false}
             />
 
             <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
               <legend className="vf-form__legend">
-                Select target database
+                Select target databafwfwfwse
               </legend>
 
               <div className="vf-form__item vf-form__item--radio">
@@ -296,34 +420,467 @@ const Branchwater = () => {
               </g>
             </defs>
           </svg>
-          <table className="vf-table">
-            <tbody className="vf-table__body">
-              {sampleEntries.map((entry, index) => (
-                <tr className="vf-table__row" key={index}>
-                  <td className="vf-table__cell">{entry.acc}</td>
-                  <td className="vf-table__cell">{entry.assay_type}</td>
-                  <td className="vf-table__cell">{entry.bioproject}</td>
-                  <td className="vf-table__cell">
-                    <a
-                      href={entry.biosample_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
+          {isLoading ? (
+            <div className="vf-u-padding__top--800">
+              <p>Loading search results...</p>
+            </div>
+          ) : searchResults.length > 0 ? (
+            <>
+              <table className="vf-table">
+                <thead className="vf-table__header">
+                  <tr className="vf-table__row">
+                    {/* Filter inputs row */}
+                    <th className="vf-table__heading" scope="col">
+                      <input
+                        type="text"
+                        className="vf-form__input"
+                        placeholder="Filter Accession"
+                        value={filters.acc}
+                        onChange={(e) =>
+                          handleFilterChange('acc', e.target.value)
+                        }
+                      />
+                    </th>
+                    <th className="vf-table__heading" scope="col">
+                      <input
+                        type="text"
+                        className="vf-form__input"
+                        placeholder="Filter Type"
+                        value={filters.assay_type}
+                        onChange={(e) =>
+                          handleFilterChange('assay_type', e.target.value)
+                        }
+                      />
+                    </th>
+                    <th className="vf-table__heading" scope="col">
+                      <input
+                        type="text"
+                        className="vf-form__input"
+                        placeholder="Filter Bioproject"
+                        value={filters.bioproject}
+                        onChange={(e) =>
+                          handleFilterChange('bioproject', e.target.value)
+                        }
+                      />
+                    </th>
+                    <th className="vf-table__heading" scope="col">
+                      {/* No filter for Biosample link */}
+                    </th>
+                    <th className="vf-table__heading" scope="col">
+                      <input
+                        type="text"
+                        className="vf-form__input"
+                        placeholder="Filter cANI"
+                        value={filters.cANI}
+                        onChange={(e) =>
+                          handleFilterChange('cANI', e.target.value)
+                        }
+                      />
+                    </th>
+                    <th className="vf-table__heading" scope="col">
+                      <input
+                        type="text"
+                        className="vf-form__input"
+                        placeholder="Filter Date"
+                        value={filters.collection_date_sam}
+                        onChange={(e) =>
+                          handleFilterChange(
+                            'collection_date_sam',
+                            e.target.value
+                          )
+                        }
+                      />
+                    </th>
+                    <th className="vf-table__heading" scope="col">
+                      <input
+                        type="text"
+                        className="vf-form__input"
+                        placeholder="Filter Containment"
+                        value={filters.containment}
+                        onChange={(e) =>
+                          handleFilterChange('containment', e.target.value)
+                        }
+                      />
+                    </th>
+                    <th className="vf-table__heading" scope="col">
+                      <input
+                        type="text"
+                        className="vf-form__input"
+                        placeholder="Filter Location"
+                        value={filters.geo_loc_name_country_calc}
+                        onChange={(e) =>
+                          handleFilterChange(
+                            'geo_loc_name_country_calc',
+                            e.target.value
+                          )
+                        }
+                      />
+                    </th>
+                    <th className="vf-table__heading" scope="col">
+                      <input
+                        type="text"
+                        className="vf-form__input"
+                        placeholder="Filter Organism"
+                        value={filters.organism}
+                        onChange={(e) =>
+                          handleFilterChange('organism', e.target.value)
+                        }
+                      />
+                    </th>
+                  </tr>
+                  <tr className="vf-table__row">
+                    {/* Sortable column headers */}
+                    <th
+                      className="vf-table__heading"
+                      scope="col"
+                      onClick={() => handleSortChange('acc')}
+                      style={{ cursor: 'pointer' }}
                     >
-                      Link
-                    </a>
-                  </td>
-                  <td className="vf-table__cell">{entry.cANI}</td>
-                  <td className="vf-table__cell">{entry.collection_date}</td>
-                  <td className="vf-table__cell">{entry.containment}</td>
-                  <td className="vf-table__cell">
-                    {entry.geo_loc_name_country}
-                  </td>
-                  <td className="vf-table__cell">{entry.lat_lon}</td>
-                  <td className="vf-table__cell">{entry.organism}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      Accession
+                      {sortField === 'acc' && (
+                        <svg
+                          className="vf-icon"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                        >
+                          <use
+                            href={`#vf-table-sortable--${
+                              sortDirection === 'asc' ? 'up' : 'down'
+                            }`}
+                          />
+                        </svg>
+                      )}
+                    </th>
+                    <th
+                      className="vf-table__heading"
+                      scope="col"
+                      onClick={() => handleSortChange('assay_type')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Type
+                      {sortField === 'assay_type' && (
+                        <svg
+                          className="vf-icon"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                        >
+                          <use
+                            href={`#vf-table-sortable--${
+                              sortDirection === 'asc' ? 'up' : 'down'
+                            }`}
+                          />
+                        </svg>
+                      )}
+                    </th>
+                    <th
+                      className="vf-table__heading"
+                      scope="col"
+                      onClick={() => handleSortChange('bioproject')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Bioproject
+                      {sortField === 'bioproject' && (
+                        <svg
+                          className="vf-icon"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                        >
+                          <use
+                            href={`#vf-table-sortable--${
+                              sortDirection === 'asc' ? 'up' : 'down'
+                            }`}
+                          />
+                        </svg>
+                      )}
+                    </th>
+                    <th className="vf-table__heading" scope="col">
+                      Biosample
+                    </th>
+                    <th
+                      className="vf-table__heading"
+                      scope="col"
+                      onClick={() => handleSortChange('cANI')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      cANI
+                      {sortField === 'cANI' && (
+                        <svg
+                          className="vf-icon"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                        >
+                          <use
+                            href={`#vf-table-sortable--${
+                              sortDirection === 'asc' ? 'up' : 'down'
+                            }`}
+                          />
+                        </svg>
+                      )}
+                    </th>
+                    <th
+                      className="vf-table__heading"
+                      scope="col"
+                      onClick={() => handleSortChange('collection_date_sam')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Date
+                      {sortField === 'collection_date_sam' && (
+                        <svg
+                          className="vf-icon"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                        >
+                          <use
+                            href={`#vf-table-sortable--${
+                              sortDirection === 'asc' ? 'up' : 'down'
+                            }`}
+                          />
+                        </svg>
+                      )}
+                    </th>
+                    <th
+                      className="vf-table__heading"
+                      scope="col"
+                      onClick={() => handleSortChange('containment')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Containment
+                      {sortField === 'containment' && (
+                        <svg
+                          className="vf-icon"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                        >
+                          <use
+                            href={`#vf-table-sortable--${
+                              sortDirection === 'asc' ? 'up' : 'down'
+                            }`}
+                          />
+                        </svg>
+                      )}
+                    </th>
+                    <th
+                      className="vf-table__heading"
+                      scope="col"
+                      onClick={() =>
+                        handleSortChange('geo_loc_name_country_calc')
+                      }
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Location
+                      {sortField === 'geo_loc_name_country_calc' && (
+                        <svg
+                          className="vf-icon"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                        >
+                          <use
+                            href={`#vf-table-sortable--${
+                              sortDirection === 'asc' ? 'up' : 'down'
+                            }`}
+                          />
+                        </svg>
+                      )}
+                    </th>
+                    <th
+                      className="vf-table__heading"
+                      scope="col"
+                      onClick={() => handleSortChange('organism')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Organism
+                      {sortField === 'organism' && (
+                        <svg
+                          className="vf-icon"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                        >
+                          <use
+                            href={`#vf-table-sortable--${
+                              sortDirection === 'asc' ? 'up' : 'down'
+                            }`}
+                          />
+                        </svg>
+                      )}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="vf-table__body">
+                  {processResults().paginatedResults.map((entry, index) => (
+                    <tr className="vf-table__row" key={index}>
+                      <td className="vf-table__cell">{entry.acc}</td>
+                      <td className="vf-table__cell">{entry.assay_type}</td>
+                      <td className="vf-table__cell">{entry.bioproject}</td>
+                      <td className="vf-table__cell">
+                        <a
+                          href={entry.biosample_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Link
+                        </a>
+                      </td>
+                      <td className="vf-table__cell">{entry.cANI}</td>
+                      <td className="vf-table__cell">
+                        {entry.collection_date_sam || 'NP'}
+                      </td>
+                      <td className="vf-table__cell">{entry.containment}</td>
+                      <td className="vf-table__cell">
+                        {entry.geo_loc_name_country_calc || 'NP'}
+                      </td>
+                      <td className="vf-table__cell">{entry.organism}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Pagination */}
+              {processResults().totalPages > 1 && (
+                <nav className="vf-pagination" aria-label="Pagination">
+                  <ul className="vf-pagination__list">
+                    <li
+                      className={`vf-pagination__item vf-pagination__item--previous-page ${
+                        currentPage === 1
+                          ? 'vf-pagination__item--is-disabled'
+                          : ''
+                      }`}
+                    >
+                      <a
+                        href="JavaScript:Void(0);"
+                        className="vf-pagination__link"
+                        onClick={() =>
+                          currentPage > 1 && handlePageChange(currentPage - 1)
+                        }
+                      >
+                        Previous<span className="vf-u-sr-only"> page</span>
+                      </a>
+                    </li>
+
+                    {/* First page */}
+                    {currentPage > 2 && (
+                      <li className="vf-pagination__item">
+                        <a
+                          href="JavaScript:Void(0);"
+                          className="vf-pagination__link"
+                          onClick={() => handlePageChange(1)}
+                        >
+                          1<span className="vf-u-sr-only"> page</span>
+                        </a>
+                      </li>
+                    )}
+
+                    {/* Ellipsis if needed */}
+                    {currentPage > 3 && (
+                      <li className="vf-pagination__item">
+                        <span className="vf-pagination__label">...</span>
+                      </li>
+                    )}
+
+                    {/* Previous page if not first */}
+                    {currentPage > 1 && (
+                      <li className="vf-pagination__item">
+                        <a
+                          href="JavaScript:Void(0);"
+                          className="vf-pagination__link"
+                          onClick={() => handlePageChange(currentPage - 1)}
+                        >
+                          {currentPage - 1}
+                          <span className="vf-u-sr-only"> page</span>
+                        </a>
+                      </li>
+                    )}
+
+                    {/* Current page */}
+                    <li className="vf-pagination__item vf-pagination__item--is-active">
+                      <span
+                        className="vf-pagination__label"
+                        aria-current="page"
+                      >
+                        <span className="vf-u-sr-only">Page </span>
+                        {currentPage}
+                      </span>
+                    </li>
+
+                    {/* Next page if not last */}
+                    {currentPage < processResults().totalPages && (
+                      <li className="vf-pagination__item">
+                        <a
+                          href="JavaScript:Void(0);"
+                          className="vf-pagination__link"
+                          onClick={() => handlePageChange(currentPage + 1)}
+                        >
+                          {currentPage + 1}
+                          <span className="vf-u-sr-only"> page</span>
+                        </a>
+                      </li>
+                    )}
+
+                    {/* Ellipsis if needed */}
+                    {currentPage < processResults().totalPages - 2 && (
+                      <li className="vf-pagination__item">
+                        <span className="vf-pagination__label">...</span>
+                      </li>
+                    )}
+
+                    {/* Last page */}
+                    {currentPage < processResults().totalPages - 1 && (
+                      <li className="vf-pagination__item">
+                        <a
+                          href="JavaScript:Void(0);"
+                          className="vf-pagination__link"
+                          onClick={() =>
+                            handlePageChange(processResults().totalPages)
+                          }
+                        >
+                          {processResults().totalPages}
+                          <span className="vf-u-sr-only"> page</span>
+                        </a>
+                      </li>
+                    )}
+
+                    <li
+                      className={`vf-pagination__item vf-pagination__item--next-page ${
+                        currentPage === processResults().totalPages
+                          ? 'vf-pagination__item--is-disabled'
+                          : ''
+                      }`}
+                    >
+                      <a
+                        href="JavaScript:Void(0);"
+                        className="vf-pagination__link"
+                        onClick={() =>
+                          currentPage < processResults().totalPages &&
+                          handlePageChange(currentPage + 1)
+                        }
+                      >
+                        Next<span className="vf-u-sr-only"> page</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              )}
+            </>
+          ) : (
+            <div className="vf-u-padding__top--800">
+              <p>No search results found. Please try a different search.</p>
+            </div>
+          )}
           <Wrapper apiKey={config.googleMapsKey} render={render}>
             <div ref={ref} id="map" style={{ height: '100%' }} />
           </Wrapper>
