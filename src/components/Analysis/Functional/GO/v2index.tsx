@@ -37,15 +37,19 @@ const GO: React.FC = () => {
   const dataFile = analysisOverviewData.downloads.find(
     (file) => file.alias.includes === 'go' && file.file_type === 'tsv.gz'
   );
-  // const dataFileUrl = dataFile?.url;
   // const dataFileUrl =
-  //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/go/ERZ1049444_go_summary.tsv.gz';
+  //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/aseembly/large_assem.tsv.gz';
 
   const dataFileUrl =
-    'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/interpro/ERZ1049444_interpro_summary.tsv.gz';
+    'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/aseembly/ERZ1049444_go_summary.tsv.gz';
+  // const dataFileUrl =
+  //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/large_assem.tsv.gz';
 
   // const dataFileUrl =
-  //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/large_assem.tsv.gz';
+  //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/aseembly/ERZ1049444_go_summary.tsv.gz';
+
+  // const dataFileUrl =
+  //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/interpro/ERZ1049444_interpro_summary.tsv.gz';
 
   // const dataFileUrl =
   //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/pathways-and-systems/kegg/ERZ1049444_summary_kegg_pathways.tsv.gz';
