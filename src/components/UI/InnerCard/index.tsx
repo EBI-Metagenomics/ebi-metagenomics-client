@@ -2,6 +2,8 @@ import React from 'react';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import { Link } from 'react-router-dom';
 
+import './style.css';
+
 type InnerCardProps = {
   title: string;
   label: string;
@@ -24,7 +26,9 @@ const InnerCard: React.FC<InnerCardProps> = ({
   badge,
 }) => {
   return (
-    <article className={`vf-card vf-card--brand ${className}`}>
+    <article
+      className={`vf-card vf-card--brand vf-card--raised ${className} inner-card`}
+    >
       {image && (
         <img
           src={image}
@@ -36,10 +40,17 @@ const InnerCard: React.FC<InnerCardProps> = ({
       <div className="vf-card__content | vf-stack vf-stack--400">
         <h3 className="vf-card__heading">
           {badge && (
-            <span className="vf-badge vf-badge--tertiary">{badge}</span>
+            <span className="vf-badge vf-badge--tertiary vf-badge--pill inner-card__badge">
+              {badge}
+            </span>
           )}
           {externalLink && typeof to === 'string' && (
-            <a className="vf-card__link" href={to}>
+            <a
+              className="vf-card__link"
+              href={to}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {title} <ArrowForLink />
             </a>
           )}
@@ -58,7 +69,9 @@ const InnerCard: React.FC<InnerCardProps> = ({
             </button>
           )}
         </h3>
-        <p className="vf-card__text">{label}</p>
+        <p className="vf-card__text vf-text-body--2 inner-card__text">
+          {label}
+        </p>
       </div>
     </article>
   );

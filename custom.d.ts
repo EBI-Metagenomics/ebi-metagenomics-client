@@ -73,4 +73,5 @@ interface MGnifySourmashComponentProps
   > {
   id: string;
   show_directory_checkbox: boolean;
+  ksize?: number;
 }

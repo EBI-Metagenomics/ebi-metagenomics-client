@@ -341,7 +341,7 @@ const Branchwater = () => {
 
             <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
               <legend className="vf-form__legend">
-                Select target databafwfwfwse
+                Select target database
               </legend>
 
               <div className="vf-form__item vf-form__item--radio">

@@ -1,44 +1,103 @@
 import React from 'react';
-import SearchBy from 'components/Home/SearchBy';
-import Request from 'components/Home/Request';
 import BlogExcerpts from 'components/Home/BlogExcerpts';
 import ExtLink from 'components/UI/ExtLink';
 import Publications, { MainPublication } from 'components/Publications';
+import InnerCard from 'components/UI/InnerCard';
 import './style.css';
 import SearchPage from 'pages/Search';
+import { useReveal } from 'hooks/useReveal';
 
 const HomePage: React.FC = () => {
+  const analysisRef = useReveal();
+
   return (
     <section className="vf-content vf-stack vf-stack--800">
-      <div />
-      <div className="vf-banner vf-banner--alert vf-banner--info">
-        <div className="vf-banner__content">
-          <p className="vf-banner__text">
-            Do data resources managed by EMBL-EBI and our collaborators make a
-            difference to your work?
-            <br />
-            Please take 10 minutes to fill in our{' '}
-            <ExtLink href="https://www.surveymonkey.com/r/HJKYKTT?channel=[webpage]">
-              annual user survey
-            </ExtLink>
-            , and help us make the case for why sustaining open data resources
-            is critical for life sciences research.
+      {/* Hero section with stylized layout */}
+      <div className="home-hero compact-hero">
+        <div className="home-hero-bg-pattern" />
+        <div className="home-hero-content">
+          <h1 className="vf-text vf-text--display vf-text--bold home-search-title">
+            Discover and Compare Microbiome Data
+          </h1>
+          <p className="vf-text vf-text-body home-search-subtext">
+            Explore datasets using text, protein, or nucleotide sequences.
+          </p>
+          <div className="home-search-box">
+            <SearchPage />
+          </div>
+          <p className="vf-text-body--2 home-search-examples">
+            Examples: <code>Tara Oceans</code>, <code>MGYS00000410</code>,{' '}
+            <code>Human Gut</code>
           </p>
         </div>
       </div>
-      <div />
-      <SearchPage />
-      {/*<div className="vf-grid vf-grid__col-2">*/}
-      {/*  /!*<SearchBy />*!/*/}
-      {/*  <SearchPage />*/}
-      {/*  <Request />*/}
-      {/*</div>*/}
-      <hr />
-      <BlogExcerpts />
-      <h2>Latest publications</h2>
-      <Publications />
-      <h2>How to cite</h2>
-      <MainPublication />
+
+      {/* Search method cards in VF grid layout */}
+      <div className="home-search-cards vf-grid vf-grid__col-3">
+        <div className="vf-card home-search-card">
+          <InnerCard
+            title="Search by Text"
+            label="Find resources using keywords, names, or descriptions"
+            to="/search"
+          />
+        </div>
+        <div className="vf-card home-search-card">
+          <InnerCard
+            title="Search by Protein"
+            label="Search for resources using protein sequences"
+            to="/biomes"
+          />
+        </div>
+        <div className="vf-card home-search-card">
+          <InnerCard
+            title="Search by Nucleotide"
+            label="Search for resources using nucleotide sequences"
+            to="/branchwater-search"
+          />
+        </div>
+      </div>
+
+      <hr className="vf-divider" />
+
+      {/* Request analysis section with background texture and reveal animation */}
+      <section
+        ref={analysisRef}
+        className="vf-section vf-section--highlight request-analysis-section reveal"
+      >
+        <div className="request-analysis-bg-pattern" />
+        <h2 className="vf-section__title">Request an Analysis</h2>
+        <div className="home-search-cards vf-grid vf-grid__col-2">
+          <div className="vf-card home-search-card">
+            <InnerCard
+              title="Submit and/or Request"
+              label="Submit your data for analysis by the MGnify team"
+              to="/submit-request"
+            />
+          </div>
+          <div className="vf-card home-search-card">
+            <InnerCard
+              title="Request Public Dataset"
+              label="Request analysis of publicly available microbiome datasets"
+              to="/public-request"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="vf-section">
+        <h2 className="vf-section__title">Spotlight & Articles</h2>
+        <BlogExcerpts />
+      </section>
+
+      <section className="vf-section">
+        <h2 className="vf-section__title">Latest Publications</h2>
+        <Publications />
+      </section>
+
+      <section className="vf-section">
+        <h2 className="vf-section__title">How to Cite MGnify</h2>
+        <MainPublication />
+      </section>
     </section>
   );
 };

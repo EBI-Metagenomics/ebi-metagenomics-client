@@ -1,107 +1,29 @@
-import React, { useState } from 'react';
-import Branchwater from 'pages/Branchwater';
-import Cobs from 'components/Genomes/Cobs';
+import React from 'react';
+import './style.css';
 
 const SearchPage: React.FC = () => {
-  // State to manage the active tab
-  const [activeTab, setActiveTab] = useState('vf-tabs__section--1');
-
-  // Function to handle tab switching
-  const handleTabClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    tabId: string
-  ) => {
-    event.preventDefault();
-    setActiveTab(tabId);
-  };
-
   return (
-    <>
-      <div className="vf-tabs">
-        <ul className="vf-tabs__list">
-          <li className="vf-tabs__item">
-            <a
-              className={`vf-tabs__link ${
-                activeTab === 'vf-tabs__section--1' ? 'is-active' : ''
-              }`}
-              href="#vf-tabs__section--1"
-              onClick={(e) => handleTabClick(e, 'vf-tabs__section--1')}
-            >
-              Search by text
-            </a>
-          </li>
-          <li className="vf-tabs__item">
-            <a
-              className={`vf-tabs__link ${
-                activeTab === 'vf-tabs__section--2' ? 'is-active' : ''
-              }`}
-              href="#vf-tabs__section--2"
-              onClick={(e) => handleTabClick(e, 'vf-tabs__section--2')}
-            >
-              Search by Protein
-            </a>
-          </li>
-          <li className="vf-tabs__item">
-            <a
-              className={`vf-tabs__link ${
-                activeTab === 'vf-tabs__section--3' ? 'is-active' : ''
-              }`}
-              href="#vf-tabs__section--3"
-              onClick={(e) => handleTabClick(e, 'vf-tabs__section--3')}
-            >
-              Search by Nucleotide
-            </a>
-          </li>
-        </ul>
+    <div className="unified-search-container">
+      <div className="search-input-container">
+        <div className="search-input-with-button">
+          <input
+            type="text"
+            className="vf-form__input search-text-input"
+            placeholder="Enter keywords, sample names, or biome types..."
+          />
+          <button className="vf-button vf-button--primary vf-button--large">
+            Search
+          </button>
+        </div>
+        {/*<div className="search-examples">*/}
+        {/*  <p>*/}
+        {/*    Examples: <span className="search-example">human gut</span>,{' '}*/}
+        {/*    <span className="search-example">ocean water</span>,{' '}*/}
+        {/*    <span className="search-example">MGYS00000001</span>*/}
+        {/*  </p>*/}
+        {/*</div>*/}
       </div>
-
-      <div className="vf-tabs-content">
-        <section
-          className="vf-tabs__section"
-          id="vf-tabs__section--1"
-          style={{
-            display: activeTab === 'vf-tabs__section--1' ? 'block' : 'none',
-          }}
-        >
-          <h2>Search by text</h2>
-          <p>
-            Enter your text-based search query here. This section allows you to
-            search by keywords or phrases.
-          </p>
-        </section>
-        <section
-          className="vf-tabs__section"
-          id="vf-tabs__section--2"
-          style={{
-            display: activeTab === 'vf-tabs__section--2' ? 'block' : 'none',
-          }}
-        >
-          <h2>Search by Protein</h2>
-          <p>
-            Use this section to search by protein sequences. Enter the relevant
-            protein information to find matching results.
-          </p>
-        </section>
-        <section
-          className="vf-tabs__section"
-          id="vf-tabs__section--3"
-          style={{
-            display: activeTab === 'vf-tabs__section--3' ? 'block' : 'none',
-          }}
-        >
-          <h2>Search by Nucleotide</h2>
-          <details className="vf-details">
-            <summary className="vf-details--summary">Search by MAG</summary>
-            <Branchwater />
-          </details>
-
-          <details className="vf-details">
-            <summary className="vf-details--summary">Search by Gene</summary>
-            <Cobs />
-          </details>
-        </section>
-      </div>
-    </>
+    </div>
   );
 };
 

@@ -1,0 +1,9 @@
+.vf-card__text {
+    margin-top: 0.25rem;
+    color: #333;
+}
+
+.vf-badge--pill {
+    border-radius: 999px;
+    padding: 0.25em 0.75em;
+}

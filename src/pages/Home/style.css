@@ -1,3 +1,297 @@
+.reveal {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+    transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.is-revealed {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+
+/*.reveal {*/
+/*    opacity: 0;*/
+/*    transform: translateY(20px);*/
+/*    transition: opacity 0.6s ease, transform 0.6s ease;*/
+/*}*/
+
+/*.is-revealed {*/
+/*    opacity: 1;*/
+/*    transform: translateY(0);*/
+/*}*/
+
+
+
+.request-analysis-section {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.request-analysis-bg-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://acxngcvroo.cloudimg.io/v7/https://www.embl.org/files/wp-content/uploads/vf-hero-intense.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.035;
+    z-index: 0;
+    pointer-events: none;
+}
+
+
+
+.vf-section--highlight {
+    background-color: #f5faff;
+    padding: 2.5rem 1rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.vf-section--highlight .vf-section__title {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: #003f5c;
+}
+
+
+
+/* Compact hero area */
+.compact-hero {
+    padding: 3rem 1rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e5f6f3, #dbeff6);
+    position: relative;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.home-hero-bg-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://acxngcvroo.cloudimg.io/v7/https://www.embl.org/files/wp-content/uploads/vf-hero-intense.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.05;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.home-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.home-search-title {
+    font-size: 2.25rem;
+    color: #003f5c;
+    margin-bottom: 1rem;
+}
+
+.home-search-subtext {
+    color: #444;
+    margin-bottom: 1.5rem;
+}
+
+.home-search-box {
+    margin-bottom: 1rem;
+}
+
+.home-search-examples {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* Ensure cards don’t get chopped */
+.home-search-cards {
+    margin-top: 2rem;
+}
+
+
+.home-search-cards.vf-grid.vf-grid__col-2 .vf-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    height: 100%;
+}
+
+.home-search-cards.vf-grid.vf-grid__col-2 {
+    align-items: stretch;
+}
+
+
+
+
+
+
+
+/* Hero section styling inspired by AlphaFold */
+/* Hero section */
+.home-hero {
+    position: relative;
+    background: linear-gradient(135deg, #d3f2f0 0%, #e6f2f7 100%);
+    border-radius: 12px;
+    padding: 4rem 2rem;
+    margin-bottom: 3rem;
+    overflow: hidden;
+}
+
+.home-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://acxngcvroo.cloudimg.io/v7/https://www.embl.org/files/wp-content/uploads/vf-hero-intense.png') no-repeat center center;
+    background-size: cover;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/*.home-hero-content {*/
+/*    position: relative;*/
+/*    z-index: 1;*/
+/*    max-width: 700px;*/
+/*    margin: 0 auto;*/
+/*    text-align: center;*/
+/*}*/
+
+/*.home-search-title {*/
+/*    font-size: 2.5rem;*/
+/*    margin-bottom: 1rem;*/
+/*    color: #003f5c;*/
+/*}*/
+
+/*.home-search-subtext {*/
+/*    font-size: 1rem;*/
+/*    color: #444;*/
+/*    margin-bottom: 2rem;*/
+/*}*/
+
+/*.home-search-box {*/
+/*    margin-bottom: 1rem;*/
+/*}*/
+
+/*.home-search-examples {*/
+/*    color: #555;*/
+/*    font-size: 0.85rem;*/
+/*}*/
+
+/* Cards layout */
+.home-search-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.home-search-options .vf-card {
+    flex: 1 1 250px;
+    max-width: 320px;
+    min-height: 180px;
+}
+
+
+.home-search-box {
+    margin-top: 2rem;
+}
+
+.home-search-examples {
+    margin-top: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Search card spacing */
+.home-search-cards {
+    margin-top: 3rem;
+}
+
+/* Card tweaks */
+.home-search-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-search-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+
+
 .search-by-section, .request-by-section {
     padding: 0.4rem;
+}
+
+/* New styles for modernized homepage */
+.home-search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem auto;
+    max-width: 1000px;
+    text-align: center;
+}
+
+/*.home-search-title {*/
+/*    font-size: 2.5rem;*/
+/*    margin-bottom: 1.5rem;*/
+/*    color: #333;*/
+/*}*/
+
+.home-search-box {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Style for the unified search bar */
+.home-search-box .unified-search-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Style for the three search cards */
+.home-search-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem auto;
+    max-width: 1200px;
+}
+
+.home-search-card {
+    flex: 1;
+    min-width: 250px;
+    max-width: 350px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.home-search-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Make the content sections more minimalist */
+.vf-content h2 {
+    text-align: center;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+hr {
+    max-width: 80%;
+    margin: 3rem auto;
+    border-top: 1px solid #eee;
 }

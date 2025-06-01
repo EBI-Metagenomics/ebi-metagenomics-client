@@ -84,9 +84,19 @@ module.exports = function (env, options) {
         'node_modules',
       ],
     },
+    // output: {
+    //   filename: 'mgnify_bundle.js',
+    //   path: path.resolve(__dirname, 'dist'),
+    //   filename: isEnvProduction
+    //     ? 'js/[name].[contenthash:8].js'
+    //     : 'js/bundle.js',
+    //   chunkFilename: isEnvProduction
+    //     ? 'js/[name].[contenthash:8].chunk.js'
+    //     : 'js/[name].chunk.js',
+    // },
     output: {
-      filename: 'mgnify_bundle.js',
       path: path.resolve(__dirname, 'dist'),
+      publicPath: '/metagenomics/', // ← THIS is critical
       filename: isEnvProduction
         ? 'js/[name].[contenthash:8].js'
         : 'js/bundle.js',
@@ -97,6 +107,7 @@ module.exports = function (env, options) {
     plugins: [
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, 'public', 'index.html'),
+        publicPath: '/metagenomics/',
         title: 'MGnify - EBI',
       }),
       new CopyPlugin({
