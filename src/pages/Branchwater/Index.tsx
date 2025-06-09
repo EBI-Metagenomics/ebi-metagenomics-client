@@ -194,7 +194,11 @@ const Branchwater = () => {
         )
         .then((response) => {
           console.log('Search results:', response.data);
-          setSearchResults(response.data);
+          // Ensure response.data is an array before setting it to searchResults
+          const resultsArray = Array.isArray(response.data)
+            ? response.data
+            : [];
+          setSearchResults(resultsArray);
           setIsLoading(false);
         })
         .catch((error) => {
@@ -241,6 +245,12 @@ const Branchwater = () => {
 
   // Apply filters to search results
   const getFilteredResults = () => {
+    // Ensure searchResults is an array before filtering
+    if (!Array.isArray(searchResults)) {
+      console.error('searchResults is not an array:', searchResults);
+      return [];
+    }
+
     return searchResults.filter((item) => {
       return Object.keys(filters).every((key) => {
         if (!filters[key]) return true; // Skip empty filters
@@ -331,7 +341,7 @@ const Branchwater = () => {
       <div>
         <form className="vf-stack vf-stack--400">
           <div className="vf-form__item vf-stack">
-            <input id="file-upload" type="file" onChange={handleFileUpload} />
+            {/*<input id="file-upload" type="file" onChange={handleFileUpload} />*/}
             <mgnify-sourmash-component
               id="sourmash"
               ref={sourmash}
