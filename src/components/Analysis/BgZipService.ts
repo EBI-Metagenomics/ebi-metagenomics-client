@@ -109,6 +109,20 @@ export class BGZipService {
       console.log('BUFFER', buffer);
       let parsedGziMapping = this.parseGziIndex(buffer);
 
+      // {
+      //   "compressedOffset": 2388,
+      //   "uncompressedOffset": 65536,
+      //   "size": 7086
+      // }
+
+      // parsedGziMapping = [
+      //   {
+      //     compressedOffset: 2388,
+      //     uncompressedOffset: 65536,
+      //     size: 7086,
+      //   },
+      // ];
+
       // Get file size
       const headResponse = await fetch(this.dataFileUrl, { method: 'HEAD' });
       const contentLength = Number(
@@ -399,7 +413,7 @@ export class BGZipService {
 
     return blocks;
   }
-
+  //
   private async verifyOrFixGziMapping(
     // This function verifies and, if necessary, repairs the parsedGziMapping.
     // It tries two strategies:
@@ -429,6 +443,7 @@ export class BGZipService {
       firstRealBlockOffset !== parsedGziMapping[0].compressedOffset
     ) {
       console.log('Correction Triggered');
+      console.log('firstRealBlockOffset ', firstRealBlockOffset);
       const correction =
         firstRealBlockOffset - parsedGziMapping[0].compressedOffset;
       console.log(
@@ -465,6 +480,7 @@ export class BGZipService {
           console.log('HERE IS TEST DATA ', testData[0], testData[1]);
           console.log('Index correction succeeded!');
           indexIsValid = true;
+          console.log('HERE IS THE CORRECTED INDEX ', correctedIndex);
           return correctedIndex;
         }
         // console.log(console.log('Index correction failed, rebuilding index from scratch'););
@@ -633,6 +649,7 @@ export class BGZipService {
   }
 
   private async fetchBgzipBlock(blockIndex: number): Promise<string | null> {
+    console.group('DEBUGGIN fetchBgzipBlock');
     console.log(`📦 [Block ${blockIndex}] → fetchBgzipBlock called`);
 
     if (!this.gziIndex || blockIndex >= this.gziIndex.length) {
@@ -658,9 +675,15 @@ export class BGZipService {
 
       const scanResponse = await fetch(this.dataFileUrl, {
         headers: {
-          Range: `bytes=${block.compressedOffset}-${scanRangeEnd}`,
+          // Range: `bytes=${block.compressedOffset}-${scanRangeEnd}`,
+          Range: `bytes=0-65236`,
         },
       });
+
+      // const compressedData = await response.arrayBuffer();
+      // const dataArray = new Uint8Array(compressedData);
+      // const decompressed = pako.inflate(dataArray, { to: 'string' });
+      // console.log('🔍 DECOMPRESSED PREVIEW:', decompressed.slice(0, 100));
 
       const scanData = new Uint8Array(await scanResponse.arrayBuffer());
 
@@ -698,7 +721,8 @@ export class BGZipService {
 
       const response = await fetch(this.dataFileUrl, {
         headers: {
-          Range: `bytes=${actualBlockStart}-${fullRangeEnd}`,
+          // Range: `bytes=${actualBlockStart}-${fullRangeEnd}`,
+          Range: `bytes=${0}-${65236}`,
         },
       });
 
@@ -801,6 +825,8 @@ export class BGZipService {
       );
       this.errorHandler(`Error fetching block ${blockIndex}: ${err}`);
       return null;
+    } finally {
+      console.groupEnd();
     }
   }
 

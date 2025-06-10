@@ -40,7 +40,7 @@ const InterProTableWithPagination = () => {
   );
   // const dataFileUrl = dataFile?.url;
   const dataFileUrl =
-    'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/interpro/ERZ1049444_interpro_summary.tsv.gz';
+    'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/aseembly/asa-results/functional-annotation/interpro/ERZ1049444_interpro_summary.tsv.gz';
   const indexFileUrl = `${dataFileUrl}.gzi`;
 
   const parseInterProData = useCallback((text: string): InterProDomain[] => {
