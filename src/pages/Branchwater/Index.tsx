@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import render from 'components/UI/SamplesMap/render';
 import SamplesMap from 'components/UI/SamplesMap';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import config from 'utils/config';
 import 'mgnify-sourmash-component';
 import axios from 'axios';
+import Plot from 'react-plotly.js';
 
 const sampleEntries = [
   {
@@ -104,6 +105,232 @@ const Branchwater = () => {
   });
   const [signature, setSignature] = useState(null);
 
+  // State for visualizations
+  const [visualizationData, setVisualizationData] = useState(null);
+
+  // Helper functions for visualizations
+  const countUniqueValuesAndOccurrences = (valueList) => {
+    const counts = {};
+    const uniqueValues = [...new Set(valueList)];
+
+    for (let i = 0; i < uniqueValues.length; i++) {
+      const val = uniqueValues[i];
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      counts[val] = valueList.filter((value) => value === val).length;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const countVal = uniqueValues.map((key) => counts[key]);
+
+    return {
+      uniqueValues,
+      countVal,
+    };
+  };
+
+  const createPlotData = (stringKeys, stringValues) => {
+    const plotData = [];
+    const plotColor = 'rgba(100, 200, 102, 1)';
+
+    for (let i = 0; i < stringKeys.length; i++) {
+      const visible = i === 0;
+      const { uniqueValues, countVal } = countUniqueValuesAndOccurrences(
+        stringValues[i]
+      );
+      plotData.push({
+        x: uniqueValues,
+        y: countVal,
+        type: 'bar',
+        width: 0.2,
+        marker: {
+          color: 'rgba(100, 200, 102, 0.7)',
+          line: {
+            color: plotColor,
+            width: 1,
+          },
+        },
+        name: stringKeys[i],
+        visible,
+      });
+    }
+
+    return plotData;
+  };
+
+  // Apply filters to search results
+  const getFilteredResults = useCallback(() => {
+    // Ensure searchResults is an array before filtering
+    if (!Array.isArray(searchResults)) {
+      console.error('searchResults is not an array:', searchResults);
+      return [];
+    }
+
+    return searchResults.filter((item) => {
+      return Object.keys(filters).every((key) => {
+        if (!filters[key]) return true; // Skip empty filters
+
+        const itemValue = String(item[key] || '').toLowerCase();
+        const filterValue = filters[key].toLowerCase();
+
+        return itemValue.includes(filterValue);
+      });
+    });
+  }, [searchResults, filters]);
+
+  // Prepare data for visualizations
+  const prepareVisualizationData = useCallback(
+    (data) => {
+      if (!data || data.length === 0) return null;
+
+      const commonKeys = Object.keys(data[0]);
+      const values = Array.from({ length: commonKeys.length }, () => []);
+
+      commonKeys.forEach((key, j) => {
+        values[j] = data.map((obj) => obj[key]);
+      });
+
+      // Filter string keys for bar plots
+      let stringKeys = [];
+      let stringValues = [];
+
+      for (let i = 0; i < values.length; i++) {
+        if (
+          values[i].every(
+            (val) =>
+              typeof val === 'string' &&
+              commonKeys[i] !== 'acc' &&
+              commonKeys[i] !== 'biosample_link'
+          )
+        ) {
+          stringKeys.push(commonKeys[i]);
+          stringValues.push(values[i]);
+        }
+      }
+
+      // Create bar plot data
+      const barPlotData = createPlotData(stringKeys, stringValues);
+
+      // Create histogram data
+      const containmentIndex = commonKeys.indexOf('containment');
+      const cANIIndex = commonKeys.indexOf('cANI');
+
+      const containmentHist = {
+        x: values[containmentIndex],
+        type: 'histogram',
+        autobinx: false,
+        xbins: { size: 0.1 },
+        name: 'containment',
+        visible: true,
+        marker: {
+          color: 'rgba(100, 200, 102, 0.7)',
+          line: {
+            color: 'rgba(100, 200, 102, 1)',
+            width: 1,
+          },
+        },
+      };
+
+      const cANIHist = {
+        x: values[cANIIndex],
+        type: 'histogram',
+        autobinx: false,
+        xbins: { size: 0.02 },
+        name: 'cANI',
+        visible: false,
+        marker: {
+          color: 'rgba(100, 200, 102, 0.7)',
+          line: {
+            color: 'rgba(100, 200, 102, 1)',
+            width: 1,
+          },
+        },
+      };
+
+      // Create map data
+      let countryMap = {};
+      let latLonMap = {};
+
+      const countryIndex = commonKeys.indexOf('geo_loc_name_country');
+      const latLonIndex = commonKeys.indexOf('lat_lon');
+
+      if (countryIndex !== -1) {
+        const countryCounts = countUniqueValuesAndOccurrences(
+          values[countryIndex]
+        );
+        const countryData = countryCounts.uniqueValues.map((country, index) => {
+          return {
+            country: country,
+            count: countryCounts.countVal[index],
+          };
+        });
+
+        countryMap = {
+          name: 'geo_loc_name_country',
+          type: 'choropleth',
+          locationmode: 'country names',
+          locations: countryData.map((d) => d.country),
+          z: countryData.map((d) => d.count),
+          text: countryData.map((d) => `${d.country}: ${d.count}`),
+          autocolorscale: true,
+          marker: {
+            line: {
+              color: 'rgb(255,255,255)',
+              width: 2,
+            },
+          },
+        };
+      }
+
+      if (latLonIndex !== -1) {
+        // Process lat_lon data
+        const latLonData = values[latLonIndex]
+          .map((item, index) => {
+            if (item === 'NP') return null;
+
+            // Try to parse lat_lon string
+            try {
+              const match = item.match(/([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/);
+              if (match) {
+                const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
+                const lon = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
+                return [lat, lon, data[index].acc];
+              }
+              return null;
+            } catch (e) {
+              return null;
+            }
+          })
+          .filter((item) => item !== null);
+
+        if (latLonData.length > 0) {
+          latLonMap = {
+            name: 'lat_lon',
+            type: 'scattergeo',
+            mode: 'markers',
+            marker: {
+              color: 'rgba(100, 200, 102, 1)',
+            },
+            lat: latLonData.map((item) => item[0]),
+            lon: latLonData.map((item) => item[1]),
+            text: latLonData.map((item) => `acc: ${item[2]}`),
+          };
+        }
+      }
+
+      return {
+        barPlotData,
+        histogramData: [containmentHist, cANIHist],
+        mapData: [countryMap, latLonMap].filter(
+          (item) => Object.keys(item).length > 0
+        ),
+        stringKeys,
+      };
+    },
+    [createPlotData, countUniqueValuesAndOccurrences]
+  );
+
   useEffect(() => {
     const handleSketched = (evt) => {
       evt.preventDefault();
@@ -124,6 +351,15 @@ const Branchwater = () => {
       document.removeEventListener('sketched', handleSketched);
     };
   }, []);
+
+  // Update visualization data when filtered results change
+  useEffect(() => {
+    if (searchResults.length > 0) {
+      const filteredResults = getFilteredResults();
+      const vizData = prepareVisualizationData(filteredResults);
+      setVisualizationData(vizData);
+    }
+  }, [searchResults, getFilteredResults, prepareVisualizationData]);
 
   // useEffect(() => {
   //   console.log('sourmash.current', sourmash.current);
@@ -199,6 +435,11 @@ const Branchwater = () => {
             ? response.data
             : [];
           setSearchResults(resultsArray);
+
+          // Prepare visualization data
+          const vizData = prepareVisualizationData(resultsArray);
+          setVisualizationData(vizData);
+
           setIsLoading(false);
         })
         .catch((error) => {
@@ -206,6 +447,10 @@ const Branchwater = () => {
           setIsLoading(false);
           // For testing, use sample data if the API call fails
           setSearchResults(sampleEntries);
+
+          // Prepare visualization data with sample entries
+          const vizData = prepareVisualizationData(sampleEntries);
+          setVisualizationData(vizData);
         });
     } else {
       // If no signature yet, show a message or use sample data for testing
@@ -214,6 +459,10 @@ const Branchwater = () => {
       );
       // For testing purposes, we can use the sample data
       setSearchResults(sampleEntries);
+
+      // Prepare visualization data with sample entries
+      const vizData = prepareVisualizationData(sampleEntries);
+      setVisualizationData(vizData);
     }
   };
 
@@ -243,26 +492,6 @@ const Branchwater = () => {
     setCurrentPage(page);
   };
 
-  // Apply filters to search results
-  const getFilteredResults = () => {
-    // Ensure searchResults is an array before filtering
-    if (!Array.isArray(searchResults)) {
-      console.error('searchResults is not an array:', searchResults);
-      return [];
-    }
-
-    return searchResults.filter((item) => {
-      return Object.keys(filters).every((key) => {
-        if (!filters[key]) return true; // Skip empty filters
-
-        const itemValue = String(item[key] || '').toLowerCase();
-        const filterValue = filters[key].toLowerCase();
-
-        return itemValue.includes(filterValue);
-      });
-    });
-  };
-
   // Apply sorting to filtered results
   const getSortedResults = (filteredResults) => {
     if (!sortField) return filteredResults;
@@ -272,6 +501,7 @@ const Branchwater = () => {
       const bValue = b[sortField] || '';
 
       // Handle numeric values
+      // eslint-disable-next-line no-restricted-globals
       if (!isNaN(aValue) && !isNaN(bValue)) {
         return sortDirection === 'asc'
           ? Number(aValue) - Number(bValue)
@@ -315,6 +545,7 @@ const Branchwater = () => {
     setUploadedFile(null);
     setSearchResults([]);
     setSignature(null);
+    setVisualizationData(null);
     setFilters({
       acc: '',
       assay_type: '',
@@ -341,7 +572,6 @@ const Branchwater = () => {
       <div>
         <form className="vf-stack vf-stack--400">
           <div className="vf-form__item vf-stack">
-            {/*<input id="file-upload" type="file" onChange={handleFileUpload} />*/}
             <mgnify-sourmash-component
               id="sourmash"
               ref={sourmash}
@@ -384,6 +614,7 @@ const Branchwater = () => {
                 </label>
               </div>
 
+              {/* eslint-disable-next-line react/button-has-type */}
               <button
                 className="vf-button vf-button--sm vf-button--primary mg-button"
                 onClick={handleSearchClick}
@@ -430,6 +661,7 @@ const Branchwater = () => {
               </g>
             </defs>
           </svg>
+          {/* eslint-disable-next-line no-nested-ternary */}
           {isLoading ? (
             <div className="vf-u-padding__top--800">
               <p>Loading search results...</p>
@@ -733,6 +965,7 @@ const Branchwater = () => {
                 </thead>
                 <tbody className="vf-table__body">
                   {processResults().paginatedResults.map((entry, index) => (
+                    // eslint-disable-next-line react/no-array-index-key
                     <tr className="vf-table__row" key={index}>
                       <td className="vf-table__cell">{entry.acc}</td>
                       <td className="vf-table__cell">{entry.assay_type}</td>
@@ -891,6 +1124,150 @@ const Branchwater = () => {
               <p>No search results found. Please try a different search.</p>
             </div>
           )}
+          {/* Visualization components */}
+          {visualizationData && (
+            <div className="vf-u-padding__top--800">
+              <h2 className="vf-text vf-text-heading--2">Visualizations</h2>
+
+              {/* Containment Histogram */}
+              <div className="vf-u-padding__top--400">
+                <h3 className="vf-text vf-text-heading--3">
+                  Match Similarity Scores
+                </h3>
+                <div id="contDiv" style={{ width: '100%', height: '400px' }}>
+                  <Plot
+                    data={visualizationData.histogramData}
+                    layout={{
+                      bargap: 0.05,
+                      bargroupgap: 0.2,
+                      title: 'Match similarity scores',
+                      xaxis: { title: 'Score' },
+                      yaxis: { title: 'Frequency' },
+                      updatemenus: [
+                        {
+                          x: 0.05,
+                          y: 1.2,
+                          xanchor: 'left',
+                          yanchor: 'top',
+                          buttons: [
+                            {
+                              method: 'update',
+                              args: [{ visible: [true, false] }],
+                              label: 'containment',
+                            },
+                            {
+                              method: 'update',
+                              args: [{ visible: [false, true] }],
+                              label: 'cANI',
+                            },
+                          ],
+                          direction: 'down',
+                          showactive: true,
+                        },
+                      ],
+                    }}
+                    config={{
+                      scrollZoom: true,
+                      displaylogo: false,
+                      responsive: true,
+                    }}
+                    style={{ width: '100%', height: '100%' }}
+                  />
+                </div>
+              </div>
+
+              {/* Categorical Bar Plots */}
+              {visualizationData.barPlotData &&
+                visualizationData.barPlotData.length > 0 && (
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Categorical Metadata
+                    </h3>
+                    <div id="barDiv" style={{ width: '100%', height: '400px' }}>
+                      <Plot
+                        data={visualizationData.barPlotData}
+                        layout={{
+                          bargap: 0.05,
+                          bargroupgap: 0.2,
+                          title: 'Summary counts of categorical metadata',
+                          xaxis: { automargin: true, title: 'Category' },
+                          yaxis: { automargin: true, title: 'Counts' },
+                          updatemenus: [
+                            {
+                              x: 0.05,
+                              y: 1.2,
+                              xanchor: 'left',
+                              yanchor: 'top',
+                              buttons: visualizationData.stringKeys.map(
+                                (key, i) => ({
+                                  method: 'update',
+                                  args: [
+                                    {
+                                      visible: visualizationData.stringKeys.map(
+                                        (_, idx) => idx === i
+                                      ),
+                                    },
+                                  ],
+                                  label: key,
+                                })
+                              ),
+                              direction: 'down',
+                              showactive: true,
+                            },
+                          ],
+                        }}
+                        config={{
+                          scrollZoom: true,
+                          displaylogo: false,
+                          responsive: true,
+                        }}
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+              {/* Map Visualizations */}
+              {visualizationData.mapData &&
+                visualizationData.mapData.length > 0 && (
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Geographic Distribution
+                    </h3>
+                    <div id="mapDiv" style={{ width: '100%', height: '500px' }}>
+                      <Plot
+                        data={visualizationData.mapData}
+                        layout={{
+                          title: 'Accession locations',
+                          geo: {
+                            scope: 'world',
+                            showcountries: true,
+                            countrycolor: 'rgb(255, 255, 255)',
+                            countrywidth: 1,
+                            showframe: false,
+                            projection: {
+                              type: 'robinson',
+                            },
+                            showland: true,
+                            landcolor: 'rgb(250,250,250)',
+                            subunitcolor: 'rgb(217,217,217)',
+                            // countrycolor: 'rgb(217,217,217)',
+                          },
+                        }}
+                        config={{
+                          scrollZoom: true,
+                          displaylogo: false,
+                          responsive: true,
+                        }}
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </div>
+                  </div>
+                )}
+            </div>
+          )}
+
+          {/* Google Maps Component */}
           <Wrapper apiKey={config.googleMapsKey} render={render}>
             <div ref={ref} id="map" style={{ height: '100%' }} />
           </Wrapper>
