@@ -7,6 +7,7 @@ import './style.css';
 import SearchPage from 'pages/Search';
 import { useReveal } from 'hooks/useReveal';
 import SearchBy from 'components/Home/SearchBy';
+import LatestStudies from 'components/Home/Request/LatestStudies';
 
 const HomePage: React.FC = () => {
   const analysisRef = useReveal();
@@ -89,7 +90,9 @@ const HomePage: React.FC = () => {
       {/* Explore by data type and biome section */}
       <section ref={exploreRef} className="vf-section reveal">
         <h2 className="vf-section__title">Explore by Data Type or Biome</h2>
-        <SearchBy />
+        <div className="search-by-modernized">
+          <SearchBy />
+        </div>
       </section>
 
       <section className="vf-section">

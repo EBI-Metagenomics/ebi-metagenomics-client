@@ -1,17 +1,71 @@
+/* Biomes Component - Modern Styling */
+
 .biome_icon_hoverable {
-    filter: grayscale(40%);
+    filter: grayscale(30%);
+    transform: scale(1);
+    transition: all 0.3s ease;
 }
+
 .biome_icon_hoverable:hover {
-    filter: grayscale(0%) drop-shadow(0 0 5px #ddd);
-    transition: filter 0.1s linear;
+    filter: grayscale(0%) drop-shadow(0 0 10px rgba(59, 111, 182, 0.4));
+    transform: scale(1.15);
 }
 
 .responsive_biomes_grid {
     grid-template-columns: repeat(3, 1fr);
+    margin-top: 1rem;
 }
 
 @media (min-width: 768px) {
     .responsive_biomes_grid {
         grid-template-columns: repeat(5, 1fr);
     }
+}
+
+.search-by-biomes-section {
+    position: relative;
+    padding: 1.5rem;
+    background: linear-gradient(to right bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.5));
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    margin-top: 2rem;
+}
+
+.biome-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    margin-top: 0.75rem;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+a:hover .biome-text {
+    color: #3b6fb6;
+    transform: translateY(-2px);
+}
+
+.mg-right {
+    text-align: right;
+    margin-top: 1.5rem;
+}
+
+.vf-button--primary {
+    background: linear-gradient(90deg, #3b6fb6, #5a94e6);
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 12px rgba(59, 111, 182, 0.2);
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.vf-button--primary:hover {
+    background: linear-gradient(90deg, #2d5a9a, #4a84d6);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 111, 182, 0.3);
 }

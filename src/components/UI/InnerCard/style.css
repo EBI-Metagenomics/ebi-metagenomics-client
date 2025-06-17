@@ -7,3 +7,22 @@
     border-radius: 999px;
     padding: 0.25em 0.75em;
 }
+
+.inner-card {
+    background-color: white;
+    border: 1px solid #d8d8d8;
+}
+
+.inner-card .vf-card__heading {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.inner-card .vf-card__link {
+    color: #3b6fb6;
+    text-decoration: none;
+}
+
+.inner-card .vf-card__link:hover {
+    color: #193f90;
+}
