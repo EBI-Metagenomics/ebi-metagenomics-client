@@ -6,9 +6,11 @@ import InnerCard from 'components/UI/InnerCard';
 import './style.css';
 import SearchPage from 'pages/Search';
 import { useReveal } from 'hooks/useReveal';
+import SearchBy from 'components/Home/SearchBy';
 
 const HomePage: React.FC = () => {
   const analysisRef = useReveal();
+  const exploreRef = useReveal();
 
   return (
     <section className="vf-content vf-stack vf-stack--800">
@@ -82,6 +84,12 @@ const HomePage: React.FC = () => {
             />
           </div>
         </div>
+      </section>
+
+      {/* Explore by data type and biome section */}
+      <section ref={exploreRef} className="vf-section reveal">
+        <h2 className="vf-section__title">Explore by Data Type or Biome</h2>
+        <SearchBy />
       </section>
 
       <section className="vf-section">

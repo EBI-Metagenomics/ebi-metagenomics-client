@@ -16,7 +16,7 @@ const sampleEntries = [
     cANI: 0.9,
     collection_date: '2018-09-03',
     containment: 0.11,
-    geo_loc_name_country: 'China',
+    geo_loc_name_country_calc: 'China',
     lat_lon: 'NP',
     organism: 'environmental sample',
   },
@@ -28,7 +28,7 @@ const sampleEntries = [
     cANI: 0.8,
     collection_date: '2019-05-12',
     containment: 0.15,
-    geo_loc_name_country: 'USA',
+    geo_loc_name_country_calc: 'USA',
     lat_lon: '37.7749N, 122.4194W',
     organism: 'Homo sapiens',
   },
@@ -40,7 +40,7 @@ const sampleEntries = [
     cANI: 0.85,
     collection_date: '2020-11-25',
     containment: 0.2,
-    geo_loc_name_country: 'Germany',
+    geo_loc_name_country_calc: 'Germany',
     lat_lon: '52.5200N, 13.4050E',
     organism: 'Bacillus subtilis',
   },
@@ -52,7 +52,7 @@ const sampleEntries = [
     cANI: 0.95,
     collection_date: '2021-07-14',
     containment: 0.25,
-    geo_loc_name_country: 'Brazil',
+    geo_loc_name_country_calc: 'Brazil',
     lat_lon: '14.2350S, 51.9253W',
     organism: 'Escherichia coli',
   },
@@ -64,7 +64,7 @@ const sampleEntries = [
     cANI: 0.75,
     collection_date: '2017-03-08',
     containment: 0.1,
-    geo_loc_name_country: 'Australia',
+    geo_loc_name_country_calc: 'Australia',
     lat_lon: '25.2744S, 133.7751E',
     organism: 'environmental sample',
   },
@@ -252,7 +252,7 @@ const Branchwater = () => {
       let countryMap = {};
       let latLonMap = {};
 
-      const countryIndex = commonKeys.indexOf('geo_loc_name_country');
+      const countryIndex = commonKeys.indexOf('geo_loc_name_country_calc');
       const latLonIndex = commonKeys.indexOf('lat_lon');
 
       if (countryIndex !== -1) {
@@ -267,7 +267,7 @@ const Branchwater = () => {
         });
 
         countryMap = {
-          name: 'geo_loc_name_country',
+          name: 'geo_loc_name_country_calc',
           type: 'choropleth',
           locationmode: 'country names',
           locations: countryData.map((d) => d.country),
@@ -350,7 +350,7 @@ const Branchwater = () => {
     return () => {
       document.removeEventListener('sketched', handleSketched);
     };
-  }, []);
+  }, [signature]);
 
   // Update visualization data when filtered results change
   useEffect(() => {
@@ -916,9 +916,7 @@ const Branchwater = () => {
                     <th
                       className="vf-table__heading"
                       scope="col"
-                      onClick={() =>
-                        handleSortChange('geo_loc_name_country_calc')
-                      }
+                      onClick={() => handleSortChange('geo_loc_name_country_calc')}
                       style={{ cursor: 'pointer' }}
                     >
                       Location
@@ -1230,7 +1228,7 @@ const Branchwater = () => {
               {/* Map Visualizations */}
               {visualizationData.mapData &&
                 visualizationData.mapData.length > 0 && (
-                  <div className="vf-u-padding__top--400">
+                  <div className="vf-u-padding__top--400" style={{ height: '600px' }}>
                     <h3 className="vf-text vf-text-heading--3">
                       Geographic Distribution
                     </h3>
@@ -1250,8 +1248,7 @@ const Branchwater = () => {
                             },
                             showland: true,
                             landcolor: 'rgb(250,250,250)',
-                            subunitcolor: 'rgb(217,217,217)',
-                            // countrycolor: 'rgb(217,217,217)',
+                            subunitcolor: 'rgb(217,217,217)'
                           },
                         }}
                         config={{
@@ -1267,9 +1264,11 @@ const Branchwater = () => {
             </div>
           )}
 
+          <div className="vf-u-padding__top--800"></div>
+
           {/* Google Maps Component */}
           <Wrapper apiKey={config.googleMapsKey} render={render}>
-            <div ref={ref} id="map" style={{ height: '100%' }} />
+            <div ref={ref} id="map" style={{ width: '100%', height: '500px' }} />
           </Wrapper>
         </>
       )}
