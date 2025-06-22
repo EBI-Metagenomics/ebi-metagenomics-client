@@ -6,7 +6,7 @@ import { TAXONOMY_COLOURS } from 'utils/taxon';
 import Loading from 'components/UI/Loading';
 import ExtLink from 'components/UI/ExtLink';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
 import InterProTable from 'components/Analysis/Functional/InterPro/InterProTable';
 
 const PAGE_SIZE = 25;
@@ -87,15 +87,18 @@ const InterPro: React.FC = () => {
   return (
     <div className="vf-stack">
       <h5>InterPro match summary</h5>
-      <DetailedVisualisationCard>
-        <div className="vf-card__content | vf-stack vf-stack--400">
-          <h3 className="vf-card__heading">InterPro QC Summary </h3>
-          <p className="vf-card__subheading">Lorem Ipsum Delorim</p>
-          <p className="vf-card__text">
-            <InterProTable />
-          </p>
-        </div>
-      </DetailedVisualisationCard>
+      <SlimVisualisationCard
+        fileData={{
+          alias: 'InterPro QC Summary',
+          downloadType: 'InterPro',
+          fileType: 'tsv',
+          longDescription: 'InterPro QC Summary data',
+          shortDescription: 'Lorem Ipsum Delorim',
+          url: `analyses/${analysisData.accession}/interpro_identifiers`
+        }}
+      >
+        <InterProTable />
+      </SlimVisualisationCard>
 
       <div className="vf-grid mg-grid-30-70" />
     </div>

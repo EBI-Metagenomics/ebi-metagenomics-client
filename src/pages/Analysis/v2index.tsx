@@ -79,11 +79,11 @@ const V2AnalysisPage: React.FC = () => {
             </RouteForHash>
             <RouteForHash hash="#taxonomic">
               <AssemblyTaxonomy />
-              {/*{isAssembly(analysisData) ? (*/}
-              {/*  <AssemblyTaxonomy />*/}
-              {/*) : (*/}
-              {/*  <Taxonomy accession={accession} />*/}
-              {/*)}*/}
+              {isAssembly(analysisData) ? (
+                <AssemblyTaxonomy />
+              ) : (
+                <Taxonomy accession={accession} />
+              )}
             </RouteForHash>
             <RouteForHash hash="#functional">
               <FunctionalSubpage />
