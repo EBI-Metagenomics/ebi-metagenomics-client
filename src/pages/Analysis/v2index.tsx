@@ -45,18 +45,18 @@ const V2AnalysisPage: React.FC = () => {
     { label: 'Quality control', to: '#qc' },
     { label: 'Taxonomy', to: '#taxonomic' },
     { label: 'Functional analysis', to: '#functional' },
-    // isNotAmplicon(analysisData)
-    //   ? { label: 'Functional analysis', to: '#functional' }
-    //   : null,
-    // isNotAmplicon(analysisData)
-    //   ? { label: 'Pathways/Systems', to: '#path-systems' }
-    //   : null,
-    { label: 'Pathways/Systems', to: '#path-systems' },
-    { label: 'Contig Viewer', to: '#contigs-viewer' },
-    // isAssembly(analysisData)
-    //   ? { label: 'Contig Viewer', to: '#contigs-viewer' }
-    //   : null,
-    // isAmplicon(analysisData) ? { label: 'ASV', to: '#asv' } : null,
+    isNotAmplicon(analysisData)
+      ? { label: 'Functional analysis', to: '#functional' }
+      : null,
+    isNotAmplicon(analysisData)
+      ? { label: 'Pathways/Systems', to: '#path-systems' }
+      : null,
+    // { label: 'Pathways/Systems', to: '#path-systems' },
+    // { label: 'Contig Viewer', to: '#contigs-viewer' },
+    isAssembly(analysisData)
+      ? { label: 'Contig Viewer', to: '#contigs-viewer' }
+      : null,
+    isAmplicon(analysisData) ? { label: 'ASV', to: '#asv' } : null,
   ].filter(Boolean);
   return (
     <section className="vf-content">
