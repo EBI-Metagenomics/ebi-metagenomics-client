@@ -51,8 +51,8 @@ const V2AnalysisPage: React.FC = () => {
     isNotAmplicon(analysisData)
       ? { label: 'Pathways/Systems', to: '#path-systems' }
       : null,
-    // { label: 'Pathways/Systems', to: '#path-systems' },
-    // { label: 'Contig Viewer', to: '#contigs-viewer' },
+    { label: 'Pathways/Systems', to: '#path-systems' },
+    { label: 'Contig Viewer', to: '#contigs-viewer' },
     isAssembly(analysisData)
       ? { label: 'Contig Viewer', to: '#contigs-viewer' }
       : null,
