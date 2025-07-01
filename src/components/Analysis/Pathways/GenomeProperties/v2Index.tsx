@@ -14,13 +14,13 @@ const GenomePropertiesTab: React.FC = () => {
         <div className="p-4">
           <h3 className="text-lg font-medium mb-2">Genome Properties</h3>
           <p className="text-sm text-gray-600 mb-4">
-            Genome Properties is a system for describing prokaryotic biochemical pathways, 
-            genome architecture, and biological systems, providing insights into the functional 
-            capabilities of organisms.
+            Genome Properties is a system for describing prokaryotic biochemical
+            pathways, genome architecture, and biological systems, providing
+            insights into the functional capabilities of organisms.
           </p>
           <p className="text-sm">
-            Download this file to view the complete Genome Properties annotations for this
-            analysis.
+            Download this file to view the complete Genome Properties
+            annotations for this analysis.
           </p>
         </div>
       </SlimVisualisationCard>
