@@ -40,10 +40,6 @@ const Login: React.FC = () => {
       '?from=private-request': '/?from=private-request',
       '?from=public-request': '/?from=public-request',
     };
-    // if (possibleDesiredDestinations[location.search]) {
-    //   setDesiredDestination(possibleDesiredDestinations[location.search]);
-    //   return;
-    // }
     if (
       possibleDesiredDestinations[
         location.search as '?from=private-request' | '?from=public-request'

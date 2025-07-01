@@ -11,26 +11,12 @@ type SourmashFormProps = {
   catalogueID?: string;
 };
 const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
-  // const sourmash = useRef(null);
   const sourmash = useRef<HTMLMgnifySourmashComponentElement | null>(null);
   const [jobId, setJobId] = useQueryParamState('job_id', '');
   const [shouldSearch, setShouldSearch] = useState(false);
   const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>(
     catalogueID ? [catalogueID] : []
   );
-  // const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([
-  //   catalogueID,
-  // ]);
-
-  // interface SourmashState {
-  //   signatures: { [filename: string]: string } | null;
-  //   errors: any | null;
-  // }
-  //
-  // const [{ signatures, errors }, setSourmashState] = useState<SourmashState>({
-  //   signatures: null,
-  //   errors: null,
-  // });
 
   const [{ signatures, errors }, setSourmashState] = useState({
     signatures: null,

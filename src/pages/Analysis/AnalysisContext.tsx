@@ -10,9 +10,4 @@ const AnalysisContext = React.createContext<AnalysisContextType>({
   included: null,
 });
 
-// const AnalysisContext = React.createContext({
-//   overviewData: null,
-//   included: null,
-// });
-
 export default AnalysisContext;

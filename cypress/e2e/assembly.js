@@ -2,7 +2,7 @@ import { openPage, isValidLink, datatype, waitForPageLoad } from '../util/util';
 import GenericTableHandler from '../util/genericTable';
 
 const accession = 'ERZ477708';
-const origPage = `assemblies/${ accession}`;
+const origPage = `assemblies/${accession}`;
 const descriptionSection = '#overview div.row div.box';
 
 const assemblyTableColumns = {
@@ -50,14 +50,14 @@ describe.skip('Assembly page', function() {
       openPage(origPage);
     });
     it('Should display title', function() {
-      cy.contains(`Assembly ${ accession}`).should('be.visible');
+      cy.contains(`Assembly ${accession}`).should('be.visible');
     });
     it('Should display description section', function() {
       cy.contains('Description').should('be.visible');
       cy.get(descriptionSection).then(($el) => {
         const text = $el.text().replace('');
         expect(text).to.contain('Sample:\n                SRS1743794');
-        expect(text).to.contain(`ENA accession:\n                ${ accession}`);
+        expect(text).to.contain(`ENA accession:\n                ${accession}`);
       });
     });
     it('Table of analyses should load correctly', function() {

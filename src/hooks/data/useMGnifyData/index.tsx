@@ -47,11 +47,6 @@ const useMGnifyData: (
       }
     });
   }
-  // const data = useData(
-  //   [null, undefined].includes(endpoint) ? null : url,
-  //   format,
-  //   fetchOptions
-  // );
 
   const data = useData(endpoint ? url : '', format, fetchOptions);
   const dataM = data as MgnifyDataResponse;
