@@ -413,6 +413,7 @@ export class BGZipService {
 
     return blocks;
   }
+
   //
   private async verifyOrFixGziMapping(
     // This function verifies and, if necessary, repairs the parsedGziMapping.
