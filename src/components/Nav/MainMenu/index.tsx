@@ -29,7 +29,7 @@ const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'API' },
   { label: 'About', path: '/about' },
   { label: 'Help', path: '/help' },
-  // { label: 'Login', path: '/login' },
+  { label: 'Login', path: '/login' },
 ];
 
 const START_POS = 100;

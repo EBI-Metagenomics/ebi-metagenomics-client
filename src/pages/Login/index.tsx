@@ -21,7 +21,7 @@ const Login: React.FC = () => {
   const passwordRef = useRef(null);
   const loginErrorsContainerRef = useRef(null);
 
-  const loggedInUsername = localStorage.getItem('mgnify.username');
+  const loggedInUsername = localStorage.getItem('mgnify.v2.username');
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -50,8 +50,8 @@ const Login: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     setAuthToken(null);
-    localStorage.removeItem('mgnify.token');
-    localStorage.removeItem('mgnify.username');
+    localStorage.removeItem('mgnify.v2.token');
+    localStorage.removeItem('mgnify.v2.username');
   };
 
   useEffect(() => {
@@ -75,11 +75,11 @@ const Login: React.FC = () => {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`/utils/token/obtain`, {
+      const response = await axios.post(`/auth/sliding`, {
         username: usernameRef.current.value,
         password: passwordRef.current.value,
       });
-      const accessToken = response.data.data.token;
+      const accessToken = response.data.token;
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       setAuthToken(accessToken) as unknown as void;
@@ -92,7 +92,7 @@ const Login: React.FC = () => {
       if (!error.response) {
         setErrMsg('Network error');
       } else {
-        setErrMsg(error.response.data.errors.non_field_errors[0]);
+        setErrMsg(error.response.data.detail);
       }
       loginErrorsContainerRef.current?.focus();
     } finally {

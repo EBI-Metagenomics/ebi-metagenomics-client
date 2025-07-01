@@ -44,6 +44,7 @@
     "highcharts-react-official": "3.1.0",
     "igv": "^2.15.8",
     "jszip": "^3.10.1",
+    "jwt-decode": "^4.0.0",
     "lodash-es": "4.17.21",
     "lucide-react": "^0.476.0",
     "mgnify-sourmash-component": "0.2.4",
