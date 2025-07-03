@@ -1,6 +1,11 @@
 import React from 'react';
 
-const AnalysisContext = React.createContext({
+interface AnalysisContextType {
+  overviewData: Record<string, any> | null;
+  included: Record<string, any> | null;
+}
+
+const AnalysisContext = React.createContext<AnalysisContextType>({
   overviewData: null,
   included: null,
 });

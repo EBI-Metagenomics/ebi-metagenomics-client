@@ -527,6 +527,7 @@ export const Table3: React.FC<TableProps> = ({ onHoverStep = () => null }) => (
     </tbody>
   </table>
 );
+
 export const Table4: React.FC<TableProps> = ({ onHoverStep = () => null }) => (
   <table className="pipeline_table">
     <thead>
@@ -941,6 +942,7 @@ export const Table41: React.FC<TableProps> = ({ onHoverStep = () => null }) => (
     </tbody>
   </table>
 );
+
 export const Table5: React.FC = () => (
   <table className="stack hover responsive-table">
     <thead>
@@ -1322,4 +1324,222 @@ export const Table5: React.FC = () => (
       </tr>
     </tbody>
   </table>
+);
+
+export const Table6: React.FC = () => (
+  <>
+    <table className="stack hover responsive-table">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Version</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="https://github.com/OpenGene/fastp">fastp</a>
+          </td>
+          <td>0.23.4</td>
+          <td>Read quality control</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/telatin/seqfu2">SeqFu</a>
+          </td>
+          <td>1.20.3</td>
+          <td>FASTQ sanity checking</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/lh3/seqtk">seqtk</a>
+          </td>
+          <td>1.3-r106</td>
+          <td>FASTQ file manipulation</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://bioinf.shenwei.me/seqkit/">SeqKit</a>
+          </td>
+          <td>2.9.0</td>
+          <td>FASTQ file manipulation</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EddyRivasLab/easel">easel</a>
+          </td>
+          <td>0.49</td>
+          <td>FASTA file manipulation</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://bedtools.readthedocs.io/en/latest/">bedtools</a>
+          </td>
+          <td>2.30.0</td>
+          <td>FASTA sequence masking</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EddyRivasLab/infernal/tree/master">
+              Infernal/cmsearch
+            </a>
+          </td>
+          <td>1.1.5</td>
+          <td>rRNA sequence searching</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/nawrockie/cmsearch_tblout_deoverlap/tree/master">
+              cmsearch_tblout_deoverlap
+            </a>
+          </td>
+          <td>0.09</td>
+          <td>Deoverlapping of cmsearch results</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/meringlab/MAPseq">MAPseq</a>
+          </td>
+          <td>2.1.1b</td>
+          <td>Reference-based taxonomic classification of rRNA</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/marbl/Krona">Krona</a>
+          </td>
+          <td>2.8.1</td>
+          <td>Krona chart visualisation</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://cutadapt.readthedocs.io/en/stable/">cutadapt</a>
+          </td>
+          <td>4.6</td>
+          <td>Primer trimming</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.r-project.org/">R</a>
+          </td>
+          <td>4.3.3</td>
+          <td>R programming language (runs DADA2)</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://benjjneb.github.io/dada2/index.html">DADA2</a>
+          </td>
+          <td>1.30.0</td>
+          <td>ASV calling</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/MultiQC/MultiQC">MultiQC</a>
+          </td>
+          <td>1.24.1</td>
+          <td>Result aggregation into HTML reports</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EBI-Metagenomics/mgnify-pipelines-toolkit">
+              mgnify-pipelines-toolkit
+            </a>
+          </td>
+          <td>0.1.8</td>
+          <td>Toolkit containing various in-house processing scripts</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EBI-Metagenomics/PIMENTO">PIMENTO</a>
+          </td>
+          <td>1.0.0</td>
+          <td>Primer inference toolkit used in the pipeline</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table className="stack hover responsive-table">
+      <thead>
+        <tr>
+          <th>Reference database</th>
+          <th>Version</th>
+          <th>Purpose</th>
+          <th>Processed file paths</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="https://www.arb-silva.de/">SILVA</a>
+          </td>
+          <td>138.1</td>
+          <td>16S+18S+LSU rRNA database</td>
+          <td>
+            <a href="https://ftp.ebi.ac.uk/pub/databases/metagenomics/pipelines/tool-dbs/silva-ssu/">
+              silva-ssu
+            </a>
+            ,
+            <a href="https://ftp.ebi.ac.uk/pub/databases/metagenomics/pipelines/tool-dbs/silva-lsu/">
+              silva-lsu
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://pr2-database.org/">PR2</a>
+          </td>
+          <td>5.0</td>
+          <td>Protist-focused 18S+16S rRNA database</td>
+          <td>
+            <a href="https://ftp.ebi.ac.uk/pub/databases/metagenomics/pipelines/tool-dbs/pr2/">
+              pr2
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://unite.ut.ee/">UNITE</a>
+          </td>
+          <td>9.0</td>
+          <td>ITS database</td>
+          <td>
+            <a href="https://ftp.ebi.ac.uk/pub/databases/metagenomics/pipelines/tool-dbs/unite/">
+              unite
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://itsonedb.cloud.ba.infn.it">ITSoneDB</a>
+          </td>
+          <td>1.141</td>
+          <td>ITS database</td>
+          <td>
+            <a href="https://ftp.ebi.ac.uk/pub/databases/metagenomics/pipelines/tool-dbs/itsonedb/">
+              itsonedb
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://rfam.org/">Rfam</a>
+          </td>
+          <td>14.10</td>
+          <td>rRNA covariance models</td>
+          <td>
+            <a href="https://ftp.ebi.ac.uk/pub/databases/metagenomics/pipelines/tool-dbs/rfam/">
+              rfam
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <blockquote>
+      <strong>Note:</strong> The preprocessed databases are generated with the{' '}
+      <a href="https://github.com/EBI-Metagenomics/reference-databases-preprocessing-pipeline">
+        Microbiome Informatics reference-databases-preprocessing-pipeline
+      </a>
+      .
+    </blockquote>
+  </>
 );

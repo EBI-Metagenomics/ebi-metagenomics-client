@@ -22,8 +22,9 @@ import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
 import PersistLogin from 'components/PersistLogin';
-import SearchPage from 'pages/Search';
-import Branchwater from 'pages/Branchwater';
+// import SearchPage from './pages/Search';
+// import Branchwater from './pages/Branchwater';
+// import PersistLogin from 'components/PersistLogin';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -42,6 +43,9 @@ const Run = lazy(() => import('./pages/Run'));
 const Assembly = lazy(() => import('./pages/Assembly'));
 const Pipelines = lazy(() => import('./pages/Pipelines'));
 const Analysis = lazy(() => import('./pages/Analysis'));
+
+const SearchPage = lazy(() => import('pages/Search'));
+const Branchwater = lazy(() => import('pages/Branchwater'));
 
 const ResetScroll = () => {
   const { pathname } = useLocation();

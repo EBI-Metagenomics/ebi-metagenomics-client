@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import protectedAxios from 'utils/protectedAxios';
+import protectedAxios from '@/utils/protectedAxios';
 import { AxiosResponse } from 'axios';
 
 export enum ResponseFormat {
@@ -114,15 +114,31 @@ export type BlogResponse = {
 };
 
 export type ErrorFromFetch = {
+  code?: string;
   status?: number;
   response?: Promise<Response>;
   type: ErrorTypes;
-  error?: unknown;
+  // error?: unknown | { message: string };
+  error?: {
+    config?: {
+      url?: string;
+    };
+    message: string;
+    request: {
+      responseURL: string;
+    };
+  };
 };
 
 export type TSVResponse = Array<string>[];
 
 export type FASTAResponse = Array<string>[];
+
+export type V2Obj = {
+  study_accession: string;
+  accession: string;
+  downloads: Array<string>;
+};
 
 export interface DataResponse {
   data:
@@ -133,7 +149,8 @@ export interface DataResponse {
     | HTMLHtmlElement
     | TSVResponse
     | FASTAResponse
-    | string;
+    | string
+    | V2Obj;
   error: ErrorFromFetch | null;
   loading: boolean;
   isStale: boolean;
@@ -238,6 +255,12 @@ async function fetchData(
       rawResponse: response,
     });
   } catch (error) {
+    if (error.response.status === 401) {
+      localStorage.removeItem('mgnify.token');
+      localStorage.removeItem('mgnify.username');
+      localStorage.setItem('mgnify.sessionExpired', 'true');
+      window.location.reload();
+    }
     updateState({
       error: {
         error,
@@ -295,7 +318,6 @@ const useData: (
       setFullState(EmptyResponse);
     }
     return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       isActive = false;
     };
   }, [

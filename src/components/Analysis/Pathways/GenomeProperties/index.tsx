@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import HierarchyNode, { Node } from 'components/UI/Hierarchy';
 
-import gpHierarchy from 'public/data/genome-properties-hierarchy.json';
-import useMGnifyData from 'hooks/data/useMGnifyData';
+import gpHierarchy from 'data/genome-properties-hierarchy.json';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import { MGnifyDatum } from 'hooks/data/useData';
+import { MGnifyDatum } from '@/hooks/data/useData';
 import ExtLink from 'components/UI/ExtLink';
 
 /**
@@ -26,6 +26,8 @@ const annotate = (
     node.countgen += node.children.reduce((mem, child) => {
       return mem + annotate(child, genomePropertiesCount);
     }, 0);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     node.children = node.children.filter(({ countgen }) => countgen > 0);
   }
   /* eslint-enable no-param-reassign */
@@ -41,7 +43,7 @@ const SHOULD_NOT = {
 const GenomeProperties: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
   const { data, loading, error } = useMGnifyData(
-    `analyses/${overviewData.id}/genome-properties`
+    `analyses/${overviewData?.id}/genome-properties`
   );
   const [should, setShould] = useState(SHOULD_NOT);
   useEffect(() => {
@@ -51,7 +53,13 @@ const GenomeProperties: React.FC = () => {
   }, [should]);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
-  const genomePropertiesCount = {};
+  // const genomePropertiesCount = {};
+
+  interface GenomePropertiesCount {
+    [key: string]: number;
+  }
+
+  const genomePropertiesCount: GenomePropertiesCount = {};
 
   (data.data as MGnifyDatum[]).forEach((d) => {
     const id = d.attributes.accession as string;
@@ -92,13 +100,13 @@ const GenomeProperties: React.FC = () => {
         tree={gpHierarchy as unknown as Node}
         triggerExpandAll={should.expand}
         triggerCollapseAll={should.collapse}
-        getLabel={(node) => {
+        getLabel={(node: Node): string | React.ReactElement => {
           return (
             <>
               <ExtLink
                 href={`https://www.ebi.ac.uk/interpro/genomeproperties/genome-property/${node.id}`}
               >
-                {node.id}
+                {node.id as string}
               </ExtLink>
               : {node.name}
             </>

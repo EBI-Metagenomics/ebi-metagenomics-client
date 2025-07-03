@@ -1,16 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyDatum } from 'hooks/data/useData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import TruncatedText from 'components/UI/TextTruncated';
-import { getBiomeIcon } from 'utils/biomes';
+import { getBiomeIcon } from '@/utils/biomes';
 
 import './style.css';
-import { useMedia } from 'react-use';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
+import useStudiesList from 'hooks/data/useStudies';
 
 type LatestStudyProps = {
   id: string;
@@ -24,7 +22,7 @@ const LatestStudy: React.FC<LatestStudyProps> = ({
   abstract,
   lineage,
 }) => {
-  const icon = getBiomeIcon(lineage);
+  const icon = getBiomeIcon(lineage ?? '');
   return (
     <article className="vf-summary vf-summary--has-image study">
       <span className={`biome_icon icon_xs ${icon}`} />
@@ -52,9 +50,10 @@ const LatestStudy: React.FC<LatestStudyProps> = ({
 };
 
 const LatestStudies: React.FC = () => {
-  const isSmall = useMedia('(max-width: 768px)');
-  const { data, loading, error } = useMGnifyData('studies/recent', {
-    page_size: isSmall ? 3 : 20,
+  const { data, loading, error } = useStudiesList({
+    page: 1,
+    order: '-updated_at',
+    has_analyses_from_pipeline: 'V6',
   });
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
@@ -65,14 +64,32 @@ const LatestStudies: React.FC = () => {
         className="vf-grid vf-grid__col-1 latest-studies-section"
         heightPx={800}
       >
-        {(data.data as Array<MGnifyDatum>).map(
-          ({ id, attributes, relationships }) => (
+        {/* eslint-disable-next-line camelcase */}
+        {data.items.map(
+          ({
+            accession,
+            // eslint-disable-next-line camelcase
+            updated_at,
+            biome,
+            title,
+          }: {
+            // eslint-disable-next-line react/no-unused-prop-types
+            accession: string;
+            // eslint-disable-next-line react/no-unused-prop-types
+            updated_at: string;
+            // eslint-disable-next-line react/no-unused-prop-types
+            biome: { lineage: string };
+            // eslint-disable-next-line react/no-unused-prop-types
+            title: string;
+          }) => (
             <LatestStudy
-              key={id}
-              id={id}
-              name={attributes['study-name'] as string}
-              abstract={attributes['study-abstract'] as string}
-              lineage={relationships?.biomes?.data?.[0]?.id}
+              key={accession}
+              id={accession}
+              name={title}
+              lineage={biome.lineage}
+              abstract={`Last updated on ${new Date(
+                updated_at
+              ).toLocaleDateString()} `}
             />
           )
         )}

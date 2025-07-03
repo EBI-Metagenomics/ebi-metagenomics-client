@@ -18,12 +18,14 @@ type ProgrammaticAccessBoxProps = {
   apiPath: string;
   entityLabel: string;
   notebooks?: NotebookLinkProps[];
+  isApiV2?: boolean;
 };
 
 const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
   apiPath,
   entityLabel,
   notebooks,
+  isApiV2 = false,
 }) => {
   const { config } = useContext(UserContext);
   const sayCopied = () =>
@@ -36,7 +38,8 @@ const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
       draggable: true,
       progress: undefined,
     });
-  const apiUrl = `${config.api}${apiPath}`;
+  const root = isApiV2 ? config.api_v2 : config.api;
+  const apiUrl = `${root}${apiPath}`;
 
   return (
     <Box label="Programmatic access">
@@ -77,7 +80,7 @@ const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
             live examples that you can modify without downloading or installing
             any software.
           </p>
-          {notebooks.map((notebook) => {
+          {notebooks?.map((notebook) => {
             let jlLink = `${config.jupyterLabURL}?jlpath=${notebook.notebookPath}`;
             jlLink += Object.entries(notebook.notebookVars || {}).reduce(
               (vars, [varName, varVal]) => `${vars}&jlvar_${varName}=${varVal}`,
@@ -108,7 +111,7 @@ const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
               </button>
             );
           })}
-          {!notebooks.length && (
+          {!notebooks?.length && (
             <button
               className="vf-button vf-button--secondary vf-button--sm"
               type="button"

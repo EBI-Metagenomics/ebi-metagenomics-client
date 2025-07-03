@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import Pipeline from 'components/Pipeline';
 import ExtLink from 'components/UI/ExtLink';
-import useURLAccession from 'hooks/useURLAccession';
+import useURLAccession from '@/hooks/useURLAccession';
 
 const Pipelines: React.FC = () => {
   const accession = useURLAccession();
@@ -17,6 +17,26 @@ const Pipelines: React.FC = () => {
         You will find here the list of pipelines that were used to run the
         analyses.
       </p>
+
+      <h3>
+        <span>
+          <Link to="/pipelines/6">Pipeline v.6.0</Link>
+        </span>{' '}
+        (01-Apr-2025)
+      </h3>
+
+      <ul>
+        <li>
+          Major upgrade. This version offers specialised workflows for three
+          different data types: amplicon, raw metagenomic/metatranscriptomic
+          reads, and assembly. Each workflow is defined in Nextflow and
+          available in individual repositories of the{' '}
+          <ExtLink href="https://github.com/EBI-Metagenomics/">
+            EBI-Metagenomics GitHub organisation
+          </ExtLink>
+          .
+        </li>
+      </ul>
 
       <h3>
         <span>

@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Status } from '@googlemaps/react-wrapper';
-import { ErrorTypes } from 'hooks/data/useData';
+import { ErrorTypes } from '@/hooks/data/useData';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
@@ -13,7 +13,6 @@ const render = (status: Status): ReactElement => {
         error={{
           status: 200,
           type: ErrorTypes.OtherError,
-          error: status,
         }}
       />
     );

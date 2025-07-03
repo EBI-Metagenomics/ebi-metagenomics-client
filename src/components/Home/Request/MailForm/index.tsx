@@ -6,8 +6,8 @@ import UserContext, {
   getDetailsByWebin,
   getEmailsFromDetails,
 } from 'pages/Login/UserContext';
-import useMgnifyEmail from 'hooks/data/useMgnifyEmail';
-import { ErrorTypes } from 'hooks/data/useData';
+import useMgnifyEmail from '@/hooks/data/useMgnifyEmail';
+import { ErrorTypes } from '@/hooks/data/useData';
 
 const accessionRegex = /((?:PRJEB|PRJNA|PRJDB|PRJDA|MGYS|ERP|SRP|DRP)\d{5,})/;
 

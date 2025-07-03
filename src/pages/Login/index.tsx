@@ -9,22 +9,27 @@ import React, {
 import { useLocation, useNavigate } from 'react-router-dom';
 import OutterCard from 'components/UI/OutterCard';
 import UserContext from 'pages/Login/UserContext';
-import enaUserImg from 'public/images/ico_ena_user.jpg';
+import enaUserImg from 'images/ico_ena_user.jpg';
 import useAuthToken from 'hooks/authentication/useAuthToken';
 import axios from 'utils/protectedAxios';
+import Loading from 'components/UI/Loading';
 
 const Login: React.FC = () => {
   const [, setAuthToken] = useAuthToken();
 
-  const usernameRef = useRef(null);
-  const passwordRef = useRef(null);
-  const loginErrorsContainerRef = useRef(null);
+  // const usernameRef = useRef(null);
+  // const passwordRef = useRef(null);
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
+  // const loginErrorsContainerRef = useRef(null);
+  const loginErrorsContainerRef = useRef<HTMLParagraphElement>(null);
   const loggedInUsername = localStorage.getItem('mgnify.username');
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errMsg, setErrMsg] = useState('');
+  const [loading, setLoading] = useState(false);
   const { isAuthenticated } = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -35,8 +40,16 @@ const Login: React.FC = () => {
       '?from=private-request': '/?from=private-request',
       '?from=public-request': '/?from=public-request',
     };
-    if (possibleDesiredDestinations[location.search]) {
-      setDesiredDestination(possibleDesiredDestinations[location.search]);
+    if (
+      possibleDesiredDestinations[
+        location.search as '?from=private-request' | '?from=public-request'
+      ]
+    ) {
+      setDesiredDestination(
+        possibleDesiredDestinations[
+          location.search as '?from=private-request' | '?from=public-request'
+        ]
+      );
       return;
     }
     if (location?.state?.from?.pathname) {
@@ -71,14 +84,13 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post(`/utils/token/obtain`, {
-        username: usernameRef.current.value,
-        password: passwordRef.current.value,
+        username: usernameRef?.current?.value,
+        password: passwordRef?.current?.value,
       });
       const accessToken = response.data.data.token;
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       setAuthToken(accessToken) as unknown as void;
       setUsername('');
       setPassword('');
@@ -86,12 +98,15 @@ const Login: React.FC = () => {
         replace: true,
       });
     } catch (error) {
-      if (!error.response) {
+      const err = error as ErrorResponse;
+      if (!err.response) {
         setErrMsg('Network error');
-        return;
+      } else {
+        setErrMsg(err.response.data.errors.non_field_errors[0]);
       }
-      setErrMsg(error.response.data.errors.non_field_errors[0]);
       loginErrorsContainerRef.current?.focus();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -148,14 +163,18 @@ const Login: React.FC = () => {
 
           <br />
           <div className="form-actions-no-box">
-            <button
-              type="submit"
-              name="submit"
-              className="vf-button"
-              id="submit-id-submit"
-            >
-              Log in
-            </button>
+            {loading ? (
+              <Loading size="small" />
+            ) : (
+              <button
+                type="submit"
+                name="submit"
+                className="vf-button vf-button--primary"
+                id="submit-id-submit"
+              >
+                Log in
+              </button>
+            )}
           </div>
         </form>
         <div className="form-forgotten">

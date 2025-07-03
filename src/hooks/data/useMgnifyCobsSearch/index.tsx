@@ -4,7 +4,7 @@ import useData, {
   ErrorFromFetch,
   KeyValue,
   ResponseFormat,
-} from 'hooks/data/useData';
+} from '@/hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
 
 export interface CobsResponse {

@@ -1,5 +1,5 @@
 import React from 'react';
-import PfamTable from './Table';
+import PfamTable from './KoTable';
 import PfamBarChart from './BarChart';
 
 const PfamTab: React.FC = () => {

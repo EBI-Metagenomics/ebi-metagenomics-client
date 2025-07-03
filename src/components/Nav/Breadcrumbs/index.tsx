@@ -9,11 +9,10 @@ const Breadcrumbs = ({ links }) => {
             link: {
               url: string;
               label: string;
-              index: React.Key;
             },
             index: React.Key
           ) => (
-            <li className="vf-breadcrumbs__item">
+            <li className="vf-breadcrumbs__item" key={link.label}>
               {index === links.length - 1 ? (
                 <span className="vf-breadcrumbs__item vf-breadcrumbs__item--current">
                   {link.label}

@@ -14,22 +14,22 @@ import './style.css';
 import ExtLink from 'components/UI/ExtLink';
 import { useMedia } from 'react-use';
 import EMGModal from 'components/UI/EMGModal';
-import useAuthTokenVerifier from 'hooks/authentication/useAuthTokenVerifier';
+import useAuthTokenVerifier from '@/hooks/authentication/useAuthTokenVerifier';
 import MegaMenu from 'components/Nav/MegaMenu';
 
 const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'Overview', path: '/' },
-  {
-    label: 'Submit data',
-    path: 'https://www.ebi.ac.uk/ena/submit/webin/accountInfo',
-  },
-  { label: 'Text search', path: '/search' },
+  // {
+  //   label: 'Submit data',
+  //   path: 'https://www.ebi.ac.uk/ena/submit/webin/accountInfo',
+  // },
+  // { label: 'Text search', path: '/search' },
   { label: 'Sequence search' },
   { label: 'Browse data', path: '/browse' },
   { label: 'API' },
   { label: 'About', path: '/about' },
   { label: 'Help', path: '/help' },
-  { label: 'Login', path: '/login' },
+  // { label: 'Login', path: '/login' },
 ];
 
 const START_POS = 100;
@@ -41,7 +41,6 @@ const Nav: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <nav className="vf-navigation vf-navigation--main | vf-cluster vf-u-fullbleed">
@@ -82,7 +81,6 @@ const MobileNav: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>
@@ -116,7 +114,6 @@ const MainMenu: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useLayoutEffect(() => {
     const onScroll = (): void => {

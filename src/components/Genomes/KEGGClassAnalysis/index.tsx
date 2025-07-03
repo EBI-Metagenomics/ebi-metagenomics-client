@@ -6,12 +6,12 @@ import HighchartsReact from 'highcharts-react-official';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
-import useDefaultGenomeConfig from 'hooks/genomes/useDefaultConfig';
-import { TAXONOMY_COLOURS } from 'utils/taxon';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
+import useURLAccession from '@/hooks/useURLAccession';
+import useDefaultGenomeConfig from '@/hooks/genomes/useDefaultConfig';
+import { TAXONOMY_COLOURS } from '@/utils/taxon';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 addExportMenu(Highcharts);
 

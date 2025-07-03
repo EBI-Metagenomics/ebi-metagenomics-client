@@ -1,12 +1,12 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import Link from 'components/UI/Link';
-import { getDetailOrSearchURLForQuery } from 'utils/accessions';
-import { createParamFromURL } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
-import useQueryParamsStore from 'hooks/queryParamState/QueryParamStore/useQueryParamsStore';
+import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
+import { createParamFromURL } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
+import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
 import { useNavigate } from 'react-router-dom';
 import UserContext from 'pages/Login/UserContext';
-import config from 'utils/config';
+import config from '@/utils/config';
 
 const MegaMenu: React.FC = () => {
   const { isAuthenticated } = useContext(UserContext);
@@ -17,12 +17,16 @@ const MegaMenu: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleMouseEnter = (sectionId: string) => {
+  const handleMenuItemClick = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    sectionId: string
+  ) => {
+    e.preventDefault();
     setMenuVisible(true);
     setActiveSection(sectionId);
   };
 
-  const handleMouseLeave = () => {
+  const closeMegaMenu = () => {
     setMenuVisible(false);
     setActiveSection(null);
   };
@@ -48,9 +52,32 @@ const MegaMenu: React.FC = () => {
       })
     );
   };
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        closeMegaMenu();
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeMegaMenu();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
-    <div onMouseLeave={handleMouseLeave}>
+    // <div onMouseLeave={handleMouseLeave}>
+    <div ref={menuRef}>
       <div
         id="mgnify-mega-menu"
         className="vf-global-header vf-mega-menu"
@@ -62,48 +89,52 @@ const MegaMenu: React.FC = () => {
               <a
                 className="vf-navigation__link vf-mega-menu__link"
                 id="demo-topics-content-section"
-                href="/metagenomics"
-                onMouseEnter={() => setMenuVisible(false)}
+                href={`${config.basename}/`}
+                onClick={() => setMenuVisible(false)}
               >
                 Overview
               </a>
             </li>
-            <li className="vf-navigation__item">
-              <a
-                id="submit-data-section"
-                className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
-                  activeSection === 'submit-data-section' ? 'active' : ''
-                }`}
-                target="_blank"
-                href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo"
-                onMouseEnter={() => handleMouseEnter('submit-data-section')}
-                rel="noreferrer"
-              >
-                Submit data
-              </a>
-            </li>
-            {/*<li className="vf-navigation__item">*/}
-            {/*  <a*/}
-            {/*    id="text-search-section"*/}
-            {/*    className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${*/}
-            {/*      activeSection === 'text-search-section' ? 'active' : ''*/}
-            {/*    }`}*/}
-            {/*    href="/metagenomics/search"*/}
-            {/*    onMouseEnter={() => handleMouseEnter('text-search-section')}*/}
-            {/*  >*/}
-            {/*    Text search*/}
-            {/*  </a>*/}
-            {/*</li>*/}
+            {/* <li className="vf-navigation__item"> */}
+            {/*  <a */}
+            {/*    id="submit-data-section" */}
+            {/*    className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${ */}
+            {/*      activeSection === 'submit-data-section' ? 'active' : '' */}
+            {/*    }`} */}
+            {/*    href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo" */}
+            {/*    onClick={(event) => */}
+            {/*      handleMenuItemClick(event, 'submit-data-section') */}
+            {/*    } */}
+            {/*    rel="noreferrer" */}
+            {/*  > */}
+            {/*    Submit data */}
+            {/*  </a> */}
+            {/* </li> */}
+            {/* <li className="vf-navigation__item"> */}
+            {/*  <a */}
+            {/*    id="text-search-section" */}
+            {/*    className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${ */}
+            {/*      activeSection === 'text-search-section' ? 'active' : '' */}
+            {/*    }`} */}
+            {/*    href="/metagenomics/search" */}
+            {/*    onClick={(event) => */}
+            {/*      handleMenuItemClick(event, 'text-search-section') */}
+            {/*    } */}
+            {/*  > */}
+            {/*    Text search */}
+            {/*  </a> */}
+            {/* </li> */}
             <li className="vf-navigation__item">
               <a
                 id="sequence-search-link"
-                href="/metagenomics/search-landing"
+                target="_blank"
+                href="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
                 className="vf-navigation__link vf-mega-menu__link"
-                onMouseEnter={() => setMenuVisible(false)}
+                onClick={() => setMenuVisible(false)}
                 rel="noreferrer"
               >
-                Search page &nbsp;
-                {/*<span className="icon icon-common icon-external-link-alt" />*/}
+                Sequence search &nbsp;
+                <span className="icon icon-common icon-external-link-alt" />
               </a>
             </li>
             <li className="vf-navigation__item">
@@ -112,8 +143,10 @@ const MegaMenu: React.FC = () => {
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
                   activeSection === 'browse-section' ? 'active' : ''
                 }`}
-                href="/metagenomics/browse"
-                onMouseEnter={() => handleMouseEnter('browse-section')}
+                href={`${config.basename}/browse`}
+                onClick={(event) =>
+                  handleMenuItemClick(event, 'browse-section')
+                }
               >
                 Browse data
               </a>
@@ -123,8 +156,8 @@ const MegaMenu: React.FC = () => {
               <a
                 id="about-link"
                 className="vf-navigation__link vf-mega-menu__link"
-                href="/metagenomics/about"
-                onMouseEnter={() => setMenuVisible(false)}
+                href={`${config.basename}/about`}
+                onClick={() => setMenuVisible(false)}
               >
                 About
               </a>
@@ -136,38 +169,40 @@ const MegaMenu: React.FC = () => {
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
                   activeSection === 'help-section' ? 'active' : ''
                 }`}
-                href="/metagenomics/help"
-                onMouseEnter={() => handleMouseEnter('help-section')}
+                href={`${config.basename}/help`}
+                onClick={(event) => handleMenuItemClick(event, 'help-section')}
               >
                 Help
               </a>
             </li>
 
-            {isAuthenticated ? (
-              <li className="vf-navigation__item">
-                <a
-                  className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
-                    activeSection === 'login-section' ? 'active' : ''
-                  }`}
-                  id="login-section"
-                  href="/metagenomics/mydata"
-                  onMouseEnter={() => handleMouseEnter('login-section')}
-                >
-                  My data
-                </a>
-              </li>
-            ) : (
-              <li className="vf-navigation__item">
-                <a
-                  id="login-link"
-                  className="vf-navigation__link vf-mega-menu__link"
-                  href="/metagenomics/login"
-                  onMouseEnter={() => setMenuVisible(false)}
-                >
-                  Login
-                </a>
-              </li>
-            )}
+            {/* {isAuthenticated ? ( */}
+            {/*  <li className="vf-navigation__item"> */}
+            {/*    <a */}
+            {/*      className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${ */}
+            {/*        activeSection === 'login-section' ? 'active' : '' */}
+            {/*      }`} */}
+            {/*      id="login-section" */}
+            {/*      href="/metagenomics/mydata" */}
+            {/*      onClick={(event) => */}
+            {/*        handleMenuItemClick(event, 'login-section') */}
+            {/*      } */}
+            {/*    > */}
+            {/*      My data */}
+            {/*    </a> */}
+            {/*  </li> */}
+            {/* ) : ( */}
+            {/*  <li className="vf-navigation__item"> */}
+            {/*    <a */}
+            {/*      id="login-link" */}
+            {/*      className="vf-navigation__link vf-mega-menu__link" */}
+            {/*      href="/metagenomics/login" */}
+            {/*      onClick={() => setMenuVisible(false)} */}
+            {/*    > */}
+            {/*      Login */}
+            {/*    </a> */}
+            {/*  </li> */}
+            {/* )} */}
           </ul>
         </nav>
       </div>
@@ -179,69 +214,67 @@ const MegaMenu: React.FC = () => {
               className="vf-mega-menu__content__section"
               id="browse-content-section"
               role="menu"
-              onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'browse-section'}
             >
               <section className="vf-summary-container | embl-grid">
                 <div className="vf-section-header">
                   <h2 className="vf-section-header__heading">Browse MGnify</h2>
                   <p className="vf-section-header__text">
-                    Browse MGnify by study, sample, publication, genome or
-                    biome.
+                    Browse MGnify’s analysed datasets.
                   </p>
                 </div>
                 <div className="vf-section-content | vf-grid vf-grid__col-3">
                   <div>
                     <nav className="vf-navigation vf-navigation--main">
                       <ul className="vf-navigation__list | vf-list | vf-cluster__inner | vf-stack vf-stack--200">
+                        {/* <li className="vf-navigation__item"> */}
+                        {/*  <a */}
+                        {/*    href={`${config.basename}/browse/super-studies`} */}
+                        {/*    className="vf-navigation__link rotating-link" */}
+                        {/*  > */}
+                        {/*    Super studies <ArrowForLink /> */}
+                        {/*  </a> */}
+                        {/* </li> */}
                         <li className="vf-navigation__item">
                           <a
-                            href="/metagenomics/browse/super-studies"
-                            className="vf-navigation__link rotating-link"
-                          >
-                            Super studies <ArrowForLink />
-                          </a>
-                        </li>
-                        <li className="vf-navigation__item">
-                          <a
-                            href="/metagenomics/browse/studies"
+                            href={`${config.basename}/browse/studies`}
                             className="vf-navigation__link rotating-link"
                           >
                             Studies <ArrowForLink />
                           </a>
                         </li>
-                        <li className="vf-navigation__item">
-                          <a
-                            href="/metagenomics/browse/samples"
-                            className="vf-navigation__link rotating-link"
-                          >
-                            Samples <ArrowForLink />
-                          </a>
-                        </li>
-                        <li className="vf-navigation__item">
-                          <a
-                            href="/metagenomics/browse/publications"
-                            className="vf-navigation__link rotating-link"
-                          >
-                            Publications <ArrowForLink />
-                          </a>
-                        </li>
-                        <li className="vf-navigation__item">
-                          <a
-                            href="/metagenomics/browse/genomes"
-                            className="vf-navigation__link rotating-link"
-                          >
-                            Genomes <ArrowForLink />
-                          </a>
-                        </li>
-                        <li className="vf-navigation__item">
-                          <a
-                            href="/metagenomics/browse/biomes"
-                            className="vf-navigation__link rotating-link"
-                          >
-                            Biomes <ArrowForLink />
-                          </a>
-                        </li>
+                        {/* <li className="vf-navigation__item"> */}
+                        {/*  <a */}
+                        {/*    href={`${config.basename}/browse/samples`} */}
+                        {/*    className="vf-navigation__link rotating-link" */}
+                        {/*  > */}
+                        {/*    Samples <ArrowForLink /> */}
+                        {/*  </a> */}
+                        {/* </li> */}
+                        {/* <li className="vf-navigation__item"> */}
+                        {/*  <a */}
+                        {/*    href={`${config.basename}/browse/publications`} */}
+                        {/*    className="vf-navigation__link rotating-link" */}
+                        {/*  > */}
+                        {/*    Publications <ArrowForLink /> */}
+                        {/*  </a> */}
+                        {/* </li> */}
+                        {/* <li className="vf-navigation__item"> */}
+                        {/*  <a */}
+                        {/*    href={`${config.basename}/browse/genomes`} */}
+                        {/*    className="vf-navigation__link rotating-link" */}
+                        {/*  > */}
+                        {/*    Genomes <ArrowForLink /> */}
+                        {/*  </a> */}
+                        {/* </li> */}
+                        {/* <li className="vf-navigation__item"> */}
+                        {/*  <a */}
+                        {/*    href={`${config.basename}/browse/biomes`} */}
+                        {/*    className="vf-navigation__link rotating-link" */}
+                        {/*  > */}
+                        {/*    Biomes <ArrowForLink /> */}
+                        {/*  </a> */}
+                        {/* </li> */}
                       </ul>
                     </nav>
                   </div>
@@ -260,7 +293,7 @@ const MegaMenu: React.FC = () => {
                             id="api-link"
                             target="_blank"
                             className="vf-navigation__link"
-                            href={config.api}
+                            href={`${config.api_v2}`}
                             rel="noreferrer"
                           >
                             API &nbsp;
@@ -279,7 +312,6 @@ const MegaMenu: React.FC = () => {
               className="vf-mega-menu__content__section"
               id="submit-data-content-section"
               role="menu"
-              onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'submit-data-section'}
             >
               <section className="vf-summary-container | embl-grid">
@@ -319,14 +351,13 @@ const MegaMenu: React.FC = () => {
               className="vf-mega-menu__content__section"
               id="text-search-content-section"
               role="menu"
-              onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'text-search-section'}
             >
               <section className="vf-summary-container | embl-grid">
                 <div className="vf-section-header">
                   <h2 className="vf-section-header__heading">Search MGnify</h2>
                   <p className="vf-section-header__text">
-                    Search for studies, samples abd publications
+                    Search for studies, samples and publications
                   </p>
                 </div>
                 <div className="vf-section-content">
@@ -438,7 +469,7 @@ const MegaMenu: React.FC = () => {
                   <ul className="vf-list vf-u-margin__bottom--800">
                     <li className="vf-list__item">
                       <a
-                        href="/metagenomics/search/studies"
+                        href={`${config.basename}/search/studies`}
                         className="vf-link rotating-link"
                       >
                         Studies <ArrowForLink />
@@ -446,7 +477,7 @@ const MegaMenu: React.FC = () => {
                     </li>
                     <li className="vf-list__item">
                       <a
-                        href="/metagenomics/search/analyses"
+                        href={`${config.basename}/search/analyses`}
                         className="vf-link rotating-link"
                       >
                         Analysed samples <ArrowForLink />
@@ -454,7 +485,7 @@ const MegaMenu: React.FC = () => {
                     </li>
                     <li className="vf-list__item">
                       <a
-                        href="/metagenomics/search"
+                        href={`${config.basename}/search`}
                         className="vf-link rotating-link"
                       >
                         Go to the full search page <ArrowForLink />
@@ -470,7 +501,6 @@ const MegaMenu: React.FC = () => {
               className="vf-mega-menu__content__section"
               id="help-content-section"
               role="menu"
-              onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'help-section'}
             >
               <section className="vf-summary-container | embl-grid">
@@ -479,7 +509,7 @@ const MegaMenu: React.FC = () => {
                   <p className="vf-section-header__text">
                     Find out more about MGnify
                     <br />
-                    <a className="vf-link" href="/metagenomics/help">
+                    <a className="vf-link" href={`${config.basename}/help`}>
                       Go to the help page
                     </a>
                   </p>
@@ -553,7 +583,7 @@ const MegaMenu: React.FC = () => {
                         </div>
                         <li className="vf-navigation__item">
                           <a
-                            href="https://www.ebi.ac.uk/training/about"
+                            href="https://www.ebi.ac.uk/training/services/mgnify"
                             className="vf-navigation__link"
                             target="_blank"
                             rel="noreferrer"
@@ -658,7 +688,6 @@ const MegaMenu: React.FC = () => {
               className="vf-mega-menu__content__section"
               id="login-content-section"
               role="menu"
-              onMouseLeave={handleMouseLeave}
               aria-hidden={activeSection !== 'login-section'}
             >
               <section className="vf-summary-container | embl-grid">
@@ -674,7 +703,7 @@ const MegaMenu: React.FC = () => {
                       <ul className="vf-navigation__list | vf-list | vf-cluster__inner | vf-stack vf-stack--200">
                         <li className="vf-navigation__item">
                           <a
-                            href="/metagenomics/mydata"
+                            href={`${config.basename}/mydata`}
                             className="vf-navigation__link rotating-link"
                           >
                             My studies
@@ -682,7 +711,7 @@ const MegaMenu: React.FC = () => {
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="/metagenomics/login"
+                            href={`${config.basename}/login`}
                             className="vf-navigation__link rotating-link"
                           >
                             My account
@@ -690,7 +719,7 @@ const MegaMenu: React.FC = () => {
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="/metagenomics/login"
+                            href={`${config.basename}/login`}
                             className="vf-navigation__link rotating-link"
                           >
                             Logout
