@@ -2,7 +2,7 @@ import { React, useEffect, useRef, useState, useCallback } from 'react';
 import render from 'components/UI/SamplesMap/render';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import config from 'utils/config';
-import 'mgnify-sourmash-component';
+// import 'mgnify-sourmash-component';
 import axios from 'axios';
 import Plot from 'react-plotly.js';
 

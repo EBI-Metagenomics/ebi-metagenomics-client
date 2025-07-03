@@ -5,6 +5,10 @@ import path from 'path';
 export default defineConfig({
   base: '/metagenomics/',
   plugins: [react()],
+  assetsInclude: ['**/*.worker.js'],
+  optimizeDeps: {
+    exclude: ['mgnify-sourmash-component'],
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
