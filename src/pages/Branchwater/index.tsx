@@ -3,6 +3,7 @@ import render from 'components/UI/SamplesMap/render';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import config from 'utils/config';
 // import 'mgnify-sourmash-component';
+// import 'components/mgnify-sourmash-component-main/src';
 import axios from 'axios';
 import Plot from 'react-plotly.js';
 

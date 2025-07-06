@@ -1,14 +1,27 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'path';
+import path, { resolve } from 'path';
+// import { resolve } from 'path';
+import { copyFileSync } from 'fs';
 
 export default defineConfig({
   base: '/metagenomics/',
-  plugins: [react()],
-  assetsInclude: ['**/*.worker.js'],
-  optimizeDeps: {
-    exclude: ['mgnify-sourmash-component'],
-  },
+  plugins: [
+    react(),
+    // {
+    //   name: 'copy-mgnify-component',
+    //   writeBundle() {
+    //     // Copy the component file to dist after build
+    //     // copyFileSync(
+    //     //   resolve(
+    //     //     __dirname,
+    //     //     'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.js'
+    //     //   ),
+    //     //   resolve(__dirname, 'dist/mgnify-sourmash-component.js')
+    //     // );
+    //   },
+    // },
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
