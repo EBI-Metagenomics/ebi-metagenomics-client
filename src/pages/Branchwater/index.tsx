@@ -1,93 +1,77 @@
-import { React, useEffect, useRef, useState, useCallback } from 'react';
-import render from 'components/UI/SamplesMap/render';
-import { Wrapper } from '@googlemaps/react-wrapper';
-import config from 'utils/config';
-// import 'mgnify-sourmash-component';
-// import 'components/mgnify-sourmash-component-main/src';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import axios from 'axios';
 import Plot from 'react-plotly.js';
 
-const sampleEntries = [
-  {
-    acc: 'ERR4172301',
-    assay_type: 'OTHER',
-    bioproject: 'PRJEB38431',
-    biosample_link: 'https://www.ncbi.nlm.nih.gov',
-    cANI: 0.9,
-    collection_date: '2018-09-03',
-    containment: 0.11,
-    geo_loc_name_country_calc: 'China',
-    lat_lon: 'NP',
-    organism: 'environmental sample',
-  },
-  {
-    acc: 'ERR4172302',
-    assay_type: 'RNA-Seq',
-    bioproject: 'PRJEB38432',
-    biosample_link: 'https://www.ncbi.nlm.nih.gov/sra/ERR4172302',
-    cANI: 0.8,
-    collection_date: '2019-05-12',
-    containment: 0.15,
-    geo_loc_name_country_calc: 'USA',
-    lat_lon: '37.7749N, 122.4194W',
-    organism: 'Homo sapiens',
-  },
-  {
-    acc: 'ERR4172303',
-    assay_type: 'WGS',
-    bioproject: 'PRJEB38433',
-    biosample_link: 'https://www.ncbi.nlm.nih.gov/sra/ERR4172303',
-    cANI: 0.85,
-    collection_date: '2020-11-25',
-    containment: 0.2,
-    geo_loc_name_country_calc: 'Germany',
-    lat_lon: '52.5200N, 13.4050E',
-    organism: 'Bacillus subtilis',
-  },
-  {
-    acc: 'ERR4172304',
-    assay_type: 'ChIP-Seq',
-    bioproject: 'PRJEB38434',
-    biosample_link: 'https://www.ncbi.nlm.nih.gov/sra/ERR4172304',
-    cANI: 0.95,
-    collection_date: '2021-07-14',
-    containment: 0.25,
-    geo_loc_name_country_calc: 'Brazil',
-    lat_lon: '14.2350S, 51.9253W',
-    organism: 'Escherichia coli',
-  },
-  {
-    acc: 'ERR4172305',
-    assay_type: 'Metagenomics',
-    bioproject: 'PRJEB38435',
-    biosample_link: 'https://www.ncbi.nlm.nih.gov/sra/ERR4172305',
-    cANI: 0.75,
-    collection_date: '2017-03-08',
-    containment: 0.1,
-    geo_loc_name_country_calc: 'Australia',
-    lat_lon: '25.2744S, 133.7751E',
-    organism: 'environmental sample',
-  },
-];
+// Define interfaces for the component
+interface SearchResult {
+  acc?: string;
+  assay_type?: string;
+  bioproject?: string;
+  biosample_link?: string;
+  cANI?: number | string;
+  collection_date_sam?: string;
+  containment?: number | string;
+  geo_loc_name_country_calc?: string;
+  organism?: string;
+  lat_lon?: string;
+  [key: string]: any; // For other properties that might be in the search results
+}
+
+interface MapSample {
+  id: string;
+  attributes: {
+    latitude: number;
+    longitude: number;
+    'sample-desc': string;
+  };
+  relationships: {
+    biome: {
+      data: {
+        id: string;
+      };
+    };
+  };
+}
+
+interface VisualizationData {
+  barPlotData: any[];
+  histogramData: any[];
+  mapData: any[];
+  stringKeys: string[];
+}
+
+interface Filters {
+  acc: string;
+  assay_type: string;
+  bioproject: string;
+  cANI: string;
+  collection_date_sam: string;
+  containment: string;
+  geo_loc_name_country_calc: string;
+  organism: string;
+}
+
+interface Signature {
+  [key: string]: any;
+}
 
 const Branchwater = () => {
-  const ref = useRef();
-  const [showMgnifySourmash, setShowMgnifySourmash] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState(null);
-  const [targetDatabase, setTargetDatabase] = useState('MAGs');
-  const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [showMgnifySourmash, setShowMgnifySourmash] = useState<boolean>(false);
+  const [, setUploadedFile] = useState<File | null>(null);
+  const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(10);
 
   // Sorting state
-  const [sortField, setSortField] = useState('');
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [sortField, setSortField] = useState<string>('');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   // Filtering state
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<Filters>({
     acc: '',
     assay_type: '',
     bioproject: '',
@@ -98,31 +82,79 @@ const Branchwater = () => {
     organism: '',
   });
 
-  const sourmash = useRef(null);
-  const [{ signatures, errors }, setSourmashState] = useState({
-    signatures: null,
-    errors: null,
-  });
-  const [signature, setSignature] = useState(null);
+  const sourmash = useRef<HTMLMgnifySourmashComponentElement | null>(null);
+  const [signature, setSignature] = useState<Signature | null>(null);
 
   // State for visualizations
-  const [visualizationData, setVisualizationData] = useState(null);
+  const [visualizationData, setVisualizationData] =
+    useState<VisualizationData | null>(null);
+
+  // State for map samples
+  const [mapSamples, setMapSamples] = useState<MapSample[]>([]);
+
+  // Helper function to convert search results to SamplesMap format
+  const convertToMapSamples = useCallback(
+    (data: SearchResult[]): MapSample[] => {
+      if (!data || !Array.isArray(data)) return [];
+
+      return data
+        .map((item, index) => {
+          // Check if we have lat_lon data
+          if (!item.lat_lon || item.lat_lon === 'NP') return null;
+
+          try {
+            // Parse lat_lon string format like "40.7128N, 74.0060W"
+            const match = item.lat_lon.match(
+              /([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/
+            );
+            if (!match) return null;
+
+            const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
+            const lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
+
+            // Return in MGnifyDatum format expected by SamplesMap
+            return {
+              id: item.acc || `sample_${index}`,
+              attributes: {
+                latitude: lat,
+                longitude: lng,
+                'sample-desc': `${item.organism || 'Unknown organism'} - ${
+                  item.geo_loc_name_country_calc || 'Unknown location'
+                }`,
+              },
+              relationships: {
+                biome: {
+                  data: {
+                    id: item.assay_type || 'unknown',
+                  },
+                },
+              },
+            };
+          } catch (error) {
+            console.error('Error parsing lat_lon:', item.lat_lon, error);
+            return null;
+          }
+        })
+        .filter(Boolean) as MapSample[]; // Remove null entries and cast to MapSample[]
+    },
+    []
+  );
 
   // Helper functions for visualizations
-  const countUniqueValuesAndOccurrences = (valueList) => {
-    const counts = {};
+  const countUniqueValuesAndOccurrences = (
+    valueList: any[]
+  ): { uniqueValues: any[]; countVal: number[] } => {
+    const counts: Record<string, number> = {};
     const uniqueValues = [...new Set(valueList)];
 
     for (let i = 0; i < uniqueValues.length; i++) {
       const val = uniqueValues[i];
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      counts[val] = valueList.filter((value) => value === val).length;
+      // Convert val to string to use as object key
+      const key = String(val);
+      counts[key] = valueList.filter((value) => value === val).length;
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const countVal = uniqueValues.map((key) => counts[key]);
+    const countVal = uniqueValues.map((val) => counts[String(val)]);
 
     return {
       uniqueValues,
@@ -130,8 +162,11 @@ const Branchwater = () => {
     };
   };
 
-  const createPlotData = (stringKeys, stringValues) => {
-    const plotData = [];
+  const createPlotData = (
+    stringKeys: string[],
+    stringValues: any[][]
+  ): any[] => {
+    const plotData: any[] = [];
     const plotColor = 'rgba(100, 200, 102, 1)';
 
     for (let i = 0; i < stringKeys.length; i++) {
@@ -160,7 +195,7 @@ const Branchwater = () => {
   };
 
   // Apply filters to search results
-  const getFilteredResults = useCallback(() => {
+  const getFilteredResults = useCallback((): SearchResult[] => {
     // Ensure searchResults is an array before filtering
     if (!Array.isArray(searchResults)) {
       console.error('searchResults is not an array:', searchResults);
@@ -181,19 +216,22 @@ const Branchwater = () => {
 
   // Prepare data for visualizations
   const prepareVisualizationData = useCallback(
-    (data) => {
+    (data: SearchResult[]): VisualizationData | null => {
       if (!data || data.length === 0) return null;
 
       const commonKeys = Object.keys(data[0]);
-      const values = Array.from({ length: commonKeys.length }, () => []);
+      const values: any[][] = Array.from(
+        { length: commonKeys.length },
+        () => []
+      );
 
       commonKeys.forEach((key, j) => {
         values[j] = data.map((obj) => obj[key]);
       });
 
       // Filter string keys for bar plots
-      let stringKeys = [];
-      let stringValues = [];
+      const stringKeys: string[] = [];
+      const stringValues: any[][] = [];
 
       for (let i = 0; i < values.length; i++) {
         if (
@@ -216,7 +254,7 @@ const Branchwater = () => {
       const containmentIndex = commonKeys.indexOf('containment');
       const cANIIndex = commonKeys.indexOf('cANI');
 
-      const containmentHist = {
+      const containmentHist: any = {
         x: values[containmentIndex],
         type: 'histogram',
         autobinx: false,
@@ -232,7 +270,7 @@ const Branchwater = () => {
         },
       };
 
-      const cANIHist = {
+      const cANIHist: any = {
         x: values[cANIIndex],
         type: 'histogram',
         autobinx: false,
@@ -249,8 +287,8 @@ const Branchwater = () => {
       };
 
       // Create map data
-      let countryMap = {};
-      let latLonMap = {};
+      let countryMap: Record<string, any> = {};
+      let latLonMap: Record<string, any> = {};
 
       const countryIndex = commonKeys.indexOf('geo_loc_name_country_calc');
       const latLonIndex = commonKeys.indexOf('lat_lon');
@@ -302,7 +340,7 @@ const Branchwater = () => {
               return null;
             }
           })
-          .filter((item) => item !== null);
+          .filter((item) => item !== null) as [number, number, string][];
 
         if (latLonData.length > 0) {
           latLonMap = {
@@ -332,7 +370,7 @@ const Branchwater = () => {
   );
 
   useEffect(() => {
-    const handleSketched = (evt) => {
+    const handleSketched = (evt: CustomEvent): void => {
       evt.preventDefault();
       console.log('we be sketching not concerning what no body wanna say');
       console.log('Sigs out here ', evt.detail.signature);
@@ -345,10 +383,10 @@ const Branchwater = () => {
       // setIsButtonDisabled(false);
     };
 
-    document.addEventListener('sketched', handleSketched);
+    document.addEventListener('sketched', handleSketched as EventListener);
 
     return () => {
-      document.removeEventListener('sketched', handleSketched);
+      document.removeEventListener('sketched', handleSketched as EventListener);
     };
   }, [signature]);
 
@@ -358,8 +396,17 @@ const Branchwater = () => {
       const filteredResults = getFilteredResults();
       const vizData = prepareVisualizationData(filteredResults);
       setVisualizationData(vizData);
+
+      // Update map samples
+      const mapData = convertToMapSamples(filteredResults);
+      setMapSamples(mapData);
     }
-  }, [searchResults, getFilteredResults, prepareVisualizationData]);
+  }, [
+    searchResults,
+    getFilteredResults,
+    prepareVisualizationData,
+    convertToMapSamples,
+  ]);
 
   // useEffect(() => {
   //   console.log('sourmash.current', sourmash.current);
@@ -398,8 +445,10 @@ const Branchwater = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [sourmash.current]);
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
+  const handleFileUpload = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const file = event.target.files?.[0];
     setShowMgnifySourmash(true);
     // if (file && file.name.endsWith('.fasta')) {
     //   setUploadedFile(file);
@@ -408,7 +457,9 @@ const Branchwater = () => {
     // }
   };
 
-  const handleSearchClick = (event) => {
+  const handleSearchClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void => {
     event.preventDefault();
     setShowMgnifySourmash(true);
     console.log(`Searching in ${targetDatabase} database`);
@@ -432,7 +483,7 @@ const Branchwater = () => {
           console.log('Search results:', response.data);
           // Ensure response.data is an array before setting it to searchResults
           const resultsArray = Array.isArray(response.data)
-            ? response.data
+            ? (response.data as SearchResult[])
             : [];
           setSearchResults(resultsArray);
 
@@ -440,17 +491,18 @@ const Branchwater = () => {
           const vizData = prepareVisualizationData(resultsArray);
           setVisualizationData(vizData);
 
+          // Prepare map data
+          const mapData = convertToMapSamples(resultsArray);
+          setMapSamples(mapData);
+
           setIsLoading(false);
         })
         .catch((error) => {
           console.error('Error fetching search results:', error);
           setIsLoading(false);
-          // For testing, use sample data if the API call fails
-          setSearchResults(sampleEntries);
-
-          // Prepare visualization data with sample entries
-          const vizData = prepareVisualizationData(sampleEntries);
-          setVisualizationData(vizData);
+          // Note: sampleEntries is not defined in this scope, so we'll just clear the data
+          setVisualizationData(null);
+          setMapSamples([]);
         });
     } else {
       // If no signature yet, show a message or use sample data for testing
@@ -467,7 +519,7 @@ const Branchwater = () => {
   };
 
   // Handle filter change
-  const handleFilterChange = (field, value) => {
+  const handleFilterChange = (field: keyof Filters, value: string): void => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [field]: value,
@@ -476,7 +528,7 @@ const Branchwater = () => {
   };
 
   // Handle sort change
-  const handleSortChange = (field) => {
+  const handleSortChange = (field: string): void => {
     if (sortField === field) {
       // If already sorting by this field, toggle direction
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -488,12 +540,14 @@ const Branchwater = () => {
   };
 
   // Handle page change
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number): void => {
     setCurrentPage(page);
   };
 
   // Apply sorting to filtered results
-  const getSortedResults = (filteredResults) => {
+  const getSortedResults = (
+    filteredResults: SearchResult[]
+  ): SearchResult[] => {
     if (!sortField) return filteredResults;
 
     return [...filteredResults].sort((a, b) => {
@@ -502,7 +556,7 @@ const Branchwater = () => {
 
       // Handle numeric values
       // eslint-disable-next-line no-restricted-globals
-      if (!isNaN(aValue) && !isNaN(bValue)) {
+      if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
         return sortDirection === 'asc'
           ? Number(aValue) - Number(bValue)
           : Number(bValue) - Number(aValue);
@@ -515,18 +569,25 @@ const Branchwater = () => {
   };
 
   // Get paginated results
-  const getPaginatedResults = (sortedResults) => {
+  const getPaginatedResults = (
+    sortedResults: SearchResult[]
+  ): SearchResult[] => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return sortedResults.slice(startIndex, startIndex + itemsPerPage);
   };
 
   // Calculate total pages
-  const getTotalPages = (filteredResults) => {
+  const getTotalPages = (filteredResults: SearchResult[]): number => {
     return Math.ceil(filteredResults.length / itemsPerPage);
   };
 
   // Process results for display
-  const processResults = () => {
+  const processResults = (): {
+    filteredResults: SearchResult[];
+    sortedResults: SearchResult[];
+    paginatedResults: SearchResult[];
+    totalPages: number;
+  } => {
     const filteredResults = getFilteredResults();
     const sortedResults = getSortedResults(filteredResults);
     const paginatedResults = getPaginatedResults(sortedResults);
@@ -540,12 +601,13 @@ const Branchwater = () => {
     };
   };
 
-  const handleClearClick = () => {
+  const handleClearClick = (): void => {
     setShowMgnifySourmash(false);
     setUploadedFile(null);
     setSearchResults([]);
     setSignature(null);
     setVisualizationData(null);
+    setMapSamples([]);
     setFilters({
       acc: '',
       assay_type: '',
@@ -1004,27 +1066,27 @@ const Branchwater = () => {
                           : ''
                       }`}
                     >
-                      <a
-                        href="JavaScript:Void(0);"
+                      <button
+                        type="button"
                         className="vf-pagination__link"
                         onClick={() =>
                           currentPage > 1 && handlePageChange(currentPage - 1)
                         }
                       >
                         Previous<span className="vf-u-sr-only"> page</span>
-                      </a>
+                      </button>
                     </li>
 
                     {/* First page */}
                     {currentPage > 2 && (
                       <li className="vf-pagination__item">
-                        <a
-                          href="JavaScript:Void(0);"
+                        <button
+                          type="button"
                           className="vf-pagination__link"
                           onClick={() => handlePageChange(1)}
                         >
                           1<span className="vf-u-sr-only"> page</span>
-                        </a>
+                        </button>
                       </li>
                     )}
 
@@ -1038,14 +1100,14 @@ const Branchwater = () => {
                     {/* Previous page if not first */}
                     {currentPage > 1 && (
                       <li className="vf-pagination__item">
-                        <a
-                          href="JavaScript:Void(0);"
+                        <button
+                          type="button"
                           className="vf-pagination__link"
                           onClick={() => handlePageChange(currentPage - 1)}
                         >
                           {currentPage - 1}
                           <span className="vf-u-sr-only"> page</span>
-                        </a>
+                        </button>
                       </li>
                     )}
 
@@ -1063,14 +1125,14 @@ const Branchwater = () => {
                     {/* Next page if not last */}
                     {currentPage < processResults().totalPages && (
                       <li className="vf-pagination__item">
-                        <a
-                          href="JavaScript:Void(0);"
+                        <button
+                          type="button"
                           className="vf-pagination__link"
                           onClick={() => handlePageChange(currentPage + 1)}
                         >
                           {currentPage + 1}
                           <span className="vf-u-sr-only"> page</span>
-                        </a>
+                        </button>
                       </li>
                     )}
 
@@ -1084,8 +1146,8 @@ const Branchwater = () => {
                     {/* Last page */}
                     {currentPage < processResults().totalPages - 1 && (
                       <li className="vf-pagination__item">
-                        <a
-                          href="JavaScript:Void(0);"
+                        <button
+                          type="button"
                           className="vf-pagination__link"
                           onClick={() =>
                             handlePageChange(processResults().totalPages)
@@ -1093,7 +1155,7 @@ const Branchwater = () => {
                         >
                           {processResults().totalPages}
                           <span className="vf-u-sr-only"> page</span>
-                        </a>
+                        </button>
                       </li>
                     )}
 
@@ -1104,8 +1166,8 @@ const Branchwater = () => {
                           : ''
                       }`}
                     >
-                      <a
-                        href="JavaScript:Void(0);"
+                      <button
+                        type="button"
                         className="vf-pagination__link"
                         onClick={() =>
                           currentPage < processResults().totalPages &&
@@ -1113,7 +1175,7 @@ const Branchwater = () => {
                         }
                       >
                         Next<span className="vf-u-sr-only"> page</span>
-                      </a>
+                      </button>
                     </li>
                   </ul>
                 </nav>
@@ -1268,17 +1330,6 @@ const Branchwater = () => {
                 )}
             </div>
           )}
-
-          <div className="vf-u-padding__top--800"></div>
-
-          {/* Google Maps Component */}
-          <Wrapper apiKey={config.googleMapsKey} render={render}>
-            <div
-              ref={ref}
-              id="map"
-              style={{ width: '100%', height: '500px' }}
-            />
-          </Wrapper>
         </>
       )}
     </div>
