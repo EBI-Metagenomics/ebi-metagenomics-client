@@ -33,7 +33,7 @@ const tabs = [
 const GenomePage: React.FC = () => {
   const accession = useURLAccession();
   const { data, loading, error } = useMGnifyData(`genomes/${accession}`);
-  if (loading) return <Loading size="large" />;
+  // if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const { data: genomeData } = data as MGnifyResponseObj;

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import 'mgnify-sourmash-component';
+// import 'mgnify-sourmash-component';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
