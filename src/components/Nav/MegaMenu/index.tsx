@@ -243,6 +243,14 @@ const MegaMenu: React.FC = () => {
                             Studies <ArrowForLink />
                           </a>
                         </li>
+                        <li className="vf-navigation__item">
+                          <a
+                            href={`${config.basename}/branchwater-search`}
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Metagenome search <ArrowForLink />
+                          </a>
+                        </li>
                         {/* <li className="vf-navigation__item"> */}
                         {/*  <a */}
                         {/*    href={`${config.basename}/browse/samples`} */}

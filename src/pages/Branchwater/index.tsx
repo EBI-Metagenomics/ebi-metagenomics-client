@@ -669,57 +669,20 @@ const Branchwater = () => {
                     show_directory_checkbox={false}
                   />
 
-                  <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
-                    <legend className="vf-form__legend">
-                      Select target database
-                    </legend>
-
-                    <div className="vf-form__item vf-form__item--radio">
-                      <input
-                        type="radio"
-                        name="targetDatabase"
-                        value="MAGs"
-                        id="1"
-                        className="vf-form__radio"
-                        checked={targetDatabase === 'MAGs'}
-                        onChange={() => setTargetDatabase('MAGs')}
-                      />
-                      <label htmlFor="1" className="vf-form__label">
-                        MAGs
-                      </label>
-                    </div>
-
-                    <div className="vf-form__item vf-form__item--radio">
-                      <input
-                        type="radio"
-                        name="targetDatabase"
-                        value="Metagenomes"
-                        id="2"
-                        className="vf-form__radio"
-                        checked={targetDatabase === 'Metagenomes'}
-                        onChange={() => setTargetDatabase('Metagenomes')}
-                      />
-                      <label htmlFor="2" className="vf-form__label">
-                        Metagenomes
-                      </label>
-                    </div>
-
-                    {/* eslint-disable-next-line react/button-has-type */}
-                    <button
-                      className="vf-button vf-button--sm vf-button--primary mg-button"
-                      onClick={handleSearchClick}
-                    >
-                      Search
-                    </button>
-                    <button
-                      id="clear-button-mag"
-                      type="button"
-                      className="vf-button vf-button--sm vf-button--tertiary"
-                      onClick={handleClearClick}
-                    >
-                      Clear
-                    </button>
-                  </fieldset>
+                  <button
+                    className="vf-button vf-button--sm vf-button--primary mg-button"
+                    onClick={handleSearchClick}
+                  >
+                    Search
+                  </button>
+                  <button
+                    id="clear-button-mag"
+                    type="button"
+                    className="vf-button vf-button--sm vf-button--tertiary"
+                    onClick={handleClearClick}
+                  >
+                    Clear
+                  </button>
                 </div>
               </form>
             </div>
