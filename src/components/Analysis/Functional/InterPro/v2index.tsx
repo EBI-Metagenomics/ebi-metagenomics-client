@@ -1,20 +1,29 @@
 import React, { useContext } from 'react';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
+import { Download } from 'interfaces';
+import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 
 const InterPro: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
-  // const dataFile = analysisData.downloads.find(
-  //   (file) =>
-  //     file.alias.includes('interpro') && file.file_type === 'tsv.gz'
-  // );
 
-  const dataFile = analysisData.downloads[0]; // Placeholder until actual data is available
+  const dataFile: Download = analysisData.downloads.find(
+    (file) =>
+      file.download_group === 'functional_annotation.interpro_identifiers'
+  );
+
+  if (!dataFile) {
+    return (
+      <div className="vf-stack vf-stack--200" data-cy="assembly-interpro-chart">
+        <p>No InterPro identifiers file available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="vf-stack">
       <h5>InterPro match summary</h5>
-      <SlimVisualisationCard fileData={dataFile}>
+      <DetailedVisualisationCard ftpLink={dataFile.url} title={dataFile.alias}>
         <div className="p-4">
           <p className="text-sm text-gray-600 mb-4">
             InterPro is a database of protein families, domains, and functional
@@ -26,7 +35,8 @@ const InterPro: React.FC = () => {
             this analysis.
           </p>
         </div>
-      </SlimVisualisationCard>
+        <CompressedTSVTable download={dataFile} />
+      </DetailedVisualisationCard>
 
       <div className="vf-grid mg-grid-30-70" />
     </div>

@@ -23,6 +23,10 @@ export interface Download {
   long_description: string;
   short_description: string;
   url: string;
+  index_file?: {
+    index_type: string;
+    relative_url: string;
+  };
 }
 
 export interface Run extends EnaDerivedObject {

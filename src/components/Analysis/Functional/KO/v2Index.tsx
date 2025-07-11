@@ -1,18 +1,29 @@
 import React, { useContext } from 'react';
-import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import { Download } from 'interfaces';
+import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 
-const KOTab = () => {
-  const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
+const KOTab: React.FC = () => {
+  const { overviewData: analysisData } = useContext(AnalysisContext);
 
-  // This is used as a placeholder until the actual KO data is available on the API
-  const dataFile = analysisOverviewData.downloads[0];
+  const dataFile: Download = analysisData.downloads.find(
+    (file) => file.download_group === 'functional_annotation.kegg'
+  );
+
+  if (!dataFile) {
+    return (
+      <div className="vf-stack vf-stack--200" data-cy="assembly-interpro-chart">
+        <p>No KO identifiers file available</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <SlimVisualisationCard fileData={dataFile}>
+    <div className="vf-stack">
+      <h5>Kegg Orthologs</h5>
+      <DetailedVisualisationCard ftpLink={dataFile.url} title={dataFile.alias}>
         <div className="p-4">
-          <h3 className="text-lg font-medium mb-2">KO Terms</h3>
           <p className="text-sm text-gray-600 mb-4">
             KEGG Orthology (KO) terms represent functional orthologs of genes
             and proteins in metabolic pathways.
@@ -22,7 +33,10 @@ const KOTab = () => {
             analysis.
           </p>
         </div>
-      </SlimVisualisationCard>
+        <CompressedTSVTable download={dataFile} />
+      </DetailedVisualisationCard>
+
+      <div className="vf-grid mg-grid-30-70" />
     </div>
   );
 };

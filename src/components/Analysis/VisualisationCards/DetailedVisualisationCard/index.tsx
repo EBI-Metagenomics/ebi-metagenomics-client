@@ -389,7 +389,7 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
         <div className="vf-card__content | vf-stack vf-stack--400">
           <h3 className="vf-card__heading"> {title} </h3>
           <p className="vf-card__subheading">{subheading}</p>
-          <p className="vf-card__text">{children}</p>
+          <div className="vf-card__text">{children}</div>
         </div>
 
         <style>
