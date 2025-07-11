@@ -44,7 +44,6 @@ const V2AnalysisPage: React.FC = () => {
     { label: 'Overview', to: '#overview' },
     { label: 'Quality control', to: '#qc' },
     { label: 'Taxonomy', to: '#taxonomic' },
-    { label: 'Functional analysis', to: '#functional' },
     isNotAmplicon(analysisData)
       ? { label: 'Functional analysis', to: '#functional' }
       : null,
