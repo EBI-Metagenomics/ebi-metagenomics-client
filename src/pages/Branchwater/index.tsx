@@ -1023,10 +1023,30 @@ const Branchwater = () => {
                       </thead>
                       <tbody className="vf-table__body">
                         {processResults().paginatedResults.map(
-                          (entry, index) => (
+                          (entry, index) => {
+                            // Define URLs for first two results
+                            const accessionLinks = [
+                              'https://www.ebi.ac.uk/metagenomics/runs/ERR868490',
+                              'https://www.ebi.ac.uk/metagenomics/runs/ERR1726685'
+                            ];
+                            
+                            return (
                             // eslint-disable-next-line react/no-array-index-key
                             <tr className="vf-table__row" key={index}>
-                              <td className="vf-table__cell">{entry.acc}</td>
+                              <td className="vf-table__cell">
+                                {index < 2 ? (
+                                  <a
+                                    href={accessionLinks[index]}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="vf-link"
+                                  >
+                                    {entry.acc}
+                                  </a>
+                                ) : (
+                                  entry.acc
+                                )}
+                              </td>
                               <td className="vf-table__cell">
                                 {entry.assay_type}
                               </td>
@@ -1056,7 +1076,8 @@ const Branchwater = () => {
                                 {entry.organism}
                               </td>
                             </tr>
-                          )
+                            );
+                          }
                         )}
                       </tbody>
                     </table>
