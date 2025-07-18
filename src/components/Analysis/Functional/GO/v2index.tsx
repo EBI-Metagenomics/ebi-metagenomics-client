@@ -7,8 +7,11 @@ import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 const GO: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
 
+  console.log('analysisData.downloads', analysisData.downloads);
+
   const dataFile: Download = analysisData.downloads.find(
     (file) => file.download_group === 'functional_annotation.go_terms'
+    // (file) => file.download_group === 'quality_control'
   );
 
   if (!dataFile) {
