@@ -3,8 +3,7 @@ import {openPage} from '../util/util';
 describe('About page', { retries: 3 }, function() {
     context('Dropdown citations view', function() {
         it('Contains all the about sections', function() {
-            openPage('');
-            cy.get(`.mg-main-menu`).contains('About').click();
+            openPage('about');
             const content = '.about-page';
             cy.get(content).contains('The MGnify resource');
             cy.get(content).contains('Staying informed');
@@ -13,8 +12,7 @@ describe('About page', { retries: 3 }, function() {
             cy.get(content).contains('Funding');
         });
         it('Clicking button should display / hide publications', function() {
-            openPage('');
-            cy.get(`.mg-main-menu`).contains('About').click();
+            openPage('about');
             const citationDiv = '.mg-pub-section';
             const button = '.mg-pub-section button';
             console.log('button', button);

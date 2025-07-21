@@ -24,8 +24,12 @@ const pages: Array<{ label: string; path?: string; href?: string }> = [
     path: 'https://www.ebi.ac.uk/ena/submit/webin/accountInfo',
   },
   { label: 'Text search', path: '/search' },
-  { label: 'Sequence search' },
   { label: 'Browse data', path: '/browse' },
+  {
+    label: 'MGnify Proteins',
+    path: 'https://www.ebi.ac.uk/metagenomics/proteins',
+  },
+  { label: 'MGnify Genomes', path: '/browse/genomes' },
   { label: 'API' },
   { label: 'About', path: '/about' },
   { label: 'Help', path: '/help' },
