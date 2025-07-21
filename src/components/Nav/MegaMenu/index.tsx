@@ -126,19 +126,6 @@ const MegaMenu: React.FC = () => {
             </li>
             <li className="vf-navigation__item">
               <a
-                id="sequence-search-link"
-                target="_blank"
-                href="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
-                className="vf-navigation__link vf-mega-menu__link"
-                onClick={() => setMenuVisible(false)}
-                rel="noreferrer"
-              >
-                Sequence search &nbsp;
-                <span className="icon icon-common icon-external-link-alt" />
-              </a>
-            </li>
-            <li className="vf-navigation__item">
-              <a
                 id="browse-section"
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
                   activeSection === 'browse-section' ? 'active' : ''
@@ -151,15 +138,32 @@ const MegaMenu: React.FC = () => {
                 Browse data
               </a>
             </li>
-
             <li className="vf-navigation__item">
               <a
-                id="about-link"
-                className="vf-navigation__link vf-mega-menu__link"
-                href="/metagenomics/about"
-                onClick={() => setMenuVisible(false)}
+                id="proteins-section"
+                className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
+                  activeSection === 'proteins-section' ? 'active' : ''
+                }`}
+                href="/metagenomics/proteins"
+                onClick={(event) =>
+                  handleMenuItemClick(event, 'proteins-section')
+                }
               >
-                About
+                MGnify Proteins
+              </a>
+            </li>
+            <li className="vf-navigation__item">
+              <a
+                id="proteins-section"
+                className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
+                  activeSection === 'genomes-section' ? 'active' : ''
+                }`}
+                href="/metagenomics/browse"
+                onClick={(event) =>
+                  handleMenuItemClick(event, 'genomes-section')
+                }
+              >
+                MGnify Genomes
               </a>
             </li>
 
@@ -299,6 +303,113 @@ const MegaMenu: React.FC = () => {
                           >
                             API &nbsp;
                             <span className="icon icon-common icon-external-link-alt" />
+                          </a>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+              </section>
+            </div>
+          )}
+          {activeSection === 'proteins-section' && (
+            <div
+              className="vf-mega-menu__content__section"
+              id="browse-content-section"
+              role="menu"
+              aria-hidden={activeSection !== 'proteins-section'}
+            >
+              <section className="vf-summary-container | embl-grid">
+                <div className="vf-section-header">
+                  <h2 className="vf-section-header__heading">
+                    MGnify Proteins
+                  </h2>
+                  <p className="vf-section-header__text">
+                    MGnify Protein sequences are derived from the analysis of
+                    publicly available metagenomics assemblies within MGnify.
+                  </p>
+                </div>
+                <div className="vf-section-content | vf-grid vf-grid__col-3">
+                  <div>
+                    <nav className="vf-navigation vf-navigation--main">
+                      <ul className="vf-navigation__list | vf-list | vf-cluster__inner | vf-stack vf-stack--200">
+                        <li className="vf-navigation__item">
+                          <a
+                            href="/metagenomics/proteins"
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Browse proteins <ArrowForLink />
+                          </a>
+                        </li>
+                        <li className="vf-navigation__item">
+                          <a
+                            href="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Proteins sequence search <ArrowForLink />
+                          </a>
+                        </li>
+                        <li className="vf-navigation__item">
+                          <a
+                            href="https://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/"
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Download database releases <ArrowForLink />
+                          </a>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+              </section>
+            </div>
+          )}
+          {activeSection === 'genomes-section' && (
+            <div
+              className="vf-mega-menu__content__section"
+              id="browse-content-section"
+              role="menu"
+              aria-hidden={activeSection !== 'genomes-section'}
+            >
+              <section className="vf-summary-container | embl-grid">
+                <div className="vf-section-header">
+                  <h2 className="vf-section-header__heading">MGnify Genomes</h2>
+                  <p className="vf-section-header__text">
+                    MGnify Genomes are biome-specific catalogues of
+                    metagenomic-assembled and isolate microbial genomes.
+                  </p>
+                </div>
+                <div className="vf-section-content | vf-grid vf-grid__col-3">
+                  <div>
+                    <nav className="vf-navigation vf-navigation--main">
+                      <ul className="vf-navigation__list | vf-list | vf-cluster__inner | vf-stack vf-stack--200">
+                        <li className="vf-navigation__item">
+                          <a
+                            href="/metagenomics/browse/genomes"
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Browse genomes <ArrowForLink />
+                          </a>
+                        </li>
+                        <li className="vf-navigation__item">
+                          <a
+                            href="http://branchwater-dev.mgnify.org/"
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Branchwater search
+                            <ArrowForLink />
+                          </a>
+                          <p>
+                            Branchwater searches a large set of metagenomes for
+                            genome presence
+                          </p>
+                        </li>
+                        <li className="vf-navigation__item">
+                          <a
+                            href="https://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/"
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Browse all catalogue versions <ArrowForLink />
                           </a>
                         </li>
                       </ul>
@@ -509,6 +620,11 @@ const MegaMenu: React.FC = () => {
                   <h2 className="vf-section-header__heading">Help</h2>
                   <p className="vf-section-header__text">
                     Find out more about MGnify
+                    <br />
+                    <a className="vf-link" href="/metagenomics/about">
+                      About MGnify
+                    </a>
+                    <br />
                     <br />
                     <a className="vf-link" href="/metagenomics/help">
                       Go to the help page
