@@ -4,32 +4,15 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import TruncatedText from 'components/UI/TextTruncated';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import { getBiomeIcon } from 'utils/biomes';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useSuperStudyDetail from 'hooks/data/useSuperStudyDetail';
+import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 
-const initialPageSize = 10;
 const FlagshipTable: React.FC = () => {
-  const accession = useURLAccession();
-  const [flagshipPage] = useQueryParamState('flagship-page', 1, Number);
-  const [flagshipPageSize] = useQueryParamState(
-    'flagship-page_size',
-    initialPageSize,
-    Number
-  );
-  const [flagshipOrder] = useQueryParamState('flagship-order', '');
-  const { data, error, isStale } = useMGnifyData(
-    `super-studies/${accession}/flagship-studies`,
-    {
-      page: flagshipPage as number,
-      ordering: flagshipOrder as string,
-      page_size: flagshipPageSize as number,
-    }
-  );
-  const loading = !data;
+  const slug = useURLAccession();
+  const { data, loading, error } = useSuperStudyDetail(slug);
+
   if (loading) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
 
@@ -37,7 +20,7 @@ const FlagshipTable: React.FC = () => {
     {
       id: 'biome_id',
       Header: 'Biome',
-      accessor: (study) => study.relationships.biomes.data?.[0]?.id,
+      accessor: (study) => study.biome.lineage,
       Cell: ({ cell }) => (
         <span
           className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
@@ -49,28 +32,23 @@ const FlagshipTable: React.FC = () => {
     {
       id: 'study',
       Header: 'Study accession',
-      accessor: 'id',
+      accessor: 'accession',
       Cell: ({ cell }) => (
         <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
       ),
     },
     {
       Header: 'Name',
-      accessor: 'attributes.study-name',
+      accessor: 'title',
     },
-    {
-      Header: 'Abstract',
-      accessor: 'attributes.study-abstract',
-      Cell: ({ cell }) => <TruncatedText text={(cell.value as string) || ''} />,
-    },
-    {
-      Header: 'Samples Count',
-      accessor: 'attributes.samples-count',
-    },
+    // {
+    //   Header: 'Samples Count',
+    //   accessor: 'attributes.samples-count',
+    // },
     {
       id: 'last_update',
       Header: 'Last Updated',
-      accessor: 'attributes.last-update',
+      accessor: 'updated_at',
       Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
     },
   ];
@@ -80,17 +58,17 @@ const FlagshipTable: React.FC = () => {
       <summary>
         <b>Flagship Projects</b>
       </summary>
-      <EMGTable
-        cols={columns}
-        data={data as MGnifyResponseList}
-        initialPage={(flagshipPage as number) - 1}
-        initialPageSize={initialPageSize}
-        className="mg-anlyses-table"
-        loading={loading}
-        isStale={isStale}
-        namespace="flagship-"
-        dataCy="superStudyFlagshipTable"
-      />
+      <FixedHeightScrollable heightPx={640}>
+        <EMGTable
+          cols={columns}
+          showPagination={false}
+          data={data.flagship_studies}
+          className="mg-anlyses-table"
+          loading={loading}
+          namespace="flagship-"
+          dataCy="superStudyFlagshipTable"
+        />
+      </FixedHeightScrollable>
     </details>
   );
 };

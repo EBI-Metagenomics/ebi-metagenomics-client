@@ -86,3 +86,79 @@ export interface StudyList extends PaginatedList {
 export interface StudyDetail extends Study {
   downloads: Download[];
 }
+
+export interface GenomeCatalogue extends Record<string, unknown> {
+  catalogue_id: string;
+  version: string;
+  name: string;
+  description: string;
+  protein_catalogue_name: string;
+  protein_catalogue_description: string;
+  updated_at: string;
+  result_directory: string;
+  genome_count: number;
+  unclustered_genome_count: number;
+  ftp_url: string;
+  pipeline_version_tag: string;
+  catalogue_biome_label: string;
+  catalogue_type: 'prokaryotes' | 'eukaryotes' | 'viruses' | string;
+  other_stats: KeyValue;
+  biome: Biome;
+}
+
+export interface Genome {
+  accession: string;
+  ena_genome_accession: string;
+  ena_sample_accession: string;
+  ncbi_genome_accession: string;
+  img_genome_accession: string;
+  patric_genome_accession: string;
+  length: number;
+  num_contigs: number;
+  n_50: number;
+  gc_content: number;
+  type: 'MAG' | 'Isolate' | string;
+  completeness: number;
+  contamination: number;
+  catalogue_id: string;
+  geographic_origin: string;
+  geographic_range: string[];
+  biome: Biome;
+}
+
+export interface GenomeCatalogueList extends PaginatedList {
+  items: GenomeCatalogue[];
+}
+
+export type GenomeCatalogueDetail = GenomeCatalogue;
+
+export interface GenomeList extends PaginatedList {
+  items: Genome[];
+}
+
+export interface GenomeDetail extends Genome {
+  downloads: Download[];
+  catalogue: GenomeCatalogue;
+}
+
+export interface GenomeDetailWithAnnotations {
+  accession: string;
+  annotations: KeyValue;
+}
+
+export interface SuperStudy {
+  slug: string;
+  title: string;
+  description: string;
+  logo_url: string;
+}
+
+export interface SuperStudyList extends PaginatedList {
+  items: SuperStudy[];
+}
+
+export interface SuperStudyDetail extends SuperStudy {
+  flagship_studies: Study[];
+  related_studies: Study[];
+  genome_catalogues: GenomeCatalogue[];
+}
