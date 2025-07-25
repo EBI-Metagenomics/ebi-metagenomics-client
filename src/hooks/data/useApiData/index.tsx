@@ -20,6 +20,7 @@ const useApiData = <T,>({
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<ErrorFromFetch | null>(null);
   const [loading, setLoading] = useState(true);
+  const [stale, setStale] = useState(true);
   const protectedAxios = useProtectedApiCall();
   const { isAuthenticated } = useContext(UserContext);
   const axiosInstance =
@@ -44,6 +45,7 @@ const useApiData = <T,>({
       }
 
       try {
+        setStale(true);
         const response = await axiosInstance.get<T>(url);
         const processedData = transformResponse
           ? transformResponse(response.data)
@@ -60,13 +62,14 @@ const useApiData = <T,>({
         setError(errorFromFetch);
       } finally {
         setLoading(false);
+        setStale(false);
       }
     };
 
     fetchData();
   }, [url, transformResponse, axiosInstance]);
 
-  return { data, error, loading, url };
+  return { data, error, loading, stale, url };
 };
 
 export default useApiData;

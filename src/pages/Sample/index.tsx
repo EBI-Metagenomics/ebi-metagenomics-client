@@ -6,7 +6,6 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Sample/Overview';
-import AssociatedStudies from 'components/Study/Studies';
 import AssociatedRuns from 'components/Sample/Runs';
 import AssociatedAssemblies from 'components/Assembly/Assemblies';
 import RouteForHash from 'components/Nav/RouteForHash';
@@ -16,11 +15,11 @@ import ClearingHouseMetadata from 'components/Sample/ClearingHouseMetadata';
 import axios from 'axios';
 import marineRegionsEezData from 'public/data/marine-regions-eez-data.json';
 import {
+  defaultEezMetadata,
   displayAbsInfo,
   EezMetadata,
-  defaultEezMetadata,
-  SovereignsArray,
   Sov,
+  SovereignsArray,
 } from 'utils/eezAbs';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import HTMLRenderer from 'components/UI/HTMLRederer';
@@ -172,7 +171,7 @@ const SamplePage: React.FC = () => {
                 <AnnotationMetadata sampleAccession={accession} />
               </RouteForHash>
               <RouteForHash hash="#studies">
-                <AssociatedStudies rootEndpoint="samples" />
+                {/* <AssociatedStudies rootEndpoint="samples" /> */}
               </RouteForHash>
               <RouteForHash hash="#runs">
                 <AssociatedRuns />

@@ -11,34 +11,8 @@ import Accordion, {
   AccordionList,
 } from 'components/UI/Accordion';
 import EMGModal from 'components/UI/EMGModal';
-
-type Tag = {
-  name: string;
-  uri: string;
-};
-
-type Mention = {
-  exact: string;
-  id: string;
-  postfix: string;
-  prefix: string;
-  provider: string;
-  section: string;
-  type: string;
-  tags: Tag[];
-};
-
-type Annotation = {
-  annotation_text: string;
-  mentions: Mention[];
-};
-
-type AnnotationGroup = {
-  annotation_type: string;
-  description: string;
-  title: string;
-  annotations: Annotation[];
-};
+import { usePublicationAnnotations } from 'hooks/data/usePublicationDetail';
+import { AnnotationGroup } from 'interfaces';
 
 const AnnotationSuperGroup: React.FC<{
   superGroup: AnnotationGroup[];
@@ -131,20 +105,20 @@ const AnnotationSuperGroup: React.FC<{
   );
 };
 type PublicationAnnotationProps = {
-  publicationId: string;
   pubmedId: string;
 };
 
 const PublicationAnnotations: React.FC<PublicationAnnotationProps> = ({
-  publicationId,
   pubmedId,
 }) => {
-  const { data, loading, error } = useMGnifyData(
-    `publications/${publicationId}/europe_pmc_annotations`
-  );
+  const {
+    data: annotations,
+    loading,
+    error,
+  } = usePublicationAnnotations(parseInt(pubmedId, 10));
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
-  const annotations = data.data as unknown as Record<string, AnnotationGroup[]>;
+
   const hasAnnotations = !!(
     annotations?.sample_processing?.length || annotations.other?.length
   );
@@ -191,14 +165,16 @@ const PublicationAnnotations: React.FC<PublicationAnnotationProps> = ({
 
 export const PublicationAnnotationsPopupBadge: React.FC<
   PublicationAnnotationProps
-> = ({ publicationId, pubmedId }) => {
-  const { data, loading, error } = useMGnifyData(
-    `publications/${publicationId}/europe_pmc_annotations`
-  );
+> = ({ pubmedId }) => {
+  const {
+    data: annotations,
+    loading,
+    error,
+  } = usePublicationAnnotations(parseInt(pubmedId, 10));
   const [isModalOpen, setIsModalOpen] = useState(false);
   if (loading) return <Loading size="small" />;
   if (error) return <FetchError error={error} />;
-  const annotations = data.data as unknown as Record<string, AnnotationGroup[]>;
+
   const hasAnnotations = !!(
     annotations?.sample_processing?.length || annotations.other?.length
   );
@@ -208,13 +184,10 @@ export const PublicationAnnotationsPopupBadge: React.FC<
       <EMGModal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        contentLabel={`Europe PMC Annotations for ${publicationId}`}
+        contentLabel={`Europe PMC Annotations for ${pubmedId}`}
       >
         <h1>Annotations from Europe PMC</h1>
-        <PublicationAnnotations
-          publicationId={publicationId}
-          pubmedId={pubmedId}
-        />
+        <PublicationAnnotations pubmedId={pubmedId} />
       </EMGModal>
       <button
         className="vf-button vf-button--link vf-button--sm"
