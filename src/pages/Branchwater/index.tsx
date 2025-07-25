@@ -16,7 +16,7 @@ interface SearchResult {
   containment?: number | string;
   geo_loc_name_country_calc?: string;
   organism?: string;
-  lat_lon?: string;
+  lat_lon?: [number, number];
   [key: string]: any; // For other properties that might be in the search results
 }
 
@@ -109,13 +109,16 @@ const Branchwater = () => {
 
           try {
             // Parse lat_lon string format like "40.7128N, 74.0060W"
-            const match = item.lat_lon.match(
-              /([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/
-            );
-            if (!match) return null;
+            // const match = item.lat_lon.match(
+            //   /([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/
+            // );
+            // if (!match) return null;
+            //
+            // const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
+            // const lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
 
-            const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
-            const lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
+            const lat = item.lat_lon[0];
+            const lng = item.lat_lon[1];
 
             // Return in MGnifyDatum format expected by SamplesMap
             return {
@@ -395,7 +398,7 @@ const Branchwater = () => {
     };
   }, [signature]);
 
-  // Update visualization data when filtered results change
+  // Update visualization data when filters change
   useEffect(() => {
     if (searchResults.length > 0) {
       const filteredResults = getFilteredResults();
@@ -407,7 +410,7 @@ const Branchwater = () => {
       setMapSamples(mapData);
     }
   }, [
-    searchResults,
+    filters,
     getFilteredResults,
     prepareVisualizationData,
     convertToMapSamples,
@@ -1027,55 +1030,55 @@ const Branchwater = () => {
                             // Define URLs for first two results
                             const accessionLinks = [
                               'https://www.ebi.ac.uk/metagenomics/runs/ERR868490',
-                              'https://www.ebi.ac.uk/metagenomics/runs/ERR1726685'
+                              'https://www.ebi.ac.uk/metagenomics/runs/ERR1726685',
                             ];
-                            
+
                             return (
-                            // eslint-disable-next-line react/no-array-index-key
-                            <tr className="vf-table__row" key={index}>
-                              <td className="vf-table__cell">
-                                {index < 2 ? (
+                              // eslint-disable-next-line react/no-array-index-key
+                              <tr className="vf-table__row" key={index}>
+                                <td className="vf-table__cell">
+                                  {index < 2 ? (
+                                    <a
+                                      href={accessionLinks[index]}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="vf-link"
+                                    >
+                                      {entry.acc}
+                                    </a>
+                                  ) : (
+                                    entry.acc
+                                  )}
+                                </td>
+                                <td className="vf-table__cell">
+                                  {entry.assay_type}
+                                </td>
+                                <td className="vf-table__cell">
+                                  {entry.bioproject}
+                                </td>
+                                <td className="vf-table__cell">
                                   <a
-                                    href={accessionLinks[index]}
+                                    href={entry.biosample_link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="vf-link"
                                   >
-                                    {entry.acc}
+                                    Link
                                   </a>
-                                ) : (
-                                  entry.acc
-                                )}
-                              </td>
-                              <td className="vf-table__cell">
-                                {entry.assay_type}
-                              </td>
-                              <td className="vf-table__cell">
-                                {entry.bioproject}
-                              </td>
-                              <td className="vf-table__cell">
-                                <a
-                                  href={entry.biosample_link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  Link
-                                </a>
-                              </td>
-                              <td className="vf-table__cell">{entry.cANI}</td>
-                              <td className="vf-table__cell">
-                                {entry.collection_date_sam || 'NP'}
-                              </td>
-                              <td className="vf-table__cell">
-                                {entry.containment}
-                              </td>
-                              <td className="vf-table__cell">
-                                {entry.geo_loc_name_country_calc || 'NP'}
-                              </td>
-                              <td className="vf-table__cell">
-                                {entry.organism}
-                              </td>
-                            </tr>
+                                </td>
+                                <td className="vf-table__cell">{entry.cANI}</td>
+                                <td className="vf-table__cell">
+                                  {entry.collection_date_sam || 'NP'}
+                                </td>
+                                <td className="vf-table__cell">
+                                  {entry.containment}
+                                </td>
+                                <td className="vf-table__cell">
+                                  {entry.geo_loc_name_country_calc || 'NP'}
+                                </td>
+                                <td className="vf-table__cell">
+                                  {entry.organism}
+                                </td>
+                              </tr>
                             );
                           }
                         )}
