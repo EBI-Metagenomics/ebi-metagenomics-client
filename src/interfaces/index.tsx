@@ -162,3 +162,79 @@ export interface SuperStudyDetail extends SuperStudy {
   related_studies: Study[];
   genome_catalogues: GenomeCatalogue[];
 }
+
+export interface PublicationMetadata {
+  authors: string;
+  doi?: string;
+  iso_journal?: string;
+  pub_type?: string;
+  pubmed_central_id?: number;
+  isbn?: string;
+  volume?: string | number;
+  [key: string]: string | number | undefined;
+}
+
+export interface Publication {
+  pubmed_id: number;
+  title: string;
+  published_year: number;
+  metadata: PublicationMetadata;
+}
+
+export interface PublicationList extends PaginatedList {
+  items: Publication[];
+}
+
+export interface PublicationStudy {
+  accession: string;
+  ena_accessions: string[];
+  title: string;
+  biome: Biome;
+  updated_at: string;
+}
+
+export interface PublicationDetail extends Publication {
+  studies: PublicationStudy[];
+}
+
+export interface PublicationEuropePmcCore extends Record<string, unknown> {
+  version: number;
+  hit_count: number;
+  result: {
+    abstractText: string;
+    [key: string]: unknown;
+  };
+}
+
+type Tag = {
+  name: string;
+  uri: string;
+};
+
+type Mention = {
+  exact: string;
+  id: string;
+  postfix: string;
+  prefix: string;
+  provider: string;
+  section: string;
+  type: string;
+  tags: Tag[];
+};
+
+type Annotation = {
+  annotation_text: string;
+  mentions: Mention[];
+};
+
+export type AnnotationGroup = {
+  annotation_type: string;
+  description: string;
+  title: string;
+  annotations: Annotation[];
+};
+
+export type PublicationEuropePmcAnnotations = {
+  other: AnnotationGroup[];
+  sample_processing: AnnotationGroup[];
+};
