@@ -20,18 +20,15 @@ export class BGZipService {
 
   private readonly indexFileUrl: string;
 
-  constructor(private download: Download) {
-    console.groupCollapsed('Create BGZip Service');
+  constructor(private download: Download, autoInitialize = true) {
     this.dataFileUrl = this.download.url;
-    // this.dataFileUrl =
-    //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/ERZ1049444_go_summary.tsv.gz';
     this.indexFileUrl = new URL(
-      this.download.index_file.relative_url,
+      this.download.index_file?.relative_url,
       this.download.url.replace(/[^/]+$/, '')
     ).toString();
-    // this.indexFileUrl =
-    //   'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/assembly/ERZ1049444_go_summary.tsv.gz.gzi';
-    this.initialize().then(() => console.groupEnd());
+    if (autoInitialize) {
+      this.initialize().then(() => console.groupEnd());
+    }
   }
 
   /**
