@@ -104,7 +104,7 @@ describe('Study page', function() {
             cy.contains('MGYA00000011').should('be.visible');
         });
 
-        it.only('Analysis table download should paginate', function() {
+        it('Analysis table download should paginate', function() {
             const writtenChunks = [];
             openPage(origPage, {
                 onBeforeLoad(win) {
