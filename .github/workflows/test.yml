@@ -4,6 +4,7 @@ on: [ push, pull_request ]
 env:
   EMG_CONFIG: ${{ github.workspace }}/client-repo/ci/config.yaml
   API_URL: http://localhost:9000/metagenomics/api/v1/
+  API_V2_URL: http://localhost:8000/
   SEARCH_URL: https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_
   DEPLOYMENT_SUBFOLDER: /metagenomics
   BASE_URL: http://localhost:9000/metagenomics/
@@ -26,7 +27,7 @@ jobs:
         env: # Or as an environment variable
           MAPS_KEY: ${{ secrets.GOOGLE_MAPS_DEV_KEY }}
         run: |
-          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\"}" > "$(pwd)/config.private.json"
+          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\", \"api_v2\": \"$API_V2_URL\"}" > "$(pwd)/config.private.json"
 
       - name: 📜 - Set up JS Node 23
         uses: actions/setup-node@v4
@@ -52,10 +53,12 @@ jobs:
           start: npm run start
           wait-on: http://localhost:9000/
           wait-on-timeout: 60
+          env: api_v2
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          API_URL:
 
       - name: 📉 - Upload coverage to Codecov
         uses: codecov/codecov-action@v3
