@@ -53,12 +53,10 @@ jobs:
           start: npm run start
           wait-on: http://localhost:9000/
           wait-on-timeout: 60
-          env: api_v2
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          API_URL:
 
       - name: 📉 - Upload coverage to Codecov
         uses: codecov/codecov-action@v3
