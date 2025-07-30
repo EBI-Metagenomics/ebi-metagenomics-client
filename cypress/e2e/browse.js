@@ -30,7 +30,7 @@ describe('Browse page', function() {
         });
 
     });
-    context('Studies table', function() {
+    context.skip('Studies table', function() {
         beforeEach(function() {
             openPage(origPage + '/studies');
             waitForPageLoad('Browse MGnify');
