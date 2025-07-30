@@ -1,0 +1,24 @@
+{
+  "count": 11,
+  "items": [
+    {
+      "study_accession": "MGYS00000001",
+      "accession": "MGYA00000011",
+      "experiment_type": "Amplicon",
+      "run": {
+        "accession": "SRR1111111",
+        "instrument_model": null,
+        "instrument_platform": null
+      },
+      "sample": {
+        "accession": "SAMN07793787",
+        "ena_accessions": [
+          "SAMN07793787"
+        ],
+        "updated_at": "2025-07-29T11:32:53.831Z"
+      },
+      "assembly": null,
+      "pipeline_version": "V6"
+    }
+  ]
+}

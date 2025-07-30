@@ -15,7 +15,7 @@ const BrowseSuperStudies: React.FC = () => {
   const [pageSize] = useQueryParamState('page_size', 25, Number);
   const [hasData, setHasData] = useState(false);
 
-  const { data, loading, error } = useSuperStudiesList({
+  const { data, loading, error, download } = useSuperStudiesList({
     page,
     pageSize,
   });
@@ -63,7 +63,7 @@ const BrowseSuperStudies: React.FC = () => {
           sortable
           loading={loading}
           showPagination={false}
-          // downloadURL={downloadURL}
+          onDownloadRequested={download}
         />
       )}
     </section>

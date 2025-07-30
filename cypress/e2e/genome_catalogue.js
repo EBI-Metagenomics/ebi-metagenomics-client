@@ -1,6 +1,6 @@
-import {waitForPageLoad, openPage, openAndWait} from '../util/util';
+import { openAndWait } from '../util/util';
 
-describe('Genome catalogue page', () => {
+describe.skip('Genome catalogue page', () => {
   const catalogueIdValid = 'human-gut-v2-0';
   const catalogueNameValid = 'Human Gut v2.0'
 

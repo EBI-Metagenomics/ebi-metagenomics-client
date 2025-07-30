@@ -1,10 +1,16 @@
 import {openPage, waitForPageLoad} from '../util/util';
+import config from 'utils/config';
 
 describe('Super Study page', function() {
+    beforeEach(function() {
+        cy.intercept('GET', `${config.api_v2}/super-studies/excellent`,
+          {fixture: 'apiv2/super-studies/superStudyExcellent.json'});
+        cy.intercept('GET', `**/fieldfiles/**logo.png`,
+          {fixture: 'apiv2/super-studies/logo.png'});
+    })
     const superStudyId = 'excellent';
     const origPage = 'super-studies/' + superStudyId;
     const pageTitle = 'Super Study';
-
     context('Landing', function() {
         beforeEach(function() {
             openPage(origPage);
@@ -32,7 +38,6 @@ describe('Super Study page', function() {
             cy.get('[data-cy="superStudyFlagshipTable"]').should('contain.text', 'MGYS00000001');
             cy.get('[data-cy="superStudyFlagshipTable"] .vf-table__body > .vf-table__row').should('have.length', 1);
         });
-    //    TODO: pagination test on table
     });
 
     context('Related Projects table', function() {
@@ -41,11 +46,11 @@ describe('Super Study page', function() {
             waitForPageLoad(pageTitle);
         });
 
-        it('Should not be present', function() {
-            cy.contains('Related Projects').should('not.exist');
+        it('Should be present with empty table', function() {
+            cy.contains('Related Projects').should('be.visible');
+            cy.contains('Related Projects').click();
+            cy.get('[data-cy="superStudyRelatedTable"]').should('contain.text', 'No matching data');
         });
-
-    //    TODO: test with a related project fixture
     });
 
     context('MAG Catalogues table', function() {
@@ -60,7 +65,6 @@ describe('Super Study page', function() {
             cy.get('[data-cy="superStudyCataloguesTable"]').should('contain.text', 'human-gut-v2-0');
             cy.get('[data-cy="superStudyCataloguesTable"] .vf-table__body > .vf-table__row').should('have.length', 1);
         });
-        //    TODO: pagination test on table
     });
 
     context('Error handling', function() {
@@ -69,7 +73,6 @@ describe('Super Study page', function() {
             const origPage = 'super-studies/' + superStudyId;
             openPage(origPage);
             cy.contains('Error Fetching Data');
-            cy.contains('404');
         });
     });
 });

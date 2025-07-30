@@ -7,8 +7,8 @@ export let Util = {
   getPageURL: function(page) {
     return Config.BASE_URL + (page !== "overview" ? page : "");
   },
-  openPage: function(page) {
-    return cy.visit(Util.getPageURL(page));
+  openPage: function(page, visitOptions = {}) {
+    return cy.visit(Util.getPageURL(page), visitOptions);
   },
   waitForPageLoad: function(title) {
     cy.get("h2").should("contain", title);

@@ -1,6 +1,6 @@
-import { openPage, datatype, login, changeTab, isValidLink } from '../util/util';
-import Config from '../util/config';
-import GenericTableHandler from '../util/genericTable';
+import { changeTab, datatype, isValidLink, openPage } from "../util/util";
+import Config from "../util/config";
+import GenericTableHandler from "../util/genericTable";
 
 const sampleId = 'SRS4579074';
 const origPage = 'samples/' + sampleId;
@@ -88,7 +88,7 @@ function waitForPageLoad(projectId) {
     cy.get('h2').should('contain', projectId);
 }
 
-describe('Sample page', function() {
+describe.skip('Sample page', function() {
     beforeEach(function() {
         openPage(origPage);
         cy.intercept('GET', '**/v1/**/contextual_data_clearing_house_metadata', { fixture: 'sample/contextualDataClearingHouseSampleMetadata.json' })

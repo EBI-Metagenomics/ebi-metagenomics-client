@@ -1,0 +1,193 @@
+{
+  "count": 11,
+  "items": [
+    {
+      "study_accession": "MGYS00000001",
+      "accession": "MGYA00000001",
+      "experiment_type": "Amplicon",
+      "run": {
+        "accession": "SRR1111111",
+        "instrument_model": null,
+        "instrument_platform": null
+      },
+      "sample": {
+        "accession": "SAMN07793787",
+        "ena_accessions": [
+          "SAMN07793787"
+        ],
+        "updated_at": "2025-07-29T11:32:53.831Z"
+      },
+      "assembly": null,
+      "pipeline_version": "V6"
+    },
+    {
+      "study_accession": "MGYS00000001",
+      "accession": "MGYA00000002",
+      "experiment_type": "Assembly",
+      "run": null,
+      "sample": {
+        "accession": "SAMN07793787",
+        "ena_accessions": [
+          "SAMN07793787"
+        ],
+        "updated_at": "2025-07-29T11:32:53.831Z"
+      },
+      "assembly": {
+        "accession": "ERZ857107",
+        "updated_at": "2025-07-29T11:32:54.004Z"
+      },
+      "pipeline_version": "V6"
+    },
+    {
+      "study_accession": "MGYS00000001",
+      "accession": "MGYA00000003",
+      "experiment_type": "Metagenomic",
+      "run": {
+        "accession": "SRR6180434",
+        "instrument_model": null,
+        "instrument_platform": null
+      },
+      "sample": {
+        "accession": "SAMN07793787",
+        "ena_accessions": [
+          "SAMN07793787"
+        ],
+        "updated_at": "2025-07-29T11:32:53.831Z"
+      },
+      "assembly": null,
+      "pipeline_version": "V6"
+    },
+    {
+      "study_accession": "MGYS00000001",
+      "accession": "MGYA00000004",
+      "experiment_type": "Metagenomic",
+      "run": {
+        "accession": "SRR6180435",
+        "instrument_model": null,
+        "instrument_platform": null
+      },
+      "sample": {
+        "accession": "SAMN07793788",
+        "ena_accessions": [
+          "SAMN07793788"
+        ],
+        "updated_at": "2025-07-29T11:32:53.832Z"
+      },
+      "assembly": null,
+      "pipeline_version": "V6"
+    },
+    {
+      "study_accession": "MGYS00000001",
+      "accession": "MGYA00000005",
+      "experiment_type": "Amplicon",
+      "run": {
+        "accession": "SRR6704248",
+        "instrument_model": null,
+        "instrument_platform": null
+      },
+      "sample": {
+        "accession": "SAMN08514017",
+        "ena_accessions": [
+          "SAMN08514017"
+        ],
+        "updated_at": "2025-07-29T11:32:53.834Z"
+      },
+      "assembly": null,
+      "pipeline_version": "V6"
+    },
+    {
+      "study_accession": "MGYS00000001",
+      "accession": "MGYA00000006",
+      "experiment_type": "Amplicon",
+      "run": {
+        "accession": "SRR1111111",
+        "instrument_model": null,
+        "instrument_platform": null
+      },
+      "sample": {
+        "accession": "SAMN07793787",
+        "ena_accessions": [
+          "SAMN07793787"
+        ],
+        "updated_at": "2025-07-29T11:32:53.831Z"
+      },
+      "assembly": null,
+      "pipeline_version": "V6"
+    },
+    {
+      "study_accession": "MGYS00000001",
+      "accession": "MGYA00000007",
+      "experiment_type": "Assembly",
+      "run": null,
+      "sample": {
+        "accession": "SAMN07793787",
+        "ena_accessions": [
+          "SAMN07793787"
+        ],
+        "updated_at": "2025-07-29T11:32:53.831Z"
+      },
+      "assembly": {
+        "accession": "ERZ857107",
+        "updated_at": "2025-07-29T11:32:54.004Z"
+      },
+      "pipeline_version": "V6"
+    },
+    {
+      "study_accession": "MGYS00000001",
+      "accession": "MGYA00000008",
+      "experiment_type": "Metagenomic",
+      "run": {
+        "accession": "SRR6180434",
+        "instrument_model": null,
+        "instrument_platform": null
+      },
+      "sample": {
+        "accession": "SAMN07793787",
+        "ena_accessions": [
+          "SAMN07793787"
+        ],
+        "updated_at": "2025-07-29T11:32:53.831Z"
+      },
+      "assembly": null,
+      "pipeline_version": "V6"
+    },
+    {
+      "study_accession": "MGYS00000001",
+      "accession": "MGYA00000009",
+      "experiment_type": "Metagenomic",
+      "run": {
+        "accession": "SRR6180435",
+        "instrument_model": null,
+        "instrument_platform": null
+      },
+      "sample": {
+        "accession": "SAMN07793788",
+        "ena_accessions": [
+          "SAMN07793788"
+        ],
+        "updated_at": "2025-07-29T11:32:53.832Z"
+      },
+      "assembly": null,
+      "pipeline_version": "V6"
+    },
+    {
+      "study_accession": "MGYS00000001",
+      "accession": "MGYA00000010",
+      "experiment_type": "Amplicon",
+      "run": {
+        "accession": "SRR6704248",
+        "instrument_model": null,
+        "instrument_platform": null
+      },
+      "sample": {
+        "accession": "SAMN08514017",
+        "ena_accessions": [
+          "SAMN08514017"
+        ],
+        "updated_at": "2025-07-29T11:32:53.834Z"
+      },
+      "assembly": null,
+      "pipeline_version": "V6"
+    }
+  ]
+}
