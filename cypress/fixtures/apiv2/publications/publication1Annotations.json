@@ -1,0 +1,70 @@
+{
+  "other":
+  [
+    {
+      "annotation_type": "Gene",
+      "annotations":
+      [
+        {
+          "annotation_text": "mtrna",
+          "mentions":
+          [
+            {
+              "exact": "mtRNA",
+              "icase_text": "mtrna",
+              "id": null,
+              "postfix": null,
+              "prefix": null,
+              "provider": "Metagenomics",
+              "section": null,
+              "tags":
+              [
+                {
+                  "name": "mtRNA",
+                  "uri": "https://www.ebi.ac.uk/ols/ontologies/NCIT/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FNCIT_C25975"
+                }
+              ],
+              "type": "Gene"
+            }
+          ]
+        }
+      ],
+      "description": "Target gene(s) (e.g. hypervariable regions of 16s/18s rRNA gene)",
+      "title": "Gene"
+    }
+  ],
+  "sample_processing":
+  [
+    {
+      "annotation_type": "LS",
+      "annotations":
+      [
+        {
+          "annotation_text": "rna-seq",
+          "mentions":
+          [
+            {
+              "exact": "RNA-seq",
+              "icase_text": "rna-seq",
+              "id": null,
+              "postfix": null,
+              "prefix": null,
+              "provider": "Metagenomics",
+              "section": null,
+              "tags":
+              [
+                {
+                  "name": "RNA-seq",
+                  "uri": "http://www.ebi.ac.uk/efo/EFO_0002770"
+                }
+              ],
+              "type": "LS"
+            }
+          ]
+        }
+      ],
+      "description": "e.g. amplicon, whole metagenome",
+      "title": "Library strategy"
+    }
+  ]
+}

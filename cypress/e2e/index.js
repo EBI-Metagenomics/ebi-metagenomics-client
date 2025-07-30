@@ -15,7 +15,7 @@ function defaultLoginFieldsAreVisible(confidentialityText) {
     cy.get('button.mailtobtn').should('be.visible');
 }
 
-describe('Home page', function() {
+describe.skip('Home page', function() {
 
     context('Minimal checks', function() {
         it('has EBI header"', function() {

@@ -1,0 +1,25 @@
+{
+  "accession": "MGYS00000001",
+  "ena_accessions": [
+    "PRJNA398089"
+  ],
+  "title": "Project 1",
+  "biome": {
+    "biome_name": "Plants",
+    "lineage": "root:Host-associated:Plants"
+  },
+  "updated_at": "2025-07-29T11:32:54.168Z",
+  "downloads": [
+    {
+      "alias": "PRJNA398089_SILVA-SSU_study_summary.tsv",
+      "download_type": "Taxonomic analysis",
+      "file_type": "tsv",
+      "long_description": "Summary of SILVA-SSU taxonomic assignments, across all runs in the study",
+      "short_description": "Summary of SILVA-SSU taxonomies",
+      "download_group": "study_summary.v6.amplicon",
+      "file_size_bytes": null,
+      "index_file": null,
+      "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089//study-summaries/amplicon_study_summary.tsv"
+    }
+  ]
+}

@@ -1,21 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { unescape } from 'lodash-es';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList, MGnifyDatum } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
-import { getBiomeIcon } from 'utils/biomes';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import InfoBanner from 'components/UI/InfoBanner';
 import { singularise } from 'utils/strings';
 import useStudyAnalysesList from 'hooks/data/useStudyAnalyses';
 import { Analysis, AnalysisList } from 'interfaces';
 
-const expectedPageSize = 100;
+const expectedPageSize = 10;
 type AssociatedAnaysesProps = {
   rootEndpoint: string;
 };
@@ -25,12 +21,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const singularNamespace = singularise(rootEndpoint);
   const [analysesPage] = useQueryParamState('analyses-page', 1, Number);
 
-  const {
-    data,
-    error,
-    loading,
-    url: downloadURL,
-  } = useStudyAnalysesList(accession, {
+  const { data, error, loading, download } = useStudyAnalysesList(accession, {
     page: analysesPage,
   });
 
@@ -131,7 +122,8 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       loading={loading}
       namespace="analyses-"
       showPagination={showPagination}
-      downloadURL={downloadURL}
+      onDownloadRequested={download}
+      expectedPageSize={expectedPageSize}
     />
   );
 };

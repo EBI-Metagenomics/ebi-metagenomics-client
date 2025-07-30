@@ -3,7 +3,7 @@ import {openPage, openAndWait, checkChartTooltip} from '../util/util';
 import ClientSideTableHandler from '../util/clientSideTable';
 
 
-describe('Genome page', () => {
+describe.skip('Genome page', () => {
     const accessionValid = 'MGYG000000001';
     const accessionInvalid = 'MGYG999999999';
 

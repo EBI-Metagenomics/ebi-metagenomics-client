@@ -3,12 +3,14 @@ import axios, { AxiosError } from 'axios';
 import { ErrorFromFetch, ErrorTypes } from 'hooks/data/useData';
 import useProtectedApiCall from 'hooks/useProtectedApiCall';
 import UserContext from 'pages/Login/UserContext';
+import paginatedDownloader from 'utils/paginatedDownloader';
 
 interface FetchDataOptions<T> {
   url: string | null;
   transformResponse?: (data: T) => T;
   requireAuth?: boolean;
   includeAuthIfPresent?: boolean;
+  pageParameter?: string;
 }
 
 const useApiData = <T,>({
@@ -16,7 +18,9 @@ const useApiData = <T,>({
   transformResponse,
   requireAuth = false,
   includeAuthIfPresent = true,
+  pageParameter = undefined,
 }: FetchDataOptions<T>) => {
+  const { config } = useContext(UserContext);
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<ErrorFromFetch | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,8 +72,16 @@ const useApiData = <T,>({
 
     fetchData();
   }, [url, transformResponse, axiosInstance]);
+  const download = () =>
+    paginatedDownloader(
+      url,
+      pageParameter,
+      config.whenDownloadingListsFromApi.maxPages,
+      config.whenDownloadingListsFromApi.cadenceMs,
+      axiosInstance
+    );
 
-  return { data, error, loading, stale, url };
+  return { data, error, loading, stale, url, download };
 };
 
 export default useApiData;

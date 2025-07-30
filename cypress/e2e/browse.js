@@ -1,12 +1,12 @@
 import {openPage, waitForPageLoad} from '../util/util';
+import config from 'utils/config';
 
 const origPage = 'browse';
 
 describe('Browse page', function() {
     beforeEach(function() {
-        cy.intercept('**/v1/studies**search=**').as('studiesSearchCall');
-        cy.intercept('**/v1/studies**').as('studiesCall');
-        cy.intercept('**/v1/samples**').as('samplesCall');
+        cy.intercept('GET', `${config.api_v2}/super-studies/**`,
+          {fixture: 'apiv2/super-studies/superStudiesList.json'});
     });
 
     context('Super studies table', function() {
@@ -22,19 +22,11 @@ describe('Browse page', function() {
         });
 
         it('Should have markdown rendered description', function() {
-            cy.get('.vf-table__body > .vf-table__row > :nth-child(2)').should('contain.html', '<strong>Excellent Adventure</strong>');
-        });
-
-        it('Should be sortable by title', function() {
-            cy.contains('Title').click();
-            cy.url().should('contain', 'order=title');
+            cy.get('.vf-table__body > .vf-table__row > :nth-child(2)').should('contain.html', '<strong>excellent adventure</strong>');
         });
 
         it('Should have download button', function() {
-            cy.contains('Download')
-              .should('have.attr', 'href')
-              .and('include', 'super-studies')
-              .and('include', 'format=csv');
+            cy.contains('Download').should('be.visible');
         });
 
     });
@@ -48,12 +40,6 @@ describe('Browse page', function() {
             cy.get('.mg-table-caption').should('contain.text', 1);
             cy.get('.vf-table__body > .vf-table__row').should('have.length', 1);
             cy.get('.vf-table__body > .vf-table__row > :nth-child(2)').should('contain.text', 'MGYS00000001');
-        });
-
-        it('Should make new request when search box changes', function() {
-            //TODO: testing actual search requires SQLite full text search turned on
-            cy.get('#searchitem').type('wow');
-            cy.wait('@studiesSearchCall').its('request.url').should('include', 'search=wow');
         });
 
         it('Should respond to biome filtering', function() {

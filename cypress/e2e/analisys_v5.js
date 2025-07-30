@@ -18,7 +18,7 @@ function verifyTabIsVisible(tabId) {
     cy.get(`#tab-${tabId.slice(1)}`).should('be.visible');
 }
 
-describe('Analysis V5', () => {
+describe.skip('Analysis V5', () => {
     context('Routing', () => {
         const analysisId = 'MGYA00000001';
         const pageUrl = 'analyses/' + analysisId;

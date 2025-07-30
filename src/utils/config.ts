@@ -4,6 +4,7 @@ import { merge } from 'lodash-es';
 
 export type ConfigType = {
   api: string;
+  api_v2: string;
   ebisearch: string;
   website: string;
   blog: string;
@@ -19,6 +20,10 @@ export type ConfigType = {
   };
   jupyterLabURL: string;
   magsPipelineRepo: string;
+  whenDownloadingListsFromApi?: {
+    maxPages: number;
+    cadenceMs: number;
+  };
 };
 
 export default merge(config, privateConfig || {});

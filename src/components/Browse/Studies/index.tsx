@@ -20,7 +20,7 @@ const BrowseStudies: React.FC = () => {
   const {
     data: studiesList,
     loading,
-    url: downloadURL,
+    download,
   } = useStudiesList({
     page,
     order,
@@ -91,8 +91,7 @@ const BrowseStudies: React.FC = () => {
           initialPage={(page as number) - 1}
           sortable
           loading={loading}
-          // showTextFilter
-          downloadURL={downloadURL}
+          onDownloadRequested={download}
         />
       )}
     </section>
