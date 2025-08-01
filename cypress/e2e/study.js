@@ -1,6 +1,7 @@
 import { changeTab, openPage, waitForPageLoad } from '../util/util';
 import config from 'utils/config';
 import { mockShowSaveFilePicker } from '../util/mockFileSystem';
+import { first, last, max } from 'lodash-es';
 
 const projectId = 'MGYS00000001';
 const origPage = 'studies/' + projectId;
@@ -122,6 +123,93 @@ describe('Study page', function() {
               expect(writtenChunks.join('\n')).to.include('MGYA00000011');  // has the second page
             });
         });
+
+      it('Analysis table download should handle empty analyses list', function() {
+        // TODO: probably better a unit test rather than e2e here
+        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=1`,
+          {fixture: 'apiv2/emptyList.json'}).as('getAnalysesPage1');
+
+        const writtenChunks = [];
+        openPage(origPage, {
+          onBeforeLoad(win) {
+            mockShowSaveFilePicker(win, "analyses.tsv", {content: writtenChunks});
+          },
+        });
+        cy.get('[data-cy="emg-table-download-button"]').click();
+        cy.contains("No data to download").should('be.visible');
+
+        cy.wrap(null).then(() => {
+          expect(writtenChunks.length).to.equal(0);
+        });
+      });
+
+      it('Analysis table download should throttle as requested by API', function() {
+        // TODO: probably better a unit test rather than e2e here
+        let page2CallCount = 0;
+        let callTimestamps = [];
+
+        cy.fixture('apiv2/studies/studyMGYS00000001AnalysesPage2.json').then((fixtureData) => {
+          cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=2`, (req) => {
+            page2CallCount ++;
+            const now = Date.now();
+            callTimestamps.push(now);
+
+            if (page2CallCount < 3) {
+              // throttled twice
+              req.reply({
+                statusCode: 429,
+                body: 'Rate limited by API',
+              });
+            } else {
+              req.reply({
+                statusCode: 200,
+                body: fixtureData,
+                headers: { 'content-type': 'application/json' },
+              });
+            }
+          });
+        });
+
+        const writtenChunks = [];
+        openPage(origPage, {
+          onBeforeLoad(win) {
+            mockShowSaveFilePicker(win, "analyses.tsv", {content: writtenChunks});
+          },
+        });
+        cy.get('[data-cy="emg-table-download-button"]').click();
+        cy.contains("Downloaded 10 rows of 11").should('be.visible');
+        cy.contains("slow down this request").should('be.visible');
+        cy.contains("Downloaded 11 rows of 11").should('be.visible');
+        cy.contains("Downloaded table to analyses.tsv").should('be.visible');
+
+        cy.wrap(null).then(() => {
+          expect(writtenChunks.join('\n')).to.include('MGYA00000011');  // has the second page
+        });
+
+        let expectedTimeBeforeSuccessfulPage2 = config.whenDownloadingListsFromApi.cadenceMs * 1.5 + config.whenDownloadingListsFromApi.cadenceMs * 1.5 * 1.5;
+        // after first 429, cadence should be 1.5x, and another 1.5x on top after second request
+        cy.wrap(null).then(() => {
+          expect(last(callTimestamps) - first(callTimestamps)).to.be.greaterThan(expectedTimeBeforeSuccessfulPage2 * 0.9);  // a bit of testing tolerance
+        });
+      });
+
+      it('Analysis table download should show error if API response is bad', function() {
+        // TODO: probably better a unit test rather than e2e here
+
+        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=2`, {
+          statusCode: 500,
+          body: 'Internal Server Error',
+        }).as('serverError');
+
+        const writtenChunks = [];
+        openPage(origPage, {
+          onBeforeLoad(win) {
+            mockShowSaveFilePicker(win, "analyses.tsv", {content: writtenChunks});
+          },
+        });
+        cy.get('[data-cy="emg-table-download-button"]').click();
+        cy.contains("The data cannot be fetched just now").should('be.visible');
+      });
     });
 
     context('Error handling', function() {

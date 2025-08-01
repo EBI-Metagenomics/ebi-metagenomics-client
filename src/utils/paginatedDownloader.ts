@@ -63,8 +63,8 @@ const paginatedDownloader = async (
   });
 
   const writer = await fileHandle.createWritable();
-
   while (pageNumber < maxPages) {
+    let hasError = false;
     /* eslint-disable no-await-in-loop */
     // Ignoring because page order potentially matters, so not using Promise.all
     const page = await fetchPage(
@@ -73,7 +73,12 @@ const paginatedDownloader = async (
       pageParameter,
       axiosInstance,
       throttleDown
-    );
+    ).catch(() => {
+      hasError = true;
+    });
+    if (hasError) {
+      return null;
+    }
     if (!page) {
       // 429 - too many requests
       await throttle();
@@ -82,6 +87,9 @@ const paginatedDownloader = async (
     }
     // flatten nested JSON objects
     const flattenedItems = map(page.items, flatten);
+    if (flattenedItems.length === 0) {
+      return toast.warning(`No data to download for ${fileName}`);
+    }
     // compute ALL columns; there may be more columns behind the first row due to nested objects
     // N.B. this is imperfect because there could also be more columns beyond the first page... these are ignored
     // since page 1 is already committed to file, we just have to carry on with those cols
@@ -117,6 +125,7 @@ const paginatedDownloader = async (
   }
   await writer.close();
   toast.success(`Downloaded table to ${fileHandle.name}`);
+  return null;
 };
 
 export default paginatedDownloader;
