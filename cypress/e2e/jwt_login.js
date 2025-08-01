@@ -64,7 +64,7 @@ describe('JWT Login', () => {
   it.skip('should redirect to login when accessing an auth-protected route, then back to the original page after login', () => {
     // TODO: flakey rerender happening
     cy.intercept('GET', `${config.api_v2}/my-data/studies/**`,
-      {fixture: 'apiv2/my-data/myDataStudiesListEmpty.json'});
+      {fixture: 'apiv2/emptyList.json'});
     openPage('mydata');
     cy.url().should('eq', loginUrl);
     logUserIn();
