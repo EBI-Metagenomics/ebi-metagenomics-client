@@ -80,7 +80,7 @@ const Branchwater = () => {
   const [, setUploadedFile] = useState<File | null>(null);
   const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [availableGeoData, setAvailableGeoData] = useState<[]>([]);
+  // const [availableGeoData, setAvailableGeoData] = useState<[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Pagination state
@@ -163,6 +163,137 @@ const Branchwater = () => {
       },
     },
   ];
+
+  // Helper function to convert search results to map samples with valid lat/lng
+  const convertToMapSamples = useCallback(
+    (data: SearchResult[]): MapSample[] => {
+      if (!data || !Array.isArray(data)) return [];
+
+      return data
+        .map((item, index) => {
+          // Skip items without lat_lon data or with 'NP' values
+          if (!item.lat_lon || item.lat_lon === 'NP') return null;
+
+          try {
+            let lat: number, lng: number;
+
+            // Handle different lat_lon formats
+            if (Array.isArray(item.lat_lon)) {
+              // Format: [latitude, longitude]
+              lat = parseFloat(item.lat_lon[0]);
+              lng = parseFloat(item.lat_lon[1]);
+            } else if (typeof item.lat_lon === 'string') {
+              // Format: "40.7128N, 74.0060W" or similar
+              const match = item.lat_lon.match(
+                /([0-9.-]+)([NS]),?\s*([0-9.-]+)([EW])/
+              );
+              if (!match) return null;
+
+              lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
+              lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
+            } else {
+              return null;
+            }
+
+            // Validate coordinates
+            if (
+              isNaN(lat) ||
+              isNaN(lng) ||
+              lat < -90 ||
+              lat > 90 ||
+              lng < -180 ||
+              lng > 180
+            ) {
+              return null;
+            }
+
+            // Return in MapSample format
+            return {
+              id: item.acc || `sample_${index}`,
+              attributes: {
+                latitude: lat,
+                longitude: lng,
+                'sample-desc': `${item.organism || 'Unknown organism'} - ${
+                  item.geo_loc_name_country_calc || 'Unknown location'
+                }`,
+              },
+              relationships: {
+                biome: {
+                  data: {
+                    id: item.assay_type || 'unknown',
+                  },
+                },
+              },
+            };
+          } catch (error) {
+            console.error('Error parsing lat_lon:', item.lat_lon, error);
+            return null;
+          }
+        })
+        .filter(Boolean) as MapSample[]; // Remove null entries
+    },
+    []
+  );
+
+  // Updated search click handler
+  const handleSearchClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void => {
+    event.preventDefault();
+    setShowMgnifySourmash(true);
+
+    if (signature) {
+      setIsLoading(true);
+      axios
+        .post(
+          'http://branchwater-dev.mgnify.org/',
+          {
+            signatures: JSON.stringify(signature),
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          const resultsArray = Array.isArray(response.data)
+            ? (response.data as SearchResult[])
+            : [];
+          setSearchResults(resultsArray);
+
+          // Prepare visualization data
+          const vizData = prepareVisualizationData(resultsArray);
+          setVisualizationData(vizData);
+
+          // Convert to map samples
+          const mapData = convertToMapSamples(resultsArray);
+          setMapSamples(mapData);
+
+          // Set available geo data
+          const availableGeoData = resultsArray.filter(
+            (item) =>
+              item.geo_loc_name_country_calc &&
+              item.lat_lon &&
+              item.lat_lon !== 'NP'
+          );
+          setAvailableGeoData(availableGeoData);
+
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching search results:', error);
+          setIsLoading(false);
+          setVisualizationData(null);
+          setMapSamples([]);
+          setAvailableGeoData([]);
+        });
+    } else {
+      console.log(
+        'No signature available yet. Please upload and sketch a file first.'
+      );
+    }
+  };
 
   // // Helper function to convert search results to SamplesMap format
   // const convertToMapSamples = useCallback(
@@ -444,6 +575,38 @@ const Branchwater = () => {
     [createPlotData, countUniqueValuesAndOccurrences]
   );
 
+  // Updated useEffect for handling search results
+  useEffect(() => {
+    if (searchResults.length > 0) {
+      const filteredResults = getFilteredResults();
+      const vizData = prepareVisualizationData(filteredResults);
+      setVisualizationData(vizData);
+
+      // Convert filtered results to map samples
+      const mapData = convertToMapSamples(filteredResults);
+      setMapSamples(mapData);
+
+      // Set available geo data for other uses
+      const availableGeoData = filteredResults.filter(
+        (item) =>
+          item.geo_loc_name_country_calc &&
+          item.lat_lon &&
+          item.lat_lon !== 'NP'
+      );
+      // setAvailableGeoData(availableGeoData);
+    } else {
+      // Clear data when no search results
+      setMapSamples([]);
+      // setAvailableGeoData([]);
+    }
+  }, [
+    filters,
+    getFilteredResults,
+    prepareVisualizationData,
+    searchResults,
+    convertToMapSamples,
+  ]);
+
   useEffect(() => {
     const handleSketched = (evt: CustomEvent): void => {
       evt.preventDefault();
@@ -470,15 +633,15 @@ const Branchwater = () => {
       setVisualizationData(vizData);
 
       // Update map samples
-      // const mapData = convertToMapSamples(filteredResults);
+      const mapData = convertToMapSamples(filteredResults);
+      setMapSamples(mapData);
 
       // setMapSamples(mockMapSamples);
-      setMapSamples(availableGeoData);
-
+      // setMapSamples(availableGeoData);
     } else {
       // For development/testing: use mock data when no search results
-      // setMapSamples(mockMapSamples);
-      setMapSamples(availableGeoData);
+      setMapSamples(mockMapSamples);
+      // setMapSamples(availableGeoData);
     }
   }, [
     filters,
@@ -488,66 +651,65 @@ const Branchwater = () => {
     mockMapSamples,
   ]);
 
-  const handleSearchClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ): void => {
-    event.preventDefault();
-    setShowMgnifySourmash(true);
-
-    // If we already have a signature, trigger a search
-    if (signature) {
-      setIsLoading(true);
-      axios
-        .post(
-          'http://branchwater-dev.mgnify.org/',
-          {
-            signatures: JSON.stringify(signature),
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        .then((response) => {
-          // Ensure response.data is an array before setting it to searchResults
-          const resultsArray = Array.isArray(response.data)
-            ? (response.data as SearchResult[])
-            : [];
-          setSearchResults(resultsArray);
-
-          const availableGeoData = response.data.filter(
-            (item) => item.geo_loc_name_country_calc
-          );
-          setAvailableGeoData(availableGeoData);
-          )
-
-          // Prepare visualization data
-          const vizData = prepareVisualizationData(resultsArray);
-          setVisualizationData(vizData);
-
-          // Prepare map data
-          // const mapData = convertToMapSamples(resultsArray);
-          // setMapSamples(mockMapSamples);
-          setMapSamples(availableGeoData)
-
-
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error('Error fetching search results:', error);
-          setIsLoading(false);
-          // Note: sampleEntries is not defined in this scope, so we'll just clear the data
-          setVisualizationData(null);
-          setMapSamples([]);
-        });
-    } else {
-      // If no signature yet, show a message or use sample data for testing
-      console.log(
-        'No signature available yet. Please upload and sketch a file first.'
-      );
-    }
-  };
+  // const handleSearchClick = (
+  //   event: React.MouseEvent<HTMLButtonElement>
+  // ): void => {
+  //   event.preventDefault();
+  //   setShowMgnifySourmash(true);
+  //
+  //   // If we already have a signature, trigger a search
+  //   if (signature) {
+  //     setIsLoading(true);
+  //     axios
+  //       .post(
+  //         'http://branchwater-dev.mgnify.org/',
+  //         {
+  //           signatures: JSON.stringify(signature),
+  //         },
+  //         {
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //           },
+  //         }
+  //       )
+  //       .then((response) => {
+  //         // Ensure response.data is an array before setting it to searchResults
+  //         const resultsArray = Array.isArray(response.data)
+  //           ? (response.data as SearchResult[])
+  //           : [];
+  //         setSearchResults(resultsArray);
+  //
+  //         // const availableGeoData = response.data.filter(
+  //         //   (item) => item.geo_loc_name_country_calc
+  //         // );
+  //         // setAvailableGeoData(availableGeoData);
+  //         // )
+  //
+  //         // Prepare visualization data
+  //         const vizData = prepareVisualizationData(resultsArray);
+  //         setVisualizationData(vizData);
+  //
+  //         // Prepare map data
+  //         const mapData = convertToMapSamples(resultsArray);
+  //         // setMapSamples(mockMapSamples);
+  //         // setMapSamples(availableGeoData);
+  //
+  //         setIsLoading(false);
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error fetching search results:', error);
+  //         setIsLoading(false);
+  //         // Note: sampleEntries is not defined in this scope, so we'll just clear the data
+  //         setVisualizationData(null);
+  //         setMapSamples([]);
+  //       });
+  //   } else {
+  //     // If no signature yet, show a message or use sample data for testing
+  //     console.log(
+  //       'No signature available yet. Please upload and sketch a file first.'
+  //     );
+  //   }
+  // };
 
   // Handle filter change
   const handleFilterChange = (field: keyof Filters, value: string): void => {
