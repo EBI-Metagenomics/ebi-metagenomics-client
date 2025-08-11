@@ -1,9 +1,26 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import axios from 'axios';
 import Plot from 'react-plotly.js';
-import Cobs from 'components/Genomes/Cobs';
 import CobsSearch from 'components/Genomes/Cobs';
 import SourmashSearch from 'components/Genomes/Sourmash';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix Leaflet marker icon issue
+// This is needed because Leaflet's default icon paths are based on CSS which doesn't work well with bundlers
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+const DefaultIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 // Define interfaces for the component
 interface SearchResult {
@@ -63,6 +80,7 @@ const Branchwater = () => {
   const [, setUploadedFile] = useState<File | null>(null);
   const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [availableGeoData, setAvailableGeoData] = useState<[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Pagination state
@@ -97,56 +115,105 @@ const Branchwater = () => {
   // State for map samples
   const [mapSamples, setMapSamples] = useState<MapSample[]>([]);
 
-  // Helper function to convert search results to SamplesMap format
-  const convertToMapSamples = useCallback(
-    (data: SearchResult[]): MapSample[] => {
-      if (!data || !Array.isArray(data)) return [];
-
-      return data
-        .map((item, index) => {
-          // Check if we have lat_lon data
-          if (!item.lat_lon || item.lat_lon === 'NP') return null;
-
-          try {
-            // Parse lat_lon string format like "40.7128N, 74.0060W"
-            // const match = item.lat_lon.match(
-            //   /([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/
-            // );
-            // if (!match) return null;
-            //
-            // const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
-            // const lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
-
-            const lat = item.lat_lon[0];
-            const lng = item.lat_lon[1];
-
-            // Return in MGnifyDatum format expected by SamplesMap
-            return {
-              id: item.acc || `sample_${index}`,
-              attributes: {
-                latitude: lat,
-                longitude: lng,
-                'sample-desc': `${item.organism || 'Unknown organism'} - ${
-                  item.geo_loc_name_country_calc || 'Unknown location'
-                }`,
-              },
-              relationships: {
-                biome: {
-                  data: {
-                    id: item.assay_type || 'unknown',
-                  },
-                },
-              },
-            };
-          } catch (error) {
-            console.error('Error parsing lat_lon:', item.lat_lon, error);
-            return null;
-          }
-        })
-        .filter(Boolean) as MapSample[]; // Remove null entries and cast to MapSample[]
+  // Mock data for testing the map
+  const mockMapSamples: MapSample[] = [
+    {
+      id: 'sample_1',
+      attributes: {
+        latitude: 51.5074,
+        longitude: -0.1278,
+        'sample-desc': 'London Sample - Marine metagenome',
+      },
+      relationships: {
+        biome: {
+          data: {
+            id: 'WGS',
+          },
+        },
+      },
     },
-    []
-  );
+    {
+      id: 'sample_2',
+      attributes: {
+        latitude: 48.8566,
+        longitude: 2.3522,
+        'sample-desc': 'Paris Sample - Marine metagenome',
+      },
+      relationships: {
+        biome: {
+          data: {
+            id: 'WGS',
+          },
+        },
+      },
+    },
+    {
+      id: 'sample_3',
+      attributes: {
+        latitude: 40.7128,
+        longitude: -74.006,
+        'sample-desc': 'New York Sample - Marine metagenome',
+      },
+      relationships: {
+        biome: {
+          data: {
+            id: 'WGS',
+          },
+        },
+      },
+    },
+  ];
+
+  // // Helper function to convert search results to SamplesMap format
+  // const convertToMapSamples = useCallback(
+  //   (data: SearchResult[]): MapSample[] => {
+  //     if (!data || !Array.isArray(data)) return [];
+  //
+  //     return data
+  //       .map((item, index) => {
+  //         // Check if we have lat_lon data
+  //         if (!item.lat_lon || item.lat_lon === 'NP') return null;
+  //
+  //         try {
+  //           // Parse lat_lon string format like "40.7128N, 74.0060W"
+  //           // const match = item.lat_lon.match(
+  //           //   /([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/
+  //           // );
+  //           // if (!match) return null;
+  //           //
+  //           // const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
+  //           // const lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
+  //
+  //           const lat = item.lat_lon[0];
+  //           const lng = item.lat_lon[1];
+  //
+  //           // Return in MGnifyDatum format expected by SamplesMap
+  //           return {
+  //             id: item.acc || `sample_${index}`,
+  //             attributes: {
+  //               latitude: lat,
+  //               longitude: lng,
+  //               'sample-desc': `${item.organism || 'Unknown organism'} - ${
+  //                 item.geo_loc_name_country_calc || 'Unknown location'
+  //               }`,
+  //             },
+  //             relationships: {
+  //               biome: {
+  //                 data: {
+  //                   id: item.assay_type || 'unknown',
+  //                 },
+  //               },
+  //             },
+  //           };
+  //         } catch (error) {
+  //           console.error('Error parsing lat_lon:', item.lat_lon, error);
+  //           return null;
+  //         }
+  //       })
+  //       .filter(Boolean) as MapSample[]; // Remove null entries and cast to MapSample[]
+  //   },
+  //   []
+  // );
 
   // Helper functions for visualizations
   const countUniqueValuesAndOccurrences = (
@@ -380,12 +447,9 @@ const Branchwater = () => {
   useEffect(() => {
     const handleSketched = (evt: CustomEvent): void => {
       evt.preventDefault();
-      console.log('we be sketching not concerning what no body wanna say');
-      console.log('Sigs out here ', evt.detail.signature);
       const sig = JSON.parse(evt.detail.signature)[0];
 
       setSignature(sig);
-      console.log('sig', sig);
       // Removed automatic axios request - will only search when button is clicked
 
       // setIsButtonDisabled(false);
@@ -406,14 +470,22 @@ const Branchwater = () => {
       setVisualizationData(vizData);
 
       // Update map samples
-      const mapData = convertToMapSamples(filteredResults);
-      setMapSamples(mapData);
+      // const mapData = convertToMapSamples(filteredResults);
+
+      // setMapSamples(mockMapSamples);
+      setMapSamples(availableGeoData);
+
+    } else {
+      // For development/testing: use mock data when no search results
+      // setMapSamples(mockMapSamples);
+      setMapSamples(availableGeoData);
     }
   }, [
     filters,
     getFilteredResults,
     prepareVisualizationData,
-    convertToMapSamples,
+    searchResults,
+    mockMapSamples,
   ]);
 
   const handleSearchClick = (
@@ -444,13 +516,21 @@ const Branchwater = () => {
             : [];
           setSearchResults(resultsArray);
 
+          const availableGeoData = response.data.filter(
+            (item) => item.geo_loc_name_country_calc
+          );
+          setAvailableGeoData(availableGeoData);
+          )
+
           // Prepare visualization data
           const vizData = prepareVisualizationData(resultsArray);
           setVisualizationData(vizData);
 
           // Prepare map data
-          const mapData = convertToMapSamples(resultsArray);
-          setMapSamples(mapData);
+          // const mapData = convertToMapSamples(resultsArray);
+          // setMapSamples(mockMapSamples);
+          setMapSamples(availableGeoData)
+
 
           setIsLoading(false);
         })
@@ -1378,6 +1458,48 @@ const Branchwater = () => {
                           </div>
                         </div>
                       )}
+                    {/* Leaflet Map */}
+                    {mapSamples && mapSamples.length > 0 && (
+                      <div className="vf-u-padding__top--400">
+                        <h3 className="vf-text vf-text-heading--3">
+                          Interactive Map
+                        </h3>
+                        <div style={{ width: '100%', height: '500px' }}>
+                          <MapContainer
+                            center={[0, 0]}
+                            zoom={2}
+                            style={{ width: '100%', height: '100%' }}
+                            scrollWheelZoom
+                          >
+                            <TileLayer
+                              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                            {mapSamples.map((sample) => (
+                              <Marker
+                                key={sample.id}
+                                position={[
+                                  sample.attributes.latitude,
+                                  sample.attributes.longitude,
+                                ]}
+                              >
+                                <Popup>
+                                  <div>
+                                    <strong>ID:</strong> {sample.id}
+                                    <br />
+                                    <strong>Description:</strong>{' '}
+                                    {sample.attributes['sample-desc']}
+                                    <br />
+                                    <strong>Biome:</strong>{' '}
+                                    {sample.relationships.biome.data.id}
+                                  </div>
+                                </Popup>
+                              </Marker>
+                            ))}
+                          </MapContainer>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </>
