@@ -7,11 +7,8 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix Leaflet marker icon issue
-// This is needed because Leaflet's default icon paths are based on CSS which doesn't work well with bundlers
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import EnhancedLifeScienceMap from 'components/EnhancedLifeScienceMap';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -81,6 +78,10 @@ const Branchwater = () => {
   const [, setUploadedFile] = useState<File | null>(null);
   const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [countryCounts, setCountryCounts] = useState<Record<string, number>>(
+    {}
+  );
+
   // const [availableGeoData, setAvailableGeoData] = useState<[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -236,7 +237,62 @@ const Branchwater = () => {
     []
   );
 
-  // Updated search click handler
+  const getCountryCountsFromResults = useCallback((results: SearchResult[]) => {
+    const countryCounts: Record<string, number> = {};
+
+    results.forEach((item) => {
+      if (
+        item.geo_loc_name_country_calc &&
+        item.geo_loc_name_country_calc !== 'NP'
+      ) {
+        const country = item.geo_loc_name_country_calc;
+        countryCounts[country] = (countryCounts[country] || 0) + 1;
+      }
+    });
+
+    return countryCounts;
+  }, []);
+
+  const getCountryColor = useCallback((count: number, maxCount: number) => {
+    if (count === 0) return '#FFEDA0';
+
+    const intensity = count / maxCount;
+
+    if (intensity > 0.8) return '#BD0026';
+    if (intensity > 0.6) return '#E31A1C';
+    if (intensity > 0.4) return '#FC4E2A';
+    if (intensity > 0.2) return '#FD8D3C';
+    return '#FEB24C';
+  }, []);
+
+  // const getCountryCountsFromResults = useCallback((results: SearchResult[]) => {
+  //   const countryCounts: Record<string, number> = {};
+  //
+  //   results.forEach((item) => {
+  //     if (
+  //       item.geo_loc_name_country_calc &&
+  //       item.geo_loc_name_country_calc !== 'NP'
+  //     ) {
+  //       const country = item.geo_loc_name_country_calc;
+  //       countryCounts[country] = (countryCounts[country] || 0) + 1;
+  //     }
+  //   });
+  //
+  //   const getCountryColor = useCallback((count: number, maxCount: number) => {
+  //     if (count === 0) return '#FFEDA0';
+  //
+  //     const intensity = count / maxCount;
+  //
+  //     if (intensity > 0.8) return '#BD0026';
+  //     if (intensity > 0.6) return '#E31A1C';
+  //     if (intensity > 0.4) return '#FC4E2A';
+  //     if (intensity > 0.2) return '#FD8D3C';
+  //     return '#FEB24C';
+  //   }, []);
+  //
+  //   return countryCounts;
+  // }, []);
+
   const handleSearchClick = (
     event: React.MouseEvent<HTMLButtonElement>
   ): void => {
@@ -271,14 +327,9 @@ const Branchwater = () => {
           const mapData = convertToMapSamples(resultsArray);
           setMapSamples(mapData);
 
-          // Set available geo data
-          const availableGeoData = resultsArray.filter(
-            (item) =>
-              item.geo_loc_name_country_calc &&
-              item.lat_lon &&
-              item.lat_lon !== 'NP'
-          );
-          setAvailableGeoData(availableGeoData);
+          // Calculate country counts for heatmap
+          const counts = getCountryCountsFromResults(resultsArray);
+          setCountryCounts(counts);
 
           setIsLoading(false);
         })
@@ -287,7 +338,7 @@ const Branchwater = () => {
           setIsLoading(false);
           setVisualizationData(null);
           setMapSamples([]);
-          setAvailableGeoData([]);
+          setCountryCounts({});
         });
     } else {
       console.log(
@@ -296,58 +347,65 @@ const Branchwater = () => {
     }
   };
 
-  // // Helper function to convert search results to SamplesMap format
-  // const convertToMapSamples = useCallback(
-  //   (data: SearchResult[]): MapSample[] => {
-  //     if (!data || !Array.isArray(data)) return [];
+  // const handleSearchClick = (
+  //   event: React.MouseEvent<HTMLButtonElement>
+  // ): void => {
+  //   event.preventDefault();
+  //   setShowMgnifySourmash(true);
   //
-  //     return data
-  //       .map((item, index) => {
-  //         // Check if we have lat_lon data
-  //         if (!item.lat_lon || item.lat_lon === 'NP') return null;
-  //
-  //         try {
-  //           // Parse lat_lon string format like "40.7128N, 74.0060W"
-  //           // const match = item.lat_lon.match(
-  //           //   /([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/
-  //           // );
-  //           // if (!match) return null;
-  //           //
-  //           // const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
-  //           // const lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
-  //
-  //           const lat = item.lat_lon[0];
-  //           const lng = item.lat_lon[1];
-  //
-  //           // Return in MGnifyDatum format expected by SamplesMap
-  //           return {
-  //             id: item.acc || `sample_${index}`,
-  //             attributes: {
-  //               latitude: lat,
-  //               longitude: lng,
-  //               'sample-desc': `${item.organism || 'Unknown organism'} - ${
-  //                 item.geo_loc_name_country_calc || 'Unknown location'
-  //               }`,
-  //             },
-  //             relationships: {
-  //               biome: {
-  //                 data: {
-  //                   id: item.assay_type || 'unknown',
-  //                 },
-  //               },
-  //             },
-  //           };
-  //         } catch (error) {
-  //           console.error('Error parsing lat_lon:', item.lat_lon, error);
-  //           return null;
+  //   if (signature) {
+  //     setIsLoading(true);
+  //     axios
+  //       .post(
+  //         'http://branchwater-dev.mgnify.org/',
+  //         {
+  //           signatures: JSON.stringify(signature),
+  //         },
+  //         {
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //           },
   //         }
+  //       )
+  //       .then((response) => {
+  //         const resultsArray = Array.isArray(response.data)
+  //           ? (response.data as SearchResult[])
+  //           : [];
+  //         setSearchResults(resultsArray);
+  //
+  //         // Prepare visualization data
+  //         const vizData = prepareVisualizationData(resultsArray);
+  //         setVisualizationData(vizData);
+  //
+  //         // Convert to map samples
+  //         const mapData = convertToMapSamples(resultsArray);
+  //         setMapSamples(mapData);
+  //
+  //         // Set available geo data
+  //         const availableGeoData = resultsArray.filter(
+  //           (item) =>
+  //             item.geo_loc_name_country_calc &&
+  //             item.lat_lon &&
+  //             item.lat_lon !== 'NP'
+  //         );
+  //         setAvailableGeoData(availableGeoData);
+  //
+  //         setIsLoading(false);
   //       })
-  //       .filter(Boolean) as MapSample[]; // Remove null entries and cast to MapSample[]
-  //   },
-  //   []
-  // );
+  //       .catch((error) => {
+  //         console.error('Error fetching search results:', error);
+  //         setIsLoading(false);
+  //         setVisualizationData(null);
+  //         setMapSamples([]);
+  //         setAvailableGeoData([]);
+  //       });
+  //   } else {
+  //     console.log(
+  //       'No signature available yet. Please upload and sketch a file first.'
+  //     );
+  //   }
+  // };
 
-  // Helper functions for visualizations
   const countUniqueValuesAndOccurrences = (
     valueList: any[]
   ): { uniqueValues: any[]; countVal: number[] } => {
@@ -626,91 +684,65 @@ const Branchwater = () => {
     };
   }, [signature]);
 
-  // Update visualization data when filters change
   useEffect(() => {
     if (searchResults.length > 0) {
       const filteredResults = getFilteredResults();
       const vizData = prepareVisualizationData(filteredResults);
       setVisualizationData(vizData);
 
-      // Update map samples
+      // Convert filtered results to map samples
       const mapData = convertToMapSamples(filteredResults);
       setMapSamples(mapData);
 
-      // setMapSamples(mockMapSamples);
-      // setMapSamples(availableGeoData);
+      // Calculate country counts for heatmap
+      const counts = getCountryCountsFromResults(filteredResults);
+      setCountryCounts(counts);
+
+      // Set available geo data for other uses
+      const availableGeoData = filteredResults.filter(
+        (item) =>
+          item.geo_loc_name_country_calc &&
+          item.lat_lon &&
+          item.lat_lon !== 'NP'
+      );
     } else {
-      // For development/testing: use mock data when no search results
-      setMapSamples(mockMapSamples);
-      // setMapSamples(availableGeoData);
+      // Clear data when no search results
+      setMapSamples([]);
+      setCountryCounts({});
     }
   }, [
     filters,
     getFilteredResults,
     prepareVisualizationData,
     searchResults,
-    mockMapSamples,
+    convertToMapSamples,
+    getCountryCountsFromResults,
   ]);
 
-  // const handleSearchClick = (
-  //   event: React.MouseEvent<HTMLButtonElement>
-  // ): void => {
-  //   event.preventDefault();
-  //   setShowMgnifySourmash(true);
+  // useEffect(() => {
+  //   if (searchResults.length > 0) {
+  //     const filteredResults = getFilteredResults();
+  //     const vizData = prepareVisualizationData(filteredResults);
+  //     setVisualizationData(vizData);
   //
-  //   // If we already have a signature, trigger a search
-  //   if (signature) {
-  //     setIsLoading(true);
-  //     axios
-  //       .post(
-  //         'http://branchwater-dev.mgnify.org/',
-  //         {
-  //           signatures: JSON.stringify(signature),
-  //         },
-  //         {
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //           },
-  //         }
-  //       )
-  //       .then((response) => {
-  //         // Ensure response.data is an array before setting it to searchResults
-  //         const resultsArray = Array.isArray(response.data)
-  //           ? (response.data as SearchResult[])
-  //           : [];
-  //         setSearchResults(resultsArray);
+  //     // Update map samples
+  //     const mapData = convertToMapSamples(filteredResults);
+  //     setMapSamples(mapData);
   //
-  //         // const availableGeoData = response.data.filter(
-  //         //   (item) => item.geo_loc_name_country_calc
-  //         // );
-  //         // setAvailableGeoData(availableGeoData);
-  //         // )
-  //
-  //         // Prepare visualization data
-  //         const vizData = prepareVisualizationData(resultsArray);
-  //         setVisualizationData(vizData);
-  //
-  //         // Prepare map data
-  //         const mapData = convertToMapSamples(resultsArray);
-  //         // setMapSamples(mockMapSamples);
-  //         // setMapSamples(availableGeoData);
-  //
-  //         setIsLoading(false);
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error fetching search results:', error);
-  //         setIsLoading(false);
-  //         // Note: sampleEntries is not defined in this scope, so we'll just clear the data
-  //         setVisualizationData(null);
-  //         setMapSamples([]);
-  //       });
+  //     // setMapSamples(mockMapSamples);
+  //     // setMapSamples(availableGeoData);
   //   } else {
-  //     // If no signature yet, show a message or use sample data for testing
-  //     console.log(
-  //       'No signature available yet. Please upload and sketch a file first.'
-  //     );
+  //     // For development/testing: use mock data when no search results
+  //     setMapSamples(mockMapSamples);
+  //     // setMapSamples(availableGeoData);
   //   }
-  // };
+  // }, [
+  //   filters,
+  //   getFilteredResults,
+  //   prepareVisualizationData,
+  //   searchResults,
+  //   mockMapSamples,
+  // ]);
 
   // Handle filter change
   const handleFilterChange = (field: keyof Filters, value: string): void => {
@@ -1523,148 +1555,172 @@ const Branchwater = () => {
                         />
                       </div>
                     </div>
+                  </div>
+                )}
+                {mapSamples && mapSamples.length > 0 && (
+                  <div className="vf-u-padding__top--400">
+                    <h4 className="vf-text vf-text-heading--4">
+                      Geographic Distribution
+                    </h4>
 
-                    {/* Categorical Bar Plots */}
-                    {visualizationData.barPlotData &&
-                      visualizationData.barPlotData.length > 0 && (
-                        <div className="vf-u-padding__top--400">
-                          <h3 className="vf-text vf-text-heading--3">
-                            Categorical Metadata
-                          </h3>
-                          <div
-                            id="barDiv"
-                            style={{ width: '100%', height: '400px' }}
-                          >
-                            <Plot
-                              data={visualizationData.barPlotData}
-                              layout={{
-                                bargap: 0.05,
-                                bargroupgap: 0.2,
-                                title: 'Summary counts of categorical metadata',
-                                xaxis: { automargin: true, title: 'Category' },
-                                yaxis: { automargin: true, title: 'Counts' },
-                                updatemenus: [
-                                  {
-                                    x: 0.05,
-                                    y: 1.2,
-                                    xanchor: 'left',
-                                    yanchor: 'top',
-                                    buttons: visualizationData.stringKeys.map(
-                                      (key, i) => ({
-                                        method: 'update',
-                                        args: [
-                                          {
-                                            visible:
-                                              visualizationData.stringKeys.map(
-                                                (_, idx) => idx === i
-                                              ),
-                                          },
-                                        ],
-                                        label: key,
-                                      })
-                                    ),
-                                    direction: 'down',
-                                    showactive: true,
-                                  },
-                                ],
-                              }}
-                              config={{
-                                scrollZoom: true,
-                                displaylogo: false,
-                                responsive: true,
-                              }}
-                              style={{ width: '100%', height: '100%' }}
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                    {/* Map Visualizations */}
-                    {visualizationData.mapData &&
-                      visualizationData.mapData.length > 0 && (
+                    {/* Country counts summary */}
+                    {Object.keys(countryCounts).length > 0 && (
+                      <div className="vf-u-padding__bottom--400">
+                        <p className="vf-text vf-text--body">
+                          <strong>Samples by Country:</strong>
+                        </p>
                         <div
-                          className="vf-u-padding__top--400"
-                          style={{ height: '600px' }}
+                          style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '10px',
+                            marginBottom: '15px',
+                            maxHeight: '100px',
+                            overflowY: 'auto',
+                          }}
                         >
-                          <h3 className="vf-text vf-text-heading--3">
-                            Geographic Distribution
-                          </h3>
-                          <div
-                            id="mapDiv"
-                            style={{ width: '100%', height: '500px' }}
-                          >
-                            <Plot
-                              data={visualizationData.mapData}
-                              layout={{
-                                title: 'Accession locations',
-                                geo: {
-                                  scope: 'world',
-                                  showcountries: true,
-                                  countrycolor: 'rgb(255, 255, 255)',
-                                  countrywidth: 1,
-                                  showframe: false,
-                                  projection: {
-                                    type: 'robinson',
-                                  },
-                                  showland: true,
-                                  landcolor: 'rgb(250,250,250)',
-                                  subunitcolor: 'rgb(217,217,217)',
-                                },
-                              }}
-                              config={{
-                                scrollZoom: true,
-                                displaylogo: false,
-                                responsive: true,
-                              }}
-                              style={{ width: '100%', height: '100%' }}
-                            />
-                          </div>
+                          {Object.entries(countryCounts)
+                            .sort(([, a], [, b]) => b - a)
+                            .map(([country, count]) => {
+                              const maxCount = Math.max(
+                                ...Object.values(countryCounts)
+                              );
+                              const color = getCountryColor(count, maxCount);
+                              return (
+                                <span
+                                  key={country}
+                                  style={{
+                                    padding: '4px 8px',
+                                    backgroundColor: color,
+                                    color:
+                                      count > maxCount * 0.6
+                                        ? 'white'
+                                        : 'black',
+                                    borderRadius: '4px',
+                                    fontSize: '12px',
+                                    fontWeight: 'bold',
+                                  }}
+                                >
+                                  {country}: {count}
+                                </span>
+                              );
+                            })}
                         </div>
-                      )}
-                    {/* Leaflet Map */}
-                    {mapSamples && mapSamples.length > 0 && (
-                      <div className="vf-u-padding__top--400">
-                        {/*<h3 className="vf-text vf-text-heading--3">*/}
-                        {/*  Enhanced Interactive Map*/}
-                        {/*</h3>*/}
-                        {/*<EnhancedLifeScienceMap mapSamples={mapSamples} />*/}
-                        <h3 className="vf-text vf-text-heading--3">
-                          Interactive Map
-                        </h3>
-                        <div style={{ width: '100%', height: '500px' }}>
-                          <MapContainer
-                            center={[0, 0]}
-                            zoom={2}
-                            style={{ width: '100%', height: '100%' }}
-                            scrollWheelZoom
-                          >
-                            <TileLayer
-                              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            {mapSamples.map((sample) => (
-                              <Marker
-                                key={sample.id}
-                                position={[
-                                  sample.attributes.latitude,
-                                  sample.attributes.longitude,
-                                ]}
-                              >
-                                <Popup>
-                                  <div>
-                                    <strong>ID:</strong> {sample.id}
-                                    <br />
-                                    <strong>Description:</strong>{' '}
-                                    {sample.attributes['sample-desc']}
-                                    <br />
-                                    <strong>Biome:</strong>{' '}
-                                    {sample.relationships.biome.data.id}
-                                  </div>
-                                </Popup>
-                              </Marker>
+
+                        {/* Legend */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            fontSize: '12px',
+                          }}
+                        >
+                          <span>Heat intensity:</span>
+                          <div style={{ display: 'flex', gap: '2px' }}>
+                            {[
+                              '#FFEDA0',
+                              '#FEB24C',
+                              '#FD8D3C',
+                              '#FC4E2A',
+                              '#E31A1C',
+                              '#BD0026',
+                            ].map((color, index) => (
+                              <div
+                                key={index}
+                                style={{
+                                  width: '20px',
+                                  height: '12px',
+                                  backgroundColor: color,
+                                  border: '1px solid #ccc',
+                                }}
+                              />
                             ))}
-                          </MapContainer>
+                          </div>
+                          <span>Low → High</span>
                         </div>
+                      </div>
+                    )}
+
+                    <div style={{ width: '100%', height: '500px' }}>
+                      <MapContainer
+                        center={[20, 0]}
+                        zoom={2}
+                        style={{ width: '100%', height: '100%' }}
+                        scrollWheelZoom
+                      >
+                        <TileLayer
+                          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+
+                        {/* Individual sample markers */}
+                        {mapSamples.map((sample) => (
+                          <Marker
+                            key={sample.id}
+                            position={[
+                              sample.attributes.latitude,
+                              sample.attributes.longitude,
+                            ]}
+                          >
+                            <Popup>
+                              <div>
+                                <strong>ID:</strong> {sample.id}
+                                <br />
+                                <strong>Description:</strong>{' '}
+                                {sample.attributes['sample-desc']}
+                                <br />
+                                <strong>Biome:</strong>{' '}
+                                {sample.relationships.biome.data.id}
+                              </div>
+                            </Popup>
+                          </Marker>
+                        ))}
+                      </MapContainer>
+                    </div>
+
+                    {/* Additional country statistics */}
+                    {Object.keys(countryCounts).length > 0 && (
+                      <div className="vf-u-padding__top--400">
+                        <details>
+                          <summary
+                            style={{ cursor: 'pointer', fontWeight: 'bold' }}
+                          >
+                            Country Statistics (
+                            {Object.keys(countryCounts).length} countries)
+                          </summary>
+                          <div style={{ marginTop: '10px' }}>
+                            <table className="vf-table vf-table--compact">
+                              <thead>
+                                <tr>
+                                  <th>Country</th>
+                                  <th>Sample Count</th>
+                                  <th>Percentage</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {Object.entries(countryCounts)
+                                  .sort(([, a], [, b]) => b - a)
+                                  .map(([country, count]) => {
+                                    const total = Object.values(
+                                      countryCounts
+                                    ).reduce((sum, c) => sum + c, 0);
+                                    const percentage = (
+                                      (count / total) *
+                                      100
+                                    ).toFixed(1);
+                                    return (
+                                      <tr key={country}>
+                                        <td>{country}</td>
+                                        <td>{count}</td>
+                                        <td>{percentage}%</td>
+                                      </tr>
+                                    );
+                                  })}
+                              </tbody>
+                            </table>
+                          </div>
+                        </details>
                       </div>
                     )}
                   </div>
