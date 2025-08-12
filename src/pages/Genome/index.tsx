@@ -1,4 +1,5 @@
 import React, { Suspense, lazy, useState } from 'react';
+import axios from 'axios';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
@@ -38,50 +39,30 @@ const GenomePage: React.FC = () => {
   const [isSearching, setIsSearching] = useState(false);
 
   const handleMetagenomeSearch = () => {
+    // Only proceed if we have the data
+    if (!data) return;
+
+    const { data: genomeData } = data as MGnifyResponseObj;
+    const relatedCat = genomeData.relationships.catalogue as {
+      data: { id: string; type: string };
+      links: { related: string };
+    };
+
     setIsSearching(true);
 
-    // Mock search results
-    const mockResults = [
-      {
-        acc: 'ERR1234567',
-        assay_type: 'AMPLICON',
-        bioproject: 'PRJEB12345',
-        biosample_link: 'https://www.ebi.ac.uk/biosample/SAMEA123456',
-        cANI: 0.95,
-        collection_date_sam: '2023-01-15',
-        containment: 0.78,
-        geo_loc_name_country_calc: 'United Kingdom',
-        organism: 'Marine microbiome',
-      },
-      {
-        acc: 'ERR7890123',
-        assay_type: 'METAGENOMIC',
-        bioproject: 'PRJEB67890',
-        biosample_link: 'https://www.ebi.ac.uk/biosample/SAMEA789012',
-        cANI: 0.87,
-        collection_date_sam: '2023-02-20',
-        containment: 0.65,
-        geo_loc_name_country_calc: 'Germany',
-        organism: 'Soil microbiome',
-      },
-      {
-        acc: 'ERR4567890',
-        assay_type: 'METAGENOMIC',
-        bioproject: 'PRJEB45678',
-        biosample_link: 'https://www.ebi.ac.uk/biosample/SAMEA456789',
-        cANI: 0.92,
-        collection_date_sam: '2023-03-10',
-        containment: 0.82,
-        geo_loc_name_country_calc: 'France',
-        organism: 'Gut microbiome',
-      },
-    ];
-
-    // Simulate API delay
-    setTimeout(() => {
-      setSearchResults(mockResults);
-      setIsSearching(false);
-    }, 2000);
+    axios
+      .post(
+        `http://branchwater-dev.mgnify.org/mags?accession=${accession}&catalogue=${relatedCat.data.id}`
+      )
+      .then((response) => {
+        setSearchResults(response.data);
+        setIsSearching(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching metagenome search results:', err);
+        setIsSearching(false);
+        // Could add error state handling here if needed
+      });
   };
 
   if (loading) return <Loading size="large" />;
