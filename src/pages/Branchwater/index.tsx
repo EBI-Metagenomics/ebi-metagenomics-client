@@ -11,6 +11,7 @@ import 'leaflet/dist/leaflet.css';
 // This is needed because Leaflet's default icon paths are based on CSS which doesn't work well with bundlers
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import EnhancedLifeScienceMap from 'components/EnhancedLifeScienceMap';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -1623,6 +1624,10 @@ const Branchwater = () => {
                     {/* Leaflet Map */}
                     {mapSamples && mapSamples.length > 0 && (
                       <div className="vf-u-padding__top--400">
+                        {/*<h3 className="vf-text vf-text-heading--3">*/}
+                        {/*  Enhanced Interactive Map*/}
+                        {/*</h3>*/}
+                        {/*<EnhancedLifeScienceMap mapSamples={mapSamples} />*/}
                         <h3 className="vf-text vf-text-heading--3">
                           Interactive Map
                         </h3>
