@@ -283,7 +283,8 @@ const Branchwater = () => {
       setIsLoading(true);
       axios
         .post(
-          'http://branchwater-dev.mgnify.org/',
+          // 'http://branchwater-dev.mgnify.org/',
+          'http://localhost:8000/',
           {
             signatures: JSON.stringify(signature),
           },
