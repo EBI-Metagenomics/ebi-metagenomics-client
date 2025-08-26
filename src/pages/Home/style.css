@@ -295,3 +295,20 @@ hr {
     margin: 3rem auto;
     border-top: 1px solid #eee;
 }
+
+/* Card icon styles */
+.card-icon {
+    display: inline-flex;
+    margin-right: 0.5rem;
+    color: #3b6fb6;
+    vertical-align: middle;
+}
+
+.inner-card:hover .card-icon {
+    color: #193f90;
+}
+
+.card-title-with-icon {
+    display: flex;
+    align-items: center;
+}

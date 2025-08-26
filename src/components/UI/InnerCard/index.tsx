@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import './style.css';
 
 type InnerCardProps = {
-  title: string;
+  title: string | React.ReactNode;
   label: string;
   image?: string;
   imageAltText?: string;

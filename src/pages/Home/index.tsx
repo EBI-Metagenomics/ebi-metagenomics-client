@@ -8,6 +8,7 @@ import SearchPage from 'pages/Search';
 import { useReveal } from 'hooks/useReveal';
 import SearchBy from 'components/Home/SearchBy';
 import LatestStudies from 'components/Home/Request/LatestStudies';
+import { Search, Dna, FileSearch } from 'lucide-react';
 
 const HomePage: React.FC = () => {
   const analysisRef = useReveal();
@@ -39,21 +40,36 @@ const HomePage: React.FC = () => {
       <div className="home-search-cards vf-grid vf-grid__col-3">
         <div className="vf-card home-search-card">
           <InnerCard
-            title="Search by Text"
+            title={
+              <div className="card-title-with-icon">
+                <Search className="card-icon" size={20} />
+                Search by Text
+              </div>
+            }
             label="Find resources using keywords, names, or descriptions"
             to="/search"
           />
         </div>
         <div className="vf-card home-search-card">
           <InnerCard
-            title="Search by Protein"
+            title={
+              <div className="card-title-with-icon">
+                <Dna className="card-icon" size={20} />
+                Search by Protein
+              </div>
+            }
             label="Search for resources using protein sequences"
             to="/biomes"
           />
         </div>
         <div className="vf-card home-search-card">
           <InnerCard
-            title="Search by Nucleotide"
+            title={
+              <div className="card-title-with-icon">
+                <FileSearch className="card-icon" size={20} />
+                Search by Nucleotide
+              </div>
+            }
             label="Search for resources using nucleotide sequences"
             to="/branchwater-search"
           />
