@@ -1,5 +1,5 @@
 public/krona/js/krona-2.0-customized.js
-cypress.config.ts
+cypress.config.cjs
 *.html
 *.handlebars
 *.css
