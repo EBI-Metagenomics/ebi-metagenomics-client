@@ -1,4 +1,5 @@
 import { defineConfig } from 'cypress';
+import codeCoverageTask from '@cypress/code-coverage/task';
 
 export default defineConfig({
   projectId: '8vc1o6',
@@ -12,7 +13,7 @@ export default defineConfig({
   retries: 3,
   e2e: {
     setupNodeEvents(on, config) {
-      require('@cypress/code-coverage/task')(on, config);
+      return codeCoverageTask(on, config);
     },
     excludeSpecPattern: '*.disabled',
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
