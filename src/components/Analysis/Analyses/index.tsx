@@ -14,7 +14,7 @@ type AssociatedAnaysesProps = {
   rootEndpoint: string;
 };
 
-const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
+const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({}) => {
   const accession = useURLAccession();
   const [analysesPage] = useQueryParamState('analyses-page', 1, Number);
 

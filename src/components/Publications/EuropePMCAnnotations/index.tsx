@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import ExtLink from 'components/UI/ExtLink';
 import EuropePMCLogo from 'images/europe_pmc_logo.png';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 
