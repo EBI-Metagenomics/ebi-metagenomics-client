@@ -253,9 +253,9 @@ const EBIFooter: React.FC = () => {
           </span>
         </p>
         <p className="vf-footer__legal">
-          <span className="vf-footer__legal-text">Copyright © EMBL 2024</span>
+          <span className="vf-footer__legal-text">Copyright © EMBL 2025</span>
           <span className="vf-footer__legal-text">
-            EMBL-EBI is part of the
+            EMBL-EBI is part of the{' '}
             <a className="vf-footer__link" href="//www.embl.org">
               European Molecular Biology Laboratory
             </a>

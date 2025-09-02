@@ -1,30 +1,25 @@
 import { useContext, useState } from 'react';
 import UserContext from 'pages/Login/UserContext';
-import protectedAxios from '@/utils/protectedAxios';
+import { jwtDecode } from 'jwt-decode';
 
 type AuthToken = string | null;
-const getUserDetailsFromToken = (token: string) => {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace('-', '+').replace('_', '/');
-  return JSON.parse(window.atob(base64));
-};
+interface TokenContent {
+  username: string;
+  iat: number;
+  exp: number;
+  token_type: string;
+}
 
 const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
   const [authToken, setAuthTokenInternally] = useState<string | null>(() => {
-    return localStorage.getItem('mgnify.token');
+    return localStorage.getItem('mgnify.v2.token');
   });
   const { setUser, setDetails } = useContext(UserContext);
 
-  const getUserDetailsFromAccountApi = () => {
-    protectedAxios.get('/@/utils/myaccounts').then((response) => {
-      setDetails(response.data.data);
-    });
-  };
-
   const setAuthToken = (newToken: AuthToken) => {
     if (!newToken) {
-      localStorage.removeItem('mgnify.token');
-      localStorage.removeItem('mgnify.username');
+      localStorage.removeItem('mgnify.v2.token');
+      localStorage.removeItem('mgnify.v2.username');
       setUser({
         username: '',
         token: '',
@@ -33,16 +28,15 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
       setDetails(null);
       return;
     }
-    localStorage.setItem('mgnify.token', newToken as string);
+    localStorage.setItem('mgnify.v2.token', newToken as string);
     setAuthTokenInternally(newToken);
-    const userDetailsFromToken = getUserDetailsFromToken(newToken as string);
-    localStorage.setItem('mgnify.username', userDetailsFromToken.username);
+    const userDetailsFromToken = jwtDecode(newToken as string) as TokenContent;
+    localStorage.setItem('mgnify.v2.username', userDetailsFromToken.username);
     setUser({
       username: userDetailsFromToken.username,
       token: newToken,
       isAuthenticated: true,
     });
-    getUserDetailsFromAccountApi();
   };
 
   return [authToken, setAuthToken];

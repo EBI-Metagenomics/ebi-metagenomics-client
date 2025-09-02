@@ -9,7 +9,7 @@ import React, {
 import { useLocation, useNavigate } from 'react-router-dom';
 import OutterCard from 'components/UI/OutterCard';
 import UserContext from 'pages/Login/UserContext';
-import enaUserImg from 'images/ico_ena_user.jpg';
+import enaUserImg from 'public/images/ico_ena_user.jpg';
 import useAuthToken from 'hooks/authentication/useAuthToken';
 import axios from 'utils/protectedAxios';
 import Loading from 'components/UI/Loading';
@@ -17,14 +17,11 @@ import Loading from 'components/UI/Loading';
 const Login: React.FC = () => {
   const [, setAuthToken] = useAuthToken();
 
-  // const usernameRef = useRef(null);
-  // const passwordRef = useRef(null);
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef(null);
+  const passwordRef = useRef(null);
+  const loginErrorsContainerRef = useRef(null);
 
-  // const loginErrorsContainerRef = useRef(null);
-  const loginErrorsContainerRef = useRef<HTMLParagraphElement>(null);
-  const loggedInUsername = localStorage.getItem('mgnify.username');
+  const loggedInUsername = localStorage.getItem('mgnify.v2.username');
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -40,16 +37,8 @@ const Login: React.FC = () => {
       '?from=private-request': '/?from=private-request',
       '?from=public-request': '/?from=public-request',
     };
-    if (
-      possibleDesiredDestinations[
-        location.search as '?from=private-request' | '?from=public-request'
-      ]
-    ) {
-      setDesiredDestination(
-        possibleDesiredDestinations[
-          location.search as '?from=private-request' | '?from=public-request'
-        ]
-      );
+    if (possibleDesiredDestinations[location.search]) {
+      setDesiredDestination(possibleDesiredDestinations[location.search]);
       return;
     }
     if (location?.state?.from?.pathname) {
@@ -61,8 +50,8 @@ const Login: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     setAuthToken(null);
-    localStorage.removeItem('mgnify.token');
-    localStorage.removeItem('mgnify.username');
+    localStorage.removeItem('mgnify.v2.token');
+    localStorage.removeItem('mgnify.v2.username');
   };
 
   useEffect(() => {
@@ -86,11 +75,13 @@ const Login: React.FC = () => {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`/utils/token/obtain`, {
-        username: usernameRef?.current?.value,
-        password: passwordRef?.current?.value,
+      const response = await axios.post(`/auth/sliding`, {
+        username: usernameRef.current.value,
+        password: passwordRef.current.value,
       });
-      const accessToken = response.data.data.token;
+      const accessToken = response.data.token;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       setAuthToken(accessToken) as unknown as void;
       setUsername('');
       setPassword('');
@@ -98,11 +89,10 @@ const Login: React.FC = () => {
         replace: true,
       });
     } catch (error) {
-      const err = error as ErrorResponse;
-      if (!err.response) {
+      if (!error.response) {
         setErrMsg('Network error');
       } else {
-        setErrMsg(err.response.data.errors.non_field_errors[0]);
+        setErrMsg(error.response.data.detail);
       }
       loginErrorsContainerRef.current?.focus();
     } finally {

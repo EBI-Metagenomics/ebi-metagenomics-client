@@ -485,24 +485,6 @@ const ClosedReferenceMarkerGeneTable: React.FC<
           </tr>
         </tbody>
       </table>
-
-      <div className="marker-legend">
-        <div className="marker-legend-title">Read count color legend:</div>
-        <div className="marker-legend-items">
-          <div className="marker-legend-item">
-            <div className="marker-legend-color bacteria-color" />
-            <div className="marker-legend-label">Bacteria</div>
-          </div>
-          <div className="marker-legend-item">
-            <div className="marker-legend-color archaea-color" />
-            <div className="marker-legend-label">Archaea</div>
-          </div>
-          <div className="marker-legend-item">
-            <div className="marker-legend-color eukarya-color" />
-            <div className="marker-legend-label">Eukarya</div>
-          </div>
-        </div>
-      </div>
     </>
   );
 };

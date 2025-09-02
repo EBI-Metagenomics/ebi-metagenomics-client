@@ -4,43 +4,26 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import useURLAccession from '@/hooks/useURLAccession';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
-import InfoBanner from 'components/UI/InfoBanner';
-import { singularise } from 'utils/strings';
+import useURLAccession from 'hooks/useURLAccession';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import useStudyAnalysesList from 'hooks/data/useStudyAnalyses';
-import { Analysis, AnalysisList } from '@/interfaces';
-// import { Analysis, AnalysisList } from 'interfaces';
+import { Analysis, AnalysisList } from 'interfaces';
 
-const expectedPageSize = 100;
+const expectedPageSize = 10;
 type AssociatedAnaysesProps = {
   rootEndpoint: string;
 };
 
 const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const accession = useURLAccession();
-  const singularNamespace = singularise(rootEndpoint);
   const [analysesPage] = useQueryParamState('analyses-page', 1, Number);
 
-  const {
-    data,
-    error,
-    loading,
-    url: downloadURL,
-  } = useStudyAnalysesList(accession || '', {
+  const { data, error, loading, download } = useStudyAnalysesList(accession, {
     page: analysesPage,
   });
 
   if (loading) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error} />;
-
-  if (!data.count)
-    return (
-      <InfoBanner
-        type="info"
-        title={`The ${singularNamespace} has no analyses.`}
-      />
-    );
 
   const columns = [
     {
@@ -128,7 +111,8 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       loading={loading}
       namespace="analyses-"
       showPagination={showPagination}
-      downloadURL={downloadURL}
+      onDownloadRequested={download}
+      expectedPageSize={expectedPageSize}
     />
   );
 };

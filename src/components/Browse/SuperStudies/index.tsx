@@ -4,46 +4,37 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseList } from '@/hooks/data/useData';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import ReactMarkdown from 'react-markdown';
+import FetchError from 'components/UI/FetchError';
+import useSuperStudiesList from 'hooks/data/useSuperStudies';
 
 const BrowseSuperStudies: React.FC = () => {
   const [page] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [biome] = useQueryParamState('biome', 'root');
   const [pageSize] = useQueryParamState('page_size', 25, Number);
   const [hasData, setHasData] = useState(false);
-  const {
-    data: superStudiesList,
-    loading,
-    isStale,
-    downloadURL,
-  } = useMGnifyData('super-studies', {
+
+  const { data, loading, error, download } = useSuperStudiesList({
     page,
-    ordering: order,
-    lineage: biome,
-    page_size: pageSize,
+    pageSize,
   });
 
   const columns = React.useMemo(
     () => [
       {
         Header: 'Title',
-        accessor: 'attributes.title',
+        accessor: 'title',
+        disableSortBy: true,
         Cell: ({ cell }) => (
-          <Link
-            to={`/super-studies/${cell.row.original.attributes['url-slug']}`}
-          >
+          <Link to={`/super-studies/${cell.row.original.slug}`}>
             {cell.value}
           </Link>
         ),
       },
       {
         Header: 'Description',
-        accessor: 'attributes.description',
+        accessor: 'description',
         disableSortBy: true,
         Cell: ({ cell }) => (
           <ReactMarkdown>{cell.value as string}</ReactMarkdown>
@@ -54,23 +45,25 @@ const BrowseSuperStudies: React.FC = () => {
   );
 
   useEffect(() => {
-    setHasData(!!superStudiesList);
-  }, [superStudiesList]);
-  if (!superStudiesList && loading) return <Loading />;
+    setHasData(!!data?.items);
+  }, [data]);
+
+  if (loading) return <Loading size="large" />;
+  if (error) return <FetchError error={error} />;
+  if (!data) return <Loading />;
 
   return (
     <section className="mg-browse-section">
       {hasData && (
         <EMGTable
           cols={columns}
-          data={superStudiesList as MGnifyResponseList}
-          Title={`Super Studies (${superStudiesList.meta.pagination.count})`}
+          data={data}
+          Title={`Super Studies (${data.count})`}
           initialPage={(page as number) - 1}
           sortable
           loading={loading}
-          isStale={isStale}
           showPagination={false}
-          downloadURL={downloadURL}
+          onDownloadRequested={download}
         />
       )}
     </section>

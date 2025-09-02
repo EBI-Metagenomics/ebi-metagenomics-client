@@ -4,7 +4,7 @@ import useData, {
   MGnifyResponse,
   KeyValue,
   ResponseFormat,
-} from '@/hooks/data/useData';
+} from 'hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
 
 interface MgnifyDataResponse extends DataResponse {

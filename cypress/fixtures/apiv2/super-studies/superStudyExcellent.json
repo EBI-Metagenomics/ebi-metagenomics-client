@@ -1,0 +1,44 @@
+{
+  "slug": "excellent",
+  "title": "Excellent Adventure",
+  "description": "An **excellent adventure** through space and time",
+  "logo_url": "/fieldfiles/download/?name=analyses.SuperStudyImage%2Fbytes%2Ffilename%2Fmimetype%2Flogo.png",
+  "flagship_studies": [
+    {
+      "accession": "MGYS00000001",
+      "ena_accessions": [
+        "PRJNA398089"
+      ],
+      "title": "Project 1",
+      "biome": {
+        "biome_name": "root",
+        "lineage": null
+      },
+      "updated_at": "2025-07-29T11:32:54.168Z"
+    }
+  ],
+  "related_studies": [],
+  "genome_catalogues": [
+    {
+      "catalogue_id": "human-gut-v2-0",
+      "version": "1.0",
+      "name": "Human Gut Prokaryotes",
+      "description": "Prokaryotic genomes from human gut environments",
+      "protein_catalogue_name": null,
+      "protein_catalogue_description": null,
+      "updated_at": "2025-07-29T11:32:54.171Z",
+      "result_directory": null,
+      "genome_count": 2,
+      "unclustered_genome_count": null,
+      "ftp_url": "http://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/",
+      "pipeline_version_tag": "v1.2.1",
+      "catalogue_biome_label": "Human Gut",
+      "catalogue_type": "prokaryotes",
+      "other_stats": null,
+      "biome": {
+        "biome_name": "Human",
+        "lineage": "root:Host-Associated:Human"
+      }
+    }
+  ]
+}

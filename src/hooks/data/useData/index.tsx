@@ -256,9 +256,9 @@ async function fetchData(
     });
   } catch (error) {
     if (error.response.status === 401) {
-      localStorage.removeItem('mgnify.token');
-      localStorage.removeItem('mgnify.username');
-      localStorage.setItem('mgnify.sessionExpired', 'true');
+      localStorage.removeItem('mgnify.v2.token');
+      localStorage.removeItem('mgnify.v2.username');
+      localStorage.setItem('mgnify.v2.sessionExpired', 'true');
       window.location.reload();
     }
     updateState({

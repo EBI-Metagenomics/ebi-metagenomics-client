@@ -417,7 +417,7 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
           /* URL link container */
           .url-link-container {
             background-color: #f8f8f8;
-            padding: 8px 12px;
+            padding: 8px 12px 8px 4em;
             border-radius: 6px;
             margin-bottom: 12px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -430,7 +430,7 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
           .url-link-container::before {
             content: 'URL';
             position: absolute;
-            top: -8px;
+            top: 10px;
             left: 12px;
             background-color: #f0f0f0;
             padding: 0 6px;

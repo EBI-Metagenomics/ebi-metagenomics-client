@@ -176,33 +176,33 @@ const MegaMenu: React.FC = () => {
               </a>
             </li>
 
-            {/* {isAuthenticated ? ( */}
-            {/*  <li className="vf-navigation__item"> */}
-            {/*    <a */}
-            {/*      className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${ */}
-            {/*        activeSection === 'login-section' ? 'active' : '' */}
-            {/*      }`} */}
-            {/*      id="login-section" */}
-            {/*      href="/metagenomics/mydata" */}
-            {/*      onClick={(event) => */}
-            {/*        handleMenuItemClick(event, 'login-section') */}
-            {/*      } */}
-            {/*    > */}
-            {/*      My data */}
-            {/*    </a> */}
-            {/*  </li> */}
-            {/* ) : ( */}
-            {/*  <li className="vf-navigation__item"> */}
-            {/*    <a */}
-            {/*      id="login-link" */}
-            {/*      className="vf-navigation__link vf-mega-menu__link" */}
-            {/*      href="/metagenomics/login" */}
-            {/*      onClick={() => setMenuVisible(false)} */}
-            {/*    > */}
-            {/*      Login */}
-            {/*    </a> */}
-            {/*  </li> */}
-            {/* )} */}
+            {isAuthenticated ? (
+              <li className="vf-navigation__item">
+                <a
+                  className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
+                    activeSection === 'login-section' ? 'active' : ''
+                  }`}
+                  id="login-section"
+                  href="/metagenomics/mydata"
+                  onClick={(event) =>
+                    handleMenuItemClick(event, 'login-section')
+                  }
+                >
+                  My data
+                </a>
+              </li>
+            ) : (
+              <li className="vf-navigation__item">
+                <a
+                  id="login-link"
+                  className="vf-navigation__link vf-mega-menu__link"
+                  href="/metagenomics/login"
+                  onClick={() => setMenuVisible(false)}
+                >
+                  Login
+                </a>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
@@ -227,14 +227,14 @@ const MegaMenu: React.FC = () => {
                   <div>
                     <nav className="vf-navigation vf-navigation--main">
                       <ul className="vf-navigation__list | vf-list | vf-cluster__inner | vf-stack vf-stack--200">
-                        {/* <li className="vf-navigation__item"> */}
-                        {/*  <a */}
-                        {/*    href={`${config.basename}/browse/super-studies`} */}
-                        {/*    className="vf-navigation__link rotating-link" */}
-                        {/*  > */}
-                        {/*    Super studies <ArrowForLink /> */}
-                        {/*  </a> */}
-                        {/* </li> */}
+                        <li className="vf-navigation__item">
+                          <a
+                            href={`${config.basename}/browse/super-studies`}
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Super studies <ArrowForLink />
+                          </a>
+                        </li>
                         <li className="vf-navigation__item">
                           <a
                             href={`${config.basename}/browse/studies`}
@@ -251,14 +251,14 @@ const MegaMenu: React.FC = () => {
                         {/*    Samples <ArrowForLink /> */}
                         {/*  </a> */}
                         {/* </li> */}
-                        {/* <li className="vf-navigation__item"> */}
-                        {/*  <a */}
-                        {/*    href={`${config.basename}/browse/publications`} */}
-                        {/*    className="vf-navigation__link rotating-link" */}
-                        {/*  > */}
-                        {/*    Publications <ArrowForLink /> */}
-                        {/*  </a> */}
-                        {/* </li> */}
+                        <li className="vf-navigation__item">
+                          <a
+                            href={`${config.basename}/browse/publications`}
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Publications <ArrowForLink />
+                          </a>
+                        </li>
                         {/* <li className="vf-navigation__item"> */}
                         {/*  <a */}
                         {/*    href={`${config.basename}/browse/genomes`} */}
@@ -694,7 +694,7 @@ const MegaMenu: React.FC = () => {
                 <div className="vf-section-header">
                   <h2 className="vf-section-header__heading">My Data</h2>
                   <p className="vf-section-header__text">
-                    Access your data and Webin account information
+                    Access analyses of data belonging to your Webin account
                   </p>
                 </div>
                 <div className="vf-section-content | vf-grid vf-grid__col-3">
