@@ -11,6 +11,7 @@ const SearchPage: React.FC = () => {
             className="vf-form__input search-text-input"
             placeholder="Enter keywords, sample names, or biome types..."
           />
+          {/* eslint-disable-next-line react/button-has-type */}
           <button className="vf-button vf-button--primary vf-button--large">
             Search
           </button>

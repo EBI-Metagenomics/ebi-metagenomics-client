@@ -8,7 +8,6 @@ import SearchPage from 'pages/Search';
 import { useReveal } from 'hooks/useReveal';
 import SearchBy from 'components/Home/SearchBy';
 import LatestStudies from 'components/Home/Request/LatestStudies';
-import { Search, Dna, FileSearch } from 'lucide-react';
 
 const HomePage: React.FC = () => {
   const analysisRef = useReveal();
@@ -21,18 +20,18 @@ const HomePage: React.FC = () => {
         <div className="home-hero-bg-pattern" />
         <div className="home-hero-content">
           <h1 className="vf-text vf-text--display vf-text--bold home-search-title">
-            Discover and Compare Microbiome Data
+            Search study and sample descriptions
           </h1>
-          <p className="vf-text vf-text-body home-search-subtext">
-            Explore datasets using text, protein, or nucleotide sequences.
-          </p>
+          {/*<p className="vf-text vf-text-body home-search-subtext">*/}
+          {/*  Explore datasets using text, protein, or nucleotide sequences.*/}
+          {/*</p>*/}
           <div className="home-search-box">
             <SearchPage />
           </div>
-          <p className="vf-text-body--2 home-search-examples">
-            Examples: <code>Tara Oceans</code>, <code>MGYS00000410</code>,{' '}
-            <code>Human Gut</code>
-          </p>
+          {/*<p className="vf-text-body--2 home-search-examples">*/}
+          {/*  Examples: <code>Tara Oceans</code>, <code>MGYS00000410</code>,{' '}*/}
+          {/*  <code>Human Gut</code>*/}
+          {/*</p>*/}
         </div>
       </div>
 
@@ -40,37 +39,22 @@ const HomePage: React.FC = () => {
       <div className="home-search-cards vf-grid vf-grid__col-3">
         <div className="vf-card home-search-card">
           <InnerCard
-            title={
-              <div className="card-title-with-icon">
-                <Search className="card-icon" size={20} />
-                Search by Text
-              </div>
-            }
+            title="Search by Text"
             label="Find resources using keywords, names, or descriptions"
             to="/search"
           />
         </div>
         <div className="vf-card home-search-card">
           <InnerCard
-            title={
-              <div className="card-title-with-icon">
-                <Dna className="card-icon" size={20} />
-                Search by Protein
-              </div>
-            }
-            label="Search for resources using protein sequences"
+            title="Search by Protein"
+            label="Search for resources using  nucleotide or protein sequences"
             to="/biomes"
           />
         </div>
         <div className="vf-card home-search-card">
           <InnerCard
-            title={
-              <div className="card-title-with-icon">
-                <FileSearch className="card-icon" size={20} />
-                Search by Nucleotide
-              </div>
-            }
-            label="Search for resources using nucleotide sequences"
+            title="Search by Nucleotide"
+            label="Search metagenomes using nucleotide sequences"
             to="/branchwater-search"
           />
         </div>
@@ -104,17 +88,18 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Explore by data type and biome section */}
-      <section ref={exploreRef} className="vf-section reveal">
-        <h2 className="vf-section__title">Explore by Data Type or Biome</h2>
-        <div className="search-by-modernized">
-          <SearchBy />
-        </div>
-      </section>
+      {/*TODO  Make counts appear in this section*/}
+      {/*<section ref={exploreRef} className="vf-section reveal">*/}
+      {/*  <h2 className="vf-section__title">Explore by Data Type or Biome</h2>*/}
+      {/*  <div className="search-by-modernized">*/}
+      {/*    <SearchBy />*/}
+      {/*  </div>*/}
+      {/*</section>*/}
 
-      <section className="vf-section">
-        <h2 className="vf-section__title">Spotlight & Articles</h2>
-        <BlogExcerpts />
-      </section>
+      {/*<section className="vf-section">*/}
+      {/*  <h2 className="vf-section__title">Spotlight & Articles</h2>*/}
+      {/*  <BlogExcerpts />*/}
+      {/*</section>*/}
 
       <section className="vf-section">
         <h2 className="vf-section__title">Latest Publications</h2>

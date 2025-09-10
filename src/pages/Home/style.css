@@ -41,11 +41,9 @@
     pointer-events: none;
 }
 
-
-
 .vf-section--highlight {
     background-color: #f5faff;
-    padding: 2.5rem 1rem;
+    padding: 1rem 1rem;
     border-radius: 12px;
     margin-top: 2rem;
     margin-bottom: 3rem;
@@ -139,7 +137,7 @@
     position: relative;
     background: linear-gradient(135deg, #d3f2f0 0%, #e6f2f7 100%);
     border-radius: 12px;
-    padding: 4rem 2rem;
+    padding: 2rem 2rem;
     margin-bottom: 3rem;
     overflow: hidden;
 }
@@ -294,21 +292,4 @@ hr {
     max-width: 80%;
     margin: 3rem auto;
     border-top: 1px solid #eee;
-}
-
-/* Card icon styles */
-.card-icon {
-    display: inline-flex;
-    margin-right: 0.5rem;
-    color: #3b6fb6;
-    vertical-align: middle;
-}
-
-.inner-card:hover .card-icon {
-    color: #193f90;
-}
-
-.card-title-with-icon {
-    display: flex;
-    align-items: center;
 }
