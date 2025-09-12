@@ -16,6 +16,15 @@
 .inner-card .vf-card__heading {
     font-size: 1.1rem;
     margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.inner-card__icon {
+    display: inline-flex;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
 .inner-card .vf-card__link {

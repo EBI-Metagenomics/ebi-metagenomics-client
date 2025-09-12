@@ -13,6 +13,7 @@ type InnerCardProps = {
   className?: string;
   to: string | (() => void);
   badge?: string;
+  icon?: React.ReactNode; // optional small icon shown before the title
 };
 
 const InnerCard: React.FC<InnerCardProps> = ({
@@ -24,6 +25,7 @@ const InnerCard: React.FC<InnerCardProps> = ({
   externalLink = false,
   className = 'vf-card--bordered',
   badge,
+  icon,
 }) => {
   return (
     <article
@@ -39,6 +41,11 @@ const InnerCard: React.FC<InnerCardProps> = ({
       )}
       <div className="vf-card__content | vf-stack vf-stack--400">
         <h3 className="vf-card__heading">
+          {icon && (
+            <span className="inner-card__icon" aria-hidden>
+              {icon}
+            </span>
+          )}
           {badge && (
             <span className="vf-badge vf-badge--tertiary vf-badge--pill inner-card__badge">
               {badge}
