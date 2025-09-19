@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import protectedAxios from 'utils/protectedAxios';
+import protectedAxios from '@/utils/protectedAxios';
 import { AxiosResponse } from 'axios';
 
 export enum ResponseFormat {
@@ -318,7 +318,6 @@ const useData: (
       setFullState(EmptyResponse);
     }
     return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       isActive = false;
     };
   }, [

@@ -1,4 +1,64 @@
+/* DataType Component - Modern Styling */
+
 .mg-small-table td {
-  font-size: 0.9rem;
-  padding: 0.5em 0.3em;
+  font-size: 1rem;
+  padding: 0.75em 0.5em;
+}
+
+.vf-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.vf-table__cell {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+}
+
+.vf-table__row:last-child .vf-table__cell {
+  border-bottom: none;
+}
+
+.vf-table__row:hover .vf-table__cell {
+  background-color: #f8f9fd;
+}
+
+.mg-link {
+  color: #3b6fb6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.mg-link:hover {
+  color: #193f90;
+  text-decoration: none;
+  transform: translateX(3px);
+}
+
+/* Icon styling */
+.icon-conceptual, .icon-functional {
+  color: #3b6fb6;
+  margin-right: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+h5:hover .icon-conceptual, h5:hover .icon-functional {
+  transform: scale(1.1);
 }

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import 'mgnify-sourmash-component';
+// import 'mgnify-sourmash-component';
 
-import useInterval from 'hooks/useInterval';
-import useMgnifySourmashStatus from 'hooks/data/useMgnifySourmashStatus';
+import useInterval from '@/hooks/useInterval';
+import useMgnifySourmashStatus from '@/hooks/data/useMgnifySourmashStatus';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import SourmashResultsTable from './Table';
 
 const INTERVAL_TIME = 1000;
@@ -48,7 +48,6 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({ addToStorage }) => {
       setCount(0);
       setShouldCheck(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, error, loading]);
 
   useEffect(() => {

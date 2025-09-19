@@ -19,6 +19,81 @@ import config from 'utils/config';
 // Create a context to share assembly data with child components
 const V2AssemblyContext = createContext<any>(null);
 
+// DerivedGenomes component to display derived genomes
+const DerivedGenomes: React.FC = () => {
+  const { assemblyData } = React.useContext(V2AssemblyContext);
+  const [data, setData] = useState(null);
+  const accession = useURLAccession();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // const response = await axios.get(`assemblies/${accession}`);
+        console.log('ACCESSIOn ', accession);
+        // const response = await axios.get(`${config.api_v2}/${accession}`);
+        const response = await axios.get(
+          `http://localhost:8000/assemblies/ERZ26869131`
+        );
+        setData(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError({
+          error: err,
+          type: ErrorTypes.FetchError,
+        });
+        setLoading(false);
+      }
+    };
+
+    if (accession) {
+      fetchData();
+    }
+  }, [accession]);
+  return (
+    <Box label="Derived genomes">
+      {data?.accession ? (
+        <table className="vf-table | vf-table--compact | derived-genomes-table">
+          <thead>
+            <tr>
+              <th>Genome accession</th>
+              <th>ENA</th>
+              <th>Species Representative</th>
+              <th>Taxonomy</th>
+              <th>Catalogue</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/*{assemblyData.genome_links.map((link) => (*/}
+            {/*  <tr key={link.genome.accession}>*/}
+            {/*    <td>*/}
+            {/*      <Link to={`/genomes/${link.genome.accession}`}>*/}
+            {/*        {link.genome.accession}*/}
+            {/*      </Link>*/}
+            {/*    </td>*/}
+            {/*    <td>✅</td> /!* Placeholder for ENA info *!/*/}
+            {/*    <td>*/}
+            {/*      {link.species_rep ? (*/}
+            {/*        <Link to={`/genomes/${link.species_rep}`}>*/}
+            {/*          {link.species_rep}*/}
+            {/*        </Link>*/}
+            {/*      ) : (*/}
+            {/*        '—'*/}
+            {/*      )}*/}
+            {/*    </td>*/}
+            {/*    <td>—</td> /!* Taxonomy not in API response *!/*/}
+            {/*    <td>Marine v1.0</td> /!* Hardcoded for now *!/*/}
+            {/*  </tr>*/}
+            {/*))}*/}
+          </tbody>
+        </table>
+      ) : (
+        <p>No derived genomes found.</p>
+      )}
+    </Box>
+  );
+};
+
 // Overview component to display assembly details
 const Overview: React.FC = () => {
   const { assemblyData } = React.useContext(V2AssemblyContext);
@@ -60,10 +135,10 @@ const Overview: React.FC = () => {
         </ExtLink>
       ),
     },
-    {
-      key: 'Legacy accession',
-      value: assemblyData.attributes['legacy-accession'] as string,
-    },
+    // {
+    //   key: 'Legacy accession',
+    //   value: assemblyData.attributes['legacy-accession'] as string,
+    // },
   ].filter(({ value }) => Boolean(value));
 
   return (
@@ -73,54 +148,6 @@ const Overview: React.FC = () => {
       </Box>
       <DerivedGenomes />
     </>
-  );
-};
-
-// DerivedGenomes component to display derived genomes
-const DerivedGenomes: React.FC = () => {
-  const { assemblyData } = React.useContext(V2AssemblyContext);
-
-  return (
-    <Box label="Derived genomes">
-      {assemblyData?.genome_links?.length ? (
-        <table className="vf-table | vf-table--compact | derived-genomes-table">
-          <thead>
-            <tr>
-              <th>Genome accession</th>
-              <th>ENA</th>
-              <th>Species Representative</th>
-              <th>Taxonomy</th>
-              <th>Catalogue</th>
-            </tr>
-          </thead>
-          <tbody>
-            {assemblyData.genome_links.map((link, i) => (
-              <tr key={i}>
-                <td>
-                  <Link to={`/genomes/${link.genome.accession}`}>
-                    {link.genome.accession}
-                  </Link>
-                </td>
-                <td>✅</td> {/* Placeholder for ENA info */}
-                <td>
-                  {link.species_rep ? (
-                    <Link to={`/genomes/${link.species_rep}`}>
-                      {link.species_rep}
-                    </Link>
-                  ) : (
-                    '—'
-                  )}
-                </td>
-                <td>—</td> {/* Taxonomy not in API response */}
-                <td>Marine v1.0</td> {/* Hardcoded for now */}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>No derived genomes found.</p>
-      )}
-    </Box>
   );
 };
 
@@ -139,7 +166,7 @@ const AdditionalAnalyses: React.FC = () => {
     <Box label="Additional analyses">
       <p>
         Additional annotations produced by workflows run outside the scope of
-        MGnify's versioned pipelines.
+        MGnify&apos;s versioned pipelines.
       </p>
       <ExtraAnnotations namespace="assemblies" />
     </Box>
@@ -152,13 +179,18 @@ const V2AssemblyPage: React.FC = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const assemblyData = (data as MGnifyResponseObj | null)?.data;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         // const response = await axios.get(`assemblies/${accession}`);
-        const response = await axios.get(`${config.api_v2}/${accession}`);
+        console.log('ACCESSIOn ', accession);
+        // const response = await axios.get(`${config.api_v2}/${accession}`);
+        const response = await axios.get(
+          `http://localhost:8000/assemblies/ERZ26869131`
+        );
         setData(response.data);
         setLoading(false);
       } catch (err) {
@@ -175,12 +207,13 @@ const V2AssemblyPage: React.FC = () => {
     }
   }, [accession]);
 
+  // Ensure hook order is consistent across renders: compute memoized value unconditionally
+  // const assemblyData = (data as MGnifyResponseObj | null)?.data;
+  const value = useMemo(() => ({ assemblyData }), [assemblyData]);
+
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
-
-  const { data: assemblyData } = data as MGnifyResponseObj;
-  const value = useMemo(() => ({ assemblyData }), [assemblyData]);
 
   const tabs = [
     { label: 'Overview', to: '#overview' },
@@ -190,7 +223,8 @@ const V2AssemblyPage: React.FC = () => {
 
   return (
     <section className="vf-content">
-      <h2>Assembly: {assemblyData?.id || ''}</h2>
+      {/*<h2>Assembly: {assemblyData?.accession || ''}</h2>*/}
+      <h2>Assembly: {data?.accession || ''}</h2>
       <Tabs tabs={tabs} />
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">

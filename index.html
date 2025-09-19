@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link
+      rel="stylesheet"
+      href="https://assets.emblstatic.net/vf/v2.5.7/css/styles.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://assets.emblstatic.net/vf/v2.5.7/assets/ebi-header-footer/ebi-header-footer.css"
+    />
+    <link
+      rel="stylesheet"
+      href="//ebi.emblstatic.net/web_guidelines/EBI-Icon-fonts/v1.3/fonts.css"
+      type="text/css"
+      media="all"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stable.visual-framework.dev/assets/vf-banner-elixir/vf-banner-elixir.css"
+    />
+    <title>MGnify - EBI</title>
+
+    <!--  TODO: remove this script when no longer using GH Pages -->
+    <!-- Start Single Page Apps for GitHub Pages Changed 2 -->
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      // MIT License
+      // https://github.com/rafgraph/spa-github-pages
+      // This script checks to see if a redirect is present in the query string,
+      // converts it back into the correct url and adds it to the
+      // browser's history using window.history.replaceState(...),
+      // which won't cause the browser to attempt to load the new url.
+      // When the single page app is loaded further down in this file,
+      // the correct url will be waiting in the browser's history for
+      // the single page app to route accordingly.
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(
+            null,
+            null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      })(window.location);
+    </script>
+    <!-- End Single Page Apps for GitHub Pages -->
+  </head>
+  <body class="vf-body vf-stack ebi-black-bar-loaded embl-content-hub-loaded">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script src="./node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.js"></script>
+  </body>
+</html>

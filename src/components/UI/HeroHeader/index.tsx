@@ -3,10 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './style.css';
 
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
-import useQueryParamsStore from 'hooks/queryParamState/QueryParamStore/useQueryParamsStore';
-import { createParamFromURL } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
+import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
+import { createParamFromURL } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
 import Link from 'components/UI/Link';
-import { getDetailOrSearchURLForQuery } from 'utils/accessions';
+import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
 
 const HeroHeader: React.FC = () => {
   const searchBox = useRef<HTMLInputElement>();

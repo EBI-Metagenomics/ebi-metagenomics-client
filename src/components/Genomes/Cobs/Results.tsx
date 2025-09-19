@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import useMgnifyCobsSearch from 'hooks/data/useMgnifyCobsSearch';
+import useMgnifyCobsSearch from '@/hooks/data/useMgnifyCobsSearch';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import { getSimpleTaxLineage, cleanTaxLineage } from 'utils/taxon';
+import { getSimpleTaxLineage, cleanTaxLineage } from '@/utils/taxon';
 import Tooltip from 'components/UI/Tooltip';
-import { getBiomeIcon } from 'utils/biomes';
+import { getBiomeIcon } from '@/utils/biomes';
 import { last, split } from 'lodash-es';
 
 type ResultsProps = {

@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from 'react';
 
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
-import { getBiomeIcon } from 'utils/biomes';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseList } from '@/hooks/data/useData';
+import { getBiomeIcon } from '@/utils/biomes';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import Link from 'components/UI/Link';
 
 const BrowseBiomes: React.FC = () => {

@@ -3,10 +3,11 @@ import React, { useContext } from 'react';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import InnerCard from 'components/UI/InnerCard';
-import useBlogData from 'hooks/data/useBlogData';
+import useBlogData from '@/hooks/data/useBlogData';
 
 import UserContext from 'pages/Login/UserContext';
 import ArrowForLink from 'components/UI/ArrowForLink';
+import './style.css';
 
 const removeHTMLTags = (text: string): string => {
   return text.replace(/&lt;.+?&gt;/g, '').trim();
@@ -51,7 +52,7 @@ const BlogExcerpts: React.FC = () => {
     'vf-grid vf-grid__col-3 | vf-card-container | ' +
     'vf-u-fullbleed vf-u-background-color-ui--grey--light';
   return (
-    <div>
+    <div className="blog-excerpts-section">
       <div className={blogClass}>
         {data.spotlight && (
           <BlogExcerpt
@@ -71,7 +72,7 @@ const BlogExcerpts: React.FC = () => {
             url={data.tools.url}
           />
         )}
-        <article className="vf-card vf-card vf-card--bordered">
+        <article className="vf-card vf-card vf-card--bordered twitter-card">
           <div className="vf-card__content | vf-stack vf-stack--400">
             <h3 className="vf-card__heading">
               <a

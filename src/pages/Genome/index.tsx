@@ -1,4 +1,5 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
+import axios from 'axios';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
@@ -6,10 +7,10 @@ import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import Overview from 'components/Genomes/Overview';
 import Downloads from 'components/Downloads';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from 'hooks/data/useData';
-import useURLAccession from 'hooks/useURLAccession';
-import { cleanTaxLineage } from 'utils/taxon';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseObj } from '@/hooks/data/useData';
+import useURLAccession from '@/hooks/useURLAccession';
+import { cleanTaxLineage } from '@/utils/taxon';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
@@ -27,12 +28,43 @@ const tabs = [
   { label: 'COG analysis', to: '#cog-analysis' },
   { label: 'KEGG class analysis', to: '#kegg-class-analysis' },
   { label: 'KEGG module analysis', to: '#kegg-module-analysis' },
+  { label: 'Metagenome search', to: '#metagenome-search' },
   { label: 'Downloads', to: '#downloads' },
 ];
 
 const GenomePage: React.FC = () => {
   const accession = useURLAccession();
   const { data, loading, error } = useMGnifyData(`genomes/${accession}`);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  const handleMetagenomeSearch = () => {
+    // Only proceed if we have the data
+    if (!data) return;
+
+    const { data: genomeData } = data as MGnifyResponseObj;
+    const relatedCat = genomeData.relationships.catalogue as {
+      data: { id: string; type: string };
+      links: { related: string };
+    };
+
+    setIsSearching(true);
+
+    axios
+      .post(
+        `http://branchwater-dev.mgnify.org/mags?accession=${accession}&catalogue=${relatedCat.data.id}`
+      )
+      .then((response) => {
+        setSearchResults(response.data);
+        setIsSearching(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching metagenome search results:', err);
+        setIsSearching(false);
+        // Could add error state handling here if needed
+      });
+  };
+
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
@@ -100,8 +132,105 @@ const GenomePage: React.FC = () => {
               <KEGGModulesAnalysis />
             </Suspense>
           </RouteForHash>
+          <RouteForHash hash="#metagenome-search">
+            <div className="vf-stack vf-stack--400">
+              <h3>Metagenome Search</h3>
+              <p>
+                Search for metagenomes similar to this genome using sequence
+                similarity.
+              </p>
+
+              <button
+                type="button"
+                className="vf-button vf-button--primary"
+                onClick={handleMetagenomeSearch}
+                disabled={isSearching}
+              >
+                {isSearching ? 'Searching...' : 'Search Metagenomes'}
+              </button>
+
+              {isSearching && (
+                <div className="vf-u-padding__top--400">
+                  <Loading size="small" />
+                  <p>Searching for similar metagenomes...</p>
+                </div>
+              )}
+
+              {searchResults.length > 0 && (
+                <div className="vf-u-padding__top--400">
+                  <h4>Search Results ({searchResults.length} matches found)</h4>
+                  <table className="vf-table">
+                    <thead className="vf-table__header">
+                      <tr className="vf-table__row">
+                        <th className="vf-table__heading" scope="col">
+                          Accession
+                        </th>
+                        <th className="vf-table__heading" scope="col">
+                          Type
+                        </th>
+                        <th className="vf-table__heading" scope="col">
+                          Bioproject
+                        </th>
+                        <th className="vf-table__heading" scope="col">
+                          Biosample
+                        </th>
+                        <th className="vf-table__heading" scope="col">
+                          cANI
+                        </th>
+                        <th className="vf-table__heading" scope="col">
+                          Date
+                        </th>
+                        <th className="vf-table__heading" scope="col">
+                          Containment
+                        </th>
+                        <th className="vf-table__heading" scope="col">
+                          Location
+                        </th>
+                        <th className="vf-table__heading" scope="col">
+                          Organism
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="vf-table__body">
+                      {searchResults.map((result) => (
+                        <tr className="vf-table__row" key={result.acc}>
+                          <td className="vf-table__cell">{result.acc}</td>
+                          <td className="vf-table__cell">
+                            {result.assay_type}
+                          </td>
+                          <td className="vf-table__cell">
+                            {result.bioproject}
+                          </td>
+                          <td className="vf-table__cell">
+                            <a
+                              href={result.biosample_link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Link
+                            </a>
+                          </td>
+                          <td className="vf-table__cell">{result.cANI}</td>
+                          <td className="vf-table__cell">
+                            {result.collection_date_sam}
+                          </td>
+                          <td className="vf-table__cell">
+                            {result.containment}
+                          </td>
+                          <td className="vf-table__cell">
+                            {result.geo_loc_name_country_calc}
+                          </td>
+                          <td className="vf-table__cell">{result.organism}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </RouteForHash>
           <RouteForHash hash="#downloads">
-            <Downloads endpoint="genomes" accession={accession} />
+            <Downloads endpoint="genomes" accession={accession || ''} />
           </RouteForHash>
         </div>
       </section>

@@ -21,6 +21,9 @@ import './styles/search.css';
 import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
+import PersistLogin from 'components/PersistLogin';
+// import SearchPage from './pages/Search';
+// import Branchwater from './pages/Branchwater';
 // import PersistLogin from 'components/PersistLogin';
 import V2AnalysisPage from 'pages/Analysis/v2index';
 import V2AssemblyPage from 'pages/Assembly/v2index';
@@ -29,10 +32,10 @@ import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Help = lazy(() => import('./pages/Help'));
-// const TextSearch = lazy(() => import('./pages/TextSearch'));
-// const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
+const TextSearch = lazy(() => import('./pages/TextSearch'));
+const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
 const Browse = lazy(() => import('./pages/Browse'));
-// const Login = lazy(() => import('./pages/Login'));
+const Login = lazy(() => import('./pages/Login'));
 const Study = lazy(() => import('./pages/Study'));
 const Sample = lazy(() => import('./pages/Sample'));
 const SuperStudy = lazy(() => import('./pages/SuperStudy'));
@@ -43,6 +46,9 @@ const Run = lazy(() => import('./pages/Run'));
 const Assembly = lazy(() => import('./pages/Assembly'));
 const Pipelines = lazy(() => import('./pages/Pipelines'));
 const Analysis = lazy(() => import('./pages/Analysis'));
+
+const SearchPage = lazy(() => import('pages/Search'));
+const Branchwater = lazy(() => import('pages/Branchwater'));
 
 const ResetScroll = () => {
   const { pathname } = useLocation();
@@ -82,17 +88,18 @@ const App: React.FC = () => {
           <EBIHeader />
           <HeroHeader />
           <MainMenu />
-          <SessionExpiryBanner />
           <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
             <ErrorBoundary>
               <ResetScroll />
               <Suspense fallback={<Loading size="large" />}>
                 <Routes>
+                  <Route path="/search-landing" element={<SearchPage />} />
+                  <Route path="/branchwater-search" element={<Branchwater />} />
                   <Route path="/" element={<Home />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/help" element={<Help />} />
-                  {/* <Route path="/search/*" element={<TextSearch />} /> */}
-                  {/* <Route path="/sequence-search" element={<SequenceSearch />} /> */}
+                  <Route path="/search/*" element={<TextSearch />} />
+                  <Route path="/sequence-search" element={<SequenceSearch />} />
                   <Route path="/browse/*" element={<Browse />} />
                   <Route path="/studies/*" element={<Study />} />
                   <Route path="/super-studies/*" element={<SuperStudy />} />
@@ -108,11 +115,10 @@ const App: React.FC = () => {
                   <Route path="/v2-assemblies/*" element={<V2AssemblyPage />} />
                   <Route path="/pipelines/*" element={<Pipelines />} />
                   <Route path="/analyses/*" element={<Analysis />} />
-                  <Route path="/v2-analyses/*" element={<V2AnalysisPage />} />
-                  {/* <Route path="/mydata" element={<MyData />} /> */}
-                  {/* <Route element={<PersistLogin />}> */}
-                  {/* <Route path="/login" element={<Login />} /> */}
-                  {/* </Route> */}
+                  <Route path="/mydata" element={<MyData />} />
+                  <Route element={<PersistLogin />}>
+                    <Route path="/login" element={<Login />} />
+                  </Route>
                 </Routes>
               </Suspense>
             </ErrorBoundary>

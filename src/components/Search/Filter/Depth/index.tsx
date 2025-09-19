@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState } from 'react';
 
 import Slider from 'components/UI/Slider';
 import Switch from 'components/UI/Switch';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 const MIN = 0;
 const MAX = 2000;

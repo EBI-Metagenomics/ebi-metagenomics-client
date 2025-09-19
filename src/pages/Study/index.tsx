@@ -7,7 +7,7 @@ import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Study/Overview';
 import SummaryTab from 'components/Study/SummaryTab';
 import RouteForHash from 'components/Nav/RouteForHash';
-import useCanonicalAccessionRedirect from 'hooks/useCanonicalAccessionRedirect';
+import useCanonicalAccessionRedirect from '@/hooks/useCanonicalAccessionRedirect';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import useStudyDetail from 'hooks/data/useStudyDetail';
 import { EnaDerivedObject } from 'interfaces';
@@ -20,7 +20,7 @@ const tabs = [
 const StudyPage: React.FC = () => {
   const accession = useURLAccession();
 
-  const { data, loading, error } = useStudyDetail(accession);
+  const { data, loading, error } = useStudyDetail(accession || '');
 
   useCanonicalAccessionRedirect(data as EnaDerivedObject);
   if (loading) return <Loading size="large" />;

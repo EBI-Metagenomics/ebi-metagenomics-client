@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { getBiomeIcon } from 'utils/biomes';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { getBiomeIcon } from '@/utils/biomes';
 import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import EMGTable from 'components/UI/EMGTable';
-import { MGnifyDatum, MGnifyResponseList } from 'hooks/data/useData';
+import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import BiomeSelector from 'components/UI/BiomeSelector';
 import { some } from 'lodash-es';
 

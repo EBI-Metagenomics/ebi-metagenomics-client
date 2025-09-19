@@ -44,7 +44,7 @@ const Browse: React.FC = () => {
           <Route path="studies" element={<BrowseStudies />} />
           {/* <Route path="samples" element={<BrowseSamples />} /> */}
           {/* <Route path="publications" element={<BrowsePublications />} /> */}
-          {/* <Route path="genomes" element={<BrowseGenomes />} /> */}
+          <Route path="genomes" element={<BrowseGenomes />} />
           {/* <Route path="biomes" element={<BrowseBiomes />} /> */}
           <Route index element={<Navigate to="studies" replace />} />
         </Routes>

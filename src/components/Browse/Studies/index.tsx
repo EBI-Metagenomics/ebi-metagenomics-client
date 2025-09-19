@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
-import { getBiomeIcon } from 'utils/biomes';
+import BiomeSelector from 'components/UI/BiomeSelector';
 import Loading from 'components/UI/Loading';
+import { getBiomeIcon } from 'utils/biomes';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import useStudiesList from 'hooks/data/useStudies';
-import BiomeSelector from 'components/UI/BiomeSelector';
 
 const BrowseStudies: React.FC = () => {
   const [page, setPage] = useQueryParamState('page', 1, Number);
@@ -33,8 +33,9 @@ const BrowseStudies: React.FC = () => {
       {
         id: 'biome',
         Header: 'Biome',
-        accessor: (study) => study.biome?.lineage,
-        Cell: ({ cell }) => (
+        accessor: (study: { biome?: { lineage: string } }) =>
+          study.biome?.lineage,
+        Cell: ({ cell }: { cell: { value: string } }) => (
           <span
             className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
             style={{ float: 'initial' }}
@@ -47,7 +48,7 @@ const BrowseStudies: React.FC = () => {
         id: 'accession',
         Header: 'Accession',
         accessor: 'accession',
-        Cell: ({ cell }) => (
+        Cell: ({ cell }: { cell: { value: string } }) => (
           <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
         ),
       },
@@ -59,7 +60,8 @@ const BrowseStudies: React.FC = () => {
       {
         Header: 'Last updated',
         accessor: 'updated_at',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        Cell: ({ cell }: { cell: { value: string | number | Date } }) =>
+          new Date(cell.value).toLocaleDateString(),
       },
     ],
     []
@@ -92,7 +94,7 @@ const BrowseStudies: React.FC = () => {
           sortable
           loading={loading}
           // showTextFilter
-          downloadURL={downloadURL}
+          downloadURL={downloadURL ?? undefined}
         />
       )}
     </section>
