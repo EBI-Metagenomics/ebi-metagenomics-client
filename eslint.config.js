@@ -1,6 +1,5 @@
 // eslint.config.js
 import js from '@eslint/js'
-import airbnbX from 'eslint-config-airbnb-extended'
 import globals from 'globals'
 import tseslint from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
@@ -9,11 +8,9 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 
 import prettier from 'eslint-plugin-prettier'
-import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default [
   js.configs.recommended,
-  ...airbnbX,
 
   {
     languageOptions: {
@@ -86,5 +83,4 @@ export default [
     },
   },
   prettier.configs.recommended,
-  eslintConfigPrettier,
 ]
