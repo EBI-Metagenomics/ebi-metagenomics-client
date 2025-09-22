@@ -2,7 +2,7 @@ import React from 'react';
 import { Row } from 'react-table';
 
 import EMGTable from 'components/UI/EMGTable';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import { TaxDatum } from '../PhylumCharts';
 
 const sortFunction = (order) => (a: TaxDatum, b: TaxDatum) => {
@@ -28,6 +28,11 @@ const sortFunction = (order) => (a: TaxDatum, b: TaxDatum) => {
   }
 };
 
+const {usePhylumOrder, withQueryParamProvider} = createSharedQueryParamContextForTable(
+  "phylum",
+  {},
+)
+
 type PhylumTableProps = {
   clusteredData: Array<TaxDatum>;
   onMouseEnterRow?: (row: Row) => void;
@@ -38,7 +43,7 @@ const PhylumTable: React.FC<PhylumTableProps> = ({
   onMouseEnterRow = () => null,
   onMouseLeaveRow = () => null,
 }) => {
-  const [order] = useQueryParamState('order', '');
+  const [order] = usePhylumOrder<string>();
 
   const columns = [
     {
@@ -90,8 +95,9 @@ const PhylumTable: React.FC<PhylumTableProps> = ({
       onMouseEnterRow={onMouseEnterRow}
       onMouseLeaveRow={onMouseLeaveRow}
       sortable
+      namespace="phylum"
     />
   );
 };
 
-export default PhylumTable;
+export default withQueryParamProvider(PhylumTable);

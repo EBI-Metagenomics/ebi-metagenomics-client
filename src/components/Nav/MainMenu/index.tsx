@@ -16,6 +16,7 @@ import { useMedia } from 'react-use';
 import EMGModal from 'components/UI/EMGModal';
 import useAuthTokenVerifier from '@/hooks/authentication/useAuthTokenVerifier';
 import MegaMenu from 'components/Nav/MegaMenu';
+import config from 'utils/config';
 
 const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'Overview', path: '/' },
@@ -36,7 +37,7 @@ const START_POS = 100;
 const START_MARGIN = -7;
 
 const Nav: React.FC = () => {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const { isAuthenticated } = useContext(UserContext);
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
@@ -54,8 +55,8 @@ const Nav: React.FC = () => {
               <Link
                 className="vf-navigation__link"
                 aria-current={
-                  (path === '/' && location.pathname === path) ||
-                  (path !== '/' && location.pathname.startsWith(path))
+                  (path === '/' && pathname === path) ||
+                  (path !== '/' && pathname.startsWith(path))
                     ? 'page'
                     : undefined
                 }

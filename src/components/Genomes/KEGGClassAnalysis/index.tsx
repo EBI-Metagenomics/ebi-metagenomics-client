@@ -11,11 +11,17 @@ import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import useDefaultGenomeConfig from '@/hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from '@/utils/taxon';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 
 addExportMenu(Highcharts);
 
 const initialPageSize = 10;
+
+const {useKeggClassPage, useKeggClassPageSize, useKeggClassOrder, withQueryParamProvider} = createSharedQueryParamContextForTable(
+  "keggCLass",
+  {},
+  initialPageSize
+)
 
 const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   includePangenomes = true,
@@ -23,13 +29,9 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const accession = useURLAccession();
 
-  const [keggPage] = useQueryParamState('kegg-page', 1, Number);
-  const [keggPageSize] = useQueryParamState(
-    'kegg-page_size',
-    initialPageSize,
-    Number
-  );
-  const [keggOrder] = useQueryParamState('kegg-order', '');
+  const [keggPage] = useKeggClassPage<number>();
+  const [keggPageSize] = useKeggClassPageSize<number>();
+  const [keggOrder] = useKeggClassOrder<string>();
 
   const { columns, options } = useDefaultGenomeConfig();
   const { data, loading, isStale, error } = useMGnifyData(
@@ -132,4 +134,4 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   );
 };
 
-export default KEGGClassAnalises;
+export default withQueryParamProvider(KEGGClassAnalises);

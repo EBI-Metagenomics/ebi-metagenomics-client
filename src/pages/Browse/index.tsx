@@ -20,13 +20,13 @@ const tabs = [
 ];
 
 const Browse: React.FC = () => {
-  const location = useLocation();
+  const {pathname} = useLocation();
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Browse', url: '/browse' },
   ];
   const updateBreadcrumbs = () => {
-    const currentTab = tabs.find((tab) => tab.to === location.pathname);
+    const currentTab = tabs.find((tab) => tab.to === pathname);
     if (currentTab) {
       breadcrumbs.push({ label: currentTab.label, url: currentTab.to });
     }

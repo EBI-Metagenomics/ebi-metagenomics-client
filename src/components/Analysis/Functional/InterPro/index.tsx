@@ -8,19 +8,26 @@ import { TAXONOMY_COLOURS } from '@/utils/taxon';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import ExtLink from 'components/UI/ExtLink';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import InterProMatchesChart from './InterProMatchesChart';
 import InterProQCChart from './QCChart';
 
 const PAGE_SIZE = 25;
+
+const {useInterproPage, useInterproPageSize, useInterpoOrder, withQueryParamProvider} = createSharedQueryParamContextForTable(
+  "interpro",
+  {},
+  PAGE_SIZE
+)
+
 const InterPro: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
   const [total, setTotal] = useState(-1);
   const [colorMap, setColorMap] = useState(new Map());
   const [selectedName, setSelectedName] = useState(null);
-  const [page] = useQueryParamState('page', 1, Number);
-  const [pageSize] = useQueryParamState('page_size', PAGE_SIZE, Number);
-  const [order] = useQueryParamState('order', '');
+  const [page] = useInterproPage<number>();
+  const [pageSize] = useInterproPageSize<number>();
+  const [order] = useInterpoOrder<string>();
   const { data, loading, error, isStale } = useMGnifyData(
     `analyses/${overviewData.id}/interpro-identifiers`,
     {
@@ -135,6 +142,7 @@ const InterPro: React.FC = () => {
             onMouseLeaveRow={handleMouseLeaveRow}
             showPagination
             dataCy="interpro-table"
+            namespace="interpro"
           />
         )}
       </div>
@@ -142,4 +150,4 @@ const InterPro: React.FC = () => {
   );
 };
 
-export default InterPro;
+export default withQueryParamProvider(InterPro);

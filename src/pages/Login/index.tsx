@@ -1,11 +1,4 @@
-import React, {
-  useContext,
-  useRef,
-  FormEvent,
-  useState,
-  useEffect,
-  useMemo,
-} from 'react';
+import React, { FormEvent, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OutterCard from 'components/UI/OutterCard';
 import UserContext from 'pages/Login/UserContext';
@@ -29,7 +22,7 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { isAuthenticated } = useContext(UserContext);
   const navigate = useNavigate();
-  const location = useLocation();
+  const {state, search} = useLocation();
   const [desiredDestination, setDesiredDestination] = useState('');
 
   useMemo(() => {
@@ -37,14 +30,14 @@ const Login: React.FC = () => {
       '?from=private-request': '/?from=private-request',
       '?from=public-request': '/?from=public-request',
     };
-    if (possibleDesiredDestinations[location.search]) {
-      setDesiredDestination(possibleDesiredDestinations[location.search]);
+    if (possibleDesiredDestinations[search]) {
+      setDesiredDestination(possibleDesiredDestinations[search]);
       return;
     }
-    if (location?.state?.from?.pathname) {
-      setDesiredDestination(location.state.from.pathname + location.search);
+    if (state?.from?.pathname) {
+      setDesiredDestination(state.from.pathname + search);
     }
-  }, [location]);
+  }, [state?.from, search]);
 
   const handleLogout = async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -85,9 +78,7 @@ const Login: React.FC = () => {
       setAuthToken(accessToken) as unknown as void;
       setUsername('');
       setPassword('');
-      navigate(desiredDestination, {
-        replace: true,
-      });
+      navigate(desiredDestination);
     } catch (error) {
       if (!error.response) {
         setErrMsg('Network error');

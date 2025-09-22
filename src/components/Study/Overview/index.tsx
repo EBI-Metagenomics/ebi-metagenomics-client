@@ -12,6 +12,7 @@ type StudyOverviewProps = {
   data: Study;
 };
 const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
+  console.log('StudyOverview');
   const { config } = useContext(UserContext);
   const lineage = data.biome?.lineage || '';
   // const publications = included.filter(({ type }) => type === 'publications');

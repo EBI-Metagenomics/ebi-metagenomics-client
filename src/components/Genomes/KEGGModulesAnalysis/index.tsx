@@ -11,11 +11,17 @@ import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import useDefaultGenomeConfig from '@/hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from '@/utils/taxon';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 
 addExportMenu(Highcharts);
 
 const initialPageSize = 10;
+
+const {useKeggModPage, useKeggModPageSize, useKeggModOrder, withQueryParamProvider} = createSharedQueryParamContextForTable(
+  "keggMod",
+  {},
+  initialPageSize
+)
 
 const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   includePangenomes = true,
@@ -23,13 +29,9 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const accession = useURLAccession();
 
-  const [keggmodPage] = useQueryParamState('keggmod-page', 1, Number);
-  const [keggmodPageSize] = useQueryParamState(
-    'keggmod-page_size',
-    initialPageSize,
-    Number
-  );
-  const [keggmodOrder] = useQueryParamState('keggmod-order', '');
+  const [keggmodPage] = useKeggModPage<number>();
+  const [keggmodPageSize] = useKeggModPageSize<number>();
+  const [keggmodOrder] = useKeggModOrder<string>();
 
   const { columns, options } = useDefaultGenomeConfig();
   const { data, loading, isStale, error } = useMGnifyData(
@@ -109,27 +111,27 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   }
 
   return (
-    <div
-      className="vf-stack vf-stack--200"
-      data-cy="genome-kegg-module-analysis"
-    >
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={options}
-        ref={chartComponentRef}
-      />
-      <EMGTable
-        cols={columns}
-        data={data as MGnifyResponseList}
-        Title={`All ${data.meta.pagination.count} KEGG modules`}
-        loading={loading}
-        initialPage={(keggmodPage as number) - 1}
-        initialPageSize={initialPageSize}
-        namespace="keggmod-"
-        isStale={isStale}
-      />
-    </div>
+      <div
+        className="vf-stack vf-stack--200"
+        data-cy="genome-kegg-module-analysis"
+      >
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={options}
+          ref={chartComponentRef}
+        />
+        <EMGTable
+          cols={columns}
+          data={data as MGnifyResponseList}
+          Title={`All ${data.meta.pagination.count} KEGG modules`}
+          loading={loading}
+          initialPage={(keggmodPage as number) - 1}
+          initialPageSize={initialPageSize}
+          namespace="keggmod-"
+          isStale={isStale}
+        />
+      </div>
   );
 };
 
-export default KEGGClassModulesAnalises;
+export default withQueryParamProvider(KEGGClassModulesAnalises);

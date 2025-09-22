@@ -6,14 +6,24 @@ import { Link } from 'react-router-dom';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 import useStudiesList from 'hooks/data/useStudies';
 import BiomeSelector from 'components/UI/BiomeSelector';
+import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
+import FetchError from 'components/UI/FetchError';
+
+const {usePage, useOrder, useBiome, withQueryParamProvider} = createSharedQueryParamContextForTable(
+  "",
+  {
+    biome: SharedTextQueryParam(""),
+  }
+);
 
 const BrowseStudies: React.FC = () => {
-  const [page, setPage] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [biome] = useQueryParamState('biome', '');
+  console.log('BrowseStudies');
+  const [page, setPage] = usePage<number>();
+  const [order] = useOrder<string>();
+  const [biome] = useBiome<string>();
 
   const [hasData, setHasData] = useState(false);
 
@@ -21,6 +31,7 @@ const BrowseStudies: React.FC = () => {
     data: studiesList,
     loading,
     download,
+    error
   } = useStudiesList({
     page,
     order,
@@ -70,6 +81,7 @@ const BrowseStudies: React.FC = () => {
   }, [studiesList]);
 
   if (!studiesList && loading) return <Loading />;
+  if (error) return <FetchError error={error} />;
   return (
     <section className="mg-browse-section">
       <div>
@@ -98,4 +110,4 @@ const BrowseStudies: React.FC = () => {
   );
 };
 
-export default BrowseStudies;
+export default withQueryParamProvider(BrowseStudies);

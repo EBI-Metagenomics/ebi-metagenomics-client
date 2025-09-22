@@ -5,14 +5,19 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const PAGE_SIZE = 25;
 
+const {useAntismashPage, useAntismashPageSize, withQueryParamProvider} = createSharedQueryParamContextForTable(
+  "antismash", {}, PAGE_SIZE
+)
+
 const AntiSMASHTable: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
-  const [page] = useQueryParamState('page', 1, Number);
-  const [pageSize] = useQueryParamState('page_size', PAGE_SIZE, Number);
+  const [page] = useAntismashPage<number>();
+  const [pageSize] = useAntismashPageSize<number>();
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
     `analyses/${overviewData.id}/antismash-gene-clusters`,
     {
@@ -42,14 +47,14 @@ const AntiSMASHTable: React.FC = () => {
       cols={columns}
       data={data}
       initialPageSize={PAGE_SIZE}
-      initialPage={(page as number) - 1}
       className="mg-anlyses-table"
       loading={loading}
       isStale={isStale}
       showPagination
       downloadURL={downloadURL}
+      namespace="antismash"
     />
   );
 };
 
-export default AntiSMASHTable;
+export default withQueryParamProvider(AntiSMASHTable);

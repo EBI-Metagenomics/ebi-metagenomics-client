@@ -8,7 +8,8 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import InfoBanner from 'components/UI/InfoBanner';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@hooks/queryParamState/useQueryParamState';
+import { SharedTextQueryParam } from '@hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const initialPageSize = 10;
 
@@ -20,18 +21,22 @@ type AssociatedAssembliesProps = {
   rootEndpoint: string;
 };
 
+const {useAssembliesPage, useAssembliesPageSize, useAssembliesOrder, useAssembliesSearch, withQueryParamProvider} = createSharedQueryParamContextForTable(
+  "assemblies",
+  {
+    assembliesSearch: SharedTextQueryParam(""),
+  },
+  initialPageSize
+)
+
 const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
   rootEndpoint,
 }) => {
   const accession = useURLAccession();
-  const [assemblyPage] = useQueryParamState('assembly-page', 1, Number);
-  const [assemblyFilter] = useQueryParamState('assembly-search', '');
-  const [assemblyPageSize] = useQueryParamState(
-    'assembly-page_size',
-    initialPageSize,
-    Number
-  );
-  const [assemblyOrder] = useQueryParamState('assembly-order', '');
+  const [assemblyPage] = useAssembliesPage<number>();
+  const [assemblyFilter] = useAssembliesSearch<string>();
+  const [assemblyPageSize] = useAssembliesPageSize<number>();
+  const [assemblyOrder] = useAssembliesOrder<string>();
   const url = getURLByEndpoint(rootEndpoint, accession);
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(url, {
     sample_accession: rootEndpoint === 'samples' ? accession : undefined,
@@ -97,4 +102,4 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
   );
 };
 
-export default AssociatedAssemblies;
+export default withQueryParamProvider(AssociatedAssemblies);

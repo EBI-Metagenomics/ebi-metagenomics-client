@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useAnalysisDetail from 'hooks/data/useAnalysisDetail/Index';
+import useAnalysisDetail from 'hooks/data/useAnalysisDetail';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import ChimericProportions from 'components/Asv/ChimericProportions';
 import AsvDistribution from 'components/Asv/AsvDistribution';

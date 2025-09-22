@@ -31,7 +31,7 @@ const FieldMultipleTextQuery: React.FC<FieldMultipleTextQueryProps> = ({
   queryMustInclude,
   explainer,
 }) => {
-  const [searchQuery, setSearchQuery] = useQueryParamState(fieldName, '');
+  const [searchQuery, setSearchQuery] = useQueryParamState<string>(fieldName);
 
   const [queryTexts, setQueryTexts] = useState<SelectOptions>(
     searchQuery

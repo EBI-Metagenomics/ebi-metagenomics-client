@@ -12,6 +12,7 @@ import {
   reactSelectTheme,
 } from 'styles/react-select-styles';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useSharedQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 type BiomeSelectorProps = {
   onSelect: (lineage: string) => void;
@@ -44,7 +45,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
   const { data: biomes, loading } = useMGnifyData(
     'biomes/root/children?depth_gte=1&depth_lte=4&page_size=200'
   );
-  const [biomeQP, setBiomeQP] = useQueryParamState('biome', 'root');
+  const [biomeQP, setBiomeQP] = useSharedQueryParamState<string>("biome");
   const [value, setValue] = useState<OptionProps | undefined>();
   const options = React.useMemo(() => {
     if (loading) {

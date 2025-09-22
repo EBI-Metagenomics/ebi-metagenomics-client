@@ -4,13 +4,14 @@ import React from 'react';
 
 import CataloguesList from 'components/Browse/Genomes/CataloguesList';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
 import GenomesTextSearch from 'components/Browse/Genomes/TextSearch';
 import CobsSearch from 'components/Genomes/Cobs';
 import SourmashSearch from 'components/Genomes/Sourmash';
 import { MainPublicationForResource } from 'components/Publications';
+import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
-const PARAMETER_NAME = 'browse-by';
+const PARAMETER_NAME = 'browseBy';
 const PARAMETER_DEFAULT = 'biome';
 const tabs = [
   { label: 'Catalogues list', to: 'biome' },
@@ -19,8 +20,12 @@ const tabs = [
   { label: 'MAG search', to: 'mag-search' },
 ];
 
+const {useBrowseBy, withQueryParamProvider} = createSharedQueryParamContext({
+  browseBy: SharedTextQueryParam(PARAMETER_DEFAULT)
+})
+
 const BrowseGenomes: React.FC = () => {
-  const [browseBy] = useQueryParamState(PARAMETER_NAME, PARAMETER_DEFAULT);
+  const [browseBy] = useBrowseBy();
 
   return (
     <section className="mg-browse-section">
@@ -58,4 +63,4 @@ const BrowseGenomes: React.FC = () => {
   );
 };
 
-export default BrowseGenomes;
+export default withQueryParamProvider(BrowseGenomes);

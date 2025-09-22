@@ -9,27 +9,31 @@ import { MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import { getBiomeIcon } from '@/utils/biomes';
 import { cleanTaxLineage, getSimpleTaxLineage } from '@/utils/taxon';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import Tooltip from 'components/UI/Tooltip';
 
 const initialPageSize = 10;
+const {
+  useGenomesPage,
+  useGenomesPageSize,
+  useGenomesOrder,
+  useGenomesSearch,
+  withQueryParamProvider
+} = createSharedQueryParamContextForTable("genomes")
+
 const GenomesTable: React.FC = () => {
   const accession = useURLAccession();
-  const [genomesPage] = useQueryParamState('genomes-page', 1, Number);
-  const [genomesPageSize] = useQueryParamState(
-    'genomes-page_size',
-    initialPageSize,
-    Number
-  );
-  const [genomesOrder] = useQueryParamState('genomes-order', '');
-  const [genomeSearchParam] = useQueryParamState('genomes-search', '');
+  const [genomesPage] = useGenomesPage();
+  const [genomesPageSize] = useGenomesPageSize();
+  const [genomesOrder] = useGenomesOrder();
+  const [genomeSearch] = useGenomesSearch();
   const { data, loading, error, isStale } = useMGnifyData(
     `genome-catalogues/${accession}/genomes`,
     {
       page: genomesPage as number,
       ordering: genomesOrder as string,
       page_size: genomesPageSize as number,
-      search: genomeSearchParam as string,
+      search: genomeSearch as string,
     }
   );
   if (loading && !isStale) return <Loading size="small" />;
@@ -118,4 +122,4 @@ const GenomesTable: React.FC = () => {
   );
 };
 
-export default GenomesTable;
+export default withQueryParamProvider(GenomesTable);

@@ -4,13 +4,15 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 
 import useProtectedApiCall from 'hooks/useProtectedApiCall';
 import { StudyList } from 'interfaces';
 
+const {usePage, withQueryParamProvider} = createSharedQueryParamContextForTable()
+
 const MyDataStudies: React.FC = () => {
-  const [page] = useQueryParamState('page', 1, Number);
+  const [page] = usePage();
 
   const protectedAxios = useProtectedApiCall();
   const [myData, setMyData] = useState<StudyList | null>(null);
@@ -110,4 +112,4 @@ const MyDataStudies: React.FC = () => {
   );
 };
 
-export default MyDataStudies;
+export default withQueryParamProvider(MyDataStudies);

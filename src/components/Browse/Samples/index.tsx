@@ -9,14 +9,22 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { MGnifyResponseList } from '@/hooks/data/useData';
 import { getBiomeIcon } from '@/utils/biomes';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+
+const {usePage, usePageSize, useOrder, useBiome, useSearch, withQueryParamProvider} = createSharedQueryParamContextForTable(
+  "",
+  {
+    biome: SharedTextQueryParam(""),
+  }
+);
 
 const BrowseSamples: React.FC = () => {
-  const [page, setPage] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [biome] = useQueryParamState('biome', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
-  const [search] = useQueryParamState('search', '');
+  const [page, setPage] = usePage<number>();
+  const [order] = useOrder<string>();
+  const [biome] = useBiome<string>();
+  const [pageSize] = usePageSize<number>();
+  const [search] = useSearch<string>();
 
   const [hasData, setHasData] = useState(false);
   const {
@@ -108,4 +116,4 @@ const BrowseSamples: React.FC = () => {
   );
 };
 
-export default BrowseSamples;
+export default withQueryParamProvider(BrowseSamples);

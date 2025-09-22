@@ -1,5 +1,5 @@
-import React, { Suspense, lazy, useState, useMemo, useEffect } from 'react';
-import { Routes, Route, BrowserRouter, useLocation } from 'react-router-dom';
+import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import config from 'utils/config';
 import EBIHeader from 'components/UI/EBIHeader';
@@ -19,7 +19,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import './styles/toast.css';
 import './styles/search.css';
 import { ToastContainer } from 'react-toastify';
-import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
 import V2AnalysisPage from 'pages/Analysis/v2index';
 import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
@@ -76,54 +75,52 @@ const App: React.FC = () => {
   return (
     <BrowserRouter basename={config.basename}>
       <UserContext.Provider value={value}>
-        <QueryParamsProvider>
-          <Matomo />
-          <ToastContainer />
-          <EBIHeader />
-          <HeroHeader />
-          <MainMenu />
-          <SessionExpiryBanner />
-          <PersistLogin />
-          <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
-            <ErrorBoundary>
-              <ResetScroll />
-              <Suspense fallback={<Loading size="large" />}>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/help" element={<Help />} />
-                  {/* <Route path="/search/*" element={<TextSearch />} /> */}
-                  {/* <Route path="/sequence-search" element={<SequenceSearch />} /> */}
-                  <Route path="/browse/*" element={<Browse />} />
-                  <Route path="/studies/*" element={<Study />} />
-                  <Route path="/super-studies/*" element={<SuperStudy />} />
-                  <Route path="/samples/*" element={<Sample />} />
-                  <Route path="/publications/*" element={<Publication />} />
-                  <Route
-                    path="/genome-catalogues/*"
-                    element={<GenomeCatalogue />}
-                  />
-                  <Route path="/genomes/*" element={<Genome />} />
-                  <Route path="/runs/*" element={<Run />} />
-                  <Route path="/assemblies/*" element={<Assembly />} />
-                  <Route path="/pipelines/*" element={<Pipelines />} />
-                  <Route path="/analyses/*" element={<Analysis />} />
-                  <Route path="/v2-analyses/*" element={<V2AnalysisPage />} />
-                  <Route path="/mydata/*" element={<MyData />}>
-                    <Route index element={<MyDataStudies />} />
-                    <Route path="studies" element={<MyDataStudies />} />
-                  </Route>
-                  {/* <Route element={<PersistLogin />}> */}
-                  <Route path="/login" element={<Login />} />
-                  {/* </Route> */}
-                </Routes>
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-          <ElixirBanner />
-          <EBIFooter />
-          <CookieBanner />
-        </QueryParamsProvider>
+        <Matomo />
+        <ToastContainer />
+        <EBIHeader />
+        <HeroHeader />
+        <MainMenu />
+        <SessionExpiryBanner />
+        <PersistLogin />
+        <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
+          <ErrorBoundary>
+            <ResetScroll />
+            <Suspense fallback={<Loading size="large" />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/help" element={<Help />} />
+                {/* <Route path="/search/*" element={<TextSearch />} /> */}
+                {/* <Route path="/sequence-search" element={<SequenceSearch />} /> */}
+                <Route path="/browse/*" element={<Browse />} />
+                <Route path="/studies/*" element={<Study />} />
+                <Route path="/super-studies/*" element={<SuperStudy />} />
+                <Route path="/samples/*" element={<Sample />} />
+                <Route path="/publications/*" element={<Publication />} />
+                <Route
+                  path="/genome-catalogues/*"
+                  element={<GenomeCatalogue />}
+                />
+                <Route path="/genomes/*" element={<Genome />} />
+                <Route path="/runs/*" element={<Run />} />
+                <Route path="/assemblies/*" element={<Assembly />} />
+                <Route path="/pipelines/*" element={<Pipelines />} />
+                <Route path="/analyses/*" element={<Analysis />} />
+                <Route path="/v2-analyses/:accession/*" element={<V2AnalysisPage />} />
+                <Route path="/mydata/*" element={<MyData />}>
+                  <Route index element={<MyDataStudies />} />
+                  <Route path="studies" element={<MyDataStudies />} />
+                </Route>
+                {/* <Route element={<PersistLogin />}> */}
+                <Route path="/login" element={<Login />} />
+                {/* </Route> */}
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
+        </div>
+        <ElixirBanner />
+        <EBIFooter />
+        <CookieBanner />
       </UserContext.Provider>
     </BrowserRouter>
   );

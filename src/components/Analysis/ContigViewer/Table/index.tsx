@@ -22,7 +22,7 @@ type ContigFeatureProps = {
   present: boolean;
 };
 
-const ContigFeatureFlag: React.FC<ContigFeatureProps> = ({
+export const ContigFeatureFlag: React.FC<ContigFeatureProps> = ({
   annotationType,
   present,
 }) => {
@@ -71,10 +71,9 @@ const ContigFeatureFlag: React.FC<ContigFeatureProps> = ({
 const ContigsTable: React.FC = () => {
   const { contigsQueryData } = useContext(ContigsQueryContext);
   const { data, loading, error } = contigsQueryData || {};
-  const [, setSelectedContig] = useQueryParamState('selected_contig', '');
+  const [, setSelectedContig] = useQueryParamState('selectedContig');
   const [, setContigsPageCursor] = useQueryParamState(
-    'contigs_page_cursor',
-    ''
+    'contigsPageCursor',
   );
 
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
@@ -86,7 +85,7 @@ const ContigsTable: React.FC = () => {
     useOfflineCrate();
 
   const allCrates = useMemo(() => {
-    const cratesIncludingOffline = [...crates] || [];
+    const cratesIncludingOffline = [...crates];
     if (offlineCrate) {
       cratesIncludingOffline.push(offlineCrate);
     }

@@ -5,18 +5,23 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import useURLAccession from 'hooks/useURLAccession';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState, { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 import useStudyAnalysesList from 'hooks/data/useStudyAnalyses';
 import { Analysis, AnalysisList } from 'interfaces';
+import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const expectedPageSize = 10;
 type AssociatedAnaysesProps = {
   rootEndpoint: string;
 };
 
+const {useAnalysesPage, withQueryParamProvider} = createSharedQueryParamContextForTable(
+  "analyses",
+)
+
 const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const accession = useURLAccession();
-  const [analysesPage] = useQueryParamState('analyses-page', 1, Number);
+  const [analysesPage] = useAnalysesPage<number>();
 
   const { data, error, loading, download } = useStudyAnalysesList(accession, {
     page: analysesPage,
@@ -109,7 +114,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       initialPage={(analysesPage as number) - 1}
       className="mg-anlyses-table"
       loading={loading}
-      namespace="analyses-"
+      namespace="analyses"
       showPagination={showPagination}
       onDownloadRequested={download}
       expectedPageSize={expectedPageSize}
@@ -117,4 +122,4 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   );
 };
 
-export default AnalysesTable;
+export default withQueryParamProvider(AnalysesTable);

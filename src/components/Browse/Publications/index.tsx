@@ -6,15 +6,17 @@ import { Link } from 'react-router-dom';
 import EMGTable from 'components/UI/EMGTable';
 import ExtLink from 'components/UI/ExtLink';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 import usePublicationsList from 'hooks/data/usePublications';
 import FetchError from 'components/UI/FetchError';
 
+const {usePage, usePageSize, useOrder, useSearch, withQueryParamProvider} = createSharedQueryParamContextForTable();
+
 const BrowsePublications: React.FC = () => {
-  const [page] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
-  const [search] = useQueryParamState('search', '');
+  const [page] = usePage<number>();
+  const [order] = useOrder<string>();
+  const [pageSize] = usePageSize<number>();
+  const [search] = useSearch<string>();
   const [hasData, setHasData] = useState(false);
   const {
     data: publicationsList,
@@ -97,4 +99,4 @@ const BrowsePublications: React.FC = () => {
   );
 };
 
-export default BrowsePublications;
+export default withQueryParamProvider(BrowsePublications);

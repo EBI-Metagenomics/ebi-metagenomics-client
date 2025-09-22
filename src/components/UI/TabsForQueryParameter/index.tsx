@@ -14,15 +14,15 @@ const TabsForQueryParameter: React.FC<TabsProps> = ({
   queryParameter,
   defaultValue,
 }) => {
-  const [tabQp, setTabQp] = useQueryParamState(queryParameter, defaultValue);
-  const [, setPage] = useQueryParamState('page', 1, Number);
+  const [tabQp, setTabQp] = useQueryParamState(queryParameter);
 
   useEffect(() => {
-    if (tabQp === '') {
+    if (!tabQp || tabQp === '') {
       setTabQp(defaultValue);
-      setPage(1);
     }
   }, [tabQp, queryParameter]);
+
+  const tab = tabQp ?? defaultValue;
 
   return (
     <div className="vf-tabs mg-search-tabs">
@@ -32,11 +32,10 @@ const TabsForQueryParameter: React.FC<TabsProps> = ({
             <button
               type="button"
               className={`vf-tabs__link mg-button-as-tab ${
-                to === tabQp ? 'is-active' : ''
+                to === tab ? 'is-active' : ''
               }`}
               onClick={() => {
                 setTabQp(to);
-                setPage(1);
               }}
             >
               {typeof Label === 'string' ? Label : <Label />}

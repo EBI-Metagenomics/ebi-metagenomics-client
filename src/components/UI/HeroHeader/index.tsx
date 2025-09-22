@@ -3,25 +3,24 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './style.css';
 
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
-import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
-import { createParamFromURL } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
 import Link from 'components/UI/Link';
 import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
 
 const HeroHeader: React.FC = () => {
   const searchBox = useRef<HTMLInputElement>();
-  const location = useLocation();
+  const {pathname} = useLocation();
   const navigate = useNavigate();
   const [isAccessionLike, setIsAccessionLike] = useState(false);
   const [nextURL, setNextURL] = useState('/search/studies');
-  const { dispatch } = useQueryParamsStore();
   const setSearchQuery = (query: string) => {
-    dispatch(
-      createParamFromURL({
-        name: 'query',
-        value: query,
-      })
-    );
+    // TODO
+    console.log('setSearchQuery', query);
+    // dispatch(
+    //   createParamFromURL({
+    //     name: 'query',
+    //     value: query,
+    //   })
+    // );
   };
 
   const handleInput = () => {
@@ -36,7 +35,7 @@ const HeroHeader: React.FC = () => {
   useEffect(() => {
     // ensures jump/search button state resets when using back button
     handleInput();
-  }, [location]);
+  }, [pathname]);
 
   return (
     <section className="vf-hero vf-hero--400 | vf-u-fullbleed">

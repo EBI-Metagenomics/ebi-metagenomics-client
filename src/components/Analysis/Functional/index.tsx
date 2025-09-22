@@ -6,11 +6,12 @@ import ExtLink from 'components/UI/ExtLink';
 import InfoBanner from 'components/UI/InfoBanner';
 
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
 import InterProTab from './InterPro';
 import GOTab from './GO';
 import PfamTab from './Pfam';
 import KOTab from './KO';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const PARAMETER_NAME = 'type';
 const PARAMETER_DEFAULT = 'interpro';
@@ -20,10 +21,15 @@ const tabs = [
   { label: 'Pfam', to: 'pfam' },
   { label: 'KO', to: 'ko' },
 ];
+
+const {useType, withQueryParamProvider} = createSharedQueryParamContext({
+  type: SharedTextQueryParam(PARAMETER_DEFAULT)
+})
+
 const FunctionalAnalysis: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
 
-  const [type] = useQueryParamState(PARAMETER_NAME, PARAMETER_DEFAULT);
+  const [type] = useType<string>();
   // const accession=overviewData.id;
   const version = Number(overviewData.attributes['pipeline-version']);
   const longReadExperiment =
@@ -87,4 +93,4 @@ const FunctionalAnalysis: React.FC = () => {
     </div>
   );
 };
-export default FunctionalAnalysis;
+export default withQueryParamProvider(FunctionalAnalysis);

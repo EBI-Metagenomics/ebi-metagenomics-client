@@ -5,19 +5,21 @@ import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 import ReactMarkdown from 'react-markdown';
 import FetchError from 'components/UI/FetchError';
 import useSuperStudiesList from 'hooks/data/useSuperStudies';
 
-const BrowseSuperStudies: React.FC = () => {
-  const [page] = useQueryParamState('page', 1, Number);
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
-  const [hasData, setHasData] = useState(false);
+const {usePage, usePageSize, withQueryParamProvider} = createSharedQueryParamContextForTable();
 
+const BrowseSuperStudies: React.FC = () => {
+  console.log('BrowseSuperStudies');
+  const [page] = usePage<number>();
+  const [pageSize] = usePageSize<number>();
+  const [hasData, setHasData] = useState(false);
   const { data, loading, error, download } = useSuperStudiesList({
     page,
-    pageSize,
+    page_size: pageSize,
   });
 
   const columns = React.useMemo(
@@ -59,7 +61,7 @@ const BrowseSuperStudies: React.FC = () => {
           cols={columns}
           data={data}
           Title={`Super Studies (${data.count})`}
-          initialPage={(page as number) - 1}
+          initialPage={page}
           sortable
           loading={loading}
           showPagination={false}
@@ -70,4 +72,4 @@ const BrowseSuperStudies: React.FC = () => {
   );
 };
 
-export default BrowseSuperStudies;
+export default withQueryParamProvider(BrowseSuperStudies);

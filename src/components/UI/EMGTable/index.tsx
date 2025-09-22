@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { filter } from 'lodash-es';
+import { camelCase, filter } from 'lodash-es';
 
 import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
 import Loading from 'components/UI/Loading';
@@ -74,6 +74,13 @@ function getOrderingQueryParamFromSortedColumn(
     .replace(/-/g, '_')}`;
 }
 
+function getSortedColumnFromOrderingQueryParam(ordering: string): Array<{ id: string; desc: boolean }> {
+  if (!ordering) return [];
+  const desc = ordering.startsWith('-');
+  const id = ordering.replace(/^-/, '').replace(/attributes\./g, '').replace(/-/g, '_');
+  return [{ id, desc }];
+}
+
 type EMGTableProps = {
   cols: Column[];
   data:
@@ -120,8 +127,9 @@ const EMGTable: React.FC<EMGTableProps> = ({
   onMouseLeaveRow = () => null,
   dataCy,
 }) => {
-  const [page, setPage] = useQueryParamState(`${namespace}page`, 1, Number);
-  const [ordering, setOrdering] = useQueryParamState(`${namespace}order`, '');
+  const [page, setPage] = useQueryParamState<number>(camelCase(`${namespace} page`));
+  const [ordering, setOrdering] = useQueryParamState<string>(camelCase(`${namespace} order`));
+  console.log('rendering with ordering', ordering);
 
   const pageCount = useMemo(() => {
     if (data && 'count' in data) {
@@ -131,6 +139,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
   }, [data, expectedPageSize]);
 
   const {
+    setSortBy,
     getTableProps,
     getTableBodyProps,
     headerGroups,
@@ -151,6 +160,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
         data,
       initialState: {
         pageIndex: initialPage,
+        sortBy: getSortedColumnFromOrderingQueryParam(ordering),
       },
       pageCount: pageCount || 1,
       manualPagination: true,
@@ -173,17 +183,26 @@ const EMGTable: React.FC<EMGTableProps> = ({
   }, [showPagination, setPage, pageIndex]);
 
   useEffect(() => {
-    if (sortable) {
-      const order = getOrderingQueryParamFromSortedColumn(sortBy);
-      if (order === ordering) return;
-      setOrdering(order);
+    // Handle table-initiated change of sorting column
+    if (!sortable || !sortBy?.length) return;
+    const orderParamRequestedByTable = getOrderingQueryParamFromSortedColumn(sortBy);
+    if (ordering !== orderParamRequestedByTable) {
+      setOrdering(orderParamRequestedByTable);
       setPage(1);
-      if (tableRef.current && isChangingPage) {
-        tableRef.current.scrollIntoView();
-        setChangingPage(false);
-      }
     }
-  }, [showPagination, setOrdering, setPage, sortBy, sortable]);
+  }, [sortable, sortBy]);
+
+  useEffect(() => {
+    // Handle external (e.g. URL query param) load/change of sorting column
+    if (!sortable) return;
+    const orderParamSpecifiedExternally = ordering;
+    console.log(`orderParamSpecifiedExternally`, orderParamSpecifiedExternally);
+    const orderParamCurrentlyInTable = getOrderingQueryParamFromSortedColumn(sortBy);
+    if (orderParamSpecifiedExternally !== orderParamCurrentlyInTable) {
+      setSortBy(getSortedColumnFromOrderingQueryParam(orderParamSpecifiedExternally));
+      setPage(1);
+    }
+  }, [ordering, sortable]);
 
   const paginationRanges = useMemo(
     () => getPaginationRanges(pageIndex, pageCount),
@@ -203,7 +222,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
     <section data-cy={dataCy}>
       <LoadingOverlay loading={loading && isStale}>
         <table
-          {...getTableProps}
+          {...getTableProps()}
           className={`vf-table--striped mg-table ${className}`}
           ref={tableRef}
         >

@@ -252,11 +252,11 @@ const AnalysisOverview: React.FC = () => {
             <summary className="vf-details--summary custom-vf-details--summary">
               <b>Description</b>
             </summary>
-            <p>
+            <div>
               <KeyValueList
                 list={descriptionItems.filter(({ value }) => !!value)}
               />
-            </p>
+            </div>
           </details>
           <details className="vf-details custom-vf-details" open>
             <summary className="vf-details--summary custom-vf-details--summary">

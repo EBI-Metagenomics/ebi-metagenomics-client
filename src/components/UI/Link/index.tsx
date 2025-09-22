@@ -6,8 +6,6 @@ import {
   LinkProps as DefaultLinkProps,
 } from 'react-router-dom';
 import React, { ForwardedRef } from 'react';
-import { createParamFromURL } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
-import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
 import { forEach } from 'lodash-es';
 
 const Link: React.FC<DefaultLinkProps> = React.forwardRef(
@@ -28,14 +26,15 @@ const Link: React.FC<DefaultLinkProps> = React.forwardRef(
       target,
     });
 
-    const { dispatch } = useQueryParamsStore();
     const setQueryParam = (value: string, name: string) => {
-      dispatch(
-        createParamFromURL({
-          name,
-          value,
-        })
-      );
+      // TODO
+      console.log('setQueryParam', value, name);
+      // dispatch(
+      //   createParamFromURL({
+      //     name,
+      //     value,
+      //   })
+      // );
     };
 
     return (

@@ -29,7 +29,7 @@ import ContigLengthFilter from 'components/Analysis/ContigViewer/Filter/ContigLe
 import ContigTextFilter from 'components/Analysis/ContigViewer/Filter/ContigText';
 // eslint-disable-next-line max-len
 import ContigAnnotationTypeFilter from 'components/Analysis/ContigViewer/Filter/ContigAnnotationType';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState, { createSharedQueryParamContext } from 'hooks/queryParamState/useQueryParamState';
 import {
   AnnotationTrackColorPicker,
   annotationTrackCustomisations,
@@ -42,6 +42,11 @@ import {
 } from 'hooks/genomeViewer/CrateStore/useCrates';
 import { Track } from 'utils/trackView';
 import ROCrateComparer from 'components/UI/ROCrateComparer';
+import {
+  SharedMultipleValueQueryParam,
+  SharedNumberRangeQueryParam,
+  SharedTextQueryParam,
+} from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 type ContigProps = {
   contig: MGnifyDatum;
@@ -203,37 +208,35 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   );
 };
 
+const {useContigsPageCursor, useSelectedContig, useContigLength, useCogCategorySearch, useKeggOrthologSearch, useGoTermSearch, usePfamSearch, useInterproSearch, useAntismashSearch, useAnnotationType, useContigsSearch, withQueryParamProvider} = createSharedQueryParamContext({
+  contigsPageCursor: SharedTextQueryParam(""),
+  selectedContig: SharedTextQueryParam(""),
+  gffComparisonId: SharedTextQueryParam(""),
+  contigLength: SharedNumberRangeQueryParam([500, 10e6]),
+  cogCategorySearch: SharedTextQueryParam(""),
+  keggOrthologSearch: SharedTextQueryParam(""),
+  goTermSearch: SharedTextQueryParam(""),
+  pfamSearch: SharedTextQueryParam(""),
+  interproSearch: SharedTextQueryParam(""),
+  antismashSearch: SharedTextQueryParam(""),
+  annotationType: SharedMultipleValueQueryParam([]),
+  contigsSearch: SharedTextQueryParam(""),
+})
+
 const ContigsViewer: React.FC = () => {
   const accession = useURLAccession();
 
-  const [contigsPageCursorParam] = useQueryParamState(
-    'contigs_page_cursor',
-    ''
-  );
-  const [selectedContigParam, setSelectedContigParam] = useQueryParamState(
-    'selected_contig',
-    ''
-  );
-  useQueryParamState('gff_comparison_id', '');
-  const [contigLengthParam] = useQueryParamState('contig_length', '');
-  const [cogCategorySearchParam] = useQueryParamState(
-    'cog_category_search',
-    ''
-  );
-  const [keggOrthologSearchParam] = useQueryParamState(
-    'kegg_ortholog_search',
-    ''
-  );
-  const [goTermSearchParam] = useQueryParamState('go_term_search', '');
-  const [pfamSearchParam] = useQueryParamState('pfam_search', '');
-  const [interproSearchParam] = useQueryParamState('interpro_search', '');
-  const [antismashSearchParam] = useQueryParamState('antismash_search', '');
-  const [annotationTypeParam] = useQueryParamState('annotation_type', '');
-  const [contigsSearchParam] = useQueryParamState('contigs_search', '');
-
-  const lengthRange = useMemo(() => {
-    return (contigLengthParam as string).split(',').filter(Boolean).map(Number);
-  }, [contigLengthParam]);
+  const [contigsPageCursorParam] = useContigsPageCursor<string>();
+  const [selectedContigParam, setSelectedContigParam] = useSelectedContig<string>();
+  const [lengthRange] = useContigLength<[number, number]>();
+  const [cogCategorySearchParam] = useCogCategorySearch<string>();
+  const [keggOrthologSearchParam] = useKeggOrthologSearch<string>();
+  const [goTermSearchParam] = useGoTermSearch<string>();
+  const [pfamSearchParam] = usePfamSearch<string>();
+  const [interproSearchParam] = useInterproSearch<string>();
+  const [antismashSearchParam] = useAntismashSearch<string>();
+  const [annotationTypeParam] = useAnnotationType<string[]>();
+  const [contigsSearchParam] = useContigsSearch<string>();
 
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/contigs`,
@@ -248,7 +251,7 @@ const ContigsViewer: React.FC = () => {
       pfam: pfamSearchParam,
       interpro: interproSearchParam,
       antismash: antismashSearchParam,
-      'facet[]': annotationTypeParam,
+      'facet[]': annotationTypeParam.join(','),
     },
     {}
   );
@@ -331,4 +334,4 @@ const ContigsViewer: React.FC = () => {
   );
 };
 
-export default ContigsViewer;
+export default withQueryParamProvider(ContigsViewer);

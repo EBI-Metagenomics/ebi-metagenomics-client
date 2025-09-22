@@ -7,20 +7,25 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const initialPageSize = 10;
 
+const {useRunsPage, useRunsPageSize, useRunsOrder, useRunsSearch, withQueryParamProvider} = createSharedQueryParamContextForTable(
+  "runs",
+  {
+    runsSearch: SharedTextQueryParam(""),
+  },
+  initialPageSize
+);
+
 const AssociatedRuns: React.FC = () => {
   const accession = useURLAccession();
-  const [runsPage] = useQueryParamState('runs-page', 1, Number);
-  const [runsPageSize] = useQueryParamState(
-    'runs-page_size',
-    initialPageSize,
-    Number
-  );
-  const [runsOrder] = useQueryParamState('runs-order', '');
-  const [runsFilter] = useQueryParamState('runs-search', '');
+  const [runsPage] = useRunsPage<number>();
+  const [runsPageSize] = useRunsPageSize<number>();
+  const [runsOrder] = useRunsOrder<string>();
+  const [runsFilter] = useRunsSearch<string>();
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
     `samples/${accession}/runs`,
     {
@@ -75,10 +80,10 @@ const AssociatedRuns: React.FC = () => {
       isStale={isStale}
       sortable
       showTextFilter
-      namespace="runs-"
+      namespace="runs"
       downloadURL={downloadURL}
     />
   );
 };
 
-export default AssociatedRuns;
+export default withQueryParamProvider(AssociatedRuns);

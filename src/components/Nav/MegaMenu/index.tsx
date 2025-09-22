@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import Link from 'components/UI/Link';
 import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
-import { createParamFromURL } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
-import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
 import { useNavigate } from 'react-router-dom';
 import UserContext from 'pages/Login/UserContext';
 import config from '@/utils/config';
@@ -12,8 +10,6 @@ const MegaMenu: React.FC = () => {
   const { isAuthenticated } = useContext(UserContext);
   const [menuVisible, setMenuVisible] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-
-  const { dispatch } = useQueryParamsStore();
 
   const navigate = useNavigate();
 
@@ -45,12 +41,14 @@ const MegaMenu: React.FC = () => {
   };
 
   const setSearchQuery = (query: string) => {
-    dispatch(
-      createParamFromURL({
-        name: 'query',
-        value: query,
-      })
-    );
+    // TODO
+    console.log('setSearchQuery', query);
+    // dispatch(
+    //   createParamFromURL({
+    //     name: 'query',
+    //     value: query,
+    //   })
+    // );
   };
   const menuRef = useRef(null);
 
