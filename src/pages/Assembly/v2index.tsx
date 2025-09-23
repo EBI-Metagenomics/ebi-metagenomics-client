@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo, createContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  createContext,
+  useCallback,
+} from 'react';
 
 import axios from 'utils/protectedAxios';
 import { MGnifyResponseObj, ErrorTypes } from 'hooks/data/useData';
@@ -15,78 +21,73 @@ import ExtraAnnotations from 'components/ExtraAnnotations';
 import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import config from 'utils/config';
+import EMGTable from 'components/UI/EMGTable';
+import genome from 'pages/Genome';
 
-// Create a context to share assembly data with child components
-const V2AssemblyContext = createContext<any>(null);
+type V2AssemblyCtx = {
+  assemblyData: {
+    accession: any;
+    run_accession: React.ReactNode | undefined;
+    genome_links: [];
+    sample_accession: (() => JSX.Element) | string;
+  } | null;
+  loading: boolean;
+  error: ErrorTypes;
+  refetch: () => Promise<void>;
+};
 
-// DerivedGenomes component to display derived genomes
+const V2AssemblyContext = createContext<V2AssemblyCtx>({
+  assemblyData: null,
+  loading: false,
+  error: null,
+  refetch: async () => {},
+});
+
 const DerivedGenomes: React.FC = () => {
   const { assemblyData } = React.useContext(V2AssemblyContext);
-  const [data, setData] = useState(null);
-  const accession = useURLAccession();
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // const response = await axios.get(`assemblies/${accession}`);
-        console.log('ACCESSIOn ', accession);
-        // const response = await axios.get(`${config.api_v2}/${accession}`);
-        const response = await axios.get(
-          `http://localhost:8000/assemblies/ERZ26869131`
-        );
-        setData(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError({
-          error: err,
-          type: ErrorTypes.FetchError,
-        });
-        setLoading(false);
-      }
-    };
 
-    if (accession) {
-      fetchData();
-    }
-  }, [accession]);
+  const columns = [
+    {
+      id: 'genome_accession',
+      Header: 'Genome accession',
+      accessor: (row: any) => row.genome.accession,
+    },
+    {
+      id: 'ena',
+      Header: 'ENA',
+      accessor: (row: any) =>
+        row.genome.accession === row.species_rep ? (
+          <span
+            className="icon icon-common icon-check-circle"
+            style={{ fontSize: '1.3rem', color: 'green' }}
+          />
+        ) : (
+          ''
+        ),
+    },
+    {
+      id: 'species_representative',
+      Header: 'Species representative',
+      accessor: (row: any) => row.species_rep,
+    },
+    {
+      id: 'taxonomy',
+      Header: 'Taxonomy',
+      accessor: (row: any) => row.genome.taxon_lineage,
+    },
+    {
+      id: 'catalogue',
+      Header: 'Catalogue',
+      accessor: (row: any) => row.genome.catalogue_id,
+    },
+  ];
+
+  const genomeLinks = assemblyData?.genome_links ?? [];
+
   return (
     <Box label="Derived genomes">
-      {data?.accession ? (
-        <table className="vf-table | vf-table--compact | derived-genomes-table">
-          <thead>
-            <tr>
-              <th>Genome accession</th>
-              <th>ENA</th>
-              <th>Species Representative</th>
-              <th>Taxonomy</th>
-              <th>Catalogue</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/*{assemblyData.genome_links.map((link) => (*/}
-            {/*  <tr key={link.genome.accession}>*/}
-            {/*    <td>*/}
-            {/*      <Link to={`/genomes/${link.genome.accession}`}>*/}
-            {/*        {link.genome.accession}*/}
-            {/*      </Link>*/}
-            {/*    </td>*/}
-            {/*    <td>✅</td> /!* Placeholder for ENA info *!/*/}
-            {/*    <td>*/}
-            {/*      {link.species_rep ? (*/}
-            {/*        <Link to={`/genomes/${link.species_rep}`}>*/}
-            {/*          {link.species_rep}*/}
-            {/*        </Link>*/}
-            {/*      ) : (*/}
-            {/*        '—'*/}
-            {/*      )}*/}
-            {/*    </td>*/}
-            {/*    <td>—</td> /!* Taxonomy not in API response *!/*/}
-            {/*    <td>Marine v1.0</td> /!* Hardcoded for now *!/*/}
-            {/*  </tr>*/}
-            {/*))}*/}
-          </tbody>
-        </table>
+      {genomeLinks.length ? (
+        <EMGTable cols={columns} data={genomeLinks} />
       ) : (
         <p>No derived genomes found.</p>
       )}
@@ -94,51 +95,40 @@ const DerivedGenomes: React.FC = () => {
   );
 };
 
-// Overview component to display assembly details
 const Overview: React.FC = () => {
   const { assemblyData } = React.useContext(V2AssemblyContext);
 
   const details = [
     {
       key: 'Sample',
-      value: assemblyData?.relationships?.samples?.data?.length
+      value: assemblyData
         ? () => (
             <>
-              {assemblyData.relationships.samples.data.map((sample) => (
-                <Link to={`/samples/${sample.id}`} key={sample.id as string}>
-                  {sample.id}{' '}
-                </Link>
-              ))}
+              <Link to={`${assemblyData?.sample_accession}`}>
+                {assemblyData?.sample_accession}
+              </Link>
             </>
           )
         : null,
     },
     {
       key: 'Runs',
-      value: assemblyData?.relationships?.runs?.data?.length
+      value: assemblyData
         ? () => (
-            <>
-              {assemblyData.relationships.runs.data.map((run) => (
-                <Link to={`/runs/${run.id}`} key={run.id as string}>
-                  {run.id}{' '}
-                </Link>
-              ))}
-            </>
+            <Link to={`${assemblyData?.run_accession}`}>
+              {assemblyData?.run_accession}
+            </Link>
           )
         : null,
     },
     {
       key: 'ENA accession',
       value: () => (
-        <ExtLink href={`${ENA_VIEW_URL}${assemblyData?.id}`}>
-          {assemblyData?.id}
+        <ExtLink href={`${ENA_VIEW_URL}${assemblyData?.accession}`}>
+          ${assemblyData?.accession}
         </ExtLink>
       ),
     },
-    // {
-    //   key: 'Legacy accession',
-    //   value: assemblyData.attributes['legacy-accession'] as string,
-    // },
   ].filter(({ value }) => Boolean(value));
 
   return (
@@ -151,7 +141,6 @@ const Overview: React.FC = () => {
   );
 };
 
-// Analyses component to display associated analyses
 const Analyses: React.FC = () => {
   return (
     <Box label="Associated analyses">
@@ -160,7 +149,6 @@ const Analyses: React.FC = () => {
   );
 };
 
-// AdditionalAnalyses component to display additional analyses
 const AdditionalAnalyses: React.FC = () => {
   return (
     <Box label="Additional analyses">
@@ -173,43 +161,39 @@ const AdditionalAnalyses: React.FC = () => {
   );
 };
 
-// Main component
 const V2AssemblyPage: React.FC = () => {
   const accession = useURLAccession();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const assemblyData = (data as MGnifyResponseObj | null)?.data;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // const response = await axios.get(`assemblies/${accession}`);
-        console.log('ACCESSIOn ', accession);
-        // const response = await axios.get(`${config.api_v2}/${accession}`);
-        const response = await axios.get(
-          `http://localhost:8000/assemblies/ERZ26869131`
-        );
-        setData(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError({
-          error: err,
-          type: ErrorTypes.FetchError,
-        });
-        setLoading(false);
-      }
-    };
-
-    if (accession) {
-      fetchData();
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${config.api_v2}/assemblies/${accession}`
+      );
+      setData(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError({
+        error: err,
+        type: ErrorTypes.FetchError,
+      });
+      setLoading(false);
     }
   }, [accession]);
 
-  // Ensure hook order is consistent across renders: compute memoized value unconditionally
-  // const assemblyData = (data as MGnifyResponseObj | null)?.data;
-  const value = useMemo(() => ({ assemblyData }), [assemblyData]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const assemblyData = (data as MGnifyResponseObj | null)?.data ?? data;
+
+  const ctxValue = useMemo(
+    () => ({ assemblyData, loading, error, refetch: fetchData }),
+    [assemblyData, loading, error, fetchData]
+  );
 
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
@@ -223,12 +207,11 @@ const V2AssemblyPage: React.FC = () => {
 
   return (
     <section className="vf-content">
-      {/*<h2>Assembly: {assemblyData?.accession || ''}</h2>*/}
-      <h2>Assembly: {data?.accession || ''}</h2>
+      <h2>Assembly: {assemblyData?.accession || ''}</h2>
       <Tabs tabs={tabs} />
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
-          <V2AssemblyContext.Provider value={value}>
+          <V2AssemblyContext.Provider value={ctxValue}>
             <RouteForHash hash="#overview" isDefault>
               <Overview />
             </RouteForHash>
