@@ -1,10 +1,4 @@
-import React, {
-  MouseEventHandler,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react';
 import { camelCase, filter } from 'lodash-es';
 
 import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
@@ -156,8 +150,6 @@ const EMGTable: React.FC<EMGTableProps> = ({
     canPreviousPage,
     canNextPage,
     gotoPage,
-    nextPage,
-    previousPage,
     state: { pageIndex, sortBy },
   } = useTable(
     {
