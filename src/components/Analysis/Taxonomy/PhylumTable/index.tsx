@@ -28,10 +28,8 @@ const sortFunction = (order) => (a: TaxDatum, b: TaxDatum) => {
   }
 };
 
-const {usePhylumOrder, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "phylum",
-  {},
-)
+const { usePhylumOrder, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('phylum', {});
 
 type PhylumTableProps = {
   clusteredData: Array<TaxDatum>;

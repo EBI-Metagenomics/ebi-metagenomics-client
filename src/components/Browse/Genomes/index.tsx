@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React from 'react';
 
 import CataloguesList from 'components/Browse/Genomes/CataloguesList';
@@ -20,9 +18,9 @@ const tabs = [
   { label: 'MAG search', to: 'mag-search' },
 ];
 
-const {useBrowseBy, withQueryParamProvider} = createSharedQueryParamContext({
-  browseBy: SharedTextQueryParam(PARAMETER_DEFAULT)
-})
+const { useBrowseBy, withQueryParamProvider } = createSharedQueryParamContext({
+  browseBy: SharedTextQueryParam(PARAMETER_DEFAULT),
+});
 
 const BrowseGenomes: React.FC = () => {
   const [browseBy] = useBrowseBy();

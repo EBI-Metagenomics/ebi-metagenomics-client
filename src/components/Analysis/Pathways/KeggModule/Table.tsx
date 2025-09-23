@@ -5,15 +5,12 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 
 const PAGE_SIZE = 25;
 
-const {useKeggPage, useKeggPageSize, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "kegg",
-  {},
-  PAGE_SIZE
-)
+const { useKeggPage, useKeggPageSize, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('kegg', {}, PAGE_SIZE);
 
 const KeggTable: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);

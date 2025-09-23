@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+// import React, { useContext, useMemo } from 'react';
 // import { Routes, Route, Navigate } from 'react-router-dom';
 //
 // import { some } from 'lodash-es';
@@ -17,8 +17,8 @@ import React, { useContext, useMemo } from 'react';
 // import SearchQueryContext from './SearchQueryContext';
 import './style.css';
 
-const PAGE_SIZE = 25;
-const FACET_DEPTH = 4;
+// const PAGE_SIZE = 25;
+// const FACET_DEPTH = 4;
 
 // const formatToFacet = (facetName: string, strValue: string): string =>
 //   strValue

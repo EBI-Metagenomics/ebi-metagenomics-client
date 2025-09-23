@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,12 +10,16 @@ import Loading from 'components/UI/Loading';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 
-const {usePage, usePageSize, useOrder, useBiome, useSearch, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "",
-  {
-    biome: SharedTextQueryParam(""),
-  }
-);
+const {
+  usePage,
+  usePageSize,
+  useOrder,
+  useBiome,
+  useSearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('', {
+  biome: SharedTextQueryParam(''),
+});
 
 const BrowseSamples: React.FC = () => {
   const [page, setPage] = usePage<number>();

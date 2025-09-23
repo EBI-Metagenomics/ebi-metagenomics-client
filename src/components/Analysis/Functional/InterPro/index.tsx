@@ -8,17 +8,18 @@ import { TAXONOMY_COLOURS } from '@/utils/taxon';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import ExtLink from 'components/UI/ExtLink';
-import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import InterProMatchesChart from './InterProMatchesChart';
 import InterProQCChart from './QCChart';
 
 const PAGE_SIZE = 25;
 
-const {useInterproPage, useInterproPageSize, useInterpoOrder, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "interpro",
-  {},
-  PAGE_SIZE
-)
+const {
+  useInterproPage,
+  useInterproPageSize,
+  useInterpoOrder,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('interpro', {}, PAGE_SIZE);
 
 const InterPro: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);

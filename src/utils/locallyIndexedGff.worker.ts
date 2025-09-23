@@ -4,17 +4,18 @@ import { BgzfFilehandle } from '@gmod/bgzf-filehandle';
 
 type HeadersInitLike = HeadersInit | Record<string, string> | undefined;
 
-import type {
-  GenericFilehandle,
-  FilehandleOptions,
-} from 'generic-filehandle2';
+import type { GenericFilehandle, FilehandleOptions } from 'generic-filehandle2';
 
 class HttpRangeFilehandle implements GenericFilehandle {
   constructor(private url: string, private headers?: HeadersInit) {}
   // This is pretty much a shim so that BGZip File Reader can read in the browser
   // without failing on .stat calls (which are only in node)
 
-  async read(length: number, position: number, opts?: any): Promise<Uint8Array<ArrayBuffer>> {
+  async read(
+    length: number,
+    position: number,
+    opts?: any
+  ): Promise<Uint8Array<ArrayBuffer>> {
     const end = position + Math.max(0, length) - 1;
 
     const controller = new AbortController();
@@ -65,14 +66,17 @@ class HttpRangeFilehandle implements GenericFilehandle {
       const r = await fetch(this.url, {
         headers: { Range: 'bytes=0-0', ...(this.headers || {}) },
       });
-      const cr = r.headers.get('Content-Range') || r.headers.get('content-range');
+      const cr =
+        r.headers.get('Content-Range') || r.headers.get('content-range');
       if (cr && cr.includes('/')) {
         const total = Number(cr.split('/')[1]);
         if (Number.isFinite(total)) return { size: total };
       }
       const cl = r.headers.get('Content-Length');
       if (cl && Number.isFinite(Number(cl))) return { size: Number(cl) };
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     return { size: Number.MAX_SAFE_INTEGER };
   }
 
@@ -98,16 +102,11 @@ function makeLineProcessor(onLine: (line: string) => void) {
     }
     carry += text.slice(start);
     if (finalize && carry) {
-      const line = carry; carry = '';
+      const line = carry;
+      carry = '';
       if (line && line[0] !== '#') onLine(line);
     }
   };
-}
-
-// Replace extractValuesOfAttribute with a version that accepts single or list
-function extractValues(val: string | string[] | undefined): string[] {
-  if (!val) return [];
-  return Array.isArray(val) ? val : [val];
 }
 
 // Minimal scanner for GFF attributes that only extracts requested keys.
@@ -142,7 +141,12 @@ function parseSelectedAttributes(
   while (i < len) {
     // read key
     let kStart = i;
-    while (i < len && attrs.charCodeAt(i) !== 61 /* '=' */ && attrs.charCodeAt(i) !== 59 /* ';' */) i++;
+    while (
+      i < len &&
+      attrs.charCodeAt(i) !== 61 /* '=' */ &&
+      attrs.charCodeAt(i) !== 59 /* ';' */
+    )
+      i++;
     const key = attrs.slice(kStart, i).trim();
     if (i >= len || attrs.charCodeAt(i) !== 61 /* '=' */) {
       // no '='; skip to next ';'
@@ -182,28 +186,48 @@ function parseSelectedAttributes(
   return out;
 }
 
-async function getUncompressedSizeFromGzi(indexUrl: string, headers?: HeadersInitLike) {
+async function getUncompressedSizeFromGzi(
+  indexUrl: string,
+  headers?: HeadersInitLike
+) {
   try {
     // Try range tail; if not honored, fetch whole .gzi
-    const head = await fetch(indexUrl, { method: 'GET', headers: { Range: 'bytes=0-0', ...(headers||{}) } });
-    const lenHdr = head.headers.get('Content-Range') || head.headers.get('Content-Length');
+    const head = await fetch(indexUrl, {
+      method: 'GET',
+      headers: { Range: 'bytes=0-0', ...(headers || {}) },
+    });
+    const lenHdr =
+      head.headers.get('Content-Range') || head.headers.get('Content-Length');
     let totalLen = 0;
     if (lenHdr && lenHdr.includes('/')) totalLen = Number(lenHdr.split('/')[1]);
     else totalLen = Number(head.headers.get('Content-Length') || 0);
 
     let tail: Uint8Array;
     if (totalLen >= 16) {
-      const r = await fetch(indexUrl, { headers: { Range: `bytes=${totalLen - 16}-${totalLen - 1}`, ...(headers||{}) } });
+      const r = await fetch(indexUrl, {
+        headers: {
+          Range: `bytes=${totalLen - 16}-${totalLen - 1}`,
+          ...(headers || {}),
+        },
+      });
       if (r.status === 206) tail = new Uint8Array(await r.arrayBuffer());
       else {
-        const all = new Uint8Array(await (await fetch(indexUrl, { headers })).arrayBuffer());
+        const all = new Uint8Array(
+          await (await fetch(indexUrl, { headers })).arrayBuffer()
+        );
         tail = all.subarray(Math.max(0, all.length - 16));
       }
     } else {
-      const all = new Uint8Array(await (await fetch(indexUrl, { headers })).arrayBuffer());
+      const all = new Uint8Array(
+        await (await fetch(indexUrl, { headers })).arrayBuffer()
+      );
       tail = all.subarray(Math.max(0, all.length - 16));
     }
-    const view = new DataView(tail.buffer, tail.byteOffset + (tail.byteLength - 8), 8);
+    const view = new DataView(
+      tail.buffer,
+      tail.byteOffset + (tail.byteLength - 8),
+      8
+    );
     const lo = view.getUint32(0, true);
     const hi = view.getUint32(4, true);
     return hi * 2 ** 32 + lo;
@@ -215,8 +239,8 @@ async function getUncompressedSizeFromGzi(indexUrl: string, headers?: HeadersIni
 async function importGff(
   url: string,
   indexUrl: string,
-  onProgress: (b:number,t?:number)=>void,
-  onBatch: (rows:any[])=>Promise<void>,
+  onProgress: (b: number, t?: number) => void,
+  onBatch: (rows: any[]) => Promise<void>,
   attrsToIndex: string[],
   batchSize = 200,
   headers?: HeadersInitLike
@@ -225,7 +249,7 @@ async function importGff(
 
   // Build BGZF-aware filehandle using our HTTP-range wrapper
   const fh = new BgzfFilehandle({
-    filehandle:    new HttpRangeFilehandle(url, headers),
+    filehandle: new HttpRangeFilehandle(url, headers),
     gziFilehandle: new HttpRangeFilehandle(indexUrl, headers),
   });
 
@@ -245,7 +269,13 @@ async function importGff(
 
   // Prepare attribute selection sets
   const indexTargets = new Set(attrsToIndex);
-  const wanted = new Set<string>(['ID', 'Parent', 'Name', 'product', ...attrsToIndex]);
+  const wanted = new Set<string>([
+    'ID',
+    'Parent',
+    'Name',
+    'product',
+    ...attrsToIndex,
+  ]);
 
   const onLine = (line: string) => {
     const cols = line.split('\t');
@@ -253,11 +283,8 @@ async function importGff(
     const [seqid, source, type, s, e, score, strand, phase, attrs] = cols;
 
     // Parse only requested attributes
-    const { idAttr, parent, name, product, indexableAttrValues } = parseSelectedAttributes(
-      attrs,
-      wanted,
-      indexTargets
-    );
+    const { idAttr, parent, name, product, indexableAttrValues } =
+      parseSelectedAttributes(attrs, wanted, indexTargets);
 
     emitBatch.push({
       seqid,
@@ -267,7 +294,8 @@ async function importGff(
       end: Number(e) || 0,
       score: score === '.' ? null : Number(score),
       strand: strand || '.',
-      phase: phase === '0' || phase === '1' || phase === '2' ? Number(phase) : -1,
+      phase:
+        phase === '0' || phase === '1' || phase === '2' ? Number(phase) : -1,
       indexableAttrValues,
       idAttr,
       parent,
@@ -284,6 +312,7 @@ async function importGff(
   const processLines = makeLineProcessor(onLine);
 
   // Stream until EOF
+  // eslint-disable-next-line no-bitwise
   const CHUNK = 1 << 20; // 1 MiB (uncompressed)
   let pos = 0;
   for (;;) {

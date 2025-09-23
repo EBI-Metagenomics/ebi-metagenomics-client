@@ -88,7 +88,7 @@ const fetchAndStoreCrate = async (crateURL: string): Promise<Crate> => {
   let gff = null;
   try {
     gff = await extractGffIfExists(crateZip, schema);
-  } catch (Error) {
+  } catch {
     // Just here to prevent breakage
   }
   const newCrate: StorableCrate = {

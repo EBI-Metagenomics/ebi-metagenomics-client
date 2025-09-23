@@ -14,7 +14,8 @@ interface CompressedTSVTableProps {
   download: Download;
 }
 
-const {usePage, withQueryParamProvider} = createSharedQueryParamContextForTable()
+const { usePage, withQueryParamProvider } =
+  createSharedQueryParamContextForTable();
 
 /**
  * A component for displaying and interacting with compressed TSV files
@@ -25,7 +26,10 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
 }) => {
   const bgzipReader = useMemo(() => new BGZipService(download), [download]);
   const [pageNum, setPageNum] = usePage<number>();
-  const [pageData, setPageData] = useState<PaginatedList>({ items: [], count: 0 });
+  const [pageData, setPageData] = useState<PaginatedList>({
+    items: [],
+    count: 0,
+  });
   const [estimatedPageSize, setEstimatedPageSize] = useState<number>(0);
   const [cols, setCols] = useState<Column[]>(columns);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -57,10 +61,19 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
         }
 
         const pageCount = Math.max(1, bgzipReader.getPageCount?.() || 1);
-        let count = pageCount * Math.max(estimatedPageSize || response.length || 1, response.length || 1);
+        let count =
+          pageCount *
+          Math.max(
+            estimatedPageSize || response.length || 1,
+            response.length || 1
+          );
         const items = [...response];
 
-        if (columnsAreFirstRowOfFirstPage && currentPage === 1 && items.length) {
+        if (
+          columnsAreFirstRowOfFirstPage &&
+          currentPage === 1 &&
+          items.length
+        ) {
           const rowToUseAsHeaders = items[0] as string[];
           count = Math.max(0, count - 1);
           items.shift();
@@ -88,12 +101,7 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
     return () => {
       cancelled = true;
     };
-  }, [
-    pageNum,
-    bgzipReader,
-    estimatedPageSize,
-    columnsAreFirstRowOfFirstPage,
-  ]);
+  }, [pageNum, bgzipReader, estimatedPageSize, columnsAreFirstRowOfFirstPage]);
 
   return (
     <div className="compressed-tsv-table">
@@ -105,7 +113,9 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
             cols={cols}
             data={pageData}
             showPagination
-            expectedPageSize={estimatedPageSize || (pageData.items?.length || 100)}
+            expectedPageSize={
+              estimatedPageSize || pageData.items?.length || 100
+            }
           />
         )}
       </FixedHeightScrollable>

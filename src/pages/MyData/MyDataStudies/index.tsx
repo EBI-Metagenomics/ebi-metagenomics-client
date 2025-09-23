@@ -9,7 +9,8 @@ import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/use
 import useProtectedApiCall from 'hooks/useProtectedApiCall';
 import { StudyList } from 'interfaces';
 
-const {usePage, withQueryParamProvider} = createSharedQueryParamContextForTable()
+const { usePage, withQueryParamProvider } =
+  createSharedQueryParamContextForTable();
 
 const MyDataStudies: React.FC = () => {
   const [page] = usePage();
@@ -91,7 +92,6 @@ const MyDataStudies: React.FC = () => {
   );
   if (loading && (!isStale || !myData)) return <Loading size="large" />;
   if (error) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return <FetchError error={error} />;
   }

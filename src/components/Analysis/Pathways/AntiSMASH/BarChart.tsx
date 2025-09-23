@@ -31,7 +31,6 @@ const AntiSMASHBarChart: React.FC = () => {
   );
   const categoriesDescriptions = (data.data as MGnifyDatum[]).reduce(
     (memo, d) => {
-      // eslint-disable-next-line no-param-reassign
       memo[d.attributes.accession as string] = d.attributes.description;
       return memo;
     },
@@ -73,7 +72,6 @@ const AntiSMASHBarChart: React.FC = () => {
       enabled: true,
     },
     tooltip: {
-      /* eslint-disable react/no-this-in-sfc */
       formatter() {
         const description = categoriesDescriptions[this.key];
         let tooltip = `${this.series.name}<br/>Count: ${this.y}`;
@@ -82,7 +80,6 @@ const AntiSMASHBarChart: React.FC = () => {
         }
         return tooltip;
       },
-      /* eslint-enable react/no-this-in-sfc */
     },
     series: [
       {

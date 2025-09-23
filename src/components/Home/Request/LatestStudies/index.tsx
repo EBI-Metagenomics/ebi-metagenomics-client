@@ -64,7 +64,7 @@ const LatestStudies: React.FC = () => {
         className="vf-grid vf-grid__col-1 latest-studies-section"
         heightPx={800}
       >
-        {/* eslint-disable-next-line camelcase */}
+        {}
         {data.items.map(
           ({
             accession,

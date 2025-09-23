@@ -5,15 +5,12 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 
 const PAGE_SIZE = 25;
 
-const {usePfamPage, usePfamPageSize, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "pfam",
-  {},
-  PAGE_SIZE
-)
+const { usePfamPage, usePfamPageSize, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('pfam', {}, PAGE_SIZE);
 
 const PfamTable: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);

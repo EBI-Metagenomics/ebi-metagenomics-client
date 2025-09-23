@@ -7,15 +7,21 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
-import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const initialPageSize = 10;
 
-const {useRunsPage, useRunsPageSize, useRunsOrder, useRunsSearch, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "runs",
+const {
+  useRunsPage,
+  useRunsPageSize,
+  useRunsOrder,
+  useRunsSearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable(
+  'runs',
   {
-    runsSearch: SharedTextQueryParam(""),
+    runsSearch: SharedTextQueryParam(''),
   },
   initialPageSize
 );

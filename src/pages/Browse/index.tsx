@@ -3,10 +3,10 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 import BrowseStudies from 'components/Browse/Studies';
 import BrowseSuperStudies from 'components/Browse/SuperStudies';
-import BrowseSamples from 'components/Browse/Samples';
+// import BrowseSamples from 'components/Browse/Samples';
 import BrowsePublications from 'components/Browse/Publications';
-import BrowseGenomes from 'components/Browse/Genomes';
-import BrowseBiomes from 'components/Browse/Biomes';
+// import BrowseGenomes from 'components/Browse/Genomes';
+// import BrowseBiomes from 'components/Browse/Biomes';
 import Tabs from 'components/UI/Tabs';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
@@ -20,7 +20,7 @@ const tabs = [
 ];
 
 const Browse: React.FC = () => {
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Browse', url: '/browse' },

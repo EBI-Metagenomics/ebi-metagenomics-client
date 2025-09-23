@@ -126,7 +126,7 @@ const AsvDistribution = ({ fileUrl }) => {
         }
 
         setLoading(false);
-      } catch (err) {
+      } catch {
         setError(
           'Failed to load data. Please check the file URL and try again.'
         );

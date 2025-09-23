@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
-import useQueryParamState, { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
 import UserContext from 'pages/Login/UserContext';
 
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
@@ -26,9 +26,9 @@ type TaxonomicAnalysesProps = {
   accession: string;
 };
 
-const {useType, withQueryParamProvider} = createSharedQueryParamContext({
-  type: SharedTextQueryParam(PARAMETER_DEFAULT)
-})
+const { useType, withQueryParamProvider } = createSharedQueryParamContext({
+  type: SharedTextQueryParam(PARAMETER_DEFAULT),
+});
 
 const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   const { data, loading, error } = useMGnifyData(

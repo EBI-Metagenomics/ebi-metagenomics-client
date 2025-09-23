@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useMemo } from 'react';
 
 import useURLAccession from 'hooks/useURLAccession';
@@ -14,94 +13,106 @@ import DetailedVisualisationCard from '../VisualisationCards/DetailedVisualisati
 import { RouteTabs } from 'components/UI/Tabs';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import ContigSearch from 'components/Analysis/ContigViewer/ContigSearch';
-import { LGVProvider, useLGV } from 'components/Analysis/ContigViewer/V2ContigViewContext';
+import {
+  LGVProvider,
+  useLGV,
+} from 'components/Analysis/ContigViewer/V2ContigViewContext';
 
 const ContigBrowser: React.FC = () => {
-  const { viewState } = useLGV()
+  const { viewState } = useLGV();
   return (
     <div className="vf-stack vf-stack--400">
-      <JBrowseLinearGenomeView
-        viewState={viewState}
-      />
+      <JBrowseLinearGenomeView viewState={viewState} />
     </div>
   );
 };
 
 const ContigsViewer: React.FC = () => {
-  console.log("Rendering ContigsViewer")
+  console.log('Rendering ContigsViewer');
   const accession = useURLAccession();
   const { data, loading, error } = useAnalysisDetail(accession);
 
   const fasta = useMemo(() => {
     if (!data) return null;
-    return find(data.downloads, (d) => d.file_type === 'fasta' && d.download_group === 'quality_control')
-  }, [data])
+    return find(
+      data.downloads,
+      (d) => d.file_type === 'fasta' && d.download_group === 'quality_control'
+    );
+  }, [data]);
 
   const gff = useMemo(() => {
-    console.debug("Finding GFF URL...")
+    console.debug('Finding GFF URL...');
     if (!data) return null;
-    return find(data.downloads, (d) => d.file_type === 'gff' && d.download_group === 'functional_annotation.summary')
-  }, [data])
+    return find(
+      data.downloads,
+      (d) =>
+        d.file_type === 'gff' &&
+        d.download_group === 'functional_annotation.summary'
+    );
+  }, [data]);
 
-  const gffColumns = useMemo(() => [
-    {
-      Header: 'contig-id',
-      accessor: row => row[0],
-      id: 'contig-id',
-    },
-    {
-      Header: 'source',
-      accessor: row => row[1],
-      id: 'source',
-    },
-    {
-      Header: 'feature',
-      accessor: row => row[2],
-      id: 'feature',
-    },
-    {
-      Header: 'start',
-      accessor: row => row[3],
-      id: 'start',
-    },
-    {
-      Header: 'end',
-      accessor: row => row[4],
-      id: 'end',
-    },
-    {
-      Header: 'score',
-      accessor: row => row[5],
-      id: 'score',
-    },
-    {
-      Header: 'strand',
-      accessor: row => row[6],
-      id: 'strand',
-    },
-    {
-      Header: 'frame',
-      accessor: row => row[7],
-      id: 'frame',
-    },
-    {
-      Header: 'attributes',
-      accessor: row => row[8],
-      id: 'attributes',
-      Cell: ({ value }) => {
-        if (!value) return null;
-        return (
-          <div className="vf-stack vf-stack--200 gff-attributes">
-            {value.split(';').map((attr, i) => (
-              <div key={i} className="gff-attribute">
-                {attr.trim()}
-              </div>
-            ))}
-          </div>
-        );
+  const gffColumns = useMemo(
+    () => [
+      {
+        Header: 'contig-id',
+        accessor: (row) => row[0],
+        id: 'contig-id',
       },
-    }
-  ], []);
+      {
+        Header: 'source',
+        accessor: (row) => row[1],
+        id: 'source',
+      },
+      {
+        Header: 'feature',
+        accessor: (row) => row[2],
+        id: 'feature',
+      },
+      {
+        Header: 'start',
+        accessor: (row) => row[3],
+        id: 'start',
+      },
+      {
+        Header: 'end',
+        accessor: (row) => row[4],
+        id: 'end',
+      },
+      {
+        Header: 'score',
+        accessor: (row) => row[5],
+        id: 'score',
+      },
+      {
+        Header: 'strand',
+        accessor: (row) => row[6],
+        id: 'strand',
+      },
+      {
+        Header: 'frame',
+        accessor: (row) => row[7],
+        id: 'frame',
+      },
+      {
+        Header: 'attributes',
+        accessor: (row) => row[8],
+        id: 'attributes',
+        Cell: ({ value }) => {
+          if (!value) return null;
+          return (
+            <div className="vf-stack vf-stack--200 gff-attributes">
+              {value.split(';').map((attr, i) => (
+                <div key={i} className="gff-attribute">
+                  {attr.trim()}
+                </div>
+              ))}
+            </div>
+          );
+        },
+      },
+    ],
+    []
+  );
 
   if (loading) return <Loading size="small" />;
   if (error) return <p>Error loading analysis</p>;
@@ -115,28 +126,38 @@ const ContigsViewer: React.FC = () => {
 
   return (
     <div className="vf-stack vf-stack--400">
-      <RouteTabs tabs={tabs}/>
+      <RouteTabs tabs={tabs} />
       <Routes>
         <Route index element={<Navigate to="gff-preview" replace />} />
-        <Route path="gff-preview" element={
-          <DetailedVisualisationCard ftpLink={gff.url} title={gff.alias}>
-            <div className="p-4">
-              <p className="text-sm text-gray-600 mb-4">
-                {gff.long_description}
-              </p>
-              <p className="text-sm">
-                Download this file to view the complete GFF of this analysis.
-              </p>
-            </div>
-            <CompressedTSVTable download={gff} columns={gffColumns}/>
-          </DetailedVisualisationCard>
-        }/>
-        <Route path="search-contigs" element={
-          <LGVProvider fasta={fasta} gff={gff}>
-            <ContigBrowser/>
-            <ContigSearch gffDownload={gff} fastaDownload={fasta} assemblyAccession={accession}/>
-          </LGVProvider>
-        }/>
+        <Route
+          path="gff-preview"
+          element={
+            <DetailedVisualisationCard ftpLink={gff.url} title={gff.alias}>
+              <div className="p-4">
+                <p className="text-sm text-gray-600 mb-4">
+                  {gff.long_description}
+                </p>
+                <p className="text-sm">
+                  Download this file to view the complete GFF of this analysis.
+                </p>
+              </div>
+              <CompressedTSVTable download={gff} columns={gffColumns} />
+            </DetailedVisualisationCard>
+          }
+        />
+        <Route
+          path="search-contigs"
+          element={
+            <LGVProvider fasta={fasta} gff={gff}>
+              <ContigBrowser />
+              <ContigSearch
+                gffDownload={gff}
+                fastaDownload={fasta}
+                assemblyAccession={accession}
+              />
+            </LGVProvider>
+          }
+        />
       </Routes>
     </div>
   );

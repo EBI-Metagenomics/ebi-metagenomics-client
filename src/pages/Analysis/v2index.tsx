@@ -22,15 +22,20 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 // TODO: find v2 counterpart
 
-const isAssembly = (data: AnalysisDetail): boolean =>
-  data.experiment_type.toLowerCase().endsWith('assembly');
+const isAssembly = (
+  experimentType: AnalysisDetail['experiment_type']
+): boolean => experimentType.toLowerCase().endsWith('assembly');
 
-const isNotAmplicon = (data: AnalysisDetail): boolean => {
-  return data.experiment_type.toLowerCase() !== 'amplicon';
+const isNotAmplicon = (
+  experimentType: AnalysisDetail['experiment_type']
+): boolean => {
+  return experimentType.toLowerCase() !== 'amplicon';
 };
 
-const isAmplicon = (data: AnalysisDetail): boolean => {
-  return data.experiment_type.toLowerCase() === 'amplicon';
+const isAmplicon = (
+  experimentType: AnalysisDetail['experiment_type']
+): boolean => {
+  return experimentType.toLowerCase() === 'amplicon';
 };
 
 const V2AnalysisPage: React.FC = () => {
@@ -38,35 +43,42 @@ const V2AnalysisPage: React.FC = () => {
   const accession = useURLAccession();
   const { data, loading, error } = useAnalysisDetail(accession);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const value = useMemo(() => ({ overviewData: data }), [data?.accession]);
 
-  const thisIsAssembly = useMemo(() => (data?.experiment_type && isAssembly(data)), [data?.experiment_type]);
-  const thisIsAmplicon = useMemo(() => (data?.experiment_type && isAmplicon(data)), [data?.experiment_type]);
-  const thisIsNotAmplicon = useMemo(() => (data?.experiment_type && isNotAmplicon(data)), [data?.experiment_type]);
+  const thisIsAssembly = useMemo(
+    () => data?.experiment_type && isAssembly(data.experiment_type),
+    [data?.experiment_type]
+  );
+  const thisIsAmplicon = useMemo(
+    () => data?.experiment_type && isAmplicon(data.experiment_type),
+    [data?.experiment_type]
+  );
+  const thisIsNotAmplicon = useMemo(
+    () => data?.experiment_type && isNotAmplicon(data.experiment_type),
+    [data?.experiment_type]
+  );
 
   const tabs = useMemo(() => {
-    if (!data?.accession) return [] as { label: string | React.ElementType; to: string }[];
-    return (
-      [
-        { label: 'Overview', to: 'overview' },
-        { label: 'Quality control', to: 'qc' },
-        { label: 'Taxonomy', to: 'taxonomic' },
-        thisIsNotAmplicon
-          ? { label: 'Functional analysis', to: 'functional' }
-          : null,
-        thisIsNotAmplicon
-          ? { label: 'Pathways/Systems', to: 'path-systems' }
-          : null,
-        thisIsAssembly
-          ? { label: 'Contig Viewer', to: 'contigs-viewer' }
-          : null,
-        thisIsAmplicon ? { label: 'ASV', to: 'asv' } : null,
-      ].filter(Boolean) as { label: string | React.ElementType; to: string }[]
-    );
+    if (!data?.accession)
+      return [] as { label: string | React.ElementType; to: string }[];
+    return [
+      { label: 'Overview', to: 'overview' },
+      { label: 'Quality control', to: 'qc' },
+      { label: 'Taxonomy', to: 'taxonomic' },
+      thisIsNotAmplicon
+        ? { label: 'Functional analysis', to: 'functional' }
+        : null,
+      thisIsNotAmplicon
+        ? { label: 'Pathways/Systems', to: 'path-systems' }
+        : null,
+      thisIsAssembly ? { label: 'Contig Viewer', to: 'contigs-viewer' } : null,
+      thisIsAmplicon ? { label: 'ASV', to: 'asv' } : null,
+    ].filter(Boolean) as { label: string | React.ElementType; to: string }[];
   }, [thisIsNotAmplicon, thisIsAssembly, thisIsAmplicon, data?.accession]);
 
   const breadcrumbs = useMemo(() => {
-    if (!data) return [] as Array<{ label: string; url?: string }>;
+    if (!data?.accession) return [] as Array<{ label: string; url?: string }>;
     return [
       { label: 'Home', url: '/' },
       { label: 'Studies', url: '/browse/studies' },
@@ -96,7 +108,7 @@ const V2AnalysisPage: React.FC = () => {
               <Route
                 path="taxonomic"
                 element={
-                  isAssembly(data) ? (
+                  isAssembly(data.experiment_type) ? (
                     <AssemblyTaxonomy />
                   ) : (
                     <Taxonomy accession={accession} />

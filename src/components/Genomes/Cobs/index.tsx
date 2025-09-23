@@ -52,7 +52,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     try {
       const response = await axios.get(url);
       return response.data.data[0].attributes.accession;
-    } catch (responseErrors) {
+    } catch {
       return '';
     }
   };
@@ -70,7 +70,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
       const response = await axios.get(fastaUrl, headersConfig);
       const { data } = response;
       return data.substring(0, 500);
-    } catch (responseErrors) {
+    } catch {
       return '';
     }
   };

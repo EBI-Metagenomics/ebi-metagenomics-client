@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useQueryParamState, {
-  createSharedQueryParamContext,
-  createSharedQueryParamContextForTable,
-} from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { getBiomeIcon } from '@/utils/biomes';
 import { Link } from 'react-router-dom';
@@ -11,14 +8,12 @@ import EMGTable from 'components/UI/EMGTable';
 import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import BiomeSelector from 'components/UI/BiomeSelector';
 import { some } from 'lodash-es';
-import { SharedNumberQueryParam, SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 
-const {usePage, usePageSize, useOrder, useBiome, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "",
-  {
-    biome: SharedTextQueryParam(""),
-  }
-)
+const { usePage, usePageSize, useOrder, useBiome, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('', {
+    biome: SharedTextQueryParam(''),
+  });
 
 const BrowseGenomesByCatalogue: React.FC = () => {
   const [page] = usePage<number>();

@@ -5,14 +5,12 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
-import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 
 const PAGE_SIZE = 25;
 
-const {useAntismashPage, useAntismashPageSize, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "antismash", {}, PAGE_SIZE
-)
+const { useAntismashPage, useAntismashPageSize, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('antismash', {}, PAGE_SIZE);
 
 const AntiSMASHTable: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);

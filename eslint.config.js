@@ -1,13 +1,14 @@
 // eslint.config.js
-import js from '@eslint/js'
-import globals from 'globals'
-import tseslint from '@typescript-eslint/eslint-plugin'
-import tsParser from '@typescript-eslint/parser'
-import reactPlugin from 'eslint-plugin-react'
-import reactHooks from 'eslint-plugin-react-hooks'
-import jsxA11y from 'eslint-plugin-jsx-a11y'
+import js from '@eslint/js';
+import pluginImport from 'eslint-plugin-import';
+import globals from 'globals';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
 
-import prettier from 'eslint-plugin-prettier'
+import prettier from 'eslint-plugin-prettier';
 
 export default [
   js.configs.recommended,
@@ -19,13 +20,16 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.es2021,
+        ...globals.node,
       },
     },
     plugins: {
+      import: pluginImport,
       react: reactPlugin,
       'react-hooks': reactHooks,
       '@typescript-eslint': tseslint,
       'jsx-a11y': jsxA11y,
+      prettier,
     },
     settings: {
       react: { version: 'detect' },
@@ -34,6 +38,14 @@ export default [
       },
     },
     rules: {
+      'no-unused-vars': 'off',
+      'no-undef': 'off', // This is handled by TypeScript
+      'no-redeclare': 'off',
+      '@typescript-eslint/no-redeclare': ['error'],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' },
+      ],
       '@typescript-eslint/no-use-before-define': ['error'],
       '@typescript-eslint/no-shadow': ['error'],
       '@typescript-eslint/explicit-function-return-type': 'off',
@@ -57,7 +69,7 @@ export default [
 
       'no-shadow': 'off',
       'no-plusplus': 'off',
-      'ignoreRestSiblings': 0,
+      ignoreRestSiblings: 0,
       'no-bitwise': 'warn',
       'no-nested-ternary': 'warn',
 
@@ -67,6 +79,8 @@ export default [
       'jsx-a11y/mouse-events-have-key-events': 'warn',
 
       'max-len': ['warn', { code: 140, ignoreUrls: true }],
+
+      'prettier/prettier': 'warn',
     },
   },
 
@@ -82,5 +96,11 @@ export default [
       },
     },
   },
-  prettier.configs.recommended,
-]
+  {
+    files: ['eslint.config.js'],
+    rules: {
+      'import/no-extraneous-dependencies': 'off',
+    },
+  },
+
+];

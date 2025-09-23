@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState, useEffect } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
@@ -8,8 +8,6 @@ import useEBISearchData from '@/hooks/data/useEBISearchData';
 import 'styles/filters.css';
 import Loading from 'components/UI/Loading';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
-import useQueryParamState, { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
-import { SharedMultipleValueQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 import useSharedQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 const location2endpoint = {

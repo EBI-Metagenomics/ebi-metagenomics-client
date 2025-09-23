@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useState } from 'react';
 
 import Slider from 'components/UI/Slider';
 import Switch from 'components/UI/Switch';
@@ -8,9 +8,8 @@ const MIN = 500;
 const MAX = 10e6;
 
 const ContigLengthFilter: React.FC = () => {
-  const [contigLength, setContigLength] = useQueryParamState<[number, number]>(
-    'contigLength',
-  );
+  const [contigLength, setContigLength] =
+    useQueryParamState<[number, number]>('contigLength');
   const [enabled, setEnabled] = useState(!!contigLength);
 
   const handleSwitch = (isEnabled: boolean): void => {

@@ -6,7 +6,6 @@ const refreshPage = (): void => {
 };
 
 const getHumanReadableErrorMessages = (error: ErrorFromFetch): string => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const errorStatusCode = error.error.response?.status || error.error.code;
   switch (errorStatusCode) {

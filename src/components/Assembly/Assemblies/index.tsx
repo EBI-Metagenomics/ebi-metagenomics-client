@@ -21,13 +21,19 @@ type AssociatedAssembliesProps = {
   rootEndpoint: string;
 };
 
-const {useAssembliesPage, useAssembliesPageSize, useAssembliesOrder, useAssembliesSearch, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "assemblies",
+const {
+  useAssembliesPage,
+  useAssembliesPageSize,
+  useAssembliesOrder,
+  useAssembliesSearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable(
+  'assemblies',
   {
-    assembliesSearch: SharedTextQueryParam(""),
+    assembliesSearch: SharedTextQueryParam(''),
   },
   initialPageSize
-)
+);
 
 const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
   rootEndpoint,

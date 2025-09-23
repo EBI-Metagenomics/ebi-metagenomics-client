@@ -1,4 +1,11 @@
-import React, { FormEvent, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  FormEvent,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OutterCard from 'components/UI/OutterCard';
 import UserContext from 'pages/Login/UserContext';
@@ -22,7 +29,7 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { isAuthenticated } = useContext(UserContext);
   const navigate = useNavigate();
-  const {state, search} = useLocation();
+  const { state, search } = useLocation();
   const [desiredDestination, setDesiredDestination] = useState('');
 
   useMemo(() => {
@@ -40,7 +47,6 @@ const Login: React.FC = () => {
   }, [state?.from, search]);
 
   const handleLogout = async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     setAuthToken(null);
     localStorage.removeItem('mgnify.v2.token');
@@ -73,7 +79,7 @@ const Login: React.FC = () => {
         password: passwordRef.current.value,
       });
       const accessToken = response.data.token;
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
       // @ts-ignore
       setAuthToken(accessToken) as unknown as void;
       setUsername('');

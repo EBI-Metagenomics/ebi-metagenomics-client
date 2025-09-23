@@ -4,13 +4,10 @@ import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 const TYPES = ['COG', 'KEGG', 'GO', 'Pfam', 'InterPro', 'antiSMASH'];
 
 const ContigAnnotationTypeFilter: React.FC = () => {
-  const [annotationType, setAnnotationType] = useQueryParamState<string[]>(
-    'annotationType',
-  );
+  const [annotationType, setAnnotationType] =
+    useQueryParamState<string[]>('annotationType');
 
-  const [selected, setSelected] = useState(
-    annotationType.filter(Boolean)
-  );
+  const [selected, setSelected] = useState(annotationType.filter(Boolean));
 
   useEffect(() => {
     setSelected(annotationType.filter(Boolean));

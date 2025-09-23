@@ -11,17 +11,18 @@ import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import useDefaultGenomeConfig from '@/hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from '@/utils/taxon';
-import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 
 addExportMenu(Highcharts);
 
 const initialPageSize = 10;
 
-const {useKeggClassPage, useKeggClassPageSize, useKeggClassOrder, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "keggCLass",
-  {},
-  initialPageSize
-)
+const {
+  useKeggClassPage,
+  useKeggClassPageSize,
+  useKeggClassOrder,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('keggCLass', {}, initialPageSize);
 
 const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   includePangenomes = true,
@@ -52,7 +53,6 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   );
   const categoriesDescriptions = (data.data as MGnifyDatum[]).reduce(
     (memo, d) => {
-      // eslint-disable-next-line no-param-reassign
       memo[d.attributes.name as string] = d.attributes.description;
       return memo;
     },
@@ -82,7 +82,6 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
     categories,
   };
   options.tooltip = {
-    /* eslint-disable react/no-this-in-sfc */
     formatter() {
       const description = categoriesDescriptions[this.key];
       let tooltip = `${this.series.name}<br/>Count: ${this.y}`;
@@ -91,7 +90,6 @@ const KEGGClassAnalises: React.FC<{ includePangenomes?: boolean }> = ({
       }
       return tooltip;
     },
-    /* eslint-enable react/no-this-in-sfc */
   };
   options.series = [
     {

@@ -60,7 +60,6 @@ export const AccordionList: React.FC<AccordionListProps> = ({
       } | vf-list `}
     >
       {titles.map((title, i) => (
-        // eslint-disable-next-line react/no-array-index-key
         <AccordionElement title={title} key={i}>
           {children[i]}
         </AccordionElement>

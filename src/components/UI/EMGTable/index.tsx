@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, {
   MouseEventHandler,
   useEffect,
@@ -74,10 +73,15 @@ function getOrderingQueryParamFromSortedColumn(
     .replace(/-/g, '_')}`;
 }
 
-function getSortedColumnFromOrderingQueryParam(ordering: string): Array<{ id: string; desc: boolean }> {
+function getSortedColumnFromOrderingQueryParam(
+  ordering: string
+): Array<{ id: string; desc: boolean }> {
   if (!ordering) return [];
   const desc = ordering.startsWith('-');
-  const id = ordering.replace(/^-/, '').replace(/attributes\./g, '').replace(/-/g, '_');
+  const id = ordering
+    .replace(/^-/, '')
+    .replace(/attributes\./g, '')
+    .replace(/-/g, '_');
   return [{ id, desc }];
 }
 
@@ -127,8 +131,12 @@ const EMGTable: React.FC<EMGTableProps> = ({
   onMouseLeaveRow = () => null,
   dataCy,
 }) => {
-  const [page, setPage] = useQueryParamState<number>(camelCase(`${namespace} page`));
-  const [ordering, setOrdering] = useQueryParamState<string>(camelCase(`${namespace} order`));
+  const [page, setPage] = useQueryParamState<number>(
+    camelCase(`${namespace} page`)
+  );
+  const [ordering, setOrdering] = useQueryParamState<string>(
+    camelCase(`${namespace} order`)
+  );
   console.log('rendering with ordering', ordering);
 
   const pageCount = useMemo(() => {
@@ -173,19 +181,22 @@ const EMGTable: React.FC<EMGTableProps> = ({
   const [isChangingPage, setChangingPage] = useState(false);
 
   useEffect(() => {
-    if (showPagination && page !== pageIndex + 1) {
-      setPage(pageIndex + 1);
+    if (!showPagination) return;
+    const desiredIndex = Math.max(0, (page ?? 1) - 1);
+    if (pageIndex !== desiredIndex) {
+      gotoPage(desiredIndex);
       if (tableRef.current && isChangingPage) {
-        tableRef.current.scrollIntoView();
+        (tableRef.current as HTMLElement).scrollIntoView();
         setChangingPage(false);
       }
     }
-  }, [showPagination, setPage, pageIndex]);
+  }, [showPagination, page, pageIndex, gotoPage]);
 
   useEffect(() => {
     // Handle table-initiated change of sorting column
     if (!sortable || !sortBy?.length) return;
-    const orderParamRequestedByTable = getOrderingQueryParamFromSortedColumn(sortBy);
+    const orderParamRequestedByTable =
+      getOrderingQueryParamFromSortedColumn(sortBy);
     if (ordering !== orderParamRequestedByTable) {
       setOrdering(orderParamRequestedByTable);
       setPage(1);
@@ -197,9 +208,12 @@ const EMGTable: React.FC<EMGTableProps> = ({
     if (!sortable) return;
     const orderParamSpecifiedExternally = ordering;
     console.log(`orderParamSpecifiedExternally`, orderParamSpecifiedExternally);
-    const orderParamCurrentlyInTable = getOrderingQueryParamFromSortedColumn(sortBy);
+    const orderParamCurrentlyInTable =
+      getOrderingQueryParamFromSortedColumn(sortBy);
     if (orderParamSpecifiedExternally !== orderParamCurrentlyInTable) {
-      setSortBy(getSortedColumnFromOrderingQueryParam(orderParamSpecifiedExternally));
+      setSortBy(
+        getSortedColumnFromOrderingQueryParam(orderParamSpecifiedExternally)
+      );
       setPage(1);
     }
   }, [ordering, sortable]);
@@ -210,8 +224,9 @@ const EMGTable: React.FC<EMGTableProps> = ({
   );
   const goToPageAndScroll = (pageNumber): MouseEventHandler => {
     setChangingPage(true);
-    return gotoPage(pageNumber);
+    return () => setPage(pageNumber + 1);
   };
+
 
   const fullWidthColSpan = useMemo(() => {
     return filter(cols, (col) => !col.isFullWidth).length;
@@ -399,7 +414,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
                 <button
                   disabled={!canPreviousPage}
                   type="button"
-                  onClick={previousPage}
+                  onClick={() => setPage(Math.max(1, pageIndex /* zero-based */ + 1 - 1))}
                   className="vf-button vf-button--link vf-pagination__link"
                 >
                   Previous<span className="vf-u-sr-only"> page</span>
@@ -449,7 +464,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
                 <button
                   disabled={!canNextPage}
                   type="button"
-                  onClick={nextPage}
+                  onClick={() => setPage(pageIndex + 1 + 1)}
                   className="vf-button vf-button--link vf-pagination__link"
                 >
                   Next<span className="vf-u-sr-only"> page</span>

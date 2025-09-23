@@ -18,7 +18,7 @@ import ROCrateBrowser from 'components/UI/ROCrateBrowser';
 
 function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
   if (!feature || !feature.getAttributeValue) return null;
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const [, attr] of attrPossibleNames.entries()) {
     const featureAttrVal = feature.getAttributeValue(attr);
     if (featureAttrVal) {

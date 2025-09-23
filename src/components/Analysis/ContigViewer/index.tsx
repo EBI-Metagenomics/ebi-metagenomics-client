@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   useCallback,
   useContext,
@@ -27,9 +26,9 @@ import ReactDOMServer from 'react-dom/server';
 import GenomeBrowserPopup from 'components/Genomes/Browser/Popup';
 import ContigLengthFilter from 'components/Analysis/ContigViewer/Filter/ContigLength';
 import ContigTextFilter from 'components/Analysis/ContigViewer/Filter/ContigText';
-// eslint-disable-next-line max-len
+
 import ContigAnnotationTypeFilter from 'components/Analysis/ContigViewer/Filter/ContigAnnotationType';
-import useQueryParamState, { createSharedQueryParamContext } from 'hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContext } from 'hooks/queryParamState/useQueryParamState';
 import {
   AnnotationTrackColorPicker,
   annotationTrackCustomisations,
@@ -208,26 +207,40 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   );
 };
 
-const {useContigsPageCursor, useSelectedContig, useContigLength, useCogCategorySearch, useKeggOrthologSearch, useGoTermSearch, usePfamSearch, useInterproSearch, useAntismashSearch, useAnnotationType, useContigsSearch, withQueryParamProvider} = createSharedQueryParamContext({
-  contigsPageCursor: SharedTextQueryParam(""),
-  selectedContig: SharedTextQueryParam(""),
-  gffComparisonId: SharedTextQueryParam(""),
+const {
+  useContigsPageCursor,
+  useSelectedContig,
+  useContigLength,
+  useCogCategorySearch,
+  useKeggOrthologSearch,
+  useGoTermSearch,
+  usePfamSearch,
+  useInterproSearch,
+  useAntismashSearch,
+  useAnnotationType,
+  useContigsSearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContext({
+  contigsPageCursor: SharedTextQueryParam(''),
+  selectedContig: SharedTextQueryParam(''),
+  gffComparisonId: SharedTextQueryParam(''),
   contigLength: SharedNumberRangeQueryParam([500, 10e6]),
-  cogCategorySearch: SharedTextQueryParam(""),
-  keggOrthologSearch: SharedTextQueryParam(""),
-  goTermSearch: SharedTextQueryParam(""),
-  pfamSearch: SharedTextQueryParam(""),
-  interproSearch: SharedTextQueryParam(""),
-  antismashSearch: SharedTextQueryParam(""),
+  cogCategorySearch: SharedTextQueryParam(''),
+  keggOrthologSearch: SharedTextQueryParam(''),
+  goTermSearch: SharedTextQueryParam(''),
+  pfamSearch: SharedTextQueryParam(''),
+  interproSearch: SharedTextQueryParam(''),
+  antismashSearch: SharedTextQueryParam(''),
   annotationType: SharedMultipleValueQueryParam([]),
-  contigsSearch: SharedTextQueryParam(""),
-})
+  contigsSearch: SharedTextQueryParam(''),
+});
 
 const ContigsViewer: React.FC = () => {
   const accession = useURLAccession();
 
   const [contigsPageCursorParam] = useContigsPageCursor<string>();
-  const [selectedContigParam, setSelectedContigParam] = useSelectedContig<string>();
+  const [selectedContigParam, setSelectedContigParam] =
+    useSelectedContig<string>();
   const [lengthRange] = useContigLength<[number, number]>();
   const [cogCategorySearchParam] = useCogCategorySearch<string>();
   const [keggOrthologSearchParam] = useKeggOrthologSearch<string>();

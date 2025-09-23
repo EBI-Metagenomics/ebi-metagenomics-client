@@ -14,13 +14,15 @@ const Switch: React.FC<SwitchProps> = ({
   onChange = (v) => v,
   isOn = false,
   extraClass,
-  controlled = false
+  controlled = false,
 }) => {
-
   let value = isOn;
   let setValue = noop;
   if (!controlled) {
+    // A bit strange to have conditional hooks, but the idea is that controlled is a never-changing flag.
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     [value, setValue] = useState(isOn);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       setValue(isOn);
       onChange(isOn);

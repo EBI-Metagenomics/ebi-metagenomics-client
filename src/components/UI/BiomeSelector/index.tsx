@@ -1,17 +1,14 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useState } from 'react';
 
-import { groupBy, split, map, flatMap, find, filter } from 'lodash-es';
+import { filter, find, flatMap, groupBy, map, split } from 'lodash-es';
 import Select from 'react-select';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseList, MGnifyDatum } from '@/hooks/data/useData';
+import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import { getBiomeIcon } from '@/utils/biomes';
 import {
   reactSelectStyles,
   reactSelectTheme,
 } from 'styles/react-select-styles';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import useSharedQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 type BiomeSelectorProps = {
@@ -45,7 +42,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
   const { data: biomes, loading } = useMGnifyData(
     'biomes/root/children?depth_gte=1&depth_lte=4&page_size=200'
   );
-  const [biomeQP, setBiomeQP] = useSharedQueryParamState<string>("biome");
+  const [biomeQP, setBiomeQP] = useSharedQueryParamState<string>('biome');
   const [value, setValue] = useState<OptionProps | undefined>();
   const options = React.useMemo(() => {
     if (loading) {

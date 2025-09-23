@@ -37,16 +37,18 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
 
 export default Tabs;
 
-
 type RouteTabProps = {
   tabs: Array<{
     label: string | React.ElementType;
     to: To;
   }>;
   preservedQueryParameters?: string[];
-}
+};
 
-export const RouteTabs: React.FC<RouteTabProps> = ({ tabs, preservedQueryParameters }) => {
+export const RouteTabs: React.FC<RouteTabProps> = ({
+  tabs,
+  preservedQueryParameters,
+}) => {
   const { search, pathname } = useLocation();
 
   const queryParamString = useMemo(() => {
@@ -70,15 +72,20 @@ export const RouteTabs: React.FC<RouteTabProps> = ({ tabs, preservedQueryParamet
           // keep string `to` as a string to avoid new object identity each render
           const toProp =
             typeof to === 'string'
-              ? (to + queryParamString)
+              ? to + queryParamString
               : { ...to, search: (to as any).search ?? queryParamString };
 
           const isActive =
             (typeof to === 'string' && pathname.endsWith(to)) ||
-            (typeof to !== 'string' && to.pathname && pathname.endsWith(to.pathname));
+            (typeof to !== 'string' &&
+              to.pathname &&
+              pathname.endsWith(to.pathname));
 
           return (
-            <li className="vf-tabs__item" key={typeof to === 'string' ? to : to.pathname ?? ''}>
+            <li
+              className="vf-tabs__item"
+              key={typeof to === 'string' ? to : to.pathname ?? ''}
+            >
               <Link
                 className={`vf-tabs__link ${isActive ? 'is-active' : ''}`}
                 to={toProp}

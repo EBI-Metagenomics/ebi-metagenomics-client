@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useState } from 'react';
 
 import EMGTable from 'components/UI/EMGTable';
@@ -11,12 +9,15 @@ import { createSharedQueryParamContextForTable } from '@hooks/queryParamState/us
 import Link from 'components/UI/Link';
 import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
-const {useBiomesPage, useBiomesPageSize, useBiomesOrder, useBiomesSearch, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "biomes",
-  {
-    biomesSearch: SharedTextQueryParam(""),
-  }
-)
+const {
+  useBiomesPage,
+  useBiomesPageSize,
+  useBiomesOrder,
+  useBiomesSearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('biomes', {
+  biomesSearch: SharedTextQueryParam(''),
+});
 
 const BrowseBiomes: React.FC = () => {
   const [page] = useBiomesPage<number>();

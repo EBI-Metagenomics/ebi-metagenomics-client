@@ -91,7 +91,6 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
     [name: string]: string | null;
   } = rawData.reduce((memo, el) => {
     if (el.name)
-      // eslint-disable-next-line no-param-reassign
       memo[el.name.toLowerCase().replaceAll(':', '')] =
         el.value === null ? null : String(el.value);
     return memo;

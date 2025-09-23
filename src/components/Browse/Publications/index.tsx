@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +8,8 @@ import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/use
 import usePublicationsList from 'hooks/data/usePublications';
 import FetchError from 'components/UI/FetchError';
 
-const {usePage, usePageSize, useOrder, useSearch, withQueryParamProvider} = createSharedQueryParamContextForTable();
+const { usePage, usePageSize, useOrder, useSearch, withQueryParamProvider } =
+  createSharedQueryParamContextForTable();
 
 const BrowsePublications: React.FC = () => {
   const [page] = usePage<number>();

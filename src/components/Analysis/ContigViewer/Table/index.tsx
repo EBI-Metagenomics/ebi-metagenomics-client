@@ -72,9 +72,7 @@ const ContigsTable: React.FC = () => {
   const { contigsQueryData } = useContext(ContigsQueryContext);
   const { data, loading, error } = contigsQueryData || {};
   const [, setSelectedContig] = useQueryParamState('selectedContig');
-  const [, setContigsPageCursor] = useQueryParamState(
-    'contigsPageCursor',
-  );
+  const [, setContigsPageCursor] = useQueryParamState('contigsPageCursor');
 
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
   const assemblyId = analysisOverviewData.relationships.assembly?.data?.id;

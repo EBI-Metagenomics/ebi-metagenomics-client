@@ -5,21 +5,19 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import useURLAccession from 'hooks/useURLAccession';
-import useQueryParamState, { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 import useStudyAnalysesList from 'hooks/data/useStudyAnalyses';
 import { Analysis, AnalysisList } from 'interfaces';
-import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const expectedPageSize = 10;
 type AssociatedAnaysesProps = {
   rootEndpoint: string;
 };
 
-const {useAnalysesPage, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "analyses",
-)
+const { useAnalysesPage, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('analyses');
 
-const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
+const AnalysesTable: React.FC<AssociatedAnaysesProps> = () => {
   const accession = useURLAccession();
   const [analysesPage] = useAnalysesPage<number>();
 

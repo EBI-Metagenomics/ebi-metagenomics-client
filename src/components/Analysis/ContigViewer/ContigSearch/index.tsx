@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Download, PaginatedList } from 'interfaces';
-import { Contig, db, importGffToIndexedDB, resetDb } from 'utils/locallyIndexedGff';
+import {
+  Contig,
+  db,
+  importGffToIndexedDB,
+  resetDb,
+} from 'utils/locallyIndexedGff';
 import { useEffectOnce } from 'react-use';
 import { toast } from 'react-toastify';
 import { BGZipService } from 'components/Analysis/BgZipService';
@@ -15,57 +20,65 @@ import { Collection } from 'dexie';
 import { KEYWORD_ANY } from 'components/UI/TextInputTypeahead';
 import { filesize } from 'filesize';
 
-const {usePage, useInterproSearch, usePfamSearch, useCogCategorySearch, useKeggOrthlogSearch, useGeneOntologySearch, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "",
-  {
-    interproSearch: SharedTextQueryParam(""),
-    pfamSearch: SharedTextQueryParam(""),
-    cogCategorySearch: SharedTextQueryParam(""),
-    keggOrthlogSearch: SharedTextQueryParam(""),
-    geneOntologySearch: SharedTextQueryParam("")
-  }
-);
+const {
+  usePage,
+  useInterproSearch,
+  usePfamSearch,
+  useCogCategorySearch,
+  useKeggOrthlogSearch,
+  useGeneOntologySearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('', {
+  interproSearch: SharedTextQueryParam(''),
+  pfamSearch: SharedTextQueryParam(''),
+  cogCategorySearch: SharedTextQueryParam(''),
+  keggOrthlogSearch: SharedTextQueryParam(''),
+  geneOntologySearch: SharedTextQueryParam(''),
+});
 
 const getFileSize = async (dataFileUrl: string): Promise<number> => {
   const headResponse = await fetch(dataFileUrl, { method: 'HEAD' });
   const contentLength = Number(
-    headResponse.headers.get('content-length') || '0',
+    headResponse.headers.get('content-length') || '0'
   );
   console.debug(`Compressed file size: ${contentLength}`);
   return contentLength;
 };
 
-const annotationTypesForExistenceDisplay: { annotKeyInIndex: string, annotDisplay: string }[] = [
+const annotationTypesForExistenceDisplay: {
+  annotKeyInIndex: string;
+  annotDisplay: string;
+}[] = [
   {
-    'annotKeyInIndex': 'hasInterpros',
-    'annotDisplay': 'interpro'
+    annotKeyInIndex: 'hasInterpros',
+    annotDisplay: 'interpro',
   },
   {
-    'annotKeyInIndex': 'hasPfams',
-    'annotDisplay': 'pfam'
+    annotKeyInIndex: 'hasPfams',
+    annotDisplay: 'pfam',
   },
   {
-    'annotKeyInIndex': 'hasCogs',
-    'annotDisplay': 'cog'
+    annotKeyInIndex: 'hasCogs',
+    annotDisplay: 'cog',
   },
   {
-    'annotKeyInIndex': 'hasKeggs',
-    'annotDisplay': 'kegg'
+    annotKeyInIndex: 'hasKeggs',
+    annotDisplay: 'kegg',
   },
   {
-    'annotKeyInIndex': 'hasGos',
-    'annotDisplay': 'go'
+    annotKeyInIndex: 'hasGos',
+    annotDisplay: 'go',
   },
-]
+];
 
-const ContigSearch: React.FC<{ gffDownload: Download, fastaDownload: Download, assemblyAccession: string }> = (
-  {
-    gffDownload,
-    fastaDownload,
-    assemblyAccession
-  }) => {
+const ContigSearch: React.FC<{
+  gffDownload: Download;
+  fastaDownload: Download;
+  assemblyAccession: string;
+}> = ({ gffDownload, fastaDownload, assemblyAccession }) => {
   const [gffSize, setGffSize] = useState<number>(undefined);
-  const [existingIndexChecked, setExistingIndexChecked] = useState<boolean>(false);
+  const [existingIndexChecked, setExistingIndexChecked] =
+    useState<boolean>(false);
   const [isIndexing, setIsIndexing] = useState<boolean>(false);
   const [isIndexed, setIsIndexed] = useState<boolean>(false);
   const [isStale, setIsStale] = useState<boolean>(false);
@@ -75,13 +88,15 @@ const ContigSearch: React.FC<{ gffDownload: Download, fastaDownload: Download, a
   const [keggSearch] = useKeggOrthlogSearch<string>();
   const [goSearch] = useGeneOntologySearch<string>();
 
-  const {navTo: navToContig, ready: isViewerReady} = useLGV();
+  const { navTo: navToContig, ready: isViewerReady } = useLGV();
 
   useEffect(() => {
     getFileSize(gffDownload.url).then(setGffSize);
   }, [gffDownload]);
 
-  const [contigsTableData, setContigsTableData] = useState<PaginatedList<Contig>>({
+  const [contigsTableData, setContigsTableData] = useState<
+    PaginatedList<Contig>
+  >({
     count: 0,
     items: [],
   } as PaginatedList<Contig>);
@@ -97,12 +112,15 @@ const ContigSearch: React.FC<{ gffDownload: Download, fastaDownload: Download, a
     const contigsTable = db.contigs;
     let contigsColl: Collection<Contig> | null = null;
 
-    const presenceIndexFor: Record<'interpros' | 'pfams' | 'cogs' | 'keggs' | 'gos', string> = {
+    const presenceIndexFor: Record<
+      'interpros' | 'pfams' | 'cogs' | 'keggs' | 'gos',
+      string
+    > = {
       interpros: 'annotationsPresence.hasInterpros',
-      pfams:     'annotationsPresence.hasPfams',
-      cogs:      'annotationsPresence.hasCogs',
-      keggs:     'annotationsPresence.hasKeggs',
-      gos:       'annotationsPresence.hasGos',
+      pfams: 'annotationsPresence.hasPfams',
+      cogs: 'annotationsPresence.hasCogs',
+      keggs: 'annotationsPresence.hasKeggs',
+      gos: 'annotationsPresence.hasGos',
     };
 
     const applyAttrFilter = (
@@ -116,13 +134,26 @@ const ContigSearch: React.FC<{ gffDownload: Download, fastaDownload: Download, a
       if (term === KEYWORD_ANY) {
         // Presence-only: use the indexed boolean flag on the contig
         const base = contigsTable.where(presenceIndexFor[idxPath]).equals(1);
-        return coll ? coll.and(c => (c as any).annotationsPresence?.[`has${idxPath.charAt(0).toUpperCase()}${idxPath.slice(1)}`] === 1) : base;
+        return coll
+          ? coll.and(
+              (c) =>
+                (c as any).annotationsPresence?.[
+                  `has${idxPath.charAt(0).toUpperCase()}${idxPath.slice(1)}`
+                ] === 1
+            )
+          : base;
       }
 
       // Exact match via multiEntry index on annotations.*
       const indexName = `annotations.${idxPath}`;
       const base = contigsTable.where(indexName).equals(term);
-      return coll ? coll.and(c => ((c.annotations as any)?.[idxPath] as string[] | undefined)?.includes(term)) : base;
+      return coll
+        ? coll.and((c) =>
+            (
+              (c.annotations as any)?.[idxPath] as string[] | undefined
+            )?.includes(term)
+          )
+        : base;
     };
 
     // Apply all filters
@@ -142,18 +173,23 @@ const ContigSearch: React.FC<{ gffDownload: Download, fastaDownload: Download, a
 
   useEffect(() => {
     if (!isIndexed) return;
-    searchContigs().then(setContigsTableData).finally(() => setIsStale(false));
+    searchContigs()
+      .then(setContigsTableData)
+      .finally(() => setIsStale(false));
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isIndexed, pageNum, interproSearch, pfamSearch]);
 
   useEffect(() => {
     if (!isIndexed) return;
     setPageNum(1);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [interproSearch, pfamSearch]);
 
   useEffectOnce(() => {
     if (!isIndexed && !existingIndexChecked) {
-      db.meta.get('sourceUrl').then(
-        ({ value: existingIndex }) => {
+      db.meta
+        .get('sourceUrl')
+        .then(({ value: existingIndex }) => {
           if (existingIndex && existingIndex === gffDownload.url) {
             console.debug(`File already indexed in local db: ${existingIndex}`);
             setIsIndexed(true);
@@ -164,117 +200,138 @@ const ContigSearch: React.FC<{ gffDownload: Download, fastaDownload: Download, a
             resetDb();
           }
           setExistingIndexChecked(true);
-        },
-      ).catch(() => setExistingIndexChecked(true));
-    }
-  });
-
-  const { start: fetchAndIndex, cancel: cancelFetchAndIndex } = importGffToIndexedDB({
-    url: gffDownload.url,
-    assemblyAccession,
-    indexUrl: BGZipService.getIndexFileUrl(gffDownload),
-    fastaUrl: fastaDownload.url,
-    fastaFaiUrl: BGZipService.getIndexFileUrl(fastaDownload, 'fai'),
-    fastaGziUrl: BGZipService.getIndexFileUrl(fastaDownload, 'gzi'),
-    attrsToIndex: ['interpro', 'pfam', 'cog', 'kegg', 'go'],
-    batchSize: 200,
-    onProgress: ({ percent }) => {
-      toast.update(`${gffDownload.alias}-index-progress`, {
-        progress: percent / (110),  // extra 10% for roughly the time after batches until the index is complete
-        autoClose: 5000,
-      });
-    },
-    onBegin: () => {
-      setIsIndexing(true);
-      toast.info(`Downloading and indexing ${gffDownload.alias}`, {
-        toastId: `${gffDownload.alias}-index-progress`,
-        progress: 0.01,
-        autoClose: 5000,
-      });
-    },
-    onEnd: ({ contigsCount }) => {
-      setIsIndexing(false);
-      toast.dismiss(`${gffDownload.alias}-index-progress`);
-      toast.success(`Indexed ${contigsCount} assembly contigs`, {
-        autoClose: 5000,
-      });
-      setIsIndexed(true);
-    },
-    onError: (e) => {
-      setIsIndexing(false);
-      toast.error(`Error indexing ${gffDownload.alias}: ${e}`, {
-        autoClose: false,
-      });
-    },
-  });
-
-  const contigsColumns = useMemo(() => [
-    {
-      Header: 'Contig ID',
-      accessor: row => row.contigName,
-      id: 'contig-id',
-      Cell: ({ cell }) => (
-        <button
-          className="vf-button vf-button--link vf-button--sm contig-id-button"
-          type="button"
-          onClick={() => navToContig(cell.value)}
-        >
-          {cell.value}
-        </button>
-      ),
-    },
-    {
-      Header: 'Length (bp)',
-      accessor: row => row.length,
-      id: 'length',
-    },
-    {
-      Header: 'Features',
-      accessor: row => row.annotationsPresence,
-      id: 'features',
-      Cell: ({ cell }) => {
-        const flags = annotationTypesForExistenceDisplay.map(({ annotKeyInIndex, annotDisplay }) => {
-          return (
-            <ContigFeatureFlag
-              key={annotKeyInIndex}
-              annotationType={annotDisplay}
-              present={cell.value?.[annotKeyInIndex] > 0}
-            />
-          )
         })
-        return <div className="emg-contig-feature-flags">{flags}</div>;
-      }
+        .catch(() => setExistingIndexChecked(true));
     }
-  ], [navToContig]);
+  });
+
+  const { start: fetchAndIndex, cancel: cancelFetchAndIndex } =
+    importGffToIndexedDB({
+      url: gffDownload.url,
+      assemblyAccession,
+      indexUrl: BGZipService.getIndexFileUrl(gffDownload),
+      fastaUrl: fastaDownload.url,
+      fastaFaiUrl: BGZipService.getIndexFileUrl(fastaDownload, 'fai'),
+      fastaGziUrl: BGZipService.getIndexFileUrl(fastaDownload, 'gzi'),
+      attrsToIndex: ['interpro', 'pfam', 'cog', 'kegg', 'go'],
+      batchSize: 200,
+      onProgress: ({ percent }) => {
+        toast.update(`${gffDownload.alias}-index-progress`, {
+          progress: percent / 110, // extra 10% for roughly the time after batches until the index is complete
+          autoClose: 5000,
+        });
+      },
+      onBegin: () => {
+        setIsIndexing(true);
+        toast.info(`Downloading and indexing ${gffDownload.alias}`, {
+          toastId: `${gffDownload.alias}-index-progress`,
+          progress: 0.01,
+          autoClose: 5000,
+        });
+      },
+      onEnd: ({ contigsCount }) => {
+        setIsIndexing(false);
+        toast.dismiss(`${gffDownload.alias}-index-progress`);
+        toast.success(`Indexed ${contigsCount} assembly contigs`, {
+          autoClose: 5000,
+        });
+        setIsIndexed(true);
+      },
+      onError: (e) => {
+        setIsIndexing(false);
+        toast.error(`Error indexing ${gffDownload.alias}: ${e}`, {
+          autoClose: false,
+        });
+      },
+    });
+
+  const contigsColumns = useMemo(
+    () => [
+      {
+        Header: 'Contig ID',
+        accessor: (row) => row.contigName,
+        id: 'contig-id',
+        Cell: ({ cell }) => (
+          <button
+            className="vf-button vf-button--link vf-button--sm contig-id-button"
+            type="button"
+            onClick={() => navToContig(cell.value)}
+          >
+            {cell.value}
+          </button>
+        ),
+      },
+      {
+        Header: 'Length (bp)',
+        accessor: (row) => row.length,
+        id: 'length',
+      },
+      {
+        Header: 'Features',
+        accessor: (row) => row.annotationsPresence,
+        id: 'features',
+        Cell: ({ cell }) => {
+          const flags = annotationTypesForExistenceDisplay.map(
+            ({ annotKeyInIndex, annotDisplay }) => {
+              return (
+                <ContigFeatureFlag
+                  key={annotKeyInIndex}
+                  annotationType={annotDisplay}
+                  present={cell.value?.[annotKeyInIndex] > 0}
+                />
+              );
+            }
+          );
+          return <div className="emg-contig-feature-flags">{flags}</div>;
+        },
+      },
+    ],
+    [navToContig]
+  );
 
   console.log('Rendering contigs');
 
-  if (gffSize === undefined || !existingIndexChecked || !isViewerReady) return <Loading size="small" />;
+  if (gffSize === undefined || !existingIndexChecked || !isViewerReady)
+    return <Loading size="small" />;
 
   if (!isIndexed) {
-    return <div
-      className="vf-box vf-box-theme--primary vf-box--easy"
-      style={{
-        backgroundColor: '#d1e3f6',
-      }}
-    >
-      <h3 className="vf-box__heading">
-        <span className="icon icon-common icon-common icon-cloud-download-alt" /> File download required
-      </h3>
-      <p className="vf-box__text">
-        To search for contigs, a {filesize(gffSize, {round: 0})} file needs to be downloaded to your browser.
-        <br />
-        {!isIndexing && (
-          <button className="vf-button vf-button vf-button--primary" onClick={async () => {
-            await setPageNum(1);
-            fetchAndIndex()
-          }}>Download & index
-            GFF</button>
-        )}
-        {isIndexing && (
-          <button className="vf-button vf-button vf-button--tertiary" onClick={cancelFetchAndIndex}>Cancel</button>)}
-      </p>
-    </div>;
+    return (
+      <div
+        className="vf-box vf-box-theme--primary vf-box--easy"
+        style={{
+          backgroundColor: '#d1e3f6',
+        }}
+      >
+        <h3 className="vf-box__heading">
+          <span className="icon icon-common icon-common icon-cloud-download-alt" />{' '}
+          File download required
+        </h3>
+        <p className="vf-box__text">
+          To search for contigs, a {filesize(gffSize, { round: 0 })} file needs
+          to be downloaded to your browser.
+          <br />
+          {!isIndexing && (
+            <button
+              className="vf-button vf-button vf-button--primary"
+              onClick={async () => {
+                await setPageNum(1);
+                fetchAndIndex();
+              }}
+            >
+              Download & index GFF
+            </button>
+          )}
+          {isIndexing && (
+            <button
+              className="vf-button vf-button vf-button--tertiary"
+              onClick={cancelFetchAndIndex}
+            >
+              Cancel
+            </button>
+          )}
+        </p>
+      </div>
+    );
   }
 
   // if (isIndexed && contigsTableData === undefined) return (<Loading size="small" />);
@@ -284,15 +341,40 @@ const ContigSearch: React.FC<{ gffDownload: Download, fastaDownload: Download, a
       <div className="vf-grid vf-grid__col-6">
         <div className="vf-stack vf-stack--400">
           <h4 className="text-heading--4">Search by contained annotations</h4>
-          <ContigTypeaheadFilter title="InterPro" attribute="interpros" placeholder="IPR015200" />
-          <ContigTypeaheadFilter title="Pfam" attribute="pfams" placeholder="PF12574" />
-          <ContigTypeaheadFilter title="COG Category" attribute="cogs" placeholder="S" />
-          <ContigTypeaheadFilter title="KEGG Ortholog" attribute="keggs" placeholder="ko:K03325" />
-          <ContigTypeaheadFilter title="Gene Ontology term" attribute="gos" placeholder="GO:0044281" />
+          <ContigTypeaheadFilter
+            title="InterPro"
+            attribute="interpros"
+            placeholder="IPR015200"
+          />
+          <ContigTypeaheadFilter
+            title="Pfam"
+            attribute="pfams"
+            placeholder="PF12574"
+          />
+          <ContigTypeaheadFilter
+            title="COG Category"
+            attribute="cogs"
+            placeholder="S"
+          />
+          <ContigTypeaheadFilter
+            title="KEGG Ortholog"
+            attribute="keggs"
+            placeholder="ko:K03325"
+          />
+          <ContigTypeaheadFilter
+            title="Gene Ontology term"
+            attribute="gos"
+            placeholder="GO:0044281"
+          />
         </div>
         <div className="vf-grid__col--span-5">
-          <EMGTable cols={contigsColumns} data={contigsTableData as PaginatedList<Contig>} expectedPageSize={PAGESIZE}
-                isStale={isStale} loading={isStale || !isIndexed} />
+          <EMGTable
+            cols={contigsColumns}
+            data={contigsTableData as PaginatedList<Contig>}
+            expectedPageSize={PAGESIZE}
+            isStale={isStale}
+            loading={isStale || !isIndexed}
+          />
         </div>
       </div>
       <div
@@ -303,17 +385,27 @@ const ContigSearch: React.FC<{ gffDownload: Download, fastaDownload: Download, a
       >
         <div className="vf-flag vf-flag--top vf-flag--reversed vf-flag--800">
           <div className="vf-flag__body">
-            <p>Browsing {contigsTableData.count} annotated contigs from {gffDownload.alias}</p>
+            <p>
+              Browsing {contigsTableData.count} annotated contigs from{' '}
+              {gffDownload.alias}
+            </p>
           </div>
           <div className="vf-flag__media">
-            <button className="vf-button vf-button vf-button--tertiary vf-button--sm"
-                    onClick={() => resetDb().then(() => {
-                      setIsIndexed(false);
-                      setContigsTableData({ count: 0, items: [] } as PaginatedList<Contig>);
-                      toast.info(`Contig index removed.`, {
-                        autoClose: 5000,
-                      });
-                    })}>
+            <button
+              className="vf-button vf-button vf-button--tertiary vf-button--sm"
+              onClick={() =>
+                resetDb().then(() => {
+                  setIsIndexed(false);
+                  setContigsTableData({
+                    count: 0,
+                    items: [],
+                  } as PaginatedList<Contig>);
+                  toast.info(`Contig index removed.`, {
+                    autoClose: 5000,
+                  });
+                })
+              }
+            >
               Remove&nbsp;contig&nbsp;index
             </button>
           </div>

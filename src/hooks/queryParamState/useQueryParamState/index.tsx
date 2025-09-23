@@ -35,7 +35,7 @@ type HooksFor<P extends SharedQueryParamSet> = {
   [K in keyof P as HookName<Extract<K, string>>]: Hook;
 };
 
-export function createSharedQueryParamContext<const P extends SharedQueryParamSet>(
+export function createSharedQueryParamContext<P extends SharedQueryParamSet>(
   params: P
 ): {
   QueryParamProvider: React.FC<{ children: React.ReactNode }>;
@@ -47,6 +47,7 @@ export function createSharedQueryParamContext<const P extends SharedQueryParamSe
     const name = paramName as keyof P & string;
     const hookName = `use${upperFirst(name)}` as HookName<typeof name>;
     // Assign into the partial map
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     (hooks as any)[hookName] = (<T = unknown>() => useSharedQueryParamState<T>(name));
   });
 

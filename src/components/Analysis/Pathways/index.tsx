@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import ExtLink from 'components/UI/ExtLink';
-import useQueryParamState, { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
 import KeggModule from './KeggModule';
 import AntiSMASH from './AntiSMASH';
 import GenomeProperties from './GenomeProperties';
@@ -17,9 +17,9 @@ const tabs = [
   { label: 'antiSMASH', to: 'antismash' },
 ];
 
-const {useType, withQueryParamProvider} = createSharedQueryParamContext({
-  type: SharedTextQueryParam(PARAMETER_DEFAULT)
-})
+const { useType, withQueryParamProvider } = createSharedQueryParamContext({
+  type: SharedTextQueryParam(PARAMETER_DEFAULT),
+});
 
 const PathwaysSubPage: React.FC = () => {
   const [type] = useType<string>();

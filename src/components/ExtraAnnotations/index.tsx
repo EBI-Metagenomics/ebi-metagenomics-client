@@ -7,7 +7,7 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import InfoBanner from 'components/UI/InfoBanner';
-import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import ROCrateBrowser from 'components/UI/ROCrateBrowser';
 import { singularise } from '@/utils/strings';
 
@@ -17,11 +17,8 @@ type ExtraAnnotationsProps = {
 
 const initialPageSize = 10;
 
-const {useAnnotationsPage, useAnnotationsPageSize,  withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "annotations",
-  {},
-  initialPageSize
-)
+const { useAnnotationsPage, useAnnotationsPageSize, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('annotations', {}, initialPageSize);
 
 const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
   const singularNamespace = singularise(namespace);

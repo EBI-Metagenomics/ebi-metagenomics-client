@@ -27,7 +27,7 @@ const RouteForHash: React.FC<PropsType> = ({
   }, [currentHash, targetHash, isDefault, navigate]);
 
   if (currentHash === targetHash) {
-    return <div id={`tab-${(targetHash.slice(1)) || 'default'}`}>{children}</div>;
+    return <div id={`tab-${targetHash.slice(1) || 'default'}`}>{children}</div>;
   }
   return null;
 };

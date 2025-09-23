@@ -7,78 +7,96 @@ export type ParamParser<S> = (raw: string) => S;
 export type Serializer<S> = (v: S) => string | null;
 
 export type SharedQueryParam = {
-  parser?: ParamParser<any>,
-  serializer?: Serializer<any>
-  value?: any
-  defaultValue?: any
-}
+  parser?: ParamParser<any>;
+  serializer?: Serializer<any>;
+  value?: any;
+  defaultValue?: any;
+};
 
-export const SharedTextQueryParam: (defaultValue: string) => SharedQueryParam = (defaultValue: string) => {
+export const SharedTextQueryParam: (
+  defaultValue: string
+) => SharedQueryParam = (defaultValue: string) => {
   return {
     defaultValue: defaultValue,
     parser: (v) => v,
-    serializer: (v) => v
-  } as SharedQueryParam
-}
+    serializer: (v) => v,
+  } as SharedQueryParam;
+};
 
-export const SharedNumberQueryParam: (defaultValue: number) => SharedQueryParam = (defaultValue: number) => {
+export const SharedNumberQueryParam: (
+  defaultValue: number
+) => SharedQueryParam = (defaultValue: number) => {
   return {
     defaultValue: defaultValue,
     parser: (v) => parseInt(v as unknown as string, 10),
-    serializer: String
-  } as SharedQueryParam
-}
+    serializer: String,
+  } as SharedQueryParam;
+};
 
-export const SharedNumberRangeQueryParam: (defaultValue: [number, number]) => SharedQueryParam = (defaultValue: [number, number]) => {
+export const SharedNumberRangeQueryParam: (
+  defaultValue: [number, number]
+) => SharedQueryParam = (defaultValue: [number, number]) => {
   return {
     defaultValue: defaultValue,
     parser: (v) => {
       // TODO in theory this could be non-stringable
-      const [min, max] = String(v).split(",").map(Number);
+      const [min, max] = String(v).split(',').map(Number);
       return [min ?? defaultValue[0], max ?? defaultValue[1]];
     },
     serializer: (v) => {
       const [min, max] = v as unknown as [number, number];
       return `${min},${max}`;
-    }
-  }
-}
+    },
+  };
+};
 
-export const SharedMultipleValueQueryParam: (defaultValue: string[]) => SharedQueryParam = (defaultValue: string[]) => {
+export const SharedMultipleValueQueryParam: (
+  defaultValue: string[]
+) => SharedQueryParam = (defaultValue: string[]) => {
   return {
     defaultValue,
     parser: (v) => {
       // TODO: consider non-simple csv string lists
-      return String(v).split(",").map(s => s.trim());
+      return String(v)
+        .split(',')
+        .map((s) => s.trim());
     },
-    serializer: v => {
+    serializer: (v) => {
       // TODO: consider escaping
-      return v.join(",");
-    }
-  }
-}
+      return v.join(',');
+    },
+  };
+};
 
 export type SharedQueryParamSet = {
   [key: string]: SharedQueryParam;
-}
+};
 
 export type SharedQueryParamContextValue = {
-  queryParams: SharedQueryParamSet,
-  setQueryParams: React.Dispatch<React.SetStateAction<SharedQueryParamSet>>
-}
+  queryParams: SharedQueryParamSet;
+  setQueryParams: React.Dispatch<React.SetStateAction<SharedQueryParamSet>>;
+};
 
-export const SharedQueryParamContext = React.createContext<SharedQueryParamContextValue>({queryParams: {}, setQueryParams: () => {}});
+export const SharedQueryParamContext =
+  React.createContext<SharedQueryParamContextValue>({
+    queryParams: {},
+    setQueryParams: () => {},
+  });
 SharedQueryParamContext.displayName = 'SharedQueryParams';
 
-const SharedQueryParamsProvider: React.FC<{params: SharedQueryParamSet}> = ({ params, children }) => {
-  const [queryParams, setQueryParams] = React.useState<SharedQueryParamSet>(params);
+const SharedQueryParamsProvider: React.FC<{ params: SharedQueryParamSet }> = ({
+  params,
+  children,
+}) => {
+  const [queryParams, setQueryParams] =
+    React.useState<SharedQueryParamSet>(params);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const isFirstMount = useFirstMountState();
   useEffect(() => {
-    console.debug("Handling tick of SharedQueryParamsProvider")
-    console.debug("queryParams", queryParams)
-    console.debug("searchParams", searchParams)
+    console.debug('Handling tick of SharedQueryParamsProvider');
+    console.debug('queryParams', queryParams);
+    console.debug('searchParams', searchParams);
     // Update query params in the address bar if the params meaningfully change
     if (isFirstMount) return; // allow a tick for useEffectOnce to take priority
 
@@ -90,11 +108,16 @@ const SharedQueryParamsProvider: React.FC<{params: SharedQueryParamSet}> = ({ pa
       const { serializer, value, defaultValue } = paramDef;
       const currentSerializedValue = next.get(paramName);
 
-      const isNullishOrDefault = isNil(value) || isEqual(value, defaultValue) || isEqual(value, "");
+      const isNullishOrDefault =
+        isNil(value) || isEqual(value, defaultValue) || isEqual(value, '');
 
       if (isNullishOrDefault) {
         if (next.has(paramName)) {
-          console.log(`Removing ${paramName} from address bar because internal representation is nullish/default (${String(value)})`);
+          console.log(
+            `Removing ${paramName} from address bar because internal representation is nullish/default (${String(
+              value
+            )})`
+          );
           next.delete(paramName);
         }
         return;
@@ -103,16 +126,28 @@ const SharedQueryParamsProvider: React.FC<{params: SharedQueryParamSet}> = ({ pa
       const serializedValue = serializer ? serializer(value) : String(value);
 
       if (!isEqual(currentSerializedValue, serializedValue)) {
-        console.log(`Setting ${paramName} to`, serializedValue, '(was', currentSerializedValue, ')');
+        console.log(
+          `Setting ${paramName} to`,
+          serializedValue,
+          '(was',
+          currentSerializedValue,
+          ')'
+        );
         next.set(paramName, serializedValue);
       } else {
-        console.log(`Skipping ${paramName} because it is already in the address bar with the same value`);
+        console.log(
+          `Skipping ${paramName} because it is already in the address bar with the same value`
+        );
       }
     });
 
     const nextStr = next.toString();
     if (nextStr !== prev.toString()) {
-      console.log('Updating address bar params', next, `since ${prev} !== ${nextStr}`);
+      console.log(
+        'Updating address bar params',
+        next,
+        `since ${prev} !== ${nextStr}`
+      );
       setSearchParams(next, { replace: true });
     } else {
       console.log('No search param changes; skipping setSearchParams');
@@ -121,12 +156,15 @@ const SharedQueryParamsProvider: React.FC<{params: SharedQueryParamSet}> = ({ pa
 
   useEffectOnce(() => {
     // On the first render, set the query params values to any incoming from the address bar
-    console.log(`Handling first render of SharedQueryParamsProvider. And is first? ${isFirstMount}`)
+    console.log(
+      `Handling first render of SharedQueryParamsProvider. And is first? ${isFirstMount}`
+    );
     if (searchParams) {
       const searchParamsValuesToSyncInwards: Record<string, any> = {};
       searchParams.forEach((paramValue, paramName) => {
         if (has(params, paramName)) {
-          searchParamsValuesToSyncInwards[paramName] = queryParams[paramName].parser(paramValue);
+          searchParamsValuesToSyncInwards[paramName] =
+            queryParams[paramName].parser(paramValue);
         }
       });
       setQueryParams((prev) => {
@@ -145,15 +183,17 @@ const SharedQueryParamsProvider: React.FC<{params: SharedQueryParamSet}> = ({ pa
   });
 
   const setWithLogging = (value) => {
-    console.log("Setting queryParams", value);
+    console.log('Setting queryParams', value);
     setQueryParams(value);
-  }
+  };
 
   return (
-    <SharedQueryParamContext.Provider value={{queryParams, setQueryParams: setWithLogging}}>
+    <SharedQueryParamContext.Provider
+      value={{ queryParams, setQueryParams: setWithLogging }}
+    >
       {children}
     </SharedQueryParamContext.Provider>
   );
-}
+};
 
 export default SharedQueryParamsProvider;

@@ -11,17 +11,18 @@ import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import useDefaultGenomeConfig from '@/hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from '@/utils/taxon';
-import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 
 addExportMenu(Highcharts);
 
 const initialPageSize = 10;
 
-const {useKeggModPage, useKeggModPageSize, useKeggModOrder, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "keggMod",
-  {},
-  initialPageSize
-)
+const {
+  useKeggModPage,
+  useKeggModPageSize,
+  useKeggModOrder,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('keggMod', {}, initialPageSize);
 
 const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   includePangenomes = true,
@@ -52,7 +53,6 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   );
   const categoriesDescriptions = (data.data as MGnifyDatum[]).reduce(
     (memo, d) => {
-      // eslint-disable-next-line no-param-reassign
       memo[d.attributes.name as string] = d.attributes.description;
       return memo;
     },
@@ -79,7 +79,6 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
     categories,
   };
   options.tooltip = {
-    /* eslint-disable react/no-this-in-sfc */
     formatter() {
       const description = categoriesDescriptions[this.key];
       let tooltip = `${this.series.name}<br/>Count: ${this.y}`;
@@ -88,7 +87,6 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
       }
       return tooltip;
     },
-    /* eslint-enable react/no-this-in-sfc */
   };
   options.series = [
     {
@@ -111,26 +109,26 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   }
 
   return (
-      <div
-        className="vf-stack vf-stack--200"
-        data-cy="genome-kegg-module-analysis"
-      >
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={options}
-          ref={chartComponentRef}
-        />
-        <EMGTable
-          cols={columns}
-          data={data as MGnifyResponseList}
-          Title={`All ${data.meta.pagination.count} KEGG modules`}
-          loading={loading}
-          initialPage={(keggmodPage as number) - 1}
-          initialPageSize={initialPageSize}
-          namespace="keggmod-"
-          isStale={isStale}
-        />
-      </div>
+    <div
+      className="vf-stack vf-stack--200"
+      data-cy="genome-kegg-module-analysis"
+    >
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={options}
+        ref={chartComponentRef}
+      />
+      <EMGTable
+        cols={columns}
+        data={data as MGnifyResponseList}
+        Title={`All ${data.meta.pagination.count} KEGG modules`}
+        loading={loading}
+        initialPage={(keggmodPage as number) - 1}
+        initialPageSize={initialPageSize}
+        namespace="keggmod-"
+        isStale={isStale}
+      />
+    </div>
   );
 };
 

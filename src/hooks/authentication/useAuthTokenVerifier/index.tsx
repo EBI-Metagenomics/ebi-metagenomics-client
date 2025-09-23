@@ -13,7 +13,7 @@ const useAuthTokenVerifier = () => {
       });
       setAuthToken(authToken);
       // is 200 if valid
-    } catch (error) {
+    } catch {
       setAuthToken(null);
       setDetails(null);
     }

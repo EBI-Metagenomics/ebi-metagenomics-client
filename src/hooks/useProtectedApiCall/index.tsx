@@ -13,7 +13,6 @@ const useProtectedApiCall = () => {
       (config) => {
         // TODO also check base URL here
         if (!config.headers.Authorization) {
-          // eslint-disable-next-line no-param-reassign
           config.headers.Authorization = `Bearer ${authToken}`;
         }
         return config;
@@ -27,7 +26,10 @@ const useProtectedApiCall = () => {
         const previousRequest = error.config;
         if (error.response.status === 401 && !previousRequest.sent) {
           previousRequest.sent = true;
-          navigate('/login', { state: { from: window.location }, replace: true });
+          navigate('/login', {
+            state: { from: window.location },
+            replace: true,
+          });
         }
         return Promise.reject(error);
       }
@@ -36,7 +38,7 @@ const useProtectedApiCall = () => {
       protectedAxios.interceptors.request.eject(requestInterceptor);
       protectedAxios.interceptors.response.eject(responseInterceptor);
     };
-  }, [authToken, verifyAuthToken]);
+  }, [authToken, navigate, verifyAuthToken]);
 
   return protectedAxios;
 };

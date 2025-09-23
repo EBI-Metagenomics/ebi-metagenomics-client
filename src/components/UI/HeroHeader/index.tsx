@@ -8,7 +8,7 @@ import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
 
 const HeroHeader: React.FC = () => {
   const searchBox = useRef<HTMLInputElement>();
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const [isAccessionLike, setIsAccessionLike] = useState(false);
   const [nextURL, setNextURL] = useState('/search/studies');

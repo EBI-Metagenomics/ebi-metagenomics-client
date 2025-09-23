@@ -146,14 +146,13 @@ const PieChart: React.FC<PieProps> = ({
       align: 'right',
       verticalAlign: 'middle',
       layout: 'vertical',
-      /* eslint-disable react/no-this-in-sfc */
+
       labelFormatter() {
         if (this.name.length > 15) {
           return `${this.name.slice(0, 15)}...`;
         }
         return this.name;
       },
-      /* eslint-enable react/no-this-in-sfc */
     };
   }
   return (

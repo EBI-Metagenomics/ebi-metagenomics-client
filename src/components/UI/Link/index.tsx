@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import {
   useLinkClickHandler,
   Link as DefaultLink,

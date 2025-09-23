@@ -5,8 +5,9 @@ import useSearchStorage from '@/hooks/useSearchStorage';
 import SourmashHistory from './History';
 import SourmashForm from './Form';
 import SourmashResults from './Results';
-import { createSharedQueryParamContext } from 'hooks/queryParamState/useQueryParamState';
-import SharedQueryParamsProvider, { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
+import SharedQueryParamsProvider, {
+  SharedTextQueryParam,
+} from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 type SourmashProps = {
   catalogueName?: string;
@@ -80,7 +81,7 @@ const SourmashSearch: React.FC<SourmashProps> = ({
             expire.
           </p>
         </details>
-        <SharedQueryParamsProvider params={{jobId: SharedTextQueryParam("")}}>
+        <SharedQueryParamsProvider params={{ jobId: SharedTextQueryParam('') }}>
           <SourmashForm catalogueID={catalogueID} />
           <SourmashResults addToStorage={addToStorage} />
           <SourmashHistory jobs={jobs} removeFromStorage={removeFromStorage} />

@@ -58,7 +58,6 @@ const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
           color = '#9333ea'; // purple
       }
       return (
-        // eslint-disable-next-line react/no-array-index-key
         <span key={index} style={{ color }}>
           {nucleotide}
         </span>

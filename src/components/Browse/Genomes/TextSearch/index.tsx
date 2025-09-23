@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -7,19 +5,22 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { MGnifyResponseList } from '@/hooks/data/useData';
 import Loading from 'components/UI/Loading';
-import useQueryParamState, { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import { getBiomeIcon } from '@/utils/biomes';
-import { cleanTaxLineage, getSimpleTaxLineage } from '@/utils/taxon';
+import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon';
 import FetchError from 'components/UI/FetchError';
 import Tooltip from 'components/UI/Tooltip';
 import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
-const {useGenomesPage, useGenomesageSize, useGenomesOrder, useGenomesSearch, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "genomes",
-  {
-    genomesSearch: SharedTextQueryParam(""),
-  }
-)
+const {
+  useGenomesPage,
+  useGenomesageSize,
+  useGenomesOrder,
+  useGenomesSearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('genomes', {
+  genomesSearch: SharedTextQueryParam(''),
+});
 
 const GenomesTextSearch: React.FC = () => {
   const [page] = useGenomesPage<number>();
@@ -110,7 +111,7 @@ const GenomesTextSearch: React.FC = () => {
         isStale={isStale}
         showTextFilter
         downloadURL={downloadURL}
-        namespace={"genomes"}
+        namespace={'genomes'}
       />
     </>
   );

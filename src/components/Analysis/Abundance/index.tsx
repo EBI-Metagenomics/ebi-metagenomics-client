@@ -25,10 +25,7 @@ const Abundance: React.FC = () => {
       </p>
       {loading && <Loading />}
       {!loading && error && <FetchError error={error} />}
-      {
-        // eslint-disable-next-line react/no-danger
-        data && <div dangerouslySetInnerHTML={{ __html: data as string }} />
-      }
+      {data && <div dangerouslySetInnerHTML={{ __html: data as string }} />}
     </section>
   );
 };

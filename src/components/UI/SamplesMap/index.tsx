@@ -47,7 +47,6 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
   const markers = useRef({});
   const [markingEezRegions, setMarkingEezRegions] = useState(false);
 
-  // eslint-disable-next-line consistent-return
   const fetchPolygonCoordinates = async () => {
     try {
       const response = await axios.get(
@@ -85,7 +84,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
         }
       }
       return coordinatesArray;
-    } catch (err) {
+    } catch {
       // markingEezRegions.current = false;
     }
   };
@@ -153,10 +152,9 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
       google.maps.event.addListener(
         markerCluster.current,
         'click',
-        // eslint-disable-next-line func-names
+
         function (cluster) {
           if (
-            // eslint-disable-next-line no-underscore-dangle, react/no-this-in-sfc
             this.prevZoom_ + 1 <= this.getMaxZoom() ||
             cluster.getSize() >= 10
           ) {

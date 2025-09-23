@@ -14,7 +14,7 @@ interface OptionDataType {
   label: string;
   count: number;
   optionChildren?: OptionDataType[];
-  // eslint-disable-next-line react/no-unused-prop-types
+
   children?: OptionDataType[];
 }
 interface HierarchyOptionProps extends OptionDataType {
@@ -113,9 +113,7 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   const { pathname } = useLocation();
   const { searchData } = useContext(SearchQueryContext);
   const [facet, setFacet] = useQueryParamState<string[]>(facetName);
-  const [selected, setSelected] = useState(
-    facet.filter(Boolean)
-  );
+  const [selected, setSelected] = useState(facet.filter(Boolean));
   useEffect(() => {
     setSelected(facet.filter(Boolean));
   }, [facet]);

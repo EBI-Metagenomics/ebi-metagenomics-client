@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,12 +10,10 @@ import BiomeSelector from 'components/UI/BiomeSelector';
 import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import FetchError from 'components/UI/FetchError';
 
-const {usePage, useOrder, useBiome, withQueryParamProvider} = createSharedQueryParamContextForTable(
-  "",
-  {
-    biome: SharedTextQueryParam(""),
-  }
-);
+const { usePage, useOrder, useBiome, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('', {
+    biome: SharedTextQueryParam(''),
+  });
 
 const BrowseStudies: React.FC = () => {
   console.log('BrowseStudies');
@@ -31,7 +27,7 @@ const BrowseStudies: React.FC = () => {
     data: studiesList,
     loading,
     download,
-    error
+    error,
   } = useStudiesList({
     page,
     order,

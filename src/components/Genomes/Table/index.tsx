@@ -18,8 +18,8 @@ const {
   useGenomesPageSize,
   useGenomesOrder,
   useGenomesSearch,
-  withQueryParamProvider
-} = createSharedQueryParamContextForTable("genomes")
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('genomes');
 
 const GenomesTable: React.FC = () => {
   const accession = useURLAccession();

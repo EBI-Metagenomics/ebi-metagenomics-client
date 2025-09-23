@@ -1,9 +1,9 @@
 import React, {
+  useContext,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
-  useContext,
-  useEffect,
 } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import UserContext from 'pages/Login/UserContext';
@@ -16,7 +16,6 @@ import { useMedia } from 'react-use';
 import EMGModal from 'components/UI/EMGModal';
 import useAuthTokenVerifier from '@/hooks/authentication/useAuthTokenVerifier';
 import MegaMenu from 'components/Nav/MegaMenu';
-import config from 'utils/config';
 
 const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'Overview', path: '/' },

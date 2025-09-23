@@ -18,7 +18,6 @@ const annotate = (
   node: Node,
   genomePropertiesCount: Record<string, number>
 ) => {
-  /* eslint-disable no-param-reassign */
   if (node.countgen) return node.countgen;
   node.count = genomePropertiesCount[node.id as string] || 0;
   node.countgen = (node.countgen || 0) + (node.count as number);
@@ -30,7 +29,7 @@ const annotate = (
     // @ts-ignore
     node.children = node.children.filter(({ countgen }) => countgen > 0);
   }
-  /* eslint-enable no-param-reassign */
+
   return node.countgen;
 };
 

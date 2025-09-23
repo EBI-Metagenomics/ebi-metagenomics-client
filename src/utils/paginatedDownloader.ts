@@ -65,7 +65,7 @@ const paginatedDownloader = async (
   const writer = await fileHandle.createWritable();
   while (pageNumber < maxPages) {
     let hasError = false;
-    /* eslint-disable no-await-in-loop */
+
     // Ignoring because page order potentially matters, so not using Promise.all
     const page = await fetchPage(
       endpointUrl,
@@ -82,7 +82,7 @@ const paginatedDownloader = async (
     if (!page) {
       // 429 - too many requests
       await throttle();
-      // eslint-disable-next-line no-continue
+
       continue;
     }
     // flatten nested JSON objects

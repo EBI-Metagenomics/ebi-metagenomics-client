@@ -22,9 +22,9 @@ const tabs = [
   { label: 'KO', to: 'ko' },
 ];
 
-const {useType, withQueryParamProvider} = createSharedQueryParamContext({
-  type: SharedTextQueryParam(PARAMETER_DEFAULT)
-})
+const { useType, withQueryParamProvider } = createSharedQueryParamContext({
+  type: SharedTextQueryParam(PARAMETER_DEFAULT),
+});
 
 const FunctionalAnalysis: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);

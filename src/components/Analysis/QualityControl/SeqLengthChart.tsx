@@ -69,13 +69,11 @@ const SeqLengthChart: React.FC<SeqLengthChartProps> = ({ summaryData }) => {
         ],
         pointPadding: -0.2,
         tooltip: {
-          /* eslint-disable react/no-this-in-sfc */
           pointFormatter() {
             return `<span style="color:${this.color}">\u25CF</span> ${
               this.category
             }: <b>${this.y.toFixed(2)}</b><br/>`;
           },
-          /* eslint-enable react/no-this-in-sfc */
         },
       },
     ],

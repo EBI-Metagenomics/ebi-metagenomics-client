@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +8,8 @@ import ReactMarkdown from 'react-markdown';
 import FetchError from 'components/UI/FetchError';
 import useSuperStudiesList from 'hooks/data/useSuperStudies';
 
-const {usePage, usePageSize, withQueryParamProvider} = createSharedQueryParamContextForTable();
+const { usePage, usePageSize, withQueryParamProvider } =
+  createSharedQueryParamContextForTable();
 
 const BrowseSuperStudies: React.FC = () => {
   console.log('BrowseSuperStudies');

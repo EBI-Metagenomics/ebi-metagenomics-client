@@ -1,4 +1,4 @@
-import './utils/wdyr';
+import './utils/wdyr.js';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
