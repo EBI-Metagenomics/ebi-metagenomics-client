@@ -215,8 +215,10 @@ const EMGTable: React.FC<EMGTableProps> = ({
     [pageIndex, pageCount]
   );
   const goToPageAndScroll = (pageNumber): MouseEventHandler => {
-    setChangingPage(true);
-    return () => setPage(pageNumber + 1);
+    return () => {
+      setChangingPage(true);
+      setPage(pageNumber + 1);
+    };
   };
 
 
@@ -406,7 +408,10 @@ const EMGTable: React.FC<EMGTableProps> = ({
                 <button
                   disabled={!canPreviousPage}
                   type="button"
-                  onClick={() => setPage(Math.max(1, pageIndex /* zero-based */ + 1 - 1))}
+                  onClick={() => {
+                    setChangingPage(true);
+                    setPage(Math.max(1, pageIndex /* zero-based */ + 1 - 1));
+                  }}
                   className="vf-button vf-button--link vf-pagination__link"
                 >
                   Previous<span className="vf-u-sr-only"> page</span>
@@ -456,7 +461,10 @@ const EMGTable: React.FC<EMGTableProps> = ({
                 <button
                   disabled={!canNextPage}
                   type="button"
-                  onClick={() => setPage(pageIndex + 1 + 1)}
+                  onClick={() => {
+                    setChangingPage(true);
+                    setPage(pageIndex + 1 + 1);
+                  }}
                   className="vf-button vf-button--link vf-pagination__link"
                 >
                   Next<span className="vf-u-sr-only"> page</span>
