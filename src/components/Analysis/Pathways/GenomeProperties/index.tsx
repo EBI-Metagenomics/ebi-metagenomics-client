@@ -25,7 +25,7 @@ const annotate = (
     node.countgen += node.children.reduce((mem, child) => {
       return mem + annotate(child, genomePropertiesCount);
     }, 0);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
     // @ts-ignore
     node.children = node.children.filter(({ countgen }) => countgen > 0);
   }

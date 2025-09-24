@@ -12,7 +12,13 @@ import prettier from 'eslint-plugin-prettier';
 
 export default [
   js.configs.recommended,
-
+  {
+    ignores: [
+      "node_modules/**",
+      "dist/**",
+      "build/**",
+    ]
+  },
   {
     languageOptions: {
       ecmaVersion: 'latest',
@@ -38,6 +44,8 @@ export default [
       },
     },
     rules: {
+      ...reactPlugin.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
       'no-unused-vars': 'off',
       'no-undef': 'off', // This is handled by TypeScript
       'no-redeclare': 'off',
@@ -69,7 +77,6 @@ export default [
 
       'no-shadow': 'off',
       'no-plusplus': 'off',
-      ignoreRestSiblings: 0,
       'no-bitwise': 'warn',
       'no-nested-ternary': 'warn',
 
@@ -102,5 +109,4 @@ export default [
       'import/no-extraneous-dependencies': 'off',
     },
   },
-
 ];

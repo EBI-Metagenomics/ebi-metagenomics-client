@@ -66,5 +66,5 @@ const Link: React.FC<DefaultLinkProps> = React.forwardRef(
     );
   }
 );
-
+Link.displayName = 'Link';
 export default Link;

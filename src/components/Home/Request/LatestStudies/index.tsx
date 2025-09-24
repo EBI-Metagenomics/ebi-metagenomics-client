@@ -68,18 +68,17 @@ const LatestStudies: React.FC = () => {
         {data.items.map(
           ({
             accession,
-            // eslint-disable-next-line camelcase
+
             updated_at,
             biome,
             title,
           }: {
-            // eslint-disable-next-line react/no-unused-prop-types
             accession: string;
-            // eslint-disable-next-line react/no-unused-prop-types
+
             updated_at: string;
-            // eslint-disable-next-line react/no-unused-prop-types
+
             biome: { lineage: string };
-            // eslint-disable-next-line react/no-unused-prop-types
+
             title: string;
           }) => (
             <LatestStudy

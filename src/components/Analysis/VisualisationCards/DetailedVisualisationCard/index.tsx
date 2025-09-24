@@ -143,7 +143,7 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
           >
             {showZoomButton && (
               <Tooltip content="Zoom">
-                {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
+                {}
                 <button
                   type="button"
                   onClick={handleZoom}

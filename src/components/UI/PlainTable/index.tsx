@@ -32,6 +32,8 @@ const PlainTable: React.FC<EMGTableProps> = ({
 
   if (loading && !isStale) return <Loading size="small" />;
 
+  // @ts-ignore
+  // @ts-ignore
   return (
     <section>
       <div className="mg-table-overlay-container">
@@ -46,9 +48,11 @@ const PlainTable: React.FC<EMGTableProps> = ({
               <tr
                 {...headerGroup.getHeaderGroupProps()}
                 className="vf-table__row"
+                key={headerGroup.id}
               >
                 {headerGroup.headers.map((column) => (
                   <th
+                    key={column.id}
                     {...(sortable && column.canSort
                       ? column.getHeaderProps(column.getSortByToggleProps())
                       : { key: column.id })}
@@ -81,10 +85,18 @@ const PlainTable: React.FC<EMGTableProps> = ({
             {rows.map((row) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()} className="vf-table__row">
+                <tr
+                  {...row.getRowProps()}
+                  className="vf-table__row"
+                  key={row.id}
+                >
                   {row.cells.map((cell) => {
                     return (
-                      <td {...cell.getCellProps()} className="vf-table__cell">
+                      <td
+                        {...cell.getCellProps()}
+                        className="vf-table__cell"
+                        key={cell.id}
+                      >
                         {cell.render('Cell')}
                       </td>
                     );

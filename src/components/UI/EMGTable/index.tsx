@@ -1,4 +1,10 @@
-import React, { MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  MouseEventHandler,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { camelCase, filter } from 'lodash-es';
 
 import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
@@ -221,7 +227,6 @@ const EMGTable: React.FC<EMGTableProps> = ({
     };
   };
 
-
   const fullWidthColSpan = useMemo(() => {
     return filter(cols, (col) => !col.isFullWidth).length;
   }, [cols]);
@@ -282,6 +287,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
               <tr
                 {...headerGroup.getHeaderGroupProps()}
                 className="vf-table__row"
+                key={headerGroup.id}
               >
                 {headerGroup.headers.map((column) => {
                   if (column.isFullWidth) {
@@ -293,6 +299,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
                         ? column.getHeaderProps(column.getSortByToggleProps())
                         : { key: column.id })}
                       className="vf-table__heading"
+                      key={column.id}
                     >
                       {column.render('Header')}
                       {sortable && column.canSort && (
@@ -336,6 +343,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
                       return (
                         <td
                           {...cell.getCellProps()}
+                          key={cell.column.id}
                           colSpan={
                             typeof cell.column?.colspan === 'function'
                               ? cell.column.colspan(cell)

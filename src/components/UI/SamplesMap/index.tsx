@@ -25,7 +25,7 @@ const ClusterMarkerPopup: React.FC<{ accessions: string[] }> = ({
     <h3 className="vf-box__heading">Samples on this geographical location</h3>
     <ul className="vf-list">
       {accessions.map((accession) => (
-        <li ref={accession}>
+        <li ref={accession} key={accession}>
           <a href={`../samples/${accession}`}>{accession}</a>
         </li>
       ))}

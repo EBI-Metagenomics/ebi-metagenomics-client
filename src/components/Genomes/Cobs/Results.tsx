@@ -40,7 +40,7 @@ const Results: React.FC<ResultsProps> = ({
           Error with your search
         </h3>
         {Object.entries(data.data.errors).map(([field, err]) => (
-          <p className="vf-box__text">
+          <p className="vf-box__text" key={field}>
             {field}: {err}
           </p>
         ))}
