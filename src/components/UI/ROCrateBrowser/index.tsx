@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import Modal from 'react-modal';
 import './style.css';
-import { useCrate } from 'hooks/genomeViewer/CrateStore/useCrates';
+import { useCrate } from '@/hooks/genomeViewer/CrateStore/useCrates';
 
 Modal.setAppElement('#root');
 

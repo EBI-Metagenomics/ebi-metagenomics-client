@@ -14,7 +14,7 @@ import './style.css';
 import ExtLink from 'components/UI/ExtLink';
 import { useMedia } from 'react-use';
 import EMGModal from 'components/UI/EMGModal';
-import useAuthTokenVerifier from 'hooks/authentication/useAuthTokenVerifier';
+import useAuthTokenVerifier from '@/hooks/authentication/useAuthTokenVerifier';
 import MegaMenu from 'components/Nav/MegaMenu';
 
 const pages: Array<{ label: string; path?: string; href?: string }> = [
@@ -41,7 +41,6 @@ const Nav: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <nav className="vf-navigation vf-navigation--main | vf-cluster vf-u-fullbleed">
@@ -82,7 +81,6 @@ const MobileNav: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>
@@ -116,7 +114,6 @@ const MainMenu: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useLayoutEffect(() => {
     const onScroll = (): void => {

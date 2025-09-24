@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 type TabsProps = {
   tabs: Array<{
@@ -22,7 +22,6 @@ const TabsForQueryParameter: React.FC<TabsProps> = ({
       setTabQp(defaultValue);
       setPage(1);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabQp, queryParameter]);
 
   return (

@@ -74,3 +74,13 @@ interface MGnifySourmashComponentProps
   id: string;
   show_directory_checkbox: boolean;
 }
+
+interface ErrorResponse {
+  response?: {
+    data: {
+      errors: {
+        non_field_errors: string[];
+      };
+    };
+  };
+}

@@ -3,12 +3,12 @@ import { useLocation } from 'react-router-dom';
 
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
-import useEBISearchData from 'hooks/data/useEBISearchData';
+import useEBISearchData from '@/hooks/data/useEBISearchData';
 
 import 'styles/filters.css';
-import Loading from 'src/components/UI/Loading';
+import Loading from 'components/UI/Loading';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 const location2endpoint = {
   '/search/studies': 'metagenomics_projects',

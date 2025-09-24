@@ -19,7 +19,7 @@ import './commands';
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-import '@cypress/code-coverage/support'
+import '@cypress/code-coverage/support.js';
 
 Cypress.on('test:before:run', () => {
   Cypress.automation('remote:debugger:protocol', {

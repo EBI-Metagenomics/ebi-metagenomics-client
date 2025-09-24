@@ -1,4 +1,4 @@
-import { KeyValue } from 'hooks/data/useData';
+import { KeyValue } from '@/hooks/data/useData';
 import React from 'react';
 
 type EMGTableProps = {

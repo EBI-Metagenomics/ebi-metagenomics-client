@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import useData, {
   MGnifyResponseGenericObj,
   ResponseFormat,
-} from 'hooks/data/useData';
+} from '@/hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
 
 const useMgnifySourmashStatus: (

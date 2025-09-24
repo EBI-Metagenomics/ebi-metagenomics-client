@@ -1,6 +1,6 @@
 import Dexie, { Table } from 'dexie';
 import { ROCrate } from 'ro-crate';
-import { Track } from 'utils/trackView';
+import { Track } from '@/utils/trackView';
 import JSZip from 'jszip';
 
 export interface StorableCrate {

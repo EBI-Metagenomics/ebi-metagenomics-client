@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import Pipeline from 'components/Pipeline';
 import ExtLink from 'components/UI/ExtLink';
-import useURLAccession from 'hooks/useURLAccession';
+import useURLAccession from '@/hooks/useURLAccession';
 
 const Pipelines: React.FC = () => {
   const accession = useURLAccession();

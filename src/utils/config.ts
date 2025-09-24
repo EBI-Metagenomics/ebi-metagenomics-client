@@ -1,8 +1,11 @@
-import config from 'config.json';
-import privateConfig from 'config.private.json';
 import { merge } from 'lodash-es';
+// import config from 'config.json';
+import config from '../../config.json';
+// import privateConfig from 'config.private.json';
+import privateConfig from '../../config.private.json';
 
 export type ConfigType = {
+  hmmer: string | (() => void);
   api: string;
   api_v2: string;
   ebisearch: string;

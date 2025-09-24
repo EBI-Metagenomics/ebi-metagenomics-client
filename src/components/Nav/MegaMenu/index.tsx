@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import Link from 'components/UI/Link';
-import { getDetailOrSearchURLForQuery } from 'utils/accessions';
-import { createParamFromURL } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
-import useQueryParamsStore from 'hooks/queryParamState/QueryParamStore/useQueryParamsStore';
+import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
+import { createParamFromURL } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
+import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
 import { useNavigate } from 'react-router-dom';
 import UserContext from 'pages/Login/UserContext';
-import config from 'utils/config';
+import config from '@/utils/config';
 
 const MegaMenu: React.FC = () => {
   const { isAuthenticated } = useContext(UserContext);

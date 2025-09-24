@@ -4,12 +4,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import { MGnifyResponseList } from 'hooks/data/useData';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import { MGnifyResponseList } from '@/hooks/data/useData';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import { getBiomeIcon } from 'utils/biomes';
-import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { getBiomeIcon } from '@/utils/biomes';
+import { cleanTaxLineage, getSimpleTaxLineage } from '@/utils/taxon';
 import FetchError from 'components/UI/FetchError';
 import Tooltip from 'components/UI/Tooltip';
 

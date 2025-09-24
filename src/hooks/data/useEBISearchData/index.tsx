@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import useData, { DataResponse, KeyValue } from 'hooks/data/useData';
+import useData, { DataResponse, KeyValue } from '@/hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
 
 const getDownloadURL =

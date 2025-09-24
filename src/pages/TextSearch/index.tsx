@@ -10,10 +10,10 @@ import DepthFilter from 'components/Search/Filter/Depth';
 import Tabs from 'components/UI/Tabs';
 import TextSearch from 'components/Search/Filter/Text';
 import SearchTable from 'components/Search/Table';
-import useEBISearchData from 'hooks/data/useEBISearchData';
+import useEBISearchData from '@/hooks/data/useEBISearchData';
 
-import { Param } from 'hooks/queryParamState/QueryParamStore/queryParamReducer';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { Param } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import FieldMultipleTextQuery from 'components/Search/Filter/FieldMultipleTextQuery';
 import SearchQueryContext from './SearchQueryContext';
 import './style.css';

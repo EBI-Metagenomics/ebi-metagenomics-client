@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
-import useMGnifyData from 'hooks/data/useMGnifyData';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import useMGnifyData from '@/hooks/data/useMGnifyData';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import UserContext from 'pages/Login/UserContext';
 
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
