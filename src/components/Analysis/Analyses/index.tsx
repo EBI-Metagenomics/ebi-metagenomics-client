@@ -9,8 +9,8 @@ import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import InfoBanner from 'components/UI/InfoBanner';
 import { singularise } from 'utils/strings';
 import useStudyAnalysesList from 'hooks/data/useStudyAnalyses';
+import useAssemblyAnalysesList from 'hooks/data/useAssemblyAnalysesList';
 import { Analysis, AnalysisList } from '@/interfaces';
-// import { Analysis, AnalysisList } from 'interfaces';
 
 const expectedPageSize = 100;
 type AssociatedAnaysesProps = {
@@ -22,12 +22,17 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const singularNamespace = singularise(rootEndpoint);
   const [analysesPage] = useQueryParamState('analyses-page', 1, Number);
 
+  const hook =
+    rootEndpoint === 'assemblies'
+      ? useAssemblyAnalysesList
+      : useStudyAnalysesList;
+
   const {
     data,
     error,
     loading,
     url: downloadURL,
-  } = useStudyAnalysesList(accession || '', {
+  } = hook(accession || '', {
     page: analysesPage,
   });
 

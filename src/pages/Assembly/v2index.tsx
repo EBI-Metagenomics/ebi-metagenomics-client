@@ -22,7 +22,6 @@ import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import config from 'utils/config';
 import EMGTable from 'components/UI/EMGTable';
-import genome from 'pages/Genome';
 
 type V2AssemblyCtx = {
   assemblyData: {
@@ -50,7 +49,11 @@ const DerivedGenomes: React.FC = () => {
     {
       id: 'genome_accession',
       Header: 'Genome accession',
-      accessor: (row: any) => row.genome.accession,
+      accessor: (row: any) => (
+        <Link to={`/genomes/${row.genome.accession}`}>
+          {row.genome.accession}
+        </Link>
+      ),
     },
     {
       id: 'ena',
@@ -68,7 +71,9 @@ const DerivedGenomes: React.FC = () => {
     {
       id: 'species_representative',
       Header: 'Species representative',
-      accessor: (row: any) => row.species_rep,
+      accessor: (row: any) => (
+        <Link to={`/genomes/${row.species_rep}`}>{row.species_rep}</Link>
+      ),
     },
     {
       id: 'taxonomy',
@@ -78,7 +83,8 @@ const DerivedGenomes: React.FC = () => {
     {
       id: 'catalogue',
       Header: 'Catalogue',
-      accessor: (row: any) => row.genome.catalogue_id,
+      accessor: (row: any) =>
+        `${row.genome.catalogue_id} v${row.genome.catalogue_version}`,
     },
   ];
 
@@ -125,7 +131,7 @@ const Overview: React.FC = () => {
       key: 'ENA accession',
       value: () => (
         <ExtLink href={`${ENA_VIEW_URL}${assemblyData?.accession}`}>
-          ${assemblyData?.accession}
+          {assemblyData?.accession}
         </ExtLink>
       ),
     },
@@ -202,7 +208,8 @@ const V2AssemblyPage: React.FC = () => {
   const tabs = [
     { label: 'Overview', to: '#overview' },
     { label: 'Analyses', to: '#analyses' },
-    { label: 'Additional Analyses', to: '#additional-analyses' },
+    // TODO: Re-enable when we have assembly extra annotations API
+    // { label: 'Additional Analyses', to: '#additional-analyses' },
   ];
 
   return (
