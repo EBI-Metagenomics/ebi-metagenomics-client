@@ -1,23 +1,28 @@
 import React, { useContext } from 'react';
-import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import { Download } from 'interfaces';
+import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 
 const GO: React.FC = () => {
-  const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
+  const { overviewData: analysisData } = useContext(AnalysisContext);
+  const dataFile: Download = analysisData.downloads.find(
+    (file) => file.download_group === 'functional_annotation.go_terms'
+  );
 
-  // Find the GO data file
-  // const dataFile = analysisOverviewData.downloads.find(
-  //   (file) => file.alias.includes === 'go' && file.file_type === 'tsv.gz'
-  // );
-
-  // This is used as a placholder until the actual Assembly data is available on the API
-  const dataFile = analysisOverviewData.downloads[0];
+  if (!dataFile) {
+    return (
+      <div className="vf-stack vf-stack--200" data-cy="assembly-interpro-chart">
+        <p>No GO identifiers file available</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <SlimVisualisationCard fileData={dataFile}>
+    <div className="vf-stack">
+      <h5>Gene Ontology terms</h5>
+      <DetailedVisualisationCard ftpLink={dataFile.url} title={dataFile.alias}>
         <div className="p-4">
-          <h3 className="text-lg font-medium mb-2">GO Terms</h3>
           <p className="text-sm text-gray-600 mb-4">
             Gene Ontology (GO) terms describe gene product functions and
             relationships in any organism.
@@ -27,7 +32,10 @@ const GO: React.FC = () => {
             analysis.
           </p>
         </div>
-      </SlimVisualisationCard>
+        <CompressedTSVTable download={dataFile} />
+      </DetailedVisualisationCard>
+
+      <div className="vf-grid mg-grid-30-70" />
     </div>
   );
 };

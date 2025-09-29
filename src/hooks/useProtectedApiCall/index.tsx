@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const useProtectedApiCall = () => {
   const verifyAuthToken = useAuthTokenVerifier();
-  const authToken = localStorage.getItem('mgnify.token');
+  const authToken = localStorage.getItem('mgnify.v2.token');
   const navigate = useNavigate();
   const location = useLocation();
 

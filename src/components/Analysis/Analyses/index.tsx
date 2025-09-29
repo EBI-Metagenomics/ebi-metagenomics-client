@@ -56,34 +56,11 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
         <Link to={`/v2-analyses/${cell.value}`}>{cell.value}</Link>
       ),
     },
-    // {
-    //   id: 'biome_id',
-    //   Header: 'Biome',
-    //   accessor: (analysis) =>
-    //     samples?.[analysis?.relationships?.sample?.data?.id]?.biome || '',
-    //   Cell: ({ cell }) => (
-    //     <span
-    //       className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
-    //       style={{ float: 'initial' }}
-    //     />
-    //   ),
-    //   className: 'mg-biome',
-    // },
     {
       id: 'sample',
       Header: 'Sample accession',
       accessor: (analysis) => analysis?.sample?.accession,
-      // Cell: ({ cell }) => (
-      //   <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
-      // ),
     },
-    // {
-    //   id: 'description_id',
-    //   Header: 'Sample description',
-    //   accessor: (analysis) =>
-    //     samples?.[analysis?.relationships?.sample?.data?.id]?.description || '',
-    //   Cell: ({ cell }) => unescape(cell.value),
-    // },
     {
       id: 'assembly_run_id',
       Header: ' Run / Assembly accession',
@@ -91,19 +68,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
         assembly: analysis.assembly?.accession,
         run: analysis.run?.accession,
       }),
-      Cell: ({ cell }) => (
-        <>
-          {cell.value.assembly || cell.value.run}
-          {/* {cell.value.assembly && ( */}
-          {/*  <Link to={`/assemblies/${cell.value.assembly}`}> */}
-          {/*    {cell.value.assembly} */}
-          {/*  </Link> */}
-          {/* )} */}
-          {/* {cell.value.run && ( */}
-          {/*  <Link to={`/runs/${cell.value.run}`}>{cell.value.run}</Link> */}
-          {/* )} */}
-        </>
-      ),
+      Cell: ({ cell }) => <>{cell.value.assembly || cell.value.run}</>,
     },
     {
       id: 'pipeline_id',

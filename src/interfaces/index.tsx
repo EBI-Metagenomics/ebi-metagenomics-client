@@ -23,6 +23,10 @@ export interface Download {
   long_description: string;
   short_description: string;
   url: string;
+  index_file?: {
+    index_type: string;
+    relative_url: string;
+  };
 }
 
 export interface Run extends EnaDerivedObject {
@@ -86,3 +90,155 @@ export interface StudyList extends PaginatedList {
 export interface StudyDetail extends Study {
   downloads: Download[];
 }
+
+export interface GenomeCatalogue extends Record<string, unknown> {
+  catalogue_id: string;
+  version: string;
+  name: string;
+  description: string;
+  protein_catalogue_name: string;
+  protein_catalogue_description: string;
+  updated_at: string;
+  result_directory: string;
+  genome_count: number;
+  unclustered_genome_count: number;
+  ftp_url: string;
+  pipeline_version_tag: string;
+  catalogue_biome_label: string;
+  catalogue_type: 'prokaryotes' | 'eukaryotes' | 'viruses' | string;
+  other_stats: KeyValue;
+  biome: Biome;
+}
+
+export interface Genome {
+  accession: string;
+  ena_genome_accession: string;
+  ena_sample_accession: string;
+  ncbi_genome_accession: string;
+  img_genome_accession: string;
+  patric_genome_accession: string;
+  length: number;
+  num_contigs: number;
+  n_50: number;
+  gc_content: number;
+  type: 'MAG' | 'Isolate' | string;
+  completeness: number;
+  contamination: number;
+  catalogue_id: string;
+  geographic_origin: string;
+  geographic_range: string[];
+  biome: Biome;
+}
+
+export interface GenomeCatalogueList extends PaginatedList {
+  items: GenomeCatalogue[];
+}
+
+export type GenomeCatalogueDetail = GenomeCatalogue;
+
+export interface GenomeList extends PaginatedList {
+  items: Genome[];
+}
+
+export interface GenomeDetail extends Genome {
+  downloads: Download[];
+  catalogue: GenomeCatalogue;
+}
+
+export interface GenomeDetailWithAnnotations {
+  accession: string;
+  annotations: KeyValue;
+}
+
+export interface SuperStudy {
+  slug: string;
+  title: string;
+  description: string;
+  logo_url: string;
+}
+
+export interface SuperStudyList extends PaginatedList {
+  items: SuperStudy[];
+}
+
+export interface SuperStudyDetail extends SuperStudy {
+  flagship_studies: Study[];
+  related_studies: Study[];
+  genome_catalogues: GenomeCatalogue[];
+}
+
+export interface PublicationMetadata {
+  authors: string;
+  doi?: string;
+  iso_journal?: string;
+  pub_type?: string;
+  pubmed_central_id?: number;
+  isbn?: string;
+  volume?: string | number;
+  [key: string]: string | number | undefined;
+}
+
+export interface Publication {
+  pubmed_id: number;
+  title: string;
+  published_year: number;
+  metadata: PublicationMetadata;
+}
+
+export interface PublicationList extends PaginatedList {
+  items: Publication[];
+}
+
+export interface PublicationStudy {
+  accession: string;
+  ena_accessions: string[];
+  title: string;
+  biome: Biome;
+  updated_at: string;
+}
+
+export interface PublicationDetail extends Publication {
+  studies: PublicationStudy[];
+}
+
+export interface PublicationEuropePmcCore extends Record<string, unknown> {
+  version: number;
+  hit_count: number;
+  result: {
+    abstractText: string;
+    [key: string]: unknown;
+  };
+}
+
+type Tag = {
+  name: string;
+  uri: string;
+};
+
+type Mention = {
+  exact: string;
+  id: string;
+  postfix: string;
+  prefix: string;
+  provider: string;
+  section: string;
+  type: string;
+  tags: Tag[];
+};
+
+type Annotation = {
+  annotation_text: string;
+  mentions: Mention[];
+};
+
+export type AnnotationGroup = {
+  annotation_type: string;
+  description: string;
+  title: string;
+  annotations: Annotation[];
+};
+
+export type PublicationEuropePmcAnnotations = {
+  other: AnnotationGroup[];
+  sample_processing: AnnotationGroup[];
+};

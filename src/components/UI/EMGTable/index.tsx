@@ -93,6 +93,7 @@ type EMGTableProps = {
   loading?: boolean;
   isStale?: boolean;
   downloadURL?: string;
+  onDownloadRequested?: () => void;
   ExtraBarComponent?: React.ReactNode;
   onMouseEnterRow?: (row: Row) => void;
   onMouseLeaveRow?: (row: Row) => void;
@@ -113,6 +114,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
   loading = false,
   isStale = false,
   downloadURL = null,
+  onDownloadRequested = () => null,
   ExtraBarComponent = null,
   onMouseEnterRow = () => null,
   onMouseLeaveRow = () => null,
@@ -225,6 +227,21 @@ const EMGTable: React.FC<EMGTableProps> = ({
                         <span className="icon icon-common icon-download" />{' '}
                         Download
                       </a>
+                    </div>
+                  )}
+                  {onDownloadRequested && (
+                    <div>
+                      {' '}
+                      <button
+                        onClick={onDownloadRequested}
+                        type="button"
+                        data-cy="emg-table-download-button"
+                        className="vf-button vf-button--secondary vf-button--sm"
+                        style={{ whiteSpace: 'nowrap', marginBottom: '8px' }}
+                      >
+                        <span className="icon icon-common icon-download" />{' '}
+                        Download
+                      </button>
                     </div>
                   )}
                 </div>

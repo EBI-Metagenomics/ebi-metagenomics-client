@@ -1,5 +1,5 @@
-import protectedAxios from '@/utils/protectedAxios';
-import useAuthToken from '@/hooks/authentication/useAuthToken';
+import protectedAxios from 'utils/protectedAxios';
+import useAuthToken from 'hooks/authentication/useAuthToken';
 import UserContext from 'pages/Login/UserContext';
 import { useContext } from 'react';
 
@@ -8,11 +8,11 @@ const useAuthTokenVerifier = () => {
   const { setDetails } = useContext(UserContext);
   return async () => {
     try {
-      const response = await protectedAxios.post('/@/utils/token/verify', {
+      await protectedAxios.post('/auth/verify', {
         token: authToken,
       });
-      const accessToken = response.data.data.token;
-      setAuthToken(accessToken);
+      setAuthToken(authToken);
+      // is 200 if valid
     } catch (error) {
       setAuthToken(null);
       setDetails(null);
