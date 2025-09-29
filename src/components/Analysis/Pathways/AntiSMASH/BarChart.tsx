@@ -17,7 +17,7 @@ const AntiSMASHBarChart: React.FC = () => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const { overviewData } = useContext(AnalysisContext);
   const { data, loading, error } = useMGnifyData(
-    `analyses/${overviewData.id}/antismash-gene-clusters`,
+    overviewData?.id && `analyses/${overviewData.id}/antismash-gene-clusters`,
     {
       page_size: 10,
     }
@@ -29,13 +29,14 @@ const AntiSMASHBarChart: React.FC = () => {
   const categories = (data.data as MGnifyDatum[]).map(
     (d) => d.attributes.accession
   );
-  const categoriesDescriptions = (data.data as MGnifyDatum[]).reduce(
-    (memo, d) => {
-      memo[d.attributes.accession as string] = d.attributes.description;
-      return memo;
-    },
-    {}
-  );
+  const categoriesDescriptions = (data.data as MGnifyDatum[]).reduce<
+    Record<string, string | undefined>
+  >((memo, d) => {
+    memo[String(d.attributes.accession)] = d.attributes.description as
+      | string
+      | undefined;
+    return memo;
+  }, {});
   const options: Record<string, unknown> = {
     chart: {
       type: 'column',
@@ -73,7 +74,9 @@ const AntiSMASHBarChart: React.FC = () => {
     },
     tooltip: {
       formatter() {
+        // @ts-ignore
         const description = categoriesDescriptions[this.key];
+        // @ts-ignore
         let tooltip = `${this.series.name}<br/>Count: ${this.y}`;
         if (description) {
           tooltip += `<br/>antiSMASH gene cluster: ${description}`;
@@ -83,7 +86,7 @@ const AntiSMASHBarChart: React.FC = () => {
     },
     series: [
       {
-        name: `Analysis ${overviewData.id}`,
+        name: `Analysis ${overviewData?.id}`,
         data: series,
         colors: TAXONOMY_COLOURS[1],
       },

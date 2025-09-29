@@ -57,12 +57,12 @@ const SamplesMapByStudy: React.FC<SamplesMapProps> = ({ study }) => {
   if (samplesFiltered.length === 0) {
     return (
       <InfoBanner type="info" title="Notice">
-        None of the {total > limit ? 'loaded' : ''} samples have geolocation
+        None of the {(total || 0) > limit ? 'loaded' : ''} samples have geolocation
         co-ordinates.
         <LoadMoreSamples
-          total={total}
+          total={total || 0}
           limit={limit}
-          handleRequest={() => setLimit(total)}
+          handleRequest={() => setLimit(total || Infinity)}
         />
       </InfoBanner>
     );

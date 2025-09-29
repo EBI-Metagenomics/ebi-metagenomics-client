@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowRight, ArrowLeft, Dna, Info } from 'lucide-react';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import './style.css';
 
 const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error>();
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { PaginatedList } from 'interfaces';
+import { PaginatedList } from 'interfaces/index';
 import { toast } from 'react-toastify';
 import { map, noop, replace, snakeCase, trim, union } from 'lodash-es';
 import { showSaveFilePicker } from 'native-file-system-adapter';
@@ -12,7 +12,7 @@ const fetchPage = async (
   pageParameter = 'page',
   axiosInstance: AxiosInstance = axios,
   onTooManyRequests: () => void = noop
-): Promise<PaginatedList> => {
+): Promise<PaginatedList | null> => {
   const url = new URL(endpointUrl);
   url.searchParams.set(pageParameter, pageNumber.toString());
   const pageUrl = url.toString();

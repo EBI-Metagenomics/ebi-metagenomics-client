@@ -10,7 +10,7 @@ import RouteForHash from 'components/Nav/RouteForHash';
 import useCanonicalAccessionRedirect from '@/hooks/useCanonicalAccessionRedirect';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import useStudyDetail from 'hooks/data/useStudyDetail';
-import { EnaDerivedObject } from 'interfaces';
+import { EnaDerivedObject } from 'interfaces/index';
 
 const tabs = [
   { label: 'Overview', to: '#overview' },
@@ -30,7 +30,7 @@ const StudyPage: React.FC = () => {
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Studies', url: '/browse/studies' },
-    { label: accession },
+    { label: accession as string },
   ];
   return (
     <section className="vf-content">

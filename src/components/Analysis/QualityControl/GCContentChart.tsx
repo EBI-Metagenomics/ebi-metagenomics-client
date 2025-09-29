@@ -54,8 +54,11 @@ const GCContentChart: React.FC<GCContentChartProps> = ({ summaryData }) => {
         color: 'rgb(63, 114, 191)',
         tooltip: {
           pointFormatter() {
+            // @ts-ignore
             return `<span style="color:${this.color}">\u25CF</span> ${
+              // @ts-ignore
               this.series.name
+              // @ts-ignore
             }: <b>${this.y.toFixed(2)}%</b><br/>`;
           },
         },
@@ -72,10 +75,8 @@ const GCContentChart: React.FC<GCContentChartProps> = ({ summaryData }) => {
               2
             );
             // prettier-ignore
-            return `
-              <span style="color:${this.color}">\u25CF</span>
-              ${this.series.name}: <b>${val}%</b>
-              <br/>`;
+            // @ts-ignore
+            return `<span style="color:${this.color}">\u25CF</span>${this.series.name}: <b>${val}%</b><br/>`;
           },
         },
         data: [100],

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Download, PaginatedList } from 'interfaces';
+import { Download, PaginatedList } from 'interfaces/index';
 import {
   Contig,
   db,
@@ -19,6 +19,7 @@ import ContigTypeaheadFilter from 'components/Analysis/ContigViewer/Filter/Conti
 import { Collection } from 'dexie';
 import { KEYWORD_ANY } from 'components/UI/TextInputTypeahead';
 import { filesize } from 'filesize';
+import InfoBanner from 'components/UI/InfoBanner';
 
 const {
   usePage,
@@ -76,7 +77,7 @@ const ContigSearch: React.FC<{
   fastaDownload: Download;
   assemblyAccession: string;
 }> = ({ gffDownload, fastaDownload, assemblyAccession }) => {
-  const [gffSize, setGffSize] = useState<number>(undefined);
+  const [gffSize, setGffSize] = useState<number>();
   const [existingIndexChecked, setExistingIndexChecked] =
     useState<boolean>(false);
   const [isIndexing, setIsIndexing] = useState<boolean>(false);
@@ -148,10 +149,11 @@ const ContigSearch: React.FC<{
       const indexName = `annotations.${idxPath}`;
       const base = contigsTable.where(indexName).equals(term);
       return coll
-        ? coll.and((c) =>
-            (
-              (c.annotations as any)?.[idxPath] as string[] | undefined
-            )?.includes(term)
+        ? coll.and(
+            (c) =>
+              (
+                (c.annotations as any)?.[idxPath] as string[] | undefined
+              )?.includes(term) as boolean
           )
         : base;
     };
@@ -189,9 +191,9 @@ const ContigSearch: React.FC<{
     if (!isIndexed && !existingIndexChecked) {
       db.meta
         .get('sourceUrl')
-        .then(({ value: existingIndex }) => {
-          if (existingIndex && existingIndex === gffDownload.url) {
-            console.debug(`File already indexed in local db: ${existingIndex}`);
+        .then((row) => {
+          if (row?.value && row.value === gffDownload.url) {
+            console.debug(`File already indexed in local db: ${row.value}`);
             setIsIndexed(true);
             toast.success(`Contigs have been loaded from an earlier visit.`, {
               autoClose: 5000,
@@ -204,46 +206,6 @@ const ContigSearch: React.FC<{
         .catch(() => setExistingIndexChecked(true));
     }
   });
-
-  const { start: fetchAndIndex, cancel: cancelFetchAndIndex } =
-    importGffToIndexedDB({
-      url: gffDownload.url,
-      assemblyAccession,
-      indexUrl: BGZipService.getIndexFileUrl(gffDownload),
-      fastaUrl: fastaDownload.url,
-      fastaFaiUrl: BGZipService.getIndexFileUrl(fastaDownload, 'fai'),
-      fastaGziUrl: BGZipService.getIndexFileUrl(fastaDownload, 'gzi'),
-      attrsToIndex: ['interpro', 'pfam', 'cog', 'kegg', 'go'],
-      batchSize: 200,
-      onProgress: ({ percent }) => {
-        toast.update(`${gffDownload.alias}-index-progress`, {
-          progress: percent / 110, // extra 10% for roughly the time after batches until the index is complete
-          autoClose: 5000,
-        });
-      },
-      onBegin: () => {
-        setIsIndexing(true);
-        toast.info(`Downloading and indexing ${gffDownload.alias}`, {
-          toastId: `${gffDownload.alias}-index-progress`,
-          progress: 0.01,
-          autoClose: 5000,
-        });
-      },
-      onEnd: ({ contigsCount }) => {
-        setIsIndexing(false);
-        toast.dismiss(`${gffDownload.alias}-index-progress`);
-        toast.success(`Indexed ${contigsCount} assembly contigs`, {
-          autoClose: 5000,
-        });
-        setIsIndexed(true);
-      },
-      onError: (e) => {
-        setIsIndexing(false);
-        toast.error(`Error indexing ${gffDownload.alias}: ${e}`, {
-          autoClose: false,
-        });
-      },
-    });
 
   const contigsColumns = useMemo(
     () => [
@@ -289,7 +251,48 @@ const ContigSearch: React.FC<{
     [navToContig]
   );
 
-  console.log('Rendering contigs');
+  const gffIndex = BGZipService.getIndexFileUrl(gffDownload);
+  if (!gffIndex) return <InfoBanner type="error" title="GFF index not found" />;
+
+  const { start: fetchAndIndex, cancel: cancelFetchAndIndex } =
+    importGffToIndexedDB({
+      url: gffDownload.url,
+      assemblyAccession,
+      indexUrl: gffIndex,
+      fastaUrl: fastaDownload.url,
+      fastaFaiUrl: BGZipService.getIndexFileUrl(fastaDownload, 'fai'),
+      fastaGziUrl: BGZipService.getIndexFileUrl(fastaDownload, 'gzi'),
+      attrsToIndex: ['interpro', 'pfam', 'cog', 'kegg', 'go'],
+      batchSize: 200,
+      onProgress: ({ percent }) => {
+        toast.update(`${gffDownload.alias}-index-progress`, {
+          progress: percent ? percent / 110 : 0, // extra 10% for roughly the time after batches until the index is complete
+          autoClose: 5000,
+        });
+      },
+      onBegin: () => {
+        setIsIndexing(true);
+        toast.info(`Downloading and indexing ${gffDownload.alias}`, {
+          toastId: `${gffDownload.alias}-index-progress`,
+          progress: 0.01,
+          autoClose: 5000,
+        });
+      },
+      onEnd: ({ contigsCount }) => {
+        setIsIndexing(false);
+        toast.dismiss(`${gffDownload.alias}-index-progress`);
+        toast.success(`Indexed ${contigsCount} assembly contigs`, {
+          autoClose: 5000,
+        });
+        setIsIndexed(true);
+      },
+      onError: (e) => {
+        setIsIndexing(false);
+        toast.error(`Error indexing ${gffDownload.alias}: ${e}`, {
+          autoClose: false,
+        });
+      },
+    });
 
   if (gffSize === undefined || !existingIndexChecked || !isViewerReady)
     return <Loading size="small" />;

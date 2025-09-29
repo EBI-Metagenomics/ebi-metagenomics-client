@@ -11,7 +11,7 @@ const emoji = {
 };
 
 type SourmashResultsTableProps = {
-  results: Array<Record<string, unknown>>;
+  results: Array<Record<string, { status: any; [key: string]: any }>>;
   loading: boolean;
 };
 const SourmashResultsTable: React.FC<SourmashResultsTableProps> = ({

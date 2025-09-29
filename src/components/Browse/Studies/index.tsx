@@ -9,6 +9,7 @@ import useStudiesList from 'hooks/data/useStudies';
 import BiomeSelector from 'components/UI/BiomeSelector';
 import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import FetchError from 'components/UI/FetchError';
+import { Study } from '@/interfaces';
 
 const { usePage, useOrder, useBiome, withQueryParamProvider } =
   createSharedQueryParamContextForTable('', {
@@ -16,7 +17,6 @@ const { usePage, useOrder, useBiome, withQueryParamProvider } =
   });
 
 const BrowseStudies: React.FC = () => {
-  console.log('BrowseStudies');
   const [page, setPage] = usePage<number>();
   const [order] = useOrder<string>();
   const [biome] = useBiome<string>();
@@ -66,7 +66,7 @@ const BrowseStudies: React.FC = () => {
       {
         Header: 'Last updated',
         accessor: 'updated_at',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
       },
     ],
     []
@@ -92,10 +92,10 @@ const BrowseStudies: React.FC = () => {
       </div>
       <div style={{ height: '2rem' }} />
       {hasData && (
-        <EMGTable
+        <EMGTable<Study>
           cols={columns}
-          data={studiesList}
-          Title={`Studies (${studiesList.count})`}
+          data={studiesList ?? []}
+          Title={`Studies (${studiesList?.count})`}
           initialPage={(page as number) - 1}
           sortable
           loading={loading}

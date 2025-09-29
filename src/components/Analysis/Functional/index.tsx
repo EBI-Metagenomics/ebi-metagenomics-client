@@ -31,9 +31,9 @@ const FunctionalAnalysis: React.FC = () => {
 
   const [type] = useType<string>();
   // const accession=overviewData.id;
-  const version = Number(overviewData.attributes['pipeline-version']);
+  const version = Number(overviewData?.attributes['pipeline-version']);
   const longReadExperiment =
-    overviewData.attributes['experiment-type'] === 'long_reads_assembly';
+    overviewData?.attributes['experiment-type'] === 'long_reads_assembly';
 
   return (
     <div className="vf-stack">

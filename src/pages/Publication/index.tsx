@@ -3,12 +3,12 @@ import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Box from 'components/UI/Box';
-import KeyValueList from 'components/UI/KeyValueList';
+import KeyValueList, { KeyValueItemsList } from 'components/UI/KeyValueList';
 import ExtLink from 'components/UI/ExtLink';
 import AssociatedStudies from 'components/Study/Studies';
 import PublicationAnnotations from 'components/Publications/EuropePMCAnnotations';
 import usePublicationDetail from 'hooks/data/usePublicationDetail';
-import { PublicationEuropePmcCore } from 'interfaces';
+import { PublicationEuropePmcCore } from '@/interfaces';
 import { useEffectOnce } from 'react-use';
 
 const PublicationPage: React.FC = () => {
@@ -18,20 +18,20 @@ const PublicationPage: React.FC = () => {
     loading,
     error,
     abstractGetter,
-  } = usePublicationDetail(parseInt(pubmedId, 10));
+  } = usePublicationDetail(parseInt(pubmedId as string, 10));
 
   const [europePmcData, setEuropePMCData] =
-    React.useState<PublicationEuropePmcCore>(null);
+    React.useState<PublicationEuropePmcCore>();
 
   useEffectOnce(() => {
     abstractGetter()
       .then((response) => setEuropePMCData(response.data))
-      .catch(() => setEuropePMCData(null));
+      .catch(() => setEuropePMCData(undefined));
   });
 
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
-  if (!publicationData) return <Loading />;
+  if (!publicationData || !pubmedId) return <Loading />;
 
   const details = [
     {
@@ -60,7 +60,7 @@ const PublicationPage: React.FC = () => {
       key: 'Published year',
       value: String(publicationData.published_year),
     },
-  ];
+  ] as KeyValueItemsList;
   return (
     <section className="vf-content">
       <h2>Publication: {publicationData.title || ''}</h2>

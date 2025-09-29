@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import protectedAxios from '@/utils/protectedAxios';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 export enum ResponseFormat {
   JSON,
@@ -119,15 +119,7 @@ export type ErrorFromFetch = {
   response?: Promise<Response>;
   type: ErrorTypes;
   // error?: unknown | { message: string };
-  error?: {
-    config?: {
-      url?: string;
-    };
-    message: string;
-    request: {
-      responseURL: string;
-    };
-  };
+  error?: AxiosError;
 };
 
 export type TSVResponse = Array<string>[];
@@ -231,8 +223,8 @@ async function fetchData(
   format: ResponseFormat = ResponseFormat.JSON,
   fetchOptions: RequestInit = {}
 ): Promise<void> {
-  let response = null;
-  let data = null;
+  let response: AxiosResponse | null = null;
+  let data: Object | null = null;
 
   try {
     if (fetchOptions.method === 'POST') {
@@ -246,7 +238,9 @@ async function fetchData(
     } else {
       response = await protectedAxios.get(url);
     }
-    data = prepareResponseDataBasedOnFormat(response, format, updateState);
+    data =
+      response &&
+      prepareResponseDataBasedOnFormat(response, format, updateState);
     updateState({
       data,
       loading: false,
@@ -255,7 +249,7 @@ async function fetchData(
       rawResponse: response,
     });
   } catch (error) {
-    if (error.response.status === 401) {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
       localStorage.removeItem('mgnify.v2.token');
       localStorage.removeItem('mgnify.v2.username');
       localStorage.setItem('mgnify.v2.sessionExpired', 'true');
@@ -278,25 +272,25 @@ const EmptyResponse = {
   loading: false,
   error: {
     type: ErrorTypes.NullURL,
-    error: 'The queried URL is null',
+    error: new AxiosError('The queried URL is null'),
   },
   isStale: false,
-  rawResponse: null,
+  rawResponse: undefined,
 };
 const NewRequest = {
   data: null,
   loading: true,
   error: null,
   isStale: false,
-  rawResponse: null,
+  rawResponse: undefined,
 };
 
 const useData: (
-  url: string,
+  url: string | null,
   format?: ResponseFormat,
   fetchOptions?: RequestInit
 ) => DataResponse = (url, format = ResponseFormat.JSON, fetchOptions = {}) => {
-  const [state, setFullState] = useState(NewRequest);
+  const [state, setFullState] = useState<DataResponse>(NewRequest);
   // A flag to be able to clean up in case acomponent is unmount before the request is completed
   let isActive = true;
   const setPartialState = (updatedValues): void => {

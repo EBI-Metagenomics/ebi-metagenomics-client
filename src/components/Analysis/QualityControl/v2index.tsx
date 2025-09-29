@@ -2,12 +2,12 @@ import React, { useContext } from 'react';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import './style.css';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
-import { Download } from 'interfaces';
+import { Download } from '@/interfaces';
 
 const QualityControl: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
 
-  const qcFile = analysisData.downloads.find(
+  const qcFile = analysisData?.downloads.find(
     (file: Download) =>
       file.download_group === 'quality_control' && file.file_type === 'html'
   );

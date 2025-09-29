@@ -1,12 +1,13 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { ErrorFromFetch, ErrorTypes } from 'hooks/data/useData';
 import useProtectedApiCall from 'hooks/useProtectedApiCall';
 import UserContext from 'pages/Login/UserContext';
 import paginatedDownloader from 'utils/paginatedDownloader';
+import { isNil } from 'lodash-es';
 
 interface FetchDataOptions<T> {
-  url: string | null;
+  url: string | null | undefined;
   transformResponse?: (data: T) => T;
   requireAuth?: boolean;
   includeAuthIfPresent?: boolean;
@@ -37,12 +38,7 @@ const useApiData = <T,>({
       if (!url) {
         setError({
           type: ErrorTypes.NullURL,
-          error: {
-            message: 'URL is null',
-            request: {
-              responseURL: '',
-            },
-          },
+          error: new AxiosError('URL is null', 'NullURL'),
         });
         setLoading(false);
         return;
@@ -61,7 +57,7 @@ const useApiData = <T,>({
         const errorFromFetch: ErrorFromFetch = {
           status: axiosError.response?.status,
           type: ErrorTypes.FetchError,
-          error: err,
+          error: axiosError,
         };
         setError(errorFromFetch);
       } finally {
@@ -73,13 +69,15 @@ const useApiData = <T,>({
     fetchData();
   }, [url, transformResponse, axiosInstance]);
   const download = () =>
-    paginatedDownloader(
-      url,
-      pageParameter,
-      config.whenDownloadingListsFromApi.maxPages,
-      config.whenDownloadingListsFromApi.cadenceMs,
-      axiosInstance
-    );
+    isNil(url)
+      ? async () => {}
+      : paginatedDownloader(
+          url,
+          pageParameter,
+          config.whenDownloadingListsFromApi?.maxPages || Infinity,
+          config.whenDownloadingListsFromApi?.cadenceMs || 50,
+          axiosInstance
+        );
 
   return { data, error, loading, stale, url, download };
 };

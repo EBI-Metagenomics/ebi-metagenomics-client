@@ -68,22 +68,18 @@ const LatestStudies: React.FC = () => {
         {data.items.map(
           ({
             accession,
-
             updated_at,
             biome,
             title,
           }: {
-            accession: string;
-
+            accession?: string;
             updated_at: string;
-
             biome: { lineage: string };
-
             title: string;
           }) => (
             <LatestStudy
-              key={accession}
-              id={accession}
+              key={accession as string}
+              id={accession as string}
               name={title}
               lineage={biome.lineage}
               abstract={`Last updated on ${new Date(

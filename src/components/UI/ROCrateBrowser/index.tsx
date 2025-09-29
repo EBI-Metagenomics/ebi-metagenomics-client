@@ -25,7 +25,7 @@ const modalStyle = {
 };
 
 type ModalProps = {
-  crateUrl?: string;
+  crateUrl: string;
   useButtonVariant?: boolean;
 };
 
@@ -33,13 +33,13 @@ const ROCrateBrowser: React.FC<ModalProps> = ({
   crateUrl,
   useButtonVariant,
 }) => {
-  const [cratePreview, setCratePreview] = useState('');
+  const [cratePreview, setCratePreview] = useState<string>();
   const [crateModalOpen, setCrateModalOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const crate = useCrate(crateUrl);
 
   async function handleButtonClick() {
-    crate.getHtmlContent().then((previewHtml) => {
+    crate?.getHtmlContent?.().then((previewHtml) => {
       setCratePreview(previewHtml);
       setCrateModalOpen(true);
     });
@@ -57,9 +57,9 @@ const ROCrateBrowser: React.FC<ModalProps> = ({
     ) {
       return;
     }
-    crate.getHtmlContent(event.data).then((htmlContent) => {
+    crate?.getHtmlContent?.(event.data).then((htmlContent) => {
       if (iframeRef.current) {
-        iframeRef.current.srcdoc = htmlContent;
+        iframeRef.current.srcdoc = htmlContent ?? '';
       }
     });
   };
@@ -85,6 +85,7 @@ const ROCrateBrowser: React.FC<ModalProps> = ({
           window.removeEventListener('message', handleIframeMessage);
           setCrateModalOpen(false);
         }}
+        // @ts-ignore todo why?
         style={modalStyle}
         onAfterOpen={() => {
           window.addEventListener('message', handleIframeMessage);

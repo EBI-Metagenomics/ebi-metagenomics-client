@@ -38,9 +38,9 @@ type MapProps = {
 };
 
 const SamplesMap: React.FC<MapProps> = ({ samples }) => {
-  const ref = useRef();
-  const [theMap, setTheMap] = useState(null);
-  const markerCluster = useRef<MarkerClusterer>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [theMap, setTheMap] = useState<google.maps.Map>();
+  const markerCluster = useRef<MarkerClusterer>();
   const sampleInfoWindow = useRef(new google.maps.InfoWindow());
   const clusterInfoWindow = useRef(new google.maps.InfoWindow());
   const newBoundary = useRef(new google.maps.LatLngBounds());
@@ -54,16 +54,11 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
       );
       const rdfData = response.data as unknown as string;
       let polygonCoordinatesString = rdfData.substring(
-        rdfData.indexOf('POLYGON') + 8,
-        rdfData.length - 3
-      );
-      polygonCoordinatesString = rdfData.substring(
         rdfData.indexOf('((') + 2,
         rdfData.indexOf('))')
       );
 
-      const coordinatesArray = [];
-      const internalCoordinates = [];
+      const coordinatesArray: { lat: number; lng: number }[] = [];
 
       const pairs = polygonCoordinatesString.split(',');
 
@@ -75,8 +70,6 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
             polygonCoordinatesString.indexOf(pair),
             indexOfPairEnd + pair.length
           );
-
-          internalCoordinates.push(internalCoordinatesString);
           i += internalCoordinatesString.split(' ').length - 1;
         } else {
           const [lng, lat] = pair.trim().split(' ').map(parseFloat);
@@ -103,7 +96,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
   };
 
   useEffect(() => {
-    if (theMap === null) {
+    if (theMap === null && ref.current) {
       const tmpMap = new google.maps.Map(ref.current, {
         // zoom: 0.1,
         maxZoom: 5,
@@ -155,6 +148,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
 
         function (cluster) {
           if (
+            // @ts-ignore
             this.prevZoom_ + 1 <= this.getMaxZoom() ||
             cluster.getSize() >= 10
           ) {

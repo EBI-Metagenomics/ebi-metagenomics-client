@@ -86,9 +86,12 @@ const StackedColumnChart: React.FC<StackedColumnChartProps> = ({
     },
     tooltip: {
       formatter() {
+        // @ts-ignore
         const perc = (100 * this.y) / sum;
         return (
+          // @ts-ignore
           `${this.series.name}<br/>` +
+          // @ts-ignore
           `<b>${this.y}</b> ${sequencesType} (${perc.toFixed(2)}%)`
         );
       },
@@ -130,9 +133,12 @@ const StackedColumnChart: React.FC<StackedColumnChartProps> = ({
       layout: 'vertical',
 
       labelFormatter() {
+        // @ts-ignore
         if (this.name.length > 15) {
+          // @ts-ignore
           return `${this.name.slice(0, 15)}...`;
         }
+        // @ts-ignore
         return this.name;
       },
     };

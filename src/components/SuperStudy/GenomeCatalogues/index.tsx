@@ -57,14 +57,15 @@ const SuperStudyGenomeCataloguesTable: React.FC = () => {
         id: 'last_update',
         Header: 'Last Updated',
         accessor: 'updated_at',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
       },
     ],
     []
   );
 
   if (loading) return <Loading size="small" />;
-  if (error || !data) return <FetchError error={error} />;
+  if (error) return <FetchError error={error} />;
+  if (!data) return <Loading />;
 
   return (
     <details>

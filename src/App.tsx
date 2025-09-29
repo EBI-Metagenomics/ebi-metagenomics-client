@@ -11,7 +11,7 @@ import MainMenu from 'components/Nav/MainMenu';
 import Loading from 'components/UI/Loading';
 import ErrorBoundary from 'components/ErrorBoundary';
 import MyData from 'pages/MyData';
-import UserContext from 'pages/Login/UserContext';
+import UserContext, { UserContextType, UserDetails, UserType } from 'pages/Login/UserContext';
 
 import './App.css';
 import './styles/biomes.css';
@@ -53,23 +53,23 @@ const ResetScroll = () => {
 };
 
 const App: React.FC = () => {
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<UserType | null>({
     username: null,
     isAuthenticated: false,
     token: null,
   });
-  const [details, setDetails] = useState(null);
-  const value = useMemo(
+  const [details, setDetails] = useState<UserDetails | null>([]);
+  const value = useMemo<UserContextType>(
     () => ({
-      username: user.username,
-      isAuthenticated: user.isAuthenticated,
+      username: user?.username || null,
+      isAuthenticated: user?.isAuthenticated || false,
       details,
       setUser,
       setDetails,
       config,
-      token: user.token,
+      token: user?.token || null,
     }),
-    [details, user.isAuthenticated, user.username, user.token]
+    [details, user?.isAuthenticated, user?.username, user?.token]
   );
 
   return (

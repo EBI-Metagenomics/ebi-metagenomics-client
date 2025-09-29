@@ -28,7 +28,7 @@ const ContigsHistogram: React.FC<ContigsHistogramProps> = ({ summaryData }) => {
     ResponseFormat.TSV
   );
 
-  if (loading) return <Loading size="large" />;
+  if (loading || !overviewData) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const histData = (data as unknown as TSVResponse).map(([x, y]) => [

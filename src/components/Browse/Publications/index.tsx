@@ -84,8 +84,8 @@ const BrowsePublications: React.FC = () => {
       {hasData && (
         <EMGTable
           cols={columns}
-          data={publicationsList}
-          Title={`Publications (${publicationsList.count})`}
+          data={publicationsList ?? []}
+          Title={`Publications (${publicationsList?.count ?? 0})`}
           initialPage={(page as number) - 1}
           sortable
           loading={loading}

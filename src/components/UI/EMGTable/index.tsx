@@ -7,13 +7,20 @@ import React, {
 } from 'react';
 import { camelCase, filter } from 'lodash-es';
 
-import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
+import {
+  Column,
+  Row,
+  SortingRule,
+  usePagination,
+  useSortBy,
+  useTable,
+} from 'react-table';
 import Loading from 'components/UI/Loading';
 import TextInputDebounced from 'components/UI/TextInputDebounced';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
-import { PaginatedList } from 'interfaces';
+import { PaginatedList } from '@/interfaces';
 import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
 import PaginationButton from './PaginationButton';
 import './style.css';
@@ -64,7 +71,7 @@ function getPaginationRanges(
 }
 
 function getOrderingQueryParamFromSortedColumn(
-  tableSortBy: Array<{ id: string; desc: boolean }>
+  tableSortBy: Array<SortingRule<string>>
 ): string {
   if (!tableSortBy.length) return '';
   const col = tableSortBy[0];
@@ -85,8 +92,8 @@ function getSortedColumnFromOrderingQueryParam(
   return [{ id, desc }];
 }
 
-type EMGTableProps = {
-  cols: Column[];
+type EMGTableProps<T extends object> = {
+  cols: Column<T>[];
   data:
     | PaginatedList
     | Record<string, unknown>[]
@@ -106,12 +113,12 @@ type EMGTableProps = {
   downloadURL?: string;
   onDownloadRequested?: () => void;
   ExtraBarComponent?: React.ReactNode;
-  onMouseEnterRow?: (row: Row) => void;
-  onMouseLeaveRow?: (row: Row) => void;
+  onMouseEnterRow?: (row: Row<T>) => void;
+  onMouseLeaveRow?: (row: Row<T>) => void;
   dataCy?: string;
 };
 
-const EMGTable: React.FC<EMGTableProps> = ({
+const EMGTable = <T extends object>({
   cols,
   data,
   Title,
@@ -124,20 +131,19 @@ const EMGTable: React.FC<EMGTableProps> = ({
   sortable = false,
   loading = false,
   isStale = false,
-  downloadURL = null,
+  downloadURL = undefined,
   onDownloadRequested = () => null,
   ExtraBarComponent = null,
   onMouseEnterRow = () => null,
   onMouseLeaveRow = () => null,
   dataCy,
-}) => {
+}: EMGTableProps<T>) => {
   const [page, setPage] = useQueryParamState<number>(
     camelCase(`${namespace} page`)
   );
   const [ordering, setOrdering] = useQueryParamState<string>(
     camelCase(`${namespace} order`)
   );
-  console.log('rendering with ordering', ordering);
 
   const pageCount = useMemo(() => {
     if (data && 'count' in data) {
@@ -145,6 +151,12 @@ const EMGTable: React.FC<EMGTableProps> = ({
     }
     return (data as MGnifyResponse)?.meta?.pagination?.pages || 1;
   }, [data, expectedPageSize]);
+
+  const tableData = useMemo(() => {
+    return ((data as MGnifyResponse)?.data ||
+      (data as PaginatedList)?.items ||
+      data) as T[];
+  }, [data]);
 
   const {
     setSortBy,
@@ -157,13 +169,10 @@ const EMGTable: React.FC<EMGTableProps> = ({
     canNextPage,
     gotoPage,
     state: { pageIndex, sortBy },
-  } = useTable(
+  } = useTable<T>(
     {
-      columns: cols,
-      data:
-        (data as MGnifyResponse)?.data ||
-        (data as PaginatedList)?.items ||
-        data,
+      columns: cols as Column<T>[],
+      data: tableData,
       initialState: {
         pageIndex: initialPage,
         sortBy: getSortedColumnFromOrderingQueryParam(ordering),
@@ -283,11 +292,11 @@ const EMGTable: React.FC<EMGTableProps> = ({
             </caption>
           )}
           <thead className="vf-table__header">
-            {headerGroups.map((headerGroup) => (
+            {headerGroups.map((headerGroup, idx) => (
               <tr
                 {...headerGroup.getHeaderGroupProps()}
                 className="vf-table__row"
-                key={headerGroup.id}
+                key={headerGroup.id || idx}
               >
                 {headerGroup.headers.map((column) => {
                   if (column.isFullWidth) {

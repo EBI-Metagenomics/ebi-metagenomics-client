@@ -1,7 +1,7 @@
 /* eslint-disable no-bitwise */
 
 import * as pako from 'pako';
-import { Download } from 'interfaces';
+import { Download } from 'interfaces/index';
 import { find } from 'lodash-es';
 
 const MAX_BLOCK_SIZE = 100000;
@@ -43,14 +43,16 @@ export class BGZipService {
   public static getIndexFileUrl(
     download: Download,
     index_type: string = 'gzi'
-  ): string {
-    return new URL(
-      find(
-        download.index_files ?? [],
-        (index) => index.index_type === index_type
-      )?.relative_url,
-      download.url.replace(/[^/]+$/, '')
-    ).toString();
+  ): string | undefined {
+    const relative_url = find(
+      download.index_files ?? [],
+      (index) => index.index_type === index_type
+    )?.relative_url;
+
+    return (
+      relative_url &&
+      new URL(relative_url, download.url.replace(/[^/]+$/, '')).toString()
+    );
   }
 
   constructor(
@@ -60,7 +62,13 @@ export class BGZipService {
   ) {
     this.dataFileUrl = this.download.url;
     this.leadingTsvCommentChars = leadingTsvCommentChars;
-    this.indexFileUrl = BGZipService.getIndexFileUrl(this.download);
+    const idx = BGZipService.getIndexFileUrl(this.download);
+    if (idx) {
+      this.indexFileUrl = idx;
+    }
+    else {
+      throw new Error('No index file found for BGZip download');
+    }
     if (autoInitialize) {
       this.initialize().then(() => console.groupEnd());
     }

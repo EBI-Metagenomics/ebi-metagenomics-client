@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Download, PaginatedList } from 'interfaces';
+import { Download, PaginatedList } from '@/interfaces';
 import './style.css';
 import { BGZipService } from 'components/Analysis/BgZipService';
 import Loading from 'components/UI/Loading';
@@ -81,7 +81,8 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
           setCols(
             rowToUseAsHeaders.map((header, colNum) => ({
               Header: startCase(header),
-              accessor: (row: string[]) => row[colNum],
+              accessor: (row) => row[colNum],
+              id: `col_${colNum}`,
             }))
           );
         }

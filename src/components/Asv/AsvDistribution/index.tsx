@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ComposedChart,
   Line,
@@ -66,14 +66,14 @@ const styles = {
 };
 
 const AsvDistribution = ({ fileUrl }) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<{ name: string; count: number }[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string>();
   const [visibleCount, setVisibleCount] = useState(25);
 
   const parseAsvTsvFile = (tsvContent) => {
     const lines = tsvContent.trim().split('\n');
-    const asvData = [];
+    const asvData: { name: string; count: number }[] = [];
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
@@ -122,7 +122,7 @@ const AsvDistribution = ({ fileUrl }) => {
           setError('No valid ASV data found in the file');
         } else {
           setData(parsedData);
-          setError(null);
+          setError(undefined);
         }
 
         setLoading(false);

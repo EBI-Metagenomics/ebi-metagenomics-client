@@ -14,7 +14,8 @@ const RelatedTable: React.FC = () => {
   const { data, loading, error } = useSuperStudyDetail(slug);
 
   if (loading) return <Loading size="small" />;
-  if (error || !data) return <FetchError error={error} />;
+  if (error) return <FetchError error={error} />;
+  if (!data) return <Loading />;
 
   const columns = [
     {
@@ -49,7 +50,7 @@ const RelatedTable: React.FC = () => {
       id: 'last_update',
       Header: 'Last Updated',
       accessor: 'updated_at',
-      Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+      Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
     },
   ];
 

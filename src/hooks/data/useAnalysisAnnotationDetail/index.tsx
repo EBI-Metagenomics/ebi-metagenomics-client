@@ -1,6 +1,6 @@
 import UserContext from 'pages/Login/UserContext';
 import { useContext, useMemo } from 'react';
-import { AnalysisDetailWithAnnotations } from 'interfaces';
+import { AnalysisDetailWithAnnotations } from 'interfaces/index';
 import { KeyValue } from 'hooks/data/useData';
 import useApiData from 'hooks/data/useApiData';
 

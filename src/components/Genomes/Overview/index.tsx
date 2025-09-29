@@ -1,5 +1,5 @@
 import React from 'react';
-import KeyValueList from 'components/UI/KeyValueList';
+import KeyValueList, { KeyValueItemsList } from 'components/UI/KeyValueList';
 import ExtLink from 'components/UI/ExtLink';
 import { MGnifyDatum } from '@/hooks/data/useData';
 import { cleanTaxLineage } from '@/utils/taxon';
@@ -167,122 +167,129 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
             <b>External links</b>
           </summary>
           <KeyValueList
-            list={[
-              {
-                key: 'ENA genome accession',
-                value: data.attributes['ena-genome-accession']
-                  ? () => (
-                      <ExtLink
-                        href={
-                          ENA_VIEW_URL + data.attributes['ena-genome-accession']
-                        }
-                      >
-                        {data.attributes['ena-genome-accession']}
-                      </ExtLink>
-                    )
-                  : null,
-              },
-              {
-                key: 'ENA sample accession',
-                value: data.attributes['ena-sample-accession']
-                  ? () => (
-                      <ExtLink
-                        href={
-                          ENA_VIEW_URL + data.attributes['ena-sample-accession']
-                        }
-                      >
-                        {data.attributes['ena-sample-accession']}
-                      </ExtLink>
-                    )
-                  : null,
-              },
-              {
-                key: 'ENA study accession',
-                value: data.attributes['ena-study-accession']
-                  ? () => (
-                      <ExtLink
-                        href={
-                          ENA_VIEW_URL + data.attributes['ena-study-accession']
-                        }
-                      >
-                        {data.attributes['ena-study-accession']}
-                      </ExtLink>
-                    )
-                  : null,
-              },
-              {
-                key: 'IMG genome accession',
-                value: data.attributes['img-genome-accession']
-                  ? () => (
-                      <ExtLink
-                        href={IMG_URL + data.attributes['img-genome-accession']}
-                      >
-                        {data.attributes['img-genome-accession']}
-                      </ExtLink>
-                    )
-                  : null,
-              },
-              {
-                key: 'NCBI genome accession',
-                value: data.attributes['ncbi-genome-accession']
-                  ? () => (
-                      <ExtLink
-                        href={
-                          NCBI_ASSEMBLY_URL +
-                          data.attributes['ncbi-genome-accession']
-                        }
-                      >
-                        {data.attributes['ncbi-genome-accession']}
-                      </ExtLink>
-                    )
-                  : null,
-              },
-              {
-                key: 'NCBI sample accession',
-                value: data.attributes['ncbi-sample-accession']
-                  ? () => (
-                      <ExtLink
-                        href={
-                          NCBI_SAMPLE_URL +
-                          data.attributes['ncbi-sample-accession']
-                        }
-                      >
-                        {data.attributes['ncbi-sample-accession']}
-                      </ExtLink>
-                    )
-                  : null,
-              },
-              {
-                key: 'NCBI study accession',
-                value: data.attributes['ncbi-study-accession']
-                  ? () => (
-                      <ExtLink
-                        href={
-                          NCBI_PROJECT_URL +
-                          data.attributes['ncbi-study-accession']
-                        }
-                      >
-                        {data.attributes['ncbi-study-accession']}
-                      </ExtLink>
-                    )
-                  : null,
-              },
-              {
-                key: 'PATRIC genome accession',
-                value: data.attributes['patric-genome-accession']
-                  ? () => (
-                      <ExtLink
-                        href={
-                          PATRIC_URL +
-                          data.attributes['patric-genome-accession']
-                        }
-                      >
-                        {data.attributes['patric-genome-accession']}
-                      </ExtLink>
-                    )
-                  : null,
-              },
-            ].filter(({ value }) => notEmpty(value))}
+            list={
+              [
+                {
+                  key: 'ENA genome accession',
+                  value: data.attributes['ena-genome-accession']
+                    ? () => (
+                        <ExtLink
+                          href={
+                            ENA_VIEW_URL +
+                            data.attributes['ena-genome-accession']
+                          }
+                        >
+                          {data.attributes['ena-genome-accession']}
+                        </ExtLink>
+                      )
+                    : null,
+                },
+                {
+                  key: 'ENA sample accession',
+                  value: data.attributes['ena-sample-accession']
+                    ? () => (
+                        <ExtLink
+                          href={
+                            ENA_VIEW_URL +
+                            data.attributes['ena-sample-accession']
+                          }
+                        >
+                          {data.attributes['ena-sample-accession']}
+                        </ExtLink>
+                      )
+                    : null,
+                },
+                {
+                  key: 'ENA study accession',
+                  value: data.attributes['ena-study-accession']
+                    ? () => (
+                        <ExtLink
+                          href={
+                            ENA_VIEW_URL +
+                            data.attributes['ena-study-accession']
+                          }
+                        >
+                          {data.attributes['ena-study-accession']}
+                        </ExtLink>
+                      )
+                    : null,
+                },
+                {
+                  key: 'IMG genome accession',
+                  value: data.attributes['img-genome-accession']
+                    ? () => (
+                        <ExtLink
+                          href={
+                            IMG_URL + data.attributes['img-genome-accession']
+                          }
+                        >
+                          {data.attributes['img-genome-accession']}
+                        </ExtLink>
+                      )
+                    : null,
+                },
+                {
+                  key: 'NCBI genome accession',
+                  value: data.attributes['ncbi-genome-accession']
+                    ? () => (
+                        <ExtLink
+                          href={
+                            NCBI_ASSEMBLY_URL +
+                            data.attributes['ncbi-genome-accession']
+                          }
+                        >
+                          {data.attributes['ncbi-genome-accession']}
+                        </ExtLink>
+                      )
+                    : null,
+                },
+                {
+                  key: 'NCBI sample accession',
+                  value: data.attributes['ncbi-sample-accession']
+                    ? () => (
+                        <ExtLink
+                          href={
+                            NCBI_SAMPLE_URL +
+                            data.attributes['ncbi-sample-accession']
+                          }
+                        >
+                          {data.attributes['ncbi-sample-accession']}
+                        </ExtLink>
+                      )
+                    : null,
+                },
+                {
+                  key: 'NCBI study accession',
+                  value: data.attributes['ncbi-study-accession']
+                    ? () => (
+                        <ExtLink
+                          href={
+                            NCBI_PROJECT_URL +
+                            data.attributes['ncbi-study-accession']
+                          }
+                        >
+                          {data.attributes['ncbi-study-accession']}
+                        </ExtLink>
+                      )
+                    : null,
+                },
+                {
+                  key: 'PATRIC genome accession',
+                  value: data.attributes['patric-genome-accession']
+                    ? () => (
+                        <ExtLink
+                          href={
+                            PATRIC_URL +
+                            data.attributes['patric-genome-accession']
+                          }
+                        >
+                          {data.attributes['patric-genome-accession']}
+                        </ExtLink>
+                      )
+                    : null,
+                },
+              ].filter(({ value }) => notEmpty(value)) as KeyValueItemsList
+            }
           />
         </details>
       </div>

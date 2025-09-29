@@ -42,7 +42,8 @@ const AssociatedRuns: React.FC = () => {
     }
   );
   if (loading && !isStale) return <Loading size="small" />;
-  if (error || !data) return <FetchError error={error} />;
+  if (error) return <FetchError error={error} />;
+  if (!data) return <Loading />;
 
   const columns = [
     {
@@ -70,8 +71,9 @@ const AssociatedRuns: React.FC = () => {
       Header: 'Pipeline versions',
       accessor: 'relationships.pipelines.data',
       disableSortBy: true,
-      Cell: ({ cell }) =>
-        (cell.value as { id: string }[]).map(({ id }) => id).join(', '),
+      Cell: ({ cell }) => (
+        <>{(cell.value as { id: string }[]).map(({ id }) => id).join(', ')}</>
+      ),
     },
   ];
 

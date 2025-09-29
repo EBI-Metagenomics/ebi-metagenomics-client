@@ -274,7 +274,9 @@ export const AnnotationTrackColorPicker: React.FC<
         </span>
       )}
       {trackView.track.config.crate && (
-        <ROCrateBrowser crateUrl={trackView.track.config.initialCrateURL} />
+        <ROCrateBrowser
+          crateUrl={trackView.track.config.initialCrateURL as string}
+        />
       )}
     </div>
   );

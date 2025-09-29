@@ -11,9 +11,9 @@ import FunctionalSubpage from 'components/Analysis/Functional/v2index';
 import PathwaysSubpage from 'components/Analysis/Pathways/v2Index';
 import Downloads from 'components/Downloads/v2index';
 import Abundance from 'components/Analysis/Abundance';
-import V2AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import V2AnalysisContext, { AnalysisContextType } from 'pages/Analysis/V2AnalysisContext';
 import useAnalysisDetail from 'hooks/data/useAnalysisDetail';
-import { AnalysisDetail } from 'interfaces';
+import { AnalysisDetail } from 'interfaces/index';
 import Asv from 'components/Asv';
 import AssemblyTaxonomy from 'components/Analysis/AssemblyTaxonomy';
 import Taxonomy from 'components/Analysis/Taxonomy/v2index';
@@ -39,12 +39,14 @@ const isAmplicon = (
 };
 
 const V2AnalysisPage: React.FC = () => {
-  console.log('rendering V2AnalysisPage');
   const accession = useURLAccession();
   const { data, loading, error } = useAnalysisDetail(accession);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const value = useMemo(() => ({ overviewData: data }), [data?.accession]);
+  const value = useMemo(
+    () => ({ overviewData: data } as AnalysisContextType),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [data?.accession]
+  );
 
   const thisIsAssembly = useMemo(
     () => data?.experiment_type && isAssembly(data.experiment_type),
@@ -111,7 +113,7 @@ const V2AnalysisPage: React.FC = () => {
                   isAssembly(data.experiment_type) ? (
                     <AssemblyTaxonomy />
                   ) : (
-                    <Taxonomy accession={accession} />
+                    <Taxonomy />
                   )
                 }
               />

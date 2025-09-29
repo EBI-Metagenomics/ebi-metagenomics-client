@@ -18,6 +18,7 @@ import useData, {
 import './style.css';
 import UserContext from 'pages/Login/UserContext';
 import igv from 'igv/dist/igv.esm';
+import { Browser } from 'igv';
 
 import ContigsTable from 'components/Analysis/ContigViewer/Table';
 import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
@@ -60,7 +61,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
   const { data, loading, error } = useData(fastaURL, ResponseFormat.TXT);
 
-  const assemblyId = analysisOverviewData.relationships.assembly.data.id;
+  const assemblyId = analysisOverviewData?.relationships.assembly.data.id;
 
   const { crates, loading: loadingCrates } = useCrates(
     `assemblies/${assemblyId}/extra-annotations`
@@ -70,7 +71,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
   const antiSMASH = contig.attributes['has-antismash'];
   const displayName = contig.attributes['contig-name'];
-  const [igvBrowser, setIgvBrowser] = useState(null);
+  const [igvBrowser, setIgvBrowser] = useState<Browser>(null);
 
   const [trackColorBys, setTrackColorBys] = useState({});
   const [updatingTracks, setUpdatingTracks] = useState(true);
@@ -113,16 +114,16 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
       }
       if (crates) {
         crates.forEach((crate) => {
-          options.tracks.push(crate.track);
+          if (crate.track) options.tracks.push(crate.track);
         });
       }
-      if (offlineCrate) {
+      if (offlineCrate?.track) {
         options.tracks.push(offlineCrate.track);
       }
 
       if (node === null) return;
       igv.createBrowser(node, options).then((browser) => {
-        browser.on('trackclick', (track, trackData) =>
+        browser.on('trackclick', (_, trackData) =>
           ReactDOMServer.renderToString(<GenomeBrowserPopup data={trackData} />)
         );
         setIgvBrowser(browser);
@@ -143,8 +144,8 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   useEffect(() => {
     const updateTracks = async () => {
       setUpdatingTracks(true);
-      const tracksToRemove = [];
-      const tracksToAdd = [];
+      const tracksToRemove: string[] = [];
+      const tracksToAdd: string[] = [];
       igvBrowser?.trackViews?.forEach((trackView) => {
         if (trackView.track.type !== 'annotation') return;
         const colorBy = trackColorBys[trackView.track.id];

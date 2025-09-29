@@ -82,7 +82,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         id: 'last_update',
         Header: 'Last Updated',
         accessor: 'attributes.last-update',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
       },
     ],
     []
@@ -95,9 +95,9 @@ const BrowseGenomesByCatalogue: React.FC = () => {
   const isBiomeCatalogued = (lineage) => {
     if (!allCatalogues.data) return true;
     return some(allCatalogues.data, (catalogue) => {
-      return (catalogue as MGnifyDatum).relationships.biome.data.id.startsWith(
-        lineage
-      );
+      return !!(
+        catalogue as MGnifyDatum
+      )?.relationships?.biome?.data?.id.startsWith(lineage);
     });
   };
 

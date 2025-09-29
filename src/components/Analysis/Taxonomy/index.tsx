@@ -38,21 +38,20 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   const [type] = useType<string>();
   const datum = data?.data as Record<string, number | null>;
 
-  const enableSSU = datum?.taxonomy_ssu_count > 0 || datum?.taxonomy_count > 0;
-  const enableLSU = datum?.taxonomy_lsu_count > 0;
-  const enableITSoneDB = datum?.taxonomy_itsonedb_count > 0;
-  const enableITSUnite = datum?.taxonomy_itsunite_count > 0;
+  const enableSSU =
+    (datum?.taxonomy_ssu_count ?? 0) > 0 || (datum?.taxonomy_count ?? 0) > 0;
+  const enableLSU = (datum?.taxonomy_lsu_count ?? 0) > 0;
+  const enableITSoneDB = (datum?.taxonomy_itsonedb_count ?? 0) > 0;
+  const enableITSUnite = (datum?.taxonomy_itsunite_count ?? 0) > 0;
 
   const { config } = useContext(UserContext);
-  const [taxResults, setTaxResults] = useState('/unite');
+  const [taxResults, setTaxResults] = useState<string>('/unite');
   useEffect(() => {
     if (!loading && !error && data) {
-      setTaxResults(
-        (enableITSoneDB && '/itsonedb') ||
-          (enableITSUnite && '/unite') ||
-          (enableSSU && '/ssu') ||
-          (enableLSU && '/lsu')
-      );
+      if (enableITSoneDB) setTaxResults('/itsonedb');
+      if (enableITSUnite) setTaxResults('/unite');
+      if (enableSSU) setTaxResults('/ssu');
+      if (enableLSU) setTaxResults('/lsu');
     }
   }, [
     data,
@@ -168,7 +167,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
             category={taxResults}
             chartType={String(type)}
             sequencesType={
-              analysisOverviewData.attributes['experiment-type'] === 'assembly'
+              analysisOverviewData?.attributes['experiment-type'] === 'assembly'
                 ? 'contigs'
                 : 'reads'
             }

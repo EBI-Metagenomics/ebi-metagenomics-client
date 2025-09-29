@@ -24,7 +24,7 @@ function sumData(data: { y: number }[]): number {
  * additional data point
  */
 function duplicateLastColor(colours: string[], data: unknown[]): string[] {
-  const newColours = [];
+  const newColours: string[] = [];
   let i = 0;
   while (i < data.length) {
     newColours.push(colours[Math.min(i, colours.length - 1)]);
@@ -49,10 +49,13 @@ function groupAfterN(clusteredData: TaxDatum[], n: number): TaxDatum[] {
     };
     clusteredData.slice(n).forEach((d) => {
       others.y += d.y;
+      // @ts-ignore
       if (others.lineageA.indexOf(d.lineage[0]) === -1) {
+        // @ts-ignore
         others.lineageA.push(d.lineage[0]);
       }
     });
+    // @ts-ignore
     others.lineage = [others.lineageA.join(', ')];
     top10.push(others);
   }
@@ -148,9 +151,12 @@ const PieChart: React.FC<PieProps> = ({
       layout: 'vertical',
 
       labelFormatter() {
+        // @ts-ignore
         if (this.name.length > 15) {
+          // @ts-ignore
           return `${this.name.slice(0, 15)}...`;
         }
+        // @ts-ignore
         return this.name;
       },
     };

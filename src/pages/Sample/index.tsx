@@ -43,25 +43,11 @@ const SamplePage: React.FC = () => {
   if (!data) return <Loading />;
   const { data: sampleData } = data as MGnifyResponseObj;
 
-  const fetchSovereignsAbsInfo = (mrgId: number) => {
+  const fetchSovereignsAbsInfo = (mrgId: number): SovereignsArray => {
     const matchingEez = marineRegionsEezData.find((eez) => eez.MRGID === mrgId);
 
     const sovereigns: SovereignsArray = [];
-
-    // const sovereigns: SovereignsArray = [
-    //   {
-    //     name: 'Brazil',
-    //     absStatus: 1,
-    //   },
-    //   {
-    //     name: 'France',
-    //     absStatus: 1,
-    //   },
-    //   {
-    //     name: 'United Kingdom',
-    //     absStatus: 3,
-    //   },
-    // ];
+    if (!matchingEez) return sovereigns;
 
     const maxPossibleNumberOfSovereigns = 3;
     for (let i = 1; i <= maxPossibleNumberOfSovereigns; i++) {
@@ -135,7 +121,7 @@ const SamplePage: React.FC = () => {
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Samples', url: '/browse/samples' },
-    { label: accession },
+    { label: accession as string },
   ];
   return (
     <section className="vf-content">
@@ -167,8 +153,8 @@ const SamplePage: React.FC = () => {
                     </h3>
                   </div>
                 )}
-                <ClearingHouseMetadata sampleAccession={accession} />
-                <AnnotationMetadata sampleAccession={accession} />
+                <ClearingHouseMetadata sampleAccession={accession as string} />
+                <AnnotationMetadata sampleAccession={accession as string} />
               </RouteForHash>
               <RouteForHash hash="#studies">
                 {/* <AssociatedStudies rootEndpoint="samples" /> */}

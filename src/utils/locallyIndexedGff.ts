@@ -1,8 +1,8 @@
 import Dexie, { Table } from 'dexie';
 import * as Comlink from 'comlink';
 import { filter, flatMap, forIn, groupBy, map, uniq } from 'lodash-es';
-import { BgzipIndexedFasta } from 'node_modules/@gmod/indexedfasta/dist';
 import { RemoteFile } from 'generic-filehandle2';
+import { BgzipIndexedFasta } from '@gmod/indexedfasta';
 
 export type ContigDetails = {
   contigName: string;
@@ -128,8 +128,8 @@ export async function getTypeaheadSuggestions(
       .toArray();
 
     return suggestions
-      .flatMap((contig) => contig.annotations[attribute])
-      .filter((attr) => attr.toUpperCase().startsWith(upperQuery))
+      .flatMap((contig) => contig.annotations[attribute] || [])
+      .filter((attr) => (attr as string).toUpperCase().startsWith(upperQuery))
       .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates
       .sort() // Sort alphabetically
       .slice(0, limit);
@@ -183,12 +183,14 @@ export function importGffToIndexedDB(opts: ImportOptions) {
   ) {
     const merged = new Map<Contig['contigId'], ContigDetails>();
     for (const { contigId, annotsToAppend, contigName, length } of updates) {
-      const acc = merged.get(contigId) ?? {
-        contigName: contigName,
-        length: length,
-        annotations: {},
-        annotationsPresence: {},
-      };
+      const acc =
+        merged.get(contigId) ??
+        ({
+          contigName: contigName,
+          length: length,
+          annotations: {},
+          annotationsPresence: {},
+        } as ContigDetails);
       for (const [annotType, annotValues] of Object.entries(annotsToAppend)) {
         if (!Array.isArray(annotValues)) continue;
         const prev = (acc as any).annotations[annotType] as any[] | undefined;

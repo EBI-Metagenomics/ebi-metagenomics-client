@@ -12,7 +12,6 @@ const { usePage, usePageSize, withQueryParamProvider } =
   createSharedQueryParamContextForTable();
 
 const BrowseSuperStudies: React.FC = () => {
-  console.log('BrowseSuperStudies');
   const [page] = usePage<number>();
   const [pageSize] = usePageSize<number>();
   const [hasData, setHasData] = useState(false);

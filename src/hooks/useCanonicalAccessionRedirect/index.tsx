@@ -1,7 +1,7 @@
 import useURLAccession from '@/hooks/useURLAccession';
 import { MGnifyResponseObj } from '@/hooks/data/useData';
 import { useNavigate } from 'react-router-dom';
-import { EnaDerivedObject } from 'interfaces';
+import { EnaDerivedObject } from 'interfaces/index';
 
 const useCanonicalAccessionRedirect = (
   data: MGnifyResponseObj | EnaDerivedObject

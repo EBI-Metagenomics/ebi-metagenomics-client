@@ -13,13 +13,14 @@ import enaUserImg from 'public/images/ico_ena_user.jpg';
 import useAuthToken from 'hooks/authentication/useAuthToken';
 import axios from 'utils/protectedAxios';
 import Loading from 'components/UI/Loading';
+import { AxiosError } from 'axios';
 
 const Login: React.FC = () => {
   const [, setAuthToken] = useAuthToken();
 
-  const usernameRef = useRef(null);
-  const passwordRef = useRef(null);
-  const loginErrorsContainerRef = useRef(null);
+  const usernameRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const loginErrorsContainerRef = useRef<HTMLParagraphElement | null>(null);
 
   const loggedInUsername = localStorage.getItem('mgnify.v2.username');
 
@@ -75,8 +76,8 @@ const Login: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.post(`/auth/sliding`, {
-        username: usernameRef.current.value,
-        password: passwordRef.current.value,
+        username: usernameRef.current?.value,
+        password: passwordRef.current?.value,
       });
       const accessToken = response.data.token;
 
@@ -86,10 +87,11 @@ const Login: React.FC = () => {
       setPassword('');
       navigate(desiredDestination);
     } catch (error) {
-      if (!error.response) {
+      const axiosError = error as AxiosError;
+      if (!axiosError.response) {
         setErrMsg('Network error');
       } else {
-        setErrMsg(error.response.data.detail);
+        setErrMsg((axiosError.response.data as any).detail);
       }
       loginErrorsContainerRef.current?.focus();
     } finally {

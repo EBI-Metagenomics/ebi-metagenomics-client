@@ -20,6 +20,7 @@ import {
 
 const ContigBrowser: React.FC = () => {
   const { viewState } = useLGV();
+  if (!viewState) return <Loading size="small" />;
   return (
     <div className="vf-stack vf-stack--400">
       <JBrowseLinearGenomeView viewState={viewState} />
@@ -114,7 +115,7 @@ const ContigsViewer: React.FC = () => {
     []
   );
 
-  if (loading) return <Loading size="small" />;
+  if (loading || !accession) return <Loading size="small" />;
   if (error) return <p>Error loading analysis</p>;
   if (!fasta) return <p>No contigs fasta file available</p>;
   if (!gff) return <p>No annotations available</p>;

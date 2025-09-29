@@ -47,7 +47,7 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
       {
         Header: 'Compression',
         accessor: 'attributes.file-format.compression',
-        Cell: ({ cell }) => (cell.value ? 'Yes' : '-'),
+        Cell: ({ cell }) => <>{cell.value ? 'Yes' : '-'}</>,
       },
       {
         Header: 'Format',
@@ -79,7 +79,8 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
 
   const loading = !data;
   if (loading) return <Loading size="small" />;
-  if (error || !data) return <FetchError error={error} />;
+  if (error) return <FetchError error={error} />;
+  if (!data) return <Loading />;
   if (!(data.data as MGnifyDatum[]).length)
     return (
       <InfoBanner

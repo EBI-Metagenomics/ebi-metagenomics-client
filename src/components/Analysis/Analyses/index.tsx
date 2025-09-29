@@ -7,7 +7,8 @@ import EMGTable from 'components/UI/EMGTable';
 import useURLAccession from 'hooks/useURLAccession';
 import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 import useStudyAnalysesList from 'hooks/data/useStudyAnalyses';
-import { Analysis, AnalysisList } from 'interfaces';
+import { Analysis, AnalysisList } from 'interfaces/index';
+import { ErrorFromFetch } from 'hooks/data/useData';
 
 const expectedPageSize = 10;
 type AssociatedAnaysesProps = {
@@ -21,19 +22,19 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = () => {
   const accession = useURLAccession();
   const [analysesPage] = useAnalysesPage<number>();
 
-  const { data, error, loading, download } = useStudyAnalysesList(accession, {
+  const { data, error, loading, download } = useStudyAnalysesList(accession || '', {
     page: analysesPage,
   });
 
   if (loading) return <Loading size="small" />;
-  if (error || !data) return <FetchError error={error} />;
+  if (error || !data) return <FetchError error={error as ErrorFromFetch} />;
 
   const columns = [
     {
       id: 'analysis_id',
       Header: 'Analysis accession',
       accessor: (analysis: Analysis) => analysis.accession,
-      Cell: ({ cell }) => (
+      Cell: ({ cell }: { cell: { value: string } }) => (
         <Link to={`/v2-analyses/${cell.value}`}>{cell.value}</Link>
       ),
     },
@@ -53,7 +54,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = () => {
     {
       id: 'sample',
       Header: 'Sample accession',
-      accessor: (analysis) => analysis?.sample?.accession,
+      accessor: (analysis: Analysis) => analysis?.sample?.accession,
       // Cell: ({ cell }) => (
       //   <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
       // ),
@@ -72,7 +73,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = () => {
         assembly: analysis.assembly?.accession,
         run: analysis.run?.accession,
       }),
-      Cell: ({ cell }) => (
+      Cell: ({ cell }: { cell: { value: { assembly?: string; run?: string } } }) => (
         <>
           {cell.value.assembly || cell.value.run}
           {/* {cell.value.assembly && ( */}
@@ -93,7 +94,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = () => {
         analysis.pipeline_version.toLowerCase().startsWith('v')
           ? analysis.pipeline_version.slice(1)
           : analysis.pipeline_version,
-      Cell: ({ cell }) => (
+      Cell: ({ cell }: { cell: { value: string } }) => (
         <Link to={`/pipelines/${cell.value}`}>{cell.value}</Link>
       ),
     },

@@ -49,18 +49,18 @@ const MIBIG_MAP = {
  * If the category is not mapped then use the R, this also
  * applies if the suplied category is not found (for example: multiles COG categories)
  */
-export function getCOGColour(cog) {
+export function getCOGColour(cog: any) {
   return COG_MAP[cog] || COG_MAP.R;
 }
 
 /**
  * Get the colour for the antiSMASH gene_kind.
  */
-export function getAntiSMASHColour(kind) {
+export function getAntiSMASHColour(kind: any) {
   return ANTISMASH_MAP_GK[kind] || ANTISMASH_MAP_GK.other;
 }
 
-export function getMiBIGColor(mibigClass) {
+export function getMiBIGColor(mibigClass: any) {
   return MIBIG_MAP[mibigClass.toLowerCase().split()[0]] || '#BEBEBE';
 }
 
@@ -75,7 +75,7 @@ const CRISPR_MAP = {
   RightFLANK: '#e58f9e',
 };
 
-export function getCRISPRColour(featureType) {
+export function getCRISPRColour(featureType: any) {
   return CRISPR_MAP[featureType] || COLOUR_ABSENCE;
 }
 
@@ -94,6 +94,6 @@ const FEATURE_TYPE_MAP = {
   conjugative_transposon: '#734595',
 };
 
-export function getFeatureTypeColour(featureType) {
+export function getFeatureTypeColour(featureType: any) {
   return FEATURE_TYPE_MAP[featureType] || COLOUR_ABSENCE;
 }

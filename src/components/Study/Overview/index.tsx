@@ -10,13 +10,12 @@ import UserContext from 'pages/Login/UserContext';
 // import { PublicationAnnotationsPopupBadge } from 'components/Publications/EuropePMCAnnotations';
 import ProgrammaticAccessBox from 'components/UI/ProgrammaticAccess';
 import { ENA_VIEW_URL } from 'utils/urls';
-import { Study } from 'interfaces';
+import { Study } from 'interfaces/index';
 
 type StudyOverviewProps = {
   data: Study;
 };
 const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
-  console.log('StudyOverview');
   const { config } = useContext(UserContext);
   const lineage = data.biome?.lineage || '';
   // const publications = included.filter(({ type }) => type === 'publications');

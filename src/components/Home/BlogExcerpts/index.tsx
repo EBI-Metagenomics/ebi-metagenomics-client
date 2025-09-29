@@ -30,7 +30,7 @@ const BlogExcerpt: React.FC<{
 }> = ({ title, header, image, excerpt, url }) => {
   return (
     <InnerCard
-      image={absolutifyProtocolRelativeURL(image, true)}
+      image={absolutifyProtocolRelativeURL(image ?? '', true)}
       title={header}
       label={removeHTMLTags(excerpt)}
       to={absolutifyProtocolRelativeURL(url, true)}

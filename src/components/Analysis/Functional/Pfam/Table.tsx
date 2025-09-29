@@ -17,7 +17,7 @@ const PfamTable: React.FC = () => {
   const [page] = usePfamPage<number>();
   const [pageSize] = usePfamPageSize<number>();
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
-    `analyses/${overviewData.id}/pfam-entries`,
+    overviewData ? `analyses/${overviewData.id}/pfam-entries` : undefined,
     {
       page: page as number,
       page_size: pageSize as number,

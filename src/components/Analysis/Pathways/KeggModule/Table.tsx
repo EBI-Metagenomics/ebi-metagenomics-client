@@ -17,7 +17,7 @@ const KeggTable: React.FC = () => {
   const [page] = useKeggPage<number>();
   const [pageSize] = useKeggPageSize<number>();
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
-    `analyses/${overviewData.id}/kegg-modules`,
+    overviewData ? `analyses/${overviewData.id}/kegg-modules` : undefined,
     {
       page: page as number,
       page_size: pageSize as number,

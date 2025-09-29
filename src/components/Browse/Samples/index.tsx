@@ -39,7 +39,7 @@ const BrowseSamples: React.FC = () => {
     ordering: order as string,
     lineage: biome as string,
     page_size: pageSize as number,
-    search: (search as string) || undefined,
+    search: (search as string) || '',
   });
 
   const columns = React.useMemo(
@@ -77,7 +77,7 @@ const BrowseSamples: React.FC = () => {
         id: 'last_update',
         Header: 'Last Updated',
         accessor: 'attributes.last-update',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
       },
     ],
     []

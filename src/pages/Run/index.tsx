@@ -27,7 +27,7 @@ const RunPage: React.FC = () => {
     {
       key: 'Study',
       value: () => {
-        if (!runData.relationships.study.data) {
+        if (!runData.relationships.study?.data) {
           return (
             <ExtLink
               href={`${ENA_VIEW_URL}${runData.attributes['ena-study-accession']}`}
@@ -46,8 +46,8 @@ const RunPage: React.FC = () => {
     {
       key: 'Sample',
       value: () => (
-        <Link to={`/samples/${runData.relationships.sample.data.id}`}>
-          {runData.relationships.sample.data.id}
+        <Link to={`/samples/${runData.relationships.sample?.data.id}`}>
+          {runData.relationships.sample?.data.id}
         </Link>
       ),
     },
@@ -74,7 +74,7 @@ const RunPage: React.FC = () => {
     { label: 'Home', url: '/' },
     {
       label: 'Associated sample',
-      url: `/samples/${runData.relationships.sample.data.id}`,
+      url: `/samples/${runData.relationships.sample?.data.id}`,
     },
     { label: runData.id },
   ];

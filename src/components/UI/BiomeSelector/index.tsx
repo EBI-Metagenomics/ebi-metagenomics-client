@@ -43,7 +43,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
     'biomes/root/children?depth_gte=1&depth_lte=4&page_size=200'
   );
   const [biomeQP, setBiomeQP] = useSharedQueryParamState<string>('biome');
-  const [value, setValue] = useState<OptionProps | undefined>();
+  const [value, setValue] = useState<OptionProps | null>();
   const options = React.useMemo(() => {
     if (loading) {
       return [{ label: 'Loading...', value: 'root' }];
@@ -95,6 +95,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
         onChange={(option, action) => {
           if (action.action === 'select-option') {
             setValue(option);
+            if (!option) return;
             const biomeId =
               typeof option.value === 'string' ? option.value : option.value.id;
             onSelect(biomeId);

@@ -14,7 +14,7 @@ const KOTable: React.FC = () => {
   const [page] = useQueryParamState('page');
   const [pageSize] = useQueryParamState('page_size');
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
-    `analyses/${overviewData.id}/kegg-orthologs`,
+    overviewData ? `analyses/${overviewData.id}/kegg-orthologs` : undefined,
     {
       page: page as number,
       page_size: pageSize as number,

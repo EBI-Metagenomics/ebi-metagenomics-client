@@ -104,7 +104,7 @@ const MobileNav: React.FC = () => {
 };
 
 const MainMenu: React.FC = () => {
-  const imgRef = useRef(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const { config } = useContext(UserContext);
   const isSmall = useMedia('(max-width: 768px)');
   const [animationState, setAnimationState] = useState({
@@ -118,9 +118,9 @@ const MainMenu: React.FC = () => {
   useLayoutEffect(() => {
     const onScroll = (): void => {
       if (isSmall) return;
-      const topPos = imgRef.current.getBoundingClientRect().top;
+      const topPos = imgRef.current && imgRef.current.getBoundingClientRect().top;
       let newMargin = START_MARGIN;
-      if (topPos < START_POS) {
+      if (topPos !== null && topPos < START_POS) {
         const m = (START_MARGIN - 1) / START_POS;
         const b = START_MARGIN - m * START_POS;
         newMargin = m * topPos + b;
@@ -135,7 +135,7 @@ const MainMenu: React.FC = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, [isSmall]);
   // Getting link to Mgnify Hmmer from the config
-  pages[3].href = config.hmmer;
+  pages[3].href = config.hmmer as string;
   // Getting link to API from the config
   pages[5].href = config.api;
 

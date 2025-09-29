@@ -7,7 +7,7 @@ import { getBiomeIcon } from 'utils/biomes';
 import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 
 import useProtectedApiCall from 'hooks/useProtectedApiCall';
-import { StudyList } from 'interfaces';
+import { Study, StudyList } from 'interfaces/index';
 
 const { usePage, withQueryParamProvider } =
   createSharedQueryParamContextForTable();
@@ -19,8 +19,8 @@ const MyDataStudies: React.FC = () => {
   const [myData, setMyData] = useState<StudyList | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isStale] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
-  const [downloadURL] = useState<string | null>(null);
+  const [error, setError] = useState<Error>();
+  const [downloadURL] = useState<string>();
 
   useEffect(() => {
     let isMounted = true;
@@ -40,7 +40,7 @@ const MyDataStudies: React.FC = () => {
         }
       } catch (apiError) {
         if (isMounted) {
-          setError(apiError);
+          setError(apiError as Error);
           setLoading(false);
         }
       }
@@ -85,7 +85,7 @@ const MyDataStudies: React.FC = () => {
       {
         Header: 'Last updated',
         accessor: 'updated_at',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
       },
     ],
     []
@@ -99,9 +99,9 @@ const MyDataStudies: React.FC = () => {
   return (
     <section>
       <h4>My Studies</h4>
-      <EMGTable
+      <EMGTable<Study>
         cols={columns}
-        data={myData}
+        data={myData ?? []}
         initialPage={(page as number) - 1}
         sortable
         loading={loading}

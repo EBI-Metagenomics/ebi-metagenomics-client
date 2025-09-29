@@ -74,9 +74,12 @@ const GOPieChart: React.FC<GOPieChartProps> = ({
       layout: 'vertical',
 
       labelFormatter() {
+        // @ts-ignore
         if (this.name.length > 15) {
+          // @ts-ignore
           return `${this.name.slice(0, 15)}...`;
         }
+        // @ts-ignore
         return this.name;
       },
     },

@@ -19,7 +19,7 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({ addToStorage }) => {
   const [count, setCount] = useState(-1);
   const [shouldCheck, setShouldCheck] = useState(false);
   const [jobRetrieved, setJobRetrieved] = useState(false);
-  const [job, setJob] = useState(null);
+  const [job, setJob] = useState<any>();
 
   useInterval(() => {
     if (!jobId || jobRetrieved) return;

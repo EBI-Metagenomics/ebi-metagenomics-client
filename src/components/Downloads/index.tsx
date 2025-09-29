@@ -26,7 +26,7 @@ const Downloads: React.FC<DownloadsProps> = ({ endpoint, accession }) => {
       {
         Header: 'Compression',
         accessor: 'attributes.file-format.compression',
-        Cell: ({ cell }) => (cell.value ? 'Yes' : '-'),
+        Cell: ({ cell }) => <>{cell.value ? 'Yes' : '-'}</>,
       },
       {
         Header: 'Format',

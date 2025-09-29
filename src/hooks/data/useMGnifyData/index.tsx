@@ -4,7 +4,7 @@ import useData, {
   MGnifyResponse,
   KeyValue,
   ResponseFormat,
-} from 'hooks/data/useData';
+} from '@/hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
 
 interface MgnifyDataResponse extends DataResponse {
@@ -13,7 +13,7 @@ interface MgnifyDataResponse extends DataResponse {
 }
 
 const useMGnifyData: (
-  endpoint: string,
+  endpoint?: string,
   parameters?: KeyValue,
   fetchOptions?: RequestInit,
   format?: ResponseFormat

@@ -37,7 +37,7 @@ const GenomesTextSearch: React.FC = () => {
     page,
     ordering: order,
     page_size: pageSize,
-    search: (search as string) || undefined,
+    search: (search as string) || '',
   });
 
   const columns = [
@@ -94,7 +94,8 @@ const GenomesTextSearch: React.FC = () => {
   ];
 
   if (loading && !isStale) return <Loading size="small" />;
-  if (error || !genomesList) return <FetchError error={error} />;
+  if (error) return <FetchError error={error} />;
+  if (!genomesList) return null;
 
   return (
     <>

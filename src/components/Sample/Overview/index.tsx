@@ -12,7 +12,7 @@ type SampleOverviewProps = {
 };
 
 const SampleOverview: React.FC<SampleOverviewProps> = ({ data }) => {
-  const lineage = data.relationships.biome.data.id;
+  const lineage = data.relationships.biome?.data?.id || 'root';
   return (
     <section>
       <div className="vf-grid">

@@ -70,7 +70,7 @@ export function createSharedQueryParamContext<P extends SharedQueryParamSet>(
   };
 
   return {
-    ...(hooks as HooksFor<P>),
+    ...(hooks as unknown as HooksFor<P>),
     QueryParamProvider,
     withQueryParamProvider,
   } as {

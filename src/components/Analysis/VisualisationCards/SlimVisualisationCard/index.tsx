@@ -1,19 +1,12 @@
 import React, { useRef, useState } from 'react';
 import Tooltip from 'components/UI/Tooltip';
+import { Download } from '@/interfaces';
 
 interface SlimVisualisationCardProps {
   children?: React.ReactNode;
   onDownload?: () => void;
   onCopy?: () => void;
-  fileData: {
-    alias: string;
-    downloadType: string;
-    fileType: string;
-    longDescription: string;
-    shortDescription: string;
-    download_group?: string;
-    url: string;
-  };
+  fileData: Download;
 }
 
 const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
@@ -25,10 +18,10 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
   const [showCopiedMessage, setShowCopiedMessage] = useState(false);
   const {
     alias,
-    downloadType,
-    fileType,
-    longDescription,
-    shortDescription,
+    download_type: downloadType,
+    file_type: fileType,
+    long_description: longDescription,
+    short_description: shortDescription,
     url,
   } = fileData;
   const urlRef = useRef<HTMLAnchorElement>(null);

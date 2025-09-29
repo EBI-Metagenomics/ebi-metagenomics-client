@@ -5,7 +5,7 @@ import {
   PublicationDetail,
   PublicationEuropePmcCore,
   PublicationEuropePmcAnnotations,
-} from 'interfaces';
+} from 'interfaces/index';
 import useApiData from 'hooks/data/useApiData';
 import axios from 'axios';
 

@@ -75,7 +75,7 @@ const ContigsTable: React.FC = () => {
   const [, setContigsPageCursor] = useQueryParamState('contigsPageCursor');
 
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
-  const assemblyId = analysisOverviewData.relationships.assembly?.data?.id;
+  const assemblyId = analysisOverviewData?.relationships?.assembly?.data?.id;
   const { crates, loading: loadingCrates } = useCrates(
     `assemblies/${assemblyId}/extra-annotations`
   );
@@ -146,8 +146,8 @@ const ContigsTable: React.FC = () => {
           const crateFlags = allCrates.map((crate) => (
             <ContigFeatureFlag
               key={crate.url}
-              annotationType={crate.track.label.substring(0)}
-              present={crate.asciigff.indexOf(cell.value) >= 0}
+              annotationType={crate.track?.label?.substring(0) ?? ''}
+              present={(crate?.asciigff?.indexOf(cell.value) || 0) >= 0}
             />
           ));
           return <div className="emg-contig-feature-flags">{crateFlags}</div>;
@@ -157,7 +157,8 @@ const ContigsTable: React.FC = () => {
     return cols;
   }, [setSelectedContig, allCrates]);
 
-  if (error || !data) return <FetchError error={error} />;
+  if (error) return <FetchError error={error} />;
+  if (!data) return null;
 
   return (
     <div>
@@ -165,7 +166,7 @@ const ContigsTable: React.FC = () => {
         cols={contigsColumns}
         data={data}
         showPagination={false}
-        Title={<>Assembly Contigs ({data.meta.pagination.count})</>}
+        Title={<>Assembly Contigs ({(data as any).meta.pagination.count})</>} // TODO
         initialPage={0}
         className="mg-contigs-table"
         namespace="contigs_"
@@ -173,7 +174,7 @@ const ContigsTable: React.FC = () => {
         showTextFilter
       />
       <CursorPagination
-        paginationLinks={data.links}
+        paginationLinks={(data as any).links} // TODO
         handleCursor={(cursor) => setContigsPageCursor(cursor)}
       />
     </div>

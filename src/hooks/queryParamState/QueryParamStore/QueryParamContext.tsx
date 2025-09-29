@@ -94,9 +94,6 @@ const SharedQueryParamsProvider: React.FC<{ params: SharedQueryParamSet }> = ({
 
   const isFirstMount = useFirstMountState();
   useEffect(() => {
-    console.debug('Handling tick of SharedQueryParamsProvider');
-    console.debug('queryParams', queryParams);
-    console.debug('searchParams', searchParams);
     // Update query params in the address bar if the params meaningfully change
     if (isFirstMount) return; // allow a tick for useEffectOnce to take priority
 
@@ -113,58 +110,34 @@ const SharedQueryParamsProvider: React.FC<{ params: SharedQueryParamSet }> = ({
 
       if (isNullishOrDefault) {
         if (next.has(paramName)) {
-          console.log(
-            `Removing ${paramName} from address bar because internal representation is nullish/default (${String(
-              value
-            )})`
-          );
           next.delete(paramName);
         }
         return;
       }
 
-      const serializedValue = serializer ? serializer(value) : String(value);
+      const serializedValue = (
+        serializer ? serializer(value) : String(value)
+      ) as string;
 
       if (!isEqual(currentSerializedValue, serializedValue)) {
-        console.log(
-          `Setting ${paramName} to`,
-          serializedValue,
-          '(was',
-          currentSerializedValue,
-          ')'
-        );
         next.set(paramName, serializedValue);
-      } else {
-        console.log(
-          `Skipping ${paramName} because it is already in the address bar with the same value`
-        );
       }
     });
 
     const nextStr = next.toString();
     if (nextStr !== prev.toString()) {
-      console.log(
-        'Updating address bar params',
-        next,
-        `since ${prev} !== ${nextStr}`
-      );
       setSearchParams(next, { replace: true });
-    } else {
-      console.log('No search param changes; skipping setSearchParams');
     }
   }, [queryParams]);
 
   useEffectOnce(() => {
     // On the first render, set the query params values to any incoming from the address bar
-    console.log(
-      `Handling first render of SharedQueryParamsProvider. And is first? ${isFirstMount}`
-    );
     if (searchParams) {
       const searchParamsValuesToSyncInwards: Record<string, any> = {};
       searchParams.forEach((paramValue, paramName) => {
         if (has(params, paramName)) {
           searchParamsValuesToSyncInwards[paramName] =
-            queryParams[paramName].parser(paramValue);
+            queryParams[paramName].parser?.(paramValue);
         }
       });
       setQueryParams((prev) => {
@@ -183,7 +156,6 @@ const SharedQueryParamsProvider: React.FC<{ params: SharedQueryParamSet }> = ({
   });
 
   const setWithLogging = (value) => {
-    console.log('Setting queryParams', value);
     setQueryParams(value);
   };
 

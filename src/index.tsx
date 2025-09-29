@@ -1,6 +1,5 @@
 import './utils/wdyr.js';
 
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import * as Sentry from '@sentry/react';
 import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';

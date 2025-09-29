@@ -88,6 +88,9 @@ export default [
       'max-len': ['warn', { code: 140, ignoreUrls: true }],
 
       'prettier/prettier': 'warn',
+
+      'react/react-in-jsx-scope': 'off',
+      'react/jsx-uses-react': 'off',
     },
   },
 

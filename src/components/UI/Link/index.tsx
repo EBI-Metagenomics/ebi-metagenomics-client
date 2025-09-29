@@ -1,10 +1,5 @@
-import {
-  useLinkClickHandler,
-  Link as DefaultLink,
-  LinkProps as DefaultLinkProps,
-} from 'react-router-dom';
+import { Link as DefaultLink, LinkProps as DefaultLinkProps, useLinkClickHandler } from 'react-router-dom';
 import React, { ForwardedRef } from 'react';
-import { forEach } from 'lodash-es';
 
 const Link: React.FC<DefaultLinkProps> = React.forwardRef(
   (
@@ -24,38 +19,12 @@ const Link: React.FC<DefaultLinkProps> = React.forwardRef(
       target,
     });
 
-    const setQueryParam = (value: string, name: string) => {
-      // TODO
-      console.log('setQueryParam', value, name);
-      // dispatch(
-      //   createParamFromURL({
-      //     name,
-      //     value,
-      //   })
-      // );
-    };
-
     return (
       <DefaultLink
         {...rest}
         to={to}
         onClick={(event) => {
           onClick?.(event);
-          if (state) {
-            forEach(state, setQueryParam);
-          }
-          let stringOfParams = '';
-          if (typeof to === 'string' && to.indexOf('?') > -1) {
-            [, stringOfParams] = to.split('?');
-          } else if (
-            to.search &&
-            typeof to.search === 'string' &&
-            to.search.indexOf('?') > -1
-          ) {
-            [, stringOfParams] = to.search.split('?');
-          }
-          new URLSearchParams(stringOfParams).forEach(setQueryParam);
-
           if (!event.defaultPrevented) {
             handleClick(event);
           }

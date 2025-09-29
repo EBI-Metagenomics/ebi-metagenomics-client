@@ -67,19 +67,19 @@ export function getBiomeIcon(lineage: string): string {
     'default_b';
   return biome;
 }
-type Biome = { icon?: string; name: string };
+type Biome = { icon: string; name: string };
 export function simplifyBiomeIcons(biomes: Biome[]): Biome[] {
   const groupedBiomes = {};
-  biomes.forEach((b) => {
+  biomes.forEach((b: Biome) => {
     if (groupedBiomes[b.icon]) {
       groupedBiomes[b.icon].push(b.name);
     } else {
       groupedBiomes[b.icon] = [b.name];
     }
   });
-  const icons = [];
+  const icons: Biome[] = [];
   Object.keys(groupedBiomes).forEach((biomeIcon) => {
-    const biomesInGroup = groupedBiomes[biomeIcon].sort().join(', ');
+    const biomesInGroup: string = groupedBiomes[biomeIcon].sort().join(', ');
     icons.push({ name: biomesInGroup, icon: biomeIcon });
   });
   return icons;

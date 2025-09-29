@@ -51,7 +51,8 @@ const Results: React.FC<ResultsProps> = ({
     {
       id: 'biome_id',
       Header: 'Biome',
-      accessor: (genome) => decodeURI(last(split(genome.mgnify.biome, '/'))),
+      accessor: (genome) =>
+        decodeURI(last(split(genome.mgnify.biome, '/')) as string),
       Cell: ({ cell }) => (
         <span
           className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}

@@ -70,8 +70,11 @@ const SeqLengthChart: React.FC<SeqLengthChartProps> = ({ summaryData }) => {
         pointPadding: -0.2,
         tooltip: {
           pointFormatter() {
+            // @ts-ignore
             return `<span style="color:${this.color}">\u25CF</span> ${
+              // @ts-ignore
               this.category
+              // @ts-ignore
             }: <b>${this.y.toFixed(2)}</b><br/>`;
           },
         },

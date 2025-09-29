@@ -1,19 +1,22 @@
 /* eslint-disable */
 
-import React, { useContext, useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import './style.css';
 import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import AsvMarkerGeneTable from 'components/Analysis/Taxonomy/AsvMarkerGeneTable';
 import ClosedReferenceMarkerGeneTable from 'components/Analysis/Taxonomy/ClosedReferenceMarkerGeneTable';
+import { Download } from '@/interfaces';
 
-type TaxonomicAnalysesProps = {
-  accession: string;
-};
+type MarkerGeneSummary = {
+  // TODO: more specific types for marker_gene_summary
+  closed_reference: Record<string, any>,
+  asv: Record<string, any>,
+}
 
 const extractNavItems = (downloads, taxonomyKey) => {
-  const navItems = [];
+  const navItems: {label: string; id: string; contents: any[]}[] = [];
   downloads.filter((download) => {
     if (download.download_group.includes(taxonomyKey)) {
       const markerType = download.download_group.split('.').pop();
@@ -34,14 +37,16 @@ const extractNavItems = (downloads, taxonomyKey) => {
   return navItems;
 };
 
-const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
+const Taxonomy = () => {
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
   const [activeNavItem, setActiveNavItem] = useState('asv-ssu');
   const [activeCategory, setActiveCategory] = useState('taxonomy-asv');
-  const [activeContent, setActiveContent] = useState(null);
+  const [activeContent, setActiveContent] = useState<Download[]>([]);
+
+  if (!analysisOverviewData) return null;
 
   const asvNavItems = extractNavItems(
-    analysisOverviewData.downloads,
+    analysisOverviewData?.downloads,
     'taxonomies.asv'
   );
 
@@ -54,11 +59,11 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
     'taxonomies.closed_reference'
   );
 
-  const visualizationRef = useRef(null);
-  const asvDetailsRef = useRef(null);
-  const closedRefDetailsRef = useRef(null);
+  const visualizationRef = useRef<HTMLDetailsElement>(null);
+  const asvDetailsRef = useRef<HTMLDetailsElement>(null);
+  const closedRefDetailsRef = useRef<HTMLDetailsElement>(null);
 
-  const handleNavItemClick = (item, category, content) => {
+  const handleNavItemClick = (item, category, content: Download[]) => {
     setActiveNavItem(item);
     setActiveCategory(category);
     setActiveContent(content);
@@ -153,7 +158,9 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   };
 
   const processClosedRefMarkerGenes = () => {
-    if (!analysisOverviewData.metadata?.marker_gene_summary?.closed_reference?.marker_genes) {
+    const mgs = analysisOverviewData.metadata?.marker_gene_summary as MarkerGeneSummary;
+
+    if (!mgs?.closed_reference?.marker_genes) {
       return {
         SSU: {
           bacteria: { read_count: 0, majority_marker: false },
@@ -180,8 +187,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
       };
     }
 
-    const closedRef =
-      analysisOverviewData.metadata.marker_gene_summary.closed_reference.marker_genes;
+    const closedRef = mgs.closed_reference.marker_genes;
 
     const ssuData = closedRef.SSU || {};
     const ssuBacteria = ssuData.Bacteria || {
@@ -258,7 +264,8 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   };
 
   const processAsvMarkerGenes = () => {
-    if (!analysisOverviewData.metadata?.marker_gene_summary?.asv?.amplified_regions) {
+    const mgs = analysisOverviewData.metadata?.marker_gene_summary as MarkerGeneSummary;
+    if (!mgs?.asv?.amplified_regions) {
       return [];
     }
 
@@ -269,8 +276,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
       marker_gene: string;
     };
 
-    return analysisOverviewData.metadata.marker_gene_summary
-      .asv.amplified_regions as AsvMarkerData[];
+    return mgs.asv.amplified_regions as AsvMarkerData[];
   };
 
   const groupedClosedRefMarkerGenes = processClosedRefMarkerGenes();

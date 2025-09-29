@@ -25,12 +25,14 @@ const InterPro: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
   const [total, setTotal] = useState(-1);
   const [colorMap, setColorMap] = useState(new Map());
-  const [selectedName, setSelectedName] = useState(null);
+  const [selectedName, setSelectedName] = useState<string>();
   const [page] = useInterproPage<number>();
   const [pageSize] = useInterproPageSize<number>();
   const [order] = useInterpoOrder<string>();
   const { data, loading, error, isStale } = useMGnifyData(
-    `analyses/${overviewData.id}/interpro-identifiers`,
+    overviewData
+      ? `analyses/${overviewData.id}/interpro-identifiers`
+      : undefined,
     {
       page: page as number,
       ordering: order as string,
@@ -88,13 +90,13 @@ const InterPro: React.FC = () => {
         total === -1 ? (
           <Loading size="small" />
         ) : (
-          ((100 * cell.value) / total).toFixed(2)
+          <>{((100 * cell.value) / total).toFixed(2)}</>
         ),
     },
   ];
   const handleMouseEnterRow = (row: Row): void =>
     setSelectedName(row.values.name);
-  const handleMouseLeaveRow = (): void => setSelectedName(null);
+  const handleMouseLeaveRow = (): void => setSelectedName(undefined);
   return (
     <div className="vf-stack">
       <div>

@@ -50,7 +50,7 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
 
   const [facetData, facetSize] = useMemo(() => {
     const tmpFacet = (
-      (data || searchData?.[pathname]?.data)?.facets || []
+      ((data || searchData?.[pathname]?.data)?.facets || []) as any[]
     ).filter((f) => f.id === facetName)?.[0];
     const tmpData = tmpFacet?.facetValues;
     const tmpFacetSize = tmpFacet?.total;

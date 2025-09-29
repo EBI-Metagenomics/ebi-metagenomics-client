@@ -17,7 +17,9 @@ const AntiSMASHTable: React.FC = () => {
   const [page] = useAntismashPage<number>();
   const [pageSize] = useAntismashPageSize<number>();
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
-    `analyses/${overviewData.id}/antismash-gene-clusters`,
+    overviewData
+      ? `analyses/${overviewData.id}/antismash-gene-clusters`
+      : undefined,
     {
       page: page as number,
       page_size: pageSize as number,

@@ -5,9 +5,9 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { MGnifyResponseList } from '@/hooks/data/useData';
 import { getBiomeIcon } from '@/utils/biomes';
 import Loading from 'components/UI/Loading';
-import { createSharedQueryParamContextForTable } from '@hooks/queryParamState/useQueryParamState';
 import Link from 'components/UI/Link';
-import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 
 const {
   useBiomesPage,
@@ -34,7 +34,7 @@ const BrowseBiomes: React.FC = () => {
     page,
     ordering: order,
     page_size: pageSize,
-    search: (search as string) || undefined,
+    search: (search as string) || '',
   });
 
   const columns = React.useMemo(

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createViewState } from '@jbrowse/react-linear-genome-view2';
-import { Download } from 'interfaces';
+import { Download } from 'interfaces/index';
 import { BGZipService } from 'components/Analysis/BgZipService';
 
 type LGVViewState = ReturnType<typeof createViewState>;

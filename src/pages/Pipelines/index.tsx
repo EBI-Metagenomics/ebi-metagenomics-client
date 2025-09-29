@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import Pipeline from 'components/Pipeline';
 import ExtLink from 'components/UI/ExtLink';
 import useURLAccession from '@/hooks/useURLAccession';
+import Loading from 'components/UI/Loading';
 
 const Pipelines: React.FC = () => {
   const accession = useURLAccession();
+  if (!accession) return <Loading/>;
   if (accession.toLowerCase() !== 'pipelines') {
     return <Pipeline version={accession} />;
   }

@@ -37,7 +37,8 @@ const GenomesTable: React.FC = () => {
     }
   );
   if (loading && !isStale) return <Loading size="small" />;
-  if (error || !data) return <FetchError error={error} />;
+  if (error) return <FetchError error={error} />;
+  if (!data) return <Loading />;
 
   const columns = [
     {
@@ -101,7 +102,7 @@ const GenomesTable: React.FC = () => {
       id: 'last_update',
       Header: 'Last Updated',
       accessor: 'attributes.last-update',
-      Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+      Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
     },
   ];
 

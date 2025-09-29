@@ -5,6 +5,7 @@ import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
 import { useNavigate } from 'react-router-dom';
 import UserContext from 'pages/Login/UserContext';
 import config from '@/utils/config';
+import { noop } from 'lodash-es';
 
 const MegaMenu: React.FC = () => {
   const { isAuthenticated } = useContext(UserContext);
@@ -27,7 +28,7 @@ const MegaMenu: React.FC = () => {
     setActiveSection(null);
   };
 
-  const searchBox = useRef<HTMLInputElement>();
+  const searchBox = useRef<HTMLInputElement | null>(null);
   const [isAccessionLike, setIsAccessionLike] = useState(false);
   const [nextURL, setNextURL] = useState('/search/studies');
 
@@ -50,7 +51,7 @@ const MegaMenu: React.FC = () => {
     //   })
     // );
   };
-  const menuRef = useRef(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -363,13 +364,13 @@ const MegaMenu: React.FC = () => {
                     className="vf-form vf-form--search vf-form--search--mini | vf-sidebar vf-sidebar--end"
                     onSubmit={async (e) => {
                       e.preventDefault();
-                      const searchText = searchBox.current.value;
+                      const searchText = searchBox.current?.value;
                       if (!isAccessionLike) {
-                        setSearchQuery(searchText);
+                        setSearchQuery(searchText ?? '');
                       }
                       navigate(nextURL);
-                      searchBox.current.value = '';
-                      searchBox.current.blur();
+                      if (searchBox.current) searchBox.current.value = '';
+                      searchBox.current?.blur();
                     }}
                   >
                     <div className="vf-sidebar__inner">
@@ -407,10 +408,10 @@ const MegaMenu: React.FC = () => {
                           type={isAccessionLike ? 'button' : 'submit'}
                           onClick={
                             !isAccessionLike
-                              ? null
+                              ? noop
                               : () => {
-                                  const searchText = searchBox.current.value;
-                                  setSearchQuery(searchText);
+                                  const searchText = searchBox.current?.value;
+                                  setSearchQuery(searchText ?? '');
                                   navigate('/search/submit');
                                 }
                           }

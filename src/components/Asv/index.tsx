@@ -8,6 +8,7 @@ import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/De
 import ChimericProportions from 'components/Asv/ChimericProportions';
 import AsvDistribution from 'components/Asv/AsvDistribution';
 import PrimerIdentification from 'components/PrimerIdentification';
+import InfoBanner from 'components/UI/InfoBanner';
 
 const Asv: React.FC = () => {
   const [activeTab, setActiveTab] = useState(() => {
@@ -81,16 +82,25 @@ const Asv: React.FC = () => {
             display: activeTab === 'qc-statistics' ? 'block' : 'none',
           }}
         >
-          <DetailedVisualisationCard ftpLink={dada2StatsFile.url}>
-            <div className="vf-card__content | vf-stack vf-stack--400">
-              <h3 className="vf-card__heading">Amplicon Sequencing Results </h3>
-              {/* <p className="vf-card__subheading">With sub–heading</p> */}
-              <p className="vf-card__text">
-                {/* <ChimericProportions fileUrl="http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/amplicon/asv/SRR1111111_dada2_stats.tsv" /> */}
-                <ChimericProportions fileUrl={dada2StatsFile.url} />
-              </p>
-            </div>
-          </DetailedVisualisationCard>
+          {dada2StatsFile ? (
+            <DetailedVisualisationCard ftpLink={dada2StatsFile?.url}>
+              <div className="vf-card__content | vf-stack vf-stack--400">
+                <h3 className="vf-card__heading">
+                  Amplicon Sequencing Results{' '}
+                </h3>
+                {/* <p className="vf-card__subheading">With sub–heading</p> */}
+                <p className="vf-card__text">
+                  {/* <ChimericProportions fileUrl="http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/amplicon/asv/SRR1111111_dada2_stats.tsv" /> */}
+                  <ChimericProportions fileUrl={dada2StatsFile?.url} />
+                </p>
+              </div>
+            </DetailedVisualisationCard>
+          ) : (
+            <InfoBanner
+              type={'warning'}
+              title={'No DADA2 statistics available.'}
+            />
+          )}
         </section>
         <section
           className="vf-tabs__section"
@@ -101,14 +111,21 @@ const Asv: React.FC = () => {
             display: activeTab === 'asv-distribution' ? 'block' : 'none',
           }}
         >
-          <DetailedVisualisationCard ftpLink={asvDistributionFile.url}>
-            <div className="vf-card__content | vf-stack vf-stack--400">
-              <h3 className="vf-card__heading">ASV Distribution </h3>
-              <p className="vf-card__text">
-                <AsvDistribution fileUrl={asvDistributionFile.url} />
-              </p>
-            </div>
-          </DetailedVisualisationCard>
+          {asvDistributionFile ? (
+            <DetailedVisualisationCard ftpLink={asvDistributionFile.url}>
+              <div className="vf-card__content | vf-stack vf-stack--400">
+                <h3 className="vf-card__heading">ASV Distribution </h3>
+                <p className="vf-card__text">
+                  <AsvDistribution fileUrl={asvDistributionFile.url} />
+                </p>
+              </div>
+            </DetailedVisualisationCard>
+          ) : (
+            <InfoBanner
+              type={'warning'}
+              title={'No ASV distribution available.'}
+            />
+          )}
         </section>
 
         <section

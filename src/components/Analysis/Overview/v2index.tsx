@@ -1,8 +1,7 @@
-import React, { useContext, useMemo } from 'react';
-import KeyValueList from 'components/UI/KeyValueList';
+import React, { useContext } from 'react';
+import KeyValueList, { KeyValueItemsList } from 'components/UI/KeyValueList';
 import { Link } from 'react-router-dom';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-import useMGnifyData from 'hooks/data/useMGnifyData';
 import '../style.css';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 
@@ -11,48 +10,41 @@ function isAssembly(experimentType: string): boolean {
   return ['ASSEM', 'HYASS', 'LRASS'].includes(experimentType);
 }
 
-type Run = {
-  attributes: {
-    'instrument-platform': string;
-    'instrument-model': string;
-  };
-};
+// type HybridAnalysisDetailsProps = {
+//   assemblyId: string;
+// };
 
-type HybridAnalysisDetailsProps = {
-  assemblyId: string;
-};
-
-const HybridAnalysisDetails: React.FC<HybridAnalysisDetailsProps> = ({
-  assemblyId,
-}) => {
-  const { loading: loadingRuns, data: runs } = useMGnifyData(
-    `assemblies/${assemblyId}/runs`
-  );
-  const instruments = useMemo(() => {
-    if (loadingRuns) return '';
-    const runsData = runs.data as Run[];
-    return runsData
-      .map(
-        (run) =>
-          `${run.attributes['instrument-platform']} – ${run.attributes['instrument-model']}`
-      )
-      .join('\n');
-  }, [loadingRuns, runs]);
-  return (
-    <KeyValueList
-      list={[
-        {
-          key: 'Experiment type',
-          value: 'Hybrid assembly',
-        },
-        {
-          key: 'Instruments',
-          value: instruments,
-        },
-      ].filter(({ value }) => !!value)}
-    />
-  );
-};
+// const HybridAnalysisDetails: React.FC<HybridAnalysisDetailsProps> = ({
+//   assemblyId,
+// }) => {
+//   const { loading: loadingRuns, data: runs } = useMGnifyData(
+//     `assemblies/${assemblyId}/runs`
+//   );
+//   const instruments = useMemo(() => {
+//     if (loadingRuns) return '';
+//     const runsData = runs.data as Run[];
+//     return runsData
+//       .map(
+//         (run) =>
+//           `${run.attributes['instrument-platform']} – ${run.attributes['instrument-model']}`
+//       )
+//       .join('\n');
+//   }, [loadingRuns, runs]);
+//   return (
+//     <KeyValueList
+//       list={[
+//         {
+//           key: 'Experiment type',
+//           value: 'Hybrid assembly',
+//         },
+//         {
+//           key: 'Instruments',
+//           value: instruments,
+//         },
+//       ].filter(({ value }) => !!value)}
+//     />
+//   );
+// };
 
 const AnalysisOverview: React.FC = () => {
   const { overviewData: data } = useContext(AnalysisContext);
@@ -87,14 +79,14 @@ const AnalysisOverview: React.FC = () => {
     {
       key: 'Assembly',
       value:
-        data?.assembly_accession &&
+        data?.assembly?.accession &&
         isAssembly(data.experiment_type as string) &&
         (() => (
           <Link to={`/assemblies/${data?.assembly?.accession}`}>
             {data?.assembly?.accession}
           </Link>
         )),
-      rawValue: data?.assembly_accession || '',
+      rawValue: data?.assembly?.accession || '',
     },
     {
       key: 'Run',
@@ -229,7 +221,7 @@ const AnalysisOverview: React.FC = () => {
     const downloadLink = document.createElement('a');
     downloadLink.href = url;
     downloadLink.download = `analysis_overview_${
-      data?.run_accession || 'data'
+      data?.run?.accession || 'data'
     }.csv`;
     downloadLink.style.display = 'none';
     downloadLink.click();
@@ -254,7 +246,11 @@ const AnalysisOverview: React.FC = () => {
             </summary>
             <div>
               <KeyValueList
-                list={descriptionItems.filter(({ value }) => !!value)}
+                list={
+                  descriptionItems.filter(
+                    ({ value }) => !!value
+                  ) as KeyValueItemsList
+                }
               />
             </div>
           </details>
@@ -268,7 +264,9 @@ const AnalysisOverview: React.FC = () => {
               />
             )}
             {isHybrid && (
-              <HybridAnalysisDetails assemblyId={data?.assembly_accession} />
+              <p>Hybrid assembly details are not available yet.</p>
+              // TODO: add hybrid assembly details
+              // <HybridAnalysisDetails assemblyId={data?.assembly?.accession} />
             )}
           </details>
           <details className="vf-details custom-vf-details" open>
@@ -276,7 +274,11 @@ const AnalysisOverview: React.FC = () => {
               <b>Pipeline information</b>
             </summary>
             <KeyValueList
-              list={pipelineInformationItems.filter(({ value }) => !!value)}
+              list={
+                pipelineInformationItems.filter(
+                  ({ value }) => !!value
+                ) as KeyValueItemsList
+              }
             />
           </details>
         </DetailedVisualisationCard>

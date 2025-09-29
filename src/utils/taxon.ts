@@ -26,18 +26,21 @@ export function getSimpleTaxLineage(
 ): string {
   const l = fullLineage.split(';');
   let head = l.pop();
+  if (!head) {
+    return '';
+  }
   // Remove all until species
-  while (head.indexOf('s__') === -1) {
+  while ((head as string).indexOf('s__') === -1) {
     head = l.pop();
   }
   // Find first non-null
-  while (head.length <= 3) {
+  while ((head as string).length <= 3) {
     head = l.pop();
   }
   if (removePrefix && head) {
     return cleanTaxLineage(head);
   }
-  return head;
+  return head as string;
 }
 
 export const TAXONOMY_COLOURS = [
