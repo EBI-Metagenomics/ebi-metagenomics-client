@@ -68,7 +68,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
         assembly: analysis.assembly?.accession,
         run: analysis.run?.accession,
       }),
-      Cell: ({ cell }) => <>{cell.value.assembly || cell.value.run}</>,
+      Cell: ({ cell }) => <span>{cell.value.assembly || cell.value.run}</span>,
     },
     {
       id: 'pipeline_id',

@@ -515,10 +515,11 @@ const Branchwater = () => {
             : [];
           setSearchResults(resultsArray);
 
-          const availableGeoData = response.data.filter(
-            (item) => item.geo_loc_name_country_calc
+          const geoData = response.data.filter(
+            (item: { geo_loc_name_country_calc: any }) =>
+              item.geo_loc_name_country_calc
           );
-          setAvailableGeoData(availableGeoData);
+          setAvailableGeoData(geoData);
           // )
 
           // Prepare visualization data
@@ -528,7 +529,7 @@ const Branchwater = () => {
           // Prepare map data
           // const mapData = convertToMapSamples(resultsArray);
           // setMapSamples(mockMapSamples);
-          setMapSamples(availableGeoData);
+          setMapSamples(geoData);
 
           setIsLoading(false);
         })
@@ -786,6 +787,7 @@ const Branchwater = () => {
                     </div>
 
                     <button
+                      type="button"
                       className="vf-button vf-button--sm vf-button--primary mg-button"
                       onClick={handleSearchClick}
                     >
@@ -802,6 +804,7 @@ const Branchwater = () => {
                   </fieldset>
 
                   <button
+                    type="button"
                     className="vf-button vf-button--sm vf-button--primary mg-button"
                     onClick={handleSearchClick}
                   >

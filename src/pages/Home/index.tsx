@@ -104,16 +104,16 @@ const HomePage: React.FC = () => {
           <h1 className="vf-text vf-text--display vf-text--bold home-search-title">
             Search study and sample descriptions
           </h1>
-          {/*<p className="vf-text vf-text-body home-search-subtext">*/}
-          {/*  Explore datasets using text, protein, or nucleotide sequences.*/}
-          {/*</p>*/}
+          {/* <p className="vf-text vf-text-body home-search-subtext"> */}
+          {/*  Explore datasets using text, protein, or nucleotide sequences. */}
+          {/* </p> */}
           <div className="home-search-box">
             <SearchPage />
           </div>
-          {/*<p className="vf-text-body--2 home-search-examples">*/}
-          {/*  Examples: <code>Tara Oceans</code>, <code>MGYS00000410</code>,{' '}*/}
-          {/*  <code>Human Gut</code>*/}
-          {/*</p>*/}
+          {/* <p className="vf-text-body--2 home-search-examples"> */}
+          {/*  Examples: <code>Tara Oceans</code>, <code>MGYS00000410</code>,{' '} */}
+          {/*  <code>Human Gut</code> */}
+          {/* </p> */}
         </div>
       </div>
 
@@ -173,18 +173,18 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Explore by data type and biome section */}
-      {/*TODO  Make counts appear in this section*/}
-      {/*<section ref={exploreRef} className="vf-section reveal">*/}
-      {/*  <h2 className="vf-section__title">Explore by Data Type or Biome</h2>*/}
-      {/*  <div className="search-by-modernized">*/}
-      {/*    <SearchBy />*/}
-      {/*  </div>*/}
-      {/*</section>*/}
+      {/* TODO  Make counts appear in this section */}
+      {/* <section ref={exploreRef} className="vf-section reveal"> */}
+      {/*  <h2 className="vf-section__title">Explore by Data Type or Biome</h2> */}
+      {/*  <div className="search-by-modernized"> */}
+      {/*    <SearchBy /> */}
+      {/*  </div> */}
+      {/* </section> */}
 
-      {/*<section className="vf-section">*/}
-      {/*  <h2 className="vf-section__title">Spotlight & Articles</h2>*/}
-      {/*  <BlogExcerpts />*/}
-      {/*</section>*/}
+      {/* <section className="vf-section"> */}
+      {/*  <h2 className="vf-section__title">Spotlight & Articles</h2> */}
+      {/*  <BlogExcerpts /> */}
+      {/* </section> */}
 
       <section className="vf-section">
         <h2 className="vf-section__title">Latest Publications</h2>
