@@ -11,9 +11,11 @@ import FunctionalSubpage from 'components/Analysis/Functional/v2index';
 import PathwaysSubpage from 'components/Analysis/Pathways/v2Index';
 import Downloads from 'components/Downloads/v2index';
 import Abundance from 'components/Analysis/Abundance';
-import V2AnalysisContext, { AnalysisContextType } from 'pages/Analysis/V2AnalysisContext';
+import V2AnalysisContext, {
+  AnalysisContextType,
+} from 'pages/Analysis/V2AnalysisContext';
 import useAnalysisDetail from 'hooks/data/useAnalysisDetail';
-import { AnalysisDetail } from 'interfaces/index';
+import { AnalysisDetail } from '@/interfaces';
 import Asv from 'components/Asv';
 import AssemblyTaxonomy from 'components/Analysis/AssemblyTaxonomy';
 import Taxonomy from 'components/Analysis/Taxonomy/v2index';

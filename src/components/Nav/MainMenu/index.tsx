@@ -118,7 +118,8 @@ const MainMenu: React.FC = () => {
   useLayoutEffect(() => {
     const onScroll = (): void => {
       if (isSmall) return;
-      const topPos = imgRef.current && imgRef.current.getBoundingClientRect().top;
+      const topPos =
+        imgRef.current && imgRef.current.getBoundingClientRect().top;
       let newMargin = START_MARGIN;
       if (topPos !== null && topPos < START_POS) {
         const m = (START_MARGIN - 1) / START_POS;

@@ -8,7 +8,7 @@ import Loading from 'components/UI/Loading';
 
 const Pipelines: React.FC = () => {
   const accession = useURLAccession();
-  if (!accession) return <Loading/>;
+  if (!accession) return <Loading />;
   if (accession.toLowerCase() !== 'pipelines') {
     return <Pipeline version={accession} />;
   }
