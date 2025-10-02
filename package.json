@@ -51,7 +51,7 @@
     "leaflet": "^1.9.4",
     "lodash-es": "4.17.21",
     "lucide-react": "^0.476.0",
-    "mgnify-sourmash-component": "0.3.0",
+    "mgnify-sourmash-component": "0.2.4",
     "pako": "^2.1.0",
     "plotly.js": "^2.24.2",
     "react": "18.2.0",
