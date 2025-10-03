@@ -40,7 +40,7 @@ jobs:
         working-directory: client-repo
         run: |
           npm ci
-          npm i concurrently
+          npm i -g concurrently
 
       - name: 🧹 - ESlint
         working-directory: client-repo
