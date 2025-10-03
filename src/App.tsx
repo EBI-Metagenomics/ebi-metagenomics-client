@@ -93,7 +93,7 @@ const App: React.FC = () => {
                 {/* <Route path="/search/*" element={<TextSearch />} /> */}
                 {/* <Route path="/sequence-search" element={<SequenceSearch />} /> */}
                 <Route path="/browse/*" element={<Browse />} />
-                <Route path="/studies/*" element={<Study />} />
+                <Route path="/studies/:accession/*" element={<Study />} />
                 <Route path="/super-studies/*" element={<SuperStudy />} />
                 <Route path="/samples/*" element={<Sample />} />
                 <Route path="/publications/*" element={<Publication />} />

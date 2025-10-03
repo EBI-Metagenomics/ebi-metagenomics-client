@@ -12,6 +12,10 @@ import { Link } from 'react-router-dom';
 import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from '@/utils/urls';
 import ExtraAnnotations from 'components/ExtraAnnotations';
+import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
+
+const { withQueryParamProvider } =
+  createSharedQueryParamContextForTable('analyses');
 
 const AssemblyPage: React.FC = () => {
   const accession = useURLAccession();
@@ -87,4 +91,4 @@ const AssemblyPage: React.FC = () => {
   );
 };
 
-export default AssemblyPage;
+export default withQueryParamProvider(AssemblyPage);

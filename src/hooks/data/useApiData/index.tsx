@@ -34,6 +34,8 @@ const useApiData = <T,>({
       : axios;
 
   useEffect(() => {
+    const abortController = new AbortController(); // if component unmounts, abort the request. prevents some double fetches.
+
     const fetchData = async () => {
       if (!url) {
         setError({
@@ -46,7 +48,9 @@ const useApiData = <T,>({
 
       try {
         setStale(true);
-        const response = await axiosInstance.get<T>(url);
+        const response = await axiosInstance.get<T>(url, {
+          signal: abortController.signal,
+        });
         const processedData = transformResponse
           ? transformResponse(response.data)
           : response.data;
@@ -54,6 +58,13 @@ const useApiData = <T,>({
         setError(null);
       } catch (err) {
         const axiosError = err as AxiosError;
+        // Ignore abort errors
+        if (
+          axiosError.name === 'CanceledError' ||
+          abortController.signal.aborted
+        ) {
+          return;
+        }
         const errorFromFetch: ErrorFromFetch = {
           status: axiosError.response?.status,
           type: ErrorTypes.FetchError,
@@ -61,12 +72,18 @@ const useApiData = <T,>({
         };
         setError(errorFromFetch);
       } finally {
-        setLoading(false);
-        setStale(false);
+        if (!abortController.signal.aborted) {
+          setLoading(false);
+          setStale(false);
+        }
       }
     };
 
     fetchData();
+
+    return () => {
+      abortController.abort();
+    };
   }, [url, transformResponse, axiosInstance]);
   const download = () =>
     isNil(url)

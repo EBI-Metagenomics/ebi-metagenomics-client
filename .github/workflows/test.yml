@@ -50,7 +50,7 @@ jobs:
         with:
           working-directory: client-repo
           browser: chrome
-          start: npm run start
+          start: concurrently -k "npm run serve:fixtures" "npm run start"
           wait-on: http://localhost:9000/
           wait-on-timeout: 60
         env:

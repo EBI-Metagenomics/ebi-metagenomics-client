@@ -10,7 +10,7 @@ import UserContext from 'pages/Login/UserContext';
 // import { PublicationAnnotationsPopupBadge } from 'components/Publications/EuropePMCAnnotations';
 import ProgrammaticAccessBox from 'components/UI/ProgrammaticAccess';
 import { ENA_VIEW_URL } from 'utils/urls';
-import { Study } from 'interfaces/index';
+import { Study } from '@/interfaces';
 
 type StudyOverviewProps = {
   data: Study;

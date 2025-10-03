@@ -5,26 +5,27 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import useURLAccession from 'hooks/useURLAccession';
-import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 import useStudyAnalysesList from 'hooks/data/useStudyAnalyses';
-import { Analysis, AnalysisList } from 'interfaces/index';
+import { Analysis, AnalysisList } from '@/interfaces';
 import { ErrorFromFetch } from 'hooks/data/useData';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 const expectedPageSize = 10;
 type AssociatedAnaysesProps = {
   rootEndpoint: string;
 };
 
-const { useAnalysesPage, withQueryParamProvider } =
-  createSharedQueryParamContextForTable('analyses');
-
 const AnalysesTable: React.FC<AssociatedAnaysesProps> = () => {
   const accession = useURLAccession();
-  const [analysesPage] = useAnalysesPage<number>();
+  const [analysesPage] = useQueryParamState<number>('analysesPage');
+  // NEEDS TO BE PROVIDED BY PARENT COMPONENT
 
-  const { data, error, loading, download } = useStudyAnalysesList(accession || '', {
-    page: analysesPage,
-  });
+  const { data, error, loading, download } = useStudyAnalysesList(
+    accession || '',
+    {
+      page: analysesPage,
+    }
+  );
 
   if (loading) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error as ErrorFromFetch} />;
@@ -73,7 +74,11 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = () => {
         assembly: analysis.assembly?.accession,
         run: analysis.run?.accession,
       }),
-      Cell: ({ cell }: { cell: { value: { assembly?: string; run?: string } } }) => (
+      Cell: ({
+        cell,
+      }: {
+        cell: { value: { assembly?: string; run?: string } };
+      }) => (
         <>
           {cell.value.assembly || cell.value.run}
           {/* {cell.value.assembly && ( */}
@@ -121,4 +126,4 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = () => {
   );
 };
 
-export default withQueryParamProvider(AnalysesTable);
+export default AnalysesTable;

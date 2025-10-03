@@ -65,8 +65,7 @@ export class BGZipService {
     const idx = BGZipService.getIndexFileUrl(this.download);
     if (idx) {
       this.indexFileUrl = idx;
-    }
-    else {
+    } else {
       throw new Error('No index file found for BGZip download');
     }
     if (autoInitialize) {
@@ -193,6 +192,7 @@ export class BGZipService {
     const deflateStart = 18;
     const deflateEnd = blockSize - 8; // footer 8 bytes
     const deflateData = block.subarray(deflateStart, deflateEnd);
+    console.debug(`Decompressing block of size ${deflateData.length}`);
     return pako.inflateRaw(deflateData);
   }
 
@@ -229,13 +229,18 @@ export class BGZipService {
       console.log(`No data for page ${pageNum}`);
       return new Uint8Array(0); // Out of range → empty
     }
+    console.debug(
+      `Fetching block ${pageNum} from ${this.gziIndex.length} index entries`
+    );
     const entry = this.gziIndex[pageNum];
+    console.debug(`Fetching block ${entry.compressedOffset}`);
     return this.fetchAndDecompressBlock(entry.compressedOffset);
   }
 
   async readPageAsTSV(pageNum: number): Promise<string[][]> {
     console.groupCollapsed('Read blockzip page/block as TSV');
     const sourcePageNum = this.getSourcePageNumber(pageNum);
+    console.debug(`Will read blockzip page ${sourcePageNum}`);
     const pageBytes = await this.readPage(sourcePageNum - 1);
     console.debug(`Read blockzip page size ${pageBytes.length}`);
     const decoder = new TextDecoder('utf-8');
@@ -255,6 +260,7 @@ export class BGZipService {
       console.log(
         'First page is only comments, so treating block 2 as page 1.'
       );
+      console.groupEnd();
       return this.readPageAsTSV(pageNum);
     }
 

@@ -84,7 +84,7 @@ type BaseContext = ReturnType<typeof createSharedQueryParamContext>;
 export function createSharedQueryParamContextForTable(
   namespace: string = "",
   extraParams?: SharedQueryParamSet,
-  initialPageSize: number = 25
+  initialPageSize: number = 10
 ): BaseContext {
   return createSharedQueryParamContext({
     [camelCase(`${namespace} page`)]: SharedNumberQueryParam(1),

@@ -14,6 +14,10 @@ import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from '@/utils/urls';
 import ExtraAnnotations from 'components/ExtraAnnotations';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
+import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
+
+const { withQueryParamProvider } =
+  createSharedQueryParamContextForTable('analyses');
 
 const RunPage: React.FC = () => {
   const accession = useURLAccession();
@@ -106,4 +110,4 @@ const RunPage: React.FC = () => {
   );
 };
 
-export default RunPage;
+export default withQueryParamProvider(RunPage);

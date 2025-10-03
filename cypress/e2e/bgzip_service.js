@@ -1,20 +1,8 @@
 import { BGZipService } from 'components/Analysis/BgZipService';
 
 describe('BGZipService with real .gz and .gzi files', () => {
-  let dataUrl;
-  let indexUrl;
-
-  before(() => {
-    cy.fixture('bgzip/test_gzipped_data.tsv.gz', null).then((gzArrayBuffer) => {
-      const gzBlob = new Blob([gzArrayBuffer], { type: 'application/gzip' });
-      dataUrl = URL.createObjectURL(gzBlob);
-    }).then(() => {
-      return cy.fixture('bgzip/test_gzipped_data.tsv.gz.gzi', null).then((gziArrayBuffer) => {
-        const gziBlob = new Blob([gziArrayBuffer], { type: 'application/octet-stream' });
-        indexUrl = URL.createObjectURL(gziBlob);
-      });
-    });
-  });
+  const dataUrl = `${Cypress.env('FIXTURE_BASE')}/bgzip/test_gzipped_data.tsv.gz`;
+  const indexUrl = "test_gzipped_data.tsv.gz.gzi"
 
   it('initializes and reads a page of TSV from real BGZF file', () => {
     cy.then(async () => {
@@ -23,7 +11,7 @@ describe('BGZipService with real .gz and .gzi files', () => {
 
       const download = {
         url: dataUrl,
-        index_file: { relative_url: indexUrl },
+        index_files: [{ relative_url: indexUrl, index_type: 'gzi' }],
       };
 
       const service = new BGZipService(download, false);
