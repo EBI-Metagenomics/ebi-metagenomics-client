@@ -3,6 +3,15 @@ import config from 'utils/config';
 
 describe('Contig viewer and indexer on bgzipped gffs', () => {
   beforeEach(function() {
+    cy.window().then((win) => {
+      return new Cypress.Promise((resolve, reject) => {
+        const req = win.indexedDB.deleteDatabase('gffdb');
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+        req.onblocked = () => resolve(); // best-effort in case something still holds it
+      });
+    });
+
     cy.intercept('GET', `${config.api_v2}/analyses/MGYA00000002`,
       {fixture: 'apiv2/analyses/analysisMGYA00000002.json'});
   })
