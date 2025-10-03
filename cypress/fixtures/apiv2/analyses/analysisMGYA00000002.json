@@ -1,0 +1,170 @@
+{
+  "study_accession": "MGYS00000001",
+  "accession": "MGYA00000002",
+  "experiment_type": "Assembly",
+  "run": null,
+  "sample": {
+    "accession": "SAMN07793787",
+    "ena_accessions": [
+      "SAMN07793787"
+    ],
+    "updated_at": "2025-10-03T15:14:12.806Z"
+  },
+  "assembly": {
+    "accession": "ERZ857107",
+    "updated_at": "2025-10-03T15:14:12.994Z"
+  },
+  "pipeline_version": "V6",
+  "downloads": [
+    {
+      "alias": "multiqc_report.html",
+      "download_type": "Quality control",
+      "file_type": "html",
+      "long_description": "MultiQC webpage showing quality control steps and metrics",
+      "short_description": "MultiQC quality control report",
+      "download_group": "quality_control",
+      "file_size_bytes": null,
+      "index_files": null,
+      "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/qc/multiqc_report.html"
+    },
+    {
+      "alias": "ERZ857107_filtered_contigs.fasta.gz",
+      "download_type": "Sequence data",
+      "file_type": "fasta",
+      "long_description": "FASTA sequences of the analysed contigs after length filtering",
+      "short_description": "Filtered contig sequences",
+      "download_group": "quality_control",
+      "file_size_bytes": null,
+      "index_files": [
+        {
+          "index_type": "gzi",
+          "relative_url": "ERZ857107_filtered_contigs.fasta.gz.gzi"
+        },
+        {
+          "index_type": "fai",
+          "relative_url": "ERZ857107_filtered_contigs.fasta.gz.fai"
+        }
+      ],
+      "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_filtered_contigs.fasta.gz"
+    },
+    {
+      "alias": "taxonomy",
+      "download_type": "Taxonomic analysis",
+      "file_type": "tsv",
+      "long_description": "Table with contig counts for each taxonomic assignment",
+      "short_description": "UniRef90 contig taxonomy table",
+      "download_group": "taxonomies.closed_reference.uniref",
+      "file_size_bytes": null,
+      "index_files": null,
+      "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/taxonomy/ERZ857107.krona.txt.gz"
+    },
+    {
+      "alias": "ERZ857107_go_summary.tsv.gz",
+      "download_type": "Functional analysis",
+      "file_type": "tsv",
+      "long_description": "Table with counts for each Gene Ontology (GO) Term found",
+      "short_description": "GO Term counts",
+      "download_group": "functional_annotation.go_terms",
+      "file_size_bytes": null,
+      "index_files": [
+        {
+          "index_type": "gzi",
+          "relative_url": "ERZ857107_go_summary.tsv.gz.gzi"
+        }
+      ],
+      "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/go/ERZ857107_go_summary.tsv.gz"
+    },
+    {
+      "alias": "ERZ857107_goslim_summary.tsv.gz",
+      "download_type": "Functional analysis",
+      "file_type": "tsv",
+      "long_description": "Table with counts for each Gene Ontology (GO)-Slim Term found",
+      "short_description": "GO-Slim Term counts",
+      "download_group": "functional_annotation.go_slims",
+      "file_size_bytes": null,
+      "index_files": [
+        {
+          "index_type": "gzi",
+          "relative_url": "ERZ857107_goslim_summary.tsv.gz.gzi"
+        }
+      ],
+      "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/go/ERZ857107_goslim_summary.tsv.gz"
+    },
+    {
+      "alias": "ERZ857107_interpro_summary.tsv.gz",
+      "download_type": "Functional analysis",
+      "file_type": "tsv",
+      "long_description": "Table with counts for each InterPro identifier found",
+      "short_description": "InterPro Identifier counts",
+      "download_group": "functional_annotation.interpro_identifiers",
+      "file_size_bytes": null,
+      "index_files": [
+        {
+          "index_type": "gzi",
+          "relative_url": "ERZ857107_interpro_summary.tsv.gz.gzi"
+        }
+      ],
+      "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/interpro/ERZ857107_interpro_summary.tsv.gz"
+    },
+    {
+      "alias": "ERZ857107_pfam_summary.tsv.gz",
+      "download_type": "Functional analysis",
+      "file_type": "tsv",
+      "long_description": "Table with counts for each Pfam accession found",
+      "short_description": "Pfam accession counts",
+      "download_group": "functional_annotation.pfams",
+      "file_size_bytes": null,
+      "index_files": [
+        {
+          "index_type": "gzi",
+          "relative_url": "ERZ857107_pfam_summary.tsv.gz.gzi"
+        }
+      ],
+      "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/pfam/ERZ857107_pfam_summary.tsv.gz"
+    },
+    {
+      "alias": "ERZ857107_proteins2rhea.tsv.gz",
+      "download_type": "Functional analysis",
+      "file_type": "tsv",
+      "long_description": "Table with counts of each Rhea reaction found",
+      "short_description": "Rhea reaction counts",
+      "download_group": "functional_annotation.rhea_reactions",
+      "file_size_bytes": null,
+      "index_files": [
+        {
+          "index_type": "gzi",
+          "relative_url": "ERZ857107_proteins2rhea.tsv.gz.gzi"
+        }
+      ],
+      "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/rhea-reactions/ERZ857107_proteins2rhea.tsv.gz"
+    },
+    {
+      "alias": "ERZ857107_annotation_summary.gff.gz",
+      "download_type": "Functional analysis",
+      "file_type": "gff",
+      "long_description": "Consolidated annotations from the various functional and gene cluster annotation tools as a GFF (general feature format) file",
+      "short_description": "Summary GFF of all functional annotations",
+      "download_group": "functional_annotation.summary",
+      "file_size_bytes": null,
+      "index_files": [
+        {
+          "index_type": "gzi",
+          "relative_url": "ERZ857107_annotation_summary.gff.gz.gzi"
+        },
+        {
+          "index_type": "csi",
+          "relative_url": "ERZ857107_annotation_summary.gff.gz.csi"
+        }
+      ],
+      "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_annotation_summary.gff.gz"
+    }
+  ],
+  "read_run": {
+    "accession": "SRR6180434",
+    "instrument_model": null,
+    "instrument_platform": null
+  },
+  "quality_control_summary": {},
+  "results_dir": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly",
+  "metadata": {}
+}

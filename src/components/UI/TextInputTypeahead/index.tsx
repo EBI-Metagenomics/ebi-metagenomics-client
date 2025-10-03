@@ -130,7 +130,10 @@ const TextInputTypeahead: React.FC<TextInputTypeaheadProps> = ({
 
   return (
     <div className="vf-form__item mg-textsearch mg-typeahead">
-      <label className="vf-form__label vf-search__label" htmlFor="searchitem">
+      <label
+        className="vf-form__label vf-search__label"
+        htmlFor={`searchitem-${namespace}`}
+      >
         {title}
       </label>
       <div className="mg-typeahead-container">
@@ -138,7 +141,7 @@ const TextInputTypeahead: React.FC<TextInputTypeaheadProps> = ({
           ref={inputRef}
           type="search"
           placeholder={placeholder}
-          id="searchitem"
+          id={`searchitem-${namespace}`}
           className="vf-form__input"
           onChange={handleOnChange}
           onKeyDown={handleKeyDown}
