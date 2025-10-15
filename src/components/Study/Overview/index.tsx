@@ -10,10 +10,11 @@ import UserContext from 'pages/Login/UserContext';
 // import { PublicationAnnotationsPopupBadge } from 'components/Publications/EuropePMCAnnotations';
 import ProgrammaticAccessBox from 'components/UI/ProgrammaticAccess';
 import { ENA_VIEW_URL } from 'utils/urls';
-import { Study } from '@/interfaces';
+import { StudyDetail } from '@/interfaces';
+import SamplesMapByStudy from 'components/UI/SamplesMap/ByStudy';
 
 type StudyOverviewProps = {
-  data: Study;
+  data: StudyDetail;
 };
 const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
   const { config } = useContext(UserContext);
@@ -41,9 +42,9 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
             />
             <div>{lineage}</div>
           </Box>
-          {/* <Box label="Description">{data.attributes['study-abstract']}</Box> */}
+           <Box label="Description">{data.metadata.study_description}</Box>
         </div>
-        {/* <SamplesMapByStudy study={data.id} /> */}
+        {data.accession && <SamplesMapByStudy study={data} />}
       </div>
       <br />
       <div className="mg-flex">
