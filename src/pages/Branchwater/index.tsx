@@ -7,8 +7,6 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix Leaflet marker icon issue
-// This is needed because Leaflet's default icon paths are based on CSS which doesn't work well with bundlers
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -80,7 +78,13 @@ const Branchwater = () => {
   const [, setUploadedFile] = useState<File | null>(null);
   const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [availableGeoData, setAvailableGeoData] = useState<[]>([]);
+  const [countryCounts, setCountryCounts] = useState<Record<string, number>>(
+    {}
+  );
+
+  const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
+
+  // const [availableGeoData, setAvailableGeoData] = useState<[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Pagination state
@@ -164,58 +168,165 @@ const Branchwater = () => {
     },
   ];
 
-  // // Helper function to convert search results to SamplesMap format
-  // const convertToMapSamples = useCallback(
-  //   (data: SearchResult[]): MapSample[] => {
-  //     if (!data || !Array.isArray(data)) return [];
-  //
-  //     return data
-  //       .map((item, index) => {
-  //         // Check if we have lat_lon data
-  //         if (!item.lat_lon || item.lat_lon === 'NP') return null;
-  //
-  //         try {
-  //           // Parse lat_lon string format like "40.7128N, 74.0060W"
-  //           // const match = item.lat_lon.match(
-  //           //   /([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/
-  //           // );
-  //           // if (!match) return null;
-  //           //
-  //           // const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
-  //           // const lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
-  //
-  //           const lat = item.lat_lon[0];
-  //           const lng = item.lat_lon[1];
-  //
-  //           // Return in MGnifyDatum format expected by SamplesMap
-  //           return {
-  //             id: item.acc || `sample_${index}`,
-  //             attributes: {
-  //               latitude: lat,
-  //               longitude: lng,
-  //               'sample-desc': `${item.organism || 'Unknown organism'} - ${
-  //                 item.geo_loc_name_country_calc || 'Unknown location'
-  //               }`,
-  //             },
-  //             relationships: {
-  //               biome: {
-  //                 data: {
-  //                   id: item.assay_type || 'unknown',
-  //                 },
-  //               },
-  //             },
-  //           };
-  //         } catch (error) {
-  //           console.error('Error parsing lat_lon:', item.lat_lon, error);
-  //           return null;
-  //         }
-  //       })
-  //       .filter(Boolean) as MapSample[]; // Remove null entries and cast to MapSample[]
-  //   },
-  //   []
-  // );
+  // Helper function to convert search results to map samples with valid lat/lng
+  const convertToMapSamples = useCallback(
+    (data: SearchResult[]): MapSample[] => {
+      if (!data || !Array.isArray(data)) return [];
 
-  // Helper functions for visualizations
+      return data
+        .map((item, index) => {
+          // Skip items without lat_lon data or with 'NP' values
+          if (!item.lat_lon || item.lat_lon === 'NP') return null;
+
+          try {
+            let lat: number, lng: number;
+
+            // Handle different lat_lon formats
+            if (Array.isArray(item.lat_lon)) {
+              // Format: [latitude, longitude]
+              lat = parseFloat(item.lat_lon[0]);
+              lng = parseFloat(item.lat_lon[1]);
+            } else if (typeof item.lat_lon === 'string') {
+              // Format: "40.7128N, 74.0060W" or similar
+              const match = item.lat_lon.match(
+                /([0-9.-]+)([NS]),?\s*([0-9.-]+)([EW])/
+              );
+              if (!match) return null;
+
+              lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
+              lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
+            } else {
+              return null;
+            }
+
+            // Validate coordinates
+            if (
+              isNaN(lat) ||
+              isNaN(lng) ||
+              lat < -90 ||
+              lat > 90 ||
+              lng < -180 ||
+              lng > 180
+            ) {
+              return null;
+            }
+
+            // Return in MapSample format
+            return {
+              id: item.acc || `sample_${index}`,
+              attributes: {
+                latitude: lat,
+                longitude: lng,
+                'sample-desc': `${item.organism || 'Unknown organism'} - ${
+                  item.geo_loc_name_country_calc || 'Unknown location'
+                }`,
+              },
+              relationships: {
+                biome: {
+                  data: {
+                    id: item.assay_type || 'unknown',
+                  },
+                },
+              },
+            };
+          } catch (error) {
+            console.error('Error parsing lat_lon:', item.lat_lon, error);
+            return null;
+          }
+        })
+        .filter(Boolean) as MapSample[]; // Remove null entries
+    },
+    []
+  );
+
+  const getCountryCountsFromResults = useCallback((results: SearchResult[]) => {
+    const countryCounts: Record<string, number> = {};
+
+    results.forEach((item) => {
+      if (
+        item.geo_loc_name_country_calc &&
+        item.geo_loc_name_country_calc !== 'NP'
+      ) {
+        const country = item.geo_loc_name_country_calc;
+        countryCounts[country] = (countryCounts[country] || 0) + 1;
+      }
+    });
+
+    return countryCounts;
+  }, []);
+
+  const getCountryColor = useCallback((count: number, maxCount: number) => {
+    if (count === 0) return '#FFEDA0';
+
+    const intensity = count / maxCount;
+
+    if (intensity > 0.8) return '#BD0026';
+    if (intensity > 0.6) return '#E31A1C';
+    if (intensity > 0.4) return '#FC4E2A';
+    if (intensity > 0.2) return '#FD8D3C';
+    return '#FEB24C';
+  }, []);
+
+  const handleRequestAnalysis = (entry: SearchResult) => {
+    // You can customize this URL based on your MGnify submission workflow
+    const submitUrl = `https://www.ebi.ac.uk/metagenomics/submit?accession=${entry.acc}&bioproject=${entry.bioproject}`;
+    window.open(submitUrl, '_blank');
+  };
+
+  const handleSearchClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void => {
+    event.preventDefault();
+    setShowMgnifySourmash(true);
+
+    if (signature) {
+      setIsLoading(true);
+      axios
+        .post(
+          'http://branchwater-dev.mgnify.org/',
+          {
+            signatures: JSON.stringify(signature),
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          const resultsArray = Array.isArray(response.data)
+            ? (response.data as SearchResult[])
+            : [];
+          setSearchResults(resultsArray);
+
+          // Prepare visualization data
+          const vizData = prepareVisualizationData(resultsArray);
+          setVisualizationData(vizData);
+
+          // Convert to map samples
+          const mapData = convertToMapSamples(resultsArray);
+          setMapSamples(mapData);
+
+          // Calculate country counts for heatmap
+          const counts = getCountryCountsFromResults(resultsArray);
+          setCountryCounts(counts);
+
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching search results:', error);
+          setIsLoading(false);
+          setVisualizationData(null);
+          setMapSamples([]);
+          setCountryCounts({});
+        });
+    } else {
+      console.log(
+        'No signature available yet. Please upload and sketch a file first.'
+      );
+    }
+  };
+
   const countUniqueValuesAndOccurrences = (
     valueList: any[]
   ): { uniqueValues: any[]; countVal: number[] } => {
@@ -444,6 +555,38 @@ const Branchwater = () => {
     [createPlotData, countUniqueValuesAndOccurrences]
   );
 
+  // Updated useEffect for handling search results
+  useEffect(() => {
+    if (searchResults.length > 0) {
+      const filteredResults = getFilteredResults();
+      const vizData = prepareVisualizationData(filteredResults);
+      setVisualizationData(vizData);
+
+      // Convert filtered results to map samples
+      const mapData = convertToMapSamples(filteredResults);
+      setMapSamples(mapData);
+
+      // Set available geo data for other uses
+      const availableGeoData = filteredResults.filter(
+        (item) =>
+          item.geo_loc_name_country_calc &&
+          item.lat_lon &&
+          item.lat_lon !== 'NP'
+      );
+      // setAvailableGeoData(availableGeoData);
+    } else {
+      // Clear data when no search results
+      setMapSamples([]);
+      // setAvailableGeoData([]);
+    }
+  }, [
+    filters,
+    getFilteredResults,
+    prepareVisualizationData,
+    searchResults,
+    convertToMapSamples,
+  ]);
+
   useEffect(() => {
     const handleSketched = (evt: CustomEvent): void => {
       evt.preventDefault();
@@ -462,90 +605,65 @@ const Branchwater = () => {
     };
   }, [signature]);
 
-  // Update visualization data when filters change
   useEffect(() => {
     if (searchResults.length > 0) {
       const filteredResults = getFilteredResults();
       const vizData = prepareVisualizationData(filteredResults);
       setVisualizationData(vizData);
 
-      // Update map samples
-      // const mapData = convertToMapSamples(filteredResults);
+      // Convert filtered results to map samples
+      const mapData = convertToMapSamples(filteredResults);
+      setMapSamples(mapData);
 
-      // setMapSamples(mockMapSamples);
-      setMapSamples(availableGeoData);
+      // Calculate country counts for heatmap
+      const counts = getCountryCountsFromResults(filteredResults);
+      setCountryCounts(counts);
+
+      // Set available geo data for other uses
+      const availableGeoData = filteredResults.filter(
+        (item) =>
+          item.geo_loc_name_country_calc &&
+          item.lat_lon &&
+          item.lat_lon !== 'NP'
+      );
     } else {
-      // For development/testing: use mock data when no search results
-      // setMapSamples(mockMapSamples);
-      setMapSamples(availableGeoData);
+      // Clear data when no search results
+      setMapSamples([]);
+      setCountryCounts({});
     }
   }, [
     filters,
     getFilteredResults,
     prepareVisualizationData,
     searchResults,
-    mockMapSamples,
+    convertToMapSamples,
+    getCountryCountsFromResults,
   ]);
 
-  const handleSearchClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ): void => {
-    event.preventDefault();
-    setShowMgnifySourmash(true);
-
-    // If we already have a signature, trigger a search
-    if (signature) {
-      setIsLoading(true);
-      axios
-        .post(
-          'http://branchwater-dev.mgnify.org/',
-          {
-            signatures: JSON.stringify(signature),
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        .then((response) => {
-          // Ensure response.data is an array before setting it to searchResults
-          const resultsArray = Array.isArray(response.data)
-            ? (response.data as SearchResult[])
-            : [];
-          setSearchResults(resultsArray);
-
-          const availableGeoData = response.data.filter(
-            (item) => item.geo_loc_name_country_calc
-          );
-          setAvailableGeoData(availableGeoData);
-          // )
-
-          // Prepare visualization data
-          const vizData = prepareVisualizationData(resultsArray);
-          setVisualizationData(vizData);
-
-          // Prepare map data
-          // const mapData = convertToMapSamples(resultsArray);
-          // setMapSamples(mockMapSamples);
-          setMapSamples(availableGeoData);
-
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error('Error fetching search results:', error);
-          setIsLoading(false);
-          // Note: sampleEntries is not defined in this scope, so we'll just clear the data
-          setVisualizationData(null);
-          setMapSamples([]);
-        });
-    } else {
-      // If no signature yet, show a message or use sample data for testing
-      console.log(
-        'No signature available yet. Please upload and sketch a file first.'
-      );
-    }
-  };
+  // useEffect(() => {
+  //   if (searchResults.length > 0) {
+  //     const filteredResults = getFilteredResults();
+  //     const vizData = prepareVisualizationData(filteredResults);
+  //     setVisualizationData(vizData);
+  //
+  //     // Update map samples
+  //     const mapData = convertToMapSamples(filteredResults);
+  //     setMapSamples(mapData);
+  //
+  //     // setMapSamples(mockMapSamples);
+  //     // setMapSamples(availableGeoData);
+  //   } else {
+  //     // For development/testing: use mock data when no search results
+  //     setMapSamples(mockMapSamples);
+  //     // setMapSamples(availableGeoData);
+  //   }
+  // }, [
+  //   filters,
+  //   getFilteredResults,
+  //   prepareVisualizationData,
+  //   searchResults,
+  //   mockMapSamples,
+  // ]);
 
   // Handle filter change
   const handleFilterChange = (field: keyof Filters, value: string): void => {
@@ -751,21 +869,19 @@ const Branchwater = () => {
                   />
 
                   <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
-                    <legend className="vf-form__legend">
-                      Select target databafwfwfwse
-                    </legend>
+                    <legend className="vf-form__legend">Select target database</legend>
 
                     <div className="vf-form__item vf-form__item--radio">
                       <input
                         type="radio"
                         name="targetDatabase"
                         value="MAGs"
-                        id="1"
+                        id="target-db-mags"
                         className="vf-form__radio"
                         checked={targetDatabase === 'MAGs'}
                         onChange={() => setTargetDatabase('MAGs')}
                       />
-                      <label htmlFor="1" className="vf-form__label">
+                      <label htmlFor="target-db-mags" className="vf-form__label">
                         MAGs
                       </label>
                     </div>
@@ -775,30 +891,15 @@ const Branchwater = () => {
                         type="radio"
                         name="targetDatabase"
                         value="Metagenomes"
-                        id="2"
+                        id="target-db-metagenomes"
                         className="vf-form__radio"
                         checked={targetDatabase === 'Metagenomes'}
                         onChange={() => setTargetDatabase('Metagenomes')}
                       />
-                      <label htmlFor="2" className="vf-form__label">
+                      <label htmlFor="target-db-metagenomes" className="vf-form__label">
                         Metagenomes
                       </label>
                     </div>
-
-                    <button
-                      className="vf-button vf-button--sm vf-button--primary mg-button"
-                      onClick={handleSearchClick}
-                    >
-                      Search
-                    </button>
-                    <button
-                      id="clear-button-mag"
-                      type="button"
-                      className="vf-button vf-button--sm vf-button--tertiary"
-                      onClick={handleClearClick}
-                    >
-                      Clear
-                    </button>
                   </fieldset>
 
                   <button
@@ -847,512 +948,1847 @@ const Branchwater = () => {
                   </defs>
                 </svg>
                 {/* eslint-disable-next-line no-nested-ternary */}
+                {/*{isLoading ? (*/}
+                {/*  <div className="vf-u-padding__top--800">*/}
+                {/*    <p>Loading search results...</p>*/}
+                {/*  </div>*/}
+                {/*) : searchResults.length > 0 ? (*/}
+                {/*  <>*/}
+                {/*    <table className="vf-table">*/}
+                {/*      <thead className="vf-table__header">*/}
+                {/*        <tr className="vf-table__row">*/}
+                {/*          /!* Filter inputs row *!/*/}
+                {/*          <th className="vf-table__heading" scope="col">*/}
+                {/*            <input*/}
+                {/*              type="text"*/}
+                {/*              className="vf-form__input"*/}
+                {/*              placeholder="Filter Accession"*/}
+                {/*              value={filters.acc}*/}
+                {/*              onChange={(e) =>*/}
+                {/*                handleFilterChange('acc', e.target.value)*/}
+                {/*              }*/}
+                {/*            />*/}
+                {/*          </th>*/}
+                {/*          <th className="vf-table__heading" scope="col">*/}
+                {/*            <input*/}
+                {/*              type="text"*/}
+                {/*              className="vf-form__input"*/}
+                {/*              placeholder="Filter Type"*/}
+                {/*              value={filters.assay_type}*/}
+                {/*              onChange={(e) =>*/}
+                {/*                handleFilterChange('assay_type', e.target.value)*/}
+                {/*              }*/}
+                {/*            />*/}
+                {/*          </th>*/}
+                {/*          <th className="vf-table__heading" scope="col">*/}
+                {/*            <input*/}
+                {/*              type="text"*/}
+                {/*              className="vf-form__input"*/}
+                {/*              placeholder="Filter Bioproject"*/}
+                {/*              value={filters.bioproject}*/}
+                {/*              onChange={(e) =>*/}
+                {/*                handleFilterChange('bioproject', e.target.value)*/}
+                {/*              }*/}
+                {/*            />*/}
+                {/*          </th>*/}
+                {/*          <th className="vf-table__heading" scope="col">*/}
+                {/*            /!* No filter for Biosample link *!/*/}
+                {/*          </th>*/}
+                {/*          <th className="vf-table__heading" scope="col">*/}
+                {/*            <input*/}
+                {/*              type="text"*/}
+                {/*              className="vf-form__input"*/}
+                {/*              placeholder="Filter cANI"*/}
+                {/*              value={filters.cANI}*/}
+                {/*              onChange={(e) =>*/}
+                {/*                handleFilterChange('cANI', e.target.value)*/}
+                {/*              }*/}
+                {/*            />*/}
+                {/*          </th>*/}
+                {/*          <th className="vf-table__heading" scope="col">*/}
+                {/*            <input*/}
+                {/*              type="text"*/}
+                {/*              className="vf-form__input"*/}
+                {/*              placeholder="Filter Date"*/}
+                {/*              value={filters.collection_date_sam}*/}
+                {/*              onChange={(e) =>*/}
+                {/*                handleFilterChange(*/}
+                {/*                  'collection_date_sam',*/}
+                {/*                  e.target.value*/}
+                {/*                )*/}
+                {/*              }*/}
+                {/*            />*/}
+                {/*          </th>*/}
+                {/*          <th className="vf-table__heading" scope="col">*/}
+                {/*            <input*/}
+                {/*              type="text"*/}
+                {/*              className="vf-form__input"*/}
+                {/*              placeholder="Filter Containment"*/}
+                {/*              value={filters.containment}*/}
+                {/*              onChange={(e) =>*/}
+                {/*                handleFilterChange(*/}
+                {/*                  'containment',*/}
+                {/*                  e.target.value*/}
+                {/*                )*/}
+                {/*              }*/}
+                {/*            />*/}
+                {/*          </th>*/}
+                {/*          <th className="vf-table__heading" scope="col">*/}
+                {/*            <input*/}
+                {/*              type="text"*/}
+                {/*              className="vf-form__input"*/}
+                {/*              placeholder="Filter Location"*/}
+                {/*              value={filters.geo_loc_name_country_calc}*/}
+                {/*              onChange={(e) =>*/}
+                {/*                handleFilterChange(*/}
+                {/*                  'geo_loc_name_country_calc',*/}
+                {/*                  e.target.value*/}
+                {/*                )*/}
+                {/*              }*/}
+                {/*            />*/}
+                {/*          </th>*/}
+                {/*          <th className="vf-table__heading" scope="col">*/}
+                {/*            <input*/}
+                {/*              type="text"*/}
+                {/*              className="vf-form__input"*/}
+                {/*              placeholder="Filter Organism"*/}
+                {/*              value={filters.organism}*/}
+                {/*              onChange={(e) =>*/}
+                {/*                handleFilterChange('organism', e.target.value)*/}
+                {/*              }*/}
+                {/*            />*/}
+                {/*          </th>*/}
+                {/*        </tr>*/}
+                {/*        <tr className="vf-table__row">*/}
+                {/*          /!* Sortable column headers *!/*/}
+                {/*          <th*/}
+                {/*            className="vf-table__heading"*/}
+                {/*            scope="col"*/}
+                {/*            onClick={() => handleSortChange('acc')}*/}
+                {/*            style={{ cursor: 'pointer' }}*/}
+                {/*          >*/}
+                {/*            Accession*/}
+                {/*            {sortField === 'acc' && (*/}
+                {/*              <svg*/}
+                {/*                className="vf-icon"*/}
+                {/*                aria-hidden="true"*/}
+                {/*                xmlns="http://www.w3.org/2000/svg"*/}
+                {/*                width="24"*/}
+                {/*                height="24"*/}
+                {/*              >*/}
+                {/*                <use*/}
+                {/*                  href={`#vf-table-sortable--${*/}
+                {/*                    sortDirection === 'asc' ? 'up' : 'down'*/}
+                {/*                  }`}*/}
+                {/*                />*/}
+                {/*              </svg>*/}
+                {/*            )}*/}
+                {/*          </th>*/}
+                {/*          <th*/}
+                {/*            className="vf-table__heading"*/}
+                {/*            scope="col"*/}
+                {/*            onClick={() => handleSortChange('assay_type')}*/}
+                {/*            style={{ cursor: 'pointer' }}*/}
+                {/*          >*/}
+                {/*            Type*/}
+                {/*            {sortField === 'assay_type' && (*/}
+                {/*              <svg*/}
+                {/*                className="vf-icon"*/}
+                {/*                aria-hidden="true"*/}
+                {/*                xmlns="http://www.w3.org/2000/svg"*/}
+                {/*                width="24"*/}
+                {/*                height="24"*/}
+                {/*              >*/}
+                {/*                <use*/}
+                {/*                  href={`#vf-table-sortable--${*/}
+                {/*                    sortDirection === 'asc' ? 'up' : 'down'*/}
+                {/*                  }`}*/}
+                {/*                />*/}
+                {/*              </svg>*/}
+                {/*            )}*/}
+                {/*          </th>*/}
+                {/*          <th*/}
+                {/*            className="vf-table__heading"*/}
+                {/*            scope="col"*/}
+                {/*            onClick={() => handleSortChange('bioproject')}*/}
+                {/*            style={{ cursor: 'pointer' }}*/}
+                {/*          >*/}
+                {/*            Bioproject*/}
+                {/*            {sortField === 'bioproject' && (*/}
+                {/*              <svg*/}
+                {/*                className="vf-icon"*/}
+                {/*                aria-hidden="true"*/}
+                {/*                xmlns="http://www.w3.org/2000/svg"*/}
+                {/*                width="24"*/}
+                {/*                height="24"*/}
+                {/*              >*/}
+                {/*                <use*/}
+                {/*                  href={`#vf-table-sortable--${*/}
+                {/*                    sortDirection === 'asc' ? 'up' : 'down'*/}
+                {/*                  }`}*/}
+                {/*                />*/}
+                {/*              </svg>*/}
+                {/*            )}*/}
+                {/*          </th>*/}
+                {/*          <th className="vf-table__heading" scope="col">*/}
+                {/*            Biosample*/}
+                {/*          </th>*/}
+                {/*          <th*/}
+                {/*            className="vf-table__heading"*/}
+                {/*            scope="col"*/}
+                {/*            onClick={() => handleSortChange('cANI')}*/}
+                {/*            style={{ cursor: 'pointer' }}*/}
+                {/*          >*/}
+                {/*            cANI*/}
+                {/*            {sortField === 'cANI' && (*/}
+                {/*              <svg*/}
+                {/*                className="vf-icon"*/}
+                {/*                aria-hidden="true"*/}
+                {/*                xmlns="http://www.w3.org/2000/svg"*/}
+                {/*                width="24"*/}
+                {/*                height="24"*/}
+                {/*              >*/}
+                {/*                <use*/}
+                {/*                  href={`#vf-table-sortable--${*/}
+                {/*                    sortDirection === 'asc' ? 'up' : 'down'*/}
+                {/*                  }`}*/}
+                {/*                />*/}
+                {/*              </svg>*/}
+                {/*            )}*/}
+                {/*          </th>*/}
+                {/*          <th*/}
+                {/*            className="vf-table__heading"*/}
+                {/*            scope="col"*/}
+                {/*            onClick={() =>*/}
+                {/*              handleSortChange('collection_date_sam')*/}
+                {/*            }*/}
+                {/*            style={{ cursor: 'pointer' }}*/}
+                {/*          >*/}
+                {/*            Date*/}
+                {/*            {sortField === 'collection_date_sam' && (*/}
+                {/*              <svg*/}
+                {/*                className="vf-icon"*/}
+                {/*                aria-hidden="true"*/}
+                {/*                xmlns="http://www.w3.org/2000/svg"*/}
+                {/*                width="24"*/}
+                {/*                height="24"*/}
+                {/*              >*/}
+                {/*                <use*/}
+                {/*                  href={`#vf-table-sortable--${*/}
+                {/*                    sortDirection === 'asc' ? 'up' : 'down'*/}
+                {/*                  }`}*/}
+                {/*                />*/}
+                {/*              </svg>*/}
+                {/*            )}*/}
+                {/*          </th>*/}
+                {/*          <th*/}
+                {/*            className="vf-table__heading"*/}
+                {/*            scope="col"*/}
+                {/*            onClick={() => handleSortChange('containment')}*/}
+                {/*            style={{ cursor: 'pointer' }}*/}
+                {/*          >*/}
+                {/*            Containment*/}
+                {/*            {sortField === 'containment' && (*/}
+                {/*              <svg*/}
+                {/*                className="vf-icon"*/}
+                {/*                aria-hidden="true"*/}
+                {/*                xmlns="http://www.w3.org/2000/svg"*/}
+                {/*                width="24"*/}
+                {/*                height="24"*/}
+                {/*              >*/}
+                {/*                <use*/}
+                {/*                  href={`#vf-table-sortable--${*/}
+                {/*                    sortDirection === 'asc' ? 'up' : 'down'*/}
+                {/*                  }`}*/}
+                {/*                />*/}
+                {/*              </svg>*/}
+                {/*            )}*/}
+                {/*          </th>*/}
+                {/*          <th*/}
+                {/*            className="vf-table__heading"*/}
+                {/*            scope="col"*/}
+                {/*            onClick={() =>*/}
+                {/*              handleSortChange('geo_loc_name_country_calc')*/}
+                {/*            }*/}
+                {/*            style={{ cursor: 'pointer' }}*/}
+                {/*          >*/}
+                {/*            Location*/}
+                {/*            {sortField === 'geo_loc_name_country_calc' && (*/}
+                {/*              <svg*/}
+                {/*                className="vf-icon"*/}
+                {/*                aria-hidden="true"*/}
+                {/*                xmlns="http://www.w3.org/2000/svg"*/}
+                {/*                width="24"*/}
+                {/*                height="24"*/}
+                {/*              >*/}
+                {/*                <use*/}
+                {/*                  href={`#vf-table-sortable--${*/}
+                {/*                    sortDirection === 'asc' ? 'up' : 'down'*/}
+                {/*                  }`}*/}
+                {/*                />*/}
+                {/*              </svg>*/}
+                {/*            )}*/}
+                {/*          </th>*/}
+                {/*          <th*/}
+                {/*            className="vf-table__heading"*/}
+                {/*            scope="col"*/}
+                {/*            onClick={() => handleSortChange('organism')}*/}
+                {/*            style={{ cursor: 'pointer' }}*/}
+                {/*          >*/}
+                {/*            Organism*/}
+                {/*            {sortField === 'organism' && (*/}
+                {/*              <svg*/}
+                {/*                className="vf-icon"*/}
+                {/*                aria-hidden="true"*/}
+                {/*                xmlns="http://www.w3.org/2000/svg"*/}
+                {/*                width="24"*/}
+                {/*                height="24"*/}
+                {/*              >*/}
+                {/*                <use*/}
+                {/*                  href={`#vf-table-sortable--${*/}
+                {/*                    sortDirection === 'asc' ? 'up' : 'down'*/}
+                {/*                  }`}*/}
+                {/*                />*/}
+                {/*              </svg>*/}
+                {/*            )}*/}
+                {/*          </th>*/}
+                {/*        </tr>*/}
+                {/*      </thead>*/}
+                {/*      <tbody className="vf-table__body">*/}
+                {/*        {processResults().paginatedResults.map(*/}
+                {/*          (entry, index) => {*/}
+                {/*            // Define URLs for first two results*/}
+                {/*            const accessionLinks = [*/}
+                {/*              'https://www.ebi.ac.uk/metagenomics/runs/ERR868490',*/}
+                {/*              'https://www.ebi.ac.uk/metagenomics/runs/ERR1726685',*/}
+                {/*            ];*/}
+
+                {/*            return (*/}
+                {/*              // eslint-disable-next-line react/no-array-index-key*/}
+                {/*              <tr className="vf-table__row" key={index}>*/}
+                {/*                <td className="vf-table__cell">*/}
+                {/*                  {index < 2 ? (*/}
+                {/*                    <a*/}
+                {/*                      href={accessionLinks[index]}*/}
+                {/*                      target="_blank"*/}
+                {/*                      rel="noopener noreferrer"*/}
+                {/*                      className="vf-link"*/}
+                {/*                    >*/}
+                {/*                      {entry.acc}*/}
+                {/*                    </a>*/}
+                {/*                  ) : (*/}
+                {/*                    entry.acc*/}
+                {/*                  )}*/}
+                {/*                </td>*/}
+                {/*                <td className="vf-table__cell">*/}
+                {/*                  {entry.assay_type}*/}
+                {/*                </td>*/}
+                {/*                <td className="vf-table__cell">*/}
+                {/*                  {entry.bioproject}*/}
+                {/*                </td>*/}
+                {/*                <td className="vf-table__cell">*/}
+                {/*                  <a*/}
+                {/*                    href={entry.biosample_link}*/}
+                {/*                    target="_blank"*/}
+                {/*                    rel="noopener noreferrer"*/}
+                {/*                  >*/}
+                {/*                    Link*/}
+                {/*                  </a>*/}
+                {/*                </td>*/}
+                {/*                <td className="vf-table__cell">{entry.cANI}</td>*/}
+                {/*                <td className="vf-table__cell">*/}
+                {/*                  {entry.collection_date_sam || 'NP'}*/}
+                {/*                </td>*/}
+                {/*                <td className="vf-table__cell">*/}
+                {/*                  {entry.containment}*/}
+                {/*                </td>*/}
+                {/*                <td className="vf-table__cell">*/}
+                {/*                  {entry.geo_loc_name_country_calc || 'NP'}*/}
+                {/*                </td>*/}
+                {/*                <td className="vf-table__cell">*/}
+                {/*                  {entry.organism}*/}
+                {/*                </td>*/}
+                {/*              </tr>*/}
+                {/*            );*/}
+                {/*          }*/}
+                {/*        )}*/}
+                {/*      </tbody>*/}
+                {/*    </table>*/}
+
+                {/*    /!* Pagination *!/*/}
+                {/*    {processResults().totalPages > 1 && (*/}
+                {/*      <nav className="vf-pagination" aria-label="Pagination">*/}
+                {/*        <ul className="vf-pagination__list">*/}
+                {/*          <li*/}
+                {/*            className={`vf-pagination__item vf-pagination__item--previous-page ${*/}
+                {/*              currentPage === 1*/}
+                {/*                ? 'vf-pagination__item--is-disabled'*/}
+                {/*                : ''*/}
+                {/*            }`}*/}
+                {/*          >*/}
+                {/*            <button*/}
+                {/*              type="button"*/}
+                {/*              className="vf-pagination__link"*/}
+                {/*              onClick={() =>*/}
+                {/*                currentPage > 1 &&*/}
+                {/*                handlePageChange(currentPage - 1)*/}
+                {/*              }*/}
+                {/*            >*/}
+                {/*              Previous*/}
+                {/*              <span className="vf-u-sr-only"> page</span>*/}
+                {/*            </button>*/}
+                {/*          </li>*/}
+
+                {/*          /!* First page *!/*/}
+                {/*          {currentPage > 2 && (*/}
+                {/*            <li className="vf-pagination__item">*/}
+                {/*              <button*/}
+                {/*                type="button"*/}
+                {/*                className="vf-pagination__link"*/}
+                {/*                onClick={() => handlePageChange(1)}*/}
+                {/*              >*/}
+                {/*                1<span className="vf-u-sr-only"> page</span>*/}
+                {/*              </button>*/}
+                {/*            </li>*/}
+                {/*          )}*/}
+
+                {/*          /!* Ellipsis if needed *!/*/}
+                {/*          {currentPage > 3 && (*/}
+                {/*            <li className="vf-pagination__item">*/}
+                {/*              <span className="vf-pagination__label">...</span>*/}
+                {/*            </li>*/}
+                {/*          )}*/}
+
+                {/*          /!* Previous page if not first *!/*/}
+                {/*          {currentPage > 1 && (*/}
+                {/*            <li className="vf-pagination__item">*/}
+                {/*              <button*/}
+                {/*                type="button"*/}
+                {/*                className="vf-pagination__link"*/}
+                {/*                onClick={() =>*/}
+                {/*                  handlePageChange(currentPage - 1)*/}
+                {/*                }*/}
+                {/*              >*/}
+                {/*                {currentPage - 1}*/}
+                {/*                <span className="vf-u-sr-only"> page</span>*/}
+                {/*              </button>*/}
+                {/*            </li>*/}
+                {/*          )}*/}
+
+                {/*          /!* Current page *!/*/}
+                {/*          <li className="vf-pagination__item vf-pagination__item--is-active">*/}
+                {/*            <span*/}
+                {/*              className="vf-pagination__label"*/}
+                {/*              aria-current="page"*/}
+                {/*            >*/}
+                {/*              <span className="vf-u-sr-only">Page </span>*/}
+                {/*              {currentPage}*/}
+                {/*            </span>*/}
+                {/*          </li>*/}
+
+                {/*          /!* Next page if not last *!/*/}
+                {/*          {currentPage < processResults().totalPages && (*/}
+                {/*            <li className="vf-pagination__item">*/}
+                {/*              <button*/}
+                {/*                type="button"*/}
+                {/*                className="vf-pagination__link"*/}
+                {/*                onClick={() =>*/}
+                {/*                  handlePageChange(currentPage + 1)*/}
+                {/*                }*/}
+                {/*              >*/}
+                {/*                {currentPage + 1}*/}
+                {/*                <span className="vf-u-sr-only"> page</span>*/}
+                {/*              </button>*/}
+                {/*            </li>*/}
+                {/*          )}*/}
+
+                {/*          /!* Ellipsis if needed *!/*/}
+                {/*          {currentPage < processResults().totalPages - 2 && (*/}
+                {/*            <li className="vf-pagination__item">*/}
+                {/*              <span className="vf-pagination__label">...</span>*/}
+                {/*            </li>*/}
+                {/*          )}*/}
+
+                {/*          /!* Last page *!/*/}
+                {/*          {currentPage < processResults().totalPages - 1 && (*/}
+                {/*            <li className="vf-pagination__item">*/}
+                {/*              <button*/}
+                {/*                type="button"*/}
+                {/*                className="vf-pagination__link"*/}
+                {/*                onClick={() =>*/}
+                {/*                  handlePageChange(processResults().totalPages)*/}
+                {/*                }*/}
+                {/*              >*/}
+                {/*                {processResults().totalPages}*/}
+                {/*                <span className="vf-u-sr-only"> page</span>*/}
+                {/*              </button>*/}
+                {/*            </li>*/}
+                {/*          )}*/}
+
+                {/*          <li*/}
+                {/*            className={`vf-pagination__item vf-pagination__item--next-page ${*/}
+                {/*              currentPage === processResults().totalPages*/}
+                {/*                ? 'vf-pagination__item--is-disabled'*/}
+                {/*                : ''*/}
+                {/*            }`}*/}
+                {/*          >*/}
+                {/*            <button*/}
+                {/*              type="button"*/}
+                {/*              className="vf-pagination__link"*/}
+                {/*              onClick={() =>*/}
+                {/*                currentPage < processResults().totalPages &&*/}
+                {/*                handlePageChange(currentPage + 1)*/}
+                {/*              }*/}
+                {/*            >*/}
+                {/*              Next<span className="vf-u-sr-only"> page</span>*/}
+                {/*            </button>*/}
+                {/*          </li>*/}
+                {/*        </ul>*/}
+                {/*      </nav>*/}
+                {/*    )}*/}
+                {/*  </>*/}
+                {/*) : (*/}
+                {/*  <div className="vf-u-padding__top--800">*/}
+                {/*    <p>*/}
+                {/*      No search results found. Please try a different search.*/}
+                {/*    </p>*/}
+                {/*  </div>*/}
+                {/*)}*/}
+
                 {isLoading ? (
                   <div className="vf-u-padding__top--800">
-                    <p>Loading search results...</p>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        padding: '40px',
+                        backgroundColor: '#f8f9fa',
+                        borderRadius: '8px',
+                        border: '2px dashed #dee2e6',
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: '18px',
+                          color: '#6c757d',
+                          marginBottom: '10px',
+                        }}
+                      >
+                        🔍 Searching metagenomes...
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '14px',
+                          color: '#868e96',
+                        }}
+                      >
+                        This may take a few moments
+                      </div>
+                    </div>
                   </div>
                 ) : searchResults.length > 0 ? (
-                  <>
-                    <table className="vf-table">
-                      <thead className="vf-table__header">
-                        <tr className="vf-table__row">
-                          {/* Filter inputs row */}
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Accession"
-                              value={filters.acc}
-                              onChange={(e) =>
-                                handleFilterChange('acc', e.target.value)
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Type"
-                              value={filters.assay_type}
-                              onChange={(e) =>
-                                handleFilterChange('assay_type', e.target.value)
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Bioproject"
-                              value={filters.bioproject}
-                              onChange={(e) =>
-                                handleFilterChange('bioproject', e.target.value)
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            {/* No filter for Biosample link */}
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter cANI"
-                              value={filters.cANI}
-                              onChange={(e) =>
-                                handleFilterChange('cANI', e.target.value)
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Date"
-                              value={filters.collection_date_sam}
-                              onChange={(e) =>
-                                handleFilterChange(
-                                  'collection_date_sam',
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Containment"
-                              value={filters.containment}
-                              onChange={(e) =>
-                                handleFilterChange(
-                                  'containment',
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Location"
-                              value={filters.geo_loc_name_country_calc}
-                              onChange={(e) =>
-                                handleFilterChange(
-                                  'geo_loc_name_country_calc',
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Organism"
-                              value={filters.organism}
-                              onChange={(e) =>
-                                handleFilterChange('organism', e.target.value)
-                              }
-                            />
-                          </th>
-                        </tr>
-                        <tr className="vf-table__row">
-                          {/* Sortable column headers */}
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('acc')}
-                            style={{ cursor: 'pointer' }}
+                  <div className="vf-u-padding__top--600">
+                    {/* Results Summary Header */}
+                    <div
+                      style={{
+                        backgroundColor: '#e8f5e8',
+                        padding: '20px',
+                        borderRadius: '8px',
+                        marginBottom: '20px',
+                        border: '1px solid #28a745',
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <div>
+                          <h3 style={{ margin: '0 0 5px 0', color: '#155724' }}>
+                            🎯 Search Complete: {searchResults.length} matches
+                            found
+                          </h3>
+                          <p style={{ margin: 0, color: '#155724' }}>
+                            Found{' '}
+                            {
+                              searchResults.filter(
+                                (r) => r.assay_type === 'WGS'
+                              ).length
+                            }{' '}
+                            samples with assemblies •
+                            {Object.keys(countryCounts).length} countries •
+                            Average containment:{' '}
+                            {searchResults.length > 0
+                              ? (
+                                  searchResults
+                                    .filter(
+                                      (r) => typeof r.containment === 'number'
+                                    )
+                                    .reduce(
+                                      (sum, r) => sum + Number(r.containment),
+                                      0
+                                    ) /
+                                  searchResults.filter(
+                                    (r) => typeof r.containment === 'number'
+                                  ).length
+                                ).toFixed(3)
+                              : '0.000'}
+                          </p>
+                        </div>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <button
+                            className="vf-button vf-button--primary vf-button--sm"
+                            onClick={() => setIsTableVisible(!isTableVisible)}
                           >
-                            Accession
-                            {sortField === 'acc' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('assay_type')}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Type
-                            {sortField === 'assay_type' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('bioproject')}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Bioproject
-                            {sortField === 'bioproject' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            Biosample
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('cANI')}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            cANI
-                            {sortField === 'cANI' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
+                            {isTableVisible
+                              ? '📊 Hide Details'
+                              : '📋 View Details'}
+                          </button>
+                          <button
+                            className="vf-button vf-button--secondary vf-button--sm"
                             onClick={() =>
-                              handleSortChange('collection_date_sam')
+                              window.open(
+                                'https://www.ebi.ac.uk/metagenomics/submit',
+                                '_blank'
+                              )
                             }
-                            style={{ cursor: 'pointer' }}
                           >
-                            Date
-                            {sortField === 'collection_date_sam' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('containment')}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Containment
-                            {sortField === 'containment' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() =>
-                              handleSortChange('geo_loc_name_country_calc')
-                            }
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Location
-                            {sortField === 'geo_loc_name_country_calc' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('organism')}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Organism
-                            {sortField === 'organism' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="vf-table__body">
-                        {processResults().paginatedResults.map(
-                          (entry, index) => {
-                            // Define URLs for first two results
-                            const accessionLinks = [
-                              'https://www.ebi.ac.uk/metagenomics/runs/ERR868490',
-                              'https://www.ebi.ac.uk/metagenomics/runs/ERR1726685',
-                            ];
+                            🔬 Export as TSV
+                          </button>
+                        </div>
+                      </div>
+                    </div>
 
-                            return (
-                              // eslint-disable-next-line react/no-array-index-key
-                              <tr className="vf-table__row" key={index}>
-                                <td className="vf-table__cell">
-                                  {index < 2 ? (
-                                    <a
-                                      href={accessionLinks[index]}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="vf-link"
-                                    >
-                                      {entry.acc}
-                                    </a>
-                                  ) : (
-                                    entry.acc
-                                  )}
-                                </td>
-                                <td className="vf-table__cell">
-                                  {entry.assay_type}
-                                </td>
-                                <td className="vf-table__cell">
-                                  {entry.bioproject}
-                                </td>
-                                <td className="vf-table__cell">
-                                  <a
-                                    href={entry.biosample_link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                    {/* Collapsible Detailed Table Section */}
+                    <details
+                      open={isTableVisible}
+                      style={{ marginBottom: '30px' }}
+                    >
+                      <summary
+                        style={{
+                          cursor: 'pointer',
+                          fontWeight: 'bold',
+                          fontSize: '18px',
+                          padding: '15px',
+                          backgroundColor: '#f8f9fa',
+                          borderRadius: '8px',
+                          border: '1px solid #dee2e6',
+                          marginBottom: '20px',
+                          userSelect: 'none',
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setIsTableVisible(!isTableVisible);
+                        }}
+                      >
+                        📊 Detailed Results Table
+                        <span
+                          style={{
+                            fontWeight: 'normal',
+                            color: '#6c757d',
+                            marginLeft: '10px',
+                          }}
+                        >
+                          ({processResults().filteredResults.length} results •
+                          Click to {isTableVisible ? 'collapse' : 'expand'})
+                        </span>
+                      </summary>
+
+                      {isTableVisible && (
+                        <div
+                          style={{
+                            backgroundColor: '#fff',
+                            border: '1px solid #dee2e6',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {/* Enhanced Filter Section */}
+                          <div
+                            style={{
+                              backgroundColor: '#f8f9fa',
+                              padding: '20px',
+                              borderBottom: '1px solid #dee2e6',
+                            }}
+                          >
+                            <h4
+                              style={{ margin: '0 0 15px 0', color: '#495057' }}
+                            >
+                              🔍 Filter Results
+                            </h4>
+                            <div
+                              style={{
+                                display: 'grid',
+                                gridTemplateColumns:
+                                  'repeat(auto-fit, minmax(200px, 1fr))',
+                                gap: '15px',
+                              }}
+                            >
+                              <div>
+                                <label
+                                  style={{
+                                    fontSize: '12px',
+                                    fontWeight: 'bold',
+                                    color: '#495057',
+                                  }}
+                                >
+                                  Accession
+                                </label>
+                                <input
+                                  type="text"
+                                  className="vf-form__input"
+                                  placeholder="Filter by accession..."
+                                  value={filters.acc}
+                                  onChange={(e) =>
+                                    handleFilterChange('acc', e.target.value)
+                                  }
+                                  style={{ marginTop: '5px' }}
+                                />
+                              </div>
+                              <div>
+                                <label
+                                  style={{
+                                    fontSize: '12px',
+                                    fontWeight: 'bold',
+                                    color: '#495057',
+                                  }}
+                                >
+                                  Assay Type
+                                </label>
+                                <input
+                                  type="text"
+                                  className="vf-form__input"
+                                  placeholder="WGS, WGA..."
+                                  value={filters.assay_type}
+                                  onChange={(e) =>
+                                    handleFilterChange(
+                                      'assay_type',
+                                      e.target.value
+                                    )
+                                  }
+                                  style={{ marginTop: '5px' }}
+                                />
+                              </div>
+                              <div>
+                                <label
+                                  style={{
+                                    fontSize: '12px',
+                                    fontWeight: 'bold',
+                                    color: '#495057',
+                                  }}
+                                >
+                                  Country/Location
+                                </label>
+                                <input
+                                  type="text"
+                                  className="vf-form__input"
+                                  placeholder="Filter by country..."
+                                  value={filters.geo_loc_name_country_calc}
+                                  onChange={(e) =>
+                                    handleFilterChange(
+                                      'geo_loc_name_country_calc',
+                                      e.target.value
+                                    )
+                                  }
+                                  style={{ marginTop: '5px' }}
+                                />
+                              </div>
+                              <div>
+                                <label
+                                  style={{
+                                    fontSize: '12px',
+                                    fontWeight: 'bold',
+                                    color: '#495057',
+                                  }}
+                                >
+                                  Containment Score
+                                </label>
+                                <input
+                                  type="text"
+                                  className="vf-form__input"
+                                  placeholder="Min containment..."
+                                  value={filters.containment}
+                                  onChange={(e) =>
+                                    handleFilterChange(
+                                      'containment',
+                                      e.target.value
+                                    )
+                                  }
+                                  style={{ marginTop: '5px' }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Enhanced Table */}
+                          <div style={{ overflowX: 'auto' }}>
+                            <table className="vf-table" style={{ margin: 0 }}>
+                              <thead className="vf-table__header">
+                                <tr
+                                  className="vf-table__row"
+                                  style={{ backgroundColor: '#f1f3f4' }}
+                                >
+                                  <th
+                                    className="vf-table__heading"
+                                    scope="col"
+                                    style={{ minWidth: '120px' }}
                                   >
-                                    Link
-                                  </a>
-                                </td>
-                                <td className="vf-table__cell">{entry.cANI}</td>
-                                <td className="vf-table__cell">
-                                  {entry.collection_date_sam || 'NP'}
-                                </td>
-                                <td className="vf-table__cell">
-                                  {entry.containment}
-                                </td>
-                                <td className="vf-table__cell">
-                                  {entry.geo_loc_name_country_calc || 'NP'}
-                                </td>
-                                <td className="vf-table__cell">
-                                  {entry.organism}
-                                </td>
-                              </tr>
-                            );
-                          }
-                        )}
-                      </tbody>
-                    </table>
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '5px',
+                                      }}
+                                    >
+                                      🔗 Accession
+                                      <button
+                                        onClick={() => handleSortChange('acc')}
+                                        style={{
+                                          background: 'none',
+                                          border: 'none',
+                                          cursor: 'pointer',
+                                          padding: '2px',
+                                        }}
+                                      >
+                                        {sortField === 'acc'
+                                          ? sortDirection === 'asc'
+                                            ? '⬆️'
+                                            : '⬇️'
+                                          : '↕️'}
+                                      </button>
+                                    </div>
+                                  </th>
+                                  <th
+                                    className="vf-table__heading"
+                                    scope="col"
+                                    style={{ minWidth: '80px' }}
+                                  >
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '5px',
+                                      }}
+                                    >
+                                      🧬 Type
+                                      <button
+                                        onClick={() =>
+                                          handleSortChange('assay_type')
+                                        }
+                                        style={{
+                                          background: 'none',
+                                          border: 'none',
+                                          cursor: 'pointer',
+                                          padding: '2px',
+                                        }}
+                                      >
+                                        {sortField === 'assay_type'
+                                          ? sortDirection === 'asc'
+                                            ? '⬆️'
+                                            : '⬇️'
+                                          : '↕️'}
+                                      </button>
+                                    </div>
+                                  </th>
+                                  <th
+                                    className="vf-table__heading"
+                                    scope="col"
+                                    style={{ minWidth: '100px' }}
+                                  >
+                                    📊 cANI
+                                  </th>
+                                  <th
+                                    className="vf-table__heading"
+                                    scope="col"
+                                    style={{ minWidth: '100px' }}
+                                  >
+                                    📈 Containment
+                                  </th>
+                                  <th
+                                    className="vf-table__heading"
+                                    scope="col"
+                                    style={{ minWidth: '120px' }}
+                                  >
+                                    🌍 Location
+                                  </th>
+                                  <th
+                                    className="vf-table__heading"
+                                    scope="col"
+                                    style={{ minWidth: '120px' }}
+                                  >
+                                    🦠 Metagenome
+                                  </th>
+                                  {/*<th*/}
+                                  {/*  className="vf-table__heading"*/}
+                                  {/*  scope="col"*/}
+                                  {/*  style={{ minWidth: '80px' }}*/}
+                                  {/*>*/}
+                                  {/*  📅 Date*/}
+                                  {/*</th>*/}
+                                  <th
+                                    className="vf-table__heading"
+                                    scope="col"
+                                    style={{ minWidth: '120px' }}
+                                  >
+                                    ⚙️ Actions
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody className="vf-table__body">
+                                {processResults().paginatedResults.map(
+                                  (entry, index) => {
+                                    // Calculate actual index in the full dataset
+                                    const actualIndex =
+                                      (currentPage - 1) * itemsPerPage + index;
 
-                    {/* Pagination */}
-                    {processResults().totalPages > 1 && (
-                      <nav className="vf-pagination" aria-label="Pagination">
-                        <ul className="vf-pagination__list">
-                          <li
-                            className={`vf-pagination__item vf-pagination__item--previous-page ${
-                              currentPage === 1
-                                ? 'vf-pagination__item--is-disabled'
-                                : ''
-                            }`}
-                          >
-                            <button
-                              type="button"
-                              className="vf-pagination__link"
-                              onClick={() =>
-                                currentPage > 1 &&
-                                handlePageChange(currentPage - 1)
-                              }
+                                    return (
+                                      <tr
+                                        key={actualIndex}
+                                        className="vf-table__row"
+                                        style={{
+                                          backgroundColor:
+                                            actualIndex % 2 === 0
+                                              ? '#fff'
+                                              : '#f9f9f9',
+                                          transition: 'background-color 0.2s',
+                                        }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.backgroundColor =
+                                            '#e3f2fd';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.backgroundColor =
+                                            actualIndex % 2 === 0
+                                              ? '#fff'
+                                              : '#f9f9f9';
+                                        }}
+                                      >
+                                        <td className="vf-table__cell">
+                                          {actualIndex < 2 ? (
+                                            <div>
+                                              <a
+                                                href={`https://www.ebi.ac.uk/metagenomics/runs/${entry.acc}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="vf-link"
+                                                style={{ fontWeight: 'bold' }}
+                                              >
+                                                {entry.acc}
+                                              </a>
+                                              <div
+                                                style={{
+                                                  fontSize: '10px',
+                                                  color: '#28a745',
+                                                  fontWeight: 'bold',
+                                                  marginTop: '2px',
+                                                }}
+                                              >
+                                                ✅ Available in MGnify
+                                              </div>
+                                            </div>
+                                          ) : (
+                                            <span
+                                              style={{
+                                                fontFamily: 'monospace',
+                                              }}
+                                            >
+                                              {entry.acc}
+                                            </span>
+                                          )}
+                                        </td>
+                                        <td className="vf-table__cell">
+                                          <span
+                                            style={{
+                                              padding: '4px 8px',
+                                              borderRadius: '4px',
+                                              fontSize: '12px',
+                                              fontWeight: 'bold',
+                                              backgroundColor:
+                                                entry.assay_type === 'WGS'
+                                                  ? '#d4edda'
+                                                  : '#fff3cd',
+                                              color:
+                                                entry.assay_type === 'WGS'
+                                                  ? '#155724'
+                                                  : '#856404',
+                                            }}
+                                          >
+                                            {entry.assay_type}
+                                          </span>
+                                        </td>
+                                        <td className="vf-table__cell">
+                                          <div
+                                            style={{
+                                              fontWeight: 'bold',
+                                              color:
+                                                typeof entry.cANI ===
+                                                  'number' && entry.cANI > 0.95
+                                                  ? '#28a745'
+                                                  : '#6c757d',
+                                            }}
+                                          >
+                                            {typeof entry.cANI === 'number'
+                                              ? entry.cANI.toFixed(3)
+                                              : entry.cANI}
+                                          </div>
+                                        </td>
+                                        <td className="vf-table__cell">
+                                          <div
+                                            style={{
+                                              display: 'flex',
+                                              alignItems: 'center',
+                                              gap: '5px',
+                                            }}
+                                          >
+                                            <div
+                                              style={{
+                                                fontWeight: 'bold',
+                                                color:
+                                                  typeof entry.containment ===
+                                                    'number' &&
+                                                  entry.containment > 0.5
+                                                    ? '#28a745'
+                                                    : '#6c757d',
+                                              }}
+                                            >
+                                              {typeof entry.containment ===
+                                              'number'
+                                                ? entry.containment.toFixed(3)
+                                                : entry.containment}
+                                            </div>
+                                            {typeof entry.containment ===
+                                              'number' &&
+                                              entry.containment > 0.7 && (
+                                                <span
+                                                  style={{ fontSize: '12px' }}
+                                                >
+                                                  🔥
+                                                </span>
+                                              )}
+                                          </div>
+                                        </td>
+                                        <td className="vf-table__cell">
+                                          <div style={{ fontSize: '14px' }}>
+                                            {entry.geo_loc_name_country_calc ===
+                                            'uncalculated' ? (
+                                              <span
+                                                style={{
+                                                  color: '#ffc107',
+                                                  fontStyle: 'italic',
+                                                }}
+                                              >
+                                                📍 Location pending
+                                              </span>
+                                            ) : (
+                                              entry.geo_loc_name_country_calc ||
+                                              '❓ Unknown'
+                                            )}
+                                          </div>
+                                        </td>
+                                        <td className="vf-table__cell">
+                                          <div
+                                            style={{
+                                              fontSize: '14px',
+                                              maxWidth: '150px',
+                                              overflow: 'hidden',
+                                              textOverflow: 'ellipsis',
+                                              whiteSpace: 'nowrap',
+                                            }}
+                                            title={entry.organism}
+                                          >
+                                            {entry.organism ||
+                                              '🦠 Unknown metagenome'}
+                                          </div>
+                                        </td>
+                                        {/*<td className="vf-table__cell">*/}
+                                        {/*  <div*/}
+                                        {/*    style={{*/}
+                                        {/*      fontSize: '12px',*/}
+                                        {/*      color: '#6c757d',*/}
+                                        {/*    }}*/}
+                                        {/*  >*/}
+                                        {/*    {entry.collection_date_sam ||*/}
+                                        {/*      '📅 Not provided'}*/}
+                                        {/*  </div>*/}
+                                        {/*</td>*/}
+                                        <td className="vf-table__cell">
+                                          <div
+                                            style={{
+                                              display: 'flex',
+                                              gap: '5px',
+                                              flexWrap: 'wrap',
+                                            }}
+                                          >
+                                            {actualIndex < 2 ? (
+                                              <button
+                                                className="vf-button vf-button--primary vf-button--xs"
+                                                onClick={() =>
+                                                  window.open(
+                                                    `https://www.ebi.ac.uk/metagenomics/runs/${entry.acc}`,
+                                                    '_blank'
+                                                  )
+                                                }
+                                                title="View in MGnify"
+                                              >
+                                                👁️ View
+                                              </button>
+                                            ) : (
+                                              <button
+                                                className="vf-button vf-button--secondary vf-button--xs"
+                                                onClick={() =>
+                                                  handleRequestAnalysis(entry)
+                                                }
+                                                title="Request analysis in MGnify"
+                                              >
+                                                🔬 Request
+                                              </button>
+                                            )}
+                                            <button
+                                              className="vf-button vf-button--tertiary vf-button--xs"
+                                              onClick={() =>
+                                                window.open(
+                                                  entry.biosample_link,
+                                                  '_blank'
+                                                )
+                                              }
+                                              title="View biosample"
+                                            >
+                                              🔗 Sample
+                                            </button>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    );
+                                  }
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* Enhanced Pagination */}
+                          {processResults().totalPages > 1 && (
+                            <div
+                              style={{
+                                padding: '20px',
+                                backgroundColor: '#f8f9fa',
+                                borderTop: '1px solid #dee2e6',
+                              }}
                             >
-                              Previous
-                              <span className="vf-u-sr-only"> page</span>
-                            </button>
-                          </li>
-
-                          {/* First page */}
-                          {currentPage > 2 && (
-                            <li className="vf-pagination__item">
-                              <button
-                                type="button"
-                                className="vf-pagination__link"
-                                onClick={() => handlePageChange(1)}
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'between',
+                                  alignItems: 'center',
+                                  gap: '20px',
+                                }}
                               >
-                                1<span className="vf-u-sr-only"> page</span>
-                              </button>
-                            </li>
+                                <div
+                                  style={{ fontSize: '14px', color: '#6c757d' }}
+                                >
+                                  Showing {(currentPage - 1) * itemsPerPage + 1}{' '}
+                                  to{' '}
+                                  {Math.min(
+                                    currentPage * itemsPerPage,
+                                    processResults().filteredResults.length
+                                  )}{' '}
+                                  of {processResults().filteredResults.length}{' '}
+                                  results
+                                </div>
+                                <nav
+                                  className="vf-pagination"
+                                  aria-label="Pagination"
+                                >
+                                  <ul className="vf-pagination__list">
+                                    <li
+                                      className={`vf-pagination__item vf-pagination__item--previous-page ${
+                                        currentPage === 1
+                                          ? 'vf-pagination__item--is-disabled'
+                                          : ''
+                                      }`}
+                                    >
+                                      <button
+                                        type="button"
+                                        className="vf-pagination__link"
+                                        onClick={() =>
+                                          currentPage > 1 &&
+                                          handlePageChange(currentPage - 1)
+                                        }
+                                      >
+                                        ⬅️ Previous
+                                      </button>
+                                    </li>
+
+                                    {[
+                                      ...Array(
+                                        Math.min(5, processResults().totalPages)
+                                      ),
+                                    ].map((_, i) => {
+                                      const pageNum =
+                                        Math.max(1, currentPage - 2) + i;
+                                      if (pageNum > processResults().totalPages)
+                                        return null;
+
+                                      return (
+                                        <li
+                                          key={pageNum}
+                                          className={`vf-pagination__item ${
+                                            pageNum === currentPage
+                                              ? 'vf-pagination__item--is-active'
+                                              : ''
+                                          }`}
+                                        >
+                                          <button
+                                            type="button"
+                                            className="vf-pagination__link"
+                                            onClick={() =>
+                                              handlePageChange(pageNum)
+                                            }
+                                          >
+                                            {pageNum}
+                                          </button>
+                                        </li>
+                                      );
+                                    })}
+
+                                    <li
+                                      className={`vf-pagination__item vf-pagination__item--next-page ${
+                                        currentPage ===
+                                        processResults().totalPages
+                                          ? 'vf-pagination__item--is-disabled'
+                                          : ''
+                                      }`}
+                                    >
+                                      <button
+                                        type="button"
+                                        className="vf-pagination__link"
+                                        onClick={() =>
+                                          currentPage <
+                                            processResults().totalPages &&
+                                          handlePageChange(currentPage + 1)
+                                        }
+                                      >
+                                        Next ➡️
+                                      </button>
+                                    </li>
+                                  </ul>
+                                </nav>
+                              </div>
+                            </div>
                           )}
-
-                          {/* Ellipsis if needed */}
-                          {currentPage > 3 && (
-                            <li className="vf-pagination__item">
-                              <span className="vf-pagination__label">...</span>
-                            </li>
-                          )}
-
-                          {/* Previous page if not first */}
-                          {currentPage > 1 && (
-                            <li className="vf-pagination__item">
-                              <button
-                                type="button"
-                                className="vf-pagination__link"
-                                onClick={() =>
-                                  handlePageChange(currentPage - 1)
-                                }
-                              >
-                                {currentPage - 1}
-                                <span className="vf-u-sr-only"> page</span>
-                              </button>
-                            </li>
-                          )}
-
-                          {/* Current page */}
-                          <li className="vf-pagination__item vf-pagination__item--is-active">
-                            <span
-                              className="vf-pagination__label"
-                              aria-current="page"
-                            >
-                              <span className="vf-u-sr-only">Page </span>
-                              {currentPage}
-                            </span>
-                          </li>
-
-                          {/* Next page if not last */}
-                          {currentPage < processResults().totalPages && (
-                            <li className="vf-pagination__item">
-                              <button
-                                type="button"
-                                className="vf-pagination__link"
-                                onClick={() =>
-                                  handlePageChange(currentPage + 1)
-                                }
-                              >
-                                {currentPage + 1}
-                                <span className="vf-u-sr-only"> page</span>
-                              </button>
-                            </li>
-                          )}
-
-                          {/* Ellipsis if needed */}
-                          {currentPage < processResults().totalPages - 2 && (
-                            <li className="vf-pagination__item">
-                              <span className="vf-pagination__label">...</span>
-                            </li>
-                          )}
-
-                          {/* Last page */}
-                          {currentPage < processResults().totalPages - 1 && (
-                            <li className="vf-pagination__item">
-                              <button
-                                type="button"
-                                className="vf-pagination__link"
-                                onClick={() =>
-                                  handlePageChange(processResults().totalPages)
-                                }
-                              >
-                                {processResults().totalPages}
-                                <span className="vf-u-sr-only"> page</span>
-                              </button>
-                            </li>
-                          )}
-
-                          <li
-                            className={`vf-pagination__item vf-pagination__item--next-page ${
-                              currentPage === processResults().totalPages
-                                ? 'vf-pagination__item--is-disabled'
-                                : ''
-                            }`}
-                          >
-                            <button
-                              type="button"
-                              className="vf-pagination__link"
-                              onClick={() =>
-                                currentPage < processResults().totalPages &&
-                                handlePageChange(currentPage + 1)
-                              }
-                            >
-                              Next<span className="vf-u-sr-only"> page</span>
-                            </button>
-                          </li>
-                        </ul>
-                      </nav>
-                    )}
-                  </>
+                        </div>
+                      )}
+                    </details>
+                  </div>
                 ) : (
                   <div className="vf-u-padding__top--800">
-                    <p>
-                      No search results found. Please try a different search.
-                    </p>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        padding: '60px',
+                        backgroundColor: '#f8f9fa',
+                        borderRadius: '8px',
+                        border: '2px dashed #dee2e6',
+                      }}
+                    >
+                      <div style={{ fontSize: '48px', marginBottom: '20px' }}>
+                        🔍
+                      </div>
+                      <h3 style={{ color: '#6c757d', marginBottom: '10px' }}>
+                        No search results found
+                      </h3>
+                      <p style={{ color: '#868e96', marginBottom: '20px' }}>
+                        Try uploading a different file or adjusting your search
+                        parameters
+                      </p>
+                      <button
+                        className="vf-button vf-button--primary"
+                        onClick={() => window.location.reload()}
+                      >
+                        🔄 Start New Search
+                      </button>
+                    </div>
                   </div>
                 )}
+
+                {visualizationData && (
+                  <div className="vf-u-padding__top--800">
+                    <h2 className="vf-text vf-text-heading--2">
+                      Results Dashboard
+                    </h2>
+
+                    {/* Quick Stats Summary */}
+                    <div className="vf-u-padding__bottom--600">
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns:
+                            'repeat(auto-fit, minmax(200px, 1fr))',
+                          gap: '20px',
+                          marginBottom: '30px',
+                        }}
+                      >
+                        <div
+                          style={{
+                            backgroundColor: '#f8f9fa',
+                            padding: '20px',
+                            borderRadius: '8px',
+                            textAlign: 'center',
+                            border: '1px solid #dee2e6',
+                          }}
+                        >
+                          <h4
+                            style={{ margin: '0 0 10px 0', color: '#495057' }}
+                          >
+                            Total Matches
+                          </h4>
+                          <div
+                            style={{
+                              fontSize: '2em',
+                              fontWeight: 'bold',
+                              color: '#28a745',
+                            }}
+                          >
+                            {searchResults.length}
+                          </div>
+                        </div>
+
+                        <div
+                          style={{
+                            backgroundColor: '#f8f9fa',
+                            padding: '20px',
+                            borderRadius: '8px',
+                            textAlign: 'center',
+                            border: '1px solid #dee2e6',
+                          }}
+                        >
+                          <h4
+                            style={{ margin: '0 0 10px 0', color: '#495057' }}
+                          >
+                            Unique Countries
+                          </h4>
+                          <div
+                            style={{
+                              fontSize: '2em',
+                              fontWeight: 'bold',
+                              color: '#17a2b8',
+                            }}
+                          >
+                            {Object.keys(countryCounts).length}
+                          </div>
+                        </div>
+
+                        <div
+                          style={{
+                            backgroundColor: '#f8f9fa',
+                            padding: '20px',
+                            borderRadius: '8px',
+                            textAlign: 'center',
+                            border: '1px solid #dee2e6',
+                          }}
+                        >
+                          <h4
+                            style={{ margin: '0 0 10px 0', color: '#495057' }}
+                          >
+                            Avg Containment
+                          </h4>
+                          <div
+                            style={{
+                              fontSize: '2em',
+                              fontWeight: 'bold',
+                              color: '#fd7e14',
+                            }}
+                          >
+                            {searchResults.length > 0
+                              ? (
+                                  searchResults
+                                    .filter(
+                                      (r) => typeof r.containment === 'number'
+                                    )
+                                    .reduce(
+                                      (sum, r) => sum + Number(r.containment),
+                                      0
+                                    ) /
+                                  searchResults.filter(
+                                    (r) => typeof r.containment === 'number'
+                                  ).length
+                                ).toFixed(3)
+                              : '0.000'}
+                          </div>
+                        </div>
+
+                        <div
+                          style={{
+                            backgroundColor: '#f8f9fa',
+                            padding: '20px',
+                            borderRadius: '8px',
+                            textAlign: 'center',
+                            border: '1px solid #dee2e6',
+                          }}
+                        >
+                          <h4
+                            style={{ margin: '0 0 10px 0', color: '#495057' }}
+                          >
+                            With Assemblies
+                          </h4>
+                          <div
+                            style={{
+                              fontSize: '2em',
+                              fontWeight: 'bold',
+                              color: '#6f42c1',
+                            }}
+                          >
+                            {
+                              searchResults.filter(
+                                (r) => r.assay_type === 'WGS'
+                              ).length
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Enhanced Containment Distribution */}
+                    <div className="vf-u-padding__top--400">
+                      <h3 className="vf-text vf-text-heading--3">
+                        Containment Score Distribution
+                        <small
+                          style={{
+                            fontWeight: 'normal',
+                            color: '#6c757d',
+                            marginLeft: '10px',
+                          }}
+                        >
+                          (Binned in 0.1 ranges as requested)
+                        </small>
+                      </h3>
+                      <div
+                        id="containmentBinsDiv"
+                        style={{ width: '100%', height: '400px' }}
+                      >
+                        <Plot
+                          data={[
+                            {
+                              x: (() => {
+                                // Create containment bins of 0.1 ranges
+                                const bins = Array.from(
+                                  { length: 10 },
+                                  (_, i) =>
+                                    `${(i / 10).toFixed(1)}-${(
+                                      (i + 1) /
+                                      10
+                                    ).toFixed(1)}`
+                                );
+                                return bins;
+                              })(),
+                              y: (() => {
+                                // Count values in each bin
+                                const binCounts = new Array(10).fill(0);
+                                searchResults.forEach((result) => {
+                                  if (typeof result.containment === 'number') {
+                                    const binIndex = Math.min(
+                                      Math.floor(result.containment * 10),
+                                      9
+                                    );
+                                    binCounts[binIndex]++;
+                                  }
+                                });
+                                return binCounts;
+                              })(),
+                              type: 'bar',
+                              marker: {
+                                color: 'rgba(54, 162, 235, 0.7)',
+                                line: {
+                                  color: 'rgba(54, 162, 235, 1)',
+                                  width: 1,
+                                },
+                              },
+                              name: 'Containment Distribution',
+                            },
+                          ]}
+                          layout={{
+                            title:
+                              'Distribution of Containment Scores (0.1 bin ranges)',
+                            xaxis: {
+                              title: 'Containment Score Range',
+                              tickangle: -45,
+                            },
+                            yaxis: { title: 'Count' },
+                            bargap: 0.1,
+                          }}
+                          config={{
+                            scrollZoom: true,
+                            displaylogo: false,
+                            responsive: true,
+                          }}
+                          style={{ width: '100%', height: '100%' }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Enhanced Biome/Organism Distribution */}
+                    <div className="vf-u-padding__top--400">
+                      <h3 className="vf-text vf-text-heading--3">
+                        Sample Type Distribution
+                        <small
+                          style={{
+                            fontWeight: 'normal',
+                            color: '#6c757d',
+                            marginLeft: '10px',
+                          }}
+                        >
+                          (Showing biome/organism metadata)
+                        </small>
+                      </h3>
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                          gap: '10px',
+                        }}
+                      >
+                        {/* Assay Type Distribution */}
+                        <div>
+                          <h4>Assay Types</h4>
+                          <Plot
+                            data={[
+                              {
+                                x: (() => {
+                                  const assayCounts = {};
+                                  searchResults.forEach((r) => {
+                                    const type = r.assay_type || 'Unknown';
+                                    assayCounts[type] =
+                                      (assayCounts[type] || 0) + 1;
+                                  });
+                                  return Object.keys(assayCounts);
+                                })(),
+                                y: (() => {
+                                  const assayCounts = {};
+                                  searchResults.forEach((r) => {
+                                    const type = r.assay_type || 'Unknown';
+                                    assayCounts[type] =
+                                      (assayCounts[type] || 0) + 1;
+                                  });
+                                  return Object.values(assayCounts);
+                                })(),
+                                type: 'bar',
+                                marker: { color: 'rgba(255, 99, 132, 0.7)' },
+                              },
+                            ]}
+                            layout={{
+                              height: 300,
+                              xaxis: { title: 'Assay Type' },
+                              yaxis: { title: 'Count' },
+                              margin: { t: 30, b: 60, l: 60, r: 30 },
+                            }}
+                            config={{ displaylogo: false, responsive: true }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Organism Distribution */}
+                    <div>
+                      <h4>Top Organisms/Biomes</h4>
+                      <Plot
+                        data={[
+                          {
+                            x: (() => {
+                              const orgCounts = {};
+                              searchResults.forEach((r) => {
+                                const org = r.organism || 'Unknown';
+                                orgCounts[org] = (orgCounts[org] || 0) + 1;
+                              });
+                              return Object.entries(orgCounts)
+                                .sort(([, a], [, b]) => b - a)
+                                .slice(0, 10)
+                                .map(([org]) =>
+                                  org.length > 20
+                                    ? org.substring(0, 17) + '...'
+                                    : org
+                                );
+                            })(),
+                            y: (() => {
+                              const orgCounts = {};
+                              searchResults.forEach((r) => {
+                                const org = r.organism || 'Unknown';
+                                orgCounts[org] = (orgCounts[org] || 0) + 1;
+                              });
+                              return Object.entries(orgCounts)
+                                .sort(([, a], [, b]) => b - a)
+                                .slice(0, 10)
+                                .map(([, count]) => count);
+                            })(),
+                            type: 'bar',
+                            marker: { color: 'rgba(75, 192, 192, 0.7)' },
+                          },
+                        ]}
+                        layout={{
+                          height: 300,
+                          xaxis: {
+                            title: 'Organism/Biome',
+                            tickangle: -45,
+                          },
+                          yaxis: { title: 'Count' },
+                          margin: { t: 30, b: 100, l: 60, r: 30 },
+                        }}
+                        config={{ displaylogo: false, responsive: true }}
+                      />
+                    </div>
+
+                    {/* NEW: ANI vs Containment Scatter Plot */}
+                    <div className="vf-u-padding__top--400">
+                      <h3 className="vf-text vf-text-heading--3">
+                        Quality Assessment: cANI vs Containment
+                        <small
+                          style={{
+                            fontWeight: 'normal',
+                            color: '#6c757d',
+                            marginLeft: '10px',
+                          }}
+                        >
+                          (Higher values indicate better matches)
+                        </small>
+                      </h3>
+                      <div
+                        id="scatterDiv"
+                        style={{ width: '100%', height: '500px' }}
+                      >
+                        <Plot
+                          data={[
+                            {
+                              x: searchResults
+                                .filter(
+                                  (r) =>
+                                    typeof r.containment === 'number' &&
+                                    typeof r.cANI === 'number'
+                                )
+                                .map((r) => r.containment),
+                              y: searchResults
+                                .filter(
+                                  (r) =>
+                                    typeof r.containment === 'number' &&
+                                    typeof r.cANI === 'number'
+                                )
+                                .map((r) => r.cANI),
+                              mode: 'markers',
+                              type: 'scatter',
+                              text: searchResults
+                                .filter(
+                                  (r) =>
+                                    typeof r.containment === 'number' &&
+                                    typeof r.cANI === 'number'
+                                )
+                                .map(
+                                  (r) =>
+                                    `${r.acc}<br>Country: ${
+                                      r.geo_loc_name_country_calc || 'Unknown'
+                                    }<br>Organism: ${r.organism || 'Unknown'}`
+                                ),
+                              hovertemplate:
+                                '%{text}<br>Containment: %{x:.3f}<br>cANI: %{y:.3f}<extra></extra>',
+                              marker: {
+                                size: 8,
+                                color: searchResults
+                                  .filter(
+                                    (r) =>
+                                      typeof r.containment === 'number' &&
+                                      typeof r.cANI === 'number'
+                                  )
+                                  .map((r) =>
+                                    r.assay_type === 'WGS'
+                                      ? 'rgba(255, 99, 132, 0.8)'
+                                      : 'rgba(54, 162, 235, 0.8)'
+                                  ),
+                                line: { width: 1, color: 'white' },
+                              },
+                            },
+                          ]}
+                          layout={{
+                            title: 'Match Quality: cANI vs Containment Score',
+                            xaxis: {
+                              title: 'Containment Score',
+                              range: [0, 1],
+                            },
+                            yaxis: {
+                              title:
+                                'cANI (calculated Average Nucleotide Identity)',
+                              range: [0.8, 1],
+                            },
+                            annotations: [
+                              {
+                                x: 0.7,
+                                y: 0.95,
+                                text: 'Higher quality matches',
+                                showarrow: true,
+                                arrowhead: 2,
+                                arrowsize: 1,
+                                arrowwidth: 2,
+                                arrowcolor: '#636363',
+                                ax: -30,
+                                ay: -30,
+                              },
+                            ],
+                          }}
+                          config={{
+                            scrollZoom: true,
+                            displaylogo: false,
+                            responsive: true,
+                          }}
+                          style={{ width: '100%', height: '100%' }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* MGnify Promotion Section */}
+                    <div className="vf-u-padding__top--600">
+                      <div
+                        style={{
+                          backgroundColor: '#e3f2fd',
+                          padding: '20px',
+                          borderRadius: '8px',
+                          border: '1px solid #2196f3',
+                        }}
+                      >
+                        <h3
+                          className="vf-text vf-text-heading--3"
+                          style={{ color: '#1976d2', marginTop: 0 }}
+                        >
+                          Explore Further with MGnify
+                        </h3>
+                        <div
+                          style={{
+                            display: 'grid',
+                            gridTemplateColumns:
+                              'repeat(auto-fit, minmax(300px, 1fr))',
+                            gap: '20px',
+                          }}
+                        >
+                          <div>
+                            <h4 style={{ color: '#1976d2' }}>
+                              Available Assemblies
+                            </h4>
+                            <p>
+                              <strong>
+                                {/*{*/}
+                                {/*  searchResults.filter(*/}
+                                {/*    (r) => r.assay_type === 'WGS'*/}
+                                {/*  ).length*/}
+                                {/*}*/}2
+                              </strong>{' '}
+                              of your matches have assembled genomes available
+                              for detailed analysis.
+                            </p>
+                            <button
+                              className="vf-button vf-button--primary vf-button--sm"
+                              onClick={() =>
+                                window.open(
+                                  'https://www.ebi.ac.uk/metagenomics/',
+                                  '_blank'
+                                )
+                              }
+                            >
+                              View in MGnify
+                            </button>
+                          </div>
+
+                          <div>
+                            <h4 style={{ color: '#1976d2' }}>
+                              Request Assembly
+                            </h4>
+                            <p>
+                              For samples without assemblies, you can request
+                              assembly analysis through MGnify's pipeline.
+                            </p>
+                            <button
+                              className="vf-button vf-button--secondary vf-button--sm"
+                              onClick={() =>
+                                window.open(
+                                  'https://www.ebi.ac.uk/metagenomics/submit',
+                                  '_blank'
+                                )
+                              }
+                            >
+                              Request Analysis
+                            </button>
+                          </div>
+
+                          <div>
+                            <h4 style={{ color: '#1976d2' }}>
+                              Raw Read Analysis
+                            </h4>
+                            <p>
+                              Access comprehensive taxonomic and functional
+                              analysis results for all your matched samples.
+                            </p>
+                            <button
+                              className="vf-button vf-button--tertiary vf-button--sm"
+                              onClick={() =>
+                                window.open(
+                                  'https://www.ebi.ac.uk/metagenomics/browse',
+                                  '_blank'
+                                )
+                              }
+                            >
+                              Browse Data
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Enhanced original visualizations with improvements */}
+                    <div className="vf-u-padding__top--400">
+                      <h3 className="vf-text vf-text-heading--3">
+                        Detailed Score Distributions
+                      </h3>
+                      <div
+                        id="contDiv"
+                        style={{ width: '100%', height: '400px' }}
+                      >
+                        <Plot
+                          data={visualizationData.histogramData}
+                          layout={{
+                            bargap: 0.05,
+                            bargroupgap: 0.2,
+                            title: 'Match similarity scores (detailed view)',
+                            xaxis: { title: 'Score' },
+                            yaxis: { title: 'Frequency' },
+                            updatemenus: [
+                              {
+                                x: 0.05,
+                                y: 1.2,
+                                xanchor: 'left',
+                                yanchor: 'top',
+                                buttons: [
+                                  {
+                                    method: 'update',
+                                    args: [{ visible: [true, false] }],
+                                    label: 'containment',
+                                  },
+                                  {
+                                    method: 'update',
+                                    args: [{ visible: [false, true] }],
+                                    label: 'cANI',
+                                  },
+                                ],
+                                direction: 'down',
+                                showactive: true,
+                              },
+                            ],
+                          }}
+                          config={{
+                            scrollZoom: true,
+                            displaylogo: false,
+                            responsive: true,
+                          }}
+                          style={{ width: '100%', height: '100%' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Visualization components */}
                 {visualizationData && (
                   <div className="vf-u-padding__top--800">
@@ -1464,89 +2900,173 @@ const Branchwater = () => {
                           </div>
                         </div>
                       )}
+                  </div>
+                )}
 
-                    {/* Map Visualizations */}
-                    {visualizationData.mapData &&
-                      visualizationData.mapData.length > 0 && (
+                {mapSamples && mapSamples.length > 0 && (
+                  <div className="vf-u-padding__top--400">
+                    <h4 className="vf-text vf-text-heading--4">
+                      Geographic Distribution
+                    </h4>
+
+                    {/* Country counts summary */}
+                    {Object.keys(countryCounts).length > 0 && (
+                      <div className="vf-u-padding__bottom--400">
+                        <p className="vf-text vf-text--body">
+                          <strong>Samples by Country:</strong>
+                        </p>
                         <div
-                          className="vf-u-padding__top--400"
-                          style={{ height: '600px' }}
+                          style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '10px',
+                            marginBottom: '15px',
+                            maxHeight: '100px',
+                            overflowY: 'auto',
+                          }}
                         >
-                          <h3 className="vf-text vf-text-heading--3">
-                            Geographic Distribution
-                          </h3>
-                          <div
-                            id="mapDiv"
-                            style={{ width: '100%', height: '500px' }}
-                          >
-                            <Plot
-                              data={visualizationData.mapData}
-                              layout={{
-                                title: 'Accession locations',
-                                geo: {
-                                  scope: 'world',
-                                  showcountries: true,
-                                  countrycolor: 'rgb(255, 255, 255)',
-                                  countrywidth: 1,
-                                  showframe: false,
-                                  projection: {
-                                    type: 'robinson',
-                                  },
-                                  showland: true,
-                                  landcolor: 'rgb(250,250,250)',
-                                  subunitcolor: 'rgb(217,217,217)',
-                                },
-                              }}
-                              config={{
-                                scrollZoom: true,
-                                displaylogo: false,
-                                responsive: true,
-                              }}
-                              style={{ width: '100%', height: '100%' }}
-                            />
-                          </div>
+                          {Object.entries(countryCounts)
+                            .sort(([, a], [, b]) => b - a)
+                            .map(([country, count]) => {
+                              const maxCount = Math.max(
+                                ...Object.values(countryCounts)
+                              );
+                              const color = getCountryColor(count, maxCount);
+                              return (
+                                <span
+                                  key={country}
+                                  style={{
+                                    padding: '4px 8px',
+                                    backgroundColor: color,
+                                    color:
+                                      count > maxCount * 0.6
+                                        ? 'white'
+                                        : 'black',
+                                    borderRadius: '4px',
+                                    fontSize: '12px',
+                                    fontWeight: 'bold',
+                                  }}
+                                >
+                                  {country}: {count}
+                                </span>
+                              );
+                            })}
                         </div>
-                      )}
-                    {/* Leaflet Map */}
-                    {mapSamples && mapSamples.length > 0 && (
-                      <div className="vf-u-padding__top--400">
-                        <h3 className="vf-text vf-text-heading--3">
-                          Interactive Map
-                        </h3>
-                        <div style={{ width: '100%', height: '500px' }}>
-                          <MapContainer
-                            center={[0, 0]}
-                            zoom={2}
-                            style={{ width: '100%', height: '100%' }}
-                            scrollWheelZoom
-                          >
-                            <TileLayer
-                              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            {mapSamples.map((sample) => (
-                              <Marker
-                                key={sample.id}
-                                position={[
-                                  sample.attributes.latitude,
-                                  sample.attributes.longitude,
-                                ]}
-                              >
-                                <Popup>
-                                  <div>
-                                    <strong>ID:</strong> {sample.id}
-                                    <br />
-                                    <strong>Description:</strong>{' '}
-                                    {sample.attributes['sample-desc']}
-                                    <br />
-                                    <strong>Biome:</strong>{' '}
-                                    {sample.relationships.biome.data.id}
-                                  </div>
-                                </Popup>
-                              </Marker>
+
+                        {/* Legend */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            fontSize: '12px',
+                          }}
+                        >
+                          <span>Heat intensity:</span>
+                          <div style={{ display: 'flex', gap: '2px' }}>
+                            {[
+                              '#FFEDA0',
+                              '#FEB24C',
+                              '#FD8D3C',
+                              '#FC4E2A',
+                              '#E31A1C',
+                              '#BD0026',
+                            ].map((color, index) => (
+                              <div
+                                key={index}
+                                style={{
+                                  width: '20px',
+                                  height: '12px',
+                                  backgroundColor: color,
+                                  border: '1px solid #ccc',
+                                }}
+                              />
                             ))}
-                          </MapContainer>
+                          </div>
+                          <span>Low → High</span>
                         </div>
+                      </div>
+                    )}
+
+                    <div style={{ width: '100%', height: '500px' }}>
+                      <MapContainer
+                        center={[20, 0]}
+                        zoom={2}
+                        style={{ width: '100%', height: '100%' }}
+                        scrollWheelZoom
+                      >
+                        <TileLayer
+                          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+
+                        {/* Individual sample markers */}
+                        {mapSamples.map((sample) => (
+                          <Marker
+                            key={sample.id}
+                            position={[
+                              sample.attributes.latitude,
+                              sample.attributes.longitude,
+                            ]}
+                          >
+                            <Popup>
+                              <div>
+                                <strong>ID:</strong> {sample.id}
+                                <br />
+                                <strong>Description:</strong>{' '}
+                                {sample.attributes['sample-desc']}
+                                <br />
+                                <strong>Biome:</strong>{' '}
+                                {sample.relationships.biome.data.id}
+                              </div>
+                            </Popup>
+                          </Marker>
+                        ))}
+                      </MapContainer>
+                    </div>
+
+                    {/* Additional country statistics */}
+                    {Object.keys(countryCounts).length > 0 && (
+                      <div className="vf-u-padding__top--400">
+                        <details>
+                          <summary
+                            style={{ cursor: 'pointer', fontWeight: 'bold' }}
+                          >
+                            Country Statistics (
+                            {Object.keys(countryCounts).length} countries)
+                          </summary>
+                          <div style={{ marginTop: '10px' }}>
+                            <table className="vf-table vf-table--compact">
+                              <thead>
+                                <tr>
+                                  <th>Country</th>
+                                  <th>Sample Count</th>
+                                  <th>Percentage</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {Object.entries(countryCounts)
+                                  .sort(([, a], [, b]) => b - a)
+                                  .map(([country, count]) => {
+                                    const total = Object.values(
+                                      countryCounts
+                                    ).reduce((sum, c) => sum + c, 0);
+                                    const percentage = (
+                                      (count / total) *
+                                      100
+                                    ).toFixed(1);
+                                    return (
+                                      <tr key={country}>
+                                        <td>{country}</td>
+                                        <td>{count}</td>
+                                        <td>{percentage}%</td>
+                                      </tr>
+                                    );
+                                  })}
+                              </tbody>
+                            </table>
+                          </div>
+                        </details>
                       </div>
                     )}
                   </div>
