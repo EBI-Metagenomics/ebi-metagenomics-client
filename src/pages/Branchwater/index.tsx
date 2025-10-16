@@ -869,7 +869,9 @@ const Branchwater = () => {
                   />
 
                   <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
-                    <legend className="vf-form__legend">Select target database</legend>
+                    <legend className="vf-form__legend">
+                      Select target database
+                    </legend>
 
                     <div className="vf-form__item vf-form__item--radio">
                       <input
@@ -881,7 +883,10 @@ const Branchwater = () => {
                         checked={targetDatabase === 'MAGs'}
                         onChange={() => setTargetDatabase('MAGs')}
                       />
-                      <label htmlFor="target-db-mags" className="vf-form__label">
+                      <label
+                        htmlFor="target-db-mags"
+                        className="vf-form__label"
+                      >
                         MAGs
                       </label>
                     </div>
@@ -896,7 +901,10 @@ const Branchwater = () => {
                         checked={targetDatabase === 'Metagenomes'}
                         onChange={() => setTargetDatabase('Metagenomes')}
                       />
-                      <label htmlFor="target-db-metagenomes" className="vf-form__label">
+                      <label
+                        htmlFor="target-db-metagenomes"
+                        className="vf-form__label"
+                      >
                         Metagenomes
                       </label>
                     </div>
@@ -2031,7 +2039,7 @@ const Branchwater = () => {
                                                 }
                                                 title="View in MGnify"
                                               >
-                                                👁️ View
+                                                View
                                               </button>
                                             ) : (
                                               <button
@@ -2041,7 +2049,7 @@ const Branchwater = () => {
                                                 }
                                                 title="Request analysis in MGnify"
                                               >
-                                                🔬 Request
+                                                Request
                                               </button>
                                             )}
                                             <button
@@ -2054,7 +2062,7 @@ const Branchwater = () => {
                                               }
                                               title="View biosample"
                                             >
-                                              🔗 Sample
+                                              Sample
                                             </button>
                                           </div>
                                         </td>
