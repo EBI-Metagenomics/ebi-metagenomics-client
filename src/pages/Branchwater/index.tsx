@@ -67,7 +67,7 @@ interface Filters {
   acc: string;
   assay_type: string;
   bioproject: string;
-  cANI: string;
+  // cANI: string;
   collection_date_sam: string;
   containment: string;
   geo_loc_name_country_calc: string;
@@ -107,7 +107,7 @@ const Branchwater = () => {
     acc: '',
     assay_type: '',
     bioproject: '',
-    cANI: '',
+    // cANI: '',
     collection_date_sam: '',
     containment: '',
     geo_loc_name_country_calc: '',
@@ -126,55 +126,6 @@ const Branchwater = () => {
 
   // cANI range from query param (format: "min,max")
   const [caniRange] = useQueryParamState('cani', '');
-
-  // Mock data for testing the map
-  const mockMapSamples: MapSample[] = [
-    {
-      id: 'sample_1',
-      attributes: {
-        latitude: 51.5074,
-        longitude: -0.1278,
-        'sample-desc': 'London Sample - Marine metagenome',
-      },
-      relationships: {
-        biome: {
-          data: {
-            id: 'WGS',
-          },
-        },
-      },
-    },
-    {
-      id: 'sample_2',
-      attributes: {
-        latitude: 48.8566,
-        longitude: 2.3522,
-        'sample-desc': 'Paris Sample - Marine metagenome',
-      },
-      relationships: {
-        biome: {
-          data: {
-            id: 'WGS',
-          },
-        },
-      },
-    },
-    {
-      id: 'sample_3',
-      attributes: {
-        latitude: 40.7128,
-        longitude: -74.006,
-        'sample-desc': 'New York Sample - Marine metagenome',
-      },
-      relationships: {
-        biome: {
-          data: {
-            id: 'WGS',
-          },
-        },
-      },
-    },
-  ];
 
   // Helper function to convert search results to map samples with valid lat/lng
   const convertToMapSamples = useCallback(
@@ -408,21 +359,27 @@ const Branchwater = () => {
 
       // Apply cANI numeric range filter if present via query param
       if (caniRange) {
+        console.group('CANI FILTERS');
         const [minStr, maxStr] = caniRange.split(',');
         const min = Number(minStr);
         const max = Number(maxStr);
+        console.log('MIN ', min);
+        console.log('MAX ', max);
         // If parsing failed, ignore the cANI filter
         if (!Number.isNaN(min) && !Number.isNaN(max)) {
           const val = item.cANI;
           const num = typeof val === 'number' ? val : Number(val);
+          console.log('VAL ', val);
+          console.log('NUM ', num);
           if (Number.isNaN(num)) return false;
           if (num < min || num > max) return false;
+          console.groupEnd();
         }
       }
 
       return true;
     });
-  }, [searchResults, filters]);
+  }, [searchResults, filters, caniRange]);
 
   // Prepare data for visualizations
   const prepareVisualizationData = useCallback(
@@ -1111,22 +1068,6 @@ const Branchwater = () => {
                         />
                       </section>
                     </section>
-
-                    {/* Collapsible Detailed Table Section */}
-                    <DetailedResultsTable
-                      isOpen={isTableVisible}
-                      onToggleOpen={() => setIsTableVisible(!isTableVisible)}
-                      filters={filters}
-                      onFilterChange={handleFilterChange}
-                      sortField={sortField}
-                      sortDirection={sortDirection}
-                      onSortChange={handleSortChange}
-                      processResults={processResults}
-                      currentPage={currentPage}
-                      itemsPerPage={itemsPerPage}
-                      onPageChange={handlePageChange}
-                    />
-                    {false}
                   </div>
                 ) : (
                   <div className="vf-u-padding__top--800">
