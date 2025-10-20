@@ -15,6 +15,7 @@ import TemperatureFilter from 'components/Search/Filter/Temperature';
 import CANIFilter from 'components/Search/Filter/CANI';
 import TextSearch from 'components/Search/Filter/Text';
 import MultipleOptionFilter from 'components/Search/Filter/MultipleOption';
+import LocalMultipleOptionFilter from 'components/Branchwater/LocalMultipleOptionFilter';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -86,6 +87,11 @@ const Branchwater = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [countryCounts, setCountryCounts] = useState<Record<string, number>>(
     {}
+  );
+
+  const [, , { param: locationNameParam }] = useQueryParamState(
+    'location_name',
+    ''
   );
 
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
@@ -340,7 +346,16 @@ const Branchwater = () => {
     return plotData;
   };
 
-  // Apply filters to search results
+  // const [locationFilter] = useQueryParamState('geo_loc_name_country_calc', '');
+  // const [organismFilter] = useQueryParamState('organism', '');
+  // const [assayTypeFilter] = useQueryParamState('assay_type', '');
+
+  // Add query param states for the faceted filters
+  const [locationFilter] = useQueryParamState('geo_loc_name_country_calc', '');
+  const [organismFilter] = useQueryParamState('organism', '');
+  const [assayTypeFilter] = useQueryParamState('assay_type', '');
+
+  // Update getFilteredResults to include faceted filters
   const getFilteredResults = useCallback((): SearchResult[] => {
     if (!Array.isArray(searchResults)) {
       console.error('searchResults is not an array:', searchResults);
@@ -350,27 +365,56 @@ const Branchwater = () => {
     return searchResults.filter((item) => {
       // Apply text-based filters first
       const matchesTextFilters = Object.keys(filters).every((key) => {
-        if (!filters[key]) return true; // Skip empty filters
+        if (!filters[key]) return true;
         const itemValue = String(item[key] || '').toLowerCase();
         const filterValue = filters[key].toLowerCase();
         return itemValue.includes(filterValue);
       });
       if (!matchesTextFilters) return false;
 
-      // Apply cANI numeric range filter if present via query param
+      // Apply faceted filters from query params
+      if (locationFilter) {
+        const selectedLocations = locationFilter.split(',').filter(Boolean);
+        if (
+          selectedLocations.length > 0 &&
+          !selectedLocations.includes(item.geo_loc_name_country_calc)
+        ) {
+          return false;
+        }
+      }
+
+      if (organismFilter) {
+        const selectedOrganisms = organismFilter.split(',').filter(Boolean);
+        if (
+          selectedOrganisms.length > 0 &&
+          !selectedOrganisms.includes(item.organism)
+        ) {
+          return false;
+        }
+      }
+
+      if (assayTypeFilter) {
+        const selectedTypes = assayTypeFilter.split(',').filter(Boolean);
+        if (
+          selectedTypes.length > 0 &&
+          !selectedTypes.includes(item.assay_type)
+        ) {
+          return false;
+        }
+      }
+
+      // Apply cANI numeric range filter
       if (caniRange) {
         const [minStr, maxStr] = caniRange.split(',');
         const min = Number(minStr);
         const max = Number(maxStr);
 
-        // If parsing failed, ignore the cANI filter
         if (!Number.isNaN(min) && !Number.isNaN(max)) {
           const val = item.cANI;
           const num = typeof val === 'number' ? val : Number(val);
 
           if (Number.isNaN(num)) return false;
 
-          // Use epsilon for floating-point comparison at boundaries
           const EPSILON = 0.0001;
           if (num < min - EPSILON || num > max + EPSILON) {
             return false;
@@ -380,7 +424,56 @@ const Branchwater = () => {
 
       return true;
     });
-  }, [searchResults, filters, caniRange]);
+  }, [
+    searchResults,
+    filters,
+    caniRange,
+    locationFilter,
+    organismFilter,
+    assayTypeFilter,
+  ]);
+
+  // Apply filters to search results
+  // const getFilteredResults = useCallback((): SearchResult[] => {
+  //   if (!Array.isArray(searchResults)) {
+  //     console.error('searchResults is not an array:', searchResults);
+  //     return [];
+  //   }
+  //
+  //   return searchResults.filter((item) => {
+  //     // Apply text-based filters first
+  //     const matchesTextFilters = Object.keys(filters).every((key) => {
+  //       if (!filters[key]) return true; // Skip empty filters
+  //       const itemValue = String(item[key] || '').toLowerCase();
+  //       const filterValue = filters[key].toLowerCase();
+  //       return itemValue.includes(filterValue);
+  //     });
+  //     if (!matchesTextFilters) return false;
+  //
+  //     // Apply cANI numeric range filter if present via query param
+  //     if (caniRange) {
+  //       const [minStr, maxStr] = caniRange.split(',');
+  //       const min = Number(minStr);
+  //       const max = Number(maxStr);
+  //
+  //       // If parsing failed, ignore the cANI filter
+  //       if (!Number.isNaN(min) && !Number.isNaN(max)) {
+  //         const val = item.cANI;
+  //         const num = typeof val === 'number' ? val : Number(val);
+  //
+  //         if (Number.isNaN(num)) return false;
+  //
+  //         // Use epsilon for floating-point comparison at boundaries
+  //         const EPSILON = 0.0001;
+  //         if (num < min - EPSILON || num > max + EPSILON) {
+  //           return false;
+  //         }
+  //       }
+  //     }
+  //
+  //     return true;
+  //   });
+  // }, [searchResults, filters, caniRange]);
 
   // const getFilteredResults = useCallback((): SearchResult[] => {
   //   // Ensure searchResults is an array before filtering
@@ -1091,11 +1184,32 @@ const Branchwater = () => {
                       <div className="vf-stack vf-stack--800">
                         <TemperatureFilter />
                         <CANIFilter />
-                        <MultipleOptionFilter
-                          facetName="location_name"
-                          header="Location name"
+
+                        <LocalMultipleOptionFilter
+                          facetName="geo_loc_name_country_calc"
+                          header="Location"
+                          data={searchResults}
                           includeTextFilter
                         />
+
+                        <LocalMultipleOptionFilter
+                          facetName="organism"
+                          header="Organism"
+                          data={searchResults}
+                          includeTextFilter
+                        />
+
+                        <LocalMultipleOptionFilter
+                          facetName="assay_type"
+                          header="Assay Type"
+                          data={searchResults}
+                        />
+
+                        {/*<MultipleOptionFilter*/}
+                        {/*  facetName="location_name"*/}
+                        {/*  header="Location name"*/}
+                        {/*  includeTextFilter*/}
+                        {/*/>*/}
                       </div>
                       <section>
                         <DetailedResultsTable
