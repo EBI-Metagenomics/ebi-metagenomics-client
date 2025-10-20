@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import DetailedResultsTable from './DetailedResultsTable';
 import axios from 'axios';
 import Plot from 'react-plotly.js';
@@ -11,6 +12,7 @@ import 'leaflet/dist/leaflet.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import TemperatureFilter from 'components/Search/Filter/Temperature';
+import CANIFilter from 'components/Search/Filter/CANI';
 import TextSearch from 'components/Search/Filter/Text';
 
 const DefaultIcon = L.icon({
@@ -121,6 +123,9 @@ const Branchwater = () => {
 
   // State for map samples
   const [mapSamples, setMapSamples] = useState<MapSample[]>([]);
+
+  // cANI range from query param (format: "min,max")
+  const [caniRange] = useQueryParamState('cani', '');
 
   // Mock data for testing the map
   const mockMapSamples: MapSample[] = [
@@ -392,14 +397,30 @@ const Branchwater = () => {
     }
 
     return searchResults.filter((item) => {
-      return Object.keys(filters).every((key) => {
+      // Apply text-based filters first (existing behavior)
+      const matchesTextFilters = Object.keys(filters).every((key) => {
         if (!filters[key]) return true; // Skip empty filters
-
         const itemValue = String(item[key] || '').toLowerCase();
         const filterValue = filters[key].toLowerCase();
-
         return itemValue.includes(filterValue);
       });
+      if (!matchesTextFilters) return false;
+
+      // Apply cANI numeric range filter if present via query param
+      if (caniRange) {
+        const [minStr, maxStr] = caniRange.split(',');
+        const min = Number(minStr);
+        const max = Number(maxStr);
+        // If parsing failed, ignore the cANI filter
+        if (!Number.isNaN(min) && !Number.isNaN(max)) {
+          const val = item.cANI;
+          const num = typeof val === 'number' ? val : Number(val);
+          if (Number.isNaN(num)) return false;
+          if (num < min || num > max) return false;
+        }
+      }
+
+      return true;
     });
   }, [searchResults, filters]);
 
@@ -1070,6 +1091,7 @@ const Branchwater = () => {
                     <section className="vf-grid mg-grid-search vf-u-padding__top--400">
                       <div className="vf-stack vf-stack--800">
                         <TemperatureFilter />
+                        <CANIFilter />
                       </div>
                       <section>
                         <DetailedResultsTable

@@ -1,4 +1,6 @@
 import React from 'react';
+import EMGTable from 'components/UI/EMGTable';
+import { Column } from 'react-table';
 
 interface Filters {
   acc: string;
@@ -54,283 +56,199 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
         overflow: 'hidden',
       }}
     >
-      {/* Enhanced Table */}
+      {/* Enhanced Table using EMGTable */}
       <div style={{ overflowX: 'auto' }}>
-        <table className="vf-table" style={{ margin: 0 }}>
-          <thead className="vf-table__header">
-            <tr
-              className="vf-table__row"
-              style={{ backgroundColor: '#f1f3f4' }}
-            >
-              <th
-                className="vf-table__heading"
-                scope="col"
-                style={{ minWidth: '120px' }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                  }}
-                >
-                  🔗 Accession
-                  <button
-                    onClick={() => onSortChange('acc')}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '2px',
-                    }}
-                  >
-                    {sortField === 'acc'
-                      ? sortDirection === 'asc'
-                        ? '⬆️'
-                        : '⬇️'
-                      : '↕️'}
-                  </button>
-                </div>
-              </th>
-              <th
-                className="vf-table__heading"
-                scope="col"
-                style={{ minWidth: '80px' }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                  }}
-                >
-                  🧬 Type
-                  <button
-                    onClick={() => onSortChange('assay_type')}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '2px',
-                    }}
-                  >
-                    {sortField === 'assay_type'
-                      ? sortDirection === 'asc'
-                        ? '⬆️'
-                        : '⬇️'
-                      : '↕️'}
-                  </button>
-                </div>
-              </th>
-              <th
-                className="vf-table__heading"
-                scope="col"
-                style={{ minWidth: '100px' }}
-              >
-                📊 cANI
-              </th>
-              <th
-                className="vf-table__heading"
-                scope="col"
-                style={{ minWidth: '100px' }}
-              >
-                📈 Containment
-              </th>
-              <th
-                className="vf-table__heading"
-                scope="col"
-                style={{ minWidth: '120px' }}
-              >
-                🌍 Location
-              </th>
-              <th
-                className="vf-table__heading"
-                scope="col"
-                style={{ minWidth: '120px' }}
-              >
-                🦠 Metagenome
-              </th>
-              <th
-                className="vf-table__heading"
-                scope="col"
-                style={{ minWidth: '120px' }}
-              >
-                ⚙️ Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="vf-table__body">
-            {processResults().paginatedResults.map(
-              (entry: any, index: number) => {
-                // Calculate actual index in the full dataset
-                const actualIndex = (currentPage - 1) * itemsPerPage + index;
-
+        {(() => {
+          const columns: Column<any>[] = [
+            {
+              Header: 'Accession',
+              accessor: 'acc',
+              Cell: ({ row }) => {
+                const entry = row.original as any;
+                const actualIndex =
+                  (currentPage - 1) * itemsPerPage + row.index;
                 return (
-                  <tr
-                    key={actualIndex}
-                    className="vf-table__row"
-                    style={{
-                      backgroundColor:
-                        actualIndex % 2 === 0 ? '#fff' : '#f9f9f9',
-                      transition: 'background-color 0.2s',
-                    }}
-                    onMouseEnter={(e) => {
-                      (
-                        e.currentTarget as HTMLTableRowElement
-                      ).style.backgroundColor = '#e3f2fd';
-                    }}
-                    onMouseLeave={(e) => {
-                      (
-                        e.currentTarget as HTMLTableRowElement
-                      ).style.backgroundColor =
-                        actualIndex % 2 === 0 ? '#fff' : '#f9f9f9';
-                    }}
-                  >
-                    <td className="vf-table__cell">
-                      {actualIndex < 2 ? (
-                        <div>
-                          <a
-                            href={`https://www.ebi.ac.uk/metagenomics/runs/${entry.acc}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="vf-link"
-                            style={{ fontWeight: 'bold' }}
-                          >
-                            {entry.acc}
-                          </a>
-                          <div
-                            style={{
-                              fontSize: '10px',
-                              color: '#28a745',
-                              fontWeight: 'bold',
-                              marginTop: '2px',
-                            }}
-                          >
-                            ✅ Available in MGnify
-                          </div>
-                        </div>
-                      ) : (
-                        <span style={{ fontFamily: 'monospace' }}>
+                  <div>
+                    {actualIndex < 2 ? (
+                      <div>
+                        <a
+                          href={`https://www.ebi.ac.uk/metagenomics/runs/${entry.acc}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="vf-link"
+                          style={{ fontWeight: 'bold' }}
+                        >
                           {entry.acc}
-                        </span>
-                      )}
-                    </td>
-                    <td className="vf-table__cell">
-                      <span
-                        style={{
-                          padding: '4px 8px',
-                          borderRadius: '4px',
-                          fontSize: '12px',
-                          fontWeight: 'bold',
-                          backgroundColor:
-                            entry.assay_type === 'WGS' ? '#d4edda' : '#fff3cd',
-                          color:
-                            entry.assay_type === 'WGS' ? '#155724' : '#856404',
-                        }}
-                      >
-                        {entry.assay_type}
-                      </span>
-                    </td>
-                    <td className="vf-table__cell">
-                      <div
-                        style={{
-                          fontWeight: 'bold',
-                          color:
-                            typeof entry.cANI === 'number' && entry.cANI > 0.95
-                              ? '#28a745'
-                              : '#6c757d',
-                        }}
-                      >
-                        {typeof entry.cANI === 'number'
-                          ? entry.cANI.toFixed(3)
-                          : entry.cANI}
-                      </div>
-                    </td>
-                    <td className="vf-table__cell">
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '5px',
-                        }}
-                      >
+                        </a>
                         <div
                           style={{
+                            fontSize: '10px',
+                            color: '#28a745',
                             fontWeight: 'bold',
-                            color:
-                              typeof entry.containment === 'number' &&
-                              entry.containment > 0.5
-                                ? '#28a745'
-                                : '#6c757d',
+                            marginTop: '2px',
                           }}
                         >
-                          {typeof entry.containment === 'number'
-                            ? entry.containment.toFixed(3)
-                            : entry.containment}
+                          ✅ Available in MGnify
                         </div>
-                        {typeof entry.containment === 'number' &&
-                          entry.containment > 0.7 && (
-                            <span style={{ fontSize: '12px' }}>🔥</span>
-                          )}
                       </div>
-                    </td>
-                    <td className="vf-table__cell">
-                      <div style={{ fontSize: '14px' }}>
-                        {entry.geo_loc_name_country_calc === 'uncalculated' ? (
-                          <span
-                            style={{
-                              padding: '4px 8px',
-                              borderRadius: '4px',
-                              backgroundColor: '#f8d7da',
-                              color: '#721c24',
-                              fontWeight: 'bold',
-                            }}
-                          >
-                            Uncalculated
-                          </span>
-                        ) : (
-                          <span>{entry.geo_loc_name_country_calc || '—'}</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="vf-table__cell">
-                      <span style={{ fontSize: '14px' }}>
-                        {entry.organism || '—'}
+                    ) : (
+                      <span style={{ fontFamily: 'monospace' }}>
+                        {entry.acc}
                       </span>
-                    </td>
-                    <td className="vf-table__cell">
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <button
-                          className="vf-button vf-button--tertiary vf-button--xs"
-                          onClick={() =>
-                            window.open(
-                              `https://www.ebi.ac.uk/metagenomics/runs/${entry.acc}`,
-                              '_blank'
-                            )
-                          }
-                          title="View run in MGnify"
-                        >
-                          Open
-                        </button>
-                        {entry.biosample_link && (
-                          <button
-                            className="vf-button vf-button--tertiary vf-button--xs"
-                            onClick={() =>
-                              window.open(entry.biosample_link, '_blank')
-                            }
-                            title="View biosample"
-                          >
-                            Sample
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
+                    )}
+                  </div>
                 );
-              }
-            )}
-          </tbody>
-        </table>
+              },
+            },
+            {
+              Header: 'Type',
+              accessor: 'assay_type',
+              Cell: ({ row }) => {
+                const entry = row.original as any;
+                return (
+                  <span
+                    style={{
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      fontWeight: 'bold',
+                      backgroundColor:
+                        entry.assay_type === 'WGS' ? '#d4edda' : '#fff3cd',
+                      color: entry.assay_type === 'WGS' ? '#155724' : '#856404',
+                    }}
+                  >
+                    {entry.assay_type}
+                  </span>
+                );
+              },
+            },
+            {
+              Header: 'cANI',
+              accessor: 'cANI',
+              Cell: ({ row }) => {
+                const entry = row.original as any;
+                const isHigh =
+                  typeof entry.cANI === 'number' && entry.cANI > 0.95;
+                return (
+                  <div
+                    style={{
+                      fontWeight: 'bold',
+                      color: isHigh ? '#28a745' : '#6c757d',
+                    }}
+                  >
+                    {typeof entry.cANI === 'number'
+                      ? entry.cANI.toFixed(3)
+                      : entry.cANI}
+                  </div>
+                );
+              },
+            },
+            {
+              Header: 'Containment',
+              accessor: 'containment',
+              Cell: ({ row }) => {
+                const entry = row.original as any;
+                const isHigh =
+                  typeof entry.containment === 'number' &&
+                  entry.containment > 0.5;
+                return (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontWeight: 'bold',
+                        color: isHigh ? '#28a745' : '#6c757d',
+                      }}
+                    >
+                      {typeof entry.containment === 'number'
+                        ? entry.containment.toFixed(3)
+                        : entry.containment}
+                    </div>
+                    {typeof entry.containment === 'number' &&
+                      entry.containment > 0.7 && (
+                        <span style={{ fontSize: '12px' }}>🔥</span>
+                      )}
+                  </div>
+                );
+              },
+            },
+            {
+              Header: 'Location',
+              accessor: 'geo_loc_name_country_calc',
+              Cell: ({ row }) => {
+                const entry = row.original as any;
+                return (
+                  <div style={{ fontSize: '14px' }}>
+                    {entry.geo_loc_name_country_calc === 'uncalculated' ? (
+                      'Uncalculated'
+                    ) : (
+                      <span>{entry.geo_loc_name_country_calc || '—'}</span>
+                    )}
+                  </div>
+                );
+              },
+            },
+            {
+              Header: 'Metagenome',
+              accessor: 'organism',
+              Cell: ({ row }) => {
+                const entry = row.original as any;
+                return (
+                  <span style={{ fontSize: '14px' }}>
+                    {entry.organism || '—'}
+                  </span>
+                );
+              },
+            },
+            {
+              Header: 'Actions',
+              id: 'actions',
+              Cell: ({ row }) => {
+                const entry = row.original as any;
+                return (
+                  <div>
+                    <button
+                      className="vf-button vf-button--tertiary vf-button--xs"
+                      onClick={() =>
+                        window.open(
+                          `https://www.ebi.ac.uk/metagenomics/runs/${entry.acc}`,
+                          '_blank'
+                        )
+                      }
+                      title="View run in MGnify"
+                    >
+                      Open
+                    </button>
+                    {entry.biosample_link && (
+                      <button
+                        className="vf-button vf-button--tertiary vf-button--xs"
+                        onClick={() =>
+                          window.open(entry.biosample_link, '_blank')
+                        }
+                        title="View biosample"
+                      >
+                        Sample
+                      </button>
+                    )}
+                  </div>
+                );
+              },
+            },
+          ];
+          return (
+            <EMGTable
+              cols={columns}
+              data={processResults().paginatedResults}
+              showPagination={false}
+              className="vf-table"
+            />
+          );
+        })()}
       </div>
 
       {/* Enhanced Pagination */}
