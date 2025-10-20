@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import EMGTable from 'components/UI/EMGTable';
 import { Column } from 'react-table';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 interface Filters {
   acc: string;
@@ -47,6 +48,15 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
   itemsPerPage,
   onPageChange,
 }) => {
+  // Synchronize EMGTable internal pagination (via query param) with parent state
+  const [emgPage] = useQueryParamState('branchwater-detailed-page', currentPage || 1, Number);
+  useEffect(() => {
+    if (typeof emgPage === 'number' && emgPage !== currentPage) {
+      onPageChange(emgPage);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emgPage]);
+
   return (
     <div
       style={{
@@ -65,8 +75,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               accessor: 'acc',
               Cell: ({ row }) => {
                 const entry = row.original as any;
-                const actualIndex =
-                  (currentPage - 1) * itemsPerPage + row.index;
+                const actualIndex = row.index;
                 return (
                   <div>
                     {actualIndex < 2 ? (
@@ -240,109 +249,20 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
           ];
+          const { paginatedResults, sortedResults } = processResults();
           return (
             <EMGTable
               cols={columns}
-              data={processResults().paginatedResults}
-              showPagination={false}
+              data={{ items: paginatedResults, count: sortedResults.length }}
               className="vf-table"
+              showPagination
+              expectedPageSize={itemsPerPage}
+              initialPage={Math.max(0, (currentPage || 1) - 1)}
+              namespace="branchwater-detailed-"
             />
           );
         })()}
       </div>
-
-      {/* Enhanced Pagination */}
-      {processResults().totalPages > 1 && (
-        <div
-          style={{
-            padding: '20px',
-            backgroundColor: '#f8f9fa',
-            borderTop: '1px solid #dee2e6',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'between',
-              alignItems: 'center',
-              gap: '20px',
-            }}
-          >
-            <div style={{ fontSize: '14px', color: '#6c757d' }}>
-              Showing {(currentPage - 1) * itemsPerPage + 1} to{' '}
-              {Math.min(
-                currentPage * itemsPerPage,
-                processResults().filteredResults.length
-              )}{' '}
-              of {processResults().filteredResults.length} results
-            </div>
-            <nav className="vf-pagination" aria-label="Pagination">
-              <ul className="vf-pagination__list">
-                <li
-                  className={`vf-pagination__item vf-pagination__item--previous-page ${
-                    currentPage === 1 ? 'vf-pagination__item--is-disabled' : ''
-                  }`}
-                >
-                  <button
-                    type="button"
-                    className="vf-pagination__link"
-                    onClick={() =>
-                      currentPage > 1 && onPageChange(currentPage - 1)
-                    }
-                  >
-                    ⬅️ Previous
-                  </button>
-                </li>
-
-                {[...Array(Math.min(5, processResults().totalPages))].map(
-                  (_, i) => {
-                    const pageNum = Math.max(1, currentPage - 2) + i;
-                    if (pageNum > processResults().totalPages) return null;
-
-                    return (
-                      <li
-                        key={pageNum}
-                        className={`vf-pagination__item ${
-                          pageNum === currentPage
-                            ? 'vf-pagination__item--is-active'
-                            : ''
-                        }`}
-                      >
-                        <button
-                          type="button"
-                          className="vf-pagination__link"
-                          onClick={() => onPageChange(pageNum)}
-                        >
-                          {pageNum}
-                        </button>
-                      </li>
-                    );
-                  }
-                )}
-
-                <li
-                  className={`vf-pagination__item vf-pagination__item--next-page ${
-                    currentPage === processResults().totalPages
-                      ? 'vf-pagination__item--is-disabled'
-                      : ''
-                  }`}
-                >
-                  <button
-                    type="button"
-                    className="vf-pagination__link"
-                    onClick={() =>
-                      currentPage < processResults().totalPages &&
-                      onPageChange(currentPage + 1)
-                    }
-                  >
-                    Next ➡️
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -14,6 +14,7 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import TemperatureFilter from 'components/Search/Filter/Temperature';
 import CANIFilter from 'components/Search/Filter/CANI';
 import TextSearch from 'components/Search/Filter/Text';
+import MultipleOptionFilter from 'components/Search/Filter/MultipleOption';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -341,14 +342,13 @@ const Branchwater = () => {
 
   // Apply filters to search results
   const getFilteredResults = useCallback((): SearchResult[] => {
-    // Ensure searchResults is an array before filtering
     if (!Array.isArray(searchResults)) {
       console.error('searchResults is not an array:', searchResults);
       return [];
     }
 
     return searchResults.filter((item) => {
-      // Apply text-based filters first (existing behavior)
+      // Apply text-based filters first
       const matchesTextFilters = Object.keys(filters).every((key) => {
         if (!filters[key]) return true; // Skip empty filters
         const itemValue = String(item[key] || '').toLowerCase();
@@ -359,27 +359,69 @@ const Branchwater = () => {
 
       // Apply cANI numeric range filter if present via query param
       if (caniRange) {
-        console.group('CANI FILTERS');
         const [minStr, maxStr] = caniRange.split(',');
         const min = Number(minStr);
         const max = Number(maxStr);
-        console.log('MIN ', min);
-        console.log('MAX ', max);
+
         // If parsing failed, ignore the cANI filter
         if (!Number.isNaN(min) && !Number.isNaN(max)) {
           const val = item.cANI;
           const num = typeof val === 'number' ? val : Number(val);
-          console.log('VAL ', val);
-          console.log('NUM ', num);
+
           if (Number.isNaN(num)) return false;
-          if (num < min || num > max) return false;
-          console.groupEnd();
+
+          // Use epsilon for floating-point comparison at boundaries
+          const EPSILON = 0.0001;
+          if (num < min - EPSILON || num > max + EPSILON) {
+            return false;
+          }
         }
       }
 
       return true;
     });
   }, [searchResults, filters, caniRange]);
+
+  // const getFilteredResults = useCallback((): SearchResult[] => {
+  //   // Ensure searchResults is an array before filtering
+  //   if (!Array.isArray(searchResults)) {
+  //     console.error('searchResults is not an array:', searchResults);
+  //     return [];
+  //   }
+  //
+  //   return searchResults.filter((item) => {
+  //     // Apply text-based filters first (existing behavior)
+  //     const matchesTextFilters = Object.keys(filters).every((key) => {
+  //       if (!filters[key]) return true; // Skip empty filters
+  //       const itemValue = String(item[key] || '').toLowerCase();
+  //       const filterValue = filters[key].toLowerCase();
+  //       return itemValue.includes(filterValue);
+  //     });
+  //     if (!matchesTextFilters) return false;
+  //
+  //     // Apply cANI numeric range filter if present via query param
+  //     if (caniRange) {
+  //       console.group('CANI FILTERS');
+  //       const [minStr, maxStr] = caniRange.split(',');
+  //       const min = Number(minStr);
+  //       const max = Number(maxStr);
+  //       console.log('MIN ', min);
+  //       console.log('MAX ', max);
+  //       // If parsing failed, ignore the cANI filter
+  //       if (!Number.isNaN(min) && !Number.isNaN(max)) {
+  //         const val = item.cANI;
+  //         const num = typeof val === 'number' ? val : Number(val);
+  //         console.log('VAL ', val);
+  //         console.log('NUM ', num);
+  //         if (Number.isNaN(num)) return false;
+  //         if (num < min || num > max) return false;
+  //         console.groupEnd();
+  //       }
+  //     }
+  //
+  //     return true;
+  //   });
+  // }, [searchResults, filters, caniRange]);
 
   // Prepare data for visualizations
   const prepareVisualizationData = useCallback(
@@ -1049,6 +1091,11 @@ const Branchwater = () => {
                       <div className="vf-stack vf-stack--800">
                         <TemperatureFilter />
                         <CANIFilter />
+                        <MultipleOptionFilter
+                          facetName="location_name"
+                          header="Location name"
+                          includeTextFilter
+                        />
                       </div>
                       <section>
                         <DetailedResultsTable
