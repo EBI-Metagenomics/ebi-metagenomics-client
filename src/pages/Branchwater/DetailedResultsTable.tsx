@@ -49,7 +49,11 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
   onPageChange,
 }) => {
   // Synchronize EMGTable internal pagination (via query param) with parent state
-  const [emgPage] = useQueryParamState('branchwater-detailed-page', currentPage || 1, Number);
+  const [emgPage] = useQueryParamState(
+    'branchwater-detailed-page',
+    currentPage || 1,
+    Number
+  );
   useEffect(() => {
     if (typeof emgPage === 'number' && emgPage !== currentPage) {
       onPageChange(emgPage);
@@ -110,7 +114,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
-              Header: 'Type',
+              Header: 'Assay Type',
               accessor: 'assay_type',
               Cell: ({ row }) => {
                 const entry = row.original as any;
@@ -153,6 +157,14 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
+              Header: 'Bioproject',
+              accessor: 'bioproject',
+              Cell: ({ row }) => {
+                const entry = row.original as any;
+                return <span>{entry.bioproject}</span>;
+              },
+            },
+            {
               Header: 'Containment',
               accessor: 'containment',
               Cell: ({ row }) => {
@@ -187,6 +199,14 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
+              Header: 'Collection Date',
+              accessor: 'collectionDate',
+              Cell: ({ row }) => {
+                const entry = row.original as any;
+                return <span>{entry.collection_date_sam}</span>;
+              },
+            },
+            {
               Header: 'Location',
               accessor: 'geo_loc_name_country_calc',
               Cell: ({ row }) => {
@@ -203,7 +223,15 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
-              Header: 'Metagenome',
+              Header: 'Lat/Lng',
+              accessor: 'lat_lon',
+              Cell: ({ row }) => {
+                const entry = row.original as any;
+                return <span>{entry.lat_lon}</span>;
+              },
+            },
+            {
+              Header: 'Organism',
               accessor: 'organism',
               Cell: ({ row }) => {
                 const entry = row.original as any;
@@ -211,40 +239,6 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
                   <span style={{ fontSize: '14px' }}>
                     {entry.organism || '—'}
                   </span>
-                );
-              },
-            },
-            {
-              Header: 'Actions',
-              id: 'actions',
-              Cell: ({ row }) => {
-                const entry = row.original as any;
-                return (
-                  <div>
-                    <button
-                      className="vf-button vf-button--tertiary vf-button--xs"
-                      onClick={() =>
-                        window.open(
-                          `https://www.ebi.ac.uk/metagenomics/runs/${entry.acc}`,
-                          '_blank'
-                        )
-                      }
-                      title="View run in MGnify"
-                    >
-                      Open
-                    </button>
-                    {entry.biosample_link && (
-                      <button
-                        className="vf-button vf-button--tertiary vf-button--xs"
-                        onClick={() =>
-                          window.open(entry.biosample_link, '_blank')
-                        }
-                        title="View biosample"
-                      >
-                        Sample
-                      </button>
-                    )}
-                  </div>
                 );
               },
             },
