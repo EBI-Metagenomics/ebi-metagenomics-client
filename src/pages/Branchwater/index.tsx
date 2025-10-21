@@ -1548,15 +1548,6 @@ const Branchwater = () => {
                   <div className="vf-u-padding__top--400">
                     <h3 className="vf-text vf-text-heading--3">
                       Containment Score Distribution
-                      <small
-                        style={{
-                          fontWeight: 'normal',
-                          color: '#6c757d',
-                          marginLeft: '10px',
-                        }}
-                      >
-                        (Binned in 0.1 ranges as requested)
-                      </small>
                     </h3>
                     <div
                       id="containmentBinsDiv"
