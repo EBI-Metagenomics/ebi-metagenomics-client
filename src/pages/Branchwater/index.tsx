@@ -138,75 +138,121 @@ const Branchwater = () => {
   const [caniRange] = useQueryParamState('cani', '');
 
   // Helper function to convert search results to map samples with valid lat/lng
+
   const convertToMapSamples = useCallback(
     (data: SearchResult[]): MapSample[] => {
-      if (!data || !Array.isArray(data)) return [];
+      if (!Array.isArray(data)) return [];
 
       return data
         .map((item, index) => {
-          // Skip items without lat_lon data or with 'NP' values
-          if (!item.lat_lon || item.lat_lon === 'NP') return null;
+          // Skip missing/placeholder accessions
+          if (!item.acc || item.acc === 'NP') return null;
 
-          try {
-            let lat: number, lng: number;
+          const coords = parseLatLon(item.lat_lon);
+          if (!coords) return null;
 
-            // Handle different lat_lon formats
-            if (Array.isArray(item.lat_lon)) {
-              // Format: [latitude, longitude]
-              lat = parseFloat(item.lat_lon[0]);
-              lng = parseFloat(item.lat_lon[1]);
-            } else if (typeof item.lat_lon === 'string') {
-              // Format: "40.7128N, 74.0060W" or similar
-              const match = item.lat_lon.match(
-                /([0-9.-]+)([NS]),?\s*([0-9.-]+)([EW])/
-              );
-              if (!match) return null;
+          const [lat, lng] = coords;
 
-              lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
-              lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
-            } else {
-              return null;
-            }
+          // Clean up country label: hide NP/uncalculated
+          const countryRaw = (item.geo_loc_name_country_calc || '').trim();
+          const country =
+            !countryRaw ||
+            ['np', 'uncalculated'].includes(countryRaw.toLowerCase())
+              ? 'Unknown location'
+              : countryRaw;
 
-            // Validate coordinates
-            if (
-              isNaN(lat) ||
-              isNaN(lng) ||
-              lat < -90 ||
-              lat > 90 ||
-              lng < -180 ||
-              lng > 180
-            ) {
-              return null;
-            }
+          const organism = item.organism || 'Unknown organism';
 
-            // Return in MapSample format
-            return {
-              id: item.acc || `sample_${index}`,
-              attributes: {
-                latitude: lat,
-                longitude: lng,
-                'sample-desc': `${item.organism || 'Unknown organism'} - ${
-                  item.geo_loc_name_country_calc || 'Unknown location'
-                }`,
-              },
-              relationships: {
-                biome: {
-                  data: {
-                    id: item.assay_type || 'unknown',
-                  },
+          return {
+            id: item.acc,
+            attributes: {
+              latitude: lat,
+              longitude: lng,
+              'sample-desc': `${organism} - ${country}`,
+            },
+            relationships: {
+              biome: {
+                data: {
+                  id: item.assay_type || 'unknown',
                 },
               },
-            };
-          } catch (error) {
-            console.error('Error parsing lat_lon:', item.lat_lon, error);
-            return null;
-          }
+            },
+          } as MapSample;
         })
-        .filter(Boolean) as MapSample[]; // Remove null entries
+        .filter(Boolean) as MapSample[];
     },
     []
   );
+
+  // const convertToMapSamples = useCallback(
+  //   (data: SearchResult[]): MapSample[] => {
+  //     if (!data || !Array.isArray(data)) return [];
+  //
+  //     return data
+  //       .map((item, index) => {
+  //         // Skip items without lat_lon data or with 'NP' values
+  //         if (!item.lat_lon || item.lat_lon === 'NP') return null;
+  //
+  //         try {
+  //           let lat: number, lng: number;
+  //
+  //           // Handle different lat_lon formats
+  //           if (Array.isArray(item.lat_lon)) {
+  //             // Format: [latitude, longitude]
+  //             lat = parseFloat(item.lat_lon[0]);
+  //             lng = parseFloat(item.lat_lon[1]);
+  //           } else if (typeof item.lat_lon === 'string') {
+  //             // Format: "40.7128N, 74.0060W" or similar
+  //             const match = item.lat_lon.match(
+  //               /([0-9.-]+)([NS]),?\s*([0-9.-]+)([EW])/
+  //             );
+  //             if (!match) return null;
+  //
+  //             lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
+  //             lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
+  //           } else {
+  //             return null;
+  //           }
+  //
+  //           // Validate coordinates
+  //           if (
+  //             isNaN(lat) ||
+  //             isNaN(lng) ||
+  //             lat < -90 ||
+  //             lat > 90 ||
+  //             lng < -180 ||
+  //             lng > 180
+  //           ) {
+  //             return null;
+  //           }
+  //
+  //           // Return in MapSample format
+  //           return {
+  //             id: item.acc || `sample_${index}`,
+  //             attributes: {
+  //               latitude: lat,
+  //               longitude: lng,
+  //               'sample-desc': `${item.organism || 'Unknown organism'} - ${
+  //                 item.geo_loc_name_country_calc || 'Unknown location'
+  //               }`,
+  //             },
+  //             relationships: {
+  //               biome: {
+  //                 data: {
+  //                   id: item.assay_type || 'unknown',
+  //                 },
+  //               },
+  //             },
+  //           };
+  //         } catch (error) {
+  //           console.error('Error parsing lat_lon:', item.lat_lon, error);
+  //           return null;
+  //         }
+  //       })
+  //       .filter(Boolean) as MapSample[]; // Remove null entries
+  //   },
+  //   []
+  // );
 
   const getCountryCountsFromResults = useCallback((results: SearchResult[]) => {
     const countryCounts: Record<string, number> = {};
@@ -235,6 +281,213 @@ const Branchwater = () => {
     if (intensity > 0.2) return '#FD8D3C';
     return '#FEB24C';
   }, []);
+
+  const createPlotData = (
+    stringKeys: string[],
+    stringValues: any[][]
+  ): any[] => {
+    const plotData: any[] = [];
+    const plotColor = 'rgba(100, 200, 102, 1)';
+
+    for (let i = 0; i < stringKeys.length; i++) {
+      const visible = i === 0;
+      const { uniqueValues, countVal } = countUniqueValuesAndOccurrences(
+        stringValues[i]
+      );
+      plotData.push({
+        x: uniqueValues,
+        y: countVal,
+        type: 'bar',
+        width: 0.2,
+        marker: {
+          color: 'rgba(100, 200, 102, 0.7)',
+          line: {
+            color: plotColor,
+            width: 1,
+          },
+        },
+        name: stringKeys[i],
+        visible,
+      });
+    }
+
+    return plotData;
+  };
+
+  const countUniqueValuesAndOccurrences = (
+    valueList: any[]
+  ): { uniqueValues: any[]; countVal: number[] } => {
+    const counts: Record<string, number> = {};
+    const uniqueValues = [...new Set(valueList)];
+
+    for (let i = 0; i < uniqueValues.length; i++) {
+      const val = uniqueValues[i];
+      // Convert val to string to use as object key
+      const key = String(val);
+      counts[key] = valueList.filter((value) => value === val).length;
+    }
+
+    const countVal = uniqueValues.map((val) => counts[String(val)]);
+
+    return {
+      uniqueValues,
+      countVal,
+    };
+  };
+
+  const prepareVisualizationData = useCallback(
+    (data: SearchResult[]): VisualizationData | null => {
+      if (!data || data.length === 0) return null;
+
+      // Use the union of keys across all rows (not just the first row)
+      const commonKeys = Array.from(new Set(data.flatMap(Object.keys)));
+
+      // Build a columnar array (values[kIndex] -> array of values for that key)
+      const values: any[][] = commonKeys.map((k) => data.map((row) => row[k]));
+
+      // ----- Categorical bar plots: only include true string-like cols, skip IDs/links/coords
+      const stringKeys: string[] = [];
+      const stringValues: any[][] = [];
+
+      for (let i = 0; i < values.length; i++) {
+        const key = commonKeys[i];
+        if (['acc', 'biosample_link', 'lat_lon'].includes(key)) continue;
+
+        const col = values[i];
+        // Treat null/undefined as empty strings for the "every" check
+        const isAllStrings = col.every(
+          (v) => typeof v === 'string' || v == null
+        );
+        if (isAllStrings) {
+          stringKeys.push(key);
+          stringValues.push(col.map((v) => (v == null ? '' : String(v))));
+        }
+      }
+
+      const barPlotData = createPlotData(stringKeys, stringValues);
+
+      // ----- Histograms (containment, cANI): coerce to numbers and filter NaN
+      const numCol = (idx: number) =>
+        idx === -1
+          ? []
+          : (values[idx]
+              .map((v) => (typeof v === 'number' ? v : Number(v)))
+              .filter((n) => Number.isFinite(n)) as number[]);
+
+      const containmentIndex = commonKeys.indexOf('containment');
+      const cANIIndex = commonKeys.indexOf('cANI');
+
+      const hist: any[] = [];
+
+      if (containmentIndex !== -1) {
+        const xs = numCol(containmentIndex);
+        if (xs.length) {
+          hist.push({
+            x: xs,
+            type: 'histogram',
+            autobinx: false,
+            xbins: { size: 0.1 },
+            name: 'containment',
+            visible: true,
+            marker: {
+              color: 'rgba(100, 200, 102, 0.7)',
+              line: { color: 'rgba(100, 200, 102, 1)', width: 1 },
+            },
+          });
+        }
+      }
+
+      if (cANIIndex !== -1) {
+        const xs = numCol(cANIIndex);
+        if (xs.length) {
+          hist.push({
+            x: xs,
+            type: 'histogram',
+            autobinx: false,
+            xbins: { size: 0.02 },
+            name: 'cANI',
+            visible: hist.length === 0 ? true : false, // show if only one
+            marker: {
+              color: 'rgba(100, 200, 102, 0.7)',
+              line: { color: 'rgba(100, 200, 102, 1)', width: 1 },
+            },
+          });
+        }
+      }
+
+      // ----- Map data: choropleth by country (skip NP/uncalculated)
+      const countryIndex = commonKeys.indexOf('geo_loc_name_country_calc');
+      let countryMap: Record<string, any> = {};
+
+      if (countryIndex !== -1) {
+        const cleanedCountries = values[countryIndex]
+          .map((v) => (v == null ? '' : String(v).trim()))
+          .filter((v) => {
+            const lc = v.toLowerCase();
+            return v && lc !== 'np' && lc !== 'uncalculated';
+          });
+
+        const countryCounts = countUniqueValuesAndOccurrences(cleanedCountries);
+        if (countryCounts.uniqueValues.length > 0) {
+          const countryData = countryCounts.uniqueValues.map((country, i) => ({
+            country,
+            count: countryCounts.countVal[i],
+          }));
+
+          countryMap = {
+            name: 'geo_loc_name_country_calc',
+            type: 'choropleth',
+            locationmode: 'country names',
+            locations: countryData.map((d) => d.country),
+            z: countryData.map((d) => d.count),
+            text: countryData.map((d) => `${d.country}: ${d.count}`),
+            autocolorscale: true,
+            marker: { line: { color: 'rgb(255,255,255)', width: 2 } },
+          };
+        }
+      }
+
+      // ----- Map data: scattergeo from lat_lon using parseLatLon
+      const latLonIndex = commonKeys.indexOf('lat_lon');
+      let latLonMap: Record<string, any> = {};
+
+      if (latLonIndex !== -1) {
+        const latLonData = values[latLonIndex]
+          .map((raw, i) => {
+            const coords = parseLatLon(raw);
+            const acc = data[i]?.acc;
+            if (!coords || !acc || acc === 'NP') return null;
+            return [coords[0], coords[1], acc] as [number, number, string];
+          })
+          .filter(Boolean) as [number, number, string][];
+
+        if (latLonData.length > 0) {
+          latLonMap = {
+            name: 'lat_lon',
+            type: 'scattergeo',
+            mode: 'markers',
+            marker: { color: 'rgba(100, 200, 102, 1)' },
+            lat: latLonData.map((t) => t[0]),
+            lon: latLonData.map((t) => t[1]),
+            text: latLonData.map((t) => `acc: ${t[2]}`),
+          };
+        }
+      }
+
+      return {
+        barPlotData,
+        histogramData: hist,
+        mapData: [countryMap, latLonMap].filter(
+          (obj) => obj && Object.keys(obj).length > 0
+        ),
+        stringKeys,
+      };
+    },
+    [
+      createPlotData,
+      countUniqueValuesAndOccurrences /*, parseLatLon if declared outside */,
+    ]
+  );
 
   const handleRequestAnalysis = (entry: SearchResult) => {
     // You can customize this URL based on your MGnify submission workflow
@@ -272,9 +525,14 @@ const Branchwater = () => {
           const vizData = prepareVisualizationData(resultsArray);
           setVisualizationData(vizData);
 
+          console.log('resultsArray ', resultsArray);
+
           // Convert to map samples
           const mapData = convertToMapSamples(resultsArray);
+          // setMapSamples(mapData);
           setMapSamples(mapData);
+          console.log('mapData ', mapData);
+          console.log('mapSamples ', mapSamples);
 
           // Calculate country counts for heatmap
           const counts = getCountryCountsFromResults(resultsArray);
@@ -294,59 +552,6 @@ const Branchwater = () => {
         'No signature available yet. Please upload and sketch a file first.'
       );
     }
-  };
-
-  const countUniqueValuesAndOccurrences = (
-    valueList: any[]
-  ): { uniqueValues: any[]; countVal: number[] } => {
-    const counts: Record<string, number> = {};
-    const uniqueValues = [...new Set(valueList)];
-
-    for (let i = 0; i < uniqueValues.length; i++) {
-      const val = uniqueValues[i];
-      // Convert val to string to use as object key
-      const key = String(val);
-      counts[key] = valueList.filter((value) => value === val).length;
-    }
-
-    const countVal = uniqueValues.map((val) => counts[String(val)]);
-
-    return {
-      uniqueValues,
-      countVal,
-    };
-  };
-
-  const createPlotData = (
-    stringKeys: string[],
-    stringValues: any[][]
-  ): any[] => {
-    const plotData: any[] = [];
-    const plotColor = 'rgba(100, 200, 102, 1)';
-
-    for (let i = 0; i < stringKeys.length; i++) {
-      const visible = i === 0;
-      const { uniqueValues, countVal } = countUniqueValuesAndOccurrences(
-        stringValues[i]
-      );
-      plotData.push({
-        x: uniqueValues,
-        y: countVal,
-        type: 'bar',
-        width: 0.2,
-        marker: {
-          color: 'rgba(100, 200, 102, 0.7)',
-          line: {
-            color: plotColor,
-            width: 1,
-          },
-        },
-        name: stringKeys[i],
-        visible,
-      });
-    }
-
-    return plotData;
   };
 
   // Add query param states for the faceted filters
@@ -534,159 +739,159 @@ const Branchwater = () => {
   // }, [searchResults, filters, caniRange]);
 
   // Prepare data for visualizations
-  const prepareVisualizationData = useCallback(
-    (data: SearchResult[]): VisualizationData | null => {
-      if (!data || data.length === 0) return null;
-
-      const commonKeys = Object.keys(data[0]);
-      const values: any[][] = Array.from(
-        { length: commonKeys.length },
-        () => []
-      );
-
-      commonKeys.forEach((key, j) => {
-        values[j] = data.map((obj) => obj[key]);
-      });
-
-      // Filter string keys for bar plots
-      const stringKeys: string[] = [];
-      const stringValues: any[][] = [];
-
-      for (let i = 0; i < values.length; i++) {
-        if (
-          values[i].every(
-            (val) =>
-              typeof val === 'string' &&
-              commonKeys[i] !== 'acc' &&
-              commonKeys[i] !== 'biosample_link'
-          )
-        ) {
-          stringKeys.push(commonKeys[i]);
-          stringValues.push(values[i]);
-        }
-      }
-
-      // Create bar plot data
-      const barPlotData = createPlotData(stringKeys, stringValues);
-
-      // Create histogram data
-      const containmentIndex = commonKeys.indexOf('containment');
-      const cANIIndex = commonKeys.indexOf('cANI');
-
-      const containmentHist: any = {
-        x: values[containmentIndex],
-        type: 'histogram',
-        autobinx: false,
-        xbins: { size: 0.1 },
-        name: 'containment',
-        visible: true,
-        marker: {
-          color: 'rgba(100, 200, 102, 0.7)',
-          line: {
-            color: 'rgba(100, 200, 102, 1)',
-            width: 1,
-          },
-        },
-      };
-
-      const cANIHist: any = {
-        x: values[cANIIndex],
-        type: 'histogram',
-        autobinx: false,
-        xbins: { size: 0.02 },
-        name: 'cANI',
-        visible: false,
-        marker: {
-          color: 'rgba(100, 200, 102, 0.7)',
-          line: {
-            color: 'rgba(100, 200, 102, 1)',
-            width: 1,
-          },
-        },
-      };
-
-      // Create map data
-      let countryMap: Record<string, any> = {};
-      let latLonMap: Record<string, any> = {};
-
-      const countryIndex = commonKeys.indexOf('geo_loc_name_country_calc');
-      const latLonIndex = commonKeys.indexOf('lat_lon');
-
-      if (countryIndex !== -1) {
-        const countryCounts = countUniqueValuesAndOccurrences(
-          values[countryIndex]
-        );
-        const countryData = countryCounts.uniqueValues.map((country, index) => {
-          return {
-            country: country,
-            count: countryCounts.countVal[index],
-          };
-        });
-
-        countryMap = {
-          name: 'geo_loc_name_country_calc',
-          type: 'choropleth',
-          locationmode: 'country names',
-          locations: countryData.map((d) => d.country),
-          z: countryData.map((d) => d.count),
-          text: countryData.map((d) => `${d.country}: ${d.count}`),
-          autocolorscale: true,
-          marker: {
-            line: {
-              color: 'rgb(255,255,255)',
-              width: 2,
-            },
-          },
-        };
-      }
-
-      if (latLonIndex !== -1) {
-        // Process lat_lon data
-        const latLonData = values[latLonIndex]
-          .map((item, index) => {
-            if (item === 'NP') return null;
-
-            // Try to parse lat_lon string
-            try {
-              const match = item.match(/([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/);
-              if (match) {
-                const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
-                const lon = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
-                return [lat, lon, data[index].acc];
-              }
-              return null;
-            } catch (e) {
-              return null;
-            }
-          })
-          .filter((item) => item !== null) as [number, number, string][];
-
-        if (latLonData.length > 0) {
-          latLonMap = {
-            name: 'lat_lon',
-            type: 'scattergeo',
-            mode: 'markers',
-            marker: {
-              color: 'rgba(100, 200, 102, 1)',
-            },
-            lat: latLonData.map((item) => item[0]),
-            lon: latLonData.map((item) => item[1]),
-            text: latLonData.map((item) => `acc: ${item[2]}`),
-          };
-        }
-      }
-
-      return {
-        barPlotData,
-        histogramData: [containmentHist, cANIHist],
-        mapData: [countryMap, latLonMap].filter(
-          (item) => Object.keys(item).length > 0
-        ),
-        stringKeys,
-      };
-    },
-    [createPlotData, countUniqueValuesAndOccurrences]
-  );
+  // const prepareVisualizationData = useCallback(
+  //   (data: SearchResult[]): VisualizationData | null => {
+  //     if (!data || data.length === 0) return null;
+  //
+  //     const commonKeys = Object.keys(data[0]);
+  //     const values: any[][] = Array.from(
+  //       { length: commonKeys.length },
+  //       () => []
+  //     );
+  //
+  //     commonKeys.forEach((key, j) => {
+  //       values[j] = data.map((obj) => obj[key]);
+  //     });
+  //
+  //     // Filter string keys for bar plots
+  //     const stringKeys: string[] = [];
+  //     const stringValues: any[][] = [];
+  //
+  //     for (let i = 0; i < values.length; i++) {
+  //       if (
+  //         values[i].every(
+  //           (val) =>
+  //             typeof val === 'string' &&
+  //             commonKeys[i] !== 'acc' &&
+  //             commonKeys[i] !== 'biosample_link'
+  //         )
+  //       ) {
+  //         stringKeys.push(commonKeys[i]);
+  //         stringValues.push(values[i]);
+  //       }
+  //     }
+  //
+  //     // Create bar plot data
+  //     const barPlotData = createPlotData(stringKeys, stringValues);
+  //
+  //     // Create histogram data
+  //     const containmentIndex = commonKeys.indexOf('containment');
+  //     const cANIIndex = commonKeys.indexOf('cANI');
+  //
+  //     const containmentHist: any = {
+  //       x: values[containmentIndex],
+  //       type: 'histogram',
+  //       autobinx: false,
+  //       xbins: { size: 0.1 },
+  //       name: 'containment',
+  //       visible: true,
+  //       marker: {
+  //         color: 'rgba(100, 200, 102, 0.7)',
+  //         line: {
+  //           color: 'rgba(100, 200, 102, 1)',
+  //           width: 1,
+  //         },
+  //       },
+  //     };
+  //
+  //     const cANIHist: any = {
+  //       x: values[cANIIndex],
+  //       type: 'histogram',
+  //       autobinx: false,
+  //       xbins: { size: 0.02 },
+  //       name: 'cANI',
+  //       visible: false,
+  //       marker: {
+  //         color: 'rgba(100, 200, 102, 0.7)',
+  //         line: {
+  //           color: 'rgba(100, 200, 102, 1)',
+  //           width: 1,
+  //         },
+  //       },
+  //     };
+  //
+  //     // Create map data
+  //     let countryMap: Record<string, any> = {};
+  //     let latLonMap: Record<string, any> = {};
+  //
+  //     const countryIndex = commonKeys.indexOf('geo_loc_name_country_calc');
+  //     const latLonIndex = commonKeys.indexOf('lat_lon');
+  //
+  //     if (countryIndex !== -1) {
+  //       const countryCounts = countUniqueValuesAndOccurrences(
+  //         values[countryIndex]
+  //       );
+  //       const countryData = countryCounts.uniqueValues.map((country, index) => {
+  //         return {
+  //           country: country,
+  //           count: countryCounts.countVal[index],
+  //         };
+  //       });
+  //
+  //       countryMap = {
+  //         name: 'geo_loc_name_country_calc',
+  //         type: 'choropleth',
+  //         locationmode: 'country names',
+  //         locations: countryData.map((d) => d.country),
+  //         z: countryData.map((d) => d.count),
+  //         text: countryData.map((d) => `${d.country}: ${d.count}`),
+  //         autocolorscale: true,
+  //         marker: {
+  //           line: {
+  //             color: 'rgb(255,255,255)',
+  //             width: 2,
+  //           },
+  //         },
+  //       };
+  //     }
+  //
+  //     if (latLonIndex !== -1) {
+  //       // Process lat_lon data
+  //       const latLonData = values[latLonIndex]
+  //         .map((item, index) => {
+  //           if (item === 'NP') return null;
+  //
+  //           // Try to parse lat_lon string
+  //           try {
+  //             const match = item.match(/([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/);
+  //             if (match) {
+  //               const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
+  //               const lon = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
+  //               return [lat, lon, data[index].acc];
+  //             }
+  //             return null;
+  //           } catch (e) {
+  //             return null;
+  //           }
+  //         })
+  //         .filter((item) => item !== null) as [number, number, string][];
+  //
+  //       if (latLonData.length > 0) {
+  //         latLonMap = {
+  //           name: 'lat_lon',
+  //           type: 'scattergeo',
+  //           mode: 'markers',
+  //           marker: {
+  //             color: 'rgba(100, 200, 102, 1)',
+  //           },
+  //           lat: latLonData.map((item) => item[0]),
+  //           lon: latLonData.map((item) => item[1]),
+  //           text: latLonData.map((item) => `acc: ${item[2]}`),
+  //         };
+  //       }
+  //     }
+  //
+  //     return {
+  //       barPlotData,
+  //       histogramData: [containmentHist, cANIHist],
+  //       mapData: [countryMap, latLonMap].filter(
+  //         (item) => Object.keys(item).length > 0
+  //       ),
+  //       stringKeys,
+  //     };
+  //   },
+  //   [createPlotData, countUniqueValuesAndOccurrences]
+  // );
 
   // Updated useEffect for handling search results
   useEffect(() => {
@@ -963,6 +1168,42 @@ const Branchwater = () => {
     URL.revokeObjectURL(url);
   };
 
+  const stripQuotes = (s: string) => s.replace(/^"+|"+$/g, '').trim();
+
+  const parseLatLon = (raw: unknown): [number, number] | null => {
+    if (raw == null) return null;
+    if (Array.isArray(raw)) {
+      const [lat, lon] = raw;
+      const latNum = Number(lat),
+        lonNum = Number(lon);
+      return Number.isFinite(latNum) && Number.isFinite(lonNum)
+        ? [latNum, lonNum]
+        : null;
+    }
+    let s = String(raw).trim();
+    if (!s || s === 'NP') return null;
+    s = stripQuotes(s).toUpperCase();
+
+    // invalid markers
+    const bad = ['MISSING', 'NOT APPLICABLE', 'NA', 'N/A', 'NULL', 'NONE'];
+    if (bad.includes(s)) return null;
+
+    // Examples we want: "39.5886 N 20.1382 E", "12 N 32 W", "54.1883 N 7.9000 E"
+    // Allow commas or spaces between the pairs.
+    const re =
+      /^\s*([0-9]+(?:\.[0-9]+)?)\s*([NS])[\s,]+([0-9]+(?:\.[0-9]+)?)\s*([EW])\s*$/i;
+    const m = s.match(re);
+    if (!m) return null;
+
+    let lat = parseFloat(m[1]) * (m[2] === 'S' ? -1 : 1);
+    let lon = parseFloat(m[3]) * (m[4] === 'W' ? -1 : 1);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
+
+    return [lat, lon];
+  };
+
   const handleClearClick = (): void => {
     setShowMgnifySourmash(false);
     setUploadedFile(null);
@@ -974,7 +1215,7 @@ const Branchwater = () => {
       acc: '',
       assay_type: '',
       bioproject: '',
-      cANI: '',
+      // cANI: '',
       collection_date_sam: '',
       containment: '',
       geo_loc_name_country_calc: '',
