@@ -137,6 +137,40 @@ const Branchwater = () => {
   // cANI range from query param (format: "min,max")
   const [caniRange] = useQueryParamState('cani', '');
 
+  const parseLatLon = (raw: unknown): [number, number] | null => {
+    if (raw == null) return null;
+    if (Array.isArray(raw)) {
+      const [lat, lon] = raw;
+      const latNum = Number(lat);
+      const lonNum = Number(lon);
+      return Number.isFinite(latNum) && Number.isFinite(lonNum)
+        ? [latNum, lonNum]
+        : null;
+    }
+    let s = String(raw).trim();
+    if (!s || s === 'NP') return null;
+    s = stripQuotes(s).toUpperCase();
+
+    // invalid markers
+    const bad = ['MISSING', 'NOT APPLICABLE', 'NA', 'N/A', 'NULL', 'NONE'];
+    if (bad.includes(s)) return null;
+
+    // Examples we want: "39.5886 N 20.1382 E", "12 N 32 W", "54.1883 N 7.9000 E"
+    // Allow commas or spaces between the pairs.
+    const re =
+      /^\s*([0-9]+(?:\.[0-9]+)?)\s*([NS])[\s,]+([0-9]+(?:\.[0-9]+)?)\s*([EW])\s*$/i;
+    const m = s.match(re);
+    if (!m) return null;
+
+    const lat = parseFloat(m[1]) * (m[2] === 'S' ? -1 : 1);
+    const lon = parseFloat(m[3]) * (m[4] === 'W' ? -1 : 1);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
+
+    return [lat, lon];
+  };
+
   // Helper function to convert search results to map samples with valid lat/lng
 
   const convertToMapSamples = useCallback(
@@ -183,76 +217,6 @@ const Branchwater = () => {
     },
     []
   );
-
-  // const convertToMapSamples = useCallback(
-  //   (data: SearchResult[]): MapSample[] => {
-  //     if (!data || !Array.isArray(data)) return [];
-  //
-  //     return data
-  //       .map((item, index) => {
-  //         // Skip items without lat_lon data or with 'NP' values
-  //         if (!item.lat_lon || item.lat_lon === 'NP') return null;
-  //
-  //         try {
-  //           let lat: number, lng: number;
-  //
-  //           // Handle different lat_lon formats
-  //           if (Array.isArray(item.lat_lon)) {
-  //             // Format: [latitude, longitude]
-  //             lat = parseFloat(item.lat_lon[0]);
-  //             lng = parseFloat(item.lat_lon[1]);
-  //           } else if (typeof item.lat_lon === 'string') {
-  //             // Format: "40.7128N, 74.0060W" or similar
-  //             const match = item.lat_lon.match(
-  //               /([0-9.-]+)([NS]),?\s*([0-9.-]+)([EW])/
-  //             );
-  //             if (!match) return null;
-  //
-  //             lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
-  //             lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
-  //           } else {
-  //             return null;
-  //           }
-  //
-  //           // Validate coordinates
-  //           if (
-  //             isNaN(lat) ||
-  //             isNaN(lng) ||
-  //             lat < -90 ||
-  //             lat > 90 ||
-  //             lng < -180 ||
-  //             lng > 180
-  //           ) {
-  //             return null;
-  //           }
-  //
-  //           // Return in MapSample format
-  //           return {
-  //             id: item.acc || `sample_${index}`,
-  //             attributes: {
-  //               latitude: lat,
-  //               longitude: lng,
-  //               'sample-desc': `${item.organism || 'Unknown organism'} - ${
-  //                 item.geo_loc_name_country_calc || 'Unknown location'
-  //               }`,
-  //             },
-  //             relationships: {
-  //               biome: {
-  //                 data: {
-  //                   id: item.assay_type || 'unknown',
-  //                 },
-  //               },
-  //             },
-  //           };
-  //         } catch (error) {
-  //           console.error('Error parsing lat_lon:', item.lat_lon, error);
-  //           return null;
-  //         }
-  //       })
-  //       .filter(Boolean) as MapSample[]; // Remove null entries
-  //   },
-  //   []
-  // );
 
   const getCountryCountsFromResults = useCallback((results: SearchResult[]) => {
     const countryCounts: Record<string, number> = {};
@@ -406,7 +370,8 @@ const Branchwater = () => {
             autobinx: false,
             xbins: { size: 0.02 },
             name: 'cANI',
-            visible: hist.length === 0 ? true : false, // show if only one
+            visible: hist.length === 0, // show if only one
+            // visible: hist.length === 0 ? true : false, // show if only one
             marker: {
               color: 'rgba(100, 200, 102, 0.7)',
               line: { color: 'rgba(100, 200, 102, 1)', width: 1 },
@@ -427,12 +392,15 @@ const Branchwater = () => {
             return v && lc !== 'np' && lc !== 'uncalculated';
           });
 
-        const countryCounts = countUniqueValuesAndOccurrences(cleanedCountries);
-        if (countryCounts.uniqueValues.length > 0) {
-          const countryData = countryCounts.uniqueValues.map((country, i) => ({
-            country,
-            count: countryCounts.countVal[i],
-          }));
+        const uniqueCountryCounts =
+          countUniqueValuesAndOccurrences(cleanedCountries);
+        if (uniqueCountryCounts.uniqueValues.length > 0) {
+          const countryData = uniqueCountryCounts.uniqueValues.map(
+            (country, i) => ({
+              country,
+              count: uniqueCountryCounts.countVal[i],
+            })
+          );
 
           countryMap = {
             name: 'geo_loc_name_country_calc',
@@ -483,10 +451,7 @@ const Branchwater = () => {
         stringKeys,
       };
     },
-    [
-      createPlotData,
-      countUniqueValuesAndOccurrences /*, parseLatLon if declared outside */,
-    ]
+    [createPlotData, countUniqueValuesAndOccurrences]
   );
 
   const handleRequestAnalysis = (entry: SearchResult) => {
@@ -521,20 +486,11 @@ const Branchwater = () => {
             : [];
           setSearchResults(resultsArray);
 
-          // Prepare visualization data
           const vizData = prepareVisualizationData(resultsArray);
           setVisualizationData(vizData);
-
-          console.log('resultsArray ', resultsArray);
-
-          // Convert to map samples
           const mapData = convertToMapSamples(resultsArray);
-          // setMapSamples(mapData);
           setMapSamples(mapData);
-          console.log('mapData ', mapData);
-          console.log('mapSamples ', mapSamples);
 
-          // Calculate country counts for heatmap
           const counts = getCountryCountsFromResults(resultsArray);
           setCountryCounts(counts);
 
@@ -655,244 +611,6 @@ const Branchwater = () => {
     textQuery,
   ]);
 
-  // Apply filters to search results
-  // const getFilteredResults = useCallback((): SearchResult[] => {
-  //   if (!Array.isArray(searchResults)) {
-  //     console.error('searchResults is not an array:', searchResults);
-  //     return [];
-  //   }
-  //
-  //   return searchResults.filter((item) => {
-  //     // Apply text-based filters first
-  //     const matchesTextFilters = Object.keys(filters).every((key) => {
-  //       if (!filters[key]) return true; // Skip empty filters
-  //       const itemValue = String(item[key] || '').toLowerCase();
-  //       const filterValue = filters[key].toLowerCase();
-  //       return itemValue.includes(filterValue);
-  //     });
-  //     if (!matchesTextFilters) return false;
-  //
-  //     // Apply cANI numeric range filter if present via query param
-  //     if (caniRange) {
-  //       const [minStr, maxStr] = caniRange.split(',');
-  //       const min = Number(minStr);
-  //       const max = Number(maxStr);
-  //
-  //       // If parsing failed, ignore the cANI filter
-  //       if (!Number.isNaN(min) && !Number.isNaN(max)) {
-  //         const val = item.cANI;
-  //         const num = typeof val === 'number' ? val : Number(val);
-  //
-  //         if (Number.isNaN(num)) return false;
-  //
-  //         // Use epsilon for floating-point comparison at boundaries
-  //         const EPSILON = 0.0001;
-  //         if (num < min - EPSILON || num > max + EPSILON) {
-  //           return false;
-  //         }
-  //       }
-  //     }
-  //
-  //     return true;
-  //   });
-  // }, [searchResults, filters, caniRange]);
-
-  // const getFilteredResults = useCallback((): SearchResult[] => {
-  //   // Ensure searchResults is an array before filtering
-  //   if (!Array.isArray(searchResults)) {
-  //     console.error('searchResults is not an array:', searchResults);
-  //     return [];
-  //   }
-  //
-  //   return searchResults.filter((item) => {
-  //     // Apply text-based filters first (existing behavior)
-  //     const matchesTextFilters = Object.keys(filters).every((key) => {
-  //       if (!filters[key]) return true; // Skip empty filters
-  //       const itemValue = String(item[key] || '').toLowerCase();
-  //       const filterValue = filters[key].toLowerCase();
-  //       return itemValue.includes(filterValue);
-  //     });
-  //     if (!matchesTextFilters) return false;
-  //
-  //     // Apply cANI numeric range filter if present via query param
-  //     if (caniRange) {
-  //       console.group('CANI FILTERS');
-  //       const [minStr, maxStr] = caniRange.split(',');
-  //       const min = Number(minStr);
-  //       const max = Number(maxStr);
-  //       console.log('MIN ', min);
-  //       console.log('MAX ', max);
-  //       // If parsing failed, ignore the cANI filter
-  //       if (!Number.isNaN(min) && !Number.isNaN(max)) {
-  //         const val = item.cANI;
-  //         const num = typeof val === 'number' ? val : Number(val);
-  //         console.log('VAL ', val);
-  //         console.log('NUM ', num);
-  //         if (Number.isNaN(num)) return false;
-  //         if (num < min || num > max) return false;
-  //         console.groupEnd();
-  //       }
-  //     }
-  //
-  //     return true;
-  //   });
-  // }, [searchResults, filters, caniRange]);
-
-  // Prepare data for visualizations
-  // const prepareVisualizationData = useCallback(
-  //   (data: SearchResult[]): VisualizationData | null => {
-  //     if (!data || data.length === 0) return null;
-  //
-  //     const commonKeys = Object.keys(data[0]);
-  //     const values: any[][] = Array.from(
-  //       { length: commonKeys.length },
-  //       () => []
-  //     );
-  //
-  //     commonKeys.forEach((key, j) => {
-  //       values[j] = data.map((obj) => obj[key]);
-  //     });
-  //
-  //     // Filter string keys for bar plots
-  //     const stringKeys: string[] = [];
-  //     const stringValues: any[][] = [];
-  //
-  //     for (let i = 0; i < values.length; i++) {
-  //       if (
-  //         values[i].every(
-  //           (val) =>
-  //             typeof val === 'string' &&
-  //             commonKeys[i] !== 'acc' &&
-  //             commonKeys[i] !== 'biosample_link'
-  //         )
-  //       ) {
-  //         stringKeys.push(commonKeys[i]);
-  //         stringValues.push(values[i]);
-  //       }
-  //     }
-  //
-  //     // Create bar plot data
-  //     const barPlotData = createPlotData(stringKeys, stringValues);
-  //
-  //     // Create histogram data
-  //     const containmentIndex = commonKeys.indexOf('containment');
-  //     const cANIIndex = commonKeys.indexOf('cANI');
-  //
-  //     const containmentHist: any = {
-  //       x: values[containmentIndex],
-  //       type: 'histogram',
-  //       autobinx: false,
-  //       xbins: { size: 0.1 },
-  //       name: 'containment',
-  //       visible: true,
-  //       marker: {
-  //         color: 'rgba(100, 200, 102, 0.7)',
-  //         line: {
-  //           color: 'rgba(100, 200, 102, 1)',
-  //           width: 1,
-  //         },
-  //       },
-  //     };
-  //
-  //     const cANIHist: any = {
-  //       x: values[cANIIndex],
-  //       type: 'histogram',
-  //       autobinx: false,
-  //       xbins: { size: 0.02 },
-  //       name: 'cANI',
-  //       visible: false,
-  //       marker: {
-  //         color: 'rgba(100, 200, 102, 0.7)',
-  //         line: {
-  //           color: 'rgba(100, 200, 102, 1)',
-  //           width: 1,
-  //         },
-  //       },
-  //     };
-  //
-  //     // Create map data
-  //     let countryMap: Record<string, any> = {};
-  //     let latLonMap: Record<string, any> = {};
-  //
-  //     const countryIndex = commonKeys.indexOf('geo_loc_name_country_calc');
-  //     const latLonIndex = commonKeys.indexOf('lat_lon');
-  //
-  //     if (countryIndex !== -1) {
-  //       const countryCounts = countUniqueValuesAndOccurrences(
-  //         values[countryIndex]
-  //       );
-  //       const countryData = countryCounts.uniqueValues.map((country, index) => {
-  //         return {
-  //           country: country,
-  //           count: countryCounts.countVal[index],
-  //         };
-  //       });
-  //
-  //       countryMap = {
-  //         name: 'geo_loc_name_country_calc',
-  //         type: 'choropleth',
-  //         locationmode: 'country names',
-  //         locations: countryData.map((d) => d.country),
-  //         z: countryData.map((d) => d.count),
-  //         text: countryData.map((d) => `${d.country}: ${d.count}`),
-  //         autocolorscale: true,
-  //         marker: {
-  //           line: {
-  //             color: 'rgb(255,255,255)',
-  //             width: 2,
-  //           },
-  //         },
-  //       };
-  //     }
-  //
-  //     if (latLonIndex !== -1) {
-  //       // Process lat_lon data
-  //       const latLonData = values[latLonIndex]
-  //         .map((item, index) => {
-  //           if (item === 'NP') return null;
-  //
-  //           // Try to parse lat_lon string
-  //           try {
-  //             const match = item.match(/([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/);
-  //             if (match) {
-  //               const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
-  //               const lon = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
-  //               return [lat, lon, data[index].acc];
-  //             }
-  //             return null;
-  //           } catch (e) {
-  //             return null;
-  //           }
-  //         })
-  //         .filter((item) => item !== null) as [number, number, string][];
-  //
-  //       if (latLonData.length > 0) {
-  //         latLonMap = {
-  //           name: 'lat_lon',
-  //           type: 'scattergeo',
-  //           mode: 'markers',
-  //           marker: {
-  //             color: 'rgba(100, 200, 102, 1)',
-  //           },
-  //           lat: latLonData.map((item) => item[0]),
-  //           lon: latLonData.map((item) => item[1]),
-  //           text: latLonData.map((item) => `acc: ${item[2]}`),
-  //         };
-  //       }
-  //     }
-  //
-  //     return {
-  //       barPlotData,
-  //       histogramData: [containmentHist, cANIHist],
-  //       mapData: [countryMap, latLonMap].filter(
-  //         (item) => Object.keys(item).length > 0
-  //       ),
-  //       stringKeys,
-  //     };
-  //   },
-  //   [createPlotData, countUniqueValuesAndOccurrences]
-  // );
-
   // Updated useEffect for handling search results
   useEffect(() => {
     if (searchResults.length > 0) {
@@ -977,31 +695,6 @@ const Branchwater = () => {
     convertToMapSamples,
     getCountryCountsFromResults,
   ]);
-
-  // useEffect(() => {
-  //   if (searchResults.length > 0) {
-  //     const filteredResults = getFilteredResults();
-  //     const vizData = prepareVisualizationData(filteredResults);
-  //     setVisualizationData(vizData);
-  //
-  //     // Update map samples
-  //     const mapData = convertToMapSamples(filteredResults);
-  //     setMapSamples(mapData);
-  //
-  //     // setMapSamples(mockMapSamples);
-  //     // setMapSamples(availableGeoData);
-  //   } else {
-  //     // For development/testing: use mock data when no search results
-  //     setMapSamples(mockMapSamples);
-  //     // setMapSamples(availableGeoData);
-  //   }
-  // }, [
-  //   filters,
-  //   getFilteredResults,
-  //   prepareVisualizationData,
-  //   searchResults,
-  //   mockMapSamples,
-  // ]);
 
   // Handle filter change
   const handleFilterChange = (field: keyof Filters, value: string): void => {
@@ -1169,40 +862,6 @@ const Branchwater = () => {
   };
 
   const stripQuotes = (s: string) => s.replace(/^"+|"+$/g, '').trim();
-
-  const parseLatLon = (raw: unknown): [number, number] | null => {
-    if (raw == null) return null;
-    if (Array.isArray(raw)) {
-      const [lat, lon] = raw;
-      const latNum = Number(lat),
-        lonNum = Number(lon);
-      return Number.isFinite(latNum) && Number.isFinite(lonNum)
-        ? [latNum, lonNum]
-        : null;
-    }
-    let s = String(raw).trim();
-    if (!s || s === 'NP') return null;
-    s = stripQuotes(s).toUpperCase();
-
-    // invalid markers
-    const bad = ['MISSING', 'NOT APPLICABLE', 'NA', 'N/A', 'NULL', 'NONE'];
-    if (bad.includes(s)) return null;
-
-    // Examples we want: "39.5886 N 20.1382 E", "12 N 32 W", "54.1883 N 7.9000 E"
-    // Allow commas or spaces between the pairs.
-    const re =
-      /^\s*([0-9]+(?:\.[0-9]+)?)\s*([NS])[\s,]+([0-9]+(?:\.[0-9]+)?)\s*([EW])\s*$/i;
-    const m = s.match(re);
-    if (!m) return null;
-
-    let lat = parseFloat(m[1]) * (m[2] === 'S' ? -1 : 1);
-    let lon = parseFloat(m[3]) * (m[4] === 'W' ? -1 : 1);
-
-    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
-    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
-
-    return [lat, lon];
-  };
 
   const handleClearClick = (): void => {
     setShowMgnifySourmash(false);
@@ -1716,6 +1375,175 @@ const Branchwater = () => {
                     </div>
                   </div>
 
+                  {mapSamples && mapSamples.length > 0 && (
+                    <div className="vf-u-padding__top--400">
+                      <h4 className="vf-text vf-text-heading--4">
+                        Geographic Distribution
+                      </h4>
+
+                      {/* Country counts summary */}
+                      {Object.keys(countryCounts).length > 0 && (
+                        <div className="vf-u-padding__bottom--400">
+                          <p className="vf-text vf-text--body">
+                            <strong>Samples by Country:</strong>
+                          </p>
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexWrap: 'wrap',
+                              gap: '10px',
+                              marginBottom: '15px',
+                              maxHeight: '100px',
+                              overflowY: 'auto',
+                            }}
+                          >
+                            {Object.entries(countryCounts)
+                              .sort(([, a], [, b]) => b - a)
+                              .map(([country, count]) => {
+                                const maxCount = Math.max(
+                                  ...Object.values(countryCounts)
+                                );
+                                const color = getCountryColor(count, maxCount);
+                                return (
+                                  <span
+                                    key={country}
+                                    style={{
+                                      padding: '4px 8px',
+                                      backgroundColor: color,
+                                      color:
+                                        count > maxCount * 0.6
+                                          ? 'white'
+                                          : 'black',
+                                      borderRadius: '4px',
+                                      fontSize: '12px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    {country}: {count}
+                                  </span>
+                                );
+                              })}
+                          </div>
+
+                          {/* Legend */}
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '10px',
+                              fontSize: '12px',
+                            }}
+                          >
+                            <span>Heat intensity:</span>
+                            <div style={{ display: 'flex', gap: '2px' }}>
+                              {[
+                                '#FFEDA0',
+                                '#FEB24C',
+                                '#FD8D3C',
+                                '#FC4E2A',
+                                '#E31A1C',
+                                '#BD0026',
+                              ].map((color, index) => (
+                                <div
+                                  key={index}
+                                  style={{
+                                    width: '20px',
+                                    height: '12px',
+                                    backgroundColor: color,
+                                    border: '1px solid #ccc',
+                                  }}
+                                />
+                              ))}
+                            </div>
+                            <span>Low → High</span>
+                          </div>
+                        </div>
+                      )}
+
+                      <div style={{ width: '100%', height: '500px' }}>
+                        <MapContainer
+                          center={[20, 0]}
+                          zoom={2}
+                          style={{ width: '100%', height: '100%' }}
+                          scrollWheelZoom
+                        >
+                          <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          />
+
+                          {/* Individual sample markers */}
+                          {mapSamples.map((sample) => (
+                            <Marker
+                              key={sample.id}
+                              position={[
+                                sample.attributes.latitude,
+                                sample.attributes.longitude,
+                              ]}
+                            >
+                              <Popup>
+                                <div>
+                                  <strong>ID:</strong> {sample.id}
+                                  <br />
+                                  <strong>Description:</strong>{' '}
+                                  {sample.attributes['sample-desc']}
+                                  <br />
+                                  <strong>Biome:</strong>{' '}
+                                  {sample.relationships.biome.data.id}
+                                </div>
+                              </Popup>
+                            </Marker>
+                          ))}
+                        </MapContainer>
+                      </div>
+
+                      {/* Additional country statistics */}
+                      {Object.keys(countryCounts).length > 0 && (
+                        <div className="vf-u-padding__top--400">
+                          <details>
+                            <summary
+                              style={{ cursor: 'pointer', fontWeight: 'bold' }}
+                            >
+                              Country Statistics (
+                              {Object.keys(countryCounts).length} countries)
+                            </summary>
+                            <div style={{ marginTop: '10px' }}>
+                              <table className="vf-table vf-table--compact">
+                                <thead>
+                                  <tr>
+                                    <th>Country</th>
+                                    <th>Sample Count</th>
+                                    <th>Percentage</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {Object.entries(countryCounts)
+                                    .sort(([, a], [, b]) => b - a)
+                                    .map(([country, count]) => {
+                                      const total = Object.values(
+                                        countryCounts
+                                      ).reduce((sum, c) => sum + c, 0);
+                                      const percentage = (
+                                        (count / total) *
+                                        100
+                                      ).toFixed(1);
+                                      return (
+                                        <tr key={country}>
+                                          <td>{country}</td>
+                                          <td>{count}</td>
+                                          <td>{percentage}%</td>
+                                        </tr>
+                                      );
+                                    })}
+                                </tbody>
+                              </table>
+                            </div>
+                          </details>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {/* Enhanced Containment Distribution */}
                   <div className="vf-u-padding__top--400">
                     <h3 className="vf-text vf-text-heading--3">
@@ -1872,7 +1700,7 @@ const Branchwater = () => {
                               .slice(0, 10)
                               .map(([org]) =>
                                 org.length > 20
-                                  ? org.substring(0, 17) + '...'
+                                  ? `${org.substring(0, 17)}...`
                                   : org
                               );
                           })(),
@@ -2038,11 +1866,11 @@ const Branchwater = () => {
                           </h4>
                           <p>
                             <strong>
-                              {/*{*/}
-                              {/*  searchResults.filter(*/}
-                              {/*    (r) => r.assay_type === 'WGS'*/}
-                              {/*  ).length*/}
-                              {/*}*/}2
+                              {
+                                searchResults.filter(
+                                  (r) => r.assay_type === 'WGS'
+                                ).length
+                              }
                             </strong>{' '}
                             of your matches have assembled genomes available for
                             detailed analysis.
@@ -2264,173 +2092,6 @@ const Branchwater = () => {
                         </div>
                       </div>
                     )}
-                </div>
-              )}
-
-              {mapSamples && mapSamples.length > 0 && (
-                <div className="vf-u-padding__top--400">
-                  <h4 className="vf-text vf-text-heading--4">
-                    Geographic Distribution
-                  </h4>
-
-                  {/* Country counts summary */}
-                  {Object.keys(countryCounts).length > 0 && (
-                    <div className="vf-u-padding__bottom--400">
-                      <p className="vf-text vf-text--body">
-                        <strong>Samples by Country:</strong>
-                      </p>
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          gap: '10px',
-                          marginBottom: '15px',
-                          maxHeight: '100px',
-                          overflowY: 'auto',
-                        }}
-                      >
-                        {Object.entries(countryCounts)
-                          .sort(([, a], [, b]) => b - a)
-                          .map(([country, count]) => {
-                            const maxCount = Math.max(
-                              ...Object.values(countryCounts)
-                            );
-                            const color = getCountryColor(count, maxCount);
-                            return (
-                              <span
-                                key={country}
-                                style={{
-                                  padding: '4px 8px',
-                                  backgroundColor: color,
-                                  color:
-                                    count > maxCount * 0.6 ? 'white' : 'black',
-                                  borderRadius: '4px',
-                                  fontSize: '12px',
-                                  fontWeight: 'bold',
-                                }}
-                              >
-                                {country}: {count}
-                              </span>
-                            );
-                          })}
-                      </div>
-
-                      {/* Legend */}
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '10px',
-                          fontSize: '12px',
-                        }}
-                      >
-                        <span>Heat intensity:</span>
-                        <div style={{ display: 'flex', gap: '2px' }}>
-                          {[
-                            '#FFEDA0',
-                            '#FEB24C',
-                            '#FD8D3C',
-                            '#FC4E2A',
-                            '#E31A1C',
-                            '#BD0026',
-                          ].map((color, index) => (
-                            <div
-                              key={index}
-                              style={{
-                                width: '20px',
-                                height: '12px',
-                                backgroundColor: color,
-                                border: '1px solid #ccc',
-                              }}
-                            />
-                          ))}
-                        </div>
-                        <span>Low → High</span>
-                      </div>
-                    </div>
-                  )}
-
-                  <div style={{ width: '100%', height: '500px' }}>
-                    <MapContainer
-                      center={[20, 0]}
-                      zoom={2}
-                      style={{ width: '100%', height: '100%' }}
-                      scrollWheelZoom
-                    >
-                      <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                      />
-
-                      {/* Individual sample markers */}
-                      {mapSamples.map((sample) => (
-                        <Marker
-                          key={sample.id}
-                          position={[
-                            sample.attributes.latitude,
-                            sample.attributes.longitude,
-                          ]}
-                        >
-                          <Popup>
-                            <div>
-                              <strong>ID:</strong> {sample.id}
-                              <br />
-                              <strong>Description:</strong>{' '}
-                              {sample.attributes['sample-desc']}
-                              <br />
-                              <strong>Biome:</strong>{' '}
-                              {sample.relationships.biome.data.id}
-                            </div>
-                          </Popup>
-                        </Marker>
-                      ))}
-                    </MapContainer>
-                  </div>
-
-                  {/* Additional country statistics */}
-                  {Object.keys(countryCounts).length > 0 && (
-                    <div className="vf-u-padding__top--400">
-                      <details>
-                        <summary
-                          style={{ cursor: 'pointer', fontWeight: 'bold' }}
-                        >
-                          Country Statistics (
-                          {Object.keys(countryCounts).length} countries)
-                        </summary>
-                        <div style={{ marginTop: '10px' }}>
-                          <table className="vf-table vf-table--compact">
-                            <thead>
-                              <tr>
-                                <th>Country</th>
-                                <th>Sample Count</th>
-                                <th>Percentage</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {Object.entries(countryCounts)
-                                .sort(([, a], [, b]) => b - a)
-                                .map(([country, count]) => {
-                                  const total = Object.values(
-                                    countryCounts
-                                  ).reduce((sum, c) => sum + c, 0);
-                                  const percentage = (
-                                    (count / total) *
-                                    100
-                                  ).toFixed(1);
-                                  return (
-                                    <tr key={country}>
-                                      <td>{country}</td>
-                                      <td>{count}</td>
-                                      <td>{percentage}%</td>
-                                    </tr>
-                                  );
-                                })}
-                            </tbody>
-                          </table>
-                        </div>
-                      </details>
-                    </div>
-                  )}
                 </div>
               )}
             </>
