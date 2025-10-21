@@ -77,6 +77,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
             {
               Header: 'Accession',
               accessor: 'acc',
+              disableSortBy: true,
               Cell: ({ row }) => {
                 const entry = row.original as any;
                 const actualIndex = row.index;
@@ -116,6 +117,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
             {
               Header: 'Assay Type',
               accessor: 'assay_type',
+              disableSortBy: true,
               Cell: ({ row }) => {
                 const entry = row.original as any;
                 return (
@@ -194,14 +196,14 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
                 );
               },
             },
-            {
-              Header: 'Collection Date',
-              accessor: 'collectionDate',
-              Cell: ({ row }) => {
-                const entry = row.original as any;
-                return <span>{entry.collection_date_sam}</span>;
-              },
-            },
+            // {
+            //   Header: 'Collection Date',
+            //   accessor: 'collection_date_sam',
+            //   Cell: ({ row }) => {
+            //     const entry = row.original as any;
+            //     return <span>{entry.collection_date_sam}</span>;
+            //   },
+            // },
             {
               Header: 'Location',
               accessor: 'geo_loc_name_country_calc',
@@ -218,14 +220,15 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
                 );
               },
             },
-            {
-              Header: 'Lat/Lng',
-              accessor: 'lat_lon',
-              Cell: ({ row }) => {
-                const entry = row.original as any;
-                return <span>{entry.lat_lon}</span>;
-              },
-            },
+            // {
+            //   Header: 'Lat/Lng',
+            //   accessor: 'lat_lon',
+            //   disableSortBy: true,
+            //   Cell: ({ row }) => {
+            //     const entry = row.original as any;
+            //     return <span>{entry.lat_lon}</span>;
+            //   },
+            // },
             {
               Header: 'Metagenome',
               accessor: 'organism',
@@ -249,6 +252,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               expectedPageSize={itemsPerPage}
               initialPage={Math.max(0, (currentPage || 1) - 1)}
               namespace="branchwater-detailed-"
+              sortable={true}
             />
           );
         })()}

@@ -101,9 +101,11 @@ const Branchwater = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(10);
 
-  // Sorting state
+  // Sorting state (legacy/local)
   const [sortField, setSortField] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  // Read ordering from EMGTable's sortable integration via query param
+  const [detailedOrder] = useQueryParamState('branchwater-detailed-order', '');
 
   const [activeTab, setActiveTab] = useState('vf-tabs__section--1');
 
@@ -826,23 +828,32 @@ const Branchwater = () => {
   const getSortedResults = (
     filteredResults: SearchResult[]
   ): SearchResult[] => {
-    if (!sortField) return filteredResults;
+    // Prefer ordering from EMGTable's sortable query param if present
+    const orderStr = typeof detailedOrder === 'string' ? detailedOrder : '';
+    const effectiveField = orderStr ? orderStr.replace(/^-/, '') : sortField;
+    const effectiveDirection: 'asc' | 'desc' = orderStr
+      ? orderStr.startsWith('-')
+        ? 'desc'
+        : 'asc'
+      : sortDirection;
+
+    if (!effectiveField) return filteredResults;
 
     return [...filteredResults].sort((a, b) => {
-      const aValue = a[sortField] || '';
-      const bValue = b[sortField] || '';
+      const aValue = a[effectiveField] ?? '';
+      const bValue = b[effectiveField] ?? '';
 
       // Handle numeric values
       // eslint-disable-next-line no-restricted-globals
       if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
-        return sortDirection === 'asc'
+        return effectiveDirection === 'asc'
           ? Number(aValue) - Number(bValue)
           : Number(bValue) - Number(aValue);
       }
 
-      // Handle string values
+      // Handle string values (including dates treated as strings)
       const comparison = String(aValue).localeCompare(String(bValue));
-      return sortDirection === 'asc' ? comparison : -comparison;
+      return effectiveDirection === 'asc' ? comparison : -comparison;
     });
   };
 
@@ -1062,1150 +1073,1127 @@ const Branchwater = () => {
         >
           <h2>Search Metagenomes</h2>
           <div>
-            <div>
-              <form className="vf-stack vf-stack--400">
-                <div className="vf-form__item vf-stack">
-                  <mgnify-sourmash-component
-                    id="sourmash"
-                    ref={sourmash}
-                    ksize={21}
-                    show_directory_checkbox={false}
-                  />
+            <form className="vf-stack vf-stack--400">
+              <div className="vf-form__item vf-stack">
+                <mgnify-sourmash-component
+                  id="sourmash"
+                  ref={sourmash}
+                  ksize={21}
+                  show_directory_checkbox={false}
+                />
 
-                  <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
-                    <legend className="vf-form__legend">
-                      Select target database
-                    </legend>
+                <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
+                  <legend className="vf-form__legend">
+                    Select target database
+                  </legend>
 
-                    <div className="vf-form__item vf-form__item--radio">
-                      <input
-                        type="radio"
-                        name="targetDatabase"
-                        value="MAGs"
-                        id="target-db-mags"
-                        className="vf-form__radio"
-                        checked={targetDatabase === 'MAGs'}
-                        onChange={() => setTargetDatabase('MAGs')}
-                      />
-                      <label
-                        htmlFor="target-db-mags"
-                        className="vf-form__label"
-                      >
-                        MAGs
-                      </label>
-                    </div>
+                  <div className="vf-form__item vf-form__item--radio">
+                    <input
+                      type="radio"
+                      name="targetDatabase"
+                      value="MAGs"
+                      id="target-db-mags"
+                      className="vf-form__radio"
+                      checked={targetDatabase === 'MAGs'}
+                      onChange={() => setTargetDatabase('MAGs')}
+                    />
+                    <label htmlFor="target-db-mags" className="vf-form__label">
+                      MAGs
+                    </label>
+                  </div>
 
-                    <div className="vf-form__item vf-form__item--radio">
-                      <input
-                        type="radio"
-                        name="targetDatabase"
-                        value="Metagenomes"
-                        id="target-db-metagenomes"
-                        className="vf-form__radio"
-                        checked={targetDatabase === 'Metagenomes'}
-                        onChange={() => setTargetDatabase('Metagenomes')}
-                      />
-                      <label
-                        htmlFor="target-db-metagenomes"
-                        className="vf-form__label"
-                      >
-                        Metagenomes
-                      </label>
-                    </div>
-                  </fieldset>
+                  <div className="vf-form__item vf-form__item--radio">
+                    <input
+                      type="radio"
+                      name="targetDatabase"
+                      value="Metagenomes"
+                      id="target-db-metagenomes"
+                      className="vf-form__radio"
+                      checked={targetDatabase === 'Metagenomes'}
+                      onChange={() => setTargetDatabase('Metagenomes')}
+                    />
+                    <label
+                      htmlFor="target-db-metagenomes"
+                      className="vf-form__label"
+                    >
+                      Metagenomes
+                    </label>
+                  </div>
+                </fieldset>
 
-                  <button
-                    className="vf-button vf-button--sm vf-button--primary mg-button"
-                    onClick={handleSearchClick}
-                  >
-                    Search
-                  </button>
-                  <button
-                    id="clear-button-mag"
-                    type="button"
-                    className="vf-button vf-button--sm vf-button--tertiary"
-                    onClick={handleClearClick}
-                  >
-                    Clear
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            {showMgnifySourmash && (
-              <>
-                <svg
-                  className="vf-icon-sprite vf-icon-sprite--tables"
-                  style={{ display: 'none' }}
+                <button
+                  className="vf-button vf-button--sm vf-button--primary mg-button"
+                  onClick={handleSearchClick}
                 >
-                  <defs>
-                    <g id="vf-table-sortable--up">
-                      <path
-                        xmlns="http://www.w3.org/2000/svg"
-                        d="M17.485,5.062,12.707.284a1.031,1.031,0,0,0-1.415,0L6.515,5.062a1,1,0,0,0,.707,1.707H10.25a.25.25,0,0,1,.25.25V22.492a1.5,1.5,0,1,0,3,0V7.019a.249.249,0,0,1,.25-.25h3.028a1,1,0,0,0,.707-1.707Z"
-                      />
-                    </g>
-                    <g id="vf-table-sortable--down">
-                      <path
-                        xmlns="http://www.w3.org/2000/svg"
-                        d="M17.7,17.838a1,1,0,0,0-.924-.617H13.75a.249.249,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0V16.971a.25.25,0,0,1-.25.25H7.222a1,1,0,0,0-.707,1.707l4.777,4.778a1,1,0,0,0,1.415,0l4.778-4.778A1,1,0,0,0,17.7,17.838Z"
-                      />
-                    </g>
-                    <g id="vf-table-sortable">
-                      <path
-                        xmlns="http://www.w3.org/2000/svg"
-                        d="M9,19a1,1,0,0,0-.707,1.707l3,3a1,1,0,0,0,1.414,0l3-3A1,1,0,0,0,15,19H13.5a.25.25,0,0,1-.25-.25V5.249A.25.25,0,0,1,13.5,5H15a1,1,0,0,0,.707-1.707l-3-3a1,1,0,0,0-1.414,0l-3,3A1,1,0,0,0,9,5h1.5a.25.25,0,0,1,.25.25v13.5a.25.25,0,0,1-.25.25Z"
-                      />
-                    </g>
-                  </defs>
-                </svg>
-                {/* eslint-disable-next-line no-nested-ternary */}
+                  Search
+                </button>
+                <button
+                  id="clear-button-mag"
+                  type="button"
+                  className="vf-button vf-button--sm vf-button--tertiary"
+                  onClick={handleClearClick}
+                >
+                  Clear
+                </button>
+              </div>
+            </form>
+          </div>
 
-                {isLoading ? (
-                  <div className="vf-u-padding__top--800">
+          {showMgnifySourmash && (
+            <>
+              <svg
+                className="vf-icon-sprite vf-icon-sprite--tables"
+                style={{ display: 'none' }}
+              >
+                <defs>
+                  <g id="vf-table-sortable--up">
+                    <path
+                      xmlns="http://www.w3.org/2000/svg"
+                      d="M17.485,5.062,12.707.284a1.031,1.031,0,0,0-1.415,0L6.515,5.062a1,1,0,0,0,.707,1.707H10.25a.25.25,0,0,1,.25.25V22.492a1.5,1.5,0,1,0,3,0V7.019a.249.249,0,0,1,.25-.25h3.028a1,1,0,0,0,.707-1.707Z"
+                    />
+                  </g>
+                  <g id="vf-table-sortable--down">
+                    <path
+                      xmlns="http://www.w3.org/2000/svg"
+                      d="M17.7,17.838a1,1,0,0,0-.924-.617H13.75a.249.249,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0V16.971a.25.25,0,0,1-.25.25H7.222a1,1,0,0,0-.707,1.707l4.777,4.778a1,1,0,0,0,1.415,0l4.778-4.778A1,1,0,0,0,17.7,17.838Z"
+                    />
+                  </g>
+                  <g id="vf-table-sortable">
+                    <path
+                      xmlns="http://www.w3.org/2000/svg"
+                      d="M9,19a1,1,0,0,0-.707,1.707l3,3a1,1,0,0,0,1.414,0l3-3A1,1,0,0,0,15,19H13.5a.25.25,0,0,1-.25-.25V5.249A.25.25,0,0,1,13.5,5H15a1,1,0,0,0,.707-1.707l-3-3a1,1,0,0,0-1.414,0l-3,3A1,1,0,0,0,9,5h1.5a.25.25,0,0,1,.25.25v13.5a.25.25,0,0,1-.25.25Z"
+                    />
+                  </g>
+                </defs>
+              </svg>
+              {/* eslint-disable-next-line no-nested-ternary */}
+
+              {isLoading ? (
+                <div className="vf-u-padding__top--800">
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      padding: '40px',
+                      backgroundColor: '#f8f9fa',
+                      borderRadius: '8px',
+                      border: '2px dashed #dee2e6',
+                    }}
+                  >
                     <div
                       style={{
-                        textAlign: 'center',
-                        padding: '40px',
-                        backgroundColor: '#f8f9fa',
-                        borderRadius: '8px',
-                        border: '2px dashed #dee2e6',
+                        fontSize: '18px',
+                        color: '#6c757d',
+                        marginBottom: '10px',
                       }}
                     >
-                      <div
-                        style={{
-                          fontSize: '18px',
-                          color: '#6c757d',
-                          marginBottom: '10px',
-                        }}
-                      >
-                        🔍 Searching metagenomes...
-                      </div>
-                      <div
-                        style={{
-                          fontSize: '14px',
-                          color: '#868e96',
-                        }}
-                      >
-                        This may take a few moments
-                      </div>
+                      🔍 Searching metagenomes...
+                    </div>
+                    <div
+                      style={{
+                        fontSize: '14px',
+                        color: '#868e96',
+                      }}
+                    >
+                      This may take a few moments
                     </div>
                   </div>
-                ) : searchResults.length > 0 ? (
-                  <div className="vf-u-padding__top--600">
-                    {/* Results Summary Header */}
+                </div>
+              ) : searchResults.length > 0 ? (
+                <div className="vf-u-padding__top--600">
+                  {/* Results Summary Header */}
+                  <div
+                    style={{
+                      backgroundColor: '#e8f5e8',
+                      padding: '20px',
+                      borderRadius: '8px',
+                      marginBottom: '20px',
+                      border: '1px solid #28a745',
+                    }}
+                  >
                     <div
                       style={{
-                        backgroundColor: '#e8f5e8',
-                        padding: '20px',
-                        borderRadius: '8px',
-                        marginBottom: '20px',
-                        border: '1px solid #28a745',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
                       }}
                     >
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <div>
-                          <h3 style={{ margin: '0 0 5px 0', color: '#155724' }}>
-                            🎯 Search Complete: {searchResults.length} matches
-                            found
-                          </h3>
-                          <p style={{ margin: 0, color: '#155724' }}>
-                            Found{' '}
-                            {
-                              searchResults.filter(
-                                (r) => r.assay_type === 'WGS'
-                              ).length
-                            }{' '}
-                            samples with assemblies •
-                            {Object.keys(countryCounts).length} countries •
-                            Average containment:{' '}
-                            {searchResults.length > 0
-                              ? (
-                                  searchResults
-                                    .filter(
-                                      (r) => typeof r.containment === 'number'
-                                    )
-                                    .reduce(
-                                      (sum, r) => sum + Number(r.containment),
-                                      0
-                                    ) /
-                                  searchResults.filter(
+                      <div>
+                        <h3 style={{ margin: '0 0 5px 0', color: '#155724' }}>
+                          🎯 Search Complete: {searchResults.length} matches
+                          found
+                        </h3>
+                        <p style={{ margin: 0, color: '#155724' }}>
+                          Found{' '}
+                          {
+                            searchResults.filter((r) => r.assay_type === 'WGS')
+                              .length
+                          }{' '}
+                          samples with assemblies •
+                          {Object.keys(countryCounts).length} countries •
+                          Average containment:{' '}
+                          {searchResults.length > 0
+                            ? (
+                                searchResults
+                                  .filter(
                                     (r) => typeof r.containment === 'number'
-                                  ).length
-                                ).toFixed(3)
-                              : '0.000'}
-                          </p>
-                        </div>
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                          <button
-                            className="vf-button vf-button--primary vf-button--sm"
-                            onClick={() => setIsTableVisible(!isTableVisible)}
-                          >
-                            {isTableVisible
-                              ? '📊 Hide Details'
-                              : '📋 View Details'}
-                          </button>
-                          <button
-                            className="vf-button vf-button--secondary vf-button--sm"
-                            onClick={downloadCSV}
-                            disabled={!processResults().sortedResults.length}
-                            title={
-                              processResults().sortedResults.length
-                                ? 'Download current results as CSV'
-                                : 'No results to download'
-                            }
-                          >
-                            ⬇️ Download CSV
-                          </button>
-                        </div>
+                                  )
+                                  .reduce(
+                                    (sum, r) => sum + Number(r.containment),
+                                    0
+                                  ) /
+                                searchResults.filter(
+                                  (r) => typeof r.containment === 'number'
+                                ).length
+                              ).toFixed(3)
+                            : '0.000'}
+                        </p>
                       </div>
-                    </div>
-
-                    <TextSearch />
-
-                    <section className="vf-grid mg-grid-search vf-u-padding__top--400">
-                      <div className="vf-stack vf-stack--800">
-                        <CANIFilter />
-
-                        <LocalMultipleOptionFilter
-                          facetName="geo_loc_name_country_calc"
-                          header="Location"
-                          data={searchResults}
-                          includeTextFilter
-                        />
-
-                        <LocalMultipleOptionFilter
-                          facetName="organism"
-                          header="Organism"
-                          data={searchResults}
-                          includeTextFilter
-                        />
-
-                        <LocalMultipleOptionFilter
-                          facetName="assay_type"
-                          header="Assay Type"
-                          data={searchResults}
-                        />
-                      </div>
-                      <section>
-                        <DetailedResultsTable
-                          isOpen={isTableVisible}
-                          onToggleOpen={() =>
-                            setIsTableVisible(!isTableVisible)
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button
+                          className="vf-button vf-button--primary vf-button--sm"
+                          onClick={() => setIsTableVisible(!isTableVisible)}
+                        >
+                          {isTableVisible
+                            ? '📊 Hide Details'
+                            : '📋 View Details'}
+                        </button>
+                        <button
+                          className="vf-button vf-button--secondary vf-button--sm"
+                          onClick={downloadCSV}
+                          disabled={!processResults().sortedResults.length}
+                          title={
+                            processResults().sortedResults.length
+                              ? 'Download current results as CSV'
+                              : 'No results to download'
                           }
-                          filters={filters}
-                          onFilterChange={handleFilterChange}
-                          sortField={sortField}
-                          sortDirection={sortDirection}
-                          onSortChange={handleSortChange}
-                          processResults={processResults}
-                          currentPage={currentPage}
-                          itemsPerPage={itemsPerPage}
-                          onPageChange={handlePageChange}
-                        />
-                      </section>
-                    </section>
+                        >
+                          ⬇️ Download CSV
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                ) : (
-                  <div className="vf-u-padding__top--800">
+
+                  <TextSearch />
+
+                  <section className="vf-grid mg-grid-search vf-u-padding__top--400">
+                    <div className="vf-stack vf-stack--800">
+                      <CANIFilter />
+
+                      <LocalMultipleOptionFilter
+                        facetName="geo_loc_name_country_calc"
+                        header="Location"
+                        data={searchResults}
+                        includeTextFilter
+                      />
+
+                      <LocalMultipleOptionFilter
+                        facetName="organism"
+                        header="Organism"
+                        data={searchResults}
+                        includeTextFilter
+                      />
+
+                      <LocalMultipleOptionFilter
+                        facetName="assay_type"
+                        header="Assay Type"
+                        data={searchResults}
+                      />
+                    </div>
+                    <section>
+                      <DetailedResultsTable
+                        isOpen={isTableVisible}
+                        onToggleOpen={() => setIsTableVisible(!isTableVisible)}
+                        filters={filters}
+                        onFilterChange={handleFilterChange}
+                        sortField={sortField}
+                        sortDirection={sortDirection}
+                        onSortChange={handleSortChange}
+                        processResults={processResults}
+                        currentPage={currentPage}
+                        itemsPerPage={itemsPerPage}
+                        onPageChange={handlePageChange}
+                      />
+                    </section>
+                  </section>
+                </div>
+              ) : (
+                <div className="vf-u-padding__top--800">
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      padding: '60px',
+                      backgroundColor: '#f8f9fa',
+                      borderRadius: '8px',
+                      border: '2px dashed #dee2e6',
+                    }}
+                  >
+                    <div style={{ fontSize: '48px', marginBottom: '20px' }}>
+                      🔍
+                    </div>
+                    <h3 style={{ color: '#6c757d', marginBottom: '10px' }}>
+                      No search results found
+                    </h3>
+                    <p style={{ color: '#868e96', marginBottom: '20px' }}>
+                      Try uploading a different file or adjusting your search
+                      parameters
+                    </p>
+                    <button
+                      className="vf-button vf-button--primary"
+                      onClick={() => window.location.reload()}
+                    >
+                      🔄 Start New Search
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {visualizationData && (
+                <div className="vf-u-padding__top--800">
+                  <h2 className="vf-text vf-text-heading--2">
+                    Results Dashboard
+                  </h2>
+
+                  {/* Quick Stats Summary */}
+                  <div className="vf-u-padding__bottom--600">
                     <div
                       style={{
-                        textAlign: 'center',
-                        padding: '60px',
-                        backgroundColor: '#f8f9fa',
-                        borderRadius: '8px',
-                        border: '2px dashed #dee2e6',
+                        display: 'grid',
+                        gridTemplateColumns:
+                          'repeat(auto-fit, minmax(200px, 1fr))',
+                        gap: '20px',
+                        marginBottom: '30px',
                       }}
                     >
-                      <div style={{ fontSize: '48px', marginBottom: '20px' }}>
-                        🔍
-                      </div>
-                      <h3 style={{ color: '#6c757d', marginBottom: '10px' }}>
-                        No search results found
-                      </h3>
-                      <p style={{ color: '#868e96', marginBottom: '20px' }}>
-                        Try uploading a different file or adjusting your search
-                        parameters
-                      </p>
-                      <button
-                        className="vf-button vf-button--primary"
-                        onClick={() => window.location.reload()}
+                      <div
+                        style={{
+                          backgroundColor: '#f8f9fa',
+                          padding: '20px',
+                          borderRadius: '8px',
+                          textAlign: 'center',
+                          border: '1px solid #dee2e6',
+                        }}
                       >
-                        🔄 Start New Search
-                      </button>
+                        <h4 style={{ margin: '0 0 10px 0', color: '#495057' }}>
+                          Total Matches
+                        </h4>
+                        <div
+                          style={{
+                            fontSize: '2em',
+                            fontWeight: 'bold',
+                            color: '#28a745',
+                          }}
+                        >
+                          {searchResults.length}
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          backgroundColor: '#f8f9fa',
+                          padding: '20px',
+                          borderRadius: '8px',
+                          textAlign: 'center',
+                          border: '1px solid #dee2e6',
+                        }}
+                      >
+                        <h4 style={{ margin: '0 0 10px 0', color: '#495057' }}>
+                          Unique Countries
+                        </h4>
+                        <div
+                          style={{
+                            fontSize: '2em',
+                            fontWeight: 'bold',
+                            color: '#17a2b8',
+                          }}
+                        >
+                          {Object.keys(countryCounts).length}
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          backgroundColor: '#f8f9fa',
+                          padding: '20px',
+                          borderRadius: '8px',
+                          textAlign: 'center',
+                          border: '1px solid #dee2e6',
+                        }}
+                      >
+                        <h4 style={{ margin: '0 0 10px 0', color: '#495057' }}>
+                          Avg Containment
+                        </h4>
+                        <div
+                          style={{
+                            fontSize: '2em',
+                            fontWeight: 'bold',
+                            color: '#fd7e14',
+                          }}
+                        >
+                          {searchResults.length > 0
+                            ? (
+                                searchResults
+                                  .filter(
+                                    (r) => typeof r.containment === 'number'
+                                  )
+                                  .reduce(
+                                    (sum, r) => sum + Number(r.containment),
+                                    0
+                                  ) /
+                                searchResults.filter(
+                                  (r) => typeof r.containment === 'number'
+                                ).length
+                              ).toFixed(3)
+                            : '0.000'}
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          backgroundColor: '#f8f9fa',
+                          padding: '20px',
+                          borderRadius: '8px',
+                          textAlign: 'center',
+                          border: '1px solid #dee2e6',
+                        }}
+                      >
+                        <h4 style={{ margin: '0 0 10px 0', color: '#495057' }}>
+                          With Assemblies
+                        </h4>
+                        <div
+                          style={{
+                            fontSize: '2em',
+                            fontWeight: 'bold',
+                            color: '#6f42c1',
+                          }}
+                        >
+                          {
+                            searchResults.filter((r) => r.assay_type === 'WGS')
+                              .length
+                          }
+                        </div>
+                      </div>
                     </div>
                   </div>
-                )}
 
-                {visualizationData && (
-                  <div className="vf-u-padding__top--800">
-                    <h2 className="vf-text vf-text-heading--2">
-                      Results Dashboard
-                    </h2>
-
-                    {/* Quick Stats Summary */}
-                    <div className="vf-u-padding__bottom--600">
-                      <div
+                  {/* Enhanced Containment Distribution */}
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Containment Score Distribution
+                      <small
                         style={{
-                          display: 'grid',
-                          gridTemplateColumns:
-                            'repeat(auto-fit, minmax(200px, 1fr))',
-                          gap: '20px',
-                          marginBottom: '30px',
+                          fontWeight: 'normal',
+                          color: '#6c757d',
+                          marginLeft: '10px',
                         }}
                       >
-                        <div
-                          style={{
-                            backgroundColor: '#f8f9fa',
-                            padding: '20px',
-                            borderRadius: '8px',
-                            textAlign: 'center',
-                            border: '1px solid #dee2e6',
-                          }}
-                        >
-                          <h4
-                            style={{ margin: '0 0 10px 0', color: '#495057' }}
-                          >
-                            Total Matches
-                          </h4>
-                          <div
-                            style={{
-                              fontSize: '2em',
-                              fontWeight: 'bold',
-                              color: '#28a745',
-                            }}
-                          >
-                            {searchResults.length}
-                          </div>
-                        </div>
-
-                        <div
-                          style={{
-                            backgroundColor: '#f8f9fa',
-                            padding: '20px',
-                            borderRadius: '8px',
-                            textAlign: 'center',
-                            border: '1px solid #dee2e6',
-                          }}
-                        >
-                          <h4
-                            style={{ margin: '0 0 10px 0', color: '#495057' }}
-                          >
-                            Unique Countries
-                          </h4>
-                          <div
-                            style={{
-                              fontSize: '2em',
-                              fontWeight: 'bold',
-                              color: '#17a2b8',
-                            }}
-                          >
-                            {Object.keys(countryCounts).length}
-                          </div>
-                        </div>
-
-                        <div
-                          style={{
-                            backgroundColor: '#f8f9fa',
-                            padding: '20px',
-                            borderRadius: '8px',
-                            textAlign: 'center',
-                            border: '1px solid #dee2e6',
-                          }}
-                        >
-                          <h4
-                            style={{ margin: '0 0 10px 0', color: '#495057' }}
-                          >
-                            Avg Containment
-                          </h4>
-                          <div
-                            style={{
-                              fontSize: '2em',
-                              fontWeight: 'bold',
-                              color: '#fd7e14',
-                            }}
-                          >
-                            {searchResults.length > 0
-                              ? (
-                                  searchResults
-                                    .filter(
-                                      (r) => typeof r.containment === 'number'
-                                    )
-                                    .reduce(
-                                      (sum, r) => sum + Number(r.containment),
-                                      0
-                                    ) /
-                                  searchResults.filter(
-                                    (r) => typeof r.containment === 'number'
-                                  ).length
-                                ).toFixed(3)
-                              : '0.000'}
-                          </div>
-                        </div>
-
-                        <div
-                          style={{
-                            backgroundColor: '#f8f9fa',
-                            padding: '20px',
-                            borderRadius: '8px',
-                            textAlign: 'center',
-                            border: '1px solid #dee2e6',
-                          }}
-                        >
-                          <h4
-                            style={{ margin: '0 0 10px 0', color: '#495057' }}
-                          >
-                            With Assemblies
-                          </h4>
-                          <div
-                            style={{
-                              fontSize: '2em',
-                              fontWeight: 'bold',
-                              color: '#6f42c1',
-                            }}
-                          >
-                            {
-                              searchResults.filter(
-                                (r) => r.assay_type === 'WGS'
-                              ).length
-                            }
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Enhanced Containment Distribution */}
-                    <div className="vf-u-padding__top--400">
-                      <h3 className="vf-text vf-text-heading--3">
-                        Containment Score Distribution
-                        <small
-                          style={{
-                            fontWeight: 'normal',
-                            color: '#6c757d',
-                            marginLeft: '10px',
-                          }}
-                        >
-                          (Binned in 0.1 ranges as requested)
-                        </small>
-                      </h3>
-                      <div
-                        id="containmentBinsDiv"
-                        style={{ width: '100%', height: '400px' }}
-                      >
-                        <Plot
-                          data={[
-                            {
-                              x: (() => {
-                                // Create containment bins of 0.1 ranges
-                                const bins = Array.from(
-                                  { length: 10 },
-                                  (_, i) =>
-                                    `${(i / 10).toFixed(1)}-${(
-                                      (i + 1) /
-                                      10
-                                    ).toFixed(1)}`
-                                );
-                                return bins;
-                              })(),
-                              y: (() => {
-                                // Count values in each bin
-                                const binCounts = new Array(10).fill(0);
-                                searchResults.forEach((result) => {
-                                  if (typeof result.containment === 'number') {
-                                    const binIndex = Math.min(
-                                      Math.floor(result.containment * 10),
-                                      9
-                                    );
-                                    binCounts[binIndex]++;
-                                  }
-                                });
-                                return binCounts;
-                              })(),
-                              type: 'bar',
-                              marker: {
-                                color: 'rgba(54, 162, 235, 0.7)',
-                                line: {
-                                  color: 'rgba(54, 162, 235, 1)',
-                                  width: 1,
-                                },
-                              },
-                              name: 'Containment Distribution',
-                            },
-                          ]}
-                          layout={{
-                            title:
-                              'Distribution of Containment Scores (0.1 bin ranges)',
-                            xaxis: {
-                              title: 'Containment Score Range',
-                              tickangle: -45,
-                            },
-                            yaxis: { title: 'Count' },
-                            bargap: 0.1,
-                          }}
-                          config={{
-                            scrollZoom: true,
-                            displaylogo: false,
-                            responsive: true,
-                          }}
-                          style={{ width: '100%', height: '100%' }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Enhanced Biome/Organism Distribution */}
-                    <div className="vf-u-padding__top--400">
-                      <h3 className="vf-text vf-text-heading--3">
-                        Sample Type Distribution
-                        <small
-                          style={{
-                            fontWeight: 'normal',
-                            color: '#6c757d',
-                            marginLeft: '10px',
-                          }}
-                        >
-                          (Showing biome/organism metadata)
-                        </small>
-                      </h3>
-                      <div
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 1fr',
-                          gap: '10px',
-                        }}
-                      >
-                        {/* Assay Type Distribution */}
-                        <div>
-                          <h4>Assay Types</h4>
-                          <Plot
-                            data={[
-                              {
-                                x: (() => {
-                                  const assayCounts = {};
-                                  searchResults.forEach((r) => {
-                                    const type = r.assay_type || 'Unknown';
-                                    assayCounts[type] =
-                                      (assayCounts[type] || 0) + 1;
-                                  });
-                                  return Object.keys(assayCounts);
-                                })(),
-                                y: (() => {
-                                  const assayCounts = {};
-                                  searchResults.forEach((r) => {
-                                    const type = r.assay_type || 'Unknown';
-                                    assayCounts[type] =
-                                      (assayCounts[type] || 0) + 1;
-                                  });
-                                  return Object.values(assayCounts);
-                                })(),
-                                type: 'bar',
-                                marker: { color: 'rgba(255, 99, 132, 0.7)' },
-                              },
-                            ]}
-                            layout={{
-                              height: 300,
-                              xaxis: { title: 'Assay Type' },
-                              yaxis: { title: 'Count' },
-                              margin: { t: 30, b: 60, l: 60, r: 30 },
-                            }}
-                            config={{ displaylogo: false, responsive: true }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Organism Distribution */}
-                    <div>
-                      <h4>Top Organisms/Biomes</h4>
+                        (Binned in 0.1 ranges as requested)
+                      </small>
+                    </h3>
+                    <div
+                      id="containmentBinsDiv"
+                      style={{ width: '100%', height: '400px' }}
+                    >
                       <Plot
                         data={[
                           {
                             x: (() => {
-                              const orgCounts = {};
-                              searchResults.forEach((r) => {
-                                const org = r.organism || 'Unknown';
-                                orgCounts[org] = (orgCounts[org] || 0) + 1;
-                              });
-                              return Object.entries(orgCounts)
-                                .sort(([, a], [, b]) => b - a)
-                                .slice(0, 10)
-                                .map(([org]) =>
-                                  org.length > 20
-                                    ? org.substring(0, 17) + '...'
-                                    : org
-                                );
+                              // Create containment bins of 0.1 ranges
+                              const bins = Array.from(
+                                { length: 10 },
+                                (_, i) =>
+                                  `${(i / 10).toFixed(1)}-${(
+                                    (i + 1) /
+                                    10
+                                  ).toFixed(1)}`
+                              );
+                              return bins;
                             })(),
                             y: (() => {
-                              const orgCounts = {};
-                              searchResults.forEach((r) => {
-                                const org = r.organism || 'Unknown';
-                                orgCounts[org] = (orgCounts[org] || 0) + 1;
+                              // Count values in each bin
+                              const binCounts = new Array(10).fill(0);
+                              searchResults.forEach((result) => {
+                                if (typeof result.containment === 'number') {
+                                  const binIndex = Math.min(
+                                    Math.floor(result.containment * 10),
+                                    9
+                                  );
+                                  binCounts[binIndex]++;
+                                }
                               });
-                              return Object.entries(orgCounts)
-                                .sort(([, a], [, b]) => b - a)
-                                .slice(0, 10)
-                                .map(([, count]) => count);
+                              return binCounts;
                             })(),
                             type: 'bar',
-                            marker: { color: 'rgba(75, 192, 192, 0.7)' },
+                            marker: {
+                              color: 'rgba(54, 162, 235, 0.7)',
+                              line: {
+                                color: 'rgba(54, 162, 235, 1)',
+                                width: 1,
+                              },
+                            },
+                            name: 'Containment Distribution',
                           },
                         ]}
                         layout={{
-                          height: 300,
+                          title:
+                            'Distribution of Containment Scores (0.1 bin ranges)',
                           xaxis: {
-                            title: 'Organism/Biome',
+                            title: 'Containment Score Range',
                             tickangle: -45,
                           },
                           yaxis: { title: 'Count' },
-                          margin: { t: 30, b: 100, l: 60, r: 30 },
+                          bargap: 0.1,
                         }}
-                        config={{ displaylogo: false, responsive: true }}
+                        config={{
+                          scrollZoom: true,
+                          displaylogo: false,
+                          responsive: true,
+                        }}
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </div>
+                  </div>
 
-                    {/* NEW: ANI vs Containment Scatter Plot */}
-                    <div className="vf-u-padding__top--400">
-                      <h3 className="vf-text vf-text-heading--3">
-                        Quality Assessment: cANI vs Containment
-                        <small
-                          style={{
-                            fontWeight: 'normal',
-                            color: '#6c757d',
-                            marginLeft: '10px',
-                          }}
-                        >
-                          (Higher values indicate better matches)
-                        </small>
-                      </h3>
-                      <div
-                        id="scatterDiv"
-                        style={{ width: '100%', height: '500px' }}
+                  {/* Enhanced Biome/Organism Distribution */}
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Sample Type Distribution
+                      <small
+                        style={{
+                          fontWeight: 'normal',
+                          color: '#6c757d',
+                          marginLeft: '10px',
+                        }}
                       >
+                        (Showing biome/organism metadata)
+                      </small>
+                    </h3>
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '10px',
+                      }}
+                    >
+                      {/* Assay Type Distribution */}
+                      <div>
+                        <h4>Assay Types</h4>
                         <Plot
                           data={[
                             {
-                              x: searchResults
-                                .filter(
-                                  (r) =>
-                                    typeof r.containment === 'number' &&
-                                    typeof r.cANI === 'number'
-                                )
-                                .map((r) => r.containment),
-                              y: searchResults
-                                .filter(
-                                  (r) =>
-                                    typeof r.containment === 'number' &&
-                                    typeof r.cANI === 'number'
-                                )
-                                .map((r) => r.cANI),
-                              mode: 'markers',
-                              type: 'scatter',
-                              text: searchResults
-                                .filter(
-                                  (r) =>
-                                    typeof r.containment === 'number' &&
-                                    typeof r.cANI === 'number'
-                                )
-                                .map(
-                                  (r) =>
-                                    `${r.acc}<br>Country: ${
-                                      r.geo_loc_name_country_calc || 'Unknown'
-                                    }<br>Organism: ${r.organism || 'Unknown'}`
-                                ),
-                              hovertemplate:
-                                '%{text}<br>Containment: %{x:.3f}<br>cANI: %{y:.3f}<extra></extra>',
-                              marker: {
-                                size: 8,
-                                color: searchResults
-                                  .filter(
-                                    (r) =>
-                                      typeof r.containment === 'number' &&
-                                      typeof r.cANI === 'number'
-                                  )
-                                  .map((r) =>
-                                    r.assay_type === 'WGS'
-                                      ? 'rgba(255, 99, 132, 0.8)'
-                                      : 'rgba(54, 162, 235, 0.8)'
-                                  ),
-                                line: { width: 1, color: 'white' },
-                              },
+                              x: (() => {
+                                const assayCounts = {};
+                                searchResults.forEach((r) => {
+                                  const type = r.assay_type || 'Unknown';
+                                  assayCounts[type] =
+                                    (assayCounts[type] || 0) + 1;
+                                });
+                                return Object.keys(assayCounts);
+                              })(),
+                              y: (() => {
+                                const assayCounts = {};
+                                searchResults.forEach((r) => {
+                                  const type = r.assay_type || 'Unknown';
+                                  assayCounts[type] =
+                                    (assayCounts[type] || 0) + 1;
+                                });
+                                return Object.values(assayCounts);
+                              })(),
+                              type: 'bar',
+                              marker: { color: 'rgba(255, 99, 132, 0.7)' },
                             },
                           ]}
                           layout={{
-                            title: 'Match Quality: cANI vs Containment Score',
-                            xaxis: {
-                              title: 'Containment Score',
-                              range: [0, 1],
-                            },
-                            yaxis: {
-                              title:
-                                'cANI (calculated Average Nucleotide Identity)',
-                              range: [0.8, 1],
-                            },
-                            annotations: [
-                              {
-                                x: 0.7,
-                                y: 0.95,
-                                text: 'Higher quality matches',
-                                showarrow: true,
-                                arrowhead: 2,
-                                arrowsize: 1,
-                                arrowwidth: 2,
-                                arrowcolor: '#636363',
-                                ax: -30,
-                                ay: -30,
-                              },
-                            ],
+                            height: 300,
+                            xaxis: { title: 'Assay Type' },
+                            yaxis: { title: 'Count' },
+                            margin: { t: 30, b: 60, l: 60, r: 30 },
                           }}
-                          config={{
-                            scrollZoom: true,
-                            displaylogo: false,
-                            responsive: true,
-                          }}
-                          style={{ width: '100%', height: '100%' }}
+                          config={{ displaylogo: false, responsive: true }}
                         />
                       </div>
                     </div>
+                  </div>
 
-                    {/* MGnify Promotion Section */}
-                    <div className="vf-u-padding__top--600">
-                      <div
+                  {/* Organism Distribution */}
+                  <div>
+                    <h4>Top Organisms/Biomes</h4>
+                    <Plot
+                      data={[
+                        {
+                          x: (() => {
+                            const orgCounts = {};
+                            searchResults.forEach((r) => {
+                              const org = r.organism || 'Unknown';
+                              orgCounts[org] = (orgCounts[org] || 0) + 1;
+                            });
+                            return Object.entries(orgCounts)
+                              .sort(([, a], [, b]) => b - a)
+                              .slice(0, 10)
+                              .map(([org]) =>
+                                org.length > 20
+                                  ? org.substring(0, 17) + '...'
+                                  : org
+                              );
+                          })(),
+                          y: (() => {
+                            const orgCounts = {};
+                            searchResults.forEach((r) => {
+                              const org = r.organism || 'Unknown';
+                              orgCounts[org] = (orgCounts[org] || 0) + 1;
+                            });
+                            return Object.entries(orgCounts)
+                              .sort(([, a], [, b]) => b - a)
+                              .slice(0, 10)
+                              .map(([, count]) => count);
+                          })(),
+                          type: 'bar',
+                          marker: { color: 'rgba(75, 192, 192, 0.7)' },
+                        },
+                      ]}
+                      layout={{
+                        height: 300,
+                        xaxis: {
+                          title: 'Organism/Biome',
+                          tickangle: -45,
+                        },
+                        yaxis: { title: 'Count' },
+                        margin: { t: 30, b: 100, l: 60, r: 30 },
+                      }}
+                      config={{ displaylogo: false, responsive: true }}
+                    />
+                  </div>
+
+                  {/* NEW: ANI vs Containment Scatter Plot */}
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Quality Assessment: cANI vs Containment
+                      <small
                         style={{
-                          backgroundColor: '#e3f2fd',
-                          padding: '20px',
-                          borderRadius: '8px',
-                          border: '1px solid #2196f3',
+                          fontWeight: 'normal',
+                          color: '#6c757d',
+                          marginLeft: '10px',
                         }}
                       >
-                        <h3
-                          className="vf-text vf-text-heading--3"
-                          style={{ color: '#1976d2', marginTop: 0 }}
-                        >
-                          Explore Further with MGnify
+                        (Higher values indicate better matches)
+                      </small>
+                    </h3>
+                    <div
+                      id="scatterDiv"
+                      style={{ width: '100%', height: '500px' }}
+                    >
+                      <Plot
+                        data={[
+                          {
+                            x: searchResults
+                              .filter(
+                                (r) =>
+                                  typeof r.containment === 'number' &&
+                                  typeof r.cANI === 'number'
+                              )
+                              .map((r) => r.containment),
+                            y: searchResults
+                              .filter(
+                                (r) =>
+                                  typeof r.containment === 'number' &&
+                                  typeof r.cANI === 'number'
+                              )
+                              .map((r) => r.cANI),
+                            mode: 'markers',
+                            type: 'scatter',
+                            text: searchResults
+                              .filter(
+                                (r) =>
+                                  typeof r.containment === 'number' &&
+                                  typeof r.cANI === 'number'
+                              )
+                              .map(
+                                (r) =>
+                                  `${r.acc}<br>Country: ${
+                                    r.geo_loc_name_country_calc || 'Unknown'
+                                  }<br>Organism: ${r.organism || 'Unknown'}`
+                              ),
+                            hovertemplate:
+                              '%{text}<br>Containment: %{x:.3f}<br>cANI: %{y:.3f}<extra></extra>',
+                            marker: {
+                              size: 8,
+                              color: searchResults
+                                .filter(
+                                  (r) =>
+                                    typeof r.containment === 'number' &&
+                                    typeof r.cANI === 'number'
+                                )
+                                .map((r) =>
+                                  r.assay_type === 'WGS'
+                                    ? 'rgba(255, 99, 132, 0.8)'
+                                    : 'rgba(54, 162, 235, 0.8)'
+                                ),
+                              line: { width: 1, color: 'white' },
+                            },
+                          },
+                        ]}
+                        layout={{
+                          title: 'Match Quality: cANI vs Containment Score',
+                          xaxis: {
+                            title: 'Containment Score',
+                            range: [0, 1],
+                          },
+                          yaxis: {
+                            title:
+                              'cANI (calculated Average Nucleotide Identity)',
+                            range: [0.8, 1],
+                          },
+                          annotations: [
+                            {
+                              x: 0.7,
+                              y: 0.95,
+                              text: 'Higher quality matches',
+                              showarrow: true,
+                              arrowhead: 2,
+                              arrowsize: 1,
+                              arrowwidth: 2,
+                              arrowcolor: '#636363',
+                              ax: -30,
+                              ay: -30,
+                            },
+                          ],
+                        }}
+                        config={{
+                          scrollZoom: true,
+                          displaylogo: false,
+                          responsive: true,
+                        }}
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* MGnify Promotion Section */}
+                  <div className="vf-u-padding__top--600">
+                    <div
+                      style={{
+                        backgroundColor: '#e3f2fd',
+                        padding: '20px',
+                        borderRadius: '8px',
+                        border: '1px solid #2196f3',
+                      }}
+                    >
+                      <h3
+                        className="vf-text vf-text-heading--3"
+                        style={{ color: '#1976d2', marginTop: 0 }}
+                      >
+                        Explore Further with MGnify
+                      </h3>
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns:
+                            'repeat(auto-fit, minmax(300px, 1fr))',
+                          gap: '20px',
+                        }}
+                      >
+                        <div>
+                          <h4 style={{ color: '#1976d2' }}>
+                            Available Assemblies
+                          </h4>
+                          <p>
+                            <strong>
+                              {/*{*/}
+                              {/*  searchResults.filter(*/}
+                              {/*    (r) => r.assay_type === 'WGS'*/}
+                              {/*  ).length*/}
+                              {/*}*/}2
+                            </strong>{' '}
+                            of your matches have assembled genomes available for
+                            detailed analysis.
+                          </p>
+                          <button
+                            className="vf-button vf-button--primary vf-button--sm"
+                            onClick={() =>
+                              window.open(
+                                'https://www.ebi.ac.uk/metagenomics/',
+                                '_blank'
+                              )
+                            }
+                          >
+                            View in MGnify
+                          </button>
+                        </div>
+
+                        <div>
+                          <h4 style={{ color: '#1976d2' }}>Request Assembly</h4>
+                          <p>
+                            For samples without assemblies, you can request
+                            assembly analysis through MGnify's pipeline.
+                          </p>
+                          <button
+                            className="vf-button vf-button--secondary vf-button--sm"
+                            onClick={() =>
+                              window.open(
+                                'https://www.ebi.ac.uk/metagenomics/submit',
+                                '_blank'
+                              )
+                            }
+                          >
+                            Request Analysis
+                          </button>
+                        </div>
+
+                        <div>
+                          <h4 style={{ color: '#1976d2' }}>
+                            Raw Read Analysis
+                          </h4>
+                          <p>
+                            Access comprehensive taxonomic and functional
+                            analysis results for all your matched samples.
+                          </p>
+                          <button
+                            className="vf-button vf-button--tertiary vf-button--sm"
+                            onClick={() =>
+                              window.open(
+                                'https://www.ebi.ac.uk/metagenomics/browse',
+                                '_blank'
+                              )
+                            }
+                          >
+                            Browse Data
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Enhanced original visualizations with improvements */}
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Detailed Score Distributions
+                    </h3>
+                    <div
+                      id="contDiv"
+                      style={{ width: '100%', height: '400px' }}
+                    >
+                      <Plot
+                        data={visualizationData.histogramData}
+                        layout={{
+                          bargap: 0.05,
+                          bargroupgap: 0.2,
+                          title: 'Match similarity scores (detailed view)',
+                          xaxis: { title: 'Score' },
+                          yaxis: { title: 'Frequency' },
+                          updatemenus: [
+                            {
+                              x: 0.05,
+                              y: 1.2,
+                              xanchor: 'left',
+                              yanchor: 'top',
+                              buttons: [
+                                {
+                                  method: 'update',
+                                  args: [{ visible: [true, false] }],
+                                  label: 'containment',
+                                },
+                                {
+                                  method: 'update',
+                                  args: [{ visible: [false, true] }],
+                                  label: 'cANI',
+                                },
+                              ],
+                              direction: 'down',
+                              showactive: true,
+                            },
+                          ],
+                        }}
+                        config={{
+                          scrollZoom: true,
+                          displaylogo: false,
+                          responsive: true,
+                        }}
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Visualization components */}
+              {visualizationData && (
+                <div className="vf-u-padding__top--800">
+                  <h2 className="vf-text vf-text-heading--2">Visualizations</h2>
+
+                  {/* Containment Histogram */}
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Match Similarity Scores
+                    </h3>
+                    <div
+                      id="contDiv"
+                      style={{ width: '100%', height: '400px' }}
+                    >
+                      <Plot
+                        data={visualizationData.histogramData}
+                        layout={{
+                          bargap: 0.05,
+                          bargroupgap: 0.2,
+                          title: 'Match similarity scores',
+                          xaxis: { title: 'Score' },
+                          yaxis: { title: 'Frequency' },
+                          updatemenus: [
+                            {
+                              x: 0.05,
+                              y: 1.2,
+                              xanchor: 'left',
+                              yanchor: 'top',
+                              buttons: [
+                                {
+                                  method: 'update',
+                                  args: [{ visible: [true, false] }],
+                                  label: 'containment',
+                                },
+                                {
+                                  method: 'update',
+                                  args: [{ visible: [false, true] }],
+                                  label: 'cANI',
+                                },
+                              ],
+                              direction: 'down',
+                              showactive: true,
+                            },
+                          ],
+                        }}
+                        config={{
+                          scrollZoom: true,
+                          displaylogo: false,
+                          responsive: true,
+                        }}
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Categorical Bar Plots */}
+                  {visualizationData.barPlotData &&
+                    visualizationData.barPlotData.length > 0 && (
+                      <div className="vf-u-padding__top--400">
+                        <h3 className="vf-text vf-text-heading--3">
+                          Categorical Metadata
                         </h3>
                         <div
-                          style={{
-                            display: 'grid',
-                            gridTemplateColumns:
-                              'repeat(auto-fit, minmax(300px, 1fr))',
-                            gap: '20px',
-                          }}
+                          id="barDiv"
+                          style={{ width: '100%', height: '400px' }}
                         >
-                          <div>
-                            <h4 style={{ color: '#1976d2' }}>
-                              Available Assemblies
-                            </h4>
-                            <p>
-                              <strong>
-                                {/*{*/}
-                                {/*  searchResults.filter(*/}
-                                {/*    (r) => r.assay_type === 'WGS'*/}
-                                {/*  ).length*/}
-                                {/*}*/}2
-                              </strong>{' '}
-                              of your matches have assembled genomes available
-                              for detailed analysis.
-                            </p>
-                            <button
-                              className="vf-button vf-button--primary vf-button--sm"
-                              onClick={() =>
-                                window.open(
-                                  'https://www.ebi.ac.uk/metagenomics/',
-                                  '_blank'
-                                )
-                              }
-                            >
-                              View in MGnify
-                            </button>
-                          </div>
-
-                          <div>
-                            <h4 style={{ color: '#1976d2' }}>
-                              Request Assembly
-                            </h4>
-                            <p>
-                              For samples without assemblies, you can request
-                              assembly analysis through MGnify's pipeline.
-                            </p>
-                            <button
-                              className="vf-button vf-button--secondary vf-button--sm"
-                              onClick={() =>
-                                window.open(
-                                  'https://www.ebi.ac.uk/metagenomics/submit',
-                                  '_blank'
-                                )
-                              }
-                            >
-                              Request Analysis
-                            </button>
-                          </div>
-
-                          <div>
-                            <h4 style={{ color: '#1976d2' }}>
-                              Raw Read Analysis
-                            </h4>
-                            <p>
-                              Access comprehensive taxonomic and functional
-                              analysis results for all your matched samples.
-                            </p>
-                            <button
-                              className="vf-button vf-button--tertiary vf-button--sm"
-                              onClick={() =>
-                                window.open(
-                                  'https://www.ebi.ac.uk/metagenomics/browse',
-                                  '_blank'
-                                )
-                              }
-                            >
-                              Browse Data
-                            </button>
-                          </div>
+                          <Plot
+                            data={visualizationData.barPlotData}
+                            layout={{
+                              bargap: 0.05,
+                              bargroupgap: 0.2,
+                              title: 'Summary counts of categorical metadata',
+                              xaxis: { automargin: true, title: 'Category' },
+                              yaxis: { automargin: true, title: 'Counts' },
+                              updatemenus: [
+                                {
+                                  x: 0.05,
+                                  y: 1.2,
+                                  xanchor: 'left',
+                                  yanchor: 'top',
+                                  buttons: visualizationData.stringKeys.map(
+                                    (key, i) => ({
+                                      method: 'update',
+                                      args: [
+                                        {
+                                          visible:
+                                            visualizationData.stringKeys.map(
+                                              (_, idx) => idx === i
+                                            ),
+                                        },
+                                      ],
+                                      label: key,
+                                    })
+                                  ),
+                                  direction: 'down',
+                                  showactive: true,
+                                },
+                              ],
+                            }}
+                            config={{
+                              scrollZoom: true,
+                              displaylogo: false,
+                              responsive: true,
+                            }}
+                            style={{ width: '100%', height: '100%' }}
+                          />
                         </div>
                       </div>
-                    </div>
+                    )}
+                </div>
+              )}
 
-                    {/* Enhanced original visualizations with improvements */}
-                    <div className="vf-u-padding__top--400">
-                      <h3 className="vf-text vf-text-heading--3">
-                        Detailed Score Distributions
-                      </h3>
+              {mapSamples && mapSamples.length > 0 && (
+                <div className="vf-u-padding__top--400">
+                  <h4 className="vf-text vf-text-heading--4">
+                    Geographic Distribution
+                  </h4>
+
+                  {/* Country counts summary */}
+                  {Object.keys(countryCounts).length > 0 && (
+                    <div className="vf-u-padding__bottom--400">
+                      <p className="vf-text vf-text--body">
+                        <strong>Samples by Country:</strong>
+                      </p>
                       <div
-                        id="contDiv"
-                        style={{ width: '100%', height: '400px' }}
+                        style={{
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          gap: '10px',
+                          marginBottom: '15px',
+                          maxHeight: '100px',
+                          overflowY: 'auto',
+                        }}
                       >
-                        <Plot
-                          data={visualizationData.histogramData}
-                          layout={{
-                            bargap: 0.05,
-                            bargroupgap: 0.2,
-                            title: 'Match similarity scores (detailed view)',
-                            xaxis: { title: 'Score' },
-                            yaxis: { title: 'Frequency' },
-                            updatemenus: [
-                              {
-                                x: 0.05,
-                                y: 1.2,
-                                xanchor: 'left',
-                                yanchor: 'top',
-                                buttons: [
-                                  {
-                                    method: 'update',
-                                    args: [{ visible: [true, false] }],
-                                    label: 'containment',
-                                  },
-                                  {
-                                    method: 'update',
-                                    args: [{ visible: [false, true] }],
-                                    label: 'cANI',
-                                  },
-                                ],
-                                direction: 'down',
-                                showactive: true,
-                              },
-                            ],
-                          }}
-                          config={{
-                            scrollZoom: true,
-                            displaylogo: false,
-                            responsive: true,
-                          }}
-                          style={{ width: '100%', height: '100%' }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Visualization components */}
-                {visualizationData && (
-                  <div className="vf-u-padding__top--800">
-                    <h2 className="vf-text vf-text-heading--2">
-                      Visualizations
-                    </h2>
-
-                    {/* Containment Histogram */}
-                    <div className="vf-u-padding__top--400">
-                      <h3 className="vf-text vf-text-heading--3">
-                        Match Similarity Scores
-                      </h3>
-                      <div
-                        id="contDiv"
-                        style={{ width: '100%', height: '400px' }}
-                      >
-                        <Plot
-                          data={visualizationData.histogramData}
-                          layout={{
-                            bargap: 0.05,
-                            bargroupgap: 0.2,
-                            title: 'Match similarity scores',
-                            xaxis: { title: 'Score' },
-                            yaxis: { title: 'Frequency' },
-                            updatemenus: [
-                              {
-                                x: 0.05,
-                                y: 1.2,
-                                xanchor: 'left',
-                                yanchor: 'top',
-                                buttons: [
-                                  {
-                                    method: 'update',
-                                    args: [{ visible: [true, false] }],
-                                    label: 'containment',
-                                  },
-                                  {
-                                    method: 'update',
-                                    args: [{ visible: [false, true] }],
-                                    label: 'cANI',
-                                  },
-                                ],
-                                direction: 'down',
-                                showactive: true,
-                              },
-                            ],
-                          }}
-                          config={{
-                            scrollZoom: true,
-                            displaylogo: false,
-                            responsive: true,
-                          }}
-                          style={{ width: '100%', height: '100%' }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Categorical Bar Plots */}
-                    {visualizationData.barPlotData &&
-                      visualizationData.barPlotData.length > 0 && (
-                        <div className="vf-u-padding__top--400">
-                          <h3 className="vf-text vf-text-heading--3">
-                            Categorical Metadata
-                          </h3>
-                          <div
-                            id="barDiv"
-                            style={{ width: '100%', height: '400px' }}
-                          >
-                            <Plot
-                              data={visualizationData.barPlotData}
-                              layout={{
-                                bargap: 0.05,
-                                bargroupgap: 0.2,
-                                title: 'Summary counts of categorical metadata',
-                                xaxis: { automargin: true, title: 'Category' },
-                                yaxis: { automargin: true, title: 'Counts' },
-                                updatemenus: [
-                                  {
-                                    x: 0.05,
-                                    y: 1.2,
-                                    xanchor: 'left',
-                                    yanchor: 'top',
-                                    buttons: visualizationData.stringKeys.map(
-                                      (key, i) => ({
-                                        method: 'update',
-                                        args: [
-                                          {
-                                            visible:
-                                              visualizationData.stringKeys.map(
-                                                (_, idx) => idx === i
-                                              ),
-                                          },
-                                        ],
-                                        label: key,
-                                      })
-                                    ),
-                                    direction: 'down',
-                                    showactive: true,
-                                  },
-                                ],
-                              }}
-                              config={{
-                                scrollZoom: true,
-                                displaylogo: false,
-                                responsive: true,
-                              }}
-                              style={{ width: '100%', height: '100%' }}
-                            />
-                          </div>
-                        </div>
-                      )}
-                  </div>
-                )}
-
-                {mapSamples && mapSamples.length > 0 && (
-                  <div className="vf-u-padding__top--400">
-                    <h4 className="vf-text vf-text-heading--4">
-                      Geographic Distribution
-                    </h4>
-
-                    {/* Country counts summary */}
-                    {Object.keys(countryCounts).length > 0 && (
-                      <div className="vf-u-padding__bottom--400">
-                        <p className="vf-text vf-text--body">
-                          <strong>Samples by Country:</strong>
-                        </p>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            gap: '10px',
-                            marginBottom: '15px',
-                            maxHeight: '100px',
-                            overflowY: 'auto',
-                          }}
-                        >
-                          {Object.entries(countryCounts)
-                            .sort(([, a], [, b]) => b - a)
-                            .map(([country, count]) => {
-                              const maxCount = Math.max(
-                                ...Object.values(countryCounts)
-                              );
-                              const color = getCountryColor(count, maxCount);
-                              return (
-                                <span
-                                  key={country}
-                                  style={{
-                                    padding: '4px 8px',
-                                    backgroundColor: color,
-                                    color:
-                                      count > maxCount * 0.6
-                                        ? 'white'
-                                        : 'black',
-                                    borderRadius: '4px',
-                                    fontSize: '12px',
-                                    fontWeight: 'bold',
-                                  }}
-                                >
-                                  {country}: {count}
-                                </span>
-                              );
-                            })}
-                        </div>
-
-                        {/* Legend */}
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
-                            fontSize: '12px',
-                          }}
-                        >
-                          <span>Heat intensity:</span>
-                          <div style={{ display: 'flex', gap: '2px' }}>
-                            {[
-                              '#FFEDA0',
-                              '#FEB24C',
-                              '#FD8D3C',
-                              '#FC4E2A',
-                              '#E31A1C',
-                              '#BD0026',
-                            ].map((color, index) => (
-                              <div
-                                key={index}
+                        {Object.entries(countryCounts)
+                          .sort(([, a], [, b]) => b - a)
+                          .map(([country, count]) => {
+                            const maxCount = Math.max(
+                              ...Object.values(countryCounts)
+                            );
+                            const color = getCountryColor(count, maxCount);
+                            return (
+                              <span
+                                key={country}
                                 style={{
-                                  width: '20px',
-                                  height: '12px',
+                                  padding: '4px 8px',
                                   backgroundColor: color,
-                                  border: '1px solid #ccc',
+                                  color:
+                                    count > maxCount * 0.6 ? 'white' : 'black',
+                                  borderRadius: '4px',
+                                  fontSize: '12px',
+                                  fontWeight: 'bold',
                                 }}
-                              />
-                            ))}
-                          </div>
-                          <span>Low → High</span>
-                        </div>
+                              >
+                                {country}: {count}
+                              </span>
+                            );
+                          })}
                       </div>
-                    )}
 
-                    <div style={{ width: '100%', height: '500px' }}>
-                      <MapContainer
-                        center={[20, 0]}
-                        zoom={2}
-                        style={{ width: '100%', height: '100%' }}
-                        scrollWheelZoom
+                      {/* Legend */}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          fontSize: '12px',
+                        }}
                       >
-                        <TileLayer
-                          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-
-                        {/* Individual sample markers */}
-                        {mapSamples.map((sample) => (
-                          <Marker
-                            key={sample.id}
-                            position={[
-                              sample.attributes.latitude,
-                              sample.attributes.longitude,
-                            ]}
-                          >
-                            <Popup>
-                              <div>
-                                <strong>ID:</strong> {sample.id}
-                                <br />
-                                <strong>Description:</strong>{' '}
-                                {sample.attributes['sample-desc']}
-                                <br />
-                                <strong>Biome:</strong>{' '}
-                                {sample.relationships.biome.data.id}
-                              </div>
-                            </Popup>
-                          </Marker>
-                        ))}
-                      </MapContainer>
-                    </div>
-
-                    {/* Additional country statistics */}
-                    {Object.keys(countryCounts).length > 0 && (
-                      <div className="vf-u-padding__top--400">
-                        <details>
-                          <summary
-                            style={{ cursor: 'pointer', fontWeight: 'bold' }}
-                          >
-                            Country Statistics (
-                            {Object.keys(countryCounts).length} countries)
-                          </summary>
-                          <div style={{ marginTop: '10px' }}>
-                            <table className="vf-table vf-table--compact">
-                              <thead>
-                                <tr>
-                                  <th>Country</th>
-                                  <th>Sample Count</th>
-                                  <th>Percentage</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {Object.entries(countryCounts)
-                                  .sort(([, a], [, b]) => b - a)
-                                  .map(([country, count]) => {
-                                    const total = Object.values(
-                                      countryCounts
-                                    ).reduce((sum, c) => sum + c, 0);
-                                    const percentage = (
-                                      (count / total) *
-                                      100
-                                    ).toFixed(1);
-                                    return (
-                                      <tr key={country}>
-                                        <td>{country}</td>
-                                        <td>{count}</td>
-                                        <td>{percentage}%</td>
-                                      </tr>
-                                    );
-                                  })}
-                              </tbody>
-                            </table>
-                          </div>
-                        </details>
+                        <span>Heat intensity:</span>
+                        <div style={{ display: 'flex', gap: '2px' }}>
+                          {[
+                            '#FFEDA0',
+                            '#FEB24C',
+                            '#FD8D3C',
+                            '#FC4E2A',
+                            '#E31A1C',
+                            '#BD0026',
+                          ].map((color, index) => (
+                            <div
+                              key={index}
+                              style={{
+                                width: '20px',
+                                height: '12px',
+                                backgroundColor: color,
+                                border: '1px solid #ccc',
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <span>Low → High</span>
                       </div>
-                    )}
+                    </div>
+                  )}
+
+                  <div style={{ width: '100%', height: '500px' }}>
+                    <MapContainer
+                      center={[20, 0]}
+                      zoom={2}
+                      style={{ width: '100%', height: '100%' }}
+                      scrollWheelZoom
+                    >
+                      <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+
+                      {/* Individual sample markers */}
+                      {mapSamples.map((sample) => (
+                        <Marker
+                          key={sample.id}
+                          position={[
+                            sample.attributes.latitude,
+                            sample.attributes.longitude,
+                          ]}
+                        >
+                          <Popup>
+                            <div>
+                              <strong>ID:</strong> {sample.id}
+                              <br />
+                              <strong>Description:</strong>{' '}
+                              {sample.attributes['sample-desc']}
+                              <br />
+                              <strong>Biome:</strong>{' '}
+                              {sample.relationships.biome.data.id}
+                            </div>
+                          </Popup>
+                        </Marker>
+                      ))}
+                    </MapContainer>
                   </div>
-                )}
-              </>
-            )}
-          </div>
+
+                  {/* Additional country statistics */}
+                  {Object.keys(countryCounts).length > 0 && (
+                    <div className="vf-u-padding__top--400">
+                      <details>
+                        <summary
+                          style={{ cursor: 'pointer', fontWeight: 'bold' }}
+                        >
+                          Country Statistics (
+                          {Object.keys(countryCounts).length} countries)
+                        </summary>
+                        <div style={{ marginTop: '10px' }}>
+                          <table className="vf-table vf-table--compact">
+                            <thead>
+                              <tr>
+                                <th>Country</th>
+                                <th>Sample Count</th>
+                                <th>Percentage</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {Object.entries(countryCounts)
+                                .sort(([, a], [, b]) => b - a)
+                                .map(([country, count]) => {
+                                  const total = Object.values(
+                                    countryCounts
+                                  ).reduce((sum, c) => sum + c, 0);
+                                  const percentage = (
+                                    (count / total) *
+                                    100
+                                  ).toFixed(1);
+                                  return (
+                                    <tr key={country}>
+                                      <td>{country}</td>
+                                      <td>{count}</td>
+                                      <td>{percentage}%</td>
+                                    </tr>
+                                  );
+                                })}
+                            </tbody>
+                          </table>
+                        </div>
+                      </details>
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
         </section>
       </div>
     </section>
