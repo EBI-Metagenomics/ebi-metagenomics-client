@@ -190,10 +190,6 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
                         ? entry.containment.toFixed(3)
                         : entry.containment}
                     </div>
-                    {typeof entry.containment === 'number' &&
-                      entry.containment > 0.7 && (
-                        <span style={{ fontSize: '12px' }}>🔥</span>
-                      )}
                   </div>
                 );
               },
@@ -231,7 +227,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
-              Header: 'Organism',
+              Header: 'Metagenome',
               accessor: 'organism',
               Cell: ({ row }) => {
                 const entry = row.original as any;

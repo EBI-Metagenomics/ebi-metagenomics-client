@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
-import DetailedResultsTable from './DetailedResultsTable';
 import axios from 'axios';
 import Plot from 'react-plotly.js';
 import CobsSearch from 'components/Genomes/Cobs';
@@ -11,11 +10,10 @@ import 'leaflet/dist/leaflet.css';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import TemperatureFilter from 'components/Search/Filter/Temperature';
 import CANIFilter from 'components/Search/Filter/CANI';
 import TextSearch from 'components/Search/Filter/Text';
-import MultipleOptionFilter from 'components/Search/Filter/MultipleOption';
 import LocalMultipleOptionFilter from 'components/Branchwater/LocalMultipleOptionFilter';
+import DetailedResultsTable from './DetailedResultsTable';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -130,6 +128,9 @@ const Branchwater = () => {
 
   // State for map samples
   const [mapSamples, setMapSamples] = useState<MapSample[]>([]);
+
+  // Global text query (from generic TextSearch component)
+  const [textQuery] = useQueryParamState('query', '');
 
   // cANI range from query param (format: "min,max")
   const [caniRange] = useQueryParamState('cani', '');
@@ -358,8 +359,25 @@ const Branchwater = () => {
       return [];
     }
 
+    const globalQuery = (textQuery || '').toString().trim().toLowerCase();
+
     return searchResults.filter((item) => {
-      // Apply text-based filters first
+      // Apply global text query across common fields (if provided)
+      if (globalQuery) {
+        const haystack = [
+          item.acc,
+          item.assay_type,
+          item.bioproject,
+          item.collection_date_sam,
+          item.geo_loc_name_country_calc,
+          item.organism,
+        ]
+          .map((v) => (v == null ? '' : String(v).toLowerCase()))
+          .join(' ');
+        if (!haystack.includes(globalQuery)) return false;
+      }
+
+      // Apply text-based field-specific filters first
       const matchesTextFilters = Object.keys(filters).every((key) => {
         if (!filters[key]) return true;
         const itemValue = String(item[key] || '').toLowerCase();
@@ -427,6 +445,7 @@ const Branchwater = () => {
     locationFilter,
     organismFilter,
     assayTypeFilter,
+    textQuery,
   ]);
 
   // Apply filters to search results
@@ -919,11 +938,12 @@ const Branchwater = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     const date = new Date();
-    const ts = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
-      date.getDate()
-    ).padStart(2, '0')}_${String(date.getHours()).padStart(2, '0')}${String(
-      date.getMinutes()
-    ).padStart(2, '0')}`;
+    const ts = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(date.getDate()).padStart(2, '0')}_${String(
+      date.getHours()
+    ).padStart(2, '0')}${String(date.getMinutes()).padStart(2, '0')}`;
     a.href = url;
     a.download = `branchwater_results_${ts}.csv`;
     document.body.appendChild(a);
@@ -969,7 +989,7 @@ const Branchwater = () => {
   };
 
   return (
-    <>
+    <section className="vf-content mg-page-search">
       <div className="vf-tabs">
         <ul className="vf-tabs__list">
           <li className="vf-tabs__item">
@@ -1235,7 +1255,11 @@ const Branchwater = () => {
                             className="vf-button vf-button--secondary vf-button--sm"
                             onClick={downloadCSV}
                             disabled={!processResults().sortedResults.length}
-                            title={processResults().sortedResults.length ? 'Download current results as CSV' : 'No results to download'}
+                            title={
+                              processResults().sortedResults.length
+                                ? 'Download current results as CSV'
+                                : 'No results to download'
+                            }
                           >
                             ⬇️ Download CSV
                           </button>
@@ -2184,7 +2208,7 @@ const Branchwater = () => {
           </div>
         </section>
       </div>
-    </>
+    </section>
   );
 };
 
