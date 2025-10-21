@@ -346,10 +346,6 @@ const Branchwater = () => {
     return plotData;
   };
 
-  // const [locationFilter] = useQueryParamState('geo_loc_name_country_calc', '');
-  // const [organismFilter] = useQueryParamState('organism', '');
-  // const [assayTypeFilter] = useQueryParamState('assay_type', '');
-
   // Add query param states for the faceted filters
   const [locationFilter] = useQueryParamState('geo_loc_name_country_calc', '');
   const [organismFilter] = useQueryParamState('organism', '');
@@ -864,6 +860,78 @@ const Branchwater = () => {
     };
   };
 
+  // Export helpers: build CSV and trigger download using current processed results
+  const downloadCSV = () => {
+    const { sortedResults } = processResults();
+    if (!sortedResults || sortedResults.length === 0) return;
+
+    // Prefer a known set of columns first, then append any additional keys found
+    const preferredOrder = [
+      'acc',
+      'assay_type',
+      'bioproject',
+      'biosample_link',
+      'cANI',
+      'collection_date_sam',
+      'containment',
+      'geo_loc_name_country_calc',
+      'organism',
+    ];
+
+    const allKeys = new Set<string>();
+    sortedResults.forEach((r) => Object.keys(r).forEach((k) => allKeys.add(k)));
+
+    // Ensure lat_lon is exported as string
+    const remaining = Array.from(allKeys).filter(
+      (k) => !preferredOrder.includes(k)
+    );
+    const columns = [...preferredOrder, ...remaining];
+
+    const escape = (val: unknown): string => {
+      if (val === null || val === undefined) return '';
+      let s: string;
+      if (Array.isArray(val)) {
+        s = val.join(';');
+      } else if (typeof val === 'object') {
+        s = JSON.stringify(val);
+      } else {
+        s = String(val);
+      }
+      // Escape double quotes by doubling them and wrap in quotes if needed
+      const needsQuotes = /[",\n]/.test(s);
+      s = s.replace(/"/g, '""');
+      return needsQuotes ? `"${s}"` : s;
+    };
+
+    const header = columns.map((c) => escape(c)).join(',');
+    const rows = sortedResults.map((row) =>
+      columns
+        .map((col) => {
+          const v = row[col];
+          if (col === 'lat_lon' && Array.isArray(v)) return escape(v.join(','));
+          return escape(v);
+        })
+        .join(',')
+    );
+
+    const csv = [header, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const date = new Date();
+    const ts = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+      date.getDate()
+    ).padStart(2, '0')}_${String(date.getHours()).padStart(2, '0')}${String(
+      date.getMinutes()
+    ).padStart(2, '0')}`;
+    a.href = url;
+    a.download = `branchwater_results_${ts}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const handleClearClick = (): void => {
     setShowMgnifySourmash(false);
     setUploadedFile(null);
@@ -1165,14 +1233,11 @@ const Branchwater = () => {
                           </button>
                           <button
                             className="vf-button vf-button--secondary vf-button--sm"
-                            onClick={() =>
-                              window.open(
-                                'https://www.ebi.ac.uk/metagenomics/submit',
-                                '_blank'
-                              )
-                            }
+                            onClick={downloadCSV}
+                            disabled={!processResults().sortedResults.length}
+                            title={processResults().sortedResults.length ? 'Download current results as CSV' : 'No results to download'}
                           >
-                            🔬 Export as TSV
+                            ⬇️ Download CSV
                           </button>
                         </div>
                       </div>
@@ -1182,7 +1247,6 @@ const Branchwater = () => {
 
                     <section className="vf-grid mg-grid-search vf-u-padding__top--400">
                       <div className="vf-stack vf-stack--800">
-                        <TemperatureFilter />
                         <CANIFilter />
 
                         <LocalMultipleOptionFilter
@@ -1204,12 +1268,6 @@ const Branchwater = () => {
                           header="Assay Type"
                           data={searchResults}
                         />
-
-                        {/*<MultipleOptionFilter*/}
-                        {/*  facetName="location_name"*/}
-                        {/*  header="Location name"*/}
-                        {/*  includeTextFilter*/}
-                        {/*/>*/}
                       </div>
                       <section>
                         <DetailedResultsTable
