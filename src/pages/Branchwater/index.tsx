@@ -99,7 +99,7 @@ const Branchwater = () => {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage] = useState<number>(10);
+  const [itemsPerPage] = useState<number>(25);
 
   // Sorting state (legacy/local)
   const [sortField, setSortField] = useState<string>('');
