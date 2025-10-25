@@ -45,14 +45,9 @@ interface MapSample {
   attributes: {
     latitude: number;
     longitude: number;
-    'sample-desc': string;
-  };
-  relationships: {
-    biome: {
-      data: {
-        id: string;
-      };
-    };
+    organism: string;
+    assay_type: string;
+    country: string;
   };
 }
 
@@ -94,7 +89,6 @@ const Branchwater = () => {
 
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
 
-  // const [availableGeoData, setAvailableGeoData] = useState<[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Pagination state
@@ -192,7 +186,7 @@ const Branchwater = () => {
           const country =
             !countryRaw ||
             ['np', 'uncalculated'].includes(countryRaw.toLowerCase())
-              ? 'Unknown location'
+              ? 'Unspecified'
               : countryRaw;
 
           const organism = item.organism || 'Unknown organism';
@@ -202,14 +196,9 @@ const Branchwater = () => {
             attributes: {
               latitude: lat,
               longitude: lng,
-              'sample-desc': `${organism} - ${country}`,
-            },
-            relationships: {
-              biome: {
-                data: {
-                  id: item.assay_type || 'unknown',
-                },
-              },
+              assay_type: item.assay_type,
+              organism,
+              country,
             },
           } as MapSample;
         })
@@ -899,6 +888,9 @@ const Branchwater = () => {
     setActiveTab(tabId);
   };
 
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
   return (
     <section className="vf-content mg-page-search">
       <div className="vf-tabs">
@@ -981,6 +973,32 @@ const Branchwater = () => {
                   ksize={21}
                   show_directory_checkbox={false}
                 />
+
+                {/* <details class="mg-sourmash-readmore"> */}
+                {/*  <summary>Instructions</summary> */}
+                {/*  <p className="vf-text-body vf-text-body--3"> */}
+                {/*    Use the Browse button below to select a FastA file */}
+                {/*  </p> */}
+                {/*  <p className="vf-text-body vf-text-body--3"> */}
+                {/*    Your sequences are <strong>not</strong> uploaded. Instead, */}
+                {/*    `sourmash` runs in your browser to create compact signatures */}
+                {/*    (sketches) from your file(s) and compares them with the */}
+                {/*    MGnify catalogue you choose (MAGs or Metagenomes). Only */}
+                {/*    these signatures and match results are sent to our servers. */}
+                {/*  </p> */}
+                {/*  <p className="vf-text-body vf-text-body--3"> */}
+                {/*    Each submitted signature generates a CSV result. All CSVs */}
+                {/*    are packaged into a single `.tgz` so you can download */}
+                {/*    everything in one click. Results are stored for 30 */}
+                {/*    days—please download them before they expire. */}
+                {/*  </p> */}
+                {/*  <p className="vf-text-body vf-text-body--3"> */}
+                {/*    Notes: processing time depends on file size and your device; */}
+                {/*    keep this tab open until the search completes. Directory */}
+                {/*    mode processes FastA files only and does not descend into */}
+                {/*    subdirectories. This tool uses a k-mer size of `21`. */}
+                {/*  </p> */}
+                {/* </details> */}
 
                 <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
                   <legend className="vf-form__legend">
@@ -1309,69 +1327,6 @@ const Branchwater = () => {
                           {Object.keys(countryCounts).length}
                         </div>
                       </div>
-
-                      <div
-                        style={{
-                          backgroundColor: '#f8f9fa',
-                          padding: '20px',
-                          borderRadius: '8px',
-                          textAlign: 'center',
-                          border: '1px solid #dee2e6',
-                        }}
-                      >
-                        <h4 style={{ margin: '0 0 10px 0', color: '#495057' }}>
-                          Avg Containment
-                        </h4>
-                        <div
-                          style={{
-                            fontSize: '2em',
-                            fontWeight: 'bold',
-                            color: '#fd7e14',
-                          }}
-                        >
-                          {searchResults.length > 0
-                            ? (
-                                searchResults
-                                  .filter(
-                                    (r) => typeof r.containment === 'number'
-                                  )
-                                  .reduce(
-                                    (sum, r) => sum + Number(r.containment),
-                                    0
-                                  ) /
-                                searchResults.filter(
-                                  (r) => typeof r.containment === 'number'
-                                ).length
-                              ).toFixed(3)
-                            : '0.000'}
-                        </div>
-                      </div>
-
-                      <div
-                        style={{
-                          backgroundColor: '#f8f9fa',
-                          padding: '20px',
-                          borderRadius: '8px',
-                          textAlign: 'center',
-                          border: '1px solid #dee2e6',
-                        }}
-                      >
-                        <h4 style={{ margin: '0 0 10px 0', color: '#495057' }}>
-                          With Assemblies
-                        </h4>
-                        <div
-                          style={{
-                            fontSize: '2em',
-                            fontWeight: 'bold',
-                            color: '#6f42c1',
-                          }}
-                        >
-                          {
-                            searchResults.filter((r) => r.assay_type === 'WGS')
-                              .length
-                          }
-                        </div>
-                      </div>
                     </div>
                   </div>
 
@@ -1468,8 +1423,11 @@ const Branchwater = () => {
                           scrollWheelZoom
                         >
                           <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            attribution="Tiles &copy; Esri — Source: Esri, DeLorme,
+                            NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri
+                            Japan, METI, Esri China (Hong Kong),
+                            Esri (Thailand), TomTom, 2012"
+                            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
                           />
 
                           {/* Individual sample markers */}
@@ -1485,11 +1443,18 @@ const Branchwater = () => {
                                 <div>
                                   <strong>ID:</strong> {sample.id}
                                   <br />
-                                  <strong>Description:</strong>{' '}
-                                  {sample.attributes['sample-desc']}
+                                  <strong>Country:</strong>{' '}
+                                  {sample.attributes.country}
                                   <br />
-                                  <strong>Biome:</strong>{' '}
-                                  {sample.relationships.biome.data.id}
+                                  <strong>Coordinates:</strong>{' '}
+                                  {sample.attributes.latitude},{' '}
+                                  {sample.attributes.longitude}
+                                  <br />
+                                  <strong>Metagenome:</strong>{' '}
+                                  {sample.attributes.organism}
+                                  <br />
+                                  <strong>Assay type:</strong>{' '}
+                                  {sample.attributes.assay_type}
                                 </div>
                               </Popup>
                             </Marker>
@@ -1548,69 +1513,146 @@ const Branchwater = () => {
                   <div className="vf-u-padding__top--400">
                     <h3 className="vf-text vf-text-heading--3">
                       Containment Score Distribution
-                    </h3>
-                    <div
-                      id="containmentBinsDiv"
-                      style={{ width: '100%', height: '400px' }}
-                    >
-                      <Plot
-                        data={[
-                          {
-                            x: (() => {
-                              // Create containment bins of 0.1 ranges
-                              const bins = Array.from(
+                      <div
+                        id="containmentBinsDiv"
+                        style={{ width: '100%', height: '400px' }}
+                      >
+                        <Plot
+                          data={(() => {
+                            // make ascending bins and counts first
+                            const binsAsc = Array.from(
+                              { length: 10 },
+                              (_, i) =>
+                                `${(i / 10).toFixed(1)}-${(
+                                  (i + 1) /
+                                  10
+                                ).toFixed(1)}`
+                            );
+                            const countsAsc = new Array(10).fill(0);
+
+                            searchResults.forEach((r) => {
+                              if (typeof r.containment === 'number') {
+                                const idx = Math.min(
+                                  Math.floor(r.containment * 10),
+                                  9
+                                );
+                                countsAsc[idx]++;
+                              }
+                            });
+
+                            // reverse for display: 1.0–0.9, …, 0.1–0.0
+                            const binsDesc = [...binsAsc].reverse();
+                            const countsDesc = [...countsAsc].reverse();
+
+                            return [
+                              {
+                                x: binsDesc,
+                                y: countsDesc,
+                                type: 'bar',
+                                marker: {
+                                  color: 'rgba(54, 162, 235, 0.7)',
+                                  line: {
+                                    color: 'rgba(54, 162, 235, 1)',
+                                    width: 1,
+                                  },
+                                },
+                                name: 'Containment Distribution',
+                                hovertemplate:
+                                  '%{x}<br>count=%{y}<extra></extra>',
+                              },
+                            ];
+                          })()}
+                          layout={{
+                            title:
+                              'Distribution of Containment Scores (0.1 bin ranges)',
+                            xaxis: {
+                              title: 'Containment Score Range (high → low)',
+                              tickangle: -45,
+                              // ensure Plotly keeps our descending order
+                              categoryorder: 'array',
+                              categoryarray: Array.from(
                                 { length: 10 },
                                 (_, i) =>
-                                  `${(i / 10).toFixed(1)}-${(
-                                    (i + 1) /
+                                  `${((9 - i) / 10).toFixed(1)}-${(
+                                    (10 - i) /
                                     10
                                   ).toFixed(1)}`
-                              );
-                              return bins;
-                            })(),
-                            y: (() => {
-                              // Count values in each bin
-                              const binCounts = new Array(10).fill(0);
-                              searchResults.forEach((result) => {
-                                if (typeof result.containment === 'number') {
-                                  const binIndex = Math.min(
-                                    Math.floor(result.containment * 10),
-                                    9
-                                  );
-                                  binCounts[binIndex]++;
-                                }
-                              });
-                              return binCounts;
-                            })(),
-                            type: 'bar',
-                            marker: {
-                              color: 'rgba(54, 162, 235, 0.7)',
-                              line: {
-                                color: 'rgba(54, 162, 235, 1)',
-                                width: 1,
-                              },
+                              ),
                             },
-                            name: 'Containment Distribution',
-                          },
-                        ]}
-                        layout={{
-                          title:
-                            'Distribution of Containment Scores (0.1 bin ranges)',
-                          xaxis: {
-                            title: 'Containment Score Range',
-                            tickangle: -45,
-                          },
-                          yaxis: { title: 'Count' },
-                          bargap: 0.1,
-                        }}
-                        config={{
-                          scrollZoom: true,
-                          displaylogo: false,
-                          responsive: true,
-                        }}
-                        style={{ width: '100%', height: '100%' }}
-                      />
-                    </div>
+                            yaxis: { title: 'Count' },
+                            bargap: 0.1,
+                          }}
+                          config={{
+                            scrollZoom: true,
+                            displaylogo: false,
+                            responsive: true,
+                          }}
+                          style={{ width: '100%', height: '100%' }}
+                        />
+                      </div>
+                    </h3>
+                    {/* <div */}
+                    {/*  id="containmentBinsDiv" */}
+                    {/*  style={{ width: '100%', height: '400px' }} */}
+                    {/* > */}
+                    {/*  <Plot */}
+                    {/*    data={[ */}
+                    {/*      { */}
+                    {/*        x: (() => { */}
+                    {/*          // Create containment bins of 0.1 ranges */}
+                    {/*          const bins = Array.from( */}
+                    {/*            { length: 10 }, */}
+                    {/*            (_, i) => */}
+                    {/*              `${(i / 10).toFixed(1)}-${( */}
+                    {/*                (i + 1) / */}
+                    {/*                10 */}
+                    {/*              ).toFixed(1)}` */}
+                    {/*          ); */}
+                    {/*          return bins; */}
+                    {/*        })(), */}
+                    {/*        y: (() => { */}
+                    {/*          // Count values in each bin */}
+                    {/*          const binCounts = new Array(10).fill(0); */}
+                    {/*          searchResults.forEach((result) => { */}
+                    {/*            if (typeof result.containment === 'number') { */}
+                    {/*              const binIndex = Math.min( */}
+                    {/*                Math.floor(result.containment * 10), */}
+                    {/*                9 */}
+                    {/*              ); */}
+                    {/*              binCounts[binIndex]++; */}
+                    {/*            } */}
+                    {/*          }); */}
+                    {/*          return binCounts; */}
+                    {/*        })(), */}
+                    {/*        type: 'bar', */}
+                    {/*        marker: { */}
+                    {/*          color: 'rgba(54, 162, 235, 0.7)', */}
+                    {/*          line: { */}
+                    {/*            color: 'rgba(54, 162, 235, 1)', */}
+                    {/*            width: 1, */}
+                    {/*          }, */}
+                    {/*        }, */}
+                    {/*        name: 'Containment Distribution', */}
+                    {/*      }, */}
+                    {/*    ]} */}
+                    {/*    layout={{ */}
+                    {/*      title: */}
+                    {/*        'Distribution of Containment Scores (0.1 bin ranges)', */}
+                    {/*      xaxis: { */}
+                    {/*        title: 'Containment Score Range', */}
+                    {/*        tickangle: -45, */}
+                    {/*      }, */}
+                    {/*      yaxis: { title: 'Count' }, */}
+                    {/*      bargap: 0.1, */}
+                    {/*    }} */}
+                    {/*    config={{ */}
+                    {/*      scrollZoom: true, */}
+                    {/*      displaylogo: false, */}
+                    {/*      responsive: true, */}
+                    {/*    }} */}
+                    {/*    style={{ width: '100%', height: '100%' }} */}
+                    {/*  /> */}
+                    {/* </div> */}
                   </div>
 
                   {/* Enhanced Biome/Organism Distribution */}

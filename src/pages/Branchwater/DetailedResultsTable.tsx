@@ -142,18 +142,41 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               accessor: 'cANI',
               Cell: ({ row }) => {
                 const entry = row.original as any;
-                const isHigh =
-                  typeof entry.cANI === 'number' && entry.cANI > 0.95;
                 return (
                   <div
                     style={{
                       fontWeight: 'bold',
-                      color: isHigh ? '#28a745' : '#6c757d',
                     }}
                   >
                     {typeof entry.cANI === 'number'
                       ? entry.cANI.toFixed(3)
                       : entry.cANI}
+                  </div>
+                );
+              },
+            },
+            {
+              Header: 'Containment',
+              accessor: 'containment',
+              Cell: ({ row }) => {
+                const entry = row.original as any;
+                return (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {typeof entry.containment === 'number'
+                        ? entry.containment.toFixed(3)
+                        : entry.containment}
+                    </div>
                   </div>
                 );
               },
@@ -166,36 +189,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
                 return <span>{entry.bioproject}</span>;
               },
             },
-            {
-              Header: 'Containment',
-              accessor: 'containment',
-              Cell: ({ row }) => {
-                const entry = row.original as any;
-                const isHigh =
-                  typeof entry.containment === 'number' &&
-                  entry.containment > 0.5;
-                return (
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '5px',
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontWeight: 'bold',
-                        color: isHigh ? '#28a745' : '#6c757d',
-                      }}
-                    >
-                      {typeof entry.containment === 'number'
-                        ? entry.containment.toFixed(3)
-                        : entry.containment}
-                    </div>
-                  </div>
-                );
-              },
-            },
+
             // {
             //   Header: 'Collection Date',
             //   accessor: 'collection_date_sam',
