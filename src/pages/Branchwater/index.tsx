@@ -971,6 +971,7 @@ const Branchwater = () => {
                   id="sourmash"
                   ref={sourmash}
                   ksize={21}
+                  scaled={1000}
                   show_directory_checkbox={false}
                 />
 
@@ -1591,68 +1592,6 @@ const Branchwater = () => {
                         />
                       </div>
                     </h3>
-                    {/* <div */}
-                    {/*  id="containmentBinsDiv" */}
-                    {/*  style={{ width: '100%', height: '400px' }} */}
-                    {/* > */}
-                    {/*  <Plot */}
-                    {/*    data={[ */}
-                    {/*      { */}
-                    {/*        x: (() => { */}
-                    {/*          // Create containment bins of 0.1 ranges */}
-                    {/*          const bins = Array.from( */}
-                    {/*            { length: 10 }, */}
-                    {/*            (_, i) => */}
-                    {/*              `${(i / 10).toFixed(1)}-${( */}
-                    {/*                (i + 1) / */}
-                    {/*                10 */}
-                    {/*              ).toFixed(1)}` */}
-                    {/*          ); */}
-                    {/*          return bins; */}
-                    {/*        })(), */}
-                    {/*        y: (() => { */}
-                    {/*          // Count values in each bin */}
-                    {/*          const binCounts = new Array(10).fill(0); */}
-                    {/*          searchResults.forEach((result) => { */}
-                    {/*            if (typeof result.containment === 'number') { */}
-                    {/*              const binIndex = Math.min( */}
-                    {/*                Math.floor(result.containment * 10), */}
-                    {/*                9 */}
-                    {/*              ); */}
-                    {/*              binCounts[binIndex]++; */}
-                    {/*            } */}
-                    {/*          }); */}
-                    {/*          return binCounts; */}
-                    {/*        })(), */}
-                    {/*        type: 'bar', */}
-                    {/*        marker: { */}
-                    {/*          color: 'rgba(54, 162, 235, 0.7)', */}
-                    {/*          line: { */}
-                    {/*            color: 'rgba(54, 162, 235, 1)', */}
-                    {/*            width: 1, */}
-                    {/*          }, */}
-                    {/*        }, */}
-                    {/*        name: 'Containment Distribution', */}
-                    {/*      }, */}
-                    {/*    ]} */}
-                    {/*    layout={{ */}
-                    {/*      title: */}
-                    {/*        'Distribution of Containment Scores (0.1 bin ranges)', */}
-                    {/*      xaxis: { */}
-                    {/*        title: 'Containment Score Range', */}
-                    {/*        tickangle: -45, */}
-                    {/*      }, */}
-                    {/*      yaxis: { title: 'Count' }, */}
-                    {/*      bargap: 0.1, */}
-                    {/*    }} */}
-                    {/*    config={{ */}
-                    {/*      scrollZoom: true, */}
-                    {/*      displaylogo: false, */}
-                    {/*      responsive: true, */}
-                    {/*    }} */}
-                    {/*    style={{ width: '100%', height: '100%' }} */}
-                    {/*  /> */}
-                    {/* </div> */}
                   </div>
 
                   {/* Enhanced Biome/Organism Distribution */}
