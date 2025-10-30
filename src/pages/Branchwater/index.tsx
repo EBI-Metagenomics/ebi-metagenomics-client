@@ -460,12 +460,15 @@ const Branchwater = () => {
       axios
         .post(
           'http://branchwater-dev.mgnify.org/',
+          // 'https://branchwater.jgi.doe.gov/',
           {
-            signatures: JSON.stringify(signature),
+            signatures: signature,
+            // signatures: JSON.stringify(signature),
           },
           {
             headers: {
               'Content-Type': 'application/json',
+              Accept: '*/*',
             },
           }
         )
@@ -635,7 +638,9 @@ const Branchwater = () => {
   useEffect(() => {
     const handleSketched = (evt: CustomEvent): void => {
       evt.preventDefault();
-      const sig = JSON.parse(evt.detail.signature)[0];
+      console.log('EVT ', evt);
+      // const sig = JSON.parse(evt.detail.signature)[0];
+      const sig = JSON.parse(evt.detail.signature);
 
       setSignature(sig);
       // Removed automatic axios request - will only search when button is clicked
@@ -971,7 +976,6 @@ const Branchwater = () => {
                   id="sourmash"
                   ref={sourmash}
                   ksize={21}
-                  scaled={1000}
                   show_directory_checkbox={false}
                 />
 
