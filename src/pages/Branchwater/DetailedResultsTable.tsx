@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import EMGTable from 'components/UI/EMGTable';
 import { Column } from 'react-table';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import { Link } from 'react-router-dom';
 
 interface Filters {
   acc: string;
@@ -82,23 +81,18 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               Cell: ({ row }) => {
                 const entry = row.original as any;
                 return (
-                  <>
+                  <div>
                     {entry.exists_on_mgnify === true ? (
                       <div>
-                        <Link
-                          to={`https://www.ebi.ac.uk/metagenomics/runs/${entry.acc}`}
+                        <a
+                          href={`https://www.ebi.ac.uk/metagenomics/runs/${entry.acc}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="vf-link"
+                          style={{ fontWeight: 'bold' }}
                         >
                           {entry.acc}
-                        </Link>
-                        {/*<a*/}
-                        {/*  href={`https://www.ebi.ac.uk/metagenomics/runs/${entry.acc}`}*/}
-                        {/*  target="_blank"*/}
-                        {/*  rel="noopener noreferrer"*/}
-                        {/*  className="vf-link"*/}
-                        {/*  style={{ fontWeight: 'bold' }}*/}
-                        {/*>*/}
-                        {/*  {entry.acc}*/}
-                        {/*</a>*/}
+                        </a>
                         <div
                           style={{
                             fontSize: '10px',
@@ -115,7 +109,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
                         {entry.acc}
                       </span>
                     )}
-                  </>
+                  </div>
                 );
               },
             },
