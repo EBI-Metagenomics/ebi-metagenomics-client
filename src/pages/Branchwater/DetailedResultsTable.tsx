@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import EMGTable from 'components/UI/EMGTable';
 import { Column } from 'react-table';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import getBranchwaterResultColumns from 'components/Branchwater/common/resultColumns';
 
 interface Filters {
   acc: string;

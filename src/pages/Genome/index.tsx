@@ -12,6 +12,8 @@ import { MGnifyResponseObj } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import { cleanTaxLineage } from '@/utils/taxon';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
+import EMGTable from 'components/UI/EMGTable';
+import getBranchwaterResultColumns from 'components/Branchwater/common/resultColumns';
 
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
 const COGAnalysis = lazy(() => import('components/Genomes/COGAnalysis'));
@@ -61,7 +63,6 @@ const GenomePage: React.FC = () => {
       .catch((err) => {
         console.error('Error fetching metagenome search results:', err);
         setIsSearching(false);
-        // Could add error state handling here if needed
       });
   };
 
@@ -159,72 +160,19 @@ const GenomePage: React.FC = () => {
               {searchResults.length > 0 && (
                 <div className="vf-u-padding__top--400">
                   <h4>Search Results ({searchResults.length} matches found)</h4>
-                  <table className="vf-table">
-                    <thead className="vf-table__header">
-                      <tr className="vf-table__row">
-                        <th className="vf-table__heading" scope="col">
-                          Accession
-                        </th>
-                        <th className="vf-table__heading" scope="col">
-                          Type
-                        </th>
-                        <th className="vf-table__heading" scope="col">
-                          Bioproject
-                        </th>
-                        <th className="vf-table__heading" scope="col">
-                          Biosample
-                        </th>
-                        <th className="vf-table__heading" scope="col">
-                          cANI
-                        </th>
-                        <th className="vf-table__heading" scope="col">
-                          Date
-                        </th>
-                        <th className="vf-table__heading" scope="col">
-                          Containment
-                        </th>
-                        <th className="vf-table__heading" scope="col">
-                          Location
-                        </th>
-                        <th className="vf-table__heading" scope="col">
-                          Organism
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="vf-table__body">
-                      {searchResults.map((result) => (
-                        <tr className="vf-table__row" key={result.acc}>
-                          <td className="vf-table__cell">{result.acc}</td>
-                          <td className="vf-table__cell">
-                            {result.assay_type}
-                          </td>
-                          <td className="vf-table__cell">
-                            {result.bioproject}
-                          </td>
-                          <td className="vf-table__cell">
-                            <a
-                              href={result.biosample_link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              Link
-                            </a>
-                          </td>
-                          <td className="vf-table__cell">{result.cANI}</td>
-                          <td className="vf-table__cell">
-                            {result.collection_date_sam}
-                          </td>
-                          <td className="vf-table__cell">
-                            {result.containment}
-                          </td>
-                          <td className="vf-table__cell">
-                            {result.geo_loc_name_country_calc}
-                          </td>
-                          <td className="vf-table__cell">{result.organism}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <div style={{ overflowX: 'auto' }}>
+                    <EMGTable
+                      cols={getBranchwaterResultColumns()}
+                      data={{
+                        items: searchResults,
+                        count: searchResults.length,
+                      }}
+                      className="vf-table"
+                      showPagination={false}
+                      sortable={false}
+                      namespace="genome-metagenome-search-"
+                    />
+                  </div>
                 </div>
               )}
             </div>
