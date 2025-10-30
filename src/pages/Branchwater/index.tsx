@@ -443,6 +443,7 @@ const Branchwater = () => {
     [createPlotData, countUniqueValuesAndOccurrences]
   );
 
+  // TODO: bring back request button
   const handleRequestAnalysis = (entry: SearchResult) => {
     // You can customize this URL based on your MGnify submission workflow
     const submitUrl = `https://www.ebi.ac.uk/metagenomics/submit?accession=${entry.acc}&bioproject=${entry.bioproject}`;
@@ -462,8 +463,8 @@ const Branchwater = () => {
           'http://branchwater-dev.mgnify.org/',
           // 'https://branchwater.jgi.doe.gov/',
           {
-            signatures: signature,
-            // signatures: JSON.stringify(signature),
+            // signatures: signature,
+            signatures: JSON.stringify(signature),
           },
           {
             headers: {

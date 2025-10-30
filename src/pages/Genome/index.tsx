@@ -14,6 +14,9 @@ import { cleanTaxLineage } from '@/utils/taxon';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import EMGTable from 'components/UI/EMGTable';
 import getBranchwaterResultColumns from 'components/Branchwater/common/resultColumns';
+import useBranchwaterResults, { BranchwaterFilters } from 'components/Branchwater/common/useBranchwaterResults';
+import FiltersBar from 'components/Branchwater/common/FiltersBar';
+import ResultsDashboard from 'components/Branchwater/common/ResultsDashboard';
 
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
 const COGAnalysis = lazy(() => import('components/Genomes/COGAnalysis'));
@@ -39,6 +42,24 @@ const GenomePage: React.FC = () => {
   const { data, loading, error } = useMGnifyData(`genomes/${accession}`);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [filters, setFilters] = useState<BranchwaterFilters>({
+    acc: '',
+    assay_type: '',
+    bioproject: '',
+    collection_date_sam: '',
+    containment: '',
+    geo_loc_name_country_calc: '',
+    organism: '',
+  });
+  const namespace = 'genome-metagenome-search-';
+  const results = useBranchwaterResults({
+    items: searchResults,
+    namespace,
+    pageSize: 25,
+    filters,
+  });
+  const handleFilterChange = (field: keyof BranchwaterFilters, value: string) =>
+    setFilters((prev) => ({ ...prev, [field]: value }));
 
   const handleMetagenomeSearch = () => {
     // Only proceed if we have the data
@@ -159,20 +180,26 @@ const GenomePage: React.FC = () => {
 
               {searchResults.length > 0 && (
                 <div className="vf-u-padding__top--400">
-                  <h4>Search Results ({searchResults.length} matches found)</h4>
+                  <h4>Search Results ({results.total} matches found)</h4>
+
+                  <FiltersBar filters={filters} onFilterChange={handleFilterChange} />
+
                   <div style={{ overflowX: 'auto' }}>
                     <EMGTable
                       cols={getBranchwaterResultColumns()}
                       data={{
-                        items: searchResults,
-                        count: searchResults.length,
+                        items: results.paginatedResults,
+                        count: results.total,
                       }}
                       className="vf-table"
-                      showPagination={false}
-                      sortable={false}
-                      namespace="genome-metagenome-search-"
+                      showPagination={true}
+                      expectedPageSize={25}
+                      sortable={true}
+                      namespace={namespace}
                     />
                   </div>
+
+                  <ResultsDashboard items={results.filteredResults} />
                 </div>
               )}
             </div>
