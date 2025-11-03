@@ -39,10 +39,10 @@ npm run start --watch
 #### Integration tests
 Start the frontend as above, then use the Cypress test suite:
 ```bash
-npm test
+npm run test
 ```
 
-Or for a single test file e.g.:
+Or for a single test file or debugging, use the interactive (non-headless) mode:
 ```bash
-cypress run --spec cypress/integration/index.js
+npm run test:open
 ```
