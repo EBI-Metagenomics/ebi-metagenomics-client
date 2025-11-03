@@ -139,6 +139,7 @@ function parseSelectedAttributes(
     s.indexOf('%') >= 0 || s.indexOf('+') >= 0 ? decodeURIComponent(s) : s;
 
   while (i < len) {
+    // TODO:  improve readability of this loop.
     // read key
     let kStart = i;
     while (
