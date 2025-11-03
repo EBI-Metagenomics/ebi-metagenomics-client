@@ -53,13 +53,14 @@ const GCContentChart: React.FC<GCContentChartProps> = ({ summaryData }) => {
         pointPadding: 0.25,
         color: 'rgb(63, 114, 191)',
         tooltip: {
-          /* eslint-disable react/no-this-in-sfc */
           pointFormatter() {
+            // @ts-ignore
             return `<span style="color:${this.color}">\u25CF</span> ${
+              // @ts-ignore
               this.series.name
+              // @ts-ignore
             }: <b>${this.y.toFixed(2)}%</b><br/>`;
           },
-          /* eslint-enable react/no-this-in-sfc */
         },
         data: [Number(summaryData.average_gc_content)],
       },
@@ -69,18 +70,14 @@ const GCContentChart: React.FC<GCContentChartProps> = ({ summaryData }) => {
         pointPadding: 0.25,
         threshold: Number(summaryData.average_gc_content),
         tooltip: {
-          /* eslint-disable react/no-this-in-sfc */
           pointFormatter() {
             const val = (100 - Number(summaryData.average_gc_content)).toFixed(
               2
             );
             // prettier-ignore
-            return `
-              <span style="color:${this.color}">\u25CF</span>
-              ${this.series.name}: <b>${val}%</b>
-              <br/>`;
+            // @ts-ignore
+            return `<span style="color:${this.color}">\u25CF</span>${this.series.name}: <b>${val}%</b><br/>`;
           },
-          /* eslint-enable react/no-this-in-sfc */
         },
         data: [100],
       },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import useAuthTokenVerifier from '@/hooks/authentication/useAuthTokenVerifier';
 
@@ -12,7 +12,6 @@ const PersistLogin = () => {
         await verifyAuthToken();
         setIsLoading(false);
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.log(error);
         setIsLoading(false);
       } finally {

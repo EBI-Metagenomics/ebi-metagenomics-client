@@ -26,7 +26,7 @@ const GenomeBrowser: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const accession = useURLAccession();
   const { config } = useContext(UserContext);
-  const [igvBrowser, setIgvBrowser] = useState(null);
+  const [igvBrowser, setIgvBrowser] = useState<Browser>(null);
   const [trackColorBys, setTrackColorBys] = useState({});
 
   const virifyGffUrl = `${config.api}genomes/${accession}/downloads/${accession}_virify.gff`;
@@ -97,7 +97,7 @@ const GenomeBrowser: React.FC = () => {
       igv.createBrowser(node, options).then((browser: Browser) => {
         browser.on(
           'trackclick',
-          (track: any, trackData: { name: string; value: string | number }[]) =>
+          (_, trackData: { name: string; value: string | number }[]) =>
             ReactDOMServer.renderToString(
               <GenomeBrowserPopup data={trackData} />
             )
@@ -119,8 +119,8 @@ const GenomeBrowser: React.FC = () => {
   );
 
   useEffect(() => {
-    const tracksToRemove = [];
-    const tracksToAdd = [];
+    const tracksToRemove: string[] = [];
+    const tracksToAdd: string[] = [];
     igvBrowser?.trackViews?.forEach((trackView) => {
       if (trackView.track.type !== 'annotation') return;
       const colorBy = trackColorBys[trackView.track.id];

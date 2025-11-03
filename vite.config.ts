@@ -14,6 +14,7 @@ export default defineConfig({
       styles: path.resolve(__dirname, './src/styles'),
       utils: path.resolve(__dirname, './src/utils'),
       hooks: path.resolve(__dirname, './src/hooks'),
+      custom: path.resolve(__dirname, './custom.d.ts'),
       images: path.resolve(__dirname, './public/images'),
       data: path.resolve(__dirname, './public/data'),
       public: path.resolve(__dirname, './public'),

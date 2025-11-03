@@ -6,7 +6,9 @@ const AntiSmashTab: React.FC = () => {
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
 
   // This is used as a placeholder until the actual antiSMASH data is available on the API
-  const dataFile = analysisOverviewData.downloads[0];
+  const dataFile = analysisOverviewData?.downloads[0];
+
+  if (!dataFile) return null;
 
   return (
     <div>

@@ -1,16 +1,19 @@
 import React, { useContext } from 'react';
 import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import { Download } from '@/interfaces';
 
 const GenomePropertiesTab: React.FC = () => {
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
 
   // This is used as a placeholder until the actual Genome Properties data is available on the API
-  const dataFile = analysisOverviewData.downloads[0];
+  const dataFile = analysisOverviewData?.downloads[0];
+
+  if (!dataFile) return null;
 
   return (
     <div>
-      <SlimVisualisationCard fileData={dataFile}>
+      <SlimVisualisationCard fileData={dataFile as Download}>
         <div className="p-4">
           <h3 className="text-lg font-medium mb-2">Genome Properties</h3>
           <p className="text-sm text-gray-600 mb-4">

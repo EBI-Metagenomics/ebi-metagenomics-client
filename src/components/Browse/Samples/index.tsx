@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,14 +7,26 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { MGnifyResponseList } from '@/hooks/data/useData';
 import { getBiomeIcon } from '@/utils/biomes';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+
+const {
+  usePage,
+  usePageSize,
+  useOrder,
+  useBiome,
+  useSearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('', {
+  biome: SharedTextQueryParam(''),
+});
 
 const BrowseSamples: React.FC = () => {
-  const [page, setPage] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [biome] = useQueryParamState('biome', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
-  const [search] = useQueryParamState('search', '');
+  const [page, setPage] = usePage<number>();
+  const [order] = useOrder<string>();
+  const [biome] = useBiome<string>();
+  const [pageSize] = usePageSize<number>();
+  const [search] = useSearch<string>();
 
   const [hasData, setHasData] = useState(false);
   const {
@@ -29,7 +39,7 @@ const BrowseSamples: React.FC = () => {
     ordering: order as string,
     lineage: biome as string,
     page_size: pageSize as number,
-    search: (search as string) || undefined,
+    search: (search as string) || '',
   });
 
   const columns = React.useMemo(
@@ -67,7 +77,7 @@ const BrowseSamples: React.FC = () => {
         id: 'last_update',
         Header: 'Last Updated',
         accessor: 'attributes.last-update',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
       },
     ],
     []
@@ -108,4 +118,4 @@ const BrowseSamples: React.FC = () => {
   );
 };
 
-export default BrowseSamples;
+export default withQueryParamProvider(BrowseSamples);

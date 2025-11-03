@@ -33,3 +33,27 @@
   gap: 1em;
   align-items: center;
 }
+
+.mg-table-scroll-x {
+  overflow-x: auto;
+  width: 100%;
+  min-width: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mg-table-scroll-x > .mg-table {
+  display: inline-table;
+  min-width: 100%;
+}
+.mg-table--nowrap th,
+.mg-table--nowrap td {
+    white-space: nowrap;
+}
+
+.mg-table-footer {
+  position: sticky;
+  bottom: 0;
+  background: hsla(0, 0%, 100%, 0.8);
+  display: flex;
+  flex-wrap: wrap-reverse;
+}

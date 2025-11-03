@@ -15,7 +15,7 @@ import './style.css';
 
 const QualityControl: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
-  const accession = analysisData.id;
+  const accession = analysisData?.id;
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/summary`,
     {},
@@ -27,6 +27,8 @@ const QualityControl: React.FC = () => {
     error || !data
       ? null
       : Object.fromEntries(data as unknown as Array<[k: string, v: string]>);
+
+  if (!analysisData) return <Loading/>
 
   const isAssembly = analysisData.attributes['experiment-type'] === 'assembly';
   const unit = isAssembly ? 'contig' : 'read';

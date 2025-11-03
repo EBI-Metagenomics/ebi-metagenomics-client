@@ -1,4 +1,3 @@
-import React from 'react';
 import { useOfflineCrate } from 'hooks/genomeViewer/CrateStore/useCrates';
 
 const ROCrateComparer = () => {
@@ -12,7 +11,7 @@ const ROCrateComparer = () => {
   };
 
   const handleButtonClick = () => {
-    document.getElementById('fileInput').click();
+    document.getElementById('fileInput')?.click();
   };
 
   return (

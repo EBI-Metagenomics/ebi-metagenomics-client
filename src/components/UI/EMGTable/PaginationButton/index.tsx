@@ -28,7 +28,7 @@ const PaginationButton: React.FC<PaginationButtonProps> = ({
     <li className="vf-pagination__item">
       <button
         type="button"
-        onClick={() => gotoPage(pageIndex)}
+        onClick={gotoPage(pageIndex)}
         className="vf-button vf-button--link vf-pagination__link"
       >
         <span className="vf-u-sr-only"> page</span>

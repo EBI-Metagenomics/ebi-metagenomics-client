@@ -11,11 +11,18 @@ import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import useDefaultGenomeConfig from '@/hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from '@/utils/taxon';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 
 addExportMenu(Highcharts);
 
 const initialPageSize = 10;
+
+const {
+  useKeggModPage,
+  useKeggModPageSize,
+  useKeggModOrder,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('keggMod', {}, initialPageSize);
 
 const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   includePangenomes = true,
@@ -23,13 +30,9 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const accession = useURLAccession();
 
-  const [keggmodPage] = useQueryParamState('keggmod-page', 1, Number);
-  const [keggmodPageSize] = useQueryParamState(
-    'keggmod-page_size',
-    initialPageSize,
-    Number
-  );
-  const [keggmodOrder] = useQueryParamState('keggmod-order', '');
+  const [keggmodPage] = useKeggModPage<number>();
+  const [keggmodPageSize] = useKeggModPageSize<number>();
+  const [keggmodOrder] = useKeggModOrder<string>();
 
   const { columns, options } = useDefaultGenomeConfig();
   const { data, loading, isStale, error } = useMGnifyData(
@@ -50,7 +53,6 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   );
   const categoriesDescriptions = (data.data as MGnifyDatum[]).reduce(
     (memo, d) => {
-      // eslint-disable-next-line no-param-reassign
       memo[d.attributes.name as string] = d.attributes.description;
       return memo;
     },
@@ -77,7 +79,6 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
     categories,
   };
   options.tooltip = {
-    /* eslint-disable react/no-this-in-sfc */
     formatter() {
       const description = categoriesDescriptions[this.key];
       let tooltip = `${this.series.name}<br/>Count: ${this.y}`;
@@ -86,7 +87,6 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
       }
       return tooltip;
     },
-    /* eslint-enable react/no-this-in-sfc */
   };
   options.series = [
     {
@@ -132,4 +132,4 @@ const KEGGClassModulesAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   );
 };
 
-export default KEGGClassModulesAnalises;
+export default withQueryParamProvider(KEGGClassModulesAnalises);

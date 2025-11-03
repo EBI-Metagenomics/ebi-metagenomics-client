@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 /* eslint-disable no-bitwise */
 
 import * as pako from 'pako';
-import { Download } from 'interfaces';
+import { Download } from 'interfaces/index';
+import { find } from 'lodash-es';
 
 const MAX_BLOCK_SIZE = 100000;
 
@@ -11,6 +11,16 @@ export interface GziBlock {
   uncompressedOffset: number;
 }
 
+/**
+ * Service for handling BGZF (Blocked GNU Zip Format) compressed files with random access capabilities.
+ * Specifically: allows the random fetching of "pages" (blocks) of text files like TSV and GFF.
+ *
+ *
+ * @param download - Download object containing URL and index file information
+ * @param autoInitialize - Whether to automatically initialize the service (default: true)
+ * @param leadingTsvCommentChars - Characters to treat as comment lines (default: "#"),
+ * in which case those lines are removed from pages (and empty pages are made invisible)
+ */
 export class BGZipService {
   private gziIndex: GziBlock[] = [];
 
@@ -20,12 +30,44 @@ export class BGZipService {
 
   private readonly indexFileUrl: string;
 
-  constructor(private download: Download, autoInitialize = true) {
+  private readonly leadingTsvCommentChars: string;
+
+  private firstPageIsOnlyComments: boolean = false;
+
+  /**
+   * Generates the full URL for a GZI index file based on the download object
+   * @param download - Download object containing URL and index file information
+   * @param index_type - E.g. gzi (default) or fai
+   * @returns The full URL for the GZI index file
+   */
+  public static getIndexFileUrl(
+    download: Download,
+    index_type: string = 'gzi'
+  ): string | undefined {
+    const relative_url = find(
+      download.index_files ?? [],
+      (index) => index.index_type === index_type
+    )?.relative_url;
+
+    return (
+      relative_url &&
+      new URL(relative_url, download.url.replace(/[^/]+$/, '')).toString()
+    );
+  }
+
+  constructor(
+    private download: Download,
+    autoInitialize = true,
+    leadingTsvCommentChars = '#'
+  ) {
     this.dataFileUrl = this.download.url;
-    this.indexFileUrl = new URL(
-      this.download.index_file?.relative_url,
-      this.download.url.replace(/[^/]+$/, '')
-    ).toString();
+    this.leadingTsvCommentChars = leadingTsvCommentChars;
+    const idx = BGZipService.getIndexFileUrl(this.download);
+    if (idx) {
+      this.indexFileUrl = idx;
+    } else {
+      throw new Error('No index file found for BGZip download');
+    }
     if (autoInitialize) {
       this.initialize().then(() => console.groupEnd());
     }
@@ -150,6 +192,7 @@ export class BGZipService {
     const deflateStart = 18;
     const deflateEnd = blockSize - 8; // footer 8 bytes
     const deflateData = block.subarray(deflateStart, deflateEnd);
+    console.debug(`Decompressing block of size ${deflateData.length}`);
     return pako.inflateRaw(deflateData);
   }
 
@@ -171,6 +214,10 @@ export class BGZipService {
     return this.decompressBGZFBlock(compressedChunk);
   }
 
+  getSourcePageNumber(pageNum: number): number {
+    return this.firstPageIsOnlyComments ? pageNum + 1 : pageNum;
+  }
+
   /**
    * Fetches one full BGZF block as a page.
    */
@@ -182,20 +229,40 @@ export class BGZipService {
       console.log(`No data for page ${pageNum}`);
       return new Uint8Array(0); // Out of range → empty
     }
+    console.debug(
+      `Fetching block ${pageNum} from ${this.gziIndex.length} index entries`
+    );
     const entry = this.gziIndex[pageNum];
+    console.debug(`Fetching block ${entry.compressedOffset}`);
     return this.fetchAndDecompressBlock(entry.compressedOffset);
   }
 
   async readPageAsTSV(pageNum: number): Promise<string[][]> {
     console.groupCollapsed('Read blockzip page/block as TSV');
-    const pageBytes = await this.readPage(pageNum - 1);
+    const sourcePageNum = this.getSourcePageNumber(pageNum);
+    console.debug(`Will read blockzip page ${sourcePageNum}`);
+    const pageBytes = await this.readPage(sourcePageNum - 1);
     console.debug(`Read blockzip page size ${pageBytes.length}`);
     const decoder = new TextDecoder('utf-8');
     const text = decoder.decode(pageBytes);
 
     // Split lines and filter empty lines
-    const lines = text.split('\n').filter((line) => line.trim().length > 0);
+    const lines = text
+      .split('\n')
+      .filter(
+        (line) =>
+          line.trim().length > 0 &&
+          !line.startsWith(this.leadingTsvCommentChars)
+      );
     console.debug(`Lines ${lines.length}`);
+    if (lines.length === 0 && pageNum === 1) {
+      this.firstPageIsOnlyComments = true;
+      console.log(
+        'First page is only comments, so treating block 2 as page 1.'
+      );
+      console.groupEnd();
+      return this.readPageAsTSV(pageNum);
+    }
 
     // Split columns by tab
     const rows = lines.map((line) => line.split('\t'));
@@ -209,6 +276,8 @@ export class BGZipService {
    */
   getPageCount() {
     console.debug(`Page count is ${this.gziIndex.length}`);
-    return this.gziIndex.length;
+    return this.firstPageIsOnlyComments
+      ? this.gziIndex.length - 1
+      : this.gziIndex.length;
   }
 }

@@ -6,7 +6,6 @@ const refreshPage = (): void => {
 };
 
 const getHumanReadableErrorMessages = (error: ErrorFromFetch): string => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const errorStatusCode = error.error.response?.status || error.error.code;
   switch (errorStatusCode) {
@@ -45,7 +44,7 @@ const FetchError: React.FC<{ error: ErrorFromFetch }> = ({ error }) => {
       <details className="vf-details" open>
         <summary className="vf-details--summary">Advanced</summary>
         Request endpoint:{' '}
-        {error.error.request.responseURL || error.error.config.url}
+        {error.error?.request.responseURL || error.error?.config?.url}
       </details>
       <div className="mg-right">
         <button

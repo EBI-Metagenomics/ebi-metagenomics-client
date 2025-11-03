@@ -7,7 +7,7 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import InfoBanner from 'components/UI/InfoBanner';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import ROCrateBrowser from 'components/UI/ROCrateBrowser';
 import { singularise } from '@/utils/strings';
 
@@ -17,19 +17,14 @@ type ExtraAnnotationsProps = {
 
 const initialPageSize = 10;
 
+const { useAnnotationsPage, useAnnotationsPageSize, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('annotations', {}, initialPageSize);
+
 const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
   const singularNamespace = singularise(namespace);
   const accession = useURLAccession();
-  const [annotationsPage] = useQueryParamState(
-    `${singularNamespace}-annotations-page`,
-    1,
-    Number
-  );
-  const [annotationsPageSize] = useQueryParamState(
-    `${singularNamespace}-annotations-page-size`,
-    initialPageSize,
-    Number
-  );
+  const [annotationsPage] = useAnnotationsPage<number>();
+  const [annotationsPageSize] = useAnnotationsPageSize<number>();
 
   const { data, isStale, error } = useMGnifyData(
     `${namespace}/${accession}/extra-annotations`,
@@ -52,7 +47,7 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
       {
         Header: 'Compression',
         accessor: 'attributes.file-format.compression',
-        Cell: ({ cell }) => (cell.value ? 'Yes' : '-'),
+        Cell: ({ cell }) => <>{cell.value ? 'Yes' : '-'}</>,
       },
       {
         Header: 'Format',
@@ -84,7 +79,8 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
 
   const loading = !data;
   if (loading) return <Loading size="small" />;
-  if (error || !data) return <FetchError error={error} />;
+  if (error) return <FetchError error={error} />;
+  if (!data) return <Loading />;
   if (!(data.data as MGnifyDatum[]).length)
     return (
       <InfoBanner
@@ -110,10 +106,10 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
       className={`mg-${namespace}-table`}
       loading={loading}
       isStale={isStale}
-      namespace={namespace}
+      namespace="annotations"
       showPagination={showPagination}
     />
   );
 };
 
-export default ExtraAnnotations;
+export default withQueryParamProvider(ExtraAnnotations);

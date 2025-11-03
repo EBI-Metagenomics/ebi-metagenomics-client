@@ -25,7 +25,7 @@ const ClusterMarkerPopup: React.FC<{ accessions: string[] }> = ({
     <h3 className="vf-box__heading">Samples on this geographical location</h3>
     <ul className="vf-list">
       {accessions.map((accession) => (
-        <li ref={accession}>
+        <li ref={accession} key={accession}>
           <a href={`../samples/${accession}`}>{accession}</a>
         </li>
       ))}
@@ -38,16 +38,15 @@ type MapProps = {
 };
 
 const SamplesMap: React.FC<MapProps> = ({ samples }) => {
-  const ref = useRef();
-  const [theMap, setTheMap] = useState(null);
-  const markerCluster = useRef<MarkerClusterer>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [theMap, setTheMap] = useState<google.maps.Map>();
+  const markerCluster = useRef<MarkerClusterer>();
   const sampleInfoWindow = useRef(new google.maps.InfoWindow());
   const clusterInfoWindow = useRef(new google.maps.InfoWindow());
   const newBoundary = useRef(new google.maps.LatLngBounds());
   const markers = useRef({});
   const [markingEezRegions, setMarkingEezRegions] = useState(false);
 
-  // eslint-disable-next-line consistent-return
   const fetchPolygonCoordinates = async () => {
     try {
       const response = await axios.get(
@@ -55,16 +54,11 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
       );
       const rdfData = response.data as unknown as string;
       let polygonCoordinatesString = rdfData.substring(
-        rdfData.indexOf('POLYGON') + 8,
-        rdfData.length - 3
-      );
-      polygonCoordinatesString = rdfData.substring(
         rdfData.indexOf('((') + 2,
         rdfData.indexOf('))')
       );
 
-      const coordinatesArray = [];
-      const internalCoordinates = [];
+      const coordinatesArray: { lat: number; lng: number }[] = [];
 
       const pairs = polygonCoordinatesString.split(',');
 
@@ -76,8 +70,6 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
             polygonCoordinatesString.indexOf(pair),
             indexOfPairEnd + pair.length
           );
-
-          internalCoordinates.push(internalCoordinatesString);
           i += internalCoordinatesString.split(' ').length - 1;
         } else {
           const [lng, lat] = pair.trim().split(' ').map(parseFloat);
@@ -85,7 +77,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
         }
       }
       return coordinatesArray;
-    } catch (err) {
+    } catch {
       // markingEezRegions.current = false;
     }
   };
@@ -104,7 +96,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
   };
 
   useEffect(() => {
-    if (theMap === null) {
+    if (theMap === null && ref.current) {
       const tmpMap = new google.maps.Map(ref.current, {
         // zoom: 0.1,
         maxZoom: 5,
@@ -153,10 +145,10 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
       google.maps.event.addListener(
         markerCluster.current,
         'click',
-        // eslint-disable-next-line func-names
+
         function (cluster) {
           if (
-            // eslint-disable-next-line no-underscore-dangle, react/no-this-in-sfc
+            // @ts-ignore
             this.prevZoom_ + 1 <= this.getMaxZoom() ||
             cluster.getSize() >= 10
           ) {

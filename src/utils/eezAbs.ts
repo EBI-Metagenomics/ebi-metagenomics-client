@@ -23,9 +23,11 @@ const absInfoDictionary = {
 
 export const displayAbsInfo = (eezData: EezMetadata) => {
   if (eezData.hasMultipleSovereigns) {
-    let htmlOutput = ` <p>\n This EEZ falls within the sovereignty of ${eezData.sovereigns.length} nations:\n</p>`;
-    // eslint-disable-next-line array-callback-return
-    eezData.sovereigns.map((sovereign: Sov) => {
+    let htmlOutput = ` <p>\n This EEZ falls within the sovereignty of ${
+      eezData?.sovereigns?.length ?? 'unknown'
+    } nations:\n</p>`;
+
+    eezData?.sovereigns?.map((sovereign: Sov) => {
       const absInfo = absInfoDictionary[sovereign.absStatus];
       htmlOutput += ` <div class="vf-meta__details">
                   <p>
@@ -48,8 +50,11 @@ export const displayAbsInfo = (eezData: EezMetadata) => {
     });
     return htmlOutput;
   }
-  const sovereign = eezData.sovereigns[0];
-  const absInfo = absInfoDictionary[sovereign.absStatus];
+  const sovereign = eezData?.sovereigns?.[0];
+  const absInfo = sovereign && absInfoDictionary[sovereign.absStatus];
+  if (!sovereign) {
+    return null;
+  }
   return ` <div class="vf-meta__details">
                   <p>
                     <span

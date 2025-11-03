@@ -28,7 +28,7 @@ const antiSMASHLabels = {
 };
 
 const MultipleField: React.FC<{
-  value: string;
+  value: string | null | undefined;
   url?: string;
   decodeValue?: boolean;
   filterValue?: (value: string) => boolean;
@@ -51,7 +51,7 @@ const MultipleField: React.FC<{
 
 const getAnnotationLoc = (attributes: {
   location?: string;
-}): { start: number; end: number } => {
+}): { start: number | undefined; end: number | undefined } => {
   if (attributes.location) {
     const startEnd = attributes.location.split(':')[1];
     return {
@@ -59,7 +59,7 @@ const getAnnotationLoc = (attributes: {
       end: parseInt(startEnd.split('-')[1].replaceAll(',', ''), 10),
     };
   }
-  return undefined;
+  return { start: undefined, end: undefined };
 };
 
 /**
@@ -69,9 +69,10 @@ const getAnnotationLoc = (attributes: {
 const getProteinOrSequenceLength = (attributes: {
   location?: string;
   type?: string;
-}): number => {
+}): number | undefined => {
   if (!attributes.location || !attributes.type) return undefined;
   const { start, end } = getAnnotationLoc(attributes);
+  if (start === undefined || end === undefined) return undefined;
   if (
     Number.isNaN(start) ||
     Number.isNaN(end) ||
@@ -88,10 +89,9 @@ const getProteinOrSequenceLength = (attributes: {
 
 const formatData = (rawData: PropertyDataType[]): FormattedData => {
   const attributes: {
-    [name: string]: string | null;
+    [name: string]: string | undefined;
   } = rawData.reduce((memo, el) => {
     if (el.name)
-      // eslint-disable-next-line no-param-reassign
       memo[el.name.toLowerCase().replaceAll(':', '')] =
         el.value === null ? null : String(el.value);
     return memo;
@@ -205,7 +205,9 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
         Value:
           attributes.as_notes &&
           (() => (
-            <MultipleField value={decodeURIComponent(attributes.as_notes)} />
+            <MultipleField
+              value={decodeURIComponent(attributes.as_notes ?? '')}
+            />
           )),
       },
       {
@@ -374,7 +376,7 @@ const formatData = (rawData: PropertyDataType[]): FormattedData => {
   }
 
   const properties = [functionalData, otherData];
-  if (attributes.source.toLowerCase().includes('crispr')) {
+  if (attributes.source?.toLowerCase().includes('crispr')) {
     properties.push(crisprData);
   }
   if (attributes.pride_id) {

@@ -21,7 +21,7 @@ const SuperStudyPage: React.FC = () => {
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Super Studies', url: '/browse/super-studies' },
-    { label: slug },
+    { label: slug ?? '' },
   ];
   const logoAbs = config.api_v2 + data.logo_url;
   return (

@@ -64,27 +64,22 @@ const LatestStudies: React.FC = () => {
         className="vf-grid vf-grid__col-1 latest-studies-section"
         heightPx={800}
       >
-        {/* eslint-disable-next-line camelcase */}
+        {}
         {data.items.map(
           ({
             accession,
-            // eslint-disable-next-line camelcase
             updated_at,
             biome,
             title,
           }: {
-            // eslint-disable-next-line react/no-unused-prop-types
-            accession: string;
-            // eslint-disable-next-line react/no-unused-prop-types
+            accession?: string;
             updated_at: string;
-            // eslint-disable-next-line react/no-unused-prop-types
             biome: { lineage: string };
-            // eslint-disable-next-line react/no-unused-prop-types
             title: string;
           }) => (
             <LatestStudy
-              key={accession}
-              id={accession}
+              key={accession as string}
+              id={accession as string}
               name={title}
               lineage={biome.lineage}
               abstract={`Last updated on ${new Date(

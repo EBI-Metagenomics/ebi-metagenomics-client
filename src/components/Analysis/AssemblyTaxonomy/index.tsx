@@ -2,14 +2,18 @@ import React, { useContext } from 'react';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import 'src/components/Analysis/Taxonomy/style.css';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-import { Download } from 'interfaces';
+import { Download } from '@/interfaces';
+import InfoBanner from 'components/UI/InfoBanner';
 
 const AssemblyTaxonomy: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
-  const kronaFile = analysisData.downloads.find(
+  const kronaFile = analysisData?.downloads.find(
     (file: Download) =>
       file.download_type === 'Taxonomic analysis' && file.file_type === 'html'
   );
+
+  if (!kronaFile)
+    return <InfoBanner title="No taxonomy data available" type="warning" />;
 
   return (
     <div className="vf-stack vf-stack--400">

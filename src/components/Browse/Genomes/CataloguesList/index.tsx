@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { getBiomeIcon } from '@/utils/biomes';
 import { Link } from 'react-router-dom';
@@ -8,13 +8,19 @@ import EMGTable from 'components/UI/EMGTable';
 import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
 import BiomeSelector from 'components/UI/BiomeSelector';
 import { some } from 'lodash-es';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+
+const { usePage, usePageSize, useOrder, useBiome, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('', {
+    biome: SharedTextQueryParam(''),
+  });
 
 const BrowseGenomesByCatalogue: React.FC = () => {
-  const [page] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
+  const [page] = usePage<number>();
+  const [order] = useOrder<string>();
+  const [pageSize] = usePageSize<number>();
   const [hasData, setHasData] = useState(false);
-  const [biome] = useQueryParamState('biome', '');
+  const [biome] = useBiome<string>();
   const {
     data: genomesList,
     loading,
@@ -76,7 +82,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         id: 'last_update',
         Header: 'Last Updated',
         accessor: 'attributes.last-update',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
       },
     ],
     []
@@ -89,9 +95,9 @@ const BrowseGenomesByCatalogue: React.FC = () => {
   const isBiomeCatalogued = (lineage) => {
     if (!allCatalogues.data) return true;
     return some(allCatalogues.data, (catalogue) => {
-      return (catalogue as MGnifyDatum).relationships.biome.data.id.startsWith(
-        lineage
-      );
+      return !!(
+        catalogue as MGnifyDatum
+      )?.relationships?.biome?.data?.id.startsWith(lineage);
     });
   };
 
@@ -122,4 +128,4 @@ const BrowseGenomesByCatalogue: React.FC = () => {
   );
 };
 
-export default BrowseGenomesByCatalogue;
+export default withQueryParamProvider(BrowseGenomesByCatalogue);

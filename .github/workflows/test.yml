@@ -38,7 +38,9 @@ jobs:
 
       - name: 🔧 - Install deps
         working-directory: client-repo
-        run: npm ci
+        run: |
+          npm ci
+          npm i -g concurrently
 
       - name: 🧹 - ESlint
         working-directory: client-repo
@@ -50,7 +52,7 @@ jobs:
         with:
           working-directory: client-repo
           browser: chrome
-          start: npm run start
+          start: concurrently -k "npm run serve:fixtures" "npm run start"
           wait-on: http://localhost:9000/
           wait-on-timeout: 60
         env:

@@ -5,16 +5,19 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 
 const PAGE_SIZE = 25;
 
+const { usePfamPage, usePfamPageSize, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('pfam', {}, PAGE_SIZE);
+
 const PfamTable: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
-  const [page] = useQueryParamState('page', 1, Number);
-  const [pageSize] = useQueryParamState('page_size', PAGE_SIZE, Number);
+  const [page] = usePfamPage<number>();
+  const [pageSize] = usePfamPageSize<number>();
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
-    `analyses/${overviewData.id}/pfam-entries`,
+    overviewData ? `analyses/${overviewData.id}/pfam-entries` : undefined,
     {
       page: page as number,
       page_size: pageSize as number,
@@ -48,8 +51,9 @@ const PfamTable: React.FC = () => {
       isStale={isStale}
       showPagination
       downloadURL={downloadURL}
+      namespace="pfam"
     />
   );
 };
 
-export default PfamTable;
+export default withQueryParamProvider(PfamTable);

@@ -98,34 +98,37 @@ const ClosedReferenceMarkerGeneTable: React.FC<
               </div>
             </td>
             <td className="vf-table__cell">
-              {groupedClosedRefMarkerGenes.SSU.bacteria.read_count > 0 ? (
+              {(groupedClosedRefMarkerGenes?.SSU?.bacteria?.read_count ?? 0) >
+              0 ? (
                 <span className="read-count-value bacteria-count">
-                  {groupedClosedRefMarkerGenes.SSU.bacteria.read_count.toLocaleString()}
+                  {groupedClosedRefMarkerGenes?.SSU?.bacteria?.read_count.toLocaleString()}
                 </span>
               ) : (
                 <span className="na-value">N/A</span>
               )}
             </td>
             <td className="vf-table__cell">
-              {groupedClosedRefMarkerGenes.SSU.archaea.read_count > 0 ? (
+              {(groupedClosedRefMarkerGenes?.SSU?.archaea?.read_count ?? 0) >
+              0 ? (
                 <span className="read-count-value archaea-count">
-                  {groupedClosedRefMarkerGenes.SSU.archaea.read_count.toLocaleString()}
+                  {groupedClosedRefMarkerGenes?.SSU?.archaea?.read_count.toLocaleString()}
                 </span>
               ) : (
                 <span className="na-value">N/A</span>
               )}
             </td>
             <td className="vf-table__cell">
-              {groupedClosedRefMarkerGenes.SSU.eukarya.read_count > 0 ? (
+              {(groupedClosedRefMarkerGenes?.SSU?.eukarya?.read_count ?? 0) >
+              0 ? (
                 <span className="read-count-value eukarya-count">
-                  {groupedClosedRefMarkerGenes.SSU.eukarya.read_count.toLocaleString()}
+                  {groupedClosedRefMarkerGenes?.SSU?.eukarya?.read_count.toLocaleString()}
                 </span>
               ) : (
                 <span className="na-value">N/A</span>
               )}
             </td>
             <td className="vf-table__cell view-buttons-cell">
-              {groupedClosedRefMarkerGenes.SSU.view_available &&
+              {groupedClosedRefMarkerGenes?.SSU?.view_available &&
               groupedClosedRefMarkerGenes.SSU.total_read_count > 0 ? (
                 <button
                   type="button"
@@ -167,52 +170,52 @@ const ClosedReferenceMarkerGeneTable: React.FC<
                       }}
                     >
                       <div className="stacked-bar-container">
-                        {groupedClosedRefMarkerGenes.SSU.bacteria.read_count >
-                          0 && (
+                        {(groupedClosedRefMarkerGenes?.SSU?.bacteria
+                          ?.read_count ?? 0) > 0 && (
                           <div
                             className="stacked-bar-segment bacteria-bar"
                             style={{
                               width: `${
-                                (groupedClosedRefMarkerGenes.SSU.bacteria
-                                  .read_count /
+                                ((groupedClosedRefMarkerGenes?.SSU?.bacteria
+                                  ?.read_count ?? 0) /
                                   groupedClosedRefMarkerGenes.SSU
                                     .total_read_count) *
                                 100
                               }%`,
                             }}
-                            title={`Bacteria: ${groupedClosedRefMarkerGenes.SSU.bacteria.read_count.toLocaleString()} reads`}
+                            title={`Bacteria: ${groupedClosedRefMarkerGenes?.SSU?.bacteria?.read_count.toLocaleString()} reads`}
                           />
                         )}
-                        {groupedClosedRefMarkerGenes.SSU.archaea.read_count >
-                          0 && (
+                        {(groupedClosedRefMarkerGenes?.SSU?.archaea
+                          ?.read_count ?? 0) > 0 && (
                           <div
                             className="stacked-bar-segment archaea-bar"
                             style={{
                               width: `${
-                                (groupedClosedRefMarkerGenes.SSU.archaea
-                                  .read_count /
+                                ((groupedClosedRefMarkerGenes?.SSU?.archaea
+                                  ?.read_count ?? 0) /
                                   groupedClosedRefMarkerGenes.SSU
                                     .total_read_count) *
                                 100
                               }%`,
                             }}
-                            title={`Archaea: ${groupedClosedRefMarkerGenes.SSU.archaea.read_count.toLocaleString()} reads`}
+                            title={`Archaea: ${groupedClosedRefMarkerGenes?.SSU?.archaea?.read_count.toLocaleString()} reads`}
                           />
                         )}
-                        {groupedClosedRefMarkerGenes.SSU.eukarya.read_count >
-                          0 && (
+                        {(groupedClosedRefMarkerGenes?.SSU?.eukarya
+                          ?.read_count ?? 0) > 0 && (
                           <div
                             className="stacked-bar-segment eukarya-bar"
                             style={{
                               width: `${
-                                (groupedClosedRefMarkerGenes.SSU.eukarya
-                                  .read_count /
+                                ((groupedClosedRefMarkerGenes?.SSU?.eukarya
+                                  ?.read_count ?? 0) /
                                   groupedClosedRefMarkerGenes.SSU
                                     .total_read_count) *
                                 100
                               }%`,
                             }}
-                            title={`Eukarya: ${groupedClosedRefMarkerGenes.SSU.eukarya.read_count.toLocaleString()} reads`}
+                            title={`Eukarya: ${groupedClosedRefMarkerGenes?.SSU?.eukarya?.read_count.toLocaleString()} reads`}
                           />
                         )}
                       </div>
@@ -260,27 +263,30 @@ const ClosedReferenceMarkerGeneTable: React.FC<
               </div>
             </td>
             <td className="vf-table__cell">
-              {groupedClosedRefMarkerGenes.LSU.bacteria.read_count > 0 ? (
+              {(groupedClosedRefMarkerGenes?.LSU?.bacteria?.read_count ?? 0) >
+              0 ? (
                 <span className="read-count-value bacteria-count">
-                  {groupedClosedRefMarkerGenes.LSU.bacteria.read_count.toLocaleString()}
+                  {groupedClosedRefMarkerGenes?.LSU?.bacteria?.read_count.toLocaleString()}
                 </span>
               ) : (
                 <span className="na-value">N/A</span>
               )}
             </td>
             <td className="vf-table__cell">
-              {groupedClosedRefMarkerGenes.LSU.archaea.read_count > 0 ? (
+              {(groupedClosedRefMarkerGenes?.LSU?.archaea?.read_count ?? 0) >
+              0 ? (
                 <span className="read-count-value archaea-count">
-                  {groupedClosedRefMarkerGenes.LSU.archaea.read_count.toLocaleString()}
+                  {groupedClosedRefMarkerGenes?.LSU?.archaea?.read_count.toLocaleString()}
                 </span>
               ) : (
                 <span className="na-value">N/A</span>
               )}
             </td>
             <td className="vf-table__cell">
-              {groupedClosedRefMarkerGenes.LSU.eukarya.read_count > 0 ? (
+              {(groupedClosedRefMarkerGenes?.LSU?.eukarya?.read_count ?? 0) >
+              0 ? (
                 <span className="read-count-value eukarya-count">
-                  {groupedClosedRefMarkerGenes.LSU.eukarya.read_count.toLocaleString()}
+                  {groupedClosedRefMarkerGenes?.LSU?.eukarya?.read_count.toLocaleString()}
                 </span>
               ) : (
                 <span className="na-value">N/A</span>
@@ -329,52 +335,52 @@ const ClosedReferenceMarkerGeneTable: React.FC<
                       }}
                     >
                       <div className="stacked-bar-container">
-                        {groupedClosedRefMarkerGenes.LSU.bacteria.read_count >
-                          0 && (
+                        {(groupedClosedRefMarkerGenes?.LSU?.bacteria
+                          ?.read_count ?? 0) > 0 && (
                           <div
                             className="stacked-bar-segment bacteria-bar"
                             style={{
                               width: `${
-                                (groupedClosedRefMarkerGenes.LSU.bacteria
-                                  .read_count /
+                                ((groupedClosedRefMarkerGenes?.LSU?.bacteria
+                                  ?.read_count ?? 0) /
                                   groupedClosedRefMarkerGenes.LSU
                                     .total_read_count) *
                                 100
                               }%`,
                             }}
-                            title={`Bacteria: ${groupedClosedRefMarkerGenes.LSU.bacteria.read_count.toLocaleString()} reads`}
+                            title={`Bacteria: ${groupedClosedRefMarkerGenes?.LSU?.bacteria?.read_count.toLocaleString()} reads`}
                           />
                         )}
-                        {groupedClosedRefMarkerGenes.LSU.archaea.read_count >
-                          0 && (
+                        {(groupedClosedRefMarkerGenes?.LSU?.archaea
+                          ?.read_count ?? 0) > 0 && (
                           <div
                             className="stacked-bar-segment archaea-bar"
                             style={{
                               width: `${
-                                (groupedClosedRefMarkerGenes.LSU.archaea
-                                  .read_count /
+                                ((groupedClosedRefMarkerGenes?.LSU?.archaea
+                                  ?.read_count ?? 0) /
                                   groupedClosedRefMarkerGenes.LSU
                                     .total_read_count) *
                                 100
                               }%`,
                             }}
-                            title={`Archaea: ${groupedClosedRefMarkerGenes.LSU.archaea.read_count.toLocaleString()} reads`}
+                            title={`Archaea: ${groupedClosedRefMarkerGenes?.LSU?.archaea?.read_count.toLocaleString()} reads`}
                           />
                         )}
-                        {groupedClosedRefMarkerGenes.LSU.eukarya.read_count >
-                          0 && (
+                        {(groupedClosedRefMarkerGenes?.LSU?.eukarya
+                          ?.read_count ?? 0) > 0 && (
                           <div
                             className="stacked-bar-segment eukarya-bar"
                             style={{
                               width: `${
-                                (groupedClosedRefMarkerGenes.LSU.eukarya
-                                  .read_count /
+                                ((groupedClosedRefMarkerGenes?.LSU?.eukarya
+                                  ?.read_count ?? 0) /
                                   groupedClosedRefMarkerGenes.LSU
                                     .total_read_count) *
                                 100
                               }%`,
                             }}
-                            title={`Eukarya: ${groupedClosedRefMarkerGenes.LSU.eukarya.read_count.toLocaleString()} reads`}
+                            title={`Eukarya: ${groupedClosedRefMarkerGenes?.LSU?.eukarya?.read_count.toLocaleString()} reads`}
                           />
                         )}
                       </div>

@@ -72,7 +72,7 @@ export const MainPublicationForResource: React.FC<{
         <>
           <p className="vf-text-body vf-text-body--3">{citationPretext}</p>
           <Publication
-            id={publication.id}
+            id={undefined}
             title={publication.title}
             journal={publication.journal}
             year={publication.year}
@@ -113,7 +113,7 @@ const Publications: React.FC = () => {
         .map((pub) => (
           <article key={pub.doi}>
             <Publication
-              id={pub.id}
+              id={undefined}
               title={pub.title}
               journal={pub.journal}
               year={pub.year}

@@ -18,7 +18,7 @@ export type ConfigType = {
     [feature: string]: boolean;
   };
   matomo: {
-    baseUrl: string;
+    urlBase: string;
     siteId: number;
   };
   jupyterLabURL: string;

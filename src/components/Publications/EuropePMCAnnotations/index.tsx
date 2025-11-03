@@ -11,7 +11,7 @@ import Accordion, {
 } from 'components/UI/Accordion';
 import EMGModal from 'components/UI/EMGModal';
 import { usePublicationAnnotations } from 'hooks/data/usePublicationDetail';
-import { AnnotationGroup } from 'interfaces';
+import { AnnotationGroup } from 'interfaces/index';
 
 const AnnotationSuperGroup: React.FC<{
   superGroup: AnnotationGroup[];
@@ -119,7 +119,7 @@ const PublicationAnnotations: React.FC<PublicationAnnotationProps> = ({
   if (error) return <FetchError error={error} />;
 
   const hasAnnotations = !!(
-    annotations?.sample_processing?.length || annotations.other?.length
+    annotations?.sample_processing?.length || annotations?.other?.length
   );
 
   return (
@@ -175,7 +175,7 @@ export const PublicationAnnotationsPopupBadge: React.FC<
   if (error) return <FetchError error={error} />;
 
   const hasAnnotations = !!(
-    annotations?.sample_processing?.length || annotations.other?.length
+    annotations?.sample_processing?.length || annotations?.other?.length
   );
   if (!hasAnnotations) return null;
   return (

@@ -180,7 +180,7 @@
 }
 
 /* Make "Not calculated" more subtle */
-.vf-table__cell div:not([class]) {
+.vf-table__cell div.not-available {
   display: inline-flex;
   align-items: center;
   padding: 0.4rem 0.65rem;

@@ -33,7 +33,6 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
   );
   const categoriesDescriptions = (data.data as MGnifyDatum[]).reduce(
     (memo, d) => {
-      // eslint-disable-next-line no-param-reassign
       memo[d.attributes.name as string] = d.attributes.description;
       return memo;
     },
@@ -57,7 +56,6 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
     categories,
   };
   options.tooltip = {
-    /* eslint-disable react/no-this-in-sfc */
     formatter() {
       const description = categoriesDescriptions[this.key];
       let tooltip = `${this.series.name}<br/>Count: ${this.y}`;
@@ -66,7 +64,6 @@ const COGAnalises: React.FC<{ includePangenomes?: boolean }> = ({
       }
       return tooltip;
     },
-    /* eslint-enable react/no-this-in-sfc */
   };
   options.series = [
     {

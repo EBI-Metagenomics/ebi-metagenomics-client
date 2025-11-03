@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
-import { clearParams } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
+import { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+
+const { useQuery, withQueryParamProvider } = createSharedQueryParamContext({
+  query: SharedTextQueryParam(''),
+});
 
 const TextSearch: React.FC = () => {
-  const [query, setQuery, { actionDispatcher }] = useQueryParamState(
-    'query',
-    ''
-  );
+  const [query, setQuery] = useQuery();
+
   const [searchTerms, setSearchTerms] = useState(query as string);
   useEffect(() => {
     setSearchTerms(query as string);
@@ -48,7 +50,7 @@ const TextSearch: React.FC = () => {
             type="button"
             className="vf-search__button | vf-button vf-button--tertiary mg-text-search-clear vf-button--sm"
             onClick={() => {
-              actionDispatcher(clearParams({}));
+              setQuery('');
             }}
           >
             <span className="vf-button__text">Clear All </span>
@@ -60,4 +62,4 @@ const TextSearch: React.FC = () => {
   );
 };
 
-export default TextSearch;
+export default withQueryParamProvider(TextSearch);

@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import useData, { DataResponse, KeyValue } from '@/hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
+import { isNil } from 'lodash-es';
 
 const getDownloadURL =
   (api: string, endpoint: string, parameters: KeyValue) => (total: number) => {
@@ -36,7 +37,7 @@ const useEBISearchData: (
   const url = `${config.ebisearch}${endpoint}?${Object.entries(allParemeters)
     .map(([key, value]) => `${key}=${value}`)
     .join('&')}`;
-  const data = useData([null, undefined].includes(endpoint) ? null : url);
+  const data = useData(isNil(endpoint) ? null : url);
   const dataEBI = data as EBIDataResponse;
   dataEBI.getDownloadURL = getDownloadURL(config.api, endpoint, allParemeters);
   return dataEBI;

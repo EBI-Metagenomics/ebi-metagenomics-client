@@ -14,9 +14,12 @@ import { Track } from 'utils/trackView';
 import { useEffectOnce } from 'react-use';
 
 const extractSchema = async (crateZip: JSZip): Promise<object> => {
-  const metadataJson = await crateZip
-    .file('ro-crate-metadata.json')
-    .async('string');
+  const metadataJsonFile = crateZip.file('ro-crate-metadata.json');
+  if (!metadataJsonFile) {
+    // TODO: toast or equivalent
+    throw new Error('No metadata file found in crate');
+  }
+  const metadataJson = await metadataJsonFile.async('string');
 
   const metadata = JSON.parse(metadataJson);
   const trackCrate = new ROCrate(metadata, {
@@ -30,7 +33,7 @@ const extractSchema = async (crateZip: JSZip): Promise<object> => {
 const extractGffIfExists = async (
   crateZip: JSZip,
   schema: ROCrate
-): Promise<string> => {
+): Promise<string | undefined> => {
   let filePointer;
   schema.hasPart.forEach((dataset) => {
     if (
@@ -40,13 +43,19 @@ const extractGffIfExists = async (
       filePointer = dataset['@id'];
     }
   });
-  return filePointer ? crateZip.file(filePointer).async('base64') : null;
+  if (!filePointer) {
+    return undefined;
+  }
+  if (!crateZip.file(filePointer)) {
+    return undefined;
+  }
+  return crateZip.file(filePointer)?.async('base64');
 };
 
 const getTrackProperties = async (
   schema: ROCrate,
-  gff: string,
-  crateURL: string
+  crateURL: string,
+  gff?: string
 ): Promise<Track> => {
   const name = schema.name[0]['@value'].split(' ')[0];
   return {
@@ -63,15 +72,19 @@ const getTrackProperties = async (
   };
 };
 
-const getHTMLFile = async (zip: JSZip, filename?: string): Promise<string> => {
+const getHTMLFile = async (
+  zip: JSZip,
+  filename?: string
+): Promise<string | undefined> => {
   const htmlFile = filename || 'ro-crate-preview.html';
-  return zip.file(htmlFile).async('string');
+  return zip.file(htmlFile)?.async('string');
 };
 
 const hydrateStorableCrate = async (
   storableCrate: StorableCrate
 ): Promise<Crate> => {
   const crateZip: JSZip = await JSZip.loadAsync(storableCrate.zipBlob);
+  if (!storableCrate.gff) return storableCrate;
   return {
     ...storableCrate,
     zip: crateZip,
@@ -85,16 +98,16 @@ const fetchAndStoreCrate = async (crateURL: string): Promise<Crate> => {
   const zipBlob = await crate.blob();
   const crateZip = await JSZip.loadAsync(zipBlob);
   const schema = await extractSchema(crateZip);
-  let gff = null;
+  let gff: Maybe<string>;
   try {
     gff = await extractGffIfExists(crateZip, schema);
-  } catch (Error) {
+  } catch {
     // Just here to prevent breakage
   }
   const newCrate: StorableCrate = {
     url: crateURL,
     zipBlob,
-    track: gff ? await getTrackProperties(schema, gff, crateURL) : null,
+    track: gff ? await getTrackProperties(schema, crateURL, gff) : undefined,
     schema,
     gff,
   };
@@ -121,7 +134,7 @@ const fetchAndStoreCrate = async (crateURL: string): Promise<Crate> => {
 // };
 
 const getCrate = async (crateURL: string): Promise<Crate> => {
-  let crate: Crate = await db.crates.get({ url: crateURL });
+  let crate: Maybe<Crate> = await db.crates.get({ url: crateURL });
   if (crate) {
     crate = await hydrateStorableCrate(crate);
   } else {
@@ -130,16 +143,16 @@ const getCrate = async (crateURL: string): Promise<Crate> => {
   return crate;
 };
 
-const getOfflineCrate = async (): Promise<Crate> => {
-  let crate: Crate = await db.crates.filter(isOfflineCrate).first();
+const getOfflineCrate = async (): Promise<Maybe<Crate>> => {
+  let crate: Crate | undefined = await db.crates.filter(isOfflineCrate).first();
   if (crate) {
     crate = await hydrateStorableCrate(crate);
   }
   return crate;
 };
 
-export const useCrate = (crateURL: string): Crate => {
-  const [crate, setCrate] = useState(null);
+export const useCrate = (crateURL: string): Maybe<Crate> => {
+  const [crate, setCrate] = useState<Maybe<Crate>>();
 
   useEffect(() => {
     if (!crateURL) return;
@@ -191,7 +204,7 @@ export const useCrates = (associatedCratesUrl: string): Crates => {
 export const useOfflineCrate = () => {
   const [crate, setCrate] = useState<Crate>();
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error>();
 
   useEffectOnce(() => {
     getOfflineCrate().then(setCrate);
@@ -199,13 +212,13 @@ export const useOfflineCrate = () => {
 
   const uploadCrate = async (file: File) => {
     setIsUploading(true);
-    setError(null);
+    setError(undefined);
 
     try {
       const fileReader = new FileReader();
 
       fileReader.onload = async (event) => {
-        const zipBlob = new Blob([event.target.result]);
+        const zipBlob = new Blob([event.target?.result as string]);
         const crateZip = await JSZip.loadAsync(zipBlob);
         const schema = await extractSchema(crateZip);
         const gff = await extractGffIfExists(crateZip, schema);
@@ -214,7 +227,7 @@ export const useOfflineCrate = () => {
           url: `file:///${file.name}`,
           zipBlob,
           gff,
-          track: await getTrackProperties(schema, gff, `file:///${file.name}`),
+          track: await getTrackProperties(schema, `file:///${file.name}`, gff),
           schema,
         };
 
@@ -226,7 +239,7 @@ export const useOfflineCrate = () => {
 
       fileReader.readAsArrayBuffer(file);
     } catch (err) {
-      setError(err);
+      setError(err as Error);
     } finally {
       setIsUploading(false);
     }
@@ -234,7 +247,7 @@ export const useOfflineCrate = () => {
 
   const removeCrate = async () => {
     await db.crates.filter(isOfflineCrate).delete();
-    setCrate(null);
+    setCrate(undefined);
     window.location.reload();
   };
 

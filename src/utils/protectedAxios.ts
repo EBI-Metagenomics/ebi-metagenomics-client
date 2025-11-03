@@ -11,8 +11,7 @@ const protectedAxios = axios.create({
 });
 protectedAxios.interceptors.request.use((conf) => {
   const token = localStorage.getItem('mgnify.v2.token');
-  if (token && (conf.url.startsWith(BASE_URL) || conf.url.startsWith('/'))) {
-    // eslint-disable-next-line no-param-reassign
+  if (token && (conf.url?.startsWith(BASE_URL) || conf.url?.startsWith('/'))) {
     conf.headers.Authorization = `Bearer ${token}`;
   }
   return conf;

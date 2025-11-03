@@ -94,14 +94,14 @@ const ColumnChart: React.FC<ColumnChartProps> = ({
       },
     },
     tooltip: {
-      /* eslint-disable react/no-this-in-sfc */
       formatter() {
+        // @ts-ignore
         const perc = (100 * this.y) / total;
+        // @ts-ignore
         return `${this.x}<br/><b>${this.y}</b> ${sequencesType} (${perc.toFixed(
           2
         )}%)`;
       },
-      /* eslint-enable react/no-this-in-sfc */
     },
     legend: {
       enabled: false,
@@ -121,14 +121,16 @@ const ColumnChart: React.FC<ColumnChartProps> = ({
       align: 'right',
       verticalAlign: 'middle',
       layout: 'vertical',
-      /* eslint-disable react/no-this-in-sfc */
+
       labelFormatter() {
+        // @ts-ignore
         if (this.name.length > 15) {
+          // @ts-ignore
           return `${this.name.slice(0, 15)}...`;
         }
+        // @ts-ignore
         return this.name;
       },
-      /* eslint-enable react/no-this-in-sfc */
     };
   }
   return (

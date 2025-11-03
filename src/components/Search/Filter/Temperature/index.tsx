@@ -8,7 +8,8 @@ const MIN = -20;
 const MAX = 100;
 
 const TemperatureFilter: React.FC = () => {
-  const [temperature, setTemperature] = useQueryParamState('temperature', '');
+  const [temperature, setTemperature] =
+    useQueryParamState<string>('temperature');
   const [enabled, setEnabled] = useState(!!temperature);
   const [range, setRange] = useState(
     temperature.split(',').filter(Boolean).map(Number)

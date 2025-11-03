@@ -3,25 +3,25 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './style.css';
 
 import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
-import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
-import { createParamFromURL } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
 import Link from 'components/UI/Link';
 import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
+import { noop } from 'lodash-es';
 
 const HeroHeader: React.FC = () => {
-  const searchBox = useRef<HTMLInputElement>();
-  const location = useLocation();
+  const searchBox = useRef<HTMLInputElement | null>(null);
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const [isAccessionLike, setIsAccessionLike] = useState(false);
   const [nextURL, setNextURL] = useState('/search/studies');
-  const { dispatch } = useQueryParamsStore();
   const setSearchQuery = (query: string) => {
-    dispatch(
-      createParamFromURL({
-        name: 'query',
-        value: query,
-      })
-    );
+    // TODO
+    console.log('setSearchQuery', query);
+    // dispatch(
+    //   createParamFromURL({
+    //     name: 'query',
+    //     value: query,
+    //   })
+    // );
   };
 
   const handleInput = () => {
@@ -36,7 +36,7 @@ const HeroHeader: React.FC = () => {
   useEffect(() => {
     // ensures jump/search button state resets when using back button
     handleInput();
-  }, [location]);
+  }, [pathname]);
 
   return (
     <section className="vf-hero vf-hero--400 | vf-u-fullbleed">
@@ -67,13 +67,13 @@ const HeroHeader: React.FC = () => {
             className="vf-form vf-form--search vf-form--search--mini | vf-sidebar vf-sidebar--end"
             onSubmit={async (e) => {
               e.preventDefault();
-              const searchText = searchBox.current.value;
+              const searchText = searchBox.current?.value;
               if (!isAccessionLike) {
-                setSearchQuery(searchText);
+                setSearchQuery(searchText ?? '');
               }
               navigate(nextURL);
-              searchBox.current.value = '';
-              searchBox.current.blur();
+              if (searchBox.current) searchBox.current.value = '';
+              searchBox.current?.blur();
             }}
           >
             <div className="vf-sidebar__inner">
@@ -107,10 +107,10 @@ const HeroHeader: React.FC = () => {
                   type={isAccessionLike ? 'button' : 'submit'}
                   onClick={
                     !isAccessionLike
-                      ? null
+                      ? noop
                       : () => {
-                          const searchText = searchBox.current.value;
-                          setSearchQuery(searchText);
+                          const searchText = searchBox.current?.value;
+                          setSearchQuery(searchText ?? '');
                           navigate('/search/submit');
                         }
                   }
