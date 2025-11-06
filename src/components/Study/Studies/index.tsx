@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
-import { PublicationStudy } from 'interfaces/index';
+import { PublicationStudy, Study } from '@/interfaces';
 
 type AssociatedStudiesProps = {
-  associatedStudies: PublicationStudy[];
+  associatedStudies: PublicationStudy[] | Study[];
 };
 const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
   associatedStudies,

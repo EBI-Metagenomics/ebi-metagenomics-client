@@ -214,7 +214,6 @@ const EMGTable = <T extends object>({
     // Handle external (e.g. URL query param) load/change of sorting column
     if (!sortable) return;
     const orderParamSpecifiedExternally = ordering;
-    console.log(`orderParamSpecifiedExternally`, orderParamSpecifiedExternally);
     const orderParamCurrentlyInTable =
       getOrderingQueryParamFromSortedColumn(sortBy);
     if (orderParamSpecifiedExternally !== orderParamCurrentlyInTable) {

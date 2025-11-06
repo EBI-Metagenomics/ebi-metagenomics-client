@@ -1,0 +1,40 @@
+{
+  "count": 3,
+  "items":
+  [
+    {
+      "accession": "SAMN07793787",
+      "biome":
+      {
+        "biome_name": "Engineered",
+        "lineage": "root:Engineered"
+      },
+      "ena_accessions":
+      [
+        "SAMN07793787"
+      ],
+      "sample_title": "Space station dust",
+      "updated_at": "2025-11-04T11:54:50.580Z"
+    },
+    {
+      "accession": "SAMN07793788",
+      "biome": null,
+      "ena_accessions":
+      [
+        "SAMN07793788"
+      ],
+      "sample_title": null,
+      "updated_at": "2025-11-04T11:54:50.268Z"
+    },
+    {
+      "accession": "SAMN08514017",
+      "biome": null,
+      "ena_accessions":
+      [
+        "SAMN08514017"
+      ],
+      "sample_title": null,
+      "updated_at": "2025-11-04T11:54:50.270Z"
+    }
+  ]
+}

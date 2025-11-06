@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 import BrowseStudies from 'components/Browse/Studies';
 import BrowseSuperStudies from 'components/Browse/SuperStudies';
-// import BrowseSamples from 'components/Browse/Samples';
+import BrowseSamples from 'components/Browse/Samples';
 import BrowsePublications from 'components/Browse/Publications';
 // import BrowseGenomes from 'components/Browse/Genomes';
 // import BrowseBiomes from 'components/Browse/Biomes';
@@ -13,7 +13,7 @@ import Breadcrumbs from 'components/Nav/Breadcrumbs';
 const tabs = [
   { label: 'Super Studies', to: '/browse/super-studies' },
   { label: 'Studies', to: '/browse/studies' },
-  // { label: 'Samples', to: '/browse/samples' },
+  { label: 'Samples', to: '/browse/samples' },
   { label: 'Publications', to: '/browse/publications' },
   // { label: 'Genomes', to: '/browse/genomes' },
   // { label: 'Biomes', to: '/browse/biomes' },
@@ -42,7 +42,7 @@ const Browse: React.FC = () => {
         <Routes>
           <Route path="super-studies" element={<BrowseSuperStudies />} />
           <Route path="studies" element={<BrowseStudies />} />
-          {/* <Route path="samples" element={<BrowseSamples />} /> */}
+          <Route path="samples" element={<BrowseSamples />} />
           <Route path="publications" element={<BrowsePublications />} />
           {/* <Route path="genomes" element={<BrowseGenomes />} /> */}
           {/* <Route path="biomes" element={<BrowseBiomes />} /> */}

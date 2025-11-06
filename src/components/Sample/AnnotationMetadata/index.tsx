@@ -1,79 +1,82 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import FetchError from 'components/UI/FetchError';
 import Loading from 'components/UI/Loading';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { pickBy } from 'lodash-es';
+import { uniqBy } from 'lodash-es';
 import { Link } from 'react-router-dom';
-import ExtLink from 'components/UI/ExtLink';
+import { Publication, PublicationList, SampleDetail } from '@/interfaces';
+import axios from 'axios';
+import InfoBanner from 'components/UI/InfoBanner';
+import PublicationAnnotations from 'components/Publications/EuropePMCAnnotations';
+import UserContext from 'pages/Login/UserContext';
 
-type ExistenceData = {
-  query_possible: boolean;
-  study_has_annotations: {
-    [study: string]: boolean;
-  };
-};
-
-const AnnotationMetadata: React.FC<{ sampleAccession: string }> = ({
-  sampleAccession,
-}) => {
-  const { data, loading, error } = useMGnifyData(
-    `samples/${sampleAccession}/studies_publications_annotations_existence`
+const AnnotationMetadata: React.FC<{ sample: SampleDetail }> = ({ sample }) => {
+  const [allPublications, setAllPublications] = React.useState<Publication[]>(
+    []
   );
-  if (loading) return <Loading size="large" />;
+  const { config } = useContext(UserContext);
+  const [error, setError] = React.useState<any>(null);
+  const [loadingPublications, setLoadingPublications] = React.useState(true);
+
+  useEffect(() => {
+    const ac = new AbortController();
+
+    (async () => {
+      try {
+        const responses = await Promise.all(
+          (sample.studies ?? []).map((study) =>
+            axios.get<PublicationList>(
+              `${config.api_v2}studies/${study.accession}/publications`,
+              { signal: ac.signal }
+            )
+          )
+        );
+        const pubs: Publication[] = responses.flatMap(
+          (r) => r.data.items ?? []
+        );
+        setAllPublications(pubs);
+      } catch (err) {
+        if (axios.isCancel(err)) return;
+        setError(err);
+      }
+    })();
+    setLoadingPublications(false);
+    return () => ac.abort();
+  }, [config.api_v2, sample.studies]);
+
+  if (loadingPublications) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
-  const existenceData = data.data as unknown as ExistenceData;
-  const studiesWithAnnotations = Object.keys(
-    pickBy(existenceData.study_has_annotations)
+
+  if (allPublications.length === 0) {
+    return (
+      <InfoBanner type="info" title="No publications found for this sample." />
+    );
+  }
+
+  return (
+    <div className="vf-box vf-box-theme--primary vf-box--easy">
+      <h5 className="vf-box__heading">Additional metadata from Publications</h5>
+      <p className="vf-box__text">
+        Additional metadata that may relate to this sample is available via
+        publications linked to the sample’s studies.
+      </p>
+      {uniqBy(allPublications, 'pubmed_id').map((pub) => (
+        <article
+          className="vf-card vf-card--brand vf-card--bordered"
+          key={pub.pubmed_id}
+        >
+          <div className="vf-card__content | vf-stack vf-stack--400">
+            <h3 className="vf-card__heading">
+              <Link to={`/publications/${pub.pubmed_id}`}>{pub.title}</Link>
+            </h3>
+            <PublicationAnnotations
+              pubmedId={String(pub.pubmed_id)}
+              key={pub.pubmed_id}
+            />
+          </div>
+        </article>
+      ))}
+    </div>
   );
-  const anyMetadata = studiesWithAnnotations.length > 0;
-
-  if (!existenceData.query_possible)
-    return (
-      <div
-        className="vf-box vf-box-theme--primary vf-box--easy"
-        style={{
-          backgroundColor: 'lemonchiffon',
-        }}
-      >
-        <h6 className="vf-box__heading">
-          <span className="icon icon-common icon-exclamation-triangle" />
-          Couldn’t check all studies for metadata
-        </h6>
-        <p className="vf-box__text">
-          Additional metadata for this sample may be available via annotations
-          on the publications linked to by the associated studies in the table
-          below. Unfortunately these couldn’t be fetched at this time &ndash;
-          please view each study to explore more.
-        </p>
-      </div>
-    );
-
-  if (anyMetadata)
-    return (
-      <div className="vf-box vf-box-theme--primary vf-box--easy">
-        <h6 className="vf-box__heading">
-          Additional metadata from Publications
-        </h6>
-        <p className="vf-box__text">
-          Additional metadata that may relate to this sample is available via
-          publications in the following associated{' '}
-          {studiesWithAnnotations.length > 1 ? 'studies' : 'study'}:{' '}
-          {studiesWithAnnotations.map((study) => (
-            <React.Fragment key={study}>
-              <Link to={`/studies/${study}`}>{study}</Link>
-              &nbsp;
-            </React.Fragment>
-          ))}
-        </p>
-        <p className="vf-box__text">
-          These additional metadata are extracted by{' '}
-          <ExtLink href="https://europepmc.org">Europe PMC</ExtLink> using
-          text-mining on the publications. Browse the studies to explore
-          further.
-        </p>
-      </div>
-    );
-  return null;
 };
 
 export default AnnotationMetadata;

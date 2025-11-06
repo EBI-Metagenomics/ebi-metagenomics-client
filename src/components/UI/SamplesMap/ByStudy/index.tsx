@@ -9,7 +9,7 @@ import '../style.css';
 import InfoBanner from '../../InfoBanner';
 import useStudySamplesList from 'hooks/data/useStudySamples';
 import Loading from 'components/UI/Loading';
-import { Sample, StudyDetail } from '@/interfaces';
+import { StudySample, StudyDetail } from '@/interfaces';
 import { uniqBy } from 'lodash-es';
 import { useCounter } from 'react-use';
 
@@ -45,7 +45,7 @@ type SamplesMapProps = {
 const SamplesMapByStudy: React.FC<SamplesMapProps> = ({ study }) => {
   const [limit, setLimit] = useState(LIMIT);
   const [currentPage, { inc: nextPage }] = useCounter(1);
-  const [allSamples, setAllSamples] = useState<Array<Sample>>([]);
+  const [allSamples, setAllSamples] = useState<Array<StudySample>>([]);
 
   const { config } = useContext(UserContext);
 
