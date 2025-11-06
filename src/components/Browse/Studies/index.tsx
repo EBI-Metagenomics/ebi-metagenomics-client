@@ -11,7 +11,7 @@ import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/Quer
 import FetchError from 'components/UI/FetchError';
 import { Study } from '@/interfaces';
 
-const { usePage, useOrder, useBiome, withQueryParamProvider } =
+const { usePage, useSearch, useOrder, useBiome, withQueryParamProvider } =
   createSharedQueryParamContextForTable('', {
     biome: SharedTextQueryParam(''),
   });
@@ -20,6 +20,7 @@ const BrowseStudies: React.FC = () => {
   const [page, setPage] = usePage<number>();
   const [order] = useOrder<string>();
   const [biome] = useBiome<string>();
+  const [search] = useSearch<string>();
 
   const [hasData, setHasData] = useState(false);
 
@@ -33,6 +34,7 @@ const BrowseStudies: React.FC = () => {
     order,
     biome_lineage: biome,
     has_analyses_from_pipeline: 'V6',
+    search,
   });
 
   const columns = React.useMemo(
@@ -100,6 +102,7 @@ const BrowseStudies: React.FC = () => {
           sortable
           loading={loading}
           onDownloadRequested={download}
+          showTextFilter
         />
       )}
     </section>

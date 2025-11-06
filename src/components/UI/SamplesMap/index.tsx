@@ -6,10 +6,10 @@ import MarkerClusterer from '@googlemaps/markerclustererplus';
 
 import './style.css';
 import LoadingDots from 'components/UI/LoadingDots';
-import { Sample, StudyDetail } from '@/interfaces';
+import { SampleDetail, Study, StudySample } from '@/interfaces';
 
 // TODO: make the link play nicer with react-router
-const MarkerPopup: React.FC<{ sample: Sample }> = ({ sample }) => (
+const MarkerPopup: React.FC<{ sample: StudySample }> = ({ sample }) => (
   <div className="vf-box vf-box--easy">
     <h3 className="vf-box__heading">
       <a href={`../samples/${sample.accession}`}>{sample.accession}</a>
@@ -33,8 +33,8 @@ const ClusterMarkerPopup: React.FC<{ accessions: string[] }> = ({
 );
 
 type MapProps = {
-  study: StudyDetail;
-  samples: Array<Sample>;
+  study: Study;
+  samples: Array<StudySample | SampleDetail>;
 };
 
 const SamplesMap: React.FC<MapProps> = ({ study, samples }) => {
@@ -50,7 +50,7 @@ const SamplesMap: React.FC<MapProps> = ({ study, samples }) => {
   const fetchPolygonCoordinates = async () => {
     try {
       const response = await axios.get(
-        `https://marineregions.org/rest/getGazetteerGeometries.ttl/${samples[0]?.metadata?.mrgid}/`
+        `https://marineregions.org/rest/getGazetteerGeometries.ttl/${samples[0]?.mrgid}/`
       );
       const rdfData = response.data as unknown as string;
       let polygonCoordinatesString = rdfData.substring(
@@ -176,7 +176,7 @@ const SamplesMap: React.FC<MapProps> = ({ study, samples }) => {
 
       // TODO: check EEZs
       if (
-        samples[0]?.metadata?.mrgid &&
+        samples[0]?.mrgid &&
         study.biome.lineage?.includes('root:Environmental:Aquatic')
       ) {
         setMarkingEezRegions(true);

@@ -1,0 +1,20 @@
+{
+  "count": 1,
+  "items":
+  [
+    {
+      "accession": "SAMN07793787",
+      "biome":
+      {
+        "biome_name": "Engineered",
+        "lineage": "root:Engineered"
+      },
+      "ena_accessions":
+      [
+        "SAMN07793787"
+      ],
+      "sample_title": "Space station dust",
+      "updated_at": "2025-11-04T11:54:50.580Z"
+    }
+  ]
+}

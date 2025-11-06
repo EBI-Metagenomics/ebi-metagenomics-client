@@ -15,6 +15,8 @@ export interface Biome {
   lineage: string;
 }
 
+export type BiomeList = PaginatedList<Biome>;
+
 export interface Download {
   download_group: string;
   alias: string;
@@ -30,11 +32,21 @@ export interface Download {
 }
 
 export interface Sample extends EnaDerivedObject {
-  metadata?: Record<string, any>;
-  studies?: Study[];
+  sample_title: string;
+  biome?: Biome;
+  updated_at?: string;
 }
 
 export type SampleList = PaginatedList<Sample>;
+
+export interface StudySample extends Sample {
+  metadata?: Record<string, any>;
+}
+
+export interface SampleDetail extends Sample {
+  metadata?: Record<string, any>;
+  studies?: Study[];
+}
 
 export interface Run extends EnaDerivedObject {
   instrument_model: string | null;
