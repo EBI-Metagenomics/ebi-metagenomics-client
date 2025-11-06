@@ -21,5 +21,11 @@
       "index_file": null,
       "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089//study-summaries/amplicon_study_summary.tsv"
     }
-  ]
+  ],
+  "metadata": {
+    "study_name": "Tomato metagenomes",
+    "center_name": "Fifty Seven",
+    "study_title": "Tomato microbiome",
+    "study_description": "Microbiome sampling of a tomato skin."
+  }
 }

@@ -1,0 +1,19 @@
+{
+  "count": 1,
+  "items": [
+    {
+      "pubmed_id": 1,
+      "title": "The Origin of Species",
+      "published_year": 1859,
+      "metadata": {
+        "authors": "Charles Darwin",
+        "doi": "10.1017/CBO9780511694295",
+        "isbn": "9780511694295",
+        "iso_journal": "Cambridge University Press",
+        "pubmed_central_id": 1,
+        "volume": "1",
+        "pub_type": "Book"
+      }
+    }
+  ]
+}
