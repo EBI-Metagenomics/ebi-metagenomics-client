@@ -17,6 +17,10 @@ describe('Study page', function() {
           {fixture: 'apiv2/studies/studyMGYS00000001AnalysesPage1.json'}).as('getAnalysesPage1');
         cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=2`,
           {fixture: 'apiv2/studies/studyMGYS00000001AnalysesPage2.json'}).as('getAnalysesPage2');
+        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/publications**`,
+          {fixture: 'apiv2/studies/studyMGYS00000001Publications.json'}).as('getPublications');
+        cy.intercept('GET', `${config.api_v2}/publications/1/annotations`,
+          {fixture: 'apiv2/publications/publication1Annotations.json'});
     })
     context('General', function() {
         beforeEach(function() {
@@ -32,14 +36,9 @@ describe('Study page', function() {
                 .should('contain', 'Study MGYS00000001');
             cy.get('[data-cy=study-external-links]').should('contain', 'ENA website (PRJNA398089)');
             cy.contains('Host-associated:Plants').should('exist');
-            // TODO: other elements
-            // cy.contains('Publications').scrollIntoView();
-            // cy.contains('A longitudinal study of the diabetic skin and wound microbiome.');
-            // cy.contains('Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.')
-            //     .should('be.visible');
-            // cy.get('#europe_pmc_links > li').should('contain', '2017 5');
-            // cy.get('#europe_pmc_links > li > a').should('contain', '28740749');
-            // cy.get('#europe_pmc_links > li > a').should('contain', '10.7717/peerj.3543');
+            cy.contains('Microbiome sampling of a tomato skin.').should('exist');
+            cy.contains('Publications').scrollIntoView();
+            cy.contains("Cambridge University Press").should('be.visible');
         });
 
         it('External links should all be valid', function() {

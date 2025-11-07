@@ -1,0 +1,17 @@
+{
+  "count": 1,
+  "items": [
+    {
+      "accession": "MGYS00000001",
+      "ena_accessions": [
+        "PRJNA398089"
+      ],
+      "title": "Project 1",
+      "biome": {
+        "biome_name": "Plants",
+        "lineage": "root:Host-associated:Plants"
+      },
+      "updated_at": "2025-07-29T11:32:54.168Z"
+    }
+  ]
+}

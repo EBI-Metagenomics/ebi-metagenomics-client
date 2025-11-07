@@ -10,15 +10,27 @@ import UserContext from 'pages/Login/UserContext';
 // import { PublicationAnnotationsPopupBadge } from 'components/Publications/EuropePMCAnnotations';
 import ProgrammaticAccessBox from 'components/UI/ProgrammaticAccess';
 import { ENA_VIEW_URL } from 'utils/urls';
-import { Study } from '@/interfaces';
+import { StudyDetail } from '@/interfaces';
+import SamplesMapByStudy from 'components/UI/SamplesMap/ByStudy';
+import useStudyPublications from 'hooks/data/useStudyPublications';
+import FetchError from 'components/UI/FetchError';
+import Loading from 'components/UI/Loading';
+import { Publication } from 'components/Publications';
+import { PublicationAnnotationsPopupBadge } from 'components/Publications/EuropePMCAnnotations';
 
 type StudyOverviewProps = {
-  data: Study;
+  data: StudyDetail;
 };
 const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
   const { config } = useContext(UserContext);
   const lineage = data.biome?.lineage || '';
-  // const publications = included.filter(({ type }) => type === 'publications');
+  const {
+    data: publications,
+    loading: loadingPublications,
+    error,
+  } = useStudyPublications(data.accession);
+  if (error) return <FetchError error={error} />;
+  if (loadingPublications) return <Loading size={'large'} />;
   return (
     <section>
       <div className="vf-grid">
@@ -41,9 +53,9 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
             />
             <div>{lineage}</div>
           </Box>
-          {/* <Box label="Description">{data.attributes['study-abstract']}</Box> */}
+          <Box label="Description">{data.metadata.study_description}</Box>
         </div>
-        {/* <SamplesMapByStudy study={data.id} /> */}
+        {data.accession && <SamplesMapByStudy study={data} />}
       </div>
       <br />
       <div className="mg-flex">
@@ -70,31 +82,30 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
               </ul>
             </Box>
           )}
-          {/* {publications?.length > 0 && ( */}
-          {/*  <Box label="Publications"> */}
-          {/*    <ul className="vf-list"> */}
-          {/*      {publications.map(({ attributes, id }) => ( */}
-          {/*        <li key={id as string}> */}
-          {/*          <Publication */}
-          {/*            id={id} */}
-          {/*            title={attributes['pub-title']} */}
-          {/*            journal={attributes['iso-journal']} */}
-          {/*            year={attributes['published-year']} */}
-          {/*            link={`http://dx.doi.org/${attributes.doi}`} */}
-          {/*            doi={attributes.doi} */}
-          {/*            authors={attributes.authors} */}
-          {/*            maxAuthorsLength={70} */}
-          {/*          > */}
-          {/*            <PublicationAnnotationsPopupBadge */}
-          {/*              publicationId={id} */}
-          {/*              pubmedId={attributes['pubmed-id']} */}
-          {/*            /> */}
-          {/*          </Publication> */}
-          {/*        </li> */}
-          {/*      ))} */}
-          {/*    </ul> */}
-          {/*  </Box> */}
-          {/* )} */}
+          {publications?.items?.length && (
+            <Box label="Publications">
+              <ul className="vf-list">
+                {publications.items.map((pub) => (
+                  <li key={String(pub.pubmed_id)}>
+                    <Publication
+                      id={String(pub.pubmed_id)}
+                      title={pub.title}
+                      journal={pub.metadata?.iso_journal || 'unknown'}
+                      year={pub.published_year}
+                      link={`http://dx.doi.org/${pub.metadata.doi}`}
+                      doi={pub.metadata.doi || ''}
+                      authors={pub.metadata.authors}
+                      maxAuthorsLength={70}
+                    >
+                      <PublicationAnnotationsPopupBadge
+                        pubmedId={String(pub.pubmed_id)}
+                      />
+                    </Publication>
+                  </li>
+                ))}
+              </ul>
+            </Box>
+          )}
         </div>
       </div>
       <ProgrammaticAccessBox

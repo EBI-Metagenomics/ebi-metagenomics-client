@@ -1,16 +1,19 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 import { Wrapper } from '@googlemaps/react-wrapper';
-
-import useSamplesProvider from '@/hooks/data/useSamplesProvider';
 
 import UserContext from 'pages/Login/UserContext';
 import SamplesMap from 'components/UI/SamplesMap';
 import render from '../render';
 import '../style.css';
 import InfoBanner from '../../InfoBanner';
+import useStudySamplesList from 'hooks/data/useStudySamples';
+import Loading from 'components/UI/Loading';
+import { StudySample, StudyDetail } from '@/interfaces';
+import { uniqBy } from 'lodash-es';
+import { useCounter } from 'react-use';
 
-const LIMIT = 200;
+const LIMIT = 1000;
 
 type LoadMoreSamplesProps = {
   total: number;
@@ -37,32 +40,70 @@ const LoadMoreSamples: React.FC<LoadMoreSamplesProps> = ({
     </div>
   ) : null;
 type SamplesMapProps = {
-  study: string;
+  study: StudyDetail;
 };
 const SamplesMapByStudy: React.FC<SamplesMapProps> = ({ study }) => {
   const [limit, setLimit] = useState(LIMIT);
-  const { samples, total } = useSamplesProvider(study, limit);
+  const [currentPage, { inc: nextPage }] = useCounter(1);
+  const [allSamples, setAllSamples] = useState<Array<StudySample>>([]);
+
   const { config } = useContext(UserContext);
 
-  const samplesFiltered = samples.filter((sample) => {
+  const {
+    data: samples,
+    error,
+    loading,
+  } = useStudySamplesList(study.accession, {
+    pageSize: 200,
+    page: currentPage,
+  });
+
+  useEffect(() => {
+    if (samples?.items) {
+      setAllSamples((prev) =>
+        uniqBy([...prev, ...samples.items], (sample) => sample.accession)
+      );
+    }
+  }, [samples?.items]);
+
+  useEffect(() => {
+    if (samples?.count) {
+      if (samples.count > allSamples.length && allSamples.length < limit) {
+        nextPage();
+      }
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allSamples.length, limit, nextPage]);
+
+  if (error) {
+    return (
+      <InfoBanner type={'error'} title={'Could not fetch study’s samples'} />
+    );
+  }
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  const samplesFiltered = allSamples.filter((sample) => {
     try {
       return (
-        Number(sample.attributes.longitude) !== 0.0 &&
-        Number(sample.attributes.latitude) !== 0.0
+        Number(sample?.metadata?.lon ?? false) !== 0.0 &&
+        Number(sample?.metadata?.lat ?? false) !== 0.0
       );
     } catch {
       return false;
     }
   });
-  if (samplesFiltered.length === 0) {
+  if (samplesFiltered?.length === 0) {
     return (
       <InfoBanner type="info" title="Notice">
-        None of the {(total || 0) > limit ? 'loaded' : ''} samples have geolocation
-        co-ordinates.
+        None of the {(samples?.count ?? 0) > limit ? 'loaded' : ''} samples have
+        geolocation co-ordinates.
         <LoadMoreSamples
-          total={total || 0}
+          total={samples?.count ?? 0}
           limit={limit}
-          handleRequest={() => setLimit(total || Infinity)}
+          handleRequest={() => setLimit(samples?.count || Infinity)}
         />
       </InfoBanner>
     );
@@ -72,16 +113,16 @@ const SamplesMapByStudy: React.FC<SamplesMapProps> = ({ study }) => {
     <div className="mg-map-container">
       <div className="mg-map-wrapper">
         <Wrapper apiKey={config.googleMapsKey} render={render}>
-          <SamplesMap samples={samplesFiltered} />
+          <SamplesMap samples={samplesFiltered || []} study={study}/>
         </Wrapper>
       </div>
-      {total && (
+      {samples?.count && (
         <div className="mg-map-progress">
-          <progress max={total} value={samples.length} />
+          <progress max={samples?.count} value={allSamples.length} />
           <LoadMoreSamples
-            total={total}
+            total={samples?.count}
             limit={limit}
-            handleRequest={() => setLimit(total)}
+            handleRequest={() => setLimit(samples?.count)}
           />
         </div>
       )}
