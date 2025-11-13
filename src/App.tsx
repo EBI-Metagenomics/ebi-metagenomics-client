@@ -11,7 +11,11 @@ import MainMenu from 'components/Nav/MainMenu';
 import Loading from 'components/UI/Loading';
 import ErrorBoundary from 'components/ErrorBoundary';
 import MyData from 'pages/MyData';
-import UserContext, { UserContextType, UserDetails, UserType } from 'pages/Login/UserContext';
+import UserContext, {
+  UserContextType,
+  UserDetails,
+  UserType,
+} from 'pages/Login/UserContext';
 
 import './App.css';
 import './styles/biomes.css';
@@ -73,7 +77,7 @@ const App: React.FC = () => {
   );
 
   return (
-    <BrowserRouter basename={config.basename}>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <UserContext.Provider value={value}>
         <Matomo />
         <ToastContainer />

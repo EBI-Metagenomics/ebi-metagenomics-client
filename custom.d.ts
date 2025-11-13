@@ -64,6 +64,12 @@ declare global {
     id: string;
     show_directory_checkbox: boolean;
   }
+
+  interface ImportMeta {
+    env: {
+      BASE_URL: string;
+    };
+  }
 }
 
 declare module 'igv' {
@@ -123,4 +129,4 @@ declare module 'react-table' {
   }
 }
 
-export {}
+export {};
