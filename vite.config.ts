@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
 
   return {
-    base: env.VITE_BASE_URL ?? 'base-not-set',
+    base: env.VITE_BASE_URL ?? '/metagenomics',
     plugins: [react()],
     resolve: {
       alias: {

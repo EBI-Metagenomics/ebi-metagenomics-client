@@ -27,6 +27,12 @@ export type ConfigType = {
   };
 };
 
-export default merge(config, privateConfig || {}, {
-  basename: import.meta.env.BASE_URL, // overrides config AND privateConfig
-});
+export default merge(
+  config,
+  privateConfig || {},
+  import.meta.env
+    ? {
+        basename: import.meta.env.BASE_URL, // overrides config AND privateConfig
+      }
+    : {}
+);
