@@ -144,7 +144,7 @@
       "file_type": "gff",
       "long_description": "Consolidated annotations from the various functional and gene cluster annotation tools as a GFF (general feature format) file",
       "short_description": "Summary GFF of all functional annotations",
-      "download_group": "functional_annotation.summary",
+      "download_group": "annotation_summary",
       "file_size_bytes": null,
       "index_files": [
         {

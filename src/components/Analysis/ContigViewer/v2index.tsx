@@ -46,9 +46,7 @@ const ContigsViewer: React.FC = () => {
     if (!data) return null;
     return find(
       data.downloads,
-      (d) =>
-        d.file_type === 'gff' &&
-        d.download_group === 'functional_annotation.summary'
+      (d) => d.file_type === 'gff' && d.download_group === 'annotation_summary'
     );
   }, [data]);
 
