@@ -26,29 +26,41 @@ export default defineConfig({
       writeBundle() {
         // Copy the component file to dist after build
         copyFileSync(
-          resolve(__dirname, 'mgnify-component/mgnify-sourmash-component.js'),
+          resolve(
+            __dirname,
+            'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.js'
+          ),
           resolve(__dirname, 'dist/mgnify-sourmash-component.js')
         );
         copyFileSync(
           resolve(
             __dirname,
-            'mgnify-component/mgnify-sourmash-component.worker.js'
+            'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
           ),
-          resolve(__dirname, 'dist/mgnify-sourmash-component.worker.js')
+          resolve(
+            __dirname,
+            'dist/node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
+          )
         );
         copyFileSync(
           resolve(
             __dirname,
-            'mgnify-component/225.mgnify-sourmash-component.worker.js'
+            'node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
           ),
-          resolve(__dirname, 'dist/225.mgnify-sourmash-component.worker.js')
+          resolve(
+            __dirname,
+            'dist/node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
+          )
         );
         copyFileSync(
           resolve(
             __dirname,
-            'mgnify-component/9495c69393edaf0e1c7c.module.wasm'
+            'node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
           ),
-          resolve(__dirname, 'dist/9495c69393edaf0e1c7c.module.wasm')
+          resolve(
+            __dirname,
+            'dist/node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
+          )
         );
       },
     },

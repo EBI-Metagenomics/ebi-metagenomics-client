@@ -186,7 +186,20 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               accessor: 'bioproject',
               Cell: ({ row }) => {
                 const entry = row.original as any;
-                return <span>{entry.bioproject}</span>;
+                const bioproject = entry.bioproject;
+                if (!bioproject) {
+                  return <span>—</span>;
+                }
+                return (
+                  <a
+                    href={`https://www.ebi.ac.uk/ena/browser/view/${bioproject}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="vf-link"
+                  >
+                    {bioproject}
+                  </a>
+                );
               },
             },
 
