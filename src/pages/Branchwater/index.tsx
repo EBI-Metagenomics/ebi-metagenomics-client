@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from 'react';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import Plot from 'react-plotly.js';
 import CobsSearch from 'components/Genomes/Cobs';
@@ -273,22 +279,15 @@ const Branchwater = () => {
   const countUniqueValuesAndOccurrences = (
     valueList: any[]
   ): { uniqueValues: any[]; countVal: number[] } => {
-    const counts: Record<string, number> = {};
-    const uniqueValues = [...new Set(valueList)];
-
-    for (let i = 0; i < uniqueValues.length; i++) {
-      const val = uniqueValues[i];
-      // Convert val to string to use as object key
-      const key = String(val);
-      counts[key] = valueList.filter((value) => value === val).length;
+    // Single-pass frequency map to avoid O(n^2) behavior
+    const counts = new Map<string, number>();
+    for (const v of valueList) {
+      const key = String(v ?? '');
+      counts.set(key, (counts.get(key) ?? 0) + 1);
     }
-
-    const countVal = uniqueValues.map((val) => counts[String(val)]);
-
-    return {
-      uniqueValues,
-      countVal,
-    };
+    const uniqueValues = Array.from(counts.keys());
+    const countVal = uniqueValues.map((k) => counts.get(k) as number);
+    return { uniqueValues, countVal };
   };
 
   const prepareVisualizationData = useCallback(
@@ -452,6 +451,260 @@ const Branchwater = () => {
     window.open(submitUrl, '_blank');
   };
 
+  const [locationFilter] = useQueryParamState('geo_loc_name_country_calc', '');
+  const [organismFilter] = useQueryParamState('organism', '');
+  const [assayTypeFilter] = useQueryParamState('assay_type', '');
+
+  // Update getFilteredResults to include faceted filters
+  const getFilteredResults = useCallback((): SearchResult[] => {
+    if (!Array.isArray(searchResults)) {
+      console.error('searchResults is not an array:', searchResults);
+      return [];
+    }
+
+    const globalQuery = (textQuery || '').toString().trim().toLowerCase();
+
+    return searchResults.filter((item) => {
+      // Apply global text query across common fields (if provided)
+      if (globalQuery) {
+        const haystack = [
+          item.acc,
+          item.assay_type,
+          item.bioproject,
+          item.collection_date_sam,
+          item.geo_loc_name_country_calc,
+          item.organism,
+        ]
+          .map((v) => (v == null ? '' : String(v).toLowerCase()))
+          .join(' ');
+        if (!haystack.includes(globalQuery)) return false;
+      }
+
+      // Apply text-based field-specific filters first
+      const matchesTextFilters = Object.keys(filters).every((key) => {
+        if (!filters[key]) return true;
+        const itemValue = String(item[key] || '').toLowerCase();
+        const filterValue = filters[key].toLowerCase();
+        return itemValue.includes(filterValue);
+      });
+      if (!matchesTextFilters) return false;
+
+      // Apply faceted filters from query params
+      if (locationFilter) {
+        const selectedLocations = locationFilter.split(',').filter(Boolean);
+        if (
+          selectedLocations.length > 0 &&
+          !selectedLocations.includes(item.geo_loc_name_country_calc)
+        ) {
+          return false;
+        }
+      }
+
+      if (organismFilter) {
+        const selectedOrganisms = organismFilter.split(',').filter(Boolean);
+        if (
+          selectedOrganisms.length > 0 &&
+          !selectedOrganisms.includes(item.organism)
+        ) {
+          return false;
+        }
+      }
+
+      if (assayTypeFilter) {
+        const selectedTypes = assayTypeFilter.split(',').filter(Boolean);
+        if (
+          selectedTypes.length > 0 &&
+          !selectedTypes.includes(item.assay_type)
+        ) {
+          return false;
+        }
+      }
+
+      // Apply cANI numeric range filter
+      if (caniRange) {
+        const [minStr, maxStr] = caniRange.split(',');
+        const min = Number(minStr);
+        const max = Number(maxStr);
+
+        if (!Number.isNaN(min) && !Number.isNaN(max)) {
+          const val = item.cANI;
+          const num = typeof val === 'number' ? val : Number(val);
+
+          if (Number.isNaN(num)) return false;
+
+          const EPSILON = 0.0001;
+          if (num < min - EPSILON || num > max + EPSILON) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    });
+  }, [
+    searchResults,
+    filters,
+    caniRange,
+    locationFilter,
+    organismFilter,
+    assayTypeFilter,
+    textQuery,
+  ]);
+
+  // Apply sorting to filtered results
+  const getSortedResults = (
+    filteredResults: SearchResult[]
+  ): SearchResult[] => {
+    // Prefer ordering from EMGTable's sortable query param if present
+    const orderStr = typeof detailedOrder === 'string' ? detailedOrder : '';
+    const effectiveField = orderStr ? orderStr.replace(/^-/, '') : sortField;
+    const effectiveDirection: 'asc' | 'desc' = orderStr
+      ? orderStr.startsWith('-')
+        ? 'desc'
+        : 'asc'
+      : sortDirection;
+
+    if (!effectiveField) return filteredResults;
+
+    return [...filteredResults].sort((a, b) => {
+      const aValue = a[effectiveField] ?? '';
+      const bValue = b[effectiveField] ?? '';
+
+      // Handle numeric values
+      // eslint-disable-next-line no-restricted-globals
+      if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
+        return effectiveDirection === 'asc'
+          ? Number(aValue) - Number(bValue)
+          : Number(bValue) - Number(aValue);
+      }
+
+      // Handle string values (including dates treated as strings)
+      const comparison = String(aValue).localeCompare(String(bValue));
+      return effectiveDirection === 'asc' ? comparison : -comparison;
+    });
+  };
+
+  // Get paginated results
+  const getPaginatedResults = (
+    sortedResults: SearchResult[]
+  ): SearchResult[] => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return sortedResults.slice(startIndex, startIndex + itemsPerPage);
+  };
+
+  // Calculate total pages
+  const getTotalPages = (filteredResults: SearchResult[]): number => {
+    return Math.ceil(filteredResults.length / itemsPerPage);
+  };
+
+  // Memoized processed results to avoid recomputation on every render
+  const processedResults = useMemo(() => {
+    const filteredResults = getFilteredResults();
+    const sortedResults = getSortedResults(filteredResults);
+    const paginatedResults = getPaginatedResults(sortedResults);
+    const totalPages = getTotalPages(filteredResults);
+    return { filteredResults, sortedResults, paginatedResults, totalPages };
+  }, [
+    getFilteredResults,
+    sortField,
+    sortDirection,
+    detailedOrder,
+    currentPage,
+    itemsPerPage,
+  ]);
+
+  // Keep existing API for children expecting a function
+  const processResults = useCallback(
+    () => processedResults,
+    [processedResults]
+  );
+
+  // Containment histogram bins/counts memoized
+  const containmentHistogram = useMemo(() => {
+    const binsAsc = Array.from(
+      { length: 10 },
+      (_, i) => `${(i / 10).toFixed(1)}-${((i + 1) / 10).toFixed(1)}`
+    );
+    const countsAsc = new Array(10).fill(0) as number[];
+    for (const r of searchResults) {
+      if (typeof r.containment === 'number') {
+        const idx = Math.min(Math.floor(r.containment * 10), 9);
+        countsAsc[idx]++;
+      }
+    }
+    return {
+      binsDesc: [...binsAsc].reverse(),
+      countsDesc: [...countsAsc].reverse(),
+    };
+  }, [searchResults]);
+
+  // Scatter plot data: single pass + downsampling, memoized
+  const scatterData = useMemo(() => {
+    const xs: number[] = [];
+    const ys: number[] = [];
+    const texts: string[] = [];
+    const colors: string[] = [];
+    for (const r of searchResults) {
+      const hasNums =
+        typeof r.containment === 'number' && typeof r.cANI === 'number';
+      if (!hasNums) continue;
+      xs.push(r.containment as number);
+      ys.push(r.cANI as number);
+      texts.push(
+        `${r.acc}\nCountry: ${
+          r.geo_loc_name_country_calc || 'Unknown'
+        }\nOrganism: ${r.organism || 'Unknown'}`
+      );
+      colors.push(
+        r.assay_type === 'WGS'
+          ? 'rgba(255, 99, 132, 0.8)'
+          : 'rgba(54, 162, 235, 0.8)'
+      );
+    }
+    const MAX_POINTS = 20000;
+    if (xs.length <= MAX_POINTS) {
+      return { xs, ys, texts, colors, sampled: false, total: xs.length };
+    }
+    // Downsample by deterministic stride to keep distribution without RNG
+    const stride = Math.ceil(xs.length / MAX_POINTS);
+    const sxs: number[] = [];
+    const sys: number[] = [];
+    const stexts: string[] = [];
+    const scols: string[] = [];
+    for (let i = 0; i < xs.length; i += stride) {
+      sxs.push(xs[i]);
+      sys.push(ys[i]);
+      stexts.push(texts[i]);
+      scols.push(colors[i]);
+    }
+    return {
+      xs: sxs,
+      ys: sys,
+      texts: stexts,
+      colors: scols,
+      sampled: true,
+      total: xs.length,
+    };
+  }, [searchResults]);
+
+  // Country totals memoized for stats table
+  const totalCountryCount = useMemo(
+    () => Object.values(countryCounts).reduce((sum, c) => sum + c, 0),
+    [countryCounts]
+  );
+
+  // Limit number of map pins rendered; allow progressive loading
+  const [mapPinsLimit, setMapPinsLimit] = useState<number>(1000);
+  const displayedMapSamples = useMemo(
+    () => (Array.isArray(mapSamples) ? mapSamples.slice(0, mapPinsLimit) : []),
+    [mapSamples, mapPinsLimit]
+  );
+
+  // Reset pin limit when new samples arrive
+  useEffect(() => {
+    setMapPinsLimit(1000);
+  }, [searchResults]);
+
   const handleSearchClick = (
     event: React.MouseEvent<HTMLButtonElement>
   ): void => {
@@ -570,107 +823,6 @@ const Branchwater = () => {
     // }
   };
 
-  // Add query param states for the faceted filters
-  const [locationFilter] = useQueryParamState('geo_loc_name_country_calc', '');
-  const [organismFilter] = useQueryParamState('organism', '');
-  const [assayTypeFilter] = useQueryParamState('assay_type', '');
-
-  // Update getFilteredResults to include faceted filters
-  const getFilteredResults = useCallback((): SearchResult[] => {
-    if (!Array.isArray(searchResults)) {
-      console.error('searchResults is not an array:', searchResults);
-      return [];
-    }
-
-    const globalQuery = (textQuery || '').toString().trim().toLowerCase();
-
-    return searchResults.filter((item) => {
-      // Apply global text query across common fields (if provided)
-      if (globalQuery) {
-        const haystack = [
-          item.acc,
-          item.assay_type,
-          item.bioproject,
-          item.collection_date_sam,
-          item.geo_loc_name_country_calc,
-          item.organism,
-        ]
-          .map((v) => (v == null ? '' : String(v).toLowerCase()))
-          .join(' ');
-        if (!haystack.includes(globalQuery)) return false;
-      }
-
-      // Apply text-based field-specific filters first
-      const matchesTextFilters = Object.keys(filters).every((key) => {
-        if (!filters[key]) return true;
-        const itemValue = String(item[key] || '').toLowerCase();
-        const filterValue = filters[key].toLowerCase();
-        return itemValue.includes(filterValue);
-      });
-      if (!matchesTextFilters) return false;
-
-      // Apply faceted filters from query params
-      if (locationFilter) {
-        const selectedLocations = locationFilter.split(',').filter(Boolean);
-        if (
-          selectedLocations.length > 0 &&
-          !selectedLocations.includes(item.geo_loc_name_country_calc)
-        ) {
-          return false;
-        }
-      }
-
-      if (organismFilter) {
-        const selectedOrganisms = organismFilter.split(',').filter(Boolean);
-        if (
-          selectedOrganisms.length > 0 &&
-          !selectedOrganisms.includes(item.organism)
-        ) {
-          return false;
-        }
-      }
-
-      if (assayTypeFilter) {
-        const selectedTypes = assayTypeFilter.split(',').filter(Boolean);
-        if (
-          selectedTypes.length > 0 &&
-          !selectedTypes.includes(item.assay_type)
-        ) {
-          return false;
-        }
-      }
-
-      // Apply cANI numeric range filter
-      if (caniRange) {
-        const [minStr, maxStr] = caniRange.split(',');
-        const min = Number(minStr);
-        const max = Number(maxStr);
-
-        if (!Number.isNaN(min) && !Number.isNaN(max)) {
-          const val = item.cANI;
-          const num = typeof val === 'number' ? val : Number(val);
-
-          if (Number.isNaN(num)) return false;
-
-          const EPSILON = 0.0001;
-          if (num < min - EPSILON || num > max + EPSILON) {
-            return false;
-          }
-        }
-      }
-
-      return true;
-    });
-  }, [
-    searchResults,
-    filters,
-    caniRange,
-    locationFilter,
-    organismFilter,
-    assayTypeFilter,
-    textQuery,
-  ]);
-
   // Updated useEffect for handling search results
   useEffect(() => {
     if (searchResults.length > 0) {
@@ -784,71 +936,8 @@ const Branchwater = () => {
     setCurrentPage(page);
   };
 
-  // Apply sorting to filtered results
-  const getSortedResults = (
-    filteredResults: SearchResult[]
-  ): SearchResult[] => {
-    // Prefer ordering from EMGTable's sortable query param if present
-    const orderStr = typeof detailedOrder === 'string' ? detailedOrder : '';
-    const effectiveField = orderStr ? orderStr.replace(/^-/, '') : sortField;
-    const effectiveDirection: 'asc' | 'desc' = orderStr
-      ? orderStr.startsWith('-')
-        ? 'desc'
-        : 'asc'
-      : sortDirection;
-
-    if (!effectiveField) return filteredResults;
-
-    return [...filteredResults].sort((a, b) => {
-      const aValue = a[effectiveField] ?? '';
-      const bValue = b[effectiveField] ?? '';
-
-      // Handle numeric values
-      // eslint-disable-next-line no-restricted-globals
-      if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
-        return effectiveDirection === 'asc'
-          ? Number(aValue) - Number(bValue)
-          : Number(bValue) - Number(aValue);
-      }
-
-      // Handle string values (including dates treated as strings)
-      const comparison = String(aValue).localeCompare(String(bValue));
-      return effectiveDirection === 'asc' ? comparison : -comparison;
-    });
-  };
-
-  // Get paginated results
-  const getPaginatedResults = (
-    sortedResults: SearchResult[]
-  ): SearchResult[] => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return sortedResults.slice(startIndex, startIndex + itemsPerPage);
-  };
-
-  // Calculate total pages
-  const getTotalPages = (filteredResults: SearchResult[]): number => {
-    return Math.ceil(filteredResults.length / itemsPerPage);
-  };
-
   // Process results for display
-  const processResults = (): {
-    filteredResults: SearchResult[];
-    sortedResults: SearchResult[];
-    paginatedResults: SearchResult[];
-    totalPages: number;
-  } => {
-    const filteredResults = getFilteredResults();
-    const sortedResults = getSortedResults(filteredResults);
-    const paginatedResults = getPaginatedResults(sortedResults);
-    const totalPages = getTotalPages(filteredResults);
-
-    return {
-      filteredResults,
-      sortedResults,
-      paginatedResults,
-      totalPages,
-    };
-  };
+  // Replaced by memoized `processedResults` + `processResults` wrapper above
 
   // Export helpers: build CSV and trigger download using current processed results
   const downloadCSV = () => {
@@ -962,6 +1051,32 @@ const Branchwater = () => {
   };
 
   const handleExampleSubmit = () => {
+    setShowMgnifySourmash(false);
+    setUploadedFile(null);
+    setSearchResults([]);
+    setSignature(null);
+    setVisualizationData(null);
+    setMapSamples([]);
+    setFilters({
+      acc: '',
+      assay_type: '',
+      bioproject: '',
+      // cANI: '',
+      collection_date_sam: '',
+      containment: '',
+      geo_loc_name_country_calc: '',
+      organism: '',
+    });
+    setSortField('');
+    setSortDirection('asc');
+    setCurrentPage(1);
+    const fileInput = document.getElementById(
+      'file-upload'
+    ) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+
     setShowMgnifySourmash(true);
     setIsLoading(true);
     const examples = [
@@ -977,7 +1092,7 @@ const Branchwater = () => {
       },
       {
         id: 'example-mag-3rd',
-        accession: 'MGYG000000001',
+        accession: 'MGYG000001346',
         catalogue: 'human-gut-v2-0-2',
       },
     ];
@@ -1248,11 +1363,11 @@ const Branchwater = () => {
                       Peptostreptococcaceae — Human Gut &nbsp;{' '}
                       <a
                         className="vf-link"
-                        href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000000001#overview"
+                        href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000001346#overview"
                         target="_blank"
                         rel="noreferrer"
                       >
-                        MGYG000000001
+                        MGYG000001346
                       </a>
                     </label>
                   </div>
@@ -1389,9 +1504,9 @@ const Branchwater = () => {
                         <button
                           className="vf-button vf-button--secondary vf-button--sm"
                           onClick={downloadCSV}
-                          disabled={!processResults().sortedResults.length}
+                          disabled={!processedResults.sortedResults.length}
                           title={
-                            processResults().sortedResults.length
+                            processedResults.sortedResults.length
                               ? 'Download current results as CSV'
                               : 'No results to download'
                           }
@@ -1627,6 +1742,33 @@ const Branchwater = () => {
                       )}
 
                       <div style={{ width: '100%', height: '500px' }}>
+                        {/* Pin capping controls */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '8px',
+                          }}
+                        >
+                          <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                            Showing{' '}
+                            {displayedMapSamples.length.toLocaleString()} of{' '}
+                            {mapSamples.length.toLocaleString()} pins
+                          </div>
+                          {displayedMapSamples.length < mapSamples.length && (
+                            <button
+                              className="vf-button vf-button--secondary vf-button--sm"
+                              onClick={() =>
+                                setMapPinsLimit((prev) =>
+                                  Math.min(prev + 1000, mapSamples.length)
+                                )
+                              }
+                            >
+                              Load more pins (+1,000)
+                            </button>
+                          )}
+                        </div>
                         <MapContainer
                           center={[20, 0]}
                           zoom={2}
@@ -1641,8 +1783,8 @@ const Branchwater = () => {
                             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
                           />
 
-                          {/* Individual sample markers */}
-                          {mapSamples.map((sample) => (
+                          {/* Individual sample markers (capped) */}
+                          {displayedMapSamples.map((sample) => (
                             <Marker
                               key={sample.id}
                               position={[
@@ -1696,11 +1838,8 @@ const Branchwater = () => {
                                   {Object.entries(countryCounts)
                                     .sort(([, a], [, b]) => b - a)
                                     .map(([country, count]) => {
-                                      const total = Object.values(
-                                        countryCounts
-                                      ).reduce((sum, c) => sum + c, 0);
                                       const percentage = (
-                                        (count / total) *
+                                        (count / totalCountryCount) *
                                         100
                                       ).toFixed(1);
                                       return (
@@ -1729,50 +1868,23 @@ const Branchwater = () => {
                         style={{ width: '100%', height: '400px' }}
                       >
                         <Plot
-                          data={(() => {
-                            // make ascending bins and counts first
-                            const binsAsc = Array.from(
-                              { length: 10 },
-                              (_, i) =>
-                                `${(i / 10).toFixed(1)}-${(
-                                  (i + 1) /
-                                  10
-                                ).toFixed(1)}`
-                            );
-                            const countsAsc = new Array(10).fill(0);
-
-                            searchResults.forEach((r) => {
-                              if (typeof r.containment === 'number') {
-                                const idx = Math.min(
-                                  Math.floor(r.containment * 10),
-                                  9
-                                );
-                                countsAsc[idx]++;
-                              }
-                            });
-
-                            // reverse for display: 1.0–0.9, …, 0.1–0.0
-                            const binsDesc = [...binsAsc].reverse();
-                            const countsDesc = [...countsAsc].reverse();
-
-                            return [
-                              {
-                                x: binsDesc,
-                                y: countsDesc,
-                                type: 'bar',
-                                marker: {
-                                  color: 'rgba(54, 162, 235, 0.7)',
-                                  line: {
-                                    color: 'rgba(54, 162, 235, 1)',
-                                    width: 1,
-                                  },
+                          data={[
+                            {
+                              x: containmentHistogram.binsDesc,
+                              y: containmentHistogram.countsDesc,
+                              type: 'bar',
+                              marker: {
+                                color: 'rgba(54, 162, 235, 0.7)',
+                                line: {
+                                  color: 'rgba(54, 162, 235, 1)',
+                                  width: 1,
                                 },
-                                name: 'Containment Distribution',
-                                hovertemplate:
-                                  '%{x}<br>count=%{y}<extra></extra>',
                               },
-                            ];
-                          })()}
+                              name: 'Containment Distribution',
+                              hovertemplate:
+                                '%{x}<br>count=%{y}<extra></extra>',
+                            },
+                          ]}
                           layout={{
                             title:
                               'Distribution of Containment Scores (0.1 bin ranges)',
@@ -1781,14 +1893,7 @@ const Branchwater = () => {
                               tickangle: -45,
                               // ensure Plotly keeps our descending order
                               categoryorder: 'array',
-                              categoryarray: Array.from(
-                                { length: 10 },
-                                (_, i) =>
-                                  `${((9 - i) / 10).toFixed(1)}-${(
-                                    (10 - i) /
-                                    10
-                                  ).toFixed(1)}`
-                              ),
+                              categoryarray: containmentHistogram.binsDesc,
                             },
                             yaxis: { title: 'Count' },
                             bargap: 0.1,
@@ -1930,64 +2035,44 @@ const Branchwater = () => {
                     </h3>
                     <div
                       id="scatterDiv"
-                      style={{ width: '100%', height: '500px' }}
+                      style={{ width: '100%', height: '520px' }}
                     >
+                      {scatterData.sampled && (
+                        <div
+                          style={{
+                            fontSize: '12px',
+                            color: '#6c757d',
+                            marginBottom: '6px',
+                          }}
+                        >
+                          Showing a sampled subset of{' '}
+                          {scatterData.xs.length.toLocaleString()} points out of{' '}
+                          {scatterData.total.toLocaleString()} to keep the UI
+                          responsive.
+                        </div>
+                      )}
                       <Plot
                         data={[
                           {
-                            x: searchResults
-                              .filter(
-                                (r) =>
-                                  typeof r.containment === 'number' &&
-                                  typeof r.cANI === 'number'
-                              )
-                              .map((r) => r.containment),
-                            y: searchResults
-                              .filter(
-                                (r) =>
-                                  typeof r.containment === 'number' &&
-                                  typeof r.cANI === 'number'
-                              )
-                              .map((r) => r.cANI),
+                            x: scatterData.xs,
+                            y: scatterData.ys,
                             mode: 'markers',
                             type: 'scatter',
-                            text: searchResults
-                              .filter(
-                                (r) =>
-                                  typeof r.containment === 'number' &&
-                                  typeof r.cANI === 'number'
-                              )
-                              .map(
-                                (r) =>
-                                  `${r.acc}<br>Country: ${
-                                    r.geo_loc_name_country_calc || 'Unknown'
-                                  }<br>Organism: ${r.organism || 'Unknown'}`
-                              ),
+                            text: scatterData.texts.map((t) =>
+                              t.replace(/\n/g, '<br>')
+                            ),
                             hovertemplate:
                               '%{text}<br>Containment: %{x:.3f}<br>cANI: %{y:.3f}<extra></extra>',
                             marker: {
                               size: 8,
-                              color: searchResults
-                                .filter(
-                                  (r) =>
-                                    typeof r.containment === 'number' &&
-                                    typeof r.cANI === 'number'
-                                )
-                                .map((r) =>
-                                  r.assay_type === 'WGS'
-                                    ? 'rgba(255, 99, 132, 0.8)'
-                                    : 'rgba(54, 162, 235, 0.8)'
-                                ),
+                              color: scatterData.colors,
                               line: { width: 1, color: 'white' },
                             },
                           },
                         ]}
                         layout={{
                           title: 'Match Quality: cANI vs Containment Score',
-                          xaxis: {
-                            title: 'Containment Score',
-                            range: [0, 1],
-                          },
+                          xaxis: { title: 'Containment Score', range: [0, 1] },
                           yaxis: {
                             title:
                               'cANI (calculated Average Nucleotide Identity)',
