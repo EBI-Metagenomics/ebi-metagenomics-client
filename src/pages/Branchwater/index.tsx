@@ -101,6 +101,9 @@ const Branchwater = () => {
   const [detailedOrder] = useQueryParamState('branchwater-detailed-order', '');
 
   const [activeTab, setActiveTab] = useState('vf-tabs__section--1');
+  const [selectedExample, setSelectedExample] = useState<
+    'example-mag-1st' | 'example-mag-2nd' | 'example-mag-3rd'
+  >('example-mag-1st');
 
   // Filtering state
   const [filters, setFilters] = useState<Filters>({
@@ -469,17 +472,6 @@ const Branchwater = () => {
         mode: 'cors',
         credentials: 'omit',
       });
-      // fetch('http://branchwater-dev.mgnify.org/', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     Accept: '*/*',
-      //   },
-      //   body: JSON.stringify({
-      //     // signatures: signature,
-      //     signatures: JSON.stringify(signature),
-      //   }),
-      // })
 
       fetch('http://branchwater-dev.mgnify.org/', {
         headers: {
@@ -923,6 +915,16 @@ const Branchwater = () => {
     setActiveTab(tabId);
   };
 
+  const handleExampleSubmit = () => {
+    if (selectedExample === 'gene') {
+      setActiveTab('vf-tabs__section--1');
+    } else if (selectedExample === 'mag') {
+      setActiveTab('vf-tabs__section--2');
+    } else {
+      setActiveTab('vf-tabs__section--3');
+    }
+  };
+
   // @ts-ignore
   // @ts-ignore
   // @ts-ignore
@@ -999,6 +1001,37 @@ const Branchwater = () => {
           }}
         >
           <h2>Search Metagenomes</h2>
+          <div className="vf-u-margin__top--400">
+            <details className="vf-details">
+              <summary className="vf-details--summary">Instructions</summary>
+              <p className="vf-text-body vf-text-body--3">
+                Use the Browse button below to select a FastA file
+              </p>
+              <p className="vf-text-body vf-text-body--3">
+                <strong>Sourmash</strong> runs in your browser to create compact
+                signatures which are then sent to our servers.
+              </p>
+              <p className="vf-text-body vf-text-body--3">
+                <strong>Branchwater</strong> then compares these signatures
+                against over 1,161,119 metagenomes and also assocaites the
+                relevant metadata to the results.
+              </p>
+              <p className="vf-text-body vf-text-body--3">
+                Sequences shorter than 10kb will rarely produce results. Quality
+                of the match to the uploaded genome is represented by the cANI
+                score (calculated from containment). The relationship between
+                cANI and taxonomic level of the match varies with the genome of
+                interest. In general, matches are most robust to the genus
+                taxonomic level and a cANI greater than 0.97 often represents a
+                species-level match.
+              </p>
+              <p className="vf-text-body vf-text-body--3">
+                Notes: processing time depends on file size and your device;
+                keep this tab open until the search completes.
+              </p>
+            </details>
+          </div>
+
           <div>
             <form className="vf-stack vf-stack--400">
               <div className="vf-form__item vf-stack">
@@ -1006,76 +1039,51 @@ const Branchwater = () => {
                   id="sourmash"
                   ref={sourmash}
                   ksize={21}
-                  show_directory_checkbox={false}
                 />
 
-                {/* <details class="mg-sourmash-readmore"> */}
-                {/*  <summary>Instructions</summary> */}
-                {/*  <p className="vf-text-body vf-text-body--3"> */}
-                {/*    Use the Browse button below to select a FastA file */}
-                {/*  </p> */}
-                {/*  <p className="vf-text-body vf-text-body--3"> */}
-                {/*    Your sequences are <strong>not</strong> uploaded. Instead, */}
-                {/*    `sourmash` runs in your browser to create compact signatures */}
-                {/*    (sketches) from your file(s) and compares them with the */}
-                {/*    MGnify catalogue you choose (MAGs or Metagenomes). Only */}
-                {/*    these signatures and match results are sent to our servers. */}
-                {/*  </p> */}
-                {/*  <p className="vf-text-body vf-text-body--3"> */}
-                {/*    Each submitted signature generates a CSV result. All CSVs */}
-                {/*    are packaged into a single `.tgz` so you can download */}
-                {/*    everything in one click. Results are stored for 30 */}
-                {/*    days—please download them before they expire. */}
-                {/*  </p> */}
-                {/*  <p className="vf-text-body vf-text-body--3"> */}
-                {/*    Notes: processing time depends on file size and your device; */}
-                {/*    keep this tab open until the search completes. Directory */}
-                {/*    mode processes FastA files only and does not descend into */}
-                {/*    subdirectories. This tool uses a k-mer size of `21`. */}
-                {/*  </p> */}
-                {/* </details> */}
+                {/* TODO:  Confirm if this is still necessary, seeing as there is already a MAG search tab */}
 
-                <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
-                  <legend className="vf-form__legend">
-                    Select target database
-                  </legend>
+                {/* <fieldset className="vf-form__fieldset vf-stack vf-stack--400"> */}
+                {/*  <legend className="vf-form__legend"> */}
+                {/*    Select target database */}
+                {/*  </legend> */}
 
-                  <div className="vf-form__item vf-form__item--radio">
-                    <input
-                      type="radio"
-                      name="targetDatabase"
-                      value="MAGs"
-                      id="target-db-mags"
-                      className="vf-form__radio"
-                      checked={targetDatabase === 'MAGs'}
-                      onChange={() => setTargetDatabase('MAGs')}
-                    />
-                    <label htmlFor="target-db-mags" className="vf-form__label">
-                      MAGs
-                    </label>
-                  </div>
+                {/*  <div className="vf-form__item vf-form__item--radio"> */}
+                {/*    <input */}
+                {/*      type="radio" */}
+                {/*      name="targetDatabase" */}
+                {/*      value="MAGs" */}
+                {/*      id="target-db-mags" */}
+                {/*      className="vf-form__radio" */}
+                {/*      checked={targetDatabase === 'MAGs'} */}
+                {/*      onChange={() => setTargetDatabase('MAGs')} */}
+                {/*    /> */}
+                {/*    <label htmlFor="target-db-mags" className="vf-form__label"> */}
+                {/*      MAGs */}
+                {/*    </label> */}
+                {/*  </div> */}
 
-                  <div className="vf-form__item vf-form__item--radio">
-                    <input
-                      type="radio"
-                      name="targetDatabase"
-                      value="Metagenomes"
-                      id="target-db-metagenomes"
-                      className="vf-form__radio"
-                      checked={targetDatabase === 'Metagenomes'}
-                      onChange={() => setTargetDatabase('Metagenomes')}
-                    />
-                    <label
-                      htmlFor="target-db-metagenomes"
-                      className="vf-form__label"
-                    >
-                      Metagenomes
-                    </label>
-                  </div>
-                </fieldset>
+                {/*  <div className="vf-form__item vf-form__item--radio"> */}
+                {/*    <input */}
+                {/*      type="radio" */}
+                {/*      name="targetDatabase" */}
+                {/*      value="Metagenomes" */}
+                {/*      id="target-db-metagenomes" */}
+                {/*      className="vf-form__radio" */}
+                {/*      checked={targetDatabase === 'Metagenomes'} */}
+                {/*      onChange={() => setTargetDatabase('Metagenomes')} */}
+                {/*    /> */}
+                {/*    <label */}
+                {/*      htmlFor="target-db-metagenomes" */}
+                {/*      className="vf-form__label" */}
+                {/*    > */}
+                {/*      Metagenomes */}
+                {/*    </label> */}
+                {/*  </div> */}
+                {/* </fieldset> */}
 
                 <button
-                  className="vf-button vf-button--sm vf-button--primary mg-button"
+                  className="vf-button vf-button--sm vf-button--primary mg-button vf-u-margin__top--400"
                   onClick={handleSearchClick}
                 >
                   Search
@@ -1090,6 +1098,90 @@ const Branchwater = () => {
                 </button>
               </div>
             </form>
+
+            <details className="vf-details" open>
+              <summary className="vf-details--summary">Try an example</summary>
+              <div className="vf-u-margin__top--200">
+                <fieldset className="vf-form__fieldset">
+                  <legend className="vf-form__legend">
+                    Choose an organism
+                  </legend>
+                  <div className="vf-form__item vf-form__item--radio">
+                    <input
+                      className="vf-form__radio"
+                      type="radio"
+                      id="example-mag-1st"
+                      name="exampleMag1st"
+                      value="example-mag-1st"
+                      checked={selectedExample === 'example-mag-1st'}
+                      onChange={() => setSelectedExample('example-mag-1st')}
+                    />
+                    <label className="vf-form__label" htmlFor="example-mag-1st">
+                      Sodaliphilus sp900320055 — Sheep Rumen &nbsp;
+                      <a
+                        className="vf-link"
+                        href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000304400#overview"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        MGYG000304400
+                      </a>
+                    </label>
+                  </div>
+                  <div className="vf-form__item vf-form__item--radio">
+                    <input
+                      className="vf-form__radio"
+                      type="radio"
+                      id="example-mag-2nd"
+                      name="exampleMag2nd"
+                      value="example-mag-2nd"
+                      checked={selectedExample === 'example-mag-2nd'}
+                      onChange={() => setSelectedExample('example-mag-2nd')}
+                    />
+                    <label className="vf-form__label" htmlFor="example-mag-2nd">
+                      Rhizobiaceae BOKV01— Marine &nbsp;
+                      <a
+                        className="vf-link"
+                        href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000485384#overview"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        MGYG000485384
+                      </a>
+                    </label>
+                  </div>
+                  <div className="vf-form__item vf-form__item--radio">
+                    <input
+                      className="vf-form__radio"
+                      type="radio"
+                      id="example-mag-3rd"
+                      name="exampleMag3rd"
+                      value="metagenome"
+                      checked={selectedExample === 'example-mag-3rd'}
+                      onChange={() => setSelectedExample('example-mag-3rd')}
+                    />
+                    <label className="vf-form__label" htmlFor="example-mag-3rd">
+                      Peptostreptococcaceae — Human Gut &nbsp;{' '}
+                      <a
+                        className="vf-link"
+                        href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000000001#overview"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        MGYG000000001
+                      </a>
+                    </label>
+                  </div>
+                </fieldset>
+                <button
+                  type="button"
+                  className="vf-button vf-button--sm vf-button--secondary"
+                  onClick={handleExampleSubmit}
+                >
+                  Use selected example
+                </button>
+              </div>
+            </details>
           </div>
 
           {showMgnifySourmash && (
