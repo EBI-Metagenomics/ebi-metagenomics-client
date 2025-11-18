@@ -6,7 +6,7 @@ import useAnalysisDetail from 'hooks/data/useAnalysisDetail';
 import '@fontsource/roboto';
 
 import { JBrowseLinearGenomeView } from '@jbrowse/react-linear-genome-view2';
-import { find } from 'lodash-es';
+import { find, includes } from 'lodash-es';
 import Loading from 'components/UI/Loading';
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 import DetailedVisualisationCard from '../VisualisationCards/DetailedVisualisationCard';
@@ -29,7 +29,6 @@ const ContigBrowser: React.FC = () => {
 };
 
 const ContigsViewer: React.FC = () => {
-  console.log('Rendering ContigsViewer');
   const accession = useURLAccession();
   const { data, loading, error } = useAnalysisDetail(accession);
 
@@ -42,7 +41,6 @@ const ContigsViewer: React.FC = () => {
   }, [data]);
 
   const gff = useMemo(() => {
-    console.debug('Finding GFF URL...');
     if (!data) return null;
     return find(
       data.downloads,
@@ -113,6 +111,15 @@ const ContigsViewer: React.FC = () => {
     []
   );
 
+  const additionalGffs = useMemo(() => {
+    if (!data) return [];
+    return data.downloads.filter(
+      (d) =>
+        d.file_type === 'gff' &&
+        includes(['mobilome_annotation_pipeline'], d.download_group)
+    );
+  }, [data]);
+
   if (loading || !accession) return <Loading size="small" />;
   if (error) return <p>Error loading analysis</p>;
   if (!fasta) return <p>No contigs fasta file available</p>;
@@ -147,143 +154,55 @@ const ContigsViewer: React.FC = () => {
         <Route
           path="search-contigs"
           element={
-            <LGVProvider fasta={fasta} gff={gff}>
+            <LGVProvider
+              fasta={fasta}
+              gff={gff}
+              additionalGffs={additionalGffs}
+            >
               <ContigBrowser />
               <ContigSearch
                 gffDownload={gff}
                 fastaDownload={fasta}
                 assemblyAccession={accession}
               />
+              {additionalGffs.length > 0 && (
+                <div
+                  className="vf-box vf-box-theme--primary vf-box--easy"
+                  style={{
+                    backgroundColor: '#d1e3f6',
+                  }}
+                >
+                  <div className="vf-flag vf-flag--top vf-flag--reversed vf-flag--800">
+                    <div className="vf-flag__body">
+                      <p className="vf-text-body vf-text-body--3">
+                        Additional GFFs shown are not searchable, but can be
+                        downloaded
+                        <ul className="vf-list vf-list--bare">
+                          {additionalGffs.map((d) => (
+                            <li key={d.alias}>
+                              <p className="vf-text-body vf-text-body--4">
+                                {d.short_description}:{' '}
+                                <a
+                                  href={d.url}
+                                  className="vf-link vf-link--primary vf-link--underline"
+                                >
+                                  {d.alias}
+                                </a>
+                              </p>
+                            </li>
+                          ))}
+                        </ul>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </LGVProvider>
           }
         />
       </Routes>
     </div>
   );
-
-  // const [contigsPageCursorParam] = useQueryParamState(
-  //   'contigs_page_cursor',
-  //   ''
-  // );
-  // const [selectedContigParam, setSelectedContigParam] = useQueryParamState(
-  //   'selected_contig',
-  //   ''
-  // );
-  // useQueryParamState('gff_comparison_id', '');
-  // const [contigLengthParam] = useQueryParamState('contig_length', '');
-  // const [cogCategorySearchParam] = useQueryParamState(
-  //   'cog_category_search',
-  //   ''
-  // );
-  // const [keggOrthologSearchParam] = useQueryParamState(
-  //   'kegg_ortholog_search',
-  //   ''
-  // );
-  // const [goTermSearchParam] = useQueryParamState('go_term_search', '');
-  // const [pfamSearchParam] = useQueryParamState('pfam_search', '');
-  // const [interproSearchParam] = useQueryParamState('interpro_search', '');
-  // const [antismashSearchParam] = useQueryParamState('antismash_search', '');
-  // const [annotationTypeParam] = useQueryParamState('annotation_type', '');
-  // const [contigsSearchParam] = useQueryParamState('contigs_search', '');
-  //
-  // const lengthRange = useMemo(() => {
-  //   return (contigLengthParam as string).split(',').filter(Boolean).map(Number);
-  // }, [contigLengthParam]);
-  //
-  // const { data, loading, error } = useMGnifyData(
-  //   `analyses/${accession}/contigs`,
-  //   {
-  //     cursor: contigsPageCursorParam,
-  //     search: contigsSearchParam,
-  //     gt: lengthRange[0],
-  //     lt: lengthRange[1],
-  //     cog: cogCategorySearchParam,
-  //     kegg: keggOrthologSearchParam,
-  //     go: goTermSearchParam,
-  //     pfam: pfamSearchParam,
-  //     interpro: interproSearchParam,
-  //     antismash: antismashSearchParam,
-  //     'facet[]': annotationTypeParam,
-  //   },
-  //   {}
-  // );
-  //
-  // const context = useMemo(
-  //   () => ({
-  //     contigsQueryData: { data, loading, error },
-  //   }),
-  //   [data, error, loading]
-  // );
-  //
-  // const contig = useMemo(() => {
-  //   let selectedContig;
-  //   if (!data) return null;
-  //
-  //   const selectedContigId =
-  //     selectedContigParam || data.data?.[0]?.attributes?.['contig-id'];
-  //
-  //   if (selectedContigId) {
-  //     selectedContig = find(data.data, (c: KeyValue) => {
-  //       return c.attributes['contig-id'] === selectedContigId;
-  //     });
-  //     if (selectedContig) {
-  //       return selectedContig;
-  //     }
-  //   }
-  //   return null;
-  // }, [data, selectedContigParam]);
-  //
-  // useEffect(() => {
-  //   // If a new contig is autoselected (e.g. page change), put it in URL
-  //   if (contig && contig.attributes['contig-id'] !== selectedContigParam) {
-  //     setSelectedContigParam(contig.attributes['contig-id']);
-  //   }
-  // });
-  //
-  // useEffect(() => {
-  //   // If the contig in URL isnt in the data-page, remove the bad ID from URL
-  //   if (setSelectedContigParam && data && !contig) {
-  //     setSelectedContigParam('');
-  //   }
-  // }, [data, contig, setSelectedContigParam]);
-
-  // const showContigOrLoader = () => {
-  //   if (!contig && !loading) return <p>No contig found</p>;
-  //   if (loading) return <Loading size="small" />;
-  //   if (error) return <FetchError error={error} />;
-  //   return <Contig contig={contig} />;
-  // };
-  //
-  // if (error) return <FetchError error={error} />;
-  // return (
-  //   <div className="vf-stack vf-stack--800">
-  //     <ContigsQueryContext.Provider value={context}>
-  //       <section>
-  //         <div className="vf-stack">
-  //           <details open>
-  //             <summary>
-  //               <h4>Contig browser</h4>
-  //             </summary>
-  //             <div className="contig-igv-container">{showContigOrLoader()}</div>
-  //           </details>
-  //         </div>
-  //       </section>
-  //       <section className="vf-grid mg-contigs-list">
-  //         <div className="vf-stack vf-stack--800">
-  //           <ContigLengthFilter />
-  //           <ContigTextFilter title="COG Category" placeholder="C" />
-  //           <ContigTextFilter title="KEGG Ortholog" placeholder="K00161" />
-  //           <ContigTextFilter title="GO Term" placeholder="GO:1901575" />
-  //           <ContigTextFilter title="Pfam" placeholder="PF02086" />
-  //           <ContigTextFilter title="InterPro" placeholder="IPR015200" />
-  //           <ContigTextFilter title="antiSMASH" placeholder="terpene" />
-  //           <ContigAnnotationTypeFilter />
-  //         </div>
-  //         <ContigsTable />
-  //       </section>
-  //     </ContigsQueryContext.Provider>
-  //   </div>
-  // );
 };
 
 export default ContigsViewer;

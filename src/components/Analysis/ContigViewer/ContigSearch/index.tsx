@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Download, PaginatedList } from 'interfaces/index';
+import { Download, PaginatedList } from '@/interfaces';
 import {
   Contig,
   db,
@@ -388,7 +388,7 @@ const ContigSearch: React.FC<{
       >
         <div className="vf-flag vf-flag--top vf-flag--reversed vf-flag--800">
           <div className="vf-flag__body">
-            <p>
+            <p className="vf-text-body vf-text-body--3">
               Browsing {contigsTableData.count} annotated contigs from{' '}
               {gffDownload.alias}
             </p>
