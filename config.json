@@ -19,5 +19,31 @@
   "whenDownloadingListsFromApi": {
     "maxPages": 100,
     "cadenceMs": 1000
+  },
+  "pipelines": {
+    "v6": {
+      "amplicon": {
+        "githubs": ["https://github.com/EBI-Metagenomics/amplicon-pipeline"],
+        "workflowHubs": ["https://workflowhub.eu/projects/9#workflows"],
+        "docs": ["https://docs.mgnify.org/"]
+      },
+      "metagenomic": {
+        "githubs": ["https://github.com/EBI-Metagenomics/raw-reads-analysis-pipeline"],
+        "workflowHubs": ["https://workflowhub.eu/projects/9#workflows"],
+        "docs": ["https://docs.mgnify.org/"]
+      },
+      "assembly": {
+        "githubs": ["https://github.com/EBI-Metagenomics/assembly-analysis-pipeline", "https://github.com/EBI-Metagenomics/emg-viral-pipeline", "https://github.com/ebi-metagenomics/mobilome-annotation-pipeline/"],
+        "workflowHubs": ["https://workflowhub.eu/workflows/27", "https://workflowhub.eu/workflows/452"],
+        "docs": ["https://docs.mgnify.org/"]
+      }
+    },
+    "default": {
+      "default": {
+        "githubs": ["https://github.com/EBI-Metagenomics"],
+        "workflowHubs": ["https://workflowhub.eu/projects/9#workflows"],
+        "docs": ["https://docs.mgnify.org/"]
+      }
+    }
   }
 }

@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import '../style.css';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import { extractVersionNumber } from 'utils/strings';
+import UserContext from 'pages/Login/UserContext';
 
 function isAssembly(experimentType: string): boolean {
   // return ['assembly', 'hybrid_assembly', 'long_reads_assembly'].includes(
@@ -48,6 +50,8 @@ function isAssembly(experimentType: string): boolean {
 
 const AnalysisOverview: React.FC = () => {
   const { overviewData: data } = useContext(AnalysisContext);
+  const { config } = useContext(UserContext);
+
   const isHybrid = false;
   // data.experiment_type === 'hybrid_assembly' &&
   // data?.experiment_type === 'hybrid_assembly' &&
@@ -130,52 +134,68 @@ const AnalysisOverview: React.FC = () => {
     },
   ];
 
+  const pipelineSetMeta =
+    config.pipelines[data?.pipeline_version.toLowerCase() || ''] || {};
+  const pipelineMeta = data
+    ? pipelineSetMeta[data.experiment_type.toLowerCase()]
+    : config.pipelines['default']['default'];
+
   const pipelineInformationItems = [
     {
       key: 'Repository',
       value: () => (
-        <a
-          href="https://github.com/EBI-Metagenomics/amplicon-pipeline"
-          target="_blank"
-          rel="noreferrer"
-        >
-          https://github.com/EBI-Metagenomics/amplicon-pipeline
-        </a>
+        <ul className="vf-list vf-list--bare">
+          {pipelineMeta.githubs?.map((repo) => (
+            <li key={repo}>
+              <a href={repo} target="_blank" rel="noreferrer">
+                {repo}
+              </a>
+            </li>
+          ))}
+        </ul>
       ),
-      rawValue: 'https://github.com/EBI-Metagenomics/amplicon-pipeline',
+      rawValue: pipelineMeta.githubs?.join(', ') || '—',
     },
     {
       key: 'Documentation',
       value: () => (
-        <a
-          href="https://ebi-metagenomics.github.io/amplicon-pipeline/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          https://ebi-metagenomics.github.io/amplicon-pipeline/
-        </a>
+        <ul className="vf-list vf-list--bare">
+          {pipelineMeta.docs?.map((doc) => (
+            <li key={doc}>
+              <a href={doc} target="_blank" rel="noreferrer">
+                {doc}
+              </a>
+            </li>
+          ))}
+        </ul>
       ),
-      rawValue: 'https://ebi-metagenomics.github.io/amplicon-pipeline/',
+      rawValue: pipelineMeta.docs?.join(', ') || '—',
     },
-    // {
-    //   key: 'Workflow hub link',
-    //   value: () => (
-    //     <a
-    //       href="https://workflowhub.eu/workflows/361?version=1"
-    //       target="_blank"
-    //       rel="noreferrer"
-    //     >
-    //       https://workflowhub.eu/workflows/361?version=1
-    //     </a>
-    //   ),
-    //   rawValue: 'https://workflowhub.eu/workflows/361?version=1',
-    // },
+    {
+      key: 'WorkflowHub link',
+      value: () => (
+        <ul className="vf-list vf-list--bare">
+          {pipelineMeta.workflowHubs?.map((pipeline) => (
+            <li key={pipeline}>
+              <a href={pipeline} target="_blank" rel="noreferrer">
+                {pipeline}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ),
+      rawValue: pipelineMeta.workflowHubs?.join(', ') || '—',
+    },
     {
       key: 'Pipeline version',
       value:
         data?.pipeline_version &&
         (() => (
-          <Link to={`/pipelines/${data?.pipeline_version?.slice(1)}`}>
+          <Link
+            to={`/pipelines/${extractVersionNumber(
+              data?.pipeline_version ?? ''
+            )}`}
+          >
             {data?.pipeline_version}
           </Link>
         )),

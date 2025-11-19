@@ -25,6 +25,15 @@ export type ConfigType = {
     maxPages: number;
     cadenceMs: number;
   };
+  pipelines: {
+    [version: string]: {
+      [experimentType: string]: {
+        githubs: string[];
+        workflowHubs: string[];
+        docs: string[];
+      };
+    };
+  };
 };
 
 export default merge(
